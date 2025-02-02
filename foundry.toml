@@ -4,3 +4,24 @@ out = "out"
 libs = ["lib"]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "ds-test/=lib/forge-std/lib/ds-test/src/",
+    "forge-std/=lib/forge-std/src/"
+]
+    # The Solc instance to use if any.
+    # This takes precedence over `auto_detect_solc`, if a version is set then this overrides auto-detection.
+solc = "0.8.28"
+    # The EVM version by hardfork name
+evm_version = 'cancun'
+    # Print the sizes of the compiled contracts
+sizes = true
+    # Enables or disables the optimizer
+optimizer = true
+    # The number of optimizer runs
+optimizer_runs = 4294967295
+# optimizer_runs = 2000
+# optimizer_runs = 500
+    # Whether or not to use the Yul intermediate representation compilation pipeline
+# via_ir = true
