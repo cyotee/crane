@@ -1,0 +1,1494 @@
+# Targeted Product Requirements Document (PRD)
+# Crane Framework: OpenZeppelin Compatibility Implementation Plan
+
+## 1. Executive Summary
+
+This document outlines a targeted approach for implementing and testing Diamond Storage equivalents for OpenZeppelin contracts within the Crane Framework. Our priority is to first ensure comprehensive test coverage for existing implementations before expanding to new components. We will focus on validating and testing the existing codebase, then expand to complete the missing OpenZeppelin equivalents using the established patterns.
+
+## 2. Current State Analysis
+
+### 2.1 Existing Implementation Overview
+
+The Crane Framework already has several implementations in place:
+
+- **ERC20 Base Implementation**: 
+  - BetterERC20.sol with Diamond Storage pattern exists
+  - ERC20Storage.sol, ERC20Repo.sol, and ERC20Layout struct are implemented
+  
+- **ERC20 Extensions**: 
+  - ERC20Permit (ERC2612) is implemented via BetterERC20Permit.sol
+  - ERC4626 is implemented via BetterERC4626.sol in the extensions directory
+  - ERC20MintBurnOperable functionality exists
+  
+- **Access Controls**: 
+  - Ownable pattern exists in access/ownable
+  - ReentrancyGuard functionality exists in access/reentrancy
+  - Operable pattern exists in access/operable
+  
+- **Directory Structure**: 
+  - Most required directories exist (token/ERC20, token/ERC721, token/ERC1155, access/)
+  - Missing directories include governance/, security/, and token/ERC777
+
+### 2.2 Critical Gaps to Address
+
+- **Testing Coverage**:
+  - Missing or incomplete test suites for existing implementations
+  - Need to establish consistent test naming conventions and patterns
+  - Missing test stubs for Target contracts
+
+- **Target Implementation Gaps**:
+  - Some components may have Storage but not full Target implementations
+  - Missing facet contracts for some implementations
+
+- **Token Standards**:
+  - Missing ERC20 extensions: Burnable, Capped, Pausable, Snapshot, Votes, Wrapper
+  - ERC721 implementation needs validation and potential enhancement
+  - ERC1155 implementation needs validation
+  - ERC777 implementation is missing
+
+- **Access Controls**:
+  - AccessControl and extensions are missing
+  - Role-based access patterns need implementation
+
+- **Security Primitives**:
+  - Pausable mechanism needs implementation
+  - Additional security primitives (PullPayment, VestingWallet) are missing
+
+## 3. Implementation Priorities
+
+### 3.1 First Priority: Test Existing Implementations
+
+1. **Existing Codebase Analysis**:
+   - Analyze the existing implementations (BetterERC20, BetterERC20Permit, BetterERC4626)
+   - Review Diamond Storage patterns in place (ERC20Storage, ERC20Repo, etc.)
+   - Document current inheritance and composition patterns
+   - Map existing patterns to create a consistent approach for new components
+
+2. **Validate and Test ERC20 Base Implementation**:
+   - Verify that BetterERC20.sol correctly implements IERC20 and IERC20Metadata
+   - Ensure ERC20Storage and ERC20Repo follow Diamond Storage best practices
+   - Create BetterERC20TargetStub.sol for testing if missing
+   - Implement test suites for all IERC20 functions following naming convention
+   - Validate behavior against OpenZeppelin's ERC20 implementation
+
+3. **Validate and Test ERC20Permit Implementation**:
+   - Verify BetterERC20Permit correctly implements IERC20Permit
+   - Ensure ERC20PermitStorage and related components work properly
+   - Verify the inheritance pattern (BetterERC20Permit inherits from ERC5267Target, ERC20, ERC2612Target, etc.)
+   - Create BetterERC20PermitTargetStub.sol for testing if missing
+   - Implement test suites for all permit functions
+   - Test edge cases and security properties
+
+4. **Validate and Test ERC4626 Implementation**:
+   - Verify BetterERC4626 correctly implements IERC4626
+   - Ensure ERC4626Storage and ERC4626Repo are properly implemented
+   - Create BetterERC4626TargetStub.sol for testing if missing
+   - Implement test suites for all IERC4626 functions
+   - Test conversion logic, rounding, and edge cases
+
+5. **Implement Missing Test Components**:
+   - Create any missing test stubs for existing implementations
+   - Establish test fixtures and common behavior contracts
+   - Implement consistent test naming patterns across the codebase
+
+### 3.2 Second Priority: Complete ERC20 Ecosystem
+
+1. **Implement Missing ERC20 Extensions**:
+   - BetterERC20Burnable - Add burning capability following existing patterns
+   - BetterERC20Capped - Add supply cap functionality
+   - BetterERC20Pausable - Add ability to pause transfers (requires Pausable implementation)
+   - BetterERC20Snapshot - Add point-in-time balance tracking
+   - BetterERC20Votes - Add voting capabilities
+   - BetterERC20Wrapper - Add wrapping of another ERC20
+
+2. **Create Comprehensive Test Suite for New Extensions**:
+   - Test stubs for each new Better implementation following BetterERC20Permit pattern
+   - Individual function test suites following naming convention
+   - Integration tests with base ERC20
+   - Behavior testing
+
+### 3.3 Third Priority: Security and Access Control
+
+1. **Implement Core Security Primitives**:
+   - BetterPausable - Create Diamond Storage implementation that can be composed with other contracts
+   - Verify and enhance existing ReentrancyGuard implementation
+
+2. **Implement Access Control Mechanisms**:
+   - BetterAccessControl - Role-based access control
+   - BetterAccessControlEnumerable - Enumerable role management
+   - BetterAccessControlDefaultAdminRules - Default admin role rules
+
+3. **Create Test Suites for Security and Access**:
+   - Unit tests for each primitive
+   - Integration tests with token standards
+   - Behavior tests for expected security properties
+
+### 3.4 Fourth Priority: Additional Token Standards
+
+1. **Enhance ERC721 Implementation**:
+   - Validate existing BetterERC721 against OpenZeppelin standard
+   - Add extensions: Enumerable, URIStorage, Burnable, Pausable, Votes, Royalty
+
+2. **Enhance ERC1155 Implementation**:
+   - Validate existing BetterERC1155 against OpenZeppelin standard
+   - Add extensions: Supply, URIStorage, Pausable
+
+3. **Implement ERC777**:
+   - Create BetterERC777 implementation
+   - Ensure compatibility with ERC20 for backward compatibility
+
+## 4. Implementation Structure and Conventions
+
+### 4.1 Repository Structure
+
+All implementations will follow the existing Crane Framework structure:
+
+```
+crane/
+├── contracts/
+│   ├── access/
+│   │   ├── ownable/         # Ownable implementations
+│   │   ├── reentrancy/      # ReentrancyGuard implementations
+│   │   ├── operable/        # Operable implementations
+│   │   └── accesscontrol/   # AccessControl implementations (to be added)
+│   ├── token/
+│   │   ├── ERC20/           # ERC20 implementations
+│   │   │   └── extensions/  # ERC20 extensions including ERC4626
+│   │   ├── ERC721/          # ERC721 implementations
+│   │   │   └── extensions/  # ERC721 extensions
+│   │   ├── ERC1155/         # ERC1155 implementations
+│   │   │   └── extensions/  # ERC1155 extensions
+│   │   └── ERC777/          # ERC777 implementations (to be added)
+│   ├── security/            # Security primitives (to be added)
+│   └── governance/          # Governance implementations (to be added)
+└── test/
+    └── foundry/
+        └── [mirrors contracts structure]
+```
+
+### 4.2 Naming Conventions
+
+#### 4.2.1 Contracts Naming Convention
+
+Based on the existing conventions in the codebase, contracts follow this naming pattern:
+
+- **Layout Structs**: `[Name]Layout` (e.g., `ERC20Layout`)
+- **Repo Libraries**: `[Name]Repo` (e.g., `ERC20Repo`)
+- **Storage Contracts**: `[Name]Storage` (e.g., `ERC20Storage`)
+- **Target Contracts**: `Better[Name]` for primary implementations (e.g., `BetterERC20`)
+- **Target Contracts**: `[Name]Target` for specialized targets (e.g., `ERC2612Target`)
+- **Facet Contracts**: `[Name]Facet` (e.g., `ERC20PermitFacet`)
+- **Test Stubs**: `Better[Name]TargetStub` (e.g., `BetterERC20TargetStub`)
+- **Package Contracts**: `[Name]DFPkg` (e.g., `ERC20PermitDFPkg`)
+- **Interface Contracts**: `Better[Interface]` or `I[Name]` (e.g., `BetterIERC20`, `IERC2612`)
+
+#### 4.2.2 Testing Naming Convention and Structure
+
+Test files should follow a strict naming convention and directory structure:
+
+- **Test Directory Structure**: `test/foundry/<path relative to contracts/>`
+  - Example: Test for `contracts/token/ERC20/BetterERC20.sol` will be in `test/foundry/token/ERC20/`
+
+- **Test File Naming**: `<Test Subject Contract Name>_<Interface of function being tested>_<function name being tested>Test.sol`
+  - Example: `BetterERC20_IERC20_transferTest.sol` for testing the transfer function of BetterERC20
+  - Example: `BetterERC20Permit_IERC20Permit_permitTest.sol` for testing the permit function
+  - Example: `ERC20Repo_layoutTest.sol` for testing a library without specific interface functions
+
+- **Test Stub Naming**: `Better<Contract Name>TargetStub`
+  - Example: `BetterERC20PermitTargetStub` for a stub of BetterERC20Permit
+
+### 4.3 Diamond Storage Pattern Application
+
+The implementation will follow the established Diamond Storage pattern in the Crane Framework:
+
+1. **Storage Layout Structure**:
+   - Define state variables in a struct (e.g., `ERC20Layout`)
+   - Keep related variables grouped in a single layout
+   - Follow OpenZeppelin's naming conventions where possible
+
+2. **Repo Library Pattern**:
+   - Each layout struct has a corresponding repo library
+   - Use the consistent slot calculation approach seen in existing code
+   - Include minimal required functionality in repo libraries
+
+3. **Storage Contract Pattern**:
+   - Define storage slot calculations
+   - Provide storage access methods (_layoutName() functions)
+   - Include initialization functions (_initName() methods)
+
+4. **Inheritance and Composition**:
+   - Extensions should inherit from base storage contracts
+   - Follow the multiple inheritance pattern seen in BetterERC20Permit
+   - Reuse existing storage when possible, only define new storage for new state
+
+5. **Target Implementation**:
+   - Implement logic using storage defined in storage contracts
+   - Follow the existing implementation patterns in BetterERC20, etc.
+   - Maintain OpenZeppelin-compatible interfaces and error messages
+
+## 5. Testing Implementation Details
+
+### 5.0 Project Structure and Repository Setup
+
+Based on analysis of the existing codebase, we need to create the following missing directories:
+
+1. **Create Missing Directories**:
+   - `contracts/security/` - For security primitives like Pausable
+     - `contracts/security/pausable/` - For Pausable implementation
+     - `contracts/security/pullpayment/` - For PullPayment implementation
+   - `contracts/token/ERC777/` - For ERC777 implementation
+   - `contracts/governance/` - For governance-related contracts
+
+2. **Verify Existing Directories**:
+   The following directories already exist and should be used:
+   - `contracts/token/ERC20/` and `contracts/token/ERC20/extensions/`
+   - `contracts/token/ERC721/` and `contracts/token/ERC1155/`
+   - `contracts/access/` with subdirectories for specific access controls
+
+3. **Test Directory Structure**:
+   - Mirror the same structure in test directories
+
+### 5.1 ERC20 Base Testing
+
+#### 5.1.1 Required Test Suites
+
+For BetterERC20, we need comprehensive test suites covering:
+
+1. Create test stub exposing internal functions for testing:
+   ```solidity
+   // Example structure based on existing BetterERC20 implementation
+   contract BetterERC20TargetStub is BetterERC20 {
+       // Expose internal functions
+       function exposed_mint(address to, uint256 amount) public {
+           _mint(to, amount, _erc20().totalSupply);
+       }
+       
+       function exposed_burn(address from, uint256 amount) public {
+           _burn(from, amount, _erc20().totalSupply);
+       }
+       
+       function exposed_transfer(address from, address to, uint256 amount) public {
+           _transfer(from, to, amount);
+       }
+       
+       // Constructor/initializer for testing
+       constructor(string memory name, string memory symbol) {
+           _initERC20(name, symbol, 18);
+       }
+   }
+   ```
+
+2. Create test suites for each IERC20 function in `test/foundry/token/ERC20/`:
+   - `BetterERC20_IERC20_nameTest.sol`
+   - `BetterERC20_IERC20_symbolTest.sol`
+   - `BetterERC20_IERC20_decimalsTest.sol`
+   - `BetterERC20_IERC20_totalSupplyTest.sol`
+   - `BetterERC20_IERC20_balanceOfTest.sol`
+   - `BetterERC20_IERC20_allowanceTest.sol`
+   - `BetterERC20_IERC20_transferTest.sol`
+   - `BetterERC20_IERC20_transferFromTest.sol`
+   - `BetterERC20_IERC20_approveTest.sol`
+   - `BetterERC20_IERC20_increaseAllowanceTest.sol`
+   - `BetterERC20_IERC20_decreaseAllowanceTest.sol`
+   - `BetterERC20_InternalFunctions_mintTest.sol`
+   - `BetterERC20_InternalFunctions_burnTest.sol`
+   - `ERC20Repo_layoutTest.sol`
+
+3. Comprehensive test scenarios for each function (see Section 5.1.3)
+
+#### 5.1.2 ERC20Permit Testing
+
+1. Create test stub for BetterERC20Permit, exposing internal functions:
+   ```solidity
+   contract BetterERC20PermitTargetStub is BetterERC20Permit {
+       // Expose internal functions
+       function exposed_DOMAIN_SEPARATOR() public view returns (bytes32) {
+           return _domainSeparatorV4();
+       }
+       
+       // For easy testing
+       constructor(string memory name, string memory symbol) {
+           _initERC20(name, symbol, 18);
+           _initEIP721(name, "1");
+       }
+   }
+   ```
+
+2. Create test suites in `test/foundry/token/ERC20/extensions/`:
+   - `BetterERC20Permit_IERC20Permit_permitTest.sol`
+   - `BetterERC20Permit_IERC20Permit_nonceTest.sol`
+   - `BetterERC20Permit_IERC2612_domainSeparatorTest.sol`
+   - `ERC20PermitRepo_layoutTest.sol` (if applicable)
+
+#### 5.1.3 ERC4626 Testing
+
+Create test stub and comprehensive test suites for all IERC4626 functions in `test/foundry/token/ERC20/extensions/`:
+
+- `BetterERC4626_IERC4626_assetTest.sol`
+- `BetterERC4626_IERC4626_totalAssetsTest.sol`
+- `BetterERC4626_IERC4626_convertToSharesTest.sol`
+- `BetterERC4626_IERC4626_convertToAssetsTest.sol`
+- `BetterERC4626_IERC4626_maxDepositTest.sol`
+- `BetterERC4626_IERC4626_previewDepositTest.sol`
+- `BetterERC4626_IERC4626_depositTest.sol`
+- `BetterERC4626_IERC4626_maxMintTest.sol`
+- `BetterERC4626_IERC4626_previewMintTest.sol`
+- `BetterERC4626_IERC4626_mintTest.sol`
+- `BetterERC4626_IERC4626_maxWithdrawTest.sol`
+- `BetterERC4626_IERC4626_previewWithdrawTest.sol`
+- `BetterERC4626_IERC4626_withdrawTest.sol`
+- `BetterERC4626_IERC4626_maxRedeemTest.sol`
+- `BetterERC4626_IERC4626_previewRedeemTest.sol`
+- `BetterERC4626_IERC4626_redeemTest.sol`
+
+### 5.2 Test Implementation Details
+
+For each test suite, implement comprehensive test scenarios. For example, for the ERC20 transfer function:
+
+- Test transfer succeeds with sufficient balance
+- Test transfer emits Transfer event with correct parameters
+- Test transfer updates balances correctly
+- Test transfer to self works correctly
+- Test transfer with zero amount succeeds
+- Test transfer fails with insufficient balance
+- Test transfer to zero address fails
+- Test transfer interactions with hooks (if implemented)
+
+Follow similar patterns for all functions, focusing on:
+- Success paths with normal inputs
+- Edge cases (zero values, self-transfers)
+- Failure paths with proper error messages
+- Event emissions
+- State changes
+- Access control
+
+### 5.3 Implementing Missing Extensions
+
+When implementing new extensions, follow the established pattern from BetterERC20Permit:
+
+1. **BetterERC20Burnable Example Pattern**:
+   ```solidity
+   contract BetterERC20Burnable is BetterERC20, IERC20Burnable {
+       /**
+        * @dev Destroys `amount` tokens from the caller.
+        */
+       function burn(uint256 amount) public virtual {
+           _burn(_msgSender(), amount, _erc20().totalSupply);
+       }
+
+       /**
+        * @dev Destroys `amount` tokens from `account`, deducting from the caller's allowance.
+        */
+       function burnFrom(address account, uint256 amount) public virtual {
+           _spendAllowance(account, _msgSender(), amount);
+           _burn(account, amount, _erc20().totalSupply);
+       }
+   }
+   ```
+
+2. **BetterERC20Capped Example Pattern**:
+   Requires a new layout struct, repo, and storage contract for the cap value.
+
+3. **BetterERC20Pausable Example Pattern**:
+   Requires implementing the Pausable primitive first.
+
+### 5.4 OpenZeppelin Contracts Inventory
+
+Create an inventory of OpenZeppelin contracts to implement, starting with:
+
+1. **ERC20 Extensions Inventory**:
+   - BetterERC20Burnable - Burns tokens from the caller or approved spenders
+   - BetterERC20Capped - Adds a maximum token supply cap checked during minting
+   - BetterERC20Pausable - Adds pausable functionality to token transfers
+   - BetterERC20Snapshot - Enables historical balance queries at specific blocks
+   - BetterERC20Votes - Implements voting and delegation capabilities
+   - BetterERC20Wrapper - Wraps an underlying ERC20 token
+
+2. **ERC721 Extensions Inventory**:
+   - BetterERC721Enumerable - Adds enumeration capabilities for on-chain tracking
+     - Maintains an enumerable index of tokenIds and owner token indices
+     - Enables efficient enumeration of all tokens or owner tokens
+     - Implements IERC721Enumerable with additional gas costs
+   - BetterERC721URIStorage - Provides token URI for off-chain metadata
+     - Stores and retrieves token URIs on-chain
+     - Enables custom URI strings per token
+     - Extends standard tokenURI functionality
+   - BetterERC721Burnable - Burns tokens from token owners
+     - Allows token owners to destroy their tokens
+     - Calls _burn internally to handle state updates
+     - Removes token from total supply
+   - BetterERC721Pausable - Adds pausable functionality to token transfers
+     - Leverages Pausable functionality for emergency stops
+     - Prevents transfers, approvals, and minting when paused
+     - Admin-controlled circuit breaker pattern
+   - BetterERC721Votes - Implements voting and delegation capabilities
+     - Tracks voting units (tokens) for governance
+     - Enables delegation of voting power
+     - Supports vote tracking with checkpoints
+   - BetterERC721Royalty - Implements royalty payments for NFT creators
+     - Implements EIP-2981 NFT Royalty Standard
+     - Allows setting royalty info per token or collection
+     - Enables marketplaces to query royalty information
+
+3. **ERC1155 Extensions Inventory**:
+   - BetterERC1155 - Base implementation of the ERC1155 multi-token standard
+     - Supports both fungible and non-fungible tokens in one contract
+     - Implements batch transfer operations for efficiency
+     - Handles multiple token IDs with a shared interface
+   - BetterERC1155Burnable - Adds burning capability for token holders
+     - Allows token owners to burn their tokens
+     - Supports batch burning operations
+     - Emits TransferSingle or TransferBatch events
+   - BetterERC1155Pausable - Adds pausable functionality to token transfers
+     - Enables emergency stop for all token transfers
+     - Integrates with BetterPausable pattern
+     - Adds safety mechanisms for contract administrators
+   - BetterERC1155Supply - Adds enumeration and supply tracking capabilities
+     - Tracks total supply for each token ID
+     - Provides totalSupply() function per token ID
+     - Maintains accurate counts during mint/burn operations
+   - BetterERC1155URIStorage - Enhanced URI management for tokens
+     - Provides token URI for off-chain metadata access
+     - Enables setting both per-token and batch URIs
+     - Extends the standard uri functionality
+
+4. **Security Primitives Inventory**:
+   - BetterPausable - Implements a pause mechanism for emergency stops
+   - BetterReentrancyGuard - Prevents reentrancy attacks
+   - BetterPullPayment - Implements pull-over-push pattern for safer withdrawals
+
+5. **Access Control Inventory**:
+   - BetterAccessControl - Role-based permission system
+   - BetterAccessControlEnumerable - Adds enumeration to roles
+   - BetterAccessControlDefaultAdminRules - Adds secure admin role transitions
+
+### 10.9 ERC4626 Token Standards Inventory
+
+ERC4626 is a standard for tokenized vaults that extends ERC20. It provides a standardized API for yield-bearing vaults that accept ERC20 tokens as deposits and issue shares represented as ERC20 tokens.
+
+#### 10.9.1 ERC4626 Base Contract
+
+**File Location in OpenZeppelin**: `contracts/token/ERC20/extensions/ERC4626.sol`
+
+**Inheritance Hierarchy**:
+- IERC4626
+- ERC20
+- IERC20Metadata
+
+**Public/External Functions**:
+1. **asset()** - Returns the address of the underlying ERC20 token used for the vault
+2. **totalAssets()** - Returns the total amount of underlying assets managed by the vault
+3. **convertToShares(uint256 assets)** - Calculates the amount of shares that would be exchanged for the given assets (ideal conditions)
+4. **convertToAssets(uint256 shares)** - Calculates the amount of assets that would be exchanged for the given shares (ideal conditions)
+5. **maxDeposit(address)** - Returns the maximum amount of assets that can be deposited
+6. **previewDeposit(uint256 assets)** - Simulates the amount of shares that would be received for a deposit (including fees)
+7. **deposit(uint256 assets, address receiver)** - Deposits assets into the vault and issues shares to receiver
+8. **maxMint(address)** - Returns the maximum amount of shares that can be minted
+9. **previewMint(uint256 shares)** - Simulates the amount of assets needed for minting shares (including fees)
+10. **mint(uint256 shares, address receiver)** - Mints exactly shares and transfers the corresponding assets from the caller
+11. **maxWithdraw(address owner)** - Returns the maximum amount of assets that can be withdrawn
+12. **previewWithdraw(uint256 assets)** - Simulates the amount of shares that would be burned for a withdrawal (including fees)
+13. **withdraw(uint256 assets, address receiver, address owner)** - Burns shares and sends exactly assets to receiver
+14. **maxRedeem(address owner)** - Returns the maximum amount of shares that can be redeemed
+15. **previewRedeem(uint256 shares)** - Simulates the amount of assets that would be received for a redemption (including fees)
+16. **redeem(uint256 shares, address receiver, address owner)** - Burns shares and sends the corresponding assets to receiver
+
+**Events**:
+1. **Deposit(address caller, address owner, uint256 assets, uint256 shares)** - Emitted when tokens are deposited into the vault
+2. **Withdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares)** - Emitted when tokens are withdrawn from the vault
+
+**Dependencies**:
+- Requires ERC20 implementation for underlying token
+- Requires ERC20 implementation for share token (implemented within the same contract)
+
+#### 10.9.2 Extensions and Security Considerations
+
+**ERC4626Fees**:
+An extension to ERC4626 that adds entry and exit fees to the vault functions.
+
+**Key Functions Added**:
+- _entryFeeBasisPoints() - Returns basis points for entry fee (default 0)
+- _exitFeeBasisPoints() - Returns basis points for exit fee (default 0)
+- _entryFeeRecipient() - Returns address to receive entry fees (default address(0))
+- _exitFeeRecipient() - Returns address to receive exit fees (default address(0))
+
+**Security Considerations**:
+1. **Inflation Attack Protection**:
+   - OpenZeppelin implements "virtual offset" to protect against inflation attacks
+   - Adds virtual shares and assets to make attacks economically unfeasible
+   - Uses _decimalsOffset() to set the magnitude of virtual liquidity
+
+2. **Rounding Behavior**:
+   - Deposit/mint operations round down in favor of the vault
+   - Withdraw/redeem operations round down in favor of the vault
+   - This ensures the vault maintains integrity but can create small losses for users
+
+3. **Fee Implementation**:
+   - Preview functions must account for fees to remain compliant
+   - Events should report pre-fee assets (deposits) and post-fee assets (withdrawals)
+
+### 10.9.3 ERC4626 State Variable Analysis
+
+#### 10.9.3.1 ERC4626 Base Contract State Variables
+
+The OpenZeppelin implementation of ERC4626 contains the following state variables:
+
+1. **Immutable Variables**:
+   - `IERC20 private immutable _asset`: The underlying token used for the vault
+   - `uint8 private immutable _underlyingDecimals`: The decimals of the underlying asset
+
+2. **Virtual Offset for Security** (Implicit in implementation):
+   - OpenZeppelin uses a virtual offset mechanism to prevent inflation attacks
+   - This is implemented in the conversion math functions rather than as explicit state variables
+
+3. **Inherited State Variables from ERC20**:
+   - `mapping(address => uint256) _balances`: Maps addresses to their share balances
+   - `mapping(address => mapping(address => uint256)) _allowances`: Maps owner addresses to spender allowances
+   - `uint256 _totalSupply`: Total supply of shares
+   - `string _name`: Name of the share token
+   - `string _symbol`: Symbol of the share token
+
+4. **Accessed External State**:
+   - The contract reads the underlying token's `balanceOf(address(this))` to determine `totalAssets()`
+   - The contract interacts with the underlying token's `transferFrom()` and `transfer()` functions
+
+#### 10.9.3.2 ERC4626Fees Extension State Variables
+
+The ERC4626Fees extension adds the following state variables:
+
+1. **Constants**:
+   - `uint256 private constant _BASIS_POINT_SCALE = 1e4`: Used for fee calculations
+
+2. **Virtual Functions That Define Configurable State**:
+   - `_entryFeeBasisPoints()`: Returns basis points for entry fee (Default: 0)
+   - `_exitFeeBasisPoints()`: Returns basis points for exit fee (Default: 0)
+   - `_entryFeeRecipient()`: Returns address to receive entry fees (Default: address(0))
+   - `_exitFeeRecipient()`: Returns address to receive exit fees (Default: address(0))
+
+#### 10.9.3.3 State Variable Access Patterns
+
+1. **Read Access Patterns**:
+   - **asset()**: Reads immutable `_asset` variable
+   - **totalAssets()**: Reads external state of underlying token via `balanceOf(address(this))`
+   - **convertToShares() and convertToAssets()**: Read `totalSupply()` and `totalAssets()`
+   - **maxDeposit(), maxMint(), maxWithdraw(), maxRedeem()**: May read role-based access control state (depending on implementation)
+   - **previewDeposit(), previewMint(), previewWithdraw(), previewRedeem()**: Read conversion rates, which depend on `totalSupply()` and `totalAssets()`
+   - **Fee-related functions**: Read fee configuration through virtual functions
+
+2. **Write Access Patterns**:
+   - **deposit() and mint()**: Modify share token balances through `_mint()`, trigger transfer of underlying assets
+   - **withdraw() and redeem()**: Modify share token balances through `_burn()`, trigger transfer of underlying assets
+   - **_deposit() and _withdraw()**: Internal implementations that handle fee transfers if applicable
+
+#### 10.9.3.4 Inheritance Hierarchy and Storage Layout
+
+The inheritance path for ERC4626 is as follows:
+```
+ERC4626 → ERC20 → IERC4626 → IERC20Metadata → IERC20
+```
+
+Storage layout considerations:
+1. The ERC4626 contract adds only two immutable variables to the storage layout of ERC20
+2. Immutable variables do not occupy storage slots (they are embedded in the bytecode)
+3. The main storage variables come from the ERC20 inheritance
+4. The ERC4626Fees extension adds no storage variables, only constants and virtual functions
+
+#### 10.9.3.5 Potential Storage Conflicts in Diamond Storage
+
+When implementing ERC4626 with Diamond Storage patterns, consider these potential conflicts:
+
+1. **Share Token vs. Underlying Asset**:
+   - The ERC4626 contract represents shares as an ERC20 token implemented within the same contract
+   - In Diamond Storage, we need to carefully separate the storage for shares (ERC20Layout) from vault-specific storage
+
+2. **Fee Configuration**:
+   - Fee-related storage variables need their own layout struct to maintain composability
+   - Fee configuration should be isolated from the core ERC4626 functionality
+
+3. **Security Mechanism Storage**:
+   - The virtual offset or other security mechanisms may require additional storage variables
+   - These should be included in the ERC4626Layout struct
+
+4. **Access Control Integration**:
+   - If the vault implements access control (e.g., for max deposit limits), ensure proper storage isolation
+
+### 10.9.4 ERC4626 Diamond Storage Layout Struct
+
+To implement ERC4626 with Diamond Storage patterns, the following layout struct is recommended:
+
+```solidity
+struct ERC4626Layout {
+    // Reference to underlying asset
+    address asset;
+    uint8 underlyingDecimals;
+    
+    // Virtual offset for inflation protection (optional)
+    uint8 decimalsOffset;
+    
+    // Fee configuration (optional)
+    uint256 entryFeeBasisPoints;
+    uint256 exitFeeBasisPoints;
+    address entryFeeRecipient;
+    address exitFeeRecipient;
+}
+```
+
+### 10.9.5 ERC4626 Implementation Considerations for Crane
+
+When implementing ERC4626 in Crane using Diamond Storage:
+
+1. **Composability**:
+   - The implementation should support composition with other Diamond Storage contracts
+   - Allow separation of core ERC4626 functionality from fee mechanisms or other extensions
+
+2. **Storage Isolation**:
+   - ERC4626Layout should be isolated from ERC20Layout but reference it for share handling
+   - ERC4626 will need to interact with ERC20Storage for underlying asset interactions
+
+3. **Testing Focus**:
+   - Focus tests on correct exchange rate calculations under various deposit/withdrawal scenarios
+   - Test edge cases with very small deposits and large deposits
+   - Verify inflation attack resistance
+   - Test correct fee calculation and distribution
+
+## 6. Implementation Steps For New Components
+
+For each new component, follow these steps:
+
+1. **Analysis**:
+   - Review the OpenZeppelin implementation
+   - Identify state variables needed
+   - Plan the Diamond Storage layout
+
+2. **Implementation**:
+   - Create layout struct and repo (if new state variables needed)
+   - Create storage contract (inheriting from required base)
+   - Create target implementation (following BetterXYZ pattern)
+   - Create facet contract (if needed for Diamond integration)
+   - Create package contract (if needed for deployment)
+
+3. **Testing**:
+   - Create test stub exposing internal functions
+   - Create individual test suites for each function
+   - Implement comprehensive test scenarios
+   - Ensure full coverage of edge cases and error conditions
+
+4. **Documentation**:
+   - Document the implementation pattern
+   - Create usage examples
+   - Document any deviations from OpenZeppelin
+
+## 7. Deliverables and Milestones
+
+### 7.1 Phase 1: Test Coverage for Existing Implementations (Weeks 1-2)
+- Complete test stubs and test suites for BetterERC20, BetterERC20Permit, and BetterERC4626
+- Validate conformance to OpenZeppelin standards
+- Document any gaps or deviations
+
+### 7.2 Phase 2: ERC20 Extensions (Weeks 3-4)
+- Implement missing ERC20 extensions with test coverage
+- Begin implementation of security primitives
+
+### 7.3 Phase 3: Security and Access Control (Weeks 5-6)
+- Complete security primitives implementation
+- Implement access control mechanisms
+- Create test suites for all new components
+
+### 7.4 Phase 4: Additional Token Standards (Weeks 7-8)
+- Enhance existing token implementations
+- Add missing token standards
+- Create comprehensive documentation
+
+## 8. Success Criteria
+
+- All tests pass and demonstrate behavior equivalent to OpenZeppelin
+- Coverage report shows >95% test coverage for all components
+- Documentation provides clear migration paths from OpenZeppelin
+- Performance benchmarks show comparable or better gas efficiency
+
+## 9. Current Test Coverage and Refactoring Strategy
+
+### 9.1 Current Testing State Analysis
+
+1. **Existing Test Organization**:
+   - Tests are currently organized in `test/foundry/spec/` directory
+   - The directory structure does not fully mirror the contract structure
+   - Some tests use a different naming convention than our target convention
+   - Test stubs exist but may need to be refactored to expose more internal functionality
+   - Tests are structured at a relatively high level, often combining multiple function tests in a single file
+
+2. **Test Coverage Gaps**:
+   - ERC20 core functionality lacks comprehensive function-level test files
+   - ERC20Permit lacks specific tests for individual functions
+   - ERC4626 functionality needs dedicated test files for each function
+   - Storage implementation tests are limited
+   - Repo implementation tests are minimal or non-existent
+   - Edge cases and error conditions need additional coverage
+
+### 9.2 Test Refactoring Strategy
+
+1. **Step 1: Inventory and Preserve Existing Test Logic**:
+   - Document all existing test cases from `test/foundry/spec/`
+   - Identify which test files test which contracts
+   - Create a mapping of tested functionality to new file structure
+   - Ensure no functionality is lost during refactoring
+
+2. **Step 2: Create New Test Directory Structure**:
+   - Establish `test/foundry/token/ERC20/` for ERC20 tests
+   - Establish `test/foundry/token/ERC20/extensions/` for ERC20 extensions
+   - Create additional directories matching contract structure
+   - Ensure all directories follow the same hierarchy as contracts
+
+3. **Step 3: Create Test Stubs**:
+   - Create `BetterERC20TargetStub.sol` exposing all needed internal functions
+   - Create `BetterERC20PermitTargetStub.sol` with permit-specific functions exposed
+   - Create `BetterERC4626TargetStub.sol` with vault-specific functions exposed
+   - Ensure all stubs follow consistent initialization patterns
+
+4. **Step 4: Migrate Tests to New Structure**:
+   - For each core function, create dedicated test file:
+     - `BetterERC20_IERC20_transferTest.sol`
+     - `BetterERC20_IERC20_approveTest.sol`
+     - etc.
+   - Migrate test cases from existing files to new function-specific files
+   - Enhance test cases to cover all scenarios defined in Section 10
+   - Ensure consistent structure and naming across all test files
+
+5. **Step 5: Add Missing Test Coverage**:
+   - Add tests for repo libraries and storage slot calculations
+   - Create comprehensive internal function tests
+   - Implement edge case testing for all functions
+   - Add integration tests between components
+
+### 9.3 Test Refactoring Implementation
+
+1. **Phase 1: Create Directory Structure and Test Stubs (Week 1)**:
+   - Establish all required test directories
+   - Create test stubs for BetterERC20, BetterERC20Permit, and BetterERC4626
+   - Document mapping between old and new test structure
+
+2. **Phase 2: Migrate Core ERC20 Tests (Week 1-2)**:
+   - Migrate tests for IERC20 functions to dedicated files
+   - Enhance test coverage for core functions
+   - Validate against OpenZeppelin behaviors
+
+3. **Phase 3: Migrate Extension Tests (Week 2)**:
+   - Migrate tests for ERC20Permit to dedicated files
+   - Migrate tests for ERC4626 to dedicated files
+   - Add missing tests for extensions
+
+4. **Phase 4: Add Repository and Storage Tests (Week 3)**:
+   - Implement dedicated tests for repo libraries
+   - Add storage layout verification tests
+   - Create storage slot calculation tests
+
+### 9.4 Test Organization Guidelines
+
+1. **One Function, One File**:
+   - Each testable function should have its own dedicated test file
+   - Internal functions should be grouped by logical relationship
+   - Storage and repo tests can be grouped by layout type
+
+2. **Consistent Test Structure**:
+   - Each test file should have standard sections:
+     - Basic functionality tests
+     - Edge case tests
+     - Error condition tests
+     - Event emission tests
+   - Use consistent naming for test functions within files
+   - Use standard fixture setup following Test_Crane conventions
+
+3. **Test Coverage Requirements**:
+   - Each function must have >95% code coverage
+   - Each error condition must have a dedicated test
+   - Each event emission must be tested
+   - Edge cases must be comprehensively covered
+   - Complex logic paths must be tested separately
+
+4. **Maintainability Guidelines**:
+   - Abstract common test logic into reusable components
+   - Use proper test fixtures to minimize duplication
+   - Clearly document test purpose and assumptions
+   - Separate setup logic from assertions
+
+### 9.5 Existing Test Migration Patterns
+
+Based on analysis of current tests like `OwnableTarget.t.sol`, the following migration patterns should be applied:
+
+1. **Current Pattern Analysis**:
+   ```solidity
+   function test_IOwnable_transferOwnership(address proposedOwner_) public {
+       // Test setup
+       vm.startPrank(owner_);
+       
+       // Expected event
+       vm.expectEmit(true, true, false, false, address(ownableStub));
+       emit IOwnable.TransferProposed(proposedOwner_);
+       
+       // Function call
+       ownableStub.transferOwnership(proposedOwner_);
+       
+       // Assertions
+       assertEq(proposedOwner_, ownableStub.proposedOwner());
+   }
+   ```
+
+2. **Migrated Pattern Template**:
+   ```solidity
+   // In BetterERC20_IERC20_transferTest.sol
+   contract BetterERC20_IERC20_transferTest is Test_Crane {
+       BetterERC20TargetStub erc20Stub;
+       address sender = vm.addr(uint256(keccak256(abi.encode("sender"))));
+       address recipient = vm.addr(uint256(keccak256(abi.encode("recipient"))));
+       uint256 amount = 100;
+       
+       function setUp() public virtual override {
+           // Standard setup
+           erc20Stub = new BetterERC20TargetStub("Test Token", "TST");
+           erc20Stub.exposed_mint(sender, 1000);
+       }
+       
+       function test_IERC20_transfer_Success() public {
+           // Test setup
+           vm.startPrank(sender);
+           
+           // Expected event
+           vm.expectEmit(true, true, true, true, address(erc20Stub));
+           emit IERC20.Transfer(sender, recipient, amount);
+           
+           // Function call
+           bool success = erc20Stub.transfer(recipient, amount);
+           
+           // Assertions
+           assertTrue(success);
+           assertEq(erc20Stub.balanceOf(sender), 900);
+           assertEq(erc20Stub.balanceOf(recipient), 100);
+       }
+       
+       function test_IERC20_transfer_InsufficientBalance() public {
+           // Test setup
+           vm.startPrank(sender);
+           
+           // Expected revert
+           vm.expectRevert("ERC20: transfer amount exceeds balance");
+           
+           // Function call that should revert
+           erc20Stub.transfer(recipient, 2000);
+       }
+       
+       // Additional test functions for this specific function...
+   }
+   ```
+
+3. **Reusable Components to Create**:
+   - `ERC20TestSetup.sol` - Common setup logic for ERC20 tests
+   - `ERC20TestScenarios.sol` - Reusable test scenarios
+   - `ERC20TestHelpers.sol` - Helper functions for common assertions and operations
+
+4. **Migration Process for Each Test File**:
+   - Create the new file with appropriate name in target directory
+   - Implement standard Test_Crane inheritance and setup
+   - Copy relevant test logic from existing file
+   - Restructure tests to follow the one-function-per-file pattern
+   - Add any missing test scenarios based on Section 10
+   - Ensure 100% error path coverage
+   - Document relationship to original tests for traceability
+
+### 9.6 Test Template Files
+
+To facilitate consistent test structuring, the following template files should be created:
+
+1. **Standard Test File Template**:
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+import "../../../../../contracts/test/Test_Crane.sol";
+import "../../../../../contracts/token/ERC20/test/stubs/BetterERC20TargetStub.sol";
+import {IERC20} from "../../../../../contracts/token/ERC20/IERC20.sol";
+
+/**
+ * @title BetterERC20_IERC20_functionNameTest
+ * @dev Test suite for the functionName function of BetterERC20
+ */
+contract BetterERC20_IERC20_functionNameTest is Test_Crane {
+    // Test fixtures
+    BetterERC20TargetStub erc20Stub;
+    address sender;
+    address recipient;
+    uint256 defaultAmount;
+    
+    function setUp() public virtual override {
+        super.setUp();
+        
+        // Initialize addresses
+        sender = vm.addr(uint256(keccak256(abi.encode("sender"))));
+        recipient = vm.addr(uint256(keccak256(abi.encode("recipient"))));
+        defaultAmount = 100;
+        
+        // Initialize contract
+        erc20Stub = new BetterERC20TargetStub("Test Token", "TST");
+        erc20Stub.exposed_mint(sender, 1000);
+        
+        // Register used addresses
+        declareUsed(address(sender));
+        declareUsed(address(recipient));
+        declareUsed(address(erc20Stub));
+    }
+    
+    /* ---------------------------------------------------------------------- */
+    /*                          Success Path Tests                            */
+    /* ---------------------------------------------------------------------- */
+    
+    /**
+     * @dev Test basic success case
+     */
+    function test_IERC20_functionName_Success() public {
+        // Test setup
+        
+        // Expected events
+        
+        // Function call
+        
+        // Assertions
+    }
+    
+    /* ---------------------------------------------------------------------- */
+    /*                          Edge Case Tests                               */
+    /* ---------------------------------------------------------------------- */
+    
+    /**
+     * @dev Test with zero values
+     */
+    function test_IERC20_functionName_ZeroAmount() public {
+        // Test with zero amount
+    }
+    
+    /**
+     * @dev Test with extreme values
+     */
+    function test_IERC20_functionName_MaxValue() public {
+        // Test with max uint256
+    }
+    
+    /* ---------------------------------------------------------------------- */
+    /*                          Error Case Tests                              */
+    /* ---------------------------------------------------------------------- */
+    
+    /**
+     * @dev Test expected error case
+     */
+    function test_IERC20_functionName_ExpectedError() public {
+        // Test setup
+        
+        // Expected revert
+        vm.expectRevert("Expected error message");
+        
+        // Function call that should revert
+    }
+}
+```
+
+2. **Test Stub Template**:
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+import "../../../../../contracts/token/ERC20/BetterERC20.sol";
+
+/**
+ * @title BetterERC20TargetStub
+ * @dev Stub for testing BetterERC20 including exposed internal functions
+ */
+contract BetterERC20TargetStub is BetterERC20 {
+    /**
+     * @dev Exposes the internal _mint function for testing
+     */
+    function exposed_mint(address to, uint256 amount) public {
+        _mint(to, amount, _erc20().totalSupply);
+    }
+    
+    /**
+     * @dev Exposes the internal _burn function for testing
+     */
+    function exposed_burn(address from, uint256 amount) public {
+        _burn(from, amount, _erc20().totalSupply);
+    }
+    
+    /**
+     * @dev Exposes the internal _transfer function for testing
+     */
+    function exposed_transfer(address from, address to, uint256 amount) public {
+        _transfer(from, to, amount);
+    }
+    
+    /**
+     * @dev Constructor for testing
+     */
+    constructor(string memory name, string memory symbol) {
+        _initERC20(name, symbol, 18);
+    }
+}
+```
+
+3. **Setup Shared File Template**:
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+import "../../../../../contracts/test/Test_Crane.sol";
+import "../../../../../contracts/token/ERC20/test/stubs/BetterERC20TargetStub.sol";
+
+/**
+ * @title ERC20TestSetup
+ * @dev Provides shared setup for ERC20 tests
+ */
+abstract contract ERC20TestSetup is Test_Crane {
+    // Shared fixtures
+    BetterERC20TargetStub erc20Stub;
+    address sender;
+    address recipient;
+    address spender;
+    uint256 defaultAmount;
+    
+    function setUp() public virtual override {
+        super.setUp();
+        
+        // Initialize addresses with deterministic values
+        sender = vm.addr(uint256(keccak256(abi.encode("sender"))));
+        recipient = vm.addr(uint256(keccak256(abi.encode("recipient"))));
+        spender = vm.addr(uint256(keccak256(abi.encode("spender"))));
+        defaultAmount = 100;
+        
+        // Initialize standard token
+        erc20Stub = new BetterERC20TargetStub("Test Token", "TST");
+        erc20Stub.exposed_mint(sender, 1000);
+        
+        // Register used addresses
+        declareUsed(address(sender));
+        declareUsed(address(recipient));
+        declareUsed(address(spender));
+        declareUsed(address(erc20Stub));
+    }
+    
+    // Shared helper functions
+    function setupApproval(address owner, address spender, uint256 amount) internal {
+        vm.startPrank(owner);
+        erc20Stub.approve(spender, amount);
+        vm.stopPrank();
+    }
+}
+```
+
+## 10. State Variable Analysis for OpenZeppelin Contracts
+
+### 10.1 ERC721 State Variables
+
+For implementing ERC721 contracts with Diamond Storage patterns, it's essential to understand the state variables in the OpenZeppelin implementations:
+
+1. **ERC721 Base Contract State Variables**:
+   - `_owners`: mapping(uint256 => address) - Maps each token ID to its owner address
+   - `_balances`: mapping(address => uint256) - Tracks the number of tokens owned by each address
+   - `_tokenApprovals`: mapping(uint256 => address) - Maps token ID to approved address
+   - `_operatorApprovals`: mapping(address => mapping(address => bool)) - Maps owner to operator approvals
+   - `_name`: string - The token collection name
+   - `_symbol`: string - The token collection symbol
+   - `_baseURI`: string - Optional base URI for token metadata
+
+### 10.2 Access Control State Variables
+
+For implementing access control contracts with Diamond Storage patterns, we need to analyze the state variables in OpenZeppelin's implementations:
+
+1. **AccessControl Base Contract State Variables**:
+   - `_roles`: mapping(bytes32 => RoleData) - Maps role identifiers to role data
+   - `RoleData.members`: mapping(address => bool) - Tracks members assigned to a role
+   - `RoleData.adminRole`: bytes32 - Identifies the role that can manage this role
+   - `DEFAULT_ADMIN_ROLE`: constant bytes32(0) - Special role with control over all roles
+
+2. **AccessControlEnumerable Additional State Variables**:
+   - `_roleMembers`: mapping(bytes32 => EnumerableSet.AddressSet) - Maps roles to enumerable sets of addresses
+   
+3. **AccessControlDefaultAdminRules Additional State Variables**:
+   - `_pendingDefaultAdmin`: address - Stores next admin during transfer process
+   - `_pendingDefaultAdminSchedule`: uint48 - Timestamp when admin transfer becomes valid
+   - `_defaultAdminDelay`: uint48 - Delay period for admin changes
+   - `_pendingDefaultAdminDelay`: uint48 - Next delay value if delay is being updated
+   - `_pendingDefaultAdminDelaySchedule`: uint48 - When delay update becomes effective
+
+### 10.3 Security Primitives State Variables
+
+For implementing security primitives with Diamond Storage patterns, we need to analyze the state variables in OpenZeppelin's implementations:
+
+1. **Pausable State Variables**:
+   - `_paused`: bool - Boolean indicating if the contract is paused
+   
+2. **ReentrancyGuard State Variables**:
+   - `_status`: uint256 - Current status of the contract, used to detect reentrancy
+   - `_NOT_ENTERED`: uint256 constant - Value indicating contract is not being reentered
+   - `_ENTERED`: uint256 constant - Value indicating contract is being reentered
+   
+3. **PullPayment State Variables**:
+   - `_payments`: mapping(address => uint256) - Maps addresses to their pending payments
+   - `_escrow`: Escrow - An instance of the Escrow contract to store pending payments
+
+### 10.4 Diamond Storage Layout Structs for Access Control
+
+The following Diamond Storage layout structs should be implemented for access control contracts:
+
+1. **AccessControlLayout**:
+```solidity
+struct AccessControlLayout {
+    mapping(bytes32 => RoleData) roles;
+}
+
+struct RoleData {
+    mapping(address => bool) members;
+    bytes32 adminRole;
+}
+```
+
+2. **AccessControlEnumerableLayout**:
+```solidity
+struct AccessControlEnumerableLayout {
+    mapping(bytes32 => EnumerableSet.AddressSet) roleMembers;
+}
+```
+
+3. **AccessControlDefaultAdminRulesLayout**:
+```solidity
+struct AccessControlDefaultAdminRulesLayout {
+    address pendingDefaultAdmin;
+    uint48 pendingDefaultAdminSchedule;
+    uint48 defaultAdminDelay;
+    uint48 pendingDefaultAdminDelay;
+    uint48 pendingDefaultAdminDelaySchedule;
+}
+```
+
+### 10.5 Diamond Storage Layout Structs for Security Primitives
+
+The following Diamond Storage layout structs should be implemented for security primitives:
+
+1. **PausableLayout**:
+```solidity
+struct PausableLayout {
+    bool paused;
+}
+```
+
+2. **ReentrancyGuardLayout**:
+```solidity
+struct ReentrancyGuardLayout {
+    uint256 status;
+}
+```
+
+3. **PullPaymentLayout**:
+```solidity
+struct PullPaymentLayout {
+    mapping(address => uint256) payments;
+    address escrowAddress;
+}
+```
+
+### 10.8 Storage Slot Calculation Strategy
+
+To ensure consistency across all Diamond Storage implementations and prevent storage collisions, the following strategy should be used for calculating storage slots:
+
+1. **STORAGE_RANGE Calculation**:
+```solidity
+// Calculate STORAGE_RANGE using interface ID for domain-specific components
+// This ensures that different components use different ranges of storage slots
+bytes32 constant STORAGE_RANGE = keccak256("BetterERC20.storage");
+```
+
+2. **LAYOUT_ID Calculation**:
+```solidity
+// Calculate LAYOUT_ID using library name for specific layouts
+// This ensures that different layouts within the same domain have different IDs
+bytes32 constant LAYOUT_ID = keccak256("ERC20Layout");
+```
+
+3. **STORAGE_SLOT Calculation**:
+```solidity
+// Calculate final STORAGE_SLOT using a combination of STORAGE_RANGE and LAYOUT_ID
+// This ensures uniqueness across the entire contract system
+function _erc20Layout() internal pure returns (ERC20Layout storage layout) {
+    bytes32 position = keccak256(abi.encodePacked(STORAGE_RANGE, LAYOUT_ID));
+    assembly {
+        layout.slot := position
+    }
+}
+```
+
+4. **Guidelines for Preventing Storage Collisions**:
+   - Use descriptive, unique names for STORAGE_RANGE and LAYOUT_ID
+   - For extensions, include the base component name in the STORAGE_RANGE
+   - Always use the full contract name or interface ID in STORAGE_RANGE calculation
+   - Document all storage positions in a central registry within the project
+   - Use automated testing to verify no collisions exist
+   
+5. **Handling Inheritance and Extensions**:
+   - Base contracts and their extensions should use related STORAGE_RANGE values
+   - Extensions should add a suffix to the base STORAGE_RANGE
+   - Example: `keccak256("BetterERC20.storage")` for base, `keccak256("BetterERC20Permit.storage")` for extension
+   - Inherited functionality should use separate layouts rather than extending parent layouts
+   - Use composition over inheritance when designing storage layout relationships
+
+2. **ERC721Enumerable Additional State Variables**:
+   - `_allTokens`: uint256[] - Array of all token IDs
+   - `_allTokensIndex`: mapping(uint256 => uint256) - Maps token ID to position in _allTokens array
+   - `_ownedTokens`: mapping(address => mapping(uint256 => uint256)) - Maps owner address to list of owned tokens
+   - `_ownedTokensIndex`: mapping(uint256 => uint256) - Maps token ID to index of the owner tokens list
+
+### 10.6 ERC1155 State Variables
+
+For implementing ERC1155 contracts with Diamond Storage patterns, we need to analyze the state variables in OpenZeppelin's implementations:
+
+1. **ERC1155 Base Contract State Variables**:
+   - `_balances`: mapping(uint256 => mapping(address => uint256)) - Maps token ID to owner to balance
+   - `_operatorApprovals`: mapping(address => mapping(address => bool)) - Maps owner to operator approval
+   - `_uri`: string - Base URI for token metadata
+
+2. **ERC1155Supply Additional State Variables**:
+   - `_totalSupply`: mapping(uint256 => uint256) - Maps token ID to its total supply
+   - `_existingTokens`: EnumerableSet.UintSet - Set of existing token IDs
+
+3. **ERC1155URIStorage Additional State Variables**:
+   - `_tokenURIs`: mapping(uint256 => string) - Maps token ID to specific URI
+   - `_baseURI`: string - Base URI for token metadata
+
+### 10.7 Diamond Storage Layout Structs for ERC1155
+
+The following Diamond Storage layout structs should be implemented for ERC1155 contracts:
+
+1. **ERC1155Layout**:
+```solidity
+struct ERC1155Layout {
+    mapping(uint256 => mapping(address => uint256)) balances;
+    mapping(address => mapping(address => bool)) operatorApprovals;
+    string uri;
+}
+```
+
+2. **ERC1155SupplyLayout**:
+```solidity
+struct ERC1155SupplyLayout {
+    mapping(uint256 => uint256) totalSupply;
+    EnumerableSet.UintSet existingTokens;
+}
+```
+
+3. **ERC1155URIStorageLayout**:
+```solidity
+struct ERC1155URIStorageLayout {
+    mapping(uint256 => string) tokenURIs;
+    string baseURI;
+}
+```
+
+3. **ERC721URIStorage Additional State Variables**:
+   - `_tokenURIs`: mapping(uint256 => string) - Custom URIs for specific tokens
+
+4. **ERC721Votes Additional State Variables**:
+   - `_delegates`: mapping(address => address) - Maps address to delegate address
+   - `_checkpoints`: mapping(address => Checkpoint[]) - Tracks vote checkpoints
+   - `_totalSupplyCheckpoints`: Checkpoint[] - Tracks total supply checkpoints
+
+5. **ERC721Royalty Additional State Variables**:
+   - `_tokenRoyaltyInfo`: mapping(uint256 => RoyaltyInfo) - Royalty information per token
+   - `_defaultRoyaltyInfo`: RoyaltyInfo - Default royalty for all tokens
+
+### 10.2 ERC721 Diamond Storage Layout Structs
+
+Based on the state variable analysis, the following Diamond Storage layout structs are recommended:
+
+1. **ERC721Layout**:
+   ```solidity
+   struct ERC721Layout {
+       // Token data
+       mapping(uint256 => address) owners;
+       mapping(address => uint256) balances;
+       
+       // Approval data
+       mapping(uint256 => address) tokenApprovals;
+       mapping(address => mapping(address => bool)) operatorApprovals;
+       
+       // Metadata
+       string name;
+       string symbol;
+       string baseURI;
+       
+       // Tracking
+       uint256 totalSupply;
+   }
+   ```
+
+2. **ERC721EnumerableLayout**:
+   ```solidity
+   struct ERC721EnumerableLayout {
+       // All tokens enumeration
+       uint256[] allTokens;
+       mapping(uint256 => uint256) allTokensIndex;
+       
+       // Owner tokens enumeration
+       mapping(address => mapping(uint256 => uint256)) ownedTokens;
+       mapping(uint256 => uint256) ownedTokensIndex;
+   }
+   ```
+
+3. **ERC721URIStorageLayout**:
+   ```solidity
+   struct ERC721URIStorageLayout {
+       mapping(uint256 => string) tokenURIs;
+   }
+   ```
+
+4. **ERC721VotesLayout**:
+   ```solidity
+   struct ERC721VotesLayout {
+       mapping(address => address) delegates;
+       mapping(address => Checkpoint[]) checkpoints;
+       Checkpoint[] totalSupplyCheckpoints;
+   }
+   ```
+
+5. **ERC721RoyaltyLayout**:
+   ```solidity
+   struct ERC721RoyaltyLayout {
+       mapping(uint256 => RoyaltyInfo) tokenRoyaltyInfo;
+       RoyaltyInfo defaultRoyaltyInfo;
+   }
+   ```
+
+### 10.3 ERC721 Diamond Storage Access Patterns
+
+For each layout struct, a repo library will provide access to the storage:
+
+1. **ERC721Repo**:
+   ```solidity
+   library ERC721Repo {
+       // Storage slot
+       bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.erc721.storage");
+       
+       // Access function
+       function _erc721() internal pure returns (ERC721Layout storage l) {
+           bytes32 position = DIAMOND_STORAGE_POSITION;
+           assembly {
+               l.slot := position
+           }
+       }
+       
+       // Initialization
+       function _initERC721(string memory name, string memory symbol) internal {
+           ERC721Layout storage l = _erc721();
+           l.name = name;
+           l.symbol = symbol;
+       }
+   }
+   ```
+
+Similar repo libraries would be implemented for each extension layout.
+
+## 11. Next Steps
+
+1. Inventory existing tests and identify gaps in test coverage
+2. Create test stub templates following the patterns above
+3. Create the new test directory structure following naming conventions
+4. Develop shared test fixtures and helpers
+5. Begin migrating and enhancing existing tests
+6. Implement missing test suites for existing functions
+7. Create documentation and migration guides
+
+## 10. Appendix: Test Scenarios by Function
+
+### 10.1 ERC20 Function Test Scenarios
+
+#### 10.1.1 name(), symbol(), decimals()
+- Return the expected values
+- Values match those set during initialization
+
+#### 10.1.2 totalSupply()
+- Initial supply is 0
+- Supply increases after minting
+- Supply decreases after burning
+
+#### 10.1.3 balanceOf(address)
+- Initial balance is 0
+- Balance increases after receiving tokens
+- Balance decreases after sending/burning tokens
+
+#### 10.1.4 transfer(address, uint256)
+- Successful transfer updates balances
+- Transfer emits Transfer event
+- Transfer to self doesn't change balance
+- Transfer with zero amount succeeds
+- Transfer with insufficient balance fails
+- Transfer to zero address fails
+
+#### 10.1.5 allowance(address, address)
+- Initial allowance is 0
+- Allowance updates after approval
+- Allowance decreases after transferFrom
+
+#### 10.1.6 approve(address, uint256)
+- Approve updates allowance
+- Approve emits Approval event
+- Approve can overwrite existing allowance
+- Approve to zero address
+
+#### 10.1.7 transferFrom(address, address, uint256)
+- Transfer with allowance updates balances
+- Transfer updates allowance
+- Transfer emits Transfer event
+- Transfer without sufficient allowance fails
+- Transfer without sufficient balance fails
+- Transfer to zero address fails
+
+### 10.2 ERC20Permit Function Test Scenarios
+
+#### 10.2.1 permit(address, address, uint256, uint256, uint8, bytes32, bytes32)
+- Valid permit succeeds and updates allowance
+- Permit emits Approval event
+- Expired permit fails
+- Invalid signature fails
+- Invalid nonce fails
+- Replay attack fails
+- Permit for different token/chain fails
+
+#### 10.2.2 nonces(address)
+- Initial nonce is 0
+- Nonce increases after permit
+- Nonce for unused address stays at 0
+
+#### 10.2.3 DOMAIN_SEPARATOR()
+- Returns correct value based on name, version, chainId, and contract address
+
+### 10.3 ERC4626 Function Test Scenarios
+
+#### 10.3.1 asset()
+- Returns correct underlying asset address
+- Address is immutable after initialization
+
+#### 10.3.2 totalAssets()
+- Initial totalAssets is 0
+- Increases after deposit
+- Decreases after withdraw
+
+#### 10.3.3 convertToShares(uint256), convertToAssets(uint256)
+- Correct conversion with empty vault (1:1)
+- Correct conversion with assets in vault
+- Proper rounding behavior
+- Conversion with zero amount
+
+#### 10.3.4 deposit(uint256, address), withdraw(uint256, address, address)
+- Updates balances correctly
+- Updates totalSupply and totalAssets
+- Emits events with correct parameters
+- Handles zero amounts
+- Fails with insufficient allowance/balance
+
+All other ERC4626 functions should have similar comprehensive test scenarios. 

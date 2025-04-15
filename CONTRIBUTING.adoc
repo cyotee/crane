@@ -1,0 +1,401 @@
+= CONTRIBUTING
+:author: Erdo Crypto
+:email: erdocrypto@ethmail.cc
+:revdate: 2023-01-03
+:revnumber: 0.1
+:revremark: Initial draft.
+:toc:
+:toclevels: 4
+:sectnums:
+:doctype: book
+
+ifndef::compositing[]
+:imagesdir: ../../images/
+endif::[]
+
+ifndef::compositing[]
+:compositing:
+endif::[]
+
+= CONTRIBUTIONS
+
+* All code and documentation is published under the Affero GNU Public License V3.
+The Software license can be found in the LICENSE file.
+
+* All projects are documented.
+* All documentation is stored in the docs/ path.
+* All workflows are diagramed.
+* All software architectures are diagramed.
+* Diagrams are stored in images/diagrams
+
+* This will facilitate rendering this content into websites, documentation, and promotional material.
+AsciiDoc also support embedding several plain text graphing and diagraming formats.
+
+* All documentation Contributions tools are listed in this contributing.adoc
+
+* The project summary and installation / build instructions are in the BUILD.adoc
+
+== Purpose  
+The aim of this CONTRIBUTING file is to prepare for others setting up a working environment.
+All the specific tools mentioned below are optional, the resulting file structure and acceptable file types are mandatory. If you are willing to use a different tool that produces a file that's compatible with the recommended tools then please yourself.
+We're recommending VSCode. Tools and plugin recommendations will be compatible with VSCode.
+
+== VSCode
+=== VSCode what is it?
+* Visual Studio Code is a lightweight but powerful source code editor which runs on your desktop and is available for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and Node.js and has a rich ecosystem of extensions for other languages (such as C++, C#, Java, Python, PHP, Go) and runtimes (such as .NET and Unity)
+
+=== Setting up Visual Studio Code
+* Getting up and running with Visual Studio Code is quick and easy. It is a small download so you can install in a matter of minutes and give VS Code a try.
+** VS Code is a free code editor, which runs on the macOS, Linux, and Windows operating systems.
+. link:https://code.visualstudio.com/docs/setup/windows[Setup Windows]
+. link:https://code.visualstudio.com/docs/setup/mac[Setup MAC]
+. link:https://code.visualstudio.com/docs/setup/linux[Linux]
+
+=== Get started
+* Start your journey using Visual Studio Code with this set of introductory videos! These videos are designed to give you an overview of VS Code's various features and quickly get you familiar with them.
+. Set up and learn the basics of Visual Studio Code: link:https://code.visualstudio.com/docs/introvideos/basics[Getting Started]
+. Learn how to edit and run code in VS Code: link:https://code.visualstudio.com/docs/introvideos/codeediting[Code Editing]
+. Become a VS Code power user with these productivity tips: link:https://code.visualstudio.com/docs/introvideos/productivity[Productivity Tips]
+. Personalize VS Code to make it yours with themes: link:https://code.visualstudio.com/docs/introvideos/configure[Personalize]
+. Add features, themes, and more to VS Code with extensions! link:https://code.visualstudio.com/docs/introvideos/extend[Extensions]
+. Get started with debugging in VS Code: link:https://code.visualstudio.com/docs/introvideos/debugging[Debugging]
+. Learn how to use Git version control in VS Code: link:https://code.visualstudio.com/docs/introvideos/versioncontrol[VersionControl]
+. Learn how to customize your settings and keyboard shortcuts in VS Code: link:https://code.visualstudio.com/docs/introvideos/customize[Customize]
+
+=== how to use it
+* follow the official links below to learn about it!
+. link:https://code.visualstudio.com/docs/getstarted/tips-and-tricks[Tips&Tricks]
+. link:https://code.visualstudio.com/docs/getstarted/userinterface[User Interface]
+. link:https://code.visualstudio.com/docs/getstarted/settings[Settings]
+. https://code.visualstudio.com/docs/editor/command-line[Command Line]
+- for further tips, please navigate to the official website of link:https://code.visualstudio.com/docs/[VSCode]
+
+=== Real Case scenario
+* When you first open VScode, you will see this window
+** image:https://i.imgur.com/SbKV4lf.png[VSCode Window]
+* Go on github, click on CODE, HTTPS and copy it
+** image:https://i.imgur.com/dCvZO3N.png[CODE copy]
+* back to Vscode, click on Clone Git repositor, then press CTRL+P (Quick open) and copy the link you copied above
+** image:https://i.imgur.com/WUeXfbq.png[VSCODE Clone Repo]
+* Select the repository location on your workstation
+** image:https://i.imgur.com/zjrwRCh.png[Cloning Repo]
+* Well done, you did clone your repo
+* now, you can work on your repo, check on the left side, you do have few icons which will be very useful, called Activity Bar
+** image:https://i.imgur.com/SwK5JxD.png[Vscode Icon]
+. Explorer : The Explorer is used to browse, open, and manage all of the files and folders in your project. VS Code is file and folder based - you can get started immediately by opening a file or folder in VS Code.
+. Search: Provides global search and replace across your open folder.
+. Source Control - VS Code includes Git source control by default.
+.. image:https://i.imgur.com/bzL5MY4.png[Source Control]
+... you can here push, pull, commit, change, create-delete-modify branch etc..
+. Run - VS Code's Run and Debug View displays variables, call stacks, and breakpoints.
+. Extensions - Install and manage your extensions within VS Code.
+. Custom views - Views contributed by extensions.
+
+* *Never Ever work on the Branch Master , create new branch each time you work on a task, if the task do not exist, create an issue accordingly.*
+* then do a pull requests if your issues has been approved. Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.
+
+=== Signed Git commits in VSCode
+* This only explain how to configure it on VSCode, to know how to create PGP key and set up in Github, click HERE
+. you have to tell VS Code to append the -s flag to the git commit command, to use signed committing now. 
+. Open the settings, search for “gpg” and check the box “Enables commit signing with GPG”.
+. that’s it! Now you can commit your changes in VS Codes Git integration and sign your work.
+. Note that you will be prompted for the passphrase of your private key at first.
+. your commits are now verified on VSCode.
+. image:https://i.imgur.com/vTwm9zn.png[Verified]
+
+=== Plugins in VSCode
+==== Comment Anchors
+- *Solidity developers MUST use this plugin with VSCode, or replicate the functionality so others using this plugin aren't disrupted.*
+* Id: ExodiusStudios.comment-anchors
+** Description: Place anchor tags within comments for easy file and workspace navigation.
+** Version: 1.10.2
+** Publisher: Starlane Studios
+** VS Marketplace: link:https://marketplace.visualstudio.com/items?itemName=ExodiusStudios.comment-anchors[Comment Anchors]
+
+
+==== Solidity
+- *Recommend Solidity developers use this plugin*
+* Id: NomicFoundation.hardhat-solidity
+** Description: Solidity and Hardhat support by the Hardhat team
+** Version: 0.6.6
+** Publisher: Nomic Foundation
+** VS Marketplace link:https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity[Solidity]
+
+
+==== Solidity Visual Developer
+- *Testing is configured to be compatible with this plugin. The config is already included in the repo.*
+* Id: tintinweb.solidity-visual-auditor
+** Description: Ethereum Solidity Language customized for developers and auditors using Visual Studio Code
+** Version: 0.1.4
+** Publisher: tintinweb
+** VS Marketplace: link:https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor[Solidity Visual Developer]
+
+
+==== Mocha Test Explorer
+- *Custom dictionary available in the repo for this plugin*
+* Id: hbenl.vscode-mocha-test-adapter
+** Description: Run your Mocha tests in the Sidebar of Visual Studio Code
+** Version: 2.14.1
+** Publisher: Holger Benl
+** VS Marketplace: link:https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter[Mocha Test Explorer]
+
+
+==== Code Spell Checker
+- *Since the spell checking library it uses is open source, we'll likely use it elsewhere. Like when we render PDFs, so we can spell check custom words based on developers inventing them.*
+* Id: streetsidesoftware.code-spell-checker
+** Description: Spelling checker for source code
+** Version: 2.12.0
+** Publisher: Street Side Software
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker[Code Spell Checker]
+
+
+==== Comment Divider
+- *This plugin helps to structure comments with consistent dividers*
+* Id: stackbreak.comment-divider
+** Description: Divide your code by sections with styled separators.
+** Version: 0.4.0
+** Publisher: stackbreak
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=stackbreak.comment-divider[Comment Divider]
+
+
+=== Diagrams in VSCode
+* Diagrams are allowed in a few formats (SVG, PlantUML, Graphviz, and DITAA are allowed for now, other might be added) All of them are text based (Mostly for technical diagrams with specific styles that are easier to write in that format)
+
+* The primary one, especially for non-technical stuff is Draw.io. It embeds it's editor data in a standard SVG. SVG is a text based image format that's compatible with git. A lot of other frameworks accept SVG along with other image formats. Meaning SVG is our preferred image format.
+
+==== Draw.io Integration
+- *This plugin provides a graphical editor for diagrams in SVG format. We'll be using this for everything. There is a web service for it, but the tool doesn't require it. Eventually we'll make sure an open source version is available.*
+* Id: hediet.vscode-drawio
+** Description: This unofficial extension integrates Draw.io into VS Code.
+** Version: 1.6.4
+** Publisher: Henning Dieterichs
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio[Draw.io]
+
+==== Excalidraw
+- *This plugin for the same as above, but for drawing with a mouse/stylus. We can use this is someone wants to share a sketch.*
+* Id: pomdtr.excalidraw-editor
+** Description: Draw schemas in VS Code using Excalidraw
+** Version: 3.3.4
+** Publisher: pomdtr
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor[Excalidraw]
+
+==== HTTP Server / HTML Preview
+- *This plugin helps with viewing some of the files we'll be autogenerating. The big one for now is the test coverage report. The coverage report is a website, and this makes it easy to view the report in VSCode, and have working links.
+It'll be useful when we need to check other generated pages.
+You will find it useful for reviewing the coverage reports to create GitHub Issues for anything without full test coverage.* 
+* Id: Flixs.vs-code-http-server-and-html-preview
+** Description: A Simple HTTP Server / HTML Preview for Visual Studio Code.
+** Version: 2.2.2
+** Publisher: shawnfunke
+** VS Marketplace: Link: https://marketplace.visualstudio.com/items?itemName=Flixs.vs-code-http-server-and-html-preview[HTTP Server / HTML Preview]
+
+==== Mocha Test Explorer
+- *Useful for devs to quickly selectively run tests.*
+** Id: hbenl.vscode-mocha-test-adapter
+** Description: Run your Mocha tests in the Sidebar of Visual Studio Code
+** Version: 2.14.1
+** Publisher: Holger Benl
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter[Mocha Test Explorer]
+
+
+==== PlantUML
+- *This plugin provides an active preview of PlantUML and some other formats to aid editing.*
+* Id: jebbs.plantuml
+** Description: Rich PlantUML support for Visual Studio Code.
+** Version: 2.17.5
+** Publisher: jebbs
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml[PlantUML]
+
+==== PlantUML Syntax
+- *Syntax highlighter for PlantUML.*
+* Id: qhoekman.language-plantuml
+** Description: Language support for PlantUML
+** Version: 0.0.3
+** Publisher: Quido Hoekman
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=qhoekman.language-plantuml[PlantUML Syntax]
+
+=== yarn
+- *Useful for running our build scripts from the VSCode UI, so you don't have to remember all the commands.*
+* Id: gamunu.vscode-yarn
+** Description: Yarn commands for VSCode
+** Version: 2.1.0
+**Publisher: Gamunu Balagalla
+** VS Marketplace: Link:https://marketplace.visualstudio.com/items?itemName=gamunu.vscode-yarn[yarn]
+
+=== AsciiDoc
+- All our docs will be written in AsciiDoc. We will often render to DocBook format first before rendering to other formats because a lot of tools with with DocBook. So if we can't find a tool that just works with AsciiDoc, we'll likely find one that works with DocBook.
+* This plugin makes working with AsciiDoc easier.
+** link:https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
+- AsciiDoc syntax reference:
+** link:https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#formatted-text[AsciiDoc syntax ]
+- Reference for including diagrams in a AsciiDoc file.
+** link:https://docs.asciidoctor.org/diagram-extension/latest/[Diagrams in a AsciiDoc file.]
+
+
+=== Auto Comment Blocks
+- *This plugin makes it easier to write NatSpec comments.*
+* Id: kevinkyang.auto-comment-blocks
+** Description: Provides block comment completion for Javadoc-style multi-line comments and single-line comment blocks for most officially supported languages.
+** Version: 1.0.1
+** Publisher: kky
+** VS Marketplace: link:https://marketplace.visualstudio.com/items?itemName=kevinkyang.auto-comment-blocks[Auto Comment Blocks]
+* Note: This below reference for how comments following the NatSpec convention we'll be using MUST be written
+** link:https://docs.soliditylang.org/en/latest/natspec-format.html[natspec-format]
+* Note 2: The Conventional Commits standard to be used
+** link:https://www.conventionalcommits.org/en/v1.0.0/[conventional commits]
+
+=== Asciiflow2
+- *This plugin helps is some needs to write text based diagrams, an effective fall back if the other formats won't work. And example would be in someone includes a diagram in a NatSpec comment, since the other formats won't be rendered if it's in a comment.*
+* Id: zenghongtu.vscode-asciiflow2
+** Description: Asciiflow in VS Code
+** Version: 0.2.0
+** Publisher: zenghongtu
+** VS Marketplace: link:https://marketplace.visualstudio.com/items?itemName=zenghongtu.vscode-asciiflow2[Asciiflow2]
+
+=== Radicle
+* Radicle is a decentralized code collaboration network built on open protocols. It enables developers to collaborate on code without relying on trusted intermediaries. Radicle was designed to provide similar functionality to centralized code collaboration platforms — or "forges" — while retaining Git’s peer-to-peer nature, building on what made distributed version control so powerful in the first place.
+** We will be using it in the future so we are strongly advising you to get familair with it. More notes and comments will be written later on on this topic.
+** Read about it : link:https://docs.radicle.xyz/[Radicle Docs]
+
+== Download GPGSuite 
+* Use GPG Suite to encrypt, decrypt, sign and verify files or messages. Manage your GPG Keychain with a few simple clicks and experience the full power of GPG easier than ever before.
+
+** link:https://gpgtools.org/[GPGSuite for MAC] / Download Gpg4Win link:https://www.gpg4win.org/[GPG4win for Windows]
+
+== Keybase 
+
+link:https://keybase.io/[Keybase.io], register yourself, download-install it. Finally, Validate your email. then import the GPG Key once you've generated as below.
+
+** Command line to import it : keybase pgp import -i your path of GPG.asc
+** feel free to prove more of your identity on Keybase.
+
+== GPG-KEY
+=== What is Pretty Good Privacy (PGP) ?
+* Pretty Good Privacy is an encryption program that provides cryptographic privacy and authentication for data communication. 
+* PGP is used for signing, encrypting, and decrypting texts, e-mails, files, directories, and whole disk partitions and to increase the security of e-mail communications (we will use PGP Key to configure our commits on Windows in this guideline but I'm covering below GPG for your reference as it will be use in <<How to use the PGP Key to sign commits on Github for Windows>>
+
+=== What is GNU Privacy Guard (GnuPG or GPG) ?
+* GnuPG is a hybrid-encryption software program because it uses a combination of conventional symmetric-key cryptography for speed, and public-key cryptography for ease of secure key exchange, typically by using the recipient's public key to encrypt a session key which is used only once. 
+* This mode of operation is part of the OpenPGP standard and has been part of PGP from its first version. 
+* The GnuPG 1.x series uses an integrated cryptographic library, while the GnuPG 2.x series replaces this with Libgcrypt. GnuPG encrypts messages using asymmetric key pairs individually generated by GnuPG users. The resulting public keys may be exchanged with other users in a variety of ways, such as Internet key servers. 
+* They must always be exchanged carefully to prevent identity spoofing by corrupting public key < > "owner" identity correspondences. 
+* It is also possible to add a cryptographic digital signature to a message, so the message integrity and sender can be verified, if a particular correspondence relied upon has not been corrupted. GnuPG also supports symmetric encryption algorithms. 
+* By default, GnuPG uses the AES symmetrical algorithm since version 2.1,CAST5 was used in earlier versions. 
+* GnuPG does not use patented or otherwise restricted software or algorithms. Instead, GnuPG uses a variety of other, non-patented algorithms.
+
+=== Why Sign your Git commits?
+* It is important to sign Git commits for your source code to avoid the code being compromised and to confirm to the repository gatekeeper that you are who you say you are. Signing guarantees that my code is my work, it is my copyright and nobody else can fake it. This guide provides the necessary steps to creating private & public keys so you can sign your Git commits.
+
+=== How to Create-Configure PGP Key ?
+* Setting up PGP keys with Git on Windows can be more difficult to configure than on Mac OS or Linux. Here’s how to set it up.
+. On Windows
+.. Download and install link:https://www.gpg4win.org/get-gpg4win.html[PGP4Win], leave everything as default during the installation.
+.. Open Kleopatra and click on fiel > create new key pair
+.. Choose Create a personal OpenPGP key pair
+... image:https://i.imgur.com/XrHzUyj.png[Kleopatra new key pair]
+.. Enter Details : Username - Email , tick "Protect the generated key with a passphrase" (save your passphrase!!!)
+.. go to advanced, change the RSA to 4096 bits, adjust the validation time if needed.
+... image:https://i.imgur.com/48cpwNJ.png[Configuration KEY]
+... image:https://i.imgur.com/vzVXiev.png[Passphrase]
+.. Great! Now you have configured your PGP key!! Store the keypair on your machine by selecting an option “Make a Backup of your keypair”. This will store two files, one is private key and one is public key.
+*Private key must not be shared by anyone else.* Public Key can be shared with anyone so that they can share the secrets in an encrypted form.
+... image:https://i.imgur.com/WEdjces.png[KEY created]
+. On MAC
+.. this link cover from the creation of your key to verified your commits. link:https://www.garrickadenbuie.com/blog/signed-verified-git-commits-keybase-rstudio/[GPG  guideline On MAC]
+
+=== How to use the PGP Key to sign commits on Github for Windows
+* Git BASH Git for Windows provides a BASH emulation used to run Git from the command line. let's download link:https://gitforwindows.org/[Git For Windows], install it.
+. Next, open up a new Powershell window and run where.exe gpg to get the exact location of the GPG program installed withGPG4Win, copy the path.
+. launch git bash on windows
+. type this command git config --global gpg.program "PATH_HERE" (copy/paste the path got on powershell)
+.. this command tells Git what program to use to open it.
+. You have two options for signing commits and tags. You can either force signing for all Git projects with the --global flag, or force signing for specific projects with the --local flag. 
+Since I have some projects that require code signing, I’m going to use the global option. If you want to use this GPG key ID for all Git repositories use the --global option, otherwise use --local
+. First, force Git to sign all commits in this project: git config --global commit.gpgsign true 
+.. image:https://i.imgur.com/g3E36gt.png[commit.gpgsign]
+. Then, get the ID of your GPG key, back to Kleopatra and see your key under KEY-ID on the main window.
+. Add that ID from above to your Git config: git config --global user.signingkey "[GPG_KEY]", (Make sure to replace “GPG_KEY” with the ID from your GPG key in the previous command)
+. finally, enable the GPG feature on VSCode or your Editor of your choice.
+. Any commits will be verified from now on (will ask your passphrase configured with your key)
+
+== git 
+
+link:https://git-scm.com/download/win[Download GIT]
+
+** Git is software for tracking changes in any set of files, usually used for coordinating work among programmers collaboratively developing source code during software development. ** Its goals include speed, data integrity, and support for distributed, non-linear workflows.
+
+***
+
+== Yarn
+
+link:https://yarnpkg.com/[Download Yarn]
+
+** Yarn is a package manager for your code. It allows you to use and share code with other developers from around the world. Yarn does this quickly, securely, and reliably so you don't ever have to worry.
+
+***
+
+== NPM 
+
+link:https://www.npmjs.com/[Download NPM]
+
+** npm is a package manager for the JavaScript programming language maintained by npm, Inc. npm is the default package manager for the JavaScript runtime environment Node.js. It consists of a command line client, also called npm, and an online database of public and paid-for private packages, called the npm registry
+
+***
+
+== Creating an Ethereum wallet 
+
+** If you’re new to crypto and just want to get a feel for it, we recommend something that will give you the opportunity to explore Ethereum applications or buy your first ETH directly from the wallet (link:https://metamask.io/[Metamask], link:https://trustwallet.com/[TrustWallet] etc...)
+** If you’re looking to hold some serious value, we recommend a hardware wallet as these are the most secure (link:https://www.ledger.com/[ledger], link:https://trezor.io/[Trezor] etc...)
+
+***
+== ENS (Ethereum Name Service)
+
+** connect to the ENS Dapps with your ETH wallet and create an ENS name (buy your ENS for few years if the gas fees are high) link:https://www.coingecko.com/buzz/coingecko-guide-to-ethereum-name-service-ens/[Everything you should know about ENS]
+
+== Create SSH key
+
+** on Windows : link:https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement[Create SSH Windows]
+
+** on MAC: link:https://docs.typo3.org/m/typo3/guide-contributionworkflow/master/en-us/Appendix/OSX/SSHKeyOSX.html[Create SSH MAC]
+
+***
+
+== Configuring git to use SSH key 
+
+** link:https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent[SSH GIT]
+
+***
+
+== Create GPG key 
+
+* for email address that will be used for commits and registered in GitHub. 
+
+* Keybase can be used for this. But users should end up with a working GPGSuite install and Keybase referencing the same key. Check the paragraph #5
+
+***
+
+== Configuring git to use new GPG key 
+
+** link:https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work[Git new GPG key] 
+** All commits must be signed with a PGP / GPG key.
+** Gitkraken - Vscode will configure this for you if you choose to use it (check the )
+** You can find instructions on how to configure git to sign your commits with a PGP key on Paragraph #5.4 - #5.5
+
+***
+
+== Uploading GPG public key to GitHub
+
+** link:https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key[Generating new GPG KEY] 
+** link:https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account[Adding new GPG Key Github]
+
+== Configuring git with user email address that is registered in GitHub 
+
+** link:https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/setting-your-commit-email-address[Git email @ registered in Github ]
+
+== Configuring git with user name (people can use any name they want, just pick on and set it)
+
+[source,git]
+----
+git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"
+----

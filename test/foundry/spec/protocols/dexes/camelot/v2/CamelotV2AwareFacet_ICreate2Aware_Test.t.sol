@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: BUSL-1.1
+pragma solidity ^0.8.0;
+
+import { console } from "forge-std/console.sol";
+
+// import { Test_Crane } from "../../../../../../../contracts/test/Test_Crane.sol";
+// import { Script_Crane } from "../../../../../../../contracts/script/Script_Crane.sol";
+// Base test contracts
+import { TestBase_ICreate2Aware } from "../../../../../../../contracts/test/bases/TestBase_ICreate2Aware.sol";
+// import { TestBase_Indexedex } from "contracts/test/bases/TestBase_Indexedex.sol";
+
+// Target contracts
+import { ICreate2Aware } from "../../../../../../../contracts/interfaces/ICreate2Aware.sol";
+import { CamelotV2AwareFacet } from "../../../../../../../contracts/protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
+// import "indexedex/constants/Indexedex_INITCODE.sol";
+import { CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH } from "../../../../../../../contracts/constants/CraneINITCODE.sol";
+
+contract CamelotV2AwareFacet_ICreate2Aware_Test is TestBase_ICreate2Aware {
+
+    CamelotV2AwareFacet public camelotV2AwareFacetInstance;
+
+    address controlOrigin_;
+    bytes32 controlInitCodeHash_;
+    bytes32 controlSalt_;
+
+    function setUp() public override(TestBase_ICreate2Aware) {
+        super.setUp();
+        camelotV2AwareFacetInstance = camelotV2AwareFacet();
+
+        controlOrigin_ = address(factory());
+        controlInitCodeHash_ = CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH;
+        controlSalt_ = keccak256(abi.encode(type(CamelotV2AwareFacet).name));
+    }
+
+    function run() public override(TestBase_ICreate2Aware) {
+        // super.run(); // Comment out for performance - don't deploy unnecessary components
+    }
+
+    // --- Implementation of TestBase_ICreate2Aware ---
+
+    function create2TestInstance() public view override returns (ICreate2Aware) {
+        return ICreate2Aware(address(camelotV2AwareFacetInstance));
+    }
+
+    function controlOrigin() public view override returns (address) {
+        return controlOrigin_;
+    }
+
+    function controlInitCodeHash() public view override returns (bytes32) {
+        return controlInitCodeHash_;
+    }
+
+    function controlSalt() public view override returns (bytes32) {
+        return controlSalt_;
+    }
+} 
