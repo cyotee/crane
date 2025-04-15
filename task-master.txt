@@ -1,0 +1,118 @@
+ |_   _|_ _ ___| | __ |  \/  | __ _ ___| |_ ___ _ __     / \  |_ _|
+   | |/ _` / __| |/ / | |\/| |/ _` / __| __/ _ \ '__|   / _ \  | | 
+   | | (_| \__ \   <  | |  | | (_| \__ \ ||  __/ |     / ___ \ | | 
+   |_|\__,_|___/_|\_\ |_|  |_|\__,_|___/\__\___|_|    /_/   \_\___|
+                                                                   
+by https://x.com/eyaltoledano
+╭───────────────────────────────────╮
+│                                   │
+│   Initializing your new project   │
+│                                   │
+╰───────────────────────────────────╯
+
+===== DEBUG: INITIALIZE PROJECT OPTIONS RECEIVED =====
+Full options object: {"version":"0.1.0"}
+options.yes: undefined
+options.name: undefined
+==================================================
+Skip prompts determined: undefined
+ℹ️ Required options not provided, proceeding with prompts.
+Enter project name: crane
+Enter project description: Solidity Diamond Proxy based development framework
+Enter project version (default: 1.0.0): 0.0.1
+Enter your name: cyotee doge
+Add shell aliases for task-master? (Y/n): y
+
+Project settings:
+Name: crane
+Description: Solidity Diamond Proxy based development framework
+Version: 0.0.1
+Author: cyotee doge
+Add shell aliases (so you can use "tm" instead of "task-master"): Yes
+
+Do you want to continue with these settings? (Y/n): y
+ℹ️ Initializing project in /Users/cyotee/Development/github-cyotee/indexedex/lib/crane
+ℹ️ Created directory: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.cursor/rules
+ℹ️ Created directory: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/scripts
+ℹ️ Created directory: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/tasks
+ℹ️ package.json already exists, merging content...
+✅ Updated package.json with required fields
+ℹ️ Setting up MCP configuration for Cursor integration...
+✅ Created MCP configuration file for Cursor integration
+ℹ️ MCP server will use the installed task-master-ai package
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.env.example
+ℹ️ /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.gitignore already exists, merging content...
+✅ Updated /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.gitignore with additional entries
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.cursor/rules/dev_workflow.mdc
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.cursor/rules/taskmaster.mdc
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.cursor/rules/cursor_rules.mdc
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.cursor/rules/self_improve.mdc
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/.windsurfrules
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/scripts/dev.js
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/scripts/README.md
+ℹ️ Created file: /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/scripts/example_prd.txt
+ℹ️ /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/README.md already exists
+✅ Created /Users/cyotee/Development/github-cyotee/indexedex/lib/crane/README-task-master.md (preserved original README.md)
+ ╭─────────────────────────────╮
+ │ Installing dependencies...  │
+ ╰─────────────────────────────╯
+npm WARN EBADENGINE Unsupported engine {
+npm WARN EBADENGINE   package: 'undici@7.8.0',
+npm WARN EBADENGINE   required: { node: '>=20.18.1' },
+npm WARN EBADENGINE   current: { node: 'v20.9.0', npm: '10.1.0' }
+npm WARN EBADENGINE }
+npm WARN deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm WARN deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm WARN deprecated glob@5.0.15: Glob versions prior to v9 are no longer supported
+npm WARN deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm WARN deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+
+added 762 packages, and audited 763 packages in 33s
+
+163 packages are looking for funding
+  run `npm fund` for details
+
+12 low severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+✅ Dependencies installed successfully!
+
+   ╔════════════════════════════════════════════╗
+   ║                                            ║
+   ║     ____                              _    ║
+   ║    / ___| _   _  ___ ___ ___  ___ ___| |   ║
+   ║    \___ \| | | |/ __/ __/ _ \/ __/ __| |   ║
+   ║     ___) | |_| | (_| (_|  __/\__ \__ \_|   ║
+   ║    |____/ \__,_|\___\___\___||___/___(_)   ║
+   ║                                            ║
+   ║   Project initialized successfully!        ║
+   ║                                            ║
+   ╚════════════════════════════════════════════╝
+
+✅ Added Task Master aliases to /Users/cyotee/.zshrc
+ℹ️ To use the aliases in your current terminal, run: source /Users/cyotee/.zshrc
+
+   ╭──────────────────────────────────────────────────────────── Getting Started ────────────────────────────────────────────────────────────╮
+   │                                                                                                                                         │
+   │   Things you can now do:                                                                                                                │
+   │                                                                                                                                         │
+   │   1. Rename .env.example to .env and add your ANTHROPIC_API_KEY and PERPLEXITY_API_KEY                                                  │
+   │   2. Discuss your idea with AI, and once ready ask for a PRD using the example_prd.txt file, and save what you get to scripts/PRD.txt   │
+   │   3. Ask Cursor Agent to parse your PRD.txt and generate tasks                                                                          │
+   │      └─ You can also run task-master parse-prd <your-prd-file.txt>                                                                      │
+   │   4. Ask Cursor to analyze the complexity of your tasks                                                                                 │
+   │   5. Ask Cursor which task is next to determine where to start                                                                          │
+   │   6. Ask Cursor to expand any complex tasks that are too large or complex.                                                              │
+   │   7. Ask Cursor to set the status of a task, or multiple tasks. Use the task id from the task lists.                                    │
+   │   8. Ask Cursor to update all tasks from a specific task id based on new learnings or pivots in your project.                           │
+   │   9. Ship it!                                                                                                                           │
+   │                                                                                                                                         │
+   │   * Review the README.md file to learn how to use other commands via Cursor Agent.                                                      │
+   │                                                                                                                                         │
+   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
