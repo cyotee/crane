@@ -10,7 +10,7 @@ import '../../../../tokens/erc20/interfaces/IERC20.sol';
 import './interfaces/ICamelotV2Router.sol';
 import './libraries/UniswapV2Library.sol';
 import './libraries/SafeMath.sol';
-import '../../../tokens/wrappers/weth9/interfaces/IWETH.sol';
+import '../../../tokens/wrappers/weth/v9/interfaces/IWETH.sol';
 
 contract CamelotRouter is ICamelotV2Router {
   using SafeMath for uint;

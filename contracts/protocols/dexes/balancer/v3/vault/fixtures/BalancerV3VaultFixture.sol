@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {Fixture} from "../../../../../../fixture/Fixture.sol";
+import {Fixture} from "../../../../../../fixtures/Fixture.sol";
 
 import { Vault } from "@balancer-labs/v3-vault/contracts/Vault.sol";
 import { VaultExtension } from "@balancer-labs/v3-vault/contracts/VaultExtension.sol";
@@ -26,15 +26,27 @@ contract BalancerV3VaultFixture is Fixture, VaultContractsDeployer {
 
     VaultFactory vaultFactory;
 
-    function initialize(
-        IAuthorizer authorizer_,
-        IProtocolFeeController feeController_
-    ) public {
-        authorizer = authorizer_;
-        feeController = feeController_;
+    function builderKey_BalancerV3Vault() public pure returns (string memory) {
+        return "balancerV3Vault";
     }
 
-    function deployVaultFactory() public {
+    function initialize() public override {
+        // super.initialize();
+        initialize(
+            address(authorizer) != address(0) ? authorizer : deployBasicAuthorizerMock()
+        );
+    }
+
+    function initialize(
+        IAuthorizer authorizer_
+    ) public {
+        authorizer = authorizer_;
+    }
+
+    function deployVaultFactory(
+        IProtocolFeeController feeController_
+    ) public {
+        feeController = feeController_;
         vaultFactory = deployVaultFactory(
             authorizer,
             90 days,
