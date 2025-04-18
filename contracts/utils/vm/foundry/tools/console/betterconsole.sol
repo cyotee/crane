@@ -24,6 +24,24 @@ library betterconsole {
         console.log(logMsg);
     }
 
+    function log(
+        string memory logMsg,
+        string memory logMsg2,
+        string memory logMsg3
+    ) public pure {
+        console.log(string.concat(logMsg, logMsg2, logMsg3));
+    }
+
+    
+    function log(
+        string memory logMsg,
+        uint256 num,
+        address addr
+    ) public pure {
+        console.log(string.concat(logMsg, num._toString(), addr._toString()));
+    }
+
+
     function logBytes32(bytes32 value) public pure {
         console.logBytes32(value);
     }

@@ -9,7 +9,7 @@ import {
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 import { BasePoolFactory } from "@balancer-labs/v3-pool-utils/contracts/BasePoolFactory.sol";
 
-import { ConstantSumPool } from "../../../../pools/balancer/v3/ConstantSumPool.sol";
+import { ConstantSumPool } from "../../../../../pools/balancer/v3/const-sum/ConstantSumPool.sol";
 
 /**
  * @title Constant Sum Factory

@@ -18,8 +18,8 @@ import { ArrayHelpers } from "@balancer-labs/v3-solidity-utils/contracts/test/Ar
 import { BalancerPoolToken } from "@balancer-labs/v3-vault/contracts/BalancerPoolToken.sol";
 import { BaseVaultTest } from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { ConstantSumPool } from "../../../../../contracts/pools/balancer/v3/ConstantSumPool.sol";
-import { ConstantSumFactory } from "../../../../../contracts/factories/balancer/v3/pools/ConstantSumFactory.sol";
+import { ConstantSumPool } from "../../../../../contracts/pools/balancer/v3/const-sum/ConstantSumPool.sol";
+import { ConstantSumFactory } from "../../../../../contracts/factories/balancer/v3/pools/const-sum/ConstantSumFactory.sol";
 
 contract ConstantSumFactoryTest is BaseVaultTest {
     using CastingHelpers for address[];
