@@ -8,8 +8,15 @@ bytes16 constant HEX_SYMBOLS = "0123456789abcdef";
 
 uint8 constant FUNCTION_SELECTOR_LENGTH = 4;
 
+bytes32 constant ZERO_BYTES32 = 0x0000000000000000000000000000000000000000000000000000000000000000;
+bytes32 constant ONE_BYTES32 = 0x0000000000000000000000000000000000000000000000000000000000000001;
+
+address constant ZERO_ADDRESS = address(0);
+
 uint8 constant ADDRESS_LENGTH = 20;
 
+// Raw token balances are stored in half a slot, so the max is uint128.
+uint256 constant MAX_UINT128 = type(uint128).max;
 uint256 constant MAX_UINT256 = type(uint256).max;
 int256 constant MAX_INT256 = type(int256).max;
 
