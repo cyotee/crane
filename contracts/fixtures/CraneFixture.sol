@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import {betterconsole as console} from "../utils/vm/foundry/tools/console/betterconsole.sol";
 
 import {LOCAL} from "../networks/LOCAL.sol";
 
