@@ -44,3 +44,7 @@ tasks/
 .cursor/rules/_*.mdc
 
 .cursor/mcp.json
+
+out/
+
+cache_forge/

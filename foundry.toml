@@ -4,3 +4,47 @@ out = 'out'
 libs = ['node_modules', 'lib']
 test = 'test'
 cache_path  = 'cache_forge'
+# fs_permissions = [{ access = "read", path = "./"}, { access = "write", path = "./"}]
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "crane/=lib/crane/contracts/",
+    "weth/=lib/canonical-weth/contracts",
+    "bal3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/",
+    "bal3-vault/=lib/balancer-v3-monorepo/pkg/vault/contracts/",
+    "bal3-utils/=lib/balancer-v3-monorepo/pkg/standalone-utils/contracts/",
+    "bal3-solUtils/=lib/balancer-v3-monorepo/pkg/solidity-utils/contracts/",
+    "bal3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/contracts/",
+    "bal3-hooks/=lib/balancer-v3-monorepo/pkg/pool-hooks/contracts/",
+    "camelot-core/=lib/core/contracts/",
+    "camelot-periphery/=lib/periphery/contracts/",
+    "balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/",
+    "balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/contracts/",
+    "balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/contracts/",
+    
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
+    "@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/",
+    "@balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/",
+    "@balancer-labs/v3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/",
+    "@crane/=lib/crane/contracts/",
+
+    # "crane-core=/lib/crane/lib/crane-cor/src/",
+    # "indexedDefi/=lib/indexedDefi/src/",
+    # "daosys/=lib/daosys/contracts/",
+    # "prb-math/=lib/prb-math/src/",
+    # "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts/",
+    # "@abdk-math/=lib/abdk-libraries-solidity/"
+]
+[rpc_endpoints]
+local = "http://127.0.0.1:8545"
+mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
+ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
+apeChain_rpc = "https://rpc.apechain.com"
+apeChain_drpc = "https://apechain.drpc.org"
+apeChain_histori_rpc = "https://node.histori.xyz/apechain-mainnet/${HISTORI_PROJECT_ID}"
+apeChain_curtis_rpc = "https://rpc.curtis.apechain.com"
+apeChain_curtis_caldera_rpc = "https://curtis.rpc.caldera.xyz/http"
+payload = "https://rpc.payload.de"
