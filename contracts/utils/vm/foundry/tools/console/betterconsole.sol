@@ -104,6 +104,30 @@ library betterconsole {
         log(DIV);
     }
 
+    function log(
+        string memory logMsg1,
+        address addr1,
+        string memory logMsgs2,
+        address addr2,
+        string memory logMsgs3,
+        uint256 num
+    ) public pure {
+        console.log(string.concat(logMsg1, addr1._toString(), logMsgs2, addr2._toString(), logMsgs3, num._toString()));
+    }
+
+    function log(
+        string memory logMsg1,
+        address addr1,
+        string memory logMsgs2,
+        address addr2,
+        string memory logMsgs3,
+        uint256 num,
+        string memory logMsg4,
+        address addr3
+    ) public pure {
+        console.log(string.concat(logMsg1, addr1._toString(), logMsgs2, addr2._toString(), logMsgs3, num._toString(), logMsg4, addr3._toString()));
+    }
+
     /* ---------------------------------------------------------------------- */
     /*                            Function Logging                            */
     /* ---------------------------------------------------------------------- */

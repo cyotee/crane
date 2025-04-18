@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { betterconsole as console } from "crane/utils/vm/foundry/tools/console/betterconsole.sol";
+import { betterconsole as console } from "../../../../../utils/vm/foundry/tools/console/betterconsole.sol";
 
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
@@ -81,9 +81,10 @@ contract BalancerPoolToken is IERC20, IERC20Metadata, IERC20Permit, IRateProvide
     }
 
     /// @inheritdoc IERC20
-    function transfer(address to, uint256 amount) external returns (bool) {
-        // Vault will perform the transfer and call emitTransfer to emit the event from this contract.
+    function transfer(address to, uint256 amount) public virtual override returns (bool) {
+        console.log("BalancerPoolToken: Transfer from", msg.sender, "to", to, "amount", amount);
         _vault.transfer(msg.sender, to, amount);
+        console.log("BalancerPoolToken: Transfer completed successfully");
         return true;
     }
 
@@ -100,9 +101,15 @@ contract BalancerPoolToken is IERC20, IERC20Metadata, IERC20Permit, IRateProvide
     }
 
     /// @inheritdoc IERC20
-    function transferFrom(address from, address to, uint256 amount) external returns (bool) {
-        // Vault will perform the transfer and call emitTransfer to emit the event from this contract.
-        _vault.transferFrom(msg.sender, from, to, amount);
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public virtual override returns (bool) {
+        console.log("BalancerPoolToken: TransferFrom", from, "to", to, "amount", amount, "spender", msg.sender);
+        _vault.transferFrom(from, to, amount, msg.sender);
+        // _vault.transferFrom(msg.sender, from, to, amount);
+        console.log("BalancerPoolToken: TransferFrom completed successfully");
         return true;
     }
 
@@ -135,21 +142,34 @@ contract BalancerPoolToken is IERC20, IERC20Metadata, IERC20Permit, IRateProvide
         bytes32 r,
         bytes32 s
     ) public virtual {
+        console.log("BalancerPoolToken: Processing permit for owner", owner);
+        console.log("BalancerPoolToken: Spender", spender);
+        console.log("BalancerPoolToken: Amount", amount);
+        console.log("BalancerPoolToken: Deadline", deadline);
+        
         // solhint-disable-next-line not-rely-on-time
         if (block.timestamp > deadline) {
+            console.log("BalancerPoolToken: Permit expired. Current timestamp:", block.timestamp);
             revert ERC2612ExpiredSignature(deadline);
         }
 
         bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, amount, _useNonce(owner), deadline));
+        console.log("BalancerPoolToken: Struct hash", uint256(structHash));
 
         bytes32 hash = _hashTypedDataV4(structHash);
+        console.log("BalancerPoolToken: EIP712 hash", uint256(hash));
 
         address signer = ECDSA.recover(hash, v, r, s);
+        console.log("BalancerPoolToken: Recovered signer", signer);
+        
         if (signer != owner) {
+            console.log("BalancerPoolToken: Invalid signer. Expected:", owner);
             revert ERC2612InvalidSigner(signer, owner);
         }
 
+        console.log("BalancerPoolToken: Signature verified, approving spender");
         _vault.approve(owner, spender, amount);
+        console.log("BalancerPoolToken: Permit completed successfully");
     }
 
     // @inheritdoc IERC20Permit
