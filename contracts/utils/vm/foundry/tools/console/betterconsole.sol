@@ -128,6 +128,14 @@ library betterconsole {
         console.log(string.concat(logMsg1, addr1._toString(), logMsgs2, addr2._toString(), logMsgs3, num._toString(), logMsg4, addr3._toString()));
     }
 
+    function log(
+        string memory logMsg1,
+        uint256 num1,
+        bool bool1
+    ) public pure {
+        console.log(string.concat(logMsg1, num1._toString(), bool1 ? "true" : "false"));
+    }
+
     /* ---------------------------------------------------------------------- */
     /*                            Function Logging                            */
     /* ---------------------------------------------------------------------- */
