@@ -107,8 +107,7 @@ contract BalancerPoolToken is IERC20, IERC20Metadata, IERC20Permit, IRateProvide
         uint256 amount
     ) public virtual override returns (bool) {
         console.log("BalancerPoolToken: TransferFrom", from, "to", to, "amount", amount, "spender", msg.sender);
-        _vault.transferFrom(from, to, amount, msg.sender);
-        // _vault.transferFrom(msg.sender, from, to, amount);
+        _vault.transferFrom(msg.sender, from, to, amount);
         console.log("BalancerPoolToken: TransferFrom completed successfully");
         return true;
     }
