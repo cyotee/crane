@@ -1,12 +1,12 @@
 # File Index
 
 ## Solidity Files
-./test/spec/pools/balancer/v3/ConstantSumFactory.t.sol
-./test/spec/pools/balancer/v3/ConstantSumPool.t.sol
-./test/spec/hooks/balancer/v3/ExitFeeHookExample.t.sol
-./test/spec/protocols/dexes/balancer/v3/vault/VaultFactory.t.sol
+./test/foundry/spec/test/stubs/counter/Counter.t.sol
+./test/foundry/spec/protocols/balancer/v3/scaffold-eth/pools/ConstantSumFactory.t.sol
+./test/foundry/spec/protocols/balancer/v3/scaffold-eth/pools/ConstantSumPool.t.sol
+./test/foundry/spec/protocols/balancer/v3/scaffold-eth/hooks/ExitFeeHookExample.t.sol
+./test/foundry/spec/protocols/balancer/v3/vault/VaultFactory.t.sol
 ./contracts/Lock.sol
-./contracts/pools/balancer/v3/ConstantSumPool.sol
 ./contracts/test/behavior/CraneBehaviors.sol
 ./contracts/test/behavior/Behavior.sol
 ./contracts/test/behavior/interfaces/IBehavior.sol
@@ -17,6 +17,7 @@
 ./contracts/test/stubs/greeter/storage/GreeterStorage.sol
 ./contracts/test/stubs/greeter/libs/GreeterRepo.sol
 ./contracts/test/stubs/greeter/interfaces/IGreeter.sol
+./contracts/test/stubs/counter/Counter.sol
 ./contracts/test/comparators/Comparator.sol
 ./contracts/test/comparators/erc2535/FacetsComparator.sol
 ./contracts/test/comparators/sets/AddressSetComparator.sol
@@ -123,9 +124,6 @@
 ./contracts/networks/LOCAL.sol
 ./contracts/networks/ethereum/ETHEREUM_MAIN.sol
 ./contracts/networks/ethereum/ETHEREUM_SEPOLIA.sol
-./contracts/hooks/balancer/v3/ExitFeeHookExample.sol
-./contracts/hooks/balancer/v3/VeBALFeeDiscountHookExample.sol
-./contracts/hooks/balancer/v3/LotteryHookExample.sol
 ./contracts/factories/create2/aware/targets/Create2AwareTarget.sol
 ./contracts/factories/create2/aware/behaviors/ICreate2Aware_Behavior.sol
 ./contracts/factories/create2/aware/interfaces/ICreate2Aware.sol
@@ -144,7 +142,6 @@
 ./contracts/factories/create2/callback/diamondPkg/interfaces/IPostDeployAccountHook.sol
 ./contracts/factories/create2/callback/interfaces/ICreate2CallbackContract.sol
 ./contracts/factories/create2/callback/interfaces/ICreate2CallbackFactory.sol
-./contracts/factories/balancer/v3/pools/ConstantSumFactory.sol
 ./contracts/fixtures/CraneFixture.sol
 ./contracts/fixtures/Fixture.sol
 ./contracts/fixtures/interfaces/IFixture.sol
@@ -169,6 +166,13 @@
 ./contracts/tokens/erc5115/interfaces/IERC5115.sol
 ./contracts/tokens/erc721/interfaces/IERC721Errors.sol
 ./contracts/tokens/erc1155/interfaces/IERC1155Errors.sol
+./contracts/protocols/dexes/balancer/v3/scaffold-eth/pools/const-sum/ConstantSumPool.sol
+./contracts/protocols/dexes/balancer/v3/scaffold-eth/pools/const-sum/ConstantSumFactory.sol
+./contracts/protocols/dexes/balancer/v3/scaffold-eth/hooks/ExitFeeHookExample.sol
+./contracts/protocols/dexes/balancer/v3/scaffold-eth/hooks/VeBALFeeDiscountHookExample.sol
+./contracts/protocols/dexes/balancer/v3/scaffold-eth/hooks/LotteryHookExample.sol
+./contracts/protocols/dexes/balancer/v3/pool-utils/BasePoolFactory.sol
+./contracts/protocols/dexes/balancer/v3/vault/BalancerPoolToken.sol
 ./contracts/protocols/dexes/balancer/v3/vault/fixtures/BalancerV3VaultFixture.sol
 ./contracts/protocols/dexes/camelot/v2/UniswapV2ERC20.sol
 ./contracts/protocols/dexes/camelot/v2/libraries/UniswapV2Library.sol
@@ -1560,6 +1564,10 @@
 ./.cursor/templates/template-arch.md
 ./.cursor/templates/template-story.md
 ./docs/workflow-rules.md
+./docs/protocols/dexes/balancer/v3/balancer-v3-pool-testing-guide.md
+./docs/protocols/dexes/balancer/v3/balancer-v3-test-suite-overview.md
+./docs/protocols/dexes/balancer/v3/balancer-v3-test-patterns-reference.md
+./docs/protocols/dexes/balancer/v3/balancer-v3-testing-overview.md
 ./README-task-master.md
 ./xnotes/custom-agents.md
 ./xnotes/project-idea-prompt.md
