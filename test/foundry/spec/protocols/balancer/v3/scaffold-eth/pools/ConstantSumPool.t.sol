@@ -21,8 +21,8 @@ import { PoolHooksMock } from "@balancer-labs/v3-vault/contracts/test/PoolHooksM
 import { BasePoolTest } from "@balancer-labs/v3-vault/test/foundry/utils/BasePoolTest.sol";
 import { PoolFactoryMock } from "@balancer-labs/v3-vault/contracts/test/PoolFactoryMock.sol";
 
-import { ConstantSumFactory } from "../../../../../contracts/factories/balancer/v3/pools/const-sum/ConstantSumFactory.sol";
-import { ConstantSumPool } from "../../../../../contracts/pools/balancer/v3/const-sum/ConstantSumPool.sol";
+import { ConstantSumFactory } from "../../../../../../../../contracts/protocols/dexes/balancer/v3/scaffold-eth/pools/const-sum/ConstantSumFactory.sol";
+import { ConstantSumPool } from "../../../../../../../../contracts/protocols/dexes/balancer/v3/scaffold-eth/pools/const-sum/ConstantSumPool.sol";
 
 // contract ConstantSumPoolTest is BasePoolTest {
 //     using CastingHelpers for address[];

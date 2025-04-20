@@ -23,7 +23,7 @@ import { BaseVaultTest } from "@balancer-labs/v3-vault/test/foundry/utils/BaseVa
 import { PoolFactoryMock } from "@balancer-labs/v3-vault/contracts/test/PoolFactoryMock.sol";
 import { PoolMock } from "@balancer-labs/v3-vault/contracts/test/PoolMock.sol";
 
-import { ExitFeeHookExample } from "../../../../../contracts/hooks/balancer/v3/ExitFeeHookExample.sol";
+import { ExitFeeHookExample } from "../../../../../../../../contracts/protocols/dexes/balancer/v3/scaffold-eth/hooks/ExitFeeHookExample.sol";
 
 // contract ExitFeeHookExampleTest is BaseVaultTest {
 //     using CastingHelpers for address[];
