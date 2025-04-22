@@ -10,17 +10,9 @@ remappings = [
     "forge-std/=lib/forge-std/src/",
     "crane/=lib/crane/contracts/",
     "weth/=lib/canonical-weth/contracts",
-    "bal3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/",
-    "bal3-vault/=lib/balancer-v3-monorepo/pkg/vault/contracts/",
-    "bal3-utils/=lib/balancer-v3-monorepo/pkg/standalone-utils/contracts/",
-    "bal3-solUtils/=lib/balancer-v3-monorepo/pkg/solidity-utils/contracts/",
-    "bal3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/contracts/",
-    "bal3-hooks/=lib/balancer-v3-monorepo/pkg/pool-hooks/contracts/",
     "camelot-core/=lib/core/contracts/",
     "camelot-periphery/=lib/periphery/contracts/",
-    "balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/contracts/",
-    "balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/contracts/",
-    "balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/contracts/",
+
     
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
     "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
