@@ -3,6 +3,10 @@ pragma solidity ^0.8.0;
 
 interface ICamelotV2Router {
 
+  function factory() external view returns (address);
+
+  function WETH() external view returns (address);
+
   function addLiquidity(
     address tokenA,
     address tokenB,
@@ -109,8 +113,11 @@ interface ICamelotV2Router {
     uint deadline
   ) external;
 
-  function getPair(address token1, address token2)
-  external view returns (address);
+  function getPair(address token1, address token2) external view returns (address);
 
+  function quote(uint amountA, uint reserveA, uint reserveB) external pure returns (uint amountB);
+
+
+  function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
 
 }
