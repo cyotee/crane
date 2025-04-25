@@ -118,6 +118,9 @@ interface ICamelotV2Router {
   function quote(uint amountA, uint reserveA, uint reserveB) external pure returns (uint amountB);
 
 
-  function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
+    function getAmountsOut(
+        uint amountIn,
+        address[] calldata path
+    ) external view returns (uint[] memory amounts);
 
 }

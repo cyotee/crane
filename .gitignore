@@ -48,3 +48,5 @@ tasks/
 out/
 
 cache_forge/
+
+*.code-workspace

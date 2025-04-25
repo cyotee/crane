@@ -249,45 +249,6 @@ library ConstProdUtils {
      * @param saleFeePercent The swap fee in PPHK, i.e 0.5% == 500.
      * @return saleProceeds The proceeds of the swap.
      */
-    // function _saleQuote(
-    //     uint256 amountIn,
-    //     uint256 reserveIn,
-    //     uint256 reserveOut,
-    //     uint256 saleFeePercent
-    // ) internal pure returns (uint) {
-    //     // console.log("=== _saleQuote START ===");
-    //     // console.log("Input params - amountIn:", amountIn);
-    //     // console.log("Input params - reserveIn:", reserveIn);
-    //     // console.log("Input params - reserveOut:", reserveOut);
-    //     // console.log("Input params - saleFeePercent:", saleFeePercent);
-        
-    //     uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent);
-    //     // console.log("Intermediate - amountInWithFee:", amountInWithFee);
-        
-    //     uint256 numerator = amountInWithFee * reserveOut;
-    //     // console.log("Intermediate - numerator:", numerator);
-        
-    //     uint256 denominator = (reserveIn * FEE_DENOMINATOR) + amountInWithFee;
-    //     // uint256 denominator = (reserveIn) + amountInWithFee;
-    //     // console.log("Intermediate - denominator:", denominator);
-        
-    //     uint256 result = numerator / denominator;
-    //     // console.log("Final result:", result);
-    //     // console.log("=== _saleQuote END ===");
-        
-    //     return result;
-    // }
-    // function _saleQuote(
-    //     uint256 amountIn,
-    //     uint256 reserveIn,
-    //     uint256 reserveOut,
-    //     uint256 saleFeePercent
-    // ) internal pure returns (uint) {
-    //     uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent) / FEE_DENOMINATOR;
-    //     uint256 numerator = amountInWithFee * reserveOut;
-    //     uint256 denominator = reserveIn + amountInWithFee;
-    //     return numerator / denominator;
-    // }
 function _saleQuote(
     uint256 amountIn,
     uint256 reserveIn,
@@ -339,56 +300,37 @@ function _saleQuote(
     /**
      * @dev Calculates the amount of token to sell to effect a purchase of a desired amount of the other token.
      */
+    // function _purchaseQuote(
+    //     uint256 amountOut, 
+    //     // uint256 _reserve0,
+    //     uint256 reserveIn,
+    //     // uint256 _reserve1,
+    //     uint256 reserveOut,
+    //     uint256 feePercent
+    // ) internal pure returns (uint amountIn) {
+    //     // amountIn = amountIn * (FEE_DENOMINATOR - feePercent);
+    //     // amountOut = (amountIn * reserveOut)
+    //     // / ((reserveIn * FEE_DENOMINATOR) + amountIn);
+
+    //     // amountIn = ((reserveIn * amountOut) * FEE_DENOMINATOR)
+    //     // / (((reserveOut * feePercent) - (amountOut * feePercent))) * FEE_DENOMINATOR;
+    //     amountIn = ((reserveIn * amountOut) * FEE_DENOMINATOR)
+    //     / (((reserveOut - amountOut) * (FEE_DENOMINATOR - feePercent)));
+    //     amountIn = amountIn + 1;
+    // }
     function _purchaseQuote(
-        uint256 amountOut, 
-        // uint256 _reserve0,
+        uint256 amountOut,
         uint256 reserveIn,
-        // uint256 _reserve1,
         uint256 reserveOut,
         uint256 feePercent
     ) internal pure returns (uint amountIn) {
-        // amountIn = amountIn * (FEE_DENOMINATOR - feePercent);
-        // amountOut = (amountIn * reserveOut)
-        // / ((reserveIn * FEE_DENOMINATOR) + amountIn);
-
-        // amountIn = ((reserveIn * amountOut) * FEE_DENOMINATOR)
-        // / (((reserveOut * feePercent) - (amountOut * feePercent))) * FEE_DENOMINATOR;
-        amountIn = ((reserveIn * amountOut) * FEE_DENOMINATOR)
-        / (((reserveOut - amountOut) * (FEE_DENOMINATOR - feePercent)));
-        amountIn = amountIn + 1;
+        require(amountOut > 0, "Invalid output amount");
+        require(reserveIn > 0 && reserveOut > amountOut, "Insufficient liquidity");
+        uint256 numerator = (reserveIn * amountOut) * FEE_DENOMINATOR;
+        uint256 denominator = (reserveOut - amountOut) * (FEE_DENOMINATOR - feePercent);
+        amountIn = (numerator / denominator) + 1;
     }
 
-    // function _swapDepositSaleAmt(
-    //     uint256 amountIn,
-    //     uint256 saleReserve,
-    //     uint256 feePercent
-    // ) internal pure returns(uint256 saleAmt) {
-    //     // console.log("=== _swapDepositSaleAmt START ===");
-    //     // console.log("Input params - amountIn:", amountIn);
-    //     // console.log("Input params - saleReserve:", saleReserve);
-    //     // console.log("Input params - feePercent:", feePercent);
-        
-    //     uint256 twoMinusFee = 2 * FEE_DENOMINATOR - feePercent;
-    //     uint256 oneMinusFee = 1 * FEE_DENOMINATOR - feePercent;
-    //     // console.log("Intermediate - twoMinusFee:", twoMinusFee);
-    //     // console.log("Intermediate - oneMinusFee:", oneMinusFee);
-        
-    //     // Calculate the square term
-    //     uint256 term1 = twoMinusFee * twoMinusFee * saleReserve * saleReserve;
-    //     // console.log("Intermediate - term1 (squared part 1):", term1);
-        
-    //     uint256 term2 = 4 * oneMinusFee * FEE_DENOMINATOR * amountIn * saleReserve;
-    //     // console.log("Intermediate - term2 (squared part 2):", term2);
-        
-    //     uint256 sqrtTerm = BetterMath._sqrt(term1 + term2);
-    //     // console.log("Intermediate - sqrtTerm (sqrt result):", sqrtTerm);
-        
-    //     saleAmt = (sqrtTerm - (twoMinusFee * saleReserve)) / (2 * oneMinusFee);
-    //     // console.log("Final saleAmt:", saleAmt);
-    //     // console.log("=== _swapDepositSaleAmt END ===");
-        
-    //     return saleAmt;
-    // }
 function _swapDepositSaleAmt(
     uint256 amountIn,
     uint256 saleReserve,
@@ -410,65 +352,6 @@ function _swapDepositSaleAmt(
     /*                          SWAP/DEPOSIT (ZapIn)                          */
     /* ---------------------------------------------------------------------- */
 
-    // function _swapDepositQuote(
-    //     uint256 lpTotalSupply,
-    //     uint256 amountIn,
-    //     uint256 reserveIn,
-    //     uint256 reserveOut,
-    //     uint256 feePercent
-    // ) internal pure returns(uint256 lpAmt) {
-    //     // console.log("=== _swapDepositQuote DETAILED TRACE ===");
-    //     // console.log("Input params - lpTotalSupply:", lpTotalSupply);
-    //     // console.log("Input params - amountIn:", amountIn);
-    //     // console.log("Input params - reserveIn:", reserveIn);
-    //     // console.log("Input params - reserveOut:", reserveOut);
-    //     // console.log("Input params - feePercent:", feePercent);
-        
-    //     // Step 1: Calculate sale amount
-    //     uint256 amtInSaleAmt = amountIn
-    //     ._swapDepositSaleAmt(
-    //         reserveIn,
-    //         feePercent
-    //     );
-    //     // console.log("Step 1: Sale amount calculated:", amtInSaleAmt);
-        
-    //     // Step 2: Calculate opposing token amount from swap
-    //     uint256 opTokenAmtIn = amtInSaleAmt
-    //     ._saleQuote(
-    //         // uint256 amountIn,
-    //         reserveIn,
-    //         reserveOut,
-    //         feePercent
-    //     );
-    //     // console.log("Step 2: Opposing token amount from swap:", opTokenAmtIn);
-        
-    //     // Step 3: Calculate remaining amount after sale
-    //     uint256 amountRemaining = amountIn - amtInSaleAmt;
-    //     // console.log("Step 3: Remaining amount after sale:", amountRemaining);
-        
-    //     // Step 4: Calculate updated reserves after swap
-    //     uint256 newReserveIn = reserveIn + amtInSaleAmt;
-    //     uint256 newReserveOut = reserveOut - opTokenAmtIn;
-    //     // console.log("Step 4: New reserve in after swap:", newReserveIn);
-    //     // console.log("Step 4: New reserve out after swap:", newReserveOut);
-        
-    //     // Step 5: Calculate LP amount from deposit
-    //     lpAmt = amountRemaining
-    //     ._depositQuote(
-    //         // uint256 amountADeposit,
-    //         // uint256 amountBDeposit,
-    //         opTokenAmtIn,
-    //         lpTotalSupply,
-    //         // uint256 lpReserveA,
-    //         newReserveIn,
-    //         // uint256 lpReserveB
-    //         newReserveOut
-    //     );
-    //     // console.log("Step 5: Final LP amount from deposit:", lpAmt);
-    //     // console.log("=== _swapDepositQuote END ===");
-        
-    //     return lpAmt;
-    // }
 function _swapDepositQuote(
     uint256 lpTotalSupply,
     uint256 amountIn,
@@ -492,46 +375,6 @@ function _swapDepositQuote(
     /*                              WITHDRAW/SWAP                             */
     /* ---------------------------------------------------------------------- */
 
-    // /**
-    //  * @dev Calculates the proceeds of a "ZapOut" from a liquidity pool.
-    //  * @dev "ZapOut" being a common term for withdrawing liquidity, then selling one of the toknes into the same pool to settle with only the other token.
-    //  * @param ownedLPAmount The amount of LP tokens owned.
-    //  * @param lpTotalSupply The total supply of LP tokens.
-    //  * @param exitTokenTotalReserve The total reserve of the exit token.
-    //  * @param opposingTokenTotalReserve The total reserve of the opposing token.
-    //  * @param opTokenFeePercent The swap fee in PPHK, i.e 0.5% == 500.
-    //  * @return exitAmount The proceeds of the "ZapOut".
-    //  */
-    // function _withdrawSwapQuote(
-    //     uint256 ownedLPAmount,
-    //     uint256 lpTotalSupply,
-    //     uint256 exitTokenTotalReserve,
-    //     uint256 opposingTokenTotalReserve,
-    //     uint256 opTokenFeePercent
-    // ) internal pure returns(uint256 exitAmount) {
-    //     (
-    //         uint256 exitTokenOwnedReserve,
-    //         uint256 opposingTokenOwnedReserve
-    //     ) = ownedLPAmount._withdrawQuote(
-    //         // uint256 ownedLPAmount,
-    //         // uint256 lpTotalSupply,
-    //         lpTotalSupply,
-    //         // uint256 totalReserveA,
-    //         exitTokenTotalReserve,
-    //         // uint256 totalReserveB
-    //         opposingTokenTotalReserve
-    //     );
-    //     exitAmount = opposingTokenOwnedReserve
-    //     ._saleQuote(
-    //         // uint256 amountIn,
-    //         // uint256 reserveIn,
-    //         opposingTokenTotalReserve - opposingTokenOwnedReserve,
-    //         // uint256 reserveOut,
-    //         exitTokenTotalReserve  - exitTokenOwnedReserve,
-    //         // uint256 feePercent
-    //         opTokenFeePercent
-    //     );
-    // }
 function _withdrawSwapQuote(
     uint256 ownedLPAmount,
     uint256 lpTotalSupply,
