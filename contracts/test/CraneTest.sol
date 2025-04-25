@@ -10,6 +10,8 @@ import {
     FoundryVM
 } from "../utils/vm/foundry/FoundryVM.sol";
 
+import {BetterFuzzing} from "./fuzzing/BetterFuzzing.sol";
+
 import {
     Fixture
 } from "../fixtures/Fixture.sol";
@@ -57,6 +59,7 @@ CraneFixture,
 Script,
 CraneScript,
 CraneBehaviors,
+BetterFuzzing,
 Test
 {
     function initialize() public virtual
