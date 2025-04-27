@@ -16,6 +16,40 @@ library ConstProdUtils {
     uint256 constant _MINIMUM_LIQUIDITY = 10**3;
 
     // uint256 constant FEE_DENOMINATOR = 100_000;
+
+    /* ---------------------------------------------------------------------- */
+    /*                                Reserves                                */
+    /* ---------------------------------------------------------------------- */
+
+    function _sortReserves(
+        address knownToken,
+        address token0,
+        uint256 reserve0,
+        uint256 reserve1
+    ) internal pure returns(
+        uint256 knownReserve,
+        uint256 unknownReserve
+    ) {
+        return knownToken == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
+    }
+    
+    function _sortReserves(
+        address knownToken,
+        address token0,
+        uint256 reserve0,
+        uint256 reserve0Fee,
+        uint256 reserve1,
+        uint256 reserve1Fee
+    ) internal pure returns(
+        uint256 knownReserve,
+        uint256 knownReserveFee,
+        uint256 unknownReserve,
+        uint256 unknownReserveFee
+    ) {
+        return knownToken == token0
+            ? (reserve0, reserve0Fee, reserve1, reserve1Fee)
+            : (reserve1, reserve1Fee, reserve0, reserve0Fee);
+    }
     
     /* ---------------------------------------------------------------------- */
     /*                                 Deposit                                */
