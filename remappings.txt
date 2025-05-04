@@ -7,7 +7,7 @@ forge-std/=lib/forge-std/src/
 @camelot-periphery/=lib/periphery/contracts/
 
 
-@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+@openzeppelin/=lib/openzeppelin-contracts/
 
 @balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/
 @balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/
