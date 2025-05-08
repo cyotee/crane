@@ -1,6 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/* -------------------------------------------------------------------------- */
+/*                                    Forge                                   */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                Open Zpepelin                               */
+/* -------------------------------------------------------------------------- */
+
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
 import "../../constants/Constants.sol";
 
 struct Uint512 {
@@ -10,14 +23,265 @@ struct Uint512 {
 
 library BetterMath {
 
-    using BetterMath for uint256;
+    using Math for bool;
+    using Math for bytes;
+    using Math for uint256;
+    using Math for Math.Rounding;
+
+    error DivisionByZero(uint256 panicCode);
     
+    /* ---------------------------------------------------------------------- */
+    /*               Wrapper Functions for Drop-In Compatibility              */
+    /* ---------------------------------------------------------------------- */
+
+    /**
+     * @dev Wrapper function for the OZ Math.add512 function.
+     */
+    function add512(uint256 a, uint256 b) internal pure returns (uint256 high, uint256 low) {
+        return a.add512(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.mul512 function.
+     */
+    function mul512(uint256 a, uint256 b) internal pure returns (uint256 high, uint256 low) {
+        return a.mul512(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryAdd function.
+     */
+    function tryAdd(uint256 a, uint256 b) internal pure returns (bool success, uint256 result) {
+        return a.tryAdd(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.trySub function.
+     */
+    function trySub(uint256 a, uint256 b) internal pure returns (bool success, uint256 result) {
+        return a.trySub(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryMul function.
+     */
+    function tryMul(uint256 a, uint256 b) internal pure returns (bool success, uint256 result) {
+        return a.tryMul(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryDiv function.
+     */
+    function tryDiv(uint256 a, uint256 b) internal pure returns (bool success, uint256 result) {
+        return a.tryDiv(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryMod function.
+     */
+    function tryMod(uint256 a, uint256 b) internal pure returns (bool success, uint256 result) {
+        return a.tryMod(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.saturatingAdd function.
+     */
+    function saturatingAdd(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.saturatingAdd(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.saturatingSub function.
+     */
+    function saturatingSub(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.saturatingSub(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.saturatingMul function.
+     */
+    function saturatingMul(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.saturatingMul(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.ternary function.
+     */
+    function ternary(bool condition, uint256 a, uint256 b) internal pure returns (uint256) {
+        return condition.ternary(a, b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.max function.
+     */
+    function max(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.max(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.min function.
+     */
+    function min(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.min(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.average function.
+     */
+    function average(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.average(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.ceilDiv function.
+     */
+    function ceilDiv(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a.ceilDiv(b);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.mulDiv function.
+     */
+    function mulDiv(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 result) {
+        return x.mulDiv(y, denominator);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.mulDiv function.
+     */
+    function mulDiv(uint256 x, uint256 y, uint256 denominator, Math.Rounding rounding) internal pure returns (uint256) {
+        return x.mulDiv(y, denominator, rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.mulShr function.
+     */
+    function mulShr(uint256 x, uint256 y, uint8 n) internal pure returns (uint256 result) {
+        return x.mulShr(y, n);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.mulShr function.
+     */
+    function mulShr(uint256 x, uint256 y, uint8 n, Math.Rounding rounding) internal pure returns (uint256) {
+        return x.mulShr(y, n, rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.invMod function.
+     */
+    function invMod(uint256 a, uint256 n) internal pure returns (uint256) {
+        return a.invMod(n);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.invModPrime function.
+     */
+    function invModPrime(uint256 a, uint256 p) internal view returns (uint256) {
+        return a.invModPrime(p);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.modExp function.
+     */
+    function modExp(uint256 b, uint256 e, uint256 m) internal view returns (uint256) {
+        return b.modExp(e, m);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryModExp function.
+     */
+    function tryModExp(uint256 b, uint256 e, uint256 m) internal view returns (bool success, uint256 result) {
+        return b.tryModExp(e, m);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.modExp function.
+     */
+    function modExp(bytes memory b, bytes memory e, bytes memory m) internal view returns (bytes memory) {
+        return b.modExp(e, m);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.tryModExp function.
+     */
+    function tryModExp(
+        bytes memory b,
+        bytes memory e,
+        bytes memory m
+    ) internal view returns (bool success, bytes memory result) {
+        return b.tryModExp(e, m);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.sqrt function.
+     */
+    function sqrt(uint256 a) internal pure returns (uint256) {
+        return a.sqrt();
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.sqrt function.
+     */
+    function sqrt(uint256 a, Math.Rounding rounding) internal pure returns (uint256) {
+        return a.sqrt(rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log2 function.
+     */
+    function log2(uint256 x) internal pure returns (uint256 r) {
+        return x.log2();
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log2 function.
+     */
+    function log2(uint256 value, Math.Rounding rounding) internal pure returns (uint256) {
+        return value.log2(rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log10 function.
+     */
+    function log10(uint256 value) internal pure returns (uint256) {
+        return value.log10();
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log10 function.
+     */
+    function log10(uint256 value, Math.Rounding rounding) internal pure returns (uint256) {
+        return value.log10(rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log256 function.
+     */
+    function log256(uint256 x) internal pure returns (uint256 r) {
+        return x.log256();
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.log256 function.
+     */
+    function log256(uint256 value, Math.Rounding rounding) internal pure returns (uint256) {
+        return value.log256(rounding);
+    }
+
+    /**
+     * @dev Wrapper function for the OZ Math.unsignedRoundsUp function.
+     */
+    function unsignedRoundsUp(Math.Rounding rounding) internal pure returns (bool) {
+        return rounding.unsignedRoundsUp();
+    }
+    /* ---------------------------------------------------------------------- */
+    /*                                New Logic                               */
+    /* ---------------------------------------------------------------------- */
+
     /* ---------------------------------------------------------------------- */
     /*                                Constants                               */
     /* ---------------------------------------------------------------------- */
-
-    uint8 constant ERC20_DEFAULT_DECIMALS = 18;
-    uint224 constant Q112 = 2**112;
 
     /* ---------------------------------------------------------------------- */
     /*                                 Errors                                 */
@@ -45,60 +309,43 @@ library BetterMath {
     /*                              Unsigned Math                             */
     /* ---------------------------------------------------------------------- */
 
-    /**
-     * @dev Returns the smallest of two numbers.
-     */
-    function _min(
-        uint256 a,
-        uint256 b
-    ) internal pure returns (uint256) {
-        return a < b ? a : b;
-    }
-
-    /**
-     * @dev Returns the largest of two numbers.
-     */
-    function _max(
-        uint256 a,
-        uint256 b
-    ) internal pure returns (uint256) {
-        return a > b ? a : b;
-    }
-
-    function _asc(uint256 a, uint256 b)
-    internal pure returns(uint256 min, uint256 max) {
+    function asc(uint256 a, uint256 b)
+    internal pure returns(uint256 min_, uint256 max_) {
         require(a != b);
-        min = a._min(b);
-        max = min == a
+        min_ = min(a, b);
+        max_ = min_ == a
         ? b
         : a;
     }
 
-    function _diff(uint256 a, uint256 b)
-    internal pure returns(uint256 diff) {
-        (uint256 min, uint256 max) = a._asc(b);
-        return max - min;
+    function diff(uint256 a, uint256 b)
+    internal pure returns(uint256 diff_) {
+        (uint256 min_, uint256 max_) = asc(a, b);
+        return max_ - min_;
     }
 
-    function _mod(
+    function mod(
         uint256 a,
         uint256 b
     ) internal pure returns (uint256) {
-        require(b != 0);
-        return a % b;
-    }
-
-    function _safeHalf(
-        uint256 value
-    ) internal pure returns(uint256 safeHalf) {
-        safeHalf = value / 2;
-        if(value._mod(2) == 0) {
-            return safeHalf;
+        (bool success, uint256 result) = a.tryMod(b);
+        if(!success) {
+            revert DivisionByZero(Panic.DIVISION_BY_ZERO);
         }
-        return value - safeHalf;
+        return result;
     }
 
-    function _convertDecimalsFromTo(
+    function safeHalf(
+        uint256 value
+    ) internal pure returns(uint256 _safeHalf) {
+        _safeHalf = value / 2;
+        if(mod(value,2) == 0) {
+            return _safeHalf;
+        }
+        return value - _safeHalf;
+    }
+
+    function convertDecimalsFromTo(
         uint256 amount,
         uint8 amountDecimals,
         uint8 targetDecimals
@@ -111,21 +358,22 @@ library BetterMath {
             : amount * 10**(targetDecimals - amountDecimals);
     }
 
-    function _precision(
+    function precision(
         uint256 value,
-        uint8 precision,
+        uint8 _precision,
         uint8 targetPrecision
     ) internal pure returns(uint256 preciseValue) {
-        preciseValue = value._convertDecimalsFromTo(
-            precision,
+        preciseValue = convertDecimalsFromTo(
+            value,
+            _precision,
             targetPrecision
         );
     }
 
-    function _normalize(
+    function normalize(
         uint256 value
     ) internal pure returns(uint256) {
-        return value._precision(ERC20_DEFAULT_DECIMALS, 2);
+        return precision(value,ERC20_DEFAULT_DECIMALS, 2);
     }
 
     /* ---------------------------------------------------------------------- */
@@ -135,7 +383,7 @@ library BetterMath {
     /**
      * @dev returns `(x + y) % 2 ^ 256`
      */
-    function _unsafeAdd(uint256 x, uint256 y)
+    function unsafeAdd(uint256 x, uint256 y)
     private pure returns (uint256) {
         unchecked {
             return x + y;
@@ -145,7 +393,7 @@ library BetterMath {
     /**
      * @dev returns `(x - y) % 2 ^ 256`
      */
-    function _unsafeSub(uint256 x, uint256 y)
+    function unsafeSub(uint256 x, uint256 y)
     private pure returns (uint256) {
         unchecked {
             return x - y;
@@ -155,7 +403,7 @@ library BetterMath {
     /**
      * @dev returns `(x * y) % 2 ^ 256`
      */
-    function _unsafeMul(uint256 x, uint256 y)
+    function unsafeMul(uint256 x, uint256 y)
     private pure returns (uint256) {
         unchecked {
             return x * y;
@@ -169,71 +417,9 @@ library BetterMath {
     /**
      * @dev returns `x * y % (2 ^ 256 - 1)`
      */
-    function _mulModMax(uint256 x, uint256 y)
+    function mulModMax(uint256 x, uint256 y)
     private pure returns (uint256) {
         return mulmod(x, y, type(uint256).max);
-    }
-
-    /* ---------------------------------------------------------------------- */
-    /*                                  Roots                                 */
-    /* ---------------------------------------------------------------------- */
-
-    function _sqrt(uint256 x)
-    internal pure returns (uint z) {
-        assembly {
-            // Start off with z at 1.
-            z := 1
-
-            // Used below to help find a nearby power of 2.
-            let y := x
-
-            // Find the lowest power of 2 that is at least sqrt(x).
-            if iszero(lt(y, 0x100000000000000000000000000000000)) {
-                y := shr(128, y) // Like dividing by 2 ** 128.
-                z := shl(64, z) // Like multiplying by 2 ** 64.
-            }
-            if iszero(lt(y, 0x10000000000000000)) {
-                y := shr(64, y) // Like dividing by 2 ** 64.
-                z := shl(32, z) // Like multiplying by 2 ** 32.
-            }
-            if iszero(lt(y, 0x100000000)) {
-                y := shr(32, y) // Like dividing by 2 ** 32.
-                z := shl(16, z) // Like multiplying by 2 ** 16.
-            }
-            if iszero(lt(y, 0x10000)) {
-                y := shr(16, y) // Like dividing by 2 ** 16.
-                z := shl(8, z) // Like multiplying by 2 ** 8.
-            }
-            if iszero(lt(y, 0x100)) {
-                y := shr(8, y) // Like dividing by 2 ** 8.
-                z := shl(4, z) // Like multiplying by 2 ** 4.
-            }
-            if iszero(lt(y, 0x10)) {
-                y := shr(4, y) // Like dividing by 2 ** 4.
-                z := shl(2, z) // Like multiplying by 2 ** 2.
-            }
-            if iszero(lt(y, 0x8)) {
-                // Equivalent to 2 ** z.
-                z := shl(1, z)
-            }
-
-            // Shifting right by 1 is like dividing by 2.
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-            z := shr(1, add(z, div(x, z)))
-
-            // Compute a rounded down version of z.
-            let zRoundDown := div(x, z)
-
-            // If zRoundDown is smaller, use it.
-            if lt(zRoundDown, z) {
-                z := zRoundDown
-            }
-        }
     }
 
     /* ---------------------------------------------------------------------- */
@@ -255,7 +441,7 @@ library BetterMath {
     /**
      * @dev Returns the part of the total that is the percentage of the total.
      */
-    function _percentageOfPPM(
+    function percentageOfPPM(
         uint256 total,
         uint256 percentage
     ) internal pure returns (uint256 part) {
@@ -265,7 +451,7 @@ library BetterMath {
     /**
      * @dev Returns the percentage of which part is of the total.
      */
-    function _percentageOfTotalPPM(
+    function percentageOfTotalPPM(
         uint256 part,
         uint256 total
     ) internal pure returns (uint256 percentage) {
@@ -275,7 +461,7 @@ library BetterMath {
     /**
      * @dev Returns the total of which the part is the percentage.
      */
-    function _totalFromPercentageOfPPM(
+    function totalFromPercentageOfPPM(
         uint256 part,
         uint256 percentage
     ) internal pure returns (uint256 total) {
@@ -296,33 +482,33 @@ library BetterMath {
     /**
      * @dev Expects percentage to be trailed by 000,
      */
-    function _percentageAmountExpanded(
+    function percentageAmountExpanded(
         uint256 total_, uint256 percentage_
     ) internal pure returns ( uint256 percentAmount_ ) {
-        return ( ( total_ * percentage_ ) / 100000 );
+        return ( ( total_ * percentage_ ) / 100_000 );
     }
 
-    function _percentageOfTotalExpanded(uint256 part_, uint256 total_)
+    function percentageOfTotalExpanded(uint256 part_, uint256 total_)
     internal pure returns ( uint256 percent_ ) {
-        return ( (part_ * 100000) / total_ );
+        return ( (part_ * 100_000) / total_ );
     }
 
     function calculateGrossAmount(uint256 netAmount, uint256 feeBps) internal pure returns (uint256) {
         // Ensure fee is less than 100% (100,000 bps in this system)
-        require(feeBps < 100000, "Fee cannot be 100% or more");
+        require(feeBps < 100_000, "Fee cannot be 100% or more");
         
         // Calculate denominator
-        uint256 denominator = 100000 - feeBps;
+        uint256 denominator = 100_000 - feeBps;
         
         // Ceiling division to calculate gross amount
-        uint256 grossAmount = (netAmount * 100000 + denominator - 1) / denominator;
+        uint256 grossAmount = (netAmount * 100_000 + denominator - 1) / denominator;
         
         return grossAmount;
     }
 
     /* ------------------------------- Shares ------------------------------- */
 
-    function _proportionalSplit(
+    function proportionalSplit(
         uint256 ownedShares,
         uint256 totalShares,
         uint256 totalReserveA,
@@ -332,12 +518,12 @@ library BetterMath {
         uint256 shareB
     ) {
         // shareA = ((ownedShares * totalReserveA) / totalShares);
-        shareA = _shareOfProportionalSplit(ownedShares, totalShares, totalReserveA);
+        shareA = shareOfProportionalSplit(ownedShares, totalShares, totalReserveA);
         // shareB = ((ownedShares * totalReserveB) / totalShares);
-        shareB = _shareOfProportionalSplit(ownedShares, totalShares, totalReserveB);
+        shareB = shareOfProportionalSplit(ownedShares, totalShares, totalReserveB);
     }
 
-    function _shareOfProportionalSplit(
+    function shareOfProportionalSplit(
         uint256 ownedLPAmount,
         uint256 lpTotalSupply,
         uint256 totalReserveA
@@ -351,7 +537,7 @@ library BetterMath {
     /**
      * @return The precision offset to use with the underlying asset used as the underlying reserve.
      */
-    function _decimalsOffset()
+    function decimalsOffset()
     internal pure returns (uint8) {
         // Return the default precision offset.
         return 0;
@@ -366,17 +552,17 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate shares.
      * @return shares The equivalent amount of shares for `assets` of `reserve`.
      */
-    function _convertToShares(
+    function convertToShares(
         uint256 assets,
         uint256 reserve,
         uint256 totalShares
     ) internal pure returns (uint256 shares) {
-        shares = _convertToShares(
+        shares = convertToShares(
             assets,
             reserve,
             totalShares,
-            _decimalsOffset(),
-            Rounding.Floor
+            decimalsOffset(),
+            Math.Rounding.Floor
         );
     }
     // end::_convertToShares[]
@@ -388,18 +574,18 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate shares.
      * @return shares The equivalent amount of shares for `assets` of `reserve`.
      */
-    function _convertToShares(
+    function convertToShares(
         uint256 assets,
         uint256 reserve,
         uint256 totalShares,
         uint8 decimalOffset
     ) internal pure returns (uint256 shares) {
-        shares = _convertToShares(
+        shares = convertToShares(
             assets,
             reserve,
             totalShares,
             decimalOffset,
-            Rounding.Floor
+            Math.Rounding.Floor
         );
     }
     // end::_convertToShares(uint256,uint256)[]
@@ -412,14 +598,14 @@ library BetterMath {
      * @param rounding The desired rounding to apply to calculated `shares`
      * @return shares The equivalent amount of shares for `assets` of `reserve`.
      */
-    function _convertToShares(
+    function convertToShares(
         uint256 assets,
         uint256 reserve,
         uint256 totalShares,
         uint8 decimalOffset,
-        Rounding rounding
+        Math.Rounding rounding
     ) internal pure returns (uint256 shares) {
-        shares = assets._mulDiv(
+        shares = assets.mulDiv(
             // Offset the decimals to minimize frontrun attacks.
             totalShares + 10 ** decimalOffset,
             reserve + 1,
@@ -435,17 +621,17 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate assets.
      * @return The equivalent amount of assets for `shares` of `reserve`.
      */
-    function _convertToAssets(
+    function convertToAssets(
         uint256 shares,
         uint256 reserve,
         uint256 totalShares
     ) internal pure returns (uint256) {
-        return _convertToAssets(
+        return convertToAssets(
             shares,
             reserve,
             totalShares,
-            _decimalsOffset(),
-            Rounding.Floor
+            decimalsOffset(),
+            Math.Rounding.Floor
         );
     }
     // end::_convertToAssets[]
@@ -457,18 +643,18 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate assets.
      * @return The equivalent amount of assets for `shares` of `reserve`.
      */
-    function _convertToAssets(
+    function convertToAssets(
         uint256 shares,
         uint256 reserve,
         uint256 totalShares,
         uint8 decimalOffset
     ) internal pure returns (uint256) {
-        return _convertToAssets(
+        return convertToAssets(
             shares,
             reserve,
             totalShares,
             decimalOffset,
-            Rounding.Floor
+            Math.Rounding.Floor
         );
     }
     // end::_convertToAssets(uint256,uint256)[]
@@ -481,16 +667,16 @@ library BetterMath {
      * @param rounding The desired rounding to apply to calculated `shares`
      * @return The equivalent amount of assets for `shares` of `reserve`.
      */
-    function _convertToAssets(
+    function convertToAssets(
         uint256 shares,
         uint256 reserve,
         uint256 totalShares,
         uint8 decimalOffset,
-        Rounding rounding
+        Math.Rounding rounding
     ) internal pure returns (uint256) {
         // Calculate the amount of asset due for a given amount of shares.
         // Multiply the shares quote by the reserve, then divide by the total shares.
-        return shares._mulDiv(
+        return shares.mulDiv(
             reserve + 1,
             // Undo the precision offset done during shares conversion.
             totalShares + 10 ** decimalOffset,
@@ -503,98 +689,7 @@ library BetterMath {
     /*                             Fractional Math                            */
     /* ---------------------------------------------------------------------- */
 
-    /**
-     * @notice Calculates floor(x * y / denominator) with full precision. Throws if result overflows a uint256 or
-     * denominator == 0.
-     * @dev Original credit to Remco Bloemen under MIT license (https://xn--2-umb.com/21/muldiv) with further edits by
-     * Uniswap Labs also under MIT license.
-     */
-    function _mulDiv(
-        uint256 x,
-        uint256 y,
-        uint256 denominator
-    ) internal pure returns (uint256 result) {
-        unchecked {
-            // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use
-            // use the Chinese Remainder Theorem to reconstruct the 512 bit result. The result is stored in two 256
-            // variables such that product = prod1 * 2^256 + prod0.
-            uint256 prod0 = x * y; // Least significant 256 bits of the product
-            uint256 prod1; // Most significant 256 bits of the product
-            assembly {
-                let mm := mulmod(x, y, not(0))
-                prod1 := sub(sub(mm, prod0), lt(mm, prod0))
-            }
-
-            // Handle non-overflow cases, 256 by 256 division.
-            if (prod1 == 0) {
-                // Solidity will revert if denominator == 0, unlike the div opcode on its own.
-                // The surrounding unchecked block does not change this fact.
-                // See https://docs.soliditylang.org/en/latest/control-structures.html#checked-or-unchecked-arithmetic.
-                return prod0 / denominator;
-            }
-
-            // Make sure the result is less than 2^256. Also prevents denominator == 0.
-            if (denominator <= prod1) {
-                revert MathOverflowedMulDiv();
-            }
-
-            ///////////////////////////////////////////////
-            // 512 by 256 division.
-            ///////////////////////////////////////////////
-
-            // Make division exact by subtracting the remainder from [prod1 prod0].
-            uint256 remainder;
-            assembly {
-                // Compute remainder using mulmod.
-                remainder := mulmod(x, y, denominator)
-
-                // Subtract 256 bit number from 512 bit number.
-                prod1 := sub(prod1, gt(remainder, prod0))
-                prod0 := sub(prod0, remainder)
-            }
-
-            // Factor powers of two out of denominator and compute largest power of two divisor of denominator.
-            // Always >= 1. See https://cs.stackexchange.com/q/138556/92363.
-
-            uint256 twos = denominator & (0 - denominator);
-            assembly {
-                // Divide denominator by twos.
-                denominator := div(denominator, twos)
-
-                // Divide [prod1 prod0] by twos.
-                prod0 := div(prod0, twos)
-
-                // Flip twos such that it is 2^256 / twos. If twos is zero, then it becomes one.
-                twos := add(div(sub(0, twos), twos), 1)
-            }
-
-            // Shift in bits from prod1 into prod0.
-            prod0 |= prod1 * twos;
-
-            // Invert denominator mod 2^256. Now that denominator is an odd number, it has an inverse modulo 2^256 such
-            // that denominator * inv = 1 mod 2^256. Compute the inverse by starting with a seed that is correct for
-            // four bits. That is, denominator * inv = 1 mod 2^4.
-            uint256 inverse = (3 * denominator) ^ 2;
-
-            // Use the Newton-Raphson iteration to improve the precision. Thanks to Hensel's lifting lemma, this also
-            // works in modular arithmetic, doubling the correct bits in each step.
-            inverse *= 2 - denominator * inverse; // inverse mod 2^8
-            inverse *= 2 - denominator * inverse; // inverse mod 2^16
-            inverse *= 2 - denominator * inverse; // inverse mod 2^32
-            inverse *= 2 - denominator * inverse; // inverse mod 2^64
-            inverse *= 2 - denominator * inverse; // inverse mod 2^128
-            inverse *= 2 - denominator * inverse; // inverse mod 2^256
-
-            // Because the division is now exact we can divide by multiplying with the modular inverse of denominator.
-            // This will give us the correct result modulo 2^256. Since the preconditions guarantee that the outcome is
-            // less than 2^256, this is the final result. We don't need to compute the high bits of the result and prod1
-            // is no longer required.
-            result = prod0 * inverse;
-            return result;
-        }
-    }
-
-    function _mulDivDown(
+    function mulDivDown(
         uint256 x,
         uint256 y,
         uint256 denominator
@@ -613,43 +708,17 @@ library BetterMath {
         }
     }
 
-    /**
-     * @dev Returns whether a provided rounding mode is considered rounding up for unsigned integers.
-     */
-    function _unsignedRoundsUp(
-        Rounding rounding
-    ) internal pure returns (bool) {
-        return uint8(rounding) % 2 == 1;
-    }
-
-    /**
-     * @notice Calculates x * y / denominator with full precision, following the selected rounding direction.
-     */
-    function _mulDiv(
-        uint256 x, 
-        uint256 y, 
-        uint256 denominator, 
-        Rounding rounding
-    )
-    internal pure returns (uint256) {
-        uint256 result = _mulDiv(x, y, denominator);
-        if (_unsignedRoundsUp(rounding) && mulmod(x, y, denominator) > 0) {
-            result += 1;
-        }
-        return result;
-    }
-
     /* ---------------------------- WAD/RAY Math ---------------------------- */
 
-    function _mulWadDown(uint256 x, uint256 y)
+    function mulWadDown(uint256 x, uint256 y)
     internal pure returns (uint256) {
-        return _mulDivDown(x, y, WAD); // Equivalent to (x * y) / WAD rounded down.
+        return mulDivDown(x, y, WAD); // Equivalent to (x * y) / WAD rounded down.
     }
 
-    function _divWadDown(uint256 x, uint256 y)
+    function divWadDown(uint256 x, uint256 y)
     internal pure returns (uint256) {
       // require( (y != 0), "FixedPointWadMathLib:_divWadDown:: Attempting to divide by 0");
-      return _mulDivDown(x, WAD, y); // Equivalent to (x * WAD) / y rounded down.
+      return mulDivDown(x, WAD, y); // Equivalent to (x * WAD) / y rounded down.
     }
 
     /* ------------------------------ UQ112x112 ----------------------------- */
@@ -657,13 +726,13 @@ library BetterMath {
     // uint224 constant Q112 = 2**112;
 
     // encode a uint112 as a UQ112x112
-    function _encode(uint112 y)
+    function encode(uint112 y)
     internal pure returns (uint224 z) {
         z = uint224(y) * Q112; // never overflows
     }
 
     // divide a UQ112x112 by a uint112, returning a UQ112x112
-    function _uqdiv(uint224 x, uint112 y)
+    function uqdiv(uint224 x, uint112 y)
     internal pure returns (uint224 z) {
         z = x / uint224(y);
     }
@@ -672,29 +741,21 @@ library BetterMath {
     /*                              512-bit Math                              */
     /* ---------------------------------------------------------------------- */
 
-    /**
-     * @dev returns the value of `x * y`
-     */
-    function _mul512(uint256 x, uint256 y)
-    internal pure returns (Uint512 memory) {
-        uint256 p = _mulModMax(x, y);
-        uint256 q = _unsafeMul(x, y);
-        if (p >= q) {
-            return Uint512({hi: p - q, lo: q});
-        }
-        return Uint512({hi: _unsafeSub(p, q) - 1, lo: q});
+    function mul512ForUint512(uint256 a, uint256 b) internal pure returns (Uint512 memory) {
+        (uint256 high, uint256 low) = mul512(a, b);
+        return Uint512({hi: high, lo: low});
     }
 
     /**
      * @dev returns the value of `x / pow2n`, given that `x` is divisible by `pow2n`
      */
-    function _div512(Uint512 memory x, uint256 pow2n)
+    function div512(Uint512 memory x, uint256 pow2n)
     internal pure returns (uint256) {
-        uint256 pow2nInv = _unsafeAdd(_unsafeSub(0, pow2n) / pow2n, 1); // `1 << (256 - n)`
-        return _unsafeMul(x.hi, pow2nInv) | (x.lo / pow2n); // `(x.hi << (256 - n)) | (x.lo >> n)`
+        uint256 pow2nInv = unsafeAdd(unsafeSub(0, pow2n) / pow2n, 1); // `1 << (256 - n)`
+        return unsafeMul(x.hi, pow2nInv) | (x.lo / pow2n); // `(x.hi << (256 - n)) | (x.lo >> n)`
     }
 
-    function _div256(Uint512 memory x, uint256 y)
+    function div256(Uint512 memory x, uint256 y)
     internal pure returns (uint256) {
         if (x.hi == 0) {
             return x.lo / y;
@@ -704,21 +765,21 @@ library BetterMath {
             revert Overflow();
         }
 
-        uint256 p = _unsafeSub(0, y) & y; // `p` is the largest power of 2 which `z` is divisible by
-        uint256 q = _div512(x, p); // `n` is divisible by `p` because `n` is divisible by `z` and `z` is divisible by `p`
-        uint256 r = _inv256(y / p); // `z / p = 1 mod 2` hence `inverse(z / p) = 1 mod 2 ^ 256`
-        return _unsafeMul(q, r); // `q * r = (n / p) * inverse(z / p) = n / z`
+        uint256 p = unsafeSub(0, y) & y; // `p` is the largest power of 2 which `z` is divisible by
+        uint256 q = div512(x, p); // `n` is divisible by `p` because `n` is divisible by `z` and `z` is divisible by `p`
+        uint256 r = inv256(y / p); // `z / p = 1 mod 2` hence `inverse(z / p) = 1 mod 2 ^ 256`
+        return unsafeMul(q, r); // `q * r = (n / p) * inverse(z / p) = n / z`
     }
 
     /**
      * @dev returns the inverse of `d` modulo `2 ^ 256`, given that `d` is congruent to `1` modulo `2`
      */
-    function _inv256(uint256 d)
+    function inv256(uint256 d)
     private pure returns (uint256) {
         // approximate the root of `f(x) = 1 / x - d` using the newton–raphson convergence method
         uint256 x = 1;
         for (uint256 i = 0; i < 8; i++) {
-            x = _unsafeMul(x, _unsafeSub(2, _unsafeMul(x, d))); // `x = x * (2 - x * d) mod 2 ^ 256`
+            x = unsafeMul(x, unsafeSub(2, unsafeMul(x, d))); // `x = x * (2 - x * d) mod 2 ^ 256`
         }
         return x;
     }

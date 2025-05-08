@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 import {APE_CHAIN_MAIN} from "../constants/APE_CHAIN_MAIN.sol";
 import {APE_CHAIN_CURTIS} from "../constants/APE_CHAIN_CURTIS.sol";
@@ -8,7 +8,7 @@ import {
 } from "../../../../fixtures/Fixture.sol";
 import {
     IWETH
-} from "../../../../protocols/tokens/wrappers/weth/v9/interfaces/IWETH.sol";
+} from "../../../../protocols/tokens/wrappers/weth/IWETH.sol";
 import {
     ArbOSVM
 } from "../../../../utils/vm/arbOS/ArbOSVM.sol";

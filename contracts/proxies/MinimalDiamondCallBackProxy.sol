@@ -1,16 +1,16 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import {
     IDiamond,
     IDiamondLoupe,
     DiamondStorage
-} from "../introspection/erc2535/storage/DiamondStorage.sol";
+} from "../utils/introspection/erc2535/utils/DiamondStorage.sol";
 
 import {
     ICreate2Aware,
     Create2AwareTarget
-} from "../factories/create2/aware/targets/Create2AwareTarget.sol";
+} from "../factories/create2/aware/Create2AwareTarget.sol";
 
 /* ---------------------------------- Crane --------------------------------- */
 
@@ -22,11 +22,11 @@ import {
 
 import {
     IFactoryCallBack
-} from "../factories/create2/callback/diamondPkg/interfaces/IFactoryCallBack.sol";
+} from "../factories/create2/callback/diamondPkg/IFactoryCallBack.sol";
 
 import {
     FactoryCallBackAdaptor
-} from "../factories/create2/callback/diamondPkg/libs/utils/FactoryCallBackAdaptor.sol";
+} from "../factories/create2/callback/diamondPkg/utils/FactoryCallBackAdaptor.sol";
 
 contract MinimalDiamondCallBackProxy
 is

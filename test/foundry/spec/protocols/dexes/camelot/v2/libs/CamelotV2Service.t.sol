@@ -18,26 +18,26 @@ import {CraneTest} from "../../../../../../../../contracts/test/CraneTest.sol";
 import {
     IOwnableStorage,
     OwnableStorage
-} from "../../../../../../../../contracts/access/ownable/storage/OwnableStorage.sol";
+} from "../../../../../../../../contracts/access/ownable/utils/OwnableStorage.sol";
 
 import {ConstProdUtils} from "../../../../../../../../contracts/utils/math/ConstProdUtils.sol";
 
-import {CamelotV2Service} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/libs/CamelotV2Service.sol";
+import {CamelotV2Service} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/utils/CamelotV2Service.sol";
 
-import {ICamelotPair} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/interfaces/ICamelotPair.sol";
+import {ICamelotPair} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/ICamelotPair.sol";
 
-import {ICamelotFactory} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/interfaces/ICamelotFactory.sol";
+import {ICamelotFactory} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 
-import {ICamelotV2Router} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/interfaces/ICamelotV2Router.sol";
+import {ICamelotV2Router} from "../../../../../../../../contracts/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 
-import {IERC20} from "../../../../../../../../contracts/tokens/erc20/interfaces/IERC20.sol";
+import {BetterIERC20 as IERC20} from "../../../../../../../../contracts/token/ERC20/BetterIERC20.sol";
 
-import {IERC20MintBurn} from "../../../../../../../../contracts/tokens/erc20/interfaces/IERC20MintBurn.sol";
+import {IERC20MintBurn} from "../../../../../../../../contracts/token/ERC20/IERC20MintBurn.sol";
 
 import {
     IERC20MintBurnOperableStorage,
     ERC20MintBurnOperableStorage
-} from "../../../../../../../../contracts/tokens/erc20/storage/ERC20MintBurnOperableStorage.sol";
+} from "../../../../../../../../contracts/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
 
 contract CamelotV2ServiceTest
 is

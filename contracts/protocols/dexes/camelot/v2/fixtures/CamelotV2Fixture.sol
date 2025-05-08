@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import "../../../../../fixtures/Fixture.sol";
 
-import "../interfaces/ICamelotFactory.sol";
-import "../interfaces/ICamelotPair.sol";
-import "../interfaces/ICamelotV2Router.sol";
+import "../ICamelotFactory.sol";
+import "../ICamelotPair.sol";
+import "../ICamelotV2Router.sol";
 
 import "../../../../../networks/arbitrum/apechain/constants/APE_CHAIN_MAIN.sol";
 import "../../../../../networks/arbitrum/apechain/constants/APE_CHAIN_CURTIS.sol";

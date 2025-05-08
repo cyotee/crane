@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: BUSL-1.1
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.24;
 
 bytes32 constant EMPTY_STRING_HASH = keccak256(abi.encode(""));
 
@@ -20,11 +20,17 @@ uint256 constant MAX_UINT128 = type(uint128).max;
 uint256 constant MAX_UINT256 = type(uint256).max;
 int256 constant MAX_INT256 = type(int256).max;
 
+uint32 constant PPT_RESOLUTION = 1_000;
+uint32 constant PPT100_RESOLUTION = 100_000;
 uint32 constant PPM_RESOLUTION = 1_000_000;
+
 
 // Typical DEX fee scalar.
 uint256 constant FEE_DENOMINATOR = 100_000;
 uint256 constant PRECISION = 1e18;
+
+uint8 constant ERC20_DEFAULT_DECIMALS = 18;
+uint224 constant Q112 = 2**112;
 
 uint256 constant HALF_WAD = 1e9;
 uint256 constant WAD = 1e18; // The scalar of ETH and most ERC20s.

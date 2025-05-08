@@ -7,12 +7,13 @@ forge-std/=lib/forge-std/src/
 @camelot-periphery/=lib/periphery/contracts/
 
 
-@openzeppelin/=lib/openzeppelin-contracts/
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
 
 @balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/
 @balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/
 @balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/
 @balancer-labs/v3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/
+
 @crane/=lib/crane/
 
 eth-gas-reporter/=node_modules/eth-gas-reporter/

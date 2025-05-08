@@ -12,11 +12,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 import {
-    IERC20
-} from "../../../../../tokens/erc20/interfaces/IERC20.sol";
+    BetterIERC20 as IERC20
+} from "../../../../../token/ERC20/BetterIERC20.sol";
 
 import {
     IVault

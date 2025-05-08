@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 // import "hardhat/console.sol";
@@ -12,23 +12,23 @@ import {betterconsole as console} from "../../../utils/vm/foundry/tools/console/
 
 // import "contracts/crane/utils/Primitives.sol";
 import {
-    Address
-} from "../../../utils/primitives/Address.sol";
+    BetterAddress as Address
+} from "../../../utils/BetterAddress.sol";
 import {
-    Bytes
-} from "../../../utils/primitives/Bytes.sol";
+    BetterBytes as Bytes
+} from "../../../utils/BetterBytes.sol";
 import {
     Bytes4
-} from "../../../utils/primitives/Bytes4.sol";
+} from "../../../utils/Bytes4.sol";
 import {
     Bytes32
-} from "../../../utils/primitives/Bytes32.sol";
+} from "../../../utils/Bytes32.sol";
 import {
-    String
-} from "../../../utils/primitives/String.sol";
+    BetterStrings as Strings
+} from "../../../utils/BetterStrings.sol";
 import {
-    UInt
-} from "../../../utils/primitives/UInt.sol";
+    UInt256
+} from "../../../utils/UInt256.sol";
 // import "contracts/crane/utils/Collections.sol";
 import {
     Bytes4Set,
@@ -88,8 +88,8 @@ contract Bytes4SetComparatorStorage
     using Bytes4 for bytes4;
     using Bytes4 for bytes4[];
     using Bytes32 for bytes32;
-    using String for string;
-    using UInt for uint256;
+    using Strings for string;
+    using UInt256 for uint256;
     // using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     // using Bytes32SetRepo for Bytes32Set;
@@ -120,7 +120,7 @@ contract Bytes4SetComparatorStorage
         bytes4 func,
         bytes4[] memory expected
     ) internal {
-        _b4SetCompare(subject._toBytes32())
+        _b4SetCompare(subject.toBytes32())
         .recordedExpected[subject][func]._add(expected);
     }
 
@@ -128,7 +128,7 @@ contract Bytes4SetComparatorStorage
         address subject,
         bytes4 func
     ) internal view returns(Bytes4Set storage) {
-        return _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func];
+        return _b4SetCompare(subject.toBytes32()).recordedExpected[subject][func];
     }
 
     function _tempExpectedBytes4(
@@ -156,8 +156,8 @@ SetComparator
     using Bytes4 for bytes4;
     using Bytes4 for bytes4[];
     using Bytes32 for bytes32;
-    using String for string;
-    using UInt for uint256;
+    using Strings for string;
+    using UInt256 for uint256;
     // using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     // using Bytes32SetRepo for Bytes32Set;

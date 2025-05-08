@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity ^0.8.24;
 
-import { betterconsole as console } from "../../../../../utils/vm/foundry/tools/console/betterconsole.sol";
+/* -------------------------------------------------------------------------- */
+/*                                 Balancer V3                                */
+/* -------------------------------------------------------------------------- */
 
 import { IBasePoolFactory } from "@balancer-labs/v3-interfaces/contracts/vault/IBasePoolFactory.sol";
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
@@ -15,6 +16,11 @@ import {
 import { BaseSplitCodeFactory } from "@balancer-labs/v3-solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
 import { FactoryWidePauseWindow } from "@balancer-labs/v3-solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
 import { SingletonAuthentication } from "@balancer-labs/v3-vault/contracts/SingletonAuthentication.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+import { betterconsole as console } from "../../../../../utils/vm/foundry/tools/console/betterconsole.sol";
 
 /**
  * @notice Base contract for Pool factories.

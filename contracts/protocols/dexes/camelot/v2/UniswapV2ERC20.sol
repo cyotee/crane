@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 import {
     ERC5267Target
-} from "../../../../access/erc5267/targets/ERC5267Target.sol";
+} from "../../../../utils/cryptography/erc5267/ERC5267Target.sol";
 import  {
     IUniswapV2ERC20
-} from './interfaces/IUniswapV2ERC20.sol';
+} from './IUniswapV2ERC20.sol';
 import {
     SafeMath
 } from './libraries/SafeMath.sol';

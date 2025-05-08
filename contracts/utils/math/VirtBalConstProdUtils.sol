@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import "../../constants/Constants.sol";
@@ -53,10 +53,10 @@ library VirtBalConstProdUtils {
     ) internal pure returns (uint256 lpAmount) {
         if (lpTotalSupply == 0) {
             // First deposit: Use sqrt of product minus minimum liquidity
-            lpAmount = BetterMath._sqrt(amountADeposit * amountBDeposit) - _MINIMUM_LIQUIDITY;
+            lpAmount = BetterMath.sqrt(amountADeposit * amountBDeposit) - _MINIMUM_LIQUIDITY;
         } else {
             // Subsequent deposit: Use virtual balances for addition to determine proportional mint
-            lpAmount = BetterMath._min(
+            lpAmount = BetterMath.min(
                 (amountADeposit * lpTotalSupply) / virtReserveA,
                 (amountBDeposit * lpTotalSupply) / virtReserveB
             );
@@ -388,8 +388,8 @@ library VirtBalConstProdUtils {
     ) internal pure returns (uint256 feeAmount, uint256 newK) {
         // Use virtual balances for addition to calculate K
         newK = virtReserveA * virtReserveB;
-        uint256 rootK = BetterMath._sqrt(newK);
-        uint256 rootKLast = BetterMath._sqrt(lastK);
+        uint256 rootK = BetterMath.sqrt(newK);
+        uint256 rootKLast = BetterMath.sqrt(lastK);
         if (rootK > rootKLast) {
             uint256 d = ((FEE_DENOMINATOR * 100) / vaultFee) - 100;
             uint256 numerator = (totalSupply * (rootK - rootKLast)) * 100;

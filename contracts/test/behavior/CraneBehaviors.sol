@@ -12,27 +12,27 @@ import {
 
 import {
     IBehavior
-} from "../../test/behavior/interfaces/IBehavior.sol";
+} from "./IBehavior.sol";
 
 import {
     Behavior
-} from "../../test/behavior/Behavior.sol";
+} from "./Behavior.sol";
 
 import {
     IFacet_Behavior
-} from "../../factories/create2/callback/diamondPkg/behaviors/IFacet_Behavior.sol";
+} from "../../factories/create2/callback/diamondPkg/test/behaviors/IFacet_Behavior.sol";
 import {
     IDiamondFactoryPackage_Behavior
-} from "../../factories/create2/callback/diamondPkg/behaviors/IDiamondFactoryPackage_Behavior.sol";
+} from "../../factories/create2/callback/diamondPkg/test/behaviors/IDiamondFactoryPackage_Behavior.sol";
 import {
     ICreate2Aware_Behavior
-} from "../../factories/create2/aware/behaviors/ICreate2Aware_Behavior.sol";
+} from "../../factories/create2/aware/test/behaviors/ICreate2Aware_Behavior.sol";
 import {
     IERC165_Behavior
-} from "../../introspection/erc165/behaviors/IERC165_Behavior.sol";
+} from "../../utils/introspection/erc165/test/behaviors/IERC165_Behavior.sol";
 import {
     IDiamondLoupe_Behavior
-} from "../../introspection/erc2535/behaviors/IDiamondLoupe_Behavior.sol";
+} from "../../utils/introspection/erc2535/test/behaviors/IDiamondLoupe_Behavior.sol";
 
 contract CraneBehaviors
 is

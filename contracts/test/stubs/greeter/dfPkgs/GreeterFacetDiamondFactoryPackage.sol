@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 // import {
@@ -10,10 +10,10 @@ import {
 
 import {
     IDiamond
-} from "../../../../introspection/erc2535/interfaces/IDiamond.sol";
+} from "../../../../utils/introspection/erc2535/IDiamond.sol";
 import {
     IDiamondFactoryPackage
-} from "../../../../factories/create2/callback/diamondPkg/interfaces/IDiamondFactoryPackage.sol";
+} from "../../../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
 
 contract GreeterFacetDiamondFactoryPackage
 is

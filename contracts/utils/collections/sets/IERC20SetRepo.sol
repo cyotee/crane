@@ -1,12 +1,12 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import {
-    Array
-} from "../../collections/Array.sol";   
+    BetterArrays as Arrays
+} from "../../BetterArrays.sol";   
 import {
-    IERC20
-} from "../../../tokens/erc20/interfaces/IERC20.sol";
+    BetterIERC20 as IERC20
+} from "../../../token/ERC20/BetterIERC20.sol";
 
 struct IERC20Set {
     // 1-indexed to allow 0 to signify nonexistence
@@ -22,7 +22,7 @@ struct IERC20Set {
  */
 library IERC20SetRepo {
 
-    using Array for uint256;
+    using Arrays for uint256;
     using IERC20SetRepo for IERC20Set;
 
     /**
@@ -46,7 +46,7 @@ library IERC20SetRepo {
         IERC20Set storage set,
         uint index
     ) internal view returns (IERC20 value) {
-        require(set.values.length._isValidIndex(index));
+        require(set.values.length.isValidIndex(index));
         return set.values[index];
     }
 
@@ -234,8 +234,8 @@ library IERC20SetRepo {
             revert InvalidPageSize(start, end);
         }
         uint256 setLen = set._length();
-        require(setLen._isValidIndex(start));
-        require(setLen._isValidIndex(end));
+        require(setLen.isValidIndex(start));
+        require(setLen.isValidIndex(end));
         uint256 returnLen = end - start + 1;
         array = new IERC20[](returnLen);
         for(uint256 setCursor = start; setCursor <= end; setCursor++) {

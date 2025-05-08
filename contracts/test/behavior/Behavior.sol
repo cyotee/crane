@@ -16,7 +16,7 @@ import {
 
 import {
     IBehavior
-} from "../../test/behavior/interfaces/IBehavior.sol";
+} from "./IBehavior.sol";
 
 contract Behavior
 is

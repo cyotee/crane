@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import {
-    Array
-} from "../../collections/Array.sol";
+    BetterArrays as Arrays
+} from "../../BetterArrays.sol";
 
 struct UInt256Set {
     // 1-indexed to allow 0 to signify nonexistence
@@ -19,7 +19,7 @@ struct UInt256Set {
  */
 library UInt256SetRepo {
 
-    using Array for uint256;
+    using Arrays for uint256;
 
     /**
      * @param set The storage pointer of the struct upon which this function should operate.
@@ -30,7 +30,7 @@ library UInt256SetRepo {
         UInt256Set storage set,
         uint index
     ) internal view returns (uint256) {
-        require(set.values.length._isValidIndex(index));
+        require(set.values.length.isValidIndex(index));
         return set.values[index];
     }
 

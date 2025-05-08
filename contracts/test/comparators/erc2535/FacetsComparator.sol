@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 // import "hardhat/console.sol";
@@ -11,23 +11,23 @@ import {betterconsole as console} from "../../../utils/vm/foundry/tools/console/
 
 // import "contracts/crane/utils/Primitives.sol";
 import {
-    Address
-} from "../../../utils/primitives/Address.sol";
+    BetterAddress as Address
+} from "../../../utils/BetterAddress.sol";
 import {
-    Bytes
-} from "../../../utils/primitives/Bytes.sol";
+    BetterBytes as Bytes
+} from "../../../utils/BetterBytes.sol";
 import {
     Bytes4
-} from "../../../utils/primitives/Bytes4.sol";
+} from "../../../utils/Bytes4.sol";
 import {
     Bytes32
-} from "../../../utils/primitives/Bytes32.sol";
+} from "../../../utils/Bytes32.sol";
 import {
-    String
-} from "../../../utils/primitives/String.sol";
+    BetterStrings as Strings
+} from "../../../utils/BetterStrings.sol";
 import {
-    UInt
-} from "../../../utils/primitives/UInt.sol";
+    UInt256
+} from "../../../utils/UInt256.sol";
 // import "contracts/crane/utils/Collections.sol";
 import {
     AddressSet,
@@ -65,7 +65,7 @@ import {
 
 import {
     IDiamondLoupe
-} from "../../../introspection/erc2535/interfaces/IDiamondLoupe.sol";
+} from "../../../utils/introspection/erc2535/IDiamondLoupe.sol";
 
 // struct FacetsComparatorLayout {
 
@@ -98,8 +98,8 @@ Bytes4SetComparatorStorage
     using Bytes4 for bytes4;
     using Bytes4 for bytes4[];
     using Bytes32 for bytes32;
-    using String for string;
-    using UInt for uint256;
+    using Strings for string;
+    using UInt256 for uint256;
     using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     using Bytes32SetRepo for Bytes32Set;
@@ -186,8 +186,8 @@ FacetsComparatorStorage
     using Bytes4 for bytes4;
     using Bytes4 for bytes4[];
     using Bytes32 for bytes32;
-    using String for string;
-    using UInt for uint256;
+    using Strings for string;
+    using UInt256 for uint256;
     using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     using Bytes32SetRepo for Bytes32Set;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
-import './interfaces/ICamelotFactory.sol';
+import './ICamelotFactory.sol';
 import './CamelotPair.sol';
 
 contract CamelotFactory is ICamelotFactory {

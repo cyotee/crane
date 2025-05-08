@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 import {betterconsole as console} from "../utils/vm/foundry/tools/console/betterconsole.sol";
 
@@ -32,37 +32,37 @@ import {
 
 import {
     ICreate2CallbackFactory
-} from "../factories/create2/callback/interfaces/ICreate2CallbackFactory.sol";
+} from "../factories/create2/callback/ICreate2CallbackFactory.sol";
 
 import {
     Create2CallBackFactoryTarget
-} from "../factories/create2/callback/targets/Create2CallBackFactoryTarget.sol";
+} from "../factories/create2/callback/Create2CallBackFactoryTarget.sol";
 
 import {
     IDiamondPackageCallBackFactory
-} from "../factories/create2/callback/diamondPkg/interfaces/IDiamondPackageCallBackFactory.sol";
+} from "../factories/create2/callback/diamondPkg/IDiamondPackageCallBackFactory.sol";
 
 import {
     IPower
-} from "../utils/math/power-calc/interfaces/IPower.sol";
+} from "../utils/math/power-calc/IPower.sol";
 
 import {
     PowerCalculatorC2ATarget
-} from "../utils/math/power-calc/targets/PowerCalculatorC2ATarget.sol";
+} from "../utils/math/power-calc/PowerCalculatorC2ATarget.sol";
 
 import {
     IDiamondCutFacetDFPkg,
     DiamondCutFacetDFPkg
-} from "../introspection/erc2535/dfPkgs/DiamondCutFacetDFPkg.sol";
+} from "../utils/introspection/erc2535/DiamondCutFacetDFPkg.sol";
 
 import {
-    IERC20Permit
-} from "../tokens/erc20/interfaces/IERC20Permit.sol";
+    BetterIERC20Permit as IERC20Permit
+} from "../token/ERC20/extensions/BetterIERC20Permit.sol";
 
 import {
     IERC20PermitDFPkg,
     ERC20PermitDFPkg
-} from "../tokens/erc20/dfPkgs/ERC20PermitDFPkg.sol";
+} from "../token/ERC20/extensions/ERC20PermitDFPkg.sol";
 
 /**
  * @title CraneFixture

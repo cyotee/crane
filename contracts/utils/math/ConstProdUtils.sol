@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 // import "forge-std/console.sol";
@@ -98,7 +98,7 @@ library ConstProdUtils {
             uint256 product = amountADeposit * amountBDeposit;
             // console.log("First deposit - product:", product);
             
-            uint256 sqrtProduct = BetterMath._sqrt(product);
+            uint256 sqrtProduct = BetterMath.sqrt(product);
             // console.log("First deposit - sqrt(product):", sqrtProduct);
             
             lpAmount = sqrtProduct - _MINIMUM_LIQUIDITY;
@@ -111,7 +111,7 @@ library ConstProdUtils {
             uint256 amountB_ratio = (amountBDeposit * lpTotalSupply) / lpReserveB;
             // console.log("Normal deposit - amountB_ratio:", amountB_ratio);
             
-            lpAmount = BetterMath._min(amountA_ratio, amountB_ratio);
+            lpAmount = BetterMath.min(amountA_ratio, amountB_ratio);
             // console.log("Normal deposit - min(ratios):", lpAmount);
         }
         
@@ -374,7 +374,7 @@ function _swapDepositSaleAmt(
     uint256 oneMinusFee = FEE_DENOMINATOR - feePercent;
     uint256 term1 = twoMinusFee * twoMinusFee * saleReserve * saleReserve;
     uint256 term2 = 4 * oneMinusFee * FEE_DENOMINATOR * amountIn * saleReserve;
-    uint256 sqrtTerm = BetterMath._sqrt(term1 + term2);
+    uint256 sqrtTerm = BetterMath.sqrt(term1 + term2);
     if (sqrtTerm <= twoMinusFee * saleReserve) {
         return amountIn / 2; // Fallback to half for small deposits
     }
@@ -460,8 +460,8 @@ function _withdrawSwapQuote(
             return 0;
         }
         
-        uint256 rootK = BetterMath._sqrt(newK);
-        uint256 rootKLast = BetterMath._sqrt(kLast);
+        uint256 rootK = BetterMath.sqrt(newK);
+        uint256 rootKLast = BetterMath.sqrt(kLast);
         // console.log("Intermediate - rootK:", rootK);
         // console.log("Intermediate - rootKLast:", rootKLast);
         
@@ -563,8 +563,8 @@ function _withdrawSwapQuote(
         uint256 vaultFee
     ) internal pure returns (uint256 feeAmount, uint256 newK) {
         newK = _k(uint(reserveA), uint(reserveB));
-        uint rootK = BetterMath._sqrt(newK);
-        uint rootKLast = BetterMath._sqrt(lastK);
+        uint rootK = BetterMath.sqrt(newK);
+        uint rootKLast = BetterMath.sqrt(lastK);
         if (rootK > rootKLast) {
             // Commented out code kept as reference to original known good code.
             // Errors should start by validating this is a correct conversion to native operators.

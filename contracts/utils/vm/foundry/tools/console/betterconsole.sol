@@ -8,15 +8,15 @@ import {Vm} from "forge-std/Vm.sol";
 
 import "../../../../../constants/Constants.sol";
 import "../../FoundryConstants.sol";
-import {Address} from "../../../../primitives/Address.sol";
-import {Bytes} from "../../../../primitives/Bytes.sol";
-import {UInt} from "../../../../primitives/UInt.sol";
+import {BetterAddress as Address} from "../../../../BetterAddress.sol";
+import {BetterBytes as Bytes} from "../../../../BetterBytes.sol";
+import {UInt256} from "../../../../UInt256.sol";
 
 library betterconsole {
 
     using Address for address;
     using Bytes for bytes;
-    using UInt for uint256;
+    using UInt256 for uint256;
 
     Vm constant vm = Vm(VM_ADDRESS);
 
@@ -38,7 +38,7 @@ library betterconsole {
         uint256 num,
         address addr
     ) public pure {
-        console.log(string.concat(logMsg, num._toString(), addr._toString()));
+        console.log(string.concat(logMsg, num.toString(), addr.toString()));
     }
 
 
@@ -64,21 +64,21 @@ library betterconsole {
         string memory logMsg,
         bytes32 value
     ) public pure {
-        log(string.concat(logMsg, "0x", uint256(value)._toHexString()));
+        log(string.concat(logMsg, "0x", uint256(value).toHexString()));
     }
 
     function log(
         string memory logMsg,
         address addr
     ) public pure {
-        log(string.concat(logMsg, addr._toString()));
+        log(string.concat(logMsg, addr.toString()));
     }
 
     function log(
         string memory logMsg,
         uint256 num
     ) public pure {
-        log(string.concat(logMsg, num._toString()));
+        log(string.concat(logMsg, num.toString()));
     }
 
     function log(
@@ -112,7 +112,7 @@ library betterconsole {
         string memory logMsgs3,
         uint256 num
     ) public pure {
-        console.log(string.concat(logMsg1, addr1._toString(), logMsgs2, addr2._toString(), logMsgs3, num._toString()));
+        console.log(string.concat(logMsg1, addr1.toString(), logMsgs2, addr2.toString(), logMsgs3, num.toString()));
     }
 
     function log(
@@ -125,7 +125,7 @@ library betterconsole {
         string memory logMsg4,
         address addr3
     ) public pure {
-        console.log(string.concat(logMsg1, addr1._toString(), logMsgs2, addr2._toString(), logMsgs3, num._toString(), logMsg4, addr3._toString()));
+        console.log(string.concat(logMsg1, addr1.toString(), logMsgs2, addr2.toString(), logMsgs3, num.toString(), logMsg4, addr3.toString()));
     }
 
     function log(
@@ -133,7 +133,7 @@ library betterconsole {
         uint256 num1,
         bool bool1
     ) public pure {
-        console.log(string.concat(logMsg1, num1._toString(), bool1 ? "true" : "false"));
+        console.log(string.concat(logMsg1, num1.toString(), bool1 ? "true" : "false"));
     }
 
     /* ---------------------------------------------------------------------- */
@@ -216,8 +216,8 @@ library betterconsole {
         logCompare(
             subjectLabel,
             logBody,
-            string.concat(vm.getLabel(expected), " :: ", expected._toString()),
-            string.concat(vm.getLabel(actual), " :: ", actual._toString())
+            string.concat(vm.getLabel(expected), " :: ", expected.toString()),
+            string.concat(vm.getLabel(actual), " :: ", actual.toString())
         );
     }
 
@@ -230,8 +230,8 @@ library betterconsole {
         logCompare(
             subjectLabel,
             logBody,
-            uint256(expected)._toHexString(),
-            uint256(actual)._toHexString()
+            uint256(expected).toHexString(),
+            uint256(actual).toHexString()
         );
     }
 

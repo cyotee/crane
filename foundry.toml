@@ -15,6 +15,7 @@ remappings = [
 
     
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    
     "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
     "@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/",
     "@balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/",

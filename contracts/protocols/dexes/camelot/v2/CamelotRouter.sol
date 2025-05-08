@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
-import './libraries/TransferHelper.sol';
+import {TransferHelper} from './libraries/TransferHelper.sol';
 
-import './interfaces/ICamelotFactory.sol';
-import './interfaces/ICamelotPair.sol';
-import '../../../../tokens/erc20/interfaces/IERC20.sol';
+import {ICamelotFactory} from './ICamelotFactory.sol';
+import {ICamelotPair} from './ICamelotPair.sol';
+import {BetterIERC20 as IERC20} from '../../../../token/ERC20/BetterIERC20.sol';
 
-import './interfaces/ICamelotV2Router.sol';
+import './ICamelotV2Router.sol';
 import './libraries/UniswapV2Library.sol';
 import './libraries/SafeMath.sol';
-import '../../../tokens/wrappers/weth/v9/interfaces/IWETH.sol';
+import '../../../tokens/wrappers/weth/IWETH.sol';
 
 contract CamelotRouter is ICamelotV2Router {
   using SafeMath for uint;

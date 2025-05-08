@@ -2,8 +2,8 @@ pragma solidity >=0.5.0;
 
 import "./SafeMath.sol";
 
-import '../interfaces/ICamelotPair.sol';
-import '../interfaces/ICamelotFactory.sol';
+import '../ICamelotPair.sol';
+import '../ICamelotFactory.sol';
 
 library UniswapV2Library {
     using SafeMath for uint;

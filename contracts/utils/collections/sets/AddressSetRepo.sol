@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import {
-    Array
-} from "../../collections/Array.sol";
+    BetterArrays as Arrays
+} from "../../BetterArrays.sol";
 
 struct AddressSet {
     // 1-indexed to allow 0 to signify nonexistence
@@ -19,7 +19,7 @@ struct AddressSet {
  */
 library AddressSetRepo {
 
-    using Array for uint256;
+    using Arrays for uint256;
     using AddressSetRepo for AddressSet;
 
     /**
@@ -43,7 +43,7 @@ library AddressSetRepo {
         AddressSet storage set,
         uint index
     ) internal view returns (address value) {
-        require(set.values.length._isValidIndex(index));
+        require(set.values.length.isValidIndex(index));
         return set.values[index];
     }
 
@@ -231,8 +231,8 @@ library AddressSetRepo {
             revert InvalidPageSize(start, end);
         }
         uint256 setLen = set._length();
-        require(setLen._isValidIndex(start));
-        require(setLen._isValidIndex(end));
+        require(setLen.isValidIndex(start));
+        require(setLen.isValidIndex(end));
         uint256 returnLen = end - start + 1;
         array = new address[](returnLen);
         for(uint256 setCursor = start; setCursor <= end; setCursor++) {

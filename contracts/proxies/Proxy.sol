@@ -6,8 +6,8 @@ pragma solidity ^0.8.8;
 // solhint-disable reason-string
 // solhint-disable no-inline-assembly
 import {
-    Address
-} from "../utils/primitives/Address.sol";
+    BetterAddress as Address
+} from "../utils/BetterAddress.sol";
 
 /**
  * @title Base proxy contract
@@ -31,29 +31,29 @@ abstract contract Proxy {
     fallback() external payable {
 
         address target = _getTarget();
-        if(!target._isContract()) {
+        if(!target.isContract()) {
             revert TargetNotValid(target);
         }
 
         assembly {
-        calldatacopy(0, 0, calldatasize())
-        let result := delegatecall(
-            gas(),
-            target,
-            0,
-            calldatasize(),
-            0,
-            0
-        )
-        returndatacopy(0, 0, returndatasize())
+            calldatacopy(0, 0, calldatasize())
+            let result := delegatecall(
+                gas(),
+                target,
+                0,
+                calldatasize(),
+                0,
+                0
+            )
+            returndatacopy(0, 0, returndatasize())
 
-        switch result
-            case 0 {
-            revert(0, returndatasize())
-            }
-            default {
-            return(0, returndatasize())
-            }
+            switch result
+                case 0 {
+                revert(0, returndatasize())
+                }
+                default {
+                return(0, returndatasize())
+                }
         }
     }
 

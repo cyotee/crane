@@ -11,7 +11,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 import {
     IAuthentication
@@ -23,11 +23,11 @@ import {
     ITemporarilyPausable
 } from "./ITemporarilyPausable.sol";
 import {
-    IERC20
-} from "../../../../../tokens/erc20/interfaces/IERC20.sol";
+    BetterIERC20 as IERC20
+} from "../../../../../token/ERC20/BetterIERC20.sol";
 import {
     IWETH
-} from "../../../../tokens/wrappers/weth/v9/interfaces/IWETH.sol";
+} from "../../../../tokens/wrappers/weth/IWETH.sol";
 
 import {
     IAsset

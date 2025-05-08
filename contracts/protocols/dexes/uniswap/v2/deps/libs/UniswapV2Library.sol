@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../../interfaces/IUniswapV2Pair.sol";
-import "../../interfaces/IUniswapV2Factory.sol";
+import "../../IUniswapV2Pair.sol";
+import "../../IUniswapV2Factory.sol";
 
 // import {SafeMath} from "./SafeMath.sol";
 

@@ -35,20 +35,20 @@ import {
 } from "../utils/math/ConstProdUtils.sol";
 
 import {
-    IERC20
-} from "../tokens/erc20/interfaces/IERC20.sol";
-import {
-    IERC4626
-} from "../tokens/erc4626/interfaces/IERC4626.sol";
+    BetterIERC20 as IERC20
+} from "../token/ERC20/BetterIERC20.sol";
+// import {
+//     IERC4626
+// } from "../tokens/erc4626/IERC4626.sol";
 import {
     IERC5115
-} from "../tokens/erc5115/interfaces/IERC5115.sol";
+} from "../token/ERC5115/IERC5115.sol";
 import {
     ICamelotPair
-} from "../protocols/dexes/camelot/v2/interfaces/ICamelotPair.sol";
+} from "../protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {
-    IERC20Permit
-} from "../tokens/erc20/interfaces/IERC20Permit.sol";
+    BetterIERC20Permit as IERC20Permit
+} from "../token/ERC20/extensions/BetterIERC20Permit.sol";
 
 contract CraneTest
 is

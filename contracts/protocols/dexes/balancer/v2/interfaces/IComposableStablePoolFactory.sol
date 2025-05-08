@@ -1,4 +1,5 @@
-pragma solidity ^0.8.20;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.24;
 
 import {
     IRateProvider
@@ -7,8 +8,8 @@ import {
     IBasePool
 } from "./IBasePool.sol";
 import {
-    IERC20
-} from "../../../../../tokens/erc20/interfaces/IERC20.sol";
+    BetterIERC20 as IERC20
+} from "../../../../../token/ERC20/BetterIERC20.sol";
 
 // 
 

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
-import './interfaces/ICamelotPair.sol';
+import './ICamelotPair.sol';
 import './UniswapV2ERC20.sol';
 import './libraries/Math.sol';
-import '../../../../tokens/erc20/interfaces/IERC20.sol';
-import './interfaces/ICamelotFactory.sol';
-import './interfaces/IUniswapV2Callee.sol';
+import {BetterIERC20 as IERC20} from '../../../../token/ERC20/BetterIERC20.sol';
+import './ICamelotFactory.sol';
+import './IUniswapV2Callee.sol';
 
 contract CamelotPair is ICamelotPair, UniswapV2ERC20 {
   using SafeMath  for uint;
