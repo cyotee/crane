@@ -8,7 +8,6 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 /*                                Open Zpepelin                               */
 /* -------------------------------------------------------------------------- */
-
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
 /* -------------------------------------------------------------------------- */

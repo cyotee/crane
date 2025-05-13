@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
+
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -22,8 +26,8 @@ import {BetterIERC20} from "./BetterIERC20.sol";
  */
 contract BetterERC20
 is
-ERC20Storage,
-BetterIERC20
+    ERC20Storage,
+    BetterIERC20
 {
 
     // tag::name[]

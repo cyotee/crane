@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 /* -------------------------------------------------------------------------- */
 /*                                Open Zppelin                                */
@@ -149,4 +149,14 @@ library BetterSafeERC20 {
             revert SafeERC20.SafeERC20FailedOperation(address(token));
         }
     }
+
+    function cast(
+        IERC20[] memory tokens
+    ) internal pure returns (BetterIERC20[] memory betterTokens) {
+        betterTokens = new BetterIERC20[](tokens.length);
+        for (uint256 i = 0; i < tokens.length; i++) {
+            betterTokens[i] = BetterIERC20(address(tokens[i]));
+        }
+    }
+
 }

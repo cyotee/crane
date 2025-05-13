@@ -12,6 +12,7 @@ pragma solidity ^0.8.0;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
@@ -47,8 +48,9 @@ interface IERC20Storage {
  */
 contract ERC20Storage
 is
-IERC20Errors,
-IERC20Storage
+    Context,
+    IERC20Errors,
+    IERC20Storage
 {
 
     /* ------------------------------ LIBRARIES ----------------------------- */
@@ -74,8 +76,7 @@ IERC20Storage
 
     // tag::_erc20()[]
     /**
-     * @dev internal hook for the default storage range used by this library.
-     * @dev Other services will use their default storage range to ensure consistent storage usage.
+     * @dev internal hook for the default storage range used by this contract.
      * @return The default storage range used with repos.
      */
     function _erc20()
@@ -158,17 +159,6 @@ IERC20Storage
         address account,
         uint256 amount
     ) {
-        // if(account != msg.sender) {
-        //     // Load the current spending limit of `spender` for `sender`.
-        //     uint256 currentAllowance = _erc20().allowances[account][msg.sender];
-        //     // Do not allow transfers by `spender` that exceed their spending limit.
-        //     if(currentAllowance < amount) {
-        //         // Revert if `spender` lacks sufficient spending limit.
-        //         revert ERC20InsufficientAllowance(account, currentAllowance, amount);
-        //     }
-        //     // Decrease the spending limit of `spender` for `sender`.
-        //     ERC20Storage._decreaseAllowance(account, msg.sender,  amount);
-        // }
         _spendAllowance(
             account,
             amount
@@ -176,25 +166,13 @@ IERC20Storage
         _;
     }
 
-    // function _spendAllowance(
-    //     address account,
-    //     uint256 amount
-    // ) internal virtual {
-    //     if(account != msg.sender) {
-    //         // Load the current spending limit of `spender` for `sender`.
-    //         uint256 currentAllowance = _erc20().allowances[account][msg.sender];
-    //         // Do not allow transfers by `spender` that exceed their spending limit.
-    //         if(currentAllowance < amount) {
-    //             // Revert if `spender` lacks sufficient spending limit.
-    //             revert ERC20InsufficientAllowance(account, currentAllowance, amount);
-    //         }
-    //         // Decrease the spending limit of `spender` for `sender`.
-    //         ERC20Storage._decreaseAllowance(account, msg.sender,  amount);
-    //     }
-    // }
     function _spendAllowance(address account, uint256 amount) internal virtual {
-        if (account != msg.sender) {
-            uint256 currentAllowance = _allowance(account, msg.sender); // Use ERC20Storage slot
+        _spendAllowance(account, _msgSender(), amount);
+    }
+
+    function _spendAllowance(address account, address caller, uint256 amount) internal virtual {
+        if (account != caller) {
+            uint256 currentAllowance = _allowance(account, caller); // Use ERC20Storage slot
             // console.log("In _spendAllowance: owner=", account);
             // console.log("spender = ", msg.sender);
             // console.log("allowance = ", currentAllowance);
@@ -202,7 +180,7 @@ IERC20Storage
             if (currentAllowance < amount) {
                 revert IERC20Errors.ERC20InsufficientAllowance(account, currentAllowance, amount);
             }
-            _decreaseAllowance(account, msg.sender, amount); // Use ERC20Storage’s _decreaseAllowance
+            _decreaseAllowance(account, caller, amount); // Use ERC20Storage’s _decreaseAllowance
         }
     }
 
