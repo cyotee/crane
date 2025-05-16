@@ -1,0 +1,316 @@
+# Unified Product Requirements Document (PRD)
+# Crane Framework: OpenZeppelin Compatibility Implementation Plan
+
+## 1. Executive Summary
+
+This document outlines the requirements and tasks for implementing Diamond Storage equivalents for OpenZeppelin contracts within the Crane Framework. The goal is to provide a nearly drop-in replacement for OpenZeppelin by offering Diamond Storage implementations, Facets, and Package deployments for all major OpenZeppelin components, while maintaining Crane's naming convention of prefixing implementations with "Better" to minimize adoption friction.
+
+## 2. Project Objectives
+
+- Create a comprehensive inventory of all OpenZeppelin contracts requiring Diamond Storage implementations
+- Document state variables in each contract that need conversion to Diamond Storage patterns
+- Develop a testing strategy for existing and new implementations
+- Prioritize implementations based on utility and dependencies
+- Define requirements for creating OpenZeppelin-equivalent Packages
+- Create a roadmap for bringing Crane to feature parity with OpenZeppelin
+
+## 3. Current State Analysis
+
+### 3.1 Existing Crane Implementations
+
+- ERC20, ERC20Permit, and ERC4626 partial implementations exist
+- ConstProdUtils and CamelotV2Service libraries are implemented
+- Basic testing infrastructure (Fixtures, Stubs) is in place
+- Diamond Storage pattern is established but not consistently applied
+- Package deployment system exists but needs expansion
+
+### 3.2 Current Gaps
+
+- Many OpenZeppelin contracts lack Diamond Storage implementations
+- Testing coverage is incomplete, especially for libraries
+- Documentation for migration from OpenZeppelin to Crane is minimal
+- Not all OpenZeppelin constructor options have Package equivalents
+- Consistent Diamond Storage patterns across all components is lacking
+
+## 4. Analysis Tasks
+
+### 4.1 Contract Inventory and Classification
+
+#### 4.1.1 Token Standards Inventory
+- Create inventories of all ERC token implementations (ERC20, ERC721, ERC1155, ERC777, ERC4626)
+- Document token utility contracts (e.g., SafeERC20, TokenTimelock)
+- Map dependencies between token contracts
+
+#### 4.1.2 Access Control Inventory
+- Create inventories of all access control mechanisms (Ownable, AccessControl)
+- Document role-based implementations and extensions
+- Map dependencies with other contract categories
+
+#### 4.1.3 Security Primitives Inventory
+- Create inventories of security contracts (Pausable, ReentrancyGuard)
+- Document payment and fund management contracts
+- Map dependencies with other contract categories
+
+#### 4.1.4 Utilities, Governance, and Proxy Inventories
+- Create inventories of mathematical libraries, string utilities, cryptographic utilities
+- Document governance contracts, timelock controllers, voting mechanisms
+- Create inventories of proxy patterns and initialization patterns
+
+### 4.2 State Variable Analysis
+
+For each OpenZeppelin contract category:
+- Document all state variables
+- Identify storage patterns and potential conflicts
+- Map inheritance relationships and storage overlap
+- Document visibility and access patterns
+
+### 4.3 Diamond Storage Conversion Analysis
+
+For each OpenZeppelin contract category:
+- Design layout structs for base contracts and extensions
+- Define storage slot calculations to prevent collisions
+- Document required initialization methods
+- Identify shared storage components across extensions
+
+### 4.4 Package Configuration Analysis
+
+For each OpenZeppelin contract category:
+- Document required constructor arguments for all variants
+- Design initialization patterns for each variant
+- Map constructor arguments to initialization methods
+- Define facet compositions for different extensions
+- Document deployment scenarios and configurations
+
+### 4.5 Testing Strategy Development
+
+- Define unit testing approaches for libraries, Diamond Storage, facets, and packages
+- Design test cases for initialization methods and storage patterns
+- Document behavior testing requirements
+- Identify edge cases and security concerns
+
+### 4.6 Prioritization and Documentation Planning
+
+- Create prioritized implementation list based on dependency, usage, and complexity
+- Plan migration guides and API documentation
+- Design tutorials for common deployment scenarios
+
+## 5. Implementation Requirements
+
+### 5.1 Diamond Storage Implementation Guidelines
+
+#### Standard Conversion Pattern
+
+The conversion from OpenZeppelin to Diamond Storage follows this structured approach:
+
+1. **Define Layout Struct** - Create a storage layout struct matching the original contract's state variables
+2. **Create Repo Library** - Implement a library for binding the layout struct to a storage slot
+3. **Create Storage Contract** - Build a contract managing the storage slot calculation and access functions
+4. **Create Target Implementation** - Implement the core logic using Diamond Storage
+5. **Create Facet** - Expose the functionality as a Diamond facet
+6. **Create Test Stub** - Build a testable implementation inheriting from the Target
+7. **Create Package** - Build a deployment package combining related facets
+8. **Create Initialization Contract** - Implement contract handling initialization for the diamond
+
+#### Naming Conventions
+- Layout struct: `ContractNameLayout`
+- Repo library: `ContractNameRepo`
+- Storage contract: `ContractNameStorage`
+- Target contract: `ContractNameTarget`
+- Facet contract: `ContractNameFacet`
+- Test stub: `ContractNameStub`
+- Package: `ContractNameDFPkg`
+- Initialization contract: `ContractNameInit`
+
+#### Storage Slot Calculation
+- Use contract interface ID for `STORAGE_RANGE`
+- Use library name for `LAYOUT_ID`
+- Calculate `STORAGE_SLOT` using consistent pattern
+
+#### Code Guidelines
+- Use `_contractName()` helper functions to access storage
+- Cache storage references in functions with multiple accesses
+- Use dollar sign prefix for local storage references (e.g., `$erc20`)
+- Storage contracts can inherit from multiple sources
+- Target contracts implement core logic and inherit from storage
+- Facets expose functionality and inherit from targets
+- Packages compose multiple facets into deployable units
+
+### 5.2 Prioritized Implementation Order
+
+1. **First Priority Tier**
+   - Complete ERC20 ecosystem (all extensions and variants)
+   - ERC721 base implementation
+   - AccessControl and Ownable patterns
+   - Security primitives (Pausable, ReentrancyGuard)
+
+2. **Second Priority Tier**
+   - ERC721 extensions
+   - ERC1155 implementation
+   - Governance primitives
+   - Utility libraries
+
+3. **Third Priority Tier**
+   - ERC777
+   - Advanced Governance
+   - Specialized extensions
+
+### 5.3 Specific Implementation Requirements
+
+#### 5.3.1 ERC20 Ecosystem
+Complete Diamond Storage implementations for:
+- ERC20
+- ERC20Burnable
+- ERC20Capped
+- ERC20Pausable
+- ERC20Snapshot
+- ERC20Votes
+- ERC20Wrapper
+- ERC20FlashMint
+- ERC20Permit
+
+#### 5.3.2 ERC721 Ecosystem
+Complete Diamond Storage implementations for:
+- ERC721
+- ERC721Enumerable
+- ERC721URIStorage
+- ERC721Burnable
+- ERC721Pausable
+- ERC721Votes
+- ERC721Royalty
+
+#### 5.3.3 Access Control
+Complete Diamond Storage implementations for:
+- Ownable
+- AccessControl
+- AccessControlEnumerable
+- AccessControlDefaultAdminRules
+
+#### 5.3.4 Security Primitives
+Complete Diamond Storage implementations for:
+- Pausable
+- ReentrancyGuard
+- PullPayment
+- VestingWallet
+
+#### 5.3.5 Utility Libraries
+Testing and completion of:
+- ConstProdUtils
+- CamelotV2Service
+- Math libraries
+- Address utilities
+
+## 6. Diamond Storage Conversion Example: ERC20
+
+This example demonstrates the full conversion process for the ERC20 token contract.
+
+### 6.1 Step 1: Define Layout Struct
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+struct ERC20Layout {
+    mapping(address account => uint256 balance) balances;
+    mapping(address owner => mapping(address spender => uint256 amount)) allowances;
+    uint256 totalSupply;
+    string name;
+    string symbol;
+    uint8 decimals;
+}
+```
+
+### 6.2 Step 2: Create Repo Library
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+library ERC20Repo {
+    function _layout(
+        bytes32 slot_
+    ) internal pure returns(ERC20Layout storage layout_) {
+        assembly{layout_.slot := slot_}
+    }
+}
+```
+
+### 6.3 Step 3: Create Storage Contract
+
+```solidity
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+
+import {
+    ERC20Layout,
+    ERC20Repo
+} from "./ERC20Repo.sol";
+
+contract ERC20Storage is 
+    Context,
+    IERC20Errors
+{
+    using ERC20Repo for bytes32;
+
+    bytes32 private constant LAYOUT_ID
+        = keccak256(abi.encode(type(ERC20Repo).name));
+    bytes32 private constant STORAGE_RANGE_OFFSET
+        = bytes32(uint256(keccak256(abi.encode(LAYOUT_ID))) - 1);
+    bytes32 private constant STORAGE_RANGE
+        = type(IERC20).interfaceId;
+    bytes32 private constant STORAGE_SLOT
+        = keccak256(abi.encode(STORAGE_RANGE, STORAGE_RANGE_OFFSET));
+
+    function _erc20()
+    internal pure virtual returns(ERC20Layout storage) {
+        return STORAGE_SLOT._layout();
+    }
+
+    function _initERC20(
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_
+    ) internal {
+        _erc20().name = name_;
+        _erc20().symbol = symbol_;
+        _erc20().decimals = decimals_;
+    }
+}
+```
+
+### 6.4 Step 4-8: Target, Facet, Test Stub, Package, and Init Contracts
+
+The subsequent steps involve creating:
+- Target contract implementing the core token logic
+- Facet exposing the functionality as a Diamond facet
+- Test stub for easier unit testing
+- Package for deployment
+- Initialization contract for setup
+
+Each follows the structural patterns defined in the guidelines section.
+
+## 7. Deliverables
+
+1. Complete inventory spreadsheet of OpenZeppelin contracts
+2. State variable analysis document for each contract
+3. Diamond Storage implementation specifications
+4. Test requirement documentation
+5. Package configuration specifications
+6. Prioritized implementation roadmap
+7. Migration guides for OpenZeppelin users
+
+## 8. Success Criteria
+
+- 100% of core OpenZeppelin contracts have Diamond Storage equivalents
+- All implementations pass comprehensive test suites
+- Package deployments match all OpenZeppelin constructor configurations
+- Documentation provides clear migration paths
+- Performance benchmarks show acceptable overhead compared to OpenZeppelin
+
+## Next Steps
+
+This PRD will be broken down into specific tasks for both analysis and implementation phases, with the analysis phase focused on completing a detailed inventory and requirements documentation before proceeding to implementation PRDs for specific contract categories. 
