@@ -40,8 +40,8 @@ The Crane Framework is a Solidity development framework designed to simplify the
 
    ```bash
    git clone https://github.com/cyotee/crane.git
-   cd crane
-   npm install
+cd crane
+npm install
    ```
 
 4. **Initialize a New Project**:
@@ -81,6 +81,208 @@ The Crane Framework includes:
    ```
 
 2. Configure hardhat.config.js to include Crane Framework dependencies.
+
+### Using the Create2CallBackFactory
+
+The Create2CallBackFactory provides a deterministic way to deploy contracts with initialization data. This approach is especially useful for testing and for creating contracts that need to reference each other:
+
+```solidity
+// First, deploy the Create2CallBackFactoryTarget
+Create2CallBackFactoryTarget create2Factory = new Create2CallBackFactoryTarget();
+
+// Deploy facets using the factory
+ERC20PermitFacet erc20PermitFacet = ERC20PermitFacet(
+    create2Factory.create2(
+        type(ERC20PermitFacet).creationCode,
+        "" // Empty initialization data
+    )
+);
+
+// Deploy contracts with initialization data
+bytes memory initData = abi.encode(
+    IERC4626DFPkg.ERC4626DFPkgInit({
+        erc20PermitFacet: erc20PermitFacet,
+        erc4626Facet: erc4626Facet
+    })
+);
+
+ERC4626DFPkg erc4626Pkg = ERC4626DFPkg(
+    create2Factory.create2(
+        type(ERC4626DFPkg).creationCode,
+        initData // Pass initialization data
+    )
+);
+```
+
+#### Create2CallBackFactoryTarget API
+
+The `Create2CallBackFactoryTarget` contract provides the following key methods:
+
+```solidity
+// Deploy a contract with the provided initialization code and data
+function create2(
+    bytes memory initCode,   // The contract bytecode to deploy
+    bytes memory initData    // Initialization data to be made available to the contract
+) public payable returns(address deployment);
+
+// Deploy with a custom salt for more control over the resulting address
+function create2(
+    bytes memory initCode,   // The contract bytecode to deploy
+    bytes memory initData,   // Initialization data to be made available to the contract
+    bytes32 salt             // Custom salt for address generation
+) public payable returns(address deployment);
+
+// Retrieve initialization data for a contract deployed by this factory
+function initData() public view returns(
+    bytes32 initCodeHash,    // Hash of the contract's initialization code
+    bytes32 salt,            // Salt used during deployment
+    bytes memory initData    // Initialization data passed during deployment
+);
+```
+
+The factory also maintains mappings to track deployments:
+
+- `initCodeHashOfTarget`: Maps deployed addresses to their initCode hash
+- `saltOfTarget`: Maps deployed addresses to the salt used in deployment
+- `initDataOfTarget`: Maps deployed addresses to their initialization data
+
+Contracts deployed through this factory can access their initialization data by calling the `initData()` function from within their constructor.
+
+#### Accessing Initialization Data in Deployed Contracts
+
+Contracts deployed via the Create2CallBackFactory can access their initialization data in their constructor, enabling dynamic initialization:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import {Create2CallbackContract} from "../factories/create2/callback/Create2CallbackContract.sol";
+
+contract MyContract is Create2CallbackContract {
+    string public name;
+    address public owner;
+    
+    // Constructor will automatically access initialization data
+    constructor() {
+        // initData is provided by Create2CallbackContract
+        // and references the bytes passed to the factory's create2 method
+        if (initData.length > 0) {
+            // Decode the initialization parameters
+            (string memory _name, address _owner) = abi.decode(initData, (string, address));
+            name = _name;
+            owner = _owner;
+        } else {
+            // Default values if no initialization data
+            name = "Default Name";
+            owner = msg.sender;
+        }
+    }
+}
+
+// Usage:
+// bytes memory contractInitData = abi.encode("Custom Name", myAddress);
+// address myContract = create2Factory.create2(type(MyContract).creationCode, contractInitData);
+```
+
+The `Create2CallbackContract` is a base contract that handles retrieving the initialization data from the factory, making it available via the `initData` property. This pattern allows for:
+
+1. **Flexible Initialization**: Pass any constructor parameters without changing the contract's bytecode
+2. **Deterministic Addresses**: Same bytecode + same init data = same address
+3. **Complex Initialization**: Initialize contracts with references to other contracts
+4. **Reusable Logic**: Deploy the same contract with different configurations
+
+#### Key Benefits of the Create2CallBackFactory
+
+1. **Deterministic Addresses**: Contracts deployed with the same code and initialization data will always have the same address.
+2. **Constructor Parameters**: Pass encoded initialization data directly to constructors.
+3. **Simplified Testing**: Easily recreate complex contract systems with interdependencies.
+4. **Address Prediction**: Calculate contract addresses before deployment.
+
+#### Deployment Process
+
+1. **Create the Factory**: Deploy a Create2CallBackFactoryTarget instance.
+2. **Prepare Initialization Data**: If needed, encode the constructor parameters using `abi.encode()`.
+3. **Deploy Contracts**: Use the factory's `create2` method, passing the contract creation code and initialization data.
+4. **Compose Systems**: Deploy facets first, then packages that reference those facets.
+5. **Deploy Diamond Proxies**: Use the DiamondPackageCallBackFactory to deploy the final proxies.
+
+### Complete Diamond Proxy Deployment Flow
+
+The following example demonstrates a complete deployment flow for an ERC4626 vault using the Diamond Proxy pattern:
+
+```solidity
+// 1. Deploy the Create2CallBackFactoryTarget
+Create2CallBackFactoryTarget create2Factory = new Create2CallBackFactoryTarget();
+
+// 2. Deploy the facets using Create2
+ERC20PermitFacet erc20PermitFacet = ERC20PermitFacet(
+    create2Factory.create2(
+        type(ERC20PermitFacet).creationCode,
+        ""
+    )
+);
+
+ERC4626Facet erc4626Facet = ERC4626Facet(
+    create2Factory.create2(
+        type(ERC4626Facet).creationCode,
+        ""
+    )
+);
+
+// 3. Deploy the DiamondPackageCallBackFactory
+DiamondPackageCallBackFactory factory = DiamondPackageCallBackFactory(
+    create2Factory.create2(
+        type(DiamondPackageCallBackFactory).creationCode,
+        ""
+    )
+);
+
+// 4. Create the package with facet references
+bytes memory initData = abi.encode(
+    IERC4626DFPkg.ERC4626DFPkgInit({
+        erc20PermitFacet: erc20PermitFacet,
+        erc4626Facet: erc4626Facet
+    })
+);
+
+ERC4626DFPkg erc4626Pkg = ERC4626DFPkg(
+    create2Factory.create2(
+        type(ERC4626DFPkg).creationCode,
+        initData
+    )
+);
+
+// 5. Prepare the deployment parameters
+IERC4626DFPkg.ERC4626DFPkgArgs memory vaultArgs = IERC4626DFPkg.ERC4626DFPkgArgs({
+    underlying: address(yourToken),  // The underlying ERC20 token
+    decimalsOffset: 0,               // Decimals offset (typically 0)
+    name: "Your Vault Token",        // Name for the vault token
+    symbol: "vTKN"                   // Symbol for the vault token
+});
+
+bytes memory pkgArgs = abi.encode(vaultArgs);
+
+// 6. Deploy the final vault proxy
+bytes32 salt = erc4626Pkg.calcSalt(pkgArgs);
+address vaultAddress = factory.deploy(erc4626Pkg, pkgArgs);
+
+// 7. Now you can interact with the vault via its interfaces
+IERC4626 vault = IERC4626(vaultAddress);
+```
+
+#### Key Steps in the Process
+
+1. **Facet Deployment**: Each facet is deployed using the Create2CallBackFactory.
+2. **Diamond Factory**: The DiamondPackageCallBackFactory handles the diamond proxy deployment.
+3. **Package Creation**: Packages bundle facets together with their initialization logic.
+4. **Salt Calculation**: Each deployment uses a deterministic salt based on its arguments.
+5. **Proxy Deployment**: The final deployment step creates the diamond proxy with all facets.
+
+This pattern allows for:
+- Predictable addresses across deployments
+- Complex system composition with clear dependencies
+- Upgradable facets with state preservation
+- Clean separation of concerns between components
 
 ### Writing Facets
 
@@ -559,4 +761,113 @@ npx hardhat run scripts/deploy.js --network localhost
 ### Community Channels
 
 - GitHub Issues
+
+### Understanding the IDiamondFactoryPackage Interface
+
+The `IDiamondFactoryPackage` interface is a key component in Crane's diamond deployment ecosystem. It defines the contract interface that packages must implement to work with the DiamondPackageCallBackFactory deployment system:
+
+```solidity
+interface IDiamondFactoryPackage {
+    // Holds a diamond's facet cuts and interfaces
+    struct DiamondConfig {
+        IDiamond.FacetCut[] facetCuts;
+        bytes4[] interfaces;
+    }
+    
+    // Returns interfaces exposed by this package
+    function facetInterfaces() external view returns(bytes4[] memory interfaces);
+    
+    // Returns facet cuts for configuring a diamond
+    function facetCuts() external view returns(IDiamond.FacetCut[] memory facetCuts_);
+    
+    // Returns both interfaces and facet cuts in a single call
+    function diamondConfig() external view returns(DiamondConfig memory config);
+    
+    // Calculates a unique salt based on deployment arguments
+    function calcSalt(bytes memory pkgArgs) external view returns(bytes32 salt);
+    
+    // Preprocessing hook for normalizing user-provided arguments
+    function processArgs(bytes memory pkgArgs) external returns(bytes memory processedPkgArgs);
+    
+    // Initializes the diamond proxy's state
+    function initAccount(bytes memory initArgs) external;
+    
+    // Post-deployment hook for additional setup
+    function postDeploy(address account) external returns(bytes memory postDeployData);
+}
+```
+
+#### Package Development Process
+
+When creating a new diamond factory package (like ERC4626DFPkg), implement this interface to:
+
+1. **Define Facet Structure**: Specify which facets to include and their function selectors
+2. **Expose Interfaces**: List all interfaces the diamond proxy will support
+3. **Manage Deployment Arguments**: Process and validate deployment parameters
+4. **Handle Initialization**: Set up the initial state for the diamond proxy
+5. **Perform Post-Deployment Tasks**: Execute any additional setup after deployment
+
+#### Example Implementation Pattern
+
+A typical package implementation follows this pattern:
+
+```solidity
+contract MyFeatureDFPkg is Create2CallbackContract, IDiamondFactoryPackage {
+    // Hold references to required facets
+    IFacet immutable FEATURE_FACET;
+    IFacet immutable BASIC_FACET;
+    
+    // Constructor receives facet references via initialization data
+    constructor() {
+        MyFeaturePkgInit memory init = abi.decode(initData, (MyFeaturePkgInit));
+        FEATURE_FACET = init.featureFacet;
+        BASIC_FACET = init.basicFacet;
+    }
+    
+    // Define facet cuts to include all required functionality
+    function facetCuts() public view returns(IDiamond.FacetCut[] memory) {
+        IDiamond.FacetCut[] memory cuts = new IDiamond.FacetCut[](2);
+        
+        cuts[0] = IDiamond.FacetCut({
+            facetAddress: address(BASIC_FACET),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: BASIC_FACET.facetFuncs()
+        });
+        
+        cuts[1] = IDiamond.FacetCut({
+            facetAddress: address(FEATURE_FACET),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: FEATURE_FACET.facetFuncs()
+        });
+        
+        return cuts;
+    }
+    
+    // List all interfaces supported by the diamond
+    function facetInterfaces() public view returns(bytes4[] memory) {
+        // Return combined interfaces from all facets
+    }
+    
+    // Calculate unique salt based on deployment args
+    function calcSalt(bytes memory pkgArgs) public pure returns(bytes32) {
+        MyFeatureArgs memory args = abi.decode(pkgArgs, (MyFeatureArgs));
+        return keccak256(abi.encode(args));
+    }
+    
+    // Initialize the diamond with deployment args
+    function initAccount(bytes memory initArgs) public {
+        MyFeatureArgs memory args = abi.decode(initArgs, (MyFeatureArgs));
+        // Set up initial state
+    }
+    
+    // Perform any post-deployment actions
+    function postDeploy(address account) public pure returns(bytes memory) {
+        return "";
+    }
+}
+```
+
+This architecture enables composable, reusable packages that can be mixed and matched to create complex, feature-rich diamond proxies with predictable addresses and behaviors.
+
+### Writing Facets
 
