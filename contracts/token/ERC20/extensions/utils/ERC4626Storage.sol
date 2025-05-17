@@ -5,12 +5,15 @@ pragma solidity ^0.8.20;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
+import {BetterMath} from "../../../../utils/math/BetterMath.sol";
 import {BetterIERC20 as IERC20} from "../../BetterIERC20.sol";
 import {BetterSafeERC20 as SafeERC20} from "../../utils/BetterSafeERC20.sol";
 
@@ -36,7 +39,10 @@ contract ERC4626Storage is IERC4626Storage, ERC20Storage {
     /* ------------------------------ LIBRARIES ----------------------------- */
 
     using ERC4626Repo for bytes32;
+
+    using BetterMath for uint256;
     using SafeERC20 for IERC20;
+
     /* ---------------------------------------------------------------------- */
     /*                                 STORAGE                                */
     /* ---------------------------------------------------------------------- */
@@ -112,6 +118,72 @@ contract ERC4626Storage is IERC4626Storage, ERC20Storage {
     function _decimalsOffset()
     internal view returns (uint8) {
         return _erc4626().decimalsOffset;
+    }
+
+    function _totalAssets() internal view virtual returns (uint256) {
+        return IERC20(_asset()).balanceOf(address(this));
+    }
+
+    /**
+     * @dev Internal conversion function (from assets to shares) with support for rounding direction.
+     */
+    function _convertToShares(uint256 assets, Math.Rounding rounding) internal view virtual returns (uint256) {
+        return assets.mulDiv(_totalSupply() + 10 ** _decimalsOffset(), _totalAssets() + 1, rounding);
+    }
+
+    /**
+     * @dev Internal conversion function (from shares to assets) with support for rounding direction.
+     */
+    function _convertToAssets(uint256 shares, Math.Rounding rounding) internal view virtual returns (uint256) {
+        return shares.mulDiv(_totalAssets() + 1, _totalSupply() + 10 ** _decimalsOffset(), rounding);
+    }
+
+    /**
+     * @dev Deposit/mint common workflow.
+     */
+    function _deposit(
+        address caller, 
+        address receiver, 
+        uint256 assets, 
+        uint256 shares
+    ) internal virtual {
+        // If asset() is ERC-777, `transferFrom` can trigger a reentrancy BEFORE the transfer happens through the
+        // `tokensToSend` hook. On the other hand, the `tokenReceived` hook, that is triggered after the transfer,
+        // calls the vault, which is assumed not malicious.
+        //
+        // Conclusion: we need to do the transfer before we mint so that any reentrancy would happen before the
+        // assets are transferred and before the shares are minted, which is a valid state.
+        // slither-disable-next-line reentrancy-no-eth
+        SafeERC20.safeTransferFrom(IERC20(_asset()), caller, address(this), assets);
+        _mint(receiver, shares);
+
+        emit IERC4626.Deposit(caller, receiver, assets, shares);
+    }
+
+    /**
+     * @dev Withdraw/redeem common workflow.
+     */
+    function _withdraw(
+        address caller,
+        address receiver,
+        address owner,
+        uint256 assets,
+        uint256 shares
+    ) internal virtual {
+        if (caller != owner) {
+            _spendAllowance(owner, caller, shares);
+        }
+
+        // If asset() is ERC-777, `transfer` can trigger a reentrancy AFTER the transfer happens through the
+        // `tokensReceived` hook. On the other hand, the `tokensToSend` hook, that is triggered before the transfer,
+        // calls the vault, which is assumed not malicious.
+        //
+        // Conclusion: we need to do the transfer after the burn so that any reentrancy would happen after the
+        // shares are burned and after the assets are transferred, which is a valid state.
+        _burn(owner, shares);
+        SafeERC20.safeTransfer(IERC20(_asset()), receiver, assets);
+
+        emit IERC4626.Withdraw(caller, receiver, owner, assets, shares);
     }
 
 }

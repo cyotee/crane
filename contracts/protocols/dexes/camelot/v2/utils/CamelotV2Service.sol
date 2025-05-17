@@ -38,6 +38,36 @@ library CamelotV2Service {
     using CamelotV2Service for ICamelotV2Router;
     using SafeERC20 for IERC20;
 
+    // Struct to help avoid stack too deep errors
+    struct ReserveInfo {
+        uint256 reserveIn;
+        uint256 reserveOut;
+        uint256 feePercent;
+        uint256 unknownFee;
+    }
+
+    struct SwapParams {
+        ICamelotV2Router router;
+        uint256 amountIn;
+        IERC20 tokenIn;
+        uint256 reserveIn;
+        uint256 feePercent;
+        IERC20 tokenOut;
+        uint256 reserveOut;
+        address referrer;
+    }
+
+    struct BalanceParams {
+        ICamelotV2Router router;
+        uint256 saleAmt;
+        IERC20 tokenIn;
+        uint256 saleReserve;
+        uint256 saleTokenFeePerc;
+        IERC20 tokenOut;
+        uint256 reserveOut;
+        address referrer;
+    }
+
     /* ---------------------------------------------------------------------- */
     /*                                 Deposit                                */
     /* ---------------------------------------------------------------------- */
@@ -79,6 +109,32 @@ library CamelotV2Service {
     /*                                  Swap                                  */
     /* ---------------------------------------------------------------------- */
 
+    // Helper function to create path and approve token
+    function _prepareSwap(
+        SwapParams memory params
+    ) private returns (address[] memory path) {
+        path = new address[](2);
+        path[0] = address(params.tokenIn);
+        path[1] = address(params.tokenOut);
+        params.tokenIn.approve(address(params.router), params.amountIn);
+        return path;
+    }
+
+    // Helper function to perform router swap
+    function _executeSwap(
+        SwapParams memory params,
+        address[] memory path
+    ) private {
+        params.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            params.amountIn,
+            1, // uint amountOutMin
+            path,
+            address(this), // address to
+            params.referrer,
+            block.timestamp // uint deadline
+        );
+    }
+
     function _swap(
         ICamelotV2Router router,
         uint256 amountIn,
@@ -89,30 +145,31 @@ library CamelotV2Service {
         uint256 reserveOut,
         address referrer
     ) internal returns (uint256 amountOut) {
-        address[] memory path = new address[](2);
-        path[0] = address(tokenIn);
-        path[1] = address(tokenOut);
-        amountOut = amountIn
-        ._saleQuote(
-            // uint256 amountIn,
-            reserveIn,
-            reserveOut,
-            feePercent
+        // Create parameter struct to avoid stack too deep error
+        SwapParams memory params = SwapParams({
+            router: router,
+            amountIn: amountIn,
+            tokenIn: tokenIn,
+            reserveIn: reserveIn,
+            feePercent: feePercent,
+            tokenOut: tokenOut,
+            reserveOut: reserveOut,
+            referrer: referrer
+        });
+
+        // Calculate expected output
+        amountOut = ConstProdUtils._saleQuote(
+            params.amountIn,
+            params.reserveIn,
+            params.reserveOut,
+            params.feePercent
         );
-        tokenIn.approve(address(router), amountIn);
-        router
-        .swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountIn,
-            // uint amountOutMin,
-            1,
-            path,
-            // address to,
-            address(this),
-            referrer,
-            // uint deadline
-            block.timestamp
-        );
-        // console.log("CamelotV2Service:_swap:: Exiting function");
+
+        // Prepare swap
+        address[] memory path = _prepareSwap(params);
+        
+        // Execute swap
+        _executeSwap(params, path);
     }
     
     function _swap(
@@ -123,97 +180,46 @@ library CamelotV2Service {
         IERC20 tokenOut,
         address referrer
     ) internal returns (uint256 amountOut) {
-        // address[] memory path = new address[](2);
-        // path[0] = address(tokenIn);
-        // path[1] = address(tokenOut);
-        // (
-        //     uint112 reserve0,
-        //     uint112 reserve1,
-        //     uint16 token0feePercent,
-        //     uint16 token1FeePercent
-        // ) =  pool.getReserves();
-        // (
-        //     uint256 reserveIn,
-        //     uint256 reserveOut,
-        //     uint256 feePercent
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, reserve1, token0feePercent)
-        // : (reserve1, reserve0, token1FeePercent);
-        (
-            uint256 reserveIn,
-            uint256 reserveOut,
-            uint256 feePercent,
-
-        ) = _sortReserves(
-            // ICamelotPair pool,
-            pool,
-            // IERC20 knownToken
-            tokenIn
-        );
+        // Get reserves and fees
+        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        
+        // Forward to the main swap function
         return _swap(
-            // ICamelotV2Router router,
             router,
-            // uint256 amountIn,
             amountIn,
-            // IERC20 tokenIn,
             tokenIn,
-            // uint256 reserveIn,
-            reserveIn,
-            // uint256 feePercent,
-            feePercent,
-            // IERC20 tokenOut,
+            reserves.reserveIn,
+            reserves.feePercent,
             tokenOut,
-            // uint256 reserveOut,
-            reserveOut,
-            // address referrer
+            reserves.reserveOut,
             referrer
         );
-        // amountOut = amountIn
-        // ._calcAmountOutConstProd(
-        //     // uint256 amountIn,
-        //     reserveIn,
-        //     reserveOut,
-        //     feePercent
-        // );
-        // tokenIn.approve(address(router), amountIn);
-        // router
-        // .swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        //     amountIn,
-        //     // uint amountOutMin,
-        //     1,
-        //     path,
-        //     // address to,
-        //     address(this),
-        //     referrer,
-        //     // uint deadline
-        //     block.timestamp
-        // );
-        // console.log("CamelotV2Service:_swap:: Exiting function");
     }
 
     function _sortReserves(
         ICamelotPair pool,
         IERC20 knownToken
-    ) internal view returns(
-        uint256 knownReserve,
-        uint256 unknownReserve,
-        uint256 knownFee,
-        uint256 unknownFee
-    ) {
+    ) internal view returns(ReserveInfo memory reserves) {
         (
             uint112 reserve0,
             uint112 reserve1,
             uint16 token0feePercent,
             uint16 token1FeePercent
         ) = pool.getReserves();
-        (
-            knownReserve,
-            unknownReserve,
-            knownFee,
-            unknownFee
-        ) = address(knownToken) == pool.token0()
-        ? (reserve0, reserve1, token0feePercent, token1FeePercent)
-        : (reserve1, reserve0, token1FeePercent, token0feePercent);
+        
+        if (address(knownToken) == pool.token0()) {
+            reserves.reserveIn = reserve0;
+            reserves.reserveOut = reserve1;
+            reserves.feePercent = token0feePercent;
+            reserves.unknownFee = token1FeePercent;
+        } else {
+            reserves.reserveIn = reserve1;
+            reserves.reserveOut = reserve0;
+            reserves.feePercent = token1FeePercent;
+            reserves.unknownFee = token0feePercent;
+        }
+        
+        return reserves;
     }
     
     function _swapDeposit(
@@ -224,76 +230,33 @@ library CamelotV2Service {
         IERC20 opToken,
         address referrer
     ) internal returns (uint256) {
-        // (
-        //     uint112 reserve0,
-        //     uint112 reserve1,
-        //     uint16 token0feePercent,
-        //     uint16 token1FeePercent
-        // ) = pool.getReserves();
-        // (
-        //     uint256 saleReserve,
-        //     uint256 saleTokenFeePerc
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, token0feePercent)
-        // : (reserve1, token1FeePercent);
-        // (
-        //     uint256 saleReserve,
-        //     uint256 reserveOut,
-        //     uint256 saleTokenFeePerc
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, reserve1, token0feePercent)
-        // : (reserve1, reserve0, token1FeePercent);
-        (
-            uint256 saleReserve,
-            uint256 reserveOut,
-            uint256 saleTokenFeePerc,
-
-        ) = _sortReserves(
-            // ICamelotPair pool,
-            pool,
-            // IERC20 knownToken
-            tokenIn
-        );
-        // uint256[] memory balancedAmounts = _balanceAssets(
-        //     router,
-        //     pool,
-        //     saleAmt,
-        //     // tokenA,
-        //     tokenIn,
-        //     // tokenB,
-        //     opToken,
-        //     referrer
-        // );
-        uint256[] memory balancedAmounts = _balanceAssets(
-            // ICamelotV2Router router,
-            router,
-            // uint256 saleAmt,
-            saleAmt,
-            // IERC20 tokenIn,
-            tokenIn,
-            // uint256 saleReserve,
-            saleReserve,
-            // uint256 saleTokenFeePerc,
-            saleTokenFeePerc,
-            // IERC20 tokenOut,
-            opToken,
-            // uint256 reserveOut,
-            reserveOut,
-            // address referrer
-            referrer
-        );
-        // tokenIn.approve(address(router),  balancedAmounts[0]);
-        // opToken.approve(address(router),  balancedAmounts[1]);
+        // Get reserves
+        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        
+        // Create parameter struct to avoid stack too deep error
+        BalanceParams memory params = BalanceParams({
+            router: router,
+            saleAmt: saleAmt,
+            tokenIn: tokenIn,
+            saleReserve: reserves.reserveIn,
+            saleTokenFeePerc: reserves.feePercent,
+            tokenOut: opToken,
+            reserveOut: reserves.reserveOut,
+            referrer: referrer
+        });
+        
+        // Balance assets using the reserves
+        uint256[] memory balancedAmounts = _balanceAssetsInternal(params);
+        
+        // Deposit balanced amounts
         uint256 poolTokenAmount = _deposit(
             router,
-            // tokenA,
             tokenIn,
-            // tokenB,
             opToken,
             balancedAmounts[0],
             balancedAmounts[1]
-            // extra
         );
+        
         return poolTokenAmount;
     }
 
@@ -305,61 +268,23 @@ library CamelotV2Service {
         IERC20 tokenOut,
         address referrer
     ) internal returns(uint256[] memory amounts) {
-        (
-            uint112 reserve0,
-            uint112 reserve1,
-            uint16 token0feePercent,
-            uint16 token1FeePercent
-        ) = pool.getReserves();
-        // (
-        //     uint256 saleReserve,
-        //     uint256 saleTokenFeePerc
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, token0feePercent)
-        // : (reserve1, token1FeePercent);
-        (
-            uint256 saleReserve,
-            uint256 reserveOut,
-            uint256 saleTokenFeePerc
-        ) = address(tokenIn) == pool.token0()
-        ? (reserve0, reserve1, token0feePercent)
-        : (reserve1, reserve0, token1FeePercent);
-        // get amount of input token to be swapped
-        uint256 swapAmountIn = saleAmt
-        ._swapDepositSaleAmt(
-            saleReserve,
-            saleTokenFeePerc
-        );
-        // tokenIn.approve(address(router), swapAmountIn);
-        amounts = new uint256[](2);
-        amounts[0] = saleAmt - swapAmountIn;
-        // console.log("Swapping to balance pool");
-        // amounts[1] = _swap(
-        //     router,
-        //     pool,
-        //     swapAmountIn,
-        //     tokenIn,
-        //     tokenOut,
-        //     referrer
-        // );
-        amounts[1] = _swap(
-            // ICamelotV2Router router,
-            router,
-            // uint256 amountIn,
-            swapAmountIn,
-            // IERC20 tokenIn,
-            tokenIn,
-            // uint256 reserveIn,
-            saleReserve,
-            // uint256 feePercent,
-            saleTokenFeePerc,
-            // IERC20 tokenOut,
-            tokenOut,
-            // uint256 reserveOut,
-            reserveOut,
-            // address referrer
-            referrer
-        );
+        // Get reserves
+        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        
+        // Create parameter struct to avoid stack too deep error
+        BalanceParams memory params = BalanceParams({
+            router: router,
+            saleAmt: saleAmt,
+            tokenIn: tokenIn,
+            saleReserve: reserves.reserveIn,
+            saleTokenFeePerc: reserves.feePercent,
+            tokenOut: tokenOut,
+            reserveOut: reserves.reserveOut,
+            referrer: referrer
+        });
+        
+        // Use the helper with direct reserves
+        return _balanceAssetsInternal(params);
     }
 
     function _balanceAssets(
@@ -372,66 +297,73 @@ library CamelotV2Service {
         uint256 reserveOut,
         address referrer
     ) internal returns(uint256[] memory amounts) {
-        // (
-        //     uint112 reserve0,
-        //     uint112 reserve1,
-        //     uint16 token0feePercent,
-        //     uint16 token1FeePercent
-        // ) = pool.getReserves();
-        // (
-        //     uint256 saleReserve,
-        //     uint256 saleTokenFeePerc
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, token0feePercent)
-        // : (reserve1, token1FeePercent);
-        // (
-        //     uint256 saleReserve,
-        //     uint256 reserveOut,
-        //     uint256 saleTokenFeePerc
-        // ) = address(tokenIn) == pool.token0()
-        // ? (reserve0, reserve1, token0feePercent)
-        // : (reserve1, reserve0, token1FeePercent);
-        // get amount of input token to be swapped
-        uint256 swapAmountIn = saleAmt
-        ._swapDepositSaleAmt(
+        // Package parameters to avoid stack too deep
+        BalanceParams memory params = BalanceParams({
+            router: router,
+            saleAmt: saleAmt,
+            tokenIn: tokenIn,
+            saleReserve: saleReserve,
+            saleTokenFeePerc: saleTokenFeePerc,
+            tokenOut: tokenOut,
+            reserveOut: reserveOut,
+            referrer: referrer
+        });
+        
+        return _balanceAssetsInternal(params);
+    }
+    
+    // Helper function to implement _balanceAssets logic to avoid stack too deep
+    function _balanceAssetsInternal(BalanceParams memory params) private returns(uint256[] memory amounts) {
+        // Get amount of input token to be swapped
+        uint256 swapAmountIn = _calculateSwapAmount(
+            params.saleAmt,
+            params.saleReserve,
+            params.saleTokenFeePerc
+        );
+        
+        amounts = new uint256[](2);
+        amounts[0] = params.saleAmt - swapAmountIn;
+        
+        // Perform swap to get the second token
+        amounts[1] = _swap(
+            params.router,
+            swapAmountIn,
+            params.tokenIn,
+            params.saleReserve,
+            params.saleTokenFeePerc,
+            params.tokenOut,
+            params.reserveOut,
+            params.referrer
+        );
+        
+        return amounts;
+    }
+    
+    // Helper function to calculate swap amount for balanced deposit
+    function _calculateSwapAmount(
+        uint256 saleAmt,
+        uint256 saleReserve,
+        uint256 saleTokenFeePerc
+    ) internal pure returns (uint256) {
+        return ConstProdUtils._swapDepositSaleAmt(
+            saleAmt,
             saleReserve,
             saleTokenFeePerc
-        );
-        // tokenIn.approve(address(router), swapAmountIn);
-        amounts = new uint256[](2);
-        amounts[0] = saleAmt - swapAmountIn;
-        // console.log("Swapping to balance pool");
-        // amounts[1] = _swap(
-        //     router,
-        //     pool,
-        //     swapAmountIn,
-        //     tokenIn,
-        //     tokenOut,
-        //     referrer
-        // );
-        amounts[1] = _swap(
-            // ICamelotV2Router router,
-            router,
-            // uint256 amountIn,
-            swapAmountIn,
-            // IERC20 tokenIn,
-            tokenIn,
-            // uint256 reserveIn,
-            saleReserve,
-            // uint256 feePercent,
-            saleTokenFeePerc,
-            // IERC20 tokenOut,
-            tokenOut,
-            // uint256 reserveOut,
-            reserveOut,
-            // address referrer
-            referrer
         );
     }
 
     /* ---------------------------------------------------------------------- */
     /*                              Withdraw/Swap                             */
     /* ---------------------------------------------------------------------- */
+    
+    struct WithdrawSwapParams {
+        ICamelotPair pool;
+        ICamelotV2Router router;
+        uint256 amt;
+        IERC20 tokenOut;
+        IERC20 opToken;
+        address referrer;
+    }
 
     function _withdrawSwapDirect(
         ICamelotPair pool,
@@ -441,26 +373,59 @@ library CamelotV2Service {
         IERC20 opToken,
         address referrer
     ) internal returns(uint256 amountOut) {
-        (uint amount0, uint amount1) = pool
-        ._withdrawDirect(amt);
-        address token0 = pool.token0();
-
-        (
-            uint256 tokenOutWDAmt,
-            uint256 saleTokenWDAmt
-        ) = address(tokenOut) == address(token0)
-            ? (amount0, amount1)
-            : (amount1, amount0);
-        (uint256 proceedsAmount) = router
-        ._swap(
-            pool,
-            saleTokenWDAmt,
-            opToken,
-            tokenOut,
-            referrer
+        // Create struct to avoid stack too deep
+        WithdrawSwapParams memory params = WithdrawSwapParams({
+            pool: pool,
+            router: router,
+            amt: amt,
+            tokenOut: tokenOut,
+            opToken: opToken,
+            referrer: referrer
+        });
+        
+        // Withdraw tokens from pool
+        (uint amount0, uint amount1) = _withdrawDirect(params.pool, params.amt);
+        
+        // Determine which token is which
+        (uint256 tokenOutWDAmt, uint256 saleTokenWDAmt) = _determineTokenAmounts(
+            params,
+            amount0,
+            amount1
         );
-        amountOut = (tokenOutWDAmt + proceedsAmount);
-        // tokenOut._safeTransfer(recipient, amountOut);
+        
+        // Swap the other token to the target token and add to result
+        uint256 proceedsAmount = _swapWithdrawnTokens(params, saleTokenWDAmt);
+        amountOut = tokenOutWDAmt + proceedsAmount;
     }
-
+    
+    // Helper function to determine token amounts after withdrawal
+    function _determineTokenAmounts(
+        WithdrawSwapParams memory params,
+        uint256 amount0,
+        uint256 amount1
+    ) internal view returns (uint256 tokenOutAmount, uint256 saleTokenAmount) {
+        address token0 = params.pool.token0();
+        
+        if (address(params.tokenOut) == token0) {
+            tokenOutAmount = amount0;
+            saleTokenAmount = amount1;
+        } else {
+            tokenOutAmount = amount1;
+            saleTokenAmount = amount0;
+        }
+    }
+    
+    // Helper function to swap withdrawn tokens
+    function _swapWithdrawnTokens(
+        WithdrawSwapParams memory params,
+        uint256 saleTokenWDAmt
+    ) internal returns (uint256) {
+        return params.router._swap(
+            params.pool,
+            saleTokenWDAmt,
+            params.opToken,
+            params.tokenOut,
+            params.referrer
+        );
+    }
 }

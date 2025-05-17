@@ -49,7 +49,7 @@ bytes32 constant REENTRANCY_LOCK_FACET_INIT_CODE_HASH = keccak256(REENTRANCY_LOC
 
 import {
     ERC20PermitFacet
-} from "../token/ERC20/ERC20PermitFacet.sol";
+} from "../token/ERC20/extensions/ERC20PermitFacet.sol";
 bytes constant ERC20_PERMIT_FACET_INIT_CODE = type(ERC20PermitFacet).creationCode;
 bytes32 constant ERC20_PERMIT_FACET_INIT_CODE_HASH = keccak256(ERC20_PERMIT_FACET_INIT_CODE);
 

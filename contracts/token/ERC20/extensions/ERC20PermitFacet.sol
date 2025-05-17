@@ -1,31 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+/* -------------------------------------------------------------------------- */
+/*                                Open Zeppelin                               */
+/* -------------------------------------------------------------------------- */
+
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-
-import {
-    BetterIERC20
-} from "./BetterIERC20.sol";
-
-import {
-    IERC2612
-} from "./extensions/IERC2612.sol";
-
 import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+
+import {BetterIERC20} from "../BetterIERC20.sol";
+
+import {IERC2612} from "./IERC2612.sol";
 
 import {
     BetterERC20Permit
-} from "./extensions/BetterERC20Permit.sol";
+} from "./BetterERC20Permit.sol";
 
 import {
     IFacet
-} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
+} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
 
 import {
     Create2CallbackContract
-} from "../../factories/create2/callback/Create2CallbackContract.sol";
+} from "../../../factories/create2/callback/Create2CallbackContract.sol";
 
 contract ERC20PermitFacet
 is

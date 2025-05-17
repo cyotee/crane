@@ -1,27 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
+
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
 
 import {
     IDiamondFactoryPackage
 } from "../../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
-
-import {
-    IFacet
-} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
-
-import {
-    IDiamond
-} from "../../../utils/introspection/erc2535/IDiamond.sol";
-
+import {IFacet} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
+import {IDiamond} from "../../../utils/introspection/erc2535/IDiamond.sol";
 import {
     IERC20PermitStorage,
     ERC20PermitStorage
 } from "./utils/ERC20PermitStorage.sol";
-
-import {
-    BetterERC20Permit
-} from "./BetterERC20Permit.sol";
-
+import {BetterERC20Permit} from "./BetterERC20Permit.sol";
 import {
     Create2CallbackContract
 } from "../../../factories/create2/callback/Create2CallbackContract.sol";
@@ -47,13 +40,9 @@ IERC20PermitDFPkg,
 IDiamondFactoryPackage
 {
 
-    // IDiamondFactoryPackage immutable SELF;
+    IFacet immutable ERC20_PERMIT_FACET;
 
-    IFacet ERC20_PERMIT_FACET;
-
-    constructor(
-        // ERC20PermitDFPkgInit memory erc20PermitDFPkgInit_
-    ) {
+    constructor() {
         ERC20PermitDFPkgInit memory erc20PermitDFPkgInit_ = abi.decode(initData, (ERC20PermitDFPkgInit));
         ERC20_PERMIT_FACET = erc20PermitDFPkgInit_.erc20PermitFacet;
     }
