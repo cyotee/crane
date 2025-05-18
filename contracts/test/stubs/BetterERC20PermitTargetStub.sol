@@ -28,4 +28,8 @@ contract BetterERC20PermitTargetStub is BetterERC20Permit {
         _initERC20(name_, symbol_, decimals_, initialSupply_, recipient_);
         _initEIP721(name_, version_);
     }
+
+    function mint(address to, uint256 amount) public {
+        _mint(to, amount);
+    }
 } 
