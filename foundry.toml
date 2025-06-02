@@ -7,28 +7,66 @@ cache_path  = 'cache_forge'
 # fs_permissions = [{ access = "read", path = "./"}, { access = "write", path = "./"}]
 fs_permissions = [{ access = "read-write", path = "./"}]
 remappings = [
+    # Forge
     "forge-std/=lib/forge-std/src/",
-    "crane/=lib/crane/contracts/",
+    # WETH
     "weth/=lib/canonical-weth/contracts",
+    # Open Zeppelin
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "@openzeppelin/contracts-upgradeable/contracts/=lib/openzeppelin-contracts-upgradeable/contracts/",
+    # Solmate
+    "solmate/=lib/solmate/src/",
+    # Camelot
     "camelot-core/=lib/core/contracts/",
     "camelot-periphery/=lib/periphery/contracts/",
-
-    
-    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
-    
+    # Permit2
+    "permit/=lib/permit2/src/",
+    # Balancer
     "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
     "@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/",
     "@balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/",
-    "@balancer-labs/v3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/",
-    "@crane/=lib/crane/contracts/",
-
-    # "crane-core=/lib/crane/lib/crane-cor/src/",
-    # "indexedDefi/=lib/indexedDefi/src/",
-    # "daosys/=lib/daosys/contracts/",
-    # "prb-math/=lib/prb-math/src/",
-    # "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts/",
-    # "@abdk-math/=lib/abdk-libraries-solidity/"
+    "@balancer-labs/v3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/"
 ]
+solc = "0.8.30"
+# solc = "0.8.28"
+# solc = "0.8.26"
+# The EVM version by hardfork name
+# evm_version = 'paris'
+evm_version = 'cancun'
+# evm_version = 'pectra'
+# Whether or not Forge should auto-detect the solc version to use
+# auto_detect_solc = true
+# Print the sizes of the compiled contracts
+sizes = true
+# Disables downloading missing solc versions
+# offline = true
+# Whether or not to use the Yul intermediate representation compilation pipeline
+# via_ir = true
+# Enables or disables the optimizer
+optimizer = true
+# optimizer_runs = 4294967295
+# optimizer_runs = 4000000000
+# optimizer_runs = 200000
+# optimizer_runs = 150000
+# optimizer_runs = 100000
+# optimizer_runs = 50000
+# optimizer_runs = 40000
+# optimizer_runs = 35000
+# optimizer_runs = 30000
+# optimizer_runs = 25000
+# optimizer_runs = 20000
+optimizer_runs = 2000
+# optimizer_runs = 1000
+# optimizer_runs = 999
+# optimizer_runs = 500
+# optimizer_runs = 250
+# optimizer_runs = 100
+# optimizer_runs = 50
+# optimizer_runs = 10
+# optimizer_runs = 5
+# optimizer_runs = 1 
+# optimizer_runs = 0
+
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
 mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
