@@ -21,7 +21,7 @@ contract BetterERC4626Target_IERC4626_maxWithdrawTest is BetterERC4626TargetTest
         vm.stopPrank();
     }
     
-    function test_IERC4626_maxWithdraw() public view {
+    function test_IERC4626_maxWithdraw_BetterERC4626Target() public view {
         // maxWithdraw should equal convertToAssets(balanceOf(owner))
         address owner = DEPOSITOR;
         uint256 expected = vault.convertToAssets(vault.balanceOf(owner));

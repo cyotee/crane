@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
 // import "forge-std/Base.sol";
 // import "contracts/crane/utils/Collections.sol";
 
-import {betterconsole as console} from "../utils/vm/foundry/tools/console/betterconsole.sol";
+import {betterconsole as console} from "../utils/vm/foundry/tools/betterconsole.sol";
 
 import {
     AddressSet,
@@ -25,7 +25,7 @@ import {
 } from "../utils/vm/foundry/tools/DeclaredAddrs.sol";
 import {
     IFixture
-} from "./IFixture.sol";
+} from "../interfaces/IFixture.sol";
 
 /**
  * @title Fixture
@@ -44,6 +44,20 @@ IFixture
 
     using AddressSetRepo for AddressSet;
     using StringSetRepo for StringSet;
+
+    bool internal _testMocksEnabled;
+
+    function areTestMocksEnabled() public view returns (bool) {
+        return _testMocksEnabled;
+    }
+
+    function disableTestMocks() public {
+        _testMocksEnabled = false;
+    }
+
+    function enableTestMocks() public {
+        _testMocksEnabled = true;
+    }
 
     function initialize()
     public virtual;

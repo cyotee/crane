@@ -7,7 +7,7 @@ import {
 } from "./PowerRepo.sol";
 import {
     IPower
-} from "./IPower.sol";
+} from "../../../interfaces/IPower.sol";
 
  /**
  * @title Power function by Bancor

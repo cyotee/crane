@@ -17,7 +17,7 @@ import {
     ERC20Storage
 } from "./utils/ERC20Storage.sol";
 
-import {BetterIERC20} from "./BetterIERC20.sol";
+import {BetterIERC20} from "../../interfaces/BetterIERC20.sol";
 
 /**
  * @title ERC20Target - Proxy Logic target exposing ERC20 standard.
@@ -36,7 +36,8 @@ is
      */
     function name()
     public view virtual returns (string memory) {
-        return _erc20().name;
+        // return _erc20().name;
+        return _name();
     }
     // end::name[]
 
@@ -46,7 +47,8 @@ is
      */
     function symbol()
     public view virtual returns (string memory tokenSymbol) {
-        return _erc20().symbol;
+        // return _erc20().symbol;
+        return _symbol();
     }
     // end::symbol[]
 
@@ -56,7 +58,8 @@ is
      */
     function decimals()
     public view virtual returns (uint8) {
-        return _erc20().decimals;
+        // return _erc20().decimals;
+        return _decimals();
     }
     // end::decimals[]
 
@@ -66,7 +69,8 @@ is
      */
     function totalSupply()
     public view virtual returns (uint256 supply) {
-        return _erc20().totalSupply;
+        // return _erc20().totalSupply;
+        return _totalSupply();
     }
     // end::totalSupply[]
 
@@ -77,7 +81,8 @@ is
     function balanceOf(
         address account
     ) public view virtual returns (uint256 balance) {
-        return _erc20().balanceOf[account];
+        // return _erc20().balanceOf[account];
+        return _balanceOf(account);
     }
     // end::balanceOf[]
 
@@ -89,7 +94,8 @@ is
         address owner,
         address spender
     ) public view virtual returns (uint256) {
-        return _erc20().allowances[owner][spender];
+        // return _erc20().allowances[owner][spender];
+        return _allowance(owner, spender);
     }
     // end::allowance[]
 

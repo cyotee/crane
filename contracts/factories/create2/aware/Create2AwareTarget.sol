@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {
     ICreate2Aware
-} from "./ICreate2Aware.sol";
+} from "../../../interfaces/ICreate2Aware.sol";
 
 /**
  * @title Create2AwareTarget

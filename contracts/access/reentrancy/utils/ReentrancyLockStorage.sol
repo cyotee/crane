@@ -8,7 +8,7 @@ import {
 
 import {
     IReentrancyLock
-} from"../IReentrancyLock.sol";
+} from "../../../interfaces/IReentrancyLock.sol";
 
 contract ReentrancyLockStorage {
 

@@ -19,7 +19,7 @@ import {
 } from "../../../utils/BetterAddress.sol";
 import {
     BetterIERC20
-} from "../../../token/ERC20/BetterIERC20.sol";
+} from "../../../interfaces/BetterIERC20.sol";
 
 /**
  * @title SafeERC20

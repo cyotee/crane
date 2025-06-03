@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {
     IOperable
-} from "./IOperable.sol";
+} from "../../interfaces/IOperable.sol";
 
 import {
     IOperableStorage,

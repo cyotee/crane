@@ -7,7 +7,7 @@ import {
 
 import {
     IDiamondFactoryPackage
-} from "../IDiamondFactoryPackage.sol";
+} from "../../../../../interfaces/IDiamondFactoryPackage.sol";
 
 library DiamondFactoryPackageAdaptor {
 

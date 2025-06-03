@@ -15,17 +15,17 @@ import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IDiamond} from "../../../utils/introspection/erc2535/IDiamond.sol";
+import {IDiamond} from "../../../interfaces/IDiamond.sol";
 import {
     Create2CallbackContract
 } from "../../../factories/create2/callback/Create2CallbackContract.sol";
 import {
     IDiamondFactoryPackage
-} from "../../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
-import {IFacet} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
-import {BetterIERC20} from "../BetterIERC20.sol";
+} from "../../../interfaces/IDiamondFactoryPackage.sol";
+import {IFacet} from "../../../interfaces/IFacet.sol";
+import {BetterIERC20} from "../../../interfaces/BetterIERC20.sol";
 import {BetterSafeERC20 as SafeERC20} from "../utils/BetterSafeERC20.sol";
-import {IERC2612} from "./IERC2612.sol";
+import {IERC2612} from "../../../interfaces/IERC2612.sol";
 import {ERC4626Storage} from "./utils/ERC4626Storage.sol";
 // import {
 //     IERC20PermitStorage,

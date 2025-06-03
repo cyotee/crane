@@ -9,7 +9,7 @@ import {
 } from "../../utils/ERC20Storage.sol";
 import {
     IERC2612
-}  from "../IERC2612.sol";
+}  from "../../../../interfaces/IERC2612.sol";
 import {
     ERC2612Layout,
     ERC2612Repo

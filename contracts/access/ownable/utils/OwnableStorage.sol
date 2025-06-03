@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {
     IOwnable
-} from "../IOwnable.sol";
+} from "../../../interfaces/IOwnable.sol";
 
 import {
     OwnableLayout,

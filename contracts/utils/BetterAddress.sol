@@ -12,10 +12,8 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 /* -------------------------------------------------------------------------- */
 
 import "../constants/Constants.sol";
-
-import {
-    UInt256
-} from "./UInt256.sol";
+import {Bytecode} from "./Bytecode.sol";
+import {UInt256} from "./UInt256.sol";
 
 /**
  * @title Drop-in replacement extension of the OZ Address library.
@@ -24,9 +22,9 @@ import {
  */
 library BetterAddress {
 
-    // using BetterAddress for address;
+    using BetterAddress for address;
     using Address for address;
-    // using Bytecode for address;
+    using Bytecode for address;
     using UInt256 for uint256;
 
     /* ---------------------------------------------------------------------- */
@@ -98,6 +96,8 @@ library BetterAddress {
     /*                                New Logic                               */
     /* ---------------------------------------------------------------------- */
 
+    error NotAContract(address account);
+
     /**
      * @dev Considers presence of bytecode as definition of being a "contract".
      * @param account The address of the account to check for being a "contract".
@@ -105,11 +105,19 @@ library BetterAddress {
      */
     function isContract(address account)
     internal view returns (bool isContract_) {
-        // return account._codeSizeOf() > 0;
-        uint256 size;
-        assembly { size := extcodesize(account) }
-        return size > 0;
+        return account._codeSizeOf() > 0;
+        // uint256 size;
+        // assembly { size := extcodesize(account) }
+        // return size > 0;
     }
+
+    // function codeAt(address account)
+    // internal view returns (bytes memory code_) {
+    //     if(!isContract(account)) {
+    //         revert NotAContract(account);
+    //     }
+    //     return account._codeAt();
+    // }
 
     /**
      * @dev Left pads (prepends) zeroes to provided address

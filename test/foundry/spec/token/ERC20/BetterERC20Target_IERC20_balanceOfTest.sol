@@ -8,7 +8,7 @@ import "./BetterERC20TargetTest.sol";
  * @dev Test suite for the balanceOf function of BetterERC20Target
  */
 contract BetterERC20Target_IERC20_balanceOfTest is BetterERC20TargetTest {
-    function test_IERC20_balanceOf() public view {
+    function test_IERC20_balanceOf_BetterERC20Target() public view {
         // Initial balance of addresses should be zero when no supply is minted
         assertEq(token.balanceOf(address(this)), 0);
         assertEq(token.balanceOf(address(1)), 0);

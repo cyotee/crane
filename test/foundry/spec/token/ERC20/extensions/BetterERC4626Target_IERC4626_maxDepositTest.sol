@@ -8,7 +8,7 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the maxDeposit function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_maxDepositTest is BetterERC4626TargetTest {
-    function test_IERC4626_maxDeposit() public view {
+    function test_IERC4626_maxDeposit_BetterERC4626Target() public view {
         // maxDeposit should return max uint256 by default
         assertEq(vault.maxDeposit(address(0)), type(uint256).max);
         assertEq(vault.maxDeposit(DEPOSITOR), type(uint256).max);

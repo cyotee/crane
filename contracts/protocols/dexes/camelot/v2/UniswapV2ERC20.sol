@@ -6,7 +6,7 @@ import {
 } from "../../../../utils/cryptography/erc5267/ERC5267Target.sol";
 import  {
     IUniswapV2ERC20
-} from './IUniswapV2ERC20.sol';
+} from '../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2ERC20.sol';
 import {
     SafeMath
 } from './libraries/SafeMath.sol';

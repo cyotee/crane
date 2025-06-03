@@ -6,25 +6,25 @@ import {
 } from "../../BetterAddress.sol";
 import {
     IOwnable
-} from "../../../access/ownable/IOwnable.sol";
+} from "../../../interfaces/IOwnable.sol";
 import {
     IDiamond
-} from "./IDiamond.sol";
+} from "../../../interfaces/IDiamond.sol";
 import {
     IDiamondCut
-} from "./IDiamondCut.sol";
+} from "../../../interfaces/IDiamondCut.sol";
 import {
     DiamondCutTarget
 } from "./DiamondCutTarget.sol";
 import {
     IDiamondFactoryPackage
-} from "../../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
+} from "../../../interfaces/IDiamondFactoryPackage.sol";
 import {
     Create2CallbackContract
 } from "../../../factories/create2/callback/Create2CallbackContract.sol";
 import {
     IFacet
-} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
+} from "../../../interfaces/IFacet.sol";
 import {
     ERC165Storage
 } from "../erc165/ERC165Storage.sol";

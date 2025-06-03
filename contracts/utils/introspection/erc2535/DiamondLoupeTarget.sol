@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IDiamond} from "./IDiamond.sol";
-import {IDiamondLoupe} from "./IDiamondLoupe.sol";
+// import {IDiamond} from "../../../interfaces/IDiamond.sol";
+import {IDiamondLoupe} from "../../../interfaces/IDiamondLoupe.sol";
 import {DiamondStorage} from "./utils/DiamondStorage.sol";
 
 contract DiamondLoupeTarget

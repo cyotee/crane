@@ -1,25 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-// import {
-//     IOwnable
-// } from "../ownable/IOwnable.sol";
-
-// import {
-//     OwnableStorage
-// } from "../ownable/utils/OwnableStorage.sol";
-
-// import {
-//     OwnableModifiers
-// } from "../../access/ownable/OwnableModifiers.sol";
-
-import {
-    IOperable
-} from "../../access/operable/IOperable.sol";
-
-import {
-    OperableStorage
-} from "./utils/OperableStorage.sol";
+import { IOperable } from "../../interfaces/IOperable.sol";
+import { OperableStorage } from "./utils/OperableStorage.sol";
 
 /**
  * @title OperableModifiers - Inheritable modifiers for Operable validations.

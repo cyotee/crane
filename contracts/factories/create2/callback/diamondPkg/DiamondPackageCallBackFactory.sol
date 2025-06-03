@@ -17,7 +17,7 @@ import {
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "../../../../utils/vm/foundry/tools/console/betterconsole.sol";
+// import {betterconsole as console} from "../../../../utils/vm/foundry/tools/console/betterconsole.sol";
 
 import {
     BetterAddress as Address
@@ -27,7 +27,7 @@ import {
 } from "../../../../utils/Creation.sol";
 import {
     IFactoryCallBack
-} from "./IFactoryCallBack.sol";
+} from "../../../../interfaces/IFactoryCallBack.sol";
 
 import {
     ERC165Target
@@ -35,11 +35,11 @@ import {
 
 import {
     IDiamond
-} from "../../../../utils/introspection/erc2535/IDiamond.sol";
+} from "../../../../interfaces/IDiamond.sol";
 
 import {
     IDiamondLoupe
-} from "../../../../utils/introspection/erc2535/IDiamondLoupe.sol";
+} from "../../../../interfaces/IDiamondLoupe.sol";
 
 import {
     DiamondLoupeTarget
@@ -55,11 +55,11 @@ import {
 
 import {
     ICreate2Aware
-} from "../../aware/ICreate2Aware.sol";
+} from "../../../../interfaces/ICreate2Aware.sol";
 
 import {
     IDiamondFactoryPackage
-} from "./IDiamondFactoryPackage.sol";
+} from "../../../../interfaces/IDiamondFactoryPackage.sol";
 
 import {
     DiamondFactoryPackageAdaptor
@@ -67,7 +67,7 @@ import {
 
 import {
     IDiamondPackageCallBackFactory
-} from "./IDiamondPackageCallBackFactory.sol";
+} from "../../../../interfaces/IDiamondPackageCallBackFactory.sol";
 
 import {
     PostDeployAccountHookFacet
@@ -78,7 +78,7 @@ import {
 
 import {
     IPostDeployAccountHook
-} from "./IPostDeployAccountHook.sol";
+} from "../../../../interfaces/IPostDeployAccountHook.sol";
 
 /**
  * @title DiamondPackageCallBackFactory
@@ -171,6 +171,17 @@ ERC165Target
     error UnexpectedOrigin(address expected, address reported);
     error UnexpectedMetadata(address expected, address reported);
 
+    function calcAddress(
+        IDiamondFactoryPackage pkg,
+        bytes memory pkgArgs
+    ) public view returns (address) {
+        return address(this)
+            ._create2AddressFromOf(
+                PROXY_INIT_HASH,
+                keccak256(abi.encode(pkg, pkg.calcSalt(pkgArgs)))
+            );
+    }
+    
     function deploy(
         IDiamondFactoryPackage pkg,
         bytes memory pkgArgs

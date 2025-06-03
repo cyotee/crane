@@ -8,7 +8,7 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the convertToShares function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_convertToSharesTest is BetterERC4626TargetTest {
-    function test_IERC4626_convertToShares() public view {
+    function test_IERC4626_convertToShares_BetterERC4626Target() public view {
         // With no assets in the vault, 1:1 conversion (1e18 assets = 1e18 shares)
         uint256 assets = 1e18;
         uint256 expectedShares = assets;
@@ -16,7 +16,7 @@ contract BetterERC4626Target_IERC4626_convertToSharesTest is BetterERC4626Target
         assertEq(vault.convertToShares(assets), expectedShares);
     }
     
-    function test_IERC4626_convertToShares_withExistingAssets() public {
+    function test_IERC4626_convertToShares_withExistingAssets_BetterERC4626Target() public {
         uint256 initialDeposit = 10 * 10**UNDERLYING_DECIMALS;
         
         // First deposit to establish a non-1:1 ratio

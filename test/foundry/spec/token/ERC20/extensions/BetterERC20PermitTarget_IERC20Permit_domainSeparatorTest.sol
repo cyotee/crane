@@ -8,7 +8,7 @@ import "./BetterERC20PermitTargetTest.sol";
  * @dev Test suite for the DOMAIN_SEPARATOR function of BetterERC20PermitTarget
  */
 contract BetterERC20PermitTarget_IERC20Permit_domainSeparatorTest is BetterERC20PermitTargetTest {
-    function test_IERC20Permit_DOMAIN_SEPARATOR() public view {
+    function test_IERC20Permit_DOMAIN_SEPARATOR_BetterERC20PermitTarget() public view {
         // Check that the domain separator is not empty
         bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         assertFalse(domainSeparator == bytes32(0));

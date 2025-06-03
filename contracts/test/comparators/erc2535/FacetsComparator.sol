@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 // import "hardhat/console.sol";
 // import "forge-std/console.sol";
 // import "forge-std/console2.sol";
-import {betterconsole as console} from "../../../utils/vm/foundry/tools/console/betterconsole.sol";
+import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
 // import "contracts/crane/test/behavior/Behavior.sol";
 
 // import "contracts/crane/utils/vm/foundry/FoundryVM.sol";
@@ -65,7 +65,7 @@ import {
 
 import {
     IDiamondLoupe
-} from "../../../utils/introspection/erc2535/IDiamondLoupe.sol";
+} from "../../../interfaces/IDiamondLoupe.sol";
 
 // struct FacetsComparatorLayout {
 

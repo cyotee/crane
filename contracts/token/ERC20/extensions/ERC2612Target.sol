@@ -2,6 +2,11 @@
 // OpenZeppelin Contracts (last updated v5.0.0) (token/ERC20/extensions/ERC20Permit.sol)
 pragma solidity ^0.8.24;
 
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+
+import  "../../../constants/Constants.sol";
 import {
     ECDSA
 } from "../../../utils/cryptography/ecdsa/ECDSA.sol";
@@ -21,7 +26,7 @@ import {
 import {
     IERC20Permit,
     IERC2612
-} from "./IERC2612.sol";
+} from "../../../interfaces/IERC2612.sol";
 
 /**
  * @title ERC2612Target - "Gasless" spending limit approval contract.
@@ -40,8 +45,8 @@ BetterERC20,
 ERC2612Storage,
 IERC2612
 {
-    bytes32 private constant PERMIT_TYPEHASH
-        = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+    // bytes32 private constant PERMIT_TYPEHASH
+    //     = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
     /**
      * @dev Permit deadline has expired.
@@ -76,7 +81,7 @@ IERC2612
             revert ERC2612ExpiredSignature(deadline);
         }
 
-        bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
 
         bytes32 hash = _hashTypedDataV4(structHash);
 

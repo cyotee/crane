@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterIERC20 as IERC20} from "./BetterIERC20.sol";
-import {IERC2612} from "./extensions/IERC2612.sol";
+import {BetterIERC20 as IERC20} from "../../interfaces/BetterIERC20.sol";
+import {IERC2612} from "../../interfaces/IERC2612.sol";
 import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
-import {IERC20MintBurn} from "./IERC20MintBurn.sol";
-import {IOwnable} from "../../access/ownable/IOwnable.sol";
-import {IOperable} from "../../access/operable/IOperable.sol";
+import {IERC20MintBurn} from "../../interfaces/IERC20MintBurn.sol";
+import {IOwnable} from "../../interfaces/IOwnable.sol";
+import {IOperable} from "../../interfaces/IOperable.sol";
 
 import {
     ERC20MintBurnOperableTarget
 } from "./ERC20MintBurnOperableTarget.sol";
 
-import {IDiamond} from "../../utils/introspection/erc2535/IDiamond.sol";
+import {IDiamond} from "../../interfaces/IDiamond.sol";
 
 import {
     IFacet
-} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
+} from "../../interfaces/IFacet.sol";
 
 import {
     IDiamondFactoryPackage
-} from "../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
+} from "../../interfaces/IDiamondFactoryPackage.sol";
 
 import {
     Create2CallbackContract

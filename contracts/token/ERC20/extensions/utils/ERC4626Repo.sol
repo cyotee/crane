@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20 as IERC20} from "../../BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "../../../../interfaces/BetterIERC20.sol";
 
 struct ERC4626Layout {
     IERC20 asset;

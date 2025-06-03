@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IPowerCalculatorAware} from "./IPowerCalculatorAware.sol";
+import {IPowerCalculatorAware} from "../../../interfaces/IPowerCalculatorAware.sol";
 
-import {IPower} from "./IPower.sol";
+import {IPower} from "../../../interfaces/IPower.sol";
 
 import {PowerCalculatorAwareStorage} from "./PowerCalculatorAwareStorage.sol";
 

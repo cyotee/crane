@@ -7,10 +7,10 @@ import {
 } from "./PowerCalculatorAwareRepo.sol";
 import {
     IPowerCalculatorAware
-} from "./IPowerCalculatorAware.sol";
+} from "../../../interfaces/IPowerCalculatorAware.sol";
 import {
     IPower
-} from "./IPower.sol";
+} from "../../../interfaces/IPower.sol";
 
 interface IPowerCalculatorAwareStorage
 {

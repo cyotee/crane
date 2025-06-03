@@ -7,7 +7,7 @@ import {BetterAddress as Address} from "../../../../../utils/BetterAddress.sol";
 
 /* ----------------------------------- Ham ---------------------------------- */
 
-import {IFactoryCallBack} from "../IFactoryCallBack.sol";
+import {IFactoryCallBack} from "../../../../../interfaces/IFactoryCallBack.sol";
 
 library FactoryCallBackAdaptor {
 

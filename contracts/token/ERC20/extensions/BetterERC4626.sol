@@ -14,10 +14,10 @@ import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.so
 /* -------------------------------------------------------------------------- */
 
 import {BetterMath} from "../../../utils/math/BetterMath.sol";
-import {BetterIERC20 as IERC20} from "../BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "../../../interfaces/BetterIERC20.sol";
 import {BetterERC20 as ERC20} from "../BetterERC20.sol";
 import {BetterSafeERC20 as SafeERC20} from "../utils/BetterSafeERC20.sol";
-import {BetterIERC4626} from "./BetterIERC4626.sol";
+import {BetterIERC4626} from "../../../interfaces/BetterIERC4626.sol";
 import {ERC4626Storage} from "./utils/ERC4626Storage.sol";
 import {ERC4626Target} from "./ERC4626Target.sol";
 

@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import {OwnableTarget} from "../ownable/OwnableTarget.sol";
-import {IFacet} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
-import {IOperableManager} from "./IOperableManager.sol";
+import {IFacet} from "../../interfaces/IFacet.sol";
+import {IOperableManager} from "../../interfaces/IOperableManager.sol";
 import {OperableManagerTarget} from "./OperableManagerTarget.sol";
 
 /**

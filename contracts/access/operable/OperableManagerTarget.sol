@@ -3,8 +3,8 @@ pragma solidity ^0.8.24;
 
 import {OwnableModifiers} from "../ownable/OwnableModifiers.sol";
 import {OwnableTarget} from "../ownable/OwnableTarget.sol";
-import {IOperable} from "./IOperable.sol";
-import {IOperableManager} from "./IOperableManager.sol";
+import {IOperable} from "../../interfaces/IOperable.sol";
+import {IOperableManager} from "../../interfaces/IOperableManager.sol";
 
 /**
  * @title OperatableManagerFacet - Facet for Diamond proxies to expose IOperatableManager.

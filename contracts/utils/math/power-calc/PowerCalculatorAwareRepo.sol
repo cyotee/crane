@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {
     IPower
-} from "./IPower.sol";
+} from "../../../interfaces/IPower.sol";
 
 struct PowerCalculatorAwareLayout {
     IPower powerCalculator;

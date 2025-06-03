@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {
     IOwnable
-} from "./IOwnable.sol";
+} from "../../interfaces/IOwnable.sol";
 
 import {
     IOwnableStorage,
@@ -16,7 +16,7 @@ import {
 
 import {
     IFacet
-} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
+} from "../../interfaces/IFacet.sol";
 
 import {
     Create2CallbackContract

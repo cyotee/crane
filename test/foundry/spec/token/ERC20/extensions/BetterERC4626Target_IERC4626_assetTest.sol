@@ -8,7 +8,7 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the asset function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_assetTest is BetterERC4626TargetTest {
-    function test_IERC4626_asset() public view {
+    function test_IERC4626_asset_BetterERC4626Target() public view {
         assertEq(vault.asset(), address(underlying));
     }
 } 

@@ -3,15 +3,15 @@ pragma solidity ^0.8.0;
 
 import {
     IDiamondCut
-} from "./IDiamondCut.sol";
+} from "../../../interfaces/IDiamondCut.sol";
 import {
     IDiamond,
     DiamondStorage
 } from "./utils/DiamondStorage.sol";
 import {
-    IOwnable,
     OwnableModifiers
 } from "../../../access/ownable/OwnableModifiers.sol";
+import { IOwnable } from "../../../interfaces/IOwnable.sol";
 
 contract DiamondCutTarget
 is

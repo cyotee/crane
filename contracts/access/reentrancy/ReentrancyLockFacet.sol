@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {IReentrancyLock} from "./IReentrancyLock.sol";
+import {IReentrancyLock} from "../../interfaces/IReentrancyLock.sol";
 import {ReentrancyLockTarget} from "./ReentrancyLockTarget.sol";
-import {IFacet} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
+import {IFacet} from "../../interfaces/IFacet.sol";
 
 import {Create2CallbackContract} from "../../factories/create2/callback/Create2CallbackContract.sol";
 

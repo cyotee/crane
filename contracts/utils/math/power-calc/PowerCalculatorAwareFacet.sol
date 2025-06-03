@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IPowerCalculatorAware} from "./IPowerCalculatorAware.sol";
-
+import {IPowerCalculatorAware} from "../../../interfaces/IPowerCalculatorAware.sol";      
 import {PowerCalculatorAwareTarget} from "./PowerCalculatorAwareTarget.sol";
-
-import {IFacet} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
+import {IFacet} from "../../../interfaces/IFacet.sol";
 
 contract PowerCalculatorAwareFacet
 is

@@ -13,7 +13,7 @@ import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 import {BetterERC4626} from "../../token/ERC20/extensions/BetterERC4626.sol";
 import {ERC4626Target} from "../../token/ERC20/extensions/ERC4626Target.sol";
-import {BetterIERC20 as IERC20} from "../../token/ERC20/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "../../interfaces/BetterIERC20.sol";
 
 /**
  * @title BetterERC4626TargetStub

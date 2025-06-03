@@ -14,12 +14,6 @@ library Creation {
         deployment = initCode._create();
     }
 
-    // function create(
-    //     bytes memory initCode
-    // ) external returns(address deployment) {
-    //     deployment = _create(initCode);
-    // }
-
     /**
      * @notice calculate the deployment address for a given salt
      * @param initCodeHash_ hash of contract initialization code
@@ -33,6 +27,39 @@ library Creation {
     ) internal pure returns (address deployment) {
         //     address(bytes20(value)) is NOT equivalent.
         return address(uint160(uint256(keccak256(abi.encodePacked(hex'ff', deployer, salt, initCodeHash_)))));
+    }
+
+    function _create2Address(
+        bytes32 initCodeHash,
+        bytes32 salt
+    ) internal view returns (address deployment) {
+        return _create2AddressFromOf(address(this), initCodeHash, salt);
+    }
+
+    function _create2WithArgsAddressFromOf(
+        address deployer,
+        bytes memory initCode,
+        bytes memory initArgs,
+        bytes32 salt
+    ) internal pure returns (address deployment) {
+        return deployer._create2WithArgsAddressFromOf(
+            initCode,
+            initArgs,
+            salt
+        );
+    }
+
+    function _create2WithArgsAddress(
+        bytes memory initCode,
+        bytes memory initArgs,
+        bytes32 salt
+    ) internal view returns (address deployment) {
+        return _create2WithArgsAddressFromOf(
+            address(this),
+            initCode,
+            initArgs,
+            salt
+        );
     }
 
     /**
@@ -63,6 +90,37 @@ library Creation {
         deployment = initCode._create2WithArgs(
         salt,
         initArgs
+        );
+    }
+
+    function _create3AddressFromOf(
+        address deployer,
+        bytes32 salt
+    ) internal pure returns (address deployment) {
+        return deployer._create3AddressFromOf(salt);
+    }
+
+    function _create3AddressOf(
+        bytes32 salt
+    ) internal view returns (address deployedAddress) {
+        return _create3AddressFromOf(address(this), salt);
+    }
+
+    function _create3(
+        bytes memory initCode,
+        bytes32 salt
+    ) internal returns (address deployment) {
+        return initCode._create3(salt);
+    }
+
+    function _create3WithArgs(
+        bytes memory initCode,
+        bytes memory initArgs,
+        bytes32 salt
+    ) internal returns (address deployment) {
+        return _create3(
+            abi.encodePacked(initCode, initArgs),
+            salt
         );
     }
 

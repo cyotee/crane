@@ -21,14 +21,14 @@ contract BetterERC4626Target_IERC4626_previewRedeemTest is BetterERC4626TargetTe
         vm.stopPrank();
     }
     
-    function test_IERC4626_previewRedeem() public view {
+    function test_IERC4626_previewRedeem_BetterERC4626Target() public view {
         uint256 shares = 100 * 10**UNDERLYING_DECIMALS;
         
         // previewRedeem should match convertToAssets
         assertEq(vault.previewRedeem(shares), vault.convertToAssets(shares));
     }
     
-    function test_IERC4626_previewRedeemRounding() public {
+    function test_IERC4626_previewRedeemRounding_BetterERC4626Target() public {
         // Create a scenario where rounding would apply
         
         // Introduce some imbalance

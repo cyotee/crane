@@ -11,15 +11,15 @@ import {
 
 import {
     IFacet
-} from "./IFacet.sol";
+} from "../../../../interfaces/IFacet.sol";
 
 import {
     IPostDeployAccountHook
-} from "./IPostDeployAccountHook.sol";
+} from "../../../../interfaces/IPostDeployAccountHook.sol";
 
 import {
     IDiamondFactoryPackage
-} from "./IDiamondFactoryPackage.sol";
+} from "../../../../interfaces/IDiamondFactoryPackage.sol";
 
 contract PostDeployAccountHookFacet
 is

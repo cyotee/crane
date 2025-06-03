@@ -8,7 +8,7 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the deposit function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_depositTest is BetterERC4626TargetTest {
-    function test_IERC4626_deposit() public {
+    function test_IERC4626_deposit_BetterERC4626Target() public {
         uint256 depositAmount = 100 * 10**UNDERLYING_DECIMALS;
         
         // Pre-deposit state
@@ -30,7 +30,7 @@ contract BetterERC4626Target_IERC4626_depositTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(DEPOSITOR), INITIAL_UNDERLYING_SUPPLY - depositAmount);
     }
     
-    function test_IERC4626_deposit_differentReceiver() public {
+    function test_IERC4626_deposit_differentReceiver_BetterERC4626Target() public {
         uint256 depositAmount = 100 * 10**UNDERLYING_DECIMALS;
         address receiver = address(2);
         
@@ -47,7 +47,7 @@ contract BetterERC4626Target_IERC4626_depositTest is BetterERC4626TargetTest {
         assertEq(vault.balanceOf(DEPOSITOR), 0);
     }
     
-    function test_IERC4626_deposit_ZeroAmount() public {
+    function test_IERC4626_deposit_ZeroAmount_BetterERC4626Target() public {
         // Should be able to deposit zero assets
         vm.prank(DEPOSITOR);
         vault.deposit(0, DEPOSITOR);

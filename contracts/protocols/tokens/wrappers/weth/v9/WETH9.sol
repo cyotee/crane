@@ -12,16 +12,21 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+pragma solidity ^0.8.24;
 
-pragma solidity ^0.8.0;
+/* -------------------------------------------------------------------------- */
+/*                                 Balancer V3                                */
+/* -------------------------------------------------------------------------- */
 
-contract WETH9 {
+import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+
+contract WETH9 is IWETH {
     string public name     = "Wrapped Ether";
     string public symbol   = "WETH";
     uint8  public decimals = 18;
 
-    event  Approval(address indexed src, address indexed guy, uint wad);
-    event  Transfer(address indexed src, address indexed dst, uint wad);
+    // event  Approval(address indexed src, address indexed guy, uint wad);
+    // event  Transfer(address indexed src, address indexed dst, uint wad);
     event  Deposit(address indexed dst, uint wad);
     event  Withdrawal(address indexed src, uint wad);
 
@@ -33,7 +38,7 @@ contract WETH9 {
     }
 
     receive() external payable {
-        // deposit();
+        deposit();
     }
 
     function deposit() public payable {

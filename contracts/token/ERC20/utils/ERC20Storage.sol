@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                                    Forge                                   */
@@ -238,18 +238,6 @@ is
     }
 
     function _mint(
-        address account,
-        uint256 amount,
-        uint256 currentSupply
-    ) internal virtual {
-        _mint(
-            amount,
-            account,
-            currentSupply
-        );
-    }
-
-    function _mint(
         uint256 amount,
         address account,
         uint256 currentSupply
@@ -264,6 +252,18 @@ is
         );
     }
 
+    function _mint(
+        address account,
+        uint256 amount,
+        uint256 currentSupply
+    ) internal virtual {
+        _mint(
+            amount,
+            account,
+            currentSupply
+        );
+    }
+
     // tag::_mint(uint256,address)
     /**
      * @dev Normalizes argument order to ERC4626.
@@ -275,8 +275,6 @@ is
         uint256 amount,
         address account
     ) internal virtual {
-        // ERC20Storage._totalSupply(ERC20Storage._totalSupply() + amount);
-        // ERC20Storage._increaseBalanceOf(account, amount);
         _mint(
             amount,
             account,
@@ -296,8 +294,6 @@ is
         address account,
         uint256 amount
     ) internal virtual {
-        // ERC20Storage._totalSupply(ERC20Storage._totalSupply() + amount);
-        // ERC20Storage._increaseBalanceOf(account, amount);
         _mint(
             amount,
             account,
@@ -387,14 +383,7 @@ is
     function _increaseBalanceOf(
         address account,
         uint256 amount
-    ) internal {
-        // Increase the balance of `account` by `amount`.
-        // ERC20Storage._balanceOf(
-        //     account,
-        //     // Load the current balance of `account` and add the `amount`.
-        //     // Should naturally revert for overflow.
-        //     ERC20Storage._balanceOf(account) + amount
-        // );
+    ) internal virtual {
         _erc20().balanceOf[account] += amount;
     }
     // end::_increaseBalanceOf(address,uint256)[]
@@ -407,19 +396,13 @@ is
     function _decreaseBalanceOf(
         address account,
         uint256 amount
-    ) internal {
+    ) internal virtual {
         // Load the current balance of `account`.
         uint256 senderBalance = _erc20().balanceOf[account];
         if(senderBalance < amount) {
             // Revert if `account` balance is insufficient.
             revert ERC20InsufficientBalance(account, senderBalance, amount);
         }
-        // Decrease the balance of `account` of `amount`.
-        // ERC20Storage._balanceOf(
-        //     account,
-        //     // Load the current balance of `account` and subtract the `amount`.
-        //     senderBalance - amount
-        // );
         _erc20().balanceOf[account] = senderBalance - amount;
     }
     // end::_decreaseBalanceOf(address,uint256)[]

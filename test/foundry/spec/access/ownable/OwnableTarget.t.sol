@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 // import "forge-std/Test.sol";
 // import "../../../../../../test/DAOSYSTest.sol";
 // import "daosys/access/ownable/behaviors/IOwnable.b.sol";
-import "../../../../../contracts/test/CraneTest.sol";
+import { CraneTest } from "../../../../../contracts/test/CraneTest.sol";
 
-import "../../../../../contracts/access/ownable/test/stubs/OwnableTargetStub.sol";
-import {IOwnable} from "../../../../../contracts/access/ownable/IOwnable.sol";
+import { OwnableTargetStub } from "../../../../../contracts/test/stubs/OwnableTargetStub.sol";
+import { IOwnable } from "../../../../../contracts/interfaces/IOwnable.sol";
 
 contract OwnableTargetTest
 is
@@ -22,7 +22,7 @@ CraneTest
 
     function setUp()
     public virtual override {
-
+        
         declareUsed(address(owner_));
         ownableStub = new OwnableTargetStub(owner_);
         declareUsed(address(ownableStub));

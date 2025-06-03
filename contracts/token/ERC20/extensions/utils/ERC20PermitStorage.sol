@@ -16,7 +16,7 @@ import {
 } from "./ERC2612Storage.sol";
 import {
     BetterIERC20Permit
-} from "../BetterIERC20Permit.sol";
+} from "../../../../interfaces/BetterIERC20Permit.sol";
 
 interface IERC20PermitStorage {
 

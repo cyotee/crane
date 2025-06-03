@@ -8,8 +8,9 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the mint function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_mintTest is BetterERC4626TargetTest {
+    
     // Mint function tests
-    function test_IERC4626_mint() public {
+    function test_IERC4626_mint_BetterERC4626Target() public {
         uint256 mintAmount = 100 * 10**UNDERLYING_DECIMALS;
         
         // Pre-mint state
@@ -31,7 +32,7 @@ contract BetterERC4626Target_IERC4626_mintTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(DEPOSITOR), INITIAL_UNDERLYING_SUPPLY - mintAmount);
     }
     
-    function test_IERC4626_mint_differentReceiver() public {
+    function test_IERC4626_mint_differentReceiver_BetterERC4626Target() public {
         uint256 mintAmount = 100 * 10**UNDERLYING_DECIMALS;
         address receiver = address(2);
         
@@ -47,7 +48,7 @@ contract BetterERC4626Target_IERC4626_mintTest is BetterERC4626TargetTest {
         assertEq(vault.balanceOf(DEPOSITOR), 0);
     }
     
-    function test_IERC4626_mint_ZeroAmount() public {
+    function test_IERC4626_mint_ZeroAmount_BetterERC4626Target() public {
         // Should be able to mint zero shares
         vm.prank(DEPOSITOR);
         vault.mint(0, DEPOSITOR);

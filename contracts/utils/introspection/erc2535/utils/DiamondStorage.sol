@@ -21,13 +21,13 @@ import {
 
 import {
     IDiamond
-} from "../IDiamond.sol";
+} from "../../../../interfaces/IDiamond.sol";
 import {
     IDiamondCut
-} from "../IDiamondCut.sol";
+} from "../../../../interfaces/IDiamondCut.sol";
 import {
     IDiamondLoupe
-} from "../IDiamondLoupe.sol";
+} from "../../../../interfaces/IDiamondLoupe.sol";
 
 abstract contract DiamondStorage
 // is MutableERC165Storage

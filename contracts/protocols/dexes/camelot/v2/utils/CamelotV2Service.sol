@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../../token/ERC20/BetterIERC20.sol";
+} from "../../../../../interfaces/BetterIERC20.sol";
 
 import {
     BetterSafeERC20 as SafeERC20
@@ -15,13 +15,13 @@ import {
 
 import {
     ICamelotPair
-} from "../ICamelotPair.sol";
+} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {
     ICamelotFactory
-} from "../ICamelotFactory.sol";
+} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import {
     ICamelotV2Router
-} from "../ICamelotV2Router.sol";
+} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 
 // import {
 //     CamelotV2Utils

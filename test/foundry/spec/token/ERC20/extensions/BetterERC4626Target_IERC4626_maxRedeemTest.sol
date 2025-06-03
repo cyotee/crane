@@ -21,7 +21,7 @@ contract BetterERC4626Target_IERC4626_maxRedeemTest is BetterERC4626TargetTest {
         vm.stopPrank();
     }
     
-    function test_IERC4626_maxRedeem() public view {
+    function test_IERC4626_maxRedeem_BetterERC4626Target() public view {
         // maxRedeem should equal balanceOf(owner)
         address owner = DEPOSITOR;
         

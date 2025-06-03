@@ -11,9 +11,9 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20 as IERC20} from "../BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "../../../interfaces/BetterIERC20.sol";
 import {ERC4626Storage} from "./utils/ERC4626Storage.sol";
-import {IERC4626Errors} from "./IERC4626Errors.sol";
+import {IERC4626Errors} from "../../../interfaces/IERC4626Errors.sol";
 
 contract ERC4626Target is ERC4626Storage, IERC4626Errors {
 

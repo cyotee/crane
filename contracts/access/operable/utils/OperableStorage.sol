@@ -1,20 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {OwnableStorage} from "../../../access/ownable/utils/OwnableStorage.sol";
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
 
 import {
     OperableLayout,
     OperableRepo
-} from "../utils/OperableRepo.sol";
-
-import {IOperable} from "../IOperable.sol";
-
-import {OwnableModifiers} from "../../ownable/OwnableModifiers.sol";
-
-import {
-    OperableRepo
 } from "./OperableRepo.sol";
+import {OwnableStorage} from "../../../access/ownable/utils/OwnableStorage.sol";
+import {IOperable} from "../../../interfaces/IOperable.sol";
 
 /**
  * @title IOperableStorage - Inheritable structs for 
@@ -144,13 +140,17 @@ abstract contract OperableStorage is OwnableStorage, IOperableStorage {
     /**
      * @param func Function selector for which to query authorization of `newOperator`.
      * @param query Address for which to query operator authorization.
-     * @return Boolean indicating authorization as an operator.
+     * @return isAuthed Boolean indicating authorization as an operator.
      */
     function _isOperatorFor(
         bytes4 func,
         address query
-    ) internal view virtual returns(bool) {
-        return _operable().isOperatorFor[func][query];
+    ) internal view virtual returns(bool isAuthed) {
+        isAuthed = _operable().isOperator[query];
+        if(!isAuthed) {
+            isAuthed = _operable().isOperatorFor[func][query];
+        }
+        return isAuthed;
     }
 
     /**

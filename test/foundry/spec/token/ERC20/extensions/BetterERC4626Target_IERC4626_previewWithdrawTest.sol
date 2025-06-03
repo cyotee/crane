@@ -21,7 +21,7 @@ contract BetterERC4626Target_IERC4626_previewWithdrawTest is BetterERC4626Target
         vm.stopPrank();
     }
     
-    function test_IERC4626_previewWithdraw() public view {
+    function test_IERC4626_previewWithdraw_BetterERC4626Target() public view {
         uint256 assets = 100 * 10**UNDERLYING_DECIMALS;
         
         // previewWithdraw should be consistent with actual withdraw behavior

@@ -13,7 +13,7 @@ import {
 
 import {
     IFacet
-} from "../../factories/create2/callback/diamondPkg/IFacet.sol";
+} from "../../interfaces/IFacet.sol";
 
 /**
  * @title OperatableFacet - Facet for Diamond proxies to expose IOwnable and IOperatable.

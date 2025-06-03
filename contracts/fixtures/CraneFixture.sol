@@ -1,23 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {betterconsole as console} from "../utils/vm/foundry/tools/console/betterconsole.sol";
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
 
-import {LOCAL} from "../networks/LOCAL.sol";
+import {betterconsole as console} from "../utils/vm/foundry/tools/betterconsole.sol";
 
-import {ETHEREUM_MAIN} from "../networks/ethereum/ETHEREUM_MAIN.sol";
+import {LOCAL} from "../constants/networks/LOCAL.sol";
 
-import {ETHEREUM_SEPOLIA} from "../networks/ethereum/ETHEREUM_SEPOLIA.sol";
+import {ETHEREUM_MAIN} from "../constants/networks/ETHEREUM_MAIN.sol";
 
-import {APE_CHAIN_MAIN} from "../networks/arbitrum/apechain/constants/APE_CHAIN_MAIN.sol";
+import {ETHEREUM_SEPOLIA} from "../constants/networks/ETHEREUM_SEPOLIA.sol";
 
-import {APE_CHAIN_CURTIS} from "../networks/arbitrum/apechain/constants/APE_CHAIN_CURTIS.sol";
+import {APE_CHAIN_MAIN} from "../constants/networks/APE_CHAIN_MAIN.sol";
+
+import {APE_CHAIN_CURTIS} from "../constants/networks/APE_CHAIN_CURTIS.sol";
 
 import "../constants/CraneINITCODE.sol";
 
 import {FoundryVM} from "../utils/vm/foundry/FoundryVM.sol";
-
-// import "contracts/crane/utils/Primitives.sol";
 import {
     Fixture
 } from "./Fixture.sol";
@@ -26,13 +28,13 @@ import {
     Creation
 } from "../utils/Creation.sol";
 
-import {
-    CamelotV2Fixture
-} from "../protocols/dexes/camelot/v2/fixtures/CamelotV2Fixture.sol";
+// import {
+//     CamelotV2Fixture
+// } from "../protocols/dexes/camelot/v2/fixtures/CamelotV2Fixture.sol";
 
 import {
     ICreate2CallbackFactory
-} from "../factories/create2/callback/ICreate2CallbackFactory.sol";
+} from "../interfaces/ICreate2CallbackFactory.sol";
 
 import {
     Create2CallBackFactoryTarget
@@ -40,11 +42,11 @@ import {
 
 import {
     IDiamondPackageCallBackFactory
-} from "../factories/create2/callback/diamondPkg/IDiamondPackageCallBackFactory.sol";
+} from "../interfaces/IDiamondPackageCallBackFactory.sol";
 
 import {
     IPower
-} from "../utils/math/power-calc/IPower.sol";
+} from "../interfaces/IPower.sol";
 
 import {
     PowerCalculatorC2ATarget
@@ -57,7 +59,7 @@ import {
 
 import {
     BetterIERC20Permit as IERC20Permit
-} from "../token/ERC20/extensions/BetterIERC20Permit.sol";
+} from "../interfaces/BetterIERC20Permit.sol";
 
 import {
     IERC20PermitDFPkg,
@@ -71,9 +73,11 @@ import {
  */
 contract CraneFixture
 is
-FoundryVM,
-Fixture,
-CamelotV2Fixture
+// FoundryVM,
+Fixture
+// Permit2Fixture,
+// CamelotV2Fixture,
+// BalancerV3Fixture
 {
 
     using Creation for bytes;
@@ -85,8 +89,10 @@ CamelotV2Fixture
 
     function initialize() public virtual 
     override(
-        Fixture,
-        CamelotV2Fixture
+        Fixture
+        // Permit2Fixture,
+        // CamelotV2Fixture,
+        // BalancerV3Fixture
     ) {
         // Fixture.initialize();
         // CamelotV2Fixture.initialize();
@@ -155,7 +161,7 @@ CamelotV2Fixture
         // _factory = factory_;
         factory(block.chainid, factory_);
         // _log("Declaring address of Create2CallBackFactoryTarget.");
-        declare(builderKey_Crane(), "factory", address(factory_));
+        // declare(builderKey_Crane(), "factory", address(factory_));
         // _log("Declared address of Create2CallBackFactoryTarget.");
         return true;
     }
@@ -209,9 +215,10 @@ CamelotV2Fixture
     function diamondFactory(IDiamondPackageCallBackFactory diamondFactory_) public returns(bool) {
         // _log("CraneFixture:diamondFactory():: Entering function.");
         // _log("Setting provided diamond factory of %s", address(diamondFactory_));
-        diamondFactory(block.chainid, diamondFactory_);
+        // diamondFactory(block.chainid, diamondFactory_);
         // _log("Declaring address of IDiamondPackageCallBackFactory.");
-        declare(builderKey_Crane(), "diamondFactory", address(diamondFactory_));
+        // declare(builderKey_Crane(), "diamondFactory", address(diamondFactory_));
+        diamondFactory(block.chainid, diamondFactory_);
         // _log("Declared address of IDiamondPackageCallBackFactory.");
         return true;
     }
@@ -276,7 +283,7 @@ CamelotV2Fixture
         // _log("Setting provided power calculator of %s", address(powerCalculator_));
         powerCalculator(block.chainid, powerCalculator_);
         // _log("Declaring address of PowerCalculatorC2ATarget.");
-        declare(builderKey_Crane(), "powerCalculator", address(powerCalculator_));
+        // declare(builderKey_Crane(), "powerCalculator", address(powerCalculator_));
         // _log("Declared address of PowerCalculatorC2ATarget.");
         return true;
     }

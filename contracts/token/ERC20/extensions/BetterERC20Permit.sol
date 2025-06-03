@@ -12,10 +12,10 @@ import {
 } from "./ERC2612Target.sol";
 import {
     BetterIERC20Permit as IERC20Permit
-} from "./BetterIERC20Permit.sol";
+} from "../../../interfaces/BetterIERC20Permit.sol";
 import {
     BetterERC20 as ERC20
-} from "../BetterERC20.sol";
+} from "../BetterERC20.sol"; 
 
 // Mostly a reminder to include this in tokens.
 contract BetterERC20Permit

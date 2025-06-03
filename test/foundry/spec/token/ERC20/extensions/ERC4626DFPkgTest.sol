@@ -1,23 +1,27 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.20;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+
+import { betterconsole as console } from "../../../../../../contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { CraneTest } from "../../../../../../contracts/test/CraneTest.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC2612} from "../../../../../../contracts/token/ERC20/extensions/IERC2612.sol";
+import {IERC2612} from "../../../../../../contracts/interfaces/IERC2612.sol";
 import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
 
 import {Create2CallBackFactoryTarget} from "../../../../../../contracts/factories/create2/callback/Create2CallBackFactoryTarget.sol";
 import {DiamondPackageCallBackFactory} from "../../../../../../contracts/factories/create2/callback/diamondPkg/DiamondPackageCallBackFactory.sol";
-import {IDiamondFactoryPackage} from "../../../../../../contracts/factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
-import {IFacet} from "../../../../../../contracts/factories/create2/callback/diamondPkg/IFacet.sol";
-import {IDiamond} from "../../../../../../contracts/utils/introspection/erc2535/IDiamond.sol";
+import {IDiamondFactoryPackage} from "../../../../../../contracts/interfaces/IDiamondFactoryPackage.sol";
+import {IFacet} from "../../../../../../contracts/interfaces/IFacet.sol";
+import {IDiamond} from "../../../../../../contracts/interfaces/IDiamond.sol";
 
 import {ERC4626DFPkg, IERC4626DFPkg} from "../../../../../../contracts/token/ERC20/extensions/ERC4626DFPkg.sol";
-import {ERC4626Facet} from "../../../../../../contracts/token/ERC20/extensions/EREC4626Facet.sol";
+import {ERC4626Facet} from "../../../../../../contracts/token/ERC20/extensions/ERC4626Facet.sol";
 import {BetterERC20TargetStub} from "../../../../../../contracts/test/stubs/BetterERC20TargetStub.sol";
 import {ERC20PermitFacet} from "../../../../../../contracts/token/ERC20/extensions/ERC20PermitFacet.sol";
 
@@ -25,17 +29,17 @@ import {ERC20PermitFacet} from "../../../../../../contracts/token/ERC20/extensio
  * @title ERC4626DFPkgTest
  * @dev Tests for ERC4626DFPkg to verify it can successfully deploy a working ERC4626 vault
  */
-contract ERC4626DFPkgTest is Test {
+contract ERC4626DFPkgTest is CraneTest {
 
-    Create2CallBackFactoryTarget create2Factory;
+    // Create2CallBackFactoryTarget create2Factory;
     // Test fixtures
     ERC4626DFPkg erc4626Pkg;
-    DiamondPackageCallBackFactory factory;
+    // DiamondPackageCallBackFactory factory;
     BetterERC20TargetStub underlying;
     address vaultAddress;
     
     // Facets
-    ERC20PermitFacet erc20PermitFacet;
+    // ERC20PermitFacet erc20PermitFacet;
     ERC4626Facet erc4626Facet;
     
     // Constants
@@ -46,12 +50,14 @@ contract ERC4626DFPkgTest is Test {
     uint8 public constant UNDERLYING_DECIMALS = 18;
     uint8 public constant DECIMALS_OFFSET = 0;
     uint256 public constant INITIAL_UNDERLYING_SUPPLY = 1000 * 10**18;
-    address public constant DEPLOYER = address(10);
+    address public DEPLOYER;
     address public constant DEPOSITOR = address(1);
     address public constant RECEIVER = address(2);
     uint256 public constant DEPOSIT_AMOUNT = 100 * 10**18;
 
-    function setUp() public {
+    function setUp() public virtual override {
+        setDeployer(address(10));
+        DEPLOYER = deployer();
         // Set up as deployer
         vm.startPrank(DEPLOYER);
         
@@ -64,40 +70,40 @@ contract ERC4626DFPkgTest is Test {
             DEPOSITOR
         );
 
-        create2Factory = new Create2CallBackFactoryTarget();
+        // create2Factory = new Create2CallBackFactoryTarget();
         
         // Deploy facets
-        erc20PermitFacet = ERC20PermitFacet(
-            create2Factory.create2(
-                type(ERC20PermitFacet).creationCode,
-                ""
-            )
-        );
+        // erc20PermitFacet = ERC20PermitFacet(
+        //     factory().create2(
+        //         type(ERC20PermitFacet).creationCode,
+        //         ""
+        //     )
+        // );
         erc4626Facet = ERC4626Facet(
-            create2Factory.create2(
+            factory().create2(
                 type(ERC4626Facet).creationCode,
                 ""
             )
         );
         
         // Create diamond factory
-        factory = DiamondPackageCallBackFactory(
-            create2Factory.create2(
-                type(DiamondPackageCallBackFactory).creationCode,
-                ""
-            )
-        );
+        // factory = DiamondPackageCallBackFactory(
+        //     factory().create2(
+        //         type(DiamondPackageCallBackFactory).creationCode,
+        //         ""
+        //     )
+        // );
         
         // Deploy the package with facet references
         bytes memory initData = abi.encode(
             IERC4626DFPkg.ERC4626DFPkgInit({
-                erc20PermitFacet: erc20PermitFacet,
+                erc20PermitFacet: erc20PermitFacet(),
                 erc4626Facet: erc4626Facet
             })
         );
         
         erc4626Pkg = ERC4626DFPkg(
-            create2Factory.create2(
+            factory().create2(
                 type(ERC4626DFPkg).creationCode,
                 initData
             )
@@ -114,18 +120,18 @@ contract ERC4626DFPkgTest is Test {
         bytes memory pkgArgs = abi.encode(vaultArgs);
         
         // Deploy the vault using the factory
-        bytes32 salt = erc4626Pkg.calcSalt(pkgArgs);
-        vaultAddress = factory.deploy(erc4626Pkg, pkgArgs);
+        // bytes32 salt = erc4626Pkg.calcSalt(pkgArgs);
+        vaultAddress = diamondFactory().deploy(erc4626Pkg, pkgArgs);
         
         vm.stopPrank();
     }
     
-    function test_DeploymentSuccess() public {
+    function test_DeploymentSuccess() public view {
         // Check that the vault was deployed
         assertTrue(vaultAddress != address(0), "Vault should be deployed");
         
         // Check that the correct interfaces are supported
-        IDiamond diamond = IDiamond(vaultAddress);
+        // IDiamond diamond = IDiamond(vaultAddress);
         
         assertTrue(
             _supportsInterface(vaultAddress, type(IERC20).interfaceId),
@@ -148,7 +154,7 @@ contract ERC4626DFPkgTest is Test {
         );
     }
     
-    function test_VaultInitialization() public {
+    function test_VaultInitialization() public view {
         IERC4626 vault = IERC4626(vaultAddress);
         IERC20Metadata vaultToken = IERC20Metadata(vaultAddress);
         
@@ -259,21 +265,24 @@ contract ERC4626DFPkgTest is Test {
         return success && abi.decode(data, (bool));
     }
     
-    // Approximation helper for comparing values with small precision differences
-    function assertApproxEqualRelXY(uint256 x, uint256 y, uint256 precision) internal {
-        if (precision == 0) {
-            precision = 1;
-        }
+    // // TODO Move to CraneAsserts
+    // // TODO Inherit CraneAsserts into CraneTest
+    // // Approximation helper for comparing values with small precision differences
+    // function assertApproxEqualRelXY(uint256 x, uint256 y, uint256 precision) internal pure {
+    //     if (precision == 0) {
+    //         precision = 1;
+    //     }
         
-        uint256 maxValue = x > y ? x : y;
-        uint256 minValue = x > y ? y : x;
+    //     uint256 maxValue = x > y ? x : y;
+    //     uint256 minValue = x > y ? y : x;
         
-        if (minValue == 0) {
-            assertTrue(maxValue < precision, "Values not approximately equal");
-            return;
-        }
+    //     if (minValue == 0) {
+    //         assertTrue(maxValue < precision, "Values not approximately equal");
+    //         return;
+    //     }
         
-        uint256 diff = maxValue - minValue;
-        assertTrue(diff * 1e18 / minValue < precision, "Values not approximately equal");
-    }
+    //     uint256 diff = maxValue - minValue;
+    //     assertTrue(diff * 1e18 / minValue < precision, "Values not approximately equal");
+    // }
+    
 } 

@@ -68,14 +68,14 @@ bytes32 constant ERC20_MINT_BURN_OPERABLE_FACET_DFPKG_INIT_CODE_HASH = keccak256
 
 import {
     GreeterFacet
-} from "../test/stubs/greeter/facets/GreeterFacet.sol";
+} from "../test/stubs/greeter/GreeterFacet.sol";
 bytes constant GREETER_FACET_INIT_CODE = type(GreeterFacet).creationCode;
 // bytes constant GREETER_FACET_INIT_CODE = hex"";
 bytes32 constant GREETER_FACET_INIT_CODE_HASH = keccak256(GREETER_FACET_INIT_CODE);
 
 import {
     GreeterFacetDiamondFactoryPackage
-} from "../test/stubs/greeter/dfPkgs/GreeterFacetDiamondFactoryPackage.sol";
+} from "../test/stubs/greeter/GreeterFacetDiamondFactoryPackage.sol";
 bytes constant GREETER_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE = type(GreeterFacetDiamondFactoryPackage).creationCode;
 // bytes constant GREETER_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE = hex"";
 bytes32 constant GREETER_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE_HASH = keccak256(GREETER_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE);

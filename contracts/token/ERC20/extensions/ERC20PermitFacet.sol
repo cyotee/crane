@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                                Open Zeppelin                               */
@@ -14,21 +14,11 @@ import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20} from "../BetterIERC20.sol";
-
-import {IERC2612} from "./IERC2612.sol";
-
-import {
-    BetterERC20Permit
-} from "./BetterERC20Permit.sol";
-
-import {
-    IFacet
-} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
-
-import {
-    Create2CallbackContract
-} from "../../../factories/create2/callback/Create2CallbackContract.sol";
+import {BetterIERC20} from "../../../interfaces/BetterIERC20.sol";
+import {IERC2612} from "../../../interfaces/IERC2612.sol";
+import {BetterERC20Permit} from "./BetterERC20Permit.sol";
+import {IFacet} from "../../../interfaces/IFacet.sol";
+import {Create2CallbackContract} from "../../../factories/create2/callback/Create2CallbackContract.sol";
 
 contract ERC20PermitFacet
 is
@@ -46,7 +36,7 @@ IFacet
         interfaces[0] = type(IERC20).interfaceId;
         interfaces[1] = type(IERC20Metadata).interfaceId;
         interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
-        interfaces[3] = type(IERC2612).interfaceId;
+        interfaces[3] = type(IERC20Permit).interfaceId;
         interfaces[4] = type(IERC5267).interfaceId;
 
     }

@@ -15,7 +15,8 @@ import {
 } from "./extensions/BetterERC20Permit.sol";
 import {
     IERC20MintBurn
-} from "./IERC20MintBurn.sol";
+} from "../../interfaces/IERC20MintBurn.sol";
+
 contract ERC20MintBurnOperableTarget
 is
 BetterERC20Permit,

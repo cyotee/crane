@@ -12,7 +12,7 @@ pragma solidity ^0.8.0;
 // import "forge-std/Test.sol";
 import {FoundryVM} from "../foundry/FoundryVM.sol";
 
-import {ARB_OS_PRECOMPILES} from "../../../networks/arbitrum/ARB_OS_PRECOMPILES.sol";
+import {ARB_OS_PRECOMPILES} from "../../../constants/networks/ARB_OS_PRECOMPILES.sol";
 contract ArbOSVM
 is
 FoundryVM

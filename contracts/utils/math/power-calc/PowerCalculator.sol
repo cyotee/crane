@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-import {IPower} from "./IPower.sol";
+import {IPower} from "../../../interfaces/IPower.sol";
 import {PowerStorage} from "./PowerStorage.sol";
 
  /**

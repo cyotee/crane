@@ -22,7 +22,7 @@ contract BetterERC4626Target_IERC4626_withdrawTest is BetterERC4626TargetTest {
     }
     
     // Withdraw function tests
-    function test_IERC4626_withdraw() public {
+    function test_IERC4626_withdraw_BetterERC4626Target() public {
         uint256 withdrawAmount = 100 * 10**UNDERLYING_DECIMALS;
         uint256 initialShares = vault.balanceOf(DEPOSITOR);
         uint256 initialAssets = vault.totalAssets();
@@ -37,7 +37,7 @@ contract BetterERC4626Target_IERC4626_withdrawTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(DEPOSITOR), INITIAL_UNDERLYING_SUPPLY - initialAssets + withdrawAmount);
     }
     
-    function test_IERC4626_withdraw_differentReceiver() public {
+    function test_IERC4626_withdraw_differentReceiver_BetterERC4626Target() public {
         uint256 withdrawAmount = 100 * 10**UNDERLYING_DECIMALS;
         address receiver = address(2);
         
@@ -51,7 +51,7 @@ contract BetterERC4626Target_IERC4626_withdrawTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(receiver), initialReceiverBalance + withdrawAmount);
     }
     
-    function test_IERC4626_withdraw_fromCaller() public {
+    function test_IERC4626_withdraw_fromCaller_BetterERC4626Target() public {
         uint256 withdrawAmount = 100 * 10**UNDERLYING_DECIMALS;
         address caller = address(3);
         
@@ -68,7 +68,7 @@ contract BetterERC4626Target_IERC4626_withdrawTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(caller), withdrawAmount);
     }
     
-    function test_IERC4626_withdraw_InsufficientAssets() public {
+    function test_IERC4626_withdraw_InsufficientAssets_BetterERC4626Target() public {
         uint256 excessAmount = vault.totalAssets() + 1;
         
         // Try to withdraw more than available assets
@@ -77,7 +77,7 @@ contract BetterERC4626Target_IERC4626_withdrawTest is BetterERC4626TargetTest {
         vault.withdraw(excessAmount, DEPOSITOR, DEPOSITOR);
     }
     
-    function test_IERC4626_withdraw_ZeroAmount() public {
+    function test_IERC4626_withdraw_ZeroAmount_BetterERC4626Target() public {
         // Should be able to withdraw zero assets
         vm.prank(DEPOSITOR);
         vault.withdraw(0, DEPOSITOR, DEPOSITOR);

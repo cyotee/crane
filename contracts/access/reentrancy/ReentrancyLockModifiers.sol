@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {
     IReentrancyLock
-} from "./IReentrancyLock.sol";
+} from "../../interfaces/IReentrancyLock.sol";
 
 import {
     ReentrancyLockStorage

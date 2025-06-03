@@ -21,14 +21,14 @@ contract BetterERC4626Target_IERC4626_previewDepositTest is BetterERC4626TargetT
         vm.stopPrank();
     }
     
-    function test_IERC4626_previewDeposit() public view {
+    function test_IERC4626_previewDeposit_BetterERC4626Target() public view {
         uint256 assets = 100 * 10**UNDERLYING_DECIMALS;
         
         // previewDeposit should match convertToShares
         assertEq(vault.previewDeposit(assets), vault.convertToShares(assets));
     }
     
-    function test_IERC4626_previewDepositRounding() public {
+    function test_IERC4626_previewDepositRounding_BetterERC4626Target() public {
         // Create a scenario where rounding would apply
         
         // Introduce imbalance

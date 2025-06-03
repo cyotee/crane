@@ -21,7 +21,7 @@ contract BetterERC4626Target_IERC4626_previewMintTest is BetterERC4626TargetTest
         vm.stopPrank();
     }
     
-    function test_IERC4626_previewMint() public view {
+    function test_IERC4626_previewMint_BetterERC4626Target() public view {
         uint256 shares = 100 * 10**UNDERLYING_DECIMALS;
         
         // previewMint should be consistent with actual mint behavior

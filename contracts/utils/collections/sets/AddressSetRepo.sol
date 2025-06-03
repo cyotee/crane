@@ -195,19 +195,19 @@ library AddressSetRepo {
         success = true;
     }
 
-    // /**
-    //  * @dev Copies the set into memory as an array.
-    //  * @param set The storage pointer of the struct upon which this function should operate.
-    //  * @return array The members of the set copied to memory as an array.
-    //  */
-    // function _asArray(
-    //     AddressSet storage set
-    // ) internal view returns (address[] memory array) {
-    //     array = set.values;
-    // }
+    /**
+     * @dev Copies the set into memory as an array.
+     * @param set The storage pointer of the struct upon which this function should operate.
+     * @return array The members of the set copied to memory as an array.
+     */
+    function _asArray(
+        AddressSet storage set
+    ) internal view returns (address[] memory array) {
+        array = set.values;
+    }
 
     /**
-     * @dev Provides the storage pointer os the underlying array of value.
+     * @dev Provides the storage pointer of the underlying array of value.
      * @dev DO NOT alter values via this pointer.
      * @dev ONLY use to minimize memory usage when passing a reference internally for gas efficiency.
      * @dev OR when passing the array as an external return.

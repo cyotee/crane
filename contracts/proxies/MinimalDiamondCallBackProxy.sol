@@ -22,7 +22,7 @@ import {
 
 import {
     IFactoryCallBack
-} from "../factories/create2/callback/diamondPkg/IFactoryCallBack.sol";
+} from "../interfaces/IFactoryCallBack.sol";
 
 import {
     FactoryCallBackAdaptor

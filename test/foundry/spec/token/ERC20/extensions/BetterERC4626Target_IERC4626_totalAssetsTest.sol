@@ -8,12 +8,12 @@ import "./BetterERC4626TargetTest.sol";
  * @dev Test suite for the totalAssets function of BetterERC4626Target
  */
 contract BetterERC4626Target_IERC4626_totalAssetsTest is BetterERC4626TargetTest {
-    function test_IERC4626_totalAssets() public view {
+    function test_IERC4626_totalAssets_BetterERC4626Target() public view {
         // Initially the vault should have 0 assets
         assertEq(vault.totalAssets(), 0);
     }
     
-    function test_IERC4626_totalAssets_afterDeposit() public {
+    function test_IERC4626_totalAssets_afterDeposit_BetterERC4626Target() public {
         uint256 depositAmount = 100 * 10**UNDERLYING_DECIMALS;
         
         // Approve and deposit tokens

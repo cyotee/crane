@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -7,9 +7,9 @@ pragma solidity ^0.8.20;
 
 import {
     IDiamondFactoryPackage
-} from "../../../factories/create2/callback/diamondPkg/IDiamondFactoryPackage.sol";
-import {IFacet} from "../../../factories/create2/callback/diamondPkg/IFacet.sol";
-import {IDiamond} from "../../../utils/introspection/erc2535/IDiamond.sol";
+} from "../../../interfaces/IDiamondFactoryPackage.sol";
+import {IFacet} from "../../../interfaces/IFacet.sol";
+import {IDiamond} from "../../../interfaces/IDiamond.sol";
 import {
     IERC20PermitStorage,
     ERC20PermitStorage

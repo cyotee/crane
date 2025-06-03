@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import {CraneTest} from "contracts/test/CraneTest.sol";
-import {IFacet} from "../../../../../contracts/factories/create2/callback/diamondPkg/IFacet.sol";
-import {IOperable} from "../../../../../contracts/access/operable/IOperable.sol";
+import {CraneTest} from "../../../../../contracts/test/CraneTest.sol";
+import {IFacet} from "../../../../../contracts/interfaces/IFacet.sol";
+import {IOperable} from "../../../../../contracts/interfaces/IOperable.sol";
 import {OperableFacet} from "../../../../../contracts/access/operable/OperableFacet.sol";
 
 contract OperableFacet_IFacet_Test is CraneTest {

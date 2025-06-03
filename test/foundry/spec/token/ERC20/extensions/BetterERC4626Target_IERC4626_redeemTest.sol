@@ -21,7 +21,7 @@ contract BetterERC4626Target_IERC4626_redeemTest is BetterERC4626TargetTest {
         vm.stopPrank();
     }
     
-    function test_IERC4626_redeem() public {
+    function test_IERC4626_redeem_BetterERC4626Target() public {
         uint256 redeemAmount = 100 * 10**UNDERLYING_DECIMALS;
         uint256 initialAssets = vault.totalAssets();
         uint256 initialShares = vault.balanceOf(DEPOSITOR);
@@ -36,7 +36,7 @@ contract BetterERC4626Target_IERC4626_redeemTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(DEPOSITOR), INITIAL_UNDERLYING_SUPPLY - initialAssets + redeemAmount);
     }
     
-    function test_IERC4626_redeem_differentReceiver() public {
+    function test_IERC4626_redeem_differentReceiver_BetterERC4626Target() public {
         uint256 redeemAmount = 100 * 10**UNDERLYING_DECIMALS;
         address receiver = address(2);
         
@@ -50,7 +50,7 @@ contract BetterERC4626Target_IERC4626_redeemTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(receiver), initialReceiverBalance + redeemAmount);
     }
     
-    function test_IERC4626_redeem_withApproval() public {
+    function test_IERC4626_redeem_withApproval_BetterERC4626Target() public {
         uint256 redeemAmount = 100 * 10**UNDERLYING_DECIMALS;
         address owner = DEPOSITOR;
         address spender = address(4);
@@ -68,7 +68,7 @@ contract BetterERC4626Target_IERC4626_redeemTest is BetterERC4626TargetTest {
         assertEq(underlying.balanceOf(spender), redeemAmount);
     }
     
-    function test_IERC4626_redeem_InsufficientShares() public {
+    function test_IERC4626_redeem_InsufficientShares_BetterERC4626Target() public {
         uint256 excessAmount = vault.balanceOf(DEPOSITOR) + 1;
         
         // Try to redeem more shares than owned
@@ -77,7 +77,7 @@ contract BetterERC4626Target_IERC4626_redeemTest is BetterERC4626TargetTest {
         vault.redeem(excessAmount, DEPOSITOR, DEPOSITOR);
     }
     
-    function test_IERC4626_redeem_ZeroAmount() public {
+    function test_IERC4626_redeem_ZeroAmount_BetterERC4626Target() public {
         // Should be able to redeem zero shares
         vm.prank(DEPOSITOR);
         vault.redeem(0, DEPOSITOR, DEPOSITOR);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.26;
 
 bytes32 constant EMPTY_STRING_HASH = keccak256(abi.encode(""));
 
@@ -70,3 +70,22 @@ string constant PLOT_CORRELATOR = "x-axis";
 
 string constant SEP = "********************************************************************************";
 string constant DIV = "--------------------------------------------------------------------------------";
+
+// bytes32 constant PERMIT_TYPEHASH
+//     = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+
+bytes32 constant _PERMIT_TYPEHASH
+    = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+
+bytes32 constant _PERMIT_DETAILS_TYPEHASH =
+    keccak256("PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)");
+
+bytes32 constant _PERMIT_BATCH_TYPEHASH =
+    keccak256(
+        "PermitBatch(PermitDetails[] details,address spender,uint256 sigDeadline)PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)"
+    );
+
+bytes32 constant _PERMIT_SINGLE_TYPEHASH =
+    keccak256(
+        "PermitSingle(PermitDetails details,address spender,uint256 sigDeadline)PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)"
+    );

@@ -3,14 +3,15 @@ pragma solidity ^0.8.24;
 
 import {TransferHelper} from './libraries/TransferHelper.sol';
 
-import {ICamelotFactory} from './ICamelotFactory.sol';
-import {ICamelotPair} from './ICamelotPair.sol';
-import {BetterIERC20 as IERC20} from '../../../../token/ERC20/BetterIERC20.sol';
+import {ICamelotFactory} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol';
+import {ICamelotPair} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol';
+import {BetterIERC20 as IERC20} from '../../../../interfaces/BetterIERC20.sol';
 
-import './ICamelotV2Router.sol';
-import './libraries/UniswapV2Library.sol';
-import './libraries/SafeMath.sol';
-import '../../../tokens/wrappers/weth/IWETH.sol';
+import {ICamelotV2Router} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol';
+import {UniswapV2Library} from './libraries/UniswapV2Library.sol';
+import {SafeMath} from './libraries/SafeMath.sol';
+// import '../../../tokens/wrappers/weth/IWETH.sol';
+import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 contract CamelotRouter is ICamelotV2Router {
   using SafeMath for uint;

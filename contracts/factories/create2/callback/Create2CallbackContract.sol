@@ -6,10 +6,10 @@ import {
 } from "../aware/Create2AwareTarget.sol";
 import {
     ICreate2CallbackFactory
-} from "./ICreate2CallbackFactory.sol";
+} from "../../../interfaces/ICreate2CallbackFactory.sol";
 import {
     ICreate2CallbackContract
-} from "./ICreate2CallbackContract.sol";
+} from "../../../interfaces/ICreate2CallbackContract.sol";
 
 /**
  * @title Create2CallbackContract
