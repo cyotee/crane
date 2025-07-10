@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import { IOperable } from "../../interfaces/IOperable.sol";
-import { OperableStorage } from "./utils/OperableStorage.sol";
+import { OperableStorage } from "./OperableStorage.sol";
 
 /**
  * @title OperableModifiers - Inheritable modifiers for Operable validations.

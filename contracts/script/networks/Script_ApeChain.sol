@@ -19,15 +19,20 @@ import {StdUtils} from "forge-std/StdUtils.sol";
 import { Script } from "forge-std/Script.sol";
 
 /* -------------------------------------------------------------------------- */
+/*                                 Balancer V3                                */
+/* -------------------------------------------------------------------------- */
+
+import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+
+/* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../BetterScript.sol";
-import { Script_ArbOS } from "./Script_ArbOS.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
+import { Script_ArbOS } from "../../script/networks/Script_ArbOS.sol";
 import { LOCAL } from "../../constants/networks/LOCAL.sol";
 import { APE_CHAIN_MAIN } from "../../constants/networks/APE_CHAIN_MAIN.sol";
 import { APE_CHAIN_CURTIS } from "../../constants/networks/APE_CHAIN_CURTIS.sol";
-import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import { WAPE } from "../../protocols/tokens/wrappers/wape/WAPE.sol";
 
 contract Script_ApeChain
@@ -81,7 +86,7 @@ is
         // _log("Fixture_ApeChain::wape():: Entering function");
         // _log("Fixture_ApeChain::wape():: Checking if wape is declared");
         if(address(wape(block.chainid)) == address(0)) {
-            // _log("Fixture_ApeChain::wape():: WAPE is not declared, deploying...");
+            // _log("Fixture_ApeChain::wape():: WAPE is not declared, deploying.");
             // _log("Fixture_ApeChain::wape():: Checking if this is a test");
             if(isAnyTest()) {
                 // _log("Fixture_ApeChain::wape():: This is a test, initializing precompiles");

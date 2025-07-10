@@ -70,30 +70,23 @@ import { VaultMock } from "@balancer-labs/v3-vault/contracts/test/VaultMock.sol"
 
 import "../../constants/protocols/dexes/balancer/v3/BalancerV3_INITCODE.sol";
 import {betterconsole as console} from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../BetterScript.sol";
-import { Script_Permit2 } from "./Script_Permit2.sol";
-import { Script_Crane } from "../Script_Crane.sol";
-import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../ScriptBase_Crane_ERC4626.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
+import { Script_Permit2 } from "../../script/protocols/Script_Permit2.sol";
+import { Script_Crane } from "../../script/Script_Crane.sol";
+import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../script/ScriptBase_Crane_ERC4626.sol";
 import { BetterBaseContractsDeployer } from "../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
 import { BetterVaultContractsDeployer } from "../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
 import { BetterAddress as Address } from "../../utils/BetterAddress.sol";
 import { Bytecode } from "../../utils/Bytecode.sol";
 import { LOCAL } from "../../constants/networks/LOCAL.sol";
 import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
-// import { Fixture } from "../Fixture.sol";
-// import { Fixture_Crane } from "../Fixture_Crane.sol";
 import { IOwnable } from "../../interfaces/IOwnable.sol";
 import { BalancerV3Authorizer } from "../../protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
 
-/* -------------------------------------------------------------------------- */
-/*                                    Crane                                   */
-/* -------------------------------------------------------------------------- */
-
-import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterTest } from "../../test/BetterTest.sol";
-import { Script_WETH } from "./Script_WETH.sol";
+import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
 
 contract Script_BalancerV3
 is
@@ -113,10 +106,10 @@ is
     BetterScript,
     
     ScriptBase_Crane_Factories,
-    Script_Permit2,
-    Script_WETH,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
+    Script_Permit2,
+    Script_WETH,
 
     Script_Crane,
 
@@ -151,9 +144,9 @@ is
         ScriptBase_Crane_ERC4626,
         Script_Crane
     ) {
-        // console..log("Script_BalancerV3.run():: Entering function.");
+        // console.log("Script_BalancerV3.run():: Entering function.");
         super.run();
-        // console..log("Script_BalancerV3.run():: Exiting function.");
+        // console.log("Script_BalancerV3.run():: Exiting function.");
     }
 
     /* ---------------------------------------------------------------------- */

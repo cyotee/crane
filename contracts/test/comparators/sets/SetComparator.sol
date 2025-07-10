@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// import "hardhat/console.sol";
-import "forge-std/console.sol";
-// import "forge-std/console2.sol";
-
-// import {
-//     FoundryVM
-// } from "../../../utils/vm/foundry/FoundryVM.sol";
-
-// import "contracts/crane/utils/Primitives.sol";
+import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
 import {
     BetterAddress as Address
 } from "../../../utils/BetterAddress.sol";
@@ -28,7 +20,6 @@ import {
 import {
     UInt256
 } from "../../../utils/UInt256.sol";
-// import "contracts/crane/utils/Collections.sol";
 import {
     BetterMath
 } from "../../../utils/math/BetterMath.sol";

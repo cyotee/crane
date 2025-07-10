@@ -15,7 +15,7 @@ import {
     AddressToUintMappingSlot
 } from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { BetterIERC20 as IERC20 } from "../../../../../interfaces/BetterIERC20.sol";
 import { BetterRouterCommon } from "./BetterRouterCommon.sol";
 
 /// @notice Transient storage for Batch and Composite Liquidity Router operations.

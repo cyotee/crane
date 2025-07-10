@@ -37,17 +37,12 @@ import {Permit2Helpers} from "@balancer-labs/v3-vault/test/foundry/utils/Permit2
 /* -------------------------------------------------------------------------- */
 
 import "../constants/Constants.sol";
-// import {FoundryVM} from "../utils/vm/foundry/FoundryVM.sol";
-// import {BetterFuzzing} from "./fuzzing/BetterFuzzing.sol";
-// import {Fixture} from "../fixtures/Fixture.sol";
-// import {Fixture_Crane} from "../fixtures/Fixture_Crane.sol";
-// import {Fixture_Crane_Stubs} from "../fixtures/Fixture_Crane_Stubs.sol";
 import { BetterScript } from "../script/BetterScript.sol";
 import { ScriptBase_Crane_Factories } from "../script/ScriptBase_Crane_Factories.sol";
 import { ScriptBase_Crane_ERC20 } from "../script/ScriptBase_Crane_ERC20.sol";
 import { ScriptBase_Crane_ERC4626 } from "../script/ScriptBase_Crane_ERC4626.sol";
 import {Script_Crane} from "../script/Script_Crane.sol";
-import {Behavior_Crane} from "./behaviors/Behavior_Crane.sol";
+import {Behavior_Crane} from "../test/behaviors/Behavior_Crane.sol";
 import {ConstProdUtils} from "../utils/math/ConstProdUtils.sol";
 import {BetterIERC20 as IERC20} from "../interfaces/BetterIERC20.sol";
 import {IERC5115} from "../interfaces/IERC5115.sol";
@@ -55,11 +50,8 @@ import {ICamelotPair} from "../interfaces/protocols/dexes/camelot/v2/ICamelotPai
 import {
     BetterIERC20Permit as IERC20Permit
 } from "../interfaces/BetterIERC20Permit.sol";
-// import {
-//     Fixture_CamelotV2
-// } from "../protocols/dexes/camelot/v2/fixtures/Fixture_CamelotV2.sol";
 import { Script_Crane_Stubs } from "../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "./BetterTest.sol";
+import { BetterTest } from "../test/BetterTest.sol";
 
 contract Test_Crane
 is
@@ -81,6 +73,7 @@ is
     ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
+    
     Script_Crane,
     Script_Crane_Stubs,
     Test,

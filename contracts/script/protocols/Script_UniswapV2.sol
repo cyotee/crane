@@ -33,7 +33,7 @@ import {
     AddressSet,
     AddressSetRepo
 } from "../../utils/collections/sets/AddressSetRepo.sol";
-import { BetterScript } from "../BetterScript.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
 import {LOCAL} from "../../constants/networks/LOCAL.sol";
 import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
 import {ETHEREUM_SEPOLIA} from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
@@ -44,8 +44,8 @@ import { IUniswapV2Router } from "../../interfaces/protocols/dexes/uniswap/v2/IU
 import {IUniswapV2Pair} from "../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {UniV2Factory} from "../../protocols/dexes/uniswap/v2/UniV2Factory.sol";
 import {UniV2Router02} from "../../protocols/dexes/uniswap/v2/UniV2Router02.sol";
-import { Script_WETH } from "./Script_WETH.sol";
-import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
+import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
+import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
 
 contract Script_UniswapV2
 is
@@ -130,57 +130,57 @@ is
         uint256 chainid,
         IUniswapV2Factory uniswapV2Factory_
     ) public returns(bool) {
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(uint256,IUniswapV2Factory):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(uint256,IUniswapV2Factory):: Entering function.");
         registerInstance(chainid, keccak256(type(UniV2Factory).creationCode), address(uniswapV2Factory_));
         declare(builderKey_UniswapV2(), "uniswapV2Factory", address(uniswapV2Factory_));
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(uint256,IUniswapV2Factory):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(uint256,IUniswapV2Factory):: Exiting function.");
         return true;
     }
 
     function uniswapV2Factory(IUniswapV2Factory uniswapV2Factory_) public returns(bool) {
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Entering function.");
         uniswapV2Factory(block.chainid, uniswapV2Factory_);
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Exiting function.");
         return true;
     }
 
     function uniswapV2Factory(uint256 chainid) public view returns(IUniswapV2Factory) {
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(uint256):: Entering function.");
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(uint256):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(uint256):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(uint256):: Exiting function.");
         return IUniswapV2Factory(chainInstance(chainid, keccak256(type(UniV2Factory).creationCode)));
     }
 
     function uniswapV2Factory(
         bytes memory initArgs
     ) public returns(IUniswapV2Factory uniswapV2Factory_) {
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(bytes):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(bytes):: Entering function.");
         if(address(uniswapV2Factory(block.chainid)) == address(0)) {
-            // console..log("Uniswap V2 Factory not set on this chain, setting");
-            // console..log("Checking if this is Etherem Mainnet.");
+            // console.log("Uniswap V2 Factory not set on this chain, setting");
+            // console.log("Checking if this is Etherem Mainnet.");
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
-                // console..log("Ethereum Mainnet detected, setting Uniswap V2 Factory to ETHEREUM_MAIN.UNISWAP_V2_FACTORY");
+                // console.log("Ethereum Mainnet detected, setting Uniswap V2 Factory to ETHEREUM_MAIN.UNISWAP_V2_FACTORY");
                 uniswapV2Factory_ = IUniswapV2Factory(ETHEREUM_MAIN.UNISWAP_V2_FACTORY);
             } else if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
-                // console..log("Ethereum Sepolia detected, setting Uniswap V2 Factory to ETHEREUM_SEPOLIA.UNISWAP_V2_FACTORY");
+                // console.log("Ethereum Sepolia detected, setting Uniswap V2 Factory to ETHEREUM_SEPOLIA.UNISWAP_V2_FACTORY");
                 uniswapV2Factory_ = IUniswapV2Factory(ETHEREUM_SEPOLIA.UNISWAP_V2_FACTORY);
             } else if(block.chainid == LOCAL.CHAIN_ID) {
-                // console..log("Local detected, setting Uniswap V2 Factory to LOCAL.UNISWAP_V2_FACTORY");
+                // console.log("Local detected, setting Uniswap V2 Factory to LOCAL.UNISWAP_V2_FACTORY");
                 uniswapV2Factory_ = new UniV2Factory(abi.decode(initArgs, (address)));
             } else {
                 revert("Uniswap V2 Factory not declared on this chain");
             }
-            // console..log("Uniswap V2 Factory set to ", address(uniswapV2Factory_));
-            // console..log("Declaring address of Uniswap V2 Factory.");
+            // console.log("Uniswap V2 Factory set to ", address(uniswapV2Factory_));
+            // console.log("Declaring address of Uniswap V2 Factory.");
             uniswapV2Factory(block.chainid, uniswapV2Factory_);
         }
-        // console..log("Fixture_UniswapV2:uniswapV2Factory(bytes):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory(bytes):: Exiting function.");
         return uniswapV2Factory(block.chainid);
     }
 
     function uniswapV2Factory() public returns(IUniswapV2Factory uniswapV2Factory_) {
-        // console..log("Fixture_UniswapV2:uniswapV2Factory():: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory():: Entering function.");
         uniswapV2Factory_ = uniswapV2Factory(abi.encode(uniswapV2FeeTo()));
-        // console..log("Fixture_UniswapV2:uniswapV2Factory():: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Factory():: Exiting function.");
         return uniswapV2Factory_;
     }
 
@@ -189,23 +189,23 @@ is
     /* ---------------------------------------------------------------------- */
 
     function uniswapV2Router(uint256 chainid, IUniswapV2Router uniswapV2Router_) public returns(bool) {
-        // console..log("Fixture_UniswapV2:uniswapV2Router(uint256,IUniswapV2Router02):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(uint256,IUniswapV2Router02):: Entering function.");
         registerInstance(chainid, keccak256(type(UniV2Router02).creationCode), address(uniswapV2Router_));
         declare(builderKey_UniswapV2(), "uniswapV2Router", address(uniswapV2Router_));
-        // console..log("Fixture_UniswapV2:uniswapV2Router(uint256,IUniswapV2Router02):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(uint256,IUniswapV2Router02):: Exiting function.");
         return true;
     }
 
     function uniswapV2Router(IUniswapV2Router uniswapV2Router_) public returns(bool) {
-        // console..log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Entering function.");
         uniswapV2Router(block.chainid, uniswapV2Router_);
-        // console..log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Exiting function.");
         return true;
     }
 
     function uniswapV2Router(uint256 chainid) public view returns(IUniswapV2Router) {
-        // console..log("Fixture_UniswapV2:uniswapV2Router(uint256):: Entering function.");
-        // console..log("Fixture_UniswapV2:uniswapV2Router(uint256):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(uint256):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(uint256):: Exiting function.");
         return IUniswapV2Router(chainInstance(chainid, keccak256(type(UniV2Router02).creationCode)));
     }
 
@@ -213,10 +213,10 @@ is
         IUniswapV2Factory uniswapV2Factory_,
         IWETH weth_
     ) public returns(IUniswapV2Router uniswapV2Router_) {
-        // console..log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Factory,IWETH):: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Factory,IWETH):: Entering function.");
         if(address(uniswapV2Router(block.chainid)) == address(0)) {
-            // console..log("Uniswap V2 Router not set on this chain, setting");
-            // console..log("Checking if this is Etherem Mainnet.");
+            // console.log("Uniswap V2 Router not set on this chain, setting");
+            // console.log("Checking if this is Etherem Mainnet.");
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 uniswapV2Router_ = IUniswapV2Router(ETHEREUM_MAIN.UNISWAP_V2_ROUTER);
             } else if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
@@ -226,17 +226,17 @@ is
             } else {
                 revert("Uniswap V2 Router not declared on this chain");
             }
-            // console..log("Uniswap V2 Router set to ", address(uniswapV2Router_));
-            // console..log("Declaring address of Uniswap V2 Router.");
+            // console.log("Uniswap V2 Router set to ", address(uniswapV2Router_));
+            // console.log("Declaring address of Uniswap V2 Router.");
             uniswapV2Router(block.chainid, uniswapV2Router_);
         }
-        // console..log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Factory,IWETH):: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Factory,IWETH):: Exiting function.");
         return uniswapV2Router(block.chainid);
     }
 
     function uniswapV2Router() public returns (IUniswapV2Router uniswapV2Router_) {
-        // console..log("Fixture_UniswapV2:uniswapV2Router():: Entering function.");
-        // console..log("Fixture_UniswapV2:uniswapV2Router():: Exiting function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router():: Entering function.");
+        // console.log("Fixture_UniswapV2:uniswapV2Router():: Exiting function.");
         return uniswapV2Router(uniswapV2Factory(), weth9());
     }
     

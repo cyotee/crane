@@ -50,7 +50,10 @@ import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
 import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
 import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
 import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
+import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
 import { Script_Crane } from "../../../script/Script_Crane.sol";
+import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
 import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
 import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
 import { BetterTest } from "../../BetterTest.sol";
@@ -70,27 +73,33 @@ import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/
 
 abstract contract BetterBalancerV3BaseTest
 is 
-    // CommonBase,
-    // ScriptBase,
+    CommonBase,
+    ScriptBase,
 
-    // TestBase,
-    // StdAssertions,
+    TestBase,
+    StdAssertions,
 
-    // StdChains,
-    // StdCheatsSafe,
-    // StdCheats,
-    // StdInvariant,
+    StdChains,
+    StdCheatsSafe,
+    StdCheats,
+    StdInvariant,
     
-    // StdUtils,
+    StdUtils,
+    Script,
+    BetterScript,
     
-    // Script,
-    // BetterScript,
+    ScriptBase_Crane_Factories,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
+    Script_Permit2,
+    Script_WETH,
 
-    // Script_Permit2,
-    // ScriptBase_Crane_Factories,
-    // ScriptBase_Crane_ERC20,
-    // ScriptBase_Crane_ERC4626,
-    // Script_Crane,
+    Script_Crane,
+
+    Test,
+    BetterTest,
+    BetterBaseContractsDeployer,
+    BetterVaultContractsDeployer,
     Script_BalancerV3,
     // Script_Crane_Stubs,
     // Test,
@@ -196,6 +205,12 @@ is
 
     function run() public virtual
     override(
+        ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
+        Script_Permit2,
+        Script_WETH,
+        Script_Crane,
         Script_BalancerV3,
         Test_Crane
     ) {

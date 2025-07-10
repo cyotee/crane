@@ -17,10 +17,8 @@ import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.s
 import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
 import { Script_Crane } from "../../../script/Script_Crane.sol";
 import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../BetterTest.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
-// import { BetterPermit2Helpers } from "../../../protocols/utils/permit2/BetterPermit2Helpers.sol";
-// import { Fixture_Permit2 } from "../../../fixtures/protocols/Fixture_Permit2.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
+import { Test_Crane } from "../../../test/Test_Crane.sol";
 import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
 
 contract TestBase_Permit2
@@ -28,9 +26,9 @@ is
     Script,
     BetterScript,
     ScriptBase_Crane_Factories,
-    Script_Permit2,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
+    Script_Permit2,
     Script_Crane,
     Script_Crane_Stubs,
     BetterTest,

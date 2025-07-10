@@ -1,16 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// import "hardhat/console.sol";
-// import "forge-std/console.sol";
-// import "forge-std/console2.sol";
 import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-
-// import "contracts/crane/test/behavior/Behavior.sol";
-
-// import "contracts/crane/utils/vm/foundry/FoundryVM.sol";
-
-// import "contracts/crane/utils/Primitives.sol";
 import {
     BetterAddress as Address
 } from "../../../utils/BetterAddress.sol";
@@ -29,7 +20,6 @@ import {
 import {
     UInt256
 } from "../../../utils/UInt256.sol";
-// import "contracts/crane/utils/Collections.sol";
 import {
     AddressSet,
     AddressSetRepo
@@ -47,8 +37,6 @@ import {
     SetComparatorResults,
     SetComparator
 } from "../../../test/comparators/sets/SetComparator.sol";
-
-// import "src/crane/test/matchers/Matchers.sol";
 
 struct AddressComparatorRequest {
     address[] expected;

@@ -2,6 +2,32 @@
 pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
+/*                                   Foundry                                  */
+/* -------------------------------------------------------------------------- */
+
+import {
+    CommonBase,
+    ScriptBase,
+    TestBase
+} from "forge-std/Base.sol";
+import {StdChains} from "forge-std/StdChains.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import {StdUtils} from "forge-std/StdUtils.sol";
+import { Script } from "forge-std/Script.sol";
+import { VmSafe } from "forge-std/Vm.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import { Test } from "forge-std/Test.sol";
+import {StdAssertions} from "forge-std/StdAssertions.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
+import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
+
+/* -------------------------------------------------------------------------- */
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
@@ -57,15 +83,56 @@ import {
     Create2CallBackFactory
 } from "../../../factories/create2/callback/Create2CallBackFactory.sol";
 import {IDiamondPackageCallBackFactory} from "../../../interfaces/IDiamondPackageCallBackFactory.sol";
+import { BetterScript } from "../../../script/BetterScript.sol";
+import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
+import { Script_Crane } from "../../../script/Script_Crane.sol";
+import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
+import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
 import { TestBase_Permit2 } from "../protocols/TestBase_Permit2.sol";
 import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
 import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
 import { BetterIERC20 } from "../../../interfaces/BetterIERC20.sol";
-
+import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
+import { Test_Crane } from "../../../test/Test_Crane.sol";
+import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
+import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
 
 contract BetterBalancerV3VaultTest
 is
-    // Fixture_BalancerV3_Vault,
+    CommonBase,
+    ScriptBase,
+
+    TestBase,
+    StdAssertions,
+
+    StdChains,
+    StdCheatsSafe,
+    StdCheats,
+    StdInvariant,
+    
+    StdUtils,
+    Script,
+    BetterScript,
+    
+    ScriptBase_Crane_Factories,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
+    Script_Permit2,
+    Script_WETH,
+
+    Script_Crane,
+    Script_Crane_Stubs,
+
+    Test,
+    BetterTest,
+    BetterBaseContractsDeployer,
+    BetterVaultContractsDeployer,
+    Script_BalancerV3,
+    Test_Crane,
     BetterBalancerV3BaseTest,
     TestBase_Permit2
 {
@@ -176,7 +243,7 @@ is
     function setUp() public virtual
     override(
         BetterBalancerV3BaseTest,
-        // Test_Crane,
+        Test_Crane,
         TestBase_Permit2
     ) {
         // console.log("BetterBalancerV3VaultTest.setUp():: Entering function.");
@@ -217,8 +284,17 @@ is
 
     function run() public virtual
     override(
+        ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
+        Script_BalancerV3,
+        Script_Permit2,
+        Script_WETH,
+        Script_Crane,
+        Script_Crane_Stubs,
         BetterBalancerV3BaseTest,
-        TestBase_Permit2
+        TestBase_Permit2,
+        Test_Crane
     ) {
         // solhint-disable-next-line no-empty-blocks
     }

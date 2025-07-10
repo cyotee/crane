@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-// import "forge-std/console.sol";
-// import "forge-std/console2.sol";
-
-// import "contracts/crane/token/ERC20/interfaces/IERC20.sol";
-
 // tag::ERC20Layout[]
 // Named with Struct suffix to ensure no namespace collisions.
 struct ERC20Layout {

@@ -32,11 +32,11 @@ import { RouterWethLib } from "@balancer-labs/v3-vault/contracts/lib/RouterWethL
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { VaultGaurdModifiers } from "contracts/protocols/dexes/balancer/v3/VaultGaurdModifiers.sol";
-import { VersionStorage } from "contracts/protocols/dexes/balancer/v3/solidity-utils/utils/VersionStorage.sol";
-import { WETHAwareStorage } from "contracts/protocols/tokens/wrappers/weth/v9/utils/WETHAwareStorage.sol";
-import { Permit2AwareStorage } from "contracts/protocols/utils/permit2/utils/Permit2AwareStorage.sol";
-import { BalancerV3VaultAwareStorage } from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
+import { VaultGaurdModifiers } from "../../../../../protocols/dexes/balancer/v3/VaultGaurdModifiers.sol";
+import { VersionStorage } from "../../../../../protocols/dexes/balancer/v3/solidity-utils/utils/VersionStorage.sol";
+import { WETHAwareStorage } from "../../../../../protocols/tokens/wrappers/weth/v9/utils/WETHAwareStorage.sol";
+import { Permit2AwareStorage } from "../../../../../protocols/utils/permit2/utils/Permit2AwareStorage.sol";
+import { BalancerV3VaultAwareStorage } from "../../../../../protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
 import { BetterRouterCommonStorage } from "./utils/BetterRouterCommonStorage.sol";
 
 /**

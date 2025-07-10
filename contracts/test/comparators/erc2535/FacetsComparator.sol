@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// import "hardhat/console.sol";
-// import "forge-std/console.sol";
-// import "forge-std/console2.sol";
 import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-// import "contracts/crane/test/behavior/Behavior.sol";
-
-// import "contracts/crane/utils/vm/foundry/FoundryVM.sol";
-
-// import "contracts/crane/utils/Primitives.sol";
 import {
     BetterAddress as Address
 } from "../../../utils/BetterAddress.sol";
@@ -28,7 +20,6 @@ import {
 import {
     UInt256
 } from "../../../utils/UInt256.sol";
-// import "contracts/crane/utils/Collections.sol";
 import {
     AddressSet,
     AddressSetRepo
@@ -66,26 +57,6 @@ import {
 import {
     IDiamondLoupe
 } from "../../../interfaces/IDiamondLoupe.sol";
-
-// struct FacetsComparatorLayout {
-
-// }
-
-// library FacetsComparatorRepo {
-
-//     // tag::_layout[]
-//     /**
-//      * @dev "Binds" this struct to a storage slot.
-//      * @param slot_ The first slot to use in the range of slots used by the struct.
-//      * @return layout_ A struct from a Layout library bound to the provided slot.
-//      */
-//     function _layout(
-//         bytes32 slot_
-//     ) internal pure returns(FacetsComparatorLayout storage layout_) {
-//         assembly{layout_.slot := slot_}
-//     }
-   
-// }
 
 contract FacetsComparatorStorage
 is

@@ -13,10 +13,10 @@ import {
     Bytes4Set,
     Bytes4SetRepo
 } from "../../utils/collections/sets/Bytes4SetRepo.sol";
-import { Test_Crane } from "../Test_Crane.sol";
+import { Test_Crane } from "../../test/Test_Crane.sol";
 import { IFacet } from "../../interfaces/IFacet.sol";
 import { IDiamondLoupe } from "../../interfaces/IDiamondLoupe.sol";
-import { Behavior_IDiamondLoupe } from "../behaviors/Behavior_IDiamondLoupe.sol";
+import { Behavior_IDiamondLoupe } from "../../test/behaviors/Behavior_IDiamondLoupe.sol";
 
 abstract contract TestBase_IDiamondLoupe is Test_Crane, Behavior_IDiamondLoupe {
 

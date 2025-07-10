@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
-import { IFacet } from "contracts/interfaces/IFacet.sol";
-import { IPermit2Aware } from "contracts/interfaces/IPermit2Aware.sol";
+import { IFacet } from "../../../interfaces/IFacet.sol";
+import { IPermit2Aware } from "../../../interfaces/IPermit2Aware.sol";
 import { Permit2AwareStorage } from "./utils/Permit2AwareStorage.sol";
-import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { Create3AwareContract } from "../../../factories/create2/aware/Create3AwareContract.sol";
 
 contract Permit2AwareFacet is Permit2AwareStorage, IPermit2Aware, IFacet, Create3AwareContract {
 

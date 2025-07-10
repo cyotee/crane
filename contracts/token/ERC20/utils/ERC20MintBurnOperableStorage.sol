@@ -8,7 +8,7 @@ import {
 import {
     IOperableStorage,
     OperableStorage
-} from "../../../access/operable/utils/OperableStorage.sol";
+} from "../../../access/operable/OperableStorage.sol";
 import {
     ERC20Storage
 } from "./ERC20Storage.sol";

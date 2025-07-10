@@ -5,10 +5,8 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-
-// import {IWETH} from "../weth/IWETH.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import {WETH9} from "../weth/v9/WETH9.sol";
+import { WETH9 } from "../../../../protocols/tokens/wrappers/weth/v9/WETH9.sol";
 
 contract WAPE is WETH9 {}
 

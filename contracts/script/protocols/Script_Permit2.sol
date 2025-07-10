@@ -30,7 +30,7 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
 import "../../constants/Constants.sol";
 import "../../constants/CraneINITCODE.sol";
-import { BetterScript } from "../BetterScript.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
 import {LOCAL} from "../../constants/networks/LOCAL.sol";
 import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
 import {PERMIT2_CONSTANTS} from "../../constants/protocols/utils/permit2/PERMIT2_CONSTANTS.sol";
@@ -39,7 +39,7 @@ import { betterconsole as console } from "../../utils/vm/foundry/tools/bettercon
 import { IEIP712 } from "../../interfaces/IEIP712.sol";
 import { IAllowanceTransfer } from "../../interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 import { Permit2AwareFacet } from "../../protocols/utils/permit2/Permit2AwareFacet.sol";
-import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
 
 contract Script_Permit2
 is
@@ -61,9 +61,9 @@ is
     // override(
     //     Fixture_Permit2
     // ) {
-    //     // console..log("Script_Permit2.initialize():: Entering function.");
+    //     // console.log("Script_Permit2.initialize():: Entering function.");
     //     Fixture_Permit2.initialize();
-    //     // console..log("Script_Permit2.initialize():: Exiting function.");
+    //     // console.log("Script_Permit2.initialize():: Exiting function.");
     // }
 
     // function setUp() public virtual {}
@@ -73,11 +73,11 @@ is
         // ScriptBase,
         ScriptBase_Crane_Factories
     ) {
-        // console..log("Fixture_Permit2.initialize():: Entering function.");
-        // console..log("Fixture_Permit2.initialize():: Declaring permit2.");
+        // console.log("Fixture_Permit2.initialize():: Entering function.");
+        // console.log("Fixture_Permit2.initialize():: Declaring permit2.");
         declare(vm.getLabel(address(permit2())), address(permit2()));
-        // console..log("Fixture_Permit2.initialize():: Declared permit2.");
-        // console..log("Fixture_Permit2.initialize():: Exiting function.");
+        // console.log("Fixture_Permit2.initialize():: Declared permit2.");
+        // console.log("Fixture_Permit2.initialize():: Exiting function.");
     }
 
     function getPermitSignature(
@@ -175,10 +175,10 @@ is
         uint256 chainid,
         IPermit2 permit2_
     ) public returns(bool) {
-        // console..log("Fixture_Permit2.permit2():: Entering function.");
+        // console.log("Fixture_Permit2.permit2():: Entering function.");
         registerInstance(chainid, PERMIT2_CONSTANTS.PERMIT2_INIT_CODE_HASH, address(permit2_));
         declare(builderKey_Permit2(), "permit2", address(permit2_));
-        // console..log("Fixture_Permit2.permit2():: Exiting function.");
+        // console.log("Fixture_Permit2.permit2():: Exiting function.");
         return true;
     }
 
@@ -192,39 +192,39 @@ is
     }
     
     function permit2() public virtual returns(IPermit2 permit2_) {
-        // console..log("Fixture_Permit2.permit2():: Entering function.");
-        // console..log("Fixture_Permit2.permit2():: Checking if Permit2 instances is declared for chain ID %s.", block.chainid);
-        // console..log("Fixture_Permit2.permit2():: Permit2 address: ", address(permit2(block.chainid)));
+        // console.log("Fixture_Permit2.permit2():: Entering function.");
+        // console.log("Fixture_Permit2.permit2():: Checking if Permit2 instances is declared for chain ID %s.", block.chainid);
+        // console.log("Fixture_Permit2.permit2():: Permit2 address: ", address(permit2(block.chainid)));
         if (address(permit2(block.chainid)) == address(0)) {
-            // console..log("Fixture_Permit2.permit2():: Permit2 instances is not declared for chain ID %s.", block.chainid);
-            // console..log("Fixture_Permit2.permit2():: Checking chain ID for how to declare Permit2.");
+            // console.log("Fixture_Permit2.permit2():: Permit2 instances is not declared for chain ID %s.", block.chainid);
+            // console.log("Fixture_Permit2.permit2():: Checking chain ID for how to declare Permit2.");
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
-                // console..log("Fixture_Permit2.permit2():: Chain ID is Ethereum Mainnet.");
-                // console..log("Fixture_Permit2.permit2():: Declaring canonical Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
+                // console.log("Fixture_Permit2.permit2():: Chain ID is Ethereum Mainnet.");
+                // console.log("Fixture_Permit2.permit2():: Declaring canonical Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
                 permit2_ = IPermit2(ETHEREUM_MAIN.PERMIT2);
-                // console..log("Fixture_Permit2.permit2():: Declared canonical Permit2 of %s.", address(permit2_));
+                // console.log("Fixture_Permit2.permit2():: Declared canonical Permit2 of %s.", address(permit2_));
             } else
             if(block.chainid == LOCAL.CHAIN_ID) {
-                // console..log("Fixture_Permit2.permit2():: Chain ID is Local.");
-                // // console..log("Fixture_Permit2.permit2():: Declaring local Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
+                // console.log("Fixture_Permit2.permit2():: Chain ID is Local.");
+                // // console.log("Fixture_Permit2.permit2():: Declaring local Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
                 // // permit2_ = IPermit2(address(new BetterPermit2()));
                 // permit2_ = IPermit2(ETHEREUM_MAIN.PERMIT2);
-                // // console..log("Fixture_Permit2.permit2():: Etching canonical exec code.");
+                // // console.log("Fixture_Permit2.permit2():: Etching canonical exec code.");
                 // vm.etch(ETHEREUM_MAIN.PERMIT2, PERMIT2_CONSTANTS.PERMIT2_EXEC_CODE);
-                // // console..log("Fixture_Permit2.permit2():: Declared local Permit2 of %s.", address(permit2_));
-                // console..log("Fixture_Permit2.permit2():: Deploying Permit2");
+                // // console.log("Fixture_Permit2.permit2():: Declared local Permit2 of %s.", address(permit2_));
+                // console.log("Fixture_Permit2.permit2():: Deploying Permit2");
                 permit2_ = IPermit2(address(new BetterPermit2()));
-                // console..log("Fixture_Permit2.permit2():: Deployed Permit2 of %s.", address(permit2_));
+                // console.log("Fixture_Permit2.permit2():: Deployed Permit2 of %s.", address(permit2_));
             }
             else {
-                // console..log("Fixture_Permit2.permit2():: Unknown chain ID of %s.", block.chainid);
-                // console..log("Fixture_Permit2.permit2():: Deploying Permit2");
+                // console.log("Fixture_Permit2.permit2():: Unknown chain ID of %s.", block.chainid);
+                // console.log("Fixture_Permit2.permit2():: Deploying Permit2");
                 permit2_ = IPermit2(address(new BetterPermit2()));
-                // console..log("Fixture_Permit2.permit2():: Deployed Permit2 of %s.", address(permit2_));
+                // console.log("Fixture_Permit2.permit2():: Deployed Permit2 of %s.", address(permit2_));
             }
             permit2(permit2_);
         }
-        // console..log("Fixture_Permit2.permit2():: Exiting function.");
+        // console.log("Fixture_Permit2.permit2():: Exiting function.");
         return permit2(block.chainid);
     }
 

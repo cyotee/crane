@@ -5,14 +5,31 @@ pragma solidity ^0.8.0;
 /*                                   Foundry                                  */
 /* -------------------------------------------------------------------------- */
 
+import {
+    CommonBase,
+    ScriptBase,
+    TestBase
+} from "forge-std/Base.sol";
+import {StdChains} from "forge-std/StdChains.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import {StdUtils} from "forge-std/StdUtils.sol";
 import { Script } from "forge-std/Script.sol";
+import { Test } from "forge-std/Test.sol";
+import {StdAssertions} from "forge-std/StdAssertions.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterScript } from "../../../script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
 import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
 import { Script_UniswapV2 } from "../../../script/protocols/Script_UniswapV2.sol";
 import { Script_Crane } from "../../../script/Script_Crane.sol";
@@ -23,7 +40,6 @@ import { Test_Crane } from "../../Test_Crane.sol";
 import { IUniswapV2Factory } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 import { IUniswapV2Pair } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import { IERC20MintBurn } from "../../../interfaces/IERC20MintBurn.sol";
-// import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IUniswapV2Router } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
 import { ConstProdUtils } from "../../../utils/math/ConstProdUtils.sol";
 import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
@@ -31,12 +47,31 @@ import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
 
 contract TestBase_UniswapV2
 is
-    // Script,
-    // BetterScript,
-    // Script_WETH,
+    CommonBase,
+    ScriptBase,
+
+    TestBase,
+    StdAssertions,
+
+    StdChains,
+    StdCheatsSafe,
+    StdCheats,
+    StdInvariant,
+
+    StdUtils,
+
+    Script,
+    BetterScript,
+
+    ScriptBase_Crane_Factories,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
+
+    Script_WETH,
     Script_UniswapV2,
     Script_Crane,
     Script_Crane_Stubs,
+    Test,
     BetterTest,
     Test_Crane
 {
@@ -52,7 +87,10 @@ is
 
     function run() public virtual
     override(
-        // Script_WETH,
+        ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
+        Script_WETH,
         Script_UniswapV2,
         Script_Crane,
         Script_Crane_Stubs,

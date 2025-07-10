@@ -12,7 +12,7 @@ import {VmSafe} from "forge-std/Vm.sol";
 /* -------------------------------------------------------------------------- */
 
 import {betterconsole as console} from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { Behavior } from "./Behavior.sol";
+import { Behavior } from "../../test/behaviors/Behavior.sol";
 // import { FoundryVM } from "../../utils/vm/foundry/FoundryVM.sol";
 import { BetterAddress as Address } from "../../utils/BetterAddress.sol";
 import { BetterBytes as Bytes } from "../../utils/BetterBytes.sol";

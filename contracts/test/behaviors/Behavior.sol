@@ -3,10 +3,6 @@ pragma solidity ^0.8.0;
 
 import "forge-std/StdAssertions.sol";
 import { CommonBase } from "forge-std/Base.sol";
-// import {
-//     FoundryVM
-// } from "../../utils/vm/foundry/FoundryVM.sol";
-// import "contracts/crane/utils/vm/foundry/FoundryVM.sol";
 import {
     AddressSet,
     AddressSetRepo
@@ -14,13 +10,9 @@ import {
 import {
     betterconsole as console
 } from "../../utils/vm/foundry/tools/betterconsole.sol";
-// import {
-//     DeclaredAddrs
-// } from "../../utils/vm/foundry/tools/DeclaredAddrs.sol";
-
 import {
     IBehavior
-} from "contracts/interfaces/IBehavior.sol";
+} from "../../interfaces/IBehavior.sol";
 
 contract Behavior
 is

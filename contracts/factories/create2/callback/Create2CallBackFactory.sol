@@ -21,7 +21,7 @@ import { Creation } from "../../../utils/Creation.sol";
 contract Create2CallBackFactory
 is
 // Include the ownership management.
-// THis includes the onwership modifiers.
+// This includes the onwership modifiers.
 OwnableTarget,
 OperableModifiers,
 // Include the operability management.

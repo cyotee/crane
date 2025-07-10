@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IWETHAware } from "contracts/interfaces/IWETHAware.sol";
+import { IWETHAware } from "../../../../../../interfaces/IWETHAware.sol";
 
 struct WETHAwareLayout {
     IWETH weth;

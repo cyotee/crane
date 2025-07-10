@@ -5,9 +5,9 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { OwnableStorage } from "../../../access/ownable/utils/OwnableStorage.sol";
-import { IOperable } from "../../../interfaces/IOperable.sol";
-import { IOperableStorage } from "../../../interfaces/IOperableStorage.sol";
+import { OwnableStorage } from "../../access/ownable/utils/OwnableStorage.sol";
+import { IOperable } from "../../interfaces/IOperable.sol";
+// import { IOperableStorage } from "../../interfaces/IOperableStorage.sol";
 
 /**
  * @title OperableLayout - Diamond storage layout for IOperable.
@@ -55,6 +55,24 @@ library OperableRepo {
         assembly{layout_.slot := slot_}
     }
     // end::_layout[]
+
+}
+
+/**
+ * @title IOperableStorage - Inheritable structs for 
+ */
+interface IOperableStorage
+{
+
+    struct OperatorConfig {
+        address operator;
+        bytes4[] funcs;
+    }
+
+    struct OperableAccountInit {
+        address[] globalOperators;
+        OperatorConfig[] operatorConfigs;
+    }
 
 }
 

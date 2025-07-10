@@ -30,10 +30,10 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 
 import "../../constants/CraneINITCODE.sol";
 import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../BetterScript.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
 import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
 import { WETH9 } from "../../protocols/tokens/wrappers/weth/v9/WETH9.sol";
-import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
 
 contract Script_WETH
 is
@@ -55,11 +55,11 @@ is
     override(
         ScriptBase_Crane_Factories
     ) {
-        // console..log("Script_WETH.run():: Entering function.");
-        // console..log("Script_WETH.run():: Declaring weth9.");
+        // console.log("Script_WETH.run():: Entering function.");
+        // console.log("Script_WETH.run():: Declaring weth9.");
         declare(vm.getLabel(address(weth9())), address(weth9()));
-        // console..log("Script_WETH.run():: Declared weth9.");
-        // console..log("Script_WETH.run():: Exiting function.");
+        // console.log("Script_WETH.run():: Declared weth9.");
+        // console.log("Script_WETH.run():: Exiting function.");
     }
 
     function weth9(

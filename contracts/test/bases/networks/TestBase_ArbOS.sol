@@ -28,12 +28,12 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import { BetterScript } from "../../../script/BetterScript.sol";
 import { Script_Crane } from "../../../script/Script_Crane.sol";
 import { Script_ArbOS } from "../../../script/networks/Script_ArbOS.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
+import { Test_Crane } from "../../../test/Test_Crane.sol";
 import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
 import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
 import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
 import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../BetterTest.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
 
 contract TestBase_ArbOS
 is

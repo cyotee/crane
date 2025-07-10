@@ -16,7 +16,6 @@ OwnableModifiers,
 IOperableManager
 {
 
-
     /**
      * @inheritdoc IOperableManager
      */

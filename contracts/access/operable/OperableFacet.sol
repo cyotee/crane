@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {
-    IOperable
-} from "../../interfaces/IOperable.sol";
+import { OwnableModifiers } from "../ownable/OwnableModifiers.sol";
+import { IOperable } from "../../interfaces/IOperable.sol";
+import { OperableStorage } from "./OperableStorage.sol";
 
-import {
-    IOperableStorage,
-    OperableStorage
-} from "./utils/OperableStorage.sol";
-
-import {
-    OperableTarget
-} from "./OperableTarget.sol";
+// import {
+//     OperableTarget
+// } from "./OperableTarget.sol";
 
 import {
     IFacet
@@ -32,8 +27,14 @@ import {
  */
 contract OperableFacet
 is
-OperableTarget,
+// OperableTarget,
+// Some functions are restricted to Owner.
+OwnableModifiers,
+// Uses Operable diamond storage.
+OperableStorage,
 Create3AwareContract,
+// Exposes IOperable interface
+IOperable,
 IFacet
 {
 
@@ -41,15 +42,9 @@ IFacet
         // No additional initialization needed for facets
     }
 
-    // /**
-    //  * @inheritdoc IFacet
-    //  */
-    // function supportedInterfaces()
-    // public view virtual override returns(bytes4[] memory interfaces) {
-    //     interfaces =  new bytes4[](2);
-    //     interfaces[0] = type(IOwnable).interfaceId;
-    //     interfaces[1] = type(IOperatable).interfaceId;
-    // }
+    /* ---------------------------------------------------------------------- */
+    /*                                 IFacet                                 */
+    /* ---------------------------------------------------------------------- */
 
     /**
      * @inheritdoc IFacet
@@ -57,7 +52,6 @@ IFacet
     function facetInterfaces()
     public view virtual override returns(bytes4[] memory interfaces) {
         interfaces =  new bytes4[](1);
-        // interfaces[0] = type(IOwnable).interfaceId;
         interfaces[0] = type(IOperable).interfaceId;
     }
 
@@ -67,15 +61,63 @@ IFacet
     function facetFuncs()
     public view virtual override returns(bytes4[] memory funcs) {
         funcs = new bytes4[](4);
-        // funcs[0] = IOwnable.owner.selector;
-        // funcs[1] = IOwnable.proposedOwner.selector;
-        // funcs[2] = IOwnable.transferOwnership.selector;
-        // funcs[3] = IOwnable.acceptOwnership.selector;
-        // funcs[4] = IOwnable.renounceOwnership.selector;
         funcs[0] = IOperable.isOperator.selector;
         funcs[1] = IOperable.isOperatorFor.selector;
         funcs[2] = IOperable.setOperator.selector;
         funcs[3] = IOperable.setOperatorFor.selector;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                                  Logic                                 */
+    /* ---------------------------------------------------------------------- */
+
+    /**
+     * @inheritdoc IOperable
+     */
+    function isOperator(address query)
+    public view virtual returns(bool) {
+        return _isOperator(query);
+    }
+
+    /**
+     * @inheritdoc IOperable
+     */
+    function isOperatorFor(
+        bytes4 func,
+        address query
+    ) public view returns(bool) {
+        return _isOperatorFor(func, query);
+    }
+
+    /**
+     * @notice Restricted to owner.
+     * @inheritdoc IOperable
+     */
+    function setOperator(
+        address operator,
+        bool status
+    ) public virtual
+    // Restrict to ONLY calls from Owner.
+    onlyOwner()
+    returns(bool) {
+        _isOperator(operator, status);
+        return true;
+    }
+
+    /**
+     * @notice Restricted to owner.
+     * @inheritdoc IOperable
+     */
+    function setOperatorFor(
+        bytes4 func,
+        address newOperator,
+        bool approval
+    ) public 
+    // Restrict to ONLY calls from Owner.
+    onlyOwner()
+    returns(bool) {
+        _isOperatorFor(func, newOperator, approval);
+        return true;
     }
 
 }

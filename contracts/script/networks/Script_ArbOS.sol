@@ -22,11 +22,9 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../BetterScript.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
 import {LOCAL} from "../../constants/networks/LOCAL.sol";
 import {ARB_OS_PRECOMPILES} from "../../constants/networks/ARB_OS_PRECOMPILES.sol";
-
-// import { ArbOSVM } from "../../utils/vm/arbOS/ArbOSVM.sol";
 import { IArbOwnerPublic } from "../../interfaces/networks/IArbOwnerPublic.sol";
 import { ArbOwnerPublicStub } from "../../utils/vm/arbOS/stubs/precompiles/ArbOwnerPublicStub.sol";
 

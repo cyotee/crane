@@ -14,8 +14,8 @@ import { Script } from "forge-std/Script.sol";
 import { BetterScript } from "../../../script/BetterScript.sol";
 import { Script_Crane } from "../../../script/Script_Crane.sol";
 import { Script_ArbOS } from "../../../script/networks/Script_ArbOS.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
-import { TestBase_ArbOS } from "./TestBase_ArbOS.sol";
+import { Test_Crane } from "../../../test/Test_Crane.sol";
+import { TestBase_ArbOS } from "../../../test/bases/networks/TestBase_ArbOS.sol";
 
 contract TestBase_Curtis
 is

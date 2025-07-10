@@ -21,8 +21,6 @@ import {
     IDiamondFactoryPackage
 } from "../../../../interfaces/IDiamondFactoryPackage.sol";
 
-// import { Create3AwareContract } from "../../../../factories/create2/aware/Create3AwareContract.sol";
-
 abstract contract PostDeployAccountHookFacet
 is
 IPostDeployAccountHook,

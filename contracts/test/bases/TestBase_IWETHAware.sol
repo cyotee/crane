@@ -25,11 +25,11 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { IWETHAware } from "contracts/interfaces/IWETHAware.sol";
-import { BetterScript } from "contracts/script/BetterScript.sol";
-import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
-import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
-import { TestBase_WETH } from "contracts/test/bases/protocols/TestBase_WETH.sol";
+import { IWETHAware } from "../../interfaces/IWETHAware.sol";
+import { BetterScript } from "../../script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
+import { TestBase_WETH } from "../../test/bases/protocols/TestBase_WETH.sol";
 
 abstract contract TestBase_IWETHAware
 is

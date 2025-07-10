@@ -28,6 +28,8 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import { BetterScript } from "../../../script/BetterScript.sol";
 import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
 import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
+import { Test_Crane } from "../../../test/Test_Crane.sol";
 
 contract TestBase_WETH
 is
@@ -51,13 +53,16 @@ is
     // ScriptBase_Crane_ERC20,
     // ScriptBase_Crane_ERC4626,
 
-    Script_WETH
+    Script_WETH,
+    BetterTest,
+    Test_Crane
 {
 
-    function run() public
+    function run() public virtual
     override(
         ScriptBase_Crane_Factories,
-        Script_WETH
+        Script_WETH,
+        Test_Crane
     ) {
         super.run();
     }

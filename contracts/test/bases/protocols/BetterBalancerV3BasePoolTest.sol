@@ -36,7 +36,10 @@ import { InputHelpersMock } from "@balancer-labs/v3-vault/contracts/test/InputHe
 import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterBalancerV3VaultTest } from "./BetterBalancerV3VaultTest.sol";
 
-contract BetterBalancerV3BasePoolTest is BetterBalancerV3VaultTest {
+contract BetterBalancerV3BasePoolTest
+is 
+    BetterBalancerV3VaultTest
+{
 
     
     using FixedPoint for uint256;
