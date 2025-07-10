@@ -37,18 +37,20 @@ import { ICamelotFactory } from "../../interfaces/protocols/dexes/camelot/v2/ICa
 import { ICamelotV2Router } from "../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 import { ICamelotPair } from "../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import { BetterIERC20 as IERC20 } from "../../interfaces/BetterIERC20.sol";
+import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
 
 contract Script_CamelotV2
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
+    ScriptBase_Crane_Factories,
     Script_WETH,
-    // Script_ArbOS,
+    Script_ArbOS,
     Script_ApeChain
 {
 
@@ -58,7 +60,10 @@ is
     }
 
     function run()
-    public virtual override {
+    public virtual override(
+        Script_WETH,
+        ScriptBase_Crane_Factories
+    ) {
         // console..log("Fixture_CamelotV2:setUp():: Entering function.");
         // console..log("Declaring addresses of Camelot V2 Factory and Router in json of all.");
         // console..log("Declaring Camelot V2 Factory.");

@@ -29,6 +29,7 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 /* -------------------------------------------------------------------------- */
 
 import "../../constants/Constants.sol";
+import "../../constants/CraneINITCODE.sol";
 import { BetterScript } from "../BetterScript.sol";
 import {LOCAL} from "../../constants/networks/LOCAL.sol";
 import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
@@ -37,16 +38,19 @@ import { BetterPermit2 } from "../../protocols/utils/permit2/BetterPermit2.sol";
 import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
 import { IEIP712 } from "../../interfaces/IEIP712.sol";
 import { IAllowanceTransfer } from "../../interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import { Permit2AwareFacet } from "../../protocols/utils/permit2/Permit2AwareFacet.sol";
+import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
 
 contract Script_Permit2
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    BetterScript
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
+    ScriptBase_Crane_Factories
 {
 
     function builderKey_Permit2() public pure returns (string memory) {
@@ -64,7 +68,11 @@ is
 
     // function setUp() public virtual {}
     
-    function run() public virtual {
+    function run() public virtual
+    override(
+        // ScriptBase,
+        ScriptBase_Crane_Factories
+    ) {
         // console..log("Fixture_Permit2.initialize():: Entering function.");
         // console..log("Fixture_Permit2.initialize():: Declaring permit2.");
         declare(vm.getLabel(address(permit2())), address(permit2()));
@@ -218,6 +226,42 @@ is
         }
         // console..log("Fixture_Permit2.permit2():: Exiting function.");
         return permit2(block.chainid);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Permit2AwareFacet                           */
+    /* ---------------------------------------------------------------------- */
+
+    function permit2AwareFacet(
+        uint256 chainId,
+        Permit2AwareFacet permit2AwareFacet_
+    ) public returns(bool) {
+        registerInstance(chainId, PERMIT2_AWARE_FACET_INITCODE_HASH, address(permit2AwareFacet_));
+        declare(builderKey_Permit2(), "permit2AwareFacet", address(permit2AwareFacet_));
+        return true;
+    }
+
+    function permit2AwareFacet(Permit2AwareFacet permit2AwareFacet_) public returns(bool) {
+        permit2AwareFacet(block.chainid, permit2AwareFacet_);
+        return true;
+    }
+
+    function permit2AwareFacet(uint256 chainId) public view returns(Permit2AwareFacet permit2AwareFacet_) {
+        permit2AwareFacet_ = Permit2AwareFacet(chainInstance(chainId, PERMIT2_AWARE_FACET_INITCODE_HASH));
+    }
+
+    function permit2AwareFacet() public returns(Permit2AwareFacet permit2AwareFacet_) {
+        if(address(permit2AwareFacet(block.chainid)) == address(0)) {
+            permit2AwareFacet_ = Permit2AwareFacet(
+                factory().create3(
+                    PERMIT2_AWARE_FACET_INITCODE,
+                    "",
+                    keccak256(abi.encode(type(Permit2AwareFacet).name))
+                )
+            );
+            permit2AwareFacet(permit2AwareFacet_);
+        }
+        return permit2AwareFacet(block.chainid);
     }
 
 }

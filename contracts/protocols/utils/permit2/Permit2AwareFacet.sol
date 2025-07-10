@@ -5,8 +5,13 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 import { IFacet } from "contracts/interfaces/IFacet.sol";
 import { IPermit2Aware } from "contracts/interfaces/IPermit2Aware.sol";
 import { Permit2AwareStorage } from "./utils/Permit2AwareStorage.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
 
-contract Permit2AwareFacet is Permit2AwareStorage, IPermit2Aware, IFacet {
+contract Permit2AwareFacet is Permit2AwareStorage, IPermit2Aware, IFacet, Create3AwareContract {
+
+    constructor(
+        CREATE3InitData memory create3InitData
+    ) Create3AwareContract(create3InitData) {}
 
     function facetInterfaces() external pure returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](1);

@@ -49,13 +49,13 @@ import {
 
 contract ScriptBase_Crane_ERC20
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
     ScriptBase_Crane_Factories
 {
 

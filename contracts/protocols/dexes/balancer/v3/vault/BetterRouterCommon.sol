@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity ^0.8.24;
 
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
@@ -38,6 +37,7 @@ import { VersionStorage } from "contracts/protocols/dexes/balancer/v3/solidity-u
 import { WETHAwareStorage } from "contracts/protocols/tokens/wrappers/weth/v9/utils/WETHAwareStorage.sol";
 import { Permit2AwareStorage } from "contracts/protocols/utils/permit2/utils/Permit2AwareStorage.sol";
 import { BalancerV3VaultAwareStorage } from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
+import { BetterRouterCommonStorage } from "./utils/BetterRouterCommonStorage.sol";
 
 /**
  * @notice Abstract base contract for functions shared among all Routers.
@@ -48,15 +48,16 @@ import { BalancerV3VaultAwareStorage } from "contracts/protocols/dexes/balancer/
 abstract contract BetterRouterCommon
 is 
     IRouterCommon,
+    BetterRouterCommonStorage,
     SenderGuard,
     // BalancerV3VaultAwareStorage,
     // VaultGuard,
     VaultGaurdModifiers,
-    ReentrancyGuardTransient,
+    ReentrancyGuardTransient
     // Version
-    VersionStorage,
-    WETHAwareStorage,
-    Permit2AwareStorage
+    // VersionStorage,
+    // WETHAwareStorage,
+    // Permit2AwareStorage
 {
     using Address for address payable;
     using StorageSlotExtension for *;

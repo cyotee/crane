@@ -26,16 +26,10 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 /* -------------------------------------------------------------------------- */
 
 import { BetterScript } from "../../../script/BetterScript.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { Script_ArbOS } from "../../../script/networks/Script_ArbOS.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
 import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../BetterTest.sol";
+import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
 
-contract TestBase_ArbOS
+contract TestBase_WETH
 is
     CommonBase,
     ScriptBase,
@@ -54,37 +48,17 @@ is
     BetterScript,
 
     ScriptBase_Crane_Factories,
-    ScriptBase_Crane_ERC20,
-    ScriptBase_Crane_ERC4626,
+    // ScriptBase_Crane_ERC20,
+    // ScriptBase_Crane_ERC4626,
 
-    Script_ArbOS,
-    Script_Crane,
-    Script_Crane_Stubs,
-    Test,
-    BetterTest,
-
-    Test_Crane
+    Script_WETH
 {
 
-    function setUp() public virtual
-    override(
-        Test_Crane
-    ) {
-        // initialize();
-        Test_Crane.setUp();
-        // initPrecompiles_ArbOS();
-    }
-
-    function run() public virtual
+    function run() public
     override(
         ScriptBase_Crane_Factories,
-        ScriptBase_Crane_ERC20,
-        ScriptBase_Crane_ERC4626,
-        Script_Crane,
-        Script_Crane_Stubs,
-        Test_Crane
+        Script_WETH
     ) {
-        Test_Crane.run();
+        super.run();
     }
-
 }

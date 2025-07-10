@@ -32,13 +32,13 @@ import { WAPE } from "../../protocols/tokens/wrappers/wape/WAPE.sol";
 
 contract Script_ApeChain
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
     Script_ArbOS
 {
 

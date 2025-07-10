@@ -6,7 +6,7 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 import { IWETHAware } from "contracts/interfaces/IWETHAware.sol";
 import { WETHAwareStorage } from "./utils/WETHAwareStorage.sol";
 
-contract WETHFacet is WETHAwareStorage, IWETHAware, IFacet {
+contract WETHAwareFacet is WETHAwareStorage, IWETHAware, IFacet {
 
     /* ------------------------------ LIBRARIES ----------------------------- */
 

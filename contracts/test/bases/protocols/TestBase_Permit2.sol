@@ -27,8 +27,8 @@ contract TestBase_Permit2
 is
     Script,
     BetterScript,
-    Script_Permit2,
     ScriptBase_Crane_Factories,
+    Script_Permit2,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
     Script_Crane,

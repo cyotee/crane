@@ -199,3 +199,11 @@ bytes32 constant ERC4626_DFPKG_INITCODE_HASH = keccak256(ERC4626_DFPKG_INITCODE)
 // import { CamelotV2AwareFacet } from "../protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
 // bytes constant CAMELOT_V2_AWARE_FACET_INITCODE = type(CamelotV2AwareFacet).creationCode;
 // bytes32 constant CAMELOT_V2_AWARE_FACET_INITCODE_HASH = keccak256(CAMELOT_V2_AWARE_FACET_INITCODE);
+
+import { Permit2AwareFacet } from "../protocols/utils/permit2/Permit2AwareFacet.sol";
+bytes constant PERMIT2_AWARE_FACET_INITCODE = type(Permit2AwareFacet).creationCode;
+bytes32 constant PERMIT2_AWARE_FACET_INITCODE_HASH = keccak256(PERMIT2_AWARE_FACET_INITCODE);
+
+import { WETHAwareFacet } from "../protocols/tokens/wrappers/weth/v9/WETHAwareFacet.sol";
+bytes constant WETH_AWARE_FACET_INITCODE = type(WETHAwareFacet).creationCode;
+bytes32 constant WETH_AWARE_FACET_INITCODE_HASH = keccak256(WETH_AWARE_FACET_INITCODE);

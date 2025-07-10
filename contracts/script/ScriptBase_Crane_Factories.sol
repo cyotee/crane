@@ -34,12 +34,12 @@ import { IDiamondPackageCallBackFactory } from "../interfaces/IDiamondPackageCal
 
 contract ScriptBase_Crane_Factories
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
     BetterScript
 {
 

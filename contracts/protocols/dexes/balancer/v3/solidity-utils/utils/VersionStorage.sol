@@ -51,6 +51,12 @@ contract VersionStorage {
     }
     // end::_versionStorage()[]
 
+    function _initVersionStorage(
+        string memory version
+    ) internal {
+        _versionStorage().version = version;
+    }
+
     function _version()
     internal view virtual returns(string memory) {
         return _versionStorage().version;

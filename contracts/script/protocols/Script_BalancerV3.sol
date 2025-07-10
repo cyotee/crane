@@ -93,6 +93,7 @@ import { BalancerV3Authorizer } from "../../protocols/dexes/balancer/v3/vault/Ba
 
 import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterTest } from "../../test/BetterTest.sol";
+import { Script_WETH } from "./Script_WETH.sol";
 
 contract Script_BalancerV3
 is
@@ -111,9 +112,9 @@ is
     Script,
     BetterScript,
     
-    Script_Permit2,
-    
     ScriptBase_Crane_Factories,
+    Script_Permit2,
+    Script_WETH,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
 
@@ -144,6 +145,7 @@ is
     function run() public virtual
     override(
         Script_Permit2,
+        Script_WETH,
         ScriptBase_Crane_Factories,
         ScriptBase_Crane_ERC20,
         ScriptBase_Crane_ERC4626,

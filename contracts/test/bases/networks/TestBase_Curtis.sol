@@ -36,4 +36,12 @@ is
         // initPrecompiles_ArbOS();
     }
 
+    function run() public virtual
+    override(
+        Test_Crane,
+        TestBase_ArbOS
+    ) {
+        Test_Crane.run();
+    }
+
 }

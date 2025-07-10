@@ -45,16 +45,18 @@ import {IUniswapV2Pair} from "../../interfaces/protocols/dexes/uniswap/v2/IUnisw
 import {UniV2Factory} from "../../protocols/dexes/uniswap/v2/UniV2Factory.sol";
 import {UniV2Router02} from "../../protocols/dexes/uniswap/v2/UniV2Router02.sol";
 import { Script_WETH } from "./Script_WETH.sol";
+import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
 
 contract Script_UniswapV2
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
+    ScriptBase_Crane_Factories,
     Script_WETH
 {
 
@@ -68,6 +70,7 @@ is
 
     function run() public virtual
     override(
+        ScriptBase_Crane_Factories,
         Script_WETH
     ) {
         Script_WETH.run();

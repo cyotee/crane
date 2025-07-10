@@ -28,27 +28,33 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
+import "../../constants/CraneINITCODE.sol";
 import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterScript } from "../BetterScript.sol";
 import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
 import { WETH9 } from "../../protocols/tokens/wrappers/weth/v9/WETH9.sol";
+import { ScriptBase_Crane_Factories } from "../ScriptBase_Crane_Factories.sol";
 
 contract Script_WETH
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    BetterScript
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
+    ScriptBase_Crane_Factories
 {
 
     function builderKey_WETH9() public pure returns (string memory) {
         return "weth9";
     }
 
-    function run() public virtual {
+    function run() public virtual
+    override(
+        ScriptBase_Crane_Factories
+    ) {
         // console..log("Script_WETH.run():: Entering function.");
         // console..log("Script_WETH.run():: Declaring weth9.");
         declare(vm.getLabel(address(weth9())), address(weth9()));
@@ -89,5 +95,40 @@ is
         }
         return weth9(block.chainid);
     }
-    
+
+    /* ---------------------------------------------------------------------- */
+    /*                             WETHAwareFacet                             */
+    /* ---------------------------------------------------------------------- */
+
+    function wethAwareFacet(
+        uint256 chainId,
+        WETHAwareFacet wethAwareFacet_
+    ) public returns(bool) {
+        registerInstance(chainId, WETH_AWARE_FACET_INITCODE_HASH, address(wethAwareFacet_));
+        declare(builderKey_WETH9(), "wethAwareFacet", address(wethAwareFacet_));
+        return true;
+    }
+
+    function wethAwareFacet(WETHAwareFacet wethAwareFacet_) public returns(bool) {
+        wethAwareFacet(block.chainid, wethAwareFacet_);
+        return true;
+    }
+
+    function wethAwareFacet(uint256 chainId) public view returns(WETHAwareFacet wethAwareFacet_) {
+        wethAwareFacet_ = WETHAwareFacet(chainInstance(chainId, WETH_AWARE_FACET_INITCODE_HASH));
+    }
+
+    function wethAwareFacet() public returns(WETHAwareFacet wethAwareFacet_) {
+        if(address(wethAwareFacet(block.chainid)) == address(0)) {
+            wethAwareFacet_ = WETHAwareFacet(
+                factory().create3(
+                    WETH_AWARE_FACET_INITCODE,
+                    "",
+                    keccak256(abi.encode(type(WETHAwareFacet).name))
+                )
+            );
+            wethAwareFacet(block.chainid, wethAwareFacet_);
+        }
+        return wethAwareFacet(block.chainid);
+    }
 }

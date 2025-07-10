@@ -32,12 +32,12 @@ import { ArbOwnerPublicStub } from "../../utils/vm/arbOS/stubs/precompiles/ArbOw
 
 contract Script_ArbOS
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
     BetterScript
 {
 
