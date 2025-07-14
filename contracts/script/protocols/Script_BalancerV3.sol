@@ -93,14 +93,9 @@ is
     CommonBase,
     ScriptBase,
 
-    TestBase,
-    StdAssertions,
-
     StdChains,
     StdCheatsSafe,
-    StdCheats,
-    StdInvariant,
-    
+
     StdUtils,
     Script,
     BetterScript,
@@ -108,13 +103,12 @@ is
     ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
-    Script_Permit2,
+    
     Script_WETH,
+    Script_Permit2,
 
     Script_Crane,
 
-    Test,
-    BetterTest,
     BetterBaseContractsDeployer,
     BetterVaultContractsDeployer
 {
@@ -137,11 +131,11 @@ is
 
     function run() public virtual
     override(
-        Script_Permit2,
-        Script_WETH,
         ScriptBase_Crane_Factories,
         ScriptBase_Crane_ERC20,
         ScriptBase_Crane_ERC4626,
+        Script_WETH,
+        Script_Permit2,
         Script_Crane
     ) {
         // console.log("Script_BalancerV3.run():: Entering function.");

@@ -121,17 +121,17 @@ is
     ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
-    Script_Permit2,
     Script_WETH,
+    Script_Permit2,
 
     Script_Crane,
     Script_Crane_Stubs,
 
-    Test,
-    BetterTest,
     BetterBaseContractsDeployer,
     BetterVaultContractsDeployer,
     Script_BalancerV3,
+    Test,
+    BetterTest,
     Test_Crane,
     BetterBalancerV3BaseTest,
     TestBase_Permit2
@@ -287,14 +287,15 @@ is
         ScriptBase_Crane_Factories,
         ScriptBase_Crane_ERC20,
         ScriptBase_Crane_ERC4626,
-        Script_BalancerV3,
-        Script_Permit2,
         Script_WETH,
+        Script_Permit2,
+        Script_BalancerV3,
         Script_Crane,
         Script_Crane_Stubs,
+        Test_Crane,
+        // Script_BalancerV3,
         BetterBalancerV3BaseTest,
-        TestBase_Permit2,
-        Test_Crane
+        TestBase_Permit2
     ) {
         // solhint-disable-next-line no-empty-blocks
     }
@@ -437,6 +438,61 @@ is
         // console.log("BetterBalancerV3VaultTest.approveForSender():: Exiting function.");
     }
 
+    function _approveSpenderForAllUsers(
+        address spender
+    ) internal virtual {
+        for (uint256 i = 0; i < users.length; ++i) {
+            address user = users[i];
+            vm.startPrank(user);
+            approveForSender(spender);
+            vm.stopPrank();
+        }
+    }
+
+    function approveForSender(
+        address spender
+    ) internal virtual {
+        // console.log("BetterBalancerV3VaultTest.approveForSender():: Entering function.");
+        for (uint256 i = 0; i < tokens.length; ++i) {
+            tokens[i].approve(spender, type(uint256).max);
+            permit2().approve(address(tokens[i]), address(spender), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(tokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
+        }
+
+        for (uint256 i = 0; i < oddDecimalTokens.length; ++i) {
+            oddDecimalTokens[i].approve(spender, type(uint256).max);
+            permit2().approve(address(oddDecimalTokens[i]), spender, type(uint160).max, type(uint48).max);
+            // permit2().approve(address(oddDecimalTokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(oddDecimalTokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(
+            //     address(oddDecimalTokens[i]),
+            //     address(compositeLiquidityRouter),
+            //     type(uint160).max,
+            //     type(uint48).max
+            // );
+        }
+
+        for (uint256 i = 0; i < erc4626Tokens.length; ++i) {
+            erc4626Tokens[i].approve(spender, type(uint256).max);
+            permit2().approve(address(erc4626Tokens[i]), address(spender), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(erc4626Tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(address(erc4626Tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
+            // permit2().approve(
+            //     address(erc4626Tokens[i]),
+            //     address(compositeLiquidityRouter),
+            //     type(uint160).max,
+            //     type(uint48).max
+            // );
+
+            // Approve deposits from sender.
+            // IERC20 underlying = IERC20(erc4626Tokens[i].asset());
+            // underlying.approve(address(erc4626Tokens[i]), type(uint160).max);
+        }
+        // console.log("BetterBalancerV3VaultTest.approveForSender():: Exiting function.");
+    }
+
     function _approveForAllUsers(IERC20 token) internal virtual {
         for (uint256 i = 0; i < users.length; ++i) {
             address user = users[i];
@@ -452,6 +508,29 @@ is
         permit2().approve(address(token), address(bufferRouter), type(uint160).max, type(uint48).max);
         permit2().approve(address(token), address(batchRouter), type(uint160).max, type(uint48).max);
         permit2().approve(address(token), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
+    }
+
+    function _approveSpenderForAllUsers(
+        address spender,
+        IERC20 token
+    ) internal virtual {
+        for (uint256 i = 0; i < users.length; ++i) {
+            address user = users[i];
+            vm.startPrank(user);
+            approveForSender(spender, token);
+            vm.stopPrank();
+        }
+    }
+
+    function approveForSender(
+        address spender,
+        IERC20 token
+    ) internal virtual {
+        token.approve(spender, type(uint256).max);
+        permit2().approve(address(token), address(spender), type(uint160).max, type(uint48).max);
+        // permit2().approve(address(token), address(bufferRouter), type(uint160).max, type(uint48).max);
+        // permit2().approve(address(token), address(batchRouter), type(uint160).max, type(uint48).max);
+        // permit2().approve(address(token), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
     }
 
     function approveForPool(IERC20 bpt) internal virtual {

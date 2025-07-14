@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import { betterconsole as console } from "../../../../../utils/vm/foundry/tools/betterconsole.sol";
 import { BetterIERC20 as IERC20 } from "../../../../../interfaces/BetterIERC20.sol";
 import { BetterSafeERC20 as SafeERC20 } from "../../../../../token/ERC20/utils/BetterSafeERC20.sol";
 import { IUniswapV2Pair } from "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
@@ -264,6 +265,14 @@ library UniswapV2Service {
         IERC20 tokenOut,
         uint256 reserveOut
     ) internal returns (uint256 amountOut) {
+        console.log("swap: amountIn", amountIn);
+        console.log("swap: tokenIn", address(tokenIn));
+        console.log("swap: tokenIn name = %s", IERC20(address(tokenIn)).name());
+        console.log("swap: reserveIn", reserveIn);
+        console.log("swap: feePercent", feePercent);
+        console.log("swap: tokenOut", address(tokenOut));
+        console.log("swap: tokenOut name = %s", IERC20(address(tokenOut)).name());
+        console.log("swap: reserveOut", reserveOut);
         // Create parameter struct to avoid stack too deep error
         SwapParams memory params = SwapParams({
             router: router,
@@ -282,12 +291,16 @@ library UniswapV2Service {
             params.reserveOut,
             params.feePercent
         );
+        console.log("swap: amountOut", amountOut);
 
         // Prepare swap
         address[] memory path = _prepareSwap(params);
+        console.log("swap: path[0]", path[0]);
+        console.log("swap: path[1]", path[1]);
         
         // Execute swap
         _executeSwap(params, path);
+        console.log("swap: tokenOut.balanceOf(this) = ", tokenOut.balanceOf(address(this)));
     }
     
     // Helper function to create path and approve token
@@ -326,8 +339,18 @@ library UniswapV2Service {
         uint256 saleAmt,
         IERC20 opToken
     ) internal returns (uint256) {
+        console.log("swapDeposit: tokenIn", address(tokenIn));
+        console.log("swapDeposit: tokenIn name = %s", IERC20(address(tokenIn)).name());
+        console.log("swapDeposit: saleAmt", saleAmt);
+        console.log("swapDeposit: opToken", address(opToken));
+        console.log("swapDeposit: opToken name = %s", IERC20(address(opToken)).name());
+        
         // Get reserves
         ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        console.log("swapDeposit: reserves.reserveIn", reserves.reserveIn);
+        console.log("swapDeposit: reserves.reserveOut", reserves.reserveOut);
+        console.log("swapDeposit: reserves.feePercent", reserves.feePercent);
+        console.log("swapDeposit: reserves.unknownFee", reserves.unknownFee);
         
         // Create parameter struct to avoid stack too deep error
         BalanceParams memory params = BalanceParams({
@@ -342,6 +365,8 @@ library UniswapV2Service {
         
         // Balance assets using the reserves
         uint256[] memory balancedAmounts = _balanceAssetsInternal(params);
+        console.log("swapDeposit: balancedAmounts[0]", balancedAmounts[0]);
+        console.log("swapDeposit: balancedAmounts[1]", balancedAmounts[1]);
         
         // Deposit balanced amounts
         uint256 poolTokenAmount = _deposit(
@@ -351,21 +376,28 @@ library UniswapV2Service {
             balancedAmounts[0],
             balancedAmounts[1]
         );
+        console.log("swapDeposit: poolTokenAmount", poolTokenAmount);
         
         return poolTokenAmount;
     }
 
     // Helper function to implement _balanceAssets logic to avoid stack too deep
     function _balanceAssetsInternal(BalanceParams memory params) private returns(uint256[] memory amounts) {
+        console.log("balanceAssetsInternal: params.saleAmt", params.saleAmt);
+        console.log("balanceAssetsInternal: params.saleReserve", params.saleReserve);
+        console.log("balanceAssetsInternal: params.saleTokenFeePerc", params.saleTokenFeePerc);
+        
         // Get amount of input token to be swapped
         uint256 swapAmountIn = _calculateSwapAmount(
             params.saleAmt,
             params.saleReserve,
             params.saleTokenFeePerc
         );
+        console.log("balanceAssetsInternal: swapAmountIn", swapAmountIn);
         
         amounts = new uint256[](2);
         amounts[0] = params.saleAmt - swapAmountIn;
+        console.log("balanceAssetsInternal: amounts[0]", amounts[0]);
         
         // Perform swap to get the second token
         amounts[1] = _swap(
@@ -377,7 +409,7 @@ library UniswapV2Service {
             params.tokenOut,
             params.reserveOut
         );
-        
+        console.log("balanceAssetsInternal: amounts[1]", amounts[1]);
         return amounts;
     }
     

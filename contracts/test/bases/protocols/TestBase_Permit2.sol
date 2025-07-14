@@ -5,7 +5,26 @@ pragma solidity ^0.8.0;
 /*                                   Foundry                                  */
 /* -------------------------------------------------------------------------- */
 
+import {
+    CommonBase,
+    ScriptBase,
+    TestBase
+} from "forge-std/Base.sol";
+import {StdChains} from "forge-std/StdChains.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import {StdUtils} from "forge-std/StdUtils.sol";
 import { Script } from "forge-std/Script.sol";
+import { VmSafe } from "forge-std/Vm.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import { Test } from "forge-std/Test.sol";
+import {StdAssertions} from "forge-std/StdAssertions.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -23,14 +42,29 @@ import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
 
 contract TestBase_Permit2
 is
+    CommonBase,
+    ScriptBase,
+
+    TestBase,
+    StdAssertions,
+
+    StdChains,
+    StdCheatsSafe,
+    StdCheats,
+    StdInvariant,
+    
+    StdUtils,
+
     Script,
     BetterScript,
     ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
+
     Script_Permit2,
     Script_Crane,
     Script_Crane_Stubs,
+    Test,
     BetterTest,
     Test_Crane
 {
@@ -39,9 +73,6 @@ is
     override(
         // Script_Crane,
         Test_Crane
-        // Fixture_Crane,
-        // Fixture_CamelotV2,
-        // Fixture
     ) {
         Test_Crane.setUp();
     }
@@ -49,10 +80,10 @@ is
 
     function run() public virtual
     override (
-        Script_Permit2,
         ScriptBase_Crane_Factories,
         ScriptBase_Crane_ERC20,
         ScriptBase_Crane_ERC4626,
+        Script_Permit2,
         Script_Crane,
         Script_Crane_Stubs,
         Test_Crane

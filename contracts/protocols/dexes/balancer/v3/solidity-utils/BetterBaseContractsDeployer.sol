@@ -35,14 +35,15 @@ import { BetterTest } from "../../../../../test/BetterTest.sol";
 
 abstract contract BetterBaseContractsDeployer
 is
+    CommonBase,
     ScriptBase,
+
     StdChains,
     StdCheatsSafe,
+    
     StdUtils,
     Script,
-    BetterScript,
-    Test,
-    BetterTest
+    BetterScript
 {
     bool reusingArtifacts;
 

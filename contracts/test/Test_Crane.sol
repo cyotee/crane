@@ -73,7 +73,7 @@ is
     ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20,
     ScriptBase_Crane_ERC4626,
-    
+
     Script_Crane,
     Script_Crane_Stubs,
     Test,

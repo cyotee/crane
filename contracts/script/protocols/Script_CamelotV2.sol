@@ -60,9 +60,10 @@ is
     }
 
     function run()
-    public virtual override(
-        Script_WETH,
-        ScriptBase_Crane_Factories
+    public virtual
+    override(
+        ScriptBase_Crane_Factories,
+        Script_WETH
     ) {
         // console.log("Fixture_CamelotV2:setUp():: Entering function.");
         // console.log("Declaring addresses of Camelot V2 Factory and Router in json of all.");

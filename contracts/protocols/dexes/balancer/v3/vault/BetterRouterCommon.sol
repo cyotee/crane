@@ -1,21 +1,40 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
+/* -------------------------------------------------------------------------- */
+/*                                Open Zeppelin                               */
+/* -------------------------------------------------------------------------- */
+
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                   Permit2                                  */
+/* -------------------------------------------------------------------------- */
+
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
+import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                 Balancer V3                                */
+/* -------------------------------------------------------------------------- */
+
 
 import { IRouterCommon } from "@balancer-labs/v3-interfaces/contracts/vault/IRouterCommon.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
+/* ------------------------------- Interfaces ------------------------------- */
+
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+
+/* ----------------------------- Solidity Utils ----------------------------- */
 
 import { InputHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/InputHelpers.sol";
 import { RevertCodec } from "@balancer-labs/v3-solidity-utils/contracts/helpers/RevertCodec.sol";
 import { Version } from "@balancer-labs/v3-solidity-utils/contracts/helpers/Version.sol";
+
 import {
     ReentrancyGuardTransient
 } from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
@@ -47,11 +66,9 @@ import { BetterRouterCommonStorage } from "./utils/BetterRouterCommonStorage.sol
  */
 abstract contract BetterRouterCommon
 is 
-    IRouterCommon,
     BetterRouterCommonStorage,
+    IRouterCommon,
     SenderGuard,
-    // BalancerV3VaultAwareStorage,
-    // VaultGuard,
     VaultGaurdModifiers,
     ReentrancyGuardTransient
     // Version
@@ -71,11 +88,6 @@ is
     // solhint-disable-next-line var-name-mixedcase
     bytes32 private immutable _IS_RETURN_ETH_LOCKED_SLOT =
         TransientStorageHelpers.calculateSlot(type(BetterRouterCommon).name, "isReturnEthLocked");
-
-    // solhint-disable-next-line var-name-mixedcase
-    // IWETH internal immutable _weth;
-
-    // IPermit2 internal immutable _permit2;
 
     /**
      * @notice Locks the return of excess ETH to the sender until the end of the function.
@@ -99,16 +111,6 @@ is
 
         _returnEth(sender);
     }
-
-    // constructor(
-    //     IVault vault,
-    //     IWETH weth,
-    //     IPermit2 permit2,
-    //     string memory routerVersion
-    // ) SenderGuard() VaultGuard(vault) Version(routerVersion) {
-    //     _weth = weth;
-    //     _permit2 = permit2;
-    // }
 
     /// @inheritdoc IRouterCommon
     function getWeth() external view returns (IWETH) {
@@ -176,9 +178,7 @@ is
             } catch (bytes memory returnData) {
                 // Did it fail because the permit was executed (possible DoS attack to make the transaction revert),
                 // or was it something else (e.g., deadline, invalid signature)?
-                if (
-                    IERC20(permitApproval.token).allowance(permitApproval.owner, address(this)) != permitApproval.amount
-                ) {
+                if (IERC20(permitApproval.token).allowance(permitApproval.owner, address(this)) != permitApproval.amount) {
                     // It was something else, or allowance was used, so we should revert. Bubble up the revert reason.
                     RevertCodec.bubbleUpRevert(returnData);
                 }
@@ -243,13 +243,19 @@ is
         // It's cheaper to check the balance and return early than checking a transient variable.
         // Moreover, most operations will not have ETH to return.
         uint256 excess = address(this).balance;
-        if (excess == 0) {
-            return;
-        }
+        // if (excess == 0) {
+        //     return;
+        // }
+
+        // // If the return of ETH is locked, then don't return it,
+        // // because _returnEth will be called again at the end of the call.
+        // if (_isReturnEthLockedSlot().tload()) {
+        //     return;
+        // }
+        if (excess == 0 || _isReturnEthLockedSlot().tload()) {
 
         // If the return of ETH is locked, then don't return it,
         // because _returnEth will be called again at the end of the call.
-        if (_isReturnEthLockedSlot().tload()) {
             return;
         }
 
@@ -274,7 +280,7 @@ is
 
     function _takeTokenIn(address sender, IERC20 tokenIn, uint256 amountIn, bool wethIsEth) internal {
         // If the tokenIn is ETH, then wrap `amountIn` into WETH.
-        if (wethIsEth && tokenIn == _weth()) {
+        if (wethIsEth && address(tokenIn) == address(_weth())) {
             _weth().wrapEthAndSettle(_balV3Vault(), amountIn);
         } else {
             if (amountIn > 0) {
@@ -285,13 +291,31 @@ is
         }
     }
 
+    function _transferToRecipient(
+        address sender,
+        address recipient,
+        IERC20 tokenIn,
+        uint256 amountIn,
+        bool wethIsEth
+    ) internal {
+        address weth = address(_weth());
+        if (wethIsEth && address(tokenIn) == address(weth)) {
+            _weth().deposit{value: amountIn}();
+            _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(weth));
+        } else {
+            if (amountIn > 0) {
+                _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(tokenIn));
+            }
+        }
+    }
+
     function _sendTokenOut(address sender, IERC20 tokenOut, uint256 amountOut, bool wethIsEth) internal {
         if (amountOut == 0) {
             return;
         }
 
         // If the tokenOut is ETH, then unwrap `amountOut` into ETH.
-        if (wethIsEth && tokenOut == _weth()) {
+        if (wethIsEth && address(tokenOut) == address(_weth())) {
             _weth().unwrapWethAndTransferToSender(_balV3Vault(), sender, amountOut);
         } else {
             // Receive the tokenOut amountOut.

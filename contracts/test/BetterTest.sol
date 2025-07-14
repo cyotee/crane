@@ -57,8 +57,6 @@ is
 
     BetterScript,
 
-    // StdChains,
-    // StdUtils,
     Test
 {
 

@@ -28,8 +28,14 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import { IWETHAware } from "../../interfaces/IWETHAware.sol";
 import { BetterScript } from "../../script/BetterScript.sol";
 import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../script/ScriptBase_Crane_ERC4626.sol";
 import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
+import { BetterTest } from "../../test/BetterTest.sol";
+import { Test_Crane } from "../../test/Test_Crane.sol";
 import { TestBase_WETH } from "../../test/bases/protocols/TestBase_WETH.sol";
+import { Script_Crane } from "../../script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "../../script/Script_Crane_Stubs.sol";
 
 abstract contract TestBase_IWETHAware
 is
@@ -42,24 +48,36 @@ is
     StdChains,
     StdCheatsSafe,
     StdCheats,
+    StdInvariant,
 
     StdUtils,
-
     Script,
     BetterScript,
 
     ScriptBase_Crane_Factories,
-    // ScriptBase_Crane_ERC20,
-    // ScriptBase_Crane_ERC4626,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
 
     Script_WETH,
+
+    Script_Crane,
+    Script_Crane_Stubs,
+
+    Test,
+    BetterTest,
+    Test_Crane,
     TestBase_WETH
 {
 
-    function run() public
+    function run() public virtual
     override(
         ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
         Script_WETH,
+        Script_Crane,
+        Script_Crane_Stubs,
+        Test_Crane,
         TestBase_WETH
     ) {
         // super.run();

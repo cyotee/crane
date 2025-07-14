@@ -80,14 +80,16 @@ import { BetterBaseContractsDeployer } from "../solidity-utils/BetterBaseContrac
  */
 contract BetterVaultContractsDeployer
 is 
+    CommonBase,
     ScriptBase,
+
     StdChains,
     StdCheatsSafe,
+
     StdUtils,
     Script,
     BetterScript,
-    Test,
-    BetterTest,
+    
     BetterBaseContractsDeployer
 {
     string private artifactsRootDir = "artifacts/";

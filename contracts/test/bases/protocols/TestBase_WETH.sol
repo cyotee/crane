@@ -30,6 +30,8 @@ import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Fac
 import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
 import { BetterTest } from "../../../test/BetterTest.sol";
 import { Test_Crane } from "../../../test/Test_Crane.sol";
+import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
 
 contract TestBase_WETH
 is
@@ -45,15 +47,16 @@ is
     StdInvariant,
 
     StdUtils,
-
     Script,
     BetterScript,
 
     ScriptBase_Crane_Factories,
-    // ScriptBase_Crane_ERC20,
-    // ScriptBase_Crane_ERC4626,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
 
     Script_WETH,
+    
+    Test,
     BetterTest,
     Test_Crane
 {
@@ -61,6 +64,8 @@ is
     function run() public virtual
     override(
         ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
         Script_WETH,
         Test_Crane
     ) {

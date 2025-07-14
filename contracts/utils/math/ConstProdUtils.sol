@@ -315,6 +315,45 @@ library ConstProdUtils {
         uint256 reserveOut,
         uint256 saleFeePercent
     ) internal pure returns (uint) {
+        console.log("=== _saleQuote START ===");
+        console.log("Input - amountIn:", amountIn);
+        console.log("Input - reserveIn:", reserveIn);
+        console.log("Input - reserveOut:", reserveOut);
+        console.log("Input - saleFeePercent:", saleFeePercent);
+        console.log("Input - FEE_DENOMINATOR:", FEE_DENOMINATOR);
+
+        uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent) / FEE_DENOMINATOR;
+        console.log("Step 1 - Fee reduction factor:", FEE_DENOMINATOR - saleFeePercent);
+        console.log("Step 1 - amountInWithFee:", amountInWithFee);
+        
+        uint256 numerator = amountInWithFee * reserveOut;
+        console.log("Step 2 - numerator (amountInWithFee * reserveOut):", numerator);
+        
+        uint256 denominator = reserveIn + amountInWithFee;
+        console.log("Step 3 - denominator (reserveIn + amountInWithFee):", denominator);
+        
+        uint256 result = numerator / denominator;
+        console.log("Step 4 - final result (numerator / denominator):", result);
+        console.log("=== _saleQuote END ===");
+        
+        return result;
+    }
+
+    /**
+     * @dev Calculates the proceeds of a swap.
+     * @param amountIn The amount of token to be sold.
+     * @param reserveIn The reserve of the input token in the pool (e.g., token A).
+     * @param reserveOut The reserve of the output token in the pool (e.g., token B).
+     * @param saleFeePercent The swap fee in PPHK, i.e 0.5% == 500.
+     * @return saleProceeds The proceeds of the swap.
+     */
+    function _saleQuote(
+        uint256 amountIn,
+        uint256 reserveIn,
+        uint256 reserveOut,
+        uint256 saleFeePercent,
+        uint256 feeDenominator
+    ) internal pure returns (uint) {
         // console.log("=== _saleQuote START ===");
         // console.log("Input - amountIn:", amountIn);
         // console.log("Input - reserveIn:", reserveIn);
@@ -322,7 +361,7 @@ library ConstProdUtils {
         // console.log("Input - saleFeePercent:", saleFeePercent);
         // console.log("Input - FEE_DENOMINATOR:", FEE_DENOMINATOR);
 
-        uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent) / FEE_DENOMINATOR;
+        uint256 amountInWithFee = amountIn * (feeDenominator - saleFeePercent) / feeDenominator;
         // console.log("Step 1 - Fee reduction factor:", FEE_DENOMINATOR - saleFeePercent);
         // console.log("Step 1 - amountInWithFee:", amountInWithFee);
         
@@ -390,6 +429,21 @@ library ConstProdUtils {
         uint256 denominator = (reserveOut - amountOut) * (FEE_DENOMINATOR - feePercent);
         amountIn = (numerator / denominator) + 1;
     }
+
+    function _purchaseQuote(
+        uint256 amountOut,
+        uint256 reserveIn,
+        uint256 reserveOut,
+        uint256 feePercent,
+        uint256 feeDenominator
+    ) internal pure returns (uint amountIn) {
+        require(amountOut > 0, "Invalid output amount");
+        require(reserveIn > 0 && reserveOut > amountOut, "Insufficient liquidity");
+        uint256 numerator = (reserveIn * amountOut) * feeDenominator;
+        uint256 denominator = (reserveOut - amountOut) * (feeDenominator - feePercent);
+        amountIn = (numerator / denominator) + 1;
+    }
+
 
     function _swapDepositSaleAmt(
         uint256 amountIn,

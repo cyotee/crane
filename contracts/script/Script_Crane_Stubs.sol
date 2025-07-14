@@ -32,16 +32,16 @@ import { Script_Crane } from "./Script_Crane.sol";
 
 contract Script_Crane_Stubs
 is
-    CommonBase,
-    ScriptBase,
-    StdChains,
-    StdCheatsSafe,
-    StdUtils,
-    Script,
-    BetterScript,
-    ScriptBase_Crane_Factories,
-    ScriptBase_Crane_ERC20,
-    ScriptBase_Crane_ERC4626,
+    // CommonBase,
+    // ScriptBase,
+    // StdChains,
+    // StdCheatsSafe,
+    // StdUtils,
+    // Script,
+    // BetterScript,
+    // ScriptBase_Crane_Factories,
+    // ScriptBase_Crane_ERC20,
+    // ScriptBase_Crane_ERC4626,
     Script_Crane
 {
 
@@ -51,9 +51,9 @@ is
 
     function run() public virtual
     override(
-        ScriptBase_Crane_Factories,
-        ScriptBase_Crane_ERC20,
-        ScriptBase_Crane_ERC4626,
+        // ScriptBase_Crane_Factories,
+        // ScriptBase_Crane_ERC20,
+        // ScriptBase_Crane_ERC4626,
         Script_Crane
     ) {
         // ScriptBase_Crane_Factories.run();

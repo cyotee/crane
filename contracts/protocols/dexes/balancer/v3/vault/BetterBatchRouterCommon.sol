@@ -37,18 +37,6 @@ abstract contract BetterBatchRouterCommon is BetterRouterCommon {
         _calculateBatchRouterStorageSlot("currentSwapTokenOutAmounts");
     bytes32 private immutable _SETTLED_TOKEN_AMOUNTS_SLOT = _calculateBatchRouterStorageSlot("settledTokenAmounts");
 
-    // solhint-enable var-name-mixedcase
-    // solhint-disable no-inline-assembly
-
-    // constructor(
-    //     IVault vault,
-    //     IWETH weth,
-    //     IPermit2 permit2,
-    //     string memory routerVersion
-    // ) RouterCommon(vault, weth, permit2, routerVersion) {
-    //     // solhint-disable-previous-line no-empty-blocks
-    // }
-
     function _initBetterBatchRouterCommon(
         IVault vault,
         IWETH weth,

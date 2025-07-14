@@ -43,14 +43,14 @@ import { IERC4626DFPkg } from "../token/ERC20/extensions/ERC4626DFPkg.sol";
 
 contract ScriptBase_Crane_ERC4626
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
-    // ScriptBase_Crane_Factories,
+    CommonBase,
+    ScriptBase,
+    StdChains,
+    StdCheatsSafe,
+    StdUtils,
+    Script,
+    BetterScript,
+    ScriptBase_Crane_Factories,
     ScriptBase_Crane_ERC20
 {
 
@@ -60,7 +60,7 @@ is
 
     function run() public virtual
     override( 
-        // ScriptBase_Crane_Factories,
+        ScriptBase_Crane_Factories,
         ScriptBase_Crane_ERC20
     ) {
         // ScriptBase_Crane_Factories.run();
