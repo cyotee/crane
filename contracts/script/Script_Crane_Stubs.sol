@@ -32,16 +32,20 @@ import { Script_Crane } from "./Script_Crane.sol";
 
 contract Script_Crane_Stubs
 is
-    // CommonBase,
-    // ScriptBase,
-    // StdChains,
-    // StdCheatsSafe,
-    // StdUtils,
-    // Script,
-    // BetterScript,
-    // ScriptBase_Crane_Factories,
-    // ScriptBase_Crane_ERC20,
-    // ScriptBase_Crane_ERC4626,
+    CommonBase,
+    ScriptBase,
+
+    StdChains,
+    StdCheatsSafe,
+
+    StdUtils,
+    Script,
+    BetterScript,
+
+    ScriptBase_Crane_Factories,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
+
     Script_Crane
 {
 
@@ -51,9 +55,9 @@ is
 
     function run() public virtual
     override(
-        // ScriptBase_Crane_Factories,
-        // ScriptBase_Crane_ERC20,
-        // ScriptBase_Crane_ERC4626,
+        ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
         Script_Crane
     ) {
         // ScriptBase_Crane_Factories.run();
@@ -69,7 +73,7 @@ is
     function greeterFacet(
         uint256 chainid,
         GreeterFacet greeterFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane:greeterFacet(uint256,GreeterFacet):: Entering function.");
         // console.log("Fixture_Crane:greeterFacet(uint256,GreeterFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane:greeterFacet(uint256,GreeterFacet):: Storing instance mapped to initCodeHash: %s.", GREETER_FACET_INIT_CODE_HASH);
@@ -80,7 +84,7 @@ is
         return true;
     }
 
-    function greeterFacet(GreeterFacet greeterFacet_) public returns(bool) {
+    function greeterFacet(GreeterFacet greeterFacet_) public virtual returns(bool) {
         // console.log("Fixture_Crane:greeterFacet(GreeterFacet):: Entering function.");
         // console.log("Fixture_Crane:greeterFacet(GreeterFacet):: Setting provided greeter facet of %s", address(greeterFacet_));
         greeterFacet(block.chainid, greeterFacet_);
@@ -100,7 +104,7 @@ is
         return greeterFacet_;
     }
 
-    function greeterFacet() public returns (GreeterFacet greeterFacet_) {
+    function greeterFacet() public virtual returns (GreeterFacet greeterFacet_) {
         // console.log("Fixture_Crane:greeterFacet():: Entering function.");
         // console.log("Fixture_Crane:greeterFacet():: Checking if GreeterFacet is declared.");
         if (address(greeterFacet(block.chainid)) == address(0)) {
@@ -130,7 +134,7 @@ is
     function greeterFacetDFPkg(
         uint256 chainid,
         GreeterFacetDiamondFactoryPackage greeterFacetDFPkg_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane:greeterFacetDFPkg(uint256,GreeterFacetDiamondFactoryPackage):: Entering function.");
         // console.log("Fixture_Crane:greeterFacetDFPkg(uint256,GreeterFacetDiamondFactoryPackage):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane:greeterFacetDFPkg(uint256,GreeterFacetDiamondFactoryPackage):: Storing instance mapped to initCodeHash: %s.", GREETER_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE_HASH);
@@ -141,7 +145,7 @@ is
         return true;
     }
 
-    function greeterFacetDFPkg(GreeterFacetDiamondFactoryPackage greeterFacetDFPkg_) public returns(bool) {
+    function greeterFacetDFPkg(GreeterFacetDiamondFactoryPackage greeterFacetDFPkg_) public virtual returns(bool) {
         // console.log("Fixture_Crane:greeterFacetDFPkg(GreeterFacetDiamondFactoryPackage):: Entering function.");
         // console.log("Fixture_Crane:greeterFacetDFPkg(GreeterFacetDiamondFactoryPackage):: Setting provided greeter facet diamond factory package of %s", address(greeterFacetDFPkg_));
         greeterFacetDFPkg(block.chainid, greeterFacetDFPkg_);
@@ -161,7 +165,7 @@ is
         return greeterFacetDFPkg_;
     }
 
-    function greeterFacetDFPkg() public returns (GreeterFacetDiamondFactoryPackage greeterFacetDFPkg_) {
+    function greeterFacetDFPkg() public virtual returns (GreeterFacetDiamondFactoryPackage greeterFacetDFPkg_) {
         // console.log("Fixture_Crane:greeterFacetDFPkg():: Entering function.");
         // console.log("Fixture_Crane:greeterFacetDFPkg():: Checking if GreeterFacetDiamondFactoryPackage is declared.");
         if (address(greeterFacetDFPkg(block.chainid)) == address(0)) {

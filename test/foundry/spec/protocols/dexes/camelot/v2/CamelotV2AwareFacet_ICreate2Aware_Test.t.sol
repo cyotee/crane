@@ -17,19 +17,19 @@ import { CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH } from "../../../../../../../cont
 
 contract CamelotV2AwareFacet_ICreate2Aware_Test is TestBase_ICreate2Aware {
 
-    CamelotV2AwareFacet public camelotV2AwareFacetInstance;
+    // CamelotV2AwareFacet public camelotV2AwareFacetInstance;
 
-    address controlOrigin_;
-    bytes32 controlInitCodeHash_;
-    bytes32 controlSalt_;
+    // address controlOrigin_;
+    // bytes32 controlInitCodeHash_;
+    // bytes32 controlSalt_;
 
     function setUp() public override(TestBase_ICreate2Aware) {
         super.setUp();
-        camelotV2AwareFacetInstance = camelotV2AwareFacet();
+        // camelotV2AwareFacetInstance = camelotV2AwareFacet();
 
-        controlOrigin_ = address(factory());
-        controlInitCodeHash_ = CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH;
-        controlSalt_ = keccak256(abi.encode(type(CamelotV2AwareFacet).name));
+        // controlOrigin_ = address(factory());
+        // controlInitCodeHash_ = CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH;
+        // controlSalt_ = keccak256(abi.encode(type(CamelotV2AwareFacet).name));
     }
 
     function run() public override(TestBase_ICreate2Aware) {
@@ -38,19 +38,20 @@ contract CamelotV2AwareFacet_ICreate2Aware_Test is TestBase_ICreate2Aware {
 
     // --- Implementation of TestBase_ICreate2Aware ---
 
-    function create2TestInstance() public view override returns (ICreate2Aware) {
-        return ICreate2Aware(address(camelotV2AwareFacetInstance));
+    function create2TestInstance() public override returns (ICreate2Aware) {
+        return ICreate2Aware(address(camelotV2AwareFacet()));
     }
 
-    function controlOrigin() public view override returns (address) {
-        return controlOrigin_;
+    function controlOrigin() public override returns (address) {
+        return address(factory());
     }
 
-    function controlInitCodeHash() public view override returns (bytes32) {
-        return controlInitCodeHash_;
+    function controlInitCodeHash() public pure override returns (bytes32) {
+        return CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH;
     }
 
-    function controlSalt() public view override returns (bytes32) {
-        return controlSalt_;
+    function controlSalt() public pure override returns (bytes32) {
+        return keccak256(abi.encode(type(CamelotV2AwareFacet).name));
     }
+    
 } 

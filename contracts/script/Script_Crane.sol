@@ -44,6 +44,15 @@ import {
     IERC20MintBurnOperableFacetDFPkg,
     ERC20MintBurnOperableFacetDFPkg
 } from "../token/ERC20/extensions/ERC20MintBurnOperableFacetDFPkg.sol";
+import { IERC20MintBurn } from "@crane/contracts/interfaces/IERC20MintBurn.sol";
+import {
+    IERC20MintBurnOperableStorage, 
+    ERC20MintBurnOperableStorage
+} from "@crane/contracts/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
+import {
+    IOwnableStorage, 
+    OwnableStorage
+} from "@crane/contracts/access/ownable/utils/OwnableStorage.sol";
 import { IUniswapV2Aware } from "../interfaces/IUniswapV2Aware.sol";
 import { CamelotV2AwareFacet } from "../protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
 import { UniswapV2AwareFacet } from "../protocols/dexes/uniswap/v2/UniswapV2AwareFacet.sol";
@@ -120,7 +129,7 @@ is
     function ownableFacet(
         uint256 chainid,
         OwnableFacet ownableFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:ownableFacet(uint256,OwnableFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:ownableFacet(uint256,OwnableFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Access:ownableFacet(uint256,OwnableFacet):: Storing instance mapped to initCodeHash: %s.", OWNABLE_FACET_INIT_CODE_HASH);
@@ -137,7 +146,7 @@ is
      * @param ownableFacet_ The ownable facet to declare.
      * @return true if the ownable facet was declared.
      */
-    function ownableFacet(OwnableFacet ownableFacet_) public returns(bool) {
+    function ownableFacet(OwnableFacet ownableFacet_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:ownableFacet(OwnableFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:ownableFacet(OwnableFacet):: Setting provided ownable facet of %s.", address(ownableFacet_));
         ownableFacet(block.chainid, ownableFacet_);
@@ -162,7 +171,7 @@ is
      * @notice minimizes the required bytecode for other targets to apply ownable modifiers.
      * @return ownableFacet_ The ownable facet.
      */
-    function ownableFacet() public returns (OwnableFacet ownableFacet_) {
+    function ownableFacet() public virtual returns (OwnableFacet ownableFacet_) {
         // console.log("Fixture_Crane_Access:ownableFacet():: Entering function.");
         // console.log("Fixture_Crane_Access:ownableFacet():: Checking if OwnableFacet is declared.");
         if (address(ownableFacet(block.chainid)) == address(0)) {
@@ -179,7 +188,8 @@ is
                             salt: keccak256(abi.encode(type(OwnableFacet).name)),
                             initData: ""
                         })),
-                        keccak256(abi.encode(type(OwnableFacet).name))
+                        // keccak256(abi.encode(type(OwnableFacet).name))
+                        OWNABLE_FACET_SALT
                     )
                 );
             }
@@ -201,7 +211,7 @@ is
     function operableFacet(
         uint256 chainid,
         OperableFacet operableFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:operableFacet(uint256,OperableFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:operableFacet(uint256,OperableFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Access:operableFacet(uint256,OperableFacet):: Storing instance mapped to initCodeHash: %s.", OPERABLE_FACET_INIT_CODE_HASH);
@@ -218,7 +228,7 @@ is
      * @param operableFacet_ The operable facet to declare.
      * @return true if the operable facet was declared.
      */
-    function operableFacet(OperableFacet operableFacet_) public returns(bool) {
+    function operableFacet(OperableFacet operableFacet_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:operableFacet(OperableFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:operableFacet(OperableFacet):: Setting provided operable facet of %s.", address(operableFacet_));
         operableFacet(block.chainid, operableFacet_);
@@ -243,7 +253,7 @@ is
      * @notice minimizes the required bytecode for other targets to apply operable modifiers.
      * @return operableFacet_ The operable facet.
      */
-    function operableFacet() public returns (OperableFacet operableFacet_) {
+    function operableFacet() public virtual returns (OperableFacet operableFacet_) {
         // console.log("Fixture_Crane_Access:operableFacet():: Entering function.");
         // console.log("Fixture_Crane_Access:operableFacet():: Checking if OperableFacet is declared.");
         if (address(operableFacet(block.chainid)) == address(0)) {    
@@ -260,7 +270,8 @@ is
                             salt: keccak256(abi.encode(type(OperableFacet).name)),
                             initData: ""
                         })),
-                        keccak256(abi.encode(type(OperableFacet).name))
+                        // keccak256(abi.encode(type(OperableFacet).name))
+                        OPERABLE_FACET_SALT
                     )
                 );
             }
@@ -281,7 +292,7 @@ is
     function operableManagerFacet(
         uint256 chainid,
         OperableManagerFacet operableManagerFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:operableManagerFacet(uint256,OperableManagerFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:operableManagerFacet(uint256,OperableManagerFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Access:operableManagerFacet(uint256,OperableManagerFacet):: Storing instance mapped to initCodeHash: %s.", OPERABLE_MANAGER_FACET_INITCODE_HASH);
@@ -293,7 +304,7 @@ is
         return true;
     }
 
-    function operableManagerFacet(OperableManagerFacet operableManagerFacet_) public returns(bool) {
+    function operableManagerFacet(OperableManagerFacet operableManagerFacet_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:operableManagerFacet(OperableManagerFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:operableManagerFacet(OperableManagerFacet):: Setting provided operable manager facet of %s.", address(operableManagerFacet_));
         operableManagerFacet(block.chainid, operableManagerFacet_);
@@ -312,7 +323,7 @@ is
         return operableManagerFacet_;
     }
 
-    function operableManagerFacet() public returns(OperableManagerFacet operableManagerFacet_) {
+    function operableManagerFacet() public virtual returns(OperableManagerFacet operableManagerFacet_) {
         // console.log("Fixture_Crane_Access:operableManagerFacet():: Entering function.");
         // console.log("Fixture_Crane_Access:operableManagerFacet():: Checking if OperableManagerFacet is declared.");
         if (address(operableManagerFacet(block.chainid)) == address(0)) {
@@ -344,7 +355,7 @@ is
     function reentrancyLockFacet(
         uint256 chainid,
         ReentrancyLockFacet reentrancyLockFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(uint256,ReentrancyLockFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(uint256,ReentrancyLockFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(uint256,ReentrancyLockFacet):: Storing instance mapped to initCodeHash: %s.", REENTRANCY_LOCK_FACET_INIT_CODE_HASH);
@@ -361,7 +372,7 @@ is
      * @param reentrancyLockFacet_ The reentrancy lock facet to declare.
      * @return true if the reentrancy lock facet was declared.
      */
-    function reentrancyLockFacet(ReentrancyLockFacet reentrancyLockFacet_) public returns(bool) {
+    function reentrancyLockFacet(ReentrancyLockFacet reentrancyLockFacet_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(ReentrancyLockFacet):: Entering function.");
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(ReentrancyLockFacet):: Setting provided reentrancy lock facet of %s.", address(reentrancyLockFacet_));
         // console.log("Fixture_Crane_Access:reentrancyLockFacet(ReentrancyLockFacet):: Declaring address of ReentrancyLockFacet.");
@@ -387,7 +398,7 @@ is
      * @notice minimizes the required bytecode for other targets to apply reentrancy lock modifiers.
      * @return reentrancyLockFacet_ The reentrancy lock facet.
      */
-    function reentrancyLockFacet() public returns (ReentrancyLockFacet reentrancyLockFacet_) {
+    function reentrancyLockFacet() public virtual returns (ReentrancyLockFacet reentrancyLockFacet_) {
         // console.log("Fixture_Crane_Access:reentrancyLockFacet():: Entering function.");
         // console.log("Fixture_Crane_Access:reentrancyLockFacet():: Checking if ReentrancyLockFacet is declared.");
         if (address(reentrancyLockFacet(block.chainid)) == address(0)) {
@@ -425,7 +436,7 @@ is
     function diamondCutFacetDFPkg(
         uint256 chainid,
         DiamondCutFacetDFPkg diamondCutFacetDFPkg_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg(uint256,DiamondCutFacetDFPkg):: Entering function.");
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg(uint256,DiamondCutFacetDFPkg):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg(uint256,DiamondCutFacetDFPkg):: Storing instance mapped to initCodeHash: %s.", DIAMOND_CUT_FACET_DIAMOND_FACTORY_PACKAGE_INIT_CODE_HASH);
@@ -437,7 +448,7 @@ is
         return true;
     }
 
-    function diamondCutFacetDFPkg(DiamondCutFacetDFPkg diamondCutFacetDFPkg_) public returns(bool) {
+    function diamondCutFacetDFPkg(DiamondCutFacetDFPkg diamondCutFacetDFPkg_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg(DiamondCutFacetDFPkg):: Entering function.");
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg(DiamondCutFacetDFPkg):: Setting provided diamond cut facet diamond factory package of %s", address(diamondCutFacetDFPkg_));
         diamondCutFacetDFPkg(block.chainid, diamondCutFacetDFPkg_);
@@ -457,7 +468,7 @@ is
         return diamondCutFacetDFPkg_;
     }
 
-    function diamondCutFacetDFPkg() public returns (DiamondCutFacetDFPkg diamondCutFacetDFPkg_) {
+    function diamondCutFacetDFPkg() public virtual returns (DiamondCutFacetDFPkg diamondCutFacetDFPkg_) {
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg():: Entering function.");
         // console.log("Fixture_Crane_Upgradable:diamondCutFacetDFPkg():: Checking if DiamondCutFacetDFPkg is declared.");
         if (address(diamondCutFacetDFPkg(block.chainid)) == address(0)) {
@@ -492,7 +503,7 @@ is
     function powerCalculator(
         uint256 chainid,
         PowerCalculatorC2ATarget powerCalculator_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_Math:powerCalculator(uint256,PowerCalculatorC2ATarget):: Entering function.");
         // console.log("Fixture_Crane_Math:powerCalculator(uint256,PowerCalculatorC2ATarget):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_Math:powerCalculator(uint256,PowerCalculatorC2ATarget):: Storing instance mapped to initCodeHash: %s.", POWER_CALC_INIT_CODE_HASH);
@@ -509,7 +520,7 @@ is
      * @param powerCalculator_ The power calculator to declare.
      * @return true if the power calculator was declared.
      */
-    function powerCalculator(PowerCalculatorC2ATarget powerCalculator_) public returns(bool) {
+    function powerCalculator(PowerCalculatorC2ATarget powerCalculator_) public virtual returns(bool) {
         // console.log("Fixture_Crane_Math:powerCalculator(PowerCalculatorC2ATarget):: Entering function.");
         // console.log("Fixture_Crane_Math:powerCalculator(PowerCalculatorC2ATarget):: Setting provided power calculator of %s.", address(powerCalculator_));
         powerCalculator(block.chainid, powerCalculator_);
@@ -572,7 +583,7 @@ is
     function erc20MintBurnPkg(
         uint256 chainid,
         ERC20MintBurnOperableFacetDFPkg erc20MintBurnPkg_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg(uint256,ERC20MintBurnOperableFacetDFPkg):: Entering function.");
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg(uint256,ERC20MintBurnOperableFacetDFPkg):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg(uint256,ERC20MintBurnOperableFacetDFPkg):: Storing instance mapped to initCodeHash: %s.", ERC20_MINT_BURN_OPERABLE_FACET_DFPKG_INIT_CODE_HASH);
@@ -588,7 +599,7 @@ is
      * @param erc20MintBurnPkg_ The ERC20 mint burn operable facet diamond factory package to declare.
      * @return true if the ERC20 mint burn operable facet diamond factory package was declared.
      */
-    function erc20MintBurnPkg(ERC20MintBurnOperableFacetDFPkg erc20MintBurnPkg_) public returns(bool) {
+    function erc20MintBurnPkg(ERC20MintBurnOperableFacetDFPkg erc20MintBurnPkg_) public virtual returns(bool) {
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg(ERC20MintBurnOperableFacetDFPkg):: Entering function.");   
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg(ERC20MintBurnOperableFacetDFPkg):: Setting provided ERC20 mint burn operable facet diamond factory package of %s", address(erc20MintBurnPkg_));
         erc20MintBurnPkg(block.chainid, erc20MintBurnPkg_);
@@ -613,7 +624,7 @@ is
      * @notice Deploys a DiamondFactorPackage for deploying ERC20MintBurnOperableFacet proxies.
      * @return erc20MintBurnPkg_ The ERC20 mint burn operable facet diamond factor package.
      */
-    function erc20MintBurnPkg() public returns (ERC20MintBurnOperableFacetDFPkg erc20MintBurnPkg_) {
+    function erc20MintBurnPkg() public virtual returns (ERC20MintBurnOperableFacetDFPkg erc20MintBurnPkg_) {
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg():: Entering function.");
         // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg():: Checking if ERC20MintBurnOperableFacetDFPkg is declared.");
         if (address(erc20MintBurnPkg(block.chainid)) == address(0)) {
@@ -639,7 +650,8 @@ is
                             erc20PermitFacet: erc20PermitFacet()
                         })
                     ),
-                    keccak256(abi.encode(type(ERC20MintBurnOperableFacetDFPkg).name))
+                    // keccak256(abi.encode(type(ERC20MintBurnOperableFacetDFPkg).name))
+                    ERC20_MINT_BURN_OPERABLE_FACET_DFPKG_SALT
                 )
             );
             // console.log("Fixture_Crane_ERC20:erc20MintBurnPkg():: ERC20MintBurnOperableFacetDFPkg deployed @ ", address(erc20MintBurnPkg_));
@@ -654,13 +666,43 @@ is
     }
 
     /* ---------------------------------------------------------------------- */
+    /*                             IERC20MintBurn                             */
+    /* ---------------------------------------------------------------------- */
+
+    function erc20MintBurnOperable(
+        address owner,
+        string memory name,
+        string memory symbol,
+        uint8 decimals
+    ) public virtual returns(IERC20MintBurn erc20_) {
+
+        IOwnableStorage.OwnableAccountInit memory globalOwnableAccountInit;
+        globalOwnableAccountInit.owner = owner;
+
+        IERC20MintBurnOperableStorage.MintBurnOperableAccountInit memory tokenInit;
+        tokenInit.ownableAccountInit = globalOwnableAccountInit;
+        tokenInit.name = name;
+        tokenInit.symbol = symbol;
+        tokenInit.decimals = decimals;
+
+        erc20_ = IERC20MintBurn(
+            diamondFactory()
+                .deploy(
+                    erc20MintBurnPkg(),
+                    abi.encode(tokenInit)
+                )
+        );
+        return erc20_;
+    }
+
+    /* ---------------------------------------------------------------------- */
     /*                           CamelotV2AwareFacet                          */
     /* ---------------------------------------------------------------------- */
 
     function camelotV2AwareFacet(
         uint256 chainid,
         CamelotV2AwareFacet camelotV2Aware_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet(uint256,CamelotV2AwareFacet):: Entering function.");
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet(uint256,CamelotV2AwareFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet(uint256,CamelotV2AwareFacet):: Storing instance mapped to initCodeHash: %s.", CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH);
@@ -671,7 +713,7 @@ is
         return true;
     }
 
-    function camelotV2AwareFacet(CamelotV2AwareFacet camelotV2Aware_) public returns(bool) {
+    function camelotV2AwareFacet(CamelotV2AwareFacet camelotV2Aware_) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet(CamelotV2AwareFacet):: Entering function.");
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet(CamelotV2AwareFacet):: Setting provided camelot v2 aware facet of %s.", address(camelotV2Aware_));
         camelotV2AwareFacet(block.chainid, camelotV2Aware_);
@@ -689,7 +731,7 @@ is
         return camelotV2AwareFacet_;
     }
 
-    function camelotV2AwareFacet() public returns(CamelotV2AwareFacet camelotV2AwareFacet_) {
+    function camelotV2AwareFacet() public virtual returns(CamelotV2AwareFacet camelotV2AwareFacet_) {
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet():: Entering function.");
         // console.log("Fixture_CamelotV2:camelotV2AwareFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(camelotV2AwareFacet(block.chainid)) == address(0)) {
@@ -720,7 +762,7 @@ is
     function uniswapV2AwareFacet(
         uint256 chainid,
         UniswapV2AwareFacet uniswapV2Aware_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet(uint256,UniswapV2AwareFacet):: Entering function.");
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet(uint256,UniswapV2AwareFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet(uint256,UniswapV2AwareFacet):: Storing instance mapped to initCodeHash: %s.", UNISWAP_V2_AWARE_FACET_INIT_CODE_HASH);
@@ -731,7 +773,7 @@ is
         return true;
     }
 
-    function uniswapV2AwareFacet(UniswapV2AwareFacet uniswapV2Aware_) public returns(bool) {
+    function uniswapV2AwareFacet(UniswapV2AwareFacet uniswapV2Aware_) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet(UniswapV2AwareFacet):: Entering function.");
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet(UniswapV2AwareFacet):: Setting provided uniswap v2 aware facet of %s.", address(uniswapV2Aware_));
         uniswapV2AwareFacet(block.chainid, uniswapV2Aware_);
@@ -747,7 +789,7 @@ is
         return UniswapV2AwareFacet(chainInstance(chainid, UNISWAP_V2_AWARE_FACET_INIT_CODE_HASH));
     }
 
-    function uniswapV2AwareFacet() public returns(UniswapV2AwareFacet uniswapV2Aware_) {
+    function uniswapV2AwareFacet() public virtual returns(UniswapV2AwareFacet uniswapV2Aware_) {
         // console.log("Fixture_UniswapV2:uniswapV2AwareFacet():: Entering function.");
         if(address(uniswapV2AwareFacet(block.chainid)) == address(0)) {
             // console.log("UniswapV2AwareFacet not set on this chain, setting");
@@ -756,7 +798,8 @@ is
                 factory().create3(
                     UNISWAP_V2_AWARE_FACET_INIT_CODE,
                     "",
-                    keccak256(abi.encode(type(UniswapV2AwareFacet).name))
+                    // keccak256(abi.encode(type(UniswapV2AwareFacet).name))
+                    UNISWAP_V2_AWARE_FACET_SALT
                 )
             );
             // console.log("Fixture_UniswapV2:uniswapV2AwareFacet():: UniswapV2AwareFacet deployed @ ", address(uniswapV2Aware_));
@@ -776,7 +819,7 @@ is
     function balancerV3VaultAwareFacet(
         uint256 chainid,
         BalancerV3VaultAwareFacet balancerV3VaultAwareFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(uint256,BalancerV3VaultAwareFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(uint256,BalancerV3VaultAwareFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(uint256,BalancerV3VaultAwareFacet):: Storing instance mapped to initCodeHash: %s.", BALANCER_V3_VAULT_AWARE_FACET_INIT_CODE_HASH);
@@ -788,7 +831,7 @@ is
         return true;
     }
 
-    function balancerV3VaultAwareFacet(BalancerV3VaultAwareFacet balancerV3VaultAwareFacet_) public returns(bool) {
+    function balancerV3VaultAwareFacet(BalancerV3VaultAwareFacet balancerV3VaultAwareFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(BalancerV3VaultAwareFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(BalancerV3VaultAwareFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet(BalancerV3VaultAwareFacet):: Instance to store: %s.", address(balancerV3VaultAwareFacet_));
@@ -807,7 +850,7 @@ is
         return balancerV3VaultAwareFacet_;
     }
 
-    function balancerV3VaultAwareFacet() public returns(BalancerV3VaultAwareFacet balancerV3VaultAwareFacet_) {
+    function balancerV3VaultAwareFacet() public virtual returns(BalancerV3VaultAwareFacet balancerV3VaultAwareFacet_) {
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet():: Entering function.");
         // console.log("IndexedexFixture:balancerV3VaultAwareFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(balancerV3VaultAwareFacet(block.chainid)) == address(0)) {
@@ -817,7 +860,8 @@ is
                 factory().create3(
                     BALANCER_V3_VAULT_AWARE_FACET_INIT_CODE,
                     "",
-                    keccak256(abi.encode(type(BalancerV3VaultAwareFacet).name))
+                    // keccak256(abi.encode(type(BalancerV3VaultAwareFacet).name))
+                    BALANCER_V3_VAULT_AWARE_FACET_SALT
                 )
             );
             // console.log("IndexedexFixture:balancerV3VaultAwareFacet():: Instance created: %s.", address(balancerV3VaultAwareFacet_));
@@ -838,7 +882,7 @@ is
     function betterBalancerV3PoolTokenFacet(
         uint256 chainid,
         BetterBalancerV3PoolTokenFacet betterBalancerV3PoolTokenFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(uint256,BetterBalancerV3PoolTokenFacet):: Entering function.");
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(uint256,BetterBalancerV3PoolTokenFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(uint256,BetterBalancerV3PoolTokenFacet):: Storing instance mapped to initCodeHash: %s.", BETTER_BALANCER_V3_POOL_TOKEN_FACET_INIT_CODE_HASH);
@@ -850,7 +894,7 @@ is
         return true;
     }
 
-    function betterBalancerV3PoolTokenFacet(BetterBalancerV3PoolTokenFacet betterBalancerV3PoolTokenFacet_) public returns(bool) {
+    function betterBalancerV3PoolTokenFacet(BetterBalancerV3PoolTokenFacet betterBalancerV3PoolTokenFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(BetterBalancerV3PoolTokenFacet):: Entering function.");
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(BetterBalancerV3PoolTokenFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet(BetterBalancerV3PoolTokenFacet):: Instance to store: %s.", address(betterBalancerV3PoolTokenFacet_));
@@ -869,7 +913,7 @@ is
         return betterBalancerV3PoolTokenFacet_;
     }
 
-    function betterBalancerV3PoolTokenFacet() public returns(BetterBalancerV3PoolTokenFacet betterBalancerV3PoolTokenFacet_) {
+    function betterBalancerV3PoolTokenFacet() public virtual returns(BetterBalancerV3PoolTokenFacet betterBalancerV3PoolTokenFacet_) {
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet():: Entering function.");
         // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(betterBalancerV3PoolTokenFacet(block.chainid)) == address(0)) {
@@ -879,7 +923,8 @@ is
                 factory().create3(
                     BETTER_BALANCER_V3_POOL_TOKEN_FACET_INIT_CODE,
                     "",
-                    keccak256(abi.encode(type(BetterBalancerV3PoolTokenFacet).name))
+                    // keccak256(abi.encode(type(BetterBalancerV3PoolTokenFacet).name))
+                    BETTER_BALANCER_V3_POOL_TOKEN_FACET_SALT
                 )
             );
             // console.log("IndexedexFixture:betterBalancerV3PoolTokenFacet():: Instance created: %s.", address(betterBalancerV3PoolTokenFacet_));
@@ -900,7 +945,7 @@ is
     function balancerV3AuthenticationFacet(
         uint256 chainid,
         BalancerV3AuthenticationFacet balancerV3AuthenticationFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(uint256,BalancerV3AuthenticationFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(uint256,BalancerV3AuthenticationFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(uint256,BalancerV3AuthenticationFacet):: Storing instance mapped to initCodeHash: %s.", BALANCER_V3_AUTHENTICATION_FACET_INIT_CODE_HASH);
@@ -912,7 +957,7 @@ is
         return true;
     }
 
-    function balancerV3AuthenticationFacet(BalancerV3AuthenticationFacet balancerV3AuthenticationFacet_) public returns(bool) {
+    function balancerV3AuthenticationFacet(BalancerV3AuthenticationFacet balancerV3AuthenticationFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(BalancerV3AuthenticationFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(BalancerV3AuthenticationFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet(BalancerV3AuthenticationFacet):: Instance to store: %s.", address(balancerV3AuthenticationFacet_));
@@ -931,7 +976,7 @@ is
         return balancerV3AuthenticationFacet_;
     }
 
-    function balancerV3AuthenticationFacet() public returns(BalancerV3AuthenticationFacet balancerV3AuthenticationFacet_) {
+    function balancerV3AuthenticationFacet() public virtual returns(BalancerV3AuthenticationFacet balancerV3AuthenticationFacet_) {
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet():: Entering function.");
         // console.log("IndexedexFixture:balancerV3AuthenticationFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(balancerV3AuthenticationFacet(block.chainid)) == address(0)) {
@@ -941,7 +986,8 @@ is
                 factory().create3(
                     BALANCER_V3_AUTHENTICATION_FACET_INIT_CODE,
                     "",
-                    keccak256(abi.encode(type(BalancerV3AuthenticationFacet).name))
+                    // keccak256(abi.encode(type(BalancerV3AuthenticationFacet).name))
+                    BALANCER_V3_AUTHENTICATION_FACET_SALT
                 )
             );
             // console.log("IndexedexFixture:balancerV3AuthenticationFacet():: Instance created: %s.", address(balancerV3AuthenticationFacet_));
@@ -962,7 +1008,7 @@ is
     function balancedLiquidityInvariantRatioBoundsFacet(
         uint256 chainid,
         BalancedLiquidityInvariantRatioBoundsFacet balancedLiquidityInvariantRatioBoundsFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(uint256,BalancedLiquidityInvariantRatioBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(uint256,BalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(uint256,BalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to initCodeHash: %s.", BALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INIT_CODE_HASH);
@@ -974,7 +1020,7 @@ is
         return true;
     }
 
-    function balancedLiquidityInvariantRatioBoundsFacet(BalancedLiquidityInvariantRatioBoundsFacet balancedLiquidityInvariantRatioBoundsFacet_) public returns(bool) {
+    function balancedLiquidityInvariantRatioBoundsFacet(BalancedLiquidityInvariantRatioBoundsFacet balancedLiquidityInvariantRatioBoundsFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(BalancedLiquidityInvariantRatioBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(BalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet(BalancedLiquidityInvariantRatioBoundsFacet):: Instance to store: %s.", address(balancedLiquidityInvariantRatioBoundsFacet_));
@@ -993,7 +1039,7 @@ is
         return balancedLiquidityInvariantRatioBoundsFacet_;
     }
 
-    function balancedLiquidityInvariantRatioBoundsFacet() public returns(BalancedLiquidityInvariantRatioBoundsFacet balancedLiquidityInvariantRatioBoundsFacet_) {
+    function balancedLiquidityInvariantRatioBoundsFacet() public virtual returns(BalancedLiquidityInvariantRatioBoundsFacet balancedLiquidityInvariantRatioBoundsFacet_) {
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet():: Entering function.");
         // console.log("IndexedexFixture:balancedLiquidityInvariantRatioBoundsFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(balancedLiquidityInvariantRatioBoundsFacet(block.chainid)) == address(0)) {
@@ -1024,7 +1070,7 @@ is
     function standardSwapFeePercentageBoundsFacet(
         uint256 chainid,
         StandardSwapFeePercentageBoundsFacet standardSwapFeePercentageBoundsFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(uint256,StandardSwapFeePercentageBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(uint256,StandardSwapFeePercentageBoundsFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(uint256,StandardSwapFeePercentageBoundsFacet):: Storing instance mapped to initCodeHash: %s.", STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INIT_CODE_HASH);
@@ -1036,7 +1082,7 @@ is
         return true;
     }
 
-    function standardSwapFeePercentageBoundsFacet(StandardSwapFeePercentageBoundsFacet standardSwapFeePercentageBoundsFacet_) public returns(bool) {
+    function standardSwapFeePercentageBoundsFacet(StandardSwapFeePercentageBoundsFacet standardSwapFeePercentageBoundsFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(StandardSwapFeePercentageBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(StandardSwapFeePercentageBoundsFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet(StandardSwapFeePercentageBoundsFacet):: Instance to store: %s.", address(standardSwapFeePercentageBoundsFacet_));
@@ -1055,7 +1101,7 @@ is
         return standardSwapFeePercentageBoundsFacet_;
     }
 
-    function standardSwapFeePercentageBoundsFacet() public returns(StandardSwapFeePercentageBoundsFacet standardSwapFeePercentageBoundsFacet_) {
+    function standardSwapFeePercentageBoundsFacet() public virtual returns(StandardSwapFeePercentageBoundsFacet standardSwapFeePercentageBoundsFacet_) {
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet():: Entering function.");
         // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(standardSwapFeePercentageBoundsFacet(block.chainid)) == address(0)) {
@@ -1065,7 +1111,8 @@ is
                 factory().create3(
                     STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INIT_CODE,
                     "",
-                    keccak256(abi.encode(type(StandardSwapFeePercentageBoundsFacet).name))
+                    // keccak256(abi.encode(type(StandardSwapFeePercentageBoundsFacet).name))
+                    STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_SALT
                 )
             );
             // console.log("IndexedexFixture:standardSwapFeePercentageBoundsFacet():: Instance created: %s.", address(standardSwapFeePercentageBoundsFacet_));
@@ -1086,7 +1133,7 @@ is
     function standardUnbalancedLiquidityInvariantRatioBoundsFacet(
         uint256 chainid,
         StandardUnbalancedLiquidityInvariantRatioBoundsFacet standardUnbalancedLiquidityInvariantRatioBoundsFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(uint256,StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(uint256,StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(uint256,StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to initCodeHash: %s.", STANDARD_UNBALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INIT_CODE_HASH);
@@ -1098,7 +1145,7 @@ is
         return true;
     }
 
-    function standardUnbalancedLiquidityInvariantRatioBoundsFacet(StandardUnbalancedLiquidityInvariantRatioBoundsFacet standardUnbalancedLiquidityInvariantRatioBoundsFacet_) public returns(bool) {
+    function standardUnbalancedLiquidityInvariantRatioBoundsFacet(StandardUnbalancedLiquidityInvariantRatioBoundsFacet standardUnbalancedLiquidityInvariantRatioBoundsFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet(StandardUnbalancedLiquidityInvariantRatioBoundsFacet):: Instance to store: %s.", address(standardUnbalancedLiquidityInvariantRatioBoundsFacet_));
@@ -1117,7 +1164,7 @@ is
         return standardUnbalancedLiquidityInvariantRatioBoundsFacet_;
     }
 
-    function standardUnbalancedLiquidityInvariantRatioBoundsFacet() public returns(StandardUnbalancedLiquidityInvariantRatioBoundsFacet standardUnbalancedLiquidityInvariantRatioBoundsFacet_) {
+    function standardUnbalancedLiquidityInvariantRatioBoundsFacet() public virtual returns(StandardUnbalancedLiquidityInvariantRatioBoundsFacet standardUnbalancedLiquidityInvariantRatioBoundsFacet_) {
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet():: Entering function.");
         // console.log("IndexedexFixture:standardUnbalancedLiquidityInvariantRatioBoundsFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(standardUnbalancedLiquidityInvariantRatioBoundsFacet(block.chainid)) == address(0)) {
@@ -1148,7 +1195,7 @@ is
     function zeroSwapFeePercentageBoundsFacet(
         uint256 chainid,
         ZeroSwapFeePercentageBoundsFacet zeroSwapFeePercentageBoundsFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(uint256,ZeroSwapFeePercentageBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(uint256,ZeroSwapFeePercentageBoundsFacet):: Storing instance mapped to chainId %s.", chainid);
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(uint256,ZeroSwapFeePercentageBoundsFacet):: Storing instance mapped to initCodeHash: %s.", ZERO_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INIT_CODE_HASH);
@@ -1160,7 +1207,7 @@ is
         return true;
     }
 
-    function zeroSwapFeePercentageBoundsFacet(ZeroSwapFeePercentageBoundsFacet zeroSwapFeePercentageBoundsFacet_) public returns(bool) {
+    function zeroSwapFeePercentageBoundsFacet(ZeroSwapFeePercentageBoundsFacet zeroSwapFeePercentageBoundsFacet_) public virtual returns(bool) {
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(ZeroSwapFeePercentageBoundsFacet):: Entering function.");
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(ZeroSwapFeePercentageBoundsFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet(ZeroSwapFeePercentageBoundsFacet):: Instance to store: %s.", address(zeroSwapFeePercentageBoundsFacet_));
@@ -1179,7 +1226,7 @@ is
         return zeroSwapFeePercentageBoundsFacet_;
     }
 
-    function zeroSwapFeePercentageBoundsFacet() public returns(ZeroSwapFeePercentageBoundsFacet zeroSwapFeePercentageBoundsFacet_) {
+    function zeroSwapFeePercentageBoundsFacet() public virtual returns(ZeroSwapFeePercentageBoundsFacet zeroSwapFeePercentageBoundsFacet_) {
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet():: Entering function.");
         // console.log("IndexedexFixture:zeroSwapFeePercentageBoundsFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(zeroSwapFeePercentageBoundsFacet(block.chainid)) == address(0)) {
@@ -1210,7 +1257,7 @@ is
     function defaultPoolInfoFacet(
         uint256 chainId,
         DefaultPoolInfoFacet defaultPoolInfoFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:defaultPoolInfoFacet(uint256,DefaultPoolInfoFacet):: Entering function.");
         // console.log("IndexedexFixture:defaultPoolInfoFacet(uint256,DefaultPoolInfoFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:defaultPoolInfoFacet(uint256,DefaultPoolInfoFacet):: Storing instance mapped to initCodeHash: %s.", DEFAULT_POOL_INFO_FACET_INITCODE);
@@ -1222,7 +1269,7 @@ is
         return true;
     }
 
-    function defaultPoolInfoFacet(DefaultPoolInfoFacet defaultPoolInfoFacet_) public returns (bool) {
+    function defaultPoolInfoFacet(DefaultPoolInfoFacet defaultPoolInfoFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:defaultPoolInfoFacet(DefaultPoolInfoFacet):: Entering function.");
         // console.log("IndexedexFixture:defaultPoolInfoFacet(DefaultPoolInfoFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:defaultPoolInfoFacet(DefaultPoolInfoFacet):: Instance to store: %s.", address(defaultPoolInfoFacet_));
@@ -1241,7 +1288,7 @@ is
         return defaultPoolInfoFacet_;
     }
 
-    function defaultPoolInfoFacet() public returns (DefaultPoolInfoFacet defaultPoolInfoFacet_) {
+    function defaultPoolInfoFacet() public virtual returns (DefaultPoolInfoFacet defaultPoolInfoFacet_) {
         // console.log("IndexedexFixture:defaultPoolInfoFacet():: Entering function.");
         // console.log("IndexedexFixture:defaultPoolInfoFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(defaultPoolInfoFacet(block.chainid)) == address(0)) {
@@ -1251,7 +1298,8 @@ is
                 factory().create3(
                     DEFAULT_POOL_INFO_FACET_INITCODE,
                     "",
-                    keccak256(abi.encode(type(DefaultPoolInfoFacet).name))
+                    // keccak256(abi.encode(type(DefaultPoolInfoFacet).name))
+                    DEFAULT_POOL_INFO_FACET_SALT
                 )
             );
             // console.log("IndexedexFixture:defaultPoolInfoFacet():: Instance created: %s.", address(defaultPoolInfoFacet_));
@@ -1272,7 +1320,7 @@ is
     function balancerV3ERC4626AdaptorPoolFacet(
         uint256 chainId,
         BalancerV3ERC4626AdaptorPoolFacet balancerV3ERC4626AdaptorPoolFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(uint256,BalancerV3ERC4626AdaptorPoolFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(uint256,BalancerV3ERC4626AdaptorPoolFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(uint256,BalancerV3ERC4626AdaptorPoolFacet):: Storing instance mapped to initCodeHash: %s.", BALANCER_V3_ERC4626_ADAPTOR_POOL_FACET_INITCODE_HASH);
@@ -1284,7 +1332,7 @@ is
         return true;
     }
 
-    function balancerV3ERC4626AdaptorPoolFacet(BalancerV3ERC4626AdaptorPoolFacet balancerV3ERC4626AdaptorPoolFacet_) public returns (bool) {
+    function balancerV3ERC4626AdaptorPoolFacet(BalancerV3ERC4626AdaptorPoolFacet balancerV3ERC4626AdaptorPoolFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(BalancerV3ERC4626AdaptorPoolFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(BalancerV3ERC4626AdaptorPoolFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet(BalancerV3ERC4626AdaptorPoolFacet):: Instance to store: %s.", address(balancerV3ERC4626AdaptorPoolFacet_));
@@ -1303,7 +1351,7 @@ is
         return balancerV3ERC4626AdaptorPoolFacet_;
     }
 
-    function balancerV3ERC4626AdaptorPoolFacet() public returns (BalancerV3ERC4626AdaptorPoolFacet balancerV3ERC4626AdaptorPoolFacet_) {
+    function balancerV3ERC4626AdaptorPoolFacet() public virtual returns (BalancerV3ERC4626AdaptorPoolFacet balancerV3ERC4626AdaptorPoolFacet_) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet():: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(balancerV3ERC4626AdaptorPoolFacet(block.chainid)) == address(0)) {
@@ -1334,7 +1382,7 @@ is
     function balancerV3ERC4626AdaptorPoolHooksFacet(
         uint256 chainId,
         BalancerV3ERC4626AdaptorPoolHooksFacet balancerV3ERC4626AdaptorPoolHooksFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(uint256,BalancerV3ERC4626AdaptorPoolHooksFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(uint256,BalancerV3ERC4626AdaptorPoolHooksFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(uint256,BalancerV3ERC4626AdaptorPoolHooksFacet):: Storing instance mapped to initCodeHash: %s.", BALANCER_V3_ERC4626_ADAPTOR_POOL_HOOKS_FACET_INITCODE_HASH);
@@ -1346,7 +1394,7 @@ is
         return true;
     }
 
-    function balancerV3ERC4626AdaptorPoolHooksFacet(BalancerV3ERC4626AdaptorPoolHooksFacet balancerV3ERC4626AdaptorPoolHooksFacet_) public returns (bool) {
+    function balancerV3ERC4626AdaptorPoolHooksFacet(BalancerV3ERC4626AdaptorPoolHooksFacet balancerV3ERC4626AdaptorPoolHooksFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(BalancerV3ERC4626AdaptorPoolHooksFacet):: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(BalancerV3ERC4626AdaptorPoolHooksFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet(BalancerV3ERC4626AdaptorPoolHooksFacet):: Instance to store: %s.", address(balancerV3ERC4626AdaptorPoolHooksFacet_));
@@ -1365,7 +1413,7 @@ is
         return balancerV3ERC4626AdaptorPoolHooksFacet_;
     }
 
-    function balancerV3ERC4626AdaptorPoolHooksFacet() public returns (BalancerV3ERC4626AdaptorPoolHooksFacet balancerV3ERC4626AdaptorPoolHooksFacet_) {
+    function balancerV3ERC4626AdaptorPoolHooksFacet() public virtual returns (BalancerV3ERC4626AdaptorPoolHooksFacet balancerV3ERC4626AdaptorPoolHooksFacet_) {
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet():: Entering function.");
         // console.log("IndexedexFixture:balancerV3ERC4626AdaptorPoolHooksFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(balancerV3ERC4626AdaptorPoolHooksFacet(block.chainid)) == address(0)) {
@@ -1396,7 +1444,7 @@ is
     function erc4626AwareFacet(
         uint256 chainId,
         ERC4626AwareFacet erc4626AwareFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc4626AwareFacet(uint256,ERC4626AwareFacet):: Entering function.");
         // console.log("IndexedexFixture:erc4626AwareFacet(uint256,ERC4626AwareFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:erc4626AwareFacet(uint256,ERC4626AwareFacet):: Storing instance mapped to initCodeHash: %s.", ERC4626_AWARE_FACET_INITCODE_HASH);
@@ -1408,7 +1456,7 @@ is
         return true;
     }
 
-    function erc4626AwareFacet(ERC4626AwareFacet erc4626AwareFacet_) public returns (bool) {
+    function erc4626AwareFacet(ERC4626AwareFacet erc4626AwareFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc4626AwareFacet(ERC4626AwareFacet):: Entering function.");
         // console.log("IndexedexFixture:erc4626AwareFacet(ERC4626AwareFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:erc4626AwareFacet(ERC4626AwareFacet):: Instance to store: %s.", address(erc4626AwareFacet_));
@@ -1424,7 +1472,7 @@ is
         erc4626AwareFacet_ = ERC4626AwareFacet(chainInstance(chainId, ERC4626_AWARE_FACET_INITCODE_HASH));
     }
 
-    function erc4626AwareFacet() public returns (ERC4626AwareFacet erc4626AwareFacet_) {
+    function erc4626AwareFacet() public virtual returns (ERC4626AwareFacet erc4626AwareFacet_) {
         // console.log("IndexedexFixture:erc4626AwareFacet():: Entering function.");
         // console.log("IndexedexFixture:erc4626AwareFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(erc4626AwareFacet(block.chainid)) == address(0)) {
@@ -1455,7 +1503,7 @@ is
     function erc5115ViewFacet(
         uint256 chainId,
         ERC5115ViewFacet erc5115ViewFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc5115ViewFacet(uint256,ERC5115ViewFacet):: Entering function.");
         // console.log("IndexedexFixture:erc5115ViewFacet(uint256,ERC5115ViewFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:erc5115ViewFacet(uint256,ERC5115ViewFacet):: Storing instance mapped to initCodeHash: %s.", ERC5115_VIEW_FACET_INITCODE_HASH);
@@ -1467,7 +1515,7 @@ is
         return true;
     }
 
-    function erc5115ViewFacet(ERC5115ViewFacet erc5115ViewFacet_) public returns (bool) {
+    function erc5115ViewFacet(ERC5115ViewFacet erc5115ViewFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc5115ViewFacet(ERC5115ViewFacet):: Entering function.");
         // console.log("IndexedexFixture:erc5115ViewFacet(ERC5115ViewFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:erc5115ViewFacet(ERC5115ViewFacet):: Instance to store: %s.", address(erc5115ViewFacet_));
@@ -1486,7 +1534,7 @@ is
         return erc5115ViewFacet_;
     }
 
-    function erc5115ViewFacet() public returns (ERC5115ViewFacet erc5115ViewFacet_) {
+    function erc5115ViewFacet() public virtual returns (ERC5115ViewFacet erc5115ViewFacet_) {
         // console.log("IndexedexFixture:erc5115ViewFacet():: Entering function.");
         // console.log("IndexedexFixture:erc5115ViewFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(erc5115ViewFacet(block.chainid)) == address(0)) {
@@ -1517,7 +1565,7 @@ is
     function erc5115ExtensionViewFacet(
         uint256 chainId,
         ERC5115ExtensionViewFacet erc5115ExtensionViewFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(uint256,ERC5115ExtensionViewFacet):: Entering function.");
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(uint256,ERC5115ExtensionViewFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(uint256,ERC5115ExtensionViewFacet):: Storing instance mapped to initCodeHash: %s.", ERC5115_EXTENSION_VIEW_FACET_INITCODE_HASH);
@@ -1529,7 +1577,7 @@ is
         return true;
     }
 
-    function erc5115ExtensionViewFacet(ERC5115ExtensionViewFacet erc5115ExtensionViewFacet_) public returns (bool) {
+    function erc5115ExtensionViewFacet(ERC5115ExtensionViewFacet erc5115ExtensionViewFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(ERC5115ExtensionViewFacet):: Entering function.");
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(ERC5115ExtensionViewFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet(ERC5115ExtensionViewFacet):: Instance to store: %s.", address(erc5115ExtensionViewFacet_));
@@ -1548,7 +1596,7 @@ is
         return erc5115ExtensionViewFacet_;
     }
 
-    function erc5115ExtensionViewFacet() public returns (ERC5115ExtensionViewFacet erc5115ExtensionViewFacet_) {
+    function erc5115ExtensionViewFacet() public virtual returns (ERC5115ExtensionViewFacet erc5115ExtensionViewFacet_) {
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet():: Entering function.");
         // console.log("IndexedexFixture:erc5115ExtensionViewFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(erc5115ExtensionViewFacet(block.chainid)) == address(0)) {
@@ -1579,7 +1627,7 @@ is
     function powerCalculatorAwareFacet(
         uint256 chainId,
         PowerCalculatorAwareFacet powerCalculatorAwareFacet_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(uint256,PowerCalculatorAwareFacet):: Entering function.");
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(uint256,PowerCalculatorAwareFacet):: Storing instance mapped to chainId %s.", chainId);
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(uint256,PowerCalculatorAwareFacet):: Storing instance mapped to initCodeHash: %s.", POWER_CALCULATOR_AWARE_FACET_INITCODE_HASH);
@@ -1591,7 +1639,7 @@ is
         return true;
     }
 
-    function powerCalculatorAwareFacet(PowerCalculatorAwareFacet powerCalculatorAwareFacet_) public returns (bool) {
+    function powerCalculatorAwareFacet(PowerCalculatorAwareFacet powerCalculatorAwareFacet_) public virtual returns (bool) {
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(PowerCalculatorAwareFacet):: Entering function.");
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(PowerCalculatorAwareFacet):: Storing instance mapped to chainId %s.", block.chainid);
         // console.log("IndexedexFixture:powerCalculatorAwareFacet(PowerCalculatorAwareFacet):: Instance to store: %s.", address(powerCalculatorAwareFacet_));
@@ -1610,7 +1658,7 @@ is
         return powerCalculatorAwareFacet_;
     }
 
-    function powerCalculatorAwareFacet() public returns (PowerCalculatorAwareFacet powerCalculatorAwareFacet_) {
+    function powerCalculatorAwareFacet() public virtual returns (PowerCalculatorAwareFacet powerCalculatorAwareFacet_) {
         // console.log("IndexedexFixture:powerCalculatorAwareFacet():: Entering function.");
         // console.log("IndexedexFixture:powerCalculatorAwareFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
         if(address(powerCalculatorAwareFacet(block.chainid)) == address(0)) {
@@ -1634,5 +1682,65 @@ is
         return powerCalculatorAwareFacet_;
     }
 
+    /* ---------------------------------------------------------------------- */
+    /*                              VersionFacet                              */
+    /* ---------------------------------------------------------------------- */
 
+    function versionFacet(
+        uint256 chainId,
+        VersionFacet versionFacet_
+    ) public virtual returns (bool) {
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Entering function.");
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Storing instance mapped to chainId %s.", chainId);
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Storing instance mapped to initCodeHash: %s.", VERSION_FACET_INITCODE_HASH);
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Instance to store: %s.", address(versionFacet_));
+        registerInstance(chainId, VERSION_FACET_INITCODE_HASH, address(versionFacet_));
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Declaring instance.");
+        declare(builderKey_Crane(), "versionFacet", address(versionFacet_));
+        // console.log("IndexedexFixture:versionFacet(uint256,VersionFacet):: Exiting function.");
+        return true;
+    }
+
+    function versionFacet(VersionFacet versionFacet_) public virtual returns (bool) {
+        // console.log("IndexedexFixture:versionFacet(VersionFacet):: Entering function.");
+        // console.log("IndexedexFixture:versionFacet(VersionFacet):: Storing instance mapped to chainId %s.", block.chainid);
+        // console.log("IndexedexFixture:versionFacet(VersionFacet):: Instance to store: %s.", address(versionFacet_));
+        versionFacet(block.chainid, versionFacet_);
+        // console.log("IndexedexFixture:versionFacet(VersionFacet):: Exiting function.");
+        return true;
+    }
+
+    function versionFacet(uint256 chainId) public view returns (VersionFacet versionFacet_) {
+        // console.log("IndexedexFixture:versionFacet(uint256):: Entering function.");
+        // console.log("IndexedexFixture:versionFacet(uint256):: Retrieving instance mapped to chainId %s.", chainId);
+        // console.log("IndexedexFixture:versionFacet(uint256):: Retrieving instance mapped to initCodeHash: %s.", VERSION_FACET_INITCODE_HASH);
+        versionFacet_ = VersionFacet(chainInstance(chainId, VERSION_FACET_INITCODE_HASH));
+        // console.log("IndexedexFixture:versionFacet(uint256):: Instance retrieved: %s.", address(versionFacet_));
+        // console.log("IndexedexFixture:versionFacet(uint256):: Exiting function.");
+        return versionFacet_;
+    }
+
+    function versionFacet() public virtual returns (VersionFacet versionFacet_) {
+        // console.log("IndexedexFixture:versionFacet():: Entering function.");
+        // console.log("IndexedexFixture:versionFacet():: Checking if instance has been declared for chainid: %s.", block.chainid);
+        if(address(versionFacet(block.chainid)) == address(0)) {
+            // console.log("VersionFacet not set on this chain, setting");
+            // console.log("IndexedexFixture:versionFacet():: Creating instance.");
+            versionFacet_ = VersionFacet(
+                factory().create3(
+                    VERSION_FACET_INITCODE,
+                    "",
+                    VERSION_FACET_SALT
+                )
+            );
+            // console.log("IndexedexFixture:versionFacet():: Instance created: %s.", address(versionFacet_));
+            // console.log("IndexedexFixture:versionFacet():: Storing instance.");
+            versionFacet(block.chainid, versionFacet_);
+        }
+        // console.log("IndexedexFixture:versionFacet():: Retrieving instance mapped to chainId %s.", block.chainid);
+        versionFacet_ = versionFacet(block.chainid);
+        // console.log("IndexedexFixture:versionFacet():: Instance retrieved: %s.", address(versionFacet_));
+        // console.log("IndexedexFixture:versionFacet():: Exiting function.");
+        return versionFacet_;
+    }
 }

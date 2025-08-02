@@ -2,6 +2,32 @@
 pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
+/*                                   Foundry                                  */
+/* -------------------------------------------------------------------------- */
+
+import {
+    CommonBase,
+    ScriptBase,
+    TestBase
+} from "forge-std/Base.sol";
+import {StdChains} from "forge-std/StdChains.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import {StdUtils} from "forge-std/StdUtils.sol";
+import { Script } from "forge-std/Script.sol";
+import { VmSafe } from "forge-std/Vm.sol";
+import {
+    StdCheatsSafe,
+    StdCheats
+} from "forge-std/StdCheats.sol";
+import { Test } from "forge-std/Test.sol";
+import {StdAssertions} from "forge-std/StdAssertions.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
+import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
+
+/* -------------------------------------------------------------------------- */
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
@@ -34,10 +60,59 @@ import { InputHelpersMock } from "@balancer-labs/v3-vault/contracts/test/InputHe
 /* -------------------------------------------------------------------------- */
 
 import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "../../../script/BetterScript.sol";
 import { BetterBalancerV3VaultTest } from "./BetterBalancerV3VaultTest.sol";
+import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
+import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
+import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
+import { Script_Crane } from "../../../script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
+import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
+import {Test_Crane} from "../../Test_Crane.sol";
+import {BetterBalancerV3BaseTest} from "./BetterBalancerV3BaseTest.sol";
+import { TestBase_Permit2 } from "./TestBase_Permit2.sol";
+
 
 contract BetterBalancerV3BasePoolTest
 is 
+    CommonBase,
+    ScriptBase,
+
+    TestBase,
+    StdAssertions,
+
+    StdChains,
+    StdCheatsSafe,
+    StdCheats,
+    StdInvariant,
+    
+    StdUtils,
+    Script,
+    BetterScript,
+    
+    ScriptBase_Crane_Factories,
+    ScriptBase_Crane_ERC20,
+    ScriptBase_Crane_ERC4626,
+    Script_WETH,
+    Script_Permit2,
+
+    Script_Crane,
+    Script_Crane_Stubs,
+
+    BetterBaseContractsDeployer,
+    BetterVaultContractsDeployer,
+    Script_BalancerV3,
+    
+    Test,
+    BetterTest,
+    Test_Crane,
+    BetterBalancerV3BaseTest,
+    TestBase_Permit2,
     BetterBalancerV3VaultTest
 {
 
@@ -64,7 +139,13 @@ is
 
     InputHelpersMock public immutable inputHelpersMock = new InputHelpersMock();
 
-    function setUp() public virtual override {
+    function setUp() public virtual
+    override(
+        Test_Crane,
+        BetterBalancerV3BaseTest,
+        TestBase_Permit2,
+        BetterBalancerV3VaultTest
+    ) {
         BetterBalancerV3VaultTest.setUp();
 
         require(poolTokens.length >= 2, "Minimum 2 tokens required (poolTokens)");
@@ -72,6 +153,27 @@ is
 
         poolMinSwapFeePercentage = 0;
         poolMaxSwapFeePercentage = 1e18;
+    }
+
+    function run() public virtual
+    override(
+        ScriptBase_Crane_Factories,
+        ScriptBase_Crane_ERC20,
+        ScriptBase_Crane_ERC4626,
+        Script_WETH,
+        Script_Permit2,
+        Script_BalancerV3,
+        Script_Crane,
+        Script_Crane_Stubs,
+        Test_Crane,
+        // Script_BalancerV3,
+        BetterBalancerV3BaseTest,
+        TestBase_Permit2,
+        BetterBalancerV3VaultTest
+    ) {
+        console.log(string.concat(type(BetterBalancerV3BasePoolTest).name, ".run():: Entering function."));
+        // solhint-disable-next-line no-empty-blocks
+        console.log(string.concat(type(BetterBalancerV3BasePoolTest).name, ".run():: Exiting function."));
     }
 
     function testPoolAddress() public view virtual {

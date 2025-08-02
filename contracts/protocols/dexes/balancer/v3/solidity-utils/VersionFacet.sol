@@ -16,12 +16,18 @@ import { IFacet } from "../../../../../interfaces/IFacet.sol";
  *
  * `{name: 'ChildChainGaugeFactory', version: 2, deployment: '20230316-child-chain-gauge-factory-v2'}`
  */
-contract VersionFacet is VersionStorage, IVersion {
+contract VersionFacet is VersionStorage, IVersion, IFacet {
 
     function facetInterfaces() external pure returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IVersion).interfaceId;
         return interfaces;
+    }
+
+    function facetFuncs() external pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](1);
+        funcs[0] = IVersion.version.selector;
+        return funcs;
     }
 
     /**

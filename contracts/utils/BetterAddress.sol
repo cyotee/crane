@@ -6,6 +6,7 @@ pragma solidity ^0.8.24;
 /* -------------------------------------------------------------------------- */
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import { IERC20 as OZIERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -14,6 +15,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import "../constants/Constants.sol";
 import {Bytecode} from "./Bytecode.sol";
 import {UInt256} from "./UInt256.sol";
+import { BetterIERC20 as IERC20 } from "../interfaces/BetterIERC20.sol";
 
 /**
  * @title Drop-in replacement extension of the OZ Address library.
@@ -155,6 +157,28 @@ library BetterAddress {
         castValue = uint256(uint160(value));
     }
 
+    function toIERC20(address[] memory addresses)
+    internal pure returns (IERC20[] memory erc20s) {
+        erc20s = new IERC20[](addresses.length);
+        for (uint256 i = 0; i < addresses.length; i++) {
+            erc20s[i] = IERC20(addresses[i]);
+        }
+        return erc20s;
+    }
+
+    function toOZIERC20(address[] memory addresses)
+    internal pure returns (OZIERC20[] memory erc20s) {
+        erc20s = new OZIERC20[](addresses.length);
+        for (uint256 i = 0; i < addresses.length; i++) {
+            erc20s[i] = OZIERC20(addresses[i]);
+        }
+    }
+
+    function sort(address[] memory array)
+    internal pure returns (address[] memory) {
+        return _sort(array);
+    }
+
     function _sort(
         address[] memory array
     ) internal pure returns (address[] memory) {
@@ -177,6 +201,11 @@ library BetterAddress {
         }
 
         return array;
+    }
+
+    function sort(address[] memory array, uint256 unsortedLen)
+    internal pure {
+        _sort(array, unsortedLen);
     }
   
     function _sort(

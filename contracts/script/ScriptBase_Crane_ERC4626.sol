@@ -68,84 +68,8 @@ is
     }
     
     /* ---------------------------------------------------------------------- */
-    /*                              ERC4626Facet                              */
+    /*                            Builder Functions                           */
     /* ---------------------------------------------------------------------- */
-
-    function erc4626Facet(
-        uint256 chainId,
-        ERC4626Facet erc4626Facet_
-    ) public returns (bool) {
-        registerInstance(chainId, ERC4626_FACET_INITCODE_HASH, address(erc4626Facet_));
-        declare(builderKey_Crane_ERC4626(), "erc4626Facet", address(erc4626Facet_));
-        return true;
-    }
-
-    function erc4626Facet(ERC4626Facet erc4626Facet_) public returns (bool) {
-        erc4626Facet(block.chainid, erc4626Facet_);
-        return true;
-    }
-
-    function erc4626Facet(uint256 chainId) public view returns (ERC4626Facet erc4626Facet_) {
-        erc4626Facet_ = ERC4626Facet(chainInstance(chainId, ERC4626_FACET_INITCODE_HASH));
-        return erc4626Facet_;
-    }
-
-    function erc4626Facet() public returns (ERC4626Facet erc4626Facet_) {
-        if(address(erc4626Facet(block.chainid)) == address(0)) {
-            erc4626Facet_ = ERC4626Facet(
-                factory().create3(
-                    ERC4626_FACET_INITCODE,
-                    "",
-                    keccak256(abi.encode(type(ERC4626Facet).name))
-                )
-            );
-            erc4626Facet(block.chainid, erc4626Facet_);
-        }
-        erc4626Facet_ = erc4626Facet(block.chainid);
-        return erc4626Facet_;
-    }
-
-    /* ---------------------------------------------------------------------- */
-    /*                              ERC4626DFPkg                              */
-    /* ---------------------------------------------------------------------- */
-
-    function erc4626DFPkg(
-        uint256 chainId,
-        ERC4626DFPkg erc4626DFPkg_
-    ) public returns (bool) {
-        registerInstance(chainId, ERC4626_DFPKG_INITCODE_HASH, address(erc4626DFPkg_));
-        declare(builderKey_Crane_ERC4626(), "erc4626DFPkg", address(erc4626DFPkg_));
-        return true;
-    }
-
-    function erc4626DFPkg(ERC4626DFPkg erc4626DFPkg_) public returns (bool) {
-        erc4626DFPkg(block.chainid, erc4626DFPkg_);
-        return true;
-    }
-
-    function erc4626DFPkg(uint256 chainId) public view returns (ERC4626DFPkg erc4626DFPkg_) {
-        erc4626DFPkg_ = ERC4626DFPkg(chainInstance(chainId, ERC4626_DFPKG_INITCODE_HASH));
-        return erc4626DFPkg_;
-    }
-
-    function erc4626DFPkg() public returns (ERC4626DFPkg erc4626DFPkg_) {
-        if(address(erc4626DFPkg(block.chainid)) == address(0)) {
-            IERC4626DFPkg.ERC4626DFPkgInit memory init = IERC4626DFPkg.ERC4626DFPkgInit({
-                erc20PermitFacet: erc20PermitFacet(),
-                erc4626Facet: erc4626Facet()
-            });
-            erc4626DFPkg_ = ERC4626DFPkg(
-                factory().create3(
-                    ERC4626_DFPKG_INITCODE,
-                    abi.encode(init),
-                    keccak256(abi.encode(type(ERC4626DFPkg).name))
-                )
-            );
-            erc4626DFPkg(block.chainid, erc4626DFPkg_);
-        }
-        erc4626DFPkg_ = erc4626DFPkg(block.chainid);
-        return erc4626DFPkg_;
-    }
 
     /* ---------------------------------------------------------------------- */
     /*                                IERC4626                                */
@@ -211,4 +135,90 @@ is
         return erc4626_;
     }
     
+    /* ---------------------------------------------------------------------- */
+    /*                          Deployment Functions                          */
+    /* ---------------------------------------------------------------------- */
+    
+    /* ---------------------------------------------------------------------- */
+    /*                              ERC4626Facet                              */
+    /* ---------------------------------------------------------------------- */
+
+    function erc4626Facet(
+        uint256 chainId,
+        ERC4626Facet erc4626Facet_
+    ) public virtual returns (bool) {
+        registerInstance(chainId, ERC4626_FACET_INITCODE_HASH, address(erc4626Facet_));
+        declare(builderKey_Crane_ERC4626(), "erc4626Facet", address(erc4626Facet_));
+        return true;
+    }
+
+    function erc4626Facet(ERC4626Facet erc4626Facet_) public virtual returns (bool) {
+        erc4626Facet(block.chainid, erc4626Facet_);
+        return true;
+    }
+
+    function erc4626Facet(uint256 chainId) public view returns (ERC4626Facet erc4626Facet_) {
+        erc4626Facet_ = ERC4626Facet(chainInstance(chainId, ERC4626_FACET_INITCODE_HASH));
+        return erc4626Facet_;
+    }
+
+    function erc4626Facet() public virtual returns (ERC4626Facet erc4626Facet_) {
+        if(address(erc4626Facet(block.chainid)) == address(0)) {
+            erc4626Facet_ = ERC4626Facet(
+                factory().create3(
+                    ERC4626_FACET_INITCODE,
+                    "",
+                    // keccak256(abi.encode(type(ERC4626Facet).name))
+                    ERC4626_FACET_SALT
+                )
+            );
+            erc4626Facet(block.chainid, erc4626Facet_);
+        }
+        erc4626Facet_ = erc4626Facet(block.chainid);
+        return erc4626Facet_;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                              ERC4626DFPkg                              */
+    /* ---------------------------------------------------------------------- */
+
+    function erc4626DFPkg(
+        uint256 chainId,
+        ERC4626DFPkg erc4626DFPkg_
+    ) public virtual returns (bool) {
+        registerInstance(chainId, ERC4626_DFPKG_INITCODE_HASH, address(erc4626DFPkg_));
+        declare(builderKey_Crane_ERC4626(), "erc4626DFPkg", address(erc4626DFPkg_));
+        return true;
+    }
+
+    function erc4626DFPkg(ERC4626DFPkg erc4626DFPkg_) public virtual returns (bool) {
+        erc4626DFPkg(block.chainid, erc4626DFPkg_);
+        return true;
+    }
+
+    function erc4626DFPkg(uint256 chainId) public view returns (ERC4626DFPkg erc4626DFPkg_) {
+        erc4626DFPkg_ = ERC4626DFPkg(chainInstance(chainId, ERC4626_DFPKG_INITCODE_HASH));
+        return erc4626DFPkg_;
+    }
+
+    function erc4626DFPkg() public virtual returns (ERC4626DFPkg erc4626DFPkg_) {
+        if(address(erc4626DFPkg(block.chainid)) == address(0)) {
+            IERC4626DFPkg.ERC4626DFPkgInit memory init = IERC4626DFPkg.ERC4626DFPkgInit({
+                erc20PermitFacet: erc20PermitFacet(),
+                erc4626Facet: erc4626Facet()
+            });
+            erc4626DFPkg_ = ERC4626DFPkg(
+                factory().create3(
+                    ERC4626_DFPKG_INITCODE,
+                    abi.encode(init),
+                    // keccak256(abi.encode(type(ERC4626DFPkg).name))
+                    ERC4626_DFPKG_SALT
+                )
+            );
+            erc4626DFPkg(block.chainid, erc4626DFPkg_);
+        }
+        erc4626DFPkg_ = erc4626DFPkg(block.chainid);
+        return erc4626DFPkg_;
+    }
+
 }

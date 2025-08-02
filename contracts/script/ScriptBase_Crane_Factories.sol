@@ -67,7 +67,7 @@ is
     function factory(
         uint256 chainid,
         Create2CallBackFactory factory_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, CREATE2_CALLBACK_FACTORY_TARGET_INIT_CODE_HASH, address(factory_));
         declare(builderKey_Crane_Factories(), "factory", address(factory_));
         return true;
@@ -78,7 +78,7 @@ is
      * @param factory_ The factory to declare.
      * @return true if the factory was declared.
      */
-    function factory(Create2CallBackFactory factory_) public returns(bool) {
+    function factory(Create2CallBackFactory factory_) public virtual returns(bool) {
         factory(block.chainid, factory_);
         return true;
     }
@@ -100,7 +100,11 @@ is
     function factory()
     public virtual returns(Create2CallBackFactory factory_) {
         if(address(factory(block.chainid)) == address(0)) {
-            factory_ = Create2CallBackFactory(CREATE2_CALLBACK_FACTORY_TARGET_INIT_CODE._create());
+            factory_ = Create2CallBackFactory(
+                abi.encodePacked(CREATE2_CALLBACK_FACTORY_TARGET_INIT_CODE, abi.encode(owner()))
+                // ._create());
+                ._create2(CREATE2_CALLBACK_FACTORY_TARGET_SALT)
+            );
             factory(factory_);
         }
         factory_ = factory(block.chainid);
@@ -114,7 +118,7 @@ is
     function diamondFactory(
         uint256 chainid,
         IDiamondPackageCallBackFactory diamondFactory_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, DIAMOND_PACKAGE_FACTORY_INIT_CODE_HASH, address(diamondFactory_));
         declare(builderKey_Crane_Factories(), "diamondFactory", address(diamondFactory_));
         return true;
@@ -125,7 +129,7 @@ is
      * @param diamondFactory_ The diamond factory to declare.
      * @return true if the diamond factory was declared.
      */
-    function diamondFactory(IDiamondPackageCallBackFactory diamondFactory_) public returns(bool) {
+    function diamondFactory(IDiamondPackageCallBackFactory diamondFactory_) public virtual returns(bool) {
         diamondFactory(block.chainid, diamondFactory_);
         return true;
     }
@@ -150,7 +154,8 @@ is
                     factory().create3(
                         DIAMOND_PACKAGE_FACTORY_INIT_CODE,
                         "",
-                        keccak256(abi.encode(type(DiamondPackageCallBackFactory).name))
+                        // keccak256(abi.encode(type(DiamondPackageCallBackFactory).name))
+                        DIAMOND_PACKAGE_FACTORY_SALT
                     )
                 );
             }

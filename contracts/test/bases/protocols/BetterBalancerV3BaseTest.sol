@@ -175,29 +175,29 @@ is
     override(
         Test_Crane
     ) {
-        // console.log("BetterBalancerV3BaseTest.setUp():: Entering function.");
-        // console.log("BetterBalancerV3BaseTest.setUp():: block.chainid: %s", block.chainid);
-        // console.log("BetterBalancerV3BaseTest.setUp():: block.timestamp: %s", block.timestamp);
-        // console.log("BetterBalancerV3BaseTest.setUp():: Checking if block.chainid == 31337");
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Entering function."));
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: block.chainid: %s"), block.chainid);
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: block.timestamp: %s"), block.timestamp);
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Checking if block.chainid == 31337"));
         // Set timestamp only if testing locally
         if (block.chainid == 31337) {
             // Set block.timestamp to something better than 0
-            // console.log("BetterBalancerV3BaseTest.setUp():: block.chainid == 31337, setting block.timestamp to START_TIMESTAMP");
+            console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: block.chainid == 31337, setting block.timestamp to START_TIMESTAMP"));
             vm.warp(START_TIMESTAMP);
-            // console.log("BetterBalancerV3BaseTest.setUp():: block.timestamp: %s", block.timestamp);
+            console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: block.timestamp: %s" ), block.timestamp);
         }
 
-        // console.log("BetterBalancerV3BaseTest.setUp():: Initializing tokens.");
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initializing tokens."));
         _initTokens();
-        // console.log("BetterBalancerV3BaseTest.setUp():: Initialized tokens.");
-        // console.log("BetterBalancerV3BaseTest.setUp():: Initializing accounts.");
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initialized tokens."));
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initializing accounts."));
         _initAccounts();
-        // console.log("BetterBalancerV3BaseTest.setUp():: Initialized accounts.");
-        // console.log("BetterBalancerV3BaseTest.setUp():: Mocking ERC4626 token rates.");
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initialized accounts."));
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Mocking ERC4626 token rates."));
 
         // Must mock rates after giving wrapped tokens to users, but before creating pools and initializing buffers.
         mockERC4626TokenRates();
-        // console.log("BetterBalancerV3BaseTest.setUp():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Exiting function."));
     }
 
     function run() public virtual

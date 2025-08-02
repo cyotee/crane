@@ -77,4 +77,10 @@ interface ICreate2CallbackFactory {
         bytes32 salt
     ) external returns (address proxy);
 
+    function create3WithInitData(
+        bytes memory initCode,
+        bytes memory initData,
+        bytes32 salt
+    ) external returns (address proxy);
+
 }

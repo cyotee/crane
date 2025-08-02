@@ -85,6 +85,30 @@ is
         declare(vm.getLabel(address(uniswapV2Factory())), address(uniswapV2Factory()));
     }
 
+    /* ---------------------------------------------------------------------- */
+    /*                             Uniswap V2 Pair                            */
+    /* ---------------------------------------------------------------------- */
+
+    AddressSet _uniswapV2Pairs;
+
+    function uniswapV2Pair(
+        IERC20 tokenA,
+        IERC20 tokenB
+    ) public virtual returns(IUniswapV2Pair uniswapV2Pair_) {
+        uniswapV2Pair_ = IUniswapV2Pair(uniswapV2Factory().getPair(address(tokenA), address(tokenB)));
+        if (address(uniswapV2Pair_) == address(0)) {
+            uniswapV2Pair_ = IUniswapV2Pair(uniswapV2Factory().createPair(address(tokenA), address(tokenB)));
+            declare(builderKey_UniswapV2(), string.concat("UniswapV2 Pair ", tokenA.name(), " / ", tokenB.name()), address(uniswapV2Pair_));
+        }
+        _uniswapV2Pairs._add(address(uniswapV2Pair_));
+        declare(builderKey_UniswapV2(), string.concat("UniswapV2 Pair ", tokenA.name(), " / ", tokenB.name()), address(uniswapV2Pair_));
+        return uniswapV2Pair_;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Uniswap V2 Fee To                           */
+    /* ---------------------------------------------------------------------- */
+
     function uniswapV2FeeTo(uint256 chainId, address uniswapV2FeeTo_) public {
         registerInstance(chainId, IUniswapV2Factory.feeTo.selector, address(uniswapV2FeeTo_));
         declare(builderKey_UniswapV2(), "uniswapV2FeeTo", address(uniswapV2FeeTo_));
@@ -99,32 +123,22 @@ is
         return address(chainInstance(chainId, IUniswapV2Factory.feeTo.selector));
     }
 
-    function uniswapV2FeeTo() public view returns (address) {
+    function uniswapV2FeeTo() public virtual returns (address) {
         if(uniswapV2FeeTo(block.chainid) == address(0)) {
+            // if(block.chainid == ETHEREUM_MAIN.CHAIN_ID){
+            //     uniswapV2FeeTo(uniswapV2Factory().feeTo());
+            // }
+            // else
+            // if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+            //     uniswapV2FeeTo(uniswapV2Factory().feeTo());
+            // } else
+            // {
+                revert UniswapV2FeeToNotDeclaredOnChain(block.chainid);
+            // }
             // uniswapV2FeeTo(block.chainid, address(this));
-            revert UniswapV2FeeToNotDeclaredOnChain(block.chainid);
+            
         }
         return uniswapV2FeeTo(block.chainid);
-    }
-
-    /* ---------------------------------------------------------------------- */
-    /*                             Uniswap V2 Pair                            */
-    /* ---------------------------------------------------------------------- */
-
-    AddressSet _uniswapV2Pairs;
-
-    function uniswapV2Pair(
-        IERC20 tokenA,
-        IERC20 tokenB
-    ) public returns(IUniswapV2Pair uniswapV2Pair_) {
-        uniswapV2Pair_ = IUniswapV2Pair(uniswapV2Factory().getPair(address(tokenA), address(tokenB)));
-        if (address(uniswapV2Pair_) == address(0)) {
-            uniswapV2Pair_ = IUniswapV2Pair(uniswapV2Factory().createPair(address(tokenA), address(tokenB)));
-            declare(builderKey_UniswapV2(), string.concat("UniswapV2 Pair ", tokenA.name(), " / ", tokenB.name()), address(uniswapV2Pair_));
-        }
-        _uniswapV2Pairs._add(address(uniswapV2Pair_));
-        declare(builderKey_UniswapV2(), string.concat("UniswapV2 Pair ", tokenA.name(), " / ", tokenB.name()), address(uniswapV2Pair_));
-        return uniswapV2Pair_;
     }
 
     /* ---------------------------------------------------------------------- */
@@ -134,7 +148,7 @@ is
     function uniswapV2Factory(
         uint256 chainid,
         IUniswapV2Factory uniswapV2Factory_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2Factory(uint256,IUniswapV2Factory):: Entering function.");
         registerInstance(chainid, keccak256(type(UniV2Factory).creationCode), address(uniswapV2Factory_));
         declare(builderKey_UniswapV2(), "uniswapV2Factory", address(uniswapV2Factory_));
@@ -142,7 +156,7 @@ is
         return true;
     }
 
-    function uniswapV2Factory(IUniswapV2Factory uniswapV2Factory_) public returns(bool) {
+    function uniswapV2Factory(IUniswapV2Factory uniswapV2Factory_) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Entering function.");
         uniswapV2Factory(block.chainid, uniswapV2Factory_);
         // console.log("Fixture_UniswapV2:uniswapV2Factory(IUniswapV2Factory):: Exiting function.");
@@ -157,7 +171,7 @@ is
 
     function uniswapV2Factory(
         bytes memory initArgs
-    ) public returns(IUniswapV2Factory uniswapV2Factory_) {
+    ) public virtual returns(IUniswapV2Factory uniswapV2Factory_) {
         // console.log("Fixture_UniswapV2:uniswapV2Factory(bytes):: Entering function.");
         if(address(uniswapV2Factory(block.chainid)) == address(0)) {
             // console.log("Uniswap V2 Factory not set on this chain, setting");
@@ -182,7 +196,7 @@ is
         return uniswapV2Factory(block.chainid);
     }
 
-    function uniswapV2Factory() public returns(IUniswapV2Factory uniswapV2Factory_) {
+    function uniswapV2Factory() public virtual returns(IUniswapV2Factory uniswapV2Factory_) {
         // console.log("Fixture_UniswapV2:uniswapV2Factory():: Entering function.");
         uniswapV2Factory_ = uniswapV2Factory(abi.encode(uniswapV2FeeTo()));
         // console.log("Fixture_UniswapV2:uniswapV2Factory():: Exiting function.");
@@ -193,7 +207,7 @@ is
     /*                            Uniswap V2 Router                           */
     /* ---------------------------------------------------------------------- */
 
-    function uniswapV2Router(uint256 chainid, IUniswapV2Router uniswapV2Router_) public returns(bool) {
+    function uniswapV2Router(uint256 chainid, IUniswapV2Router uniswapV2Router_) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2Router(uint256,IUniswapV2Router02):: Entering function.");
         registerInstance(chainid, keccak256(type(UniV2Router02).creationCode), address(uniswapV2Router_));
         declare(builderKey_UniswapV2(), "uniswapV2Router", address(uniswapV2Router_));
@@ -201,7 +215,7 @@ is
         return true;
     }
 
-    function uniswapV2Router(IUniswapV2Router uniswapV2Router_) public returns(bool) {
+    function uniswapV2Router(IUniswapV2Router uniswapV2Router_) public virtual returns(bool) {
         // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Entering function.");
         uniswapV2Router(block.chainid, uniswapV2Router_);
         // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Router02):: Exiting function.");
@@ -217,7 +231,7 @@ is
     function uniswapV2Router(
         IUniswapV2Factory uniswapV2Factory_,
         IWETH weth_
-    ) public returns(IUniswapV2Router uniswapV2Router_) {
+    ) public virtual returns(IUniswapV2Router uniswapV2Router_) {
         // console.log("Fixture_UniswapV2:uniswapV2Router(IUniswapV2Factory,IWETH):: Entering function.");
         if(address(uniswapV2Router(block.chainid)) == address(0)) {
             // console.log("Uniswap V2 Router not set on this chain, setting");
@@ -239,7 +253,7 @@ is
         return uniswapV2Router(block.chainid);
     }
 
-    function uniswapV2Router() public returns (IUniswapV2Router uniswapV2Router_) {
+    function uniswapV2Router() public virtual returns (IUniswapV2Router uniswapV2Router_) {
         // console.log("Fixture_UniswapV2:uniswapV2Router():: Entering function.");
         // console.log("Fixture_UniswapV2:uniswapV2Router():: Exiting function.");
         return uniswapV2Router(uniswapV2Factory(), weth9());

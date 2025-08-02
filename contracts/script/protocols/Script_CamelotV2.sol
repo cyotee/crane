@@ -90,7 +90,7 @@ is
         return _camelotV2FeeTo[chainid];
     }
 
-    function camelotV2FeeTo() public returns (address) {
+    function camelotV2FeeTo() public virtual returns (address) {
         if(_camelotV2FeeTo[block.chainid] == address(0)) {
             camelotV2FeeTo(block.chainid, address(this));
         }
@@ -104,7 +104,7 @@ is
     function camelotV2Pair(
         IERC20 tokenA,
         IERC20 tokenB
-    ) public returns(ICamelotPair camelotV2Pair_) {
+    ) public virtual returns(ICamelotPair camelotV2Pair_) {
         camelotV2Pair_ = ICamelotPair(camV2Factory().createPair(address(tokenA), address(tokenB)));
         if(address(camelotV2Pair_) == address(0)) {
             camelotV2Pair_ = ICamelotPair(camV2Factory().createPair(address(tokenA), address(tokenB)));
@@ -118,7 +118,7 @@ is
     function camV2Factory(
         uint256 chainid,
         ICamelotFactory camV2Factory_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camV2Factory(uint256,ICamelotFactory):: Entering function.");
         registerInstance(chainid, keccak256(type(CamelotFactory).creationCode), address(camV2Factory_));
         declare(builderKey_CamV2(), "camV2Factory", address(camV2Factory_));
@@ -126,7 +126,7 @@ is
         return true;
     }
 
-    function camV2Factory(ICamelotFactory camV2Factory_) public returns(bool) {
+    function camV2Factory(ICamelotFactory camV2Factory_) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camV2Factory(ICamelotFactory):: Entering function.");
         camV2Factory(block.chainid, camV2Factory_);
         // console.log("Fixture_CamelotV2:camV2Factory(ICamelotFactory):: Exiting function.");
@@ -143,7 +143,7 @@ is
      * @notice camV2Factory_ Returns the Camelot V2 factory for the current chain.
      */
     // TODO Add deployment if no address is declared for a chain.
-    function camV2Factory() public returns (ICamelotFactory camV2Factory_) {
+    function camV2Factory() public virtual returns (ICamelotFactory camV2Factory_) {
         // console.log("Fixture_CamelotV2:camV2Factory():: Entering function.");
         // console.log("Checking if address is declared for this chain.");
         if(address(camV2Factory(block.chainid)) == address(0)) {
@@ -176,7 +176,7 @@ is
     function camV2Router(
         uint256 chainid,
         ICamelotV2Router camV2Router_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camV2Router(uint256,ICamelotV2Router):: Entering function.");
         registerInstance(chainid, keccak256(type(CamelotRouter).creationCode), address(camV2Router_));
         declare(builderKey_CamV2(), "camV2Router", address(camV2Router_));
@@ -184,7 +184,7 @@ is
         return true;
     }
 
-    function camV2Router(ICamelotV2Router camV2Router_) public returns(bool) {
+    function camV2Router(ICamelotV2Router camV2Router_) public virtual returns(bool) {
         // console.log("Fixture_CamelotV2:camV2Router(ICamelotV2Router):: Entering function.");
         camV2Router(block.chainid, camV2Router_);
         // console.log("Fixture_CamelotV2:camV2Router(ICamelotV2Router):: Exiting function.");
@@ -201,7 +201,7 @@ is
      * @notice camV2Router_ Returns the Camelot V2 router for the current chain.
      */
     // TODO Add deployment if no address is declared for a chain.
-    function camV2Router() public returns (ICamelotV2Router camV2Router_) {
+    function camV2Router() public virtual returns (ICamelotV2Router camV2Router_) {
         // console.log("Fixture_CamelotV2:camV2Router():: Entering function.");
         // console.log("Checking if address is declared for this chain.");
         if(address(camV2Router(block.chainid)) == address(0)) {

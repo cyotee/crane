@@ -33,6 +33,7 @@ import "../../constants/CraneINITCODE.sol";
 import { BetterScript } from "../../script/BetterScript.sol";
 import {LOCAL} from "../../constants/networks/LOCAL.sol";
 import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
+import {ETHEREUM_SEPOLIA} from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
 import {PERMIT2_CONSTANTS} from "../../constants/protocols/utils/permit2/PERMIT2_CONSTANTS.sol";
 import { BetterPermit2 } from "../../protocols/utils/permit2/BetterPermit2.sol";
 import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
@@ -45,11 +46,15 @@ contract Script_Permit2
 is
     CommonBase,
     ScriptBase,
+
     StdChains,
     StdCheatsSafe,
+
     StdUtils,
+
     Script,
     BetterScript,
+    
     ScriptBase_Crane_Factories
 {
 
@@ -163,7 +168,7 @@ is
         uint48 expiration,
         uint48 nonce,
         uint256 key
-    ) public returns (bytes memory sig) {
+    ) public virtual returns (bytes memory sig) {
         return getPermit2BatchSignature(permit2(), spender, tokens, amount, expiration, nonce, key);
     }
 
@@ -174,7 +179,7 @@ is
     function permit2(
         uint256 chainid,
         IPermit2 permit2_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         // console.log("Fixture_Permit2.permit2():: Entering function.");
         registerInstance(chainid, PERMIT2_CONSTANTS.PERMIT2_INIT_CODE_HASH, address(permit2_));
         declare(builderKey_Permit2(), "permit2", address(permit2_));
@@ -182,7 +187,7 @@ is
         return true;
     }
 
-    function permit2(IPermit2 permit2_) public returns(bool) {
+    function permit2(IPermit2 permit2_) public virtual returns(bool) {
         permit2(block.chainid, permit2_);
         return true;
     }
@@ -203,7 +208,15 @@ is
                 // console.log("Fixture_Permit2.permit2():: Declaring canonical Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
                 permit2_ = IPermit2(ETHEREUM_MAIN.PERMIT2);
                 // console.log("Fixture_Permit2.permit2():: Declared canonical Permit2 of %s.", address(permit2_));
-            } else
+            } 
+            else
+            if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                // console.log("Fixture_Permit2.permit2():: Chain ID is Ethereum Sepolia.");
+                // console.log("Fixture_Permit2.permit2():: Declaring canonical Permit2 of %s.", ETHEREUM_SEPOLIA.PERMIT2);
+                permit2_ = IPermit2(ETHEREUM_SEPOLIA.PERMIT2);
+                // console.log("Fixture_Permit2.permit2():: Declared canonical Permit2 of %s.", address(permit2_));
+            }
+            else
             if(block.chainid == LOCAL.CHAIN_ID) {
                 // console.log("Fixture_Permit2.permit2():: Chain ID is Local.");
                 // // console.log("Fixture_Permit2.permit2():: Declaring local Permit2 of %s.", ETHEREUM_MAIN.PERMIT2);
@@ -235,13 +248,13 @@ is
     function permit2AwareFacet(
         uint256 chainId,
         Permit2AwareFacet permit2AwareFacet_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainId, PERMIT2_AWARE_FACET_INITCODE_HASH, address(permit2AwareFacet_));
         declare(builderKey_Permit2(), "permit2AwareFacet", address(permit2AwareFacet_));
         return true;
     }
 
-    function permit2AwareFacet(Permit2AwareFacet permit2AwareFacet_) public returns(bool) {
+    function permit2AwareFacet(Permit2AwareFacet permit2AwareFacet_) public virtual returns(bool) {
         permit2AwareFacet(block.chainid, permit2AwareFacet_);
         return true;
     }
@@ -250,13 +263,14 @@ is
         permit2AwareFacet_ = Permit2AwareFacet(chainInstance(chainId, PERMIT2_AWARE_FACET_INITCODE_HASH));
     }
 
-    function permit2AwareFacet() public returns(Permit2AwareFacet permit2AwareFacet_) {
+    function permit2AwareFacet() public virtual returns(Permit2AwareFacet permit2AwareFacet_) {
         if(address(permit2AwareFacet(block.chainid)) == address(0)) {
             permit2AwareFacet_ = Permit2AwareFacet(
                 factory().create3(
                     PERMIT2_AWARE_FACET_INITCODE,
                     "",
-                    keccak256(abi.encode(type(Permit2AwareFacet).name))
+                    // keccak256(abi.encode(type(Permit2AwareFacet).name))
+                    PERMIT2_AWARE_FACET_SALT
                 )
             );
             permit2AwareFacet(permit2AwareFacet_);

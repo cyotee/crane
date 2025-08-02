@@ -28,11 +28,20 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 
 /* -------------------------------------------------------------------------- */
+/*                                Open Zeppelin                               */
+/* -------------------------------------------------------------------------- */
+
+import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+
+/* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
 /* ------------------------------- Interfaces ------------------------------- */
 
+import { IRouter } from "@balancer-labs/v3-interfaces/contracts/vault/IRouter.sol";
+import { IBatchRouter } from "@balancer-labs/v3-interfaces/contracts/vault/IBatchRouter.sol";
+import { IBufferRouter } from "@balancer-labs/v3-interfaces/contracts/vault/IBufferRouter.sol";
 import { IAuthorizer } from "@balancer-labs/v3-interfaces/contracts/vault/IAuthorizer.sol";
 import { IProtocolFeeController } from "@balancer-labs/v3-interfaces/contracts/vault/IProtocolFeeController.sol";
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
@@ -82,11 +91,15 @@ import { BetterAddress as Address } from "../../utils/BetterAddress.sol";
 import { Bytecode } from "../../utils/Bytecode.sol";
 import { LOCAL } from "../../constants/networks/LOCAL.sol";
 import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
 import { IOwnable } from "../../interfaces/IOwnable.sol";
 import { BalancerV3Authorizer } from "../../protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
 
 import { BetterTest } from "../../test/BetterTest.sol";
 import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
+
+import { IERC4626RateProvider } from "../../interfaces/IERC4626RateProvider.sol";
+import { ERC4626RateProviderFacetDFPkg } from "../../protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 
 contract Script_BalancerV3
 is
@@ -144,19 +157,43 @@ is
     }
 
     /* ---------------------------------------------------------------------- */
+    /*                            Builder Functions                           */
+    /* ---------------------------------------------------------------------- */
+
+
+    /* ---------------------------------------------------------------------- */
+    /*                          IERC4626RateProvider                          */
+    /* ---------------------------------------------------------------------- */
+
+    function balV3ERC4626RateProvider(
+        IERC4626 erc4626Vault_
+    ) public virtual returns(IERC4626RateProvider erc4626RateProvider_) {
+        require(address(erc4626Vault_) != address(0), "ERC4626 vault address is zero");
+        erc4626RateProvider_ = IERC4626RateProvider(
+            diamondFactory().deploy(
+                balV3ERC4626RateProviderFacetDFPkg(),
+                abi.encode(erc4626Vault_)
+            )
+        );
+        declare(builderKey_BalancerV3(), erc4626Vault_.name(), address(erc4626RateProvider_));
+        return erc4626RateProvider_;
+    }
+
+
+    /* ---------------------------------------------------------------------- */
     /*                               Authorizer                               */
     /* ---------------------------------------------------------------------- */
 
     function balV3Authorizer(
         uint256 chainid,
         IAuthorizer authorizer_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_AUTHORIZER_INITCODE_HASH, address(authorizer_));
         declare(builderKey_BalancerV3(), "authorizer", address(authorizer_));
         return true;
     }
 
-    function balV3Authorizer(IAuthorizer authorizer_) public returns(bool) {
+    function balV3Authorizer(IAuthorizer authorizer_) public virtual returns(bool) {
         balV3Authorizer(block.chainid, authorizer_);
         return true;
     }
@@ -165,11 +202,16 @@ is
         authorizer_ = IAuthorizer(chainInstance(chainid, BALANCER_V3_AUTHORIZER_INITCODE_HASH));
     }
     
-    function balV3Authorizer(bytes memory initArgs) public returns(IAuthorizer authorizer_) {
+    function balV3Authorizer(bytes memory initArgs) public virtual returns(IAuthorizer authorizer_) {
         if(address(balV3Authorizer(block.chainid)) == address(0)) {
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 authorizer_ = IAuthorizer(ETHEREUM_MAIN.BALANCER_V3_AUTHORIZER);  
-            } else
+            }
+            else
+            if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                authorizer_ = IAuthorizer(ETHEREUM_SEPOLIA.BALANCER_V3_AUTHORIZER);  
+            }
+            else
             if (block.chainid == LOCAL.CHAIN_ID) {
                 if (areTestMocksEnabled() == true) {
                     // authorizer_ = new BasicAuthorizerMock();
@@ -188,7 +230,7 @@ is
         return balV3Authorizer(block.chainid);
     }
 
-    function balV3Authorizer() public returns (IAuthorizer authorizer_) {
+    function balV3Authorizer() public virtual returns (IAuthorizer authorizer_) {
         // authorizer_ = balV3Authorizer(abi.encode(address(msg.sender)));
         authorizer_ = balV3Authorizer(abi.encode(owner()));
     }
@@ -200,13 +242,13 @@ is
     function balV3VaultFactory(
         uint256 chainid,
         VaultFactory vaultFactory_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_VAULT_FACTORY_INITCODE_HASH, address(vaultFactory_));
         declare(builderKey_BalancerV3(), "vaultFactory", address(vaultFactory_));
         return true;
     }
 
-    function balV3VaultFactory(VaultFactory vaultFactory_) public returns(bool) {
+    function balV3VaultFactory(VaultFactory vaultFactory_) public virtual returns(bool) {
         balV3VaultFactory(block.chainid, vaultFactory_);
         return true;
     }
@@ -225,11 +267,16 @@ is
         bytes32 vaultCreationCodeHash_,
         bytes32 vaultExtensionCreationCodeHash_,
         bytes32 vaultAdminCreationCodeHash_
-    ) public returns(VaultFactory vaultFactory_) {
+    ) public virtual returns(VaultFactory vaultFactory_) {
         if (address(balV3VaultFactory(block.chainid)) == address(0)) {
             if (block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 vaultFactory_ = VaultFactory(ETHEREUM_MAIN.BALANCER_V3_VAULT_FACTORY);
-            } else {
+            }
+            else 
+            if (block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                vaultFactory_ = VaultFactory(ETHEREUM_SEPOLIA.BALANCER_V3_VAULT_FACTORY);
+            }
+            else {
                 // vaultFactory_ = new VaultFactory(
                 //         authorizer_,
                 //         pauseWindowDuration_,
@@ -261,7 +308,7 @@ is
         bytes32 vaultCreationCodeHash_,
         bytes32 vaultExtensionCreationCodeHash_,
         bytes32 vaultAdminCreationCodeHash_
-    ) public returns(VaultFactory vaultFactory_) {
+    ) public virtual returns(VaultFactory vaultFactory_) {
         return balV3VaultFactory(
             // IAuthorizer authorizer_,
             authorizer_,
@@ -284,7 +331,7 @@ is
     
     function balV3VaultFactory(
         bytes memory initArgs
-    ) public returns(VaultFactory vaultFactory_) {
+    ) public virtual returns(VaultFactory vaultFactory_) {
         return balV3VaultFactory(
             // IAuthorizer authorizer_,
             abi.decode(initArgs, (IAuthorizer)),
@@ -305,7 +352,7 @@ is
         );
     }
 
-    function balV3VaultFactory() public returns(VaultFactory vaultFactory_) {
+    function balV3VaultFactory() public virtual returns(VaultFactory vaultFactory_) {
         return balV3VaultFactory(abi.encode(balV3Authorizer()));
     }
 
@@ -313,16 +360,30 @@ is
     /*                                 IVault                                 */
     /* ---------------------------------------------------------------------- */
 
-    function balV3Vault(
+    function balancerV3Vault(
         uint256 chainid,
         IVault vault_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_VAULT_INITCODE_HASH, address(vault_));
         declare(builderKey_BalancerV3(), "vault", address(vault_));
         return true;
     }
 
-    function balV3Vault(IVault vault_) public returns(bool) {
+    function balV3Vault(
+        uint256 chainid,
+        IVault vault_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, BALANCER_V3_VAULT_INITCODE_HASH, address(vault_));
+        declare(builderKey_BalancerV3(), "vault", address(vault_));
+        return true;
+    }
+
+    function balancerV3Vault(IVault vault_) public virtual returns(bool) {
+        balV3Vault(block.chainid, vault_);
+        return true;
+    }
+    
+    function balV3Vault(IVault vault_) public virtual returns(bool) {
         balV3Vault(block.chainid, vault_);
         return true;
     }
@@ -339,11 +400,16 @@ is
         uint256 minWrapAmount,
         uint256 protocolSwapFeePercentage,
         uint256 protocolYieldFeePercentage
-    ) public returns(IVault vault_) {
+    ) public virtual returns(IVault vault_) {
         if(address(balV3Vault(block.chainid)) == address(0)) {
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 vault_ = IVault(ETHEREUM_MAIN.BALANCER_V3_VAULT);
-            } else
+            } 
+            else
+            if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                vault_ = IVault(ETHEREUM_SEPOLIA.BALANCER_V3_VAULT);
+            } 
+            else
             if(block.chainid == LOCAL.CHAIN_ID) {
                 if (areTestMocksEnabled() == true) {
                     if(isAnyScript() == true) {
@@ -378,7 +444,7 @@ is
         return balV3Vault(block.chainid);
     }
     
-    function balancerV3Vault() public returns(IVault vault_) {
+    function balancerV3Vault() public virtual returns(IVault vault_) {
         return balV3Vault(
             // bytes32 salt,
             _HARDCODED_SALT,
@@ -404,7 +470,7 @@ is
     function balV3ProtocolFeeController(
         uint256 chainid,
         IProtocolFeeController protocolFeeController_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         registerInstance(chainid, BALANCER_V3_PROTOCOL_FEE_CONTROLLER_INITCODE_HASH, address(protocolFeeController_));
         declare(builderKey_BalancerV3(), "protocolFeeController", address(protocolFeeController_));
         return true;
@@ -412,7 +478,7 @@ is
 
     function balV3ProtocolFeeController(
         IProtocolFeeController protocolFeeController_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         balV3ProtocolFeeController(block.chainid, protocolFeeController_);
         return true;
     }
@@ -423,11 +489,16 @@ is
     
     function balV3ProtocolFeeController(
         bytes32 vaultSalt
-    ) public returns (IProtocolFeeController protocolFeeController_) {
+    ) public virtual returns (IProtocolFeeController protocolFeeController_) {
         if(address(balV3ProtocolFeeController(block.chainid)) == address(0)) {
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 protocolFeeController_ = IProtocolFeeController(ETHEREUM_MAIN.BALANCER_V3_PROTOCOL_FEE_CONTROLLER_2);
-            } else
+            } 
+            else
+            if(block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                protocolFeeController_ = IProtocolFeeController(ETHEREUM_SEPOLIA.BALANCER_V3_PROTOCOL_FEE_CONTROLLER_2);
+            } 
+            else
             if(block.chainid == LOCAL.CHAIN_ID) {
                 protocolFeeController_ = new ProtocolFeeController(
                     IVault(Bytecode._create3AddressFromOf(address(balV3VaultFactory()), vaultSalt)),
@@ -440,7 +511,7 @@ is
         return balV3ProtocolFeeController(block.chainid);
     }
 
-    function balV3ProtocolFeeController() public returns (IProtocolFeeController protocolFeeController_) {
+    function balV3ProtocolFeeController() public virtual returns (IProtocolFeeController protocolFeeController_) {
         return balV3ProtocolFeeController(_HARDCODED_SALT);
     }
 
@@ -451,7 +522,7 @@ is
     function balV3VaultExplorer(
         uint256 chainid,
         VaultExplorer vaultExplorer_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_VAULT_EXPLORER_INITCODE_HASH, address(vaultExplorer_));
         declare(builderKey_BalancerV3(), "vaultExplorer", address(vaultExplorer_));
         return true;
@@ -459,7 +530,7 @@ is
     
     function balV3VaultExplorer(
         VaultExplorer vaultExplorer_
-    ) public returns (bool) {
+    ) public virtual returns (bool) {
         balV3VaultExplorer(block.chainid, vaultExplorer_);
         return true;
     }
@@ -470,11 +541,12 @@ is
 
     function balV3VaultExplorer(
         bytes memory initArgs
-    ) public returns (VaultExplorer vaultExplorer_) {
+    ) public virtual returns (VaultExplorer vaultExplorer_) {
         if(address(balV3VaultExplorer(block.chainid)) == address(0)) {
             if(block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
                 vaultExplorer_ = VaultExplorer(ETHEREUM_MAIN.BALANCER_V3_VAULT_EXPLORER);
-            } else
+            } 
+            else
             if(block.chainid == LOCAL.CHAIN_ID) {
                 vaultExplorer_ = deployVaultExplorer(abi.decode(initArgs, (IVault)));
                 // vaultExplorer_ =  new VaultExplorer(abi.decode(initArgs, (IVault)));
@@ -485,8 +557,167 @@ is
         return balV3VaultExplorer(block.chainid);
     }
 
-    function balV3VaultExplorer() public returns (VaultExplorer vaultExplorer_) {
+    function balV3VaultExplorer() public virtual returns (VaultExplorer vaultExplorer_) {
         return balV3VaultExplorer(abi.encode(balV3VaultFactory()));
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                                 IRouter                                */
+    /* ---------------------------------------------------------------------- */
+
+    function balancerV3Router(
+        uint256 chainid,
+        IRouter router_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, BALANCER_V3_ROUTER_INITCODE_HASH, address(router_));
+        declare(builderKey_BalancerV3(), "router", address(router_));
+        return true;
+    }
+
+    function balancerV3Router(IRouter router_) public virtual returns(bool) {
+        balancerV3Router(block.chainid, router_);
+        return true;
+    }
+
+    function balancerV3Router(uint256 chainid) public view returns(IRouter router_) {
+        router_ = IRouter(chainInstance(chainid, BALANCER_V3_ROUTER_INITCODE_HASH));
+    }
+
+    function balancerV3Router() public virtual returns(IRouter router_) {
+        if (address(balancerV3Router(block.chainid)) == address(0)) {
+            if (block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
+                router_ = IRouter(ETHEREUM_MAIN.BALANCER_V3_ROUTER);
+            }
+            else
+            if (block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                router_ = IRouter(ETHEREUM_SEPOLIA.BALANCER_V3_ROUTER);
+            }
+            // else
+            // if (block.chainid == LOCAL.CHAIN_ID) {
+            //     router_ = new Router();
+            // }
+            balancerV3Router(router_);
+        }
+        return balancerV3Router(block.chainid);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                              IBatchRouter                              */
+    /* ---------------------------------------------------------------------- */
+
+    function balancerV3BatchRouter(
+        uint256 chainid,
+        IBatchRouter batchRouter_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, BALANCER_V3_BATCH_ROUTER_INITCODE_HASH, address(batchRouter_));
+        declare(builderKey_BalancerV3(), "batchRouter", address(batchRouter_));
+        return true;
+    }
+
+    function balancerV3BatchRouter(IBatchRouter batchRouter_) public virtual returns(bool) {
+        balancerV3BatchRouter(block.chainid, batchRouter_);
+        return true;
+    }
+
+    function balancerV3BatchRouter(uint256 chainid) public view returns(IBatchRouter batchRouter_) {
+        batchRouter_ = IBatchRouter(chainInstance(chainid, BALANCER_V3_BATCH_ROUTER_INITCODE_HASH));
+    }
+
+    function balancerV3BatchRouter() public virtual returns(IBatchRouter batchRouter_) {
+        if (address(balancerV3BatchRouter(block.chainid)) == address(0)) {
+            if (block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
+                batchRouter_ = IBatchRouter(ETHEREUM_MAIN.BALANCER_V3_BATCH_ROUTER);
+            }
+            else
+            if (block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                batchRouter_ = IBatchRouter(ETHEREUM_SEPOLIA.BALANCER_V3_BATCH_ROUTER);
+            }
+            // else
+            // if (block.chainid == LOCAL.CHAIN_ID) {
+            //     batchRouter_ = new BatchRouter();
+            // }
+            balancerV3BatchRouter(batchRouter_);
+        }
+        return balancerV3BatchRouter(block.chainid);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                              IBufferRouter                             */
+    /* ---------------------------------------------------------------------- */
+
+    function balancerV3BufferRouter(
+        uint256 chainid,
+        IBufferRouter bufferRouter_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, BALANCER_V3_BUFFER_ROUTER_INITCODE_HASH, address(bufferRouter_));
+        declare(builderKey_BalancerV3(), "bufferRouter", address(bufferRouter_));
+        return true;
+    }
+
+    function balancerV3BufferRouter(IBufferRouter bufferRouter_) public virtual returns(bool) {
+        balancerV3BufferRouter(block.chainid, bufferRouter_);
+        return true;
+    }
+
+    function balancerV3BufferRouter(uint256 chainid) public view returns(IBufferRouter bufferRouter_) {
+        bufferRouter_ = IBufferRouter(chainInstance(chainid, BALANCER_V3_BUFFER_ROUTER_INITCODE_HASH));
+    }
+
+    function balancerV3BufferRouter() public virtual returns(IBufferRouter bufferRouter_) {
+        if (address(balancerV3BufferRouter(block.chainid)) == address(0)) {
+            if (block.chainid == ETHEREUM_MAIN.CHAIN_ID) {
+                bufferRouter_ = IBufferRouter(ETHEREUM_MAIN.BALANCER_V3_BUFFER_ROUTER);
+            }
+            else
+            if (block.chainid == ETHEREUM_SEPOLIA.CHAIN_ID) {
+                bufferRouter_ = IBufferRouter(ETHEREUM_SEPOLIA.BALANCER_V3_BUFFER_ROUTER);
+            }
+            // else
+            // if (block.chainid == LOCAL.CHAIN_ID) {
+            //     bufferRouter_ = new BufferRouter();
+            // }
+            balancerV3BufferRouter(bufferRouter_);
+        }
+        return balancerV3BufferRouter(block.chainid);
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                      ERC4626RateProviderFacetDFPkg                     */
+    /* ---------------------------------------------------------------------- */
+    
+    function balV3ERC4626RateProviderFacetDFPkg(
+        uint256 chainid,
+        ERC4626RateProviderFacetDFPkg erc4626RateProviderFacetDFPkg_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE_HASH, address(erc4626RateProviderFacetDFPkg_));
+        declare(builderKey_BalancerV3(), "erc4626RateProviderFacetDFPkg", address(erc4626RateProviderFacetDFPkg_));
+        return true;
+    }
+
+    function balV3ERC4626RateProviderFacetDFPkg(
+        ERC4626RateProviderFacetDFPkg erc4626RateProviderFacetDFPkg_
+    ) public virtual returns(bool) {
+        balV3ERC4626RateProviderFacetDFPkg(block.chainid, erc4626RateProviderFacetDFPkg_);
+        return true;
+    }
+
+    function balV3ERC4626RateProviderFacetDFPkg(uint256 chainid) public view returns (ERC4626RateProviderFacetDFPkg erc4626RateProviderFacetDFPkg_) {
+        erc4626RateProviderFacetDFPkg_ = ERC4626RateProviderFacetDFPkg(chainInstance(chainid, ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE_HASH));
+    }
+
+    function balV3ERC4626RateProviderFacetDFPkg() public virtual returns (ERC4626RateProviderFacetDFPkg erc4626RateProviderFacetDFPkg_) {
+        if(address(balV3ERC4626RateProviderFacetDFPkg(block.chainid)) == address(0)) {
+            erc4626RateProviderFacetDFPkg_ = ERC4626RateProviderFacetDFPkg(
+                factory().create3(
+                    ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE,
+                    "",
+                    ERC4626_RATE_PROVIDER_FACET_DFPKG_SALT
+                    // keccak256(abi.encode(type(ERC4626RateProviderFacetDFPkg).name))
+                )
+            );
+            balV3ERC4626RateProviderFacetDFPkg(erc4626RateProviderFacetDFPkg_);
+        }
+        return balV3ERC4626RateProviderFacetDFPkg(block.chainid);
     }
 
 } 

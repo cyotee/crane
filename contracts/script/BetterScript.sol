@@ -22,6 +22,8 @@ import { VmSafe } from "forge-std/Vm.sol";
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
+
+import { DEPLOYMENTS_PATH } from "../constants/Constants.sol";
 import {terminal as term} from "../utils/vm/foundry/tools/terminal.sol";
 import {
     AddressSet,
@@ -375,6 +377,22 @@ is
         _deploymentJSON = json("all");
     }
 
+    function loadDeployments(string memory _deploymentsPath) public view virtual returns(string memory json_) {
+        string memory deploymentsPath = string.concat(DEPLOYMENTS_PATH, _deploymentsPath);
+        return vm.readFile(deploymentsPath);
+    }
+
+    function loadAddress(string memory _deploymentsPath, string memory key) public virtual returns(address) {
+        return parseJsonAddress(loadDeployments(_deploymentsPath), key);
+    }
+
+    function parseJsonAddress(string memory _json, string memory key) public virtual returns(address addr_) {
+        require(vm.keyExistsJson(_json, string.concat("$.", key)), string.concat("key: ", key, " not found in json"));
+        addr_ = vm.parseJsonAddress(_json, string.concat("$.", key));
+        vm.label(addr_, key);
+        return addr_;
+    }
+
     function writeDeploymentJSON() public {
         term.mkDir(term.dirName(deploymentPath()));
         term.touch(deploymentPath());
@@ -404,7 +422,7 @@ is
 
     function declareAddr(
         address dec
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         _declaredAddrs._add(dec);
         return true;
     }
@@ -412,7 +430,7 @@ is
     function declareAddr(
         address dec,
         string memory label
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         declareAddr(dec);
         vm.label(
             dec,

@@ -67,6 +67,8 @@ string constant JSON = ".json";
 string constant CSV = ".csv";
 string constant SVG = ".svg";
 
+string constant DEPLOYMENTS_PATH = "deployments/";
+
 string constant DEPLOYMENTS_DIR = "/deployments";
 
 string constant PLOT_CORRELATOR = "x-axis";

@@ -82,13 +82,13 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
     function balV3RateProviderMock(
         uint256 chainid,
         RateProviderMock rateProviderMock_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_RATE_PROVIDER_MOCK_INITCODE_HASH, address(rateProviderMock_));
         declare(builderKey_BalancerV3Mocks(), "rateProviderMock", address(rateProviderMock_));
         return true;
     }
 
-    function balV3RateProviderMock(RateProviderMock rateProviderMock_) public returns(bool) {
+    function balV3RateProviderMock(RateProviderMock rateProviderMock_) public virtual returns(bool) {
         balV3RateProviderMock(block.chainid, rateProviderMock_);
         return true;
     }
@@ -97,7 +97,7 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
         rateProviderMock_ = RateProviderMock(chainInstance(chainid, BALANCER_V3_RATE_PROVIDER_MOCK_INITCODE_HASH));
     }
 
-    function balV3RateProviderMock() public returns(RateProviderMock rateProviderMock_) {
+    function balV3RateProviderMock() public virtual returns(RateProviderMock rateProviderMock_) {
         if(isAnyScript() == true) {
             contextNotSupported(type(RateProviderMock).name);
         }
@@ -115,13 +115,13 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
     function balV3PoolFactoryMock(
         uint256 chainid,
         PoolFactoryMock poolFactoryMock_
-    ) public returns(bool) {
+    ) public virtual returns(bool) {
         registerInstance(chainid, BALANCER_V3_POOL_FACTORY_MOCK_INITCODE_HASH, address(poolFactoryMock_));
         declare(builderKey_BalancerV3Mocks(), "poolFactoryMock", address(poolFactoryMock_));
         return true;
     }
 
-    function balV3PoolFactoryMock(PoolFactoryMock poolFactoryMock_) public returns(bool) {
+    function balV3PoolFactoryMock(PoolFactoryMock poolFactoryMock_) public virtual returns(bool) {
         balV3PoolFactoryMock(block.chainid, poolFactoryMock_);
         return true;
     }
@@ -133,7 +133,7 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
     function balV3PoolFactoryMock(
         IVault vault_,
         uint32 pauseWindowDuration_
-    ) public returns(PoolFactoryMock poolFactoryMock_) {
+    ) public virtual returns(PoolFactoryMock poolFactoryMock_) {
         if(isAnyScript() == true) {
             contextNotSupported(type(PoolFactoryMock).name);
         }
@@ -146,7 +146,7 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
         return balV3PoolFactoryMock(block.chainid);
     }
 
-    function balV3PoolFactoryMock(bytes memory initArgs) public returns(PoolFactoryMock poolFactoryMock_) {
+    function balV3PoolFactoryMock(bytes memory initArgs) public virtual returns(PoolFactoryMock poolFactoryMock_) {
         (
             IVault vault_,
             uint32 pauseWindowDuration_
@@ -154,7 +154,7 @@ contract Script_BalancerV3_Mocks is Script_BalancerV3 {
         return balV3PoolFactoryMock(vault_, pauseWindowDuration_);
     }
 
-    function balV3PoolFactoryMock() public returns(PoolFactoryMock poolFactoryMock_) {
+    function balV3PoolFactoryMock() public virtual returns(PoolFactoryMock poolFactoryMock_) {
         return balV3PoolFactoryMock(abi.encode(balV3VaultFactory()));
     }
 

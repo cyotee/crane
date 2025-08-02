@@ -36,8 +36,8 @@ ICreate2CallbackFactory
      * @dev We deliberately DO NOT pass any constructor arguments.
      * @dev This keeps the bytecode consistent and easier to track.
      */
-    constructor() {
-        _initOwnable(msg.sender);
+    constructor(address owner_) {
+        _initOwnable(owner_);
     }
 
     /**
@@ -101,6 +101,12 @@ ICreate2CallbackFactory
         return _create2(initCode, keccak256(initCode), initData_, salt_);
     }
 
+    function create3Address(
+        bytes32 salt
+    ) public view returns (address) {
+        return Creation._create3AddressOf(salt);
+    }
+
     function create3(
         bytes memory initCode,
         bytes32 salt
@@ -117,6 +123,25 @@ ICreate2CallbackFactory
     }
 
     function create3(
+        bytes memory initCode,
+        bytes memory initData_,
+        bytes32 salt
+    ) public returns (address proxy) {
+        return create3(
+            abi.encodePacked(
+                initCode,
+                abi.encode(
+                    ICreate3Aware.CREATE3InitData({
+                        salt: salt,
+                        initData: initData_
+                    })
+                )
+            ),
+            salt
+        );
+    }
+
+    function create3WithInitData(
         bytes memory initCode,
         bytes memory initData_,
         bytes32 salt

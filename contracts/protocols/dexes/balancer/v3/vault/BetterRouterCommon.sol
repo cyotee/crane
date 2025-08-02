@@ -301,7 +301,8 @@ is
         address weth = address(_weth());
         if (wethIsEth && address(tokenIn) == address(weth)) {
             _weth().deposit{value: amountIn}();
-            _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(weth));
+            // _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(weth));
+            _weth().transfer(recipient, amountIn);
         } else {
             if (amountIn > 0) {
                 _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(tokenIn));

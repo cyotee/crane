@@ -31,29 +31,41 @@ import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { IERC20 as OZIERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
+/* ------------------------------ Interfaces ------------------------------ */
 import { IProtocolFeeController } from "@balancer-labs/v3-interfaces/contracts/vault/IProtocolFeeController.sol";
-import { HookFlags, FEE_SCALING_FACTOR, Rounding } from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import { IRateProvider } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import { IVaultExtension } from "@balancer-labs/v3-interfaces/contracts/vault/IVaultExtension.sol";
 import { IVaultAdmin } from "@balancer-labs/v3-interfaces/contracts/vault/IVaultAdmin.sol";
 import { IVaultMock } from "@balancer-labs/v3-interfaces/contracts/test/IVaultMock.sol";
 import { IBasePool } from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 import {IVaultMock} from "@balancer-labs/v3-interfaces/contracts/test/IVaultMock.sol";
+import {
+    HookFlags,
+    FEE_SCALING_FACTOR,
+    Rounding,
+    TokenConfig,
+    TokenType
+} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+
+/* ----------------------------- Solidity Utils ----------------------------- */
 
 import { CastingHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
 import { ArrayHelpers } from "@balancer-labs/v3-solidity-utils/contracts/test/ArrayHelpers.sol";
 import { FixedPoint } from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-
+import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
 import { ERC4626TestToken } from "@balancer-labs/v3-solidity-utils/contracts/test/ERC4626TestToken.sol";
 import { ERC20TestToken } from "@balancer-labs/v3-solidity-utils/contracts/test/ERC20TestToken.sol";
 import { WETHTestToken } from "@balancer-labs/v3-solidity-utils/contracts/test/WETHTestToken.sol";
+
+/* ---------------------------------- Vault --------------------------------- */
 
 import { BasicAuthorizerMock } from "@balancer-labs/v3-vault/contracts/test/BasicAuthorizerMock.sol";
 import { RateProviderMock } from "@balancer-labs/v3-vault/contracts/test/RateProviderMock.sol";
@@ -67,39 +79,38 @@ import { BufferRouterMock } from "@balancer-labs/v3-vault/contracts/test/BufferR
 import { VaultContractsDeployer } from "@balancer-labs/v3-vault/test/foundry/utils/VaultContractsDeployer.sol";
 import { Permit2Helpers } from "@balancer-labs/v3-vault/test/foundry/utils/Permit2Helpers.sol";
 
-import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
 import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-import {Bytecode} from "../../../utils/Bytecode.sol";
-import {Test_Crane} from "../../Test_Crane.sol";
-import {BetterBalancerV3BaseTest} from "./BetterBalancerV3BaseTest.sol";
 // import {Fixture_BalancerV3_Vault} from "../../../fixtures/protocols/Fixture_BalancerV3_Vault.sol"; 
+import { BetterScript } from "../../../script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
+import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
+import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
+import { Script_Crane } from "../../../script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
+import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
+// import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
+// import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
+import { BetterTest } from "../../../test/BetterTest.sol";
+import {Test_Crane} from "../../Test_Crane.sol";
+import { TestBase_Permit2 } from "../protocols/TestBase_Permit2.sol";
+import {BetterBalancerV3BaseTest} from "./BetterBalancerV3BaseTest.sol";
+import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
+import { BetterInputHelpers as InputHelpers } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterInputHelpers.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {
     Create2CallBackFactory
 } from "../../../factories/create2/callback/Create2CallBackFactory.sol";
 import {IDiamondPackageCallBackFactory} from "../../../interfaces/IDiamondPackageCallBackFactory.sol";
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
-import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
-import { TestBase_Permit2 } from "../protocols/TestBase_Permit2.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { BetterIERC20 } from "../../../interfaces/BetterIERC20.sol";
-import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
-import { BetterTest } from "../../../test/BetterTest.sol";
-import { Test_Crane } from "../../../test/Test_Crane.sol";
-import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
+import {Bytecode} from "../../../utils/Bytecode.sol";
 
 contract BetterBalancerV3VaultTest
 is
@@ -130,6 +141,7 @@ is
     BetterBaseContractsDeployer,
     BetterVaultContractsDeployer,
     Script_BalancerV3,
+
     Test,
     BetterTest,
     Test_Crane,
@@ -137,6 +149,8 @@ is
     TestBase_Permit2
 {
 
+    using InputHelpers for IERC20[];
+    using InputHelpers for OZIERC20[];
     using CastingHelpers for address[];
     using FixedPoint for uint256;
     using ArrayHelpers for *;
@@ -237,8 +251,44 @@ is
     uint256 vaultMockInitialProtocolSwapFeePercentage = 0;
     uint256 vaultMockInitialProtocolYieldFeePercentage = 0;
 
+    /* ---------------------------------------------------------------------- */
+    /*                         ERC4626 Rate Providers                         */
+    /* ---------------------------------------------------------------------- */
+
+    /* ------------------------- waDAI Rate Provider ------------------------ */
+
+    IRateProvider waDaiRateProvider;
+
+    /* ------------------------ waUSDC Rate Provider ------------------------ */
+
+    IRateProvider waUsdcRateProvider;
+
+    /* ------------------------ waWETH Rate Provider ------------------------ */
+
+    IRateProvider waWethRateProvider;
+ 
+    /* ---------------------------------------------------------------------- */
+    /*                            Liquidity Buffers                           */
+    /* ---------------------------------------------------------------------- */
+
+    /* ----------------------- waDAI Liquidity Buffer ----------------------- */
+
+    uint256 waDaiBufferInitShares;
+
+    /* ----------------------- waUSDC Liquidity Buffer ---------------------- */
+
+    uint256 waUsdcBufferInitShares;
+
+    /* ----------------------- weWETH Liquidity Buffer ---------------------- */ 
+
+    uint256 waWethBufferInitShares;
+
     Create2CallBackFactory _factory;
     IDiamondPackageCallBackFactory _diamondPkgFactory;
+
+    /* ---------------------------------------------------------------------- */
+    /*                             Initialization                             */
+    /* ---------------------------------------------------------------------- */
 
     function setUp() public virtual
     override(
@@ -246,40 +296,44 @@ is
         Test_Crane,
         TestBase_Permit2
     ) {
-        // console.log("BetterBalancerV3VaultTest.setUp():: Entering function.");
-        // console.log("BetterBalancerV3VaultTest.setUp():: Setting up BetterBalancerV3BaseTest.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Entering function."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Setting up BetterBalancerV3BaseTest."));
         BetterBalancerV3BaseTest.setUp();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Setting up Test_Crane.");
-        // Test_Crane.setUp();
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Setting up Test_Crane."));
+        Test_Crane.setUp();
 
-        // console.log("BetterBalancerV3VaultTest.setUp():: Deploying main contracts.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Deploying main contracts."));
         _deployMainContracts();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Deployed main contracts.");
-        // console.log("BetterBalancerV3VaultTest.setUp():: Calling onAfterDeployMainContracts().");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Deployed main contracts."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Calling onAfterDeployMainContracts()."));
         onAfterDeployMainContracts();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Called onAfterDeployMainContracts().");
-        // console.log("BetterBalancerV3VaultTest.setUp():: Approved for all users.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Called onAfterDeployMainContracts()."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Approving for all users."));
         _approveForAllUsers();
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Approved for all users."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Calling onAfterTokenApprovals()."));
+        onAfterTokenApprovals();
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Called onAfterTokenApprovals()."));
 
-        // console.log("BetterBalancerV3VaultTest.setUp():: Creating pool factory.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Creating pool factory."));
         poolFactory = createPoolFactory();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Creating pool hooks contract.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Creating pool hooks contract."));
         poolHooksContract = createHook();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Creating pool.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Creating pool."));
         (pool, poolArguments) = createPool();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Created pool.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Created pool."));
 
-        // console.log("BetterBalancerV3VaultTest.setUp():: Checking that pool was created.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Checking that pool was created."));
         if (pool != address(0)) {
-            // console.log("BetterBalancerV3VaultTest.setUp():: Approving pool for all tokens fopr all users.");
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Approving pool for all tokens fopr all users."));
             approveForPool(IERC20(pool));
         }
 
         // Add initial liquidity
-        // console.log("BetterBalancerV3VaultTest.setUp():: Adding initial liquidity.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Adding initial liquidity."));
         initPool();
-        // console.log("BetterBalancerV3VaultTest.setUp():: Added initial liquidity.");
-        // console.log("BetterBalancerV3VaultTest.setUp():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Added initial liquidity."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".setUp():: Exiting function."));
     }
 
     function run() public virtual
@@ -297,10 +351,113 @@ is
         BetterBalancerV3BaseTest,
         TestBase_Permit2
     ) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".run():: Entering function."));
         // solhint-disable-next-line no-empty-blocks
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".run():: Exiting function."));
     }
 
+    /* ---------------------------------------------------------------------- */
+    /*                             Lifecycle Hooks                            */
+    /* ---------------------------------------------------------------------- */
+
+    /* ----------- After Main balancer V3 Contract Deployment Hook ---------- */
+    
+    function onAfterDeployMainContracts() internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".onAfterDeployMainContracts():: Entering function."));
+        createRateProviders();
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".onAfterDeployMainContracts():: Exiting function."));
+    }
+
+    /* --- After Token Approvals for All Spender for Existing Balancer V3 --- */
+
+    function onAfterTokenApprovals() public virtual {}
+
+    /* ---------------------------- Pool Factory ---------------------------- */
+
+    function createPoolFactory() internal virtual returns (address) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createPoolFactory():: Entering function."));
+        PoolFactoryMock factoryMock = PoolFactoryMock(address(vault.getPoolFactoryMock()));
+        vm.label(address(factoryMock), "factory");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createPoolFactory():: Exiting function."));
+        return address(factoryMock);
+    }
+
+    /* ---------------------- Pool Hooks Creation Hook ---------------------- */
+
+    function createHook() internal virtual returns (address) {        
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createHook():: Entering function."));
+        // Sets all flags to false.
+        HookFlags memory hookFlags;
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createHook():: Exiting function."));
+        return _createHook(hookFlags);
+    }
+
+    /* --------------------------- Pool Deployment -------------------------- */
+
+    function createPool() internal virtual returns (address newPool, bytes memory poolArgs) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createPool():: Entering function."));
+        (newPool, poolArgs) = _createPool([address(dai), address(usdc)].toMemoryArray(), "pool");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createPool():: Exiting function."));
+        return (newPool, poolArgs);
+    }
+
+    function approveForPool(IERC20 bpt) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Entering function."));
+        // console.log("BetterBalancerV3VaultTest.approveForPool():: Entering function.");
+        for (uint256 i = 0; i < users.length; ++i) {
+            vm.startPrank(users[i]);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for user ", vm.getLabel(users[i])));
+
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for router"));
+            bpt.approve(address(router), type(uint256).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for router"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for bufferRouter"));
+            bpt.approve(address(bufferRouter), type(uint256).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for bufferRouter"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for batchRouter"));
+            bpt.approve(address(batchRouter), type(uint256).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for batchRouter"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for compositeLiquidityRouter"));
+            bpt.approve(address(compositeLiquidityRouter), type(uint256).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for compositeLiquidityRouter"));
+
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for permit2"));
+            IERC20(bpt).approve(address(permit2()), type(uint256).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for permit2"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for router"));
+            permit2().approve(address(bpt), address(router), type(uint160).max, type(uint48).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for router"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for bufferRouter"));
+            permit2().approve(address(bpt), address(bufferRouter), type(uint160).max, type(uint48).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for bufferRouter"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for batchRouter"));
+            permit2().approve(address(bpt), address(batchRouter), type(uint160).max, type(uint48).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for batchRouter"));
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approving for compositeLiquidityRouter"));
+            permit2().approve(address(bpt), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Approved for compositeLiquidityRouter"));
+
+            vm.stopPrank();
+        }
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForPool():: Exiting function."));
+    }
+
+    function initPool() internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".initPool():: Entering function."));
+        // console.log("BetterBalancerV3VaultTest.initPool():: Entering function.");
+        vm.startPrank(lp);
+        _initPool(pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
+        vm.stopPrank();
+        // console.log("BetterBalancerV3VaultTest.initPool():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".initPool():: Exiting function."));
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                          Deployment Functions                          */
+    /* ---------------------------------------------------------------------- */
+
     function _deployMainContracts() private {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._deployMainContracts():: Entering function."));
         // vault = deployVaultMock(
         //     vaultMockMinTradeAmount,
         //     vaultMockMinWrapAmount,
@@ -383,20 +540,132 @@ is
 
         // console.log("BetterBalancerV3VaultTest.setUp():: Deployed main contracts.");
         // console.log("BetterBalancerV3VaultTest.setUp():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._deployMainContracts():: Exiting function."));
     }
 
-    function onAfterDeployMainContracts() internal virtual {}
+    /* ---------------------------------------------------------------------- */
+    /*                              RateProviders                             */
+    /* ---------------------------------------------------------------------- */
+
+    function createRateProviders() public virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createRateProviders():: Entering function."));
+        createWaDAIRateProvider();
+        createWaUSDCRateProvider();
+        createWaWETHRateProvider();
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createRateProviders():: Exiting function."));
+    }
+    
+    /* ------------------------- waDAI Rate Provider ------------------------ */
+
+    function createWaDAIRateProvider() public virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaDAIRateProvider():: Entering function."));
+        waDaiRateProvider = balV3ERC4626RateProvider(waDAI);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaDAIRateProvider():: Exiting function."));
+    }
+
+    /* ------------------------ waUSDC Rate Provider ------------------------ */
+
+    function createWaUSDCRateProvider() public virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaUSDCRateProvider():: Entering function."));
+        waUsdcRateProvider = balV3ERC4626RateProvider(waUSDC);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaUSDCRateProvider():: Exiting function."));
+    }
+
+    /* ------------------------ waWETH Rate Provider ------------------------ */
+
+    function createWaWETHRateProvider() public virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaWETHRateProvider():: Entering function."));
+        waWethRateProvider = balV3ERC4626RateProvider(waWETH);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".createWaWETHRateProvider():: Exiting function."));
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Token Configs                             */
+    /* ---------------------------------------------------------------------- */
+
+    function daiTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".daiTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(dai)),
+            tokenType: TokenType.STANDARD,
+            rateProvider: IRateProvider(address(0)),
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".daiTokenConfig():: Exiting function."));
+    }
+
+    function usdcTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".usdcTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(usdc)),
+            tokenType: TokenType.STANDARD,
+            rateProvider: IRateProvider(address(0)),
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".usdcTokenConfig():: Exiting function."));
+    }
+
+    function wethTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".wethTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(weth)),
+            tokenType: TokenType.STANDARD,
+            rateProvider: IRateProvider(address(0)),
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".wethTokenConfig():: Exiting function."));
+    }
+
+    function waDaiTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waDaiTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(waDAI)),
+            tokenType: TokenType.WITH_RATE,
+            rateProvider: waDaiRateProvider,
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waDaiTokenConfig():: Exiting function."));
+    }
+
+    function waUsdcTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waUsdcTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(waUSDC)),
+            tokenType: TokenType.WITH_RATE,
+            rateProvider: waUsdcRateProvider,
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waUsdcTokenConfig():: Exiting function."));
+    }
+
+    function waWethTokenConfig() public virtual returns(TokenConfig memory tokenConfig) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waWethTokenConfig():: Entering function."));
+        tokenConfig = TokenConfig({
+            token: IERC20(address(waWETH)),
+            tokenType: TokenType.WITH_RATE,
+            rateProvider: waWethRateProvider,
+            paysYieldFees: false
+        });
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".waWethTokenConfig():: Exiting function."));
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Approval Helpers                            */
+    /* ---------------------------------------------------------------------- */
 
     function _approveForAllUsers() internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveForAllUsers():: Entering function."));
         for (uint256 i = 0; i < users.length; ++i) {
             address user = users[i];
             vm.startPrank(user);
             approveForSender();
             vm.stopPrank();
         }
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveForAllUsers():: Exiting function."));
     }
 
     function approveForSender() internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Entering function."));
         // console.log("BetterBalancerV3VaultTest.approveForSender():: Entering function.");
         for (uint256 i = 0; i < tokens.length; ++i) {
             tokens[i].approve(address(permit2()), type(uint256).max);
@@ -436,130 +705,91 @@ is
             underlying.approve(address(erc4626Tokens[i]), type(uint160).max);
         }
         // console.log("BetterBalancerV3VaultTest.approveForSender():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Exiting function."));
     }
 
     function _approveSpenderForAllUsers(
         address spender
     ) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveSpenderForAllUsers():: Entering function."));
         for (uint256 i = 0; i < users.length; ++i) {
             address user = users[i];
             vm.startPrank(user);
             approveForSender(spender);
             vm.stopPrank();
         }
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveSpenderForAllUsers():: Exiting function."));
     }
 
     function approveForSender(
         address spender
     ) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Entering function."));
         // console.log("BetterBalancerV3VaultTest.approveForSender():: Entering function.");
         for (uint256 i = 0; i < tokens.length; ++i) {
             tokens[i].approve(spender, type(uint256).max);
             permit2().approve(address(tokens[i]), address(spender), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(tokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
         }
 
         for (uint256 i = 0; i < oddDecimalTokens.length; ++i) {
             oddDecimalTokens[i].approve(spender, type(uint256).max);
             permit2().approve(address(oddDecimalTokens[i]), spender, type(uint160).max, type(uint48).max);
-            // permit2().approve(address(oddDecimalTokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(oddDecimalTokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(
-            //     address(oddDecimalTokens[i]),
-            //     address(compositeLiquidityRouter),
-            //     type(uint160).max,
-            //     type(uint48).max
-            // );
         }
 
         for (uint256 i = 0; i < erc4626Tokens.length; ++i) {
             erc4626Tokens[i].approve(spender, type(uint256).max);
             permit2().approve(address(erc4626Tokens[i]), address(spender), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(erc4626Tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(address(erc4626Tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
-            // permit2().approve(
-            //     address(erc4626Tokens[i]),
-            //     address(compositeLiquidityRouter),
-            //     type(uint160).max,
-            //     type(uint48).max
-            // );
-
-            // Approve deposits from sender.
-            // IERC20 underlying = IERC20(erc4626Tokens[i].asset());
-            // underlying.approve(address(erc4626Tokens[i]), type(uint160).max);
         }
         // console.log("BetterBalancerV3VaultTest.approveForSender():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Exiting function."));
     }
 
     function _approveForAllUsers(IERC20 token) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveForAllUsers():: Entering function."));
         for (uint256 i = 0; i < users.length; ++i) {
             address user = users[i];
             vm.startPrank(user);
             approveForSender(token);
             vm.stopPrank();
         }
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveForAllUsers():: Exiting function."));
     }
 
     function approveForSender(IERC20 token) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Entering function."));
         token.approve(address(permit2()), type(uint256).max);
         permit2().approve(address(token), address(router), type(uint160).max, type(uint48).max);
         permit2().approve(address(token), address(bufferRouter), type(uint160).max, type(uint48).max);
         permit2().approve(address(token), address(batchRouter), type(uint160).max, type(uint48).max);
         permit2().approve(address(token), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Exiting function."));
     }
 
     function _approveSpenderForAllUsers(
         address spender,
         IERC20 token
     ) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveSpenderForAllUsers():: Entering function."));
         for (uint256 i = 0; i < users.length; ++i) {
             address user = users[i];
             vm.startPrank(user);
             approveForSender(spender, token);
             vm.stopPrank();
         }
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._approveSpenderForAllUsers():: Exiting function."));
     }
 
     function approveForSender(
         address spender,
         IERC20 token
     ) internal virtual {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Entering function."));
         token.approve(spender, type(uint256).max);
         permit2().approve(address(token), address(spender), type(uint160).max, type(uint48).max);
         // permit2().approve(address(token), address(bufferRouter), type(uint160).max, type(uint48).max);
         // permit2().approve(address(token), address(batchRouter), type(uint160).max, type(uint48).max);
         // permit2().approve(address(token), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
-    }
-
-    function approveForPool(IERC20 bpt) internal virtual {
-        // console.log("BetterBalancerV3VaultTest.approveForPool():: Entering function.");
-        for (uint256 i = 0; i < users.length; ++i) {
-            vm.startPrank(users[i]);
-
-            bpt.approve(address(router), type(uint256).max);
-            bpt.approve(address(bufferRouter), type(uint256).max);
-            bpt.approve(address(batchRouter), type(uint256).max);
-            bpt.approve(address(compositeLiquidityRouter), type(uint256).max);
-
-            IERC20(bpt).approve(address(permit2()), type(uint256).max);
-            permit2().approve(address(bpt), address(router), type(uint160).max, type(uint48).max);
-            permit2().approve(address(bpt), address(bufferRouter), type(uint160).max, type(uint48).max);
-            permit2().approve(address(bpt), address(batchRouter), type(uint160).max, type(uint48).max);
-            permit2().approve(address(bpt), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max);
-
-            vm.stopPrank();
-        }
-        // console.log("BetterBalancerV3VaultTest.approveForPool():: Exiting function.");
-    }
-
-    function initPool() internal virtual {
-        // console.log("BetterBalancerV3VaultTest.initPool():: Entering function.");
-        vm.startPrank(lp);
-        _initPool(pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
-        vm.stopPrank();
-        // console.log("BetterBalancerV3VaultTest.initPool():: Exiting function.");
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, ".approveForSender():: Exiting function."));
     }
 
     function _initPool(
@@ -567,9 +797,20 @@ is
         uint256[] memory amountsIn,
         uint256 minBptOut
     ) internal virtual returns (uint256 bptOut) {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(poolToInit);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPol():: Entering function."));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPool():: poolToInit: ", IERC20(poolToInit).name()));
+        (OZIERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(poolToInit);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPool():: tokens: "), tokens.length);
+        require(amountsIn.length == tokens.length, "amountsIn.length != tokens.length");
+        for (uint256 i = 0; i < tokens.length; ++i) {
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPool():: token[%s]: "), i, IERC20(address(tokens[i])).name());
+            console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPool():: amountsIn[%s]: "), i, amountsIn[i]);
+            require(amountsIn[i] > 0, "amountsIn[i] <= 0");
+        }
 
-        return router.initialize(poolToInit, tokens, amountsIn, minBptOut, false, bytes(""));
+        bptOut =  router.initialize(poolToInit, tokens, amountsIn, minBptOut, false, bytes(""));
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._initPool():: Exiting function."));
+        return bptOut;
     }
 
     // function erc20Permit(
@@ -596,25 +837,11 @@ is
     //     return BetterBalancerV3BaseTest.erc4626(underlying);
     // }
 
-    function createPoolFactory() internal virtual returns (address) {
-        // console.log("BetterBalancerV3VaultTest.createPoolFactory():: Entering function.");
-        PoolFactoryMock factoryMock = PoolFactoryMock(address(vault.getPoolFactoryMock()));
-        vm.label(address(factoryMock), "factory");
-        // console.log("BetterBalancerV3VaultTest.createPoolFactory():: Exiting function.");
-        return address(factoryMock);
-    }
-
-    function createPool() internal virtual returns (address, bytes memory) {
-        // console.log("BetterBalancerV3VaultTest.createPool():: Entering function.");
-        // console.log("BetterBalancerV3VaultTest.createPool():: Creating pool.");
-        // console.log("BetterBalancerV3VaultTest.createPool():: Exiting function.");
-        return _createPool([address(dai), address(usdc)].toMemoryArray(), "pool");
-    }
-
     function _createPool(
         address[] memory tokens,
         string memory label
     ) internal virtual returns (address newPool, bytes memory poolArgs) {
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._createPool():: Entering function"));
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -629,14 +856,7 @@ is
         );
 
         poolArgs = abi.encode(vault, name, symbol);
-    }
-
-    function createHook() internal virtual returns (address) {
-        // console.log("BetterBalancerV3VaultTest.createHook():: Entering function.");
-        // Sets all flags to false.
-        HookFlags memory hookFlags;
-        // console.log("BetterBalancerV3VaultTest.createHook():: Exiting function.");
-        return _createHook(hookFlags);
+        console.log(string.concat(type(BetterBalancerV3VaultTest).name, "._createPool():: Exiting function."));
     }
 
     function _createHook(HookFlags memory hookFlags) internal virtual returns (address) {
@@ -701,7 +921,7 @@ is
 
         balances.poolSupply = IERC20(pool).totalSupply();
 
-        (IERC20[] memory tokens, , uint256[] memory poolBalances, uint256[] memory lastBalancesLiveScaled18) = vault
+        (OZIERC20[] memory tokens, , uint256[] memory poolBalances, uint256[] memory lastBalancesLiveScaled18) = vault
             .getPoolTokenInfo(pool);
         balances.poolTokens = poolBalances;
         uint256 numTokens = tokens.length;
@@ -709,7 +929,7 @@ is
         balances.poolInvariant = IBasePool(pool).computeInvariant(lastBalancesLiveScaled18, invariantRounding);
         balances.poolEth = pool.balance;
 
-        _fillBalances(balances, user, tokens);
+        _fillBalances(balances, user, tokens.castToIERC20());
 
         balances.swapFeeAmounts = new uint256[](numTokens);
         balances.yieldFeeAmounts = new uint256[](numTokens);

@@ -106,6 +106,8 @@ library ETHEREUM_MAIN {
 
     /* ------------------------------- Routers ------------------------------ */
 
+    address constant BALANCER_V3_AGGREGATOR_BATCH_ROUTER
+        = 0xDADa7bE438bdD89416F4802B679E320b15c92D49;
     address constant BALANCER_V3_AGGREGATOR_ROUTER
         = 0x309abcAeFa19CA6d34f0D8ff4a4103317c138657;
     address constant BALANCER_V3_BATCH_ROUTER
@@ -114,6 +116,8 @@ library ETHEREUM_MAIN {
         = 0x9179C06629ef7f17Cb5759F501D89997FE0E7b45;
     address constant BALANCER_V3_COMPOSITE_LIQUIDITY_ROUTER
         = 0xb21A277466e7dB6934556a1Ce12eb3F032815c8A;
+    address constant BALANCER_V3_LBP_MIGRATION_ROUTER
+        = 0xCC267D25576b48f08A90C3605624Ab62a73a7A4E;
     address constant BALANCER_V3_ROUTER
         = 0xAE563E3f8219521950555F5962419C8919758Ea2;
 
@@ -131,6 +135,8 @@ library ETHEREUM_MAIN {
         = 0xe912C791f7c4b6323EfBA294F66C0dE93c50eB5F;
     address constant BALANCER_V3_MOCK_LB_POOL
         = 0xdBB8aD38C990Bd4ca2c88A6E6CfDF5045B0d4FB0;
+    address constant BALANCER_V3_MOCK_RECLAMM_POOL
+        = address(0x000aB3853737842bED7Dabe3540E3e5336FE62a6);
     address constant BALANCER_V3_MOCK_STABLE_POOL_V2
         = 0x95BC5CA62Ed018b5206342479ded82e18e46dcbf;
     address constant BALANCER_V3_MOCK_STABLE_SURGE_POOL
@@ -139,6 +145,8 @@ library ETHEREUM_MAIN {
         = 0x527d0E14acc53FB040DeBeae1cAb973D23FB3568;
     address constant BALANCER_V3_MOCK_WRAPPED_BALANCER_POOL_TOKEN
         = 0x27ad56B2bfcb923091d80CA2D657AEbA5Ac3121c;
+    address constant BALANCER_V3_RECLAMM_POOL_FACTORY
+        = address(0xDaa273AeEc06e9CCb7428a77E2abb1E4659B16D2);
     address constant BALANCER_V3_STABLE_POOL_FACTORY
         = 0x8df317a729fcaA260306d7de28888932cb579b88;
     address constant BALANCER_V3_STABLE_SURGE_POOL_FACTORY
@@ -167,6 +175,10 @@ library ETHEREUM_MAIN {
         = 0xf5dECDB1f3d1ee384908Fbe16D2F0348AE43a9eA;
     address constant BALANCER_V3_AUTHORIZER_WITH_ADAPTOR_VALIDATION
         = 0x6048A8c631Fb7e77EcA533Cf9C29784e482391e7;
+    address constant BALANCER_V3_TIMELOCK_AUTHORIZER
+        = address(0);
+    address constant BALANCER_V3_TIMELOCK_AUTHORIZER_MIGRATOR
+        = address(0);
 
     /* ------------------------ Gauges and Governance ----------------------- */
 
