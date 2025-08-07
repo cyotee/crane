@@ -44,15 +44,15 @@ import {
     IERC20MintBurnOperableFacetDFPkg,
     ERC20MintBurnOperableFacetDFPkg
 } from "../token/ERC20/extensions/ERC20MintBurnOperableFacetDFPkg.sol";
-import { IERC20MintBurn } from "@crane/contracts/interfaces/IERC20MintBurn.sol";
+import { IERC20MintBurn } from "../interfaces/IERC20MintBurn.sol";
 import {
     IERC20MintBurnOperableStorage, 
     ERC20MintBurnOperableStorage
-} from "@crane/contracts/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
+} from "../token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
 import {
     IOwnableStorage, 
     OwnableStorage
-} from "@crane/contracts/access/ownable/utils/OwnableStorage.sol";
+} from "../access/ownable/utils/OwnableStorage.sol";
 import { IUniswapV2Aware } from "../interfaces/IUniswapV2Aware.sol";
 import { CamelotV2AwareFacet } from "../protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
 import { UniswapV2AwareFacet } from "../protocols/dexes/uniswap/v2/UniswapV2AwareFacet.sol";
