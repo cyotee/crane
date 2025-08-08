@@ -6,6 +6,9 @@ import {
 } from "../../../../BetterIERC20.sol";
 import {IERC2612} from "../../../../IERC2612.sol";
 
+/**
+ * @custom:interfaceid 0x3510a6a0
+ */
 interface IUniswapV2Pair is IERC20, IERC2612 {
 
     event Mint(address indexed sender, uint amount0, uint amount1);

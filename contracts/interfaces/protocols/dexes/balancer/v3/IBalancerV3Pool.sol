@@ -7,6 +7,9 @@ pragma solidity ^0.8.0;
 
 import { PoolSwapParams, Rounding, SwapKind } from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
 
+/**
+ * @custom:interfaceid 0xfc24db8e
+ */
 interface IBalancerV3Pool {
     /***************************************************************************
                                    Invariant
