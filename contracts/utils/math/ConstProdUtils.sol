@@ -8,9 +8,11 @@ import {betterconsole as console} from "../vm/foundry/tools/betterconsole.sol";
 
 import "../../constants/Constants.sol";
 import {BetterMath} from "./BetterMath.sol";
+import {BetterMath as Math} from "./BetterMath.sol";
 
 library ConstProdUtils {
 
+    using Math for uint256;
     using ConstProdUtils for uint256;
 
     uint256 constant _MINIMUM_LIQUIDITY = 10**3;
@@ -315,26 +317,26 @@ library ConstProdUtils {
         uint256 reserveOut,
         uint256 saleFeePercent
     ) internal pure returns (uint) {
-        console.log("=== _saleQuote START ===");
-        console.log("Input - amountIn:", amountIn);
-        console.log("Input - reserveIn:", reserveIn);
-        console.log("Input - reserveOut:", reserveOut);
-        console.log("Input - saleFeePercent:", saleFeePercent);
-        console.log("Input - FEE_DENOMINATOR:", FEE_DENOMINATOR);
+        // console.log("=== _saleQuote START ===");
+        // console.log("Input - amountIn:", amountIn);
+        // console.log("Input - reserveIn:", reserveIn);
+        // console.log("Input - reserveOut:", reserveOut);
+        // console.log("Input - saleFeePercent:", saleFeePercent);
+        // console.log("Input - FEE_DENOMINATOR:", FEE_DENOMINATOR);
 
         uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent) / FEE_DENOMINATOR;
-        console.log("Step 1 - Fee reduction factor:", FEE_DENOMINATOR - saleFeePercent);
-        console.log("Step 1 - amountInWithFee:", amountInWithFee);
+        // console.log("Step 1 - Fee reduction factor:", FEE_DENOMINATOR - saleFeePercent);
+        // console.log("Step 1 - amountInWithFee:", amountInWithFee);
         
         uint256 numerator = amountInWithFee * reserveOut;
-        console.log("Step 2 - numerator (amountInWithFee * reserveOut):", numerator);
+        // console.log("Step 2 - numerator (amountInWithFee * reserveOut):", numerator);
         
         uint256 denominator = reserveIn + amountInWithFee;
-        console.log("Step 3 - denominator (reserveIn + amountInWithFee):", denominator);
+        // console.log("Step 3 - denominator (reserveIn + amountInWithFee):", denominator);
         
         uint256 result = numerator / denominator;
-        console.log("Step 4 - final result (numerator / denominator):", result);
-        console.log("=== _saleQuote END ===");
+        // console.log("Step 4 - final result (numerator / denominator):", result);
+        // console.log("=== _saleQuote END ===");
         
         return result;
     }
@@ -484,6 +486,90 @@ library ConstProdUtils {
         );
     }
 
+    // /**
+    //  * @dev Calculates the amount of input token needed to ZapIn and receive a specified amount of LP tokens.
+    //  * @param lpAmountDesired The desired amount of LP tokens to receive.
+    //  * @param lpTotalSupply The current total supply of LP tokens.
+    //  * @param reserveIn The reserve of the input token.
+    //  * @param reserveOut The reserve of the output token.
+    //  * @param feePercent The swap fee percentage (e.g., 300 for 0.3%).
+    //  * @return amountIn The amount of input token needed.
+    //  */
+    // function _swapDepositRequired(
+    //     uint256 lpAmountDesired,
+    //     uint256 lpTotalSupply,
+    //     uint256 reserveIn,
+    //     uint256 reserveOut,
+    //     uint256 feePercent
+    // ) internal pure returns (uint256 amountIn) {
+    //     // Edge cases
+    //     if (lpAmountDesired == 0 || lpTotalSupply == 0 || reserveIn == 0 || reserveOut == 0) {
+    //         return 0;
+    //     }
+
+    //     // Use Newton-Raphson method to find the required input
+    //     // Start with a reasonable initial guess based on pool ratio
+    //     uint256 k = reserveIn * reserveOut;
+    //     uint256 targetTotalSupply = lpTotalSupply + lpAmountDesired;
+    //     uint256 targetK = (k * targetTotalSupply * targetTotalSupply) / (lpTotalSupply * lpTotalSupply);
+    //     uint256 targetReserveIn = BetterMath.sqrt((targetK * reserveIn) / reserveOut);
+        
+    //     // Initial guess: proportional increase in reserve
+    //     amountIn = targetReserveIn > reserveIn ? (targetReserveIn - reserveIn) * 11 / 10 : lpAmountDesired; // 10% buffer
+        
+    //     // Newton-Raphson iterations (usually converges in 3-4 iterations)
+    //     for (uint256 i = 0; i < 5; i++) {
+    //         uint256 currentLP = _swapDepositQuote(lpTotalSupply, amountIn, reserveIn, reserveOut, feePercent);
+            
+    //         if (currentLP == lpAmountDesired) {
+    //             break; // Exact match found
+    //         }
+            
+    //         // Calculate derivative approximation (delta method)
+    //         uint256 delta = amountIn / 1000; // 0.1% delta
+    //         if (delta == 0) delta = 1;
+            
+    //         uint256 lpAtDelta = _swapDepositQuote(lpTotalSupply, amountIn + delta, reserveIn, reserveOut, feePercent);
+    //         uint256 derivative = (lpAtDelta > currentLP) ? (lpAtDelta - currentLP) * 1e18 / delta : 1e18;
+            
+    //         // Newton-Raphson update: x = x - f(x)/f'(x)
+    //         if (currentLP > lpAmountDesired) {
+    //             uint256 excess = currentLP - lpAmountDesired;
+    //             uint256 adjustment = (excess * 1e18) / derivative;
+    //             amountIn = amountIn > adjustment ? amountIn - adjustment : amountIn / 2;
+    //         } else {
+    //             uint256 deficit = lpAmountDesired - currentLP;
+    //             uint256 adjustment = (deficit * 1e18) / derivative;
+    //             amountIn += adjustment;
+    //         }
+    //     }
+        
+    //     return amountIn;
+    // }
+
+    /**
+     * @dev Calculatess the amount token A needed to ZapIn to receive a desired amount of LP tokens.
+     */
+    function _calculateZapInAmount(
+        uint256 desiredLP,
+        uint256 totalLP,
+        uint256 reserveA,
+        uint256 feeNum,
+        uint256 feeDenom
+    ) internal pure returns (uint256) {
+        uint256 lt_delta = totalLP * feeDenom;
+        uint256 ltd_ld = totalLP - desiredLP;
+        uint256 delta_phi = feeDenom - feeNum;
+        uint256 inner = lt_delta + (ltd_ld * delta_phi);
+        uint256 numerator = desiredLP * reserveA * inner;
+        uint256 denominator = totalLP * ltd_ld * delta_phi;
+        uint256 inputAmount = numerator / denominator;
+        if (numerator % denominator != 0) {
+            inputAmount += 1;
+        }
+        return inputAmount;
+    }
+
     /**
      * @dev Calculates the amount of input token needed to ZapIn and receive a specified amount of LP tokens.
      * @param lpAmountDesired The desired amount of LP tokens to receive.
@@ -533,6 +619,37 @@ library ConstProdUtils {
         return amountInRequired;
     }
 
+    function _calculateZapInInput(
+        uint256 lpTokensDesired,
+        uint256 reserveIn,
+        uint256 reserveOut, 
+        uint256 poolTotalSupply,
+        uint256 feePercent
+    ) internal pure returns (uint256 amountIn) {
+        // Direct calculation for zap-in amount
+        // Formula derived from UniswapV2 swap + addLiquidity math
+        
+        uint256 fee = 10000 - feePercent; // e.g., 9700 for 3% fee
+        
+        // Calculate the target reserves after adding liquidity
+        uint256 targetTotalSupply = poolTotalSupply + lpTokensDesired;
+        uint256 ratio = (targetTotalSupply * 1e18) / poolTotalSupply;
+        
+        uint256 targetReserveIn = (reserveIn * ratio) / 1e18;
+        uint256 deltaReserveIn = targetReserveIn - reserveIn;
+        
+        // Account for the swap fee and slippage
+        // Solve the quadratic equation directly
+        uint256 b = (reserveIn * fee * 2) + (deltaReserveIn * 10000);
+        uint256 c = deltaReserveIn * reserveIn * fee;
+        
+        // Use quadratic formula: (-b + sqrt(b² + 4c)) / 2
+        uint256 discriminant = b * b + 4 * c;
+        amountIn = (BetterMath.sqrt(discriminant) - b) / 2;
+        
+        return amountIn;
+    }
+
     /* ---------------------------------------------------------------------- */
     /*                              WITHDRAW/SWAP                             */
     /* ---------------------------------------------------------------------- */
@@ -578,8 +695,52 @@ library ConstProdUtils {
         
         return totalAmountA;
     }
+/**
+     * @dev Calculates the amount of LP tokens needed to zap out and receive a desired amount of the output token.
+     * @param desiredOut The desired amount of output token (token A).
+     * @param reserveA Reserve of the output token.
+     * @param reserveB Reserve of the paired token.
+     * @param lpTotalSupply Current total supply of LP tokens.
+     * @param feePercent Swap fee in PPHK (e.g., 300 for 0.3% with FEE_DENOMINATOR = 100000).
+     * @param feeDenominator Fee denominator (e.g., 100000).
+     * @return lpNeeded Amount of LP tokens required.
+     */
+    function _calculateZapOutLP(
+        uint256 desiredOut,
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 lpTotalSupply,
+        uint256 feePercent,
+        uint256 feeDenominator
+    ) internal pure returns (uint256 lpNeeded) {
+        // Edge cases
+        if (desiredOut == 0 || lpTotalSupply == 0 || reserveA == 0 || reserveB == 0) {
+            return 0;
+        }
+        if (desiredOut > reserveA) {
+            return 0; // Cannot withdraw more than available
+        }
+        require(feePercent < feeDenominator, "Invalid fee");
 
-
+        // g = (FEE_DENOMINATOR - feePercent) / FEE_DENOMINATOR
+        uint256 gNumerator = feeDenominator - feePercent;
+        // Quadratic coefficients
+        uint256 a = reserveA * gNumerator; // R_a * (FEE_DENOM - feePercent)
+        uint256 b = reserveA * (feeDenominator + gNumerator) - desiredOut * gNumerator;
+        uint256 c = desiredOut * feeDenominator; // -D * FEE_DENOM (sign handled in discriminant)
+        // Discriminant: b^2 + 4ac (since c is negative, adjust sign)
+        uint256 discriminant = b * b + 4 * a * c;
+        uint256 sqrtDisc = BetterMath.sqrt(discriminant);
+        // r = (-b + sqrt(d)) / (2a), scaled to avoid early division
+        uint256 numerator = (sqrtDisc - b) * lpTotalSupply;
+        uint256 denominator = 2 * a;
+        lpNeeded = numerator / denominator;
+        // Ceiling for safety
+        if (numerator % denominator != 0) {
+            lpNeeded += 1;
+        }
+        return lpNeeded;
+    }
     /* ---------------------------------------------------------------------- */
     /*                          SWAP/DEPOSIT WITH FEES                          */
     /* ---------------------------------------------------------------------- */
@@ -590,14 +751,14 @@ library ConstProdUtils {
      * @param newK The new K value after the operation.
      * @param kLast The last stored K value before the operation.
      * @param ownerFeeShare The fee share percentage for the protocol owner (e.g., 30000 for 30%).
-     * @return feeAmount The amount of LP tokens to be minted as a protocol fee.
+     * @return lpOfYield The amount of LP tokens to be minted as a protocol fee.
      */
     function _calculateProtocolFee(
         uint256 lpTotalSupply,
         uint256 newK,
         uint256 kLast,
         uint256 ownerFeeShare
-    ) internal pure returns (uint256 feeAmount) {
+    ) internal pure returns (uint256 lpOfYield) {
         // console.log("=== _calculateProtocolFee START ===");
         // console.log("Input params - lpTotalSupply:", lpTotalSupply);
         // console.log("Input params - newK:", newK);
@@ -638,11 +799,11 @@ library ConstProdUtils {
         uint256 denominator = rootK * d + rootKLast * 100;
         // console.log("Intermediate - denominator:", denominator);
         
-        feeAmount = numerator / denominator;
-        // console.log("Final feeAmount:", feeAmount);
+        lpOfYield = numerator / denominator;
+        // console.log("Final lpOfYield:", lpOfYield);
         // console.log("=== _calculateProtocolFee END ===");
         
-        return feeAmount;
+        return lpOfYield;
     }
 
     /**
@@ -712,7 +873,7 @@ library ConstProdUtils {
         // uint256 currentK,
         uint256 lastK,
         uint256 vaultFee
-    ) internal pure returns (uint256 feeAmount, uint256 newK) {
+    ) internal pure returns (uint256 lpOfYield, uint256 newK) {
         newK = _k(uint(reserveA), uint(reserveB));
         uint rootK = BetterMath.sqrt(newK);
         uint rootKLast = BetterMath.sqrt(lastK);
@@ -726,9 +887,9 @@ library ConstProdUtils {
             // uint denominator = rootK.mul(d).add(rootKLast.mul(100));
             uint denominator = ((rootK * d) + (rootKLast * 100));
             uint liquidity = numerator / denominator;
-            if (liquidity > 0) feeAmount = liquidity;
+            if (liquidity > 0) lpOfYield = liquidity;
         }
-        return (feeAmount, newK);
+        return (lpOfYield, newK);
     }
 
     function _k(uint balanceA, uint balanceB) internal pure returns (uint) {
@@ -780,5 +941,178 @@ library ConstProdUtils {
         return (feeAmount, newK);
     }
 
+    function _calculateLpOfYiedAndNewK(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 totalSupply,
+        uint256 lastK,
+        uint256 vaultFee,
+        uint256 feeDenominator
+    ) internal pure returns (uint256 lpOfYield, uint256 newK) {
+        // Calculate current K
+        newK = reserveA * reserveB;
 
+        // No fees if no liquidity or K hasn't grown
+        if (lastK == 0 || newK <= lastK || totalSupply == 0 || vaultFee == 0) {
+            return (0, newK);
+        }
+
+        // Calculate fee based on growth in sqrt(K)
+        uint256 rootK = BetterMath.sqrt(newK);
+        uint256 rootKLast = BetterMath.sqrt(lastK);
+
+        if (rootK <= rootKLast) {
+            return (0, newK);
+        }
+
+        // Calculate LP tokens to mint (Uniswap V2 formula)
+        // uint256 FEE_DENOMINATOR = 1e6; // Matches vaultFee denominator
+        uint256 d = (feeDenominator * 100 / vaultFee) - 100;
+        uint256 numerator = totalSupply * (rootK - rootKLast) * 100;
+        uint256 denominator = rootK * d + rootKLast * 100;
+
+        lpOfYield = numerator / denominator;
+
+        return (lpOfYield, newK);
+    }
+
+    function _calculateVaultFeeNoNewK(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 totalSupply,
+        uint256 lastK,
+        uint256 vaultFee,
+        uint256 feeDenominator
+    ) internal pure returns (uint256 lpOfYield) {
+        // Calculate current K
+        uint256 newK = reserveA * reserveB;
+
+        // No fees if no liquidity or K hasn't grown
+        if (lastK == 0 || newK <= lastK || totalSupply == 0 || vaultFee == 0) {
+            return (0);
+        }
+
+        // Calculate fee based on growth in sqrt(K)
+        uint256 rootK = BetterMath.sqrt(newK);
+        uint256 rootKLast = BetterMath.sqrt(lastK);
+
+        if (rootK <= rootKLast) {
+            return (0);
+        }
+
+        // Calculate LP tokens to mint (Uniswap V2 formula)
+        // uint256 FEE_DENOMINATOR = 1e6; // Matches vaultFee denominator
+        uint256 d = (feeDenominator * 100 / vaultFee) - 100;
+        uint256 numerator = totalSupply * (rootK - rootKLast) * 100;
+        uint256 denominator = rootK * d + rootKLast * 100;
+
+        lpOfYield = numerator / denominator;
+
+        return lpOfYield;
+    }
+
+    /**
+     * @dev Calculates LP tokens to mint as vault fees based on market maker fee accrual.
+     * @param reserveA Current reserve of token A.
+     * @param reserveB Current reserve of token B.
+     * @param totalSupply Current total supply of LP tokens.
+     * @param lastK Last stored K value (reserveA_last * reserveB_last).
+     * @param vaultFee Vault's fee share (e.g., 30000 for 30%, denominator 1e6).
+     * @return lpOfYield LP tokens to mint as vault fees.
+     */
+    function _calculateLPOfYield(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 totalSupply,
+        uint256 lastK,
+        uint256 vaultFee,
+        uint256 feeDenominator
+    ) internal pure returns (uint256 lpOfYield) {
+        // Calculate current K
+        uint256 newK = reserveA * reserveB;
+
+        // No fees if no liquidity or K hasn't grown
+        if (lastK == 0 || newK <= lastK || totalSupply == 0 || vaultFee == 0) {
+            return (0);
+        }
+
+        // Calculate fee based on growth in sqrt(K)
+        uint256 rootK = BetterMath.sqrt(newK);
+        uint256 rootKLast = BetterMath.sqrt(lastK);
+
+        if (rootK <= rootKLast) {
+            return (0);
+        }
+
+        // Calculate LP tokens to mint (Uniswap V2 formula)
+        // uint256 FEE_DENOMINATOR = 1e6; // Matches vaultFee denominator
+        uint256 d = (feeDenominator * 100 / vaultFee) - 100;
+        uint256 numerator = totalSupply * (rootK - rootKLast) * 100;
+        uint256 denominator = rootK * d + rootKLast * 100;
+
+        lpOfYield = numerator / denominator;
+
+        return lpOfYield;
+    }
+
+    function _calculateYieldForOwnedLP(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 totalSupply,
+        uint256 lastK,
+        uint256 ownedLP
+    ) internal pure returns (uint256 lpOfYield, uint256 newK) {
+        // Calculate current K
+        newK = _k(reserveA, reserveB);
+        return (
+            _calculateYieldForOwnedLP(
+                reserveA,
+                reserveB,
+                totalSupply,
+                lastK,
+                newK,
+                ownedLP
+            ),
+            newK
+        );
+    }
+    
+    /**
+     * @dev Calculates the equivalent LP tokens representing the yield for owned LP tokens.
+     * @param reserveA Current reserve of token A.
+     * @param reserveB Current reserve of token B.
+     * @param totalSupply Current total supply of LP tokens.
+     * @param lastK Last stored K value (reserveA_last * reserveB_last).
+     * @param ownedLP Amount of LP tokens owned by the holder.
+     * @return lpOfYield LP tokens representing the yield for ownedLP.
+     */
+    function _calculateYieldForOwnedLP(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 totalSupply,
+        uint256 lastK,
+        uint256 newK,
+        uint256 ownedLP
+    ) internal pure returns (uint256 lpOfYield) {
+        // No yield if no liquidity, no owned LP, or no growth
+        if (totalSupply == 0 || ownedLP == 0 || newK <= lastK) {
+            return (0);
+        }
+        // Calculate sqrt(K) and sqrt(K_last)
+        uint256 rootK = newK.sqrt();
+        uint256 rootKLast = lastK.sqrt();
+        if (rootK <= rootKLast) {
+            return (0);
+        }
+        // Calculate yield in LP tokens: ownedLP * (sqrt(K) - sqrt(K_last)) / sqrt(K_last)
+        uint256 numerator = ownedLP * (rootK - rootKLast);
+        uint256 denominator = rootKLast;
+        lpOfYield = numerator / denominator;
+        // Handle remainder to avoid truncation
+        if (numerator % denominator != 0) {
+            lpOfYield += 1;
+        }
+        return (lpOfYield);
+    }
+    
 }

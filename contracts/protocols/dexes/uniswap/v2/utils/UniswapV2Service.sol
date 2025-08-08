@@ -18,8 +18,10 @@ library UniswapV2Service {
     // Structs to help avoid stack too deep errors
 
     struct ReserveInfo {
-        uint256 reserveIn;
-        uint256 reserveOut;
+        // uint256 reserveIn;
+        uint256 knownReserve;
+        // uint256 reserveOut;
+        uint256 opposingReserve;
         uint256 feePercent;
         uint256 unknownFee;
     }
@@ -60,11 +62,11 @@ library UniswapV2Service {
         reserves.unknownFee = 300;
         
         if (address(knownToken) == address(token0)) {
-            reserves.reserveIn = token0Resereves;
-            reserves.reserveOut = token1Resereves;
+            reserves.knownReserve = token0Resereves;
+            reserves.opposingReserve = token1Resereves;
         } else {
-            reserves.reserveIn = token1Resereves;
-            reserves.reserveOut = token0Resereves;
+            reserves.knownReserve = token1Resereves;
+            reserves.opposingReserve = token0Resereves;
         }
         
         return reserves;
@@ -86,11 +88,11 @@ library UniswapV2Service {
         reserves.unknownFee = 300;
         
         if (address(knownToken) == address(token0)) {
-            reserves.reserveIn = reserve0;
-            reserves.reserveOut = reserve1;
+            reserves.knownReserve = reserve0;
+            reserves.opposingReserve = reserve1;
         } else {
-            reserves.reserveIn = reserve1;
-            reserves.reserveOut = reserve0;
+            reserves.knownReserve = reserve1;
+            reserves.opposingReserve = reserve0;
         }
         
         return reserves;
@@ -109,11 +111,11 @@ library UniswapV2Service {
         reserves.unknownFee = 300;
         
         if (address(knownToken) == pool.token0()) {
-            reserves.reserveIn = reserve0;
-            reserves.reserveOut = reserve1;
+            reserves.knownReserve = reserve0;
+            reserves.opposingReserve = reserve1;
         } else {
-            reserves.reserveIn = reserve1;
-            reserves.reserveOut = reserve0;
+            reserves.knownReserve = reserve1;
+            reserves.opposingReserve = reserve0;
         }
         
         return reserves;
@@ -249,10 +251,10 @@ library UniswapV2Service {
             router,
             amountIn,
             tokenIn,
-            reserves.reserveIn,
+            reserves.knownReserve,
             reserves.feePercent,
             tokenOut,
-            reserves.reserveOut
+            reserves.opposingReserve
         );
     }
 
@@ -265,14 +267,14 @@ library UniswapV2Service {
         IERC20 tokenOut,
         uint256 reserveOut
     ) internal returns (uint256 amountOut) {
-        console.log("swap: amountIn", amountIn);
-        console.log("swap: tokenIn", address(tokenIn));
-        console.log("swap: tokenIn name = %s", IERC20(address(tokenIn)).name());
-        console.log("swap: reserveIn", reserveIn);
-        console.log("swap: feePercent", feePercent);
-        console.log("swap: tokenOut", address(tokenOut));
-        console.log("swap: tokenOut name = %s", IERC20(address(tokenOut)).name());
-        console.log("swap: reserveOut", reserveOut);
+        // console.log("swap: amountIn", amountIn);
+        // console.log("swap: tokenIn", address(tokenIn));
+        // console.log("swap: tokenIn name = %s", IERC20(address(tokenIn)).name());
+        // console.log("swap: reserveIn", reserveIn);
+        // console.log("swap: feePercent", feePercent);
+        // console.log("swap: tokenOut", address(tokenOut));
+        // console.log("swap: tokenOut name = %s", IERC20(address(tokenOut)).name());
+        // console.log("swap: reserveOut", reserveOut);
         // Create parameter struct to avoid stack too deep error
         SwapParams memory params = SwapParams({
             router: router,
@@ -291,16 +293,16 @@ library UniswapV2Service {
             params.reserveOut,
             params.feePercent
         );
-        console.log("swap: amountOut", amountOut);
+        // console.log("swap: amountOut", amountOut);
 
         // Prepare swap
         address[] memory path = _prepareSwap(params);
-        console.log("swap: path[0]", path[0]);
-        console.log("swap: path[1]", path[1]);
+        // console.log("swap: path[0]", path[0]);
+        // console.log("swap: path[1]", path[1]);
         
         // Execute swap
         _executeSwap(params, path);
-        console.log("swap: tokenOut.balanceOf(this) = ", tokenOut.balanceOf(address(this)));
+        // console.log("swap: tokenOut.balanceOf(this) = ", tokenOut.balanceOf(address(this)));
     }
     
     // Helper function to create path and approve token
@@ -339,34 +341,34 @@ library UniswapV2Service {
         uint256 saleAmt,
         IERC20 opToken
     ) internal returns (uint256) {
-        console.log("swapDeposit: tokenIn", address(tokenIn));
-        console.log("swapDeposit: tokenIn name = %s", IERC20(address(tokenIn)).name());
-        console.log("swapDeposit: saleAmt", saleAmt);
-        console.log("swapDeposit: opToken", address(opToken));
-        console.log("swapDeposit: opToken name = %s", IERC20(address(opToken)).name());
+        // console.log("swapDeposit: tokenIn", address(tokenIn));
+        // console.log("swapDeposit: tokenIn name = %s", IERC20(address(tokenIn)).name());
+        // console.log("swapDeposit: saleAmt", saleAmt);
+        // console.log("swapDeposit: opToken", address(opToken));
+        // console.log("swapDeposit: opToken name = %s", IERC20(address(opToken)).name());
         
         // Get reserves
         ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
-        console.log("swapDeposit: reserves.reserveIn", reserves.reserveIn);
-        console.log("swapDeposit: reserves.reserveOut", reserves.reserveOut);
-        console.log("swapDeposit: reserves.feePercent", reserves.feePercent);
-        console.log("swapDeposit: reserves.unknownFee", reserves.unknownFee);
+        // console.log("swapDeposit: reserves.reserveIn", reserves.reserveIn);
+        // console.log("swapDeposit: reserves.reserveOut", reserves.reserveOut);
+        // console.log("swapDeposit: reserves.feePercent", reserves.feePercent);
+        // console.log("swapDeposit: reserves.unknownFee", reserves.unknownFee);
         
         // Create parameter struct to avoid stack too deep error
         BalanceParams memory params = BalanceParams({
             router: router,
             saleAmt: saleAmt,
             tokenIn: tokenIn,
-            saleReserve: reserves.reserveIn,
+            saleReserve: reserves.knownReserve,
             saleTokenFeePerc: reserves.feePercent,
             tokenOut: opToken,
-            reserveOut: reserves.reserveOut
+            reserveOut: reserves.opposingReserve
         });
         
         // Balance assets using the reserves
         uint256[] memory balancedAmounts = _balanceAssetsInternal(params);
-        console.log("swapDeposit: balancedAmounts[0]", balancedAmounts[0]);
-        console.log("swapDeposit: balancedAmounts[1]", balancedAmounts[1]);
+        // console.log("swapDeposit: balancedAmounts[0]", balancedAmounts[0]);
+        // console.log("swapDeposit: balancedAmounts[1]", balancedAmounts[1]);
         
         // Deposit balanced amounts
         uint256 poolTokenAmount = _deposit(
@@ -376,16 +378,16 @@ library UniswapV2Service {
             balancedAmounts[0],
             balancedAmounts[1]
         );
-        console.log("swapDeposit: poolTokenAmount", poolTokenAmount);
+        // console.log("swapDeposit: poolTokenAmount", poolTokenAmount);
         
         return poolTokenAmount;
     }
 
     // Helper function to implement _balanceAssets logic to avoid stack too deep
     function _balanceAssetsInternal(BalanceParams memory params) private returns(uint256[] memory amounts) {
-        console.log("balanceAssetsInternal: params.saleAmt", params.saleAmt);
-        console.log("balanceAssetsInternal: params.saleReserve", params.saleReserve);
-        console.log("balanceAssetsInternal: params.saleTokenFeePerc", params.saleTokenFeePerc);
+        // console.log("balanceAssetsInternal: params.saleAmt", params.saleAmt);
+        // console.log("balanceAssetsInternal: params.saleReserve", params.saleReserve);
+        // console.log("balanceAssetsInternal: params.saleTokenFeePerc", params.saleTokenFeePerc);
         
         // Get amount of input token to be swapped
         uint256 swapAmountIn = _calculateSwapAmount(
@@ -393,11 +395,11 @@ library UniswapV2Service {
             params.saleReserve,
             params.saleTokenFeePerc
         );
-        console.log("balanceAssetsInternal: swapAmountIn", swapAmountIn);
+        // console.log("balanceAssetsInternal: swapAmountIn", swapAmountIn);
         
         amounts = new uint256[](2);
         amounts[0] = params.saleAmt - swapAmountIn;
-        console.log("balanceAssetsInternal: amounts[0]", amounts[0]);
+        // console.log("balanceAssetsInternal: amounts[0]", amounts[0]);
         
         // Perform swap to get the second token
         amounts[1] = _swap(
@@ -409,7 +411,7 @@ library UniswapV2Service {
             params.tokenOut,
             params.reserveOut
         );
-        console.log("balanceAssetsInternal: amounts[1]", amounts[1]);
+        // console.log("balanceAssetsInternal: amounts[1]", amounts[1]);
         return amounts;
     }
     
@@ -524,4 +526,23 @@ library UniswapV2Service {
             params.tokenOut
         );
     }
+
+    // function _yieldLPAmt(
+    //     IUniswapV2Pair pool_,
+    //     uint256 totalShares_,
+    //     IVaultFeeOracle _vaultFeeOracle,
+
+    // ) internal view returns(uint256 lpAmt) {
+    //     (uint112 poolReserve0, uint112 poolReserve1, ) = pool_.getReserves();
+    //     uint256 currentK = uint256(poolReserve0) * uint256(poolReserve1);
+    //     uint256 kLast = _constantProductStandardStrategyVault().yieldTokenKLast;
+    //     (uint256 feeShares) = ConstProdUtils._calculateVaultFeeNoNewK(
+    //         uint256(poolReserve0),
+    //         uint256(poolReserve1), 
+    //         totalShares_,
+    //         kLast,
+    //         _vaultFeeOracle().feeOfVault(address(this)),
+    //         PPM_RESOLUTION
+    //     );
+    // }
 }
