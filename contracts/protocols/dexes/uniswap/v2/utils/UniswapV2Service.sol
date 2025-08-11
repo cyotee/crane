@@ -233,7 +233,8 @@ library UniswapV2Service {
             0
         );
 
-        return amounts[amounts.length - 1];
+        // return amounts[amounts.length - 1];
+        return amounts[0];
     }
 
     function _swap(
