@@ -855,7 +855,7 @@ library ConstProdUtils {
         // Calculate standard LP amount
         lpAmt = amountIn._depositQuote(
             opTokenAmtIn,
-            lpTotalSupply,
+            lpTotalSupply + protocolFee,
             reserveIn,
             reserveOut
         );

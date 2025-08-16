@@ -3174,15 +3174,6 @@
 ./hardhat.config.ts
 
 ## Documentation
-./.cursor/rules/ui-rules/readme.md
-./.cursor/rules/core-rules/readme.md
-./.cursor/rules/tool-rules/readme.md
-./.cursor/rules/global-rules/readme.md
-./.cursor/rules/ts-rules/readme.md
-./.cursor/templates/mode-format.md
-./.cursor/templates/template-prd.md
-./.cursor/templates/template-arch.md
-./.cursor/templates/template-story.md
 ./test/foundry/spec/token/ERC20/README.md
 ./.roo/rules/dev_workflow.md
 ./.roo/rules/taskmaster.md
@@ -3345,4 +3336,13 @@
 ./lib/openzeppelin-contracts/lib/erc4626-tests/README.md
 ./lib/openzeppelin-contracts/certora/README.md
 ./lib/openzeppelin-contracts/SECURITY.md
+./.cursor.old/rules/ui-rules/readme.md
+./.cursor.old/rules/core-rules/readme.md
+./.cursor.old/rules/tool-rules/readme.md
+./.cursor.old/rules/global-rules/readme.md
+./.cursor.old/rules/ts-rules/readme.md
+./.cursor.old/templates/mode-format.md
+./.cursor.old/templates/template-prd.md
+./.cursor.old/templates/template-arch.md
+./.cursor.old/templates/template-story.md
 
