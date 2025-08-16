@@ -38,6 +38,7 @@ import { Test } from "forge-std/Test.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
+import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import { VaultContractsDeployer } from "@balancer-labs/v3-vault/test/foundry/utils/VaultContractsDeployer.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -189,6 +190,7 @@ is
 
         // console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initializing tokens."));
         _initTokens();
+        weth9(IWETH(address(weth)));
         // console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initialized tokens."));
         // console.log(string.concat(type(BetterBalancerV3BaseTest).name, ".setUp():: Initializing accounts."));
         _initAccounts();

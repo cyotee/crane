@@ -16,3 +16,6 @@
 [submodule "lib/solmate"]
 	path = lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "lib/daosys_frontend"]
+	path = lib/daosys_frontend
+	url = https://github.com/syscoin/daosys_frontend

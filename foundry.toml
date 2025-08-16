@@ -21,6 +21,7 @@ remappings = [
     "camelot-periphery/=lib/periphery/contracts/",
     # Permit2
     "permit/=lib/permit2/src/",
+    "permit2/=lib/permit2/src/",
     # Balancer
     "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
     "@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/",
