@@ -564,9 +564,10 @@ library ConstProdUtils {
         uint256 numerator = desiredLP * reserveA * inner;
         uint256 denominator = totalLP * ltd_ld * delta_phi;
         uint256 inputAmount = numerator / denominator;
-        if (numerator % denominator != 0) {
-            inputAmount += 1;
-        }
+        // Remove rounding up logic to match Uniswap V2's rounding down behavior
+        // if (numerator % denominator != 0) {
+        //     inputAmount += 1;
+        // }
         return inputAmount;
     }
 
