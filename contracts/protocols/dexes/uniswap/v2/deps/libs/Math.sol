@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import "../../../../../../constants/Constants.sol";
-import "./Conversion.sol";
-import "./FixedPointWadMathLib.sol";
-import "./Fraction.sol";
+import "contracts/constants/Constants.sol";
+import "contracts/protocols/dexes/uniswap/v2/deps/libs/Conversion.sol";
+import "contracts/protocols/dexes/uniswap/v2/deps/libs/FixedPointWadMathLib.sol";
+import "contracts/protocols/dexes/uniswap/v2/deps/libs/Fraction.sol";
 import {
     MathEx
-} from "./MathEx.sol";
-import "./UQ112x112.sol";
-import "./WadRayMath.sol";
+} from "contracts/protocols/dexes/uniswap/v2/deps/libs/MathEx.sol";
+import "contracts/protocols/dexes/uniswap/v2/deps/libs/UQ112x112.sol";
+import "contracts/protocols/dexes/uniswap/v2/deps/libs/WadRayMath.sol";
 
 // solhint-disable reason-string
 // TODO Write NatSpec comments.

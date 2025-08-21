@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 import {
     EIP712Storage
-} from "../../../../utils/cryptography/eip712/EIP712Storage.sol";
+} from "contracts/utils/cryptography/eip712/EIP712Storage.sol";
 import {
     ERC5267Storage
-} from "../../../../utils/cryptography/erc5267/ERC5267Storage.sol";
+} from "contracts/utils/cryptography/erc5267/ERC5267Storage.sol";
 import {
     IERC20Storage,
     ERC20Storage
@@ -16,7 +16,7 @@ import {
 } from "./ERC2612Storage.sol";
 import {
     BetterIERC20Permit
-} from "../../../../interfaces/BetterIERC20Permit.sol";
+} from "contracts/interfaces/BetterIERC20Permit.sol";
 
 interface IERC20PermitStorage {
 

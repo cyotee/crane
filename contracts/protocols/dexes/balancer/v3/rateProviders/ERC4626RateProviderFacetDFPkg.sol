@@ -17,13 +17,13 @@ import { IRateProvider } from "@balancer-labs/v3-interfaces/contracts/solidity-u
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { Create3AwareContract } from "../../../../../factories/create2/aware/Create3AwareContract.sol";
-import { IDiamond } from "../../../../../interfaces/IDiamond.sol";
-import { IFacet } from "../../../../../interfaces/IFacet.sol";
-import { IDiamondFactoryPackage } from "../../../../../interfaces/IDiamondFactoryPackage.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { IDiamond } from "contracts/interfaces/IDiamond.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
+import { IDiamondFactoryPackage } from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
-import { IERC4626RateProvider } from "../../../../../interfaces/IERC4626RateProvider.sol";
-import { ERC4626RateProviderStorage } from "./ERC4626RateProviderStorage.sol";
+import { IERC4626RateProvider } from "contracts/interfaces/IERC4626RateProvider.sol";
+import { ERC4626RateProviderStorage } from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderStorage.sol";
 
 contract ERC4626RateProviderFacetDFPkg
 is

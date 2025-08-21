@@ -11,9 +11,8 @@ import {ISwapFeePercentageBounds} from "@balancer-labs/v3-interfaces/contracts/v
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import {Create2AwareTarget} from "../../../../../factories/create2/aware/Create2AwareTarget.sol";
-import {Create3AwareContract} from "../../../../factories/create2/aware/Create3AwareContract.sol";
-import {IFacet} from "../../../../interfaces/IFacet.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
 
 contract ZeroSwapFeePercentageBoundsFacet
 is Create3AwareContract, ISwapFeePercentageBounds, IFacet {

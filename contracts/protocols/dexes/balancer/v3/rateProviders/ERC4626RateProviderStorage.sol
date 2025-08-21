@@ -11,8 +11,7 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import { BetterIERC20 as IERC20 } from "../../../../../interfaces/BetterIERC20.sol";
-import { IERC4626RateProvider } from "../../../../../interfaces/IERC4626RateProvider.sol";
+import { IERC4626RateProvider } from "contracts/interfaces/IERC4626RateProvider.sol";
 
 struct ERC4626RateProviderLayout {
     IERC4626 erc4626Vault;

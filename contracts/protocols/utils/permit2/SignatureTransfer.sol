@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {ISignatureTransfer} from "../../../interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
+import {ISignatureTransfer} from "contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
 import {SignatureExpired, InvalidNonce} from "./PermitErrors.sol";
 // import {ERC20} from "solmate/tokens/ERC20.sol";
 // import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
-import {SignatureVerification} from "./SignatureVerification.sol";
-import {PermitHash} from "./PermitHash.sol";
-import {IEIP712} from "../../../interfaces/IEIP712.sol";
-import {EIP712} from "./EIP712.sol";
+import {SignatureVerification} from "contracts/protocols/utils/permit2/SignatureVerification.sol";
+import {PermitHash} from "contracts/protocols/utils/permit2/PermitHash.sol";
+import {IEIP712} from "contracts/interfaces/IEIP712.sol";
+import {EIP712} from "contracts/protocols/utils/permit2/EIP712.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

@@ -27,11 +27,11 @@ import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { Create3AwareContract } from "../../../../factories/create2/aware/Create3AwareContract.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
 import { BalancerV3HooksFacet } from "./vault/BalancerV3HooksFacet.sol";
-import { ERC4626AwareStorage } from "../../../../token/ERC20/extensions/utils/ERC4626AwareStorage.sol";
-import { BetterIERC20 as IERC20 } from "../../../../interfaces/BetterIERC20.sol";
-import { BetterSafeERC20 as SafeERC20 } from "../../../../token/ERC20/utils/BetterSafeERC20.sol";
+import { ERC4626AwareStorage } from "contracts/token/ERC20/extensions/utils/ERC4626AwareStorage.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { BetterSafeERC20 as SafeERC20 } from "contracts/token/ERC20/utils/BetterSafeERC20.sol";
 
 // TODO Deperecate by integrating with BalancerV3ERC4625AdaptorPoolFacet
 contract BalancerV3ERC4626AdaptorPoolHooksFacet

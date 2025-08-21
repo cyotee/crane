@@ -3,8 +3,8 @@
 pragma solidity ^0.8.24;
 
 import { IVersion } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IVersion.sol";
-import { VersionStorage } from "./utils/VersionStorage.sol";
-import { IFacet } from "../../../../../interfaces/IFacet.sol";
+import { VersionStorage } from "contracts/protocols/dexes/balancer/v3/solidity-utils/utils/VersionStorage.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
 
 /**
  * @notice Retrieves a contract's version from storage.

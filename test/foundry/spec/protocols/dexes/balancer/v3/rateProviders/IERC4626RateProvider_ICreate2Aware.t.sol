@@ -60,7 +60,7 @@ is
         // Script_BalancerV3,
         TestBase_ICreate2Aware
     ) {
-
+        owner(address(this));
         underlyingName = "Test ERC20";
         underlyingSymbol = "TERC20";
         underlyingDecimals = 18;

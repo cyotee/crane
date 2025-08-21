@@ -2,13 +2,13 @@
 pragma solidity ^0.8.0;
 
 
-import { IUniswapV2Factory } from "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import { IUniswapV2Router } from    "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
+import { IUniswapV2Factory } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Router } from    "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
 import {
     UniswapV2AwareLayout,
     UniswapV2AwareRepo
-} from "./UniswapV2AwareRepo.sol";
-import { IUniswapV2Aware } from "../../../../../interfaces/IUniswapV2Aware.sol";
+} from "contracts/protocols/dexes/uniswap/v2/utils/UniswapV2AwareRepo.sol";
+import { IUniswapV2Aware } from "contracts/interfaces/IUniswapV2Aware.sol";
 
 contract UniswapV2AwareStorage {
 

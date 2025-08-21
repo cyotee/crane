@@ -22,22 +22,22 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../script/BetterScript.sol";
-import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
-import { Script_ArbOS } from "../../script/networks/Script_ArbOS.sol";
-import { Script_ApeChain } from "../../script/networks/Script_ApeChain.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { Script_ArbOS } from "contracts/script/networks/Script_ArbOS.sol";
+import { Script_ApeChain } from "contracts/script/networks/Script_ApeChain.sol";
 
-import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { APE_CHAIN_MAIN } from "../../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../../constants/networks/APE_CHAIN_CURTIS.sol";
-import { LOCAL } from "../../constants/networks/LOCAL.sol";
-import { CamelotFactory } from "../../protocols/dexes/camelot/v2/CamelotFactory.sol";
-import { CamelotRouter } from "../../protocols/dexes/camelot/v2/CamelotRouter.sol";
-import { ICamelotFactory } from "../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
-import { ICamelotV2Router } from "../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
-import { ICamelotPair } from "../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
-import { BetterIERC20 as IERC20 } from "../../interfaces/BetterIERC20.sol";
-import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import { betterconsole as console } from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { CamelotFactory } from "contracts/protocols/dexes/camelot/v2/CamelotFactory.sol";
+import { CamelotRouter } from "contracts/protocols/dexes/camelot/v2/CamelotRouter.sol";
+import { ICamelotFactory } from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
+import { ICamelotV2Router } from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
+import { ICamelotPair } from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
 
 contract Script_CamelotV2
 is

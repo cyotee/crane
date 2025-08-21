@@ -5,8 +5,8 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {FactoryWidePauseWindowStorage} from "./utils/FactoryWidePauseWindowStorage.sol";
-import {IFactoryWidePauseWindow} from "../../../../../../interfaces/IFactoryWidePauseWindow.sol";
+import {FactoryWidePauseWindowStorage} from "contracts/protocols/dexes/balancer/v3/solidity-utils/helpers/utils/FactoryWidePauseWindowStorage.sol";
+import {IFactoryWidePauseWindow} from "contracts/interfaces/IFactoryWidePauseWindow.sol";
 
 contract FactoryWidePauseWindowTarget is FactoryWidePauseWindowStorage, IFactoryWidePauseWindow {
 

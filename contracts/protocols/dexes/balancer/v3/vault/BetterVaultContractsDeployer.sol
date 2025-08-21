@@ -70,9 +70,9 @@ import { BufferRouterMock } from "@balancer-labs/v3-vault/contracts/test/BufferR
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../../../../script/BetterScript.sol";
-import { BetterTest } from "../../../../../test/BetterTest.sol";
-import { BetterBaseContractsDeployer } from "../solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import { BetterBaseContractsDeployer } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
 
 /**
  * @notice This contract contains functions for deploying mocks and contracts related to the "Vault".

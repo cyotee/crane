@@ -7,27 +7,27 @@ import {
 } from "./ERC2535Repo.sol";
 import {
     BetterAddress as Address
-} from "../../../../utils/BetterAddress.sol";
+} from "contracts/utils/BetterAddress.sol";
 
 import {
     AddressSet,
     AddressSetRepo
-} from "../../../../utils/collections/sets/AddressSetRepo.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
 
 import {
     Bytes4Set,
     Bytes4SetRepo
-} from "../../../../utils/collections/sets/Bytes4SetRepo.sol";
+} from "contracts/utils/collections/sets/Bytes4SetRepo.sol";
 
 import {
     IDiamond
-} from "../../../../interfaces/IDiamond.sol";
+} from "contracts/interfaces/IDiamond.sol";
 import {
     IDiamondCut
-} from "../../../../interfaces/IDiamondCut.sol";
+} from "contracts/interfaces/IDiamondCut.sol";
 import {
     IDiamondLoupe
-} from "../../../../interfaces/IDiamondLoupe.sol";
+} from "contracts/interfaces/IDiamondLoupe.sol";
 
 abstract contract DiamondStorage
 // is MutableERC165Storage

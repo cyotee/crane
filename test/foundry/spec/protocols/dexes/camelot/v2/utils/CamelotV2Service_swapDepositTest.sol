@@ -30,6 +30,7 @@ contract CamelotV2Service_swapDepositTest is TestBase_CamelotV2 {
     uint256 swapAmount = TENK_WAD / 10; // Amount to swap for testing
 
     function setUp() public virtual override {
+        owner(address(this));
         // Fork chain state
         vm.createSelectFork("apeChain_curtis_rpc", 8579331);
 

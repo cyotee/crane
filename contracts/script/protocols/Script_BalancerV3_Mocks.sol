@@ -49,16 +49,14 @@ import { VaultMock } from "@balancer-labs/v3-vault/contracts/test/VaultMock.sol"
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../../constants/protocols/dexes/balancer/v3/BalancerV3_INITCODE.sol";
-import {betterconsole as console} from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterAddress as Address } from "../../utils/BetterAddress.sol";
-import { Bytecode } from "../../utils/Bytecode.sol";
-import { LOCAL } from "../../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
-// import { Fixture } from "../Fixture.sol";
-// import { Fixture_Crane } from "../Fixture_Crane.sol";
-import { IOwnable } from "../../interfaces/IOwnable.sol";
-import { BalancerV3Authorizer } from "../../protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
+import "contracts/constants/protocols/dexes/balancer/v3/BalancerV3_INITCODE.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterAddress as Address } from "contracts/utils/BetterAddress.sol";
+import { Bytecode } from "contracts/utils/Bytecode.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { IOwnable } from "contracts/interfaces/IOwnable.sol";
+import { BalancerV3Authorizer } from "contracts/protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

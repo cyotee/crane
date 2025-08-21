@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {TransferHelper} from './libraries/TransferHelper.sol';
+import {TransferHelper} from 'contracts/protocols/dexes/camelot/v2/libraries/TransferHelper.sol';
 
-import {ICamelotFactory} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol';
-import {ICamelotPair} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol';
-import {BetterIERC20 as IERC20} from '../../../../interfaces/BetterIERC20.sol';
+import {ICamelotFactory} from 'contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol';
+import {ICamelotPair} from 'contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol';
+import {BetterIERC20 as IERC20} from 'contracts/interfaces/BetterIERC20.sol';
 
-import {ICamelotV2Router} from '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol';
-import {UniswapV2Library} from './libraries/UniswapV2Library.sol';
-import {SafeMath} from './libraries/SafeMath.sol';
-// import '../../../tokens/wrappers/weth/IWETH.sol';
+import {ICamelotV2Router} from 'contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol';
+import {UniswapV2Library} from 'contracts/protocols/dexes/camelot/v2/libraries/UniswapV2Library.sol';
+import {SafeMath} from 'contracts/protocols/dexes/camelot/v2/libraries/SafeMath.sol';
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 contract CamelotRouter is ICamelotV2Router {

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {
     BetterIERC20Permit as IERC20Permit
-} from "../../../../BetterIERC20Permit.sol";
+} from "contracts/interfaces/BetterIERC20Permit.sol";
 
 interface ICamelotPair is IERC20Permit {
     // event Approval(address indexed owner, address indexed spender, uint value);

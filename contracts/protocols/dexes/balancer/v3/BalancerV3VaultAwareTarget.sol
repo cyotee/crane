@@ -12,9 +12,8 @@ import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IBalancerV3VaultAware} from "../../../../interfaces/IBalancerV3VaultAware.sol";
-import { BalancerV3VaultAwareStorage } from "./utils/BalancerV3VaultAwareStorage.sol";
-// import { IBalancerPoolToken } from "@crane/contracts/interfaces/IBalancerPoolToken.sol";
+import {IBalancerV3VaultAware} from "contracts/interfaces/IBalancerV3VaultAware.sol";
+import { BalancerV3VaultAwareStorage } from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
 
 contract BalancerV3VaultAwareTarget is BalancerV3VaultAwareStorage, IBalancerV3VaultAware {
 

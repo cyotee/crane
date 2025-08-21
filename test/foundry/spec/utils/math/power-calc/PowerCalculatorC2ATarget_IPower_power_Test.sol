@@ -9,6 +9,7 @@ contract PowerCalculatorC2ATarget_IPower_power_Test is Test_Crane {
     uint256 constant MAX_NUM = 0x200000000000000000000000000000000;
 
     function setUp() public virtual override {
+        owner(address(this));
         // super.setUp();
     }
     function testSimplePower() public {

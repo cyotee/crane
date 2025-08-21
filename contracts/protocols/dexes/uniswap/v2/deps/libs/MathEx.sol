@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import {Math} from "./Math.sol";
 import {Fraction, InvalidFraction} from "./Fraction.sol";
 
-import "../../../../../../constants/Constants.sol";
+import "contracts/constants/Constants.sol";
 
 uint256 constant ONE = 0x80000000000000000000000000000000;
 uint256 constant LN2 = 0x58b90bfbe8e7bcd5e4f1d9cc01f97b57;

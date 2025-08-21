@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 import {
     Bytes4Set,
     Bytes4SetRepo
-} from "../../../../utils/collections/sets/Bytes4SetRepo.sol";
+} from "contracts/utils/collections/sets/Bytes4SetRepo.sol";
 import {
     ERC5115ExtensionLayout,
     ERC5115ExtensionRepo
 } from "./ERC5115ExtensionRepo.sol";
-import { IERC5115Extension } from "../../../../interfaces/IERC5115Extension.sol";
+import { IERC5115Extension } from "contracts/interfaces/IERC5115Extension.sol";
 
 contract ERC5115ExtensionStorage {
 

@@ -3,12 +3,12 @@ pragma solidity ^0.8.24;
 
 import {
     IOwnable
-} from "../../interfaces/IOwnable.sol";
+} from "contracts/interfaces/IOwnable.sol";
 
 import {
     IOwnableStorage,
     OwnableStorage
-} from "./utils/OwnableStorage.sol";
+} from "contracts/access/ownable/utils/OwnableStorage.sol";
 
 
 /**

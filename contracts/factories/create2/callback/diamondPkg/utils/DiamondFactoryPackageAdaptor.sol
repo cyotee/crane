@@ -3,11 +3,11 @@ pragma solidity ^0.8.24;
 
 import {
     BetterAddress as Address
-} from "../../../../../utils/BetterAddress.sol";
+} from "contracts/utils/BetterAddress.sol";
 
 import {
     IDiamondFactoryPackage
-} from "../../../../../interfaces/IDiamondFactoryPackage.sol";
+} from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
 library DiamondFactoryPackageAdaptor {
 

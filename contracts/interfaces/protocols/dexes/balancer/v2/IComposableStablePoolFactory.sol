@@ -3,13 +3,13 @@ pragma solidity ^0.8.24;
 
 import {
     IRateProvider
-} from "../common/IRateProvider.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {
     IBasePool
-} from "./IBasePool.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IBasePool.sol";
 import {
     BetterIERC20 as IERC20
-} from "../../../../BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 // 
 

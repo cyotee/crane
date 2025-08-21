@@ -27,6 +27,7 @@ contract CamelotV2Service_depositTest is TestBase_CamelotV2 {
     ICamelotPair pool;
 
     function setUp() public virtual override {
+        owner(address(this));
         // Fork chain state
         vm.createSelectFork("apeChain_curtis_rpc", 8579331);
 

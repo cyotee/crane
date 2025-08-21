@@ -7,28 +7,24 @@ pragma solidity ^0.8.24;
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../../interfaces/BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 import {
     BetterSafeERC20 as SafeERC20
-} from "../../../../../token/ERC20/utils/BetterSafeERC20.sol";
+} from "contracts/token/ERC20/utils/BetterSafeERC20.sol";
 
 import {
     ICamelotPair
-} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
+} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {
     ICamelotFactory
-} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
+} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import {
     ICamelotV2Router
-} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
-
-// import {
-//     CamelotV2Utils
-// } from "../libs/CamelotV2Utils.sol";
+} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 import {
     ConstProdUtils
-} from "../../../../../utils/math/ConstProdUtils.sol";
+} from "contracts/utils/math/ConstProdUtils.sol";
 
 library CamelotV2Service {
 

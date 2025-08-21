@@ -176,8 +176,8 @@ contract UniswapV2Service_withdrawSwapDirectTest is TestBase_UniswapV2 {
         
         uint256 expectedSwapOutput = ConstProdUtils._saleQuote(
             amountToSwap,
-            reserves.reserveOut - amountToSwap, // Adjusted reserve after withdrawal
-            reserves.reserveIn - directAmount,  // Adjusted reserve after withdrawal
+            reserves.opposingReserve - amountToSwap, // Adjusted reserve after withdrawal
+            reserves.knownReserve - directAmount,  // Adjusted reserve after withdrawal
             reserves.feePercent
         );
         

@@ -28,24 +28,24 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "../../utils/vm/foundry/tools/betterconsole.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {
     AddressSet,
     AddressSetRepo
-} from "../../utils/collections/sets/AddressSetRepo.sol";
-import { BetterScript } from "../../script/BetterScript.sol";
-import {LOCAL} from "../../constants/networks/LOCAL.sol";
-import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
-import {ETHEREUM_SEPOLIA} from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
-import {BetterIERC20 as IERC20} from "../../interfaces/BetterIERC20.sol";
-import {IUniswapV2Factory} from "../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import {IUniswapV2Router02} from "../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router02.sol";
-import { IUniswapV2Router } from "../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
-import {IUniswapV2Pair} from "../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
-import {UniV2Factory} from "../../protocols/dexes/uniswap/v2/UniV2Factory.sol";
-import {UniV2Router02} from "../../protocols/dexes/uniswap/v2/UniV2Router02.sol";
-import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
-import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import {LOCAL} from "contracts/constants/networks/LOCAL.sol";
+import {ETHEREUM_MAIN} from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import {ETHEREUM_SEPOLIA} from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {IUniswapV2Factory} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+import {IUniswapV2Router02} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router02.sol";
+import { IUniswapV2Router } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+import {UniV2Factory} from "contracts/protocols/dexes/uniswap/v2/UniV2Factory.sol";
+import {UniV2Router02} from "contracts/protocols/dexes/uniswap/v2/UniV2Router02.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
 
 contract Script_UniswapV2
 is

@@ -25,14 +25,14 @@ import {
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IDiamondFactoryPackage} from "../../../../../../interfaces/IDiamondFactoryPackage.sol";
-import {FactoryWidePauseWindowStorage} from "../../solidity-utils/helpers/utils/FactoryWidePauseWindowStorage.sol";
-import {BalancerV3AuthenticationStorage} from "../../solidity-utils/utils/BalancerV3AuthenticationStorage.sol";
-import {BalancerV3VaultAwareStorage} from "../../utils/BalancerV3VaultAwareStorage.sol";
+import {IDiamondFactoryPackage} from "contracts/interfaces/IDiamondFactoryPackage.sol";
+import {FactoryWidePauseWindowStorage} from "contracts/protocols/dexes/balancer/v3/solidity-utils/helpers/FactoryWidePauseWindowTarget.sol";
+import {BalancerV3AuthenticationStorage} from "contracts/protocols/dexes/balancer/v3/solidity-utils/utils/BalancerV3AuthenticationStorage.sol";
+import {BalancerV3VaultAwareStorage} from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
 import {
     AddressSet,
     AddressSetRepo
-} from "../../../../../../utils/collections/sets/AddressSetRepo.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
 
 struct BalancerV3BasePoolFactoryLayout {
     AddressSet pools;

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {IReentrancyLock} from "../../interfaces/IReentrancyLock.sol";
-import {ReentrancyLockTarget} from "./ReentrancyLockTarget.sol";
-import {IFacet} from "../../interfaces/IFacet.sol";
+import {IReentrancyLock} from "contracts/interfaces/IReentrancyLock.sol";
+import {ReentrancyLockTarget} from "contracts/access/reentrancy/ReentrancyLockTarget.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
 
-import {Create3AwareContract} from "../../factories/create2/aware/Create3AwareContract.sol";
-import {ICreate3Aware} from "../../interfaces/ICreate3Aware.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import {ICreate3Aware} from "contracts/interfaces/ICreate3Aware.sol";
 
 contract ReentrancyLockFacet
 is

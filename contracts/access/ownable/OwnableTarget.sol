@@ -3,11 +3,11 @@ pragma solidity ^0.8.24;
 
 import {
     IOwnable
-} from "../../interfaces/IOwnable.sol";
+} from "contracts/interfaces/IOwnable.sol";
 
 import {
     OwnableModifiers
-} from "./OwnableModifiers.sol";
+} from "contracts/access/ownable/OwnableModifiers.sol";
 
 /**
  * @title OwnableTarget - Contract exposing IOwnable.

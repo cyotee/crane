@@ -25,15 +25,15 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { Script_ArbOS } from "../../../script/networks/Script_ArbOS.sol";
-import { Test_Crane } from "../../../test/Test_Crane.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../../test/BetterTest.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { Script_ArbOS } from "contracts/script/networks/Script_ArbOS.sol";
+import { Test_Crane } from "contracts/test/Test_Crane.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { Script_Crane_Stubs } from "contracts/script/Script_Crane_Stubs.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
 
 contract TestBase_ArbOS
 is

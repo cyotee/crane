@@ -5,10 +5,10 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { Test_Crane } from "../Test_Crane.sol";
-import { IFacet } from "../../interfaces/IFacet.sol";
-import { Behavior_ICreate2Aware } from "../behaviors/Behavior_ICreate2Aware.sol";
-import { ICreate2Aware } from "../../interfaces/ICreate2Aware.sol";
+import { Test_Crane } from "contracts/test/Test_Crane.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
+import { Behavior_ICreate2Aware } from "contracts/test/behaviors/Behavior_ICreate2Aware.sol";
+import { ICreate2Aware } from "contracts/interfaces/ICreate2Aware.sol";
 
 abstract contract TestBase_ICreate2Aware
 is
@@ -24,6 +24,7 @@ is
     // TODO Implement test_ICreate2Aware_CREATE2Metadata()
 
     function setUp() public virtual override(Test_Crane) {
+        owner(address(this));
         // Test_Crane.setUp();
     }
 

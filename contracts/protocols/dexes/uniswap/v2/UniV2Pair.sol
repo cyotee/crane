@@ -4,33 +4,30 @@ pragma solidity ^0.8.0;
 import {Math} from "./deps/libs/Math.sol";
 import {
     UQ112x112
-} from "./deps/libs/UQ112x112.sol";
+} from "contracts/protocols/dexes/uniswap/v2/deps/libs/UQ112x112.sol";
 import {
     IUniswapV2ERC20
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2ERC20.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2ERC20.sol";
 import {
     IUniswapV2Pair
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {
     IUniswapV2Factory
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-// import {
-//     IERC20Errors
-// } from "../../../../../token/ERC20/interfaces/IERC20Errors.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 import {
     BetterIERC20 as IERC20
-} from "../../../../interfaces/BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 import {
     BetterERC20
-} from "../../../../token/ERC20/BetterERC20.sol";
+} from "contracts/token/ERC20/BetterERC20.sol";
 import {
     IUniswapV2Callee
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Callee.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Callee.sol";
 
 import {
     SafeMath
 } from "./deps/libs/SafeMath.sol";
-import "../../../../constants/Constants.sol";
+import "contracts/constants/Constants.sol";
 // import "hardhat/console.sol";
 import "forge-std/console.sol";
 // import "forge-std/console2.sol";

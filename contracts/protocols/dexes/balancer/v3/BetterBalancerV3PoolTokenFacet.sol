@@ -20,14 +20,14 @@ import { IRateProvider } from "@balancer-labs/v3-interfaces/contracts/solidity-u
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterERC20 } from "../../../../token/ERC20/BetterERC20.sol";
-import { ERC20Storage } from "../../../../token/ERC20/utils/ERC20Storage.sol";
-import {BetterERC20Permit} from "../../../../token/ERC20/extensions/BetterERC20Permit.sol";
-import {IBalancerPoolToken} from "../../../../interfaces/IBalancerPoolToken.sol";
+import { BetterERC20 } from "contracts/token/ERC20/BetterERC20.sol";
+import { ERC20Storage } from "contracts/token/ERC20/utils/ERC20Storage.sol";
+import {BetterERC20Permit} from "contracts/token/ERC20/extensions/BetterERC20Permit.sol";
+import {IBalancerPoolToken} from "contracts/interfaces/IBalancerPoolToken.sol";
 import {BetterBalancerV3PoolTokenStorage} from "./vault/utils/BetterBalancerV3PoolTokenStorage.sol";
 import { VaultGaurdModifiers } from "./VaultGaurdModifiers.sol";
-import {Create3AwareContract} from "../../../../factories/create2/aware/Create3AwareContract.sol";
-import {IFacet} from "../../../../interfaces/IFacet.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
 
 contract BetterBalancerV3PoolTokenFacet
 is

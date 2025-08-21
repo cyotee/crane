@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterIERC20 as IERC20} from "../../../../../interfaces/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
 import {
     
     BetterSafeERC20 as SafeERC20
 
-} from "../../../../../token/ERC20/utils/BetterSafeERC20.sol";
-import {IUniswapV2Pair} from "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+} from "contracts/token/ERC20/utils/BetterSafeERC20.sol";
+import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {
 
     BetterMath,

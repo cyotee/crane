@@ -45,20 +45,20 @@ import { VaultContractsDeployer } from "@balancer-labs/v3-vault/test/foundry/uti
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
-import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
-import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../BetterTest.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Script_Permit2 } from "contracts/script/protocols/Script_Permit2.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { BetterBaseContractsDeployer } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "contracts/protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { Script_BalancerV3 } from "contracts/script/protocols/Script_BalancerV3.sol";
+import { Script_Crane_Stubs } from "contracts/script/Script_Crane_Stubs.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import { Test_Crane } from "contracts/test/Test_Crane.sol";
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
@@ -69,8 +69,8 @@ import { ERC4626TestToken } from "@balancer-labs/v3-solidity-utils/contracts/tes
 import { ERC20TestToken } from "@balancer-labs/v3-solidity-utils/contracts/test/ERC20TestToken.sol";
 import { WETHTestToken } from "@balancer-labs/v3-solidity-utils/contracts/test/WETHTestToken.sol";
 
-import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
-import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { BetterVaultContractsDeployer } from "contracts/protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
 
 abstract contract BetterBalancerV3BaseTest
 is 

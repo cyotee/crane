@@ -3,7 +3,7 @@
 pragma solidity ^0.8.24;
 
 import { IERC20 as OZIERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { BetterIERC20 as IERC20 } from "../../../../../../contracts/interfaces/BetterIERC20.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
 
 import { CastingHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
 // import { InputHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/InputHelpers.sol";

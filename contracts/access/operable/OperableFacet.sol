@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import { OwnableModifiers } from "../ownable/OwnableModifiers.sol";
-import { IOperable } from "../../interfaces/IOperable.sol";
-import { OperableStorage } from "./OperableStorage.sol";
+import { OwnableModifiers } from "contracts/access/ownable/OwnableModifiers.sol";
+import { IOperable } from "contracts/interfaces/IOperable.sol";
+import { OperableStorage } from "contracts/access/operable/OperableStorage.sol";
 
 // import {
 //     OperableTarget
@@ -11,14 +11,14 @@ import { OperableStorage } from "./OperableStorage.sol";
 
 import {
     IFacet
-} from "../../interfaces/IFacet.sol";
+} from "contracts/interfaces/IFacet.sol";
 
 import {
     Create3AwareContract
-} from "../../factories/create2/aware/Create3AwareContract.sol";
+} from "contracts/factories/create2/aware/Create3AwareContract.sol";
 import {
     ICreate3Aware
-} from "../../interfaces/ICreate3Aware.sol";
+} from "contracts/interfaces/ICreate3Aware.sol";
 
 
 /**

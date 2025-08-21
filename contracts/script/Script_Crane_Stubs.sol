@@ -22,9 +22,9 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../constants/CraneINITCODE.sol";
-import { betterconsole as console } from "../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "./BetterScript.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { betterconsole as console } from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
 import { ScriptBase_Crane_Factories } from "./ScriptBase_Crane_Factories.sol";
 import { ScriptBase_Crane_ERC20 } from "./ScriptBase_Crane_ERC20.sol";
 import { ScriptBase_Crane_ERC4626 } from "./ScriptBase_Crane_ERC4626.sol";

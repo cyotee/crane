@@ -63,37 +63,37 @@ bytes32 constant BALANCER_V3_BASIC_AUTHORIZER_MOCK_INITCODE_HASH = keccak256(typ
 
 /* --------------- BalancedLiquidityInvariantRatioBoundsFacet --------------- */
 
-import { BalancedLiquidityInvariantRatioBoundsFacet } from "../../../../../protocols/dexes/balancer/v3/BalancedLiquidityInvariantRatioBoundsFacet.sol";
+import { BalancedLiquidityInvariantRatioBoundsFacet } from "contracts/protocols/dexes/balancer/v3/BalancedLiquidityInvariantRatioBoundsFacet.sol";
 bytes constant BALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE = type(BalancedLiquidityInvariantRatioBoundsFacet).creationCode;
 bytes32 constant BALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE_HASH = keccak256(BALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE);
 
 /* ------------------ StandardSwapFeePercentageBoundsFacet ------------------ */
 
-import { StandardSwapFeePercentageBoundsFacet } from "../../../../../protocols/dexes/balancer/v3/StandardSwapFeePercentageBoundsFacet.sol";
+import { StandardSwapFeePercentageBoundsFacet } from "contracts/protocols/dexes/balancer/v3/StandardSwapFeePercentageBoundsFacet.sol";
 bytes constant STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE = type(StandardSwapFeePercentageBoundsFacet).creationCode;
 bytes32 constant STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE_HASH = keccak256(STANDARD_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE);
 
 /* ---------- StandardUnbalancedLiquidityInvariantRatioBoundsFacet ---------- */
 
-import { StandardUnbalancedLiquidityInvariantRatioBoundsFacet } from "../../../../../protocols/dexes/balancer/v3/StandardUnbalancedLiquidityInvariantRatioBoundsFacet.sol";
+import { StandardUnbalancedLiquidityInvariantRatioBoundsFacet } from "contracts/protocols/dexes/balancer/v3/StandardUnbalancedLiquidityInvariantRatioBoundsFacet.sol";
 bytes constant STANDARD_UNBALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE = type(StandardUnbalancedLiquidityInvariantRatioBoundsFacet).creationCode;
 bytes32 constant STANDARD_UNBALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE_HASH = keccak256(STANDARD_UNBALANCED_LIQUIDITY_INVARIANT_RATIO_BOUNDS_FACET_INITCODE);
 
 /* -------------------- ZeroSwapFeePercentageBoundsFacet -------------------- */
 
-import { ZeroSwapFeePercentageBoundsFacet } from "../../../../../protocols/dexes/balancer/v3/ZeroSwapFeePercentageBoundsFacet.sol";
+import { ZeroSwapFeePercentageBoundsFacet } from "contracts/protocols/dexes/balancer/v3/ZeroSwapFeePercentageBoundsFacet.sol";
 bytes constant ZERO_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE = type(ZeroSwapFeePercentageBoundsFacet).creationCode;
 bytes32 constant ZERO_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE_HASH = keccak256(ZERO_SWAP_FEE_PERCENTAGE_BOUNDS_FACET_INITCODE);
 
 /* ------------------------ Authorization Contracts --------------------- */
 
-import { BalancerV3Authorizer } from "../../../../../protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
+import { BalancerV3Authorizer } from "contracts/protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
 bytes constant BALANCER_V3_AUTHORIZER_INITCODE = type(BalancerV3Authorizer).creationCode;
 bytes32 constant BALANCER_V3_AUTHORIZER_INITCODE_HASH = keccak256(type(BalancerV3Authorizer).creationCode);
 bytes constant BALANCER_V3_AUTHORIZER_MOCK_INITCODE = type(BasicAuthorizerMock).creationCode;
 
 /* -------------------------- IERC4626RateProvider -------------------------- */
-import { ERC4626RateProviderFacetDFPkg } from "../../../../../protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
+import { ERC4626RateProviderFacetDFPkg } from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 bytes constant ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE = type(ERC4626RateProviderFacetDFPkg).creationCode;
 bytes32 constant ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE_HASH = keccak256(ERC4626_RATE_PROVIDER_FACET_DFPKG_INITCODE);
 bytes32 constant ERC4626_RATE_PROVIDER_FACET_DFPKG_SALT = keccak256(abi.encode(type(ERC4626RateProviderFacetDFPkg).name));

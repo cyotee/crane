@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {
     Uint512,
     BetterMath
-} from "../../../../../utils/math/BetterMath.sol";
+} from "contracts/utils/math/BetterMath.sol";
 
 library BetterUniV2Utils {
 

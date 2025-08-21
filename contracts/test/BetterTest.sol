@@ -33,9 +33,9 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {
     AddressSet,
     AddressSetRepo
-} from "../utils/collections/sets/AddressSetRepo.sol";
-import { BetterScript } from "../script/BetterScript.sol";
-import "../constants/FoundryConstants.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import "contracts/constants/FoundryConstants.sol";
 // import { BetterFuzzing } from "./fuzzing/BetterFuzzing.sol";
 // import { Behavior_Crane } from "./behaviors/Behavior_Crane.sol";
 

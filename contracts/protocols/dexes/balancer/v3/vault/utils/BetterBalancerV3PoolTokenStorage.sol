@@ -15,10 +15,10 @@ import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 import {
     AddressSet,
     AddressSetRepo
-} from "../../../../../../utils/collections/sets/AddressSetRepo.sol";
-import {BetterIERC20 as IERC20} from "../../../../../../interfaces/BetterIERC20.sol";      
-import {ERC20PermitStorage} from "../../../../../../token/ERC20/extensions/utils/ERC20PermitStorage.sol";
-import {BalancerV3VaultAwareStorage} from "../../utils/BalancerV3VaultAwareStorage.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";      
+import {ERC20PermitStorage} from "contracts/token/ERC20/extensions/utils/ERC20PermitStorage.sol";
+import {BalancerV3VaultAwareStorage} from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
 
 struct BetterBalancerV3PoolTokenLayout {
     // We ensure the values are sorted in ascending order to match Balancere V2 convention.

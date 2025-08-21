@@ -7,10 +7,10 @@ pragma solidity ^0.8.0;
 
 import {
     IDegenFactory
-} from "../../../../../interfaces/protocols/launchpads/ape-express/IDegenFactory.sol";
-import {OperableModifiers} from "../../../../../access/operable/OperableModifiers.sol";
-import {OperableTarget} from "../../../../../access/operable/OperableTarget.sol";
-import {OwnableTarget} from "../../../../../access/ownable/OwnableTarget.sol";
+} from "contracts/interfaces/protocols/launchpads/ape-express/IDegenFactory.sol";
+import {OperableModifiers} from "contracts/access/operable/OperableModifiers.sol";
+import {OperableTarget} from "contracts/access/operable/OperableTarget.sol";
+import {OwnableTarget} from "contracts/access/ownable/OwnableTarget.sol";
 
 contract MockDegenFactory
 is

@@ -28,13 +28,13 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../../constants/CraneINITCODE.sol";
-import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../../script/BetterScript.sol";
-import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { WETH9 } from "../../protocols/tokens/wrappers/weth/v9/WETH9.sol";
-import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { betterconsole as console } from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { WETH9 } from "contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
 
 contract Script_WETH
 is

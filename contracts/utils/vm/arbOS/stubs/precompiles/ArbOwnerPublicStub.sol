@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IArbOwnerPublic} from "../../../../../interfaces/networks/IArbOwnerPublic.sol";
+import {IArbOwnerPublic} from "contracts/interfaces/networks/IArbOwnerPublic.sol";
 
 import {
     AddressSet,
     AddressSetRepo
-} from "../../../../collections/sets/AddressSetRepo.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
 
 contract ArbOwnerPublicStub
 is

@@ -5,9 +5,9 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { OwnableStorage } from "../../access/ownable/utils/OwnableStorage.sol";
-import { IOperable } from "../../interfaces/IOperable.sol";
-// import { IOperableStorage } from "../../interfaces/IOperableStorage.sol";
+import { OwnableStorage } from "contracts/access/ownable/utils/OwnableStorage.sol";
+import { IOperable } from "contracts/interfaces/IOperable.sol";
+// import { IOperableStorage } from "contracts/interfaces/IOperableStorage.sol";
 
 /**
  * @title OperableLayout - Diamond storage layout for IOperable.

@@ -84,33 +84,33 @@ import { Permit2Helpers } from "@balancer-labs/v3-vault/test/foundry/utils/Permi
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-// import {Fixture_BalancerV3_Vault} from "../../../fixtures/protocols/Fixture_BalancerV3_Vault.sol"; 
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
-import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
-import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
-import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
-// import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-// import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { BetterTest } from "../../../test/BetterTest.sol";
-import {Test_Crane} from "../../Test_Crane.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+// import {Fixture_BalancerV3_Vault} from "contracts/fixtures/protocols/Fixture_BalancerV3_Vault.sol"; 
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { Script_Permit2 } from "contracts/script/protocols/Script_Permit2.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "contracts/script/Script_Crane_Stubs.sol";
+import { BetterBaseContractsDeployer } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "contracts/protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { Script_BalancerV3 } from "contracts/script/protocols/Script_BalancerV3.sol";
+// import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+// import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import {Test_Crane} from "contracts/test/Test_Crane.sol";
 import { TestBase_Permit2 } from "../protocols/TestBase_Permit2.sol";
 import {BetterBalancerV3BaseTest} from "./BetterBalancerV3BaseTest.sol";
-import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
-import { BetterInputHelpers as InputHelpers } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterInputHelpers.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { BetterInputHelpers as InputHelpers } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterInputHelpers.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {
     Create2CallBackFactory
-} from "../../../factories/create2/callback/Create2CallBackFactory.sol";
-import {IDiamondPackageCallBackFactory} from "../../../interfaces/IDiamondPackageCallBackFactory.sol";
-import {Bytecode} from "../../../utils/Bytecode.sol";
+} from "contracts/factories/create2/callback/Create2CallBackFactory.sol";
+import {IDiamondPackageCallBackFactory} from "contracts/interfaces/IDiamondPackageCallBackFactory.sol";
+import {Bytecode} from "contracts/utils/Bytecode.sol";
 
 contract BetterBalancerV3VaultTest
 is

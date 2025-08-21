@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import {
     ERC5267Storage
-} from "../../../../utils/cryptography/erc5267/ERC5267Storage.sol"; 
+} from "contracts/utils/cryptography/erc5267/ERC5267Storage.sol"; 
 import {
     ERC20Storage
 } from "../../utils/ERC20Storage.sol";
 import {
     IERC2612
-}  from "../../../../interfaces/IERC2612.sol";
+}  from "contracts/interfaces/IERC2612.sol";
 import {
     ERC2612Layout,
     ERC2612Repo

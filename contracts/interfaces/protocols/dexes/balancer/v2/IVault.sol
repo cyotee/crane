@@ -15,33 +15,33 @@ pragma solidity ^0.8.24;
 
 import {
     IAuthentication
-} from "./IAuthentication.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IAuthentication.sol";
 import {
     ISignaturesValidator
-} from "./ISignaturesValidator.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/ISignaturesValidator.sol";
 import {
     ITemporarilyPausable
-} from "./ITemporarilyPausable.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/ITemporarilyPausable.sol";
 import {
     BetterIERC20 as IERC20
-} from "../../../../BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 // import {
 //     IWETH
-// } from "../../../../tokens/wrappers/weth/IWETH.sol";
+// } from "contracts/interfaces/tokens/wrappers/weth/IWETH.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 import {
     IAsset
-} from "./IAsset.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
 import {
     IAuthorizer
-} from "./IAuthorizer.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IAuthorizer.sol";
 import {
     IFlashLoanRecipient
-} from "./IFlashLoanRecipient.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IFlashLoanRecipient.sol";
 import {
     IProtocolFeesCollector
-} from "./IProtocolFeesCollector.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IProtocolFeesCollector.sol";
 
 /**
  * @dev Full external interface for the Vault core contract - no external or public methods exist in the contract that

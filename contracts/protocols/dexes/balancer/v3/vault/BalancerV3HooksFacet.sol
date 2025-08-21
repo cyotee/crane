@@ -14,11 +14,11 @@ import { BaseHooks } from "@balancer-labs/v3-vault/contracts/BaseHooks.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { Create3AwareContract } from "../../../../../factories/create2/aware/Create3AwareContract.sol";
-import { IFacet } from "../../../../../interfaces/IFacet.sol";
-import { BetterBalancerV3PoolTokenStorage } from "./utils/BetterBalancerV3PoolTokenStorage.sol";
-import { IBalancerV3Pool } from "../../../../../interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import { VaultGaurdModifiers } from "../VaultGaurdModifiers.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
+import { BetterBalancerV3PoolTokenStorage } from "contracts/protocols/dexes/balancer/v3/vault/utils/BetterBalancerV3PoolTokenStorage.sol";
+import { IBalancerV3Pool } from "contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
+import { VaultGaurdModifiers } from "contracts/protocols/dexes/balancer/v3/VaultGaurdModifiers.sol";
 
 abstract contract BalancerV3HooksFacet
 is

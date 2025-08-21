@@ -152,14 +152,14 @@ contract UniswapV2Service_swapDepositTest is TestBase_UniswapV2 {
         // Calculate expected swap amount for optimal deposit
         uint256 expectedSwapAmount = ConstProdUtils._swapDepositSaleAmt(
             saleAmt,
-            reserves.reserveIn,
+            reserves.knownReserve,
             reserves.feePercent
         );
         
         console.log("Sale amount:", saleAmt);
         console.log("Expected swap amount:", expectedSwapAmount);
         console.log("Expected remaining for deposit:", saleAmt - expectedSwapAmount);
-        console.log("Reserve in:", reserves.reserveIn);
-        console.log("Reserve out:", reserves.reserveOut);
+        console.log("Reserve in:", reserves.knownReserve);
+        console.log("Reserve out:", reserves.opposingReserve);
     }
 } 

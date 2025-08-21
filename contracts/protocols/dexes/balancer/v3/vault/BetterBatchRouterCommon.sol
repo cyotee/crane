@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-// import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
@@ -15,8 +14,8 @@ import {
     AddressToUintMappingSlot
 } from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { BetterIERC20 as IERC20 } from "../../../../../interfaces/BetterIERC20.sol";
-import { BetterRouterCommon } from "./BetterRouterCommon.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { BetterRouterCommon } from "contracts/protocols/dexes/balancer/v3/vault/BetterRouterCommon.sol";
 
 /// @notice Transient storage for Batch and Composite Liquidity Router operations.
 abstract contract BetterBatchRouterCommon is BetterRouterCommon {

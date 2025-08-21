@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IFactoryWidePauseWindow} from "../../../../../../../interfaces/IFactoryWidePauseWindow.sol";
+import {IFactoryWidePauseWindow} from "contracts/interfaces/IFactoryWidePauseWindow.sol";
 
 struct FactoryWidePauseWindowLayout {
     uint32 pauseWindowDuration;

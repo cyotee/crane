@@ -22,15 +22,15 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../constants/CraneINITCODE.sol";
-import { BetterScript } from "./BetterScript.sol";
-import { Creation } from "../utils/Creation.sol";
-import { LOCAL } from "../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { APE_CHAIN_MAIN } from "../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../constants/networks/APE_CHAIN_CURTIS.sol";
-import { IDiamondPackageCallBackFactory } from "../interfaces/IDiamondPackageCallBackFactory.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
+import { IDiamondPackageCallBackFactory } from "contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 contract ScriptBase_Crane_Factories
 is

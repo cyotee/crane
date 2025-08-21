@@ -30,8 +30,8 @@ import { CREATE3 } from "@balancer-labs/v3-solidity-utils/contracts/solmate/CREA
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../../../../script/BetterScript.sol";
-import { BetterTest } from "../../../../../test/BetterTest.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
 
 abstract contract BetterBaseContractsDeployer
 is

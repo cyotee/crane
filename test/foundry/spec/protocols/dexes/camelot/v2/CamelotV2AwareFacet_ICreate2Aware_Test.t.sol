@@ -12,7 +12,7 @@ import { TestBase_ICreate2Aware } from "../../../../../../../contracts/test/base
 // Target contracts
 import { ICreate2Aware } from "../../../../../../../contracts/interfaces/ICreate2Aware.sol";
 import { CamelotV2AwareFacet } from "../../../../../../../contracts/protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
-// import "indexedex/constants/Indexedex_INITCODE.sol";
+// import "contracts/constants/Indexedex_INITCODE.sol";
 import { CAMELOT_V2_AWARE_FACET_INIT_CODE_HASH } from "../../../../../../../contracts/constants/CraneINITCODE.sol";
 
 contract CamelotV2AwareFacet_ICreate2Aware_Test is TestBase_ICreate2Aware {

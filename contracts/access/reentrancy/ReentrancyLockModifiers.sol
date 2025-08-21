@@ -3,11 +3,11 @@ pragma solidity ^0.8.24;
 
 import {
     IReentrancyLock
-} from "../../interfaces/IReentrancyLock.sol";
+} from "contracts/interfaces/IReentrancyLock.sol";
 
 import {
     ReentrancyLockStorage
-} from "./utils/ReentrancyLockStorage.sol";
+} from "contracts/access/reentrancy/utils/ReentrancyLockStorage.sol";
 
 contract ReentrancyLockModifiers
 is

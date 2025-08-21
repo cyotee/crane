@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {ICamelotFactory} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
-import {ICamelotPair} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
-import {ICamelotV2Router} from "../../../../../interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
-import {BetterIERC20 as IERC20} from "../../../../../interfaces/BetterIERC20.sol";
+import {ICamelotFactory} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
+import {ICamelotPair} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
+import {ICamelotV2Router} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
 
 struct CamelotPairAwareLayout {
     ICamelotFactory camelotFactory;

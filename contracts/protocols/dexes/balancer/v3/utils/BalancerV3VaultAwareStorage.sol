@@ -11,7 +11,7 @@ import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IBalancerV3VaultAware} from "../../../../../interfaces/IBalancerV3VaultAware.sol";
+import {IBalancerV3VaultAware} from "contracts/interfaces/IBalancerV3VaultAware.sol";
 
 struct BalancerV3VaultAwareLayout {
     IVault vault;

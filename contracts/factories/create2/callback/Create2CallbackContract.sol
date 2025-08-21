@@ -3,13 +3,13 @@ pragma solidity ^0.8.24;
 
 import {
     Create2AwareTarget
-} from "../aware/Create2AwareTarget.sol";
+} from "contracts/factories/create2/aware/Create2AwareTarget.sol";
 import {
     ICreate2CallbackFactory
-} from "../../../interfaces/ICreate2CallbackFactory.sol";
+} from "contracts/interfaces/ICreate2CallbackFactory.sol";
 import {
     ICreate2CallbackContract
-} from "../../../interfaces/ICreate2CallbackContract.sol";
+} from "contracts/interfaces/ICreate2CallbackContract.sol";
 
 /**
  * @title Create2CallbackContract

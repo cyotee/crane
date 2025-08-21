@@ -18,11 +18,10 @@ import { PoolConfig, TokenInfo } from "@balancer-labs/v3-interfaces/contracts/va
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import { BetterIERC20 as IERC20 } from "../../../../../interfaces/BetterIERC20.sol";
-import { IBalancerV3VaultAware } from "../../../../../interfaces/IBalancerV3VaultAware.sol";
-import { BalancerV3VaultAwareStorage } from "../utils/BalancerV3VaultAwareStorage.sol";
-import { Create3AwareContract } from "../../../../../factories/create2/aware/Create3AwareContract.sol";
-import { IFacet } from "../../../../../interfaces/IFacet.sol";
+import { IBalancerV3VaultAware } from "contracts/interfaces/IBalancerV3VaultAware.sol";
+import { BalancerV3VaultAwareStorage } from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
 
 contract DefaultPoolInfoFacet
 is Create3AwareContract, BalancerV3VaultAwareStorage, IFacet, IPoolInfo {

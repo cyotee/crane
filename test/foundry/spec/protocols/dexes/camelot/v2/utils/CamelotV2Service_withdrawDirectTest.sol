@@ -35,6 +35,7 @@ contract CamelotV2Service_withdrawDirectTest is TestBase_CamelotV2 {
     uint256 withdrawAmount;
 
     function setUp() public virtual override {
+        owner(address(this));
         // Fork chain state
         vm.createSelectFork("apeChain_curtis_rpc", 8579331);
 

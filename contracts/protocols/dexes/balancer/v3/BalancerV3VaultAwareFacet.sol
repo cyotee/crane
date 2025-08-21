@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IFacet} from "../../../../interfaces/IFacet.sol";
-import {IBalancerV3VaultAware} from "../../../../interfaces/IBalancerV3VaultAware.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
+import {IBalancerV3VaultAware} from "contracts/interfaces/IBalancerV3VaultAware.sol";
 import {BalancerV3VaultAwareTarget} from "./BalancerV3VaultAwareTarget.sol";
-import { Create3AwareContract } from "../../../../factories/create2/aware/Create3AwareContract.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
 
 contract BalancerV3VaultAwareFacet is BalancerV3VaultAwareTarget, Create3AwareContract, IFacet {
 

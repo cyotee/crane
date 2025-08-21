@@ -55,6 +55,7 @@ is
         // Script_BalancerV3,
         TestBase_ICreate2Aware
     ) {
+        super.setUp();
         name = "Test ERC20";
         symbol = "TERC20";
         decimals = 18;

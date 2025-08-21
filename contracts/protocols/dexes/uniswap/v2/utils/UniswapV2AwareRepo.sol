@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import { IUniswapV2Factory } from "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import { IUniswapV2Router } from    "../../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
+import { IUniswapV2Factory } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Router } from    "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
 
 struct UniswapV2AwareLayout {
     IUniswapV2Factory factory;

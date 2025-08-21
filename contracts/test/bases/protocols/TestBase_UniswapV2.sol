@@ -25,24 +25,24 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
-import { Script_UniswapV2 } from "../../../script/protocols/Script_UniswapV2.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterTest } from "../../BetterTest.sol";
-import { Test_Crane } from "../../Test_Crane.sol";
+import { betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { Script_UniswapV2 } from "contracts/script/protocols/Script_UniswapV2.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "contracts/script/Script_Crane_Stubs.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import { Test_Crane } from "contracts/test/Test_Crane.sol";
 
-import { IUniswapV2Factory } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import { IUniswapV2Pair } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
-import { IERC20MintBurn } from "../../../interfaces/IERC20MintBurn.sol";
-import { IUniswapV2Router } from "../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
-import { ConstProdUtils } from "../../../utils/math/ConstProdUtils.sol";
-import { BetterIERC20 as IERC20 } from "../../../interfaces/BetterIERC20.sol";
+import { IUniswapV2Factory } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Pair } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+import { IERC20MintBurn } from "contracts/interfaces/IERC20MintBurn.sol";
+import { IUniswapV2Router } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
+import { ConstProdUtils } from "contracts/utils/math/ConstProdUtils.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
 
 
 contract TestBase_UniswapV2

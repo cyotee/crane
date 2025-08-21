@@ -28,12 +28,12 @@ import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/mis
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../script/BetterScript.sol";
-import { Script_ArbOS } from "../../script/networks/Script_ArbOS.sol";
-import { LOCAL } from "../../constants/networks/LOCAL.sol";
-import { APE_CHAIN_MAIN } from "../../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../../constants/networks/APE_CHAIN_CURTIS.sol";
-import { WAPE } from "../../protocols/tokens/wrappers/wape/WAPE.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Script_ArbOS } from "contracts/script/networks/Script_ArbOS.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
+import { WAPE } from "contracts/protocols/tokens/wrappers/wape/WAPE.sol";
 
 contract Script_ApeChain
 is

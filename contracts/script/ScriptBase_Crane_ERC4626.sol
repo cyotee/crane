@@ -28,18 +28,18 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../constants/CraneINITCODE.sol";
-import { BetterScript } from "./BetterScript.sol";
-import { Creation } from "../utils/Creation.sol";
-import { LOCAL } from "../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { APE_CHAIN_MAIN } from "../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../constants/networks/APE_CHAIN_CURTIS.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
 import { ScriptBase_Crane_Factories } from "./ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "./ScriptBase_Crane_ERC20.sol";
-import { BetterIERC20 as IERC20 } from "../interfaces/BetterIERC20.sol";
-import { IERC4626DFPkg } from "../token/ERC20/extensions/ERC4626DFPkg.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { IERC4626DFPkg } from "contracts/token/ERC20/extensions/ERC4626DFPkg.sol";
 
 contract ScriptBase_Crane_ERC4626
 is

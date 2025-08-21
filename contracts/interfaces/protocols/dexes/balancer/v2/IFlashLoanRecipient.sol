@@ -18,7 +18,7 @@ pragma solidity ^0.8.24;
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 interface IFlashLoanRecipient {
     /**

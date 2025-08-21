@@ -59,10 +59,11 @@ contract BetterVaultFactoryTest is BetterBalancerV3VaultTest {
         enableTestMocks();
         deployer_ = makeAddr("deployer");
         other = makeAddr("other");
+        owner(address(deployer_));
         // vm.startPrank(deployer_);
         // authorizer_ = deployBasicAuthorizerMock();
-        authorizer_ = balV3Authorizer();
         vm.startPrank(deployer_);
+        authorizer_ = balV3Authorizer();
         // factory_ = deployVaultFactory(
         //     authorizer_,
         //     90 days,

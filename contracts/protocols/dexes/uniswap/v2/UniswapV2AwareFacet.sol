@@ -5,12 +5,12 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { IFacet } from "../../../../interfaces/IFacet.sol";
-import { IUniswapV2Aware } from "../../../../interfaces/IUniswapV2Aware.sol";
-import { IUniswapV2Factory } from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import { IUniswapV2Router } from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
+import { IUniswapV2Aware } from "contracts/interfaces/IUniswapV2Aware.sol";
+import { IUniswapV2Factory } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Router } from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
 import { UniswapV2AwareStorage } from "./utils/UniswapV2AwareStorage.sol";
-import { Create3AwareContract } from "../../../../factories/create2/aware/Create3AwareContract.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
 
 /**
  * @title UniswapV2AwareFacet

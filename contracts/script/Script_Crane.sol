@@ -22,50 +22,55 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../constants/CraneINITCODE.sol";
-import { betterconsole as console } from "../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../script/BetterScript.sol";
-import { ScriptBase_Crane_Factories } from "../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../script/ScriptBase_Crane_ERC4626.sol";
-import {terminal as term} from "../utils/vm/foundry/tools/terminal.sol";
-import { LOCAL } from "../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { APE_CHAIN_MAIN } from "../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../constants/networks/APE_CHAIN_CURTIS.sol";
-import { Creation } from "../utils/Creation.sol";
-import { ICreate2CallbackFactory } from "../interfaces/ICreate2CallbackFactory.sol";
-import { Create2CallBackFactory } from "../factories/create2/callback/Create2CallBackFactory.sol";
-import { IPower } from "../interfaces/IPower.sol";
-import { PowerCalculatorC2ATarget } from "../utils/math/power-calc/PowerCalculatorC2ATarget.sol";
-import { ICreate3Aware } from "../interfaces/ICreate3Aware.sol";
+import "contracts/constants/Constants.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { betterconsole as console } from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import {terminal as term} from "contracts/utils/vm/foundry/tools/terminal.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { ICreate2CallbackFactory } from "contracts/interfaces/ICreate2CallbackFactory.sol";
+import { Create2CallBackFactory } from "contracts/factories/create2/callback/Create2CallBackFactory.sol";
+import { IPower } from "contracts/interfaces/IPower.sol";
+import { PowerCalculatorC2ATarget } from "contracts/utils/math/power-calc/PowerCalculatorC2ATarget.sol";
+import { ICreate3Aware } from "contracts/interfaces/ICreate3Aware.sol";
 import {
     IERC20MintBurnOperableFacetDFPkg,
     ERC20MintBurnOperableFacetDFPkg
-} from "../token/ERC20/extensions/ERC20MintBurnOperableFacetDFPkg.sol";
-import { IERC20MintBurn } from "../interfaces/IERC20MintBurn.sol";
+} from "contracts/token/ERC20/extensions/ERC20MintBurnOperableFacetDFPkg.sol";
+import { IERC20MintBurn } from "contracts/interfaces/IERC20MintBurn.sol";
 import {
     IERC20MintBurnOperableStorage, 
     ERC20MintBurnOperableStorage
-} from "../token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
+} from "contracts/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
 import {
     IOwnableStorage, 
     OwnableStorage
-} from "../access/ownable/utils/OwnableStorage.sol";
-import { IUniswapV2Aware } from "../interfaces/IUniswapV2Aware.sol";
-import { CamelotV2AwareFacet } from "../protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
-import { UniswapV2AwareFacet } from "../protocols/dexes/uniswap/v2/UniswapV2AwareFacet.sol";
+} from "contracts/access/ownable/utils/OwnableStorage.sol";
+import { IUniswapV2Aware } from "contracts/interfaces/IUniswapV2Aware.sol";
+import { CamelotV2AwareFacet } from "contracts/protocols/dexes/camelot/v2/CamelotV2AwareFacet.sol";
+import { UniswapV2AwareFacet } from "contracts/protocols/dexes/uniswap/v2/UniswapV2AwareFacet.sol";
+import { IERC20MinterFacadeFacetDFPkg } from "contracts/token/ERC20/ERC20MinterFacadeFacetDFPkg.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
+import { IERC20MinterFacade } from "contracts/interfaces/IERC20MinterFacade.sol";
+import { IDiamondFactoryPackage } from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
 
 import {
     AddressSet,
     AddressSetRepo
-} from "../utils/collections/sets/AddressSetRepo.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
 import {
     StringSet,
     StringSetRepo
-} from "../utils/collections/sets/StringSetRepo.sol";
+} from "contracts/utils/collections/sets/StringSetRepo.sol";
 
 
 contract Script_Crane
@@ -121,6 +126,131 @@ is
     /* ---------------------------------------------------------------------- */
     /*                                  Logic                                 */
     /* ---------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    /*                       ERC20MinterFacadeFacetDFPkg                      */
+    /* ---------------------------------------------------------------------- */
+
+    function erc20MinterFacadeFacetDFPkg(
+        uint256 chainid,
+        ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, ERC20_MINTER_FACADE_FACET_DFPKG_INITCODE_HASH, address(erc20MinterFacadeFacetDFPkg_));
+        declare(builderKey_Crane(), "erc20MinterFacadeFacetDFPkg", address(erc20MinterFacadeFacetDFPkg_));
+        return true;
+    }
+    
+    function erc20MinterFacadeFacetDFPkg(ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_) public virtual returns(bool) {
+        erc20MinterFacadeFacetDFPkg(block.chainid, erc20MinterFacadeFacetDFPkg_);
+        return true;
+    }
+    
+    function erc20MinterFacadeFacetDFPkg(uint256 chainid)
+    public virtual view returns(ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_) {
+        erc20MinterFacadeFacetDFPkg_ = ERC20MinterFacadeFacetDFPkg(chainInstance(chainid, ERC20_MINTER_FACADE_FACET_DFPKG_INITCODE_HASH));
+        return erc20MinterFacadeFacetDFPkg_;
+    }
+    
+    
+    function erc20MinterFacadeFacetDFPkg(
+        IERC20MinterFacadeFacetDFPkg.ERC20MinterFacadeFacetDFPkgInit memory pkgInit
+    ) public virtual returns(ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_) {
+        if(address(erc20MinterFacadeFacetDFPkg(block.chainid)) == address(0)) {
+            erc20MinterFacadeFacetDFPkg_ = ERC20MinterFacadeFacetDFPkg(
+                factory().create3(
+                    ERC20_MINTER_FACADE_FACET_DFPKG_INITCODE,
+                    abi.encode(pkgInit),
+                    keccak256(abi.encode(type(ERC20MinterFacadeFacetDFPkg).name))
+                )
+            );
+            erc20MinterFacadeFacetDFPkg(block.chainid, erc20MinterFacadeFacetDFPkg_);
+        }
+        return erc20MinterFacadeFacetDFPkg(block.chainid);
+    }
+    
+    function erc20MinterFacadeFacetDFPkg(
+        // IFacet ownableFacet_
+        bytes memory initData
+    ) public virtual returns(ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_) {
+        return erc20MinterFacadeFacetDFPkg(
+            IERC20MinterFacadeFacetDFPkg.ERC20MinterFacadeFacetDFPkgInit({
+                // ownableFacet: ownableFacet_
+                ownableFacet: IFacet(abi.decode(initData, (address)))
+            })
+        );
+    }
+
+    function erc20MinterFacadeFacetDFPkg() public virtual returns(ERC20MinterFacadeFacetDFPkg erc20MinterFacadeFacetDFPkg_) {
+        return erc20MinterFacadeFacetDFPkg(abi.encode(ownableFacet()));
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                           IERC20MinterFacade                           */
+    /* ---------------------------------------------------------------------- */
+    
+    function erc20MinterFacade(
+        uint256 chainid,
+        IERC20MinterFacade erc20MinterFacade_
+    ) public virtual returns(bool) {
+        registerInstance(chainid, ERC20_MINTER_FACADE_FACET_DFPKG_INITCODE_HASH, address(erc20MinterFacade_));
+        declare(builderKey_Crane(), "erc20MinterFacade", address(erc20MinterFacade_));
+        return true;
+    }
+
+    function erc20MinterFacade(
+        IERC20MinterFacade erc20MinterFacade_
+    ) public virtual returns (bool) {
+        return erc20MinterFacade(block.chainid, erc20MinterFacade_);
+    }
+    
+    function erc20MinterFacade(uint256 chainid)
+    public virtual view returns(IERC20MinterFacade erc20MinterFacade_) {
+        erc20MinterFacade_ = IERC20MinterFacade(chainInstance(chainid, ERC20_MINTER_FACADE_FACET_DFPKG_INITCODE_HASH));
+        return erc20MinterFacade_;
+    }
+    
+    function erc20MinterFacade(
+        IERC20MinterFacadeFacetDFPkg.ERC20MinterFacadePkgArgs memory pkgArgs
+    ) public virtual returns(IERC20MinterFacade erc20MinterFacade_) {
+        if(address(erc20MinterFacade(block.chainid)) == address(0)) {
+            erc20MinterFacade_ = IERC20MinterFacade(
+                diamondFactory()
+                    .deploy(
+                        IDiamondFactoryPackage(address(erc20MinterFacadeFacetDFPkg())),
+                        abi.encode(pkgArgs)
+                    )
+            );
+            erc20MinterFacade(block.chainid, erc20MinterFacade_);
+        }
+        return erc20MinterFacade(block.chainid);
+    }
+
+    function erc20MinterFacade(
+        address owner_,
+        uint256 maxMintAmount
+    ) public virtual returns (IERC20MinterFacade erc20MinterFacade_) {
+        return erc20MinterFacade(
+            IERC20MinterFacadeFacetDFPkg.ERC20MinterFacadePkgArgs({
+                owner: owner_,
+                maxMint: maxMintAmount
+            })
+        );
+    }
+
+    function erc20MinterFacade(
+        bytes memory maxMintAmount
+    ) public virtual returns (IERC20MinterFacade erc20MinterFacade_) {
+        return erc20MinterFacade(
+            owner(),
+            abi.decode(maxMintAmount, (uint256))
+        );
+    }
+
+    function erc20MinterFacade() public virtual returns (IERC20MinterFacade erc20MinterFacade_) {
+        return erc20MinterFacade(
+            abi.encode(TENK_WAD)
+        );
+    }
 
     /* ---------------------------------------------------------------------- */
     /*                              OwnableFacet                              */
@@ -670,14 +800,14 @@ is
     /* ---------------------------------------------------------------------- */
 
     function erc20MintBurnOperable(
-        address owner,
+        address owner_,
         string memory name,
         string memory symbol,
         uint8 decimals
     ) public virtual returns(IERC20MintBurn erc20_) {
 
         IOwnableStorage.OwnableAccountInit memory globalOwnableAccountInit;
-        globalOwnableAccountInit.owner = owner;
+        globalOwnableAccountInit.owner = owner_;
 
         IERC20MintBurnOperableStorage.MintBurnOperableAccountInit memory tokenInit;
         tokenInit.ownableAccountInit = globalOwnableAccountInit;

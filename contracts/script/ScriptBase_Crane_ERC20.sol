@@ -22,30 +22,30 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../constants/CraneINITCODE.sol";
-import { BetterScript } from "./BetterScript.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
 import { ScriptBase_Crane_Factories } from "./ScriptBase_Crane_Factories.sol";
-import { Creation } from "../utils/Creation.sol";
-import { LOCAL } from "../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { APE_CHAIN_MAIN } from "../constants/networks/APE_CHAIN_MAIN.sol";
-import { APE_CHAIN_CURTIS } from "../constants/networks/APE_CHAIN_CURTIS.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { APE_CHAIN_MAIN } from "contracts/constants/networks/APE_CHAIN_MAIN.sol";
+import { APE_CHAIN_CURTIS } from "contracts/constants/networks/APE_CHAIN_CURTIS.sol";
 import {
     IERC20PermitStorage,
     ERC20PermitStorage
-} from "../token/ERC20/extensions/utils/ERC20PermitStorage.sol";
+} from "contracts/token/ERC20/extensions/utils/ERC20PermitStorage.sol";
 import {
     IERC20PermitDFPkg,
     ERC20PermitDFPkg
-} from "../token/ERC20/extensions/ERC20PermitDFPkg.sol";
+} from "contracts/token/ERC20/extensions/ERC20PermitDFPkg.sol";
 import {
     IERC20Storage,
     ERC20Storage
-} from "../token/ERC20/utils/ERC20Storage.sol";
+} from "contracts/token/ERC20/utils/ERC20Storage.sol";
 import {
     BetterIERC20 as IERC20
-} from "../interfaces/BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 contract ScriptBase_Crane_ERC20
 is

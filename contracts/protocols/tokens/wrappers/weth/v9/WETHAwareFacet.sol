@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import { IFacet } from "../../../../../interfaces/IFacet.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
 import { IWETH } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IWETHAware } from "../../../../../interfaces/IWETHAware.sol";
+import { IWETHAware } from "contracts/interfaces/IWETHAware.sol";
 import { WETHAwareStorage } from "./utils/WETHAwareStorage.sol";
 
 contract WETHAwareFacet is WETHAwareStorage, IWETHAware, IFacet {

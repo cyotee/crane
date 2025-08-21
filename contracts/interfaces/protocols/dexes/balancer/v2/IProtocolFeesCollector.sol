@@ -16,14 +16,14 @@ pragma solidity ^0.8.24;
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 import {
     IVault
-} from "./IVault.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
 import {
     IAuthorizer
-} from "./IAuthorizer.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IAuthorizer.sol";
 
 interface IProtocolFeesCollector {
     event SwapFeePercentageChanged(uint256 newSwapFeePercentage);

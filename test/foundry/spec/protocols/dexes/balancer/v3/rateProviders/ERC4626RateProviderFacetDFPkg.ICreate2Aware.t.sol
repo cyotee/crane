@@ -29,7 +29,7 @@ is
         // Script_BalancerV3,
         TestBase_ICreate2Aware
     ) {
-
+        owner(address(this));
     }
 
     function run() public

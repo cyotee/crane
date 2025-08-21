@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import { TransientSlot } from "openzeppelin-contracts/contracts/utils/TransientSlot.sol";
+import { TransientSlot } from "@openzeppelin/contracts/utils/TransientSlot.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -18,7 +18,7 @@ import { TransientSlot } from "openzeppelin-contracts/contracts/utils/TransientS
 
 import {
     IReentrancyLock
-} from "../../../interfaces/IReentrancyLock.sol";
+} from "contracts/interfaces/IReentrancyLock.sol";
 
 contract ReentrancyLockStorage {
 

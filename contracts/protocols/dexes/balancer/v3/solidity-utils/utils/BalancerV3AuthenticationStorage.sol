@@ -12,7 +12,7 @@ import { IAuthentication } from "@balancer-labs/v3-interfaces/contracts/solidity
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareStorage} from "../../utils/BalancerV3VaultAwareStorage.sol";
+import {BalancerV3VaultAwareStorage} from "contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
 
 struct BalancerV3AuthenticationLayout {
     bytes32 actionIdDisambiguator;

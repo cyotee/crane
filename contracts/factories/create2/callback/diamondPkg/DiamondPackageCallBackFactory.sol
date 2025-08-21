@@ -13,24 +13,23 @@ import {
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import {betterconsole as console} from "../../../../utils/vm/foundry/tools/console/betterconsole.sol";
-import { BetterAddress as Address } from "../../../../utils/BetterAddress.sol";
-import { Creation } from "../../../../utils/Creation.sol";
-import { IFactoryCallBack } from "../../../../interfaces/IFactoryCallBack.sol";
-import { ERC165Target } from "../../../../utils/introspection/erc165/ERC165Target.sol";
-import { IDiamond } from "../../../../interfaces/IDiamond.sol";
-import { IDiamondLoupe } from "../../../../interfaces/IDiamondLoupe.sol";
-import { DiamondLoupeTarget } from "../../../../utils/introspection/erc2535/DiamondLoupeTarget.sol";
-import { Creation } from "../../../../utils/Creation.sol";
-import { MinimalDiamondCallBackProxy } from "../../../../proxies/MinimalDiamondCallBackProxy.sol";
-import { ICreate2Aware } from "../../../../interfaces/ICreate2Aware.sol";
-import { IDiamondFactoryPackage } from "../../../../interfaces/IDiamondFactoryPackage.sol";
-import { DiamondFactoryPackageAdaptor } from "./utils/DiamondFactoryPackageAdaptor.sol";
-import { IDiamondPackageCallBackFactory } from "../../../../interfaces/IDiamondPackageCallBackFactory.sol";
-import { PostDeployAccountHookFacet } from "./PostDeployAccountHookFacet.sol";
-// import { Create2CallbackContract } from "../Create2CallbackContract.sol";
-import { Create3AwareContract } from "../../aware/Create3AwareContract.sol";
-import { IPostDeployAccountHook } from "../../../../interfaces/IPostDeployAccountHook.sol";
+// import {betterconsole as console} from "contracts/utils/vm/foundry/tools/console/betterconsole.sol";
+import { BetterAddress as Address } from "contracts/utils/BetterAddress.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { IFactoryCallBack } from "contracts/interfaces/IFactoryCallBack.sol";
+import { ERC165Target } from "contracts/utils/introspection/erc165/ERC165Target.sol";
+import { IDiamond } from "contracts/interfaces/IDiamond.sol";
+import { IDiamondLoupe } from "contracts/interfaces/IDiamondLoupe.sol";
+import { DiamondLoupeTarget } from "contracts/utils/introspection/erc2535/DiamondLoupeTarget.sol";
+import { Creation } from "contracts/utils/Creation.sol";
+import { MinimalDiamondCallBackProxy } from "contracts/proxies/MinimalDiamondCallBackProxy.sol";
+import { ICreate2Aware } from "contracts/interfaces/ICreate2Aware.sol";
+import { IDiamondFactoryPackage } from "contracts/interfaces/IDiamondFactoryPackage.sol";
+import { DiamondFactoryPackageAdaptor } from "contracts/factories/create2/callback/diamondPkg/utils/DiamondFactoryPackageAdaptor.sol";
+import { IDiamondPackageCallBackFactory } from "contracts/interfaces/IDiamondPackageCallBackFactory.sol";
+import { PostDeployAccountHookFacet } from "contracts/factories/create2/callback/diamondPkg/PostDeployAccountHookFacet.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { IPostDeployAccountHook } from "contracts/interfaces/IPostDeployAccountHook.sol";
 
 /**
  * @title DiamondPackageCallBackFactory

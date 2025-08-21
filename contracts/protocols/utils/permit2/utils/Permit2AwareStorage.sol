@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
-import { IPermit2Aware } from "../../../../interfaces/IPermit2Aware.sol";
+import { IPermit2Aware } from "contracts/interfaces/IPermit2Aware.sol";
 
 struct Permit2AwareLayout {
     IPermit2 permit2;

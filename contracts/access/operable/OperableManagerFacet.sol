@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-// import {OwnableTarget} from "../ownable/OwnableTarget.sol";
-import {OwnableModifiers} from "../ownable/OwnableModifiers.sol";
-import {IOperableManager} from "../../interfaces/IOperableManager.sol";
+// import {OwnableTarget} from "contracts/access/ownable/OwnableTarget.sol";
+import {OwnableModifiers} from "contracts/access/ownable/OwnableModifiers.sol";
+import {IOperableManager} from "contracts/interfaces/IOperableManager.sol";
 import {OperableManagerTarget} from "./OperableManagerTarget.sol";
-import {Create3AwareContract} from "../../factories/create2/aware/Create3AwareContract.sol";
-import {IFacet} from "../../interfaces/IFacet.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
 
 /**
  * @title OperatableManagerFacet - Facet for Diamond proxies to expose IOperatableManager.

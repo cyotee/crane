@@ -7,10 +7,10 @@ pragma solidity ^0.8.24;
 
 import {
     IDiamond
-} from "../../../../interfaces/IDiamond.sol";
+} from "contracts/interfaces/IDiamond.sol";
 import {
     IDiamondFactoryPackage
-} from "../../../../interfaces/IDiamondFactoryPackage.sol";
+} from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
 abstract contract BaseDiamondFactoryPackage
 is IDiamondFactoryPackage {

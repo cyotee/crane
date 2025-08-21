@@ -18,12 +18,12 @@ import { PoolSwapParams, Rounding, SwapKind } from "@balancer-labs/v3-interfaces
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterIERC20 as IERC20 } from "../../../../interfaces/BetterIERC20.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
 // import { BetterBalancerV3PoolTokenStorage } from "@crane/contracts/protocols/dexes/balancer/v3/vault/utils/BetterBalancerV3PoolTokenStorage.sol";
-import { ERC4626AwareStorage } from "../../../../token/ERC20/extensions/utils/ERC4626AwareStorage.sol";
-import { BalancerV3PoolFacet } from "./vault/BalancerV3PoolFacet.sol";
-import { Create3AwareContract } from "../../../../factories/create2/aware/Create3AwareContract.sol";
-import { IFacet } from "../../../../interfaces/IFacet.sol";
+import { ERC4626AwareStorage } from "contracts/token/ERC20/extensions/utils/ERC4626AwareStorage.sol";
+import { BalancerV3PoolFacet } from "contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolFacet.sol";
+import { Create3AwareContract } from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import { IFacet } from "contracts/interfaces/IFacet.sol";
 
 contract BalancerV3ERC4626AdaptorPoolFacet
 is

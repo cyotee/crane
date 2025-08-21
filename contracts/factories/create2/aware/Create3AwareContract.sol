@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { Bytecode } from "../../../utils/Bytecode.sol";
-import { ICreate2Aware } from "../../../interfaces/ICreate2Aware.sol";
-import { ICreate3Aware } from "../../../interfaces/ICreate3Aware.sol";
+import { Bytecode } from "contracts/utils/Bytecode.sol";
+import { ICreate2Aware } from "contracts/interfaces/ICreate2Aware.sol";
+import { ICreate3Aware } from "contracts/interfaces/ICreate3Aware.sol";
 
 contract Create3AwareContract is ICreate3Aware {
 

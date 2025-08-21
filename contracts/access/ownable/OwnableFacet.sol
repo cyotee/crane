@@ -3,27 +3,27 @@ pragma solidity ^0.8.24;
 
 import {
     IOwnable
-} from "../../interfaces/IOwnable.sol";
+} from "contracts/interfaces/IOwnable.sol";
 
 import {
     IOwnableStorage,
     OwnableStorage
-} from "./utils/OwnableStorage.sol";
+} from "contracts/access/ownable/utils/OwnableStorage.sol";
 
 import {
     OwnableTarget
-} from "./OwnableTarget.sol";
+} from "contracts/access/ownable/OwnableTarget.sol";
 
 import {
     IFacet
-} from "../../interfaces/IFacet.sol";
+} from "contracts/interfaces/IFacet.sol";
 
 import {
     Create3AwareContract
-} from "../../factories/create2/aware/Create3AwareContract.sol";
+} from "contracts/factories/create2/aware/Create3AwareContract.sol";
 import {
     ICreate3Aware
-} from "../../interfaces/ICreate3Aware.sol";
+} from "contracts/interfaces/ICreate3Aware.sol";
 
 contract OwnableFacet
 is

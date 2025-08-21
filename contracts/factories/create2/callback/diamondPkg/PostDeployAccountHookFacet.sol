@@ -7,19 +7,19 @@ pragma solidity ^0.8.24;
 
 import {
     BetterAddress as Address
-} from "../../../../utils/BetterAddress.sol";
+} from "contracts/utils/BetterAddress.sol";
 
 import {
     IFacet
-} from "../../../../interfaces/IFacet.sol";
+} from "contracts/interfaces/IFacet.sol";
 
 import {
     IPostDeployAccountHook
-} from "../../../../interfaces/IPostDeployAccountHook.sol";
+} from "contracts/interfaces/IPostDeployAccountHook.sol";
 
 import {
     IDiamondFactoryPackage
-} from "../../../../interfaces/IDiamondFactoryPackage.sol";
+} from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
 abstract contract PostDeployAccountHookFacet
 is

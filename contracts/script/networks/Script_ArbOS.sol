@@ -22,11 +22,11 @@ import { Script } from "forge-std/Script.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterScript } from "../../script/BetterScript.sol";
-import {LOCAL} from "../../constants/networks/LOCAL.sol";
-import {ARB_OS_PRECOMPILES} from "../../constants/networks/ARB_OS_PRECOMPILES.sol";
-import { IArbOwnerPublic } from "../../interfaces/networks/IArbOwnerPublic.sol";
-import { ArbOwnerPublicStub } from "../../utils/vm/arbOS/stubs/precompiles/ArbOwnerPublicStub.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import {LOCAL} from "contracts/constants/networks/LOCAL.sol";
+import {ARB_OS_PRECOMPILES} from "contracts/constants/networks/ARB_OS_PRECOMPILES.sol";
+import { IArbOwnerPublic } from "contracts/interfaces/networks/IArbOwnerPublic.sol";
+import { ArbOwnerPublicStub } from "contracts/utils/vm/arbOS/stubs/precompiles/ArbOwnerPublicStub.sol";
 
 contract Script_ArbOS
 is

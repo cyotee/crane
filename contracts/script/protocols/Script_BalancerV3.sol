@@ -77,29 +77,29 @@ import { VaultMock } from "@balancer-labs/v3-vault/contracts/test/VaultMock.sol"
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../../constants/protocols/dexes/balancer/v3/BalancerV3_INITCODE.sol";
-import {betterconsole as console} from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../../script/BetterScript.sol";
-import { Script_Permit2 } from "../../script/protocols/Script_Permit2.sol";
-import { Script_Crane } from "../../script/Script_Crane.sol";
-import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../script/ScriptBase_Crane_ERC4626.sol";
-import { BetterBaseContractsDeployer } from "../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
-import { BetterVaultContractsDeployer } from "../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
-import { BetterAddress as Address } from "../../utils/BetterAddress.sol";
-import { Bytecode } from "../../utils/Bytecode.sol";
-import { LOCAL } from "../../constants/networks/LOCAL.sol";
-import { ETHEREUM_MAIN } from "../../constants/networks/ETHEREUM_MAIN.sol";
-import { ETHEREUM_SEPOLIA } from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
-import { IOwnable } from "../../interfaces/IOwnable.sol";
-import { BalancerV3Authorizer } from "../../protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
+import "contracts/constants/protocols/dexes/balancer/v3/BalancerV3_INITCODE.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { Script_Permit2 } from "contracts/script/protocols/Script_Permit2.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { BetterBaseContractsDeployer } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "contracts/protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { BetterAddress as Address } from "contracts/utils/BetterAddress.sol";
+import { Bytecode } from "contracts/utils/Bytecode.sol";
+import { LOCAL } from "contracts/constants/networks/LOCAL.sol";
+import { ETHEREUM_MAIN } from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import { ETHEREUM_SEPOLIA } from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import { IOwnable } from "contracts/interfaces/IOwnable.sol";
+import { BalancerV3Authorizer } from "contracts/protocols/dexes/balancer/v3/vault/BalancerV3Authorizer.sol";
 
-import { BetterTest } from "../../test/BetterTest.sol";
-import { Script_WETH } from "../../script/protocols/Script_WETH.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
 
-import { IERC4626RateProvider } from "../../interfaces/IERC4626RateProvider.sol";
-import { ERC4626RateProviderFacetDFPkg } from "../../protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
+import { IERC4626RateProvider } from "contracts/interfaces/IERC4626RateProvider.sol";
+import { ERC4626RateProviderFacetDFPkg } from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 
 contract Script_BalancerV3
 is

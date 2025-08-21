@@ -7,29 +7,23 @@ import "forge-std/console.sol";
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../interfaces/BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 import {
     IUniswapV2Factory
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 import {
     TransferHelper
 } from "./deps/libs/TransferHelper.sol";
 
 import {
     IUniswapV2Router02
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router02.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router02.sol";
 import {
     IUniswapV2Pair
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {
     UniswapV2Library
-} from "./deps/libs/UniswapV2Library.sol";
-// import './libraries/SafeMath.sol';
-// import 'contracts/token/ERC20/interfaces/IERC20.sol';
-// import "daosys/protocols/dexes/uniswap/v2/interfaces/IUniswapV2Router02.sol";
-// import {
-//     IWETH
-// } from "../../../../../tokens/wrappers/weth/IWETH.sol";
+} from "contracts/protocols/dexes/uniswap/v2/deps/libs/UniswapV2Library.sol";
 import {
     IWETH
 } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";

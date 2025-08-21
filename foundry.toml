@@ -6,31 +6,33 @@ test = 'test'
 cache_path  = 'cache_forge'
 # fs_permissions = [{ access = "read", path = "./"}, { access = "write", path = "./"}]
 fs_permissions = [{ access = "read-write", path = "./"}]
+auto_detect_remappings = false
 remappings = [
     # Forge
     "forge-std/=lib/forge-std/src/",
     # WETH
-    "weth/=lib/canonical-weth/contracts",
+    # "weth/=lib/canonical-weth/contracts",
     # Open Zeppelin
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
-    "@openzeppelin/contracts-upgradeable/contracts/=lib/openzeppelin-contracts-upgradeable/contracts/",
+    # "@openzeppelin/contracts-upgradeable/contracts/=lib/openzeppelin-contracts-upgradeable/contracts/",
     # Solmate
     "solmate/=lib/solmate/src/",
     # Camelot
     "camelot-core/=lib/core/contracts/",
     "camelot-periphery/=lib/periphery/contracts/",
     # Permit2
-    "permit/=lib/permit2/src/",
-    "permit2/=lib/permit2/src/",
+    "permit/=lib/permit2/",
+    "permit2/=lib/permit2/",
     # Balancer
     "@balancer-labs/v3-interfaces/=lib/balancer-v3-monorepo/pkg/interfaces/",
     "@balancer-labs/v3-vault/=lib/balancer-v3-monorepo/pkg/vault/",
     "@balancer-labs/v3-solidity-utils/=lib/balancer-v3-monorepo/pkg/solidity-utils/",
     "@balancer-labs/v3-pool-utils/=lib/balancer-v3-monorepo/pkg/pool-utils/"
 ]
-# solc = "0.8.30"
+# solc = "0.8.31"
+solc = "0.8.30"
 # solc = "0.8.28"
-solc = "0.8.26"
+# solc = "0.8.26"
 # The EVM version by hardfork name
 # evm_version = 'paris'
 evm_version = 'cancun'
@@ -44,7 +46,7 @@ sizes = true
 # Whether or not to use the Yul intermediate representation compilation pipeline
 # via_ir = true
 # Enables or disables the optimizer
-optimizer = true
+# optimizer = true
 # optimizer_runs = 4294967295
 # optimizer_runs = 4000000000
 # optimizer_runs = 200000
@@ -64,7 +66,7 @@ optimizer = true
 # optimizer_runs = 16685
 # optimizer_runs = 16684
 # CamelotFactory requires 16683 to fit within execution code size limits
-optimizer_runs = 16683
+# optimizer_runs = 16683
 # optimizer_runs = 16680
 # optimizer_runs = 16675
 # optimizer_runs = 16650

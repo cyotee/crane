@@ -126,8 +126,8 @@ contract UniswapV2Service_balanceAssetsTest is TestBase_UniswapV2 {
         // Test sorting reserves for tokenB  
         UniswapV2Service.ReserveInfo memory reservesB = UniswapV2Service._sortReserves(pool, tokenB);
         
-        console.log("TokenA reserves - in:", reservesA.reserveIn, "out:", reservesA.reserveOut);
-        console.log("TokenB reserves - in:", reservesB.reserveIn, "out:", reservesB.reserveOut);
+        console.log("TokenA reserves - in:", reservesA.knownReserve, "out:", reservesA.opposingReserve);
+        console.log("TokenB reserves - in:", reservesB.knownReserve, "out:", reservesB.opposingReserve);
         console.log("Fee percent:", reservesA.feePercent);
     }
 } 

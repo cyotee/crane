@@ -3,12 +3,12 @@ pragma solidity ^0.8.24;
 
 /* ---------------------------------- Crane --------------------------------- */
 
-import {BetterAddress as Address} from "../../../../../utils/BetterAddress.sol";
+import {BetterAddress as Address} from "contracts/utils/BetterAddress.sol";
 
 /* ----------------------------------- Ham ---------------------------------- */
 
-import {IFactoryCallBack} from "../../../../../interfaces/IFactoryCallBack.sol";
-import {IDiamondFactoryPackage} from "../../../../../interfaces/IDiamondFactoryPackage.sol";
+import {IFactoryCallBack} from "contracts/interfaces/IFactoryCallBack.sol";
+import {IDiamondFactoryPackage} from "contracts/interfaces/IDiamondFactoryPackage.sol";
 
 library FactoryCallBackAdaptor {
 

@@ -17,14 +17,14 @@ import {
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IDiamondPackageCallBackFactory} from "../../../../../interfaces/IDiamondPackageCallBackFactory.sol";
-import {IDiamondFactoryPackage} from "../../../../../interfaces/IDiamondFactoryPackage.sol";
-import {Create2CallbackContract} from "../../../../../factories/create2/callback/Create2CallbackContract.sol";
-import {FactoryWidePauseWindowTarget} from "../solidity-utils/helpers/FactoryWidePauseWindowTarget.sol";
-import {BalancerV3AuthenticationTarget} from "../solidity-utils/BalancerV3AuthenticationTarget.sol";
-import {BalancerV3AuthenticationModifiers} from "../solidity-utils/utils/BalancerV3AuthenticationModifiers.sol";
-import {BalancerV3BasePoolFactoryStorage} from "./utils/BalancerV3BasePoolFactoryStorage.sol";
-import { IBalancerV3BasePoolFactory } from "../../../../../interfaces/IBalancerV3BasePoolFactory.sol";
+import {IDiamondPackageCallBackFactory} from "contracts/interfaces/IDiamondPackageCallBackFactory.sol";
+import {IDiamondFactoryPackage} from "contracts/interfaces/IDiamondFactoryPackage.sol";
+import {Create2CallbackContract} from "contracts/factories/create2/callback/Create2CallbackContract.sol";
+import {FactoryWidePauseWindowTarget} from "contracts/protocols/dexes/balancer/v3/solidity-utils/helpers/FactoryWidePauseWindowTarget.sol";
+import {BalancerV3AuthenticationTarget} from "contracts/protocols/dexes/balancer/v3/solidity-utils/BalancerV3AuthenticationTarget.sol";
+import {BalancerV3AuthenticationModifiers} from "contracts/protocols/dexes/balancer/v3/solidity-utils/utils/BalancerV3AuthenticationModifiers.sol";
+import {BalancerV3BasePoolFactoryStorage} from "contracts/protocols/dexes/balancer/v3/pool-utils/utils/BalancerV3BasePoolFactoryStorage.sol";
+import { IBalancerV3BasePoolFactory } from "contracts/interfaces/IBalancerV3BasePoolFactory.sol";
 
 abstract contract BalancerV3BasePoolFactoryTarget
 is

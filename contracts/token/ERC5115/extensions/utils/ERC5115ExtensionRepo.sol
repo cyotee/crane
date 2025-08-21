@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
 import {
     Bytes4Set,
     Bytes4SetRepo
-} from "../../../../utils/collections/sets/Bytes4SetRepo.sol";
+} from "contracts/utils/collections/sets/Bytes4SetRepo.sol";
 
 struct ERC5115ExtensionLayout {
     Bytes4Set yieldTokenTypes;

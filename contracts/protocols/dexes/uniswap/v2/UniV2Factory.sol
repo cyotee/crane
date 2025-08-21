@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import {
     IUniswapV2Factory
-} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
+} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 // import "daosys/protocols/dexes/uniswap/v2/interfaces/IUniswapV2Pair.sol";
-import {IUniswapV2Pair} from "../../../../interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {
     // IUniswapV2Pair,
     UniV2Pair

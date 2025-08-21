@@ -11,10 +11,9 @@ import {IUnbalancedLiquidityInvariantRatioBounds} from "@balancer-labs/v3-interf
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../../../../constants/Constants.sol";
-// import {Create2AwareTarget} from "../../../../../factories/create2/aware/Create2AwareTarget.sol";
-import {Create3AwareContract} from "../../../../factories/create2/aware/Create3AwareContract.sol";
-import {IFacet} from "../../../../interfaces/IFacet.sol";
+import "contracts/constants/Constants.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
 
 /**
  * @title BalancedLiquidityInvariantRatioBoundsFacet

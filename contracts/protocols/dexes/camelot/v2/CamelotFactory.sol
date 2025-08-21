@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import '../../../../interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol'; 
-import './CamelotPair.sol';
+import 'contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol'; 
+import 'contracts/protocols/dexes/camelot/v2/CamelotPair.sol';
 
 contract CamelotFactory is ICamelotFactory {
     address public owner;

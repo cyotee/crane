@@ -59,26 +59,26 @@ import { InputHelpersMock } from "@balancer-labs/v3-vault/contracts/test/InputHe
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "../../../utils/vm/foundry/tools/betterconsole.sol";
-import { BetterScript } from "../../../script/BetterScript.sol";
-import { BetterBalancerV3VaultTest } from "./BetterBalancerV3VaultTest.sol";
-import { ScriptBase_Crane_Factories } from "../../../script/ScriptBase_Crane_Factories.sol";
-import { ScriptBase_Crane_ERC20 } from "../../../script/ScriptBase_Crane_ERC20.sol";
-import { ScriptBase_Crane_ERC4626 } from "../../../script/ScriptBase_Crane_ERC4626.sol";
-import { Script_WETH } from "../../../script/protocols/Script_WETH.sol";
-import { Script_Permit2 } from "../../../script/protocols/Script_Permit2.sol";
-import { Script_Crane } from "../../../script/Script_Crane.sol";
-import { Script_Crane_Stubs } from "../../../script/Script_Crane_Stubs.sol";
-import { BetterBaseContractsDeployer } from "../../../protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
-import { BetterVaultContractsDeployer } from "../../../protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
-import { Script_BalancerV3 } from "../../../script/protocols/Script_BalancerV3.sol";
-import { BetterTest } from "../../../test/BetterTest.sol";
-import {Test_Crane} from "../../Test_Crane.sol";
-import {BetterBalancerV3BaseTest} from "./BetterBalancerV3BaseTest.sol";
-import { TestBase_Permit2 } from "./TestBase_Permit2.sol";
+import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import { BetterBalancerV3VaultTest } from "contracts/test/bases/protocols/BetterBalancerV3VaultTest.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
+import { ScriptBase_Crane_ERC20 } from "contracts/script/ScriptBase_Crane_ERC20.sol";
+import { ScriptBase_Crane_ERC4626 } from "contracts/script/ScriptBase_Crane_ERC4626.sol";
+import { Script_WETH } from "contracts/script/protocols/Script_WETH.sol";
+import { Script_Permit2 } from "contracts/script/protocols/Script_Permit2.sol";
+import { Script_Crane } from "contracts/script/Script_Crane.sol";
+import { Script_Crane_Stubs } from "contracts/script/Script_Crane_Stubs.sol";
+import { BetterBaseContractsDeployer } from "contracts/protocols/dexes/balancer/v3/solidity-utils/BetterBaseContractsDeployer.sol";
+import { BetterVaultContractsDeployer } from "contracts/protocols/dexes/balancer/v3/vault/BetterVaultContractsDeployer.sol";
+import { Script_BalancerV3 } from "contracts/script/protocols/Script_BalancerV3.sol";
+import { BetterTest } from "contracts/test/BetterTest.sol";
+import {Test_Crane} from "contracts/test/Test_Crane.sol";
+import {BetterBalancerV3BaseTest} from "contracts/test/bases/protocols/BetterBalancerV3BaseTest.sol";
+import { TestBase_Permit2 } from "contracts/test/bases/protocols/TestBase_Permit2.sol";
 
 
-contract BetterBalancerV3BasePoolTest
+abstract contract BetterBalancerV3BasePoolTest
 is 
     CommonBase,
     ScriptBase,

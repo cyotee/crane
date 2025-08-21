@@ -11,8 +11,8 @@ import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { BetterIERC20 as IERC20 } from "../../../../interfaces/BetterIERC20.sol";
-import { IERC4626Aware } from "../../../../interfaces/IERC4626Aware.sol";
+import { BetterIERC20 as IERC20 } from "contracts/interfaces/BetterIERC20.sol";
+import { IERC4626Aware } from "contracts/interfaces/IERC4626Aware.sol";
 
 struct ERC4626AwareLayout {
     IERC4626 wrapper;

@@ -12,8 +12,8 @@ import { IAuthentication } from "@balancer-labs/v3-interfaces/contracts/solidity
 /* -------------------------------------------------------------------------- */
 
 import {BalancerV3AuthenticationTarget} from "./BalancerV3AuthenticationTarget.sol";
-import {IFacet} from "../../../../../interfaces/IFacet.sol";
-import {Create3AwareContract} from "../../../../../factories/create2/aware/Create3AwareContract.sol";
+import {IFacet} from "contracts/interfaces/IFacet.sol";
+import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
 
 contract BalancerV3AuthenticationFacet is Create3AwareContract, BalancerV3AuthenticationTarget, IFacet {
 

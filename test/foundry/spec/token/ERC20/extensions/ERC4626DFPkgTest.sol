@@ -58,6 +58,7 @@ contract ERC4626DFPkgTest is Test_Crane {
     function setUp() public virtual override {
         setDeployer(address(10));
         DEPLOYER = deployer();
+        owner(deployer());
         // Set up as deployer
         vm.startPrank(DEPLOYER);
         

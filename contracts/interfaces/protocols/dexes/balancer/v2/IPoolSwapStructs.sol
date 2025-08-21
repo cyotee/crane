@@ -17,11 +17,11 @@ pragma experimental ABIEncoderV2;
 
 import {
     BetterIERC20 as IERC20
-} from "../../../../BetterIERC20.sol";
+} from "contracts/interfaces/BetterIERC20.sol";
 
 import {
     IVault
-} from "./IVault.sol";
+} from "contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
 
 interface IPoolSwapStructs {
     // This is not really an interface - it just defines common structs used by other interfaces: IGeneralPool and

@@ -28,19 +28,19 @@ import { IPermit2 } from "permit2/src/interfaces/IPermit2.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import "../../constants/Constants.sol";
-import "../../constants/CraneINITCODE.sol";
-import { BetterScript } from "../../script/BetterScript.sol";
-import {LOCAL} from "../../constants/networks/LOCAL.sol";
-import {ETHEREUM_MAIN} from "../../constants/networks/ETHEREUM_MAIN.sol";
-import {ETHEREUM_SEPOLIA} from "../../constants/networks/ETHEREUM_SEPOLIA.sol";
-import {PERMIT2_CONSTANTS} from "../../constants/protocols/utils/permit2/PERMIT2_CONSTANTS.sol";
-import { BetterPermit2 } from "../../protocols/utils/permit2/BetterPermit2.sol";
-import { betterconsole as console } from "../../utils/vm/foundry/tools/betterconsole.sol";
-import { IEIP712 } from "../../interfaces/IEIP712.sol";
-import { IAllowanceTransfer } from "../../interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import { Permit2AwareFacet } from "../../protocols/utils/permit2/Permit2AwareFacet.sol";
-import { ScriptBase_Crane_Factories } from "../../script/ScriptBase_Crane_Factories.sol";
+import "contracts/constants/Constants.sol";
+import "contracts/constants/CraneINITCODE.sol";
+import { BetterScript } from "contracts/script/BetterScript.sol";
+import {LOCAL} from "contracts/constants/networks/LOCAL.sol";
+import {ETHEREUM_MAIN} from "contracts/constants/networks/ETHEREUM_MAIN.sol";
+import {ETHEREUM_SEPOLIA} from "contracts/constants/networks/ETHEREUM_SEPOLIA.sol";
+import {PERMIT2_CONSTANTS} from "contracts/constants/protocols/utils/permit2/PERMIT2_CONSTANTS.sol";
+import { BetterPermit2 } from "contracts/protocols/utils/permit2/BetterPermit2.sol";
+import { betterconsole as console } from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import { IEIP712 } from "contracts/interfaces/IEIP712.sol";
+import { IAllowanceTransfer } from "contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import { Permit2AwareFacet } from "contracts/protocols/utils/permit2/Permit2AwareFacet.sol";
+import { ScriptBase_Crane_Factories } from "contracts/script/ScriptBase_Crane_Factories.sol";
 
 contract Script_Permit2
 is

@@ -23,16 +23,16 @@ import { VmSafe } from "forge-std/Vm.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import { DEPLOYMENTS_PATH } from "../constants/Constants.sol";
-import {terminal as term} from "../utils/vm/foundry/tools/terminal.sol";
+import { DEPLOYMENTS_PATH } from "contracts/constants/Constants.sol";
+import {terminal as term} from "contracts/utils/vm/foundry/tools/terminal.sol";
 import {
     AddressSet,
     AddressSetRepo
-} from "../utils/collections/sets/AddressSetRepo.sol";
+} from "contracts/utils/collections/sets/AddressSetRepo.sol";
 import {
     StringSet,
     StringSetRepo
-} from "../utils/collections/sets/StringSetRepo.sol";
+} from "contracts/utils/collections/sets/StringSetRepo.sol";
 
 contract BetterScript
 is
@@ -264,6 +264,12 @@ is
 
     function owner() public view virtual returns (address) {
         return _owner;
+    }
+
+    function owner(
+        address owner_
+    ) public virtual {
+        setOwner(owner_);
     }
 
     function setOwner(

@@ -13,8 +13,8 @@ import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterMath} from "../../../../utils/math/BetterMath.sol";
-import {BetterIERC20 as IERC20} from "../../../../interfaces/BetterIERC20.sol";
+import {BetterMath} from "contracts/utils/math/BetterMath.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
 import {BetterSafeERC20 as SafeERC20} from "../../utils/BetterSafeERC20.sol";
 
 import {
