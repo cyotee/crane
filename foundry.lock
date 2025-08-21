@@ -1,0 +1,29 @@
+{
+  "lib/solmate": {
+    "rev": "c93f7716c9909175d45f6ef80a34a650e2d24e56"
+  },
+  "lib/forge-std": {
+    "rev": "f46d8301cf732f4f83846565aa475628265e51e0"
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "83d2a247be73b065d45977d2943e18810ae0dbef"
+  },
+  "lib/balancer-v3-monorepo": {
+    "rev": "e65fc25d8c33a17b0367ea2bc763d8a175be0867"
+  },
+  "lib/openzeppelin-contracts-upgradeable": {
+    "rev": "3eee293579c9d248235acadbdc246a46b1cadeab"
+  },
+  "lib/permit2": {
+    "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
+  },
+  "lib/solady": {
+    "tag": {
+      "name": "v0.1.24",
+      "rev": "a5bb996e91aae5b0c068087af7594d92068b12f1"
+    }
+  },
+  "lib/daosys_frontend": {
+    "rev": "16d8c1a72db3b4a28cfe44b6ef3bb7b4b7a86f71"
+  }
+}
