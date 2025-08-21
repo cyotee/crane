@@ -19,3 +19,9 @@
 [submodule "lib/daosys_frontend"]
 	path = lib/daosys_frontend
 	url = https://github.com/syscoin/daosys_frontend
+[submodule "lib/solady"]
+	path = lib/solady
+	url = https://github.com/Vectorized/solady
+[submodule "lib/diamond-etherscan"]
+	path = lib/diamond-etherscan
+	url = https://github.com/zdenham/diamond-etherscan
