@@ -1,0 +1,5 @@
+imagesdir
+revdate
+revnumber
+revremark
+sectnums
