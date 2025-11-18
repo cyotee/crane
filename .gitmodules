@@ -22,3 +22,6 @@
 [submodule "lib/Compose"]
 	path = lib/Compose
 	url = https://github.com/cyotee/Compose.git
+[submodule "lib/scaffold-eth-2"]
+	path = lib/scaffold-eth-2
+	url = https://github.com/scaffold-eth/scaffold-eth-2.git
