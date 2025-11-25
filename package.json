@@ -9,5 +9,11 @@
   "private": false,
   "scripts": {
     "generate-readme": "asciidoctor -b html5 -a source-highlighter=highlight.js -a icons=font -a sectanchors -a sectlinks -a toc=left -a toclevels=3 -a github docs/README.adoc -o - | pandoc -f html -t gfm --wrap=none > README.md"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.2.0",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@nomicfoundation/hardhat-toolbox-viem": "^4.1.1",
+    "hardhat": "^2.27.0"
   }
 }
