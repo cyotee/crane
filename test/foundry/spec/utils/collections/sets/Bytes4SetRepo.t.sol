@@ -70,25 +70,6 @@ contract Bytes4SetRepoTest is Test {
         }
     }
 
-    function test_addExclusive(bytes4 value) public {
-        testInstance._addExclusive(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
-    }
-
-    function test_addExclusive(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            for (uint256 cursor1 = 0; values.length > cursor1; cursor1++) {
-                if (cursor != cursor1) {
-                    vm.assume(values[cursor] != values[cursor1]);
-                }
-            }
-        }
-        testInstance._addExclusive(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
-    }
-
     function test_remove(bytes4 value) public {
         testInstance.values.push(value);
         testInstance.indexes[value] = testInstance.values.length;

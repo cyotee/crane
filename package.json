@@ -1,0 +1,13 @@
+{
+  "name": "crane",
+  "version": "0.0.1",
+  "description": "A Dimaond first Solidity development framework",
+  "main": "index.js",
+  "repository": "https://github.com/cyotee/crane",
+  "author": "cyotee <not_cyotee@proton.me>",
+  "license": "AGPL-3.0-or-later",
+  "private": false,
+  "scripts": {
+    "generate-readme": "asciidoctor -b html5 -a source-highlighter=highlight.js -a icons=font -a sectanchors -a sectlinks -a toc=left -a toclevels=3 -a github docs/README.adoc -o - | pandoc -f html -t gfm --wrap=none > README.md"
+  }
+}

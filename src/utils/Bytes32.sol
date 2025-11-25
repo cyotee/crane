@@ -11,8 +11,8 @@ import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {HEX_SYMBOLS} from "@crane/src/constants/Constants.sol";
-import {BetterArrays as Arrays} from "@crane/src/utils/collections/BetterArrays.sol";
+import {HEX_SYMBOLS} from "src/constants/Constants.sol";
+import {BetterArrays as Arrays} from "src/utils/collections/BetterArrays.sol";
 
 /**
  * @title Bytes32 - Standardized operations for bytes32.
