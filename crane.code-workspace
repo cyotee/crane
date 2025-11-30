@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../indexedex.worktrees/splitting"
+		},
+		{
+			"path": "../daosys_frontend"
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../wagmi-declare"
+		}
+	],
+	"settings": {}
+}

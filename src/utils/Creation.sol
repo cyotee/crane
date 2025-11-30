@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "@crane/src/utils/Bytecode.sol";
+import "src/utils/Bytecode.sol";
 
 library Creation {
     using Bytecode for address;
