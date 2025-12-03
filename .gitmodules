@@ -25,3 +25,9 @@
 [submodule "lib/scaffold-eth-2"]
 	path = lib/scaffold-eth-2
 	url = https://github.com/scaffold-eth/scaffold-eth-2.git
+[submodule "lib/solplot"]
+	path = lib/solplot
+	url = https://github.com/cyotee/solplot
+[submodule "lib/solidity-lib"]
+	path = lib/solidity-lib
+	url = https://github.com/cyotee/solidity-lib

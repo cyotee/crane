@@ -2,10 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {Bytecode} from "src/utils/Bytecode.sol";
+import {Bytecode} from "contracts/utils/Bytecode.sol";
 
 contract Simple {
     uint256 public v;
+
     constructor(uint256 _v) {
         v = _v;
     }
@@ -20,7 +21,6 @@ contract BytecodeRevertHarness {
 // No external harness needed — tests call the library functions directly.
 
 contract BytecodeTest is Test {
-
     function testCreate_deploysSimpleContract() public {
         bytes memory init = abi.encodePacked(type(Simple).creationCode, abi.encode(uint256(123)));
         address d = Bytecode.create(init);
@@ -58,7 +58,7 @@ contract BytecodeTest is Test {
         }
     }
 
-    function test_create2WithArgsAddressDerivation_matchesManual() public {
+    function test_create2WithArgsAddressDerivation_matchesManual() public view {
         bytes memory init = type(Simple).creationCode;
         bytes memory args = abi.encode(uint256(9));
         bytes32 salt = bytes32(uint256(0x123));
@@ -78,7 +78,7 @@ contract BytecodeTest is Test {
         assertEq(Simple(deployed).v(), 77);
     }
 
-    function test_encodeInitArgs_concatenatesInitAndArgs() public {
+    function test_encodeInitArgs_concatenatesInitAndArgs() public pure {
         bytes memory init = type(Simple).creationCode;
         bytes memory args = abi.encode(uint256(77));
         bytes memory enc = Bytecode._encodeInitArgs(init, args);
@@ -95,13 +95,13 @@ contract BytecodeTest is Test {
         assertTrue(Bytecode.codeSizeOf(d2) > 0);
     }
 
-    function test_calcInitCodeHash_returnsKeccak() public {
+    function test_calcInitCodeHash_returnsKeccak() public pure {
         bytes memory init = type(Simple).creationCode;
         bytes32 initHash = Bytecode._calcInitCodeHash(init);
         assertEq(initHash, keccak256(init));
     }
 
-    function test_create2AddressFromOf_matchesManual() public {
+    function test_create2AddressFromOf_matchesManual() public view {
         bytes memory init = type(Simple).creationCode;
         bytes32 initHash = Bytecode._calcInitCodeHash(init);
         bytes32 salt = bytes32(uint256(0xA1));
@@ -114,7 +114,7 @@ contract BytecodeTest is Test {
         assertEq(expected, manual);
     }
 
-    function test_create3AddressFromOf_matchesManual() public {
+    function test_create3AddressFromOf_matchesManual() public view {
         bytes32 salt = bytes32(uint256(0xCAFE));
         address deployer = address(this);
 
@@ -129,7 +129,7 @@ contract BytecodeTest is Test {
         assertEq(calc, manual);
     }
 
-    function test_create3AddressOf_usesCallerAddress() public {
+    function test_create3AddressOf_usesCallerAddress() public view {
         bytes32 salt = bytes32(uint256(0xCAFE));
         address calc2 = Bytecode._create3AddressOf(salt);
         address calc = Bytecode._create3AddressFromOf(address(this), salt);

@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "src/utils/collections/BetterArrays.sol";
+import "contracts/utils/collections/BetterArrays.sol";
 
 contract BetterArraysCaller {
     function isValidIndex(uint256 length, uint256 index) external pure returns (bool) {
@@ -13,21 +13,27 @@ contract BetterArraysCaller {
     }
 
     function toLengthFixed10(uint256 newLen) external pure returns (address[] memory) {
-        address[10] memory src;
-        for (uint256 i = 0; i < 10; i++) src[i] = address(uint160(i + 1));
-        return BetterArrays._toLength(src, newLen);
+        address[10] memory contracts;
+        for (uint256 i = 0; i < 10; i++) {
+            contracts[i] = address(uint160(i + 1));
+        }
+        return BetterArrays._toLength(contracts, newLen);
     }
 
     function toLengthFixed100(uint256 newLen) external pure returns (address[] memory) {
-        address[100] memory src;
-        for (uint256 i = 0; i < 100; i++) src[i] = address(uint160(i + 1));
-        return BetterArrays._toLength(src, newLen);
+        address[100] memory contracts;
+        for (uint256 i = 0; i < 100; i++) {
+            contracts[i] = address(uint160(i + 1));
+        }
+        return BetterArrays._toLength(contracts, newLen);
     }
 
     function toLengthFixed1000(uint256 newLen) external pure returns (address[] memory) {
-        address[1000] memory src;
-        for (uint256 i = 0; i < 1000; i++) src[i] = address(uint160(i + 1));
-        return BetterArrays._toLength(src, newLen);
+        address[1000] memory contracts;
+        for (uint256 i = 0; i < 1000; i++) {
+            contracts[i] = address(uint160(i + 1));
+        }
+        return BetterArrays._toLength(contracts, newLen);
     }
 }
 
@@ -37,7 +43,7 @@ contract BetterArraysTest is Test {
     using BetterArrays for bytes32[];
 
     // 1. _isValidIndex success
-    function test_isValidIndex_valid(uint256 length, uint256 index) public {
+    function test_isValidIndex_valid(uint256 length, uint256 index) public pure {
         // limit ranges to avoid vm.bound overflow in fuzzing — use modulo to keep values small
         length = (length % 256) + 1; // length in [1,256]
         // index in [0, length-1]
@@ -59,8 +65,8 @@ contract BetterArraysTest is Test {
 
     // 3. _toLength for fixed-size address[5]
     function test_toLength_fixed5() public pure {
-        address[5] memory src = [address(0x1), address(0x2), address(0x3), address(0x4), address(0x5)];
-        address[] memory out = BetterArrays._toLength(src, 7);
+        address[5] memory contracts = [address(0x1), address(0x2), address(0x3), address(0x4), address(0x5)];
+        address[] memory out = BetterArrays._toLength(contracts, 7);
         assertEq(out.length, 7);
         assertEq(out[0], address(0x1));
         assertEq(out[4], address(0x5));
@@ -116,10 +122,10 @@ contract BetterArraysTest is Test {
 
     // 4. _toLength for dynamic address[]
     function test_toLength_dynamic() public pure {
-        address[] memory src = new address[](2);
-        src[0] = address(0xabcdef);
-        src[1] = address(0x123456);
-        address[] memory out = BetterArrays._toLength(src, 4);
+        address[] memory contracts = new address[](2);
+        contracts[0] = address(0xabcdef);
+        contracts[1] = address(0x123456);
+        address[] memory out = BetterArrays._toLength(contracts, 4);
         assertEq(out.length, 4);
         assertEq(out[0], address(0xabcdef));
         assertEq(out[1], address(0x123456));

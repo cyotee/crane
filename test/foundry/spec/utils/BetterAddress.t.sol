@@ -2,11 +2,11 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import {BetterAddress} from "src/utils/BetterAddress.sol";
+import {BetterAddress} from "contracts/utils/BetterAddress.sol";
 import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {BetterIERC20 as IERC20} from "src/interfaces/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
 
-contract Empty {}
+// contract Empty {}
 
 contract FuncTarget {
     uint256 public stored;
@@ -79,14 +79,14 @@ contract BetterAddressTest is Test {
         assertTrue(!BetterAddress.isContract(address(0x1234)));
     }
 
-    function test_toBytes32_and_toUint256_consistent() public {
+    function test_toBytes32_and_toUint256_consistent() public pure {
         address a = address(bytes20(hex"1111222233334444555566667777888899990000"));
         bytes32 b = BetterAddress._toBytes32(a);
         assertEq(uint256(b), uint256(uint160(a)));
         assertEq(BetterAddress._toUint256(a), uint256(uint160(a)));
     }
 
-    function test_toHexString_and_toString_are_nonEmpty() public {
+    function test_toHexString_and_toString_are_nonEmpty() public view {
         address a = address(this);
         string memory s1 = BetterAddress._toHexString(a);
         string memory s2 = BetterAddress._toString(a);
@@ -94,7 +94,7 @@ contract BetterAddressTest is Test {
         assertTrue(bytes(s2).length > 0);
     }
 
-    function test_toIERC20_and_toOZIERC20_preserveAddresses() public {
+    function test_toIERC20_and_toOZIERC20_preserveAddresses() public pure {
         address[] memory arr = new address[](2);
         arr[0] = address(0x100);
         arr[1] = address(0x200);
@@ -108,7 +108,7 @@ contract BetterAddressTest is Test {
         assertEq(address(oz[1]), arr[1]);
     }
 
-    function test_sort_returnsSortedArray() public {
+    function test_sort_returnsSortedArray() public pure {
         address[] memory arr = new address[](4);
         arr[0] = address(0x9);
         arr[1] = address(0x3);
@@ -121,7 +121,7 @@ contract BetterAddressTest is Test {
         }
     }
 
-    function test_inplace_sort_unsortedLen() public {
+    function test_inplace_sort_unsortedLen() public pure {
         address[] memory arr = new address[](5);
         arr[0] = address(0x10);
         arr[1] = address(0x02);
@@ -138,7 +138,7 @@ contract BetterAddressTest is Test {
     function test_sendValue_transfersEther() public {
         Sender s = new Sender();
         // fund sender
-        address(s).call{value: 1 ether}("");
+        (bool result, bytes memory returnData) = address(s).call{value: 1 ether}("");
         uint256 before = address(this).balance;
         // instruct sender to send 0.5 ether to this test contract
         s.sendTo(payable(address(this)), 0.5 ether);
@@ -157,7 +157,7 @@ contract BetterAddressTest is Test {
         FuncTarget t = new FuncTarget();
         Sender s = new Sender();
         // fund sender
-        address(s).call{value: 1 ether}("");
+        (bool result, bytes memory returnData) = address(s).call{value: 1 ether}("");
         bytes memory ret = s.callTargetWithValue(address(t), abi.encodeWithSelector(t.deposit.selector), 0.3 ether);
         uint256 got = abi.decode(ret, (uint256));
         assertEq(got, 0.3 ether);

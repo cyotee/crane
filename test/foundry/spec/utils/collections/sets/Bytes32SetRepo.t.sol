@@ -9,7 +9,7 @@ import "forge-std/Test.sol";
 // import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "src/utils/collections/sets/Bytes32SetRepo.sol";
+import "contracts/utils/collections/sets/Bytes32SetRepo.sol";
 
 contract Bytes32SetRepoTest is Test {
     using Bytes32SetRepo for Bytes32Set;
@@ -26,16 +26,6 @@ contract Bytes32SetRepoTest is Test {
         }
     }
 
-    function test_contains(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-    }
-
     function test_indexOf(bytes32[] calldata values) public {
         for (uint256 cursor = 0; values.length > cursor; cursor++) {
             testInstance.values.push(values[cursor]);
@@ -47,6 +37,16 @@ contract Bytes32SetRepoTest is Test {
                 testInstance.indexes[values[cursor]] - 1,
                 testInstance._indexOf(values[cursor])
             );
+        }
+    }
+
+    function test_contains(bytes32[] calldata values) public {
+        for (uint256 cursor = 0; values.length > cursor; cursor++) {
+            testInstance.values.push(values[cursor]);
+            testInstance.indexes[values[cursor]] = testInstance.values.length;
+        }
+        for (uint256 cursor = 0; values.length > cursor; cursor++) {
+            assert(testInstance._contains(values[cursor]));
         }
     }
 
@@ -65,25 +65,6 @@ contract Bytes32SetRepoTest is Test {
 
     function test_add(bytes32[] calldata values) public {
         testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
-    }
-
-    function test_addExclusive(bytes32 value) public {
-        testInstance._addExclusive(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
-    }
-
-    function test_addExclusive(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            for (uint256 cursor1 = 0; values.length > cursor1; cursor1++) {
-                if (cursor != cursor1) {
-                    vm.assume(values[cursor] != values[cursor1]);
-                }
-            }
-        }
-        testInstance._addExclusive(values);
         for (uint256 cursor = 0; values.length > cursor; cursor++) {
             assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
         }

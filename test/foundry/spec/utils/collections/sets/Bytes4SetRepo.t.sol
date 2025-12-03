@@ -9,7 +9,7 @@ import "forge-std/Test.sol";
 // import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "src/utils/collections/sets/Bytes4SetRepo.sol";
+import "contracts/utils/collections/sets/Bytes4SetRepo.sol";
 
 contract Bytes4SetRepoTest is Test {
     using Bytes4SetRepo for Bytes4Set;

@@ -1,19 +1,43 @@
 {
   "name": "crane",
+  "license": "AGPL-3.0-or-later",
   "version": "0.0.1",
   "description": "A Dimaond first Solidity development framework",
   "main": "index.js",
   "repository": "https://github.com/cyotee/crane",
   "author": "cyotee <not_cyotee@proton.me>",
-  "license": "AGPL-3.0-or-later",
   "private": false,
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "scripts": {
+    "compile": "forge compile",
+    "test-all": "npx hardhat test && forge test",
     "generate-readme": "asciidoctor -b html5 -a source-highlighter=highlight.js -a icons=font -a sectanchors -a sectlinks -a toc=left -a toclevels=3 -a github docs/README.adoc -o - | pandoc -f html -t gfm --wrap=none > README.md"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-foundry": "^1.2.0",
+    "@nomicfoundation/hardhat-ignition": "^0.15.0",
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@nomicfoundation/hardhat-toolbox-viem": "^4.1.1",
-    "hardhat": "^2.27.0"
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": ">=9.1.0",
+    "@types/node": ">=20.0.0",
+    "chai": "^4.2.0",
+    "ethers": "^6.4.0",
+    "hardhat": "^2.27.1",
+    "hardhat-gas-reporter": "^2.3.0",
+    "mocha": "^10.8.2",
+    "solidity-coverage": "^0.8.0",
+    "ts-node": ">=8.0.0",
+    "typechain": "^8.3.0",
+    "typescript": ">=4.5.0"
   }
 }

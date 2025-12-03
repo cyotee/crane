@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "src/utils/UInt256.sol";
+import "contracts/utils/UInt256.sol";
 
 contract UInt256Caller {
     function toHexWithLen(uint256 v, uint256 len) external pure returns (string memory) {

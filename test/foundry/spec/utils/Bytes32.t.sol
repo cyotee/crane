@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "src/utils/Bytes32.sol";
+import "contracts/utils/Bytes32.sol";
 
 contract Bytes32Test is Test {
     using Bytes32 for bytes32;
@@ -18,7 +18,7 @@ contract Bytes32Test is Test {
         bytes32 expected = bytes32(uint256(v) ^ (uint256(keccak256(abi.encodePacked(address(this)))) - 1));
         assertEq(uint256(scrambled), uint256(expected));
     }
-    
+
     function test_toAddress_roundtrip() public pure {
         address a = address(0x1234567890123456789012345678901234567890);
         bytes32 packed = bytes32(uint256(uint160(a)));
@@ -32,8 +32,8 @@ contract Bytes32Test is Test {
         assertEq(s, "0x00000000000000000000000000000000000000000000000000000000deadbeef");
         // check prefix and length
         bytes memory bs = bytes(s);
-        assertEq(bs[0], bytes1('0'));
-        assertEq(bs[1], bytes1('x'));
+        assertEq(bs[0], bytes1("0"));
+        assertEq(bs[1], bytes1("x"));
         assertEq(bs.length, 66);
     }
 
@@ -70,5 +70,4 @@ contract Bytes32Test is Test {
         bytes32 modified = Bytes32._insertEqPartition(packed, newPart, 1);
         assertEq(uint32(Bytes32._extractEqPartition(modified, 1)), uint32(newPart));
     }
-
 }

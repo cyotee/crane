@@ -1,18 +1,15 @@
 {
+  "lib/Compose": {
+    "rev": "28d74826a532d067556a4c1067cd4722fa78d2ce"
+  },
   "lib/balancer-v3-monorepo": {
-    "rev": "8ec66211456909e8c72c00c4c094aef4d03894c3"
+    "rev": "a2fe650f622e1bd6201537cc5c754afe7feac24a"
   },
   "lib/forge-std": {
-    "tag": {
-      "name": "v1.11.0",
-      "rev": "8e40513d678f392f398620b3ef2b418648b33e89"
-    }
+    "rev": "100b0d756adda67bc70aab816fa5a1a95dcf78b6"
   },
   "lib/openzeppelin-contracts": {
-    "tag": {
-      "name": "v5.5.0",
-      "rev": "fcbae5394ae8ad52d8e580a3477db99814b9d565"
-    }
+    "rev": "6308fdc5e8e0d5e8a94dc9d5d4c79f6331334c81"
   },
   "lib/permit2": {
     "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
@@ -20,13 +17,22 @@
   "lib/reclamm": {
     "rev": "ab51e0b2ffc6c3a39df940dc1de4651a672cfa47"
   },
+  "lib/scaffold-eth-2": {
+    "rev": "f94c6c368c5b83f331eb0e04f88650568fea67de"
+  },
   "lib/solady": {
+    "rev": "73f13dd1483707ef6b4d16cb0543570b7e1715a8"
+  },
+  "lib/solidity-lib": {
     "tag": {
-      "name": "v0.1.26",
-      "rev": "acd959aa4bd04720d640bf4e6a5c71037510cc4b"
+      "name": "v3.3.0",
+      "rev": "c3fc8b3c8439bfdbd55c86485a3418f2e167c962"
     }
   },
   "lib/solmate": {
     "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
+  },
+  "lib/solplot": {
+    "rev": "f29f41afb44da7c7ed08115e167b2be8618d7f9b"
   }
 }
