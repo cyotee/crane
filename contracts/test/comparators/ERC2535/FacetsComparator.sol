@@ -5,14 +5,14 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IDiamondLoupe} from "contracts/interfaces/IDiamondLoupe.sol";
-import {Bytes4Set, Bytes4SetRepo} from "contracts/utils/collections/sets/Bytes4SetRepo.sol";
-import {AddressSet, AddressSetRepo} from "contracts/utils/collections/sets/AddressSetRepo.sol";
-import {AddressSetComparatorRepo, AddressSetComparator} from "contracts/test/comparators/AddressSetComparator.sol";
-import {Bytes4SetComparatorRepo, Bytes4SetComparator} from "contracts/test/comparators/Bytes4SetComparator.sol";
-import {BehaviorUtils} from "contracts/test/behaviors/BehaviorUtils.sol";
-import {SetComparatorLogger} from "contracts/test/comparators/SetComparatorLogger.sol";
-import {Bytes32} from "contracts/utils/Bytes32.sol";
+import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
+import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
+import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
+import {AddressSetComparatorRepo, AddressSetComparator} from "@crane/contracts/test/comparators/AddressSetComparator.sol";
+import {Bytes4SetComparatorRepo, Bytes4SetComparator} from "@crane/contracts/test/comparators/Bytes4SetComparator.sol";
+import {BehaviorUtils} from "@crane/contracts/test/behaviors/BehaviorUtils.sol";
+import {SetComparatorLogger} from "@crane/contracts/test/comparators/SetComparatorLogger.sol";
+import {Bytes32} from "@crane/contracts/utils/Bytes32.sol";
 
 library FacetsComparatorRepo {
     using AddressSetRepo for AddressSet;

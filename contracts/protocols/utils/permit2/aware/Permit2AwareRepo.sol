@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
 /*                                   Permit2                                  */
 /* -------------------------------------------------------------------------- */
 
-import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+// import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IPermit2Aware} from "contracts/interfaces/IPermit2Aware.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2Aware} from "@crane/contracts/interfaces/IPermit2Aware.sol";
 
 // tag::struct[]
 struct Permit2AwareLayout {
@@ -44,12 +45,12 @@ library Permit2AwareRepo {
         return STORAGE_SLOT._layout();
     }
 
-    function _initPermit2Aware(Permit2AwareLayout storage layout, IPermit2 permit2) internal {
+    function _initialize(Permit2AwareLayout storage layout, IPermit2 permit2) internal {
         layout.permit2 = permit2;
     }
 
-    function _initPermit2Aware(IPermit2 permit2) internal {
-        _initPermit2Aware(_layout(), permit2);
+    function _initialize(IPermit2 permit2) internal {
+        _initialize(_layout(), permit2);
     }
 
     function _permit2(Permit2AwareLayout storage layout) internal view returns (IPermit2) {

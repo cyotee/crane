@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IDiamond} from "./IDiamond.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
 interface IDiamondCut {
     /**

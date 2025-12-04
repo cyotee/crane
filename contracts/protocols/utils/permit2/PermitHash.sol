@@ -7,8 +7,8 @@ pragma solidity ^0.8.17;
 
 import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
 
-import {IAllowanceTransfer} from "contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import {ISignatureTransfer} from "contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {ISignatureTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
 
 library PermitHash {
     using EfficientHashLib for bytes;

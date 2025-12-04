@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterIERC20Permit as IERC20Permit} from "contracts/interfaces/BetterIERC20Permit.sol";
+import {BetterIERC20Permit as IERC20Permit} from "@crane/contracts/interfaces/BetterIERC20Permit.sol";
+import {BetterIERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
-interface ICamelotPair is IERC20Permit {
+interface ICamelotPair is BetterIERC20, IERC20Permit {
     // event Approval(address indexed owner, address indexed spender, uint value);
     // event Transfer(address indexed from, address indexed to, uint value);
 

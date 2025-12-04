@@ -6,26 +6,27 @@ pragma solidity ^0.8.24;
 /*                                   Solday                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
+// import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/constants/Constants.sol";
+import "@crane/contracts/constants/Constants.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-// import {ERC2612Storage} from "contracts/token/ERC20/extensions/utils/ERC2612Storage.sol";
+// import {ERC2612Storage} from "@crane/contracts/token/ERC20/extensions/utils/ERC2612Storage.sol";
 // import {
 //     IERC20Storage
 //     // ERC20Storage
-// } from "contracts/crane/token/ERC20/utils/ERC20Storage.sol";
-import {ERC20Target} from "contracts/tokens/ERC20/ERC20Target.sol";
-import {ERC5267Target} from "contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
-import {IERC20Permit, IERC2612} from "contracts/interfaces/IERC2612.sol";
-import {ERC2612Repo} from "contracts/tokens/ERC2612/ERC2612Repo.sol";
-import {EIP712Repo} from "contracts/utils/cryptography/EIP712/EIP712Repo.sol";
-import {ERC20Repo} from "contracts/tokens/ERC20/ERC20Repo.sol";
+// } from "@crane/contracts/crane/token/ERC20/utils/ERC20Storage.sol";
+import {ERC20Target} from "@crane/contracts/tokens/ERC20/ERC20Target.sol";
+import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
+import {IERC20Permit, IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
+import {ERC2612Repo} from "@crane/contracts/tokens/ERC2612/ERC2612Repo.sol";
+import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
+import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @title ERC2612Target - "Gasless" spending limit approval contract.
@@ -37,8 +38,8 @@ import {ERC20Repo} from "contracts/tokens/ERC20/ERC20Repo.sol";
  * presenting a message signed by the account. By not relying on `{IERC20-approve}`, the token holder account doesn't
  * need to send a transaction, and thus is not required to hold Ether at all.
  */
-contract ERC2612Target is ERC5267Target, ERC20Target, IERC2612 {
-    using EfficientHashLib for bytes;
+contract ERC2612Target is IERC2612 {
+    using BetterEfficientHashLib for bytes;
 
     // bytes32 private constant PERMIT_TYPEHASH
     //     = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
@@ -56,7 +57,7 @@ contract ERC2612Target is ERC5267Target, ERC20Target, IERC2612 {
 
         // bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
         bytes32 structHash =
-            abi.encode(_PERMIT_TYPEHASH, owner, spender, value, ERC2612Repo._useNonce(owner), deadline).hash();
+            abi.encode(_PERMIT_TYPEHASH, owner, spender, value, ERC2612Repo._useNonce(owner), deadline)._hash();
 
         bytes32 hash = EIP712Repo._hashTypedDataV4(structHash);
 

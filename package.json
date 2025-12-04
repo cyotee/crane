@@ -14,6 +14,7 @@
   "scripts": {
     "compile": "forge compile",
     "test-all": "npx hardhat test && forge test",
+    "test-corpus": "FOUNDRY_INVARIANT_CORPUS_DIR='corpus' FOUNDRY_INVARIANT_CORPUS_GZIP=true forge test",
     "generate-readme": "asciidoctor -b html5 -a source-highlighter=highlight.js -a icons=font -a sectanchors -a sectlinks -a toc=left -a toclevels=3 -a github docs/README.adoc -o - | pandoc -f html -t gfm --wrap=none > README.md"
   },
   "devDependencies": {

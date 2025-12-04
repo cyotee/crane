@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                                Open Zeppelin                               */
@@ -12,100 +12,57 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {ERC20Layout, ERC20Repo} from "contracts/tokens/ERC20/ERC20Repo.sol";
-import {BetterIERC20} from "contracts/interfaces/BetterIERC20.sol";
-import {IFacet} from "contracts/interfaces/IFacet.sol";
+import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
+import {ERC2612Target} from "@crane/contracts/tokens/ERC2612/ERC2612Target.sol";
+import {BetterIERC20Permit} from "@crane/contracts/interfaces/BetterIERC20Permit.sol";
+import {ERC20Target} from "@crane/contracts/tokens/ERC20/ERC20Target.sol";
+import {ERC20PermitTarget} from "@crane/contracts/tokens/ERC20/ERC20PermitTarget.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+// import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
+// import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
 
-contract ERC20Facet is BetterIERC20, IFacet {
-    /* -------------------------------------------------------------------------- */
-    /*                              IFacet Functions                              */
-    /* -------------------------------------------------------------------------- */
-
-    function facetInterfaces() external pure returns (bytes4[] memory facetInterfaces_) {
-        facetInterfaces_ = new bytes4[](3);
-        facetInterfaces_[0] = type(IERC20Metadata).interfaceId;
-        facetInterfaces_[1] = type(IERC20).interfaceId;
-        facetInterfaces_[2] = type(IERC20).interfaceId ^ type(IERC20Metadata).interfaceId;
+contract ERC20Facet is ERC20Target, IFacet {
+    function facetName() public pure returns (string memory name) {
+        return type(ERC20Facet).name;
     }
 
-    function facetFuncs() external pure returns (bytes4[] memory facetFuncs_) {
-        facetFuncs_ = new bytes4[](9);
-        facetFuncs_[0] = IERC20Metadata.name.selector;
-        facetFuncs_[1] = IERC20Metadata.symbol.selector;
-        facetFuncs_[2] = IERC20Metadata.decimals.selector;
-        facetFuncs_[3] = IERC20.totalSupply.selector;
-        facetFuncs_[4] = IERC20.balanceOf.selector;
-        facetFuncs_[5] = IERC20.allowance.selector;
-        facetFuncs_[6] = IERC20.approve.selector;
-        facetFuncs_[7] = IERC20.transfer.selector;
-        facetFuncs_[8] = IERC20.transferFrom.selector;
+    function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](3);
+
+        interfaces[0] = type(IERC20).interfaceId;
+        interfaces[1] = type(IERC20Metadata).interfaceId;
+        interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                              IERC20 Functions                              */
-    /* -------------------------------------------------------------------------- */
+    function facetFuncs()
+        public
+        pure
+        virtual
+        returns (
+            // override
+            bytes4[] memory funcs
+        )
+    {
+        funcs = new bytes4[](9);
 
-    function approve(address spender, uint256 amount) external returns (bool) {
-        ERC20Repo._approve(msg.sender, spender, amount);
-        return true;
+        funcs[0] = IERC20Metadata.name.selector;
+        funcs[1] = IERC20Metadata.symbol.selector;
+        funcs[2] = IERC20Metadata.decimals.selector;
+        funcs[3] = IERC20.totalSupply.selector;
+        funcs[4] = IERC20.balanceOf.selector;
+        funcs[5] = IERC20.allowance.selector;
+        funcs[6] = IERC20.approve.selector;
+        funcs[7] = IERC20.transfer.selector;
+        funcs[8] = IERC20.transferFrom.selector;
     }
 
-    /**
-     * @inheritdoc IERC20
-     */
-    function transfer(address recipient, uint256 amount) external returns (bool) {
-        ERC20Repo._transfer(msg.sender, recipient, amount);
-        return true;
-    }
-
-    function transferFrom(address owner, address recipient, uint256 amount) external returns (bool) {
-        ERC20Repo._transfer(owner, recipient, amount);
-        return true;
-    }
-
-    /**
-     * @inheritdoc IERC20
-     */
-    function totalSupply() external view returns (uint256) {
-        return ERC20Repo._totalSupply();
-    }
-
-    /**
-     * @inheritdoc IERC20
-     */
-    function balanceOf(address account) external view returns (uint256) {
-        return ERC20Repo._balanceOf(account);
-    }
-
-    /**
-     * @inheritdoc IERC20
-     */
-    function allowance(address owner, address spender) external view returns (uint256) {
-        return ERC20Repo._allowance(owner, spender);
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                          IERC20Metadata Functions                          */
-    /* -------------------------------------------------------------------------- */
-
-    /**
-     * @inheritdoc IERC20Metadata
-     */
-    function name() external view returns (string memory) {
-        return ERC20Repo._name();
-    }
-
-    /**
-     * @inheritdoc IERC20Metadata
-     */
-    function symbol() external view returns (string memory) {
-        return ERC20Repo._symbol();
-    }
-
-    /**
-     * @inheritdoc IERC20Metadata
-     */
-    function decimals() external view returns (uint8) {
-        return ERC20Repo._decimals();
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 }

@@ -29,14 +29,14 @@ contract BetterBytesRevertHarness {
 contract BetterBytesTest is Test {
     using BetterBytes for bytes;
 
-    function test_indexOf_and_indexOf_fromPos() public {
+    function test_indexOf_and_indexOf_fromPos() public pure {
         bytes memory buf = "hello world";
         // 'o' first at 4, second at 7
         assertEq(BetterBytes._indexOf(buf, bytes1("o")), 4);
         assertEq(BetterBytes._indexOf(buf, bytes1("o"), 5), 7);
     }
 
-    function test_lastIndexOf_and_fromPos() public {
+    function test_lastIndexOf_and_fromPos() public pure {
         bytes memory buf = "abca";
         // last 'a' is at index 3
         assertEq(BetterBytes._lastIndexOf(buf, bytes1("a")), 3);
@@ -44,7 +44,7 @@ contract BetterBytesTest is Test {
         assertEq(BetterBytes._lastIndexOf(buf, bytes1("a"), 2), 0);
     }
 
-    function test_slice_start_and_slice_start_end() public {
+    function test_slice_start_and_slice_start_end() public pure {
         bytes memory data = hex"01020304";
         bytes memory s1 = BetterBytes._slice(data, 1);
         assertEq(s1, hex"020304");
@@ -54,7 +54,7 @@ contract BetterBytesTest is Test {
         assertEq(s2, hex"0203");
     }
 
-    function test_prependToArray_putsValueFirst() public {
+    function test_prependToArray_putsValueFirst() public pure {
         bytes[] memory arr = new bytes[](2);
         arr[0] = hex"01";
         arr[1] = hex"02";
@@ -65,20 +65,20 @@ contract BetterBytesTest is Test {
         assertEq(out[2], hex"02");
     }
 
-    function test_toAddress_roundtrip() public {
+    function test_toAddress_roundtrip() public pure {
         address expected = address(bytes20(hex"1234567890abcdef1234567890abcdef12345678"));
         bytes memory b = abi.encodePacked(expected);
         address got = BetterBytes._toAddress(b, 0);
         assertEq(got, expected);
     }
 
-    function test_toHexString_prefixAndChars() public {
+    function test_toHexString_prefixAndChars() public pure {
         bytes memory b = hex"0a1b";
         string memory s = BetterBytes._toHexString(b);
         assertEq(s, string("0x0a1b"));
     }
 
-    function test_toUint_variants() public {
+    function test_toUint_variants() public pure {
         bytes memory b1 = abi.encodePacked(uint8(0x7f));
         assertEq(BetterBytes._toUint8(b1, 0), uint8(0x7f));
 
@@ -101,13 +101,13 @@ contract BetterBytesTest is Test {
         assertEq(BetterBytes._toUint256(b32, 0), uint256(0xdeadbeef));
     }
 
-    function test_toBytes32_roundtrip() public {
+    function test_toBytes32_roundtrip() public pure {
         bytes32 v = bytes32(uint256(0xabcdef));
         bytes memory b = abi.encodePacked(v);
         assertEq(BetterBytes._toBytes32(b, 0), v);
     }
 
-    function test_equal_memory_comparisons() public {
+    function test_equal_memory_comparisons() public pure {
         bytes memory a = hex"010203";
         bytes memory b = hex"010203";
         bytes memory c = hex"010204";

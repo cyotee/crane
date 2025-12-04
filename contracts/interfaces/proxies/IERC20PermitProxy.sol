@@ -12,12 +12,13 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import {IERC2612} from "contracts/interfaces/IERC2612.sol";
-import {BetterIERC20Permit} from "contracts/interfaces/BetterIERC20Permit.sol";
+// import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
+import {BetterIERC20Permit} from "@crane/contracts/interfaces/BetterIERC20Permit.sol";
+import {BetterIERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 /**
  * @title BetterIERC20Permit
  * @author cyotee doge <doge.cyotee>
  * @dev Composes IERC5267 and ERC2612 as IERC20Permit.
  */
-interface IERC20PermitProxy is BetterIERC20Permit {}
+interface IERC20PermitProxy is BetterIERC20, BetterIERC20Permit {}

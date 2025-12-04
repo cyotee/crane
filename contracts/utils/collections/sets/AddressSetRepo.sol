@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {InvalidPageSize} from "contracts/GeneralErrors.sol";
-import {BetterArrays as Arrays} from "contracts/utils/collections/BetterArrays.sol";
+import {InvalidPageSize} from "@crane/contracts/GeneralErrors.sol";
+import {BetterArrays as Arrays} from "@crane/contracts/utils/collections/BetterArrays.sol";
 
 struct AddressSet {
     // 1-indexed to allow 0 to signify nonexistence

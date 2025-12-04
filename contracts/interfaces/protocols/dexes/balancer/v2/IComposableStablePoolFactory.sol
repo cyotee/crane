@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {IRateProvider} from "contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
-import {IBasePool} from "contracts/interfaces/protocols/dexes/balancer/v2/IBasePool.sol";
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IBasePool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IBasePool.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 //
 

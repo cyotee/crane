@@ -11,7 +11,7 @@ import {TransientSlot} from "@openzeppelin/contracts/utils/TransientSlot.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IReentrancyLock} from "contracts/interfaces/IReentrancyLock.sol";
+import {IReentrancyLock} from "@crane/contracts/interfaces/IReentrancyLock.sol";
 
 library ReentrancyLockRepo {
     using TransientSlot for *;

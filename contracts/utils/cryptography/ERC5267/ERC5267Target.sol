@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
-import {EIP712Layout, EIP712Repo} from "contracts/utils/cryptography/EIP712/EIP712Repo.sol";
+import {EIP712Layout, EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 
 /**
  * @title ERC5267Target - ERC712 domain declaration standardization contract.

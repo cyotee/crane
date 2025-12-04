@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// import { IGreeter } from "contracts/crane/test/stubs/greeter/IGreeter.sol";
-import {GreeterStub} from "contracts/test/stubs/greeter/GreeterStub.sol";
-import {ReentrancyLockModifiers} from "contracts/access/reentrancy/ReentrancyLockModifiers.sol";
-import {ReentrancyLockTarget} from "contracts/access/reentrancy/ReentrancyLockTarget.sol";
+// import { IGreeter } from "@crane/contracts/crane/test/stubs/greeter/IGreeter.sol";
+import {GreeterStub} from "@crane/contracts/test/stubs/greeter/GreeterStub.sol";
+import {ReentrancyLockModifiers} from "@crane/contracts/access/reentrancy/ReentrancyLockModifiers.sol";
+import {ReentrancyLockTarget} from "@crane/contracts/access/reentrancy/ReentrancyLockTarget.sol";
 
 contract NonReentrantGreeterStub is GreeterStub, ReentrancyLockModifiers, ReentrancyLockTarget {
     bool public shouldReenter;

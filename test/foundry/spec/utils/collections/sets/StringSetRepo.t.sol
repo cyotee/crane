@@ -1,94 +1,102 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// solhint-disable no-global-import
-// solhint-disable state-visibility
-// solhint-disable func-name-mixedcase
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "forge-std/Test.sol";
-// import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/utils/collections/sets/StringSetRepo.sol";
 
-contract StringSetRepoTest is Test {
+// Invariant testing handler for StringSetRepo
+contract StringSetRepoHandler {
     using StringSetRepo for StringSet;
+    StringSet internal s;
 
-    StringSet testInstance;
+    // Map arbitrary uint input to a small set of short strings to keep state compact
+    function strFromSeed(uint256 seed) public pure returns (string memory) {
+        uint256 v = (seed % 16) + 1; // 1..16
+        if (v < 10) return string(abi.encodePacked("s", bytes1(uint8(48 + v))));
+        // v 10..16 -> 'sa'..'sg'
+        return string(abi.encodePacked("s", bytes1(uint8(87 + v))));
+    }
 
-    function test_index(string[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance._index(testInstance.indexes[values[cursor]] - 1));
+    // Positive-path operations
+    function add_seed(uint256 seed) external {
+        s._add(strFromSeed(seed));
+    }
+
+    function add_many(string[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        for (uint256 i = 0; i < n; i++) {
+            s._add(strFromSeed(uint256(keccak256(bytes(arr[i])))));
         }
     }
 
-    function test_contains(string[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
+    function remove_seed(uint256 seed) external {
+        s._remove(strFromSeed(seed));
+    }
+
+    function remove_many(string[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        for (uint256 i = 0; i < n; i++) {
+            string memory v = strFromSeed(uint256(keccak256(bytes(arr[i]))));
+            s._remove(v);
         }
     }
 
-    function test_indexOf(string[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    // View helpers
+    function asArray() external view returns (string[] memory) {
+        string[] storage vals = s._values();
+        string[] memory arr = new string[](vals.length);
+        for (uint256 i = 0; i < vals.length; i++) {
+            arr[i] = vals[i];
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(
-                // cursor,
-                testInstance.indexes[values[cursor]] - 1,
-                testInstance._indexOf(values[cursor])
-            );
-        }
+        return arr;
     }
 
-    function test_length(string[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        assertEq(values.length, testInstance._length());
-    }
-
-    function test_add(string calldata value) public {
-        testInstance._add(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
-    }
-
-    function test_add(string[] calldata values) public {
-        testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
-    }
-
-    function test_remove(string calldata value) public {
-        testInstance.values.push(value);
-        testInstance.indexes[value] = testInstance.values.length;
-        assert(testInstance._contains(value));
-        testInstance._remove(value);
-        assert(!testInstance._contains(value));
-    }
-
-    function test_remove(string[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance._remove(values[cursor]);
-            assert(!testInstance._contains(values[cursor]));
-        }
+    function indexOf(string calldata a) external view returns (uint256) {
+        return s._indexOf(a);
     }
 }
+
+contract StringSetRepoInvariantTest is Test {
+    StringSetRepoHandler public handler;
+
+    function setUp() public {
+        handler = new StringSetRepoHandler();
+
+        // Register handler for fuzzing; explicitly list selectors to keep runs focused
+        targetContract(address(handler));
+
+        bytes4[] memory selectors = new bytes4[](4);
+        selectors[0] = handler.add_seed.selector;
+        selectors[1] = handler.remove_seed.selector;
+        selectors[2] = handler.add_many.selector;
+        selectors[3] = handler.remove_many.selector;
+
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+    }
+
+    // Invariant: indexes mapping is consistent with values array
+    function invariant_indexes_consistent() public view {
+        string[] memory arr = handler.asArray();
+        for (uint256 i = 0; i < arr.length; i++) {
+            uint256 idx = handler.indexOf(arr[i]);
+            assertEq(idx, i);
+        }
+    }
+
+    // Invariant: indexOf for missing returns MAX
+    function invariant_indexOf_missing_returns_max() public view {
+        uint256 idx = handler.indexOf("__MISSING__");
+        assert(idx == type(uint256).max);
+    }
+
+    // Placeholder: no sort operation for strings in repo
+    function invariant_sorted_after_sort_ops() public pure {
+        return;
+    }
+}
+

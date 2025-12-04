@@ -18,9 +18,9 @@ import {Bytes} from "@openzeppelin/contracts/utils/Bytes.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {HEX_SYMBOLS} from "contracts/constants/Constants.sol";
+import {HEX_SYMBOLS} from "@crane/contracts/constants/Constants.sol";
 
-import {BetterStrings as Strings} from "contracts/utils/BetterStrings.sol";
+import {BetterStrings as Strings} from "@crane/contracts/utils/BetterStrings.sol";
 
 // TODO Write NatSpec comments.
 // TODO Complete unit testing for all functions.

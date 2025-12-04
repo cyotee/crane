@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
-import {IERC2612} from "contracts/interfaces/IERC2612.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 
 /**
  * @custom:interfaceid 0x3510a6a0

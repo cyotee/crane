@@ -15,7 +15,7 @@
 pragma solidity ^0.8.24;
 pragma experimental ABIEncoderV2;
 
-import {IBasePool} from "./IBasePool.sol";
+import {IBasePool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IBasePool.sol";
 
 /**
  * @dev IPools with the General specialization setting should implement this interface.

@@ -12,7 +12,7 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC2
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20} from "./BetterIERC20.sol";
+import {BetterIERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 /**
  * @title IERC2612 - "Gasless" spending limit approval interface.
@@ -52,7 +52,7 @@ import {BetterIERC20} from "./BetterIERC20.sol";
  * Additionally, note that smart contract wallets (such as Argent or Safe) are not able to produce permit signatures, so
  * contracts should have entry points that don't rely on permit.
  */
-interface IERC2612 is BetterIERC20, IERC20Permit {
+interface IERC2612 is IERC20Permit {
     /**
      * @dev Permit deadline has expired.
      */

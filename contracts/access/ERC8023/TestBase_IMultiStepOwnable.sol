@@ -12,7 +12,7 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IMultiStepOwnable} from "contracts/interfaces/IMultiStepOwnable.sol";
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
 
 contract MultiStepOwnableHandler is Test {
     IMultiStepOwnable public immutable ownable;
@@ -158,7 +158,7 @@ abstract contract TestBase_IMultiStepOwnable is StdInvariant, Test {
         selectors[8] = handler.wrongGuy_acceptOwnershipTransfer.selector;
 
         // Register only the explicit handler selectors for fuzzing (avoid fuzzing SUT directly)
-        targetSelector(FuzzSelector({ addr: address(handler), selectors: selectors }));
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
         excludeContract(address(ownable));
     }
 

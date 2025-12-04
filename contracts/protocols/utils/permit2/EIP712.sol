@@ -7,7 +7,7 @@ pragma solidity ^0.8.17;
 
 import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
 
-import {IEIP712} from "contracts/interfaces/IEIP712.sol";
+import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
 
 /// @notice EIP712 helpers for permit2
 /// @dev Maintains cross-chain replay protection in the event of a fork

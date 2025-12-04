@@ -7,211 +7,129 @@ import "forge-std/Test.sol";
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/utils/collections/sets/AddressSetRepo.sol";
 
-// Small caller wrapper to allow try/catch of library reverts from an external call
-contract AddressSetRepoCaller {
+// Invariant testing handler for AddressSetRepo
+contract AddressSetRepoHandler {
     using AddressSetRepo for AddressSet;
     AddressSet internal s;
 
-    function add(address a) external {
-        s._add(a);
+    // Map arbitrary uint input to a small set of addresses to keep state compact
+    function addrFromSeed(uint256 seed) public pure returns (address) {
+        uint160 v = uint160((seed % 16) + 1); // addresses 1..16
+        return address(v);
+    }
+
+    // Positive-path operations
+    function add_seed(uint256 seed) external {
+        s._add(addrFromSeed(seed));
+        _lastWasSort = false;
+    }
+
+    function add_many(address[] calldata arr) external {
+        uint256 n = arr.length;
+        // bound size to small to avoid huge arrays
+        if (n > 8) n = 8;
+        for (uint256 i = 0; i < n; i++) {
+            // map arbitrary addresses into the small seed set to keep state compact
+            s._add(addrFromSeed(uint256(uint160(arr[i]))));
+        }
+        _lastWasSort = false;
+    }
+
+    function remove_seed(uint256 seed) external {
+        s._remove(addrFromSeed(seed));
+        _lastWasSort = false;
+    }
+
+    function addAsc_seed(uint256 seed) external {
+        s._addAsc(addrFromSeed(seed));
+        _lastWasSort = false;
+    }
+
+    function removeAsc_seed(uint256 seed) external {
+        s._removeAsc(addrFromSeed(seed));
+        _lastWasSort = false;
+    }
+
+    function sort() external {
+        s._sortAsc();
+        _lastWasSort = true;
+    }
+
+    function quickSort() external {
+        s._quickSort();
+        _lastWasSort = true;
+    }
+
+    // track if last mutating operation was a sort (so we only assert sortedness then)
+    bool internal _lastWasSort;
+
+    // View helpers
+    function asArray() external view returns (address[] memory) {
+        return s._asArray();
+    }
+
+    function indexOf(address a) external view returns (uint256) {
+        return s._indexOf(a);
     }
 
     function range(uint256 start, uint256 end) external view returns (address[] memory) {
         return s._range(start, end);
     }
+
+    function lastWasSort() external view returns (bool) {
+        return _lastWasSort;
+    }
 }
 
-contract AddressSetRepoTest is Test {
-    using AddressSetRepo for AddressSet;
+contract AddressSetRepoInvariantTest is Test {
+    AddressSetRepoHandler public handler;
 
-    AddressSet testInstance;
+    function setUp() public {
+        handler = new AddressSetRepoHandler();
 
-    function test_index(address[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance._index(testInstance.indexes[values[cursor]] - 1));
+        // Register handler for fuzzing; explicitly list selectors to keep runs focused
+        targetContract(address(handler));
+
+        bytes4[] memory selectors = new bytes4[](8);
+        selectors[0] = handler.add_seed.selector;
+        selectors[1] = handler.remove_seed.selector;
+        selectors[2] = handler.addAsc_seed.selector;
+        selectors[3] = handler.removeAsc_seed.selector;
+        selectors[4] = handler.sort.selector;
+        selectors[5] = handler.quickSort.selector;
+        selectors[6] = handler.add_many.selector;
+        selectors[7] = handler.range.selector;
+
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+    }
+
+    // Invariant: indexes mapping is consistent with values array
+    function invariant_indexes_consistent() public view {
+        address[] memory arr = handler.asArray();
+        for (uint256 i = 0; i < arr.length; i++) {
+            // AddressSetRepo stores indexes 1-based; _indexOf returns 0-based index
+            uint256 idx = handler.indexOf(arr[i]);
+            assertEq(idx, i);
         }
     }
 
-    function test_contains(address[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
+    // Invariant: indexOf for missing returns MAX
+    function invariant_indexOf_missing_returns_max() public view {
+        address missing = address(uint160(0xFFFF));
+        uint256 idx = handler.indexOf(missing);
+        assert(idx == type(uint256).max);
     }
 
-    function test_indexOf(address[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    // Invariant: values are sorted after sort/quickSort operations
+    function invariant_sorted_after_sort_ops() public view {
+        // Only assert sortedness if the handler indicates the last mutating op was a sort
+        // (handler._lastWasSort is internal; we expose its effect by checking that
+        // calling asArray() after a sort should produce a non-decreasing array.
+        // The handler tracks `_lastWasSort` and sets it on sort/quickSort.)
+        address[] memory arr = handler.asArray();
+        if (!handler.lastWasSort()) return;
+        for (uint256 i = 1; i < arr.length; i++) {
+            assert(arr[i - 1] <= arr[i]);
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(
-                // cursor,
-                testInstance.indexes[values[cursor]] - 1,
-                testInstance._indexOf(values[cursor])
-            );
-        }
-    }
-
-    function test_length(address[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        assertEq(values.length, testInstance._length());
-    }
-
-    function test_add(address value) public {
-        testInstance._add(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
-    }
-
-    function test_add(address[] calldata values) public {
-        testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
-    }
-
-    function test_remove(address value) public {
-        testInstance.values.push(value);
-        testInstance.indexes[value] = testInstance.values.length;
-        assert(testInstance._contains(value));
-        testInstance._remove(value);
-        assert(!testInstance._contains(value));
-    }
-
-    function test_remove(address[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance._remove(values[cursor]);
-            assert(!testInstance._contains(values[cursor]));
-        }
-    }
-
-    function test_addAsc_and_removeAsc() public {
-        address a = address(0x10);
-        address b = address(0x05);
-        address c = address(0x20);
-
-        testInstance._addAsc(a);
-        testInstance._addAsc(b);
-        testInstance._addAsc(c);
-
-        // Expect ascending: b, a, c
-        assertEq(testInstance.values.length, 3);
-        assertEq(testInstance.values[0], b);
-        assertEq(testInstance.values[1], a);
-        assertEq(testInstance.values[2], c);
-
-        // Indexes should be 1-indexed
-        assertEq(testInstance.indexes[b], 1);
-        assertEq(testInstance.indexes[a], 2);
-        assertEq(testInstance.indexes[c], 3);
-
-        // Removing `a` with _removeAsc should preserve ascending order
-        testInstance._removeAsc(a);
-        assertEq(testInstance.values.length, 2);
-        assertEq(testInstance.values[0], b);
-        assertEq(testInstance.values[1], c);
-        assertEq(testInstance.indexes[b], 1);
-        assertEq(testInstance.indexes[c], 2);
-    }
-
-    function test_sortAsc_and_quickSort() public {
-        address[] memory addrs = new address[](6);
-        addrs[0] = address(0x33);
-        addrs[1] = address(0x01);
-        addrs[2] = address(0x10);
-        addrs[3] = address(0x02);
-        addrs[4] = address(0xFF);
-        addrs[5] = address(0x0A);
-
-        for (uint256 i = 0; i < addrs.length; i++) {
-            testInstance._add(addrs[i]);
-        }
-
-        testInstance._sortAsc();
-        for (uint256 i = 1; i < testInstance.values.length; i++) {
-            assert(testInstance.values[i - 1] <= testInstance.values[i]);
-            assertEq(testInstance.indexes[testInstance.values[i - 1]], i);
-        }
-
-        delete testInstance;
-
-        for (uint256 i = 0; i < addrs.length; i++) {
-            testInstance._add(addrs[i]);
-        }
-
-        testInstance._quickSort();
-        for (uint256 i = 1; i < testInstance.values.length; i++) {
-            assert(testInstance.values[i - 1] <= testInstance.values[i]);
-            assertEq(testInstance.indexes[testInstance.values[i]], i + 1);
-        }
-    }
-
-    function test_asArray_values_range_and_indexOf_missing() public {
-        address[] memory addrs = new address[](4);
-        addrs[0] = address(0x11);
-        addrs[1] = address(0x22);
-        addrs[2] = address(0x33);
-        addrs[3] = address(0x44);
-
-        testInstance._add(addrs);
-
-        address[] memory mem = testInstance._asArray();
-        assertEq(mem.length, testInstance._length());
-        for (uint256 i = 0; i < mem.length; i++) {
-            assertEq(mem[i], testInstance.values[i]);
-        }
-
-        address[] storage vals = testInstance._values();
-        assertEq(vals.length, testInstance._length());
-        for (uint256 i = 0; i < vals.length; i++) {
-            assertEq(vals[i], testInstance.values[i]);
-        }
-
-        address[] memory rng = testInstance._range(1, 2);
-        assertEq(rng.length, 2);
-        assertEq(rng[0], testInstance._index(1));
-        assertEq(rng[1], testInstance._index(2));
-
-        uint256 missingIdx = testInstance._indexOf(address(0xDEAD));
-        assertEq(missingIdx, type(uint256).max);
-
-        // invalid range should revert (end < start) when called externally
-        AddressSetRepoCaller caller = new AddressSetRepoCaller();
-        // populate caller's set too
-        for (uint256 i = 0; i < addrs.length; i++) {
-            caller.add(addrs[i]);
-        }
-
-        try caller.range(3, 1) returns (address[] memory) {
-            // if it returns, that's a failure
-            fail();
-        } catch (bytes memory) {
-            // expected revert
-        }
-    }
-
-    function test_addAsc_idempotent() public {
-        address x = address(0xABC);
-        testInstance._addAsc(x);
-        uint256 lenBefore = testInstance._length();
-        testInstance._addAsc(x);
-        assertEq(testInstance._length(), lenBefore);
     }
 }

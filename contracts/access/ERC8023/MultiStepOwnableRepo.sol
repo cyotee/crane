@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IMultiStepOwnable} from "contracts/interfaces/IMultiStepOwnable.sol";
-
-struct MultiStepOwnableLayout {
-    address owner;
-    address pendingOwner;
-    bool pendingOwnerConfirmed;
-    uint256 ownershipBufferPeriod;
-    uint256 bufferPeriodEnd;
-}
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
 
 library MultiStepOwnableRepo {
     bytes32 internal constant STORAGE_SLOT = keccak256("daosys.crane.contracts.access.ownable.OwnableRepo");
 
-    function _layout() internal pure returns (MultiStepOwnableLayout storage layout) {
+    struct Storage {
+        address owner;
+        address pendingOwner;
+        bool pendingOwnerConfirmed;
+        uint256 ownershipBufferPeriod;
+        uint256 bufferPeriodEnd;
+    }
+
+    function _layout() internal pure returns (Storage storage layout) {
         bytes32 slot = STORAGE_SLOT;
         assembly {
             layout.slot := slot
         }
     }
 
-    function _initialize(MultiStepOwnableLayout storage layout, address initialOwner, uint256 ownershipBufferPeriod)
+    function _initialize(Storage storage layout, address initialOwner, uint256 ownershipBufferPeriod)
         internal
     {
         layout.owner = initialOwner;
@@ -32,7 +32,7 @@ library MultiStepOwnableRepo {
         _initialize(_layout(), initialOwner, ownershipBufferPeriod);
     }
 
-    function _onlyOwner(MultiStepOwnableLayout storage layout) internal view {
+    function _onlyOwner(Storage storage layout) internal view {
         if (msg.sender != layout.owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
         }
@@ -42,7 +42,7 @@ library MultiStepOwnableRepo {
         _onlyOwner(_layout());
     }
 
-    function _onlyPendingOwner(MultiStepOwnableLayout storage layout) internal view {
+    function _onlyPendingOwner(Storage storage layout) internal view {
         if (msg.sender != layout.pendingOwner) {
             revert IMultiStepOwnable.NotPending(msg.sender);
         }
@@ -52,7 +52,7 @@ library MultiStepOwnableRepo {
         _onlyPendingOwner(_layout());
     }
 
-    function _initiateOwnershipTransfer(MultiStepOwnableLayout storage layout, address pendingOwner) internal {
+    function _initiateOwnershipTransfer(Storage storage layout, address pendingOwner) internal {
         address owner = layout.owner;
         if (msg.sender != owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
@@ -66,7 +66,7 @@ library MultiStepOwnableRepo {
         _initiateOwnershipTransfer(_layout(), pendingOwner);
     }
 
-    function _confirmOwnershipTransfer(MultiStepOwnableLayout storage layout, address pendingOwner) internal {
+    function _confirmOwnershipTransfer(Storage storage layout, address pendingOwner) internal {
         address owner = layout.owner;
         if (msg.sender != owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
@@ -86,7 +86,7 @@ library MultiStepOwnableRepo {
         _confirmOwnershipTransfer(_layout(), pendingOwner);
     }
 
-    function _cancelPendingOwnershipTransfer(MultiStepOwnableLayout storage layout) internal {
+    function _cancelPendingOwnershipTransfer(Storage storage layout) internal {
         address owner = layout.owner;
         if (msg.sender != owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
@@ -100,7 +100,7 @@ library MultiStepOwnableRepo {
         _cancelPendingOwnershipTransfer(_layout());
     }
 
-    function _acceptOwnershipTransfer(MultiStepOwnableLayout storage layout) internal {
+    function _acceptOwnershipTransfer(Storage storage layout) internal {
         address pendingOwner = layout.pendingOwner;
         if (msg.sender != pendingOwner) {
             revert IMultiStepOwnable.NotPending(msg.sender);
@@ -117,7 +117,7 @@ library MultiStepOwnableRepo {
         _acceptOwnershipTransfer(_layout());
     }
 
-    function _owner(MultiStepOwnableLayout storage layout) internal view returns (address) {
+    function _owner(Storage storage layout) internal view returns (address) {
         return layout.owner;
     }
 
@@ -125,7 +125,7 @@ library MultiStepOwnableRepo {
         return _owner(_layout());
     }
 
-    function _pendingOwner(MultiStepOwnableLayout storage layout) internal view returns (address) {
+    function _pendingOwner(Storage storage layout) internal view returns (address) {
         return layout.pendingOwner;
     }
 
@@ -133,7 +133,7 @@ library MultiStepOwnableRepo {
         return _pendingOwner(_layout());
     }
 
-    function _preConfirmedOwner(MultiStepOwnableLayout storage layout) internal view returns (address) {
+    function _preConfirmedOwner(Storage storage layout) internal view returns (address) {
         if (!layout.pendingOwnerConfirmed) {
             return address(0);
         }
@@ -144,7 +144,7 @@ library MultiStepOwnableRepo {
         return _preConfirmedOwner(_layout());
     }
 
-    function _ownershipBufferPeriod(MultiStepOwnableLayout storage layout) internal view returns (uint256) {
+    function _ownershipBufferPeriod(Storage storage layout) internal view returns (uint256) {
         return layout.ownershipBufferPeriod;
     }
 

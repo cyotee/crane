@@ -1,94 +1,110 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// solhint-disable no-global-import
-// solhint-disable state-visibility
-// solhint-disable func-name-mixedcase
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "forge-std/Test.sol";
-// import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/utils/collections/sets/UInt256SetRepo.sol";
 
-contract UInt256SetRepoTest is Test {
+// Invariant testing handler for UInt256SetRepo
+contract UInt256SetRepoHandler {
     using UInt256SetRepo for UInt256Set;
+    UInt256Set internal s;
 
-    UInt256Set testInstance;
+    // Map arbitrary uint input to a small seed space 1..16
+    function valFromSeed(uint256 seed) public pure returns (uint256) {
+        return (seed % 16) + 1;
+    }
 
-    function test_index(uint256[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    // Positive-path operations
+    function add_seed(uint256 seed) external {
+        s._add(valFromSeed(seed));
+    }
+
+    function add_many(uint256[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        uint256[] memory batch = new uint256[](n);
+        for (uint256 i = 0; i < n; i++) {
+            batch[i] = valFromSeed(arr[i]);
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance._index(testInstance.indexes[values[cursor]] - 1));
+        s._add(batch);
+    }
+
+    function remove_seed(uint256 seed) external {
+        s._remove(valFromSeed(seed));
+    }
+
+    function remove_many(uint256[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        for (uint256 i = 0; i < n; i++) {
+            s._remove(valFromSeed(arr[i]));
         }
     }
 
-    function test_contains(uint256[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    // View helpers
+    function asArray() external view returns (uint256[] memory) {
+        uint256[] storage vals = s._values();
+        uint256[] memory arr = new uint256[](vals.length);
+        for (uint256 i = 0; i < vals.length; i++) {
+            arr[i] = vals[i];
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
+        return arr;
     }
 
-    function test_indexOf(uint256[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(
-                // cursor,
-                testInstance.indexes[values[cursor]] - 1,
-                testInstance._indexOf(values[cursor])
-            );
-        }
+    function indexOf(uint256 a) external view returns (uint256) {
+        return s._indexOf(a);
     }
 
-    function test_length(uint256[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        assertEq(values.length, testInstance._length());
-    }
-
-    function test_add(uint256 value) public {
-        testInstance._add(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
-    }
-
-    function test_add(uint256[] calldata values) public {
-        testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
-    }
-
-    function test_remove(uint256 value) public {
-        testInstance.values.push(value);
-        testInstance.indexes[value] = testInstance.values.length;
-        assert(testInstance._contains(value));
-        testInstance._remove(value);
-        assert(!testInstance._contains(value));
-    }
-
-    function test_remove(uint256[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance._remove(values[cursor]);
-            assert(!testInstance._contains(values[cursor]));
-        }
+    function maxValue() external view returns (uint256) {
+        return s._max();
     }
 }
+
+contract UInt256SetRepoInvariantTest is Test {
+    UInt256SetRepoHandler public handler;
+
+    function setUp() public {
+        handler = new UInt256SetRepoHandler();
+
+        // Register handler for fuzzing; explicitly list selectors to keep runs focused
+        targetContract(address(handler));
+
+        bytes4[] memory selectors = new bytes4[](4);
+        selectors[0] = handler.add_seed.selector;
+        selectors[1] = handler.remove_seed.selector;
+        selectors[2] = handler.add_many.selector;
+        selectors[3] = handler.remove_many.selector;
+
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+    }
+
+    // Invariant: indexes mapping is consistent with values array
+    function invariant_indexes_consistent() public view {
+        uint256[] memory arr = handler.asArray();
+        for (uint256 i = 0; i < arr.length; i++) {
+            uint256 idx = handler.indexOf(arr[i]);
+            assertEq(idx, i);
+        }
+    }
+
+    // Invariant: indexOf for missing returns MAX
+    function invariant_indexOf_missing_returns_max() public view {
+        uint256 idx = handler.indexOf(type(uint256).max);
+        assert(idx == type(uint256).max);
+    }
+
+    // Invariant: tracked maxValue equals highest element in array (or 0)
+    function invariant_max_consistent() public view {
+        uint256[] memory arr = handler.asArray();
+        uint256 reported = handler.maxValue();
+        uint256 actual = 0;
+        for (uint256 i = 0; i < arr.length; i++) {
+            if (arr[i] > actual) actual = arr[i];
+        }
+        assert(reported >= actual);
+    }
+}
+

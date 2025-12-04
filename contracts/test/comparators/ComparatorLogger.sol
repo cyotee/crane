@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
 
 struct ErrorMsg {
     string prefix;

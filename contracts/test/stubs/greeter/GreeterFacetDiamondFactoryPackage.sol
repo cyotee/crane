@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {GreeterFacet} from "contracts/test/stubs/greeter/GreeterFacet.sol";
-import {GreeterLayout, GreeterRepo} from "contracts/test/stubs/greeter/GreeterRepo.sol";
+import {GreeterFacet} from "@crane/contracts/test/stubs/greeter/GreeterFacet.sol";
+import {GreeterLayout, GreeterRepo} from "@crane/contracts/test/stubs/greeter/GreeterRepo.sol";
 
-import {IDiamond} from "contracts/interfaces/IDiamond.sol";
-import {IDiamondFactoryPackage} from "contracts/interfaces/IDiamondFactoryPackage.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
+import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 
 contract GreeterFacetDiamondFactoryPackage is GreeterFacet, IDiamondFactoryPackage {
     IDiamondFactoryPackage immutable SELF;
@@ -14,9 +14,38 @@ contract GreeterFacetDiamondFactoryPackage is GreeterFacet, IDiamondFactoryPacka
         SELF = this;
     }
 
-    function facetInterfaces()
+    // function facetName() public pure returns (string memory name_) {
+    //     return type(GreeterFacetDiamondFactoryPackage).name;
+    // }
+
+    // function facetMetadata() external pure returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions) {
+    //     name_ = facetName();
+    //     interfaces = facetInterfaces();
+    //     functions = facetFuncs();
+    // }
+
+    function packageName() public pure returns (string memory name_) {
+        return type(GreeterFacetDiamondFactoryPackage).name;
+    }
+
+    function packageMetadata()
         public
         view
+        returns (string memory name_, bytes4[] memory interfaces, address[] memory facets)
+    {
+        name_ = packageName();
+        interfaces = facetInterfaces();
+        facets = facetAddresses();
+    }
+
+    function facetAddresses() public view returns (address[] memory facetAddresses_) {
+        facetAddresses_ = new address[](1);
+        facetAddresses_[0] = address(SELF);
+    }
+
+    function facetInterfaces()
+        public
+        pure
         virtual
         override(GreeterFacet, IDiamondFactoryPackage)
         returns (bytes4[] memory interfaces)

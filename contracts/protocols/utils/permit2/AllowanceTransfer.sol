@@ -3,20 +3,20 @@ pragma solidity ^0.8.17;
 
 // import {ERC20} from "solmate/tokens/ERC20.sol";
 // import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
-import {PermitHash} from "contracts/protocols/utils/permit2/PermitHash.sol";
-import {SignatureVerification} from "contracts/protocols/utils/permit2/SignatureVerification.sol";
-import {EIP712} from "contracts/protocols/utils/permit2/EIP712.sol";
-import {IEIP712} from "contracts/interfaces/IEIP712.sol";
-import {IAllowanceTransfer} from "contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import {SignatureExpired, InvalidNonce} from "contracts/protocols/utils/permit2/PermitErrors.sol";
-import {Allowance} from "contracts/protocols/utils/permit2/Allowance.sol";
+import {PermitHash} from "@crane/contracts/protocols/utils/permit2/PermitHash.sol";
+import {SignatureVerification} from "@crane/contracts/protocols/utils/permit2/SignatureVerification.sol";
+import {EIP712} from "@crane/contracts/protocols/utils/permit2/EIP712.sol";
+import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {SignatureExpired, InvalidNonce} from "@crane/contracts/protocols/utils/permit2/PermitErrors.sol";
+import {Allowance} from "@crane/contracts/protocols/utils/permit2/Allowance.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
-import {BetterSafeERC20 as SafeERC20} from "contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 contract AllowanceTransfer is IAllowanceTransfer, EIP712 {
     using SignatureVerification for bytes;

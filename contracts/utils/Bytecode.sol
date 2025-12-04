@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import {Bytes32} from "contracts/utils/Bytes32.sol";
+import {Bytes32} from "@crane/contracts/utils/Bytes32.sol";
 
 /**
  * @title A library for deploying contracts EIP-3171 style.

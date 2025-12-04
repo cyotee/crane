@@ -1,37 +1,39 @@
 [profile.default]
 src = 'contracts'
 out = 'out'
-libs = ['node_modules', 'lib']
+libs = ['node_modules', 'lib', 'contracts']
 test = 'test'
 cache_path  = 'cache_forge'
-block_gas_limit = 999999999999999999
+# block_gas_limit = "9223372036854775807"
 solc = "0.8.30"
 sizes = true
 optimizer = true
 optimizer_runs = 4294967295
 # optimizer_runs = 1
-# remappings = [
-#     "@balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/",
-#     "@balancer-labs/v3-pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/",
-#     "@balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/",
-#     "@balancer-labs/v3-pool-weighted/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-weighted/",
-#     "@balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/",
-#     "@balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/",
-#     "@openzeppelin/=lib/reclamm/node_modules/@openzeppelin/",
-#     "Compose/=lib/Compose/",
-#     "balancer-v3-monorepo/=lib/balancer-v3-monorepo/",
-#     "ds-test/=lib/solmate/lib/ds-test/src/",
-#     "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
-#     "forge-gas-snapshot/=lib/permit2/lib/forge-gas-snapshot/src/",
-#     "forge-std/=lib/forge-std/src/",
-#     "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
-#     "openzeppelin-contracts/=lib/openzeppelin-contracts/",
-#     "permit2/=lib/permit2/",
-#     "reclamm/=lib/reclamm/contracts/",
-#     "scaffold-eth-2/=lib/scaffold-eth-2/",
-#     "solady/=lib/solady/src/",
-#     "solmate/=lib/solmate/src/",
-# ]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@crane/contracts/=contracts/"
+    # "@balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/",
+    # "@balancer-labs/v3-pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/",
+    # "@balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/",
+    # "@balancer-labs/v3-pool-weighted/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-weighted/",
+    # "@balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/",
+    # "@balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/",
+    # "@openzeppelin/=lib/reclamm/node_modules/@openzeppelin/",
+    # "Compose/=lib/Compose/",
+    # "balancer-v3-monorepo/=lib/balancer-v3-monorepo/",
+    # "ds-test/=lib/solmate/lib/ds-test/src/",
+    # "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+    # "forge-gas-snapshot/=lib/permit2/lib/forge-gas-snapshot/src/",
+    # "forge-std/=lib/forge-std/src/",
+    # "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+    # "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+    # "permit2/=lib/permit2/",
+    # "reclamm/=lib/reclamm/contracts/",
+    # "scaffold-eth-2/=lib/scaffold-eth-2/",
+    # "solady/=lib/solady/src/",
+    # "solmate/=lib/solmate/src/",
+]
 
 ignored_error_codes = [
     2394, 
@@ -40,6 +42,11 @@ ignored_error_codes = [
     2072
 ]
 ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
+
+# [invariant]
+# corpus_dir = 'corpus'
+# corpus_gzip = true
+
 [profile.default.fmt]
 skip = ["lib/"]
 

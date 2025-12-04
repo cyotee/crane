@@ -1,36 +1,36 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IOperable} from "contracts/interfaces/IOperable.sol";
-import {MultiStepOwnableRepo} from "contracts/access/ERC8023/MultiStepOwnableRepo.sol";
-
-/**
- * @title OperableLayout - Diamond storage layout for IOperable.
- * @author cyotee doge <doge.cyotee>
- */
-struct OperableLayout {
-    // Mapping of global operators.
-    // Global operators may call any function.
-    mapping(address => bool) isOperator;
-    // Mapping of function level authorization for operators.
-    // Operators may call functions only if they are authorized.
-    mapping(bytes4 func => mapping(address => bool)) isOperatorFor;
-}
+import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
+import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
 
 library OperableRepo {
     bytes32 internal constant STORAGE_SLOT = keccak256(abi.encode("crane.access.operable"));
 
-    function _layout(bytes32 storageSlot) internal pure returns (OperableLayout storage layout) {
+    /**
+     * @title Storage - Diamond storage layout for IOperable.
+     * @author cyotee doge <doge.cyotee>
+     */
+    struct Storage {
+        // Mapping of global operators.
+        // Global operators may call any function.
+        mapping(address => bool) isOperator;
+        // Mapping of function level authorization for operators.
+        // Operators may call functions only if they are authorized.
+        mapping(bytes4 func => mapping(address => bool)) isOperatorFor;
+    }
+
+    function _layout(bytes32 storageSlot) internal pure returns (Storage storage layout) {
         assembly {
             layout.slot := storageSlot
         }
     }
 
-    function _layout() internal pure returns (OperableLayout storage) {
+    function _layout() internal pure returns (Storage storage) {
         return _layout(STORAGE_SLOT);
     }
 
-    function _setOperatorStatus(OperableLayout storage layout, address operator, bool approval) internal {
+    function _setOperatorStatus(Storage storage layout, address operator, bool approval) internal {
         MultiStepOwnableRepo._onlyOwner();
         layout.isOperator[operator] = approval;
         emit IOperable.NewGlobalOperatorStatus(operator, approval);
@@ -40,7 +40,7 @@ library OperableRepo {
         _setOperatorStatus(_layout(), operator, approval);
     }
 
-    function _setFunctionOperatorStatus(OperableLayout storage layout, bytes4 func, address operator, bool approval)
+    function _setFunctionOperatorStatus(Storage storage layout, bytes4 func, address operator, bool approval)
         internal
     {
         MultiStepOwnableRepo._onlyOwner();
@@ -52,7 +52,7 @@ library OperableRepo {
         _setFunctionOperatorStatus(_layout(), func, operator, approval);
     }
 
-    function _isOperator(OperableLayout storage layout, address operator) internal view returns (bool) {
+    function _isOperator(Storage storage layout, address operator) internal view returns (bool) {
         return layout.isOperator[operator];
     }
 
@@ -60,7 +60,7 @@ library OperableRepo {
         return _isOperator(_layout(), operator);
     }
 
-    function _isFunctionOperator(OperableLayout storage layout, bytes4 func, address operator)
+    function _isFunctionOperator(Storage storage layout, bytes4 func, address operator)
         internal
         view
         returns (bool)
@@ -72,7 +72,7 @@ library OperableRepo {
         return _isFunctionOperator(_layout(), func, operator);
     }
 
-    function _onlyOperator(OperableLayout storage layout) internal view {
+    function _onlyOperator(Storage storage layout) internal view {
         if (!_isOperator(layout, msg.sender) && !_isFunctionOperator(layout, msg.sig, msg.sender)) {
             revert IOperable.NotOperator(msg.sender);
         }
@@ -82,7 +82,7 @@ library OperableRepo {
         _onlyOperator(_layout());
     }
 
-    function _onlyOwnerOrOperator(OperableLayout storage layout) internal view {
+    function _onlyOwnerOrOperator(Storage storage layout) internal view {
         if (
             MultiStepOwnableRepo._owner() != msg.sender && !_isOperator(layout, msg.sender)
                 && !_isFunctionOperator(layout, msg.sig, msg.sender)

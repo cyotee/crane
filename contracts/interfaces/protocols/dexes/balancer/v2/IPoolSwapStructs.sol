@@ -15,9 +15,9 @@
 pragma solidity ^0.8.24;
 pragma experimental ABIEncoderV2;
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
-import {IVault} from "contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
+import {IVault} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
 
 interface IPoolSwapStructs {
     // This is not really an interface - it just defines common structs used by other interfaces: IGeneralPool and

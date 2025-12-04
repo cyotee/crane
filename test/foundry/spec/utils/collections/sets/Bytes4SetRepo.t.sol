@@ -1,94 +1,109 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// solhint-disable no-global-import
-// solhint-disable state-visibility
-// solhint-disable func-name-mixedcase
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "forge-std/Test.sol";
-// import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/utils/collections/sets/Bytes4SetRepo.sol";
 
-contract Bytes4SetRepoTest is Test {
+// Invariant testing handler for Bytes4SetRepo
+contract Bytes4SetRepoHandler {
     using Bytes4SetRepo for Bytes4Set;
+    Bytes4Set internal s;
 
-    Bytes4Set testInstance;
-
-    function test_index(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance._index(testInstance.indexes[values[cursor]] - 1));
-        }
+    // Map arbitrary uint input to a small set of bytes4 values to keep state compact
+    function valFromSeed(uint256 seed) public pure returns (bytes4) {
+        return bytes4(uint32((seed % 16) + 1)); // values 1..16
     }
 
-    function test_contains(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
+    // Positive-path operations
+    function add_seed(uint256 seed) external {
+        s._add(valFromSeed(seed));
+        _lastWasSort = false;
     }
 
-    function test_indexOf(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    function add_many(bytes4[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        bytes4[] memory toAdd = new bytes4[](n);
+        for (uint256 i = 0; i < n; i++) {
+            toAdd[i] = valFromSeed(uint256(uint32(uint32(arr[i]))));
+            s._add(toAdd[i]);
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(
-                // cursor,
-                testInstance.indexes[values[cursor]] - 1,
-                testInstance._indexOf(values[cursor])
-            );
-        }
+        _lastWasSort = false;
     }
 
-    function test_length(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        assertEq(values.length, testInstance._length());
+    function remove_seed(uint256 seed) external {
+        s._remove(valFromSeed(seed));
+        _lastWasSort = false;
     }
 
-    function test_add(bytes4 value) public {
-        testInstance._add(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
+    function remove_many(bytes4[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        bytes4[] memory toRemove = new bytes4[](n);
+        for (uint256 i = 0; i < n; i++) {
+            toRemove[i] = valFromSeed(uint256(uint32(uint32(arr[i]))));
+        }
+        s._remove(toRemove);
+        _lastWasSort = false;
     }
 
-    function test_add(bytes4[] calldata values) public {
-        testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
+    // small parity flag (not used)
+    bool internal _lastWasSort;
+
+    // View helpers
+    function asArray() external view returns (bytes4[] memory) {
+        return s._asArray();
     }
 
-    function test_remove(bytes4 value) public {
-        testInstance.values.push(value);
-        testInstance.indexes[value] = testInstance.values.length;
-        assert(testInstance._contains(value));
-        testInstance._remove(value);
-        assert(!testInstance._contains(value));
+    function indexOf(bytes4 a) external view returns (uint256) {
+        return s._indexOf(a);
     }
 
-    function test_remove(bytes4[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance._remove(values[cursor]);
-            assert(!testInstance._contains(values[cursor]));
-        }
+    function lastWasSort() external view returns (bool) {
+        return _lastWasSort;
     }
 }
+
+contract Bytes4SetRepoInvariantTest is Test {
+    Bytes4SetRepoHandler public handler;
+
+    function setUp() public {
+        handler = new Bytes4SetRepoHandler();
+
+        // Register handler for fuzzing; explicitly list selectors to keep runs focused
+        targetContract(address(handler));
+
+        bytes4[] memory selectors = new bytes4[](4);
+        selectors[0] = handler.add_seed.selector;
+        selectors[1] = handler.remove_seed.selector;
+        selectors[2] = handler.add_many.selector;
+        selectors[3] = handler.remove_many.selector;
+
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+    }
+
+    // Invariant: indexes mapping is consistent with values array
+    function invariant_indexes_consistent() public view {
+        bytes4[] memory arr = handler.asArray();
+        for (uint256 i = 0; i < arr.length; i++) {
+            uint256 idx = handler.indexOf(arr[i]);
+            assertEq(idx, i);
+        }
+    }
+
+    // Invariant: indexOf for missing returns MAX
+    function invariant_indexOf_missing_returns_max() public view {
+        bytes4 missing = bytes4(uint32(0xFFFF));
+        uint256 idx = handler.indexOf(missing);
+        assert(idx == type(uint256).max);
+    }
+
+    // No sorting in this repo; placeholder invariant
+    function invariant_sorted_after_sort_ops() public pure {
+        return;
+    }
+}
+

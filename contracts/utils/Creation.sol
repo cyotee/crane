@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/utils/Bytecode.sol";
+import "@crane/contracts/utils/Bytecode.sol";
 
 library Creation {
     using Bytecode for address;
@@ -83,7 +83,7 @@ library Creation {
         return initCode.create3(salt);
     }
 
-    function _create3WithArgs(bytes memory initCode, bytes memory initArgs, bytes32 salt)
+    function create3WithArgs(bytes memory initCode, bytes memory initArgs, bytes32 salt)
         internal
         returns (address deployment)
     {

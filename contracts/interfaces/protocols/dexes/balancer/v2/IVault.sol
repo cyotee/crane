@@ -13,19 +13,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 pragma solidity ^0.8.24;
 
-import {IAuthentication} from "contracts/interfaces/protocols/dexes/balancer/v2/IAuthentication.sol";
-import {ISignaturesValidator} from "contracts/interfaces/protocols/dexes/balancer/v2/ISignaturesValidator.sol";
-import {ITemporarilyPausable} from "contracts/interfaces/protocols/dexes/balancer/v2/ITemporarilyPausable.sol";
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {IAuthentication} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAuthentication.sol";
+import {ISignaturesValidator} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/ISignaturesValidator.sol";
+import {ITemporarilyPausable} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/ITemporarilyPausable.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 // import {
 //     IWETH
-// } from "contracts/interfaces/tokens/wrappers/weth/IWETH.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+// } from "@crane/contracts/interfaces/tokens/wrappers/weth/IWETH.sol";
+import {IWETH} from "@crane/contracts/interfaces/protocols/tokens/wrappers/weth/v9/IWETH.sol";
 
-import {IAsset} from "contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
-import {IAuthorizer} from "contracts/interfaces/protocols/dexes/balancer/v2/IAuthorizer.sol";
-import {IFlashLoanRecipient} from "contracts/interfaces/protocols/dexes/balancer/v2/IFlashLoanRecipient.sol";
-import {IProtocolFeesCollector} from "contracts/interfaces/protocols/dexes/balancer/v2/IProtocolFeesCollector.sol";
+import {IAsset} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
+import {IAuthorizer} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAuthorizer.sol";
+import {IFlashLoanRecipient} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IFlashLoanRecipient.sol";
+import {IProtocolFeesCollector} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IProtocolFeesCollector.sol";
 
 /**
  * @dev Full external interface for the Vault core contract - no external or public methods exist in the contract that

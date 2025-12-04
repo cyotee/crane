@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IDiamondLoupe} from "contracts/interfaces/IDiamondLoupe.sol";
-import {ERC2535Repo} from "contracts/introspection/ERC2535/ERC2535Repo.sol";
+import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
+import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";
 
 contract DiamondLoupeTarget is IDiamondLoupe {
     /**

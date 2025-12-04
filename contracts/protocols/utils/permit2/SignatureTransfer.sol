@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {ISignatureTransfer} from "contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
+import {ISignatureTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
 import {SignatureExpired, InvalidNonce} from "./PermitErrors.sol";
 // import {ERC20} from "solmate/tokens/ERC20.sol";
 // import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
-import {SignatureVerification} from "contracts/protocols/utils/permit2/SignatureVerification.sol";
-import {PermitHash} from "contracts/protocols/utils/permit2/PermitHash.sol";
-import {IEIP712} from "contracts/interfaces/IEIP712.sol";
-import {EIP712} from "contracts/protocols/utils/permit2/EIP712.sol";
+import {SignatureVerification} from "@crane/contracts/protocols/utils/permit2/SignatureVerification.sol";
+import {PermitHash} from "@crane/contracts/protocols/utils/permit2/PermitHash.sol";
+import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
+import {EIP712} from "@crane/contracts/protocols/utils/permit2/EIP712.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
-import {BetterSafeERC20 as SafeERC20} from "contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 contract SignatureTransfer is ISignatureTransfer, EIP712 {
     using SignatureVerification for bytes;

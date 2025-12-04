@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterAddress as Address} from "contracts/utils/BetterAddress.sol";
-import {IMultiStepOwnable} from "contracts/interfaces/IMultiStepOwnable.sol";
-import {IDiamond} from "contracts/interfaces/IDiamond.sol";
-import {IDiamondCut} from "contracts/interfaces/IDiamondCut.sol";
-import {DiamondCutTarget} from "./DiamondCutTarget.sol";
-import {IDiamondFactoryPackage} from "contracts/interfaces/IDiamondFactoryPackage.sol";
-import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
-import {ICreate3Aware} from "contracts/interfaces/ICreate3Aware.sol";
-import {IFacet} from "contracts/interfaces/IFacet.sol";
-import {ERC2535Repo} from "contracts/introspection/ERC2535/ERC2535Repo.sol";
-import {ERC165Repo} from "contracts/introspection/ERC165/ERC165Repo.sol";
-import {MultiStepOwnableRepo} from "contracts/access/ERC8023/MultiStepOwnableRepo.sol";
+import {BetterAddress as Address} from "@crane/contracts/utils/BetterAddress.sol";
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
+import {IDiamondCut} from "@crane/contracts/interfaces/IDiamondCut.sol";
+import {DiamondCutTarget} from "@crane/contracts/introspection/ERC2535/DiamondCutTarget.sol";
+import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
+// import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
+// import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";
+import {ERC165Repo} from "@crane/contracts/introspection/ERC165/ERC165Repo.sol";
+import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
 
 interface IDiamondCutFacetDFPkg {
     struct PkgInit {
@@ -29,16 +29,36 @@ interface IDiamondCutFacetDFPkg {
     }
 }
 
-contract DiamondCutFacetDFPkg is DiamondCutTarget, Create3AwareContract, IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
+contract DiamondCutFacetDFPkg is DiamondCutTarget, IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
     using Address for address;
 
     IDiamondFactoryPackage immutable SELF;
     IFacet immutable MULTI_STEP_OWNABLE_FACET;
 
-    constructor(ICreate3Aware.CREATE3InitData memory create3InitData) Create3AwareContract(create3InitData) {
-        PkgInit memory pkgInitArgs = abi.decode(create3InitData.initData, (PkgInit));
+    constructor(PkgInit memory pkgInitArgs) {
+        // PkgInit memory pkgInitArgs = abi.decode(create3InitData.initData, (PkgInit));
         SELF = this;
         MULTI_STEP_OWNABLE_FACET = pkgInitArgs.MULTI_STEP_OWNABLE_FACET;
+    }
+
+    function packageName() public pure returns (string memory name_) {
+        return type(DiamondCutFacetDFPkg).name;
+    }
+
+    function packageMetadata()
+        public
+        view
+        returns (string memory name_, bytes4[] memory interfaces, address[] memory facets)
+    {
+        name_ = packageName();
+        interfaces = facetInterfaces();
+        facets = facetAddresses();
+    }
+
+    function facetAddresses() public view returns (address[] memory facetAddresses_) {
+        facetAddresses_ = new address[](2);
+        facetAddresses_[0] = address(SELF);
+        facetAddresses_[1] = address(MULTI_STEP_OWNABLE_FACET);
     }
 
     function facetInterfaces() public view virtual returns (bytes4[] memory interfaces) {

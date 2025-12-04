@@ -11,9 +11,9 @@ import {ShortString, ShortStrings} from "@openzeppelin/contracts/utils/ShortStri
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EIP721_TYPE_HASH} from "contracts/constants/Constants.sol";
-import {BetterEfficientHashLib} from "contracts/utils/BetterEfficientHashLib.sol";
-import {MessageHashUtils} from "contracts/utils/cryptography/hash/MessageHashUtils.sol";
+import {EIP721_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+import {MessageHashUtils} from "@crane/contracts/utils/cryptography/hash/MessageHashUtils.sol";
 
 /// forge-lint: disable-next-line(pascal-case-struct)
 struct EIP712Layout {
@@ -89,7 +89,7 @@ library EIP712Repo {
     }
 
     function _domainSeparatorV4() internal view returns (bytes32) {
-        _domainSeparatorV4(_layout());
+        return _domainSeparatorV4(_layout());
     }
 
     function _buildDomainSeparator(EIP712Layout storage layout) private view returns (bytes32) {

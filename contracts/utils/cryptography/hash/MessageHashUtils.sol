@@ -6,8 +6,8 @@ pragma solidity ^0.8.24;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterEfficientHashLib} from "contracts/utils/BetterEfficientHashLib.sol";
-import {UInt256} from "contracts/utils/UInt256.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+import {UInt256} from "@crane/contracts/utils/UInt256.sol";
 
 /**
  * @dev Signature message hash utilities for producing digests to be consumed by {ECDSA} recovery or signing.

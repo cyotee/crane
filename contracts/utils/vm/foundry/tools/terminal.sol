@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {Vm} from "forge-std/Vm.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/constants/FoundryConstants.sol";
+import "@crane/contracts/constants/FoundryConstants.sol";
 
 library terminal {
     /// forge-lint: disable-next-line(screaming-snake-case-const)

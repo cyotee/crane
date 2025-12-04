@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {MultiStepOwnableRepo} from "contracts/access/ERC8023/MultiStepOwnableRepo.sol";
-import {IMultiStepOwnable} from "contracts/interfaces/IMultiStepOwnable.sol";
-import {IFacet} from "contracts/interfaces/IFacet.sol";
-import {MultiStepOwnableModifiers} from "contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
+import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
 
 contract MultiStepOwnableTarget is IMultiStepOwnable {
     /* -------------------------------------------------------------------------- */

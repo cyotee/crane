@@ -14,8 +14,8 @@
 
 pragma solidity ^0.8.0;
 
-import {IAsset} from "contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
-import {IVault} from "contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
+import {IAsset} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
+import {IVault} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
 
 /**
  * @dev Provides a way to perform queries on swaps, joins and exits, simulating these operations and returning the exact

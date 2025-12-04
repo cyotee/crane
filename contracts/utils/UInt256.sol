@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {HEX_SYMBOLS} from "contracts/constants/Constants.sol";
+import {HEX_SYMBOLS} from "@crane/contracts/constants/Constants.sol";
 
 /**
  * @title utility functions for uint256 operations

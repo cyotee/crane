@@ -16,7 +16,7 @@ pragma solidity ^0.8.24;
 
 // Inspired by Aave Protocol's IFlashLoanReceiver.
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 interface IFlashLoanRecipient {
     /**

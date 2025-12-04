@@ -20,7 +20,7 @@ import {PoolRoleAccounts, TokenConfig} from "@balancer-labs/v3-interfaces/contra
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 interface IWeightedPool8020Factory is IPoolVersion {
     function create(

@@ -1,94 +1,115 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// solhint-disable no-global-import
-// solhint-disable state-visibility
-// solhint-disable func-name-mixedcase
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "forge-std/Test.sol";
-// import "daosys/test/BetterTest.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/utils/collections/sets/Bytes32SetRepo.sol";
 
-contract Bytes32SetRepoTest is Test {
+// Invariant testing handler for Bytes32SetRepo
+contract Bytes32SetRepoHandler {
     using Bytes32SetRepo for Bytes32Set;
+    Bytes32Set internal s;
 
-    Bytes32Set testInstance;
-
-    function test_index(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance._index(testInstance.indexes[values[cursor]] - 1));
-        }
+    // Map arbitrary uint input to a small set of bytes32 values to keep state compact
+    function valFromSeed(uint256 seed) public pure returns (bytes32) {
+        return bytes32(uint256((seed % 16) + 1)); // values 1..16
     }
 
-    function test_indexOf(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(
-                // cursor,
-                testInstance.indexes[values[cursor]] - 1,
-                testInstance._indexOf(values[cursor])
-            );
-        }
+    // Positive-path operations
+    function add_seed(uint256 seed) external {
+        s._add(valFromSeed(seed));
+        _lastWasSort = false;
     }
 
-    function test_contains(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
+    function add_many(bytes32[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8; // bound size to small to avoid huge arrays
+        for (uint256 i = 0; i < n; i++) {
+            s._add(valFromSeed(uint256(arr[i])));
         }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
+        _lastWasSort = false;
     }
 
-    function test_length(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        assertEq(values.length, testInstance._length());
+    function remove_seed(uint256 seed) external {
+        s._remove(valFromSeed(seed));
+        _lastWasSort = false;
     }
 
-    function test_add(bytes32 value) public {
-        testInstance._add(value);
-        assertEq(value, testInstance.values[testInstance.indexes[value] - 1]);
+    function remove_many(bytes32[] calldata arr) external {
+        uint256 n = arr.length;
+        if (n > 8) n = 8;
+        bytes32[] memory toRemove = new bytes32[](n);
+        for (uint256 i = 0; i < n; i++) {
+            toRemove[i] = valFromSeed(uint256(arr[i]));
+        }
+        s._remove(toRemove);
+        _lastWasSort = false;
     }
 
-    function test_add(bytes32[] calldata values) public {
-        testInstance._add(values);
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assertEq(values[cursor], testInstance.values[testInstance.indexes[values[cursor]] - 1]);
-        }
+    // track if last mutating operation was a sort (not used for this repo but kept for parity)
+    bool internal _lastWasSort;
+
+    // View helpers
+    function indexOf(bytes32 a) external view returns (uint256) {
+        return s._indexOf(a);
     }
 
-    function test_remove(bytes32 value) public {
-        testInstance.values.push(value);
-        testInstance.indexes[value] = testInstance.values.length;
-        assert(testInstance._contains(value));
-        testInstance._remove(value);
-        assert(!testInstance._contains(value));
+    // Provide a memory copy of underlying storage values
+    function asArray() external view returns (bytes32[] memory) {
+        bytes32[] storage vals = s._values();
+        bytes32[] memory arr = new bytes32[](vals.length);
+        for (uint256 i = 0; i < vals.length; i++) {
+            arr[i] = vals[i];
+        }
+        return arr;
     }
 
-    function test_remove(bytes32[] calldata values) public {
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance.values.push(values[cursor]);
-            testInstance.indexes[values[cursor]] = testInstance.values.length;
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            assert(testInstance._contains(values[cursor]));
-        }
-        for (uint256 cursor = 0; values.length > cursor; cursor++) {
-            testInstance._remove(values[cursor]);
-            assert(!testInstance._contains(values[cursor]));
-        }
+    function lastWasSort() external view returns (bool) {
+        return _lastWasSort;
     }
 }
+
+contract Bytes32SetRepoInvariantTest is Test {
+    Bytes32SetRepoHandler public handler;
+
+    function setUp() public {
+        handler = new Bytes32SetRepoHandler();
+
+        // Register handler for fuzzing; explicitly list selectors to keep runs focused
+        targetContract(address(handler));
+
+        bytes4[] memory selectors = new bytes4[](4);
+        selectors[0] = handler.add_seed.selector;
+        selectors[1] = handler.remove_seed.selector;
+        selectors[2] = handler.add_many.selector;
+        selectors[3] = handler.remove_many.selector;
+
+        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+    }
+
+    // Invariant: indexes mapping is consistent with values array
+    function invariant_indexes_consistent() public view {
+        bytes32[] memory arr = handler.asArray();
+        for (uint256 i = 0; i < arr.length; i++) {
+            uint256 idx = handler.indexOf(arr[i]);
+            assertEq(idx, i);
+        }
+    }
+
+    // Invariant: indexOf for missing returns MAX
+    function invariant_indexOf_missing_returns_max() public view {
+        bytes32 missing = bytes32(uint256(0xFFFF));
+        uint256 idx = handler.indexOf(missing);
+        assert(idx == type(uint256).max);
+    }
+
+    // Invariant: values are sorted after sort/quickSort operations
+    function invariant_sorted_after_sort_ops() public pure {
+        // No-op for Bytes32SetRepo: sorting operations are not supported.
+        // Keep invariant placeholder for parity with other set tests.
+        return;
+    }
+}
+

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
-import {ErrorMsg, ComparatorLogger} from "contracts/test/comparators/ComparatorLogger.sol";
-import {BetterMath} from "contracts/utils/math/BetterMath.sol";
-import {UInt256} from "contracts/utils/UInt256.sol";
+import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
+import {ErrorMsg, ComparatorLogger} from "@crane/contracts/test/comparators/ComparatorLogger.sol";
+import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
+import {UInt256} from "@crane/contracts/utils/UInt256.sol";
 
 struct SetComparatorResults {
     bool hasDupes;

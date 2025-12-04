@@ -17,7 +17,7 @@ import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
 /* -------------------------------------------------------------------------- */
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/constants/Constants.sol";
+import "@crane/contracts/constants/Constants.sol";
 
 struct Uint512 {
     uint256 hi; // 256 most significant bits
@@ -698,7 +698,7 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate shares.
      * @return shares The equivalent amount of shares for `assets` of `reserve`.
      */
-    function _convertToSharesIn(uint256 assets, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
+    function _convertToSharesDown(uint256 assets, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
         internal
         pure
         returns (uint256 shares)
@@ -713,7 +713,7 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate shares.
      * @return shares The equivalent amount of shares for `assets` of `reserve`.
      */
-    function _convertToSharesOut(uint256 assets, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
+    function _convertToSharesUp(uint256 assets, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
         internal
         pure
         returns (uint256 shares)
@@ -756,7 +756,7 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate assets.
      * @return The equivalent amount of assets for `shares` of `reserve`.
      */
-    function _convertToAssetsIn(uint256 shares, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
+    function _convertToAssetsDown(uint256 shares, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
         internal
         pure
         returns (uint256)
@@ -773,7 +773,7 @@ library BetterMath {
      * @param reserve The reserve amount of which to calculate assets.
      * @return The equivalent amount of assets for `shares` of `reserve`.
      */
-    function _convertToAssetsOut(uint256 shares, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
+    function _convertToAssetsUp(uint256 shares, uint256 reserve, uint256 totalShares, uint8 decimalOffset)
         internal
         pure
         returns (uint256)

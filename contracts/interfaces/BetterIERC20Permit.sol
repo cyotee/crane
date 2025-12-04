@@ -12,7 +12,7 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC2
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IERC2612} from "contracts/interfaces/IERC2612.sol";
+import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 
 /**
  * @title BetterIERC20Permit

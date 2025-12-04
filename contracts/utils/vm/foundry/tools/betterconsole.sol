@@ -9,13 +9,13 @@ import "forge-std/console2.sol";
 import {Vm} from "forge-std/Vm.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/constants/Constants.sol";
+import "@crane/contracts/constants/Constants.sol";
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/constants/FoundryConstants.sol";
-import {BetterAddress as Address} from "contracts/utils/BetterAddress.sol";
-import {BetterBytes as Bytes} from "contracts/utils/BetterBytes.sol";
-import {Bytes32} from "contracts/utils/Bytes32.sol";
-import {UInt256} from "contracts/utils/UInt256.sol";
+import "@crane/contracts/constants/FoundryConstants.sol";
+import {BetterAddress as Address} from "@crane/contracts/utils/BetterAddress.sol";
+import {BetterBytes as Bytes} from "@crane/contracts/utils/BetterBytes.sol";
+import {Bytes32} from "@crane/contracts/utils/Bytes32.sol";
+import {UInt256} from "@crane/contracts/utils/UInt256.sol";
 
 library betterconsole {
     using Address for address;

@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {MultiStepOwnableModifiers} from "contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
-import {OperableModifiers} from "contracts/access/operable/OperableModifiers.sol";
-// import {ERC20MintBurnOperableStorage} from "contracts/crane/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
-import {ERC20PermitTarget} from "contracts/tokens/ERC20/ERC20PermitTarget.sol";
-import {IERC20MintBurn} from "contracts/interfaces/IERC20MintBurn.sol";
-import {ERC20Repo} from "contracts/tokens/ERC20/ERC20Repo.sol";
+import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
+import {OperableModifiers} from "@crane/contracts/access/operable/OperableModifiers.sol";
+// import {ERC20MintBurnOperableStorage} from "@crane/contracts/crane/token/ERC20/utils/ERC20MintBurnOperableStorage.sol";
+import {ERC20PermitTarget} from "@crane/contracts/tokens/ERC20/ERC20PermitTarget.sol";
+import {IERC20MintBurn} from "@crane/contracts/interfaces/IERC20MintBurn.sol";
+import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 
 contract ERC20MintBurnOperableTarget is
-    ERC20PermitTarget,
+
+    // ERC20PermitTarget,
     MultiStepOwnableModifiers,
     OperableModifiers,
     IERC20MintBurn

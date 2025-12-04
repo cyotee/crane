@@ -11,7 +11,7 @@ import {Vm} from "forge-std/Vm.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {VM_ADDRESS} from "contracts/constants/FoundryConstants.sol";
+import {VM_ADDRESS} from "@crane/contracts/constants/FoundryConstants.sol";
 
 library BehaviorUtils {
     /// forge-lint: disable-next-line(screaming-snake-case-const)

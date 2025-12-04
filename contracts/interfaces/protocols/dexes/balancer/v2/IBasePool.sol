@@ -15,8 +15,8 @@
 pragma solidity ^0.8.24;
 pragma experimental ABIEncoderV2;
 
-import {IAsset, IVault} from "./IVault.sol";
-import {IPoolSwapStructs} from "./IPoolSwapStructs.sol";
+import {IAsset, IVault} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IVault.sol";
+import {IPoolSwapStructs} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IPoolSwapStructs.sol";
 
 /**
  * @dev Interface for adding and removing liquidity that all Pool contracts should implement. Note that this is not

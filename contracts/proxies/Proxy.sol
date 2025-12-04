@@ -5,7 +5,7 @@ pragma solidity ^0.8.8;
 // solhint-disable no-empty-blocks
 // solhint-disable reason-string
 // solhint-disable no-inline-assembly
-import {BetterAddress} from "contracts/utils/BetterAddress.sol";
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 
 /**
  * @title Base proxy contract

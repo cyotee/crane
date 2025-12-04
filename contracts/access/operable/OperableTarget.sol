@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {IOperable} from "contracts/interfaces/IOperable.sol";
-import {OperableRepo} from "contracts/access/operable/OperableRepo.sol";
-import {MultiStepOwnableModifiers} from "contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
+import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
+import {OperableRepo} from "@crane/contracts/access/operable/OperableRepo.sol";
+import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
 
 /**
  * @title OperableTarget - Exposes IOperable functions.

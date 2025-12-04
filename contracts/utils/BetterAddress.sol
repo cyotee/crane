@@ -12,10 +12,10 @@ import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {ADDRESS_LENGTH} from "contracts/constants/Constants.sol";
-import {Bytecode} from "contracts/utils/Bytecode.sol";
-import {UInt256} from "contracts/utils/UInt256.sol";
-import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
+import {ADDRESS_LENGTH} from "@crane/contracts/constants/Constants.sol";
+import {Bytecode} from "@crane/contracts/utils/Bytecode.sol";
+import {UInt256} from "@crane/contracts/utils/UInt256.sol";
+import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
 /**
  * @title Drop-in replacement extension of the OZ Address library.

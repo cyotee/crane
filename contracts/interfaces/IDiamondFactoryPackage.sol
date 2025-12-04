@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.0;
 
-import {IDiamond} from "contracts/interfaces/IDiamond.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
 interface IDiamondFactoryPackage {
     /**
@@ -11,6 +11,15 @@ interface IDiamondFactoryPackage {
         IDiamond.FacetCut[] facetCuts;
         bytes4[] interfaces;
     }
+
+    function packageName() external view returns (string memory name_);
+
+    function packageMetadata()
+        external
+        view
+        returns (string memory name_, bytes4[] memory interfaces, address[] memory facets);
+
+    function facetAddresses() external view returns (address[] memory facetAddresses);
 
     /**
      * @dev ONLY includes interface expected to be called through a proxy.

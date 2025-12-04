@@ -1,18 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {AddressSet, AddressSetRepo} from "contracts/utils/collections/sets/AddressSetRepo.sol";
-import {Bytes4Set, Bytes4SetRepo} from "contracts/utils/collections/sets/Bytes4SetRepo.sol";
-import {BetterAddress} from "contracts/utils/BetterAddress.sol";
-import {IDiamondLoupe} from "contracts/interfaces/IDiamondLoupe.sol";
-import {IDiamond} from "contracts/interfaces/IDiamond.sol";
-
-/// forge-lint: disable-next-line(pascal-case-struct)
-struct ERC2535Layout {
-    AddressSet facetAddresses;
-    mapping(bytes4 functionSelector => address facet) facetAddress;
-    mapping(address facet => Bytes4Set functionSelectors) facetFunctionSelectors;
-}
+import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
+import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
+import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
 library ERC2535Repo {
     using AddressSetRepo for AddressSet;
@@ -21,20 +14,27 @@ library ERC2535Repo {
 
     bytes32 private constant STORAGE_SLOT = keccak256(abi.encode(type(ERC2535Repo).name));
 
+    /// forge-lint: disable-next-line(pascal-case-struct)
+    struct Storage {
+        AddressSet facetAddresses;
+        mapping(bytes4 functionSelector => address facet) facetAddress;
+        mapping(address facet => Bytes4Set functionSelectors) facetFunctionSelectors;
+    }
+
     // tag::_layout[]
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
      * @return layout_ A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (ERC2535Layout storage layout_) {
+    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
         assembly {
             layout_.slot := slot_
         }
     }
     // end::_layout[]
 
-    function _layout() internal pure returns (ERC2535Layout storage layout) {
+    function _layout() internal pure returns (Storage storage layout) {
         return _layout(STORAGE_SLOT);
     }
 
@@ -45,7 +45,7 @@ library ERC2535Repo {
     }
 
     function _diamondCut(
-        ERC2535Layout storage layout,
+        Storage storage layout,
         IDiamond.FacetCut[] memory diamondCut_,
         address initTarget,
         bytes memory initCalldata
@@ -64,13 +64,13 @@ library ERC2535Repo {
         _processFacetCuts(_layout(), facetCuts);
     }
 
-    function _processFacetCuts(ERC2535Layout storage layout, IDiamond.FacetCut[] memory facetCuts) internal {
+    function _processFacetCuts(Storage storage layout, IDiamond.FacetCut[] memory facetCuts) internal {
         for (uint256 cursor = 0; cursor < facetCuts.length; cursor++) {
             _processFacetCut(layout, facetCuts[cursor]);
         }
     }
 
-    function _processFacetCut(ERC2535Layout storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _processFacetCut(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
         if (facetCut.facetAddress == address(0)) {
             return;
         } else {
@@ -87,7 +87,7 @@ library ERC2535Repo {
         }
     }
 
-    function _addFacet(ERC2535Layout storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _addFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Add, update the function selector mapping for each functionSelectors item to the facetAddress.
@@ -102,7 +102,7 @@ library ERC2535Repo {
         layout.facetAddresses._add(facetCut.facetAddress);
     }
 
-    function _replaceFacet(ERC2535Layout storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _replaceFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Replace, update the function selector mapping for each functionSelectors item to the facetAddress.
@@ -127,7 +127,7 @@ library ERC2535Repo {
         layout.facetAddresses._add(facetCut.facetAddress);
     }
 
-    function _removeFacet(ERC2535Layout storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _removeFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Remove, remove the function selector mapping for each functionSelectors item.
@@ -147,7 +147,7 @@ library ERC2535Repo {
      * @notice Gets all facet addresses and their four byte function selectors.
      * @return facets_ Facet
      */
-    function _facets(ERC2535Layout storage layout) internal view returns (IDiamondLoupe.Facet[] memory facets_) {
+    function _facets(Storage storage layout) internal view returns (IDiamondLoupe.Facet[] memory facets_) {
         uint256 facetAddrLen = layout.facetAddresses._length();
         facets_ = new IDiamondLoupe.Facet[](facetAddrLen);
         for (uint256 cursor = 0; cursor < facetAddrLen; cursor++) {
@@ -167,7 +167,7 @@ library ERC2535Repo {
      * @param facetAddress The facet address.
      * @return facetFunctionSelectors_
      */
-    function _facetFunctionSelectors(ERC2535Layout storage layout, address facetAddress)
+    function _facetFunctionSelectors(Storage storage layout, address facetAddress)
         internal
         view
         returns (bytes4[] memory facetFunctionSelectors_)
@@ -187,7 +187,7 @@ library ERC2535Repo {
      * @notice Get all the facet addresses used by a diamond.
      * @return facetAddresses_
      */
-    function _facetAddresses(ERC2535Layout storage layout) internal view returns (address[] memory facetAddresses_) {
+    function _facetAddresses(Storage storage layout) internal view returns (address[] memory facetAddresses_) {
         return layout.facetAddresses._values();
     }
 
@@ -201,7 +201,7 @@ library ERC2535Repo {
      * @param _functionSelector The function selector.
      * @return facetAddress_ The facet address.
      */
-    function _facetAddress(ERC2535Layout storage layout, bytes4 _functionSelector)
+    function _facetAddress(Storage storage layout, bytes4 _functionSelector)
         internal
         view
         returns (address facetAddress_)

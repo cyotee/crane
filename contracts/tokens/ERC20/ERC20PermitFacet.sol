@@ -14,17 +14,23 @@ import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import {BetterIERC20} from "contracts/interfaces/BetterIERC20.sol";
-// import {IERC2612} from "contracts/interfaces/IERC2612.sol";
-import {ERC20PermitTarget} from "contracts/tokens/ERC20/ERC20PermitTarget.sol";
-import {IFacet} from "contracts/interfaces/IFacet.sol";
-import {Create3AwareContract} from "contracts/factories/create2/aware/Create3AwareContract.sol";
-import {ICreate3Aware} from "contracts/interfaces/ICreate3Aware.sol";
+import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
+import {ERC2612Target} from "@crane/contracts/tokens/ERC2612/ERC2612Target.sol";
+import {BetterIERC20Permit} from "@crane/contracts/interfaces/BetterIERC20Permit.sol";
+import {ERC20Target} from "@crane/contracts/tokens/ERC20/ERC20Target.sol";
+import {ERC20PermitTarget} from "@crane/contracts/tokens/ERC20/ERC20PermitTarget.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+// import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
+// import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
 
-contract ERC20PermitFacet is ERC20PermitTarget, IFacet {
+contract ERC20PermitFacet is ERC5267Target, ERC20Target, ERC2612Target, IFacet {
+    function facetName() public pure returns (string memory name) {
+        return type(ERC20PermitFacet).name;
+    }
+
     function facetInterfaces()
         public
-        view
+        pure
         virtual
         returns (
             // override
@@ -66,5 +72,15 @@ contract ERC20PermitFacet is ERC20PermitTarget, IFacet {
         funcs[10] = IERC20Permit.permit.selector;
         funcs[11] = IERC20Permit.nonces.selector;
         funcs[12] = IERC20Permit.DOMAIN_SEPARATOR.selector;
+    }
+
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 }

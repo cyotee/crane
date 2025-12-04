@@ -5,12 +5,12 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
-import {BetterEfficientHashLib} from "contracts/utils/BetterEfficientHashLib.sol";
-import {AddressSet, AddressSetRepo} from "contracts/utils/collections/sets/AddressSetRepo.sol";
-import {BetterAddress} from "contracts/utils/BetterAddress.sol";
-import {ErrorMsg, ComparatorLogger} from "contracts/test/comparators/ComparatorLogger.sol";
-import {SetComparatorResults, SetComparatorLogger} from "contracts/test/comparators/SetComparatorLogger.sol";
+import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
+import {ErrorMsg, ComparatorLogger} from "@crane/contracts/test/comparators/ComparatorLogger.sol";
+import {SetComparatorResults, SetComparatorLogger} from "@crane/contracts/test/comparators/SetComparatorLogger.sol";
 
 struct AddressComparatorRequest {
     address[] expected;
