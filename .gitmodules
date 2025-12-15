@@ -31,3 +31,6 @@
 [submodule "lib/solidity-lib"]
 	path = lib/solidity-lib
 	url = https://github.com/cyotee/solidity-lib
+[submodule "lib/aerodrome-contracts"]
+	path = lib/aerodrome-contracts
+	url = https://github.com/aerodrome-finance/contracts
