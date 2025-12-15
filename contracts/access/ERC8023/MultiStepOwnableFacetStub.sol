@@ -4,8 +4,15 @@ pragma solidity ^0.8.0;
 import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
 import {MultiStepOwnableFacet} from "@crane/contracts/access/ERC8023/MultiStepOwnableFacet.sol";
 
+// tag::MultiStepOwnableFacetStub[]
+/**
+ * @title MultiStepOwnableFacetStub - Test stub for MultiStepOwnableFacet.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Not intended for production use.
+ */
 contract MultiStepOwnableFacetStub is MultiStepOwnableFacet {
     constructor(address initialOwner, uint256 ownershipBufferPeriod) {
         MultiStepOwnableRepo._initialize(initialOwner, ownershipBufferPeriod);
     }
 }
+// end::MultiStepOwnableFacetStub[]

@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                                Open Zppelin                                */
 /* -------------------------------------------------------------------------- */
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 // import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IERC1363} from "@openzeppelin/contracts/interfaces/IERC1363.sol";
@@ -85,6 +85,24 @@ library BetterSafeERC20 {
     /* ---------------------------------------------------------------------- */
     /*                                New Logic                               */
     /* ---------------------------------------------------------------------- */
+
+    function safeName(IERC20Metadata asset_) internal view returns (string memory) {
+        (bool success, bytes memory encodedName) =
+            address(asset_).staticcall(abi.encodeCall(IERC20Metadata.name, ()));
+        if (success && encodedName.length >= 32) {
+            return abi.decode(encodedName, (string));
+        }
+        return "ERC20 Token";
+    }
+
+    function safeSymbol(IERC20Metadata asset_) internal view returns (string memory) {
+        (bool success, bytes memory encodedSymbol) =
+            address(asset_).staticcall(abi.encodeCall(IERC20Metadata.symbol, ()));
+        if (success && encodedSymbol.length >= 32) {
+            return abi.decode(encodedSymbol, (string));
+        }
+        return "ERC20";
+    }
 
     /**
      * @dev Attempts to fetch the asset decimals. A return value of false indicates that the attempt failed in some way.

@@ -28,35 +28,6 @@ import {
     DiamondPackageCallBackFactory
 } from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
 
-// import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
-
-// import {Bytecode} from "@crane/contracts/utils/Bytecode.sol";
-// import {OperableRepo} from "@crane/contracts/access/operable/OperableRepo.sol";
-// import {FacetRegistry} from "@crane/contracts/registries/facet/FacetRegistry.sol";
-// import {DiamondFactoryPackageRegistry} from "@crane/contracts/registries/package/DiamondFactoryPackageRegistry.sol";
-
-// import {DiamondLoupeFacet} from "@crane/contracts/introspection/ERC2535/DiamondLoupeFacet.sol";
-// import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-
-// import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
-// import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
-// import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
-// import {OperableRepo} from "@crane/contracts/access/operable/OperableRepo.sol";
-// import {MultiStepOwnableTarget} from "@crane/contracts/access/ERC8023/MultiStepOwnableTarget.sol";
-// import {OperableModifiers} from "@crane/contracts/access/operable/OperableModifiers.sol";
-// import {OperableTarget} from "@crane/contracts/access/operable/OperableTarget.sol";
-// import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-// import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
-// import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
-// import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
-// import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
-// import {StringSet, StringSetRepo} from "@crane/contracts/utils/collections/sets/StringSetRepo.sol";
-// import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
-// import {OperableRepo} from "@crane/contracts/access/operable/OperableRepo.sol";
-// import {MultiStepOwnableTarget} from "@crane/contracts/access/ERC8023/MultiStepOwnableTarget.sol";
-// import {OperableModifiers} from "@crane/contracts/access/operable/OperableModifiers.sol";
-// import {OperableTarget} from "@crane/contracts/access/operable/OperableTarget.sol";
-
 /**
  * @title Create2CallBackFactory
  * @author cyotee doge <doge.cyotee>
@@ -82,8 +53,6 @@ contract Create3Factory is
     using BetterEfficientHashLib for bytes;
 
     IDiamondPackageCallBackFactory public diamondPackageFactory;
-    // FacetRegistry public facetRegistry;
-    // DiamondFactoryPackageRegistry public packageRegistry;
 
     mapping(IFacet facet => string name) public nameOfFacet;
     mapping(IFacet facet => bytes4[] interfaces) public interfacesOfFacet;
@@ -212,13 +181,13 @@ contract Create3Factory is
     }
 
     function _deployFacet(bytes memory initCode, bytes memory initArgs, bytes32 salt) internal returns (IFacet facet) {
-        facet = IFacet(Creation.create3WithArgs(initCode, initArgs, salt));
+        facet = IFacet(create3WithArgs(initCode, initArgs, salt));
         _registerFacet(facet);
         return facet;
     }
 
     function _deployFacet(bytes memory initCode, bytes32 salt) internal returns (IFacet facet) {
-        facet = IFacet(Creation.create3(initCode, salt));
+        facet = IFacet(create3(initCode, salt));
         _registerFacet(facet);
         return facet;
     }
@@ -227,13 +196,13 @@ contract Create3Factory is
         internal
         returns (IDiamondFactoryPackage package)
     {
-        package = IDiamondFactoryPackage(Creation.create3WithArgs(initCode, constructorArgs, salt));
+        package = IDiamondFactoryPackage(create3WithArgs(initCode, constructorArgs, salt));
         _registerPackage(package);
         return package;
     }
 
     function _deployPackage(bytes memory initCode, bytes32 salt) internal returns (IDiamondFactoryPackage package) {
-        package = IDiamondFactoryPackage(Creation.create3(initCode, salt));
+        package = IDiamondFactoryPackage(create3(initCode, salt));
         _registerPackage(package);
         return package;
     }

@@ -6,15 +6,27 @@ import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.s
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {MultiStepOwnableTarget} from "@crane/contracts/access/ERC8023/MultiStepOwnableTarget.sol";
 
+// tag::MultiStepOwnableFacet[]
+/**
+ * @title MultiStepOwnableFacet - Reusable facet for ERC8023 compliant multi-step ownership transfer.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @notice 
+ */
 contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
     /* -------------------------------------------------------------------------- */
-    /*                              IFacet Functions                              */
+    /*                                   IFacet                                   */
     /* -------------------------------------------------------------------------- */
 
+    // tag::facetName()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetName() public pure returns (string memory name) {
         return type(MultiStepOwnableFacet).name;
     }
+    // end::facetName[]
 
+    // tag::facetInterfaces()[]
     /**
      * @inheritdoc IFacet
      */
@@ -22,7 +34,9 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IMultiStepOwnable).interfaceId;
     }
+    // end::facetInterfaces()[]
 
+    // tag::facetFuncs()[]
     /**
      * @inheritdoc IFacet
      */
@@ -37,7 +51,12 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
         funcs[6] = IMultiStepOwnable.preConfirmedOwner.selector;
         funcs[7] = IMultiStepOwnable.getOwnershipTransferBuffer.selector;
     }
+    // end::facetFuncs()[]
 
+    // tag::facetMetadata()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetMetadata()
         external
         pure
@@ -47,4 +66,6 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+    // end::facetMetadata()[]
 }
+// end::MultiStepOwnableFacet[]

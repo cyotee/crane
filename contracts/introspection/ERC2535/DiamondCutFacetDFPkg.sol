@@ -16,6 +16,7 @@ import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwn
 
 interface IDiamondCutFacetDFPkg {
     struct PkgInit {
+        IFacet diamondCutFacet;
         IFacet MULTI_STEP_OWNABLE_FACET;
     }
 
@@ -29,15 +30,17 @@ interface IDiamondCutFacetDFPkg {
     }
 }
 
-contract DiamondCutFacetDFPkg is DiamondCutTarget, IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
+contract DiamondCutFacetDFPkg is IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
     using Address for address;
 
-    IDiamondFactoryPackage immutable SELF;
+    // IDiamondFactoryPackage immutable SELF;
+    IFacet immutable DIAMOND_CUT_FACET;
     IFacet immutable MULTI_STEP_OWNABLE_FACET;
 
     constructor(PkgInit memory pkgInitArgs) {
         // PkgInit memory pkgInitArgs = abi.decode(create3InitData.initData, (PkgInit));
-        SELF = this;
+        // SELF = this;
+        DIAMOND_CUT_FACET = pkgInitArgs.diamondCutFacet;
         MULTI_STEP_OWNABLE_FACET = pkgInitArgs.MULTI_STEP_OWNABLE_FACET;
     }
 
@@ -57,7 +60,7 @@ contract DiamondCutFacetDFPkg is DiamondCutTarget, IDiamondFactoryPackage, IDiam
 
     function facetAddresses() public view returns (address[] memory facetAddresses_) {
         facetAddresses_ = new address[](2);
-        facetAddresses_[0] = address(SELF);
+        facetAddresses_[0] = address(DIAMOND_CUT_FACET);
         facetAddresses_[1] = address(MULTI_STEP_OWNABLE_FACET);
     }
 
@@ -67,22 +70,22 @@ contract DiamondCutFacetDFPkg is DiamondCutTarget, IDiamondFactoryPackage, IDiam
         interfaces[1] = type(IDiamondCut).interfaceId;
     }
 
-    function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](1);
-        funcs[0] = IDiamondCut.diamondCut.selector;
-    }
+    // function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
+    //     funcs = new bytes4[](1);
+    //     funcs[0] = IDiamondCut.diamondCut.selector;
+    // }
 
-    function _MULTI_STEP_OWNABLE_FACETFuncs() internal view virtual returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](8);
-        funcs[0] = IMultiStepOwnable.initiateOwnershipTransfer.selector;
-        funcs[1] = IMultiStepOwnable.confirmOwnershipTransfer.selector;
-        funcs[2] = IMultiStepOwnable.cancelPendingOwnershipTransfer.selector;
-        funcs[3] = IMultiStepOwnable.acceptOwnershipTransfer.selector;
-        funcs[4] = IMultiStepOwnable.owner.selector;
-        funcs[5] = IMultiStepOwnable.pendingOwner.selector;
-        funcs[6] = IMultiStepOwnable.preConfirmedOwner.selector;
-        funcs[7] = IMultiStepOwnable.getOwnershipTransferBuffer.selector;
-    }
+    // function _MULTI_STEP_OWNABLE_FACETFuncs() internal view virtual returns (bytes4[] memory funcs) {
+    //     funcs = new bytes4[](8);
+    //     funcs[0] = IMultiStepOwnable.initiateOwnershipTransfer.selector;
+    //     funcs[1] = IMultiStepOwnable.confirmOwnershipTransfer.selector;
+    //     funcs[2] = IMultiStepOwnable.cancelPendingOwnershipTransfer.selector;
+    //     funcs[3] = IMultiStepOwnable.acceptOwnershipTransfer.selector;
+    //     funcs[4] = IMultiStepOwnable.owner.selector;
+    //     funcs[5] = IMultiStepOwnable.pendingOwner.selector;
+    //     funcs[6] = IMultiStepOwnable.preConfirmedOwner.selector;
+    //     funcs[7] = IMultiStepOwnable.getOwnershipTransferBuffer.selector;
+    // }
 
     function facetCuts() public view virtual override returns (IDiamond.FacetCut[] memory facetCuts_) {
         facetCuts_ = new IDiamond.FacetCut[](2);
@@ -96,11 +99,11 @@ contract DiamondCutFacetDFPkg is DiamondCutTarget, IDiamondFactoryPackage, IDiam
         });
         facetCuts_[1] = IDiamond.FacetCut({
             // address facetAddress;
-            facetAddress: address(SELF),
+            facetAddress: address(DIAMOND_CUT_FACET),
             // FacetCutAction action;
             action: IDiamond.FacetCutAction.Add,
             // bytes4[] functionSelectors;
-            functionSelectors: facetFuncs()
+            functionSelectors: DIAMOND_CUT_FACET.facetFuncs()
         });
     }
 

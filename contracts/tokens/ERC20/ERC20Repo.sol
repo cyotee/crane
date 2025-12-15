@@ -84,10 +84,10 @@ library ERC20Repo {
     }
 
     function _increaseBalanceOf(Storage storage layout, address account, uint256 amount) internal {
-        // if (account == address(0)) {
-        //     // Revert if address(0).
-        //     revert IERC20Errors.ERC20InvalidReceiver(account);
-        // }
+        if (account == address(0)) {
+            // Revert if address(0).
+            revert IERC20Errors.ERC20InvalidReceiver(account);
+        }
         layout.balanceOf[account] += amount;
     }
 
@@ -140,7 +140,8 @@ library ERC20Repo {
     }
 
     function _mint(Storage storage layout, address recipient, uint256 amount) internal {
-        _increaseBalanceOf(layout, recipient, amount);
+        // _increaseBalanceOf(layout, recipient, amount);
+        layout.balanceOf[recipient] += amount;
         layout.totalSupply += amount;
         emit IERC20.Transfer(address(0), recipient, amount);
     }
@@ -150,7 +151,8 @@ library ERC20Repo {
     }
 
     function _burn(Storage storage layout, address account, uint256 amount) internal {
-        _decreaseBalanceOf(layout, account, amount);
+        // _decreaseBalanceOf(layout, account, amount);
+        layout.balanceOf[account] -= amount;
         layout.totalSupply -= amount;
         emit IERC20.Transfer(account, address(0), amount);
     }

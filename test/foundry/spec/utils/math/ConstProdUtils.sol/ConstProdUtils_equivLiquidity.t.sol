@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils} from "test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils.sol";
+import {TestBase_ConstProdUtils} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils.sol";
 
 contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
     function setUp() public override {
@@ -26,13 +26,6 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity balanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 
     function test_equivLiquidity_Camelot_unbalancedPool() public {
@@ -51,13 +44,6 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity unbalanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 
     function test_equivLiquidity_Camelot_extremeUnbalancedPool() public {
@@ -77,13 +63,6 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity extreme unbalanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 
     function test_equivLiquidity_Uniswap_BalancedPool() public {
@@ -102,13 +81,6 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity Uniswap balanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 
     function test_equivLiquidity_Uniswap_UnbalancedPool() public {
@@ -127,13 +99,6 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity Uniswap unbalanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 
     function test_equivLiquidity_Uniswap_ExtremeUnbalancedPool() public {
@@ -152,12 +117,5 @@ contract ConstProdUtils_equivLiquidity_Test is TestBase_ConstProdUtils {
 
         // Validate against actual pool state
         assertEq(expectedAmountB, reserveB, "Calculated equivalent liquidity should match actual pool reserve");
-
-        console.log("_equivLiquidity Uniswap extreme unbalanced pool test passed:");
-        console.log("  ReserveA:", reserveA);
-        console.log("  ReserveB:", reserveB);
-        console.log("  Input amountA:", amountA);
-        console.log("  Calculated equivalent amountB:", expectedAmountB);
-        console.log("  Actual pool reserveB:", reserveB);
     }
 }

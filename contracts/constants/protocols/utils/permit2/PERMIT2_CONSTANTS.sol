@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {BetterPermit2} from "contracts/protocols/utils/permit2/BetterPermit2.sol";
+import {BetterPermit2} from "@crane/contracts/protocols/utils/permit2/BetterPermit2.sol";
 
 library PERMIT2_CONSTANTS {
     bytes constant PERMIT2_INIT_CODE = type(BetterPermit2).creationCode;

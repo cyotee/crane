@@ -1,36 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
-
-/* -------------------------------------------------------------------------- */
-/*                                   Solday                                   */
-/* -------------------------------------------------------------------------- */
-
-// import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
-
-/* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
-import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
-// import {
-//     IERC20PermitStorage,
-//     ERC20PermitStorage
-// } from "@crane/contracts/token/ERC20/extensions/utils/ERC20PermitStorage.sol";
-// import {BetterERC20Permit} from "@crane/contracts/crane/token/ERC20/extensions/BetterERC20Permit.sol";
-// import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
-// import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
+import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 
@@ -63,8 +45,6 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
     IFacet immutable ERC2612_FACET;
 
     constructor(PkgInit memory pkgInit) {
-        /// forge-lint: disable-next-line(mixed-case-variable)
-        // PkgInit memory pkgInit = abi.decode(initData, (PkgInit));
         ERC20_FACET = pkgInit.erc20Facet;
         ERC5267_FACET = pkgInit.erc5267Facet;
         ERC2612_FACET = pkgInit.erc2612Facet;
@@ -72,16 +52,6 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
 
     function packageName() public pure returns (string memory name_) {
         return type(ERC20PermitDFPkg).name;
-    }
-
-    function packageMetadata()
-        public
-        view
-        returns (string memory name_, bytes4[] memory interfaces, address[] memory facets)
-    {
-        name_ = packageName();
-        interfaces = facetInterfaces();
-        facets = facetAddresses();
     }
 
     function facetAddresses() public view returns (address[] memory facetAddresses_) {
@@ -99,6 +69,16 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
         interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
         interfaces[3] = type(IERC20Permit).interfaceId;
         interfaces[4] = type(IERC5267).interfaceId;
+    }
+
+    function packageMetadata()
+        public
+        view
+        returns (string memory name_, bytes4[] memory interfaces, address[] memory facets)
+    {
+        name_ = packageName();
+        interfaces = facetInterfaces();
+        facets = facetAddresses();
     }
 
     function facetCuts() public view returns (IDiamond.FacetCut[] memory facetCuts_) {
@@ -160,11 +140,6 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
             decodedArgs.decimals = 18;
         }
 
-        // if (bytes(decodedArgs.version).length == 0) {
-        //     decodedArgs.version = "1";
-        // }
-
-        // return keccak256(abi.encode(decodedArgs));
         return abi.encode(decodedArgs)._hash();
     }
 
@@ -190,10 +165,6 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
         if (decodedArgs.decimals == 0) {
             decodedArgs.decimals = 18;
         }
-
-        // if (bytes(decodedArgs.version).length == 0) {
-        //     decodedArgs.version = "1";
-        // }
 
         return abi.encode(decodedArgs);
     }

@@ -1,12 +1,27 @@
 {
+  "contracts/gsn": {
+    "tag": {
+      "name": "v2.2.5",
+      "rev": "8e0c9ed23d9798b7384e8255054631c3cb414fdf"
+    }
+  },
   "lib/Compose": {
     "rev": "28d74826a532d067556a4c1067cd4722fa78d2ce"
+  },
+  "lib/aerodrome-contracts": {
+    "rev": "a4fe56813c9e64907038f447a7358f83ec32dc14"
   },
   "lib/balancer-v3-monorepo": {
     "rev": "a2fe650f622e1bd6201537cc5c754afe7feac24a"
   },
   "lib/forge-std": {
     "rev": "100b0d756adda67bc70aab816fa5a1a95dcf78b6"
+  },
+  "lib/gsn": {
+    "tag": {
+      "name": "v2.2.5",
+      "rev": "8e0c9ed23d9798b7384e8255054631c3cb414fdf"
+    }
   },
   "lib/openzeppelin-contracts": {
     "rev": "6308fdc5e8e0d5e8a94dc9d5d4c79f6331334c81"

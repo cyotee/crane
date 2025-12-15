@@ -1,17 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
-
-/* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {TransientSlot} from "@openzeppelin/contracts/utils/TransientSlot.sol";
+pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
 import {IReentrancyLock} from "@crane/contracts/interfaces/IReentrancyLock.sol";
+import {TransientSlot} from "@crane/contracts/utils/TransientSlot.sol";
 
 library ReentrancyLockRepo {
     using TransientSlot for *;

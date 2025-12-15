@@ -103,8 +103,21 @@ contract ERC20DFPkg is IERC20DFPkg, IDiamondFactoryPackage {
         return IERC20(factory.deploy(this, abi.encode(pkgArgs)));
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                           IDiamondFactoryPackage                           */
+    /* -------------------------------------------------------------------------- */
+
     function packageName() public pure returns (string memory name_) {
         return type(ERC20DFPkg).name;
+    }
+
+    function facetInterfaces() public view returns (bytes4[] memory interfaces) {
+        return ERC20_FACET.facetInterfaces();
+    }
+
+    function facetAddresses() public view returns (address[] memory facetAddresses_) {
+        facetAddresses_ = new address[](1);
+        facetAddresses_[0] = address(ERC20_FACET);
     }
 
     function packageMetadata()
@@ -115,15 +128,6 @@ contract ERC20DFPkg is IERC20DFPkg, IDiamondFactoryPackage {
         name_ = packageName();
         interfaces = facetInterfaces();
         facets = facetAddresses();
-    }
-
-    function facetAddresses() public view returns (address[] memory facetAddresses_) {
-        facetAddresses_ = new address[](1);
-        facetAddresses_[0] = address(ERC20_FACET);
-    }
-
-    function facetInterfaces() public view returns (bytes4[] memory interfaces) {
-        return ERC20_FACET.facetInterfaces();
     }
 
     function facetCuts() public view returns (IDiamond.FacetCut[] memory facetCuts_) {
