@@ -40,7 +40,6 @@ Files still needing migration or parity checks:
 - snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateFeePortionForPosition_struct.sol
 - snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_sortReserves.sol
 - snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateZapOutLPPrecise.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_quoteSwapDepositWithFee.sol
 - snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_k.sol
 - snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateProtocolFee.sol
 
