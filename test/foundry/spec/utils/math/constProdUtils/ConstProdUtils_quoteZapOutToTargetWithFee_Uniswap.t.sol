@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Uniswap.sol";
+import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {UniV2Factory} from "contracts/protocols/dexes/uniswap/v2/UniV2Factory.sol";

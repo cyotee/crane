@@ -507,44 +507,44 @@ library ConstProdUtils {
         if (ownedLPAmount > lpTotalSupply) {
             return (0);
         }
-        // console.log("_quoteWithdrawSwapWithFee: ownedLPAmount", ownedLPAmount);
-        // console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (start)", lpTotalSupply);
-        // console.log("_quoteWithdrawSwapWithFee: reserveA (start)", reserveA);
-        // console.log("_quoteWithdrawSwapWithFee: reserveB (start)", reserveB);
-        // console.log("_quoteWithdrawSwapWithFee: feePercent", feePercent);
-        // console.log("_quoteWithdrawSwapWithFee: feeOn", feeOn ? 1 : 0);
-        // console.log("_quoteWithdrawSwapWithFee: kLast", kLast);
-        // console.log("_quoteWithdrawSwapWithFee: ownerFeeShare", ownerFeeShare);
+        console.log("_quoteWithdrawSwapWithFee: ownedLPAmount", ownedLPAmount);
+        console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (start)", lpTotalSupply);
+        console.log("_quoteWithdrawSwapWithFee: reserveA (start)", reserveA);
+        console.log("_quoteWithdrawSwapWithFee: reserveB (start)", reserveB);
+        console.log("_quoteWithdrawSwapWithFee: feePercent", feePercent);
+        console.log("_quoteWithdrawSwapWithFee: feeOn", feeOn ? 1 : 0);
+        console.log("_quoteWithdrawSwapWithFee: kLast", kLast);
+        console.log("_quoteWithdrawSwapWithFee: ownerFeeShare", ownerFeeShare);
         // Protocol fee is minted before burns in V2-like pairs; use current reserves (pre-withdrawal)
         if (feeOn && kLast != 0) {
             if (ownerFeeShare >= 16666 && ownerFeeShare <= 16667) {
                 uint256 protocolFee = _calculateUniswapFeeMint(lpTotalSupply, reserveA, reserveB, kLast);
                 lpTotalSupply += protocolFee;
-                // console.log("_quoteWithdrawSwapWithFee: uniswap protocolFee", protocolFee);
+                console.log("_quoteWithdrawSwapWithFee: uniswap protocolFee", protocolFee);
             } else {
                 uint256 newK = reserveA * reserveB;
                 uint256 protocolFee = _calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
                 lpTotalSupply += protocolFee;
-                // console.log("_quoteWithdrawSwapWithFee: generic protocolFee", protocolFee);
+                console.log("_quoteWithdrawSwapWithFee: generic protocolFee", protocolFee);
             }
-            // console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (adj)", lpTotalSupply);
+            console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (adj)", lpTotalSupply);
         }
         // Get direct amounts from LP withdrawal with adjusted supply
         (uint256 amountAWD, uint256 amountBWD) = _withdrawQuote(ownedLPAmount, lpTotalSupply, reserveA, reserveB);
-        // console.log("_quoteWithdrawSwapWithFee: amountAWD", amountAWD);
-        // console.log("_quoteWithdrawSwapWithFee: amountBWD", amountBWD);
+        console.log("_quoteWithdrawSwapWithFee: amountAWD", amountAWD);
+        console.log("_quoteWithdrawSwapWithFee: amountBWD", amountBWD);
         // Calculate new reserves after withdrawal for swap calculation
         uint256 newReserveB = reserveB - amountBWD;
         uint256 newReserveA = reserveA - amountAWD;
-        // console.log("_quoteWithdrawSwapWithFee: newReserveA", newReserveA);
-        // console.log("_quoteWithdrawSwapWithFee: newReserveB", newReserveB);
+        console.log("_quoteWithdrawSwapWithFee: newReserveA", newReserveA);
+        console.log("_quoteWithdrawSwapWithFee: newReserveB", newReserveB);
         // Swap amountB to token A (force Uniswap denom when small integer fee is used)
         uint256 denom = (feePercent <= 10) ? 1000 : FEE_DENOMINATOR;
-        // console.log("_quoteWithdrawSwapWithFee: denom", denom);
+        console.log("_quoteWithdrawSwapWithFee: denom", denom);
         uint256 swapOut = _saleQuote(amountBWD, newReserveB, newReserveA, feePercent, denom);
-        // console.log("_quoteWithdrawSwapWithFee: swapOut", swapOut);
+        console.log("_quoteWithdrawSwapWithFee: swapOut", swapOut);
         totalAmountA = amountAWD + swapOut;
-        // console.log("_quoteWithdrawSwapWithFee: totalAmountA", totalAmountA);
+        console.log("_quoteWithdrawSwapWithFee: totalAmountA", totalAmountA);
         return (totalAmountA);
     }
 
@@ -567,39 +567,39 @@ library ConstProdUtils {
         if (ownedLPAmount > lpTotalSupply) {
             return (0);
         }
-        // console.log("_quoteWithdrawSwapWithFee(denom): ownedLPAmount", ownedLPAmount);
-        // console.log("_quoteWithdrawSwapWithFee(denom): lpTotalSupply (start)", lpTotalSupply);
-        // console.log("_quoteWithdrawSwapWithFee(denom): reserveA (start)", reserveA);
-        // console.log("_quoteWithdrawSwapWithFee(denom): reserveB (start)", reserveB);
-        // console.log("_quoteWithdrawSwapWithFee(denom): feePercent", feePercent);
-        // console.log("_quoteWithdrawSwapWithFee(denom): feeDenominator", feeDenominator);
-        // console.log("_quoteWithdrawSwapWithFee(denom): feeOn", feeOn ? 1 : 0);
-        // console.log("_quoteWithdrawSwapWithFee(denom): kLast", kLast);
-        // console.log("_quoteWithdrawSwapWithFee(denom): ownerFeeShare", ownerFeeShare);
+        console.log("_quoteWithdrawSwapWithFee(denom): ownedLPAmount", ownedLPAmount);
+        console.log("_quoteWithdrawSwapWithFee(denom): lpTotalSupply (start)", lpTotalSupply);
+        console.log("_quoteWithdrawSwapWithFee(denom): reserveA (start)", reserveA);
+        console.log("_quoteWithdrawSwapWithFee(denom): reserveB (start)", reserveB);
+        console.log("_quoteWithdrawSwapWithFee(denom): feePercent", feePercent);
+        console.log("_quoteWithdrawSwapWithFee(denom): feeDenominator", feeDenominator);
+        console.log("_quoteWithdrawSwapWithFee(denom): feeOn", feeOn ? 1 : 0);
+        console.log("_quoteWithdrawSwapWithFee(denom): kLast", kLast);
+        console.log("_quoteWithdrawSwapWithFee(denom): ownerFeeShare", ownerFeeShare);
         if (feeOn && kLast != 0) {
             if (ownerFeeShare >= 16666 && ownerFeeShare <= 16667) {
                 uint256 protocolFee = _calculateUniswapFeeMint(lpTotalSupply, reserveA, reserveB, kLast);
                 lpTotalSupply += protocolFee;
-                // console.log("_quoteWithdrawSwapWithFee(denom): uniswap protocolFee", protocolFee);
+                console.log("_quoteWithdrawSwapWithFee(denom): uniswap protocolFee", protocolFee);
             } else {
                 uint256 newK = reserveA * reserveB;
                 uint256 protocolFee = _calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
                 lpTotalSupply += protocolFee;
-                // console.log("_quoteWithdrawSwapWithFee(denom): generic protocolFee", protocolFee);
+                console.log("_quoteWithdrawSwapWithFee(denom): generic protocolFee", protocolFee);
             }
-            // console.log("_quoteWithdrawSwapWithFee(denom): lpTotalSupply (adj)", lpTotalSupply);
+            console.log("_quoteWithdrawSwapWithFee(denom): lpTotalSupply (adj)", lpTotalSupply);
         }
         (uint256 amountAWD, uint256 amountBWD) = _withdrawQuote(ownedLPAmount, lpTotalSupply, reserveA, reserveB);
-        // console.log("_quoteWithdrawSwapWithFee(denom): amountAWD", amountAWD);
-        // console.log("_quoteWithdrawSwapWithFee(denom): amountBWD", amountBWD);
+        console.log("_quoteWithdrawSwapWithFee(denom): amountAWD", amountAWD);
+        console.log("_quoteWithdrawSwapWithFee(denom): amountBWD", amountBWD);
         uint256 newReserveB = reserveB - amountBWD;
         uint256 newReserveA = reserveA - amountAWD;
-        // console.log("_quoteWithdrawSwapWithFee(denom): newReserveA", newReserveA);
-        // console.log("_quoteWithdrawSwapWithFee(denom): newReserveB", newReserveB);
+        console.log("_quoteWithdrawSwapWithFee(denom): newReserveA", newReserveA);
+        console.log("_quoteWithdrawSwapWithFee(denom): newReserveB", newReserveB);
         uint256 swapOut = _saleQuote(amountBWD, newReserveB, newReserveA, feePercent, feeDenominator);
-        // console.log("_quoteWithdrawSwapWithFee(denom): swapOut", swapOut);
+        console.log("_quoteWithdrawSwapWithFee(denom): swapOut", swapOut);
         totalAmountA = amountAWD + swapOut;
-        // console.log("_quoteWithdrawSwapWithFee(denom): totalAmountA", totalAmountA);
+        console.log("_quoteWithdrawSwapWithFee(denom): totalAmountA", totalAmountA);
         return (totalAmountA);
     }
 

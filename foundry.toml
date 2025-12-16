@@ -9,6 +9,8 @@ fs_permissions = [{ access = "read", path = "./"}]
 solc = "0.8.30"
 sizes = true
 optimizer = true
+# Use the new IR pipeline to avoid "stack too deep" compile errors in complex tests
+viaIR = true
 # optimizer_runs = 4294967295
 # CamelotFactory requires 16683 to fit within execution code size limits
 # optimizer_runs = 16683

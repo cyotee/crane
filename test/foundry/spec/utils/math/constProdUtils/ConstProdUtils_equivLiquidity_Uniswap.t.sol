@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Uniswap.sol";
+import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 
 contract ConstProdUtils_equivLiquidity_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {

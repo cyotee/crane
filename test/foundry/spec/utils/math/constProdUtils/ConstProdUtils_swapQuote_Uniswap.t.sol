@@ -5,7 +5,7 @@ import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterc
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {UniswapV2Service} from "contracts/protocols/dexes/uniswap/v2/UniswapV2Service.sol";
 import {IUniswapV2Router} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Uniswap.sol";
+import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 
 contract ConstProdUtils_swapQuote_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {

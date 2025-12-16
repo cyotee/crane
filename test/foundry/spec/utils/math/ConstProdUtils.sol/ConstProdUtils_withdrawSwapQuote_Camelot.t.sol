@@ -2,10 +2,12 @@
 pragma solidity ^0.8.0;
 
 
-import {TestBase_ConstProdUtils_Camelot} from "./TestBase_ConstProdUtils_Camelot.sol";
+import {TestBase_ConstProdUtils_Camelot} from "../constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
+import {CamelotV2Utils} from "contracts/utils/math/CamelotV2Utils.sol";
+import {FEE_DENOMINATOR} from "contracts/constants/Constants.sol";
 
-contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Camelot {
+contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot_Old is TestBase_ConstProdUtils_Camelot {
     function setUp() public override {
         super.setUp();
     }
@@ -29,8 +31,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -76,8 +78,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotUnbalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+            uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotUnbalancedTokenA.balanceOf(address(this));
@@ -129,8 +131,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotExtremeUnbalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotExtremeTokenA.balanceOf(address(this));
@@ -180,8 +182,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 4; // Smaller amount
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -212,8 +214,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = (lpBalance * 3) / 4; // Larger amount
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -244,8 +246,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -276,8 +278,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -308,8 +310,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = (lpBalance * 2) / 3; // Mid-range amount
 
-        uint256 expectedTotalTokenA = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, 0, 0, false
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -340,8 +342,8 @@ contract ConstProdUtils_withdrawSwapQuote_Camelot is TestBase_ConstProdUtils_Cam
         uint256 lpBalance2 = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount2 = (lpBalance2 * 3) / 4; // Large amount
 
-        uint256 expectedTotalTokenA2 = ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount2, lpTotalSupply2, reserveA2, reserveB2, uint256(feeA2), 0, 0, false
+        uint256 expectedTotalTokenA2 = CamelotV2Utils._quoteWithdrawSwapWithFee(
+            ownedLPAmount2, lpTotalSupply2, reserveA2, reserveB2, uint256(feeA2), FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 initialTokenABalance2 = camelotBalancedTokenA.balanceOf(address(this));

@@ -24,7 +24,7 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(MultiStepOwnableFacet).name;
     }
-    // end::facetName[]
+    // end::facetName()[]
 
     // tag::facetInterfaces()[]
     /**

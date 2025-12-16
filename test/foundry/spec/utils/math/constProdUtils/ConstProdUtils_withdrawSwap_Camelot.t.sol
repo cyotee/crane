@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {FEE_DENOMINATOR} from "contracts/constants/Constants.sol";
-import {TestBase_ConstProdUtils_Camelot} from "../constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
+import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/CamelotV2Service.sol";
 import {CamelotV2Utils} from "contracts/utils/math/CamelotV2Utils.sol";
 

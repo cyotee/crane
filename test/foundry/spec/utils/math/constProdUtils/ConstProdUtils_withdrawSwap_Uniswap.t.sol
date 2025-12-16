@@ -3,8 +3,9 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Uniswap.sol";
+import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {UniswapV2Service} from "@crane/contracts/protocols/dexes/uniswap/v2/UniswapV2Service.sol";
+import {UniswapV2Utils} from "contracts/utils/math/UniswapV2Utils.sol";
 
 contract ConstProdUtils_withdrawSwap_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {
@@ -28,7 +29,7 @@ contract ConstProdUtils_withdrawSwap_Uniswap_Test is TestBase_ConstProdUtils_Uni
         uint256 totalSupply = uniswapBalancedPair.totalSupply();
         uint256 feePercent = 300;
 
-        uint256 expectedAmountOut = ConstProdUtils._quoteWithdrawSwapWithFee(
+        uint256 expectedAmountOut = UniswapV2Utils._quoteWithdrawSwapFee(
             liquidityToWithdraw,
             totalSupply,
             uint256(reserveA),

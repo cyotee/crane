@@ -14,10 +14,10 @@ import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.so
 import {ERC165Repo} from "@crane/contracts/introspection/ERC165/ERC165Repo.sol";
 import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
 
-interface IDiamondCutFacetDFPkg {
+interface IDiamondCutFacetDFPkg is IDiamondFactoryPackage {
     struct PkgInit {
         IFacet diamondCutFacet;
-        IFacet MULTI_STEP_OWNABLE_FACET;
+        IFacet multiStepOwnableFacet;
     }
 
     struct PkgArgs {
@@ -30,7 +30,8 @@ interface IDiamondCutFacetDFPkg {
     }
 }
 
-contract DiamondCutFacetDFPkg is IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
+// TODO Rename to DiamondCutDFPkg
+contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
     using Address for address;
 
     // IDiamondFactoryPackage immutable SELF;
@@ -41,7 +42,7 @@ contract DiamondCutFacetDFPkg is IDiamondFactoryPackage, IDiamondCutFacetDFPkg {
         // PkgInit memory pkgInitArgs = abi.decode(create3InitData.initData, (PkgInit));
         // SELF = this;
         DIAMOND_CUT_FACET = pkgInitArgs.diamondCutFacet;
-        MULTI_STEP_OWNABLE_FACET = pkgInitArgs.MULTI_STEP_OWNABLE_FACET;
+        MULTI_STEP_OWNABLE_FACET = pkgInitArgs.multiStepOwnableFacet;
     }
 
     function packageName() public pure returns (string memory name_) {

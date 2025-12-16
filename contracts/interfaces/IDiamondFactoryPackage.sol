@@ -3,6 +3,53 @@ pragma solidity ^0.8.0;
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
+/**
+ * @title 
+ * @author 
+ * @notice
+ * +------+   +------------------------------------+   +----------------------+   +-------+
+ * |User  |   | DiamondPackageCallBackFactory (F)  |   |DiamondFactoryPackage |   | Proxy |
+ * +------+   +------------------------------------+   +----------------------+   +-------+
+ * |                         |                                          |             |
+ * | 1) deploy(pkg, pkgArgs) |                                          |             |
+ * +------------------------>|                                          |             |
+ * |                         |                                          |             |
+ * |                         |-- DELEGATECALL: pkg.calcSalt(pkgArgs) -->|             |
+ * |                         |                                          |             |
+ * |                         |<-- salt ---------------------------------|             |
+ * |                         |                                          |             |
+ * |                         | compute address = _create2AddressFromOf( |             |
+ * |                         |    PROXY_INIT_HASH,                      |             |
+ * |                         |    keccak256(abi.encode(pkg,salt))       |             |
+ * |                         |                                          |             |
+ * |                         | if codesize > 0 ------------------------>|             |
+ * |                         | | return proxy address to User           |             |
+ * |                         | |                                        |             |
+ * |                         | else (codesize == 0)                     |             |
+ * |                         |----------------------------------------->|             |
+ * |                         |    2) updatePkg()                        |             |
+ * |                         |----------------------------------------->|             |
+ * |                         | CREATE2(PROXY_INIT_HASH, salt) ----------|-----------=>|
+ * |                         |                                          |             |
+ * |                         |-------- DELEGATECALL (via Proxy): initAccount() -------|
+ * |                         |-> DiamondFactoryPackage: diamondConfig() |             |
+ * |                         |                                          |<-- config --|
+ * |                         |-- DELEGATECALL: pkg._initAccount(args) ->|             |
+ * |                         |                                          |             |
+ * |                         |<------------ Proxy returns: proxy address -------------|
+ * |                         |                                          |             |
+ * |                         |------------> DiamondFactoryPackage: postDeploy(proxy)  |
+ * |                         |                                          |             |
+ * |                         |                  (opt) DiamondFactoryPackage -> Proxy: |
+ * |                         |                                    postDeploy().       |
+ * |                         |                                          |<--success --|
+ * |                         |<-- DiamondFactoryPackage: success -------|             |
+ * |                         |-----> Proxy: postDeploy() ---------------|------------>|
+ * |                         |<----------------------- success ---------|-------------|
+ * |  final: proxy address   |                                          |             |
+ * |<------------------------|                                          |             |
+ * |                         |                                          |             |
+ */
 interface IDiamondFactoryPackage {
     /**
      * @dev Structs are better than tuples.
