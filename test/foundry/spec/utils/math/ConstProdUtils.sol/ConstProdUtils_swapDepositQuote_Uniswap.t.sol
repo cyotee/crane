@@ -1,13 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import {TestBase_ConstProdUtils_Uniswap} from "./TestBase_ConstProdUtils_Uniswap.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Uniswap.sol";
 
-contract ConstProdUtils_swapDepositQuote_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
+contract ConstProdUtils_swapDepositQuote_Uniswap is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {
-        TestBase_ConstProdUtils_Uniswap.setUp();
+        super.setUp();
+    }
+
+    function test_quoteSwapDepositWithFee_Uniswap_balancedPool_basic() public {
+        _initializeUniswapBalancedPools();
+        (uint112 reserve0, uint112 reserve1,) = uniswapBalancedPair.getReserves();
+        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
+            address(uniswapBalancedTokenA), uniswapBalancedPair.token0(), reserve0, reserve1
+        );
+
+        uint256 lpTotalSupply = uniswapBalancedPair.totalSupply();
+        uint256 amountIn = 1e18;
+
+        uint256 expectedLp = ConstProdUtils._quoteSwapDepositWithFee(
+            amountIn, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false
+        );
+
+        // Basic sanity: expected LP should be non-zero for meaningful inputs
+        assertGt(expectedLp, 0, "Expected LP quote should be greater than 0");
     }
 
     function test_swapDepositQuote_Uniswap_balancedPool() public {
@@ -51,4 +68,5 @@ contract ConstProdUtils_swapDepositQuote_Uniswap_Test is TestBase_ConstProdUtils
 
         assertEq(actualLPTokens, expectedLPTokens, "Actual LP tokens should equal expected LP tokens exactly");
     }
+
 }

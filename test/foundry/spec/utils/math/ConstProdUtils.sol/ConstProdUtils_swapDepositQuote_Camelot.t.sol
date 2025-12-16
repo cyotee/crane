@@ -1,13 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
+import {TestBase_ConstProdUtils_Camelot} from "./TestBase_ConstProdUtils_Camelot.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/ConstProdUtils.sol/TestBase_ConstProdUtils_Camelot.sol";
 
-contract ConstProdUtils_swapDepositQuote_Camelot_Test is TestBase_ConstProdUtils_Camelot {
+contract ConstProdUtils_swapDepositQuote_Camelot is TestBase_ConstProdUtils_Camelot {
     function setUp() public override {
-        TestBase_ConstProdUtils_Camelot.setUp();
+        super.setUp();
+    }
+
+    function test_quoteSwapDepositWithFee_Camelot_balancedPool_basic() public {
+        _initializeCamelotBalancedPools();
+        (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = camelotBalancedPair.getReserves();
+
+        (uint256 reserveA, uint256 feeA, uint256 reserveB, uint256 feeB) = ConstProdUtils._sortReserves(
+            address(camelotBalancedTokenA), camelotBalancedPair.token0(), reserve0, uint256(fee0), reserve1, uint256(fee1)
+        );
+
+        uint256 lpTotalSupply = camelotBalancedPair.totalSupply();
+        uint256 amountIn = 1e18;
+
+        uint256 expectedLp = ConstProdUtils._quoteSwapDepositWithFee(
+            amountIn, lpTotalSupply, reserveA, reserveB, feeA, 0, 0, false
+        );
+
+        assertGt(expectedLp, 0, "Expected LP quote should be greater than 0");
     }
 
     function test_swapDepositQuote_Camelot_balancedPool() public {
@@ -78,4 +95,5 @@ contract ConstProdUtils_swapDepositQuote_Camelot_Test is TestBase_ConstProdUtils
 
         assertEq(actualLPTokens, expectedLPTokens, "Actual LP tokens should equal expected LP tokens exactly");
     }
+
 }
