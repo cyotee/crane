@@ -50,7 +50,9 @@ ignored_error_codes = [
 ]
 ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
 
-# [invariant]
+[invariant]
+runs = 50
+depth = 5
 # corpus_dir = 'corpus'
 # corpus_gzip = true
 

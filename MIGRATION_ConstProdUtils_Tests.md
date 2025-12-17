@@ -24,24 +24,43 @@ Legend: • not migrated / missing
 
 Files still needing migration or parity checks:
 
--- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_swapDepositSaleAmt.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateZapOutLP.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_minZapInAmount.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_quoteZapOutAmount.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_saleQuoteMin.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateYieldForOwnedLP.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_swapDeposit.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_helpers.sol  
+  (migrated as `ConstProdUtils_quoteZapOutLP_*` files)
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateYieldForOwnedLP.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_helpers.sol
   (verify helper consolidation into `TestBase_*`; migrate remaining helper tests if needed)
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_purchaseQuote.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateVaultFee.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateFeePortionForPosition.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_saleQuote.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateFeePortionForPosition_struct.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_sortReserves.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateZapOutLPPrecise.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_k.sol
-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateProtocolFee.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_purchaseQuote.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateVaultFee.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateFeePortionForPosition.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_saleQuote.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateFeePortionForPosition_struct.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_sortReserves.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_calculateZapOutLP.sol
+  (migrated as `ConstProdUtils_quoteZapOutLP_*` files)
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_minZapInAmount.sol  (migrated as `ConstProdUtils_minZapInAmount_*`)
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_quoteZapOutAmount.sol
+-- snippets/indexedex/old/spec/crane/utils/math/Test_ConstProdUtils_saleQuoteMin.sol
+
+Notes on quick findings (updated):
+- `Test_ConstProdUtils_swapDepositSaleAmt.sol` — already migrated to:
+  - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_swapDepositSaleAmt_Uniswap.t.sol
+  - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_swapDepositSaleAmt_Camelot.t.sol
+- `Test_ConstProdUtils_calculateZapOutLP.sol` — migrated under `ConstProdUtils_quoteZapOutLP_*` (Uniswap + Camelot)
+- `Test_ConstProdUtils_swapDeposit.sol` — migrated as `ConstProdUtils_swapDepositQuote_*` and `ConstProdUtils_swapDepositSaleAmt_*`
+- `Test_ConstProdUtils_saleQuote.sol` — analogous tests exist (see `ConstProdUtils_swapQuote_*` and related files)
+
+Remaining items (need migration/parity verification):
+- `Test_ConstProdUtils_quoteZapOutAmount.sol` (verify if fully covered by existing `quoteZapOut*` tests)
+- `Test_ConstProdUtils_saleQuoteMin.sol`
+- `Test_ConstProdUtils_calculateYieldForOwnedLP.sol`
+- `Test_ConstProdUtils_helpers.sol` (verify helper coverage)
+- `Test_ConstProdUtils_purchaseQuote.sol`
+- `Test_ConstProdUtils_calculateVaultFee.sol`
+- `Test_ConstProdUtils_calculateFeePortionForPosition.sol`
+- `Test_ConstProdUtils_calculateFeePortionForPosition_struct.sol`
+- `Test_ConstProdUtils_sortReserves.sol`
+- `Test_ConstProdUtils_calculateZapOutLPPrecise.sol`
+- `Test_ConstProdUtils_k.sol`
+- `Test_ConstProdUtils_calculateProtocolFee.sol`
 
 Partial/missing DEX counterparts to add:
 
@@ -64,6 +83,8 @@ forge test --match-path test/foundry/spec/utils/math/constProdUtils/ConstProdUti
 Updated: 2025-12-16
 
 
-Planned next migration: none — `Test_ConstProdUtils_quoteWithdrawSwapWithFee.sol` already migrated; pick an item from the list above to prioritize.
+Planned next migration: `Test_ConstProdUtils_quoteZapOutAmount.sol` — recommended
+
+Rationale: `quoteZapOutAmount` exercises ZapOut/burn-to-output math and will surface rounding and fee-mint edgecases across DEXes; migrating it next helps validate current `quoteZapOut*` implementations early.
 
 

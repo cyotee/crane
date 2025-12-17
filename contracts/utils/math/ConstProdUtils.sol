@@ -303,6 +303,57 @@ library ConstProdUtils {
     }
 
     /**
+     * @dev Find minimal zap-in amount that produces at least 1 unit of equivalent liquidity
+     * Uses exponential search + binary search and existing helpers for parity.
+     */
+    function _minZapInAmount(
+        uint256 reserveA,
+        uint256 reserveB,
+        uint256 /* lpTotalSupply */,
+        uint256 feePercent,
+        uint256 feeDenominator
+    ) internal pure returns (uint256) {
+        if (reserveA == 0 || reserveB == 0) return 0;
+
+        uint256 low = 1;
+        uint256 high = 1;
+
+        // Exponential search to find an upper bound where equivalent liquidity >= 1
+        while (true) {
+            uint256 sale = _swapDepositSaleAmt(high, reserveA, feePercent, feeDenominator);
+            uint256 equiv = 0;
+            if (sale > 0) {
+                equiv = _equivLiquidity(sale, reserveA, reserveB);
+            }
+            if (equiv >= 1) break;
+            // prevent overflow
+            if (high >= type(uint256).max / 2) {
+                high = type(uint256).max;
+                break;
+            }
+            high = high * 2;
+        }
+
+        // Binary search between low and high for minimal amount
+        uint256 l = low;
+        uint256 h = high;
+        while (l < h) {
+            uint256 m = l + (h - l) / 2;
+            uint256 sale = _swapDepositSaleAmt(m, reserveA, feePercent, feeDenominator);
+            uint256 equiv = 0;
+            if (sale > 0) {
+                equiv = _equivLiquidity(sale, reserveA, reserveB);
+            }
+            if (equiv >= 1) {
+                h = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return l;
+    }
+
+    /**
      * @dev Calculates the expected LP tokens from a swap deposit operation, accounting for protocol fees.
      * @param amountIn The amount of token being deposited.
      * @param lpTotalSupply The current total supply of LP tokens.

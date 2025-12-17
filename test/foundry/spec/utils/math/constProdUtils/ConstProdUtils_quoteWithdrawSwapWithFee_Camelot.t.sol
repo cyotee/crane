@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Camelot} from "./TestBase_ConstProdUtils_Camelot.sol";
+import {TestBase_ConstProdUtils_Camelot} from "../constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {FEE_DENOMINATOR} from "contracts/constants/Constants.sol";
 
 import {IERC20MintBurn} from "contracts/interfaces/IERC20MintBurn.sol";
