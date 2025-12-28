@@ -4,6 +4,10 @@ pragma solidity ^0.8.0;
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {TestBase_ConstProdUtils_Camelot} from "./TestBase_ConstProdUtils_Camelot.sol";
 import {ICamelotPair} from "contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
+import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
+
+import "contracts/utils/math/CamelotV2Utils.sol";
+import {Math as CamMath} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/Math.sol";
 
 contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_Camelot {
     function setUp() public override {
@@ -25,12 +29,36 @@ contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_
         );
         uint256 kLast = pair.kLast();
         (uint256 ownerFeeShare, ) = camelotV2Factory.feeInfo();
-        return ConstProdUtils._quoteWithdrawWithFee(lpReceived, totalSupply, reserveA, reserveB, kLast, ownerFeeShare, false);
+        // Compute Camelot's minted liquidity (mirror of CamelotPair._mintFee)
+        // so we can adjust `totalSupply` to the post-mint value and avoid
+        // double-simulating the mint when calling `ConstProdUtils`.
+        uint256 minted = 0;
+        uint256 feeDenominator = 100000; // Camelot FEE_DENOMINATOR
+        if (kLast != 0 && ownerFeeShare != 0) {
+            uint256 rootK = CamMath.sqrt(reserveA * reserveB);
+            uint256 rootKLast = CamMath.sqrt(kLast);
+            if (rootK > rootKLast) {
+                uint256 d = (feeDenominator * 100) / ownerFeeShare;
+                if (d >= 100) {
+                    d = d - 100;
+                    uint256 liquidityNumer = totalSupply * (rootK - rootKLast) * 100;
+                    uint256 liquidityDenom = (rootK * d) + (rootKLast * 100);
+                    if (liquidityDenom != 0) {
+                        minted = liquidityNumer / liquidityDenom;
+                    }
+                }
+            }
+        }
+        uint256 adjustedSupply = totalSupply + minted;
+        return ConstProdUtils._quoteWithdrawWithFee(lpReceived, adjustedSupply, reserveA, reserveB, kLast, ownerFeeShare, false);
     }
 
     function test_quoteWithdrawWithFee_Camelot_balanced_simple() public {
         _initializeCamelotBalancedPools();
         ICamelotPair pair = camelotBalancedPair;
+
+        // generate trading activity so protocol fee paths can run
+        _executeCamelotTradesToGenerateFees(camelotBalancedTokenA, camelotBalancedTokenB);
 
         uint256 lpReceived = pair.balanceOf(address(this));
         assertTrue(lpReceived > 0, "got lp");
@@ -56,6 +84,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_
         _initializeCamelotUnbalancedPools();
         ICamelotPair pair = camelotUnbalancedPair;
 
+        // generate trading activity so protocol fee paths can run
+        _executeCamelotTradesToGenerateFees(camelotUnbalancedTokenA, camelotUnbalancedTokenB);
+
         uint256 lpReceived = pair.balanceOf(address(this));
 
         (uint256 quotedA, uint256 quotedB) = _quotedWithdrawForPair(pair, address(camelotUnbalancedTokenA));
@@ -78,6 +109,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_
     function test_quoteWithdrawWithFee_Camelot_extreme_unbalanced_simple() public {
         _initializeCamelotExtremeUnbalancedPools();
         ICamelotPair pair = camelotExtremeUnbalancedPair;
+
+        // generate trading activity so protocol fee paths can run
+        _executeCamelotTradesToGenerateFees(camelotExtremeTokenA, camelotExtremeTokenB);
 
         uint256 lpReceived = pair.balanceOf(address(this));
 

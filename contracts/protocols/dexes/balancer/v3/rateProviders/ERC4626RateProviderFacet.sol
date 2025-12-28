@@ -32,10 +32,11 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
 import {IERC4626RateProvider} from "@crane/contracts/interfaces/IERC4626RateProvider.sol";
 import {ERC4626RateProviderRepo} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
+import {ERC4626RateProviderTarget} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderTarget.sol";
 
 contract ERC4626RateProviderFacet is
-    IFacet,
-    IERC4626RateProvider
+    ERC4626RateProviderTarget,
+    IFacet
 {
     using EfficientHashLib for bytes;
 
@@ -84,25 +85,4 @@ contract ERC4626RateProviderFacet is
         functions = facetFuncs();
     }
     // end::facetMetadata()[]
-
-    /* ---------------------------------------------------------------------- */
-    /*                              IRateProvider                             */
-    /* ---------------------------------------------------------------------- */
-
-    function getRate() public view returns (uint256 rate) {
-        // Deliberately NOT using convertToAssets.
-        // Typical expectation for a rate is to capture the actual redeemable value.
-        // convertToAssets is specified to NOT capture fees and other redemption amount adjustments.
-        // I use previewRedeem so I ensure I am capturing all relevant redeemed amount adjustments.
-        rate = ERC4626RateProviderRepo._erc4626Vault().previewRedeem(1e18);
-        return rate * (10 ** (18 - ERC4626RateProviderRepo._assetDecimals()));
-    }
-
-    /* ---------------------------------------------------------------------- */
-    /*                          IERC4626RateProvider                          */
-    /* ---------------------------------------------------------------------- */
-
-    function erc4626Vault() public view returns (IERC4626) {
-        return ERC4626RateProviderRepo._erc4626Vault();
-    }
 }

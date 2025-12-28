@@ -45,6 +45,12 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
         uint256 percentage
     ) internal {
         _initializeCamelotBalancedPools();
+        // Generate trading activity to accrue protocol fees so Camelot's
+        // `_mintFee` path will run during `burn` and quoting matches.
+        // Only generate fees when the test scenario expects fees enabled.
+        if (feesEnabled) {
+            _executeCamelotTradesToGenerateFees(targetToken, saleToken);
+        }
 
         (uint112 r0, uint112 r1, uint16 f0, uint16 f1) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();

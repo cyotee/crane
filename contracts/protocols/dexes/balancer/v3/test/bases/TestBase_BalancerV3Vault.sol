@@ -17,9 +17,9 @@ import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
 import {BaseVaultTest} from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
-import {TestBase_BalancerV3} from "contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3.sol";
+import {TestBase_BalancerV3} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3.sol";
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
-import {ERC4626RateProviderFactoryService} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
+import {ERC4626RateProviderFactoryService} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
 
 contract TestBase_BalancerV3Vault is TestBase_BalancerV3, BaseVaultTest {
 

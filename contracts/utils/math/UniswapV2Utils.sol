@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {Math as UniV2Math} from "@crane/contracts/protocols/dexes/uniswap/v2/deps/libs/Math.sol";
+import {Math as UniV2Math} from "@crane/contracts/protocols/dexes/uniswap/v2/stubs/deps/libs/Math.sol";
 import "@crane/contracts/constants/Constants.sol";
 
 /**

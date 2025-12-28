@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
 contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_Uniswap {
     uint256 constant TEST_LP_AMOUNT = 1000e18;
@@ -15,6 +16,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
     function test_quoteWithdrawWithFee_Uniswap_balanced_simple() public {
         _initializeUniswapBalancedPools();
         IUniswapV2Pair pair = uniswapBalancedPair;
+
+        // generate trading activity so protocol fee paths can run
+        _executeUniswapTradesToGenerateFees(uniswapBalancedTokenA, uniswapBalancedTokenB);
 
         // Mint tokens and add small liquidity to obtain LP
         uniswapBalancedTokenA.mint(address(this), TEST_LP_AMOUNT);
@@ -59,6 +63,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         _initializeUniswapUnbalancedPools();
         IUniswapV2Pair pair = uniswapUnbalancedPair;
 
+        // generate trading activity so protocol fee paths can run
+        _executeUniswapTradesToGenerateFees(uniswapUnbalancedTokenA, uniswapUnbalancedTokenB);
+
         // Mint tokens and add small liquidity to obtain LP
         uniswapUnbalancedTokenA.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
@@ -99,6 +106,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
     function test_quoteWithdrawWithFee_Uniswap_extreme_unbalanced_simple() public {
         _initializeUniswapExtremeUnbalancedPools();
         IUniswapV2Pair pair = uniswapExtremeUnbalancedPair;
+
+        // generate trading activity so protocol fee paths can run
+        _executeUniswapTradesToGenerateFees(uniswapExtremeTokenA, uniswapExtremeTokenB);
 
         // Mint tokens and add small liquidity to obtain LP
         uniswapExtremeTokenA.mint(address(this), TEST_LP_AMOUNT);

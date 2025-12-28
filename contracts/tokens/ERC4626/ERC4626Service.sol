@@ -39,4 +39,36 @@ library ERC4626Service {
         }
         ERC4626Repo._setLastTotalAssets(layout, currentBalance);
     }
+
+    function _secureReserveDeposit(
+        uint256 lastTotalAssets,
+        uint256 amountTokenToDeposit
+        // bool pretransfered
+    )
+        internal
+        returns (uint256 actualIn)
+    {
+        return _secureReserveDeposit(ERC4626Repo._layout(), lastTotalAssets, amountTokenToDeposit);
+    }
+
+    function _secureReserveDeposit(
+        ERC4626Repo.Storage storage layout,
+        uint256 amountTokenToDeposit
+        // bool pretransfered
+    )
+        internal
+        returns (uint256 actualIn)
+    {
+        return _secureReserveDeposit(layout, ERC4626Repo._lastTotalAssets(layout), amountTokenToDeposit);
+    }
+
+    function _secureReserveDeposit(
+        uint256 amountTokenToDeposit
+        // bool pretransfered
+    )
+        internal
+        returns (uint256 actualIn)
+    {
+        return _secureReserveDeposit(ERC4626Repo._layout(), amountTokenToDeposit);
+    }
 }

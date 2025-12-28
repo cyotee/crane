@@ -6,4 +6,6 @@ import {BetterScript} from "@crane/contracts/script/BetterScript.sol";
 
 abstract contract BetterTest is BetterScript, Test {
 
+    function setUp() public virtual {}
+
 }

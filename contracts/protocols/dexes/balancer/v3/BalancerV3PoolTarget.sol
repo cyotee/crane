@@ -19,10 +19,10 @@ import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/B
 import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationRepo.sol";
 import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3VaultAwareRepo.sol";
 import {BalancerV3AuthenticationService} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationService.sol";
-import {VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/VaultGuardModifiers.sol";
+import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3VaultGuardModifiers.sol";
 import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
 
-contract BalancerV3PoolTarget is VaultGuardModifiers, IERC20, IBalancerPoolToken, IPoolInfo, IUnbalancedLiquidityInvariantRatioBounds, IAuthentication {
+contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IBalancerPoolToken, IPoolInfo, IUnbalancedLiquidityInvariantRatioBounds, IAuthentication {
 
     /* -------------------------------------------------------------------------- */
     /*                                   IERC20                                   */
@@ -112,12 +112,12 @@ contract BalancerV3PoolTarget is VaultGuardModifiers, IERC20, IBalancerPoolToken
     /* -------------------------------------------------------------------------- */
 
     /// @dev Emit the Transfer event. This function can only be called by the MultiToken.
-    function emitTransfer(address from, address to, uint256 amount) external onlyVault() {
+    function emitTransfer(address from, address to, uint256 amount) external onlyBalancerV3Vault() {
         emit IERC20.Transfer(from, to, amount);
     }
 
     /// @dev Emit the Approval event. This function can only be called by the MultiToken.
-    function emitApproval(address owner, address spender, uint256 amount) external onlyVault() {
+    function emitApproval(address owner, address spender, uint256 amount) external onlyBalancerV3Vault() {
         emit IERC20.Approval(owner, spender, amount);
     }
 

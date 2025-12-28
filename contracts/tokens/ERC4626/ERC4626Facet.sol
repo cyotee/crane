@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
-import {ERC4626Target} from "contracts/tokens/ERC4626/ERC4626Target.sol";
+import {ERC4626Target} from "@crane/contracts/tokens/ERC4626/ERC4626Target.sol";
 
 contract ERC4626Facet is ERC4626Target, IFacet {
     function facetName() public pure returns (string memory name) {

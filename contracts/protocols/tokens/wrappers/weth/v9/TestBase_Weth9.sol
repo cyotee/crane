@@ -16,6 +16,7 @@ abstract contract TestBase_Weth9 is Test {
     function setUp() public virtual {
         if (address(weth) == address(0)) {
             weth = new WETH9();
+            vm.label(address(weth), type(IWETH).name);
         }
     }
 }

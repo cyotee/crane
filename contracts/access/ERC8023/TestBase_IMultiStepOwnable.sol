@@ -1,20 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-/* -------------------------------------------------------------------------- */
-/*                                   Foundry                                  */
-/* -------------------------------------------------------------------------- */
-
-import "forge-std/Test.sol";
-import {StdInvariant} from "forge-std/StdInvariant.sol";
-
-/* -------------------------------------------------------------------------- */
-/*                                    Crane                                   */
-/* -------------------------------------------------------------------------- */
-
+import {VM_ADDRESS} from "@crane/contracts/constants/FoundryConstants.sol";
 import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
+import {IHandler} from "@crane/contracts/interfaces/IHandler.sol";
+import {BetterVM} from "@crane/contracts/utils/vm/foundry/tools/BetterVM.sol";
+import {Vm} from "forge-std/Vm.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
+import "forge-std/Test.sol";
 
-contract MultiStepOwnableHandler is Test {
+contract MultiStepOwnableHandler is IHandler {
+    using BetterVM for Vm;
+    /// forge-lint: disable-next-line(screaming-snake-case-const)
+    Vm constant vm = Vm(VM_ADDRESS);
+
     IMultiStepOwnable public immutable ownable;
 
     // Actor system – 2025 gold standard
@@ -22,7 +21,7 @@ contract MultiStepOwnableHandler is Test {
     address public currentActor;
 
     modifier useActor(uint256 actorIndexSeed) {
-        currentActor = actors[bound(actorIndexSeed, 0, actors.length - 1)];
+        currentActor = actors[BetterVM.bound(actorIndexSeed, 0, actors.length - 1)];
         vm.startPrank(currentActor);
         _;
         vm.stopPrank();
@@ -43,14 +42,29 @@ contract MultiStepOwnableHandler is Test {
         actors.push(address(0x4));
         actors.push(address(this));
         actors.push(address(_ownable));
-        actors.push(makeAddr("alice"));
-        actors.push(makeAddr("bob"));
-        actors.push(makeAddr("eve"));
-        actors.push(makeAddr("mallory"));
+        actors.push(vm.makeAddr("alice"));
+        actors.push(vm.makeAddr("bob"));
+        actors.push(vm.makeAddr("eve"));
+        actors.push(vm.makeAddr("mallory"));
         actors.push(address(0xDEAD));
         actors.push(address(0xBEEF));
         actors.push(address(0xFFFF));
         actors.push(ghostCurrentOwner); // filtered out in negative tests
+    }
+
+    function selectors() public pure returns (bytes4[] memory selectors_) {
+        selectors_ = new bytes4[](9);
+        selectors_[0] = this.initiateOwnershipTransfer.selector;
+        selectors_[1] = this.confirmOwnershipTransfer.selector;
+        selectors_[2] = this.acceptOwnershipTransfer.selector;
+        selectors_[3] = this.cancelPendingOwnershipTransfer.selector;
+
+        // Access-control proofs (must always revert)
+        selectors_[4] = this.attacker_initiateOwnershipTransfer.selector;
+        selectors_[5] = this.attacker_confirmOwnershipTransfer.selector;
+        selectors_[6] = this.attacker_cancelPendingOwnershipTransfer.selector;
+        selectors_[7] = this.attacker_acceptOwnershipTransfer.selector;
+        selectors_[8] = this.wrongGuy_acceptOwnershipTransfer.selector;
     }
 
     // ======================= POSITIVE PATHS =======================
@@ -144,21 +158,9 @@ abstract contract TestBase_IMultiStepOwnable is StdInvariant, Test {
 
         targetContract(address(handler));
 
-        bytes4[] memory selectors = new bytes4[](9);
-        selectors[0] = handler.initiateOwnershipTransfer.selector;
-        selectors[1] = handler.confirmOwnershipTransfer.selector;
-        selectors[2] = handler.acceptOwnershipTransfer.selector;
-        selectors[3] = handler.cancelPendingOwnershipTransfer.selector;
-
-        // Access-control proofs (must always revert)
-        selectors[4] = handler.attacker_initiateOwnershipTransfer.selector;
-        selectors[5] = handler.attacker_confirmOwnershipTransfer.selector;
-        selectors[6] = handler.attacker_cancelPendingOwnershipTransfer.selector;
-        selectors[7] = handler.attacker_acceptOwnershipTransfer.selector;
-        selectors[8] = handler.wrongGuy_acceptOwnershipTransfer.selector;
 
         // Register only the explicit handler selectors for fuzzing (avoid fuzzing SUT directly)
-        targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
+        targetSelector(FuzzSelector({addr: address(handler), selectors: handler.selectors()}));
         excludeContract(address(ownable));
     }
 

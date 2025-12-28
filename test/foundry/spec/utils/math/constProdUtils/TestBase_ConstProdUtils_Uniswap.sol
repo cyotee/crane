@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "forge-std/Test.sol";
-import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
-import {TestBase_UniswapV2} from "contracts/protocols/dexes/uniswap/v2/TestBase_UniswapV2.sol";
-import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
+import {IUniswapV2Pair} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
+import {TestBase_UniswapV2} from "@crane/contracts/protocols/dexes/uniswap/v2/test/bases/TestBase_UniswapV2.sol";
+import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
+import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
 contract TestBase_ConstProdUtils_Uniswap is TestBase_UniswapV2 {
     // Test tokens for Uniswap V2 - Balanced Pool
@@ -98,4 +98,50 @@ contract TestBase_ConstProdUtils_Uniswap is TestBase_UniswapV2 {
 
         uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), UNBALANCED_RATIO_A, UNBALANCED_RATIO_C, 1, 1, address(this), block.timestamp);
     }
+
+    function _executeUniswapTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB) internal {
+        uint256 swapAmountA = 100e18;
+        tokenA.mint(address(this), swapAmountA);
+        tokenA.approve(address(uniswapV2Router), swapAmountA);
+
+        address[] memory path = new address[](2);
+        path[0] = address(tokenA);
+        path[1] = address(tokenB);
+
+        uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            swapAmountA,
+            0,
+            path,
+            address(this),
+            block.timestamp + 300
+        );
+
+        uint256 balanceB = tokenB.balanceOf(address(this));
+        if (balanceB > 0) {
+            tokenB.approve(address(uniswapV2Router), balanceB);
+            address[] memory pathRev = new address[](2);
+            pathRev[0] = address(tokenB);
+            pathRev[1] = address(tokenA);
+            uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                balanceB,
+                0,
+                pathRev,
+                address(this),
+                block.timestamp + 300
+            );
+        }
+
+        uint256 balanceA = tokenA.balanceOf(address(this));
+        if (balanceA > 0) {
+            tokenA.approve(address(uniswapV2Router), balanceA);
+            uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                balanceA,
+                0,
+                path,
+                address(this),
+                block.timestamp + 300
+            );
+        }
+    }
+
 }

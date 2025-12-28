@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 // import {Vm} from "forge-std/Vm.sol";
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "@crane/contracts/constants/FoundryConstants.sol";
-import {AddressSet, AddressSetRepo} from "contracts/utils/collections/sets/AddressSetRepo.sol";
+import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 
 library DeployedAddressesRepo {
     using AddressSetRepo for AddressSet;

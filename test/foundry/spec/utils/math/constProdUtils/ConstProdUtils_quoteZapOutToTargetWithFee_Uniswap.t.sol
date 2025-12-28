@@ -6,7 +6,7 @@ import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
-import {UniV2Factory} from "contracts/protocols/dexes/uniswap/v2/UniV2Factory.sol";
+import {UniV2Factory} from "contracts/protocols/dexes/uniswap/v2/stubs/UniV2Factory.sol";
 
 contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     // Fee constants matching legacy tests
@@ -82,6 +82,9 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
 
         _setupUniswapFees(feesEnabled);
         _initializeUniswapBalancedPools();
+        // Generate trading activity so protocol fee paths can run and
+        // `kLast`/fee mints reflect accrued fees in the pair.
+        _executeUniswapTradesToGenerateFees(targetToken, saleToken);
 
         ZapData memory d;
         (d.r0, d.r1,) = pair.getReserves();

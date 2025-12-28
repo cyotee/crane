@@ -5,7 +5,7 @@ import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC721, IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IERC6372} from "@openzeppelin/contracts/interfaces/IERC6372.sol";
 import {IERC4906} from "@openzeppelin/contracts/interfaces/IERC4906.sol";
-import {IVotes} from "../governance/IVotes.sol";
+import {IVotes} from "./IVotes.sol";
 
 interface IVotingEscrow is IERC165, IVotes, IERC4906, IERC6372, IERC721Metadata {
     struct LockedBalance {
