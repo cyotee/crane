@@ -392,11 +392,53 @@ Use hierarchical dot-notation:
 
 ## Testing
 
-### Test File Organization
-- Test files: `*.t.sol` in `test/foundry/spec/`
-- Test base classes: `TestBase_*.sol` in `contracts/` near the code they test
-- Stubs in `/contracts/test/stubs/` demonstrate patterns (Greeter example)
-- Comparators in `/contracts/test/comparators/` for assertion helpers
+### Test Directory Structure
+
+Test infrastructure lives in `contracts/`, test specs live in `test/`:
+
+```
+contracts/                              # Test infrastructure lives WITH the code
+├── access/ERC8023/
+│   ├── MultiStepOwnableRepo.sol
+│   ├── MultiStepOwnableFacet.sol
+│   ├── TestBase_IMultiStepOwnable.sol  # TestBase next to implementation
+│   └── ...
+├── introspection/ERC165/
+│   ├── ERC165Facet.sol
+│   ├── TestBase_IERC165.sol            # TestBase for behavior testing
+│   └── Behavior_IERC165.sol            # Behavior library for validation
+├── protocols/dexes/camelot/v2/
+│   ├── services/CamelotV2Service.sol
+│   └── test/bases/                     # Protocol TestBases in test/bases/
+│       └── TestBase_CamelotV2.sol
+├── tokens/ERC20/
+│   ├── ERC20Facet.sol
+│   ├── TestBase_ERC20.sol              # Invariant testing base
+│   └── TestBase_ERC20Permit.sol
+└── test/
+    ├── stubs/                          # Example implementations
+    │   └── greeter/
+    ├── comparators/                    # Assertion helpers
+    └── behaviors/                      # Shared behavior utilities
+
+test/foundry/spec/                      # Actual test specs mirror contracts/
+├── access/ERC8023/                     # Mirrors contracts/access/ERC8023/
+│   └── MultiStepOwnable.t.sol
+├── introspection/ERC165/
+│   └── ERC165Facet.t.sol
+├── tokens/ERC20/
+│   └── ERC20DFPkg_IERC20.t.sol
+├── utils/math/constProdUtils/
+│   └── ConstProdUtils_*.t.sol
+└── protocols/dexes/balancer/v3/
+    └── ...
+```
+
+**Key Conventions:**
+- `TestBase_*.sol` and `Behavior_*.sol` live in `contracts/` alongside the code they test
+- Protocol test bases go in `contracts/protocols/.../test/bases/`
+- Actual test specs (`*.t.sol`) go in `test/foundry/spec/` mirroring `contracts/` structure
+- Stubs, comparators, and shared utilities go in `contracts/test/`
 
 ### TestBase Pattern
 
