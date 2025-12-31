@@ -14,6 +14,28 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
     uint256 constant PERCENTAGE_10_PCT = 1000; // 10%
     uint256 constant PERCENTAGE_25_PCT = 2500; // 25%
 
+    struct PoolState {
+        uint256 r0;
+        uint256 r1;
+        uint256 totalSupply;
+        uint256 reserveTarget;
+        uint256 reserveSale;
+        uint256 desiredOut;
+        uint256 feePercent;
+        uint256 quotedLpAmt;
+    }
+
+    struct BurnAndSwapState {
+        uint256 balBefore;
+        uint256 a0;
+        uint256 a1;
+        uint256 saleAmount;
+        address token0;
+        address tokenFrom;
+        uint256 balAfter;
+        uint256 actualReceived;
+    }
+
     function setUp() public override {
         super.setUp();
     }
@@ -51,21 +73,22 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
         // so the fee-enabled paths mirror on-chain behavior.
         _executeAerodromeTradesToGenerateFees(targetToken, saleToken);
 
-        (uint256 r0, uint256 r1, ) = pair.getReserves();
-        uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveTarget, uint256 reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
+        PoolState memory poolState;
+        (poolState.r0, poolState.r1, ) = pair.getReserves();
+        poolState.totalSupply = pair.totalSupply();
+        (poolState.reserveTarget, poolState.reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
 
-        uint256 desiredOut = (reserveTarget * percentage) / 10000;
-        if (desiredOut > reserveTarget) desiredOut = reserveTarget;
+        poolState.desiredOut = (poolState.reserveTarget * percentage) / 10000;
+        if (poolState.desiredOut > poolState.reserveTarget) poolState.desiredOut = poolState.reserveTarget;
 
-        uint256 feePercent = aerodromePoolFactory.getFee(address(pair), false);
+        poolState.feePercent = aerodromePoolFactory.getFee(address(pair), false);
 
         ConstProdUtils.ZapOutToTargetWithFeeArgs memory args = ConstProdUtils.ZapOutToTargetWithFeeArgs({
-            desiredOut: desiredOut,
-            lpTotalSupply: totalSupply,
-            reserveDesired: reserveTarget,
-            reserveOther: reserveSale,
-            feePercent: feePercent,
+            desiredOut: poolState.desiredOut,
+            lpTotalSupply: poolState.totalSupply,
+            reserveDesired: poolState.reserveTarget,
+            reserveOther: poolState.reserveSale,
+            feePercent: poolState.feePercent,
             feeDenominator: 10000,
             kLast: 0,
             ownerFeeShare: 0,
@@ -73,31 +96,31 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
             protocolFeeDenominator: 10000
         });
 
-        uint256 quotedLpAmt = ConstProdUtils._quoteZapOutToTargetWithFee(args);
-        assertTrue(quotedLpAmt > 0, "Quoted LP amount should be positive");
-        assertTrue(quotedLpAmt <= totalSupply, "Quoted LP amount should not exceed total supply");
+        poolState.quotedLpAmt = ConstProdUtils._quoteZapOutToTargetWithFee(args);
+        assertTrue(poolState.quotedLpAmt > 0, "Quoted LP amount should be positive");
+        assertTrue(poolState.quotedLpAmt <= poolState.totalSupply, "Quoted LP amount should not exceed total supply");
 
-        uint256 balBefore = targetToken.balanceOf(address(this));
-        pair.transfer(address(pair), quotedLpAmt);
-        (uint256 a0, uint256 a1) = pair.burn(address(this));
-        uint256 saleAmount;
-        address token0 = pair.token0();
-        if (address(targetToken) == token0) {
-            saleAmount = a1;
+        BurnAndSwapState memory state;
+        state.balBefore = targetToken.balanceOf(address(this));
+        pair.transfer(address(pair), poolState.quotedLpAmt);
+        (state.a0, state.a1) = pair.burn(address(this));
+        state.token0 = pair.token0();
+        if (address(targetToken) == state.token0) {
+            state.saleAmount = state.a1;
         } else {
-            saleAmount = a0;
+            state.saleAmount = state.a0;
         }
-        if (saleAmount > 0) {
-            address tokenFrom = pair.token0() == address(targetToken) ? pair.token1() : pair.token0();
-            IERC20(tokenFrom).approve(address(aerodromeRouter), saleAmount);
+        if (state.saleAmount > 0) {
+            state.tokenFrom = pair.token0() == address(targetToken) ? pair.token1() : pair.token0();
+            IERC20(state.tokenFrom).approve(address(aerodromeRouter), state.saleAmount);
             IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: tokenFrom, to: address(targetToken), stable: false, factory: address(aerodromePoolFactory)});
-            aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(saleAmount, 1, routes, address(this), block.timestamp);
+            routes[0] = IRouter.Route({from: state.tokenFrom, to: address(targetToken), stable: false, factory: address(aerodromePoolFactory)});
+            aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(state.saleAmount, 1, routes, address(this), block.timestamp);
         }
 
-        uint256 balAfter = targetToken.balanceOf(address(this));
-        uint256 actualReceived = balAfter - balBefore;
-        assertTrue(actualReceived >= desiredOut, "received >= desiredOut");
+        state.balAfter = targetToken.balanceOf(address(this));
+        state.actualReceived = state.balAfter - state.balBefore;
+        assertTrue(state.actualReceived >= poolState.desiredOut, "received >= desiredOut");
     }
 
     function _testZapOutToTargetWithFeeImpossible(

@@ -12,6 +12,28 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
     uint256 constant PERCENTAGE_10_PCT = 1000; // 10%
     uint256 constant PERCENTAGE_25_PCT = 2500; // 25%
 
+    struct PoolState {
+        uint112 r0;
+        uint112 r1;
+        uint256 totalSupply;
+        uint256 kLast;
+        uint256 reserveTarget;
+        uint256 reserveSale;
+        uint256 desiredOut;
+        uint256 ownerFeeShare;
+        uint256 feePercent;
+        uint256 quotedLpAmt;
+    }
+
+    struct BurnAndSwapState {
+        uint256 balBefore;
+        uint256 a0;
+        uint256 a1;
+        uint256 saleAmount;
+        uint256 balAfter;
+        uint256 actualReceived;
+    }
+
     function setUp() public override {
         super.setUp();
     }
@@ -52,52 +74,56 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
             _executeCamelotTradesToGenerateFees(targetToken, saleToken);
         }
 
-        (uint112 r0, uint112 r1, uint16 f0, uint16 f1) = pair.getReserves();
-        uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveTarget, uint256 reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
+        PoolState memory poolState;
+        uint16 f0;
+        uint16 f1;
+        (poolState.r0, poolState.r1, f0, f1) = pair.getReserves();
+        poolState.totalSupply = pair.totalSupply();
+        poolState.kLast = pair.kLast();
+        (poolState.reserveTarget, poolState.reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
 
-        uint256 desiredOut = (reserveTarget * percentage) / 10000;
-        if (desiredOut > reserveTarget) desiredOut = reserveTarget;
+        poolState.desiredOut = (poolState.reserveTarget * percentage) / 10000;
+        if (poolState.desiredOut > poolState.reserveTarget) poolState.desiredOut = poolState.reserveTarget;
 
-        (uint256 ownerFeeShare, ) = camelotV2Factory.feeInfo();
+        (poolState.ownerFeeShare, ) = camelotV2Factory.feeInfo();
 
-        uint256 feePercent = pair.token0() == address(targetToken) ? uint256(f0) : uint256(f1);
+        poolState.feePercent = pair.token0() == address(targetToken) ? uint256(f0) : uint256(f1);
 
         ConstProdUtils.ZapOutToTargetWithFeeArgs memory args = ConstProdUtils.ZapOutToTargetWithFeeArgs({
-            desiredOut: desiredOut,
-            lpTotalSupply: totalSupply,
-            reserveDesired: reserveTarget,
-            reserveOther: reserveSale,
-            feePercent: feePercent,
+            desiredOut: poolState.desiredOut,
+            lpTotalSupply: poolState.totalSupply,
+            reserveDesired: poolState.reserveTarget,
+            reserveOther: poolState.reserveSale,
+            feePercent: poolState.feePercent,
             feeDenominator: 100000,
-            kLast: pair.kLast(),
-            ownerFeeShare: ownerFeeShare,
+            kLast: poolState.kLast,
+            ownerFeeShare: poolState.ownerFeeShare,
             feeOn: feesEnabled,
             protocolFeeDenominator: 100000
         });
 
-        uint256 quotedLpAmt = ConstProdUtils._quoteZapOutToTargetWithFee(args);
-        assertTrue(quotedLpAmt > 0, "Quoted LP amount should be positive");
-        assertTrue(quotedLpAmt <= totalSupply, "Quoted LP amount should not exceed total supply");
+        poolState.quotedLpAmt = ConstProdUtils._quoteZapOutToTargetWithFee(args);
+        assertTrue(poolState.quotedLpAmt > 0, "Quoted LP amount should be positive");
+        assertTrue(poolState.quotedLpAmt <= poolState.totalSupply, "Quoted LP amount should not exceed total supply");
 
-        uint256 balBefore = targetToken.balanceOf(address(this));
-        pair.transfer(address(pair), quotedLpAmt);
-        (uint256 a0, uint256 a1) = pair.burn(address(this));
-        uint256 saleAmount;
+        BurnAndSwapState memory state;
+        state.balBefore = targetToken.balanceOf(address(this));
+        pair.transfer(address(pair), poolState.quotedLpAmt);
+        (state.a0, state.a1) = pair.burn(address(this));
         if (address(targetToken) == pair.token0()) {
-            saleAmount = a1;
+            state.saleAmount = state.a1;
         } else {
-            saleAmount = a0;
+            state.saleAmount = state.a0;
         }
-        if (saleAmount > 0) {
-            saleToken.approve(address(camelotV2Router), saleAmount);
+        if (state.saleAmount > 0) {
+            saleToken.approve(address(camelotV2Router), state.saleAmount);
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                saleAmount, 1, _buildPath(address(saleToken), address(targetToken)), address(this), address(0), block.timestamp
+                state.saleAmount, 1, _buildPath(address(saleToken), address(targetToken)), address(this), address(0), block.timestamp
             );
         }
-        uint256 balAfter = targetToken.balanceOf(address(this));
-        uint256 actualReceived = balAfter - balBefore;
-        assertTrue(actualReceived >= desiredOut, "received >= desiredOut");
+        state.balAfter = targetToken.balanceOf(address(this));
+        state.actualReceived = state.balAfter - state.balBefore;
+        assertTrue(state.actualReceived >= poolState.desiredOut, "received >= desiredOut");
     }
 
     function _testZapOutToTargetWithFeeImpossible(
