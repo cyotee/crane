@@ -517,6 +517,84 @@ CraneTest                          # Factory setup (create3Factory, diamondFacto
                 └── YourTest.t.sol  # Actual test contract
 ```
 
+### Declarative Invariant Testing Pattern
+
+For fuzz/invariant testing, use a Handler + TestBase pattern:
+
+**1. Handler** - Wraps Subject Under Test (SUT), exposes fuzzable operations, tracks expected state:
+```solidity
+contract ERC20TargetStubHandler is Test {
+    IERC20 public sut;
+    mapping(bytes32 => uint256) internal _expectedAllowance;  // Track expected state
+
+    function transfer(uint256 ownerSeed, uint256 toSeed, uint256 amount) external {
+        address owner = addrFromSeed(ownerSeed);  // Normalize fuzz input
+        address to = addrFromSeed(toSeed);
+
+        uint256 bal = sut.balanceOf(owner);
+        vm.prank(owner);
+
+        if (amount > bal) {
+            vm.expectRevert(...);  // Declare expected revert
+            sut.transfer(to, amount);
+            return;
+        }
+
+        vm.expectEmit(true, true, false, true);  // Declare expected event
+        emit IERC20.Transfer(owner, to, amount);
+        sut.transfer(to, amount);
+    }
+}
+```
+
+**2. TestBase** - Declares invariants and virtual deployment functions:
+```solidity
+abstract contract TestBase_ERC20 is Test {
+    ERC20TargetStubHandler public handler;
+
+    // Virtual function - inheritor provides the SUT
+    function _deployToken(ERC20TargetStubHandler handler_) internal virtual returns (IERC20);
+
+    function setUp() public virtual {
+        handler = new ERC20TargetStubHandler();
+        IERC20 token = _deployToken(handler);
+        handler.attachToken(token);
+
+        // Register handler for Foundry invariant fuzzing
+        targetContract(address(handler));
+        targetSelector(FuzzSelector({
+            addr: address(handler),
+            selectors: [handler.transfer.selector, handler.approve.selector]
+        }));
+    }
+
+    // Invariant: totalSupply equals sum of all balances
+    function invariant_totalSupply_equals_sumBalances() public view {
+        address[] memory addrs = handler.asAddresses();
+        uint256 sum = 0;
+        for (uint256 i = 0; i < addrs.length; i++) {
+            sum += handler.balanceOf(addrs[i]);
+        }
+        assertEq(sum, handler.totalSupply());
+    }
+
+    // Invariant: allowances match expected state tracked by handler
+    function invariant_allowances_consistent() public view {
+        for (uint256 i = 0; i < handler.pairCount(); i++) {
+            (address owner, address spender, uint256 expected) = handler.pairAt(i);
+            assertEq(handler.allowance(owner, spender), expected);
+        }
+    }
+}
+```
+
+**Key Conventions:**
+- Handler normalizes fuzz inputs: `addrFromSeed(seed)` maps to small address set
+- Handler tracks expected state: `_expectedAllowance`, `_seen`, etc.
+- Invariant functions named `invariant_*` for Foundry discovery
+- Use `vm.expectRevert` / `vm.expectEmit` to declare expected behavior
+- TestBase declares virtual `_deploy*` functions for SUT injection
+
 ### Key Testing Files
 - `/contracts/test/CraneTest.sol` - Base with factory infrastructure
 - `/contracts/factories/diamondPkg/TestBase_IFacet.sol` - Facet behavior testing
@@ -526,6 +604,7 @@ CraneTest                          # Factory setup (create3Factory, diamondFacto
 - `/contracts/test/comparators/Bytes4SetComparator.sol` - Set comparison with error output
 - `/contracts/test/behaviors/BehaviorUtils.sol` - Shared behavior utilities
 - `/contracts/protocols/dexes/camelot/v2/test/bases/TestBase_CamelotV2.sol` - Protocol setup example
+- `/contracts/tokens/ERC20/TestBase_ERC20.sol` - Declarative invariant testing example
 
 ## Configuration
 
