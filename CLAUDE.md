@@ -392,10 +392,87 @@ Use hierarchical dot-notation:
 
 ## Testing
 
+### Test File Organization
 - Test files: `*.t.sol` in `test/foundry/spec/`
-- Test base classes: `TestBase_*.sol` provide shared setup
+- Test base classes: `TestBase_*.sol` in `contracts/` near the code they test
 - Stubs in `/contracts/test/stubs/` demonstrate patterns (Greeter example)
 - Comparators in `/contracts/test/comparators/` for assertion helpers
+
+### TestBase Pattern
+
+Two types of TestBase contracts:
+
+**1. Protocol Setup TestBase** - Sets up protocol infrastructure with inheritance chains:
+```solidity
+// Builds up dependencies via inheritance
+abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
+    ICamelotFactory internal camelotV2Factory;
+    ICamelotV2Router internal camelotV2Router;
+
+    function setUp() public virtual override {
+        TestBase_Weth9.setUp();  // Call parent setUp
+        if (address(camelotV2Factory) == address(0)) {
+            camelotV2Factory = new CamelotFactory(feeToSetter);
+        }
+        if (address(camelotV2Router) == address(0)) {
+            camelotV2Router = new CamelotRouter(address(camelotV2Factory), address(weth));
+        }
+    }
+}
+```
+
+**2. Behavior TestBase** - Defines expected behavior via virtual functions:
+```solidity
+abstract contract TestBase_IFacet is Test {
+    IFacet internal testFacet;
+
+    function setUp() public virtual {
+        testFacet = facetTestInstance();  // Implemented by inheritor
+    }
+
+    // Virtual functions - inheritors return expected values
+    function facetTestInstance() public virtual returns (IFacet);
+    function controlFacetInterfaces() public view virtual returns (bytes4[] memory);
+    function controlFacetFuncs() public view virtual returns (bytes4[] memory);
+
+    // Test functions validate actual vs expected
+    function test_IFacet_FacetInterfaces() public {
+        assertTrue(Behavior_IFacet.areValid_IFacet_facetInterfaces(
+            testFacet, controlFacetInterfaces(), testFacet.facetInterfaces()
+        ));
+    }
+}
+```
+
+### Behavior Libraries
+
+Stateless libraries that validate expected vs actual values with detailed error messages:
+```solidity
+library Behavior_IFacet {
+    function areValid_IFacet_facetInterfaces(
+        IFacet subject,
+        bytes4[] memory expected,
+        bytes4[] memory actual
+    ) public returns (bool valid) {
+        return Bytes4SetComparator._compare(expected, actual, errPrefix, errSuffix);
+    }
+}
+```
+
+### TestBase Inheritance Chain Example
+```
+CraneTest                          # Factory setup (create3Factory, diamondFactory)
+    └── TestBase_Weth9             # WETH deployment
+        └── TestBase_CamelotV2     # Camelot factory + router
+            └── TestBase_CamelotV2_Pools  # Pool creation helpers
+                └── YourTest.t.sol  # Actual test contract
+```
+
+### Key Testing Files
+- `/contracts/test/CraneTest.sol` - Base with factory infrastructure
+- `/contracts/factories/diamondPkg/TestBase_IFacet.sol` - Facet behavior testing
+- `/contracts/factories/diamondPkg/Behavior_IFacet.sol` - Facet validation library
+- `/contracts/protocols/dexes/camelot/v2/test/bases/TestBase_CamelotV2.sol` - Protocol setup example
 
 ## Configuration
 
