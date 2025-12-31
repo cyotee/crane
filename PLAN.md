@@ -237,14 +237,12 @@ function _testFunction(...) internal {
 
 ---
 
-# Part 4: Test Coverage Improvement Plan (Phase 2) 📋 PLANNED
+# Part 4: Test Coverage Improvement Plan (Phase 2) 🔄 IN PROGRESS
 
-## Status: PLANNED
+## Status: IN PROGRESS
 
 **Last Updated:** 2024-12-31
-**Current Line Coverage:** 34.87% (4454/12774)
-**Current Branch Coverage:** 34.41% (4711/13692)
-**Current Function Coverage:** 11.10% (300/2703)
+**Current Test Count:** 597 tests
 **Target Line Coverage:** 60%+
 
 ---
@@ -259,83 +257,105 @@ Analysis of `forge coverage` output identified critical gaps in test coverage. T
 
 ---
 
-## Priority 1: Core Framework Components (0% Coverage) 🔴
+## Priority 1: Core Framework Components ✅ COMPLETE
 
-### 1.1 ERC8109 Introspection Tests
+### 1.1 ERC8109 Introspection Behavior Tests ✅ COMPLETE
 
-**Files:**
-- `contracts/introspection/ERC8109/ERC8109Repo.sol` (0%)
-- `contracts/introspection/ERC8109/ERC8109IntrospectionTarget.sol` (0%)
-- `contracts/introspection/ERC8109/ERC8109UpdateTarget.sol` (0%)
+**Files Created:**
+- `contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol`
+- `contracts/introspection/ERC8109/TestBase_IERC8109Introspection.sol`
+- `test/foundry/spec/introspection/ERC8109/Behavior_IERC8109Introspection_Test.sol`
 
-**Test File:** `test/foundry/spec/introspection/ERC8109/ERC8109Repo.t.sol`
+**Tests Added:** 13 new tests
 
-**Tests Needed:**
-- [ ] `_facetAddress()` returns correct facet for registered functions
-- [ ] `_facetAddress()` returns zero for unregistered functions
-- [ ] `_functionFacetPairs()` returns all registered pairs
-- [ ] `_registerFunction()` adds function-facet mapping
-- [ ] `_removeFunction()` removes function-facet mapping
-- [ ] `_registerFunctions()` batch registration
-- [ ] `_removeFunctions()` batch removal
-- [ ] Storage slot isolation between instances
+**Tests Implemented:**
+- [x] `facetAddress()` returns correct facet for registered functions
+- [x] `facetAddress()` returns zero for unregistered functions
+- [x] `functionFacetPairs()` returns all registered pairs
+- [x] Behavior validation with valid implementation
+- [x] Behavior validation with missing pairs (negative test)
+- [x] Behavior validation with wrong facet (negative test)
+- [x] Behavior validation with extra pairs (negative test)
+- [x] Behavior validation with inconsistent data (negative test)
+- [x] Empty implementation edge case
+- [x] Single pair edge case
+- [x] Full interface validation
 
-### 1.2 Diamond Cut Tests
+### 1.2 Diamond Cut Tests ✅ COMPLETE
 
-**Files:**
-- `contracts/introspection/ERC2535/DiamondCutFacet.sol` (0%)
-- `contracts/introspection/ERC2535/DiamondCutTarget.sol` (0%)
-- `contracts/introspection/ERC2535/DiamondCutFacetDFPkg.sol` (0%)
+**Files Created:**
+- `contracts/introspection/ERC2535/DiamondCutTargetStub.sol` - Test stub with ownership and loupe
+- `contracts/test/stubs/MockFacet.sol` - Mock facets for testing (MockFacet, MockFacetV2, MockFacetC, MockInitTarget)
+- `test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol` - 19 tests
 
-**Test File:** `test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol`
+**Tests Implemented:**
+- [x] Add facet with new functions
+- [x] Add multiple facets at once
+- [x] Add facet emits DiamondCut event
+- [x] Replace facet functions with new implementation
+- [x] Remove facet functions
+- [x] Batch cut operations (add + replace + remove)
+- [x] Revert on adding duplicate selectors (FunctionAlreadyPresent)
+- [x] Revert on replacing non-existent selectors (FunctionNotPresent)
+- [x] Revert on replacing with same facet (FacetAlreadyPresent)
+- [x] Revert on removing non-existent selectors (FunctionNotPresent)
+- [x] Init function execution during cut
+- [x] Init function revert propagates
+- [x] No init with zero address target
+- [x] Access control (onlyOwner blocks non-owner)
+- [x] Owner can cut
+- [x] Empty cuts succeeds
+- [x] Zero address facet is skipped
+- [x] Fuzz: random selector registration
+- [x] Fuzz: non-owner always reverts
 
-**Tests Needed:**
-- [ ] Add facet with new functions
-- [ ] Replace facet functions with new implementation
-- [ ] Remove facet functions
-- [ ] Batch cut operations (add + replace + remove)
-- [ ] Revert on adding duplicate selectors
-- [ ] Revert on replacing non-existent selectors
-- [ ] Revert on removing non-existent selectors
-- [ ] Init function execution during cut
-- [ ] Access control (onlyOwner)
+### 1.3 Operable Access Control Tests ✅ COMPLETE
 
-### 1.3 Operable Access Control Tests
+**Files Created:**
+- `contracts/access/operable/OperableTargetStub.sol` - Test stub with modifier-protected functions
+- `test/foundry/spec/access/operable/Operable.t.sol` - 24 tests
 
-**Files:**
-- `contracts/access/operable/OperableFacet.sol` (0%)
-- `contracts/access/operable/OperableTarget.sol` (0%)
-- `contracts/access/operable/OperableModifiers.sol` (0%)
-- `contracts/access/operable/OperableRepo.sol` (19.44%)
+**Tests Implemented:**
+- [x] `setOperator()` grants operator role (with event)
+- [x] `setOperator()` revokes operator role (with event)
+- [x] `setOperator()` reverts when not owner
+- [x] `isOperator()` returns correct status
+- [x] `setOperatorFor()` grants function-specific access (with event)
+- [x] `setOperatorFor()` revokes function-specific access (with event)
+- [x] `setOperatorFor()` reverts when not owner
+- [x] `isOperatorFor()` returns correct status
+- [x] `onlyOperator` modifier allows global operators
+- [x] `onlyOperator` modifier allows function operators
+- [x] `onlyOperator` modifier blocks non-operators
+- [x] Function operator limited to specific function only
+- [x] `onlyOwnerOrOperator` allows owner
+- [x] `onlyOwnerOrOperator` allows global operator
+- [x] `onlyOwnerOrOperator` allows function operator
+- [x] `onlyOwnerOrOperator` blocks non-operators
+- [x] Multiple global operators work correctly
+- [x] Multiple function operators work correctly
+- [x] Owner is not automatically a global operator
+- [x] Revoked operator cannot call restricted functions
+- [x] Public functions allow anyone
+- [x] Fuzz: any address can become operator (via owner)
+- [x] Fuzz: non-owner cannot set operator
+- [x] Fuzz: non-operator cannot call restricted
 
-**Test File:** `test/foundry/spec/access/operable/Operable.t.sol`
+### 1.4 MultiStepOwnable Facet Tests ✅ COMPLETE
 
-**Tests Needed:**
-- [ ] `setOperator()` grants operator role
-- [ ] `removeOperator()` revokes operator role
-- [ ] `isOperator()` returns correct status
-- [ ] `setFunctionOperator()` grants function-specific access
-- [ ] `removeFunctionOperator()` revokes function-specific access
-- [ ] `onlyOperator` modifier allows operators
-- [ ] `onlyOperator` modifier blocks non-operators
-- [ ] `onlyFunctionOperator` modifier works per-function
-- [ ] Owner can always operate
-- [ ] Access control for setOperator/removeOperator
+**Existing Tests:** `test/foundry/spec/access/ERC8023/MultiStepOwnableFacet.t.sol` (invariant tests already exist)
 
-### 1.4 MultiStepOwnable Facet Tests
+**New Files Created:**
+- `test/foundry/spec/access/ERC8023/MultiStepOwnableFacet_IFacet.t.sol` - 3 IFacet compliance tests
+- `test/foundry/spec/access/operable/OperableFacet_IFacet.t.sol` - 3 IFacet compliance tests
+- `test/foundry/spec/introspection/ERC2535/DiamondCutFacet_IFacet.t.sol` - 3 IFacet compliance tests
 
-**Files:**
-- `contracts/access/ERC8023/MultiStepOwnableFacet.sol` (0%)
+**Tests Implemented:**
+- [x] MultiStepOwnableFacet IFacet compliance (facetName, facetInterfaces, facetFuncs)
+- [x] OperableFacet IFacet compliance (facetName, facetInterfaces, facetFuncs)
+- [x] DiamondCutFacet IFacet compliance (facetName, facetInterfaces, facetFuncs)
 
-**Test File:** `test/foundry/spec/access/ERC8023/MultiStepOwnableFacet.t.sol`
-
-**Tests Needed:**
-- [ ] IFacet compliance (facetName, facetInterfaces, facetFuncs)
-- [ ] `transferOwnership()` initiates transfer
-- [ ] `acceptOwnership()` completes transfer
-- [ ] `renounceOwnership()` removes owner
-- [ ] Events emitted correctly
-- [ ] Revert on unauthorized calls
+**Note:** The `TestBase_IMultiStepOwnable` already provides comprehensive invariant testing for the ownership transfer functionality (initiateOwnershipTransfer, confirmOwnershipTransfer, acceptOwnershipTransfer, cancelPendingOwnershipTransfer, events, and access control)
 
 ---
 
@@ -565,10 +585,15 @@ testFuzz_BetterMath_sqrt_matchesReference(uint256)
 # Run all Crane tests
 forge test
 
-# Expected: 532 tests passed
+# Expected: 597 tests passed
 
 # Run coverage report
 forge coverage
+
+# Run ERC8109 behavior tests
+forge test --match-path "test/foundry/spec/introspection/ERC8109/*"
+
+# Expected: 13 tests passed
 
 # Run math utils integration tests
 forge test --match-path "test/foundry/spec/utils/math/constProdUtils/*"

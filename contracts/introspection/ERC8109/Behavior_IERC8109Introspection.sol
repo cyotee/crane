@@ -93,6 +93,24 @@ library Behavior_IERC8109IntrospectionRepo {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                           Validation Context Structs                       */
+/* -------------------------------------------------------------------------- */
+
+struct ValidationContext {
+    bool isValid;
+    uint256 expectedCount;
+    uint256 actualCount;
+    string subjectLabel;
+}
+
+struct PairValidationContext {
+    bytes4 selector;
+    address expectedFacet;
+    address actualFacet;
+    bool found;
+}
+
+/* -------------------------------------------------------------------------- */
 /*                              Behavior Library                              */
 /* -------------------------------------------------------------------------- */
 
@@ -328,58 +346,39 @@ library Behavior_IERC8109Introspection {
             _Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_functionFacetPairs"
         );
 
-        isValid = true;
+        ValidationContext memory ctx;
+        ctx.isValid = true;
+        ctx.expectedCount = expected.length;
+        ctx.actualCount = actual.length;
+        ctx.subjectLabel = vm.getLabel(address(subject));
 
         // Check count matches
-        if (expected.length != actual.length) {
-            console.logBehaviorError(
-                _Behavior_IERC8109IntrospectionName(),
-                "areValid_IERC8109Introspection_functionFacetPairs",
-                _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                "Pair count mismatch"
-            );
-            console.logCompare(
-                vm.getLabel(address(subject)),
-                "pair count",
-                expected.length._toString(),
-                actual.length._toString()
-            );
-            isValid = false;
+        if (ctx.expectedCount != ctx.actualCount) {
+            _logPairCountMismatch(ctx);
+            ctx.isValid = false;
         }
 
-        // Build lookup from actual pairs
         // For each expected pair, verify it exists in actual
-        for (uint256 i = 0; i < expected.length && isValid; i++) {
-            bool found = false;
-            for (uint256 j = 0; j < actual.length; j++) {
-                if (expected[i].selector == actual[j].selector) {
-                    found = true;
-                    if (expected[i].facet != actual[j].facet) {
-                        console.logBehaviorError(
-                            _Behavior_IERC8109IntrospectionName(),
-                            "areValid_IERC8109Introspection_functionFacetPairs",
-                            _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                            string.concat("Facet mismatch for selector ", expected[i].selector._toHexString())
-                        );
-                        console.logCompare(
-                            vm.getLabel(address(subject)),
-                            string.concat("selector: ", expected[i].selector._toHexString()),
-                            vm.getLabel(expected[i].facet),
-                            vm.getLabel(actual[j].facet)
-                        );
-                        isValid = false;
+        for (uint256 i = 0; i < ctx.expectedCount && ctx.isValid; i++) {
+            PairValidationContext memory pCtx;
+            pCtx.selector = expected[i].selector;
+            pCtx.expectedFacet = expected[i].facet;
+            pCtx.found = false;
+
+            for (uint256 j = 0; j < ctx.actualCount; j++) {
+                if (pCtx.selector == actual[j].selector) {
+                    pCtx.found = true;
+                    pCtx.actualFacet = actual[j].facet;
+                    if (pCtx.expectedFacet != pCtx.actualFacet) {
+                        _logFacetMismatch(ctx.subjectLabel, pCtx);
+                        ctx.isValid = false;
                     }
                     break;
                 }
             }
-            if (!found) {
-                console.logBehaviorError(
-                    _Behavior_IERC8109IntrospectionName(),
-                    "areValid_IERC8109Introspection_functionFacetPairs",
-                    _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                    string.concat("Missing selector in actual: ", expected[i].selector._toHexString())
-                );
-                isValid = false;
+            if (!pCtx.found) {
+                _logMissingSelector(ctx.subjectLabel, pCtx.selector);
+                ctx.isValid = false;
             }
         }
 
@@ -387,11 +386,50 @@ library Behavior_IERC8109Introspection {
             _Behavior_IERC8109IntrospectionName(),
             "areValid_IERC8109Introspection_functionFacetPairs",
             "function-facet pairs",
-            isValid
+            ctx.isValid
         );
 
         console.logBehaviorExit(
             _Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_functionFacetPairs"
+        );
+
+        return ctx.isValid;
+    }
+
+    /// @dev Helper to log pair count mismatch
+    function _logPairCountMismatch(ValidationContext memory ctx) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "areValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), ctx.subjectLabel),
+            "Pair count mismatch"
+        );
+        console.logCompare(ctx.subjectLabel, "pair count", ctx.expectedCount._toString(), ctx.actualCount._toString());
+    }
+
+    /// @dev Helper to log facet mismatch
+    function _logFacetMismatch(string memory subjectLabel, PairValidationContext memory pCtx) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "areValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), subjectLabel),
+            string.concat("Facet mismatch for selector ", pCtx.selector._toHexString())
+        );
+        console.logCompare(
+            subjectLabel,
+            string.concat("selector: ", pCtx.selector._toHexString()),
+            vm.getLabel(pCtx.expectedFacet),
+            vm.getLabel(pCtx.actualFacet)
+        );
+    }
+
+    /// @dev Helper to log missing selector
+    function _logMissingSelector(string memory subjectLabel, bytes4 selector) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "areValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), subjectLabel),
+            string.concat("Missing selector in actual: ", selector._toHexString())
         );
     }
 
@@ -406,57 +444,42 @@ library Behavior_IERC8109Introspection {
             _Behavior_IERC8109IntrospectionName(), "hasValid_IERC8109Introspection_functionFacetPairs"
         );
 
-        isValid = true;
+        ValidationContext memory ctx;
+        ctx.isValid = true;
+        ctx.subjectLabel = vm.getLabel(address(subject));
+
         IERC8109Introspection.FunctionFacetPair[] memory actual = subject.functionFacetPairs();
         Bytes4Set storage expectedSelectors = Behavior_IERC8109IntrospectionRepo._expected_selectors(subject);
-        uint256 expectedCount = expectedSelectors._length();
+        ctx.expectedCount = expectedSelectors._length();
+        ctx.actualCount = actual.length;
 
         // Check count
-        if (expectedCount != actual.length) {
-            console.logBehaviorError(
-                _Behavior_IERC8109IntrospectionName(),
-                "hasValid_IERC8109Introspection_functionFacetPairs",
-                _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                "Pair count mismatch"
-            );
-            console.logCompare(
-                vm.getLabel(address(subject)),
-                "pair count",
-                expectedCount._toString(),
-                actual.length._toString()
-            );
-            isValid = false;
+        if (ctx.expectedCount != ctx.actualCount) {
+            _logPairCountMismatchHasValid(ctx);
+            ctx.isValid = false;
         }
 
         // Validate each expected selector exists in actual with correct facet
-        for (uint256 i = 0; i < expectedCount && isValid; i++) {
-            bytes4 selector = expectedSelectors._index(i);
-            address expectedFacet = Behavior_IERC8109IntrospectionRepo._expected_facetAddress(subject, selector);
+        for (uint256 i = 0; i < ctx.expectedCount && ctx.isValid; i++) {
+            PairValidationContext memory pCtx;
+            pCtx.selector = expectedSelectors._index(i);
+            pCtx.expectedFacet = Behavior_IERC8109IntrospectionRepo._expected_facetAddress(subject, pCtx.selector);
+            pCtx.found = false;
 
-            bool found = false;
-            for (uint256 j = 0; j < actual.length; j++) {
-                if (actual[j].selector == selector) {
-                    found = true;
-                    if (actual[j].facet != expectedFacet) {
-                        console.logBehaviorError(
-                            _Behavior_IERC8109IntrospectionName(),
-                            "hasValid_IERC8109Introspection_functionFacetPairs",
-                            _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                            string.concat("Facet mismatch for selector ", selector._toHexString())
-                        );
-                        isValid = false;
+            for (uint256 j = 0; j < ctx.actualCount; j++) {
+                if (actual[j].selector == pCtx.selector) {
+                    pCtx.found = true;
+                    pCtx.actualFacet = actual[j].facet;
+                    if (pCtx.actualFacet != pCtx.expectedFacet) {
+                        _logFacetMismatchHasValid(ctx.subjectLabel, pCtx);
+                        ctx.isValid = false;
                     }
                     break;
                 }
             }
-            if (!found) {
-                console.logBehaviorError(
-                    _Behavior_IERC8109IntrospectionName(),
-                    "hasValid_IERC8109Introspection_functionFacetPairs",
-                    _errPrefix(funcSig_functionFacetPairs(), vm.getLabel(address(subject))),
-                    string.concat("Missing selector in actual: ", selector._toHexString())
-                );
-                isValid = false;
+            if (!pCtx.found) {
+                _logMissingSelectorHasValid(ctx.subjectLabel, pCtx.selector);
+                ctx.isValid = false;
             }
         }
 
@@ -464,11 +487,44 @@ library Behavior_IERC8109Introspection {
             _Behavior_IERC8109IntrospectionName(),
             "hasValid_IERC8109Introspection_functionFacetPairs",
             "all function-facet pairs",
-            isValid
+            ctx.isValid
         );
 
         console.logBehaviorExit(
             _Behavior_IERC8109IntrospectionName(), "hasValid_IERC8109Introspection_functionFacetPairs"
+        );
+
+        return ctx.isValid;
+    }
+
+    /// @dev Helper to log pair count mismatch for hasValid
+    function _logPairCountMismatchHasValid(ValidationContext memory ctx) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "hasValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), ctx.subjectLabel),
+            "Pair count mismatch"
+        );
+        console.logCompare(ctx.subjectLabel, "pair count", ctx.expectedCount._toString(), ctx.actualCount._toString());
+    }
+
+    /// @dev Helper to log facet mismatch for hasValid
+    function _logFacetMismatchHasValid(string memory subjectLabel, PairValidationContext memory pCtx) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "hasValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), subjectLabel),
+            string.concat("Facet mismatch for selector ", pCtx.selector._toHexString())
+        );
+    }
+
+    /// @dev Helper to log missing selector for hasValid
+    function _logMissingSelectorHasValid(string memory subjectLabel, bytes4 selector) private view {
+        console.logBehaviorError(
+            _Behavior_IERC8109IntrospectionName(),
+            "hasValid_IERC8109Introspection_functionFacetPairs",
+            _errPrefix(funcSig_functionFacetPairs(), subjectLabel),
+            string.concat("Missing selector in actual: ", selector._toHexString())
         );
     }
 
