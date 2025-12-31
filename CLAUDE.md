@@ -121,6 +121,171 @@ library BalancerV3VaultAwareRepo {
 }
 ```
 
+**`*DFPkg.sol`** - Diamond Factory Package bundles facets into deployable packages:
+```solidity
+// Interface defines structs for constructor and deployment args
+interface IERC20DFPkg {
+    struct PkgInit {           // Constructor arguments (immutable facet references)
+        IFacet erc20Facet;
+    }
+    struct PkgArgs {           // Deployment arguments (per-instance config)
+        string name;
+        string symbol;
+        uint8 decimals;
+    }
+}
+
+contract ERC20DFPkg is IERC20DFPkg, IDiamondFactoryPackage {
+    IFacet immutable ERC20_FACET;
+
+    constructor(PkgInit memory pkgInit) {
+        ERC20_FACET = pkgInit.erc20Facet;
+    }
+
+    function packageName() public pure returns (string memory);
+    function facetCuts() public view returns (IDiamond.FacetCut[] memory);
+    function diamondConfig() public view returns (DiamondConfig memory);
+    function calcSalt(bytes memory pkgArgs) public pure returns (bytes32);
+    function initAccount(bytes memory initArgs) public;  // Called via delegatecall on proxy
+    function postDeploy(address account) public returns (bool);
+}
+```
+
+**`*FactoryService.sol`** - Libraries that encapsulate CREATE3 deployment logic for related facets and packages:
+```solidity
+library IntrospectionFacetFactoryService {
+    using BetterEfficientHashLib for bytes;
+    Vm constant vm = Vm(VM_ADDRESS);
+
+    // Deploy a facet - salt derived from type name
+    function deployERC165Facet(
+        ICreate3Factory create3Factory
+    ) internal returns (IFacet erc165Facet) {
+        erc165Facet = create3Factory.deployFacet(
+            type(ERC165Facet).creationCode,
+            abi.encode(type(ERC165Facet).name)._hash()  // Deterministic salt
+        );
+        vm.label(address(erc165Facet), type(ERC165Facet).name);  // Label for traces
+    }
+
+    // Deploy a package - includes constructor args
+    function deployDiamondCutDFPkg(
+        ICreate3Factory create3Factory,
+        IFacet multiStepOwnableFacet,
+        IFacet diamondCutFacet
+    ) internal returns (IDiamondCutFacetDFPkg diamondCutDFPkg) {
+        diamondCutDFPkg = IDiamondCutFacetDFPkg(address(
+            create3Factory.deployPackageWithArgs(
+                type(DiamondCutFacetDFPkg).creationCode,
+                abi.encode(IDiamondCutFacetDFPkg.PkgInit({
+                    diamondCutFacet: diamondCutFacet,
+                    multiStepOwnableFacet: multiStepOwnableFacet
+                })),
+                abi.encode(type(DiamondCutFacetDFPkg).name)._hash()
+            )
+        ));
+        vm.label(address(diamondCutDFPkg), type(DiamondCutFacetDFPkg).name);
+    }
+}
+```
+
+Key conventions for FactoryService libraries:
+- Group related deployments (e.g., `AccessFacetFactoryService`, `IntrospectionFacetFactoryService`)
+- Salt from type name: `abi.encode(type(X).name)._hash()`
+- Always `vm.label()` deployed contracts for debugging
+- Use `deployFacet()` for facets, `deployPackageWithArgs()` for packages
+
+### Guard Functions Pattern
+
+Repos contain `_onlyXxx()` guard functions with the actual access control logic. Modifiers are thin wrappers that delegate to these guards:
+
+```solidity
+// In Repo - contains the actual check logic
+function _onlyOperator(Storage storage layout) internal view {
+    if (!_isOperator(layout, msg.sender) && !_isFunctionOperator(layout, msg.sig, msg.sender)) {
+        revert IOperable.NotOperator(msg.sender);
+    }
+}
+
+function _onlyOperator() internal view {
+    _onlyOperator(_layout());
+}
+
+// In Modifiers - thin delegation wrapper
+modifier onlyOperator() {
+    OperableRepo._onlyOperator();
+    _;
+}
+```
+
+This pattern centralizes all logic in the Repo and allows guard functions to be called directly from other Repo functions.
+
+## Diamond Package Deployment Pattern
+
+The framework uses a two-factory system for deterministic cross-chain deployments:
+
+### Factory Hierarchy
+
+```
+Create3Factory                    # Deploys facets, packages, and any contract
+    └── DiamondPackageCallBackFactory   # Deploys Diamond proxy instances from packages
+```
+
+### Deployment Flow
+
+**Step 1: Initialize factories** (typically in test `setUp()` or deployment script)
+```solidity
+(ICreate3Factory factory, IDiamondPackageCallBackFactory diamondFactory) =
+    InitDevService.initEnv(address(this));
+```
+
+**Step 2: Deploy facets via Create3Factory**
+```solidity
+IFacet erc20Facet = factory.deployFacet(
+    type(ERC20Facet).creationCode,
+    abi.encode(type(ERC20Facet).name)._hash()  // Salt from name hash
+);
+```
+
+**Step 3: Deploy package with facet references**
+```solidity
+IERC20DFPkg erc20Pkg = IERC20DFPkg(address(
+    factory.deployPackageWithArgs(
+        type(ERC20DFPkg).creationCode,
+        abi.encode(IERC20DFPkg.PkgInit({ erc20Facet: erc20Facet })),  // Constructor args
+        abi.encode(type(ERC20DFPkg).name)._hash()  // Salt
+    )
+));
+```
+
+**Step 4: Deploy Diamond proxy instances**
+```solidity
+// Option A: Via package's deploy() helper
+IERC20 token = erc20Pkg.deploy(diamondFactory, "Token", "TKN", 18, 1000e18, recipient, bytes32(0));
+
+// Option B: Via factory directly
+address proxy = diamondFactory.deploy(pkg, abi.encode(pkgArgs));
+```
+
+### Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| `Create3Factory` | Deploys any contract with deterministic addresses via CREATE3 |
+| `DiamondPackageCallBackFactory` | Deploys Diamond proxies, calls `initAccount()` via delegatecall |
+| `IDiamondFactoryPackage` | Interface for packages - bundles facets + initialization logic |
+| `InitDevService` | Library to bootstrap the factory system in tests |
+
+### Deployment Sequence Diagram
+
+See `/contracts/interfaces/IDiamondFactoryPackage.sol` for the full ASCII sequence diagram showing:
+1. User calls `factory.deploy(pkg, pkgArgs)`
+2. Factory calculates deterministic address via `pkg.calcSalt()`
+3. Factory deploys `MinimalDiamondCallBackProxy` via CREATE2
+4. Proxy calls back to factory's `initAccount()`
+5. Factory delegatecalls `pkg.initAccount()` to initialize storage
+6. Factory calls `pkg.postDeploy()` for any post-deployment hooks
+
 ### IFacet Interface
 
 All facets implement `IFacet` from `/contracts/interfaces/IFacet.sol`:
@@ -181,6 +346,12 @@ Or shorter form:
 ### Import Organization
 Group imports by source: External libs, Crane interfaces, Crane contracts
 
+Use import aliases (defined in `foundry.toml` and `remappings.txt`):
+- `@crane/` - Crane framework contracts (e.g., `@crane/contracts/access/operable/OperableRepo.sol`)
+- `@solady/` - Solady library
+- `@openzeppelin/` - OpenZeppelin contracts
+- `forge-std/` - Foundry test utilities
+
 ### Function Organization
 Constructor → Receive → Fallback → External → Public → Internal → Private
 
@@ -188,12 +359,13 @@ Constructor → Receive → Fallback → External → Public → Internal → Pr
 
 | Pattern | Usage | Example |
 |---------|-------|---------|
-| `_layout()` | Storage access | `_layout()`, `_layout(bytes32 slot)` |
-| `_initialize()` | Storage setup | `_initialize(address owner)` |
+| `_layout()` | Storage access | `_layout()`, `_layout(bytes32 slot_)` |
+| `_initialize()` | Storage setup | `_initialize(address owner_)` |
 | `_functionName()` | Internal Repo functions | `_isOperator()`, `_setOperator()` |
 | `_onlyXxx()` | Guard functions in Repos | `_onlyOwner()`, `_onlyOperator()` |
 | `onlyXxx` | Modifiers | `onlyOwner`, `onlyOperator` |
 | `layout` | Storage parameter name | `Storage storage layout` |
+| `param_` | Function parameters | `owner_`, `slot_`, `name_` |
 
 ### Storage Slot Naming
 
@@ -211,6 +383,12 @@ Use hierarchical dot-notation:
 - `/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol` - Service pattern example
 - `/contracts/utils/math/ConstProdUtils.sol` - Constant product AMM calculations
 - `/contracts/test/CraneTest.sol` - Base test contract for Crane tests
+- `/contracts/tokens/ERC20/ERC20DFPkg.sol` - Diamond Factory Package example
+- `/contracts/access/AccessFacetFactoryService.sol` - FactoryService pattern example
+- `/contracts/introspection/IntrospectionFacetFactoryService.sol` - FactoryService with package deployment
+- `/contracts/interfaces/IDiamondFactoryPackage.sol` - DFPkg interface with deployment flow diagram
+- `/contracts/InitDevService.sol` - Factory initialization for tests/scripts
+- `/contracts/factories/create3/Create3Factory.sol` - CREATE3 factory with facet/package registry
 
 ## Testing
 
