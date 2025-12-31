@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
-import {ERC4626RateProviderFacet} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacet.sol";
-import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
+import {ERC4626RateProviderFacet} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacet.sol";
+import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 
 library ERC4626RateProviderFactoryService {
     using BetterEfficientHashLib for bytes;

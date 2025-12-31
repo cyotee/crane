@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {IERC20} from "contracts/interfaces/IERC20.sol";
-import {TestBase_ERC4626} from "contracts/tokens/ERC4626/TestBase_ERC4626.sol";
 import {BetterPermit2} from "contracts/protocols/utils/permit2/BetterPermit2.sol";
 import {IPermit2} from "contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {ERC20PermitStub} from "contracts/tokens/ERC20/ERC20PermitStub.sol";
@@ -12,7 +11,7 @@ import {IERC4626PermitProxy} from "contracts/interfaces/proxies/IERC4626PermitPr
 import {ERC4626TargetStub} from "contracts/tokens/ERC4626/ERC4626TargetStub.sol";
 import {IERC4626} from "contracts/interfaces/IERC4626.sol";
 
-contract ERC4626TargetStubTest is TestBase_ERC4626 {
+contract ERC4626TargetStubTest is Test {
     IPermit2 permit2;
 
     IERC20PermitProxy reserveAsset;

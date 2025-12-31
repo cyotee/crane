@@ -16,6 +16,20 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
     uint256 constant TEST_AMOUNT_IN = 1000000; // 1M wei input amount
     uint256 constant AERO_FEE_DENOM = 10000;
 
+    struct QuoteIntermediates {
+        uint256 feeDenom;
+        uint256 amtInSaleAmt;
+        uint256 amountInWithFee;
+        uint256 opTokenAmtIn;
+        uint256 remaining;
+        uint256 newReserveIn;
+        uint256 newReserveOut;
+        uint256 amountBOptimal;
+        uint256 amountA;
+        uint256 amountB;
+        uint256 lpAmtLocal;
+    }
+
     function setUp() public override {
         TestBase_ConstProdUtils_Aerodrome.setUp();
     }
@@ -160,48 +174,46 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
         uint256 reserveOut,
         uint256 feePercent
     ) internal view {
-        uint256 feeDenom = (feePercent <= 10) ? 1000 : AERO_FEE_DENOM;
-        uint256 amtInSaleAmt = ConstProdUtils._swapDepositSaleAmt(amountIn, reserveIn, feePercent, feeDenom);
-        uint256 amountInWithFee = amtInSaleAmt - ((amtInSaleAmt * feePercent) / feeDenom);
-        uint256 opTokenAmtIn = (amountInWithFee * reserveOut) / (reserveIn + amountInWithFee);
+        QuoteIntermediates memory q;
+        q.feeDenom = (feePercent <= 10) ? 1000 : AERO_FEE_DENOM;
+        q.amtInSaleAmt = ConstProdUtils._swapDepositSaleAmt(amountIn, reserveIn, feePercent, q.feeDenom);
+        q.amountInWithFee = q.amtInSaleAmt - ((q.amtInSaleAmt * feePercent) / q.feeDenom);
+        q.opTokenAmtIn = (q.amountInWithFee * reserveOut) / (reserveIn + q.amountInWithFee);
 
-        uint256 remaining = amountIn - amtInSaleAmt;
-        uint256 newReserveIn = reserveIn + amtInSaleAmt;
-        uint256 newReserveOut = reserveOut - opTokenAmtIn;
+        q.remaining = amountIn - q.amtInSaleAmt;
+        q.newReserveIn = reserveIn + q.amtInSaleAmt;
+        q.newReserveOut = reserveOut - q.opTokenAmtIn;
 
-        uint256 amountBOptimal = (remaining * newReserveOut) / newReserveIn;
-        uint256 amountA;
-        uint256 amountB;
-        if (amountBOptimal <= opTokenAmtIn) {
-            amountA = remaining;
-            amountB = amountBOptimal;
+        q.amountBOptimal = (q.remaining * q.newReserveOut) / q.newReserveIn;
+        if (q.amountBOptimal <= q.opTokenAmtIn) {
+            q.amountA = q.remaining;
+            q.amountB = q.amountBOptimal;
         } else {
-            uint256 amountAOptimal = (opTokenAmtIn * newReserveIn) / newReserveOut;
-            amountA = amountAOptimal;
-            amountB = opTokenAmtIn;
+            uint256 amountAOptimal = (q.opTokenAmtIn * q.newReserveIn) / q.newReserveOut;
+            q.amountA = amountAOptimal;
+            q.amountB = q.opTokenAmtIn;
         }
 
-        uint256 lpAmtLocal;
         if (lpTotalSupply == 0) {
-            uint256 product = amountA * amountB;
+            uint256 product = q.amountA * q.amountB;
             uint256 sqrtProduct = Math._sqrt(product);
-            lpAmtLocal = sqrtProduct - 10 ** 3;
+            q.lpAmtLocal = sqrtProduct - 10 ** 3;
         } else {
-            uint256 amountA_ratio = (amountA * lpTotalSupply) / newReserveIn;
-            uint256 amountB_ratio = (amountB * lpTotalSupply) / newReserveOut;
-            lpAmtLocal = amountA_ratio < amountB_ratio ? amountA_ratio : amountB_ratio;
+            uint256 amountA_ratio = (q.amountA * lpTotalSupply) / q.newReserveIn;
+            uint256 amountB_ratio = (q.amountB * lpTotalSupply) / q.newReserveOut;
+            q.lpAmtLocal = amountA_ratio < amountB_ratio ? amountA_ratio : amountB_ratio;
         }
 
-        console.log("[DIAG-INT] amtInSaleAmt", amtInSaleAmt);
-        console.log("[DIAG-INT] amountInWithFee (scaled)", amountInWithFee);
-        console.log("[DIAG-INT] opTokenAmtIn (computed)", opTokenAmtIn);
-        console.log("[DIAG-INT] remaining", remaining);
-        console.log("[DIAG-INT] newReserveIn", newReserveIn);
-        console.log("[DIAG-INT] newReserveOut", newReserveOut);
-        console.log("[DIAG-INT] amountBOptimal", amountBOptimal);
-        console.log("[DIAG-INT] amountA_selected", amountA);
-        console.log("[DIAG-INT] amountB_selected", amountB);
-        console.log("[DIAG-INT] lpAmtLocal", lpAmtLocal);
+        console.log("[DIAG-INT] amtInSaleAmt", q.amtInSaleAmt);
+        console.log("[DIAG-INT] amountInWithFee (scaled)", q.amountInWithFee);
+        console.log("[DIAG-INT] opTokenAmtIn (computed)", q.opTokenAmtIn);
+        console.log("[DIAG-INT] remaining", q.remaining);
+        console.log("[DIAG-INT] newReserveIn", q.newReserveIn);
+        console.log("[DIAG-INT] newReserveOut", q.newReserveOut);
+        console.log("[DIAG-INT] amountBOptimal", q.amountBOptimal);
+        console.log("[DIAG-INT] amountA_selected", q.amountA);
+        console.log("[DIAG-INT] amountB_selected", q.amountB);
+        console.log("[DIAG-INT] lpAmtLocal", q.lpAmtLocal);
     }
 
     // Tests - swap tokenA -> tokenB

@@ -38,7 +38,7 @@ contract ERC2612Facet is ERC2612Target, IFacet {
         )
     {
         interfaces = new bytes4[](1);
-        interfaces[3] = type(IERC20Permit).interfaceId;
+        interfaces[0] = type(IERC20Permit).interfaceId;
     }
 
     function facetFuncs()

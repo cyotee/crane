@@ -23,6 +23,7 @@ import {
 } from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
 import {ERC165Facet} from "@crane/contracts/introspection/ERC165/ERC165Facet.sol";
 import {DiamondLoupeFacet} from "@crane/contracts/introspection/ERC2535/DiamondLoupeFacet.sol";
+import {ERC8109IntrospectionFacet} from "@crane/contracts/introspection/ERC8109/ERC8109IntrospectionFacet.sol";
 import {PostDeployAccountHookFacet} from "@crane/contracts/factories/diamondPkg/PostDeployAccountHookFacet.sol";
 
 library InitDevService {
@@ -60,6 +61,12 @@ library InitDevService {
             factory.deployFacet(type(DiamondLoupeFacet).creationCode, abi.encode(type(DiamondLoupeFacet).name)._hash());
         vm.label(address(diamondLoupeFacet), "DiamondLoupeFacet");
         // console.log("Deployed DiamondLoupeFacet at ", address(diamondLoupeFacet));
+        // console.log("Deploying ERC8109IntrospectionFacet");
+        IFacet erc8109IntrospectionFacet = factory.deployFacet(
+            type(ERC8109IntrospectionFacet).creationCode, abi.encode(type(ERC8109IntrospectionFacet).name)._hash()
+        );
+        vm.label(address(erc8109IntrospectionFacet), "ERC8109IntrospectionFacet");
+        // console.log("Deployed ERC8109IntrospectionFacet at ", address(erc8109IntrospectionFacet));
         // console.log("Deploying PostDeployAccountHookFacet");
         IFacet postDeployAccountHookFacet = factory.deployFacet(
             type(PostDeployAccountHookFacet).creationCode, abi.encode(type(PostDeployAccountHookFacet).name)._hash()
@@ -74,6 +81,7 @@ library InitDevService {
                     IDiamondPackageCallBackFactoryInit.InitArgs({
                         erc165Facet: erc165Facet,
                         diamondLoupeFacet: diamondLoupeFacet,
+                        erc8109IntrospectionFacet: erc8109IntrospectionFacet,
                         postDeployHookFacet: postDeployAccountHookFacet
                     })
                 ),

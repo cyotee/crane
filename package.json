@@ -12,6 +12,8 @@
     "test": "test"
   },
   "scripts": {
+    "coverage": "forge coverage --ir-minimum",
+    "coverage-log": "forge coverage --ir-minimum | tee COVERAGE.log",
     "compile": "forge compile",
     "test-all": "npx hardhat test && forge test",
     "test-corpus": "FOUNDRY_INVARIANT_CORPUS_DIR='corpus' FOUNDRY_INVARIANT_CORPUS_GZIP=true forge test",

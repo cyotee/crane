@@ -11,6 +11,14 @@ import {ICamelotPair} from "contracts/interfaces/protocols/dexes/camelot/v2/ICam
 contract ConstProdUtils_purchaseQuote_Camelot is TestBase_ConstProdUtils_Camelot {
     using ConstProdUtils for uint256;
 
+    struct TestData {
+        uint256 reserveA;
+        uint256 reserveB;
+        uint256 feePercent;
+        uint256 desiredOutput;
+        uint256 expectedInput;
+    }
+
     function setUp() public override {
         TestBase_ConstProdUtils_Camelot.setUp();
     }
@@ -91,41 +99,30 @@ contract ConstProdUtils_purchaseQuote_Camelot is TestBase_ConstProdUtils_Camelot
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint112 r0, uint112 r1, uint16 token0Fee, uint16 token1Fee) = pair.getReserves();
-        (uint256 reserveA, uint256 feePercent, uint256 reserveB, ) = ConstProdUtils._sortReserves(
-            address(tokenA), pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee)
-        );
-
-        uint256 desiredOutput = ((reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, feePercent, 100000);
-            tokenA.mint(address(this), expectedInput);
-            tokenA.approve(address(camelotV2Router), expectedInput);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                expectedInput,
-                desiredOutput,
-                _getPath(address(tokenA), address(tokenB)),
-                address(this),
-                address(0),
-                block.timestamp + 300
+        TestData memory data;
+        {
+            (uint112 r0, uint112 r1, uint16 token0Fee, uint16 token1Fee) = pair.getReserves();
+            (data.reserveA, data.feePercent, data.reserveB, ) = ConstProdUtils._sortReserves(
+                address(tokenA), pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee)
             );
-            uint256 actualOutput = tokenB.balanceOf(address(this));
-            assertGe(actualOutput, desiredOutput, "Should receive at least desired output");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, feePercent);
-            tokenA.mint(address(this), expectedInput);
-            tokenA.approve(address(camelotV2Router), expectedInput);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                expectedInput,
-                desiredOutput,
-                _getPath(address(tokenA), address(tokenB)),
-                address(this),
-                address(0),
-                block.timestamp + 300
-            );
-            uint256 actualOutput = tokenB.balanceOf(address(this));
-            assertGe(actualOutput, desiredOutput, "Should receive at least desired output");
+            data.desiredOutput = ((data.reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = use5param
+                ? ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveA, data.reserveB, data.feePercent, 100000)
+                : ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveA, data.reserveB, data.feePercent);
         }
+
+        tokenA.mint(address(this), data.expectedInput);
+        tokenA.approve(address(camelotV2Router), data.expectedInput);
+        camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            data.expectedInput,
+            data.desiredOutput,
+            _getPath(address(tokenA), address(tokenB)),
+            address(this),
+            address(0),
+            block.timestamp + 300
+        );
+        uint256 actualOutput = tokenB.balanceOf(address(this));
+        assertGe(actualOutput, data.desiredOutput, "Should receive at least desired output");
     }
 
     function _testPurchaseQuote_Camelot_BtoA(
@@ -135,40 +132,29 @@ contract ConstProdUtils_purchaseQuote_Camelot is TestBase_ConstProdUtils_Camelot
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint112 r0, uint112 r1, uint16 token0Fee, uint16 token1Fee) = pair.getReserves();
-        (uint256 reserveA, uint256 feePercent, uint256 reserveB, ) = ConstProdUtils._sortReserves(
-            address(tokenA), pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee)
-        );
-
-        uint256 desiredOutput = ((reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, feePercent, 100000);
-            tokenB.mint(address(this), expectedInput);
-            tokenB.approve(address(camelotV2Router), expectedInput);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                expectedInput,
-                desiredOutput,
-                _getPath(address(tokenB), address(tokenA)),
-                address(this),
-                address(0),
-                block.timestamp + 300
+        TestData memory data;
+        {
+            (uint112 r0, uint112 r1, uint16 token0Fee, uint16 token1Fee) = pair.getReserves();
+            (data.reserveA, data.feePercent, data.reserveB, ) = ConstProdUtils._sortReserves(
+                address(tokenA), pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee)
             );
-            uint256 actualOutput = tokenA.balanceOf(address(this));
-            assertGe(actualOutput, desiredOutput, "Should receive at least desired output");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, feePercent);
-            tokenB.mint(address(this), expectedInput);
-            tokenB.approve(address(camelotV2Router), expectedInput);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                expectedInput,
-                desiredOutput,
-                _getPath(address(tokenB), address(tokenA)),
-                address(this),
-                address(0),
-                block.timestamp + 300
-            );
-            uint256 actualOutput = tokenA.balanceOf(address(this));
-            assertGe(actualOutput, desiredOutput, "Should receive at least desired output");
+            data.desiredOutput = ((data.reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = use5param
+                ? ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveB, data.reserveA, data.feePercent, 100000)
+                : ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveB, data.reserveA, data.feePercent);
         }
+
+        tokenB.mint(address(this), data.expectedInput);
+        tokenB.approve(address(camelotV2Router), data.expectedInput);
+        camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            data.expectedInput,
+            data.desiredOutput,
+            _getPath(address(tokenB), address(tokenA)),
+            address(this),
+            address(0),
+            block.timestamp + 300
+        );
+        uint256 actualOutput = tokenA.balanceOf(address(this));
+        assertGe(actualOutput, data.desiredOutput, "Should receive at least desired output");
     }
 }

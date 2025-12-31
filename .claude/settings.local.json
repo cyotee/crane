@@ -3,7 +3,9 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(forge build:*)",
-      "Bash(forge test:*)"
+      "Bash(forge test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

@@ -11,6 +11,14 @@ import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintabl
 contract ConstProdUtils_purchaseQuote_Uniswap is TestBase_ConstProdUtils_Uniswap {
     using ConstProdUtils for uint256;
 
+    struct TestData {
+        uint256 reserveA;
+        uint256 reserveB;
+        uint256 feePercent;
+        uint256 desiredOutput;
+        uint256 expectedInput;
+    }
+
     function setUp() public override {
         TestBase_ConstProdUtils_Uniswap.setUp();
     }
@@ -92,36 +100,26 @@ contract ConstProdUtils_purchaseQuote_Uniswap is TestBase_ConstProdUtils_Uniswap
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint112 r0, uint112 r1,) = pair.getReserves();
-        (uint256 reserveA, uint256 feePercent, uint256 reserveB, ) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, 300, r1, 300);
-
-        uint256 desiredOutput = ((reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, feePercent, 100000);
-            tokenA.mint(address(this), expectedInput);
-            tokenA.approve(address(uniswapV2Router), expectedInput);
-            uint256[] memory amounts = uniswapV2Router.swapTokensForExactTokens(
-                desiredOutput,
-                expectedInput,
-                _getPath(address(tokenA), address(tokenB)),
-                address(this),
-                block.timestamp + 300
-            );
-            // amounts[0] is the actual input used; must equal expectedInput
-            assertEq(amounts[0], expectedInput, "Input used must equal quoted input");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, feePercent);
-            tokenA.mint(address(this), expectedInput);
-            tokenA.approve(address(uniswapV2Router), expectedInput);
-            uint256[] memory amounts = uniswapV2Router.swapTokensForExactTokens(
-                desiredOutput,
-                expectedInput,
-                _getPath(address(tokenA), address(tokenB)),
-                address(this),
-                block.timestamp + 300
-            );
-            assertEq(amounts[0], expectedInput, "Input used must equal quoted input");
+        TestData memory data;
+        {
+            (uint112 r0, uint112 r1,) = pair.getReserves();
+            (data.reserveA, data.feePercent, data.reserveB, ) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, 300, r1, 300);
+            data.desiredOutput = ((data.reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = use5param
+                ? ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveA, data.reserveB, data.feePercent, 100000)
+                : ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveA, data.reserveB, data.feePercent);
         }
+
+        tokenA.mint(address(this), data.expectedInput);
+        tokenA.approve(address(uniswapV2Router), data.expectedInput);
+        uint256[] memory amounts = uniswapV2Router.swapTokensForExactTokens(
+            data.desiredOutput,
+            data.expectedInput,
+            _getPath(address(tokenA), address(tokenB)),
+            address(this),
+            block.timestamp + 300
+        );
+        assertEq(amounts[0], data.expectedInput, "Input used must equal quoted input");
     }
 
     function _testPurchaseQuote_Uniswap_BtoA(
@@ -131,38 +129,27 @@ contract ConstProdUtils_purchaseQuote_Uniswap is TestBase_ConstProdUtils_Uniswap
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint112 r0, uint112 r1,) = pair.getReserves();
-        (uint256 reserveA, uint256 feePercent, uint256 reserveB, ) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, 300, r1, 300);
-
-        uint256 desiredOutput = ((reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, feePercent, 100000);
-            tokenB.mint(address(this), expectedInput);
-            tokenB.approve(address(uniswapV2Router), expectedInput);
-            uniswapV2Router.swapExactTokensForTokens(
-                expectedInput,
-                0,
-                _getPath(address(tokenB), address(tokenA)),
-                address(this),
-                block.timestamp + 300
-            );
-            uint256 actualOutput = tokenA.balanceOf(address(this));
-            uint256 minExpected = (desiredOutput * 999) / 1000;
-            assertGe(actualOutput, minExpected, "Should get at least 99.9% of desired output");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, feePercent);
-            tokenB.mint(address(this), expectedInput);
-            tokenB.approve(address(uniswapV2Router), expectedInput);
-            uniswapV2Router.swapExactTokensForTokens(
-                expectedInput,
-                0,
-                _getPath(address(tokenB), address(tokenA)),
-                address(this),
-                block.timestamp + 300
-            );
-            uint256 actualOutput = tokenA.balanceOf(address(this));
-            uint256 minExpected = (desiredOutput * 999) / 1000;
-            assertGe(actualOutput, minExpected, "Should get at least 99.9% of desired output");
+        TestData memory data;
+        {
+            (uint112 r0, uint112 r1,) = pair.getReserves();
+            (data.reserveA, data.feePercent, data.reserveB, ) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, 300, r1, 300);
+            data.desiredOutput = ((data.reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = use5param
+                ? ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveB, data.reserveA, data.feePercent, 100000)
+                : ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveB, data.reserveA, data.feePercent);
         }
+
+        tokenB.mint(address(this), data.expectedInput);
+        tokenB.approve(address(uniswapV2Router), data.expectedInput);
+        uniswapV2Router.swapExactTokensForTokens(
+            data.expectedInput,
+            0,
+            _getPath(address(tokenB), address(tokenA)),
+            address(this),
+            block.timestamp + 300
+        );
+        uint256 actualOutput = tokenA.balanceOf(address(this));
+        uint256 minExpected = (data.desiredOutput * 999) / 1000;
+        assertGe(actualOutput, minExpected, "Should get at least 99.9% of desired output");
     }
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
 import {WeightedMath} from "@balancer-labs/v3-solidity-utils/contracts/math/WeightedMath.sol";
 
-import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
+// import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 
 library BalancerV38020WeightedPoolMath {
@@ -70,7 +70,7 @@ library BalancerV38020WeightedPoolMath {
         uint256 tokenIndex,
         uint256 amountIn
     ) internal pure returns (uint256 otherAmount, uint256 bptOut) {
-        console.log("Entering calcEquivalentProportionalGivenSingle with bptOut calculation");
+        // console.log("Entering calcEquivalentProportionalGivenSingle with bptOut calculation");
         // require(balances.length == 2 && normalizedWeights.length == 2, "80/20 pool only");
         // if (amountIn == 0) return (0, 0);
 
@@ -82,35 +82,35 @@ library BalancerV38020WeightedPoolMath {
         // uint256 ratio = amountIn.divDown(balances[tokenIndex]);
         // bptOut = totalSupply.mulDown(ratio);
         require(balances.length == 2 && normalizedWeights.length == 2, "80/20 only");
-        console.log("normalizedWeights[0] = ", normalizedWeights[0]);
-        console.log("normalizedWeights[1] = ", normalizedWeights[1]);
+        // console.log("normalizedWeights[0] = ", normalizedWeights[0]);
+        // console.log("normalizedWeights[1] = ", normalizedWeights[1]);
         require(normalizedWeights[0] + normalizedWeights[1] == FixedPoint.ONE, "weights must sum to 1e18");
         if (amountIn == 0) return (0, 0);
 
         uint256 otherIndex = 1 - tokenIndex;
-        console.log("Checking toal supply");
+        // console.log("Checking toal supply");
         if (totalSupply == 0) {
-            console.log("Total supply is zero");
+            // console.log("Total supply is zero");
             // ───── INITIAL DEPOSIT (pool empty) ─────
             // Proportional = deposit in weight ratio so post-deposit normalized balances are proportional to weights
             // (this sets clean initial prices with no arb).
-            console.log("Calculating other amount based on weights");
-            console.log("normalizedWeights[otherIndex] = ", normalizedWeights[otherIndex]);
-            console.log("normalizedWeights[tokenIndex] = ", normalizedWeights[tokenIndex]);
+            // console.log("Calculating other amount based on weights");
+            // console.log("normalizedWeights[otherIndex] = ", normalizedWeights[otherIndex]);
+            // console.log("normalizedWeights[tokenIndex] = ", normalizedWeights[tokenIndex]);
             otherAmount = amountIn.mulUp(
                 normalizedWeights[otherIndex].divDown(normalizedWeights[tokenIndex])
             );
-            console.log("otherAmount = ", otherAmount);
+            // console.log("otherAmount = ", otherAmount);
 
             uint256[] memory postDepositBalances = new uint256[](2);
             postDepositBalances[tokenIndex] = amountIn;
             postDepositBalances[otherIndex] = otherAmount;
-            console.log("postDepositBalances[tokenIndex] = ", postDepositBalances[tokenIndex]);
-            console.log("postDepositBalances[otherIndex] = ", postDepositBalances[otherIndex]);
+            // console.log("postDepositBalances[tokenIndex] = ", postDepositBalances[tokenIndex]);
+            // console.log("postDepositBalances[otherIndex] = ", postDepositBalances[otherIndex]);
             bptOut = WeightedMath.computeInvariantDown(normalizedWeights, postDepositBalances);
-            console.log("Initial BPT out (before min supply adjustment) = ", bptOut);
+            // console.log("Initial BPT out (before min supply adjustment) = ", bptOut);
             bptOut -= _POOL_MINIMUM_TOTAL_SUPPLY;
-            console.log("BPT out (after min supply adjustment) = ", bptOut);
+            // console.log("BPT out (after min supply adjustment) = ", bptOut);
 
             // No minimum liquidity is subtracted from the first LP in standard WeightedPool.
             // (If you ever encounter a custom/hook pool that does it, subtract here.)
@@ -125,7 +125,7 @@ library BalancerV38020WeightedPoolMath {
             uint256 ratio = amountIn.divDown(balances[tokenIndex]);
             bptOut = totalSupply.mulDown(ratio);
         }
-        console.log("Exiting calcEquivalentProportionalGivenSingle with bptOut =", bptOut);
+        // console.log("Exiting calcEquivalentProportionalGivenSingle with bptOut =", bptOut);
     }
 
     /**

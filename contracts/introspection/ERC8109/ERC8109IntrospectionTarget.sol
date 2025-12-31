@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {IERC8109Introspection} from "@crane/contracts/interfaces/IERC8109Introspection.sol";
 import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";
-import {ERC8109Repo} from "contracts/introspection/ERC8109/ERC8109Repo.sol";
+import {ERC8109Repo} from "@crane/contracts/introspection/ERC8109/ERC8109Repo.sol";
 
 contract ERC8109IntrospectionTarget is IERC8109Introspection {
     /** 

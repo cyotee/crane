@@ -30,7 +30,7 @@ import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IERC4626RateProvider} from "@crane/contracts/interfaces/IERC4626RateProvider.sol";
-import {ERC4626RateProviderRepo} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
+import {ERC4626RateProviderRepo} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {ERC4626RateProviderTarget} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderTarget.sol";
 

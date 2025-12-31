@@ -14,6 +14,7 @@ library AerodromService {
         IPoolFactory factory;
         IPool pool;
         IERC20 tokenIn;
+        IERC20 tokenOut;
         uint256 amountIn;
         address recipient;
         uint256 deadline;
@@ -38,7 +39,7 @@ library AerodromService {
             // address from;
             from: address(params.tokenIn),
             // address to;
-            to: address(params.pool),
+            to: address(params.tokenOut),
             // bool stable;
             stable: false,
             // address factory;
@@ -70,6 +71,7 @@ library AerodromService {
             factory: params.factory,
             pool: params.pool,
             tokenIn: params.tokenIn,
+            tokenOut: params.opposingToken,
             amountIn: _quoteSwapDepositSaleAmt(params),
             recipient: address(this),
             deadline: params.deadline
@@ -88,7 +90,7 @@ library AerodromService {
             // address tokenA,
             address(params.tokenIn),
             // address tokenB,
-            address(params.pool),
+            address(params.opposingToken),
             // bool stable,
             false,
             // uint256 amountADesired,
@@ -156,6 +158,7 @@ library AerodromService {
             factory: params.factory,
             pool: params.pool,
             tokenIn: params.opposingToken,
+            tokenOut: params.tokenOut,
             amountIn: amountB,
             recipient: params.recipient,
             deadline: params.deadline

@@ -53,6 +53,8 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
  * |                         |                                          |             |
  */
 interface IDiamondPackageCallBackFactory {
+    error DeploymentAddressMismatch(address expected, address actual);
+
     function PROXY_INIT_HASH() external view returns (bytes32);
 
     function ERC165_FACET() external view returns (IFacet);

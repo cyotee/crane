@@ -18,6 +18,7 @@ import {IFactoryCallBack} from "@crane/contracts/interfaces/IFactoryCallBack.sol
 import {ERC165Target} from "@crane/contracts/introspection/ERC165/ERC165Target.sol";
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
+import {IERC8109Introspection} from "@crane/contracts/interfaces/IERC8109Introspection.sol";
 import {DiamondLoupeTarget} from "@crane/contracts/introspection/ERC2535/DiamondLoupeTarget.sol";
 import {Creation} from "@crane/contracts/utils/Creation.sol";
 import {MinimalDiamondCallBackProxy} from "@crane/contracts/proxies/MinimalDiamondCallBackProxy.sol";
@@ -36,6 +37,7 @@ interface IDiamondPackageCallBackFactoryInit {
     struct InitArgs {
         IFacet erc165Facet;
         IFacet diamondLoupeFacet;
+        IFacet erc8109IntrospectionFacet;
         IFacet postDeployHookFacet;
     }
 }
@@ -64,6 +66,7 @@ contract DiamondPackageCallBackFactory is
 
     IFacet public immutable ERC165_FACET;
     IFacet public immutable DIAMOND_LOUPE_FACET;
+    IFacet public immutable ERC8109_INTROSPECTION_FACET;
     IFacet public immutable POST_DEPLOY_HOOK_FACET;
     IFactoryCallBack immutable SELF;
 
@@ -80,18 +83,20 @@ contract DiamondPackageCallBackFactory is
     constructor(InitArgs memory init) {
         ERC165_FACET = init.erc165Facet;
         DIAMOND_LOUPE_FACET = init.diamondLoupeFacet;
+        ERC8109_INTROSPECTION_FACET = init.erc8109IntrospectionFacet;
         POST_DEPLOY_HOOK_FACET = init.postDeployHookFacet;
         SELF = this;
     }
 
     function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
-        interfaces = new bytes4[](2);
+        interfaces = new bytes4[](3);
         interfaces[0] = type(IERC165).interfaceId;
         interfaces[1] = type(IDiamondLoupe).interfaceId;
+        interfaces[2] = type(IERC8109Introspection).interfaceId;
     }
 
     function facetCuts() public view virtual returns (IDiamond.FacetCut[] memory facetCuts_) {
-        facetCuts_ = new IDiamond.FacetCut[](3);
+        facetCuts_ = new IDiamond.FacetCut[](4);
         facetCuts_[0] = IDiamond.FacetCut({
             // address facetAddress;
             facetAddress: address(ERC165_FACET),
@@ -110,12 +115,25 @@ contract DiamondPackageCallBackFactory is
         });
         facetCuts_[2] = IDiamond.FacetCut({
             // address facetAddress;
+            facetAddress: address(ERC8109_INTROSPECTION_FACET),
+            // FacetCutAction action;
+            action: IDiamond.FacetCutAction.Add,
+            // bytes4[] functionSelectors;
+            functionSelectors: erc8109Funcs()
+        });
+        facetCuts_[3] = IDiamond.FacetCut({
+            // address facetAddress;
             facetAddress: address(POST_DEPLOY_HOOK_FACET),
             // FacetCutAction action;
             action: IDiamond.FacetCutAction.Add,
             // bytes4[] functionSelectors;
             functionSelectors: POST_DEPLOY_HOOK_FACET.facetFuncs()
         });
+    }
+
+    function erc8109Funcs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](1);
+        funcs[0] = IERC8109Introspection.functionFacetPairs.selector;
     }
 
     function calcAddress(IDiamondFactoryPackage pkg, bytes memory pkgArgs) public view returns (address) {
@@ -147,18 +165,15 @@ contract DiamondPackageCallBackFactory is
         // This makes the deployments ZK possible, per the CREATE2 example from docs.
         // Should be fine since we're NOT including any constructor arguments.
         proxy = address(new MinimalDiamondCallBackProxy{salt: salt}());
-        // console.log("Expected MinimalDiamondCallBackProxy at ", expectedProxy);
-        // console.log("Deployed MinimalDiamondCallBackProxy at ", address(proxy));
-        require(expectedProxy == proxy, "DiamondPackageCallBackFactory: Deployment failed");
-        // console.log("Calling package post deploy");
+        // If you ever see this, math is broken. Your universe will probably collapse soon.
+        if (expectedProxy != proxy) {
+            revert DeploymentAddressMismatch(expectedProxy, proxy);
+        }
         pkg.postDeploy(expectedProxy);
-        // console.log("Calling proxy post deploy From factory");
         IPostDeployAccountHook(expectedProxy).postDeploy();
     }
 
     function initAccount() public returns (bool) {
-        // ERC2535Repo._processFacetCuts(create2AwareFacetCuts(address(this)));
-        // emit IDiamond.DiamondCut(create2AwareFacetCuts(address(this)), address(SELF), bytes.concat(IFactoryCallBack.initAccount.selector));
         ERC2535Repo._processFacetCuts(facetCuts());
         ERC165Repo._registerInterfaces(facetInterfaces());
         emit IDiamond.DiamondCut(facetCuts(), address(SELF), bytes.concat(IFactoryCallBack.initAccount.selector));
@@ -171,7 +186,6 @@ contract DiamondPackageCallBackFactory is
             config.facetCuts, address(pkg), bytes.concat(IDiamondFactoryPackage.initAccount.selector, args)
         );
         return true;
-        // return (PROXY_INIT_HASH, IDiamondPackageCallBackFactory(msg.sender).create2SaltOfAccount(address(this)));
     }
 
     function pkgConfig() public view returns (IDiamondFactoryPackage pkg, bytes memory args) {

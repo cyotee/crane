@@ -15,7 +15,18 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
     uint256 constant MEDIUM_PERCENTAGE = 50;
     uint256 constant HIGH_PERCENTAGE = 90;
 
-    // uint256 constant AERO_FEE_PERCENT = 30; // Aerodrome default volatile fee is 0.3% (30/10000)
+    struct TestData {
+        uint256 totalLP;
+        uint256 lpAmount;
+        uint256 reserveA;
+        uint256 reserveB;
+        address tokenA;
+        address tokenB;
+        uint256 ownerFeeShare;
+        uint256 feePercent;
+        uint256 quote;
+        uint256 actualAmount;
+    }
 
     function setUp() public override {
         super.setUp();
@@ -119,31 +130,31 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
     }
 
     function _testWithdrawSwapWithFee(Pool pair, uint256 percentage, bool feesEnabled) internal {
-        uint256 totalLP = pair.totalSupply();
-        uint256 lpAmount = _calculateLPAmount(totalLP, percentage);
+        TestData memory data;
+        data.totalLP = pair.totalSupply();
+        data.lpAmount = _calculateLPAmount(data.totalLP, percentage);
 
-        (uint256 reserveA, uint256 reserveB, address tokenA, address tokenB) = _getPoolReserves(address(pair));
+        (data.reserveA, data.reserveB, data.tokenA, data.tokenB) = _getPoolReserves(address(pair));
 
         if (feesEnabled) {
-            // generate some trading activity so swap fees are accrued into the pool
-            _generateTradingActivity(pair, tokenA, tokenB, 100);
-            (reserveA, reserveB, tokenA, tokenB) = _getPoolReserves(address(pair));
-            totalLP = pair.totalSupply();
+            _generateTradingActivity(pair, data.tokenA, data.tokenB, 100);
+            (data.reserveA, data.reserveB, data.tokenA, data.tokenB) = _getPoolReserves(address(pair));
+            data.totalLP = pair.totalSupply();
         }
 
-        uint256 ownerFeeShare = 0;
+        data.feePercent = aerodromePoolFactory.getFee(address(pair), pair.stable());
 
-        uint256 quote = AerodromeUtils._quoteWithdrawSwapWithFee(
-            lpAmount,
-            totalLP,
-            reserveA,
-            reserveB,
-            aerodromePoolFactory.getFee(address(pair), pair.stable())
+        data.quote = AerodromeUtils._quoteWithdrawSwapWithFee(
+            data.lpAmount,
+            data.totalLP,
+            data.reserveA,
+            data.reserveB,
+            data.feePercent
         );
 
-        uint256 actualAmount = _performActualWithdrawSwap(address(pair), lpAmount, tokenA, tokenB, aerodromePoolFactory.getFee(address(pair), pair.stable()));
+        data.actualAmount = _performActualWithdrawSwap(address(pair), data.lpAmount, data.tokenA, data.tokenB, data.feePercent);
 
-        assertEq(quote, actualAmount, "Quote should match actual execution");
+        assertEq(data.quote, data.actualAmount, "Quote should match actual execution");
     }
 
     function test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_lowPercentage_feesDisabled_extractTokenA() public {

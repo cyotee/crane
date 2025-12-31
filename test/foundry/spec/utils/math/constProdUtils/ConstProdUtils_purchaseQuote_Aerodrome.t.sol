@@ -13,6 +13,15 @@ contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
 
     uint256 constant AERO_FEE_PERCENT = 30; // 30/10000
 
+    struct TestData {
+        uint256 reserveA;
+        uint256 reserveB;
+        uint256 desiredOutput;
+        uint256 expectedInput;
+        uint256 amountIn;
+        uint256 iter;
+    }
+
     function setUp() public override {
         TestBase_ConstProdUtils_Aerodrome.setUp();
     }
@@ -108,94 +117,53 @@ contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint256 r0, uint256 r1,) = pair.getReserves();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, r1);
-
-        uint256 desiredOutput = ((reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, AERO_FEE_PERCENT, 10000);
-            IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)});
-            uint256 amountIn = expectedInput;
-            uint256[] memory outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("_purchaseQuote_expectedInput", expectedInput);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
-            uint256 poolOutQuoted = pair.getAmountOut(expectedInput, address(tokenB));
-            emit log_named_uint("pair.getAmountOut(expectedInput)", poolOutQuoted);
-            if (expectedInput > 0) {
-                uint256 poolOutQuotedPrev = pair.getAmountOut(expectedInput - 1, address(tokenB));
-                emit log_named_uint("pair.getAmountOut(expectedInput-1)", poolOutQuotedPrev);
-            }
-            if (outs[outs.length - 1] < desiredOutput) {
-                uint256 low = amountIn;
-                uint256 high = amountIn;
-                // exponential search to find an upper bound
-                while (true) {
-                    high = high == 0 ? 1 : high * 2;
-                    outs = aerodromeRouter.getAmountsOut(high, routes);
-                    if (outs[outs.length - 1] >= desiredOutput) break;
-                }
-                // binary search for minimal sufficient amountIn
-                while (low + 1 < high) {
-                    uint256 mid = (low + high) / 2;
-                    outs = aerodromeRouter.getAmountsOut(mid, routes);
-                    if (outs[outs.length - 1] < desiredOutput) {
-                        low = mid;
-                    } else {
-                        high = mid;
-                    }
-                }
-                amountIn = high;
-            }
-            emit log_named_uint("final_amountIn_from_search", amountIn);
-            outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
-            tokenA.mint(address(this), amountIn);
-            tokenA.approve(address(aerodromeRouter), amountIn);
-            aerodromeRouter.swapExactTokensForTokens(amountIn, desiredOutput, routes, address(this), block.timestamp + 300);
-            assertEq(amountIn, expectedInput, "Input used must equal quoted expected input");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveA, reserveB, AERO_FEE_PERCENT, 10000);
-            IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)});
-            uint256 amountIn = expectedInput;
-            uint256[] memory outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("_purchaseQuote_expectedInput", expectedInput);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
-            uint256 poolOutQuoted = pair.getAmountOut(expectedInput, address(tokenB));
-            emit log_named_uint("pair.getAmountOut(expectedInput)", poolOutQuoted);
-            if (expectedInput > 0) {
-                uint256 poolOutQuotedPrev = pair.getAmountOut(expectedInput - 1, address(tokenB));
-                emit log_named_uint("pair.getAmountOut(expectedInput-1)", poolOutQuotedPrev);
-            }
-            if (outs[outs.length - 1] < desiredOutput) {
-                uint256 low = amountIn;
-                uint256 high = amountIn;
-                while (true) {
-                    high = high == 0 ? 1 : high * 2;
-                    outs = aerodromeRouter.getAmountsOut(high, routes);
-                    if (outs[outs.length - 1] >= desiredOutput) break;
-                }
-                while (low + 1 < high) {
-                    uint256 mid = (low + high) / 2;
-                    outs = aerodromeRouter.getAmountsOut(mid, routes);
-                    if (outs[outs.length - 1] < desiredOutput) {
-                        low = mid;
-                    } else {
-                        high = mid;
-                    }
-                }
-                amountIn = high;
-            }
-            emit log_named_uint("final_amountIn_from_search", amountIn);
-            outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
-            tokenA.mint(address(this), amountIn);
-            tokenA.approve(address(aerodromeRouter), amountIn);
-            aerodromeRouter.swapExactTokensForTokens(amountIn, desiredOutput, routes, address(this), block.timestamp + 300);
-            assertEq(amountIn, expectedInput, "Input used must equal quoted expected input");
+        TestData memory data;
+        {
+            (uint256 r0, uint256 r1,) = pair.getReserves();
+            (data.reserveA, data.reserveB) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, r1);
+            data.desiredOutput = ((data.reserveB / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveA, data.reserveB, AERO_FEE_PERCENT, 10000);
+            data.amountIn = data.expectedInput;
         }
+
+        IRouter.Route[] memory routes = new IRouter.Route[](1);
+        routes[0] = IRouter.Route({from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)});
+
+        uint256[] memory outs = aerodromeRouter.getAmountsOut(data.amountIn, routes);
+        emit log_named_uint("_purchaseQuote_expectedInput", data.expectedInput);
+        emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
+        emit log_named_uint("pair.getAmountOut(expectedInput)", pair.getAmountOut(data.expectedInput, address(tokenB)));
+        if (data.expectedInput > 0) {
+            emit log_named_uint("pair.getAmountOut(expectedInput-1)", pair.getAmountOut(data.expectedInput - 1, address(tokenB)));
+        }
+
+        if (outs[outs.length - 1] < data.desiredOutput) {
+            uint256 low = data.amountIn;
+            uint256 high = data.amountIn;
+            while (true) {
+                high = high == 0 ? 1 : high * 2;
+                outs = aerodromeRouter.getAmountsOut(high, routes);
+                if (outs[outs.length - 1] >= data.desiredOutput) break;
+            }
+            while (low + 1 < high) {
+                uint256 mid = (low + high) / 2;
+                outs = aerodromeRouter.getAmountsOut(mid, routes);
+                if (outs[outs.length - 1] < data.desiredOutput) {
+                    low = mid;
+                } else {
+                    high = mid;
+                }
+            }
+            data.amountIn = high;
+        }
+
+        emit log_named_uint("final_amountIn_from_search", data.amountIn);
+        outs = aerodromeRouter.getAmountsOut(data.amountIn, routes);
+        emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
+        tokenA.mint(address(this), data.amountIn);
+        tokenA.approve(address(aerodromeRouter), data.amountIn);
+        aerodromeRouter.swapExactTokensForTokens(data.amountIn, data.desiredOutput, routes, address(this), block.timestamp + 300);
+        assertEq(data.amountIn, data.expectedInput, "Input used must equal quoted expected input");
     }
 
     function _testPurchaseQuote_Aerodrome_BtoA(
@@ -205,65 +173,39 @@ contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
         uint256 reduce,
         bool use5param
     ) internal {
-        (uint256 r0, uint256 r1,) = pair.getReserves();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, r1);
-
-        uint256 desiredOutput = ((reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
-
-        if (use5param) {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, AERO_FEE_PERCENT, 10000);
-            IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: address(tokenB), to: address(tokenA), stable: false, factory: address(aerodromePoolFactory)});
-            uint256 amountIn = expectedInput;
-            uint256 iter = 0;
-            uint256[] memory outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("_purchaseQuote_expectedInput", expectedInput);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
-            uint256 poolOutQuoted = pair.getAmountOut(expectedInput, address(tokenA));
-            emit log_named_uint("pair.getAmountOut(expectedInput)", poolOutQuoted);
-            if (expectedInput > 0) {
-                uint256 poolOutQuotedPrev = pair.getAmountOut(expectedInput - 1, address(tokenA));
-                emit log_named_uint("pair.getAmountOut(expectedInput-1)", poolOutQuotedPrev);
-            }
-            while (outs[outs.length - 1] < desiredOutput && iter < 1024) {
-                amountIn += 1;
-                outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-                iter++;
-            }
-            emit log_named_uint("final_amountIn_after_linear_search", amountIn);
-            outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
-            tokenB.mint(address(this), amountIn);
-            tokenB.approve(address(aerodromeRouter), amountIn);
-            aerodromeRouter.swapExactTokensForTokens(amountIn, desiredOutput, routes, address(this), block.timestamp + 300);
-            assertEq(amountIn, expectedInput, "Input used must equal quoted expected input");
-        } else {
-            uint256 expectedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveB, reserveA, AERO_FEE_PERCENT, 10000);
-            IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: address(tokenB), to: address(tokenA), stable: false, factory: address(aerodromePoolFactory)});
-            uint256 amountIn = expectedInput;
-            uint256 iter = 0;
-            uint256[] memory outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("_purchaseQuote_expectedInput", expectedInput);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
-            uint256 poolOutQuoted = pair.getAmountOut(expectedInput, address(tokenA));
-            emit log_named_uint("pair.getAmountOut(expectedInput)", poolOutQuoted);
-            if (expectedInput > 0) {
-                uint256 poolOutQuotedPrev = pair.getAmountOut(expectedInput - 1, address(tokenA));
-                emit log_named_uint("pair.getAmountOut(expectedInput-1)", poolOutQuotedPrev);
-            }
-            while (outs[outs.length - 1] < desiredOutput && iter < 1024) {
-                amountIn += 1;
-                outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-                iter++;
-            }
-            emit log_named_uint("final_amountIn_after_linear_search", amountIn);
-            outs = aerodromeRouter.getAmountsOut(amountIn, routes);
-            emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
-            tokenB.mint(address(this), amountIn);
-            tokenB.approve(address(aerodromeRouter), amountIn);
-            aerodromeRouter.swapExactTokensForTokens(amountIn, desiredOutput, routes, address(this), block.timestamp + 300);
-            assertEq(amountIn, expectedInput, "Input used must equal quoted expected input");
+        TestData memory data;
+        {
+            (uint256 r0, uint256 r1,) = pair.getReserves();
+            (data.reserveA, data.reserveB) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, r1);
+            data.desiredOutput = ((data.reserveA / (reduce == 1 ? 10 : (reduce == 0 ? 20 : 100))) - reduce);
+            data.expectedInput = ConstProdUtils._purchaseQuote(data.desiredOutput, data.reserveB, data.reserveA, AERO_FEE_PERCENT, 10000);
+            data.amountIn = data.expectedInput;
         }
+
+        IRouter.Route[] memory routes = new IRouter.Route[](1);
+        routes[0] = IRouter.Route({from: address(tokenB), to: address(tokenA), stable: false, factory: address(aerodromePoolFactory)});
+
+        uint256[] memory outs = aerodromeRouter.getAmountsOut(data.amountIn, routes);
+        emit log_named_uint("_purchaseQuote_expectedInput", data.expectedInput);
+        emit log_named_uint("aerodromeRouter.getAmountsOut(expectedInput)", outs[outs.length - 1]);
+        emit log_named_uint("pair.getAmountOut(expectedInput)", pair.getAmountOut(data.expectedInput, address(tokenA)));
+        if (data.expectedInput > 0) {
+            emit log_named_uint("pair.getAmountOut(expectedInput-1)", pair.getAmountOut(data.expectedInput - 1, address(tokenA)));
+        }
+
+        while (outs[outs.length - 1] < data.desiredOutput && data.iter < 1024) {
+            data.amountIn += 1;
+            outs = aerodromeRouter.getAmountsOut(data.amountIn, routes);
+            data.iter++;
+        }
+
+        emit log_named_uint("final_amountIn_after_linear_search", data.amountIn);
+        outs = aerodromeRouter.getAmountsOut(data.amountIn, routes);
+        emit log_named_uint("aerodromeRouter.getAmountsOut(final_amountIn)", outs[outs.length - 1]);
+
+        tokenB.mint(address(this), data.amountIn);
+        tokenB.approve(address(aerodromeRouter), data.amountIn);
+        aerodromeRouter.swapExactTokensForTokens(data.amountIn, data.desiredOutput, routes, address(this), block.timestamp + 300);
+        assertEq(data.amountIn, data.expectedInput, "Input used must equal quoted expected input");
     }
 }

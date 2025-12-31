@@ -30,7 +30,7 @@ import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamo
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
+import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
 import {BaseVaultTest} from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
 import {TestBase_BalancerV3} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3.sol";
