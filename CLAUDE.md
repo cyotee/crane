@@ -444,20 +444,69 @@ abstract contract TestBase_IFacet is Test {
 }
 ```
 
-### Behavior Libraries
+### Behavior Libraries (`Behavior_*.sol`)
 
-Stateless libraries that validate expected vs actual values with detailed error messages:
+Libraries that encapsulate validation logic for interface compliance testing. Named `Behavior_I{Interface}`:
+
 ```solidity
-library Behavior_IFacet {
-    function areValid_IFacet_facetInterfaces(
-        IFacet subject,
-        bytes4[] memory expected,
-        bytes4[] memory actual
-    ) public returns (bool valid) {
-        return Bytes4SetComparator._compare(expected, actual, errPrefix, errSuffix);
+library Behavior_IERC165 {
+    using UInt256 for uint256;
+    Vm constant vm = Vm(VM_ADDRESS);
+
+    // Behavior name for logging
+    function _Behavior_IERC165Name() internal pure returns (string memory) {
+        return type(Behavior_IERC165).name;
+    }
+
+    // Error message helpers
+    function funcSig_IERC165_supportsInterFace() public pure returns (string memory) {
+        return "supportsInterFace(bytes4)";
+    }
+
+    // expect_* - Store expected values in ComparatorRepo
+    function expect_IERC165_supportsInterface(IERC165 subject, bytes4[] memory expectedInterfaces_) public {
+        console.logBehaviorEntry(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
+        Bytes4SetComparatorRepo._recExpectedBytes4(
+            address(subject), IERC165.supportsInterface.selector, expectedInterfaces_
+        );
+        console.logBehaviorExit(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
+    }
+
+    // isValid_* - Compare expected vs actual directly
+    function isValid_IERC165_supportsInterfaces(IERC165 subject, bool expected, bool actual)
+        public view returns (bool valid)
+    {
+        valid = expected == actual;
+        if (!valid) {
+            console.logBehaviorError(...);
+        }
+        return valid;
+    }
+
+    // hasValid_* - Validate against stored expectations
+    function hasValid_IERC165_supportsInterface(IERC165 subject) public view returns (bool isValid_) {
+        console.logBehaviorEntry(_Behavior_IERC165Name(), "hasValid_IERC165_supportsInterface");
+        // Iterate stored expectations and validate each
+        for (uint256 i = 0; i < expectedCount; i++) {
+            bytes4 interfaceId = _expected_IERC165_supportsInterface(subject)._index(i);
+            isValid_ = isValid_ && subject.supportsInterface(interfaceId);
+        }
+        console.logBehaviorExit(_Behavior_IERC165Name(), "hasValid_IERC165_supportsInterface");
     }
 }
 ```
+
+**Behavior Function Types:**
+| Pattern | Purpose | Example |
+|---------|---------|---------|
+| `expect_*` | Store expected values | `expect_IERC165_supportsInterface(subject, interfaces)` |
+| `isValid_*` / `areValid_*` | Compare expected vs actual directly | `isValid_IERC165_supportsInterfaces(subject, true, actual)` |
+| `hasValid_*` | Validate against stored expectations | `hasValid_IERC165_supportsInterface(subject)` |
+
+**Supporting Components:**
+- `ComparatorRepo` - Stores expected values keyed by (address, selector)
+- `Comparator` - Performs comparison with detailed error output
+- `console.logBehavior*` - Structured logging for test debugging
 
 ### TestBase Inheritance Chain Example
 ```
@@ -472,6 +521,10 @@ CraneTest                          # Factory setup (create3Factory, diamondFacto
 - `/contracts/test/CraneTest.sol` - Base with factory infrastructure
 - `/contracts/factories/diamondPkg/TestBase_IFacet.sol` - Facet behavior testing
 - `/contracts/factories/diamondPkg/Behavior_IFacet.sol` - Facet validation library
+- `/contracts/introspection/ERC165/Behavior_IERC165.sol` - ERC165 validation library
+- `/contracts/introspection/ERC165/TestBase_IERC165.sol` - ERC165 behavior testing
+- `/contracts/test/comparators/Bytes4SetComparator.sol` - Set comparison with error output
+- `/contracts/test/behaviors/BehaviorUtils.sol` - Shared behavior utilities
 - `/contracts/protocols/dexes/camelot/v2/test/bases/TestBase_CamelotV2.sol` - Protocol setup example
 
 ## Configuration
