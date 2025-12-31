@@ -23,7 +23,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {InitDevService} from "contracts/InitDevService.sol";
 import {InitDevService} from "contracts/InitDevService.sol";
 import {Create3Factory} from "contracts/factories/create3/Create3Factory.sol";
-import {ICreate3Factory} from "contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {DiamondPackageCallBackFactory} from "contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
 import {IDiamondPackageCallBackFactory} from "contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {TestBase_IDiamondLoupe} from "contracts/introspection/ERC2535/TestBase_IDiamondLoupe.sol";

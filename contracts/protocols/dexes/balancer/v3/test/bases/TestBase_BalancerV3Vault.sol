@@ -171,6 +171,7 @@ contract TestBase_BalancerV3Vault is
         TestBase_BalancerV3
     ) {
         TestBase_BalancerV3.setUp();
+        TestBase_Permit2.setUp();  // Initialize permit2 before deploying contracts
         _deployMainContracts();
         onAfterDeployMainContracts();
         _approveForAllUsers();

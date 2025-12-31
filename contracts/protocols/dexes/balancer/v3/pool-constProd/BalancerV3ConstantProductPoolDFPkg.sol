@@ -87,8 +87,6 @@ contract BalancerV3ConstantProductPoolDFPkg is
     using SafeERC20 for IERC20;
     using TokenConfigUtils for TokenConfig[];
 
-    error NotCalledByRegistry(address caller);
-
     uint256 private constant _MIN_SWAP_FEE_PERCENTAGE = 1e12; // 0.0001%
     uint256 private constant _MAX_SWAP_FEE_PERCENTAGE = 0.1e18; // 10%
     uint256 private constant _MIN_INVARIANT_RATIO = 70e16; // 70%

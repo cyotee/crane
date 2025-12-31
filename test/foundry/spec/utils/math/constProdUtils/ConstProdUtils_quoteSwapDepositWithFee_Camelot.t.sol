@@ -24,8 +24,8 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
         ERC20PermitMintableStub tokenB,
         uint256 amountIn,
         uint256 reserveA,
-        uint256 reserveB,
-        uint256 ownerFeeShare
+        uint256 /*reserveB*/,
+        uint256 /*ownerFeeShare*/
     ) internal returns (uint256 actualLpAmt) {
         uint256 lpBalanceBefore = pair.balanceOf(address(this));
 

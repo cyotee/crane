@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {ICreate3Factory} from "contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {ERC4626RateProviderFacet} from "contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacet.sol";

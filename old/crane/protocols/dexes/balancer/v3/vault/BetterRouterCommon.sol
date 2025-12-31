@@ -1,0 +1,364 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.8.24;
+
+/* -------------------------------------------------------------------------- */
+/*                                Open Zeppelin                               */
+/* -------------------------------------------------------------------------- */
+
+import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                   Permit2                                  */
+/* -------------------------------------------------------------------------- */
+
+import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                 Balancer V3                                */
+/* -------------------------------------------------------------------------- */
+
+import {IRouterCommon} from "@balancer-labs/v3-interfaces/contracts/vault/IRouterCommon.sol";
+import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+/* ------------------------------- Interfaces ------------------------------- */
+
+import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+
+/* ----------------------------- Solidity Utils ----------------------------- */
+
+import {InputHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/InputHelpers.sol";
+import {RevertCodec} from "@balancer-labs/v3-solidity-utils/contracts/helpers/RevertCodec.sol";
+import {Version} from "@balancer-labs/v3-solidity-utils/contracts/helpers/Version.sol";
+
+import {
+    ReentrancyGuardTransient
+} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
+import {StorageSlotExtension} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {TransientStorageHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+
+import {SenderGuard} from "@balancer-labs/v3-vault/contracts/SenderGuard.sol";
+import {RouterWethLib} from "@balancer-labs/v3-vault/contracts/lib/RouterWethLib.sol";
+// import { VaultGuard } from "@balancer-labs/v3-vault/contracts/VaultGuard.sol";
+
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+
+import {VaultGuardModifiers} from "contracts/crane/protocols/dexes/balancer/v3/VaultGuardModifiers.sol";
+import {VersionStorage} from "contracts/crane/protocols/dexes/balancer/v3/solidity-utils/utils/VersionStorage.sol";
+import {WETHAwareStorage} from "contracts/crane/protocols/tokens/wrappers/weth/v9/utils/WETHAwareStorage.sol";
+import {Permit2AwareStorage} from "contracts/crane/protocols/utils/permit2/utils/Permit2AwareStorage.sol";
+import {
+    BalancerV3VaultAwareStorage
+} from "contracts/crane/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
+import {
+    BetterRouterCommonStorage
+} from "contracts/crane/protocols/dexes/balancer/v3/vault/utils/BetterRouterCommonStorage.sol";
+
+/**
+ * @notice Abstract base contract for functions shared among all Routers.
+ * @dev Common functionality includes access to the sender (which would normally be obscured, since msg.sender in the
+ * Vault is the Router contract itself, not the account that invoked the Router), versioning, and the external
+ * invocation functions (`permitBatchAndCall` and `multicall`).
+ */
+abstract contract BetterRouterCommon is
+    BetterRouterCommonStorage,
+    // IRouterCommon,
+    SenderGuard,
+    VaultGuardModifiers,
+    ReentrancyGuardTransient
+{
+    // Version
+    // VersionStorage,
+    // WETHAwareStorage,
+    // Permit2AwareStorage
+
+    using Address for address payable;
+    using StorageSlotExtension for *;
+    using RouterWethLib for IWETH;
+    using SafeCast for *;
+
+    /**
+     * @notice The sender has not transferred the correct amount of tokens to the Vault.
+     * @param token The address of the token that should have been transferred
+     */
+    error InsufficientPayment(IERC20 token);
+
+    // NOTE: If you use a constant, then it is simply replaced everywhere when this constant is used by what is written
+    // after =. If you use immutable, the value is first calculated and then replaced everywhere. That means that if a
+    // constant has executable variables, they will be executed every time the constant is used.
+
+    // solhint-disable-next-line var-name-mixedcase
+    bytes32 private immutable _IS_RETURN_ETH_LOCKED_SLOT =
+        TransientStorageHelpers.calculateSlot(type(BetterRouterCommon).name, "isReturnEthLocked");
+
+    /**
+     * @notice Locks the return of excess ETH to the sender until the end of the function.
+     * @dev This also encompasses the `saveSender` functionality.
+     */
+    modifier saveSenderAndManageEth() {
+        bool isExternalSender = _saveSender(msg.sender);
+
+        // Revert if a function with this modifier is called recursively (e.g., multicall).
+        if (_isReturnEthLockedSlot().tload()) {
+            revert ReentrancyGuardReentrantCall();
+        }
+
+        // Lock the return of ETH during execution
+        _isReturnEthLockedSlot().tstore(true);
+        _;
+        _isReturnEthLockedSlot().tstore(false);
+
+        address sender = _getSenderSlot().tload();
+        _discardSenderIfRequired(isExternalSender);
+
+        _returnEth(sender);
+    }
+
+    // TODO Deprecate
+    function getWeth() external view returns (IWETH) {
+        return _weth();
+    }
+
+    // TODO Deprecate
+    function getPermit2() external view returns (IPermit2) {
+        return _permit2();
+    }
+
+    /**
+     *
+     *                                   Utilities
+     *
+     */
+    struct SignatureParts {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+    }
+
+    // TODO Move to facet.
+    function permitBatchAndCall(
+        IRouterCommon.PermitApproval[] calldata permitBatch,
+        bytes[] calldata permitSignatures,
+        IAllowanceTransfer.PermitBatch calldata permit2Batch,
+        bytes calldata permit2Signature,
+        bytes[] calldata multicallData
+    ) external payable virtual returns (bytes[] memory results) {
+        _permitBatch(permitBatch, permitSignatures, permit2Batch, permit2Signature);
+
+        // Execute all the required operations once permissions have been granted.
+        return multicall(multicallData);
+    }
+
+    function _permitBatch(
+        IRouterCommon.PermitApproval[] calldata permitBatch,
+        bytes[] calldata permitSignatures,
+        IAllowanceTransfer.PermitBatch calldata permit2Batch,
+        bytes calldata permit2Signature
+    ) internal nonReentrant {
+        InputHelpers.ensureInputLengthMatch(permitBatch.length, permitSignatures.length);
+
+        // Use Permit (ERC-2612) to grant allowances to Permit2 for tokens to swap,
+        // and grant allowances to Vault for BPT tokens.
+        for (uint256 i = 0; i < permitBatch.length; ++i) {
+            bytes memory signature = permitSignatures[i];
+
+            SignatureParts memory signatureParts = _getSignatureParts(signature);
+            IRouterCommon.PermitApproval memory permitApproval = permitBatch[i];
+
+            try IERC20Permit(permitApproval.token)
+                .permit(
+                    permitApproval.owner,
+                    address(this),
+                    permitApproval.amount,
+                    permitApproval.deadline,
+                    signatureParts.v,
+                    signatureParts.r,
+                    signatureParts.s
+                ) {
+            // solhint-disable-previous-line no-empty-blocks
+            // OK; carry on.
+            }
+            catch (bytes memory returnData) {
+                // Did it fail because the permit was executed (possible DoS attack to make the transaction revert),
+                // or was it something else (e.g., deadline, invalid signature)?
+                if (
+                    IERC20(permitApproval.token).allowance(permitApproval.owner, address(this)) != permitApproval.amount
+                ) {
+                    // It was something else, or allowance was used, so we should revert. Bubble up the revert reason.
+                    RevertCodec.bubbleUpRevert(returnData);
+                }
+            }
+        }
+
+        // Only call permit2 if there's something to do.
+        if (permit2Batch.details.length > 0) {
+            // Use Permit2 for tokens that are swapped and added into the Vault. Note that this call on Permit2 is
+            // theoretically also vulnerable to the same DoS attack as above. This edge case was not mitigated
+            // on-chain, mainly due to the increased complexity and cost of protecting the batch call.
+            //
+            // If this is a concern, we recommend submitting through a private node to avoid front-running the public
+            // mempool. In any case, best practice is to always use expiring, limited approvals, and only with known
+            // and trusted contracts.
+            //
+            // See https://www.immunebytes.com/blog/permit2-erc-20-token-approvals-and-associated-risks/.
+
+            _permit2().permit(msg.sender, permit2Batch, permit2Signature);
+        }
+    }
+
+    // TODO Move to facet, maybe depreccate.
+    function multicall(bytes[] calldata data)
+        public
+        payable
+        virtual
+        saveSenderAndManageEth
+        returns (bytes[] memory results)
+    {
+        results = new bytes[](data.length);
+        for (uint256 i = 0; i < data.length; ++i) {
+            results[i] = Address.functionDelegateCall(address(this), data[i]);
+        }
+        return results;
+    }
+
+    function _getSignatureParts(bytes memory signature) private pure returns (SignatureParts memory signatureParts) {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+
+        // solhint-disable-next-line no-inline-assembly
+        assembly ("memory-safe") {
+            r := mload(add(signature, 0x20))
+            s := mload(add(signature, 0x40))
+            v := byte(0, mload(add(signature, 0x60)))
+        }
+
+        signatureParts.r = r;
+        signatureParts.s = s;
+        signatureParts.v = v;
+    }
+
+    /**
+     * @dev Returns excess ETH back to the contract caller. Checks for sufficient ETH balance are made right before
+     * each deposit, ensuring it will revert with a friendly custom error. If there is any balance remaining when
+     * `_returnEth` is called, return it to the sender.
+     *
+     * Because the caller might not know exactly how much ETH a Vault action will require, they may send extra.
+     * Note that this excess value is returned *to the contract caller* (msg.sender). If caller and e.g. swap sender
+     * are not the same (because the caller is a relayer for the sender), then it is up to the caller to manage this
+     * returned ETH.
+     */
+    function _returnEth(address sender) internal {
+        // It's cheaper to check the balance and return early than checking a transient variable.
+        // Moreover, most operations will not have ETH to return.
+        uint256 excess = address(this).balance;
+        // if (excess == 0) {
+        //     return;
+        // }
+
+        // // If the return of ETH is locked, then don't return it,
+        // // because _returnEth will be called again at the end of the call.
+        // if (_isReturnEthLockedSlot().tload()) {
+        //     return;
+        // }
+        if (excess == 0 || _isReturnEthLockedSlot().tload()) {
+            // If the return of ETH is locked, then don't return it,
+            // because _returnEth will be called again at the end of the call.
+            return;
+        }
+
+        payable(sender).sendValue(excess);
+    }
+
+    /**
+     * @dev Returns an array with `amountGiven` at `tokenIndex`, and 0 for every other index.
+     * The returned array length matches the number of tokens in the pool.
+     * Reverts if the given index is greater than or equal to the pool number of tokens.
+     */
+    function _getSingleInputArrayAndTokenIndex(address pool, IERC20 token, uint256 amountGiven)
+        internal
+        view
+        returns (uint256[] memory amountsGiven, uint256 tokenIndex)
+    {
+        uint256 numTokens;
+        (numTokens, tokenIndex) = _balV3Vault().getPoolTokenCountAndIndexOfToken(pool, token);
+        amountsGiven = new uint256[](numTokens);
+        amountsGiven[tokenIndex] = amountGiven;
+    }
+
+    function _takeTokenIn(address sender, IERC20 tokenIn, uint256 amountIn, bool wethIsEth) internal {
+        // If the tokenIn is ETH, then wrap `amountIn` into WETH.
+        if (wethIsEth && address(tokenIn) == address(_weth())) {
+            _weth().wrapEthAndSettle(_balV3Vault(), amountIn);
+        } else {
+            if (amountIn > 0) {
+                // Send the tokenIn amount to the Vault.
+                _permit2().transferFrom(sender, address(_balV3Vault()), amountIn.toUint160(), address(tokenIn));
+                _balV3Vault().settle(tokenIn, amountIn);
+            }
+        }
+    }
+
+    function _transferToRecipient(address sender, address recipient, IERC20 tokenIn, uint256 amountIn, bool wethIsEth)
+        internal
+    {
+        address weth = address(_weth());
+        if (wethIsEth && address(tokenIn) == address(weth)) {
+            _weth().deposit{value: amountIn}();
+            // _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(weth));
+            _weth().transfer(recipient, amountIn);
+        } else {
+            if (amountIn > 0) {
+                _permit2().transferFrom(sender, recipient, amountIn.toUint160(), address(tokenIn));
+            }
+        }
+    }
+
+    function _sendTokenOut(address sender, IERC20 tokenOut, uint256 amountOut, bool wethIsEth) internal {
+        if (amountOut == 0) {
+            return;
+        }
+
+        // If the tokenOut is ETH, then unwrap `amountOut` into ETH.
+        if (wethIsEth && address(tokenOut) == address(_weth())) {
+            _weth().unwrapWethAndTransferToSender(_balV3Vault(), sender, amountOut);
+        } else {
+            // Receive the tokenOut amountOut.
+            _balV3Vault().sendTo(tokenOut, sender, amountOut);
+        }
+    }
+
+    function _maxTokenLimits(address pool) internal view returns (uint256[] memory maxLimits) {
+        uint256 numTokens = _balV3Vault().getPoolTokens(pool).length;
+        maxLimits = new uint256[](numTokens);
+        for (uint256 i = 0; i < numTokens; ++i) {
+            maxLimits[i] = _MAX_AMOUNT;
+        }
+    }
+
+    function _isReturnEthLockedSlot() internal view returns (StorageSlotExtension.BooleanSlotType) {
+        return _IS_RETURN_ETH_LOCKED_SLOT.asBoolean();
+    }
+
+    /**
+     * @dev Enables the Router to receive ETH. This is required for it to be able to unwrap WETH, which sends ETH to the
+     * caller.
+     *
+     * Any ETH sent to the Router outside of the WETH unwrapping mechanism would be forever locked inside the Router, so
+     * we prevent that from happening. Other mechanisms used to send ETH to the Router (such as being the recipient of
+     * an ETH swap, Pool exit or withdrawal, contract self-destruction, or receiving the block mining reward) will
+     * result in locked funds, but are not otherwise a security or soundness issue. This check only exists as an attempt
+     * to prevent user error.
+     */
+    // TODO Deprecate
+    receive() external payable {
+        if (msg.sender != address(_weth())) {
+            revert EthTransfer();
+        }
+    }
+}

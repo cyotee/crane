@@ -33,6 +33,15 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
     uint256 daiUsdc8020WeightedPoolBptAmountOut;
     WeightedPool daiUsdc8020WeightedPool;
 
+    function setUp() public virtual override {
+        TestBase_BalancerV3Vault.setUp();
+        poolFactory = createPoolFactory();
+        (pool, poolArguments) = createPool();
+        if (pool != address(0)) {
+            approveForPool(IERC20(pool));
+        }
+    }
+
     function createPoolFactory()
         internal
         virtual
@@ -45,10 +54,10 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
         return address(weighted8020Factory);
     }
 
-    // function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
-    //     (newPool, poolArgs) = createDaiUsdc8020WeightedPool();
-    //     return (newPool, poolArgs);
-    // }
+    function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
+        (newPool, poolArgs) = createDaiUsdc8020WeightedPool();
+        return (newPool, poolArgs);
+    }
 
     function createDaiUsdc8020WeightedPool() internal virtual returns (address newPool, bytes memory poolArgs) {
         daiUsdc8020WeightedPoolTokens = new address[](2);
