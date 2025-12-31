@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 library BalancerV3PoolRepo {
     using BetterEfficientHashLib for bytes;
+    using AddressSetRepo for AddressSet;
 
     bytes32 internal constant STORAGE_SLOT = keccak256("protocols.dexes.balancer.v3.pool.common");
 
@@ -14,6 +16,7 @@ library BalancerV3PoolRepo {
         uint256 maximumInvariantRatio;
         uint256 minimumSwapFeePercentage;
         uint256 maximumSwapFeePercentage;
+        AddressSet tokens;
     }
 
     function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
@@ -32,13 +35,15 @@ library BalancerV3PoolRepo {
         uint256 minimumInvariantRatio,
         uint256 maximumInvariantRatio,
         uint256 minimumSwapFeePercentage,
-        uint256 maximumSwapFeePercentage
+        uint256 maximumSwapFeePercentage,
+        address[] memory tokens
     ) internal {
         // layout.actionIdDisambiguator = actionIdDisambiguator;
         layout.minimumInvariantRatio = minimumInvariantRatio;
         layout.maximumInvariantRatio = maximumInvariantRatio;
         layout.minimumSwapFeePercentage = minimumSwapFeePercentage;
         layout.maximumSwapFeePercentage = maximumSwapFeePercentage;
+        layout.tokens._add(tokens);
     }
 
     function _initialize(
@@ -46,7 +51,8 @@ library BalancerV3PoolRepo {
         uint256 minimumInvariantRatio,
         uint256 maximumInvariantRatio,
         uint256 minimumSwapFeePercentage,
-        uint256 maximumSwapFeePercentage
+        uint256 maximumSwapFeePercentage,
+        address[] memory tokens
     ) internal {
         _initialize(
             _layout(),
@@ -54,7 +60,8 @@ library BalancerV3PoolRepo {
             minimumInvariantRatio,
             maximumInvariantRatio,
             minimumSwapFeePercentage,
-            maximumSwapFeePercentage
+            maximumSwapFeePercentage,
+            tokens
         );
     }
 

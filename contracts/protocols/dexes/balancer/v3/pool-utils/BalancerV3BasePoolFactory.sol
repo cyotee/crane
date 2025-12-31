@@ -12,19 +12,13 @@ import {
     TokenType,
     TokenConfig
 } from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3BasePoolFactoryRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationRepo.sol";
+import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
 import {DiamondPackageFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageFactoryAwareRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3AuthenticationModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationModifiers.sol";
+import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {BalancerV3AuthenticationModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationModifiers.sol";
 
 abstract contract BalancerV3BasePoolFactory is BalancerV3AuthenticationModifiers, IAuthentication, IBalancerV3BasePoolFactory, IFactoryWidePauseWindow {
-
-    address public immutable SELF;
-
-    constructor() {
-        SELF = address(this);
-    }
 
     /* -------------------------------------------------------------------------- */
     /*                              IBasePoolFactory                              */
@@ -58,12 +52,16 @@ abstract contract BalancerV3BasePoolFactory is BalancerV3AuthenticationModifiers
         return BalancerV3BasePoolFactoryRepo._isDisabled();
     }
 
-    function disable() external authenticate(SELF) {
+    function disable() external authenticate(address(this)) {
         BalancerV3BasePoolFactoryRepo._ensureEnabled();
 
         BalancerV3BasePoolFactoryRepo._disable();
 
         emit FactoryDisabled();
+    }
+
+    function getPoolsInRange(uint256 start, uint256 count) public view virtual returns (address[] memory) {
+        return BalancerV3BasePoolFactoryRepo._getPoolsInRange(start, count);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -114,7 +112,7 @@ abstract contract BalancerV3BasePoolFactory is BalancerV3AuthenticationModifiers
 
     function _poolDFPkg() internal view virtual returns (IDiamondFactoryPackage);
 
-    function _registerPoolWithVault(
+    function _registerPoolWithBalV3Vault(
         address pool,
         TokenConfig[] memory tokens,
         uint256 swapFeePercentage,

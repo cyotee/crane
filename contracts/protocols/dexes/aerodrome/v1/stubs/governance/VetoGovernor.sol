@@ -14,11 +14,13 @@ import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEnde
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import "./IVetoGovernor.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @dev Modified lightly from OpenZeppelin's Governor contract to support vetoing.
  */
 abstract contract VetoGovernor is Context, ERC165, EIP712, IVetoGovernor, IERC721Receiver, IERC1155Receiver {
+    using BetterEfficientHashLib for bytes;
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
     using SafeCast for uint256;
 
@@ -66,7 +68,8 @@ abstract contract VetoGovernor is Context, ERC165, EIP712, IVetoGovernor, IERC72
     modifier onlyGovernance() {
         require(_msgSender() == _executor(), "Governor: onlyGovernance");
         if (_executor() != address(this)) {
-            bytes32 msgDataHash = keccak256(_msgData());
+            // bytes32 msgDataHash = keccak256(_msgData());
+            bytes32 msgDataHash = _msgData()._hash();
             // loop until popping the expected operation - throw if deque is empty (operation not authorized)
             while (_governanceCall.popFront() != msgDataHash) {}
         }

@@ -133,11 +133,6 @@ library ConstProdUtils {
         pure
         returns (uint256)
     {
-        // uint256 amountInWithFee = amountIn * (FEE_DENOMINATOR - saleFeePercent) / FEE_DENOMINATOR;
-        // uint256 numerator = amountInWithFee * reserveOut;
-        // uint256 denominator = reserveIn + amountInWithFee;
-        // uint256 result = numerator / denominator;
-        // return result;
         return _saleQuote(
             // uint256 amountIn,
             amountIn,
@@ -167,14 +162,6 @@ library ConstProdUtils {
         uint256 saleFeePercent,
         uint256 feeDenominator
     ) internal pure returns (uint256) {
-        // uint256 amountInWithFee = amountIn * (feeDenominator - saleFeePercent) / feeDenominator;
-
-        // uint256 numerator = amountInWithFee * reserveOut;
-
-        // uint256 denominator = reserveIn + amountInWithFee;
-
-        // uint256 result = numerator / denominator;
-        // return result;
         uint256 amountInWithFee = amountIn * (feeDenominator - saleFeePercent);
         uint256 numerator = amountInWithFee * reserveOut;
         uint256 denominator = (reserveIn * feeDenominator) + amountInWithFee;
@@ -234,13 +221,6 @@ library ConstProdUtils {
         uint256 feeScaled = (feeNumer + feeDenom - 1) / feeDenom; // ceil division
         // 3) amountCalculatedScaled18 = poolAmount + feeScaled
         uint256 amountCalculatedScaled18 = poolAmount + feeScaled;
-
-        console.log("_purchaseQuote: poolAmount(no-fee)", poolAmount);
-        console.log("_purchaseQuote: feeNumer", feeNumer);
-        console.log("_purchaseQuote: feeDenom", feeDenom);
-        console.log("_purchaseQuote: feeScaled(ceil)", feeScaled);
-        console.log("_purchaseQuote: amountCalculatedScaled18", amountCalculatedScaled18);
-
         // Return the scaled amount corresponding to the Vault's final amountInScaled18
         // Add one wei safety increment to ensure we cover rounding-down edgecases
         // where the computed amount would be 1 wei short of the desired output.
@@ -712,18 +692,6 @@ library ConstProdUtils {
         uint256 sB = (initialA * initialB * reserveB) / reserveA;
         uint256 noFeeB = Math._sqrt(sB);
         // Fee portions, clamped to 0
-        // Diagnostic logs for parity debugging
-        // console.log("_calculateFeePortionForPosition: ownedLP", ownedLP);
-        // console.log("_calculateFeePortionForPosition: initialA", initialA);
-        // console.log("_calculateFeePortionForPosition: initialB", initialB);
-        // console.log("_calculateFeePortionForPosition: reserveA", reserveA);
-        // console.log("_calculateFeePortionForPosition: reserveB", reserveB);
-        // console.log("_calculateFeePortionForPosition: claimableA", claimableA);
-        // console.log("_calculateFeePortionForPosition: noFeeA", noFeeA);
-        // console.log("_calculateFeePortionForPosition: claimableB", claimableB);
-        // console.log("_calculateFeePortionForPosition: noFeeB(before sqrt)");
-        // console.log("_calculateFeePortionForPosition: sB", sB);
-        // console.log("_calculateFeePortionForPosition: noFeeB", noFeeB);
         feeA = claimableA > noFeeA ? claimableA - noFeeA : 0;
         feeB = claimableB > noFeeB ? claimableB - noFeeB : 0;
     }

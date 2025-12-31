@@ -16,6 +16,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {IGovernor} from "./IGovernor.sol";
 import {IMinter} from "../../interfaces/IMinter.sol";
 import {ProtocolTimeLibrary} from "../libraries/ProtocolTimeLibrary.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @dev Modified lightly from OpenZeppelin's Governor contract to support three option voting via callback.
@@ -31,6 +32,7 @@ import {ProtocolTimeLibrary} from "../libraries/ProtocolTimeLibrary.sol";
  * propose(...) creates a proposal for the following epoch. This proposal can only be executed during that epoch.
  */
 abstract contract GovernorSimple is ERC2771Context, ERC165, EIP712, IGovernor, IERC721Receiver, IERC1155Receiver {
+    using BetterEfficientHashLib for bytes;
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
     using SafeCast for uint256;
 
@@ -81,7 +83,8 @@ abstract contract GovernorSimple is ERC2771Context, ERC165, EIP712, IGovernor, I
     modifier onlyGovernance() {
         require(_msgSender() == _executor(), "GovernorSimple: onlyGovernance");
         if (_executor() != address(this)) {
-            bytes32 msgDataHash = keccak256(_msgData());
+            // bytes32 msgDataHash = keccak256(_msgData());
+            bytes32 msgDataHash = _msgData()._hash();
             // loop until popping the expected operation - throw if deque is empty (operation not authorized)
             while (_governanceCall.popFront() != msgDataHash) {}
         }

@@ -15,11 +15,13 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {ERC2771Context} from "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title Protocol Router
 /// @author velodrome.finance, Solidly, Uniswap Labs, @pegahcarter
 /// @notice Router allows routes through any pools created by any factory adhering to univ2 interface.
 contract Router is IRouter, ERC2771Context {
+    using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
 
     /// @inheritdoc IRouter
@@ -74,7 +76,8 @@ contract Router is IRouter, ERC2771Context {
         if (!IFactoryRegistry(factoryRegistry).isPoolFactoryApproved(factory)) revert PoolFactoryDoesNotExist();
 
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable));
+        // bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable));
+        bytes32 salt = abi.encodePacked(token0, token1, stable)._hash();
         pool = Clones.predictDeterministicAddress(IPoolFactory(factory).implementation(), salt, factory);
     }
 

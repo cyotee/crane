@@ -36,7 +36,6 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
     function createPoolFactory()
         internal
         virtual
-        override
         returns (
             address newPoolFactory
         )

@@ -17,6 +17,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {DelegationLogicLibrary} from "./libraries/DelegationLogicLibrary.sol";
 import {BalanceLogicLibrary} from "./libraries/BalanceLogicLibrary.sol";
 import {SafeCastLibrary} from "./libraries/SafeCastLibrary.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title Voting Escrow
 /// @notice veNFT implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
@@ -26,6 +27,7 @@ import {SafeCastLibrary} from "./libraries/SafeCastLibrary.sol";
 /// @author velodrome.finance, Solidly, @figs999, @pegahcarter
 /// @dev Vote weight decays linearly over time. Lock time cannot be more than `MAXTIME` (4 years).
 contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
+    using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
     using SafeCastLibrary for uint256;
     using SafeCastLibrary for int128;
@@ -1222,11 +1224,14 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
         // vice versa. If your library also generates signatures with 0/1 for v instead 27/28, add 27 to v to accept
         // these malleable signatures as well.
         if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) revert InvalidSignatureS();
-        bytes32 domainSeparator = keccak256(
-            abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this))
-        );
-        bytes32 structHash = keccak256(abi.encode(DELEGATION_TYPEHASH, delegator, delegatee, nonce, expiry));
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
+        // bytes32 domainSeparator = keccak256(
+        //     abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this))
+        // );
+        bytes32 domainSeparator = abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this))._hash();
+        // bytes32 structHash = keccak256(abi.encode(DELEGATION_TYPEHASH, delegator, delegatee, nonce, expiry));
+        bytes32 structHash = abi.encode(DELEGATION_TYPEHASH, delegator, delegatee, nonce, expiry)._hash();
+        // bytes32 digest = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
+        bytes32 digest = abi.encodePacked("\x19\x01", domainSeparator, structHash)._hash();
         address signatory = ecrecover(digest, v, r, s);
         if (!_isApprovedOrOwner(signatory, delegator)) revert NotApprovedOrOwner();
         if (signatory == address(0)) revert InvalidSignature();

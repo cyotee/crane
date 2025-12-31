@@ -14,13 +14,20 @@ library BalancerV3BasePoolFactoryRepo {
 
     using AddressSetRepo for AddressSet;
 
+    /// @notice The factory deployer gave a duration that would overflow the Unix timestamp.
+    error PoolPauseWindowDurationOverflow();
+
     bytes32 internal constant STORAGE_SLOT =
         keccak256("protocols.dexes.balancer.v3.base.pool.factory.common");
+
+    // The pause window end time is stored in 32 bits.
+    uint32 private constant _MAX_TIMESTAMP = type(uint32).max;
 
     struct Storage {
         bool isDisabled;
         uint32 pauseWindowDuration;
         uint32 pauseWindowEndTime;
+        address poolManager;
         AddressSet pools;
         // mapping(address pool => TokenConfig[] tokenConfigs) tokenConfigsOfPool;
         mapping(address pool => AddressSet tokens) tokensOfPool;
@@ -45,6 +52,77 @@ library BalancerV3BasePoolFactoryRepo {
 
     function _layout() internal pure returns (Storage storage) {
         return _layout(STORAGE_SLOT);
+    }
+
+    function _initialize(
+        Storage storage layout,
+        uint32 pauseWindowDuration,
+        address poolManager
+    ) internal {
+        uint32 pauseWindowEndTime = uint32(block.timestamp) + pauseWindowDuration;
+        if (pauseWindowEndTime > _MAX_TIMESTAMP) {
+            revert PoolPauseWindowDurationOverflow();
+        }
+        layout.pauseWindowEndTime = pauseWindowEndTime;
+        layout.pauseWindowDuration = pauseWindowDuration;
+        layout.poolManager = poolManager;
+    }
+
+    function _initialize(
+        uint32 pauseWindowDuration,
+        address poolFeeManager
+    ) internal {
+        _initialize(
+            _layout(),
+            pauseWindowDuration,
+            poolFeeManager
+        );
+    }
+
+    function _isDisabled(Storage storage layout) internal view returns (bool) {
+        return layout.isDisabled;
+    }
+
+    function _isDisabled() internal view returns (bool) {
+        return _isDisabled(_layout());
+    }
+
+    function _disable(Storage storage layout) internal {
+        layout.isDisabled = true;
+    }
+
+    function _disable() internal {
+        _disable(_layout());
+    }
+
+    function _ensureEnabled() internal view {
+        if (_isDisabled()) {
+            revert IBasePoolFactory.Disabled();
+        }
+    }
+
+    function _pauseWindowDuration(Storage storage layout) internal view returns (uint32) {
+        return layout.pauseWindowDuration;
+    }
+
+    function _pauseWindowDuration() internal view returns (uint32) {
+        return _pauseWindowDuration(_layout());
+    }
+
+    function _pauseWindowEndTime(Storage storage layout) internal view returns (uint32) {
+        return layout.pauseWindowEndTime;
+    }
+
+    function _pauseWindowEndTime() internal view returns (uint32) {
+        return _pauseWindowEndTime(_layout());
+    }
+
+    function _getPoolManager(Storage storage layout) internal view returns (address) {
+        return layout.poolManager;
+    }
+
+    function _getPoolManager() internal view returns (address) {
+        return _getPoolManager(_layout());
     }
 
     function _addPool(Storage storage layout, address pool) internal {
@@ -99,53 +177,8 @@ library BalancerV3BasePoolFactoryRepo {
         return _getPools(_layout());
     }
 
-    function _ensureEnabled() internal view {
-        if (_isDisabled()) {
-            revert IBasePoolFactory.Disabled();
-        }
-    }
-
-    function _isDisabled(Storage storage layout) internal view returns (bool) {
-        return layout.isDisabled;
-    }
-
-    function _isDisabled() internal view returns (bool) {
-        return _isDisabled(_layout());
-    }
-
-    function _disable(Storage storage layout) internal {
-        layout.isDisabled = true;
-    }
-
-    function _disable() internal {
-        _disable(_layout());
-    }
-
-    function _pauseWindowDuration(Storage storage layout) internal view returns (uint32) {
-        return layout.pauseWindowDuration;
-    }
-
-    function _pauseWindowDuration() internal view returns (uint32) {
-        return _pauseWindowDuration(_layout());
-    }
-
-    function _pauseWindowEndTime(Storage storage layout) internal view returns (uint32) {
-        return layout.pauseWindowEndTime;
-    }
-
-    function _pauseWindowEndTime() internal view returns (uint32) {
-        return _pauseWindowEndTime(_layout());
-    }
-
-    function _getNewPoolPauseWindowEndTime(Storage storage layout) internal view returns (uint32) {
-        // We know _poolsPauseWindowEndTime <= _MAX_TIMESTAMP (checked above).
-        // Do not truncate timestamp; it should still return 0 after _MAX_TIMESTAMP.
-        uint32 pauseWindowEndTime = _pauseWindowEndTime(layout);
-        return (block.timestamp < pauseWindowEndTime) ? pauseWindowEndTime : 0;
-    }
-
-    function _getNewPoolPauseWindowEndTime() internal view returns (uint32) {
-        return _getNewPoolPauseWindowEndTime(_layout());
+    function _setTokenConfigs(address pool_, TokenConfig[] memory tokenConfig_) internal {
+        _setTokenConfigs(_layout(), pool_, tokenConfig_);
     }
 
     function _getTokenConfigs(Storage storage layout, address pool_) internal view returns (TokenConfig[] memory tokenConfigs) {
@@ -178,8 +211,31 @@ library BalancerV3BasePoolFactoryRepo {
         }
     }
 
-    function _setTokenConfigs(address pool_, TokenConfig[] memory tokenConfig_) internal {
-        _setTokenConfigs(_layout(), pool_, tokenConfig_);
+    function _getNewPoolPauseWindowEndTime(Storage storage layout) internal view returns (uint32) {
+        // We know _poolsPauseWindowEndTime <= _MAX_TIMESTAMP (checked above).
+        // Do not truncate timestamp; it should still return 0 after _MAX_TIMESTAMP.
+        uint32 pauseWindowEndTime = _pauseWindowEndTime(layout);
+        return (block.timestamp < pauseWindowEndTime) ? pauseWindowEndTime : 0;
+    }
+
+    function _setHooksContract(Storage storage layout, address pool_, address hooksContract_) internal {
+        layout.hooksContractOfPool[pool_] = hooksContract_;
+    }
+
+    function _setHooksContract(address pool_, address hooksContract_) internal {
+        _setHooksContract(_layout(), pool_, hooksContract_);
+    }
+
+    function _getNewPoolPauseWindowEndTime() internal view returns (uint32) {
+        return _getNewPoolPauseWindowEndTime(_layout());
+    }
+
+    function _getHooksContract(Storage storage layout, address pool_) internal view returns (address) {
+        return layout.hooksContractOfPool[pool_];
+    }
+
+    function _getHooksContract(address pool_) internal view returns (address) {
+        return _getHooksContract(_layout(), pool_);
     }
 
 }

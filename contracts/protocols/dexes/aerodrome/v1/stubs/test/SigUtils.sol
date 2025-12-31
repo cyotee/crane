@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.19;
 
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+
 contract SigUtils {
+    using BetterEfficientHashLib for bytes;
     bytes32 internal DOMAIN_SEPARATOR;
 
     constructor(bytes32 _DOMAIN_SEPARATOR) {
@@ -20,21 +23,30 @@ contract SigUtils {
 
     /// @dev Computes the hash of a permit
     function getStructHash(Delegation memory _delegation) internal pure returns (bytes32) {
+        // return
+        //     keccak256(
+        //         abi.encode(
+        //             DELEGATION_TYPEHASH,
+        //             _delegation.delegator,
+        //             _delegation.delegatee,
+        //             _delegation.nonce,
+        //             _delegation.deadline
+        //         )
+        //     );
         return
-            keccak256(
-                abi.encode(
-                    DELEGATION_TYPEHASH,
-                    _delegation.delegator,
-                    _delegation.delegatee,
-                    _delegation.nonce,
-                    _delegation.deadline
-                )
-            );
+            abi.encode(
+                DELEGATION_TYPEHASH,
+                _delegation.delegator,
+                _delegation.delegatee,
+                _delegation.nonce,
+                _delegation.deadline
+            )._hash();
     }
 
     /// @dev Computes the hash of the fully encoded EIP-712 message for the domain,
     ///      which can be used to recover the signer
     function getTypedDataHash(Delegation memory _delegation) public view returns (bytes32) {
-        return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, getStructHash(_delegation)));
+        // return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, getStructHash(_delegation)));
+        return abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, getStructHash(_delegation))._hash();
     }
 }

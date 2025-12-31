@@ -8,7 +8,7 @@ import { StorageSlotExtension } from "@balancer-labs/v3-solidity-utils/contracts
 import {
     TransientStorageHelpers
 } from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {SenderGuardCommon} from "@crane/contracts/protocols/dexes/balancer/v3/SenderGuardCommon.sol";
+import {SenderGuardCommon} from "@crane/contracts/protocols/dexes/balancer/v3/vault/SenderGuardCommon.sol";
 
 /**
  * @notice Abstract base contract for functions shared among all Routers.

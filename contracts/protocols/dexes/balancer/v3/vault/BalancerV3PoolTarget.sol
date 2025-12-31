@@ -15,14 +15,14 @@ import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 
 import {PoolConfig, TokenInfo} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
-import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3AuthenticationService} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3AuthenticationService.sol";
-import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3VaultGuardModifiers.sol";
+import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
+import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {BalancerV3AuthenticationService} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationService.sol";
+import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
 
-contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IBalancerPoolToken, IPoolInfo, IUnbalancedLiquidityInvariantRatioBounds, IAuthentication {
+contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Metadata, IBalancerPoolToken, IPoolInfo, IUnbalancedLiquidityInvariantRatioBounds, IAuthentication {
 
     /* -------------------------------------------------------------------------- */
     /*                                   IERC20                                   */
@@ -71,26 +71,29 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IBalance
     /*                          IERC20Metadata Functions                          */
     /* -------------------------------------------------------------------------- */
 
-    // /**
-    //  * @inheritdoc IERC20Metadata
-    //  */
-    // function name() external view returns (string memory) {
-    //     return ERC20Repo._name();
-    // }
+    /**
+     * @inheritdoc IERC20Metadata
+     */
+    function name() external pure returns (string memory) {
+        // return ERC20Repo._name();
+        return "Pachira BPT";
+    }
 
-    // /**
-    //  * @inheritdoc IERC20Metadata
-    //  */
-    // function symbol() external view returns (string memory) {
-    //     return ERC20Repo._symbol();
-    // }
+    /**
+     * @inheritdoc IERC20Metadata
+     */
+    function symbol() external pure returns (string memory) {
+        // return ERC20Repo._symbol();
+        return "BPT";
+    }
 
-    // /**
-    //  * @inheritdoc IERC20Metadata
-    //  */
-    // function decimals() external view returns (uint8) {
-    //     return ERC20Repo._decimals();
-    // }
+    /**
+     * @inheritdoc IERC20Metadata
+     */
+    function decimals() external pure returns (uint8) {
+        // return ERC20Repo._decimals();
+        return 18;
+    }
 
     /* -------------------------------------------------------------------------- */
     /*                                IRateProvider                               */

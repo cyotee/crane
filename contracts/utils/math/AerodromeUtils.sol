@@ -26,7 +26,14 @@ library AerodromeUtils {
         (uint256 amountAWD, uint256 amountBWD) = ConstProdUtils._withdrawQuote(ownedLPAmount, lpTotalSupply, reserveOut, reserveIn);
         uint256 newReserveB = reserveIn - amountBWD;
         uint256 newReserveA = reserveOut - amountAWD;
-        uint256 swapOut = ConstProdUtils._saleQuote(amountBWD, newReserveB, newReserveA, feePercent, AERO_FEE_DENOM);
+
+        // Mirror Aerodrome Pool.getAmountOut (volatile path):
+        // amountInAfterFee = amountIn - floor(amountIn * fee / 10000)
+        // amountOut = (amountInAfterFee * reserveOut) / (reserveIn + amountInAfterFee)
+        // Note: Aerodrome fees are removed from the pool (sent to PoolFees), so only
+        // amountInAfterFee contributes to the invariant.
+        uint256 amountInAfterFee = amountBWD - ((amountBWD * feePercent) / AERO_FEE_DENOM);
+        uint256 swapOut = (amountInAfterFee * newReserveA) / (newReserveB + amountInAfterFee);
         totalAmountA = amountAWD + swapOut;
         return (totalAmountA);
     }

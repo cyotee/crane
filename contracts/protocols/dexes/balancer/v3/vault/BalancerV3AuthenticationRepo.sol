@@ -10,10 +10,6 @@ library BalancerV3AuthenticationRepo {
 
     struct Storage {
         bytes32 actionIdDisambiguator;
-        // uint256 minimumInvariantRatio;
-        // uint256 maximumInvariantRatio;
-        // uint256 minimumSwapFeePercentage;
-        // uint256 maximumSwapFeePercentage;
     }
 
     function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
@@ -29,32 +25,16 @@ library BalancerV3AuthenticationRepo {
     function _initialize(
         Storage storage layout,
         bytes32 actionIdDisambiguator
-        // uint256 minimumInvariantRatio,
-        // uint256 maximumInvariantRatio,
-        // uint256 minimumSwapFeePercentage,
-        // uint256 maximumSwapFeePercentage
     ) internal {
         layout.actionIdDisambiguator = actionIdDisambiguator;
-        // layout.minimumInvariantRatio = minimumInvariantRatio;
-        // layout.maximumInvariantRatio = maximumInvariantRatio;
-        // layout.minimumSwapFeePercentage = minimumSwapFeePercentage;
-        // layout.maximumSwapFeePercentage = maximumSwapFeePercentage;
     }
 
     function _initialize(
         bytes32 actionIdDisambiguator
-        // uint256 minimumInvariantRatio,
-        // uint256 maximumInvariantRatio,
-        // uint256 minimumSwapFeePercentage,
-        // uint256 maximumSwapFeePercentage
     ) internal {
         _initialize(
             _layout(),
             actionIdDisambiguator
-            // minimumInvariantRatio,
-            // maximumInvariantRatio,
-            // minimumSwapFeePercentage,
-            // maximumSwapFeePercentage
         );
     }
 

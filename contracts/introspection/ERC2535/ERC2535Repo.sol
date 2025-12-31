@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
+import {IERC8109Update} from "@crane/contracts/introspection/ERC8109/IERC8109Update.sol";
 import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
 import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
-import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
-import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
 library ERC2535Repo {
     using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     using BetterAddress for address;
 
-    bytes32 private constant STORAGE_SLOT = keccak256(abi.encode(type(ERC2535Repo).name));
+    bytes32 internal constant STORAGE_SLOT = keccak256(abi.encode("eip.erc.2535"));
 
     /// forge-lint: disable-next-line(pascal-case-struct)
     struct Storage {
@@ -53,9 +54,8 @@ library ERC2535Repo {
         _processFacetCuts(layout, diamondCut_);
         // bytes memory returnData
         if (initCalldata.length > 0 && initTarget != address(0)) {
-            // (bool result, ) = initTarget.delegatecall(initCalldata);
-            // require(result == true, "Address:_delegateCall:: delegatecall failed");
             initTarget.functionDelegateCall(initCalldata);
+            emit IERC8109Update.DiamondDelegateCall(initTarget, initCalldata);
         }
         emit IDiamond.DiamondCut(diamondCut_, initTarget, initCalldata);
     }
@@ -137,6 +137,7 @@ library ERC2535Repo {
                 revert IDiamondLoupe.FunctionNotPresent(facetCut.functionSelectors[cursor]);
             }
             layout.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
+            emit IERC8109Update.DiamondFunctionRemoved(facetCut.functionSelectors[cursor], facetCut.facetAddress);
         }
         // Does not actually delete values, just unmaps storage pointer.
         delete layout.facetFunctionSelectors[facetCut.facetAddress];

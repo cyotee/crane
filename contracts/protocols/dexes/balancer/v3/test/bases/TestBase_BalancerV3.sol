@@ -5,11 +5,11 @@ import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/Base
 
 abstract contract TestBase_BalancerV3 is BaseTest {
 
-    // function setUp() public virtual
-    // override(
-    //     BaseTest
-    // ) {
-    //     BaseTest.setUp();
-    // }
+    function setUp() public virtual
+    override(
+        BaseTest
+    ) {
+        BaseTest.setUp();
+    }
 
 }

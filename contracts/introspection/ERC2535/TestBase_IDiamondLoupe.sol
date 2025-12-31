@@ -64,7 +64,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
     }
 
     function erc165Funcs() public pure returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](3);
+        funcs = new bytes4[](1);
 
         funcs[0] = IERC165.supportsInterface.selector;
     }

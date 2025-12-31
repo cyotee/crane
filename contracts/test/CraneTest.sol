@@ -15,8 +15,10 @@ abstract contract CraneTest is BetterTest {
 
     function setUp() public virtual override {
         BetterTest.setUp();
-        (create3Factory, diamondPackageFactory) = InitDevService.initEnv(address(this));
-        diamondFactory = diamondPackageFactory;
+        if (address(diamondFactory) == address(0)) {
+            (create3Factory, diamondPackageFactory) = InitDevService.initEnv(address(this));
+            diamondFactory = diamondPackageFactory;
+        }
     }
 
 }

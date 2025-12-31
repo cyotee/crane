@@ -4,8 +4,10 @@ pragma solidity ^0.8.19;
 import {IPoolFactory} from "../../interfaces/factories/IPoolFactory.sol";
 import {IPool} from "../../interfaces/IPool.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract PoolFactory is IPoolFactory {
+    using BetterEfficientHashLib for bytes;
     address public immutable implementation;
 
     bool public isPaused;
@@ -129,7 +131,8 @@ contract PoolFactory is IPoolFactory {
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         if (token0 == address(0)) revert ZeroAddress();
         if (_getPool[token0][token1][stable] != address(0)) revert PoolAlreadyExists();
-        bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable)); // salt includes stable as well, 3 parameters
+        // bytes32 salt = keccak256(abi.encodePacked(token0, token1, stable)); // salt includes stable as well, 3 parameters
+        bytes32 salt = abi.encodePacked(token0, token1, stable)._hash();
         pool = Clones.cloneDeterministic(implementation, salt);
         IPool(pool).initialize(token0, token1, stable);
         _getPool[token0][token1][stable] = pool;

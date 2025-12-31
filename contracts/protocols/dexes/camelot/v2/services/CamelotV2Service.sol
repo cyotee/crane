@@ -5,7 +5,8 @@ pragma solidity ^0.8.24;
 // import "forge-std/console.sol";
 // import "forge-std/console2.sol";
 
-import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+// import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
@@ -145,7 +146,7 @@ library CamelotV2Service {
         address referrer
     ) internal returns (uint256 amountOut) {
         // Get reserves and fees
-        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        ReserveInfo memory reserves = _sortReservesStruct(pool, tokenIn);
 
         // Forward to the main swap function
         return _swap(
@@ -153,10 +154,19 @@ library CamelotV2Service {
         );
     }
 
-    function _sortReserves(ICamelotPair pool, IERC20 knownToken) internal view returns (ReserveInfo memory reserves) {
-        (uint112 reserve0, uint112 reserve1, uint16 token0feePercent, uint16 token1FeePercent) = pool.getReserves();
+    function _sortReserves(ICamelotPair pool, IERC20 knownToken) internal view returns (uint256 knownReserve, uint256 opposingReserve, uint256 knownFeePercent, uint256 opposingFeePercent) {
+        ReserveInfo memory reserves = _sortReservesStruct(pool, knownToken);
+        return (reserves.reserveIn, reserves.reserveOut, reserves.feePercent, reserves.unknownFee);
+    }
 
-        if (address(knownToken) == pool.token0()) {
+    function _sortReservesStruct(ICamelotPair pool, IERC20 knownToken) internal view returns (ReserveInfo memory reserves) {
+        (uint112 reserve0, uint112 reserve1, uint16 token0feePercent, uint16 token1FeePercent) = pool.getReserves();
+        address token0 = pool.token0();
+        if (address(knownToken) == address(0)) {
+            knownToken = IERC20(token0);
+        }
+
+        if (address(knownToken) == token0) {
             reserves.reserveIn = reserve0;
             reserves.reserveOut = reserve1;
             reserves.feePercent = token0feePercent;
@@ -180,7 +190,7 @@ library CamelotV2Service {
         address referrer
     ) internal returns (uint256) {
         // Get reserves
-        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        ReserveInfo memory reserves = _sortReservesStruct(pool, tokenIn);
 
         // Create parameter struct to avoid stack too deep error
         BalanceParams memory params = BalanceParams({
@@ -212,7 +222,7 @@ library CamelotV2Service {
         address referrer
     ) internal returns (uint256[] memory amounts) {
         // Get reserves
-        ReserveInfo memory reserves = _sortReserves(pool, tokenIn);
+        ReserveInfo memory reserves = _sortReservesStruct(pool, tokenIn);
 
         // Create parameter struct to avoid stack too deep error
         BalanceParams memory params = BalanceParams({

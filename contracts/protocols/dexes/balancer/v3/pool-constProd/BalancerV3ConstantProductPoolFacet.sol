@@ -25,7 +25,7 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {BalancerV3ConstantProductPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/BalancerV3ConstantProductPoolTarget.sol";
+import {BalancerV3ConstantProductPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Indexedex                                 */
@@ -46,8 +46,6 @@ contract BalancerV3ConstantProductPoolFacet is BalancerV3ConstantProductPoolTarg
         interfaces = new bytes4[](3);
 
         interfaces[0] = type(IBalancerV3Pool).interfaceId;
-        // interfaces[1] = type(IERC20Metadata).interfaceId;
-        // interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
     }
 
     function facetFuncs()

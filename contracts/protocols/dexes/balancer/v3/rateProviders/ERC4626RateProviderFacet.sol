@@ -38,9 +38,7 @@ contract ERC4626RateProviderFacet is
     ERC4626RateProviderTarget,
     IFacet
 {
-    using EfficientHashLib for bytes;
-
-    address immutable SELF;
+    // using EfficientHashLib for bytes;
 
     /* ---------------------------------------------------------------------- */
     /*                                 IFacet                                 */

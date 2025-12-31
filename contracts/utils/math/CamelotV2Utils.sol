@@ -68,49 +68,45 @@ library CamelotV2Utils {
         return totalAmountA;
     }
 
-    /**
-     * @dev Mirror CamelotPair._mintFee + burn math exactly to compute the
-     *      fee portion (token amounts) attributable to `ownedLP`.
-     *
-     * Parameters mirror the values available in tests: owned LP, the original
-     * position token amounts, current reserves, current total supply, the
-     * pair's kLast, the factory owner fee share, the pair fee denominator and
-     * whether fee is considered on (feeTo != address(0)).
-     */
-    function _calculateFeePortionForPosition(
-        uint256 ownedLP,
-        uint256 initialPositionA,
-        uint256 initialPositionB,
-        uint256 reserveA,
-        uint256 reserveB,
-        uint256 lpTotalSupply,
-        uint256 kLast,
-        uint256 ownerFeeShare,
-        uint256 feeDenominator,
-        bool feeOn
-    ) public pure returns (uint256 calculatedFeeA, uint256 calculatedFeeB) {
-        if (ownedLP == 0 || lpTotalSupply == 0 || reserveA == 0 || reserveB == 0) return (0, 0);
+    // /**
+    //  * @dev Mirror CamelotPair._mintFee + burn math exactly to compute the
+    //  *      fee portion (token amounts) attributable to `ownedLP`.
+    //  *
+    //  * Parameters mirror the values available in tests: owned LP, the original
+    //  * position token amounts, current reserves, current total supply, the
+    //  * pair's kLast, the factory owner fee share, the pair fee denominator and
+    //  * whether fee is considered on (feeTo != address(0)).
+    //  */
+    // function _calculateFeePortionForPosition(
+    //     uint256 ownedLP,
+    //     uint256 initialPositionA,
+    //     uint256 initialPositionB,
+    //     uint256 reserveA,
+    //     uint256 reserveB,
+    //     uint256 lpTotalSupply
+    // ) public pure returns (uint256 calculatedFeeA, uint256 calculatedFeeB) {
+    //     if (ownedLP == 0 || lpTotalSupply == 0 || reserveA == 0 || reserveB == 0) return (0, 0);
 
-        // Use the provided total supply from the pair; tests supply the live
-        // `totalSupply()` so performing an additional simulated mint here can
-        // double-count protocol fee mints and skew pro-rata math. Keep the
-        // supply exactly as passed in to match `ConstProdUtils` expectations.
-        uint256 _totalSupply = lpTotalSupply;
+    //     // Use the provided total supply from the pair; tests supply the live
+    //     // `totalSupply()` so performing an additional simulated mint here can
+    //     // double-count protocol fee mints and skew pro-rata math. Keep the
+    //     // supply exactly as passed in to match `ConstProdUtils` expectations.
+    //     // uint256 _totalSupply = lpTotalSupply;
 
-        // Claimable amounts after possible fee mint
-        uint256 claimableA = (ownedLP * reserveA) / _totalSupply;
-        uint256 claimableB = (ownedLP * reserveB) / _totalSupply;
+    //     // Claimable amounts after possible fee mint
+    //     uint256 claimableA = (ownedLP * reserveA) / lpTotalSupply;
+    //     uint256 claimableB = (ownedLP * reserveB) / lpTotalSupply;
 
-        // No-fee baseline using Camelot's sqrt-based math (same as test expectation)
-        uint256 tempA = 0;
-        uint256 tempB = 0;
-        if (reserveB != 0) tempA = (initialPositionA * initialPositionB * reserveA) / reserveB;
-        if (reserveA != 0) tempB = (initialPositionA * initialPositionB * reserveB) / reserveA;
-        uint256 noFeeA = CamMath.sqrt(tempA);
-        uint256 noFeeB = CamMath.sqrt(tempB);
+    //     // No-fee baseline using Camelot's sqrt-based math (same as test expectation)
+    //     uint256 tempA = 0;
+    //     uint256 tempB = 0;
+    //     if (reserveB != 0) tempA = (initialPositionA * initialPositionB * reserveA) / reserveB;
+    //     if (reserveA != 0) tempB = (initialPositionA * initialPositionB * reserveB) / reserveA;
+    //     uint256 noFeeA = CamMath.sqrt(tempA);
+    //     uint256 noFeeB = CamMath.sqrt(tempB);
 
-        calculatedFeeA = claimableA > noFeeA ? claimableA - noFeeA : 0;
-        calculatedFeeB = claimableB > noFeeB ? claimableB - noFeeB : 0;
-        return (calculatedFeeA, calculatedFeeB);
-    }
+    //     calculatedFeeA = claimableA > noFeeA ? claimableA - noFeeA : 0;
+    //     calculatedFeeB = claimableB > noFeeB ? claimableB - noFeeB : 0;
+    //     return (calculatedFeeA, calculatedFeeB);
+    // }
 }

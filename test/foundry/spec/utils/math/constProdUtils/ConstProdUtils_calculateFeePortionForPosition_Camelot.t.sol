@@ -42,19 +42,14 @@ contract ConstProdUtils_calculateFeePortionForPosition_Camelot is TestBase_Const
 
         assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
 
-        (uint256 ownerFeeShare, address feeTo) = camelotV2Factory.feeInfo();
-        bool feeOn = feeTo != address(0);
-        (uint256 expectedFeeA, uint256 expectedFeeB) = CamelotV2Utils._calculateFeePortionForPosition(
+        (, address feeTo) = camelotV2Factory.feeInfo();
+        (uint256 expectedFeeA, uint256 expectedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
             ownedLP,
             initialPositionA,
             initialPositionB,
             finalReserveA,
             finalReserveB,
-            finalTotalSupply,
-            camelotBalancedPair.kLast(),
-            ownerFeeShare,
-            100000, // Camelot FEE_DENOMINATOR
-            feeOn
+            finalTotalSupply
         );
 
         (uint256 calculatedFeeA, uint256 calculatedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
@@ -82,19 +77,14 @@ contract ConstProdUtils_calculateFeePortionForPosition_Camelot is TestBase_Const
 
         assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
 
-        (uint256 ownerFeeShare, address feeTo) = camelotV2Factory.feeInfo();
-        bool feeOn = feeTo != address(0);
-        (uint256 expectedFeeA, uint256 expectedFeeB) = CamelotV2Utils._calculateFeePortionForPosition(
+        (, address feeTo) = camelotV2Factory.feeInfo();
+        (uint256 expectedFeeA, uint256 expectedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
             ownedLP,
             initialPositionA,
             initialPositionB,
             finalReserveA,
             finalReserveB,
-            finalTotalSupply,
-            camelotUnbalancedPair.kLast(),
-            ownerFeeShare,
-            100000, // Camelot FEE_DENOMINATOR
-            feeOn
+            finalTotalSupply
         );
 
         (uint256 calculatedFeeA, uint256 calculatedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
@@ -122,19 +112,14 @@ contract ConstProdUtils_calculateFeePortionForPosition_Camelot is TestBase_Const
 
         assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
 
-        (uint256 ownerFeeShare, address feeTo) = camelotV2Factory.feeInfo();
-        bool feeOn = feeTo != address(0);
-        (uint256 expectedFeeA, uint256 expectedFeeB) = CamelotV2Utils._calculateFeePortionForPosition(
+        (, address feeTo) = camelotV2Factory.feeInfo();
+        (uint256 expectedFeeA, uint256 expectedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
             ownedLP,
             initialPositionA,
             initialPositionB,
             finalReserveA,
             finalReserveB,
-            finalTotalSupply,
-            camelotExtremeUnbalancedPair.kLast(),
-            ownerFeeShare,
-            100000, // Camelot FEE_DENOMINATOR
-            feeOn
+            finalTotalSupply
         );
 
         (uint256 calculatedFeeA, uint256 calculatedFeeB) = ConstProdUtils._calculateFeePortionForPosition(
