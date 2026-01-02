@@ -108,6 +108,9 @@ library AerodromService {
         );
     }
 
+    // Aerodrome fee denominator is 10000 (not 100000 like Uniswap V2)
+    uint256 constant AERO_FEE_DENOM = 10000;
+
     function _quoteSwapDepositSaleAmt(
         SwapDepositVolatileParams memory params
     ) internal view returns (uint256 saleAmt) {
@@ -117,7 +120,8 @@ library AerodromService {
         saleAmt = ConstProdUtils._swapDepositSaleAmt(
             params.amountIn,
             saleReserve,
-            params.factory.getFee(address(params.pool), false)
+            params.factory.getFee(address(params.pool), false),
+            AERO_FEE_DENOM
         );
     }
 
@@ -164,6 +168,8 @@ library AerodromService {
             deadline: params.deadline
         });
         uint256 swapAmountOut = AerodromService._swap(swapParams);
+        // Transfer the tokenOut portion from removeLiquidity to recipient
+        params.tokenOut.transfer(params.recipient, amountA);
         return amountA + swapAmountOut;
     }
 

@@ -71,23 +71,6 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         interfaces[1] = type(IDiamondCut).interfaceId;
     }
 
-    // function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
-    //     funcs = new bytes4[](1);
-    //     funcs[0] = IDiamondCut.diamondCut.selector;
-    // }
-
-    // function _MULTI_STEP_OWNABLE_FACETFuncs() internal view virtual returns (bytes4[] memory funcs) {
-    //     funcs = new bytes4[](8);
-    //     funcs[0] = IMultiStepOwnable.initiateOwnershipTransfer.selector;
-    //     funcs[1] = IMultiStepOwnable.confirmOwnershipTransfer.selector;
-    //     funcs[2] = IMultiStepOwnable.cancelPendingOwnershipTransfer.selector;
-    //     funcs[3] = IMultiStepOwnable.acceptOwnershipTransfer.selector;
-    //     funcs[4] = IMultiStepOwnable.owner.selector;
-    //     funcs[5] = IMultiStepOwnable.pendingOwner.selector;
-    //     funcs[6] = IMultiStepOwnable.preConfirmedOwner.selector;
-    //     funcs[7] = IMultiStepOwnable.getOwnershipTransferBuffer.selector;
-    // }
-
     function facetCuts() public view virtual override returns (IDiamond.FacetCut[] memory facetCuts_) {
         facetCuts_ = new IDiamond.FacetCut[](2);
         facetCuts_[0] = IDiamond.FacetCut({

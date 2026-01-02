@@ -1,0 +1,1948 @@
+Warning: `--ir-minimum` enables `viaIR` with minimum optimization, which can result in inaccurate source mappings.
+Only use this flag as a workaround if you are experiencing "stack too deep" errors.
+Note that `viaIR` is production ready since Solidity 0.8.13 and above.
+See more: https://github.com/foundry-rs/foundry/issues/3357
+Compiling 731 files with Solc 0.8.30
+Solc 0.8.30 finished in 1167.19s
+Compiler run successful with warnings:
+Warning (8760): This declaration has the same name as another declaration.
+  --> test/foundry/spec/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.t.sol:17:25:
+   |
+17 |     function initialize(uint32 pauseWindowDuration, address poolFeeManager) external {
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+Note: The other declaration is here:
+  --> test/foundry/spec/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.t.sol:33:5:
+   |
+33 |     function pauseWindowDuration() external view returns (uint32) {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+  --> test/foundry/spec/tokens/ERC721/ERC721Invariant.t.sol:14:27:
+   |
+14 |     function _deployToken(ERC721TargetStubHandler handler_) internal override returns (ERC721TargetStub token_) {
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_purchaseQuote_Aerodrome.t.sol:118:9:
+    |
+118 |         bool use5param
+    |         ^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_purchaseQuote_Aerodrome.t.sol:174:9:
+    |
+174 |         bool use5param
+    |         ^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome.t.sol:129:9:
+    |
+129 |         ERC20PermitMintableStub saleToken,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Camelot.t.sol:132:9:
+    |
+132 |         ERC20PermitMintableStub saleToken,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:125:9:
+    |
+125 |         ERC20PermitMintableStub saleToken,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:186:9:
+    |
+186 |         uint256 lpTotalSupply,
+    |         ^^^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:188:9:
+    |
+188 |         uint256 reserveSale,
+    |         ^^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:189:9:
+    |
+189 |         uint256 feePercent,
+    |         ^^^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:190:9:
+    |
+190 |         uint256 feeDenominator
+    |         ^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol:400:5:
+    |
+400 |     function _logPairCountMismatch(ValidationContext memory ctx) private view {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol:427:5:
+    |
+427 |     function _logMissingSelector(string memory subjectLabel, bytes4 selector) private view {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol:501:5:
+    |
+501 |     function _logPairCountMismatchHasValid(ValidationContext memory ctx) private view {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol:512:5:
+    |
+512 |     function _logFacetMismatchHasValid(string memory subjectLabel, PairValidationContext memory pCtx) private view {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol:522:5:
+    |
+522 |     function _logMissingSelectorHasValid(string memory subjectLabel, bytes4 selector) private view {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.sol:242:5:
+    |
+242 |     function processArgs(bytes memory pkgArgs) public view returns (bytes memory processedPkgArgs) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol:122:5:
+    |
+122 |     function decimals() external view returns (uint8) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/foundry/spec/access/operable/Operable.t.sol:280:5:
+    |
+280 |     function test_ownerIsNotAutomaticallyOperator() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/foundry/spec/utils/Creation.t.sol:165:5:
+    |
+165 |     function test_create2_differentSalts_differentAddresses() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/foundry/spec/utils/Creation.t.sol:176:5:
+    |
+176 |     function test_create2_sameSalt_sameAddress() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/foundry/spec/utils/Creation.t.sol:316:5:
+    |
+316 |     function testFuzz_create2_saltDeterminesAddress(bytes32 salt) public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteSwapDepositWithFee_Aerodrome.t.sol:170:5:
+    |
+170 |     function _computeQuoteIntermediates(
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Analysing contracts...
+Running tests...
+
+Ran 11 tests for test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet_IFacet.t.sol:BalancerV3ConstantProductPoolFacet_IFacet_Test
+[PASS] test_facetFuncs_containsComputeBalance() (gas: 14033)
+[PASS] test_facetFuncs_containsComputeInvariant() (gas: 13733)
+[PASS] test_facetFuncs_containsOnSwap() (gas: 13831)
+[PASS] test_facetFuncs_returnsNonEmptyArray() (gas: 13653)
+[PASS] test_facetInterfaces_containsIBalancerV3Pool() (gas: 10263)
+[PASS] test_facetInterfaces_returnsNonEmptyArray() (gas: 10275)
+[PASS] test_facetMetadata_functionsMatchFacetFuncs() (gas: 37164)
+[PASS] test_facetMetadata_interfacesMatchFacetInterfaces() (gas: 26130)
+[PASS] test_facetMetadata_returnsConsistentData() (gas: 39025)
+[PASS] test_facetName_returnsCorrectName() (gas: 13627)
+[PASS] test_implementsIFacet() (gas: 31622)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 15.92ms (10.06ms CPU time)
+
+Ran 3 tests for test/foundry/spec/tokens/ERC721/ERC721Facet_IFacet.t.sol:ERC721Facet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 806510)
+[PASS] test_IFacet_FacetInterfaces() (gas: 230550)
+[PASS] test_IFacet_facetName() (gas: 45675)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 16.64ms (11.91ms CPU time)
+
+Ran 1 test for test/foundry/spec/tokens/ERC20/ERC20DFPkg_IERC165.t.sol:ERC20DFPkg_IERC165_Test
+[PASS] test_IERC165_supportsInterface() (gas: 141003)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 49.71ms (14.71ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_withdrawQuote_Uniswap.t.sol:ConstProdUtils_withdrawQuote_Uniswap_Test
+[PASS] test_withdrawQuote_Uniswap_BalancedPool() (gas: 203471)
+[PASS] test_withdrawQuote_Uniswap_ExtremeUnbalancedPool() (gas: 203372)
+[PASS] test_withdrawQuote_Uniswap_UnbalancedPool() (gas: 203487)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 50.99ms (17.33ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_swapDepositSaleAmt_Uniswap.t.sol:ConstProdUtils_swapDepositSaleAmt_Uniswap
+[PASS] test_swapDepositSaleAmt_Uniswap_balancedPool() (gas: 588830)
+[PASS] test_swapDepositSaleAmt_Uniswap_extremeUnbalancedPool() (gas: 675035)
+[PASS] test_swapDepositSaleAmt_Uniswap_unbalancedPool() (gas: 677246)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 81.04ms (53.87ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_swapDepositSaleAmt_Camelot.t.sol:ConstProdUtils_swapDepositSaleAmt_Camelot
+[PASS] test_swapDepositSaleAmt_Camelot_balancedPool() (gas: 910599)
+[PASS] test_swapDepositSaleAmt_Camelot_extremeUnbalancedPool() (gas: 901924)
+[PASS] test_swapDepositSaleAmt_Camelot_unbalancedPool() (gas: 898034)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 97.46ms (72.52ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_swapDepositSaleAmt_Aerodrome.t.sol:ConstProdUtils_swapDepositSaleAmt_Aerodrome
+[PASS] test_swapDepositSaleAmt_Aerodrome_balancedPool() (gas: 721309)
+[PASS] test_swapDepositSaleAmt_Aerodrome_extremePool() (gas: 721467)
+[PASS] test_swapDepositSaleAmt_Aerodrome_unbalancedPool() (gas: 721782)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 104.70ms (49.59ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_calculateFeePortionForPosition_Aerodrome.t.sol:ConstProdUtils_calculateFeePortionForPosition_Aerodrome
+[PASS] test_calculateFeePortionForPosition_Aerodrome_balancedPool() (gas: 1078045)
+[PASS] test_calculateFeePortionForPosition_Aerodrome_extremeUnbalancedPool() (gas: 1074626)
+[PASS] test_calculateFeePortionForPosition_Aerodrome_unbalancedPool() (gas: 1071285)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 133.22ms (77.59ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_withdrawQuote_Aerodrome.t.sol:ConstProdUtils_withdrawQuote_Aerodrome
+[PASS] test_withdrawQuote_Aerodrome_balancedPool() (gas: 199317)
+[PASS] test_withdrawQuote_Aerodrome_extremePool() (gas: 198627)
+[PASS] test_withdrawQuote_Aerodrome_unbalancedPool() (gas: 198903)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 85.84ms (26.91ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_calculateFeePortionForPosition_Camelot.t.sol:ConstProdUtils_calculateFeePortionForPosition_Camelot
+[PASS] test_calculateFeePortionForPosition_Camelot_balancedPool() (gas: 856763)
+[PASS] test_calculateFeePortionForPosition_Camelot_extremeUnbalancedPool() (gas: 858892)
+[PASS] test_calculateFeePortionForPosition_Camelot_unbalancedPool() (gas: 855993)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 94.67ms (65.32ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_withdrawQuote_Camelot.t.sol:ConstProdUtils_withdrawQuote_Camelot_Test
+[PASS] test_withdrawQuote_Camelot_balancedPool() (gas: 324512)
+[PASS] test_withdrawQuote_Camelot_extremeUnbalancedPool() (gas: 320850)
+[PASS] test_withdrawQuote_Camelot_unbalancedPool() (gas: 323049)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 80.78ms (33.73ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_calculateFeePortionForPosition_Uniswap.t.sol:ConstProdUtils_calculateFeePortionForPosition_Uniswap
+[PASS] test_calculateFeePortionForPosition_Uniswap_balancedPool() (gas: 758586)
+[PASS] test_calculateFeePortionForPosition_Uniswap_extremeUnbalancedPool() (gas: 762674)
+[PASS] test_calculateFeePortionForPosition_Uniswap_unbalancedPool() (gas: 759844)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 72.96ms (51.10ms CPU time)
+
+Ran 2 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_depositQuote_Aerodrome.t.sol:ConstProdUtils_depositQuote_Aerodrome_Test
+[PASS] test_depositQuote_Aerodrome_First_Deposit_balancedPool() (gas: 477949)
+[PASS] test_depositQuote_Aerodrome_Second_Deposit_balancedPool() (gas: 578514)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 77.49ms (25.85ms CPU time)
+
+Ran 2 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_depositQuote_Camelot.t.sol:ConstProdUtils_depositQuote_Camelot_Test
+[PASS] test_depositQuote_Camelot_First_Deposit_balancedPool() (gas: 454074)
+[PASS] test_depositQuote_Camelot_Second_Deposit_balancedPool() (gas: 672717)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 46.65ms (25.47ms CPU time)
+
+Ran 2 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_depositQuote_Uniswap.t.sol:ConstProdUtils_depositQuote_Uniswap_Test
+[PASS] test_depositQuote_Uniswap_First_Deposit_balancedPool() (gas: 441157)
+[PASS] test_depositQuote_Uniswap_Second_Deposit_balancedPool() (gas: 540035)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 46.61ms (28.96ms CPU time)
+
+Ran 24 tests for test/foundry/spec/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.t.sol:BalancerV3BasePoolFactoryRepo_Test
+[PASS] testFuzz_addPool_anyAddress(address) (runs: 256, μ: 112591, ~: 112591)
+[PASS] testFuzz_initialize_anyDuration(uint32) (runs: 256, μ: 41064, ~: 41064)
+[PASS] testFuzz_initialize_anyManager(address) (runs: 256, μ: 34584, ~: 34584)
+[PASS] test_addPool_addsPoolToRegistry() (gas: 111019)
+[PASS] test_disable_setsDisabledTrue() (gas: 38171)
+[PASS] test_ensureEnabled_revertsWhenDisabled() (gas: 41222)
+[PASS] test_ensureEnabled_succeedsWhenEnabled() (gas: 9779)
+[PASS] test_getHooksContract_returnsZeroForUnknownPool() (gas: 12875)
+[PASS] test_getNewPoolPauseWindowEndTime_returnsEndTimeBeforeExpiry() (gas: 37491)
+[PASS] test_getNewPoolPauseWindowEndTime_returnsZeroAfterExpiry() (gas: 41212)
+[PASS] test_getPoolCount_returnsCorrectCount() (gas: 166953)
+[PASS] test_getPoolsInRange_returnsCorrectSubset() (gas: 314243)
+[PASS] test_getPools_returnsAllPools() (gas: 167158)
+[PASS] test_getTokenConfigs_returnsEmptyForUnknownPool() (gas: 14331)
+[PASS] test_initialize_revertsOnOverflow() (gas: 14730)
+[PASS] test_initialize_setsPauseWindowEndTime() (gas: 37428)
+[PASS] test_initialize_storesPauseWindowDuration() (gas: 36575)
+[PASS] test_initialize_storesPoolManager() (gas: 36779)
+[PASS] test_isDisabled_returnsFalseByDefault() (gas: 36646)
+[PASS] test_isPoolFromFactory_returnsFalseForUnregistered() (gas: 13132)
+[PASS] test_setHooksContract_storesContract() (gas: 72219)
+[PASS] test_setTokenConfigs_preservesTokenType() (gas: 182474)
+[PASS] test_setTokenConfigs_storesConfigs() (gas: 274253)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7596)
+Suite result: ok. 24 passed; 0 failed; 0 skipped; finished in 548.05ms (809.10ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/collections/sets/AddressSetRepo.t.sol:AddressSetRepoInvariantTest
+[PASS] invariant_indexOf_missing_returns_max() (runs: 50, calls: 250, reverts: 35)
+
+╭-----------------------+----------------+-------+---------+----------╮
+| Contract              | Selector       | Calls | Reverts | Discards |
++=====================================================================+
+| AddressSetRepoHandler | addAsc_seed    | 36    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_many       | 17    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_seed       | 25    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | quickSort      | 33    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | range          | 35    | 35      | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | removeAsc_seed | 31    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | remove_seed    | 30    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | sort           | 43    | 0       | 0        |
+╰-----------------------+----------------+-------+---------+----------╯
+
+[PASS] invariant_indexes_consistent() (runs: 50, calls: 250, reverts: 35)
+
+╭-----------------------+----------------+-------+---------+----------╮
+| Contract              | Selector       | Calls | Reverts | Discards |
++=====================================================================+
+| AddressSetRepoHandler | addAsc_seed    | 36    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_many       | 17    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_seed       | 25    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | quickSort      | 33    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | range          | 35    | 35      | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | removeAsc_seed | 31    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | remove_seed    | 30    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | sort           | 43    | 0       | 0        |
+╰-----------------------+----------------+-------+---------+----------╯
+
+[PASS] invariant_sorted_after_sort_ops() (runs: 50, calls: 250, reverts: 35)
+
+╭-----------------------+----------------+-------+---------+----------╮
+| Contract              | Selector       | Calls | Reverts | Discards |
++=====================================================================+
+| AddressSetRepoHandler | addAsc_seed    | 36    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_many       | 17    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | add_seed       | 25    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | quickSort      | 33    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | range          | 35    | 35      | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | removeAsc_seed | 31    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | remove_seed    | 30    | 0       | 0        |
+|-----------------------+----------------+-------+---------+----------|
+| AddressSetRepoHandler | sort           | 43    | 0       | 0        |
+╰-----------------------+----------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 660.41ms (1.11s CPU time)
+
+Ran 4 tests for test/foundry/spec/utils/Bytes32.t.sol:Bytes32Test
+[PASS] test_partions_extract_insert() (gas: 38605)
+[PASS] test_scramble_behavior() (gas: 3978)
+[PASS] test_toAddress_roundtrip() (gas: 1716)
+[PASS] test_toHexString_known() (gas: 95970)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 21.68ms (16.89ms CPU time)
+
+Ran 19 tests for test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol:DiamondCutTest
+[PASS] testFuzz_diamondCut_addFacet_randomSelector(bytes4) (runs: 257, μ: 201231, ~: 201231)
+[PASS] testFuzz_diamondCut_revertsForNonOwner(address) (runs: 257, μ: 35416, ~: 35416)
+[PASS] test_diamondCut_addFacet_emitsDiamondCutEvent() (gas: 258817)
+[PASS] test_diamondCut_addFacet_multipleFacets() (gas: 418477)
+[PASS] test_diamondCut_addFacet_registersSelectors() (gas: 260643)
+[PASS] test_diamondCut_addFacet_revertsOnDuplicateSelector() (gas: 264526)
+[PASS] test_diamondCut_batchOperations_addReplaceRemove() (gas: 507296)
+[PASS] test_diamondCut_emptyCuts_succeeds() (gas: 21594)
+[PASS] test_diamondCut_ownerCanCut() (gas: 256721)
+[PASS] test_diamondCut_removeFacet_revertsOnNonExistentSelector() (gas: 39322)
+[PASS] test_diamondCut_removeFacet_unregistersSelectors() (gas: 236872)
+[PASS] test_diamondCut_replaceFacet_revertsOnNonExistentSelector() (gas: 37974)
+[PASS] test_diamondCut_replaceFacet_revertsOnSameFacet() (gas: 273327)
+[PASS] test_diamondCut_replaceFacet_updatesSelectors() (gas: 376269)
+[PASS] test_diamondCut_revertsWhenNotOwner() (gas: 33545)
+[PASS] test_diamondCut_withInit_executesInitFunction() (gas: 288202)
+[PASS] test_diamondCut_withInit_revertsOnInitRevert() (gas: 254061)
+[PASS] test_diamondCut_withoutInit_noInitCalldataNoTarget() (gas: 256253)
+[PASS] test_diamondCut_zeroAddressFacet_skipped() (gas: 35558)
+Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 705.54ms (968.03ms CPU time)
+
+Ran 24 tests for test/foundry/spec/tokens/ERC20/ERC20Target_EdgeCases.t.sol:ERC20Target_EdgeCases
+[PASS] testFuzz_approve_anyAmount_succeeds(uint256) (runs: 256, μ: 46971, ~: 47593)
+[PASS] testFuzz_transfer_anyValidAmount_succeeds(uint256) (runs: 256, μ: 62554, ~: 62560)
+[PASS] testFuzz_transfer_preservesTotalSupply(uint256) (runs: 256, μ: 61415, ~: 61421)
+[PASS] test_allowance_notSet_returnsZero() (gas: 16595)
+[PASS] test_approve_emitsEvent() (gas: 45450)
+[PASS] test_approve_maxUint256_succeeds() (gas: 47365)
+[PASS] test_approve_overwriteExisting_succeeds() (gas: 59435)
+[PASS] test_approve_zeroAddressSpender_reverts() (gas: 15799)
+[PASS] test_approve_zeroAmount_succeeds() (gas: 28119)
+[PASS] test_balanceOf_nonExistentAccount_returnsZero() (gas: 18078)
+[PASS] test_multipleApprovals_independent() (gas: 84982)
+[PASS] test_multipleTransfers_balancesCorrect() (gas: 108172)
+[PASS] test_totalSupply_matchesInitial() (gas: 10733)
+[PASS] test_transferFrom_emitsEvent() (gas: 83488)
+[PASS] test_transferFrom_insufficientBalance_reverts() (gas: 52058)
+[PASS] test_transferFrom_toZeroAddress_reverts() (gas: 55223)
+[PASS] test_transferFrom_withAllowance_succeeds() (gas: 88403)
+[PASS] test_transferFrom_zeroAmount_succeeds() (gas: 27986)
+[PASS] test_transfer_emitsEvent() (gas: 52948)
+[PASS] test_transfer_fullBalance_succeeds() (gas: 53513)
+[PASS] test_transfer_insufficientBalance_reverts() (gas: 22047)
+[PASS] test_transfer_toSelf_succeeds() (gas: 31147)
+[PASS] test_transfer_toZeroAddress_reverts() (gas: 23237)
+[PASS] test_transfer_zeroAmount_succeeds() (gas: 35671)
+Suite result: ok. 24 passed; 0 failed; 0 skipped; finished in 716.70ms (1.17s CPU time)
+
+Ran 3 tests for test/foundry/spec/introspection/ERC2535/DiamondCutFacet_IFacet.t.sol:DiamondCutFacet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 231106)
+[PASS] test_IFacet_FacetInterfaces() (gas: 296690)
+[PASS] test_IFacet_facetName() (gas: 45606)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 18.70ms (13.95ms CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_purchaseQuote_Aerodrome.t.sol:ConstProdUtils_purchaseQuote_Aerodrome
+[PASS] test_purchaseQuote_aerodrome_AtoB_balanced_4param() (gas: 1655337)
+[PASS] test_purchaseQuote_aerodrome_AtoB_balanced_5param() (gas: 1655568)
+[PASS] test_purchaseQuote_aerodrome_AtoB_extreme_4param() (gas: 1656139)
+[PASS] test_purchaseQuote_aerodrome_AtoB_extreme_5param() (gas: 1656185)
+[PASS] test_purchaseQuote_aerodrome_AtoB_unbalanced_4param() (gas: 1655403)
+[PASS] test_purchaseQuote_aerodrome_AtoB_unbalanced_5param() (gas: 1656116)
+[PASS] test_purchaseQuote_aerodrome_BtoA_balanced_4param() (gas: 1656424)
+[PASS] test_purchaseQuote_aerodrome_BtoA_balanced_5param() (gas: 1655735)
+[PASS] test_purchaseQuote_aerodrome_BtoA_extreme_4param() (gas: 1656171)
+[PASS] test_purchaseQuote_aerodrome_BtoA_extreme_5param() (gas: 1656402)
+[PASS] test_purchaseQuote_aerodrome_BtoA_unbalanced_4param() (gas: 1655711)
+[PASS] test_purchaseQuote_aerodrome_BtoA_unbalanced_5param() (gas: 1656563)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 449.20ms (398.80ms CPU time)
+
+Ran 10 tests for test/foundry/spec/protocols/dexes/balancer/v3/utils/BalancerV38020WeightedPoolMath.t.sol:BalancerV38020WeightedPoolMath_Test
+[PASS] test_calcBptOutGivenProportionalIn_Initial_Deposit() (gas: 726833)
+[PASS] test_calcBptOutGivenProportionalIn_Second_Deposit() (gas: 1019939)
+[PASS] test_calcBptOutGivenSingleIn() (gas: 1315128)
+[PASS] test_calcEquivalentProportionalGivenSingle() (gas: 1005923)
+[PASS] test_calcProportionalAmountsOutGivenBptIn() (gas: 970003)
+[PASS] test_calcSingleOutGivenBptIn() (gas: 997093)
+[PASS] test_deltaToken0_after_unbalanced_add() (gas: 1152051)
+[PASS] test_deltaToken1_after_unbalanced_add() (gas: 1153642)
+[PASS] test_price_and_delta_helpers_synthetic() (gas: 19099)
+[PASS] test_virtualPrice_after_unbalanced_add() (gas: 1146928)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 912.91ms (434.20ms CPU time)
+
+Ran 7 tests for test/foundry/spec/protocols/dexes/aerodrome/v1/aware/AerodromeRouterAwareRepo.t.sol:AerodromeRouterAwareRepo_Test
+[PASS] testFuzz_initialize_anyAddress(address) (runs: 256, μ: 36891, ~: 36891)
+[PASS] test_aerodromeRouter_returnsZeroBeforeInit() (gas: 10615)
+[PASS] test_initializeWithSlot_storesAtCustomSlot() (gas: 40967)
+[PASS] test_initialize_canOverwrite() (gas: 36365)
+[PASS] test_initialize_storesRouter() (gas: 35663)
+[PASS] test_slotIsolation_differentSlotsAreIndependent() (gas: 61437)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7228)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 1.01s (1.02s CPU time)
+
+Ran 3 tests for test/foundry/spec/tokens/ERC20/ERC20Facet_IFacet.sol:ERC20Facet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 806161)
+[PASS] test_IFacet_FacetInterfaces() (gas: 363326)
+[PASS] test_IFacet_facetName() (gas: 45671)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 15.81ms (11.40ms CPU time)
+
+Ran 3 tests for test/foundry/spec/introspection/ERC165/ERC165Facet_IFacet.t.sol:ERC165Facet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 231106)
+[PASS] test_IFacet_FacetInterfaces() (gas: 230504)
+[PASS] test_IFacet_facetName() (gas: 45579)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 10.54ms (6.34ms CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_purchaseQuote_Camelot.t.sol:ConstProdUtils_purchaseQuote_Camelot
+[PASS] test_purchaseQuote_Camelot_balancedPool_5param_purchasesTokenA() (gas: 592113)
+[PASS] test_purchaseQuote_Camelot_balancedPool_5param_purchasesTokenB() (gas: 590446)
+[PASS] test_purchaseQuote_Camelot_balancedPool_purchasesTokenA() (gas: 592661)
+[PASS] test_purchaseQuote_Camelot_balancedPool_purchasesTokenB() (gas: 590264)
+[PASS] test_purchaseQuote_Camelot_extremeUnbalancedPool_5param_purchasesTokenA() (gas: 590671)
+[PASS] test_purchaseQuote_Camelot_extremeUnbalancedPool_5param_purchasesTokenB() (gas: 588866)
+[PASS] test_purchaseQuote_Camelot_extremeUnbalancedPool_purchasesTokenA() (gas: 590644)
+[PASS] test_purchaseQuote_Camelot_extremeUnbalancedPool_purchasesTokenB() (gas: 589098)
+[PASS] test_purchaseQuote_Camelot_unbalancedPool_5param_purchasesTokenA() (gas: 591874)
+[PASS] test_purchaseQuote_Camelot_unbalancedPool_5param_purchasesTokenB() (gas: 589885)
+[PASS] test_purchaseQuote_Camelot_unbalancedPool_purchasesTokenA() (gas: 592192)
+[PASS] test_purchaseQuote_Camelot_unbalancedPool_purchasesTokenB() (gas: 589887)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 179.34ms (159.33ms CPU time)
+
+Ran 30 tests for test/foundry/spec/utils/collections/BetterArrays.t.sol:BetterArraysTest
+[PASS] testFuzz_lowerBound_findsCorrectPosition(uint256[5],uint256) (runs: 256, μ: 20941, ~: 20991)
+[PASS] testFuzz_sort_uint256_isSorted(uint256[5]) (runs: 256, μ: 20538, ~: 20310)
+[PASS] testFuzz_toLength_expandsCorrectly(uint8,uint8) (runs: 256, μ: 34553, ~: 18322)
+[PASS] testFuzz_unsafeMemoryAccess_uint256(uint256[10],uint8) (runs: 256, μ: 15584, ~: 16310)
+[PASS] test_bounds_memory() (gas: 13306)
+[PASS] test_bounds_memory_emptyArray() (gas: 2771)
+[PASS] test_bounds_memory_singleElement() (gas: 9596)
+[PASS] test_isValidIndex_revert(uint256,uint256) (runs: 256, μ: 704624, ~: 704624)
+[PASS] test_isValidIndex_valid(uint256,uint256) (runs: 256, μ: 2110, ~: 2110)
+[PASS] test_isValidIndex_zeroLength_reverts() (gas: 703430)
+[PASS] test_sort_address_sortsAscending() (gas: 10810)
+[PASS] test_sort_bytes32_sortsAscending() (gas: 9703)
+[PASS] test_sort_emptyArray_returnsEmpty() (gas: 2501)
+[PASS] test_sort_singleElement_returnsSame() (gas: 3410)
+[PASS] test_sort_uint256_sortsAscending() (gas: 13768)
+[PASS] test_sort_uint256_withComparator_sortsDescending() (gas: 13665)
+[PASS] test_toLength_dynamic() (gas: 6886)
+[PASS] test_toLength_dynamic_revert_smallerLength() (gas: 711547)
+[PASS] test_toLength_dynamic_sameLength() (gas: 7634)
+[PASS] test_toLength_fixed1000_success() (gas: 2893559)
+[PASS] test_toLength_fixed100_revert() (gas: 808408)
+[PASS] test_toLength_fixed100_success() (gas: 930973)
+[PASS] test_toLength_fixed10_revert() (gas: 715983)
+[PASS] test_toLength_fixed10_success() (gas: 726923)
+[PASS] test_toLength_fixed5() (gas: 9316)
+[PASS] test_unsafeMemoryAccess() (gas: 3158)
+[PASS] test_unsafeMemoryAccess_address() (gas: 2889)
+[PASS] test_unsafeMemoryAccess_bytes() (gas: 11351)
+[PASS] test_unsafeMemoryAccess_string() (gas: 12236)
+[PASS] test_unsafeMemoryAccess_uint256() (gas: 2570)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 1.21s (1.97s CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_purchaseQuote_Uniswap.t.sol:ConstProdUtils_purchaseQuote_Uniswap
+[PASS] test_purchaseQuote_Uniswap_balancedPool_5param_purchasesTokenA() (gas: 545051)
+[PASS] test_purchaseQuote_Uniswap_balancedPool_5param_purchasesTokenB() (gas: 542076)
+[PASS] test_purchaseQuote_Uniswap_balancedPool_purchasesTokenA() (gas: 545189)
+[PASS] test_purchaseQuote_Uniswap_balancedPool_purchasesTokenB() (gas: 542622)
+[PASS] test_purchaseQuote_Uniswap_extremeUnbalancedPool_5param_purchasesTokenA() (gas: 545630)
+[PASS] test_purchaseQuote_Uniswap_extremeUnbalancedPool_5param_purchasesTokenB() (gas: 542962)
+[PASS] test_purchaseQuote_Uniswap_extremeUnbalancedPool_purchasesTokenA() (gas: 545768)
+[PASS] test_purchaseQuote_Uniswap_extremeUnbalancedPool_purchasesTokenB() (gas: 543026)
+[PASS] test_purchaseQuote_Uniswap_unbalancedPool_5param_purchasesTokenA() (gas: 546810)
+[PASS] test_purchaseQuote_Uniswap_unbalancedPool_5param_purchasesTokenB() (gas: 544257)
+[PASS] test_purchaseQuote_Uniswap_unbalancedPool_purchasesTokenA() (gas: 546603)
+[PASS] test_purchaseQuote_Uniswap_unbalancedPool_purchasesTokenB() (gas: 544114)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 195.34ms (171.82ms CPU time)
+
+Ran 30 tests for test/foundry/spec/factories/create3/Create3Factory.t.sol:Create3Factory_Test
+[PASS] testFuzz_create3_differentSalts_differentAddresses(bytes32,bytes32) (runs: 256, μ: 1110648, ~: 1110648)
+[PASS] testFuzz_registerFacet_anyName(string) (runs: 256, μ: 733755, ~: 689800)
+[PASS] test_allFacets_returnsEmpty_initially() (gas: 10953)
+[PASS] test_allPackages_returnsEmpty_initially() (gas: 11459)
+[PASS] test_constructor_ownerCanCall() (gas: 12576)
+[PASS] test_constructor_setsOwner() (gas: 12359)
+[PASS] test_create3_asNonAuthorized_reverts() (gas: 30193)
+[PASS] test_create3_asOperator_deploysContract() (gas: 564807)
+[PASS] test_create3_asOwner_deploysContract() (gas: 605985)
+[PASS] test_create3_existingContract_returnsExisting() (gas: 573306)
+[PASS] test_deployFacetWithArgs_deploysAndRegisters() (gas: 905223)
+[PASS] test_deployFacet_asNonAuthorized_reverts() (gas: 28931)
+[PASS] test_deployFacet_deploysAndRegisters() (gas: 748208)
+[PASS] test_deployFacet_storesFacetName() (gas: 749290)
+[PASS] test_deployPackageWithArgs_deploysAndRegisters() (gas: 1418317)
+[PASS] test_deployPackage_asNonAuthorized_reverts() (gas: 32053)
+[PASS] test_deployPackage_deploysAndRegisters() (gas: 1265775)
+[PASS] test_facetsOfName_returnsMatchingFacets() (gas: 1308964)
+[PASS] test_packagesByInterface_returnsMatchingPackages() (gas: 1358050)
+[PASS] test_packagesByName_returnsMatchingPackages() (gas: 2341603)
+[PASS] test_registerFacet_asNonAuthorized_reverts() (gas: 517795)
+[PASS] test_registerFacet_indexesByFunction() (gas: 841817)
+[PASS] test_registerFacet_indexesByInterface() (gas: 842037)
+[PASS] test_registerFacet_manualRegistration() (gas: 1070183)
+[PASS] test_registerPackage_asNonAuthorized_reverts() (gas: 1035672)
+[PASS] test_registerPackage_indexesByFacet() (gas: 1851546)
+[PASS] test_registerPackage_manualRegistration() (gas: 1359926)
+[PASS] test_setDiamondPackageFactory_asNonOwner_reverts() (gas: 21211)
+[PASS] test_setDiamondPackageFactory_asOperator_reverts() (gas: 21004)
+[PASS] test_setDiamondPackageFactory_asOwner_succeeds() (gas: 46226)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 1.27s (1.25s CPU time)
+
+Ran 19 tests for test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.t.sol:BalancerV3ConstantProductPoolTarget_Test
+[PASS] testFuzz_computeBalance_positiveRatio_returnsPositive(uint256,uint256,uint256) (runs: 256, μ: 35887, ~: 36780)
+[PASS] testFuzz_computeInvariant_anyBalances_returnsPositive(uint256,uint256) (runs: 257, μ: 29732, ~: 30162)
+[PASS] testFuzz_computeInvariant_linearScaling(uint256,uint256) (runs: 257, μ: 47922, ~: 48120)
+[PASS] testFuzz_onSwap_exactIn_outputLessThanInput(uint256,uint256,uint256) (runs: 257, μ: 27665, ~: 28222)
+[PASS] testFuzz_onSwap_exactOut_inputGreaterThanOutput(uint256,uint256,uint256) (runs: 257, μ: 28291, ~: 28828)
+[PASS] test_computeBalance_invariantRatioDouble_increasesBalance() (gas: 21755)
+[PASS] test_computeBalance_invariantRatioOne_returnsSameBalance() (gas: 26024)
+[PASS] test_computeBalance_tokenIndex0_usesOtherBalance() (gas: 37236)
+[PASS] test_computeInvariant_balancedPool_returnsCorrectValue() (gas: 20172)
+[PASS] test_computeInvariant_roundDown_lessOrEqualRoundUp() (gas: 31565)
+[PASS] test_computeInvariant_singleToken_returnsScaledValue() (gas: 17647)
+[PASS] test_computeInvariant_unbalancedPool_returnsCorrectValue() (gas: 20244)
+[PASS] test_computeInvariant_zeroBalance_returnsZero() (gas: 13399)
+[PASS] test_onSwap_exactIn_invariantPreserved() (gas: 45380)
+[PASS] test_onSwap_exactIn_largeAmount_significantOutput() (gas: 14974)
+[PASS] test_onSwap_exactIn_returnsCorrectOutput() (gas: 14249)
+[PASS] test_onSwap_exactIn_reverseDirection() (gas: 14405)
+[PASS] test_onSwap_exactIn_smallAmount_noRevert() (gas: 13829)
+[PASS] test_onSwap_exactOut_returnsCorrectInput() (gas: 14303)
+Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 1.48s (2.03s CPU time)
+
+Ran 2 tests for test/foundry/spec/introspection/ERC165/Behavior_IERC165_Behavior_Test.sol:Behavior_IERC165_Behavior_Test
+[PASS] test_IERC165_supportsInterface_full() (gas: 261826)
+[PASS] test_IERC165_supportsInterface_missing() (gas: 357954)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 17.13ms (10.52ms CPU time)
+
+Ran 7 tests for test/foundry/spec/factories/create3/Create3FactoryAwareRepo.t.sol:Create3FactoryAwareRepo_Test
+[PASS] testFuzz_initialize_anyAddress(address) (runs: 256, μ: 36871, ~: 36871)
+[PASS] test_create3Factory_returnsZeroBeforeInit() (gas: 10273)
+[PASS] test_initializeWithSlot_storesAtCustomSlot() (gas: 40921)
+[PASS] test_initialize_canOverwrite() (gas: 36368)
+[PASS] test_initialize_storesFactory() (gas: 35367)
+[PASS] test_slotIsolation_differentSlotsAreIndependent() (gas: 61546)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7297)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 170.54ms (166.26ms CPU time)
+
+Ran 6 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteSwapDepositWithFee_Aerodrome.t.sol:ConstProdUtils_quoteSwapDepositWithFee_Aerodrome
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_balancedPool_swapsTokenA() (gas: 808435)
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_balancedPool_swapsTokenB() (gas: 810561)
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_extremeUnbalancedPool_swapsTokenA() (gas: 830845)
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_extremeUnbalancedPool_swapsTokenB() (gas: 830099)
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_unbalancedPool_swapsTokenA() (gas: 808954)
+[PASS] test_quoteSwapDepositWithFee_Aerodrome_unbalancedPool_swapsTokenB() (gas: 809252)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 231.98ms (180.94ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/collections/sets/Bytes32SetRepo.t.sol:Bytes32SetRepoInvariantTest
+[PASS] invariant_indexOf_missing_returns_max() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| Bytes32SetRepoHandler | add_many    | 58    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_many | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_indexes_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| Bytes32SetRepoHandler | add_many    | 58    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_many | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_sorted_after_sort_ops() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| Bytes32SetRepoHandler | add_many    | 58    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_many | 66    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| Bytes32SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 868.16ms (1.47s CPU time)
+
+Ran 6 tests for test/foundry/spec/utils/Bytes4.t.sol:Bytes4Test
+[PASS] test_append_arrays() (gas: 12170)
+[PASS] test_append_value() (gas: 6154)
+[PASS] test_toHexString() (gas: 48890)
+[PASS] test_toString_behavior() (gas: 11693)
+[PASS] test_xor_array() (gas: 10146)
+[PASS] test_xor_pair() (gas: 2876)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 15.31ms (10.97ms CPU time)
+
+Ran 20 tests for test/foundry/spec/utils/cryptography/EIP712Repo.t.sol:EIP712Repo_Test
+[PASS] testFuzz_domainSeparatorV4_chainIdAffectsSeparator(uint64) (runs: 256, μ: 29940, ~: 29940)
+[PASS] testFuzz_hashTypedDataV4_structHashAffectsResult(bytes32) (runs: 256, μ: 16150, ~: 16150)
+[PASS] testFuzz_initialize_anyNameVersion(string,string) (runs: 256, μ: 1212453, ~: 1209587)
+[FAIL: Should return to cached value on original chain: 0xf2002c0f7abf0510dbfd2af611f4cee49565ec84cc00ca58c06b35d656a863c2 != 0x759d4410dfc2e99508e8ab9c7683b6181a3daa2d7f65a7a5b244a75e66af1281] test_domainSeparatorV4_chainIdChangeBack_usesCachedAgain() (gas: 36242)
+[PASS] test_domainSeparatorV4_chainIdChange_rebuildsSeperator() (gas: 31727)
+[PASS] test_domainSeparatorV4_differentContracts_differentSeparators() (gas: 1135372)
+[PASS] test_domainSeparatorV4_differentNames_differentSeparators() (gas: 1134981)
+[PASS] test_domainSeparatorV4_differentVersions_differentSeparators() (gas: 1134846)
+[PASS] test_domainSeparatorV4_includesCorrectComponents() (gas: 17756)
+[PASS] test_domainSeparatorV4_multipleChainIds() (gas: 41699)
+[PASS] test_domainSeparatorV4_returnsCachedValue() (gas: 18550)
+[PASS] test_hashTypedDataV4_canBeUsedForSignatureVerification() (gas: 31235)
+[PASS] test_hashTypedDataV4_chainIdChange_invalidatesSignature() (gas: 46647)
+[PASS] test_hashTypedDataV4_differentStructHashes_differentResults() (gas: 20613)
+[PASS] test_hashTypedDataV4_matchesManualComputation() (gas: 20673)
+[PASS] test_hashTypedDataV4_producesConsistentHash() (gas: 19828)
+[PASS] test_initialize_computesDomainSeparator() (gas: 20896)
+[PASS] test_initialize_longName_works() (gas: 1216631)
+[PASS] test_initialize_longVersion_works() (gas: 1193573)
+[PASS] test_initialize_storesNameAndVersion() (gas: 28428)
+Suite result: FAILED. 19 passed; 1 failed; 0 skipped; finished in 828.62ms (807.56ms CPU time)
+
+Ran 13 tests for test/foundry/spec/introspection/ERC8109/Behavior_IERC8109Introspection_Test.sol:Behavior_IERC8109Introspection_Test
+[PASS] test_Behavior_IERC8109Introspection_areValid_facetAddress() (gas: 434100)
+[PASS] test_Behavior_IERC8109Introspection_areValid_functionFacetPairs() (gas: 447859)
+[PASS] test_Behavior_IERC8109Introspection_areValid_mismatch() (gas: 484359)
+[PASS] test_Behavior_IERC8109Introspection_empty() (gas: 350895)
+[PASS] test_Behavior_IERC8109Introspection_invalid_extraPair() (gas: 834758)
+[PASS] test_Behavior_IERC8109Introspection_invalid_inconsistent() (gas: 934170)
+[PASS] test_Behavior_IERC8109Introspection_invalid_missingPair() (gas: 761266)
+[PASS] test_Behavior_IERC8109Introspection_invalid_wrongFacet() (gas: 915937)
+[PASS] test_Behavior_IERC8109Introspection_singlePair() (gas: 617589)
+[PASS] test_Behavior_IERC8109Introspection_unknownSelector() (gas: 396331)
+[PASS] test_Behavior_IERC8109Introspection_valid_facetAddress() (gas: 865438)
+[PASS] test_Behavior_IERC8109Introspection_valid_full() (gas: 934591)
+[PASS] test_Behavior_IERC8109Introspection_valid_functionFacetPairs() (gas: 778828)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 123.39ms (115.56ms CPU time)
+
+Ran 13 tests for test/foundry/spec/utils/BetterAddress.t.sol:BetterAddressTest
+[PASS] test_functionCallWithValue_transfersValue_and_returns() (gas: 828195)
+[PASS] test_functionCall_invokesTarget() (gas: 299130)
+[PASS] test_functionDelegateCall_returnsExpected() (gas: 813653)
+[PASS] test_functionStaticCall_readsView() (gas: 298234)
+[PASS] test_inplace_sort_unsortedLen() (gas: 34288)
+[PASS] test_isContract_true_and_false() (gas: 299429)
+[PASS] test_sendValue_transfersEther() (gas: 530943)
+[PASS] test_sort_returnsSortedArray() (gas: 20455)
+[PASS] test_toBytes32_and_toUint256_consistent() (gas: 2481)
+[PASS] test_toHexString_and_toString_are_nonEmpty() (gas: 81981)
+[PASS] test_toIERC20_and_toOZIERC20_preserveAddresses() (gas: 11843)
+[PASS] test_verifyCallResultFromTarget_revertsWhenFalseForNonZeroReturndata() (gas: 601559)
+[PASS] test_verifyCallResult_revertsWhenFalse() (gas: 305887)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 33.50ms (27.11ms CPU time)
+
+Ran 7 tests for test/foundry/spec/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.t.sol:DiamondPackageCallBackFactoryAwareRepo_Test
+[PASS] testFuzz_initialize_anyAddress(address) (runs: 256, μ: 36894, ~: 36894)
+[PASS] test_diamondPackageCallBackFactory_returnsZeroBeforeInit() (gas: 10595)
+[PASS] test_initializeWithSlot_storesAtCustomSlot() (gas: 40944)
+[PASS] test_initialize_canOverwrite() (gas: 36368)
+[PASS] test_initialize_storesFactory() (gas: 35413)
+[PASS] test_slotIsolation_differentSlotsAreIndependent() (gas: 61431)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7274)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 946.16ms (950.75ms CPU time)
+
+Ran 4 tests for test/foundry/spec/tokens/ERC721/ERC721Invariant.t.sol:ERC721Invariant_Test
+[PASS] invariant_balances_nonnegative() (runs: 50, calls: 250, reverts: 0)
+
+╭-------------------------+-------------------+-------+---------+----------╮
+| Contract                | Selector          | Calls | Reverts | Discards |
++==========================================================================+
+| ERC721TargetStubHandler | approve           | 37    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | burn              | 50    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | mint              | 58    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | setApprovalForAll | 55    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | transferFrom      | 50    | 0       | 0        |
+╰-------------------------+-------------------+-------+---------+----------╯
+
+[PASS] invariant_ghost_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭-------------------------+-------------------+-------+---------+----------╮
+| Contract                | Selector          | Calls | Reverts | Discards |
++==========================================================================+
+| ERC721TargetStubHandler | approve           | 37    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | burn              | 50    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | mint              | 58    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | setApprovalForAll | 55    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | transferFrom      | 50    | 0       | 0        |
+╰-------------------------+-------------------+-------+---------+----------╯
+
+[PASS] invariant_sumBalances_equals_supply() (runs: 50, calls: 250, reverts: 0)
+
+╭-------------------------+-------------------+-------+---------+----------╮
+| Contract                | Selector          | Calls | Reverts | Discards |
++==========================================================================+
+| ERC721TargetStubHandler | approve           | 37    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | burn              | 50    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | mint              | 58    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | setApprovalForAll | 55    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | transferFrom      | 50    | 0       | 0        |
+╰-------------------------+-------------------+-------+---------+----------╯
+
+[PASS] invariant_token_has_single_owner() (runs: 50, calls: 250, reverts: 0)
+
+╭-------------------------+-------------------+-------+---------+----------╮
+| Contract                | Selector          | Calls | Reverts | Discards |
++==========================================================================+
+| ERC721TargetStubHandler | approve           | 37    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | burn              | 50    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | mint              | 58    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | setApprovalForAll | 55    | 0       | 0        |
+|-------------------------+-------------------+-------+---------+----------|
+| ERC721TargetStubHandler | transferFrom      | 50    | 0       | 0        |
+╰-------------------------+-------------------+-------+---------+----------╯
+
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 1.67s (2.24s CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteSwapDepositWithFee_Camelot.t.sol:ConstProdUtils_quoteSwapDepositWithFee_Camelot
+[PASS] test_quoteSwapDepositWithFee_Camelot_balancedPool_swapsTokenA_feesDisabled() (gas: 851902)
+[PASS] test_quoteSwapDepositWithFee_Camelot_balancedPool_swapsTokenA_feesEnabled() (gas: 953519)
+[PASS] test_quoteSwapDepositWithFee_Camelot_balancedPool_swapsTokenB_feesDisabled() (gas: 854257)
+[PASS] test_quoteSwapDepositWithFee_Camelot_balancedPool_swapsTokenB_feesEnabled() (gas: 955529)
+[PASS] test_quoteSwapDepositWithFee_Camelot_extremeUnbalancedPool_swapsTokenA_feesDisabled() (gas: 846456)
+[PASS] test_quoteSwapDepositWithFee_Camelot_extremeUnbalancedPool_swapsTokenA_feesEnabled() (gas: 944924)
+[PASS] test_quoteSwapDepositWithFee_Camelot_extremeUnbalancedPool_swapsTokenB_feesDisabled() (gas: 869122)
+[PASS] test_quoteSwapDepositWithFee_Camelot_extremeUnbalancedPool_swapsTokenB_feesEnabled() (gas: 967107)
+[PASS] test_quoteSwapDepositWithFee_Camelot_unbalancedPool_swapsTokenA_feesDisabled() (gas: 850433)
+[PASS] test_quoteSwapDepositWithFee_Camelot_unbalancedPool_swapsTokenA_feesEnabled() (gas: 950939)
+[PASS] test_quoteSwapDepositWithFee_Camelot_unbalancedPool_swapsTokenB_feesDisabled() (gas: 874605)
+[PASS] test_quoteSwapDepositWithFee_Camelot_unbalancedPool_swapsTokenB_feesEnabled() (gas: 975410)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 299.52ms (278.00ms CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteSwapDepositWithFee_Uniswap.t.sol:ConstProdUtils_quoteSwapDepositWithFee_Uniswap
+[PASS] test_quoteSwapDepositWithFee_Uniswap_balancedPool_swapsTokenA_feesDisabled() (gas: 658451)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_balancedPool_swapsTokenA_feesEnabled() (gas: 924816)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_balancedPool_swapsTokenB_feesDisabled() (gas: 660812)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_balancedPool_swapsTokenB_feesEnabled() (gas: 927016)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_extremeUnbalancedPool_swapsTokenA_feesDisabled() (gas: 658601)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_extremeUnbalancedPool_swapsTokenA_feesEnabled() (gas: 924614)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_extremeUnbalancedPool_swapsTokenB_feesDisabled() (gas: 678681)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_extremeUnbalancedPool_swapsTokenB_feesEnabled() (gas: 925583)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_unbalancedPool_swapsTokenA_feesDisabled() (gas: 659965)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_unbalancedPool_swapsTokenA_feesEnabled() (gas: 926445)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_unbalancedPool_swapsTokenB_feesDisabled() (gas: 681850)
+[PASS] test_quoteSwapDepositWithFee_Uniswap_unbalancedPool_swapsTokenB_feesEnabled() (gas: 928177)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 258.54ms (223.53ms CPU time)
+
+Ran 11 tests for test/foundry/spec/tokens/ERC4626/ERC4626Permit_Integration.t.sol:ERC4626Permit_Integration_Test
+[PASS] testFuzz_deposit_withPermit_anyAmount(uint256) (runs: 256, μ: 232586, ~: 232586)
+[PASS] testFuzz_sharePermit_anyRecipient(address) (runs: 256, μ: 280642, ~: 280642)
+[PASS] test_assetPermit_chainIdChange_invalidates() (gas: 78415)
+[PASS] test_deposit_withPriorAssetPermit_succeeds() (gas: 240897)
+[PASS] test_deposit_withoutApproval_reverts() (gas: 38119)
+[PASS] test_fullRoundTrip_permitAsset_deposit_permitShares_transfer() (gas: 332636)
+[PASS] test_mint_withPriorAssetPermit_succeeds() (gas: 242335)
+[PASS] test_redeem_withoutApproval_reverts() (gas: 194173)
+[PASS] test_sharePermit_chainIdChange_invalidates() (gas: 243893)
+[PASS] test_sharePermit_enablesRedeem() (gas: 261912)
+[PASS] test_sharePermit_enablesShareTransfer() (gas: 286571)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 1.93s (2.92s CPU time)
+
+Ran 19 tests for test/foundry/spec/utils/Creation.t.sol:Creation_Test
+[PASS] testFuzz_create2AddressFromOf_deployerAffectsAddress(address,bytes32) (runs: 256, μ: 47566, ~: 47566)
+[PASS] testFuzz_create2_saltDeterminesAddress(bytes32) (runs: 256, μ: 47549, ~: 47549)
+[PASS] testFuzz_create3AddressFromOf_deployerAffectsAddress(address,bytes32) (runs: 256, μ: 15778, ~: 15778)
+[PASS] testFuzz_create3_saltDeterminesAddress(bytes32) (runs: 256, μ: 18087, ~: 18087)
+[PASS] test_create2AddressFromOf_differentDeployers_differentAddresses() (gas: 47831)
+[PASS] test_create2WithArgsAddressFromOf_matchesDeployment() (gas: 278365)
+[PASS] test_create2WithArgs_deploysWithConstructorArgs() (gas: 282017)
+[PASS] test_create2_deploysToPredicatedAddress() (gas: 160006)
+[PASS] test_create2_differentSalts_differentAddresses() (gas: 47637)
+[PASS] test_create2_emptyCode_deploysEmptyContract() (gas: 42242)
+[PASS] test_create2_sameSalt_sameAddress() (gas: 47554)
+[PASS] test_create3WithArgs_deploysWithConstructorArgs() (gas: 315788)
+[PASS] test_create3_addressIndependentOfInitCode() (gas: 24515)
+[PASS] test_create3_deployTwiceToSameSalt_reverts() (gas: 204925)
+[PASS] test_create3_deploysToPredicatedAddress() (gas: 200709)
+[PASS] test_create3_differentSalts_differentAddresses() (gas: 18376)
+[PASS] test_create_deploysContract() (gas: 152813)
+[PASS] test_create_emptyCode_deploysEmptyContract() (gas: 41620)
+[PASS] test_create_invalidCode_reverts() (gas: 1040431165)
+Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 713.28ms (707.66ms CPU time)
+
+Ran 2 tests for test/foundry/spec/test/stubs/counter/Counter.t.sol:CounterTest
+[PASS] testFuzz_SetNumber(uint256) (runs: 256, μ: 30294, ~: 30916)
+[PASS] test_Increment() (gas: 31009)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 2.22s (2.22s CPU time)
+
+Ran 15 tests for test/foundry/spec/introspection/ERC2535/IDiamondLoupe_Behavior_Test.sol:Behavior_IDiamondLoupe_Test
+[PASS] test_Behavior_IDiamondLoupe_areValid_facetAddresses_and_facetAddress() (gas: 1065245)
+[PASS] test_Behavior_IDiamondLoupe_areValid_facetFunctionSelectors() (gas: 1323642)
+[PASS] test_Behavior_IDiamondLoupe_areValid_facets() (gas: 2281122)
+[PASS] test_Behavior_IDiamondLoupe_expect_and_hasValid_IDiamondLoupe() (gas: 2418173)
+[PASS] test_Behavior_IDiamondLoupe_mismatch_facets() (gas: 1493492)
+[PASS] test_duplicate_addresses_in_actual() (gas: 1349278)
+[PASS] test_duplicate_addresses_in_expectations_revert() (gas: 5831804)
+[PASS] test_empty_facet_zero_selectors() (gas: 2014913)
+[PASS] test_extra_facets_present() (gas: 1817667)
+[PASS] test_facet_has_extra_selectors() (gas: 1373908)
+[PASS] test_facet_missing_selectors() (gas: 1256263)
+[PASS] test_missing_facets() (gas: 1484188)
+[PASS] test_selector_collision_between_facets() (gas: 1015899)
+[PASS] test_selector_to_facet_mismatch() (gas: 1063398)
+[PASS] test_unknown_selector_reports_zero() (gas: 1056432)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 109.81ms (101.78ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/collections/sets/Bytes4SetRepo.t.sol:Bytes4SetRepoInvariantTest
+[PASS] invariant_indexOf_missing_returns_max() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| Bytes4SetRepoHandler | add_many    | 58    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_many | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_indexes_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| Bytes4SetRepoHandler | add_many    | 58    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_many | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_sorted_after_sort_ops() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| Bytes4SetRepoHandler | add_many    | 58    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | add_seed    | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_many | 66    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| Bytes4SetRepoHandler | remove_seed | 60    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 902.87ms (1.52s CPU time)
+
+Ran 9 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome.t.sol:ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool() (gas: 773812)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_highPercentage_feesDisabled_extractTokenA() (gas: 773146)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_highPercentage_feesEnabled_extractTokenA() (gas: 2201677)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_lowPercentage_feesDisabled_extractTokenA() (gas: 772640)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_lowPercentage_feesEnabled_extractTokenA() (gas: 2201654)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_mediumPercentage_feesDisabled_extractTokenA() (gas: 772548)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_balancedPool_mediumPercentage_feesEnabled_extractTokenA() (gas: 2200895)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_extremeUnbalancedPool() (gas: 774223)
+[PASS] test_quoteWithdrawSwapWithFee_Aerodrome_unbalancedPool() (gas: 774216)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 398.83ms (340.44ms CPU time)
+
+Ran 18 tests for test/foundry/spec/factories/diamondPlg/IFacet_Behavior_Test.sol:Behavior_IFacet_Test
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_name_badFacet() (gas: 665726)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_name_badFacetComplex() (gas: 790910)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_name_goodFacet() (gas: 739009)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_badFacet() (gas: 670958)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_badFacetComplex() (gas: 796128)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_goodFacet() (gas: 745083)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_name_badFacet() (gas: 587379)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_name_badFacetComplex() (gas: 690533)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_name_goodFacet() (gas: 606054)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_subject_badFacet() (gas: 593010)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_subject_badFacetComplex() (gas: 696302)
+[PASS] test_Behavior_IFacet_areValid_IFacet_facetInterfaces_subject_goodFacet() (gas: 611601)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetFuncs_subject_badFacet() (gas: 833416)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetFuncs_subject_badFacetComplex() (gas: 958543)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetFuncs_subject_goodFacet() (gas: 906614)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetInterfaces_subject_badFacet() (gas: 705446)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetInterfaces_subject_badFacetComplex() (gas: 808595)
+[PASS] test_Behavior_IFacet_hasValid_IFacet_facetInterfaces_subject_goodFacet() (gas: 724737)
+Suite result: ok. 18 passed; 0 failed; 0 skipped; finished in 133.38ms (129.77ms CPU time)
+
+Ran 19 tests for test/foundry/spec/tokens/ERC20/ERC20Permit_Integration.t.sol:ERC20Permit_Integration_Test
+[PASS] testFuzz_permit_anySpender_works(address) (runs: 256, μ: 97581, ~: 97581)
+[PASS] testFuzz_permit_anyValidSignature_updatesAllowance(uint256,uint256) (runs: 256, μ: 100924, ~: 100924)
+[PASS] testFuzz_permit_chainIdChange_invalidates(uint64) (runs: 256, μ: 77191, ~: 77191)
+[PASS] test_DOMAIN_SEPARATOR_differentOnDifferentChain() (gas: 27841)
+[PASS] test_DOMAIN_SEPARATOR_matchesExpectedComputation() (gas: 17722)
+[PASS] test_nonces_startsAtZero() (gas: 21725)
+[PASS] test_permit_allowsSubsequentTransferFrom() (gas: 142074)
+[FAIL: ERC2612InvalidSigner(0xbB81C89069A221c0ae90717d59a5C52Efe310F5D, 0xe05fcC23807536bEe418f142D19fa0d21BB0cfF7)] test_permit_chainIdChangeBack_worksWithOriginalSignature() (gas: 115698)
+[PASS] test_permit_chainIdChange_invalidatesSignature() (gas: 75078)
+[PASS] test_permit_doubleUse_fails() (gas: 109438)
+[PASS] test_permit_expiredSignature_reverts() (gas: 39480)
+[PASS] test_permit_incrementsNonce() (gas: 99253)
+[PASS] test_permit_maxValue_works() (gas: 99361)
+[PASS] test_permit_multipleSpenders_independentNonces() (gas: 152149)
+[PASS] test_permit_overwritesExistingAllowance() (gas: 127046)
+[PASS] test_permit_replayAttack_fails() (gas: 120240)
+[PASS] test_permit_validSignature_updatesAllowance() (gas: 104502)
+[PASS] test_permit_wrongSigner_reverts() (gas: 68971)
+[PASS] test_permit_zeroValue_works() (gas: 79224)
+Suite result: FAILED. 18 passed; 1 failed; 0 skipped; finished in 1.69s (2.34s CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawSwapWithFee_Camelot.t.sol:ConstProdUtils_quoteWithdrawSwapWithFee_Camelot
+[PASS] test_quoteWithdrawSwapWithFee_Camelot_balancedPool_highPercentage_feesDisabled_extractTokenA() (gas: 716562)
+[PASS] test_quoteWithdrawSwapWithFee_Camelot_balancedPool_lowPercentage_feesDisabled_extractTokenA() (gas: 716838)
+[PASS] test_quoteWithdrawSwapWithFee_Camelot_balancedPool_mediumPercentage_feesDisabled_extractTokenA() (gas: 716927)
+[PASS] test_withdrawSwapQuote_Camelot_balancedPool() (gas: 781874)
+[PASS] test_withdrawSwapQuote_Camelot_extremeUnbalancedPool() (gas: 779071)
+[PASS] test_withdrawSwapQuote_Camelot_unbalancedPool() (gas: 782482)
+[PASS] test_withdrawSwapQuote_edgeCase_differentFees() (gas: 775788)
+[PASS] test_withdrawSwapQuote_edgeCase_largeLPAmount() (gas: 776193)
+[PASS] test_withdrawSwapQuote_edgeCase_maxLPAmount() (gas: 776507)
+[PASS] test_withdrawSwapQuote_edgeCase_midRangeLPAmount() (gas: 776387)
+[PASS] test_withdrawSwapQuote_edgeCase_smallLPAmount() (gas: 776139)
+[PASS] test_withdrawSwapQuote_edgeCase_verySmallReserves() (gas: 775972)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 259.62ms (239.72ms CPU time)
+
+Ran 12 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap.t.sol:ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_highPercentage_feesDisabled_extractTokenA() (gas: 637430)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_highPercentage_feesEnabled_extractTokenA() (gas: 1949943)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_lowPercentage_feesDisabled_extractTokenA() (gas: 637131)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_lowPercentage_feesEnabled_extractTokenA() (gas: 1949782)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_mediumPercentage_feesDisabled_extractTokenA() (gas: 637660)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balancedPool_mediumPercentage_feesEnabled_extractTokenA() (gas: 1949598)
+[PASS] test_withdrawSwapQuote_Uniswap_balancedPool() (gas: 618482)
+[PASS] test_withdrawSwapQuote_Uniswap_balancedPool_feesEnabled() (gas: 872546)
+[PASS] test_withdrawSwapQuote_Uniswap_extremeUnbalancedPool() (gas: 621806)
+[PASS] test_withdrawSwapQuote_Uniswap_extremeUnbalancedPool_feesEnabled() (gas: 868321)
+[PASS] test_withdrawSwapQuote_Uniswap_unbalancedPool() (gas: 623055)
+[PASS] test_withdrawSwapQuote_Uniswap_unbalancedPool_feesEnabled() (gas: 873945)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 376.31ms (352.55ms CPU time)
+
+Ran 39 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_EdgeCases.t.sol:ConstProdUtils_EdgeCases_Test
+[PASS] testFuzz_depositQuote_firstDeposit_alwaysPositive(uint256,uint256) (runs: 256, μ: 19269, ~: 19661)
+[PASS] testFuzz_purchaseQuote_validInputs_alwaysReturnsPositive(uint256,uint256,uint256,uint256) (runs: 256, μ: 21104, ~: 21495)
+[PASS] testFuzz_swapDepositSaleAmt_neverExceedsInput(uint256,uint256,uint256) (runs: 256, μ: 24636, ~: 24907)
+[PASS] test_depositQuote_firstDeposit_minimumLiquiditySubtracted() (gas: 8935)
+[PASS] test_depositQuote_firstDeposit_smallAmounts() (gas: 8223)
+[PASS] test_depositQuote_normalDeposit_equalRatios() (gas: 3430)
+[PASS] test_depositQuote_normalDeposit_ratioASmaller() (gas: 3273)
+[PASS] test_depositQuote_normalDeposit_ratioBSmaller() (gas: 2957)
+[PASS] test_depositQuote_normalDeposit_unbalancedPool() (gas: 3293)
+[PASS] test_purchaseQuote_exactCeilingDivision() (gas: 4034)
+[PASS] test_purchaseQuote_revertsOnExcessiveAmountOut() (gas: 13409)
+[PASS] test_purchaseQuote_revertsOnInsufficientReserveOut() (gas: 13869)
+[PASS] test_purchaseQuote_revertsOnZeroAmountOut() (gas: 12527)
+[PASS] test_purchaseQuote_revertsOnZeroReserveIn() (gas: 12705)
+[PASS] test_purchaseQuote_smallAmountOut() (gas: 3773)
+[PASS] test_purchaseQuote_zeroFee() (gas: 4504)
+[PASS] test_quoteSwapDepositWithFee_feePercentBoundary_exactly10() (gas: 18269)
+[PASS] test_quoteSwapDepositWithFee_feePercentBoundary_exactly11() (gas: 19674)
+[PASS] test_quoteSwapDepositWithFee_kLastZero() (gas: 19537)
+[PASS] test_quoteSwapDepositWithFee_protocolFeeDisabled() (gas: 19818)
+[PASS] test_quoteSwapDepositWithFee_protocolFeeEnabled() (gas: 198289)
+[PASS] test_quoteWithdrawWithFee_ownedExactlyEqualsSupply() (gas: 4415)
+[PASS] test_quoteWithdrawWithFee_ownedExceedsTotalSupply() (gas: 3145)
+[PASS] test_quoteWithdrawWithFee_zeroOwnedLP() (gas: 2704)
+[PASS] test_quoteWithdrawWithFee_zeroReserveA() (gas: 3420)
+[PASS] test_quoteWithdrawWithFee_zeroReserveB() (gas: 3994)
+[PASS] test_quoteWithdrawWithFee_zeroTotalSupply() (gas: 2817)
+[PASS] test_saleQuote_maxFee() (gas: 2611)
+[PASS] test_saleQuote_zeroAmountIn() (gas: 3280)
+[PASS] test_saleQuote_zeroFee() (gas: 2969)
+[PASS] test_sortReserves_knownTokenIsToken0() (gas: 2197)
+[PASS] test_sortReserves_knownTokenIsToken1() (gas: 2347)
+[PASS] test_sortReserves_withFees_knownTokenIsToken0() (gas: 4385)
+[PASS] test_sortReserves_withFees_knownTokenIsToken1() (gas: 4202)
+[PASS] test_swapDepositSaleAmt_cappedAtAmountIn() (gas: 11856)
+[PASS] test_swapDepositSaleAmt_fallbackBranch_verySmallDeposit() (gas: 12010)
+[PASS] test_swapDepositSaleAmt_lowFeeDenominator() (gas: 11027)
+[PASS] test_swapDepositSaleAmt_normalCase() (gas: 12920)
+[PASS] test_swapDepositSaleAmt_zeroFee() (gas: 12989)
+Suite result: ok. 39 passed; 0 failed; 0 skipped; finished in 700.25ms (991.58ms CPU time)
+
+Ran 34 tests for test/foundry/spec/tokens/ERC721/ERC721TargetStub.t.sol:ERC721TargetStub_Test
+[PASS] testFuzz_mintBurnMint_tokenIdsIncrement(uint8) (runs: 256, μ: 1171643, ~: 707166)
+[PASS] testFuzz_mint_anyAddress_succeeds(address) (runs: 256, μ: 142581, ~: 142581)
+[PASS] testFuzz_transfer_anyRecipient_succeeds(address) (runs: 256, μ: 157648, ~: 157648)
+[PASS] test_approve_emitsEvent() (gas: 171006)
+[PASS] test_approve_notOwner_reverts() (gas: 146829)
+[PASS] test_approve_setsApproval() (gas: 171060)
+[PASS] test_approve_toZeroAddress_reverts() (gas: 140636)
+[PASS] test_behavior_balanceOf() (gas: 341051)
+[PASS] test_behavior_ownerOf() (gas: 137136)
+[PASS] test_behavior_transfer() (gas: 175758)
+[PASS] test_burn_approvedBurns_succeeds() (gas: 146322)
+[PASS] test_burn_emitsEvent() (gas: 121388)
+[PASS] test_burn_nonexistentToken_reverts() (gas: 17863)
+[PASS] test_burn_notApproved_reverts() (gas: 149562)
+[PASS] test_burn_operatorBurns_succeeds() (gas: 148742)
+[PASS] test_burn_ownerBurns_succeeds() (gas: 125300)
+[PASS] test_mint_emitsTransferEvent() (gas: 139792)
+[PASS] test_mint_multiple_incrementsTokenId() (gas: 342068)
+[PASS] test_mint_toAddress_mintsToken() (gas: 140878)
+[PASS] test_mint_toZeroAddress_reverts() (gas: 12863)
+[PASS] test_safeTransferFrom_toEOA_succeeds() (gas: 161617)
+[PASS] test_setApprovalForAll_canRevoke() (gas: 44071)
+[PASS] test_setApprovalForAll_emitsEvent() (gas: 46289)
+[PASS] test_setApprovalForAll_setsApproval() (gas: 47347)
+[PASS] test_setApprovalForAll_toZeroAddress_reverts() (gas: 16119)
+[PASS] test_transferFrom_approvedTransfers_succeeds() (gas: 169550)
+[PASS] test_transferFrom_clearsApproval() (gas: 172332)
+[PASS] test_transferFrom_emitsEvent() (gas: 158603)
+[PASS] test_transferFrom_nonexistentToken_reverts() (gas: 21656)
+[PASS] test_transferFrom_notOwnerOrApproved_reverts() (gas: 153877)
+[PASS] test_transferFrom_operatorTransfers_succeeds() (gas: 191279)
+[PASS] test_transferFrom_ownerTransfers_succeeds() (gas: 166739)
+[PASS] test_transferFrom_toZeroAddress_reverts() (gas: 141383)
+[PASS] test_transferFrom_wrongFrom_reverts() (gas: 148032)
+Suite result: ok. 34 passed; 0 failed; 0 skipped; finished in 2.51s (2.13s CPU time)
+
+Ran 31 tests for test/foundry/spec/utils/BetterStrings.t.sol:BetterStringsTest
+[PASS] test__equal_false() (gas: 2543)
+[PASS] test__equal_true() (gas: 2622)
+[PASS] test__escapeJSON() (gas: 8947)
+[PASS] test__marshall_unmarshallAsString_roundtrip() (gas: 7227)
+[PASS] test__padLeft() (gas: 9218)
+[PASS] test__padRight() (gas: 8882)
+[PASS] test__parseAddress_range() (gas: 80072)
+[PASS] test__parseAddress_valid() (gas: 80260)
+[PASS] test__parseFixedPoint_standard() (gas: 17067)
+[PASS] test__parseFixedPoint_zeroDecimals() (gas: 11618)
+[PASS] test__parseHexUint_range() (gas: 21651)
+[PASS] test__parseHexUint_valid() (gas: 12736)
+[PASS] test__parseInt_range() (gas: 10344)
+[PASS] test__parseInt_valid() (gas: 9779)
+[PASS] test__parseSecondsToISO() (gas: 35392)
+[PASS] test__parseUint_range() (gas: 10528)
+[PASS] test__parseUint_valid() (gas: 11969)
+[PASS] test__toChecksumHexString_address() (gas: 90057)
+[PASS] test__toHexString_address() (gas: 42305)
+[PASS] test__toHexString_uint() (gas: 16366)
+[PASS] test__toHexString_uint_len() (gas: 12850)
+[PASS] test__toStringSigned_int() (gas: 11862)
+[PASS] test__toString_uint() (gas: 11972)
+[PASS] test__tryParseAddress_invalid() (gas: 3664)
+[PASS] test__tryParseAddress_range_invalid() (gas: 3989)
+[PASS] test__tryParseHexUint_invalid() (gas: 5136)
+[PASS] test__tryParseHexUint_range_invalid() (gas: 5672)
+[PASS] test__tryParseInt_invalid() (gas: 5352)
+[PASS] test__tryParseInt_range_invalid() (gas: 5387)
+[PASS] test__tryParseUint_invalid() (gas: 7793)
+[PASS] test__tryParseUint_range_invalid() (gas: 2450)
+Suite result: ok. 31 passed; 0 failed; 0 skipped; finished in 93.77ms (85.00ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawWithFee_Aerodrome.t.sol:ConstProdUtils_quoteWithdrawWithFee_Aerodrome
+[PASS] test_quoteWithdrawWithFee_Aerodrome_balanced_simple() (gas: 1105559)
+[PASS] test_quoteWithdrawWithFee_Aerodrome_extreme_unbalanced_simple() (gas: 1106177)
+[PASS] test_quoteWithdrawWithFee_Aerodrome_unbalanced_simple() (gas: 1106791)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 154.39ms (110.03ms CPU time)
+
+Ran 14 tests for test/foundry/spec/utils/Bytecode.t.sol:BytecodeTest
+[PASS] testCreate_deploysSimpleContract() (gas: 112335)
+[PASS] test_calcInitCodeHash_returnsKeccak() (gas: 1584)
+[PASS] test_codeAt_endLessThanStart_reverts() (gas: 356854)
+[PASS] test_codeAt_endOutside_truncatesToAvailable() (gas: 116957)
+[PASS] test_codeAt_startOutside_reverts() (gas: 357084)
+[PASS] test_codeSizeAndCodeAt_range() (gas: 115187)
+[PASS] test_create2AddressFromOf_matchesManual() (gas: 4582)
+[PASS] test_create2WithArgsAddressDerivation_matchesManual() (gas: 7075)
+[PASS] test_create2WithArgs_deploysToDeterministicAddress() (gas: 114154)
+[PASS] test_create3AddressFromOf_matchesManual() (gas: 7849)
+[PASS] test_create3AddressOf_usesCallerAddress() (gas: 8814)
+[PASS] test_createWithArgs_deploysContractWithArgs() (gas: 112257)
+[PASS] test_encodeInitArgs_concatenatesInitAndArgs() (gas: 7952)
+[PASS] test_initCodeFor_and_deploysRuntime() (gas: 201642)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 40.70ms (36.47ms CPU time)
+
+Ran 37 tests for test/foundry/spec/tokens/ERC20/utils/BetterSafeERC20.t.sol:BetterSafeERC20_Test
+[PASS] testFuzz_safeIncreaseAllowance_anyAmount_increases(uint256) (runs: 256, μ: 54081, ~: 54188)
+[PASS] testFuzz_safeTransfer_anyAmount_transfersOrReverts(uint256) (runs: 256, μ: 60036, ~: 60005)
+[PASS] test_cast_convertsIERC20ArrayToBetterIERC20Array() (gas: 32519)
+[PASS] test_cast_emptyArray_returnsEmptyArray() (gas: 10957)
+[PASS] test_forceApprove_nonReturningToken_setsAllowance() (gas: 46760)
+[PASS] test_forceApprove_standardToken_setsAllowance() (gas: 46348)
+[PASS] test_forceApprove_usdtApprovalToken_overwritesExistingAllowance() (gas: 69753)
+[PASS] test_safeApprove_falseReturningToken_whenFalse_reverts() (gas: 47543)
+[PASS] test_safeApprove_nonReturningToken_setsAllowance() (gas: 47730)
+[PASS] test_safeApprove_standardToken_setsAllowance() (gas: 47232)
+[PASS] test_safeDecimals_noMetadataToken_returnsFallback() (gas: 15000)
+[PASS] test_safeDecimals_nonContract_returnsFallback() (gas: 13911)
+[PASS] test_safeDecimals_nonReturningToken_returnsSixDecimals() (gas: 17632)
+[PASS] test_safeDecimals_standardToken_returnsDecimals() (gas: 18184)
+[PASS] test_safeDecreaseAllowance_nonReturningToken_decreasesAllowance() (gas: 61585)
+[PASS] test_safeDecreaseAllowance_standardToken_decreasesAllowance() (gas: 61658)
+[PASS] test_safeIncreaseAllowance_nonReturningToken_increasesAllowance() (gas: 50464)
+[PASS] test_safeIncreaseAllowance_standardToken_increasesAllowance() (gas: 66654)
+[PASS] test_safeName_noMetadataToken_returnsFallback() (gas: 21347)
+[PASS] test_safeName_nonContract_returnsFallback() (gas: 19983)
+[PASS] test_safeName_standardToken_returnsName() (gas: 24745)
+[PASS] test_safeSymbol_noMetadataToken_returnsFallback() (gas: 20844)
+[PASS] test_safeSymbol_nonContract_returnsFallback() (gas: 20259)
+[PASS] test_safeSymbol_standardToken_returnsSymbol() (gas: 24883)
+[PASS] test_safeTransferFrom_insufficientAllowance_reverts() (gas: 56118)
+[PASS] test_safeTransferFrom_nonReturningToken_transfersSuccessfully() (gas: 69637)
+[PASS] test_safeTransferFrom_standardToken_transfersWithAllowance() (gas: 73806)
+[PASS] test_safeTransfer_falseReturningToken_whenFalse_reverts() (gas: 46932)
+[PASS] test_safeTransfer_insufficientBalance_reverts() (gas: 23966)
+[PASS] test_safeTransfer_nonReturningToken_transfersSuccessfully() (gas: 52674)
+[PASS] test_safeTransfer_revertingToken_reverts() (gas: 23242)
+[PASS] test_safeTransfer_standardToken_transfersAndReturnsTrue() (gas: 57188)
+[PASS] test_trySafeTransferFrom_insufficientAllowance_returnsFalse() (gas: 25517)
+[PASS] test_trySafeTransferFrom_standardToken_returnsTrue() (gas: 69649)
+[PASS] test_trySafeTransfer_falseReturningToken_whenFalse_returnsFalse() (gas: 47294)
+[PASS] test_trySafeTransfer_revertingToken_returnsFalse() (gas: 19799)
+[PASS] test_trySafeTransfer_standardToken_returnsTrue() (gas: 52490)
+Suite result: ok. 37 passed; 0 failed; 0 skipped; finished in 680.50ms (957.47ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawWithFee_Camelot.t.sol:ConstProdUtils_quoteWithdrawWithFee_Camelot
+[PASS] test_quoteWithdrawWithFee_Camelot_balanced_simple() (gas: 1169305)
+[PASS] test_quoteWithdrawWithFee_Camelot_extreme_unbalanced_simple() (gas: 1159674)
+[PASS] test_quoteWithdrawWithFee_Camelot_unbalanced_simple() (gas: 1165666)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 115.32ms (83.32ms CPU time)
+
+Ran 3 tests for test/foundry/spec/access/operable/OperableFacet_IFacet.t.sol:OperableFacet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 430246)
+[PASS] test_IFacet_FacetInterfaces() (gas: 230481)
+[PASS] test_IFacet_facetName() (gas: 45606)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 17.40ms (13.14ms CPU time)
+
+Ran 3 tests for test/foundry/spec/tokens/ERC20/ERC20PermitStub.t.sol:ERC20PermitStubInvariantTest
+[PASS] invariant_allowances_consistent() (runs: 50, calls: 250, reverts: 57)
+
+╭------------------------+--------------------------+-------+---------+----------╮
+| Contract               | Selector                 | Calls | Reverts | Discards |
++================================================================================+
+| ERC20TargetStubHandler | approve                  | 38    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer                 | 44    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom             | 54    | 54      | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_badSigner | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_expired   | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_valid             | 46    | 1       | 0        |
+╰------------------------+--------------------------+-------+---------+----------╯
+
+[PASS] invariant_nonnegative() (runs: 50, calls: 250, reverts: 57)
+
+╭------------------------+--------------------------+-------+---------+----------╮
+| Contract               | Selector                 | Calls | Reverts | Discards |
++================================================================================+
+| ERC20TargetStubHandler | approve                  | 38    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer                 | 44    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom             | 54    | 54      | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_badSigner | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_expired   | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_valid             | 46    | 1       | 0        |
+╰------------------------+--------------------------+-------+---------+----------╯
+
+[PASS] invariant_totalSupply_equals_sumBalances() (runs: 50, calls: 250, reverts: 57)
+
+╭------------------------+--------------------------+-------+---------+----------╮
+| Contract               | Selector                 | Calls | Reverts | Discards |
++================================================================================+
+| ERC20TargetStubHandler | approve                  | 38    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer                 | 44    | 0       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom             | 54    | 54      | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_badSigner | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_invalid_expired   | 34    | 1       | 0        |
+|------------------------+--------------------------+-------+---------+----------|
+| ERC20PermitHandler     | permit_valid             | 46    | 1       | 0        |
+╰------------------------+--------------------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.38s (5.72s CPU time)
+
+Ran 3 tests for test/foundry/spec/access/ERC8023/MultiStepOwnableFacet_IFacet.t.sol:MultiStepOwnableFacet_IFacet_Test
+[PASS] test_IFacet_FacetFunctions() (gas: 695898)
+[PASS] test_IFacet_FacetInterfaces() (gas: 230527)
+[PASS] test_IFacet_facetName() (gas: 45652)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 31.49ms (24.07ms CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/collections/sets/StringSetRepo.t.sol:StringSetRepoInvariantTest
+[PASS] invariant_indexOf_missing_returns_max() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| StringSetRepoHandler | add_many    | 68    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | add_seed    | 64    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_many | 50    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_seed | 68    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_indexes_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| StringSetRepoHandler | add_many    | 68    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | add_seed    | 64    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_many | 50    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_seed | 68    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_sorted_after_sort_ops() (runs: 50, calls: 250, reverts: 0)
+
+╭----------------------+-------------+-------+---------+----------╮
+| Contract             | Selector    | Calls | Reverts | Discards |
++=================================================================+
+| StringSetRepoHandler | add_many    | 68    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | add_seed    | 64    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_many | 50    | 0       | 0        |
+|----------------------+-------------+-------+---------+----------|
+| StringSetRepoHandler | remove_seed | 68    | 0       | 0        |
+╰----------------------+-------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.74s (6.28s CPU time)
+
+Ran 7 tests for test/foundry/spec/utils/UInt256.t.sol:UInt256Test
+[PASS] test_equals_behavior() (gas: 3135)
+[PASS] test_toAddress_truncation() (gas: 2998)
+[PASS] test_toBytes32_and_roundtrip() (gas: 1182)
+[PASS] test_toHexString_known() (gas: 21661)
+[PASS] test_toHexString_with_length_revert() (gas: 427)
+[PASS] test_toHexString_with_length_revert_external() (gas: 360380)
+[PASS] test_toString_values() (gas: 37001)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 18.55ms (13.76ms CPU time)
+
+Ran 3 tests for test/foundry/spec/tokens/ERC20/ERC20DFPkg_IERC20.t.sol:ERC20DFPkg_IERC20_Test
+[PASS] invariant_allowances_consistent() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+[PASS] invariant_nonnegative() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+[PASS] invariant_totalSupply_equals_sumBalances() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.72s (6.23s CPU time)
+
+Ran 5 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome.t.sol:ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome
+[PASS] test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_impossible_scenarios() (gas: 598129)
+[PASS] test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenA_1pct() (gas: 1584025)
+[PASS] test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenA_5pct_feesEnabled() (gas: 1579499)
+[PASS] test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenB_10pct() (gas: 1583097)
+[PASS] test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenB_25pct_feesEnabled() (gas: 1586890)
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 248.96ms (200.24ms CPU time)
+
+Ran 7 tests for test/foundry/spec/protocols/dexes/uniswap/v2/aware/UniswapV2RouterAwareRepo.t.sol:UniswapV2RouterAwareRepo_Test
+[PASS] testFuzz_initialize_anyAddress(address) (runs: 256, μ: 36848, ~: 36848)
+[PASS] test_initializeWithSlot_storesAtCustomSlot() (gas: 40921)
+[PASS] test_initialize_canOverwrite() (gas: 36322)
+[PASS] test_initialize_storesRouter() (gas: 35620)
+[PASS] test_slotIsolation_differentSlotsAreIndependent() (gas: 61546)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7274)
+[PASS] test_uniswapV2Router_returnsZeroBeforeInit() (gas: 10296)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 152.26ms (150.56ms CPU time)
+
+Ran 24 tests for test/foundry/spec/access/operable/Operable.t.sol:OperableTest
+[PASS] testFuzz_nonOperatorCannotCallRestricted(address) (runs: 256, μ: 31546, ~: 31546)
+[PASS] testFuzz_nonOwnerCannotSetOperator(address) (runs: 256, μ: 21575, ~: 21575)
+[PASS] testFuzz_setOperator_anyAddress(address) (runs: 256, μ: 46239, ~: 46239)
+[PASS] test_isOperatorFor_returnsCorrectStatus() (gas: 50814)
+[PASS] test_isOperator_returnsCorrectStatus() (gas: 46721)
+[PASS] test_multipleFunctionOperators() (gas: 88721)
+[PASS] test_multipleGlobalOperators() (gas: 117969)
+[PASS] test_onlyOperator_allowsFunctionOperator() (gas: 76946)
+[PASS] test_onlyOperator_allowsGlobalOperator() (gas: 73449)
+[PASS] test_onlyOperator_blocksNonOperator() (gas: 20979)
+[PASS] test_onlyOperator_functionOperatorLimitedToFunction() (gas: 85102)
+[PASS] test_onlyOwnerOrOperator_allowsFunctionOperator() (gas: 75395)
+[PASS] test_onlyOwnerOrOperator_allowsGlobalOperator() (gas: 71831)
+[PASS] test_onlyOwnerOrOperator_allowsOwner() (gas: 39734)
+[PASS] test_onlyOwnerOrOperator_blocksNonOperator() (gas: 23680)
+[PASS] test_ownerIsNotAutomaticallyOperator() (gas: 13715)
+[PASS] test_publicFunctionAllowsAnyone() (gas: 36628)
+[PASS] test_revokedOperatorCannotCall() (gas: 43783)
+[PASS] test_setOperatorFor_grantsFunctionSpecificAccess() (gas: 58407)
+[PASS] test_setOperatorFor_revertsWhenNotOwner() (gas: 22187)
+[PASS] test_setOperatorFor_revokesFunctionSpecificAccess() (gas: 45787)
+[PASS] test_setOperator_grantsOperatorRole() (gas: 54184)
+[PASS] test_setOperator_revertsWhenNotOwner() (gas: 19851)
+[PASS] test_setOperator_revokesOperatorRole() (gas: 45804)
+Suite result: ok. 24 passed; 0 failed; 0 skipped; finished in 660.52ms (680.07ms CPU time)
+
+Ran 5 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap.t.sol:ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test
+[PASS] test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesDisabled_targetTokenA_1pct() (gas: 1206943)
+[PASS] test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesDisabled_targetTokenB_10pct() (gas: 1219542)
+[PASS] test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesEnabled_targetTokenA_5pct() (gas: 1398868)
+[PASS] test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesEnabled_targetTokenB_25pct() (gas: 1407597)
+[PASS] test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_impossible_scenarios() (gas: 616244)
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 257.54ms (229.63ms CPU time)
+
+Ran 2 tests for test/foundry/spec/access/reentrancy/NonReentrantGreeter.t.sol:NonReentrantGreeterInvariantTest
+[PASS] invariant_NeverLocked() (runs: 50, calls: 250, reverts: 0)
+
+╭-------------------+------------+-------+---------+----------╮
+| Contract          | Selector   | Calls | Reverts | Discards |
++=============================================================+
+| ReentrancyHandler | getMessage | 119   | 0       | 0        |
+|-------------------+------------+-------+---------+----------|
+| ReentrancyHandler | setMessage | 131   | 0       | 0        |
+╰-------------------+------------+-------+---------+----------╯
+
+[PASS] test_ReentrancyAttemptReverts() (gas: 27692)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 901.93ms (896.17ms CPU time)
+
+Ran 21 tests for test/foundry/spec/tokens/ERC4626/ERC4626_Rounding.t.sol:ERC4626_Rounding_Test
+[PASS] testFuzz_depositWithdraw_noFreeShares(uint256) (runs: 256, μ: 189926, ~: 190209)
+[PASS] testFuzz_mintRedeem_noFreeAssets(uint256) (runs: 256, μ: 198337, ~: 198573)
+[PASS] testFuzz_roundTripPreservesValue(uint256) (runs: 256, μ: 166874, ~: 166994)
+[PASS] test_convertToAssets_roundsDown() (gas: 187709)
+[PASS] test_convertToShares_roundsDown() (gas: 188945)
+[PASS] test_firstDeposit_verySmallAmount_handlesCorrectly() (gas: 178239)
+[PASS] test_firstDeposit_zeroTotalSupply_mintsCorrectShares() (gas: 181777)
+[PASS] test_firstMint_exactShares_chargesCorrectAssets() (gas: 186969)
+[PASS] test_fullRedeem_returnsAllAssets() (gas: 164145)
+[PASS] test_fullWithdrawal_returnsAllAssets() (gas: 172895)
+[PASS] test_largeDecimalOffset_handlesCorrectly() (gas: 3359587)
+[PASS] test_multipleDepositors_fairShareDistribution() (gas: 287272)
+[PASS] test_partialWithdrawal_leavesCorrectBalance() (gas: 210213)
+[PASS] test_previewDeposit_matchesActualDeposit() (gas: 182083)
+[PASS] test_previewMint_matchesActualMint() (gas: 182889)
+[PASS] test_previewMint_roundsUp() (gas: 188160)
+[PASS] test_previewRedeem_matchesActualRedeem() (gas: 212397)
+[PASS] test_previewWithdraw_matchesActualWithdraw() (gas: 212411)
+[PASS] test_previewWithdraw_roundsUp() (gas: 187700)
+[PASS] test_yieldAccumulation_depositersGetSameShareValue() (gas: 282674)
+[PASS] test_zeroDecimalOffset_worksCorrectly() (gas: 3357783)
+Suite result: ok. 21 passed; 0 failed; 0 skipped; finished in 1.96s (2.71s CPU time)
+
+Ran 39 tests for test/foundry/spec/utils/BetterBytes.t.sol:BetterBytesTest
+[PASS] testFuzz_equal_reflexive(bytes) (runs: 256, μ: 4819, ~: 2382)
+[PASS] testFuzz_prependToArray_increasesLength(bytes,uint8) (runs: 256, μ: 23893, ~: 21080)
+[PASS] testFuzz_slice_validRange(bytes,uint256) (runs: 256, μ: 16483, ~: 14344)
+[PASS] testFuzz_toAddress_roundtrip(address) (runs: 256, μ: 2679, ~: 2679)
+[PASS] testFuzz_toBytes32_roundtrip(bytes32) (runs: 256, μ: 1518, ~: 1518)
+[PASS] testFuzz_toHexString_correctLength(bytes) (runs: 256, μ: 400815, ~: 93614)
+[PASS] testFuzz_toUint256_roundtrip(uint256) (runs: 256, μ: 1725, ~: 1725)
+[PASS] test_equalStorage_differentLengths_returnsFalse() (gas: 445121)
+[PASS] test_equalStorage_emptyBytes() (gas: 424619)
+[PASS] test_equalStorage_longBytes_greaterThan32() (gas: 490244)
+[PASS] test_equalStorage_matchesMemory() (gas: 449269)
+[PASS] test_equalStorage_shortBytes_lessThan32() (gas: 446399)
+[PASS] test_equal_differentLengths_returnsFalse() (gas: 1584)
+[PASS] test_equal_emptyBytes_returnsTrue() (gas: 2547)
+[PASS] test_equal_emptyVsNonEmpty_returnsFalse() (gas: 2079)
+[PASS] test_equal_longBytes_differentAtEnd() (gas: 2447)
+[PASS] test_equal_longBytes_identical() (gas: 2525)
+[PASS] test_equal_memory_comparisons() (gas: 3173)
+[PASS] test_indexOf_and_indexOf_fromPos() (gas: 5658)
+[PASS] test_indexOf_emptyBytes_returnsMax() (gas: 1590)
+[PASS] test_indexOf_notFound_returnsMax() (gas: 4293)
+[PASS] test_lastIndexOf_and_fromPos() (gas: 7342)
+[PASS] test_lastIndexOf_notFound_returnsMax() (gas: 5798)
+[PASS] test_prependToArray_emptyArray_createsOne() (gas: 9609)
+[PASS] test_prependToArray_putsValueFirst() (gas: 18393)
+[PASS] test_sliceRange_sameStartEnd_returnsEmpty() (gas: 3642)
+[PASS] test_slice_fromEnd_returnsEmpty() (gas: 3711)
+[PASS] test_slice_fromZero_returnsAll() (gas: 7610)
+[PASS] test_slice_start_and_slice_start_end() (gas: 13092)
+[PASS] test_toAddress_outOfBounds_revert() (gas: 303340)
+[PASS] test_toAddress_roundtrip() (gas: 2406)
+[PASS] test_toAddress_withOffset() (gas: 2901)
+[PASS] test_toBytes32_roundtrip() (gas: 2049)
+[PASS] test_toBytes32_withOffset() (gas: 2153)
+[PASS] test_toHexString_emptyBytes_returnsPrefix() (gas: 8368)
+[PASS] test_toHexString_leadingZeros() (gas: 16449)
+[PASS] test_toHexString_prefixAndChars() (gas: 13759)
+[PASS] test_toUint_outOfBounds_revert() (gas: 303482)
+[PASS] test_toUint_variants() (gas: 10032)
+Suite result: ok. 39 passed; 0 failed; 0 skipped; finished in 3.50s (6.89s CPU time)
+
+Ran 3 tests for test/foundry/spec/tokens/ERC20/ERC20TargetStub.t.sol:ERC20TargetStubInvariantTest
+[PASS] invariant_allowances_consistent() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+[PASS] invariant_nonnegative() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+[PASS] invariant_totalSupply_equals_sumBalances() (runs: 50, calls: 250, reverts: 67)
+
+╭------------------------+--------------+-------+---------+----------╮
+| Contract               | Selector     | Calls | Reverts | Discards |
++====================================================================+
+| ERC20TargetStubHandler | approve      | 87    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transfer     | 95    | 0       | 0        |
+|------------------------+--------------+-------+---------+----------|
+| ERC20TargetStubHandler | transferFrom | 68    | 67      | 0        |
+╰------------------------+--------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.30s (5.76s CPU time)
+
+Ran 12 tests for test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromService.t.sol:AerodromService_Test
+[PASS] testFuzz_swapDepositVolatile_anyAmount_producesLP(uint256) (runs: 256, μ: 808896, ~: 809043)
+[PASS] testFuzz_swap_anyAmount_producesOutput(uint256) (runs: 256, μ: 690589, ~: 690721)
+[PASS] test_integration_swapDepositWithdrawSwap_roundTrip() (gas: 1093011)
+[PASS] test_quoteSwapDepositSaleAmt_returnsPositiveAmount() (gas: 485606)
+[PASS] test_swapDepositVolatile_balancedPool_mintsLP() (gas: 809155)
+[PASS] test_swapDepositVolatile_fromTokenB_mintsLP() (gas: 811158)
+[PASS] test_swapDepositVolatile_unbalancedPool_mintsLP() (gas: 810088)
+[PASS] test_swap_normalSwap_returnsExpectedOutput() (gas: 691936)
+[PASS] test_swap_reverseDirection_swapsCorrectly() (gas: 691365)
+[PASS] test_swap_unbalancedPool_accountsForPriceImpact() (gas: 692529)
+[PASS] test_withdrawSwapVolatile_fullWithdrawal_returnsTargetToken() (gas: 772109)
+[PASS] test_withdrawSwapVolatile_partialWithdrawal_returnsTargetToken() (gas: 791552)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 5.48s (8.03s CPU time)
+
+Ran 5 tests for test/foundry/spec/access/ERC8023/MultiStepOwnableFacet.t.sol:MultiStepOwnableFacetTest
+[PASS] invariant_buffer_is_constant() (runs: 50, calls: 250, reverts: 177)
+
+╭-------------------------+-----------------------------------------+-------+---------+----------╮
+| Contract                | Selector                                | Calls | Reverts | Discards |
++================================================================================================+
+| MultiStepOwnableHandler | acceptOwnershipTransfer                 | 35    | 1       | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_acceptOwnershipTransfer        | 41    | 36      | 5        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_cancelPendingOwnershipTransfer | 22    | 22      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_confirmOwnershipTransfer       | 26    | 26      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_initiateOwnershipTransfer      | 37    | 36      | 1        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | cancelPendingOwnershipTransfer          | 24    | 16      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | confirmOwnershipTransfer                | 30    | 15      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | initiateOwnershipTransfer               | 34    | 18      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | wrongGuy_acceptOwnershipTransfer        | 40    | 7       | 33       |
+╰-------------------------+-----------------------------------------+-------+---------+----------╯
+
+[PASS] invariant_only_owner_has_power() (runs: 50, calls: 250, reverts: 177)
+
+╭-------------------------+-----------------------------------------+-------+---------+----------╮
+| Contract                | Selector                                | Calls | Reverts | Discards |
++================================================================================================+
+| MultiStepOwnableHandler | acceptOwnershipTransfer                 | 35    | 1       | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_acceptOwnershipTransfer        | 41    | 36      | 5        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_cancelPendingOwnershipTransfer | 22    | 22      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_confirmOwnershipTransfer       | 26    | 26      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_initiateOwnershipTransfer      | 37    | 36      | 1        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | cancelPendingOwnershipTransfer          | 24    | 16      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | confirmOwnershipTransfer                | 30    | 15      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | initiateOwnershipTransfer               | 34    | 18      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | wrongGuy_acceptOwnershipTransfer        | 40    | 7       | 33       |
+╰-------------------------+-----------------------------------------+-------+---------+----------╯
+
+[PASS] invariant_owner_never_zero() (runs: 50, calls: 250, reverts: 177)
+
+╭-------------------------+-----------------------------------------+-------+---------+----------╮
+| Contract                | Selector                                | Calls | Reverts | Discards |
++================================================================================================+
+| MultiStepOwnableHandler | acceptOwnershipTransfer                 | 35    | 1       | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_acceptOwnershipTransfer        | 41    | 36      | 5        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_cancelPendingOwnershipTransfer | 22    | 22      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_confirmOwnershipTransfer       | 26    | 26      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_initiateOwnershipTransfer      | 37    | 36      | 1        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | cancelPendingOwnershipTransfer          | 24    | 16      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | confirmOwnershipTransfer                | 30    | 15      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | initiateOwnershipTransfer               | 34    | 18      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | wrongGuy_acceptOwnershipTransfer        | 40    | 7       | 33       |
+╰-------------------------+-----------------------------------------+-------+---------+----------╯
+
+[PASS] invariant_owner_only_changes_after_full_transfer() (runs: 50, calls: 250, reverts: 177)
+
+╭-------------------------+-----------------------------------------+-------+---------+----------╮
+| Contract                | Selector                                | Calls | Reverts | Discards |
++================================================================================================+
+| MultiStepOwnableHandler | acceptOwnershipTransfer                 | 35    | 1       | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_acceptOwnershipTransfer        | 41    | 36      | 5        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_cancelPendingOwnershipTransfer | 22    | 22      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_confirmOwnershipTransfer       | 26    | 26      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_initiateOwnershipTransfer      | 37    | 36      | 1        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | cancelPendingOwnershipTransfer          | 24    | 16      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | confirmOwnershipTransfer                | 30    | 15      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | initiateOwnershipTransfer               | 34    | 18      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | wrongGuy_acceptOwnershipTransfer        | 40    | 7       | 33       |
+╰-------------------------+-----------------------------------------+-------+---------+----------╯
+
+[PASS] invariant_pending_and_preconfirmed_exclusive() (runs: 50, calls: 250, reverts: 177)
+
+╭-------------------------+-----------------------------------------+-------+---------+----------╮
+| Contract                | Selector                                | Calls | Reverts | Discards |
++================================================================================================+
+| MultiStepOwnableHandler | acceptOwnershipTransfer                 | 35    | 1       | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_acceptOwnershipTransfer        | 41    | 36      | 5        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_cancelPendingOwnershipTransfer | 22    | 22      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_confirmOwnershipTransfer       | 26    | 26      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | attacker_initiateOwnershipTransfer      | 37    | 36      | 1        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | cancelPendingOwnershipTransfer          | 24    | 16      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | confirmOwnershipTransfer                | 30    | 15      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | initiateOwnershipTransfer               | 34    | 18      | 0        |
+|-------------------------+-----------------------------------------+-------+---------+----------|
+| MultiStepOwnableHandler | wrongGuy_acceptOwnershipTransfer        | 40    | 7       | 33       |
+╰-------------------------+-----------------------------------------+-------+---------+----------╯
+
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 5.52s (9.07s CPU time)
+
+Ran 8 tests for test/foundry/spec/tokens/ERC4626/ERC4626Invariant.t.sol:ERC4626Invariant_Test
+[PASS] invariant_convertToAssets_roundsDown() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_convertToShares_roundsDown() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_maxRedeem_bounded() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_maxWithdraw_bounded() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_sumShares_equals_totalSupply() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_totalAssets_bounded() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_totalSupply_nonNegative() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+[PASS] invariant_vaultBalance_equals_totalAssets() (runs: 50, calls: 250, reverts: 0)
+
+╭--------------------------+----------+-------+---------+----------╮
+| Contract                 | Selector | Calls | Reverts | Discards |
++==================================================================+
+| ERC4626TargetStubHandler | deposit  | 61    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | mint     | 66    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | redeem   | 65    | 0       | 0        |
+|--------------------------+----------+-------+---------+----------|
+| ERC4626TargetStubHandler | withdraw | 58    | 0       | 0        |
+╰--------------------------+----------+-------+---------+----------╯
+
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 6.73s (9.18s CPU time)
+
+Ran 15 tests for test/foundry/spec/tokens/ERC4626/ERC4626TargetStub.t.sol:ERC4626TargetStubTest
+[PASS] test_IERC20Metadata_decimals() (gas: 21641)
+[PASS] test_IERC20Metadata_name() (gas: 25887)
+[PASS] test_IERC20Metadata_symbol() (gas: 16561)
+[PASS] test_IERC4626_deposit(uint256) (runs: 256, μ: 208382, ~: 208758)
+[PASS] test_IERC4626_deposit_Permit2(uint256) (runs: 256, μ: 255385, ~: 255761)
+[PASS] test_IERC4626_deposit_pretransfer(uint256) (runs: 256, μ: 174253, ~: 174629)
+[PASS] test_IERC4626_mint(uint256) (runs: 256, μ: 208635, ~: 208992)
+[PASS] test_IERC4626_mint_Permit2(uint256) (runs: 256, μ: 255408, ~: 255765)
+[PASS] test_IERC4626_mint_pretransfer(uint256) (runs: 256, μ: 174345, ~: 174702)
+[PASS] test_IERC4626_redeem(uint256,uint256) (runs: 256, μ: 248127, ~: 250198)
+[PASS] test_IERC4626_redeem_Approved_Spender(address,uint256,uint256) (runs: 256, μ: 267180, ~: 269412)
+[PASS] test_IERC4626_redeem_Pretransfer(uint256,uint256) (runs: 256, μ: 261866, ~: 263575)
+[PASS] test_IERC4626_withdraw(uint256,uint256) (runs: 256, μ: 235551, ~: 237712)
+[PASS] test_IERC4626_withdraw_Approved_Spender(address,uint256,uint256) (runs: 256, μ: 254628, ~: 256906)
+[PASS] test_IERC4626_withdraw_Pretransfer(uint256,uint256) (runs: 256, μ: 249412, ~: 251159)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 5.78s (30.73s CPU time)
+
+Ran 5 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteZapOutToTargetWithFee_Camelot.t.sol:ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test
+[PASS] test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesDisabled_targetTokenA_1pct() (gas: 1086990)
+[PASS] test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesDisabled_targetTokenB_10pct() (gas: 1097479)
+[PASS] test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesEnabled_targetTokenA_5pct() (gas: 1519844)
+[PASS] test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesEnabled_targetTokenB_25pct() (gas: 1528335)
+[PASS] test_quoteZapOutToTargetWithFee_Camelot_balancedPool_impossible_scenarios() (gas: 705863)
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 3.67s (299.15ms CPU time)
+
+Ran 35 tests for test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_quoteWithdrawWithFee_Uniswap.t.sol:ConstProdUtils_quoteWithdrawWithFee_Uniswap
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_highPercentage_feesDisabled_extractTokenA() (gas: 632023)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_highPercentage_feesDisabled_extractTokenB() (gas: 632456)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_highPercentage_feesEnabled_extractTokenA() (gas: 632531)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_highPercentage_feesEnabled_extractTokenB() (gas: 632343)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_lowPercentage_feesDisabled_extractTokenA() (gas: 632827)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_lowPercentage_feesDisabled_extractTokenB() (gas: 632571)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_lowPercentage_feesEnabled_extractTokenA() (gas: 632921)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_lowPercentage_feesEnabled_extractTokenB() (gas: 632504)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_mediumPercentage_feesDisabled_extractTokenA() (gas: 632258)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_mediumPercentage_feesDisabled_extractTokenB() (gas: 632433)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_mediumPercentage_feesEnabled_extractTokenA() (gas: 632071)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_balanced_mediumPercentage_feesEnabled_extractTokenB() (gas: 633007)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_highPercentage_feesDisabled_extractTokenA() (gas: 633230)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_highPercentage_feesDisabled_extractTokenB() (gas: 633083)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_highPercentage_feesEnabled_extractTokenA() (gas: 633186)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_highPercentage_feesEnabled_extractTokenB() (gas: 633223)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_lowPercentage_feesDisabled_extractTokenB() (gas: 633014)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_lowPercentage_feesEnabled_extractTokenB() (gas: 633200)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_mediumPercentage_feesDisabled_extractTokenA() (gas: 632264)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_mediumPercentage_feesDisabled_extractTokenB() (gas: 632485)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_mediumPercentage_feesEnabled_extractTokenA() (gas: 633324)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_extreme_mediumPercentage_feesEnabled_extractTokenB() (gas: 632763)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_highPercentage_feesDisabled_extractTokenA() (gas: 634042)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_highPercentage_feesDisabled_extractTokenB() (gas: 633366)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_highPercentage_feesEnabled_extractTokenA() (gas: 634573)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_highPercentage_feesEnabled_extractTokenB() (gas: 633552)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_lowPercentage_feesDisabled_extractTokenB() (gas: 634401)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_lowPercentage_feesEnabled_extractTokenB() (gas: 633943)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_mediumPercentage_feesDisabled_extractTokenA() (gas: 634203)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_mediumPercentage_feesDisabled_extractTokenB() (gas: 633757)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_mediumPercentage_feesEnabled_extractTokenA() (gas: 633814)
+[PASS] test_quoteWithdrawSwapWithFee_Uniswap_unbalanced_mediumPercentage_feesEnabled_extractTokenB() (gas: 634196)
+[PASS] test_quoteWithdrawWithFee_Uniswap_balanced_simple() (gas: 912334)
+[PASS] test_quoteWithdrawWithFee_Uniswap_extreme_unbalanced_simple() (gas: 912534)
+[PASS] test_quoteWithdrawWithFee_Uniswap_unbalanced_simple() (gas: 913392)
+Suite result: ok. 35 passed; 0 failed; 0 skipped; finished in 4.03s (663.04ms CPU time)
+
+Ran 20 tests for test/foundry/spec/protocols/dexes/camelot/v2/services/CamelotV2Service.t.sol:CamelotV2Service_Test
+[PASS] testFuzz_swapDeposit_anyAmount_producesLP(uint256) (runs: 256, μ: 844215, ~: 849784)
+[PASS] testFuzz_swap_anyAmount_producesOutput(uint256) (runs: 256, μ: 600738, ~: 600870)
+[PASS] test_balanceAssets_balancedPool_returnsBalancedAmounts() (gas: 638186)
+[PASS] test_balanceAssets_unbalancedPool_accountsForRatio() (gas: 646903)
+[PASS] test_deposit_balancedAmounts_mintsLP() (gas: 665508)
+[PASS] test_deposit_toEmptyPool_mintsInitialLP() (gas: 10432865)
+[PASS] test_sortReserves_token0AsKnown_returnsCorrectOrder() (gas: 450003)
+[PASS] test_sortReserves_token1AsKnown_returnsCorrectOrder() (gas: 450583)
+[PASS] test_sortReserves_zeroAddress_defaultsToToken0() (gas: 447278)
+[PASS] test_swapDeposit_balancedPool_mintsLP() (gas: 851988)
+[PASS] test_swapDeposit_fromTokenB_mintsLP() (gas: 854429)
+[PASS] test_swapDeposit_unbalancedPool_mintsLP() (gas: 829072)
+[PASS] test_swap_normalSwap_returnsExpectedOutput() (gas: 601811)
+[PASS] test_swap_reverseDirection_works() (gas: 605751)
+[PASS] test_swap_unbalancedPool_accountsForPriceImpact() (gas: 606204)
+[PASS] test_swap_withPoolOverload_returnsExpectedOutput() (gas: 603544)
+[PASS] test_withdrawDirect_fullWithdrawal_returnsTokens() (gas: 663185)
+[PASS] test_withdrawDirect_partialWithdrawal_returnsProportionalTokens() (gas: 677531)
+[PASS] test_withdrawSwapDirect_fullWithdrawal_returnsAllAsTokenOut() (gas: 764472)
+[PASS] test_withdrawSwapDirect_partialWithdrawal_returnsTokens() (gas: 786613)
+Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 5.64s (8.21s CPU time)
+
+Ran 20 tests for test/foundry/spec/protocols/dexes/uniswap/v2/services/UniswapV2Service.t.sol:UniswapV2Service_Test
+[PASS] testFuzz_swapDeposit_anyAmount_producesLP(uint256) (runs: 256, μ: 653643, ~: 657732)
+[PASS] testFuzz_swap_anyAmount_producesOutput(uint256) (runs: 256, μ: 563822, ~: 563954)
+[PASS] test_deposit_balancedAmounts_mintsLP() (gas: 557416)
+[PASS] test_deposit_toEmptyPool_mintsInitialLP() (gas: 7890825)
+[PASS] test_sortReserves_token0AsKnown_returnsCorrectOrder() (gas: 413693)
+[PASS] test_sortReserves_token1AsKnown_returnsCorrectOrder() (gas: 414003)
+[PASS] test_swapDeposit_balancedPool_mintsLP() (gas: 639933)
+[PASS] test_swapDeposit_fromTokenB_mintsLP() (gas: 641904)
+[PASS] test_swapDeposit_unbalancedPool_mintsLP() (gas: 641375)
+[PASS] test_swapExactTokensForTokens_normalSwap_works() (gas: 539357)
+[PASS] test_swapExactTokensForTokens_toRecipient_sendsToRecipient() (gas: 543945)
+[PASS] test_swapTokensForExactTokens_fixedOutput_works() (gas: 567673)
+[PASS] test_swap_normalSwap_returnsExpectedOutput() (gas: 566619)
+[PASS] test_swap_reverseDirection_works() (gas: 564290)
+[PASS] test_swap_unbalancedPool_accountsForPriceImpact() (gas: 567508)
+[PASS] test_swap_withPoolOverload_returnsExpectedOutput() (gas: 564094)
+[PASS] test_withdrawDirect_fullWithdrawal_returnsTokens() (gas: 512886)
+[PASS] test_withdrawDirect_partialWithdrawal_returnsProportionalTokens() (gas: 526925)
+[PASS] test_withdrawSwapDirect_fullWithdrawal_returnsAllAsTokenOut() (gas: 610831)
+[PASS] test_withdrawSwapDirect_partialWithdrawal_returnsTokens() (gas: 630946)
+Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 3.75s (6.10s CPU time)
+
+Ran 3 tests for test/foundry/spec/utils/collections/sets/UInt256SetRepo.t.sol:UInt256SetRepoInvariantTest
+[PASS] invariant_indexOf_missing_returns_max() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| UInt256SetRepoHandler | add_many    | 51    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | add_seed    | 65    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_many | 80    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_seed | 54    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_indexes_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| UInt256SetRepoHandler | add_many    | 51    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | add_seed    | 65    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_many | 80    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_seed | 54    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+[PASS] invariant_max_consistent() (runs: 50, calls: 250, reverts: 0)
+
+╭-----------------------+-------------+-------+---------+----------╮
+| Contract              | Selector    | Calls | Reverts | Discards |
++==================================================================+
+| UInt256SetRepoHandler | add_many    | 51    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | add_seed    | 65    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_many | 80    | 0       | 0        |
+|-----------------------+-------------+-------+---------+----------|
+| UInt256SetRepoHandler | remove_seed | 54    | 0       | 0        |
+╰-----------------------+-------------+-------+---------+----------╯
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.82s (4.97s CPU time)
+
+Ran 7 tests for test/foundry/spec/protocols/dexes/uniswap/v2/aware/UniswapV2FactoryAwareRepo.t.sol:UniswapV2FactoryAwareRepo_Test
+[PASS] testFuzz_initialize_anyAddress(address) (runs: 256, μ: 36848, ~: 36848)
+[PASS] test_initializeWithSlot_storesAtCustomSlot() (gas: 40921)
+[PASS] test_initialize_canOverwrite() (gas: 39237)
+[PASS] test_initialize_storesFactory() (gas: 35367)
+[PASS] test_slotIsolation_differentSlotsAreIndependent() (gas: 61546)
+[PASS] test_storageSlot_isCorrectHash() (gas: 7274)
+[PASS] test_uniswapV2Factory_returnsZeroBeforeInit() (gas: 10503)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 3.87s (3.86s CPU time)
+
+Ran 84 test suites in 7.58s (99.10s CPU time): 905 tests passed, 2 failed, 0 skipped (907 total tests)
+
+Failing tests:
+Encountered 1 failing test in test/foundry/spec/tokens/ERC20/ERC20Permit_Integration.t.sol:ERC20Permit_Integration_Test
+[FAIL: ERC2612InvalidSigner(0xbB81C89069A221c0ae90717d59a5C52Efe310F5D, 0xe05fcC23807536bEe418f142D19fa0d21BB0cfF7)] test_permit_chainIdChangeBack_worksWithOriginalSignature() (gas: 115698)
+
+Encountered 1 failing test in test/foundry/spec/utils/cryptography/EIP712Repo.t.sol:EIP712Repo_Test
+[FAIL: Should return to cached value on original chain: 0xf2002c0f7abf0510dbfd2af611f4cee49565ec84cc00ca58c06b35d656a863c2 != 0x759d4410dfc2e99508e8ab9c7683b6181a3daa2d7f65a7a5b244a75e66af1281] test_domainSeparatorV4_chainIdChangeBack_usesCachedAgain() (gas: 36242)
+
+Encountered a total of 2 failing tests, 905 tests succeeded
+
+Tip: Run `forge test --rerun` to retry only the 2 failed tests

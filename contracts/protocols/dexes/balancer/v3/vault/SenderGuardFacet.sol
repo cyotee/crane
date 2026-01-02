@@ -47,7 +47,7 @@ contract SenderGuardFacet is SenderGuardTarget, IFacet {
      * @inheritdoc IFacet
      */
     function facetFuncs() public pure returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](4);
+        funcs = new bytes4[](1);
         funcs[0] = ISenderGuard.getSender.selector;
         return funcs;
     }

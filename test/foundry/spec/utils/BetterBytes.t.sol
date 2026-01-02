@@ -139,4 +139,179 @@ contract BetterBytesTest is Test {
         vm.expectRevert();
         h.callToAddress(small, 0);
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                         Additional Edge Case Tests                         */
+    /* -------------------------------------------------------------------------- */
+
+    function test_indexOf_notFound_returnsMax() public pure {
+        bytes memory buf = "hello";
+        assertEq(BetterBytes._indexOf(buf, bytes1("z")), type(uint256).max);
+    }
+
+    function test_indexOf_emptyBytes_returnsMax() public pure {
+        bytes memory buf = "";
+        assertEq(BetterBytes._indexOf(buf, bytes1("a")), type(uint256).max);
+    }
+
+    function test_lastIndexOf_notFound_returnsMax() public pure {
+        bytes memory buf = "hello";
+        assertEq(BetterBytes._lastIndexOf(buf, bytes1("z")), type(uint256).max);
+    }
+
+    function test_slice_fromZero_returnsAll() public pure {
+        bytes memory data = hex"01020304";
+        bytes memory result = BetterBytes._slice(data, 0);
+        assertEq(result, data);
+    }
+
+    function test_slice_fromEnd_returnsEmpty() public pure {
+        bytes memory data = hex"01020304";
+        bytes memory result = BetterBytes._slice(data, 4);
+        assertEq(result.length, 0);
+    }
+
+    function test_sliceRange_sameStartEnd_returnsEmpty() public pure {
+        bytes memory data = hex"01020304";
+        bytes memory result = BetterBytes._slice(data, 2, 2);
+        assertEq(result.length, 0);
+    }
+
+    function test_prependToArray_emptyArray_createsOne() public pure {
+        bytes[] memory arr = new bytes[](0);
+        bytes[] memory out = BetterBytes._prependToArray(hex"01", arr);
+        assertEq(out.length, 1);
+        assertEq(out[0], hex"01");
+    }
+
+    function test_toHexString_emptyBytes_returnsPrefix() public pure {
+        bytes memory b = "";
+        string memory s = BetterBytes._toHexString(b);
+        assertEq(s, "0x");
+    }
+
+    function test_toHexString_leadingZeros() public pure {
+        bytes memory b = hex"00ff00";
+        string memory s = BetterBytes._toHexString(b);
+        assertEq(s, "0x00ff00");
+    }
+
+    function test_equal_emptyBytes_returnsTrue() public pure {
+        bytes memory a = "";
+        bytes memory b = "";
+        assertTrue(BetterBytes._equal(a, b));
+    }
+
+    function test_equal_emptyVsNonEmpty_returnsFalse() public pure {
+        bytes memory a = "";
+        bytes memory b = hex"01";
+        assertFalse(BetterBytes._equal(a, b));
+    }
+
+    function test_equal_differentLengths_returnsFalse() public pure {
+        bytes memory a = hex"010203";
+        bytes memory b = hex"01020304";
+        assertFalse(BetterBytes._equal(a, b));
+    }
+
+    function test_equal_longBytes_identical() public pure {
+        // Test with data longer than 32 bytes
+        bytes memory a = hex"0102030405060708091011121314151617181920212223242526272829303132333435363738394041";
+        bytes memory b = hex"0102030405060708091011121314151617181920212223242526272829303132333435363738394041";
+        assertTrue(BetterBytes._equal(a, b));
+    }
+
+    function test_equal_longBytes_differentAtEnd() public pure {
+        bytes memory a = hex"0102030405060708091011121314151617181920212223242526272829303132333435363738394041";
+        bytes memory b = hex"01020304050607080910111213141516171819202122232425262728293031323334353637383940ff";
+        assertFalse(BetterBytes._equal(a, b));
+    }
+
+    function test_equalStorage_emptyBytes() public {
+        StorageHolder sh = new StorageHolder();
+        sh.set("");
+        assertTrue(sh.equalTo(""));
+    }
+
+    function test_equalStorage_shortBytes_lessThan32() public {
+        StorageHolder sh = new StorageHolder();
+        bytes memory data = hex"0102030405060708";
+        sh.set(data);
+        assertTrue(sh.equalTo(data));
+    }
+
+    function test_equalStorage_longBytes_greaterThan32() public {
+        StorageHolder sh = new StorageHolder();
+        bytes memory data = hex"0102030405060708091011121314151617181920212223242526272829303132333435363738394041";
+        sh.set(data);
+        assertTrue(sh.equalTo(data));
+    }
+
+    function test_equalStorage_differentLengths_returnsFalse() public {
+        StorageHolder sh = new StorageHolder();
+        sh.set(hex"010203");
+        assertFalse(sh.equalTo(hex"01020304"));
+    }
+
+    function test_toAddress_withOffset() public pure {
+        address expected = address(bytes20(hex"1234567890abcdef1234567890abcdef12345678"));
+        bytes memory b = abi.encodePacked(bytes4(0xdeadbeef), expected);
+        address got = BetterBytes._toAddress(b, 4);
+        assertEq(got, expected);
+    }
+
+    function test_toBytes32_withOffset() public pure {
+        bytes32 v = bytes32(uint256(0xabcdef));
+        bytes memory b = abi.encodePacked(bytes4(0x12345678), v);
+        assertEq(BetterBytes._toBytes32(b, 4), v);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               Fuzz Tests                                   */
+    /* -------------------------------------------------------------------------- */
+
+    function testFuzz_toHexString_correctLength(bytes memory data) public pure {
+        string memory hexStr = BetterBytes._toHexString(data);
+        assertEq(bytes(hexStr).length, data.length * 2 + 2);
+    }
+
+    function testFuzz_equal_reflexive(bytes memory data) public pure {
+        assertTrue(BetterBytes._equal(data, data));
+    }
+
+    function testFuzz_slice_validRange(bytes memory data, uint256 start) public pure {
+        vm.assume(data.length > 0);
+        start = bound(start, 0, data.length);
+        bytes memory result = BetterBytes._slice(data, start);
+        assertEq(result.length, data.length - start);
+    }
+
+    function testFuzz_toAddress_roundtrip(address expected) public pure {
+        bytes memory b = abi.encodePacked(expected);
+        address got = BetterBytes._toAddress(b, 0);
+        assertEq(got, expected);
+    }
+
+    function testFuzz_toUint256_roundtrip(uint256 expected) public pure {
+        bytes memory b = abi.encodePacked(expected);
+        uint256 got = BetterBytes._toUint256(b, 0);
+        assertEq(got, expected);
+    }
+
+    function testFuzz_toBytes32_roundtrip(bytes32 expected) public pure {
+        bytes memory b = abi.encodePacked(expected);
+        bytes32 got = BetterBytes._toBytes32(b, 0);
+        assertEq(got, expected);
+    }
+
+    function testFuzz_prependToArray_increasesLength(bytes memory value, uint8 arrLen) public pure {
+        arrLen = uint8(bound(arrLen, 0, 10));
+        bytes[] memory arr = new bytes[](arrLen);
+        for (uint256 i = 0; i < arrLen; i++) {
+            arr[i] = abi.encodePacked(i);
+        }
+        bytes[] memory result = BetterBytes._prependToArray(value, arr);
+        assertEq(result.length, arr.length + 1);
+        assertEq(result[0], value);
+    }
 }
