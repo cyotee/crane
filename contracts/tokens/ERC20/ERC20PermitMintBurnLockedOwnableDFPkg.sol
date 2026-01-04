@@ -23,6 +23,7 @@ import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
+import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 
 // import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
@@ -37,6 +38,7 @@ interface IERC20PermitMintBurnLockedOwnableDFPkg {
         IFacet erc5267Facet;
         IFacet erc2612Facet;
         IFacet erc20MintBurnOwnableFacet;
+        IDiamondPackageCallBackFactory diamondFactory;
     }
 
     struct PkgArgs {
@@ -46,6 +48,14 @@ interface IERC20PermitMintBurnLockedOwnableDFPkg {
         address owner;
         bytes32 optionalSalt;
     }
+
+    function deployToken(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        address owner,
+        bytes32 optionalSalt
+    ) external returns (address tokenAddress);
 }
 
 contract ERC20PermitMintBurnLockedOwnableDFPkg is
@@ -59,12 +69,39 @@ contract ERC20PermitMintBurnLockedOwnableDFPkg is
     IFacet immutable ERC2612_FACET;
     IFacet public immutable ERC20_MINT_BURN_OWNABLE_FACET;
 
+    IDiamondPackageCallBackFactory immutable DIAMOND_FACTORY;
+
     constructor(PkgInit memory pkgInit) {
         // PkgInit memory pkgInit = abi.decode(create3InitData.initData, (PkgInit));
         ERC20_FACET = pkgInit.erc20Facet;
         ERC5267_FACET = pkgInit.erc5267Facet;
         ERC2612_FACET = pkgInit.erc2612Facet;
         ERC20_MINT_BURN_OWNABLE_FACET = pkgInit.erc20MintBurnOwnableFacet;
+        DIAMOND_FACTORY = pkgInit.diamondFactory;
+    }
+
+
+    function deployToken(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        address owner,
+        bytes32 optionalSalt
+    ) external returns (address tokenAddress) {
+        return address(
+            DIAMOND_FACTORY.deploy(
+                this,
+                abi.encode(
+                    PkgArgs({
+                        name: name,
+                        symbol: symbol,
+                        decimals: decimals,
+                        owner: owner,
+                        optionalSalt: optionalSalt
+                    })
+                )
+            )
+        );
     }
 
     function packageName() public pure returns (string memory name_) {
@@ -106,38 +143,29 @@ contract ERC20PermitMintBurnLockedOwnableDFPkg is
     }
 
     function facetCuts() public view virtual returns (IDiamond.FacetCut[] memory facetCuts_) {
-        facetCuts_ = new IDiamond.FacetCut[](2);
+        facetCuts_ = new IDiamond.FacetCut[](4);
+
         facetCuts_[0] = IDiamond.FacetCut({
-            // address facetAddress;
             facetAddress: address(ERC20_FACET),
-            // FacetCutAction action;
             action: IDiamond.FacetCutAction.Add,
-            // bytes4[] functionSelectors;
             functionSelectors: ERC20_FACET.facetFuncs()
-        });
-        facetCuts_[0] = IDiamond.FacetCut({
-            // address facetAddress;
-            facetAddress: address(ERC5267_FACET),
-            // FacetCutAction action;
-            action: IDiamond.FacetCutAction.Add,
-            // bytes4[] functionSelectors;
-            functionSelectors: ERC20_FACET.facetFuncs()
-        });
-        facetCuts_[0] = IDiamond.FacetCut({
-            // address facetAddress;
-            facetAddress: address(ERC2612_FACET),
-            // FacetCutAction action;
-            action: IDiamond.FacetCutAction.Add,
-            // bytes4[] functionSelectors;
-            functionSelectors: ERC2612_FACET.facetFuncs()
         });
 
         facetCuts_[1] = IDiamond.FacetCut({
-            // address facetAddress;
-            facetAddress: address(ERC20_MINT_BURN_OWNABLE_FACET),
-            // FacetCutAction action;
+            facetAddress: address(ERC5267_FACET),
             action: IDiamond.FacetCutAction.Add,
-            // bytes4[] functionSelectors;
+            functionSelectors: ERC5267_FACET.facetFuncs()
+        });
+
+        facetCuts_[2] = IDiamond.FacetCut({
+            facetAddress: address(ERC2612_FACET),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: ERC2612_FACET.facetFuncs()
+        });
+
+        facetCuts_[3] = IDiamond.FacetCut({
+            facetAddress: address(ERC20_MINT_BURN_OWNABLE_FACET),
+            action: IDiamond.FacetCutAction.Add,
             functionSelectors: ERC20_MINT_BURN_OWNABLE_FACET.facetFuncs()
         });
     }

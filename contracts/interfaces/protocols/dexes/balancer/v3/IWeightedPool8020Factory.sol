@@ -13,6 +13,7 @@ import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol
 
 /* ------------------------ Interfaces Solidity-Utils ----------------------- */
 
+import {IBasePoolFactory} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePoolFactory.sol";
 import {IPoolVersion} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
 import {PoolRoleAccounts, TokenConfig} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
 
@@ -22,7 +23,7 @@ import {PoolRoleAccounts, TokenConfig} from "@balancer-labs/v3-interfaces/contra
 
 import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 
-interface IWeightedPool8020Factory is IPoolVersion {
+interface IWeightedPool8020Factory is IPoolVersion, IBasePoolFactory {
     function create(
         TokenConfig memory highWeightTokenConfig,
         TokenConfig memory lowWeightTokenConfig,
