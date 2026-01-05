@@ -10,6 +10,7 @@ import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiSt
 /**
  * @title MultiStepOwnableTarget - Target contract implementing IMultiStepOwnable functions.
  * @author cyotee doge <not_cyotee@proton.me>
+ * @custom:contract-list-ipfs
  */
 contract MultiStepOwnableTarget is IMultiStepOwnable {
     /* -------------------------------------------------------------------------- */
