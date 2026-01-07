@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.0;
 
 library ETHEREUM_MAIN {
     uint256 constant CHAIN_ID = 1;
@@ -70,7 +70,7 @@ library ETHEREUM_MAIN {
     address constant BALANCER_V3_VAULT_ADMIN = 0x35fFB749B273bEb20F40f35EdeB805012C539864;
     address constant BALANCER_V3_VAULT_EXPLORER = 0xFc2986feAB34713E659da84F3B1FA32c1da95832;
     address constant BALANCER_V3_VAULT_EXTENSION = 0x0E8B07657D719B86e06bF0806D6729e3D528C9A9;
-    address constant BALANCER_V3_VAULT_FACTORY = 0x0E8B07657D719B86e06bF0806D6729e3D528C9A9;
+    address constant BALANCER_V3_VAULT_FACTORY = 0xAc27df81663d139072E615855eF9aB0Af3FBD281;
 
     /* ------------------------------- Routers ------------------------------ */
 

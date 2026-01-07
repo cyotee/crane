@@ -35,6 +35,12 @@
   "lib/scaffold-eth-2": {
     "rev": "f94c6c368c5b83f331eb0e04f88650568fea67de"
   },
+  "lib/slipstream": {
+    "tag": {
+      "name": "v1.0.0",
+      "rev": "37eead2c7e5302a204dec78bfa0775bbb8ff48a2"
+    }
+  },
   "lib/solady": {
     "rev": "73f13dd1483707ef6b4d16cb0543570b7e1715a8"
   },
@@ -49,5 +55,23 @@
   },
   "lib/solplot": {
     "rev": "f29f41afb44da7c7ed08115e167b2be8618d7f9b"
+  },
+  "lib/v3-core": {
+    "tag": {
+      "name": "v1.0.0",
+      "rev": "e3589b192d0be27e100cd0daaf6c97204fdb1899"
+    }
+  },
+  "lib/v3-periphery": {
+    "tag": {
+      "name": "v1.3.0",
+      "rev": "80f26c86c57b8a5e4b913f42844d4c8bd274d058"
+    }
+  },
+  "lib/v4-core": {
+    "tag": {
+      "name": "v4.0.0",
+      "rev": "e50237c43811bd9b526eff40f26772152a42daba"
+    }
   }
 }

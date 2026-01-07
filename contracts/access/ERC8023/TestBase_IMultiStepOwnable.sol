@@ -9,6 +9,7 @@ import {Vm} from "forge-std/Vm.sol";
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import "forge-std/Test.sol";
 
+// TODO Write NatSpec comments.
 contract MultiStepOwnableHandler is IHandler {
     using BetterVM for Vm;
     /// forge-lint: disable-next-line(screaming-snake-case-const)
@@ -146,12 +147,7 @@ abstract contract TestBase_IMultiStepOwnable is StdInvariant, Test {
 
     function _deployOwnable() internal virtual returns (IMultiStepOwnable);
 
-    // ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
-    // You MUST override setUp() in your child contract and assign `ownable`
-    // ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
-
     function setUp() public virtual {
-        // require(address(ownable) != address(0), "ownable not set in child test");
         ownable = _deployOwnable();
 
         handler = new MultiStepOwnableHandler(ownable);

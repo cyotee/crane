@@ -8,6 +8,7 @@ pragma solidity ^0.8.0;
  * @dev Optional for facets to implement for declarative metadata about the facet.
  */
 interface IFacet {
+    // tag::facetName()[]
     /**
      * @notice Declares a canonical nonunique name for the exposing facet.
      * @return name The name of the facet.
@@ -15,7 +16,9 @@ interface IFacet {
      * @custom:signature facetName()
      */
     function facetName() external view returns (string memory name);
+    // end::facetName()[]
 
+    // tag::facetInterfaces()[]
     /**
      * @notice Declares the interfaces implemented by the exposing facet for use in a composing proxy.
      * @return interfaces The interface IDs implemented by the facet.
@@ -23,7 +26,9 @@ interface IFacet {
      * @custom:signature facetInterfaces()
      */
     function facetInterfaces() external view returns (bytes4[] memory interfaces);
+    // end::facetInterfaces()[]
 
+    // tag::facetFuncs()[]
     /**
      * @notice Declares the function selectors implemented by the exposing facet for use in a composing proxy.
      * @return funcs The function selectors implemented by the facet.
@@ -31,7 +36,9 @@ interface IFacet {
      * @custom:signature facetFuncs()
      */
     function facetFuncs() external view returns (bytes4[] memory funcs);
+    // end::facetFuncs()[]
 
+    // tag::facetMetadata()[]
     /**
      * @notice Declares comprehensive metadata about the exposing facet.
      * @dev Exposed to allow for single call retrieval of all facet metadata.
@@ -45,5 +52,6 @@ interface IFacet {
         external
         view
         returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions);
+    // end::facetMetadata()[]
 }
 // end::IFacet[]

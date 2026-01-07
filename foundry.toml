@@ -80,8 +80,11 @@ exclude_lints = [
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
 ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
+base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
+base_sepolia_infura = "https://base-sepolia.infura.io/v3/${INFURA_KEY}"
 apeChain_rpc = "https://rpc.apechain.com"
 apeChain_drpc = "https://apechain.drpc.org"
 apeChain_curtis_rpc = "https://rpc.curtis.apechain.com"
