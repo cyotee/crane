@@ -37,6 +37,17 @@ library ETHEREUM_MAIN {
     address constant UNISWAP_V3_UNIVERSAL_ROUTER = 0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af;
     address constant UNISWAP_V3_STAKER = 0xe34139463bA50bD61336E0c446Bd8C0867c6fE65;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V4                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNSWAP_V4_POOL_MNANAGER = 0x000000000004444c5dc75cB358380D2e3dE08A90;
+    address constant UNSWAP_V4_POSITION_DESCRIPTOR = 0xd1428Ba554F4C8450b763a0B2040A4935c63f06C;
+    address constant UNSWAP_V4_PPOSITION_MANAGER =	0xbD216513d74C8cf14cf4747E6AaA6420FF64ee9e;
+    address constant UNSWAP_V4_QUOTER =	0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203;
+    address constant UNSWAP_V4_STATE_VIEW =	0x7fFE42C4a5DEeA5b0feC41C94C136Cf115597227;
+    address constant UNSWAP_V4_UNIVERSAL_ROUTER	= 0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af;
+
     /* ---------------------------------------------------------------------- */
     /*                                Multicall                               */
     /* ---------------------------------------------------------------------- */

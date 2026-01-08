@@ -11,6 +11,55 @@ library BASE_MAIN {
     address payable constant WETH9 = payable(0x4200000000000000000000000000000000000006);
 
     /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V2                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNISWAP_V2_FACTORY = 0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6;
+    // address constant UNISWAP_V2_FEE_TO_SETTER = 0x18e433c7Bf8A2E1d0197CE5d8f9AFAda1A771360;
+    address constant UNISWAP_V2_ROUTER = 0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V3                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNISWAP_V3_FACTORY = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
+    address constant UNISWAP_V3_PROXY_ADMIN = 0x3334d83e224aF5ef9C2E7DDA7c7C98Efd9621fA9;
+    address constant UNISWAP_V3_TICK_LENS = 0x0CdeE061c75D43c82520eD998C23ac2991c9ac6d;
+    address constant UNISWAP_V3_SWAP_ROUTER = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
+    address constant UNISWAP_V3_NFT_DESCRIPTOR = 0xF9d1077fd35670d4ACbD27af82652a8d84577d9F;
+    address constant UNISWAP_V3_NFT_POSITION_DESCRIPTOR = 0x4f225937EDc33EFD6109c4ceF7b560B2D6401009;
+    address constant UNISWAP_V3_TRANSPARENT_UPGRADEABLE_PROXY = 0x4615C383F85D0a2BbED973d83ccecf5CB7121463;
+    address constant UNISWAP_V3_NFT_POSITION_MANAGER = 0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1;
+    address constant UNISWAP_V3_MIGRATOR = 0x23cF10b1ee3AdfCA73B0eF17C07F7577e7ACd2d7;
+    address constant UNISWAP_V3_QUOTER_V2 = 0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a;
+    address constant UNISWAP_V3_SWAP_ROUTER_V2 = 0x2626664c2603336E57B271c5C0b26F421741e481;
+    address constant UNISWAP_V3_UNIVERSAL_ROUTER = 0x6fF5693b99212Da76ad316178A184AB56D299b43;
+    address constant UNISWAP_V3_STAKER = 0x42bE4D6527829FeFA1493e1fb9F3676d2425C3C1;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V4                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNSWAP_V4_POOL_MNANAGER = 0x498581fF718922c3f8e6A244956aF099B2652b2b;
+    address constant UNSWAP_V4_POSITION_DESCRIPTOR = 0x25D093633990DC94BeDEeD76C8F3CDaa75f3E7D5;
+    address constant UNSWAP_V4_PPOSITION_MANAGER =	0x7C5f5A4bBd8fD63184577525326123B519429bDc;
+    address constant UNSWAP_V4_QUOTER =	0x0d5e0F971ED27FBfF6c2837bf31316121532048D;
+    address constant UNSWAP_V4_STATE_VIEW =	0xA3c0c9b65baD0b08107Aa264b0f3dB444b867A71;
+    address constant UNSWAP_V4_UNIVERSAL_ROUTER	= 0x6fF5693b99212Da76ad316178A184AB56D299b43;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Multicall                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant MULTICALL = 0x091e99cb1C49331a94dD62755D168E941AbD0693;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Permit2                                  */
+    /* -------------------------------------------------------------------------- */
+
+    address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
+
+    /* -------------------------------------------------------------------------- */
     /*                                  Aerodrome                                 */
     /* -------------------------------------------------------------------------- */
 
