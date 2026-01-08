@@ -30,6 +30,124 @@ npm run test-all
 forge fmt
 ```
 
+## Git Worktree Workflow (git-wt)
+
+This project uses `git-wt` to simplify working with multiple branches simultaneously via git worktrees. Each worktree is an independent working directory with its own branch.
+
+### Commands
+
+```bash
+# List all worktrees
+git wt
+
+# Create new worktree for a branch (or switch to existing)
+git wt <branch-name>
+
+# Delete worktree and branch (with safety checks)
+git wt -d <branch-name>
+
+# Force delete worktree and branch
+git wt -D <branch-name>
+```
+
+### Configuration
+
+Configure via `git config`:
+
+```bash
+# Set custom worktree base directory (default: ../{repo}-wt)
+git config wt.basedir /path/to/worktrees
+
+# Copy .gitignore-excluded files to new worktrees
+git config wt.copyignored true
+
+# Copy untracked files to new worktrees
+git config wt.copyuntracked true
+
+# Copy uncommitted changes to new worktrees
+git config wt.copymodified true
+
+# Run hook after creating worktree (e.g., install deps)
+git config wt.hook "forge build"
+```
+
+### Recommended Workflow
+
+When working on a feature or fix that requires isolation:
+
+```bash
+# Create worktree for feature branch
+git wt feature/new-vault-strategy
+
+# Work in the new worktree directory
+# Changes are isolated from main worktree
+
+# When done, delete the worktree
+git wt -d feature/new-vault-strategy
+```
+
+This is useful for:
+- Running long tests in one worktree while developing in another
+- Comparing behavior between branches side-by-side
+- Isolating experimental changes without stashing
+
+## Librarian (Documentation Search)
+
+Librarian is a local CLI tool that fetches and searches up-to-date developer documentation. Use it to get real context from official docs instead of relying on potentially outdated training data.
+
+### Core Commands
+
+```bash
+# Search documentation (hybrid keyword + semantic search)
+librarian search --library vercel/next.js "middleware"
+librarian search --library openzeppelin/contracts "ERC20"
+librarian search --library balancer/docs "swap"
+
+# Search modes
+librarian search --library <lib> --mode word "query"    # keyword only
+librarian search --library <lib> --mode vector "query"  # semantic only
+librarian search --library <lib> --version 5.x "query"  # specific version
+
+# Get full document content
+librarian get --library <lib> docs/path/to/file.md
+librarian get --library <lib> --doc 69 --slice 19:73    # specific lines
+
+# Find library and list available versions
+librarian library "solidity"
+librarian library "foundry"
+```
+
+### Managing Documentation Sources
+
+```bash
+# Add GitHub repo as source
+librarian add https://github.com/owner/repo --docs docs --ref main
+librarian add https://github.com/foundry-rs/foundry --version 1.x
+
+# Add website documentation
+librarian add https://docs.soliditylang.org
+librarian add https://docs.balancer.fi --depth 3 --pages 500
+
+# Ingest/update documentation
+librarian ingest                    # process all sources
+librarian ingest --force            # re-process existing
+librarian ingest --embed            # generate semantic embeddings
+
+# Manage sources
+librarian source list               # view configured sources
+librarian source remove 1           # delete a source
+librarian seed                      # add built-in seed libraries
+```
+
+### Utility Commands
+
+```bash
+librarian detect      # identify project versions in current directory
+librarian status      # show document counts and statistics
+librarian cleanup     # remove inactive documentation
+librarian mcp         # run as MCP server for AI agent integration
+```
+
 ## Architecture Overview
 
 Crane is a Diamond-first (ERC2535) Solidity development framework for building modular, upgradeable smart contracts.
