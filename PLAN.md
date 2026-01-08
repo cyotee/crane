@@ -1,203 +1,402 @@
-# Crane Framework Development Plan
+# Crane: Uniswap V3 Quoting Plan
 
-## Document Purpose
+This PLAN.md is intentionally focused on completing the Uniswap V3 quoting library work (swap quoting + zap quoting). Previous “framework-wide” plans remain in git history.
 
-This plan tracks development tasks across the Crane framework. It is version controlled to enable tracking across sessions and repository clones.
+## Goal
 
----
+Deliver a quoting module that can:
 
-# Part 1: Test Coverage Improvement Plan ✅ COMPLETE
+1. Quote **swap exact-in** and **swap exact-out** for Uniswap V3 pools.
+2. Quote **zap-in** (single-asset → optimal {token0, token1} → mint liquidity in a chosen range).
+3. Quote **zap-out** (burn liquidity → {token0, token1} → optionally swap to a desired output asset).
 
-## Status: ALL PHASES COMPLETE
+This needs to be correct enough to be used onchain (view/pure quoting for integrations) and testable via Foundry by comparing against real pool execution.
 
-**Last Updated:** 2024-12-31
-**Starting Test Count:** 386 tests
-**Final Test Count:** 532 tests (+ 188 existing integration tests)
-**Tests Added:** 146 new tests
+## Current State (what exists today)
 
----
+- Quoting math exists in [contracts/utils/math/UniswapV3Utils.sol](contracts/utils/math/UniswapV3Utils.sol):
+   - `_quoteExactInputSingle(amountIn, sqrtPriceX96|tick, liquidity, feePips, zeroForOne)`
+   - `_quoteExactOutputSingle(amountOut, sqrtPriceX96|tick, liquidity, feePips, zeroForOne)`
+   - Helpers: `_getSqrtPriceFromReserves`, `_getAmount0Delta`, `_getAmount1Delta`
+- These are “single-step” quotes via `SwapMath.computeSwapStep` and assume **constant liquidity** (no initialized tick crossings).
+- Tests exist under:
+   - [test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_quoteExactInput.t.sol](test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_quoteExactInput.t.sol)
+   - [test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_quoteExactOutput.t.sol](test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_quoteExactOutput.t.sol)
+   - [test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_EdgeCases.t.sol](test/foundry/spec/utils/math/uniswapV3Utils/UniswapV3Utils_EdgeCases.t.sol)
+
+## Known Issues / Immediate Fixes
 
-## Overview
+1. **Test snapshot bug** in `test_quoteExactInput_variousAmounts()` (the swap loop intends to reset pool state, but snapshots are not stored/reused). Fix this first to avoid false positives/negatives.
+2. The current docstring says “within a single tick”; in practice the code is safe only under **constant liquidity**. We should update comments to reflect “no initialized tick crossings (liquidity changes)” once we introduce multi-tick quoting.
 
-Improvements to Crane framework test coverage across three phases:
-1. Protocol Service Library Tests
-2. Token Implementation Tests
-3. Protocol Math Utils Integration Tests
+## Scope Decisions (needs clarification)
 
----
+Decisions confirmed:
 
-## Phase 1: Protocol Service Library Tests ✅ COMPLETE
-
-### 1.1 CamelotV2Service Tests ✅
-
-**File:** `test/foundry/spec/protocols/dexes/camelot/v2/services/CamelotV2Service.t.sol`
-**Tests:** 20
-
-- Basic swap functionality
-- Reverse direction swaps
-- Price impact handling
-- Zap-in (balanced/unbalanced/single-sided)
-- Standard and unbalanced deposits
-- Full and partial withdrawals
-- Zap-out operations
-- Asset balancing
-- Reserve ordering
-- Integration round-trip tests
-
-### 1.2 UniswapV2Service Tests ✅
-
-**File:** `test/foundry/spec/protocols/dexes/uniswap/v2/services/UniswapV2Service.t.sol`
-**Tests:** 20
-
-- Same coverage as CamelotV2Service
-- Exact input/output swap variants
-
-### 1.3 AerodromeService Tests ✅
-
-**File:** `test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromService.t.sol`
-**Tests:** 12
-
-**Bugs Fixed:**
-1. `Route.to` was set to pool address instead of output token
-2. `addLiquidity` was called with pool address instead of opposing token
-
-**Changes to `AerodromService.sol`:**
-- Added `IERC20 tokenOut` to `SwapParams` struct
-- Fixed `Route.to` to use `params.tokenOut`
-- Fixed `addLiquidity` to use `params.opposingToken`
-
----
-
-## Phase 2: Token Implementation Tests ✅ COMPLETE
-
-### 2.1 ERC20 Edge Case Tests ✅
-
-**File:** `test/foundry/spec/tokens/ERC20/ERC20Target_EdgeCases.t.sol`
-**Tests:** 24
-
-### 2.2 ERC4626 Invariant Tests ✅
-
-**Files Created:**
-- `contracts/tokens/ERC4626/ERC4626TargetStubHandler.sol`
-- `contracts/tokens/ERC4626/TestBase_ERC4626.sol`
-- `test/foundry/spec/tokens/ERC4626/ERC4626Invariant.t.sol`
-
-**Tests:** 8 invariants (50 runs × 250 calls each)
-
-### 2.3 ERC4626 Rounding Edge Cases ✅
-
-**File:** `test/foundry/spec/tokens/ERC4626/ERC4626_Rounding.t.sol`
-**Tests:** 21
-
-### 2.4 ERC721 Tests ✅
-
-**Files Created:**
-- `contracts/tokens/ERC721/ERC721Target.sol`
-- `contracts/tokens/ERC721/ERC721TargetStub.sol`
-- `contracts/tokens/ERC721/ERC721TargetStubHandler.sol`
-- `contracts/tokens/ERC721/TestBase_ERC721.sol`
-- `contracts/tokens/ERC721/Behavior_IERC721.sol`
-- `test/foundry/spec/tokens/ERC721/ERC721Invariant.t.sol`
-- `test/foundry/spec/tokens/ERC721/ERC721TargetStub.t.sol`
-- `test/foundry/spec/tokens/ERC721/ERC721Facet_IFacet.t.sol`
-
-**Tests:** 41
-
----
-
-## Phase 3: Protocol Math Utils Integration Tests ✅ COMPLETE
-
-**Note:** These tests already existed in `test/foundry/spec/utils/math/constProdUtils/`
-
-**Total Tests:** 188 tests across 27 test suites
-
-### 3.1 CamelotV2Utils Integration ✅ (55 tests)
-### 3.2 AerodromeUtils Integration ✅ (46 tests)
-### 3.3 UniswapV2Utils Integration ✅ (87 tests)
-
----
-
-## Progress Summary
-
-| Phase | Item | Status | Tests |
-|-------|------|--------|-------|
-| 1.1 | CamelotV2Service | ✅ Complete | 20 |
-| 1.2 | UniswapV2Service | ✅ Complete | 20 |
-| 1.3 | AerodromeService | ✅ Complete | 12 |
-| 2.1 | ERC20 Edge Cases | ✅ Complete | 24 |
-| 2.2 | ERC4626 Invariants | ✅ Complete | 8 |
-| 2.3 | ERC4626 Rounding | ✅ Complete | 21 |
-| 2.4 | ERC721 Tests | ✅ Complete | 41 |
-| 3.1 | CamelotV2Utils Integration | ✅ Complete | 55 |
-| 3.2 | AerodromeUtils Integration | ✅ Complete | 46 |
-| 3.3 | UniswapV2Utils Integration | ✅ Complete | 87 |
-
----
-
-# Part 2: ERC8109 Introspection Facet ✅ COMPLETE
-
-## Status: COMPLETE
-
-**Last Updated:** 2024-12-31
-
-## Overview
-
-Add ERC8109 Introspection as a default facet for all Diamond proxies, alongside ERC165 and ERC2535 Diamond Loupe.
-
-## Changes Made
-
-### New Files Created
-
-1. **`contracts/introspection/ERC8109/ERC8109IntrospectionFacet.sol`**
-   - Implements `IFacet` interface
-   - Inherits from `ERC8109IntrospectionTarget`
-   - Exposes `facetAddress()` and `functionFacetPairs()` functions
-
-### Files Modified
-
-1. **`contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol`**
-   - Added `IERC8109Introspection` import
-   - Added `erc8109IntrospectionFacet` to `InitArgs` struct
-   - Added `ERC8109_INTROSPECTION_FACET` immutable variable
-   - Updated `facetInterfaces()` to return 3 interfaces (added IERC8109Introspection)
-   - Updated `facetCuts()` to return 4 cuts (added ERC8109 facet)
-   - Added override for `facetAddress()` function that is declared by both ERC2535 and ERC8109
-
-2. **`contracts/InitDevService.sol`**
-   - Added deployment of `ERC8109IntrospectionFacet`
-   - Updated `InitArgs` to include new facet
-
-## Result
-
-All Diamond proxies now include by default:
-- ERC165 Facet (interface detection)
-- ERC2535 Diamond Loupe Facet (facet introspection)
-- ERC8109 Introspection Facet (function-to-facet mapping)
-
----
-
-# Part 3: Stack Too Deep Fixes ✅ COMPLETE
-
-## Status: COMPLETE
-
-**Last Updated:** 2024-12-31
-
-## Overview
-
-After disabling `viaIR` compilation (per project standards), several test files had "stack too deep" compiler errors. These were fixed by refactoring functions to use structs for bundling local variables.
-
-## Approach
-
-Used memory structs to bundle related local variables, reducing stack depth without enabling viaIR compilation.
-
-## Files Fixed
-
-| File | Status |
-|------|--------|
-| `ConstProdUtils_purchaseQuote_Aerodrome.t.sol` | ✅ Fixed |
-| `ConstProdUtils_purchaseQuote_Camelot.t.sol` | ✅ Fixed |
-| `ConstProdUtils_purchaseQuote_Uniswap.t.sol` | ✅ Fixed |
-| `ConstProdUtils_quoteSwapDepositWithFee_Aerodrome.t.sol` | ✅ Fixed |
+- **Zap target**: support both
+   - pool-native execution (direct `IUniswapV3Pool.swap/mint/burn`) and
+   - position-manager/periphery execution (NFT position manager style),
+   using a shared math core.
+
+Decisions to finalize / defaults for v1:
+
+- **Range selection**:
+   - Option A (caller provides `(tickLower, tickUpper)`):
+      - Pros: simplest, deterministic gas, caller owns strategy, easiest to test.
+      - Cons: frontend/strategy must pick a range; library won’t “suggest” one.
+   - Option B (library auto-range helper):
+      - Pros: better UX for “one-click” zaps.
+      - Cons: you’re encoding a strategy into a low-level lib; needs more testing, may be chain/volatility dependent.
+
+Recommendation: implement **Option A for v1** (required params are `(tickLower, tickUpper)`), then optionally add a separate `RangeUtils` helper later once we have a clear strategy requirement.
+
+- **Input/Output assets** (v1 default):
+   - Zap-in: single-sided input of either token0 or token1 (pool tokens only).
+   - Zap-out: single-token-out by swapping one side after burn (pool tokens only).
+
+## Implementation Plan
+
+## Proposed API (v1)
+
+This section proposes concrete function signatures that:
+
+- keep the “math core” reusable for both execution styles (pool-native + position-manager),
+- make gas bounds explicit (`maxSteps`), and
+- avoid stack-too-deep by using structs.
+
+### Swap quote core (tick-crossing, view)
+
+```solidity
+struct SwapQuoteParams {
+   IUniswapV3Pool pool;
+   bool zeroForOne;
+   uint256 amount;
+   uint160 sqrtPriceLimitX96;
+   uint32 maxSteps; // 0 == unlimited
+}
+
+struct SwapQuoteResult {
+   uint256 amountIn;
+   uint256 amountOut;
+   uint256 feeAmount;
+   uint160 sqrtPriceAfterX96;
+   int24 tickAfter;
+   uint128 liquidityAfter;
+   bool fullyFilled;
+   uint32 steps;
+}
+
+function quoteExactInput(SwapQuoteParams memory p)
+   internal
+   view
+   returns (SwapQuoteResult memory r);
+
+function quoteExactOutput(SwapQuoteParams memory p)
+   internal
+   view
+   returns (SwapQuoteResult memory r);
+```
+
+Notes:
+
+- `amount` is interpreted as `amountIn` for exact-input, and `amountOut` for exact-output.
+- `fullyFilled` becomes false if we hit `sqrtPriceLimitX96` or `maxSteps`.
+- `steps` enables test assertions around bounded vs. unbounded behavior.
+
+### Liquidity/amount helpers (pure)
+
+```solidity
+struct LiquidityAmountsParams {
+   uint160 sqrtPriceX96;
+   int24 tickLower;
+   int24 tickUpper;
+}
+
+function quoteAmountsForLiquidity(
+   LiquidityAmountsParams memory p,
+   uint128 liquidity
+) internal pure returns (uint256 amount0, uint256 amount1);
+
+function quoteLiquidityForAmounts(
+   LiquidityAmountsParams memory p,
+   uint256 amount0,
+   uint256 amount1
+) internal pure returns (uint128 liquidity);
+```
+
+These match the mental model already used by the V3 test base: amounts depend on whether current price is below/in/above the range.
+
+### Zap-in quote (single-sided input → mint)
+
+```solidity
+struct ZapInParams {
+   IUniswapV3Pool pool;
+   int24 tickLower;
+   int24 tickUpper;
+   address tokenIn; // must equal token0 or token1
+   uint256 amountIn;
+   uint160 sqrtPriceLimitX96;
+   uint32 maxSwapSteps; // 0 == unlimited
+   uint16 searchIters;  // e.g. 16–24
+}
+
+struct ZapInQuote {
+   uint256 swapAmountIn;
+   uint256 amount0;
+   uint256 amount1;
+   uint128 liquidity;
+   uint256 dust0;
+   uint256 dust1;
+   SwapQuoteResult swap;
+}
+
+function quoteZapInSingleCore(ZapInParams memory p)
+   internal
+   view
+   returns (ZapInQuote memory q);
+```
+
+Wrapper outputs (thin and optional):
+
+```solidity
+struct PoolZapInExecution {
+   bool zeroForOne;
+   uint256 swapAmountIn;
+   uint160 sqrtPriceLimitX96;
+   int24 tickLower;
+   int24 tickUpper;
+   uint128 liquidity;
+   uint256 amount0;
+   uint256 amount1;
+}
+
+function quoteZapInPool(ZapInParams memory p)
+   internal
+   view
+   returns (PoolZapInExecution memory e);
+
+struct PositionManagerZapInExecution {
+   bool zeroForOne;
+   uint256 swapAmountIn;
+   uint160 sqrtPriceLimitX96;
+   int24 tickLower;
+   int24 tickUpper;
+   uint256 amount0Desired;
+   uint256 amount1Desired;
+   // mins/recipient/deadline are intentionally NOT part of quoting
+}
+
+function quoteZapInPositionManager(ZapInParams memory p)
+   internal
+   view
+   returns (PositionManagerZapInExecution memory e);
+```
+
+### Zap-out quote (burn → optional swap to single token)
+
+```solidity
+struct ZapOutParams {
+   IUniswapV3Pool pool;
+   int24 tickLower;
+   int24 tickUpper;
+   uint128 liquidity;
+   address tokenOut; // must equal token0 or token1
+   uint160 sqrtPriceLimitX96;
+   uint32 maxSwapSteps; // 0 == unlimited
+   uint16 searchIters;
+}
+
+struct ZapOutQuote {
+   uint256 burnAmount0;
+   uint256 burnAmount1;
+   uint256 swapAmountIn;
+   uint256 amountOut;
+   uint256 dust0;
+   uint256 dust1;
+   SwapQuoteResult swap;
+}
+
+function quoteZapOutSingleCore(ZapOutParams memory p)
+   internal
+   view
+   returns (ZapOutQuote memory q);
+```
+
+Wrapper outputs (thin and optional):
+
+```solidity
+struct PoolZapOutExecution {
+   uint256 burnAmount0;
+   uint256 burnAmount1;
+   bool zeroForOne;
+   uint256 swapAmountIn;
+   uint160 sqrtPriceLimitX96;
+}
+
+function quoteZapOutPool(ZapOutParams memory p)
+   internal
+   view
+   returns (PoolZapOutExecution memory e);
+
+struct PositionManagerZapOutExecution {
+   uint256 burnAmount0;
+   uint256 burnAmount1;
+   bool zeroForOne;
+   uint256 swapAmountIn;
+   uint160 sqrtPriceLimitX96;
+}
+
+function quoteZapOutPositionManager(ZapOutParams memory p)
+   internal
+   view
+   returns (PositionManagerZapOutExecution memory e);
+```
+
+### Recommendation: naming + file layout
+
+- Keep single-tick pure wrappers in the existing library for quick usage.
+- Add the tick-crossing + zap quoting as a new “view” library to keep responsibilities clear.
+- Use structs for params/results to keep call sites readable and avoid stack-too-deep.
+
+### Phase 0 — Stabilize the existing quote tests
+
+- Fix the snapshot/revert logic in `UniswapV3Utils_quoteExactInput.t.sol`.
+- Run the existing suite to establish a green baseline for current single-step quoting.
+
+### Phase 1 — Add a tick-crossing swap quote engine (view)
+
+Add new quoting entrypoints that accept an `IUniswapV3Pool` and simulate the pool’s swap loop across initialized ticks:
+
+- `quoteExactInput(pool, zeroForOne, amountIn, sqrtPriceLimitX96, maxSteps)`
+- `quoteExactOutput(pool, zeroForOne, amountOut, sqrtPriceLimitX96, maxSteps)`
+
+`maxSteps` semantics:
+
+- `maxSteps == 0`: run until the swap is fully filled or `sqrtPriceLimitX96` is hit.
+- `maxSteps > 0`: run at most `maxSteps` swap-loop iterations (bounded gas); return partial-fill results.
+
+Design notes:
+
+- Implement as `internal view` helpers in a library (likely in `UniswapV3Utils.sol` to start; can split later if it grows).
+- Use pool state via interfaces:
+   - `slot0()` for current `sqrtPriceX96` and `tick`.
+   - `liquidity()` for current in-range liquidity.
+   - `tickBitmap(word)` + `TickBitmap.nextInitializedTickWithinOneWord(...)` to find the next initialized tick.
+   - `ticks(tickNext)` (via `IUniswapV3PoolState`) to retrieve `liquidityNet` when a tick is crossed.
+- For each step:
+   1. Determine the next initialized tick in the swap direction.
+   2. Compute the target price at that tick.
+   3. Call `SwapMath.computeSwapStep(...)`.
+   4. If the step reaches the target price and the tick is initialized, update liquidity using `liquidityNet` (sign depends on direction).
+   5. Accumulate `amountIn`, `amountOut`, and `feeAmount`.
+
+Outputs to return (suggested):
+
+- `amountInUsed`, `amountOut`, `feeAmountTotal`
+- `sqrtPriceAfterX96`, `tickAfter`, `liquidityAfter`
+- `ticksCrossed` (optional diagnostics)
+
+Success criteria:
+
+- For pools with multiple positions/ranges, quotes match actual swaps within ±1 wei for the quoted direction in Foundry.
+
+### Phase 2 — Add V3 liquidity/amount helpers (pure)
+
+We need the same building blocks that Uniswap V3 “LiquidityAmounts” style libraries provide.
+
+Add pure helpers:
+
+- `quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity) -> (amount0, amount1)`
+- `quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1) -> liquidity`
+
+These should match the logic already used in [contracts/protocols/dexes/uniswap/v3/test/bases/TestBase_UniswapV3.sol](contracts/protocols/dexes/uniswap/v3/test/bases/TestBase_UniswapV3.sol) (`mintPosition` computes token needs based on where the price is relative to the range).
+
+Success criteria:
+
+- Unit tests validate monotonicity and basic equivalences (e.g., “amounts for liquidity” then “liquidity for amounts” round-trip within expected rounding).
+
+### Phase 3 — Zap-in quote (single-asset → mint)
+
+Define a minimal zap-in quote with two “shells” over a shared math core:
+
+- Core math (pool-state driven):
+   - `quoteZapInSingleCore(pool, tickLower, tickUpper, tokenIn, amountIn, sqrtPriceLimitX96, maxSteps, searchIters) -> (swapAmountIn, amount0, amount1, liquidity, dust0, dust1)`
+- Pool-native wrapper: returns the params needed to execute `swap` + `mint` directly.
+- Position-manager wrapper: returns the params needed to call an NFT position manager (mint params) using the same computed `(amount0, amount1, tickLower, tickUpper)`.
+
+Algorithm (v1):
+
+1. Decide swap direction from `tokenIn` and pool token ordering.
+2. Use a **search** over `swapAmountIn` in `[0, amountIn]`:
+    - Simulate swap quote using `quoteExactInput` (Phase 1) for `swapAmountIn`.
+    - Compute remaining balances: tokenInRemaining + tokenOutReceived.
+    - Compute max liquidity mintable in `(tickLower, tickUpper)` using `quoteLiquidityForAmounts` (Phase 2).
+3. Choose the `swapAmountIn` that maximizes mintable liquidity (or minimizes leftover dust).
+
+Notes:
+
+- Binary search is often viable because (with fixed pool state) the “optimal” swap amount tends to be unimodal; if not, fall back to coarse sampling + local refinement.
+- Keep iteration count bounded (e.g., `searchIters = 16–24`) to stay cheap onchain.
+- Swap simulation is bounded by `maxSteps` (with `0` meaning unlimited as above).
+
+Success criteria:
+
+- In tests, executing the quoted swap then minting uses near-optimal liquidity and does not revert.
+
+### Phase 4 — Zap-out quote (burn → optional swap)
+
+Define a minimal zap-out quote with two “shells” over a shared math core:
+
+- Core math (pool-state driven):
+   - `quoteZapOutSingleCore(pool, tickLower, tickUpper, liquidity, tokenOut, sqrtPriceLimitX96, maxSteps, searchIters) -> (amount0, amount1, swapAmountIn, amountOut, dust0, dust1)`
+- Pool-native wrapper: returns the params needed to `burn` + optional `swap`.
+- Position-manager wrapper: returns the params needed to burn/decrease liquidity in the manager then swap.
+
+Steps:
+
+1. Quote “burn result” amounts from liquidity at current price using `quoteAmountsForLiquidity`.
+2. If `tokenOut` is token0: swap some (or all) of token1 → token0 using `quoteExactInput`.
+    - If `tokenOut` is token1: swap token0 → token1.
+3. Choose swap amount to maximize `tokenOut` or to minimize leftover (depending on UX requirement).
+
+Open question:
+
+- Whether to account for fees/price impact when converting “burn quote” into a final single-asset output; v1 should.
+
+### Phase 5 — Expand test coverage to prove tick-crossing + zaps
+
+Add tests that **force initialized tick crossings**:
+
+- Mint multiple positions with different ranges so liquidity changes at known ticks.
+- Perform swaps large enough to cross at least 1–2 initialized ticks.
+- Compare `quoteExactInput/Output` results to actual swaps.
+
+Add zap tests:
+
+- Zap-in (token0-only and token1-only):
+   - Use `quoteZapInSingle` to compute swap portion.
+   - Execute swap + mint.
+   - Assert minted liquidity and dust behavior matches expectations.
+- Zap-out:
+   - Start from a known liquidity position (minted in test).
+   - Compute zap-out quote.
+   - (If burn execution tooling is needed) simulate by tracking theoretical burn amounts and compare with quote; or implement a small harness that burns and swaps.
+
+## Deliverables Checklist
+
+- [ ] Fix snapshot bug in UniswapV3Utils_quoteExactInput test
+- [ ] Add tick-crossing swap quote functions (view)
+- [ ] Add pure liquidity/amount helpers
+- [ ] Add zap-in quote (single-sided)
+- [ ] Add zap-out quote (single-token-out)
+- [ ] Add tick-crossing tests
+- [ ] Add zap tests
+
+## Definition of Done
+
+- Swap quoting matches actual pool execution across tick crossings within rounding tolerance.
+- Zap quotes produce executable sequences (swap + mint, burn + swap) without reverts in Foundry.
+- Documentation in `UniswapV3Utils.sol` clearly states assumptions and failure modes.
 | `ConstProdUtils_quoteSwapDepositWithFee_Camelot.t.sol` | ✅ Fixed |
 | `ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome.t.sol` | ✅ Fixed |
 
