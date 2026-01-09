@@ -68,7 +68,8 @@ git config wt.copyuntracked true
 git config wt.copymodified true
 
 # Run hook after creating worktree (e.g., install deps)
-git config wt.hook "forge build"
+# NOTE: New worktrees may have uninitialized submodules; initialize them first.
+git config wt.hook "git submodule update --init --recursive && forge build"
 ```
 
 ### Recommended Workflow
@@ -78,6 +79,9 @@ When working on a feature or fix that requires isolation:
 ```bash
 # Create worktree for feature branch
 git wt feature/new-vault-strategy
+
+# If the repo uses submodules, initialize them in the new worktree
+git submodule update --init --recursive
 
 # Work in the new worktree directory
 # Changes are isolated from main worktree
