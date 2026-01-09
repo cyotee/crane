@@ -28,17 +28,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Small swap amount to stay within single tick (100 USDC)
         uint256 amountIn = 100e6; // 100 USDC (6 decimals)
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, USDT);
+
         // Quote using UniswapV3Utils
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             sqrtPriceX96,
             liquidity,
             FEE_LOW,
-            true // USDC is token0, USDT is token1
+            zeroForOne
         );
 
         // Execute actual swap
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, USDT, amountIn, address(this));
 
         // Assert quote accuracy (0.1% tolerance)
         assertQuoteAccuracy(quotedOut, actualOut, "USDC/USDT 500 exactIn quote mismatch");
@@ -54,15 +56,17 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Small USDC swap (USDC is token0 in this pool)
         uint256 amountIn = 100e6; // 100 USDC
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             sqrtPriceX96,
             liquidity,
             FEE_LOW,
-            true // USDC -> WETH (token0 -> token1)
+            zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 500 exactIn quote mismatch");
     }
@@ -77,15 +81,17 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Want 0.01 WETH (WETH is token1)
         uint256 amountOut = 0.01 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
         uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
             amountOut,
             sqrtPriceX96,
             liquidity,
             FEE_LOW,
-            true // USDC -> WETH (want token1)
+            zeroForOne
         );
 
-        uint256 actualIn = swapExactOutput(pool, true, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
         assertQuoteAccuracy(quotedIn, actualIn, "WETH/USDC 500 exactOut quote mismatch");
     }
@@ -102,19 +108,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
 
         // Very small swap to stay in single tick
-        // On mainnet WETH_USDC_3000: USDC is token0, WETH is token1
-        // So zeroForOne = true means USDC -> WETH
         uint256 amountIn = 100e6; // 100 USDC
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true // USDC -> WETH (token0 -> token1)
+            zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 3000 exactIn quote mismatch");
     }
@@ -127,18 +133,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
 
         // Small swap: 0.001 WETH to stay in single tick
-        // oneForZero = WETH -> USDC (token1 -> token0)
         uint256 amountIn = 0.001 ether;
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
 
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false // WETH -> USDC (token1 -> token0)
+            zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, false, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WETH, USDC, amountIn, address(this));
 
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 3000 reverse exactIn quote mismatch");
     }
@@ -151,18 +158,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
 
         // Want 0.001 WETH (small amount to stay in single tick)
-        // zeroForOne = USDC -> WETH
         uint256 amountOut = 0.001 ether;
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
             amountOut,
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true // USDC -> WETH (token0 -> token1)
+            zeroForOne
         );
 
-        uint256 actualIn = swapExactOutput(pool, true, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
         assertQuoteAccuracy(quotedIn, actualIn, "WETH/USDC 3000 exactOut quote mismatch");
     }
@@ -175,18 +183,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
 
         // Want 100 USDC (small amount to stay in single tick)
-        // oneForZero = WETH -> USDC
         uint256 amountOut = 100e6;
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
 
         uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
             amountOut,
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false // WETH -> USDC (token1 -> token0)
+            zeroForOne
         );
 
-        uint256 actualIn = swapExactOutput(pool, false, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, WETH, USDC, amountOut, address(this));
 
         assertQuoteAccuracy(quotedIn, actualIn, "WETH/USDC 3000 reverse exactOut quote mismatch");
     }
@@ -203,18 +212,19 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
 
         // Very small swap for 1% pool to stay in single tick
-        // zeroForOne = USDC -> WETH
         uint256 amountIn = 10e6; // 10 USDC
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             sqrtPriceX96,
             liquidity,
             FEE_HIGH,
-            true // USDC -> WETH
+            zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 10000 exactIn quote mismatch");
     }
@@ -229,15 +239,17 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Want 0.0001 WETH (tiny amount to stay in single tick)
         uint256 amountOut = 0.0001 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
         uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
             amountOut,
             sqrtPriceX96,
             liquidity,
             FEE_HIGH,
-            true // USDC -> WETH
+            zeroForOne
         );
 
-        uint256 actualIn = swapExactOutput(pool, true, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
         assertQuoteAccuracy(quotedIn, actualIn, "WETH/USDC 10000 exactOut quote mismatch");
     }
@@ -255,8 +267,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Small swap: 0.001 WBTC (8 decimals)
         uint256 amountIn = 0.001e8;
 
-        // WBTC < WETH by address, so WBTC is token0
-        bool zeroForOne = true;
+        bool zeroForOne = zeroForOneForTokens(pool, WBTC, WETH);
 
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
@@ -266,7 +277,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
             zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, zeroForOne, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WBTC, WETH, amountIn, address(this));
 
         assertQuoteAccuracy(quotedOut, actualOut, "WBTC/WETH 3000 exactIn quote mismatch");
     }
@@ -285,15 +296,17 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Small amount to stay in single tick
         uint256 amountIn = 50e6; // 50 USDC
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
         uint256 quotedOut = UniswapV3Utils._quoteExactInputSingle(
             amountIn,
             tick,
             liquidity,
             FEE_MEDIUM,
-            true // USDC -> WETH
+            zeroForOne
         );
 
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
         // Tick-based quote may have slightly more error due to tick rounding
         assertQuoteAccuracy(quotedOut, actualOut, 50, "tick overload exactIn quote mismatch"); // 0.5% tolerance
@@ -309,15 +322,17 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Small amount to stay in single tick
         uint256 amountOut = 0.0005 ether; // 0.0005 WETH
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
         uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
             amountOut,
             tick,
             liquidity,
             FEE_MEDIUM,
-            true // USDC -> WETH
+            zeroForOne
         );
 
-        uint256 actualIn = swapExactOutput(pool, true, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
         assertQuoteAccuracy(quotedIn, actualIn, 50, "tick overload exactOut quote mismatch"); // 0.5% tolerance
     }
@@ -347,7 +362,6 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         );
 
         // Pre-deal enough tokens for the mint
-        // USDC is token0, WETH is token1 in this pool
         deal(pool.token0(), address(this), quotedAmount0 * 2);
         deal(pool.token1(), address(this), quotedAmount1 * 2);
 
@@ -375,8 +389,9 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
 
-        uint256 amount0 = 1 ether;
-        uint256 amount1 = 1000e6; // 1000 USDC
+        address token0 = pool.token0();
+        uint256 amount0 = token0 == WETH ? 1 ether : 1000e6;
+        uint256 amount1 = token0 == WETH ? 1000e6 : 1 ether;
 
         // Quote max liquidity
         uint128 quotedLiquidity = UniswapV3Utils._quoteLiquidityForAmounts(

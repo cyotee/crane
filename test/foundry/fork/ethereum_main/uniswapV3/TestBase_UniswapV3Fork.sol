@@ -64,6 +64,13 @@ abstract contract TestBase_UniswapV3Fork is Test, IUniswapV3MintCallback, IUnisw
     /* -------------------------------------------------------------------------- */
 
     function setUp() public virtual {
+        // Skip fork tests when no RPC credentials are configured.
+        // The `ethereum_mainnet_infura` endpoint in foundry.toml depends on ${INFURA_KEY}.
+        string memory infuraKey = vm.envOr("INFURA_KEY", string(""));
+        if (bytes(infuraKey).length == 0) {
+            vm.skip(true);
+        }
+
         // Create fork at specific block for reproducibility
         // Uses the rpc_endpoints defined in foundry.toml
         vm.createSelectFork("ethereum_mainnet_infura", FORK_BLOCK);
@@ -89,6 +96,30 @@ abstract contract TestBase_UniswapV3Fork is Test, IUniswapV3MintCallback, IUnisw
     /* -------------------------------------------------------------------------- */
     /*                              Pool Helpers                                  */
     /* -------------------------------------------------------------------------- */
+
+    /// @notice Return whether a token is pool.token0 (reverts if token not in pool)
+    function tokenIsToken0(IUniswapV3Pool pool, address token) internal view returns (bool) {
+        address token0 = pool.token0();
+        address token1 = pool.token1();
+        require(token == token0 || token == token1, "token not in pool");
+        return token == token0;
+    }
+
+    /// @notice Return swap direction for a specific tokenIn -> tokenOut route
+    /// @dev zeroForOne means token0 -> token1
+    function zeroForOneForTokens(
+        IUniswapV3Pool pool,
+        address tokenIn,
+        address tokenOut
+    ) internal view returns (bool) {
+        address token0 = pool.token0();
+        address token1 = pool.token1();
+        require(
+            (tokenIn == token0 && tokenOut == token1) || (tokenIn == token1 && tokenOut == token0),
+            "token pair mismatch"
+        );
+        return tokenIn == token0;
+    }
 
     /// @notice Get pool at mainnet address
     function getPool(address poolAddress) internal view returns (IUniswapV3Pool) {
@@ -117,6 +148,30 @@ abstract contract TestBase_UniswapV3Fork is Test, IUniswapV3MintCallback, IUnisw
     /* -------------------------------------------------------------------------- */
     /*                              Swap Execution                                */
     /* -------------------------------------------------------------------------- */
+
+    /// @notice Execute a swap (exact input) by specifying tokenIn/tokenOut
+    function swapExactInputTokens(
+        IUniswapV3Pool pool,
+        address tokenIn,
+        address tokenOut,
+        uint256 amountIn,
+        address recipient
+    ) internal returns (uint256 amountOut) {
+        bool zeroForOne = zeroForOneForTokens(pool, tokenIn, tokenOut);
+        return swapExactInput(pool, zeroForOne, amountIn, recipient);
+    }
+
+    /// @notice Execute a swap (exact output) by specifying tokenIn/tokenOut
+    function swapExactOutputTokens(
+        IUniswapV3Pool pool,
+        address tokenIn,
+        address tokenOut,
+        uint256 amountOut,
+        address recipient
+    ) internal returns (uint256 amountIn) {
+        bool zeroForOne = zeroForOneForTokens(pool, tokenIn, tokenOut);
+        return swapExactOutput(pool, zeroForOne, amountOut, recipient);
+    }
 
     /// @notice Execute a swap on a V3 pool (exact input)
     /// @param pool The pool to swap in
@@ -212,8 +267,10 @@ abstract contract TestBase_UniswapV3Fork is Test, IUniswapV3MintCallback, IUnisw
         address token0 = pool.token0();
         address token1 = pool.token1();
 
-        // Deal large amounts of tokens for the mint
-        uint256 fundAmount = uint256(liquidity) * 1000;
+        // Deal large amounts of tokens for the mint.
+        // Using a fixed large amount is more robust than a liquidity-based heuristic,
+        // since owed amounts depend on price and tick range.
+        uint256 fundAmount = 1e30;
         deal(token0, address(this), fundAmount);
         deal(token1, address(this), fundAmount);
 

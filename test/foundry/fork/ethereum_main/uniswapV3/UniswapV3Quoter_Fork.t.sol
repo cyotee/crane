@@ -22,21 +22,29 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteExactInput_WETH_USDC_3000_tickCrossing() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        // Large swap: 10 ETH should cross ticks
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
+        // Choose an amount that actually crosses multiple ticks at the fork block.
         uint256 amountIn = 10 ether;
+        UniswapV3Quoter.SwapQuoteResult memory quote;
+        for (uint8 i = 0; i < 6; i++) {
+            UniswapV3Quoter.SwapQuoteParams memory tryParams = UniswapV3Quoter.SwapQuoteParams({
+                pool: pool,
+                zeroForOne: zeroForOne,
+                amount: amountIn,
+                sqrtPriceLimitX96: sqrtPriceLimitX96,
+                maxSteps: 0
+            });
+            quote = UniswapV3Quoter.quoteExactInput(tryParams);
+            if (quote.steps > 1) break;
+            amountIn *= 2;
+        }
 
-        UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
-            pool: pool,
-            zeroForOne: true, // WETH -> USDC
-            amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0 // Unlimited steps
-        });
-
-        UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
+        assertTrue(quote.steps > 1, "should have crossed multiple ticks");
 
         // Execute actual swap
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WETH, USDC, amountIn, address(this));
 
         // Verify quote accuracy
         assertTrue(quote.fullyFilled, "quote should fully fill");
@@ -54,16 +62,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // Large swap: 10000 USDC should cross ticks
         uint256 amountIn = 10_000e6;
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: false, // USDC -> WETH
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MAX_SQRT_RATIO - 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
-        uint256 actualOut = swapExactInput(pool, false, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountOut, actualOut, "reverse tick-crossing quote mismatch");
@@ -76,16 +87,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // Medium swap on 0.05% pool
         uint256 amountIn = 5 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WETH, USDC, amountIn, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountOut, actualOut, "0.05% pool tick-crossing quote mismatch");
@@ -98,16 +112,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // Swap on 1% pool (fewer ticks)
         uint256 amountIn = 2 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WETH, USDC, amountIn, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountOut, actualOut, "1% pool tick-crossing quote mismatch");
@@ -120,16 +137,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // Large stablecoin swap
         uint256 amountIn = 100_000e6; // 100k USDC
 
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, USDT);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, USDC, USDT, amountIn, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountOut, actualOut, "stablecoin tick-crossing quote mismatch");
@@ -142,16 +162,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // 0.1 WBTC swap
         uint256 amountIn = 0.1e8;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WBTC, WETH);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true, // WBTC -> WETH
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
-        uint256 actualOut = swapExactInput(pool, true, amountIn, address(this));
+        uint256 actualOut = swapExactInputTokens(pool, WBTC, WETH, amountIn, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountOut, actualOut, "WBTC/WETH tick-crossing quote mismatch");
@@ -168,16 +191,19 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         // Want 10000 USDC (may cross ticks)
         uint256 amountOut = 10_000e6;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountOut,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactOutput(params);
-        uint256 actualIn = swapExactOutput(pool, true, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, WETH, USDC, amountOut, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountIn, actualIn, "exactOutput tick-crossing quote mismatch");
@@ -189,20 +215,21 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteExactOutput_WETH_USDC_3000_tickCrossing_reverse() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        // Want 5000 USDC (USDC is token0)
-        // oneForZero = WETH -> USDC
         uint256 amountOut = 5000e6;
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: false, // WETH -> USDC (token1 -> token0)
+            zeroForOne: zeroForOne,
             amount: amountOut,
-            sqrtPriceLimitX96: TickMath.MAX_SQRT_RATIO - 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactOutput(params);
-        uint256 actualIn = swapExactOutput(pool, false, amountOut, address(this));
+        uint256 actualIn = swapExactOutputTokens(pool, WETH, USDC, amountOut, address(this));
 
         assertTrue(quote.fullyFilled, "quote should fully fill");
         assertQuoteAccuracy(quote.amountIn, actualIn, "reverse exactOutput quote mismatch");
@@ -216,26 +243,38 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteExactInput_maxSteps_limits() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        // Large swap that would normally cross many ticks
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
+        // Large swap that should cross multiple ticks (adjust if needed)
         uint256 amountIn = 50 ether;
 
         // First, get unlimited quote
         UniswapV3Quoter.SwapQuoteParams memory unlimitedParams = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory unlimitedQuote = UniswapV3Quoter.quoteExactInput(unlimitedParams);
 
+        // If this amount doesn't cross multiple ticks at the fork block, scale it up.
+        for (uint8 i = 0; i < 6 && unlimitedQuote.steps <= 1; i++) {
+            amountIn *= 2;
+            unlimitedParams.amount = amountIn;
+            unlimitedQuote = UniswapV3Quoter.quoteExactInput(unlimitedParams);
+        }
+
+        assertTrue(unlimitedQuote.steps > 1, "expected >1 step for maxSteps test");
+
         // Now with maxSteps = 1
         UniswapV3Quoter.SwapQuoteParams memory limitedParams = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 1
         });
 
@@ -254,11 +293,14 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 20 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 2
         });
 
@@ -278,15 +320,22 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
 
         (uint160 currentSqrtPrice, , ) = getPoolState(pool);
 
-        // Set a price limit that's 1% away from current
-        // For zeroForOne, price decreases, so limit is lower
-        uint160 priceLimit = uint160((uint256(currentSqrtPrice) * 99) / 100);
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+
+        // Set a price limit that's ~1% away from current in the swap direction.
+        uint160 priceLimit = zeroForOne
+            ? uint160((uint256(currentSqrtPrice) * 99) / 100)
+            : uint160((uint256(currentSqrtPrice) * 101) / 100);
+
+        // Clamp to valid bounds.
+        if (priceLimit <= TickMath.MIN_SQRT_RATIO) priceLimit = TickMath.MIN_SQRT_RATIO + 1;
+        if (priceLimit >= TickMath.MAX_SQRT_RATIO) priceLimit = TickMath.MAX_SQRT_RATIO - 1;
 
         uint256 amountIn = 50 ether; // Large swap
 
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
             sqrtPriceLimitX96: priceLimit,
             maxSteps: 0
@@ -294,8 +343,14 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
 
         UniswapV3Quoter.SwapQuoteResult memory quote = UniswapV3Quoter.quoteExactInput(params);
 
-        // The swap should stop at or before the price limit
-        assertTrue(quote.sqrtPriceAfterX96 >= priceLimit, "price should not exceed limit");
+        // The swap should stop at or before the price limit (in the correct direction)
+        if (zeroForOne) {
+            // price decreases, should not go below limit
+            assertTrue(quote.sqrtPriceAfterX96 >= priceLimit, "price should not exceed limit");
+        } else {
+            // price increases, should not go above limit
+            assertTrue(quote.sqrtPriceAfterX96 <= priceLimit, "price should not exceed limit");
+        }
 
         // If not fully filled, we hit the price limit
         if (!quote.fullyFilled) {
@@ -310,14 +365,16 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
     /// @notice Test zero amount returns current state
     function test_quoteExactInput_zeroAmount() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
+    bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+    uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         (uint160 currentSqrtPrice, int24 currentTick, uint128 currentLiquidity) = getPoolState(pool);
 
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: 0,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
@@ -340,11 +397,14 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 5 ether;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 
@@ -358,9 +418,13 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quote.liquidityAfter > 0, "liquidityAfter should be > 0");
         assertTrue(quote.steps > 0, "steps should be > 0");
 
-        // For zeroForOne, price should decrease
+        // Price should move in the swap direction.
         (uint160 priceBefore, , ) = getPoolState(pool);
-        assertTrue(quote.sqrtPriceAfterX96 < priceBefore, "price should decrease for zeroForOne");
+        if (zeroForOne) {
+            assertTrue(quote.sqrtPriceAfterX96 < priceBefore, "price should decrease for zeroForOne");
+        } else {
+            assertTrue(quote.sqrtPriceAfterX96 > priceBefore, "price should increase for oneForZero");
+        }
     }
 
     /// @notice Validate result fields for exactOutput
@@ -369,11 +433,14 @@ contract UniswapV3Quoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountOut = 5000e6;
 
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
+
         UniswapV3Quoter.SwapQuoteParams memory params = UniswapV3Quoter.SwapQuoteParams({
             pool: pool,
-            zeroForOne: true,
+            zeroForOne: zeroForOne,
             amount: amountOut,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
             maxSteps: 0
         });
 

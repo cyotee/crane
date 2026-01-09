@@ -35,11 +35,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         // Zap in with 1 ETH
         uint256 amountIn = 1 ether;
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true, // Input is WETH (token0)
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0, // Use default
             maxSwapSteps: 0,
@@ -55,13 +57,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         // The total tokens should roughly equal the input (minus fees)
         // swapAmountIn + remaining input + dust should ~ amountIn
-        uint256 totalAccountedFor = quote.swapAmountIn + (amountIn - quote.swap.amountIn) + quote.dust0;
+        uint256 inputDust = inputIsToken0 ? quote.dust0 : quote.dust1;
+        uint256 totalAccountedFor = quote.swapAmountIn + (amountIn - quote.swap.amountIn) + inputDust;
         assertApproxEqRel(totalAccountedFor, amountIn, 0.01e18, "token accounting mismatch");
 
         // Execute the zap manually and compare
         // 1. Swap part of the input
         if (quote.swapAmountIn > 0) {
-            uint256 actualSwapOut = swapExactInput(pool, true, quote.swapAmountIn, address(this));
+            uint256 actualSwapOut = swapExactInput(pool, inputIsToken0, quote.swapAmountIn, address(this));
             // Compare quoted swap output to actual
             assertQuoteAccuracy(quote.swap.amountOut, actualSwapOut, 50, "swap quote mismatch"); // 0.5% tolerance
 
@@ -93,11 +96,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         // Zap in with 1000 USDC
         uint256 amountIn = 1000e6;
 
+        bool inputIsToken0 = tokenIsToken0(pool, USDC);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: false, // Input is USDC (token1)
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -123,11 +128,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 5000e6; // 5000 USDC
 
+        bool inputIsToken0 = tokenIsToken0(pool, USDC);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true, // USDC is token0
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -154,11 +161,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 0.5 ether;
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -191,9 +200,8 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
             20
         );
 
-        // On mainnet WETH_USDC_3000: USDC is token0, WETH is token1
-        // So WETH input means zeroForOne = false (token1 -> token0 swap direction for zap)
-        assertFalse(params.zeroForOne, "should NOT be zeroForOne for WETH input (WETH is token1)");
+        bool expectedZeroForOne = tokenIsToken0(pool, WETH);
+        assertEq(params.zeroForOne, expectedZeroForOne, "zeroForOne should match tokenIn == pool.token0()");
         assertEq(params.amountIn, 1 ether, "amountIn should match");
     }
 
@@ -206,11 +214,12 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: 1 ether,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -222,7 +231,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(exec.liquidity > 0, "should have liquidity");
         assertEq(exec.tickLower, tickLower, "tickLower should match");
         assertEq(exec.tickUpper, tickUpper, "tickUpper should match");
-        assertTrue(exec.zeroForOne, "zeroForOne should match");
+        assertEq(exec.zeroForOne, inputIsToken0, "zeroForOne should match");
     }
 
     /// @notice Test quoteZapInPositionManager wrapper
@@ -234,11 +243,12 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: 1 ether,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -270,13 +280,15 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         uint128 liquidity = 1e15;
         mintPosition(pool, address(this), tickLower, tickUpper, liquidity);
 
+        bool wantToken0 = tokenIsToken0(pool, WETH);
+
         // Now quote zap-out (exit to WETH only)
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: liquidity,
-            wantToken0: true, // Want WETH
+            wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -287,13 +299,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quote.amountOut > 0, "should have output");
         assertTrue(quote.burnAmount0 > 0 || quote.burnAmount1 > 0, "should burn something");
 
-        // If we have token1 from burn, we should swap it
-        if (quote.burnAmount1 > 0) {
-            assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all token1");
+        // The burn returns both tokens; we swap the *unwanted* token fully into the wanted token.
+        if (wantToken0) {
+            if (quote.burnAmount1 > 0) assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            assertEq(quote.amountOut, quote.burnAmount0 + quote.swap.amountOut, "output accounting");
+        } else {
+            if (quote.burnAmount0 > 0) assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            assertEq(quote.amountOut, quote.burnAmount1 + quote.swap.amountOut, "output accounting");
         }
-
-        // Total output should be burnAmount0 + swap output
-        assertEq(quote.amountOut, quote.burnAmount0 + quote.swap.amountOut, "output accounting");
     }
 
     /// @notice Test zap-out to USDC on WETH/USDC pool
@@ -309,12 +322,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         uint128 liquidity = 1e15;
         mintPosition(pool, address(this), tickLower, tickUpper, liquidity);
 
+        bool wantToken0 = tokenIsToken0(pool, USDC);
+
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: liquidity,
-            wantToken0: false, // Want USDC
+            wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -323,13 +338,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         assertTrue(quote.amountOut > 0, "should have output");
 
-        // If we have token0 from burn, we should swap it
-        if (quote.burnAmount0 > 0) {
-            assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all token0");
+        // The burn returns both tokens; we swap the *unwanted* token fully into the wanted token.
+        if (wantToken0) {
+            if (quote.burnAmount1 > 0) assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            assertEq(quote.amountOut, quote.burnAmount0 + quote.swap.amountOut, "output accounting");
+        } else {
+            if (quote.burnAmount0 > 0) assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            assertEq(quote.amountOut, quote.burnAmount1 + quote.swap.amountOut, "output accounting");
         }
-
-        // Total output should be burnAmount1 + swap output
-        assertEq(quote.amountOut, quote.burnAmount1 + quote.swap.amountOut, "output accounting");
     }
 
     /// @notice Test zap-out when position is entirely in one token
@@ -346,13 +362,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         uint128 liquidity = 1e15;
         mintPosition(pool, address(this), tickLower, tickUpper, liquidity);
 
-        // Zap out wanting token0 (WETH)
+        // Zap out wanting token0 (no swap expected)
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: liquidity,
-            wantToken0: true, // Want WETH
+            wantToken0: true,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -388,9 +404,8 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
             0
         );
 
-        // On mainnet WETH_USDC_3000: USDC is token0, WETH is token1
-        // So WETH output means wantToken0 = false
-        assertFalse(params.wantToken0, "should NOT want token0 for WETH output (WETH is token1)");
+        bool expectedWantToken0 = tokenIsToken0(pool, WETH);
+        assertEq(params.wantToken0, expectedWantToken0, "wantToken0 should match tokenOut == pool.token0()");
         assertEq(params.liquidity, liquidity, "liquidity should match");
     }
 
@@ -406,12 +421,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         uint128 liquidity = 1e15;
         mintPosition(pool, address(this), tickLower, tickUpper, liquidity);
 
+        bool wantToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: liquidity,
-            wantToken0: true,
+            wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -435,12 +452,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         uint128 liquidity = 1e15;
         mintPosition(pool, address(this), tickLower, tickUpper, liquidity);
 
+        bool wantToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: liquidity,
-            wantToken0: true,
+            wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -468,11 +487,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
         // Very small amount
         uint256 amountIn = 0.001 ether;
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -498,11 +519,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 1 ether;
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -528,11 +551,13 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         uint256 amountIn = 1 ether;
 
+        bool inputIsToken0 = tokenIsToken0(pool, WETH);
+
         UniswapV3ZapQuoter.ZapInParams memory params = UniswapV3ZapQuoter.ZapInParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,
+            zeroForOne: inputIsToken0,
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
