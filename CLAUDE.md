@@ -152,6 +152,61 @@ librarian cleanup     # remove inactive documentation
 librarian mcp         # run as MCP server for AI agent integration
 ```
 
+## NatSpec & Documentation Comment Standard
+
+Crane uses NatSpec + AsciiDoc include-tags to keep docs accurate and extractable.
+
+### AsciiDoc include-tags (required)
+
+When a symbol is documented, wrap it with include-tags so our docs can `include::` exact snippets:
+
+```solidity
+// tag::MySymbol[]
+// ... code to include in docs ...
+// end::MySymbol[]
+```
+
+The tag markers must match exactly (no extra spaces inside `[]`).
+
+### Custom NatSpec tags (required where applicable)
+
+- **Functions:**
+  - `@custom:signature` canonical signature string, e.g. `transfer(address,uint256)`
+  - `@custom:selector` bytes4 selector of the signature
+- **Errors:**
+  - `@custom:signature` canonical error signature, e.g. `NotOwner(address)`
+  - `@custom:selector` bytes4 selector of the error signature
+- **Events:**
+  - `@custom:signature` canonical event signature, e.g. `OwnershipTransferred(address,address)`
+  - `@custom:topic0` bytes32 topic0 hash of the event signature (events do not have bytes4 selectors)
+- **ERC-165 interfaces:**
+  - `@custom:interfaceid` bytes4 interface id computed as XOR of all function selectors
+
+### How to compute values (use `cast`)
+
+```bash
+# Function selector (bytes4)
+cast sig "transfer(address,uint256)"
+
+# Error selector (bytes4)
+cast sig "NotOwner(address)"
+
+# Event topic0 (bytes32)
+cast keccak "OwnershipTransferred(address,address)"
+```
+
+For interface ids, prefer verifying with Solidity when possible:
+
+```solidity
+type(IMyInterface).interfaceId
+```
+
+Or compute manually by XOR-ing all function selectors.
+
+### Tests/handlers (required when referenced)
+
+If a handler/test contract is part of the documented API or referenced in docs, it must also have clear NatSpec and include-tags around the documented symbols.
+
 ## Architecture Overview
 
 Crane is a Diamond-first (ERC2535) Solidity development framework for building modular, upgradeable smart contracts.
