@@ -178,7 +178,7 @@ The tag markers must match exactly (no extra spaces inside `[]`).
   - `@custom:selector` bytes4 selector of the error signature
 - **Events:**
   - `@custom:signature` canonical event signature, e.g. `OwnershipTransferred(address,address)`
-  - `@custom:topic0` bytes32 topic0 hash of the event signature (events do not have bytes4 selectors)
+  - `@custom:topiczero` bytes32 topic0 hash of the event signature (events do not have bytes4 selectors)
 - **ERC-165 interfaces:**
   - `@custom:interfaceid` bytes4 interface id computed as XOR of all function selectors
 

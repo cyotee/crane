@@ -17,7 +17,7 @@ interface IMultiStepOwnable {
      * @notice Emitted when an ownership transfer is initiated.
      * @param prevOwner The address initiating the transfer. Will only be current owner.
      * @param newOwner The address to whcih ownership is being transfered.
-    * @custom:topic0 0xb150023a879fd806e3599b6ca8ee3b60f0e360ab3846d128d67ebce1a391639a
+    * @custom:topiczero 0xb150023a879fd806e3599b6ca8ee3b60f0e360ab3846d128d67ebce1a391639a
      */
     event OwnershipTransferInitiated(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferInitiated(address-address)[]
@@ -28,7 +28,7 @@ interface IMultiStepOwnable {
      * @notice Ownership 
      * @param prevOwner The address that initiated the ownership transfer. Is still the current owner.
      * @param newOwner The address to which ownership transfer has been confirmed.
-    * @custom:topic0 0x646fe5eeb20d96ea45a9caafcb508854a2fb5660885ced7772e12a633c974571
+    * @custom:topiczero 0x646fe5eeb20d96ea45a9caafcb508854a2fb5660885ced7772e12a633c974571
      */
     event OwnershipTransferConfirmed(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferConfirmed(address-address)[]
@@ -38,7 +38,7 @@ interface IMultiStepOwnable {
      * @notice Emitted when a pending ownership transfer is completed.
      * @param prevOwner The address that initiated the ownership transfer.
      * @param newOwner The address to which ownership transfer has been completed. Is the current owner.
-    * @custom:topic0 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
+    * @custom:topiczero 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
      */
     event OwnershipTransferred(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferred(address-address)[]

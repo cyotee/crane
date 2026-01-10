@@ -22,7 +22,7 @@ import {MultiStepOwnableTarget} from "@crane/contracts/access/ERC8023/MultiStepO
 /**
  * @title MultiStepOwnableFacet - Reusable facet for ERC8023 compliant multi-step ownership transfer.
  * @author cyotee doge <not_cyotee@proton.me>
- * @custom:contract-list-ipfs
+ * @custom:contractlistipfs
  */
 contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
     /* -------------------------------------------------------------------------- */
