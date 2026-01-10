@@ -8,6 +8,15 @@
   "lib/Compose": {
     "rev": "28d74826a532d067556a4c1067cd4722fa78d2ce"
   },
+  "lib/aave-v3-horizon": {
+    "rev": "6e2a51ea2e67af8aacf63f835d2e2b26dc7a2741"
+  },
+  "lib/aave-v4": {
+    "tag": {
+      "name": "v0.5.6",
+      "rev": "6959e3219b5506bf2acae18551cbb2a68a5b8fba"
+    }
+  },
   "lib/aerodrome-contracts": {
     "rev": "a4fe56813c9e64907038f447a7358f83ec32dc14"
   },
@@ -73,5 +82,8 @@
       "name": "v4.0.0",
       "rev": "e50237c43811bd9b526eff40f26772152a42daba"
     }
+  },
+  "lib/v4-periphery": {
+    "rev": "3779387e5d296f39df543d23524b050f89a62917"
   }
 }
