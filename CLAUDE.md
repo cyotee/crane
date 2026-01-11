@@ -827,7 +827,70 @@ abstract contract TestBase_ERC20 is Test {
 
 ## Configuration
 
-- Solidity 0.8.30 with viaIR enabled (required for complex tests)
+- Solidity 0.8.30
 - Optimizer runs: 1 (for contract size limits)
 - EVM version: Prague
 - Import remappings defined in `foundry.toml`
+
+## CRITICAL: No viaIR Compilation
+
+**NEVER enable `via_ir` or `viaIR` in foundry.toml.** IR compilation is strictly forbidden because:
+- Dramatically slower compilation (10-100x slower)
+- Excessive memory usage
+- Breaks parallel agent workflows
+- Not necessary when code is properly structured
+
+### Resolving "Stack Too Deep" Errors
+
+When you encounter "stack too deep" errors, **DO NOT enable viaIR**. Instead, refactor using structs:
+
+```solidity
+// WRONG - too many local variables causes stack-too-deep
+function badFunction(
+    address tokenA,
+    address tokenB,
+    uint256 amountA,
+    uint256 amountB,
+    address recipient,
+    uint256 deadline
+) external {
+    uint256 reserveA = pair.reserveA();
+    uint256 reserveB = pair.reserveB();
+    uint256 totalSupply = pair.totalSupply();
+    uint256 liquidity = calculateLiquidity(amountA, amountB, reserveA, reserveB, totalSupply);
+    // ... more variables = stack too deep
+}
+
+// CORRECT - group related variables into structs
+struct DepositParams {
+    address tokenA;
+    address tokenB;
+    uint256 amountA;
+    uint256 amountB;
+    address recipient;
+    uint256 deadline;
+}
+
+struct PoolState {
+    uint256 reserveA;
+    uint256 reserveB;
+    uint256 totalSupply;
+}
+
+function goodFunction(DepositParams memory params) external {
+    PoolState memory state = PoolState({
+        reserveA: pair.reserveA(),
+        reserveB: pair.reserveB(),
+        totalSupply: pair.totalSupply()
+    });
+    uint256 liquidity = calculateLiquidity(params, state);
+    // ... struct members don't consume stack slots
+}
+```
+
+**Key patterns:**
+1. Group function parameters into a `Params` struct
+2. Group intermediate state into a `State` or `Context` struct
+3. Use `memory` structs for computation, `calldata` for external inputs
+4. Extract helper functions that operate on structs
+5. Use block scoping `{ ... }` to limit variable lifetimes when structs aren't appropriate
