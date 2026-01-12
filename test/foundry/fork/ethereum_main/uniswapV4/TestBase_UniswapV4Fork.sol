@@ -11,7 +11,7 @@ import {IHooks} from "../../../../../contracts/protocols/dexes/uniswap/v4/interf
 import {TickMath} from "../../../../../contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.sol";
 
-/// @title TestBase_UniswapV4Fork
+/// @title TestBase_UniswapV4EthereumMainnetFork
 /// @notice Base test contract for Uniswap V4 fork tests against Ethereum mainnet
 /// @dev V4 Architecture Key Points:
 ///      - PoolManager is a singleton (vs V3's separate pool contracts)
@@ -19,7 +19,7 @@ import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.s
 ///      - PoolId is derived from keccak256(abi.encode(poolKey))
 ///      - State is read via StateLibrary using extsload (no unlock required for views)
 ///      - Currency type wraps address (address(0) = native ETH)
-abstract contract TestBase_UniswapV4Fork is Test {
+abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     using StateLibrary for IPoolManager;
     using PoolIdLibrary for PoolKey;
     using CurrencyLibrary for Currency;
@@ -28,9 +28,9 @@ abstract contract TestBase_UniswapV4Fork is Test {
     /*                              Fork Configuration                            */
     /* -------------------------------------------------------------------------- */
 
-    /// @dev Block number for fork reproducibility (Jan 2025 - after V4 launch)
-    /// V4 launched on Ethereum mainnet in Jan 2025
-    uint256 internal constant FORK_BLOCK = 21_500_000;
+    /// @dev Block number for fork reproducibility.
+    /// Must be >= the Uniswap v4 PoolManager deployment on Ethereum mainnet.
+    uint256 internal constant FORK_BLOCK = 21_900_000;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */
@@ -90,10 +90,15 @@ abstract contract TestBase_UniswapV4Fork is Test {
         // Create fork at specific block for reproducibility
         vm.createSelectFork("ethereum_mainnet_infura", FORK_BLOCK);
 
+        // Ensure we're actually on Ethereum mainnet.
+        require(block.chainid == 1, "V4FORK:NOT_ETHEREUM_MAINNET");
+
         // Set up PoolManager reference
         // Note: Using the constant from ETHEREUM_MAIN (has typo "UNSWAP" in original)
-        poolManager = IPoolManager(ETHEREUM_MAIN.UNSWAP_V4_POOL_MNANAGER);
-        vm.label(address(poolManager), "PoolManager");
+        address poolManagerAddr = ETHEREUM_MAIN.UNSWAP_V4_POOL_MNANAGER;
+        require(poolManagerAddr.code.length > 0, "V4FORK:POOL_MANAGER_NO_CODE_AT_BLOCK");
+        poolManager = IPoolManager(poolManagerAddr);
+        vm.label(poolManagerAddr, "PoolManager");
 
         // Label common tokens
         vm.label(WETH, "WETH");

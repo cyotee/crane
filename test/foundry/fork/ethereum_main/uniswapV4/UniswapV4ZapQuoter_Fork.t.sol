@@ -10,14 +10,14 @@ import {Currency} from "../../../../../contracts/protocols/dexes/uniswap/v4/type
 import {TickMath} from "../../../../../contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {UniswapV4ZapQuoter} from "../../../../../contracts/protocols/dexes/uniswap/v4/utils/UniswapV4ZapQuoter.sol";
 import {UniswapV4Utils} from "../../../../../contracts/protocols/dexes/uniswap/v4/utils/UniswapV4Utils.sol";
-import {TestBase_UniswapV4Fork} from "./TestBase_UniswapV4Fork.sol";
+import {TestBase_UniswapV4EthereumMainnetFork} from "./TestBase_UniswapV4Fork.sol";
 
 /// @title UniswapV4ZapQuoter Fork Tests
 /// @notice Validates zap quote accuracy against production Uniswap V4 pools
 /// @dev V4-specific: Tests use PoolManager singleton and PoolKey identification
 /// @dev Zap-in: single-sided liquidity provision with optimal swap calculation
 /// @dev Zap-out: burn liquidity and swap to single token output
-contract UniswapV4ZapQuoter_Fork_Test is TestBase_UniswapV4Fork {
+contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMainnetFork {
     using StateLibrary for IPoolManager;
     using PoolIdLibrary for PoolKey;
 

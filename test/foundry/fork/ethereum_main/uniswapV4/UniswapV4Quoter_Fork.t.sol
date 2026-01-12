@@ -9,13 +9,13 @@ import {PoolId, PoolIdLibrary} from "../../../../../contracts/protocols/dexes/un
 import {Currency} from "../../../../../contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {TickMath} from "../../../../../contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {UniswapV4Quoter} from "../../../../../contracts/protocols/dexes/uniswap/v4/utils/UniswapV4Quoter.sol";
-import {TestBase_UniswapV4Fork} from "./TestBase_UniswapV4Fork.sol";
+import {TestBase_UniswapV4EthereumMainnetFork} from "./TestBase_UniswapV4Fork.sol";
 
 /// @title UniswapV4Quoter Fork Tests
 /// @notice Validates tick-crossing quote accuracy against production Uniswap V4 pools
 /// @dev V4-specific: Tests use PoolManager singleton and PoolKey identification
 /// @dev The view-based quoter reads state via extsload (StateLibrary) without requiring unlock
-contract UniswapV4Quoter_Fork_Test is TestBase_UniswapV4Fork {
+contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMainnetFork {
     using StateLibrary for IPoolManager;
     using PoolIdLibrary for PoolKey;
 

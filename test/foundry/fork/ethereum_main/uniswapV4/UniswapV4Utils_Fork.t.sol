@@ -8,14 +8,14 @@ import {PoolId, PoolIdLibrary} from "../../../../../contracts/protocols/dexes/un
 import {Currency} from "../../../../../contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {TickMath} from "../../../../../contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {UniswapV4Utils} from "../../../../../contracts/protocols/dexes/uniswap/v4/utils/UniswapV4Utils.sol";
-import {TestBase_UniswapV4Fork} from "./TestBase_UniswapV4Fork.sol";
+import {TestBase_UniswapV4EthereumMainnetFork} from "./TestBase_UniswapV4Fork.sol";
 
 /// @title UniswapV4Utils Fork Tests
 /// @notice Validates single-tick quote functions against production Uniswap V4 pools on Ethereum mainnet
 /// @dev V4-specific: Tests use PoolKey and read state via StateLibrary
 /// @dev Since V4 swaps require unlock callbacks, we validate quotes against pool state
 ///      rather than executing actual swaps
-contract UniswapV4Utils_Fork_Test is TestBase_UniswapV4Fork {
+contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMainnetFork {
     using UniswapV4Utils for uint256;
     using PoolIdLibrary for PoolKey;
 
@@ -125,7 +125,20 @@ contract UniswapV4Utils_Fork_Test is TestBase_UniswapV4Fork {
         );
 
         assertTrue(quotedIn > 0, "input should be > 0");
-        assertTrue(quotedIn > amountOut / 10000, "input should be reasonable"); // At least some value
+
+        // Sanity via round-trip: quoting the computed input back should produce
+        // at least the requested output (accounting for rounding).
+        uint256 roundTripOut = UniswapV4Utils._quoteExactInputSingle(
+            quotedIn,
+            sqrtPriceX96,
+            liquidity,
+            lpFee,
+            zeroForOne
+        );
+        assertTrue(roundTripOut >= amountOut, "round-trip output should cover amountOut");
+
+        // Loose upper bound (prevents pathological results).
+        assertTrue(quotedIn < 10_000e6, "input should be bounded");
     }
 
     /// @notice Test quoteExactOutputSingle with tick overload
