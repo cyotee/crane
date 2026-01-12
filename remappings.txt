@@ -3,12 +3,11 @@ forge-std/=lib/forge-std/src/
 @crane/contracts/=contracts/
 @crane/test/=test/
 
-@compose/=lib/Compose/
-
 @solady/=lib/solady/src/
 
-@openzeppelin/=lib/openzeppelin-contracts/
+@solmate/=lib/solmate/src/
 
+@openzeppelin/=lib/openzeppelin-contracts/
 
 @opengsn/contracts/=lib/gsn/packages/contracts/
 
@@ -21,6 +20,6 @@ forge-std/=lib/forge-std/src/
 @balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/
 @balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/
 
-v4-core/=lib/v4-periphery/lib/v4-core/src/
 v4-periphery/=lib/v4-periphery/
+v4-core/=lib/v4-periphery/lib/v4-core/src/
 permit2/=lib/v4-periphery/lib/permit2/
