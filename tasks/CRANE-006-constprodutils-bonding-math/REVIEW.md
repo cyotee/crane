@@ -5,6 +5,10 @@
 **Review Completed:** 2026-01-13
 **Status:** Complete
 
+**Secondary Review:** Claude Opus 4.5
+**Secondary Review Date:** 2026-01-13
+**Secondary Status:** Complete - Validated
+
 ---
 
 ## Clarifying Questions
@@ -103,3 +107,53 @@ Actionable items for follow-up tasks:
 ---
 
 **When review complete, output:** `<promise>REVIEW_COMPLETE</promise>`
+
+---
+
+## Secondary Review Notes (Claude Opus 4.5)
+
+### Validation Summary
+
+Secondary review validated the primary findings:
+
+1. **Finding 1 (division-by-zero) - CONFIRMED**: Verified at `ConstProdUtils.sol:530`. The code path `args.protocolFeeDenominator / args.ownerFeeShare` will panic if `ownerFeeShare == 0` and `feeOn && kLast != 0`. The input validation at lines 514-520 checks `args.ownerFeeShare > args.protocolFeeDenominator` but does not guard against `ownerFeeShare == 0`.
+
+2. **Finding 2 (memo inaccuracy) - CONFIRMED**: Verified at `ConstProdUtils.sol:101`. The subtraction `sqrtProduct - _MINIMUM_LIQUIDITY` will revert on underflow in Solidity 0.8+, not return 0.
+
+### Test Suite Validation
+
+- Full test suite: **1319 tests passed, 0 failed, 8 skipped**
+- New invariant test file: **13/13 tests passing**
+- Test quality assessment: High-signal tests covering k-invariant preservation, round-trip value extraction, extreme ratios, and boundary conditions
+
+### Additional Observations
+
+1. **Commented code volume**: Lines 848-1313 contain extensive commented-out code (~465 lines). While not a functional issue, this adds maintenance burden and could be archived separately.
+
+2. **Console import**: Line 7 imports `betterconsole`, suggesting debug logging may be active. Consider conditional compilation or removal for production.
+
+3. **Test file quality**: The new `ConstProdUtils_InvariantPreservation.t.sol` is well-structured with:
+   - 7 fuzz tests with appropriate bounds
+   - 6 unit tests for specific edge cases
+   - External wrapper pattern for catching reverts
+   - Clear documentation of invariants being tested
+
+### Acceptance Criteria Verification
+
+| Criterion | Status |
+|-----------|--------|
+| Memo exists at `docs/review/constprodutils-and-bonding-math.md` | PASS |
+| Memo lists key invariants | PASS |
+| Memo lists rounding modes | PASS |
+| Memo lists overflow/underflow assumptions | PASS |
+| Memo identifies boundary conditions | PASS |
+| At least one high-signal test added | PASS (13 tests) |
+| `forge build` passes | PASS |
+| `forge test` passes | PASS |
+
+### Recommendation
+
+**APPROVE** - Deliverables meet all acceptance criteria. Follow-up tasks should address:
+1. (High) Zap-out `ownerFeeShare == 0` guard
+2. (Medium) Fee denominator heuristic documentation/overload
+3. (Low) Commented code cleanup
