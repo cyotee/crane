@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-009 | Uniswap V4 Utilities Review | Pending Merge | None | `review/crn-uniswap-v4-utils` |
 | CRANE-010 | Aerodrome V1 Utilities Review | In Progress | None | `review/crn-aerodrome-v1-utils` |
 | CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
@@ -40,8 +39,7 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (5 tasks):**
-- ~~CRANE-009: Uniswap V4 Utilities Review~~ (Pending Merge)
+**DEX Protocol Reviews (4 tasks):**
 - ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Progress)
 - CRANE-011: Slipstream Utilities Review
 - CRANE-012: Camelot V2 Utilities Review
@@ -83,6 +81,7 @@
 | CRANE-006 | Constant Product & Bonding Math Review | 2026-01-13 | archive/CRANE-006-constprodutils-bonding-math/ |
 | CRANE-007 | Uniswap V2 Utilities Review | 2026-01-13 | archive/CRANE-007-uniswap-v2-utils/ |
 | CRANE-008 | Uniswap V3 Utilities Review | 2026-01-13 | archive/CRANE-008-uniswap-v3-utils/ |
+| CRANE-009 | Uniswap V4 Utilities Review | 2026-01-13 | archive/CRANE-009-uniswap-v4-utils/ |
 
 ## Cross-Repo Dependencies
 
