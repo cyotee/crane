@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-010 | Aerodrome V1 Utilities Review | In Progress | None | `review/crn-aerodrome-v1-utils` |
+| CRANE-010 | Aerodrome V1 Utilities Review | In Review | None | `review/crn-aerodrome-v1-utils` |
 | CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
@@ -40,7 +40,7 @@
 ### Ready for Agent
 
 **DEX Protocol Reviews (4 tasks):**
-- ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Progress)
+- ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Review)
 - CRANE-011: Slipstream Utilities Review
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review

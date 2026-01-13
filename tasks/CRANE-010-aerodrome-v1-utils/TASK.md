@@ -23,10 +23,10 @@ Review Crane's Aerodrome V1 utility surfaces for stable/volatile pool handling, 
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Aerodrome V1 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
-- [ ] PROGRESS.md lists key invariants for Aerodrome V1
-- [ ] PROGRESS.md documents stable vs volatile pool differences
-- [ ] PROGRESS.md documents fee handling
-- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
+- [x] PROGRESS.md lists key invariants for Aerodrome V1
+- [x] PROGRESS.md documents stable vs volatile pool differences
+- [x] PROGRESS.md documents fee handling
+- [x] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
@@ -52,16 +52,16 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 ## Inventory Check
 
 Before starting, verify:
-- [ ] Review `contracts/protocols/dexes/aerodrome/v1/`
-- [ ] Identify stable vs volatile pool handling
-- [ ] Identify router and factory integrations
-- [ ] Identify all public entrypoints and consumers
+- [x] Review `contracts/protocols/dexes/aerodrome/v1/`
+- [x] Identify stable vs volatile pool handling
+- [x] Identify router and factory integrations
+- [x] Identify all public entrypoints and consumers
 
 ## Completion Criteria
 
-- [ ] Review findings documented in PROGRESS.md
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] Review findings documented in PROGRESS.md
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
