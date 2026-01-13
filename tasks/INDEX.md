@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-01-13
 
 ## Active Tasks
 
@@ -22,6 +22,9 @@
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
 | CRANE-015 | Fix ERC165Repo Overload Bug | Ready | CRANE-002 | `fix/erc165-overload` |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
+| CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
+| CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
+| CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
 
 ## Status Legend
 
@@ -44,13 +47,16 @@
 
 ### Ready for Agent
 
-**Core Framework (6 tasks):**
+**Core Framework (9 tasks):**
 - CRANE-005: Token Standards Review (ERC20, Permit, EIP-712)
 - CRANE-006: Constant Product & Bonding Math Review
 - CRANE-013: Balancer V3 Utilities Review
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
+- CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
+- CRANE-018: Improve Test Verification Rigor (from CRANE-003)
+- CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
 
 ### Blocked
 

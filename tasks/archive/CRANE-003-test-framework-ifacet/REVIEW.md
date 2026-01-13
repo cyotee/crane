@@ -148,8 +148,8 @@ Actionable items for follow-up tasks:
 - contracts/introspection/ERC165/Behavior_IERC165.sol
 - contracts/introspection/ERC165/TestBase_IERC165.sol
 
-**User Response:** (awaiting user decision)
-**Notes:** These address critical safety gaps identified in the audit.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-017
 
 ---
 
@@ -165,8 +165,8 @@ Actionable items for follow-up tasks:
 - contracts/factories/diamondPkg/TestBase_IFacet.sol
 - contracts/test/comparators/Bytes4SetComparator.sol
 
-**User Response:** (awaiting user decision)
-**Notes:** These improve verification rigor and code clarity.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-018
 
 ---
 
@@ -180,8 +180,8 @@ Actionable items for follow-up tasks:
 - contracts/tokens/ERC20/TestBase_ERC20.sol
 - contracts/test/comparators/Bytes4SetComparatorRepo.sol
 
-**User Response:** (awaiting user decision)
-**Notes:** These are edge cases and hygiene improvements, not critical for current safety.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-019
 
 ---
 
