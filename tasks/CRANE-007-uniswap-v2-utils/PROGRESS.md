@@ -1,4 +1,4 @@
-# Progress: CRANE-007 — Uniswap Utilities (V2/V3/V4)
+# Progress: CRANE-007 — Uniswap V2 Utilities
 
 ## Status: Not Started
 
@@ -19,19 +19,17 @@
 
 **Next Steps:**
 - [ ] Review `contracts/protocols/dexes/uniswap/v2/`
-- [ ] Review `contracts/protocols/dexes/uniswap/v3/`
-- [ ] Review `contracts/protocols/dexes/uniswap/v4/`
-- [ ] Draft Uniswap utilities correctness memo
+- [ ] Identify router wrappers and quote utilities
+- [ ] Draft Uniswap V2 correctness memo
 
 ## Checklist
 
 ### Inventory Check
 - [ ] Uniswap V2 utilities reviewed
-- [ ] Uniswap V3 utilities reviewed
-- [ ] Uniswap V4 utilities reviewed
-- [ ] All public entrypoints identified
+- [ ] Router wrappers identified
+- [ ] Quote utilities identified
 
 ### Deliverables
-- [ ] `docs/review/uniswap-utils.md` created
+- [ ] `docs/review/uniswap-v2-utils.md` created
 - [ ] `forge build` passes
 - [ ] `forge test` passes

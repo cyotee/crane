@@ -1,4 +1,4 @@
-# Task CRANE-010: Review — Balancer V3 Utilities
+# Task CRANE-013: Review — Balancer V3 Utilities
 
 **Repo:** Crane Framework
 **Status:** Ready
@@ -10,7 +10,7 @@
 
 ## Description
 
-Review Crane's Balancer V3 utility surfaces for vault integration, batch swap handling, and test coverage.
+Review Crane's Balancer V3 utility surfaces for vault integration, pool operations, and test coverage.
 
 ## Dependencies
 
@@ -18,25 +18,30 @@ Review Crane's Balancer V3 utility surfaces for vault integration, batch swap ha
 
 ## User Stories
 
-### US-CRANE-010.1: Produce a Balancer V3 Correctness Memo
+### US-CRANE-013.1: Produce a Balancer V3 Correctness Memo
 
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Balancer V3 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
 - [ ] Memo lists key invariants for Balancer V3
-- [ ] Memo documents vault interaction patterns
+- [ ] Memo documents vault singleton interactions
+- [ ] Memo documents pool type differences
 - [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
-**Balancer V3:**
+**Balancer V3 Focus Areas:**
 - Vault singleton pattern
-- Pool registration and management
-- Batch swap execution
-- Flash loan integration
-- Buffer and liquidity management
+- Pool registration and lifecycle
 - Weighted pool math
 - Composable stable pool math
+- Batch swap execution
+- Single swap vs multi-hop
+- Flash loan integration
+- Buffer and liquidity management
+- Pool hooks
+- Rate providers for yield-bearing tokens
+- Swap fee handling
 
 ## Files to Create/Modify
 
@@ -51,6 +56,7 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 Before starting, verify:
 - [ ] Review `contracts/protocols/dexes/balancer/v3/`
 - [ ] Identify vault integration points
+- [ ] Identify pool type implementations
 - [ ] Identify all public entrypoints and consumers
 
 ## Completion Criteria

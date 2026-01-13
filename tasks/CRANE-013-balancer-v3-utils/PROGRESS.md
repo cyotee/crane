@@ -1,4 +1,4 @@
-# Progress: CRANE-010 — Balancer V3 Utilities
+# Progress: CRANE-013 — Balancer V3 Utilities
 
 ## Status: Not Started
 
@@ -26,8 +26,8 @@
 
 ### Inventory Check
 - [ ] Balancer V3 utilities reviewed
-- [ ] Vault integration points identified
-- [ ] All public entrypoints identified
+- [ ] Vault singleton documented
+- [ ] Pool types documented
 
 ### Deliverables
 - [ ] `docs/review/balancer-v3-utils.md` created

@@ -1,4 +1,4 @@
-# Progress: CRANE-008 — Aerodrome/Slipstream Utilities
+# Progress: CRANE-011 — Slipstream Utilities
 
 ## Status: Not Started
 
@@ -18,18 +18,18 @@
 - (none yet)
 
 **Next Steps:**
-- [ ] Review `contracts/protocols/dexes/aerodrome/v1/`
 - [ ] Review `contracts/protocols/dexes/aerodrome/slipstream/`
-- [ ] Draft Aerodrome/Slipstream correctness memo
+- [ ] Compare with Uniswap V3 for deviations
+- [ ] Draft Slipstream correctness memo
 
 ## Checklist
 
 ### Inventory Check
-- [ ] Aerodrome V1 utilities reviewed
 - [ ] Slipstream utilities reviewed
-- [ ] All public entrypoints identified
+- [ ] Differences from Uniswap V3 identified
+- [ ] Gauge integration documented
 
 ### Deliverables
-- [ ] `docs/review/aerodrome-slipstream-utils.md` created
+- [ ] `docs/review/slipstream-utils.md` created
 - [ ] `forge build` passes
 - [ ] `forge test` passes

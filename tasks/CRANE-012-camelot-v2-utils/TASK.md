@@ -1,4 +1,4 @@
-# Task CRANE-009: Review — Camelot V2 Utilities
+# Task CRANE-012: Review — Camelot V2 Utilities
 
 **Repo:** Crane Framework
 **Status:** Ready
@@ -10,7 +10,7 @@
 
 ## Description
 
-Review Crane's Camelot V2 utility surfaces for quote correctness, custom fee handling, and test coverage.
+Review Crane's Camelot V2 utility surfaces for custom fee handling, directional fees, and test coverage.
 
 ## Dependencies
 
@@ -18,24 +18,27 @@ Review Crane's Camelot V2 utility surfaces for quote correctness, custom fee han
 
 ## User Stories
 
-### US-CRANE-009.1: Produce a Camelot V2 Correctness Memo
+### US-CRANE-012.1: Produce a Camelot V2 Correctness Memo
 
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Camelot V2 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
 - [ ] Memo lists key invariants for Camelot V2
-- [ ] Memo documents custom fee mechanisms
+- [ ] Memo documents directional fee mechanisms
+- [ ] Memo documents fee-on-transfer token handling
 - [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
-**Camelot V2:**
-- Custom directional fees (different fees for buy vs sell)
-- Fee-on-transfer token handling
+**Camelot V2 Focus Areas:**
+- Directional fees (different fees for buy vs sell)
+- Dynamic fee calculation
+- Fee-on-transfer token compatibility
 - Referral system integration
-- Router wrapper correctness
-- Quote accuracy vs actual swap
-- `CamelotV2Service` library patterns
+- Router wrapper correctness (`CamelotV2Service`)
+- Quote accuracy vs actual swap execution
+- Pair factory interactions
+- Stable pair support (if applicable)
 
 ## Files to Create/Modify
 
@@ -50,6 +53,7 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 Before starting, verify:
 - [ ] Review `contracts/protocols/dexes/camelot/v2/`
 - [ ] Review `contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol`
+- [ ] Identify directional fee handling
 - [ ] Identify all public entrypoints and consumers
 
 ## Completion Criteria

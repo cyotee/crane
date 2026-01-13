@@ -1,18 +1,17 @@
-# Review: CRANE-010 — Balancer V3 Utilities
+# Review: CRANE-011 — Slipstream Utilities
 
 ## Status: Awaiting Implementation
 
 ## Review Checklist
 
 ### Deliverables Present
-- [ ] `docs/review/balancer-v3-utils.md` exists
-- [ ] Memo covers Balancer V3 invariants
-- [ ] Memo documents vault interaction patterns
+- [ ] `docs/review/slipstream-utils.md` exists
+- [ ] Memo covers concentrated liquidity
+- [ ] Memo covers differences from Uniswap V3
 - [ ] Memo lists missing tests
 
 ### Quality Checks
 - [ ] Memo is clear and actionable
-- [ ] Vault singleton pattern is documented
 - [ ] No regressions introduced
 
 ### Build Verification

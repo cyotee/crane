@@ -1,4 +1,4 @@
-# Progress: CRANE-009 — Camelot V2 Utilities
+# Progress: CRANE-012 — Camelot V2 Utilities
 
 ## Status: Not Started
 
@@ -26,8 +26,8 @@
 
 ### Inventory Check
 - [ ] Camelot V2 utilities reviewed
+- [ ] Directional fees documented
 - [ ] CamelotV2Service reviewed
-- [ ] All public entrypoints identified
 
 ### Deliverables
 - [ ] `docs/review/camelot-v2-utils.md` created

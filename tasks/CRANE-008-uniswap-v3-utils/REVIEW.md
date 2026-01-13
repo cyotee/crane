@@ -1,20 +1,18 @@
-# Review: CRANE-007 — Uniswap Utilities (V2/V3/V4)
+# Review: CRANE-008 — Uniswap V3 Utilities
 
 ## Status: Awaiting Implementation
 
 ## Review Checklist
 
 ### Deliverables Present
-- [ ] `docs/review/uniswap-utils.md` exists
-- [ ] Memo covers Uniswap V2 invariants
-- [ ] Memo covers Uniswap V3 invariants
-- [ ] Memo covers Uniswap V4 invariants
-- [ ] Memo documents rounding behavior
+- [ ] `docs/review/uniswap-v3-utils.md` exists
+- [ ] Memo covers concentrated liquidity
+- [ ] Memo covers tick math
+- [ ] Memo covers sqrtPriceX96
 - [ ] Memo lists missing tests
 
 ### Quality Checks
 - [ ] Memo is clear and actionable
-- [ ] Each version is adequately covered
 - [ ] No regressions introduced
 
 ### Build Verification

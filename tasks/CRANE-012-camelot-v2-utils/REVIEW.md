@@ -1,18 +1,17 @@
-# Review: CRANE-008 — Aerodrome/Slipstream Utilities
+# Review: CRANE-012 — Camelot V2 Utilities
 
 ## Status: Awaiting Implementation
 
 ## Review Checklist
 
 ### Deliverables Present
-- [ ] `docs/review/aerodrome-slipstream-utils.md` exists
-- [ ] Memo covers Aerodrome V1 invariants
-- [ ] Memo covers Slipstream concentrated liquidity
+- [ ] `docs/review/camelot-v2-utils.md` exists
+- [ ] Memo covers directional fees
+- [ ] Memo covers fee-on-transfer handling
 - [ ] Memo lists missing tests
 
 ### Quality Checks
 - [ ] Memo is clear and actionable
-- [ ] Both V1 and Slipstream are covered
 - [ ] No regressions introduced
 
 ### Build Verification
