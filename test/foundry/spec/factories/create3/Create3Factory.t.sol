@@ -580,4 +580,137 @@ contract Create3Factory_Test is Test {
 
         assertEq(factory.nameOfFacet(IFacet(address(facet))), name);
     }
+
+    /* ---------------------------------------------------------------------- */
+    /*                   Determinism / Idempotency Tests                       */
+    /* ---------------------------------------------------------------------- */
+
+    /**
+     * @notice Test that deploying DIFFERENT initCode to the same salt returns the
+     *         EXISTING contract (idempotency) rather than deploying a new one.
+     * @dev This is a critical determinism invariant: CREATE3 addresses depend only
+     *      on deployer + salt, not on initCode. The factory must return the existing
+     *      contract when the salt is already occupied.
+     *
+     *      This test verifies that:
+     *      1. First deployment succeeds with "OriginalFacet"
+     *      2. Second deployment with DIFFERENT initCode ("DifferentFacet") to same salt
+     *         returns the SAME address (idempotency)
+     *      3. The returned address still contains the ORIGINAL contract, not the new one
+     */
+    function test_create3_differentInitCode_sameSalt_returnsOriginal() public {
+        bytes32 salt = keccak256("collision.test.salt");
+
+        // First deployment: MockFacet with name "OriginalFacet"
+        bytes4[] memory interfaces1 = new bytes4[](0);
+        bytes4[] memory funcs1 = new bytes4[](0);
+        bytes memory initCode1 = abi.encodePacked(
+            type(MockFacet).creationCode,
+            abi.encode("OriginalFacet", interfaces1, funcs1)
+        );
+
+        vm.prank(owner);
+        address firstDeployment = factory.create3(initCode1, salt);
+
+        // Verify first deployment
+        assertTrue(firstDeployment != address(0), "First deployment should succeed");
+        IFacet firstFacet = IFacet(firstDeployment);
+        assertEq(firstFacet.facetName(), "OriginalFacet", "Should be OriginalFacet");
+
+        // Second deployment: DIFFERENT initCode with name "DifferentFacet" to SAME salt
+        bytes4[] memory interfaces2 = new bytes4[](1);
+        interfaces2[0] = type(IERC165).interfaceId;
+        bytes4[] memory funcs2 = new bytes4[](0);
+        bytes memory initCode2 = abi.encodePacked(
+            type(MockFacet).creationCode,
+            abi.encode("DifferentFacet", interfaces2, funcs2)
+        );
+
+        // Sanity check: initCode is actually different
+        assertTrue(
+            keccak256(initCode1) != keccak256(initCode2),
+            "Test setup error: initCodes should be different"
+        );
+
+        vm.prank(owner);
+        address secondDeployment = factory.create3(initCode2, salt);
+
+        // CRITICAL ASSERTIONS:
+        // 1. Same address returned (idempotency)
+        assertEq(
+            firstDeployment,
+            secondDeployment,
+            "Same salt must return same address regardless of initCode"
+        );
+
+        // 2. Contract is still the ORIGINAL, not the new one
+        IFacet secondFacet = IFacet(secondDeployment);
+        assertEq(
+            secondFacet.facetName(),
+            "OriginalFacet",
+            "Contract should still be OriginalFacet, not DifferentFacet"
+        );
+
+        // 3. The "new" initCode's name should NOT appear
+        assertTrue(
+            keccak256(bytes(secondFacet.facetName())) != keccak256(bytes("DifferentFacet")),
+            "DifferentFacet should NOT have been deployed"
+        );
+    }
+
+    /**
+     * @notice Test that deployFacet with different initCode to same salt
+     *         returns the original facet and does NOT re-register.
+     * @dev deployFacet calls create3 internally and then _registerFacet.
+     *      When the salt is already occupied, we want to ensure:
+     *      1. The original facet address is returned
+     *      2. The facet is NOT re-registered (registry count stays at 1)
+     */
+    function test_deployFacet_differentInitCode_sameSalt_returnsOriginalAndDoesNotReRegister() public {
+        bytes32 salt = keccak256("facet.collision.salt");
+
+        // First deployment
+        bytes memory initCode1 = abi.encodePacked(
+            type(MockFacet).creationCode,
+            abi.encode("FirstFacet", new bytes4[](0), new bytes4[](0))
+        );
+
+        vm.prank(owner);
+        IFacet firstFacet = factory.deployFacet(initCode1, salt);
+        assertEq(firstFacet.facetName(), "FirstFacet");
+
+        // Check registry has 1 facet
+        address[] memory allFacetsAfterFirst = factory.allFacets();
+        assertEq(allFacetsAfterFirst.length, 1, "Should have 1 facet registered");
+
+        // Second deployment with different initCode to same salt
+        bytes memory initCode2 = abi.encodePacked(
+            type(MockFacet).creationCode,
+            abi.encode("SecondFacet", new bytes4[](0), new bytes4[](0))
+        );
+
+        vm.prank(owner);
+        IFacet secondFacet = factory.deployFacet(initCode2, salt);
+
+        // Should return the SAME facet
+        assertEq(
+            address(firstFacet),
+            address(secondFacet),
+            "Should return same facet address"
+        );
+        assertEq(
+            secondFacet.facetName(),
+            "FirstFacet",
+            "Should still be FirstFacet"
+        );
+
+        // Registry should still have only 1 facet (not 2)
+        // The AddressSetRepo._add() is idempotent - adding an existing address is a no-op
+        address[] memory allFacetsAfterSecond = factory.allFacets();
+        assertEq(
+            allFacetsAfterSecond.length,
+            1,
+            "Facet should NOT be re-registered - AddressSet is idempotent"
+        );
+    }
 }
