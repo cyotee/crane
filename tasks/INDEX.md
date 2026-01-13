@@ -10,7 +10,7 @@
 | CRANE-007 | Uniswap V2 Utilities Review | In Progress | None | `review/crn-uniswap-v2-utils` |
 | CRANE-008 | Uniswap V3 Utilities Review | In Progress | None | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | In Progress | None | `review/crn-uniswap-v4-utils` |
-| CRANE-010 | Aerodrome V1 Utilities Review | Ready | None | `review/crn-aerodrome-v1-utils` |
+| CRANE-010 | Aerodrome V1 Utilities Review | In Progress | None | `review/crn-aerodrome-v1-utils` |
 | CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
@@ -46,7 +46,7 @@
 - ~~CRANE-007: Uniswap V2 Utilities Review~~ (In Progress)
 - ~~CRANE-008: Uniswap V3 Utilities Review~~ (In Progress)
 - ~~CRANE-009: Uniswap V4 Utilities Review~~ (In Progress)
-- CRANE-010: Aerodrome V1 Utilities Review
+- ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Progress)
 - CRANE-011: Slipstream Utilities Review
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
