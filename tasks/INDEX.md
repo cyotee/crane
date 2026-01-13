@@ -12,12 +12,12 @@
 | CRANE-003 | Test Framework and IFacet Pattern Audit | Ready | None | `review/crn-test-framework-and-ifacet-pattern` |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | Ready | None | `review/crn-token-standards-eip712-permit` |
 | CRANE-006 | Constant Product & Bonding Math Review | Ready | None | `review/crn-constprodutils-and-bonding-math` |
-| CRANE-007 | Uniswap V2 Utilities Review | Ready | None | `review/crn-uniswap-v2-utils` |
-| CRANE-008 | Uniswap V3 Utilities Review | Ready | None | `review/crn-uniswap-v3-utils` |
-| CRANE-009 | Uniswap V4 Utilities Review | Ready | None | `review/crn-uniswap-v4-utils` |
-| CRANE-010 | Aerodrome V1 Utilities Review | Ready | None | `review/crn-aerodrome-v1-utils` |
-| CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
-| CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
+| CRANE-007 | Uniswap V2 Utilities Review | Blocked | CRANE-006 | `review/crn-uniswap-v2-utils` |
+| CRANE-008 | Uniswap V3 Utilities Review | Blocked | CRANE-007 | `review/crn-uniswap-v3-utils` |
+| CRANE-009 | Uniswap V4 Utilities Review | Blocked | CRANE-008 | `review/crn-uniswap-v4-utils` |
+| CRANE-010 | Aerodrome V1 Utilities Review | Blocked | CRANE-006 | `review/crn-aerodrome-v1-utils` |
+| CRANE-011 | Slipstream Utilities Review | Blocked | CRANE-010 | `review/crn-slipstream-utils` |
+| CRANE-012 | Camelot V2 Utilities Review | Blocked | CRANE-006 | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 
 ## Status Legend
@@ -33,27 +33,23 @@
 
 ### Ready for Agent
 
-All 12 tasks are ready for agent launch:
-
-**Core Framework (5 tasks):**
+**Core Framework (6 tasks):**
 - CRANE-001: CREATE3 Factory and Deterministic Deployment Review
 - CRANE-002: Diamond Package and Proxy Architecture Review
 - CRANE-003: Test Framework and IFacet Pattern Audit
 - CRANE-005: Token Standards Review (ERC20, Permit, EIP-712)
 - CRANE-006: Constant Product & Bonding Math Review
-
-**DEX Protocols (7 tasks):**
-- CRANE-007: Uniswap V2 Utilities Review
-- CRANE-008: Uniswap V3 Utilities Review
-- CRANE-009: Uniswap V4 Utilities Review
-- CRANE-010: Aerodrome V1 Utilities Review
-- CRANE-011: Slipstream Utilities Review
-- CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
 ### Blocked
 
-(No blocked tasks)
+**DEX Protocols (waiting on CRANE-006 math review):**
+- CRANE-007: Uniswap V2 → depends on CRANE-006
+- CRANE-008: Uniswap V3 → depends on CRANE-007
+- CRANE-009: Uniswap V4 → depends on CRANE-008
+- CRANE-010: Aerodrome V1 → depends on CRANE-006
+- CRANE-011: Slipstream → depends on CRANE-010
+- CRANE-012: Camelot V2 → depends on CRANE-006
 
 ## Retired Tasks
 
