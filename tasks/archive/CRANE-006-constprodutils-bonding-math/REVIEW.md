@@ -76,8 +76,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/utils/math/ConstProdUtils.sol`
 - `test/foundry/spec/utils/math/constProdUtils/` (new unit test)
-**User Response:** (not requested)
-**Notes:** This is a classic “flag says enabled, params say disabled” edge case. Even if current callers never do it, defensive handling is cheap and improves library robustness.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-024
 
 ### Suggestion 2: Replace fee-denominator heuristic with explicit parameter (or make it opt-in)
 **Priority:** Medium
@@ -85,16 +85,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/utils/math/ConstProdUtils.sol`
 - Any call sites that currently pass feePercent without denom
-**User Response:** (not requested)
-**Notes:** If refactoring APIs is too heavy, consider adding an overload that takes `feeDenominator` and using that in new call sites.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-025
 
-### Suggestion 3: Strengthen “near overflow” tests to actually hit overflow boundaries
+### Suggestion 3: Strengthen "near overflow" tests to actually hit overflow boundaries
 **Priority:** Low
-**Description:** The new test file includes “near overflow” cases, but the chosen magnitudes (`1e38`) likely do not exercise true overflow risk in `_saleQuote` (given the extra feeDenominator scaling). Consider adding explicit overflow-expecting tests for the quadratic path in `_swapDepositSaleAmt` and/or multi-multiply paths such as `_calculateFeePortionForPosition`.
+**Description:** The new test file includes "near overflow" cases, but the chosen magnitudes (`1e38`) likely do not exercise true overflow risk in `_saleQuote` (given the extra feeDenominator scaling). Consider adding explicit overflow-expecting tests for the quadratic path in `_swapDepositSaleAmt` and/or multi-multiply paths such as `_calculateFeePortionForPosition`.
 **Affected Files:**
 - `test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_InvariantPreservation.t.sol`
-**User Response:** (not requested)
-**Notes:** It’s fine to accept reverts on overflow; the value is asserting “reverts (no wrap)”, especially around multi-multiply expressions.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-026
 
 ---
 

@@ -24,6 +24,9 @@
 | CRANE-021 | Fix ERC5267Facet Array Size Bug | Ready | CRANE-005 | `fix/erc5267-array-size` |
 | CRANE-022 | Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH | Ready | CRANE-005 | `fix/eip712-typehash-typo` |
 | CRANE-023 | Add ERC-5267 Test Coverage | Ready | CRANE-005 | `test/erc5267-coverage` |
+| CRANE-024 | Harden Zap-Out Fee-On Input Validation | Ready | CRANE-006 | `fix/zapout-fee-validation` |
+| CRANE-025 | Replace Fee-Denominator Heuristic | Ready | CRANE-006 | `fix/explicit-fee-denominator` |
+| CRANE-026 | Strengthen Overflow Boundary Tests | Ready | CRANE-006 | `test/overflow-boundary-tests` |
 
 ## Status Legend
 
@@ -45,7 +48,7 @@
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
-**Core Framework (10 tasks):**
+**Core Framework (13 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
@@ -56,6 +59,9 @@
 - CRANE-021: Fix ERC5267Facet Array Size Bug (from CRANE-005)
 - CRANE-022: Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH (from CRANE-005)
 - CRANE-023: Add ERC-5267 Test Coverage (from CRANE-005)
+- **CRANE-024: Harden Zap-Out Fee-On Input Validation (High - from CRANE-006)**
+- CRANE-025: Replace Fee-Denominator Heuristic (from CRANE-006)
+- CRANE-026: Strengthen Overflow Boundary Tests (from CRANE-006)
 
 ### Blocked
 
