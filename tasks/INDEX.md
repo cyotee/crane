@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-001 | CREATE3 Factory and Deterministic Deployment Review | Complete | None | `review/crn-create3-factory-and-determinism` |
-| CRANE-002 | Diamond Package and Proxy Architecture Review | In Progress | None | `review/crn-diamond-package-and-proxy-correctness` |
+| CRANE-002 | Diamond Package and Proxy Architecture Review | In Review | None | `review/crn-diamond-package-and-proxy-correctness` |
 | CRANE-003 | Test Framework and IFacet Pattern Audit | In Progress | None | `review/crn-test-framework-and-ifacet-pattern` |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | Ready | None | `review/crn-token-standards-eip712-permit` |
 | CRANE-006 | Constant Product & Bonding Math Review | Ready | None | `review/crn-constprodutils-and-bonding-math` |
@@ -19,6 +19,9 @@
 | CRANE-011 | Slipstream Utilities Review | Blocked | CRANE-010 | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Blocked | CRANE-006 | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
+| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
+| CRANE-015 | Fix ERC165Repo Overload Bug | Ready | CRANE-002 | `fix/erc165-overload` |
+| CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
 
 ## Status Legend
 
@@ -38,16 +41,22 @@
 
 ### In Progress
 
-**Core Framework (2 tasks):**
-- CRANE-002: Diamond Package and Proxy Architecture Review
+**Core Framework (1 task):**
 - CRANE-003: Test Framework and IFacet Pattern Audit
 
 ### Ready for Agent
 
-**Core Framework (3 tasks):**
+**Core Framework (6 tasks):**
 - CRANE-005: Token Standards Review (ERC20, Permit, EIP-712)
 - CRANE-006: Constant Product & Bonding Math Review
 - CRANE-013: Balancer V3 Utilities Review
+- CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
+- CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
+- CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
+
+### In Review
+
+- CRANE-002: Diamond Package and Proxy Architecture Review
 
 ### Blocked
 
