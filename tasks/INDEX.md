@@ -8,10 +8,10 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-007 | Uniswap V2 Utilities Review | Ready | None | `review/crn-uniswap-v2-utils` |
-| CRANE-008 | Uniswap V3 Utilities Review | Blocked | CRANE-007 | `review/crn-uniswap-v3-utils` |
-| CRANE-009 | Uniswap V4 Utilities Review | Blocked | CRANE-008 | `review/crn-uniswap-v4-utils` |
+| CRANE-008 | Uniswap V3 Utilities Review | Ready | None | `review/crn-uniswap-v3-utils` |
+| CRANE-009 | Uniswap V4 Utilities Review | Ready | None | `review/crn-uniswap-v4-utils` |
 | CRANE-010 | Aerodrome V1 Utilities Review | Ready | None | `review/crn-aerodrome-v1-utils` |
-| CRANE-011 | Slipstream Utilities Review | Blocked | CRANE-010 | `review/crn-slipstream-utils` |
+| CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
@@ -42,9 +42,12 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (14 tasks):**
+**DEX Protocol Reviews (7 tasks):**
 - CRANE-007: Uniswap V2 Utilities Review
+- CRANE-008: Uniswap V3 Utilities Review
+- CRANE-009: Uniswap V4 Utilities Review
 - CRANE-010: Aerodrome V1 Utilities Review
+- CRANE-011: Slipstream Utilities Review
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
@@ -65,10 +68,7 @@
 
 ### Blocked
 
-**DEX Protocols (sequential dependencies):**
-- CRANE-008: Uniswap V3 → depends on CRANE-007
-- CRANE-009: Uniswap V4 → depends on CRANE-008
-- CRANE-011: Slipstream → depends on CRANE-010
+(No blocked tasks)
 
 ## Retired Tasks
 
