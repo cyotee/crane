@@ -8,8 +8,8 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-001 | CREATE3 Factory and Deterministic Deployment Review | Complete | None | `review/crn-create3-factory-and-determinism` |
-| CRANE-002 | Diamond Package and Proxy Architecture Review | Ready | None | `review/crn-diamond-package-and-proxy-correctness` |
-| CRANE-003 | Test Framework and IFacet Pattern Audit | Ready | None | `review/crn-test-framework-and-ifacet-pattern` |
+| CRANE-002 | Diamond Package and Proxy Architecture Review | In Progress | None | `review/crn-diamond-package-and-proxy-correctness` |
+| CRANE-003 | Test Framework and IFacet Pattern Audit | In Progress | None | `review/crn-test-framework-and-ifacet-pattern` |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | Ready | None | `review/crn-token-standards-eip712-permit` |
 | CRANE-006 | Constant Product & Bonding Math Review | Ready | None | `review/crn-constprodutils-and-bonding-math` |
 | CRANE-007 | Uniswap V2 Utilities Review | Blocked | CRANE-006 | `review/crn-uniswap-v2-utils` |
@@ -31,11 +31,20 @@
 
 ## Quick Filters
 
-### Ready for Agent
+### Complete
 
-**Core Framework (5 tasks):**
+**Core Framework (1 task):**
+- CRANE-001: CREATE3 Factory and Deterministic Deployment Review
+
+### In Progress
+
+**Core Framework (2 tasks):**
 - CRANE-002: Diamond Package and Proxy Architecture Review
 - CRANE-003: Test Framework and IFacet Pattern Audit
+
+### Ready for Agent
+
+**Core Framework (3 tasks):**
 - CRANE-005: Token Standards Review (ERC20, Permit, EIP-712)
 - CRANE-006: Constant Product & Bonding Math Review
 - CRANE-013: Balancer V3 Utilities Review
