@@ -1,6 +1,7 @@
 # Code Review: CRANE-001
 
-**Reviewer:** GitHub Copilot (GPT-5.2)
+**Primary Reviewer:** GitHub Copilot (GPT-5.2)
+**Secondary Reviewer:** Claude Sonnet 4.5
 **Review Started:** 2026-01-12
 **Status:** Complete
 
@@ -78,6 +79,54 @@ Actionable items for follow-up tasks:
 **Findings:** 3 (1 medium, 2 low)
 **Suggestions:** 3
 **Recommendation:** Accept, with follow-ups recommended (especially clarifying/aligning `create3WithArgs` replay semantics).
+
+---
+
+## Secondary Review (Claude Sonnet 4.5)
+
+**Date:** 2026-01-12
+
+### Verification of Acceptance Criteria
+
+#### ✅ US-CRANE-001.1: Determinism Review Memo
+- ✅ Memo exists at `docs/review/create3-and-determinism.md`
+- ✅ Explains salt derivation/normalization rules (Section 2)
+- ✅ Identifies replay/idempotency assumptions (Section 3)
+- ✅ Lists collision/address reuse behaviors (Section 4)
+
+#### ✅ US-CRANE-001.2: Negative Tests Added
+- ✅ Two determinism tests added (lines 588-716 in Create3Factory.t.sol):
+  - `test_create3_differentInitCode_sameSalt_returnsOriginal()` - Verifies idempotency when different initCode deployed to same salt
+  - `test_deployFacet_differentInitCode_sameSalt_returnsOriginalAndDoesNotReRegister()` - Verifies registry idempotency
+- ✅ Tests are well-documented with clear intent
+- ✅ All 32 tests passing (forge test)
+
+#### ✅ Completion Criteria
+- ✅ `docs/review/create3-and-determinism.md` created (311 lines, comprehensive)
+- ✅ Meaningful test improvements (2 negative tests covering critical determinism invariants)
+- ✅ `forge build` passes
+- ✅ `forge test` passes (32/32 tests passing)
+
+### Agreement with Prior Review
+
+I concur with all three findings from the primary reviewer:
+
+1. **Finding 1 (Low)**: Memo gaps section is outdated - The tests were added but not reflected in the table at lines 216-221. This is minor documentation hygiene.
+
+2. **Finding 2 (Medium)**: `create3WithArgs` non-idempotent behavior - This is the most significant finding. The semantic difference between `create3()` (idempotent) and `create3WithArgs()` (reverts on collision) is a usability footgun. Developers could reasonably assume all CREATE3 methods have the same replay-safe behavior.
+
+3. **Finding 3 (Low)**: NatSpec inconsistencies - Minor documentation quality issue that should be cleaned up.
+
+### Additional Observations
+
+**Strengths of the implementation:**
+1. Well-structured review memo with clear sections and examples
+2. Tests explicitly verify the most critical invariant: same salt = same address, regardless of initCode
+3. Tests include detailed comments explaining the "why" behind assertions
+4. Registry deduplication via `AddressSetRepo._add()` is correctly tested
+
+**Recommendation:**
+**Accept** with follow-up tasks for the three findings. The implementation meets all acceptance criteria. The priority should be addressing Finding 2 (`create3WithArgs` semantics) as it impacts developer experience and could lead to production issues.
 
 ---
 
