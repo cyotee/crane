@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-006 | Constant Product & Bonding Math Review | In Review | None | `review/crn-constprodutils-and-bonding-math` |
+| CRANE-006 | Constant Product & Bonding Math Review | Pending Merge | None | `review/crn-constprodutils-and-bonding-math` |
 | CRANE-007 | Uniswap V2 Utilities Review | Blocked | CRANE-006 | `review/crn-uniswap-v2-utils` |
 | CRANE-008 | Uniswap V3 Utilities Review | Blocked | CRANE-007 | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | Blocked | CRANE-008 | `review/crn-uniswap-v4-utils` |
@@ -38,9 +38,9 @@
 
 ## Quick Filters
 
-### In Review
+### Pending Merge
 
-**Awaiting Code Review:**
+**Approved, ready for fast-forward:**
 - CRANE-006: Constant Product & Bonding Math Review
 
 ### Ready for Agent
