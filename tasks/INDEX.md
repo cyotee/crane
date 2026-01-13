@@ -21,6 +21,10 @@
 | CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
+| CRANE-020 | Fix Critical ERC20 transferFrom Allowance Bypass | Ready | CRANE-005 | `fix/erc20-transferfrom-allowance` |
+| CRANE-021 | Fix ERC5267Facet Array Size Bug | Ready | CRANE-005 | `fix/erc5267-array-size` |
+| CRANE-022 | Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH | Ready | CRANE-005 | `fix/eip712-typehash-typo` |
+| CRANE-023 | Add ERC-5267 Test Coverage | Ready | CRANE-005 | `test/erc5267-coverage` |
 
 ## Status Legend
 
@@ -41,7 +45,7 @@
 
 ### Ready for Agent
 
-**Core Framework (7 tasks):**
+**Core Framework (11 tasks):**
 - CRANE-013: Balancer V3 Utilities Review
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
@@ -49,6 +53,10 @@
 - CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
+- **CRANE-020: Fix Critical ERC20 transferFrom Allowance Bypass (P0 - from CRANE-005)**
+- CRANE-021: Fix ERC5267Facet Array Size Bug (from CRANE-005)
+- CRANE-022: Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH (from CRANE-005)
+- CRANE-023: Add ERC-5267 Test Coverage (from CRANE-005)
 
 ### Blocked
 

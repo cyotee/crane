@@ -124,8 +124,8 @@ The memo includes a comprehensive standards compliance checklist:
 **Description:** `ERC20Target.transferFrom()` must call `ERC20Repo._transferFrom()` instead of `_transfer()` to enforce allowance checks.
 **Affected Files:**
 - `contracts/tokens/ERC20/ERC20Target.sol` (line 38)
-**User Response:** Pending
-**Notes:** This is a severe security vulnerability allowing unauthorized token transfers.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-020
 
 ### Suggestion 2: Fix ERC5267Facet Array Size
 
@@ -133,8 +133,8 @@ The memo includes a comprehensive standards compliance checklist:
 **Description:** Change array allocation from size 2 to size 1 in `facetInterfaces()`.
 **Affected Files:**
 - `contracts/utils/cryptography/ERC5267/ERC5267Facet.sol` (line 40)
-**User Response:** Pending
-**Notes:** Low impact but could cause issues with Diamond facet introspection.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-021
 
 ### Suggestion 3: Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH
 
@@ -143,8 +143,8 @@ The memo includes a comprehensive standards compliance checklist:
 **Affected Files:**
 - `contracts/constants/Constants.sol` (line 91)
 - All files importing/using this constant
-**User Response:** Pending
-**Notes:** Cosmetic fix, requires updating 4+ files.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-022
 
 ### Suggestion 4: Add ERC-5267 Test Coverage
 
@@ -152,8 +152,8 @@ The memo includes a comprehensive standards compliance checklist:
 **Description:** Create dedicated test file for `eip712Domain()` function testing fields bitmap, chainId behavior, and extensions array.
 **Affected Files:**
 - New file: `test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol`
-**User Response:** Pending
-**Notes:** Improves test coverage completeness.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-023
 
 ---
 
