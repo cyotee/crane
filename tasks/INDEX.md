@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-001 | CREATE3 Factory and Deterministic Deployment Review | Complete | None | `review/crn-create3-factory-and-determinism` |
-| CRANE-002 | Diamond Package and Proxy Architecture Review | In Review | None | `review/crn-diamond-package-and-proxy-correctness` |
+| CRANE-002 | Diamond Package and Proxy Architecture Review | Complete | None | `review/crn-diamond-package-and-proxy-correctness` |
 | CRANE-003 | Test Framework and IFacet Pattern Audit | In Progress | None | `review/crn-test-framework-and-ifacet-pattern` |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | Ready | None | `review/crn-token-standards-eip712-permit` |
 | CRANE-006 | Constant Product & Bonding Math Review | Ready | None | `review/crn-constprodutils-and-bonding-math` |
@@ -36,8 +36,9 @@
 
 ### Complete
 
-**Core Framework (1 task):**
+**Core Framework (2 tasks):**
 - CRANE-001: CREATE3 Factory and Deterministic Deployment Review
+- CRANE-002: Diamond Package and Proxy Architecture Review
 
 ### In Progress
 
@@ -53,10 +54,6 @@
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
-
-### In Review
-
-- CRANE-002: Diamond Package and Proxy Architecture Review
 
 ### Blocked
 
