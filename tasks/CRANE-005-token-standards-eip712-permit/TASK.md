@@ -1,7 +1,7 @@
 # Task CRANE-005: Review — Token Standards (ERC20, Permit, EIP-712)
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-12
 **Dependencies:** None
 **Worktree:** `review/crn-token-standards-eip712-permit`
@@ -23,9 +23,9 @@ Review Crane token facets and cryptography utilities for signature correctness a
 As a maintainer, I want a clear summary of signature and domain invariants so that token integrations are safe.
 
 **Acceptance Criteria:**
-- [ ] Memo documents domain separation and replay protections
-- [ ] Memo lists missing tests
-- [ ] Memo identifies any EIP compliance gaps (EIP-712, ERC-2612, ERC-5267)
+- [x] Memo documents domain separation and replay protections
+- [x] Memo lists missing tests
+- [x] Memo identifies any EIP compliance gaps (EIP-712, ERC-2612, ERC-5267)
 
 ## Technical Details
 
@@ -62,17 +62,17 @@ Focus areas:
 ## Inventory Check
 
 Before starting, verify:
-- [ ] Review `contracts/tokens/ERC20/`
-- [ ] Review permit-related contracts
-- [ ] Review EIP-712 utilities
-- [ ] Review `contracts/tokens/ERC20/TestBase_ERC20.sol`
-- [ ] Review `contracts/tokens/ERC20/TestBase_ERC20Permit.sol`
+- [x] Review `contracts/tokens/ERC20/`
+- [x] Review permit-related contracts
+- [x] Review EIP-712 utilities
+- [x] Review `contracts/tokens/ERC20/TestBase_ERC20.sol`
+- [x] Review `contracts/tokens/ERC20/TestBase_ERC20Permit.sol`
 
 ## Completion Criteria
 
-- [ ] Memo exists at `docs/review/token-standards.md`
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] Memo exists at `docs/review/token-standards.md`
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
