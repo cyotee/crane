@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | Ready | None | `review/crn-token-standards-eip712-permit` |
-| CRANE-006 | Constant Product & Bonding Math Review | Ready | None | `review/crn-constprodutils-and-bonding-math` |
+| CRANE-006 | Constant Product & Bonding Math Review | In Progress | None | `review/crn-constprodutils-and-bonding-math` |
 | CRANE-007 | Uniswap V2 Utilities Review | Blocked | CRANE-006 | `review/crn-uniswap-v2-utils` |
 | CRANE-008 | Uniswap V3 Utilities Review | Blocked | CRANE-007 | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | Blocked | CRANE-008 | `review/crn-uniswap-v4-utils` |
@@ -35,11 +35,15 @@
 
 ## Quick Filters
 
+### In Progress
+
+**Core Framework (1 task):**
+- CRANE-006: Constant Product & Bonding Math Review
+
 ### Ready for Agent
 
-**Core Framework (9 tasks):**
+**Core Framework (8 tasks):**
 - CRANE-005: Token Standards Review (ERC20, Permit, EIP-712)
-- CRANE-006: Constant Product & Bonding Math Review
 - CRANE-013: Balancer V3 Utilities Review
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
