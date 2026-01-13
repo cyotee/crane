@@ -1,31 +1,23 @@
-# Progress: CRANE-006 — Constant Product & Bonding Math Utilities
+# Progress Log: CRANE-006
 
-## Status: Not Started
+## Current Checkpoint
 
-## Work Log
+**Last checkpoint:** Not started
+**Next step:** Read TASK.md and begin implementation
+**Build status:** Not checked
+**Test status:** Not checked
 
-<!-- Agent updates this as work progresses -->
+---
 
-### Session 1
-**Date:** (not started)
-**Agent:** (not assigned)
+## Session Log
 
-**Completed:**
-- (none yet)
+### 2026-01-13 - Task Launched
 
-**In Progress:**
-- (none yet)
+- Task launched via /backlog:launch
+- Agent worktree created
+- Ready to begin implementation
 
-**Blockers:**
-- (none yet)
-
-**Next Steps:**
-- [ ] Identify all public entrypoints of `ConstProdUtils`
-- [ ] Identify consumers of `ConstProdUtils`
-- [ ] Review existing tests in `test/foundry/spec/utils/math/constProdUtils/`
-- [ ] Identify fee units, precision, scaling assumptions
-- [ ] Draft math correctness memo
-- [ ] Add at least one high-signal test
+---
 
 ## Checklist
 
