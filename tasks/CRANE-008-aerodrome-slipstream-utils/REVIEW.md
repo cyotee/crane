@@ -1,19 +1,18 @@
-# Review: CRANE-004 — DEX Utilities (Slipstream + Uniswap)
+# Review: CRANE-008 — Aerodrome/Slipstream Utilities
 
 ## Status: Awaiting Implementation
 
 ## Review Checklist
 
 ### Deliverables Present
-- [ ] `docs/review/dex-utils.md` exists
-- [ ] Memo lists key invariants per DEX
-- [ ] Memo lists edge cases per DEX
+- [ ] `docs/review/aerodrome-slipstream-utils.md` exists
+- [ ] Memo covers Aerodrome V1 invariants
+- [ ] Memo covers Slipstream concentrated liquidity
 - [ ] Memo lists missing tests
-- [ ] Memo documents rounding behavior
 
 ### Quality Checks
 - [ ] Memo is clear and actionable
-- [ ] Each DEX is covered
+- [ ] Both V1 and Slipstream are covered
 - [ ] No regressions introduced
 
 ### Build Verification
@@ -21,8 +20,6 @@
 - [ ] `forge test` passes
 
 ## Review Notes
-
-<!-- Reviewer fills this in -->
 
 **Reviewer:** (not assigned)
 **Date:** (not reviewed)
