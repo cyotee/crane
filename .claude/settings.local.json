@@ -6,7 +6,8 @@
       "Bash(forge test:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(ls:*)"
     ]
   }
 }
