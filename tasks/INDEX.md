@@ -7,13 +7,12 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-006 | Constant Product & Bonding Math Review | Pending Merge | None | `review/crn-constprodutils-and-bonding-math` |
-| CRANE-007 | Uniswap V2 Utilities Review | Blocked | CRANE-006 | `review/crn-uniswap-v2-utils` |
+| CRANE-007 | Uniswap V2 Utilities Review | Ready | None | `review/crn-uniswap-v2-utils` |
 | CRANE-008 | Uniswap V3 Utilities Review | Blocked | CRANE-007 | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | Blocked | CRANE-008 | `review/crn-uniswap-v4-utils` |
-| CRANE-010 | Aerodrome V1 Utilities Review | Blocked | CRANE-006 | `review/crn-aerodrome-v1-utils` |
+| CRANE-010 | Aerodrome V1 Utilities Review | Ready | None | `review/crn-aerodrome-v1-utils` |
 | CRANE-011 | Slipstream Utilities Review | Blocked | CRANE-010 | `review/crn-slipstream-utils` |
-| CRANE-012 | Camelot V2 Utilities Review | Blocked | CRANE-006 | `review/crn-camelot-v2-utils` |
+| CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
 | CRANE-015 | Fix ERC165Repo Overload Bug | Ready | CRANE-002 | `fix/erc165-overload` |
@@ -38,15 +37,15 @@
 
 ## Quick Filters
 
-### Pending Merge
-
-**Approved, ready for fast-forward:**
-- CRANE-006: Constant Product & Bonding Math Review
-
 ### Ready for Agent
 
-**Core Framework (11 tasks):**
+**DEX Protocol Reviews (14 tasks):**
+- CRANE-007: Uniswap V2 Utilities Review
+- CRANE-010: Aerodrome V1 Utilities Review
+- CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
+
+**Core Framework (10 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
@@ -60,13 +59,10 @@
 
 ### Blocked
 
-**DEX Protocols (waiting on CRANE-006 math review):**
-- CRANE-007: Uniswap V2 → depends on CRANE-006
+**DEX Protocols (sequential dependencies):**
 - CRANE-008: Uniswap V3 → depends on CRANE-007
 - CRANE-009: Uniswap V4 → depends on CRANE-008
-- CRANE-010: Aerodrome V1 → depends on CRANE-006
 - CRANE-011: Slipstream → depends on CRANE-010
-- CRANE-012: Camelot V2 → depends on CRANE-006
 
 ## Retired Tasks
 
@@ -82,6 +78,7 @@
 | CRANE-002 | Diamond Package and Proxy Architecture Review | 2026-01-13 | archive/CRANE-002-diamond-package-proxy/ |
 | CRANE-003 | Test Framework and IFacet Pattern Audit | 2026-01-13 | archive/CRANE-003-test-framework-ifacet/ |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | 2026-01-13 | archive/CRANE-005-token-standards-eip712-permit/ |
+| CRANE-006 | Constant Product & Bonding Math Review | 2026-01-13 | archive/CRANE-006-constprodutils-bonding-math/ |
 
 ## Cross-Repo Dependencies
 
