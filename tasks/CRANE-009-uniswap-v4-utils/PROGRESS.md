@@ -4,6 +4,17 @@
 
 ## Work Log
 
+### Session 2
+**Date:** 2026-01-13
+**Agent:** GitHub Copilot (GPT-5.2)
+
+**Completed:**
+- [x] Re-ran `forge build` in `review/crn-uniswap-v4-utils` (no-op compile; warnings only)
+- [x] Re-ran `forge test` (1319 passed, 0 failed, 8 skipped)
+
+**Blockers:**
+- None
+
 ### Session 1
 **Date:** 2026-01-13
 **Agent:** Claude Opus 4.5
