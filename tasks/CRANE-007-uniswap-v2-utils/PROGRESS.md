@@ -4,6 +4,64 @@
 
 ## Work Log
 
+### Session 2
+**Date:** 2026-01-13
+**Agent:** GitHub Copilot (GPT-5.2)
+
+**Completed:**
+- [x] Created review memo at `docs/review/uniswap-v2-utils.md`
+- [x] Updated task review checklist (`tasks/CRANE-007-uniswap-v2-utils/REVIEW.md`) to reflect deliverables present
+- [x] Found & fixed an off-by-one rounding issue in `ConstProdUtils._purchaseQuote(...)` surfaced by `testFuzz_purchaseThenSale_noArbitrage`
+- [x] Verified `forge build` passes
+- [x] Verified ConstProdUtils spec suite passes (`forge test --match-path test/foundry/spec/utils/math/constProdUtils/*`)
+
+**Blockers:**
+- (none)
+
+---
+
+# Uniswap V2 Utilities Correctness Memo (GitHub Copilot)
+
+**Canonical memo file:** `docs/review/uniswap-v2-utils.md`
+
+## Executive Summary
+
+Crane’s Uniswap V2 utilities are centered around a pure constant-product math library (`contracts/utils/math/ConstProdUtils.sol`) and Uniswap V2 integration helpers under `contracts/protocols/dexes/uniswap/v2/`. The quote math is Uniswap V2-equivalent for swaps and liquidity operations and is heavily covered by unit/edge/fuzz/invariant tests. During verification, an off-by-one rounding issue in `_purchaseQuote(...)` was found via fuzzing and fixed.
+
+## Inventory (Reviewed Surface)
+
+- `contracts/utils/math/ConstProdUtils.sol`
+- `contracts/protocols/dexes/uniswap/v2/` (service + router/factory-aware repos)
+- Uniswap reference library used in stubs: `contracts/protocols/dexes/uniswap/v2/stubs/deps/libs/UniswapV2Library.sol`
+- Tests: `test/foundry/spec/utils/math/constProdUtils/` (includes `*_Uniswap.t.sol` variants)
+
+## Key Invariants / Assumptions
+
+- Constant product behavior: reserves approximately preserve $x \cdot y = k$ across swaps; with fees, $k$ should be non-decreasing.
+- Quotes are pure functions of `(reserveIn, reserveOut, amount, fee)`; callers must enforce slippage bounds and deadlines.
+
+## Formula Notes (Swap Quotes)
+
+- Sale quote (`getAmountOut` equivalent): standard constant-product swap output with fee applied to input.
+- Purchase quote (`getAmountIn` equivalent): uses standard exact-out inversion `floor(...) + 1` to stay safe under integer rounding.
+
+## Fee Handling
+
+- Swap fee: standard Uniswap V2 0.3% is supported (Crane commonly represents fees as `300` with denominator `100_000`).
+- Protocol fee: `ConstProdUtils` includes Uniswap-style fee-on logic (kLast / sqrt(k) growth-based minting) and generalized owner-fee-share paths.
+
+## Test Coverage & Gaps
+
+Existing coverage is strong (unit + edge + fuzz + invariants). Recommended additions:
+
+1. Multi-hop routing tests (chained amounts-in/amounts-out across multiple pools)
+2. Explicit “price impact” spec tests across trade sizes
+3. More systematic boundary fuzzing near numeric limits (within realistic pool constraints)
+
+## Conclusion
+
+Overall rating: **Production-ready** for Uniswap V2-style constant-product quoting. The core formulas are Uniswap V2-equivalent and the suite provides strong confidence; the remaining work is mainly completeness tests (multi-hop + price impact), not correctness.
+
 ### Session 1
 **Date:** 2026-01-13
 **Agent:** Claude Opus 4.5

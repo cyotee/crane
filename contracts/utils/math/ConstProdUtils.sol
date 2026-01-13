@@ -211,21 +211,16 @@ library ConstProdUtils {
         // require(reserveIn > 0 && reserveOut > amountOut, "Insufficient liquidity");
         if (reserveIn == 0) revert ArgumentMustNotBeZero(1);
         if (reserveOut <= amountOut) revert ArgumentMustBeGreaterThan(2, 0);
-        // Follow the same arithmetic sequence as the Vault for ExactOut swaps to
-        // reproduce identical rounding behaviour.
-        // 1) Pool math (no-fee): poolAmount = floor( (reserveIn * amountOut) / (reserveOut - amountOut) )
-        uint256 poolAmount = (reserveIn * amountOut) / (reserveOut - amountOut);
-        // 2) Fee added as: fee = ceil( poolAmount * feePercent / (feeDenominator - feePercent) )
-        uint256 feeNumer = poolAmount * feePercent;
-        uint256 feeDenom = feeDenominator - feePercent;
-        uint256 feeScaled = (feeNumer + feeDenom - 1) / feeDenom; // ceil division
-        // 3) amountCalculatedScaled18 = poolAmount + feeScaled
-        uint256 amountCalculatedScaled18 = poolAmount + feeScaled;
-        // Return the scaled amount corresponding to the Vault's final amountInScaled18
-        // Add one wei safety increment to ensure we cover rounding-down edgecases
-        // where the computed amount would be 1 wei short of the desired output.
-        amountIn = amountCalculatedScaled18 + 1;
-        // amountIn = (numerator / denominator);
+        // Ensure the effective fee multiplier is non-zero.
+        // feeDenominator is arg #4, feePercent is arg #3
+        if (feeDenominator <= feePercent) revert ArgumentMustBeGreaterThan(4, 3);
+
+        // Standard Uniswap V2-style exact-out inversion:
+        // amountIn = floor(reserveIn * amountOut * feeDen / ((reserveOut - amountOut) * (feeDen - fee))) + 1
+        // The +1 makes the result safe under integer division rounding.
+        uint256 numerator = (reserveIn * amountOut) * feeDenominator;
+        uint256 denominator = (reserveOut - amountOut) * (feeDenominator - feePercent);
+        amountIn = (numerator / denominator) + 1;
     }
 
     /* -------------------------------------------------------------------------- */
