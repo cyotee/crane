@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-007 | Uniswap V2 Utilities Review | Pending Merge | None | `review/crn-uniswap-v2-utils` |
 | CRANE-008 | Uniswap V3 Utilities Review | In Progress | None | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | In Progress | None | `review/crn-uniswap-v4-utils` |
 | CRANE-010 | Aerodrome V1 Utilities Review | In Progress | None | `review/crn-aerodrome-v1-utils` |
@@ -42,8 +41,7 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (7 tasks):**
-- ~~CRANE-007: Uniswap V2 Utilities Review~~ (In Progress)
+**DEX Protocol Reviews (6 tasks):**
 - ~~CRANE-008: Uniswap V3 Utilities Review~~ (In Progress)
 - ~~CRANE-009: Uniswap V4 Utilities Review~~ (In Progress)
 - ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Progress)
@@ -85,6 +83,7 @@
 | CRANE-003 | Test Framework and IFacet Pattern Audit | 2026-01-13 | archive/CRANE-003-test-framework-ifacet/ |
 | CRANE-005 | Token Standards Review (ERC20, Permit, EIP-712) | 2026-01-13 | archive/CRANE-005-token-standards-eip712-permit/ |
 | CRANE-006 | Constant Product & Bonding Math Review | 2026-01-13 | archive/CRANE-006-constprodutils-bonding-math/ |
+| CRANE-007 | Uniswap V2 Utilities Review | 2026-01-13 | archive/CRANE-007-uniswap-v2-utils/ |
 
 ## Cross-Repo Dependencies
 
