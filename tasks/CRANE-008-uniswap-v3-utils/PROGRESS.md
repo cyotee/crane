@@ -4,6 +4,17 @@
 
 ## Work Log
 
+### Session 2
+**Date:** 2026-01-13
+**Agent:** GitHub Copilot (GPT-5.2)
+
+**Completed:**
+- [x] Correct fee tier / tick spacing details in memo (pips denom = 1e6)
+- [x] Call out missing test coverage for the 0.01% (100 pips) fee tier
+- [x] Tighten wording around “price increment” vs tick spacing constraints
+
+**Blockers:** None
+
 ### Session 1
 **Date:** 2026-01-13
 **Agent:** Claude Opus 4.5
@@ -108,11 +119,18 @@ price = token1 / token0 (reserve ratio)
 
 **Standard Fee Tiers and Tick Spacings:**
 
-| Fee Tier | Fee (bps) | Tick Spacing | Price Increment |
-|----------|-----------|--------------|-----------------|
-| LOW | 5 (0.05%) | 10 | ~0.1% per tick |
-| MEDIUM | 30 (0.3%) | 60 | ~0.6% per tick |
-| HIGH | 100 (1%) | 200 | ~2% per tick |
+Uniswap V3 expresses fees in **pips** with denominator **1e6** (i.e., fee amount is `amountIn * fee / 1e6`).
+
+| Tier | Fee (pips) | Fee (%) | Tick Spacing | Min init-tick distance (approx) |
+|------|------------|---------|--------------|----------------------------------|
+| LOWEST | 100 | 0.01% | 1 | ~0.01% |
+| LOW | 500 | 0.05% | 10 | ~0.1% |
+| MEDIUM | 3000 | 0.3% | 60 | ~0.6% |
+| HIGH | 10000 | 1% | 200 | ~2% |
+
+Notes:
+- **Tick spacing** constrains where liquidity positions can be initialized (and where `TickBitmap` marks initialized ticks). Swaps still traverse tick indices one-by-one as price moves, but liquidity net changes only occur at initialized ticks.
+- The “min init-tick distance” is an approximation of $(1.0001)^{\text{tickSpacing}}-1$.
 
 **Tick Boundary Handling:**
 - Ticks must be multiples of tick spacing
@@ -191,7 +209,7 @@ price = token1 / token0 (reserve ratio)
 1. **Quote vs Actual Swap Comparison** - Validates quotes match real execution
 2. **Round-Trip Consistency** - amounts -> liquidity -> amounts
 3. **Tick Overload Equivalence** - tick vs sqrtPriceX96 versions match
-4. **Fee Tier Variation** - Tests across 0.05%, 0.3%, 1% fees
+4. **Fee Tier Variation** - Tests across 0.05% (500), 0.3% (3000), 1% (10000) fee tiers; does not currently cover 0.01% (100)
 5. **Edge Cases** - Zero amounts, dust amounts, boundary ticks
 
 ---
@@ -206,6 +224,7 @@ price = token1 / token0 (reserve ratio)
 | **Flash Loans** | Test `flash()` callback and fee calculation | Medium |
 | **Protocol Fees** | Test `setFeeProtocol()` and `collectProtocol()` | Low |
 | **Extreme Ticks** | Test at MIN_TICK and MAX_TICK boundaries | Medium |
+| **Lowest fee tier (0.01%)** | Add quote-vs-swap coverage for `fee=100` and tickSpacing=1 | Low |
 
 ### Recommended Fuzz Tests
 

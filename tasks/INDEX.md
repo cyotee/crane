@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-008 | Uniswap V3 Utilities Review | In Progress | None | `review/crn-uniswap-v3-utils` |
+| CRANE-008 | Uniswap V3 Utilities Review | In Review | None | `review/crn-uniswap-v3-utils` |
 | CRANE-009 | Uniswap V4 Utilities Review | In Progress | None | `review/crn-uniswap-v4-utils` |
 | CRANE-010 | Aerodrome V1 Utilities Review | In Progress | None | `review/crn-aerodrome-v1-utils` |
 | CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
@@ -42,7 +42,7 @@
 ### Ready for Agent
 
 **DEX Protocol Reviews (6 tasks):**
-- ~~CRANE-008: Uniswap V3 Utilities Review~~ (In Progress)
+- ~~CRANE-008: Uniswap V3 Utilities Review~~ (In Review)
 - ~~CRANE-009: Uniswap V4 Utilities Review~~ (In Progress)
 - ~~CRANE-010: Aerodrome V1 Utilities Review~~ (In Progress)
 - CRANE-011: Slipstream Utilities Review
