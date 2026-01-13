@@ -23,10 +23,10 @@ Review Crane's Uniswap V2 utility surfaces for quote correctness, constant produ
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Uniswap V2 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
-- [ ] Memo lists key invariants for Uniswap V2
-- [ ] Memo documents constant product formula implementation
-- [ ] Memo documents fee handling (0.3% standard)
-- [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
+- [ ] PROGRESS.md lists key invariants for Uniswap V2
+- [ ] PROGRESS.md documents constant product formula implementation
+- [ ] PROGRESS.md documents fee handling (0.3% standard)
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
@@ -41,8 +41,9 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 
 ## Files to Create/Modify
 
-**New Files:**
-- `docs/review/uniswap-v2-utils.md` - Review memo
+**Documentation:**
+- Write all review findings, analysis, and recommendations directly in `PROGRESS.md`
+- Do NOT create separate memo files in `docs/`
 
 **Tests:**
 - Optionally add tests if gaps are identified
@@ -56,7 +57,7 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Memo exists at `docs/review/uniswap-v2-utils.md`
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
 

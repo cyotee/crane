@@ -23,11 +23,11 @@ Review Crane's Uniswap V4 utility surfaces for PoolManager integration, hook han
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Uniswap V4 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
-- [ ] Memo lists key invariants for Uniswap V4
-- [ ] Memo documents PoolManager singleton interactions
-- [ ] Memo documents hook integration points
-- [ ] Memo documents delta/flash accounting
-- [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
+- [ ] PROGRESS.md lists key invariants for Uniswap V4
+- [ ] PROGRESS.md documents PoolManager singleton interactions
+- [ ] PROGRESS.md documents hook integration points
+- [ ] PROGRESS.md documents delta/flash accounting
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
@@ -44,8 +44,9 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 
 ## Files to Create/Modify
 
-**New Files:**
-- `docs/review/uniswap-v4-utils.md` - Review memo
+**Documentation:**
+- Write all review findings, analysis, and recommendations directly in `PROGRESS.md`
+- Do NOT create separate memo files in `docs/`
 
 **Tests:**
 - Optionally add tests if gaps are identified
@@ -60,7 +61,7 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Memo exists at `docs/review/uniswap-v4-utils.md`
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
 
