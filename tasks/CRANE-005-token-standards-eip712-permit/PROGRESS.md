@@ -1,30 +1,23 @@
-# Progress: CRANE-005 — Token Standards (ERC20, Permit, EIP-712)
+# Progress Log: CRANE-005
 
-## Status: Not Started
+## Current Checkpoint
 
-## Work Log
+**Last checkpoint:** Not started
+**Next step:** Read TASK.md and begin implementation
+**Build status:** Not checked
+**Test status:** Not checked
 
-<!-- Agent updates this as work progresses -->
+---
 
-### Session 1
-**Date:** (not started)
-**Agent:** (not assigned)
+## Session Log
 
-**Completed:**
-- (none yet)
+### 2026-01-13 - Task Launched
 
-**In Progress:**
-- (none yet)
+- Task launched via /backlog:launch
+- Agent worktree created
+- Ready to begin implementation
 
-**Blockers:**
-- (none yet)
-
-**Next Steps:**
-- [ ] Review `contracts/tokens/ERC20/`
-- [ ] Review permit-related contracts
-- [ ] Review EIP-712 utilities
-- [ ] Review existing test bases
-- [ ] Draft token standards correctness memo
+---
 
 ## Checklist
 
