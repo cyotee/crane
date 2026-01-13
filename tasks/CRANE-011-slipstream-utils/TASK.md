@@ -23,10 +23,10 @@ Review Crane's Slipstream (Aerodrome's concentrated liquidity product) utility s
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Slipstream integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
-- [ ] Memo lists key invariants for Slipstream
-- [ ] Memo documents concentrated liquidity mechanics
-- [ ] Memo documents differences from Uniswap V3
-- [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
+- [ ] PROGRESS.md lists key invariants for Slipstream
+- [ ] PROGRESS.md documents concentrated liquidity mechanics
+- [ ] PROGRESS.md documents differences from Uniswap V3
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
@@ -43,8 +43,9 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 
 ## Files to Create/Modify
 
-**New Files:**
-- `docs/review/slipstream-utils.md` - Review memo
+**Documentation:**
+- Write all review findings, analysis, and recommendations directly in `PROGRESS.md`
+- Do NOT create separate memo files in `docs/`
 
 **Tests:**
 - Optionally add tests if gaps are identified
@@ -58,7 +59,7 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Memo exists at `docs/review/slipstream-utils.md`
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
 

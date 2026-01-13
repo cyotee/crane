@@ -23,10 +23,10 @@ Review Crane's Camelot V2 utility surfaces for custom fee handling, directional 
 As a maintainer, I want a clear summary of quote correctness assumptions and edge cases for Camelot V2 integrations so that downstream vault logic can be trusted.
 
 **Acceptance Criteria:**
-- [ ] Memo lists key invariants for Camelot V2
-- [ ] Memo documents directional fee mechanisms
-- [ ] Memo documents fee-on-transfer token handling
-- [ ] Memo lists missing tests and recommended suites (unit/spec/fuzz)
+- [ ] PROGRESS.md lists key invariants for Camelot V2
+- [ ] PROGRESS.md documents directional fee mechanisms
+- [ ] PROGRESS.md documents fee-on-transfer token handling
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
 
 ## Technical Details
 
@@ -42,8 +42,9 @@ As a maintainer, I want a clear summary of quote correctness assumptions and edg
 
 ## Files to Create/Modify
 
-**New Files:**
-- `docs/review/camelot-v2-utils.md` - Review memo
+**Documentation:**
+- Write all review findings, analysis, and recommendations directly in `PROGRESS.md`
+- Do NOT create separate memo files in `docs/`
 
 **Tests:**
 - Optionally add tests if gaps are identified
@@ -58,7 +59,7 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Memo exists at `docs/review/camelot-v2-utils.md`
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
 
