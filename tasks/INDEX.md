@@ -7,8 +7,8 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-013 | Balancer V3 Utilities Review | In Progress | None | `review/crn-balancer-v3-utils` |
-| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | In Progress | CRANE-002 | `fix/erc2535-remove-replace` |
+| CRANE-013 | Balancer V3 Utilities Review | Complete | None | - |
+| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Complete | CRANE-002 | - |
 | CRANE-015 | Fix ERC165Repo Overload Bug | Complete | CRANE-002 | `fix/erc165-overload` |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
 | CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
@@ -157,6 +157,9 @@
 | CRANE-010 | Aerodrome V1 Utilities Review | 2026-01-13 | archive/CRANE-010-aerodrome-v1-utils/ |
 | CRANE-011 | Slipstream Utilities Review | 2026-01-13 | archive/CRANE-011-slipstream-utils/ |
 | CRANE-012 | Camelot V2 Utilities Review | 2026-01-13 | archive/CRANE-012-camelot-v2-utils/ |
+| CRANE-013 | Balancer V3 Utilities Review | 2026-01-14 | archive/CRANE-013-balancer-v3-utils/ |
+| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | 2026-01-14 | archive/CRANE-014-fix-erc2535-remove-replace/ |
+| CRANE-015 | Fix ERC165Repo Overload Bug | 2026-01-14 | archive/CRANE-015-fix-erc165-overload/ |
 
 ## Cross-Repo Dependencies
 
