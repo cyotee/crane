@@ -18,6 +18,8 @@ Fix two critical correctness issues in ERC2535Repo that affect proxy routing:
 
 These bugs directly undermine selector management, post-deploy hook removal safety, and loupe accuracy.
 
+Confirm implementation confirms with specification at https://eips.ethereum.org/EIPS/eip-2535
+
 (Created from code review of CRANE-002)
 
 ## Dependencies
