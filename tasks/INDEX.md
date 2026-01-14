@@ -34,6 +34,12 @@
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
 | CRANE-037 | Add Aerodrome Stable Pool Support | Ready | CRANE-010 | `feature/aerodrome-stable-pool` |
+| CRANE-038 | Add Slipstream Fuzz Tests | Ready | CRANE-011 | `test/slipstream-fuzz-tests` |
+| CRANE-039 | Add Slipstream Fork Tests | Ready | CRANE-011 | `test/slipstream-fork-tests` |
+| CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
+| CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
+| CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
+| CRANE-043 | Add Reward Quoting Utilities | Ready | CRANE-011 | `feature/slipstream-reward-utils` |
 
 ## Status Legend
 
@@ -79,6 +85,14 @@
 - CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
 - CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
 - CRANE-037: Add Aerodrome Stable Pool Support (from CRANE-010)
+
+**Slipstream Follow-ups (6 tasks - from CRANE-011):**
+- **CRANE-038: Add Slipstream Fuzz Tests (Critical)**
+- CRANE-039: Add Slipstream Fork Tests (High)
+- CRANE-040: Add Slipstream Edge Case Tests (High)
+- CRANE-041: Add Slipstream Invariant Tests (High)
+- CRANE-042: Add Unstaked Fee Handling (Medium)
+- CRANE-043: Add Reward Quoting Utilities (Low)
 
 ### Blocked
 
