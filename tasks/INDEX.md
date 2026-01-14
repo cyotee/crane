@@ -7,8 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-011 | Slipstream Utilities Review | Complete | None | - |
-| CRANE-012 | Camelot V2 Utilities Review | Complete | None | - |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
 | CRANE-015 | Fix ERC165Repo Overload Bug | Ready | CRANE-002 | `fix/erc165-overload` |
@@ -62,9 +60,7 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (3 tasks):**
-- CRANE-011: Slipstream Utilities Review
-- CRANE-012: Camelot V2 Utilities Review
+**DEX Protocol Reviews (1 task):**
 - CRANE-013: Balancer V3 Utilities Review
 
 **Core Framework (24 tasks):**
@@ -133,6 +129,7 @@
 | CRANE-008 | Uniswap V3 Utilities Review | 2026-01-13 | archive/CRANE-008-uniswap-v3-utils/ |
 | CRANE-009 | Uniswap V4 Utilities Review | 2026-01-13 | archive/CRANE-009-uniswap-v4-utils/ |
 | CRANE-010 | Aerodrome V1 Utilities Review | 2026-01-13 | archive/CRANE-010-aerodrome-v1-utils/ |
+| CRANE-011 | Slipstream Utilities Review | 2026-01-13 | archive/CRANE-011-slipstream-utils/ |
 | CRANE-012 | Camelot V2 Utilities Review | 2026-01-13 | archive/CRANE-012-camelot-v2-utils/ |
 
 ## Cross-Repo Dependencies
