@@ -1,6 +1,19 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI Agents when working with code in this repository.
+
+## Codebase Overview
+
+Crane is a Diamond-first (ERC2535) Solidity development framework for building modular, upgradeable smart contracts. It provides structured patterns, deterministic deployment infrastructure, and protocol integration utilities for DeFi development.
+
+**Stack**: Solidity 0.8.30, Foundry, Diamond Pattern (ERC2535), CREATE3 deterministic deployment
+
+**Structure**:
+- `contracts/` - Core framework (access, factories, introspection, protocols, tokens, utils)
+- `test/foundry/` - Test specifications mirroring contracts structure
+- `tasks/` - Task management for ongoing development
+
+For detailed architecture, see [docs/CODEBASE_MAP.md](docs/CODEBASE_MAP.md).
 
 ## Build & Test Commands
 
