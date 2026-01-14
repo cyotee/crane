@@ -71,40 +71,40 @@ Actionable items for follow-up tasks:
 **Description:** Modify the sort function to swap the entire TokenConfig struct, not just the token address field.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol
-**User Response:** (pending)
-**Notes:** This is a data corruption bug that needs immediate fix.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-051
 
 ### Suggestion 2: Add FixedPoint rounding to swap calculations
 **Priority:** MEDIUM
 **Description:** Use `mulDown`/`divUp` appropriately in onSwap() and computeBalance() to ensure pool-favorable rounding.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol
-**User Response:** (pending)
-**Notes:** Standard practice for AMM implementations.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-052
 
 ### Suggestion 3: Create comprehensive test suite for Balancer V3
 **Priority:** CRITICAL
 **Description:** Add unit, fuzz, and integration tests for Balancer V3 utilities.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/ (new directory)
-**User Response:** (pending)
-**Notes:** See recommended test suites in PROGRESS.md section 4.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-053
 
 ### Suggestion 5: Add a DFPkg deployment test to catch selector collisions
 **Priority:** HIGH
 **Description:** Add a Foundry spec that deploys `BalancerV3ConstantProductPoolDFPkg` and asserts `diamondConfig().facetCuts` contains no duplicate selectors; then deploy a pool and confirm metadata + vault registration flows.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/ (new test)
-**User Response:** (pending)
-**Notes:** This protects against silent misconfiguration when composing facets.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-054
 
 ### Suggestion 4: Implement weighted pool facet/target
 **Priority:** LOW
 **Description:** The BalancerV38020WeightedPoolMath library exists but has no corresponding facet/target implementation.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-weighted/ (new directory)
-**User Response:** (pending)
-**Notes:** Math library is comprehensive; needs facet wiring.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-055
 
 ---
 
