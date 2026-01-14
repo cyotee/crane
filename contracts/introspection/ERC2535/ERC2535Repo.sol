@@ -118,7 +118,7 @@ library ERC2535Repo {
             address currentFacet = layout.facetAddress[facetCut.functionSelectors[cursor]];
             layout.facetFunctionSelectors[currentFacet]._remove(facetCut.functionSelectors[cursor]);
             if (layout.facetFunctionSelectors[currentFacet]._length() == 0) {
-                layout.facetAddresses._remove(facetCut.facetAddress);
+                layout.facetAddresses._remove(currentFacet);
             }
 
             layout.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
@@ -136,7 +136,7 @@ library ERC2535Repo {
             if (layout.facetAddress[facetCut.functionSelectors[cursor]] == address(0)) {
                 revert IDiamondLoupe.FunctionNotPresent(facetCut.functionSelectors[cursor]);
             }
-            layout.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
+            layout.facetAddress[facetCut.functionSelectors[cursor]] = address(0);
             emit IERC8109Update.DiamondFunctionRemoved(facetCut.functionSelectors[cursor], facetCut.facetAddress);
         }
         // Does not actually delete values, just unmaps storage pointer.
