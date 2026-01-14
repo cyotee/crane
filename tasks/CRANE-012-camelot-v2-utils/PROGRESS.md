@@ -1,35 +1,38 @@
-# Progress: CRANE-012 — Camelot V2 Utilities
+# Progress Log: CRANE-012
 
-## Status: Not Started
+## Current Checkpoint
 
-## Work Log
+**Last checkpoint:** Not started
+**Next step:** Read TASK.md and begin implementation
+**Build status:** ⏳ Not checked
+**Test status:** ⏳ Not checked
 
-### Session 1
-**Date:** (not started)
-**Agent:** (not assigned)
+---
 
-**Completed:**
-- (none yet)
+## Session Log
 
-**In Progress:**
-- (none yet)
+### 2026-01-13 - Task Launched
 
-**Blockers:**
-- (none yet)
+- Task launched via /backlog:launch
+- Agent worktree created
+- Ready to begin implementation
 
-**Next Steps:**
-- [ ] Review `contracts/protocols/dexes/camelot/v2/`
-- [ ] Review `CamelotV2Service.sol`
-- [ ] Draft Camelot V2 correctness memo
+---
 
 ## Checklist
 
 ### Inventory Check
-- [ ] Camelot V2 utilities reviewed
+- [ ] Camelot V2 utilities reviewed (`contracts/protocols/dexes/camelot/v2/`)
+- [ ] CamelotV2Service.sol reviewed
 - [ ] Directional fees documented
-- [ ] CamelotV2Service reviewed
 
-### Deliverables
-- [ ] `docs/review/camelot-v2-utils.md` created
+### US-CRANE-012.1 Deliverables
+- [ ] PROGRESS.md lists key invariants for Camelot V2
+- [ ] PROGRESS.md documents directional fee mechanisms
+- [ ] PROGRESS.md documents fee-on-transfer token handling
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
+
+### Completion
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
