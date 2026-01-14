@@ -53,8 +53,8 @@ Actionable items for follow-up tasks:
 **Description:** Extend `AerodromService` to support stable pools by parameterizing the `stable` flag.
 **Affected Files:**
 - `contracts/protocols/dexes/aerodrome/v1/services/AerodromService.sol`
-**User Response:** (To be addressed in future task)
-**Notes:** Stable pools use `x³y + xy³ = k` curve, already documented.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-037
 
 ---
 

@@ -155,8 +155,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v4/` (new directory)
 - New files: `TickMath.t.sol`, `SwapMath.t.sol`, `SqrtPriceMath.t.sol`
-**User Response:** (pending)
-**Notes:** PROGRESS.md already includes example test code that could be extracted.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-033
 
 ### Suggestion 2: Add Fuzz Tests for SwapMath
 
@@ -164,8 +164,8 @@ Actionable items for follow-up tasks:
 **Description:** Add fuzz tests for `SwapMath.computeSwapStep()` to discover edge cases via randomized inputs. Test invariants like `amountIn + fee <= abs(amountRemaining)` for exactIn.
 **Affected Files:**
 - New file: `test/foundry/spec/protocols/dexes/uniswap/v4/SwapMath.fuzz.t.sol`
-**User Response:** (pending)
-**Notes:** PROGRESS.md includes example fuzz test structure.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-034
 
 ### Suggestion 3: Document Dynamic Fee Pool Limitations
 
@@ -173,17 +173,17 @@ Actionable items for follow-up tasks:
 **Description:** Add user-facing documentation noting that quotes for pools with `FEE_DYNAMIC` flag may differ from actual swap results since hooks can modify fees dynamically.
 **Affected Files:**
 - NatSpec comments in `UniswapV4Quoter.sol`
-**User Response:** (pending)
-**Notes:** This is mentioned in PROGRESS.md Section 3.2 but could be more prominent in code comments.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-035
 
 ### Suggestion 4: Optimize StateLibrary Hashing
 
 **Priority:** Low
-**Description:** Replace `keccak256(abi.encodePacked(...))` with inline assembly in StateLibrary for minor gas savings.
+**Description:** Replace `keccak256(abi.encodePacked(...))` with BetterEfficientHashLib in StateLibrary for gas savings.
 **Affected Files:**
 - `contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol:177,182,188`
-**User Response:** (pending)
-**Notes:** Forge lint suggestion - optional optimization.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-036
 
 ---
 

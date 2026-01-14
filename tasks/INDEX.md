@@ -29,6 +29,11 @@
 | CRANE-030 | Add FEE_LOWEST Constant to TestBase | Ready | CRANE-008 | `fix/fee-lowest-constant` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
+| CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
+| CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Ready | CRANE-009 | `test/v4-swapmath-fuzz` |
+| CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
+| CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
+| CRANE-037 | Add Aerodrome Stable Pool Support | Ready | CRANE-010 | `feature/aerodrome-stable-pool` |
 
 ## Status Legend
 
@@ -49,7 +54,7 @@
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
-**Core Framework (19 tasks):**
+**Core Framework (24 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
@@ -69,6 +74,11 @@
 - CRANE-030: Add FEE_LOWEST Constant to TestBase (from CRANE-008)
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
 - CRANE-032: Add TickMath Bijection Fuzz Tests (from CRANE-008)
+- CRANE-033: Add Uniswap V4 Pure Math Unit Tests (from CRANE-009)
+- CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests (from CRANE-009)
+- CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
+- CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
+- CRANE-037: Add Aerodrome Stable Pool Support (from CRANE-010)
 
 ### Blocked
 
