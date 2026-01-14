@@ -79,24 +79,24 @@ Note: EdgeCases count differs (19 documented vs 14 actual) - likely a counting e
 **Description:** Add `FEE_LOWEST = 100` (0.01%, tick spacing 1) to TestBase_UniswapV3.sol for completeness. This would enable testing the lowest fee tier pools.
 **Affected Files:**
 - `contracts/protocols/dexes/uniswap/v3/test/bases/TestBase_UniswapV3.sol`
-**User Response:** (pending)
-**Notes:** Low priority - the 0.01% tier is uncommon and the math is identical across tiers.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-030
 
 ### Suggestion 2: Correct EdgeCases test count in PROGRESS.md
 **Priority:** Low
 **Description:** Update PROGRESS.md table to show 14 tests for EdgeCases instead of 19.
 **Affected Files:**
 - `tasks/CRANE-008-uniswap-v3-utils/PROGRESS.md`
-**User Response:** (pending)
-**Notes:** Documentation accuracy improvement only.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-031
 
 ### Suggestion 3: Add fuzz tests for TickMath bijection
 **Priority:** Medium
 **Description:** Implement the recommended fuzz test from PROGRESS.md to verify `getTickAtSqrtRatio(getSqrtRatioAtTick(tick)) == tick` across the full tick range.
 **Affected Files:**
 - New file: `test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol`
-**User Response:** (pending)
-**Notes:** This would strengthen confidence in the vendored library integration.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-032
 
 ---
 

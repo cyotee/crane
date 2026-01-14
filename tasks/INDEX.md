@@ -26,6 +26,9 @@
 | CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
+| CRANE-030 | Add FEE_LOWEST Constant to TestBase | Ready | CRANE-008 | `fix/fee-lowest-constant` |
+| CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
+| CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
 
 ## Status Legend
 
@@ -46,7 +49,7 @@
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
-**Core Framework (16 tasks):**
+**Core Framework (19 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
@@ -63,6 +66,9 @@
 - CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
 - CRANE-028: Add Price Impact Tests (from CRANE-007)
 - CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
+- CRANE-030: Add FEE_LOWEST Constant to TestBase (from CRANE-008)
+- CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
+- CRANE-032: Add TickMath Bijection Fuzz Tests (from CRANE-008)
 
 ### Blocked
 
