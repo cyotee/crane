@@ -37,7 +37,7 @@ contract ERC5267Facet is ERC5267Target, IFacet {
             bytes4[] memory interfaces
         )
     {
-        interfaces = new bytes4[](2);
+        interfaces = new bytes4[](1);
 
         interfaces[0] = type(IERC5267).interfaceId;
     }
