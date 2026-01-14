@@ -7,9 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-013 | Balancer V3 Utilities Review | Complete | None | - |
-| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Complete | CRANE-002 | - |
-| CRANE-015 | Fix ERC165Repo Overload Bug | Complete | CRANE-002 | `fix/erc165-overload` |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
 | CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
@@ -70,12 +67,7 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (1 task):**
-- CRANE-013: Balancer V3 Utilities Review
-
-**Core Framework (24 tasks):**
-- CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
-- ~~CRANE-015: Fix ERC165Repo Overload Bug (In Review)~~
+**Core Framework (22 tasks):**
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
 - CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
