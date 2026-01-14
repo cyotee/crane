@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-013 | Balancer V3 Utilities Review | In Progress | None | `review/crn-balancer-v3-utils` |
+| CRANE-013 | Balancer V3 Utilities Review | In Review | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | In Progress | CRANE-002 | `fix/erc2535-remove-replace` |
 | CRANE-015 | Fix ERC165Repo Overload Bug | In Progress | CRANE-002 | `fix/erc165-overload` |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
@@ -60,8 +60,8 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (1 task):**
-- CRANE-013: Balancer V3 Utilities Review
+**DEX Protocol Reviews (0 tasks):**
+(none - CRANE-013 is in review)
 
 **Core Framework (24 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
