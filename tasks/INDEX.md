@@ -48,6 +48,9 @@
 | CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | Ready | CRANE-013 | `test/balancer-v3-comprehensive` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
+| CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
+| CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
+| CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 
 ## Status Legend
 
@@ -115,6 +118,11 @@
 - **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
 - CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
 - CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)
+
+**ERC2535 Follow-ups (3 tasks - from CRANE-014):**
+- **CRANE-057: Fix Remove Selector Ownership Validation (High)**
+- CRANE-056: Add Proxy-Level Routing Regression Test (Medium)
+- CRANE-058: Implement Partial Remove Semantics (Medium)
 
 ### Blocked
 

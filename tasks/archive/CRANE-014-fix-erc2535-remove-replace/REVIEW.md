@@ -88,7 +88,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol (or a new proxy-focused test)
 - contracts/proxies/Proxy.sol (for expected error selector)
-**Notes:** Current tests validate `facetAddress(selector) == address(0)` after removal, which is necessary but doesn't exercise the full proxy routing path.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-056
 
 ### Suggestion 2: Fix remove selector ownership validation
 **Priority:** High
@@ -96,7 +97,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - contracts/introspection/ERC2535/ERC2535Repo.sol
 - test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol (add negative test)
-**Notes:** This prevents owner error from corrupting loupe bookkeeping.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-057
 
 ### Suggestion 3: Implement correct partial remove or enforce whole-facet removal
 **Priority:** Medium
@@ -106,7 +108,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - contracts/introspection/ERC2535/ERC2535Repo.sol
 - test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol
-**Notes:** EIP-2535 doesn't explicitly define partial remove behavior, so either approach is valid.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-058
 
 ---
 
