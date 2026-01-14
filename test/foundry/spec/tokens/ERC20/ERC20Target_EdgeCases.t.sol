@@ -119,8 +119,40 @@ contract ERC20Target_EdgeCases is Test {
     /*                        TransferFrom Edge Cases                          */
     /* ---------------------------------------------------------------------- */
 
-    // Note: ERC20Target has a bug where transferFrom doesn't check allowance
-    // These tests document the current (potentially buggy) behavior
+    function test_transferFrom_withoutAllowance_reverts() public {
+        // Bob tries to transfer from Alice without any approval
+        vm.prank(bob);
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, bob, 0, 100e18));
+        token.transferFrom(alice, bob, 100e18);
+    }
+
+    function test_transferFrom_exceedsAllowance_reverts() public {
+        // Alice approves Bob for 50 tokens
+        vm.prank(alice);
+        token.approve(bob, 50e18);
+
+        // Bob tries to transfer 100 tokens (more than allowed)
+        vm.prank(bob);
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, bob, 50e18, 100e18));
+        token.transferFrom(alice, bob, 100e18);
+    }
+
+    function test_transferFrom_decreasesAllowance() public {
+        // Alice approves Bob for 100 tokens
+        vm.prank(alice);
+        token.approve(bob, 100e18);
+        assertEq(token.allowance(alice, bob), 100e18, "Initial allowance");
+
+        // Bob transfers 60 tokens
+        vm.prank(bob);
+        token.transferFrom(alice, bob, 60e18);
+        assertEq(token.allowance(alice, bob), 40e18, "Allowance should decrease by transfer amount");
+
+        // Bob can still transfer remaining allowance
+        vm.prank(bob);
+        token.transferFrom(alice, bob, 40e18);
+        assertEq(token.allowance(alice, bob), 0, "Allowance should be zero");
+    }
 
     function test_transferFrom_withAllowance_succeeds() public {
         // Setup: Alice approves Bob
@@ -133,6 +165,7 @@ contract ERC20Target_EdgeCases is Test {
         assertTrue(success, "TransferFrom should succeed");
         assertEq(token.balanceOf(bob), 100e18, "Bob should receive tokens");
         assertEq(token.balanceOf(alice), INITIAL_SUPPLY - 100e18, "Alice balance should decrease");
+        assertEq(token.allowance(alice, bob), 0, "Allowance should be zero after full spend");
     }
 
     function test_transferFrom_toZeroAddress_reverts() public {

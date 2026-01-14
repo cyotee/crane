@@ -35,7 +35,7 @@ contract ERC20Target is BetterIERC20 {
     }
 
     function transferFrom(address owner, address recipient, uint256 amount) external returns (bool) {
-        ERC20Repo._transfer(owner, recipient, amount);
+        ERC20Repo._transferFrom(owner, recipient, amount);
         return true;
     }
 
