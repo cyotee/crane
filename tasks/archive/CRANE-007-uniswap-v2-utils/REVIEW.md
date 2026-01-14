@@ -73,16 +73,16 @@ None - requirements were clear from TASK.md.
 **Description:** No tests for chained `getAmountsOut`/`getAmountsIn` across multiple pools.
 **Affected Files:**
 - `test/foundry/spec/utils/math/constProdUtils/` (new file)
-**User Response:** (pending)
-**Notes:** Documented as test gap in Section 7.3 of PROGRESS.md.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-027
 
 ### Suggestion 3: Add Price Impact Tests (from PROGRESS.md)
 **Priority:** Medium
 **Description:** No explicit price impact percentage tests across trade sizes.
 **Affected Files:**
 - `test/foundry/spec/utils/math/constProdUtils/` (new file)
-**User Response:** (pending)
-**Notes:** Documented as test gap in Section 7.3 of PROGRESS.md.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-028
 
 ### Suggestion 4: Expand ZapIn/ZapOut Fuzz Coverage (from PROGRESS.md)
 **Priority:** Low
@@ -97,16 +97,16 @@ None - requirements were clear from TASK.md.
 **Description:** Remove commented-out code (lines 848-1312) and debug console imports from ConstProdUtils.sol.
 **Affected Files:**
 - `contracts/utils/math/ConstProdUtils.sol`
-**User Response:** (pending)
-**Notes:** Documented in Section 8.3 "Code Quality" of PROGRESS.md.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-029 (combined with Suggestion 6)
 
 ### Suggestion 6: Add NatSpec Documentation Tags (from PROGRESS.md)
 **Priority:** Low
 **Description:** Add `@custom:signature` and `@custom:selector` tags per Crane coding standards.
 **Affected Files:**
 - `contracts/utils/math/ConstProdUtils.sol`
-**User Response:** (pending)
-**Notes:** Documented in Section 8.2 "Documentation Improvements" of PROGRESS.md.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-029 (combined with Suggestion 5)
 
 ---
 

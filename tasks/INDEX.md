@@ -23,6 +23,9 @@
 | CRANE-024 | Harden Zap-Out Fee-On Input Validation | Ready | CRANE-006 | `fix/zapout-fee-validation` |
 | CRANE-025 | Replace Fee-Denominator Heuristic | Ready | CRANE-006 | `fix/explicit-fee-denominator` |
 | CRANE-026 | Strengthen Overflow Boundary Tests | Ready | CRANE-006 | `test/overflow-boundary-tests` |
+| CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
+| CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
+| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
 
 ## Status Legend
 
@@ -43,7 +46,7 @@
 - CRANE-012: Camelot V2 Utilities Review
 - CRANE-013: Balancer V3 Utilities Review
 
-**Core Framework (13 tasks):**
+**Core Framework (16 tasks):**
 - CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
 - CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
@@ -57,6 +60,9 @@
 - **CRANE-024: Harden Zap-Out Fee-On Input Validation (High - from CRANE-006)**
 - CRANE-025: Replace Fee-Denominator Heuristic (from CRANE-006)
 - CRANE-026: Strengthen Overflow Boundary Tests (from CRANE-006)
+- CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
+- CRANE-028: Add Price Impact Tests (from CRANE-007)
+- CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
 
 ### Blocked
 
