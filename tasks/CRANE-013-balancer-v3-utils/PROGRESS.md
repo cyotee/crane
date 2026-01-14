@@ -1,35 +1,18 @@
-# Progress: CRANE-013 — Balancer V3 Utilities
+# Progress Log: CRANE-013
 
-## Status: Not Started
+## Current Checkpoint
 
-## Work Log
+**Last checkpoint:** Not started
+**Next step:** Read TASK.md and begin implementation
+**Build status:** ⏳ Not checked
+**Test status:** ⏳ Not checked
 
-### Session 1
-**Date:** (not started)
-**Agent:** (not assigned)
+---
 
-**Completed:**
-- (none yet)
+## Session Log
 
-**In Progress:**
-- (none yet)
+### 2026-01-13 - Task Launched
 
-**Blockers:**
-- (none yet)
-
-**Next Steps:**
-- [ ] Review `contracts/protocols/dexes/balancer/v3/`
-- [ ] Identify vault integration points
-- [ ] Draft Balancer V3 correctness memo
-
-## Checklist
-
-### Inventory Check
-- [ ] Balancer V3 utilities reviewed
-- [ ] Vault singleton documented
-- [ ] Pool types documented
-
-### Deliverables
-- [ ] `docs/review/balancer-v3-utils.md` created
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- Task launched via /backlog:launch
+- Agent worktree created
+- Ready to begin implementation
