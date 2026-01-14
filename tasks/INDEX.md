@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-011 | Slipstream Utilities Review | Ready | None | `review/crn-slipstream-utils` |
+| CRANE-011 | Slipstream Utilities Review | In Progress | None | `review/crn-slipstream-utils` |
 | CRANE-012 | Camelot V2 Utilities Review | Ready | None | `review/crn-camelot-v2-utils` |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
