@@ -7,7 +7,9 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-015 | Fix ERC165Repo Overload Bug | In Progress | CRANE-002 | `fix/erc165-overload` |
+| CRANE-013 | Balancer V3 Utilities Review | In Progress | None | `review/crn-balancer-v3-utils` |
+| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | In Progress | CRANE-002 | `fix/erc2535-remove-replace` |
+| CRANE-015 | Fix ERC165Repo Overload Bug | In Review | CRANE-002 | `fix/erc165-overload` |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | Ready | CRANE-002 | `test/factory-e2e` |
 | CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
@@ -43,14 +45,6 @@
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
-| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | Ready | CRANE-013 | `fix/tokenconfig-sort-bug` |
-| CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
-| CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | Ready | CRANE-013 | `test/balancer-v3-comprehensive` |
-| CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
-| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
-| CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
-| CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
-| CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 
 ## Status Legend
 
@@ -66,12 +60,12 @@
 
 ### Ready for Agent
 
-**DEX Protocol Reviews (0 tasks):**
-(none - CRANE-013 is in review)
+**DEX Protocol Reviews (1 task):**
+- CRANE-013: Balancer V3 Utilities Review
 
 **Core Framework (24 tasks):**
-- ~~CRANE-014: Fix ERC2535 Remove/Replace Correctness (In Review)~~
-- CRANE-015: Fix ERC165Repo Overload Bug (from CRANE-002)
+- CRANE-014: Fix ERC2535 Remove/Replace Correctness (from CRANE-002)
+- ~~CRANE-015: Fix ERC165Repo Overload Bug (In Review)~~
 - CRANE-016: Add End-to-End Factory Deployment Tests (from CRANE-002)
 - CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
@@ -112,18 +106,6 @@
 - CRANE-048: Add Referrer Fee Integration Tests (Low)
 - CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
 
-**Balancer V3 Follow-ups (5 tasks - from CRANE-013):**
-- **CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug (High)**
-- **CRANE-053: Create Comprehensive Test Suite for Balancer V3 (Critical)**
-- **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
-- CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
-- CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)
-
-**ERC2535 Follow-ups (3 tasks - from CRANE-014):**
-- **CRANE-057: Fix Remove Selector Ownership Validation (High)**
-- CRANE-056: Add Proxy-Level Routing Regression Test (Medium)
-- CRANE-058: Implement Partial Remove Semantics (Medium)
-
 ### Blocked
 
 (No blocked tasks)
@@ -149,8 +131,6 @@
 | CRANE-010 | Aerodrome V1 Utilities Review | 2026-01-13 | archive/CRANE-010-aerodrome-v1-utils/ |
 | CRANE-011 | Slipstream Utilities Review | 2026-01-13 | archive/CRANE-011-slipstream-utils/ |
 | CRANE-012 | Camelot V2 Utilities Review | 2026-01-13 | archive/CRANE-012-camelot-v2-utils/ |
-| CRANE-013 | Balancer V3 Utilities Review | 2026-01-14 | archive/CRANE-013-balancer-v3-utils/ |
-| CRANE-014 | Fix ERC2535 Remove/Replace Correctness | 2026-01-14 | archive/CRANE-014-fix-erc2535-remove-replace/ |
 
 ## Cross-Repo Dependencies
 

@@ -35,7 +35,7 @@ library ERC165Repo {
     }
 
     function _registerInterface(bytes4 interfaceId) internal {
-        _layout().isSupportedInterface[interfaceId] = false;
+        _layout().isSupportedInterface[interfaceId] = true;
     }
 
     function _registerInterfaces(Storage storage layout, bytes4[] memory interfaceIds) internal {

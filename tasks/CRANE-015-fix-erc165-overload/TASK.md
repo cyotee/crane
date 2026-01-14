@@ -1,7 +1,7 @@
 # Task CRANE-015: Fix ERC165Repo Overload Bug
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-12
 **Dependencies:** CRANE-002
 **Worktree:** `fix/erc165-overload`
@@ -28,21 +28,21 @@ While current codepaths appear to call the correct storage-parameterized overloa
 As a developer, I want `_registerInterface(bytes4)` to register interfaces correctly so that ERC165 compliance works as expected.
 
 **Acceptance Criteria:**
-- [ ] `_registerInterface(bytes4)` sets `layout.supportedInterfaces[interfaceId] = true`
-- [ ] Registered interfaces return `true` from `supportsInterface()`
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] `_registerInterface(bytes4)` sets `layout.supportedInterfaces[interfaceId] = true`
+- [x] Registered interfaces return `true` from `supportsInterface()`
+- [x] Tests pass
+- [x] Build succeeds
 
 ### US-CRANE-015.2: Add test coverage for both overloads
 
 As a maintainer, I want unit tests covering both `_registerInterface(bytes4)` and `_registerInterfaces(bytes4[])` overloads so that the bug cannot recur.
 
 **Acceptance Criteria:**
-- [ ] Test: `_registerInterface(bytes4)` correctly registers single interface
-- [ ] Test: `_registerInterfaces(bytes4[])` correctly registers multiple interfaces
-- [ ] Test: `supportsInterface()` returns true for registered interfaces
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test: `_registerInterface(bytes4)` correctly registers single interface
+- [x] Test: `_registerInterfaces(bytes4[])` correctly registers multiple interfaces
+- [x] Test: `supportsInterface()` returns true for registered interfaces
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -55,16 +55,16 @@ As a maintainer, I want unit tests covering both `_registerInterface(bytes4)` an
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-002 is complete or in progress
-- [ ] contracts/introspection/ERC165/ERC165Repo.sol exists
-- [ ] Both overloads exist: `_registerInterface(bytes4)` and `_registerInterfaces(bytes4[])`
+- [x] CRANE-002 is complete or in progress
+- [x] contracts/introspection/ERC165/ERC165Repo.sol exists
+- [x] Both overloads exist: `_registerInterface(bytes4)` and `_registerInterfaces(bytes4[])`
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Unit tests added for both overloads
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Unit tests added for both overloads
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
