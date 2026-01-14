@@ -1,35 +1,38 @@
-# Progress: CRANE-011 — Slipstream Utilities
+# Progress Log: CRANE-011
 
-## Status: Not Started
+## Current Checkpoint
 
-## Work Log
+**Last checkpoint:** Not started
+**Next step:** Read TASK.md and begin implementation
+**Build status:** ⏳ Not checked
+**Test status:** ⏳ Not checked
 
-### Session 1
-**Date:** (not started)
-**Agent:** (not assigned)
+---
 
-**Completed:**
-- (none yet)
+## Session Log
 
-**In Progress:**
-- (none yet)
+### 2026-01-13 - Task Launched
 
-**Blockers:**
-- (none yet)
+- Task launched via /backlog:launch
+- Agent worktree created
+- Ready to begin implementation
 
-**Next Steps:**
-- [ ] Review `contracts/protocols/dexes/aerodrome/slipstream/`
-- [ ] Compare with Uniswap V3 for deviations
-- [ ] Draft Slipstream correctness memo
+---
 
 ## Checklist
 
 ### Inventory Check
-- [ ] Slipstream utilities reviewed
+- [ ] Slipstream utilities reviewed (`contracts/protocols/dexes/aerodrome/slipstream/`)
 - [ ] Differences from Uniswap V3 identified
 - [ ] Gauge integration documented
 
-### Deliverables
-- [ ] `docs/review/slipstream-utils.md` created
+### US-CRANE-011.1 Deliverables
+- [ ] PROGRESS.md lists key invariants for Slipstream
+- [ ] PROGRESS.md documents concentrated liquidity mechanics
+- [ ] PROGRESS.md documents differences from Uniswap V3
+- [ ] PROGRESS.md lists missing tests and recommended suites (unit/spec/fuzz)
+
+### Completion
+- [ ] Review findings documented in PROGRESS.md
 - [ ] `forge build` passes
 - [ ] `forge test` passes
