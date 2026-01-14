@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-011 | Slipstream Utilities Review | Complete | None | - |
-| CRANE-012 | Camelot V2 Utilities Review | Complete | None | `review/crn-camelot-v2-utils` |
+| CRANE-012 | Camelot V2 Utilities Review | Complete | None | - |
 | CRANE-013 | Balancer V3 Utilities Review | Ready | None | `review/crn-balancer-v3-utils` |
 | CRANE-014 | Fix ERC2535 Remove/Replace Correctness | Ready | CRANE-002 | `fix/erc2535-remove-replace` |
 | CRANE-015 | Fix ERC165Repo Overload Bug | Ready | CRANE-002 | `fix/erc165-overload` |
@@ -40,6 +40,13 @@
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
 | CRANE-043 | Add Reward Quoting Utilities | Ready | CRANE-011 | `feature/slipstream-reward-utils` |
+| CRANE-044 | Add Camelot V2 Asymmetric Fee Tests | Ready | CRANE-012 | `test/camelot-asymmetric-fees` |
+| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Ready | CRANE-012 | `test/camelot-stable-swap` |
+| CRANE-046 | Add Protocol Fee Mint Parity Tests | Ready | CRANE-012 | `test/camelot-protocol-fee-parity` |
+| CRANE-047 | Add Fee-on-Transfer Token Integration Tests | Ready | CRANE-012 | `test/camelot-fot-integration` |
+| CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
+| CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
+| CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
 
 ## Status Legend
 
@@ -94,6 +101,15 @@
 - CRANE-042: Add Unstaked Fee Handling (Medium)
 - CRANE-043: Add Reward Quoting Utilities (Low)
 
+**Camelot V2 Follow-ups (7 tasks - from CRANE-012):**
+- **CRANE-044: Add Camelot V2 Asymmetric Fee Tests (Critical)**
+- CRANE-045: Add Camelot V2 Stable Swap Pool Tests (High)
+- CRANE-049: Add K Invariant Preservation Tests (High)
+- CRANE-046: Add Protocol Fee Mint Parity Tests (Medium)
+- CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)
+- CRANE-048: Add Referrer Fee Integration Tests (Low)
+- CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
+
 ### Blocked
 
 (No blocked tasks)
@@ -117,6 +133,7 @@
 | CRANE-008 | Uniswap V3 Utilities Review | 2026-01-13 | archive/CRANE-008-uniswap-v3-utils/ |
 | CRANE-009 | Uniswap V4 Utilities Review | 2026-01-13 | archive/CRANE-009-uniswap-v4-utils/ |
 | CRANE-010 | Aerodrome V1 Utilities Review | 2026-01-13 | archive/CRANE-010-aerodrome-v1-utils/ |
+| CRANE-012 | Camelot V2 Utilities Review | 2026-01-13 | archive/CRANE-012-camelot-v2-utils/ |
 
 ## Cross-Repo Dependencies
 
