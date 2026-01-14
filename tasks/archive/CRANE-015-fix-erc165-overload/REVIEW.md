@@ -38,19 +38,19 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Add an explicit test for `_supportsInterface(Storage, bytes4)`
 **Priority:** Low
-**Description:** Current tests validate `ERC165Repo._supportsInterface(bytes4)` via the stub. Adding one call-path test for the storage-parameterized overload would fully cover the Repo’s overload surface.
+**Description:** Current tests validate `ERC165Repo._supportsInterface(bytes4)` via the stub. Adding one call-path test for the storage-parameterized overload would fully cover the Repo's overload surface.
 **Affected Files:**
 - [test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol](test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol)
-**User Response:** (pending)
-**Notes:** Not required for CRANE-015 acceptance criteria; purely belt-and-suspenders.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-059
 
 ### Suggestion 2: Consider excluding `0xffffffff` in fuzz (only if strict ERC-165 semantics desired)
 **Priority:** Low
 **Description:** ERC-165 specifies `0xffffffff` as an invalid interface id. The current Repo is a generic mapping and may intentionally allow it; if you want strict semantics at the Repo level, either disallow it or exclude it from the fuzz test.
 **Affected Files:**
 - [test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol](test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol)
-**User Response:** (pending)
-**Notes:** I’d personally keep current behavior unless higher-level facets enforce strict ERC-165 constraints.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-060
 
 ---
 

@@ -45,6 +45,16 @@
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
+| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | Ready | CRANE-013 | `fix/tokenconfig-sort-bug` |
+| CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
+| CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | Ready | CRANE-013 | `test/balancer-v3-comprehensive` |
+| CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
+| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
+| CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
+| CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
+| CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
+| CRANE-059 | Add ERC165Repo Storage Overload Test | Ready | CRANE-015 | `test/erc165-storage-overload` |
+| CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 
 ## Status Legend
 
@@ -105,6 +115,22 @@
 - CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)
 - CRANE-048: Add Referrer Fee Integration Tests (Low)
 - CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
+
+**Balancer V3 Follow-ups (5 tasks - from CRANE-013):**
+- **CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug (High)**
+- **CRANE-053: Create Comprehensive Test Suite for Balancer V3 (Critical)**
+- **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
+- CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
+- CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)
+
+**ERC2535 Follow-ups (3 tasks - from CRANE-014):**
+- **CRANE-057: Fix Remove Selector Ownership Validation (High)**
+- CRANE-056: Add Proxy-Level Routing Regression Test (Medium)
+- CRANE-058: Implement Partial Remove Semantics (Medium)
+
+**ERC165 Follow-ups (2 tasks - from CRANE-015):**
+- CRANE-059: Add ERC165Repo Storage Overload Test (Low)
+- CRANE-060: Add ERC-165 Strict Semantics for 0xffffffff (Low)
 
 ### Blocked
 
