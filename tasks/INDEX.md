@@ -50,6 +50,8 @@
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
 | CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Ready | CRANE-053 | `test/exact-out-rounding` |
+| CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Ready | CRANE-023 | `refactor/erc5267-testbase` |
+| CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Ready | CRANE-023 | `test/erc5267-proxy-integration` |
 
 ## Status Legend
 
@@ -119,6 +121,10 @@
 **ERC165 Follow-ups (2 tasks - from CRANE-015):**
 - CRANE-059: Add ERC165Repo Storage Overload Test (Low)
 - CRANE-060: Add ERC-165 Strict Semantics for 0xffffffff (Low)
+
+**ERC5267 Follow-ups (2 tasks - from CRANE-023):**
+- CRANE-064: Adopt IFacet TestBase Pattern for ERC5267 (Low)
+- CRANE-065: Add ERC5267 Diamond Proxy Integration Test (Low)
 
 ### Blocked
 

@@ -31,29 +31,29 @@ Acceptance criteria verification:
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Tighten the “new empty array” test naming
+### Suggestion 1: Tighten the "new empty array" test naming
 **Priority:** P2 (Minor)
-**Description:** `test_eip712Domain_extensions_isNewEmptyArray()` can’t actually prove distinct allocations; consider renaming to something like “emptyEachCall” or removing the “separate array allocations” comment to avoid implying stronger guarantees than Solidity can validate here.
+**Description:** `test_eip712Domain_extensions_isNewEmptyArray()` can't actually prove distinct allocations; consider renaming to something like "emptyEachCall" or removing the "separate array allocations" comment to avoid implying stronger guarantees than Solidity can validate here.
 **Affected Files:**
 - `test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol`
-**User Response:** (pending)
-**Notes:** Non-blocking; current assertions are still useful.
+**User Response:** Rejected
+**Notes:** Non-blocking; current assertions are still useful. Skipped per user decision.
 
-### Suggestion 2: Consider adopting the repo’s IFacet TestBase pattern
+### Suggestion 2: Consider adopting the repo's IFacet TestBase pattern
 **Priority:** P3 (Nice-to-have)
 **Description:** The facet metadata tests are currently hand-rolled. If desired for consistency, these could be expressed via the existing `TestBase_IFacet` + `Behavior_IFacet` patterns used elsewhere.
 **Affected Files:**
 - `test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol`
-**User Response:** (pending)
-**Notes:** Not required by the task’s acceptance criteria.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-064
 
 ### Suggestion 3: Optional diamond/proxy integration assertion
 **Priority:** P3 (Nice-to-have)
 **Description:** If you want an end-to-end confirmation of delegatecall semantics, add an integration test that calls `eip712Domain()` through a Diamond proxy and asserts `verifyingContract` equals the proxy address.
 **Affected Files:**
 - New/adjacent integration test (location TBD)
-**User Response:** (pending)
-**Notes:** Only worthwhile if there’s a lightweight proxy fixture available.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-065
 
 ---
 
