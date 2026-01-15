@@ -36,21 +36,21 @@ None.
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Tighten the “both directions” fuzz assertion
+### Suggestion 1: Tighten the "both directions" fuzz assertion
 **Priority:** Medium
 **Description:** `testFuzz_asymmetricFees_bothDirections` currently validates fee selection via `_sortReservesStruct()` and that both swaps succeed, but it does not assert output correctness against `ConstProdUtils._saleQuote`. Consider splitting into two phases with fresh pools (or snapshot/restore) so each direction can be validated against the expected quote under known reserves.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_asymmetricFees.t.sol
-**User Response:** (pending)
-**Notes:** This would strengthen the acceptance criterion “both swap directions produce correct outputs” under fuzzed fees.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-069
 
 ### Suggestion 2: Reduce noisy logs from stubs (optional)
 **Priority:** Low
-**Description:** Running this suite prints debug logs from `CamelotPair._getAmountOut`. If these logs aren’t intentionally part of the test UX, consider removing or gating them to keep CI output clean.
+**Description:** Running this suite prints debug logs from `CamelotPair._getAmountOut`. If these logs aren't intentionally part of the test UX, consider removing or gating them to keep CI output clean.
 **Affected Files:**
 - contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol
-**User Response:** (pending)
-**Notes:** This is pre-existing behavior; not introduced by CRANE-044.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-070
 
 ---
 

@@ -51,6 +51,8 @@
 | CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Ready | CRANE-038 | `test/slipstream-zapin-conservation` |
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Ready | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
+| CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Ready | CRANE-044 | `test/camelot-bidirectional-fuzz` |
+| CRANE-070 | Reduce Noisy Logs from Camelot Stubs | Ready | CRANE-044 | `fix/camelot-stub-logs` |
 
 ## Status Legend
 
@@ -105,6 +107,10 @@
 - CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)
 - CRANE-048: Add Referrer Fee Integration Tests (Low)
 - CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
+
+**Camelot Asymmetric Fee Test Follow-ups (2 tasks - from CRANE-044):**
+- CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
+- CRANE-070: Reduce Noisy Logs from Camelot Stubs (Low)
 
 **Balancer V3 Follow-ups (7 tasks - from CRANE-013/CRANE-053):**
 - **CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug (High)**
