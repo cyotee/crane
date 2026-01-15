@@ -34,7 +34,7 @@
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
-| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | In Progress | CRANE-013 | `fix/tokenconfig-sort-bug` |
+| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | Pending Merge | CRANE-013 | `fix/tokenconfig-sort-bug` |
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
