@@ -9,7 +9,6 @@
 |----|-------|--------|--------------|----------|
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
-| CRANE-026 | Strengthen Overflow Boundary Tests | Complete | CRANE-006 | `test/overflow-boundary-tests` |
 | CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
@@ -67,12 +66,9 @@
 
 ### Ready for Agent
 
-**Core Framework (18 tasks):**
+**Core Framework (15 tasks):**
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
-- **CRANE-024: Harden Zap-Out Fee-On Input Validation (High - from CRANE-006)**
-- CRANE-025: Replace Fee-Denominator Heuristic (from CRANE-006)
-- CRANE-026: Strengthen Overflow Boundary Tests (from CRANE-006)
 - CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
 - CRANE-028: Add Price Impact Tests (from CRANE-007)
 - CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
@@ -174,6 +170,7 @@
 | CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | 2026-01-15 | archive/CRANE-051-fix-tokenconfig-sort-bug/ |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | 2026-01-15 | archive/CRANE-016-add-factory-tests/ |
 | CRANE-017 | Add Negative Assertions to Test Framework | 2026-01-15 | archive/CRANE-017-test-negative-assertions/ |
+| CRANE-026 | Strengthen Overflow Boundary Tests | 2026-01-15 | archive/CRANE-026-overflow-boundary-tests/ |
 
 ## Cross-Repo Dependencies
 
