@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-016 | Add End-to-End Factory Deployment Tests | In Review | CRANE-002 | `test/factory-e2e` |
+| CRANE-016 | Add End-to-End Factory Deployment Tests | Pending Merge | CRANE-002 | `test/factory-e2e` |
 | CRANE-017 | Add Negative Assertions to Test Framework | In Progress | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
