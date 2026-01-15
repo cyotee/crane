@@ -19,11 +19,10 @@ library TokenConfigUtils {
         for (uint256 i = 1; i < array.length; i++) {
             swapped = false;
             for (uint256 j = 0; j < array.length - i; j++) {
-                IERC20 next = array[j + 1].token;
-                IERC20 actual = array[j].token;
-                if (next < actual) {
-                    array[j].token = next;
-                    array[j + 1].token = actual;
+                if (array[j + 1].token < array[j].token) {
+                    TokenConfig memory temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
                     swapped = true;
                 }
             }
