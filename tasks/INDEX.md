@@ -23,7 +23,7 @@
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
 | CRANE-037 | Add Aerodrome Stable Pool Support | Ready | CRANE-010 | `feature/aerodrome-stable-pool` |
-| CRANE-038 | Add Slipstream Fuzz Tests | Pending Merge | CRANE-011 | `test/slipstream-fuzz-tests` |
+| CRANE-038 | Add Slipstream Fuzz Tests | Complete | CRANE-011 | `test/slipstream-fuzz-tests` |
 | CRANE-039 | Add Slipstream Fork Tests | Ready | CRANE-011 | `test/slipstream-fork-tests` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
