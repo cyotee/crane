@@ -157,6 +157,7 @@
 | CRANE-022 | Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH | 2026-01-14 | archive/CRANE-022-fix-eip712-typehash-typo/ |
 | CRANE-023 | Add ERC-5267 Test Coverage | 2026-01-14 | archive/CRANE-023-add-erc5267-tests/ |
 | CRANE-024 | Harden Zap-Out Fee-On Input Validation | 2026-01-14 | archive/CRANE-024-harden-zapout-fee-validation/ |
+| CRANE-025 | Replace Fee-Denominator Heuristic | 2026-01-14 | archive/CRANE-025-explicit-fee-denominator/ |
 | CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | 2026-01-14 | archive/CRANE-053-balancer-v3-comprehensive-tests/ |
 
 ## Cross-Repo Dependencies
