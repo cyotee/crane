@@ -52,6 +52,8 @@
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
 | CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Ready | CRANE-044 | `test/camelot-bidirectional-fuzz` |
 | CRANE-070 | Reduce Noisy Logs from Camelot Stubs | Ready | CRANE-044 | `fix/camelot-stub-logs` |
+| CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
+| CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 
 ## Status Legend
 
@@ -110,6 +112,10 @@
 **Camelot Asymmetric Fee Test Follow-ups (2 tasks - from CRANE-044):**
 - CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
 - CRANE-070: Reduce Noisy Logs from Camelot Stubs (Low)
+
+**TokenConfigUtils Follow-ups (2 tasks - from CRANE-051):**
+- CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test (Medium)
+- CRANE-071: Remove Unused IERC20 Import from TokenConfigUtils (Low)
 
 **Balancer V3 Follow-ups (6 tasks - from CRANE-013/CRANE-053):**
 - **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**

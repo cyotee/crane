@@ -41,7 +41,7 @@ Actionable items for follow-up tasks:
 **Description:** If `IERC20` is not required in scope for compilation, remove the unused import in `TokenConfigUtils.sol` to reduce warnings and keep the file minimal.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol
-**User Response:** (pending)
+**User Response:** Accepted → CRANE-071
 **Notes:** If the import is actually necessary due to how the compiler resolves transitive types for `TokenConfig`, keep it and ignore this suggestion.
 
 ### Suggestion 2: Add fuzz for field alignment mapping
@@ -49,8 +49,8 @@ Actionable items for follow-up tasks:
 **Description:** Add a fuzz test that assigns distinct per-token metadata (e.g., `rateProvider = address(uint160(token) ^ 0x1234)`) and asserts that after sorting, each `token` still maps to its original metadata. Current fuzz tests verify ordering/length, but not alignment under arbitrary inputs.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/utils/TokenConfigUtils.t.sol
-**User Response:** (pending)
-**Notes:** This would directly guard against regressions of the original “swap only token address” bug class.
+**User Response:** Accepted → CRANE-072
+**Notes:** This would directly guard against regressions of the original "swap only token address" bug class.
 
 ---
 
