@@ -1,0 +1,149 @@
+= Crane
+ifndef::compositing[]
+:author: cyotee doge
+:email: doge.cyotee
+:revdate: 2025-11-23
+:revnumber: 0.1
+:revremark: Initial draft.
+:toc:
+:toclevels: 6
+:sectnums:
+:data-uri:
+:stem:
+:icons: font
+:root: ../
+:imagesdir: ../images/
+:compositing:
+endif::[]
+
+image::humor/Code_Not_the_Same.jpeg[align=center]
+
+Crane is a Diamond first opinionated Solidity development framework.
+It is inspired by Open Zeppelin, Nick Mudge's work defining ERC2535, and Spring.
+Developer's are expected to reuse the deployed Facets wherever possible.
+Libraries to access contract storage are included.
+Developers are expected to import and reuse these libraries to ensure they are reliably access the same storage layout.
+
+== Dependencies
+
+Currently, Crane includes several frameworks and protocols as dependencies.
+This makes Crane rasther heavy.
+I plan on addreessing this by segmenting Crane into smaller packages in the future.
+First, I need to evaluate Soldder to see how easily I can use it to handle cross-referenced dependencies.
+
+For now, consider using Crane when you need to build across several protocols.
+Or if you're willing to have a heavy dependency that can replace several of your existing dependencies.
+
+== Structure and Naming Conventions
+
+Code is organized similar to Open Zeppelin.
+General utility libraries are in Utils, for example.
+All internal functions as prefixed weith an underscore, `_`.
+Meaning that you must port your code to be able to call Crane functions.
+I'll take this friction as a way to signal that developers should be sure they want to adopt Crane.
+
+Internal library functions that make an external call somewhere in their execution are not prefixed with an underscore.
+I do this to surface the fact that an external call is going to occur somewhere in the stack.
+
+I follow a scrict name convention for contracts and libraries.
+I also use very descriptive names.
+So, yes, I would have a FactoryContractContractFactory.
+
+Storage Slots
+
+Storage slots are defined as the keccak256 hash of the abi encoded EIP code with dot separators.
+For example storage for the ERC20 standard is "eip.erc.20".
+Storage for ERC721 is "eip.erec.721".
+
+Library names tell you expected behavior.
+
+* Utils - Only pure and view calls, never alters state.
+* Adaptor - Wraps another function or complex external call logic. Will never alter data or state.
+** Typically handles building a low-level call to an external contract.
+** Also used to wrap building complex arguments.
+For example, when an interface expects an array, but the Adaptor enumaerates the members as arguments.
+* Repo - Diamond storage libraries. Will only alter local state. Never makes external calls.
+* Service - Orchestrates external calls with local state changes, and possibly, pure caclucations.
+* Better - Wraps one or more libraries from dependencies and extends their functionality.
+** This let's you only worry about importing a single library for a set of functionality.
+** Not every library has been ported to a Better library yet.
+I simply haven't had time to ported everything yet.
+I plan to get to all of them so the function names conform.
+
+== Design Principles
+
+=== Consistency is a Virtue
+
+Blind conformity is bad.
+But being consistent is good.
+That's why I adhere to the official style guide.
+That is also why I insist on consistent naming conventions.
+For example, I always prefix internal library functions with an underscore.
+I don't care what looks good, or feels right.
+If the convention isn't causing an articulable practical problem, I'll go with the convention.
+
+=== Expose Your State
+
+I consider it good form to expose your state as readable.
+This makes it clear how your contract is configured.
+It also makes it easy for other contracts to read your state.
+That is why I included several Aware Facets to expose how a proxy is configured.
+These read from the same state used by business logic.
+This makes it clear what the business logic is actually using.
+
+=== Tests are Scripts
+
+I like Foundry's definition of Scripts and Tests.
+But I dislike that they don't expect you to include your scripts in your tests.
+I fixed that by making BetterTest inherit BetterScript.
+I also defined the inheritance linearization.
+
+== Predicted Questions
+
+=== Why do you prefix internal library functions with an underscore?
+
+Because the https://docs.soliditylang.org/en/latest/style-guide.html[Solidity Style Guide] tells you to.
+I know many have adopted the https://github.com/coinbase/solidity-style-guide[Coinsebase Style Guide].
+Which says not to do this because it "looks wrong".
+I don't see this as sufficient reason to break with convention.
+It also removes the information that it is an internal call.
+Which was the intended reason for the directive.
+
+=== Why didn't you just contribute this code to Compose?
+
+I have different opinions on how to design a development framework.
+Nick is a good guy, we just disagree on some points.
+And I'd rather just build as I think is best rather then debate the merits of personal preferences.
+I like https://github.com/Perfect-Abstractions/Compose[Compose].
+https://github.com/Perfect-Abstractions/Compose[Compose] is good.
+If it serves your needs, go use https://github.com/Perfect-Abstractions/Compose[Compose].
+
+The biggest disagreement is I hate the MIT license.
+It's too permissive.
+GPL is better.
+But I prefer the AGPL specifically because it requires publishing changes when code is used to provide a network service.
+I want to require any private chains that modify this framework to publish their changes.
+
+I'm a gas Scrooge.
+Shaving every bit of needless gas spent adds up to an overall improvement.
+https://github.com/Perfect-Abstractions/Compose[Compose's] is optimized.
+But I can shaves a bit more off, so I did.
+
+I also think a framework should have opinions, not mandates.
+I prefer to expose layers of interaction so developers can integrate the most efficient layer.
+Consider the GreeterRepo.
+
+// [source,solidity]
+// ----
+// include::src/test/stubs/greeter/GreeterRepo.sol[tag=_setMessage(GreeterLayout_string)]
+// ----
+
+// [source,solidity]
+// ----
+// include::src/test/stubs/greeter/GreeterRepo.sol[tag=_setMessage(string)]
+// ----
+
+The GreeterRepo exposes both a low level function that takes the storage layout as an argument.
+And a higher level function that abstracts away the storage layout.
+This allows developers to choose the most efficient layer for their use case.
+And allows developers to save a small amount of gas if they use the same layout struct multiple times.

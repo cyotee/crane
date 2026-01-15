@@ -1,0 +1,28 @@
+= MultiStepOwnableRepo
+ifndef::compositing[]
+:author: cyotee doge
+:email: doge.cyotee
+:revdate: 2025-12-10
+:revnumber: 0.1
+:revremark: Initial draft.
+:toc:
+:toclevels: 6
+:sectnums:
+:data-uri:
+:stem:
+:icons: font
+:root: ../../../../..
+// :imagesdir: ../images/
+:compositing:
+endif::[]
+
+
+[source,solidity]
+----
+include::{root}/contracts/access/ERC8023/MultiStepOwnableRepo.sol[tag=MultiStepOwnableRepo]
+----
+
+[source,solidity]
+----
+include::{root}/contracts/access/ERC8023/MultiStepOwnableRepo.sol[tag=_initialize(Storage-address-uint256)]
+----
