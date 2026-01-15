@@ -1,7 +1,7 @@
 # Task CRANE-023: Add ERC-5267 Test Coverage
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-005
 **Worktree:** `test/erc5267-coverage`
@@ -26,11 +26,11 @@ Create dedicated test file for `eip712Domain()` function testing fields bitmap, 
 As a maintainer, I want comprehensive tests for ERC-5267 so that domain separator behavior is verified.
 
 **Acceptance Criteria:**
-- [ ] Test file created at `test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol`
-- [ ] Tests verify `eip712Domain()` return values
-- [ ] Tests verify fields bitmap correctness
-- [ ] Tests verify extensions array is empty
-- [ ] All tests pass
+- [x] Test file created at `test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol`
+- [x] Tests verify `eip712Domain()` return values
+- [x] Tests verify fields bitmap correctness
+- [x] Tests verify extensions array is empty
+- [x] All tests pass
 
 ## Technical Details
 
@@ -66,15 +66,15 @@ function eip712Domain()
 
 Before starting, verify:
 - [x] CRANE-005 is complete
-- [ ] `contracts/utils/cryptography/ERC5267/ERC5267Facet.sol` exists
-- [ ] `contracts/utils/cryptography/ERC5267/ERC5267Target.sol` exists
+- [x] `contracts/utils/cryptography/ERC5267/ERC5267Facet.sol` exists
+- [x] `contracts/utils/cryptography/ERC5267/ERC5267Target.sol` exists
 
 ## Completion Criteria
 
-- [ ] Test file created with comprehensive coverage
-- [ ] All new tests pass
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] Test file created with comprehensive coverage
+- [x] All new tests pass
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
