@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-018 | Improve Test Verification Rigor | Complete | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
@@ -174,6 +173,7 @@
 | CRANE-016 | Add End-to-End Factory Deployment Tests | 2026-01-15 | archive/CRANE-016-add-factory-tests/ |
 | CRANE-017 | Add Negative Assertions to Test Framework | 2026-01-15 | archive/CRANE-017-test-negative-assertions/ |
 | CRANE-026 | Strengthen Overflow Boundary Tests | 2026-01-15 | archive/CRANE-026-overflow-boundary-tests/ |
+| CRANE-018 | Improve Test Verification Rigor | 2026-01-15 | archive/CRANE-018-test-verification-rigor/ |
 
 ## Cross-Repo Dependencies
 
