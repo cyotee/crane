@@ -1,7 +1,7 @@
 # Task CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-14
 **Dependencies:** CRANE-013
 **Worktree:** `fix/tokenconfig-sort-bug`
@@ -26,11 +26,11 @@ Fix the TokenConfigUtils._sort() function which only swaps the `token` field, no
 As a developer, I want the _sort() function to swap the entire TokenConfig struct so that all fields remain correctly aligned after sorting.
 
 **Acceptance Criteria:**
-- [ ] `_sort()` swaps entire TokenConfig struct, not just the token address
-- [ ] After sorting, `rateProvider`, `tokenType`, and `paysYieldFees` are correctly paired with their tokens
-- [ ] Unit tests verify correct sorting behavior
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] `_sort()` swaps entire TokenConfig struct, not just the token address
+- [x] After sorting, `rateProvider`, `tokenType`, and `paysYieldFees` are correctly paired with their tokens
+- [x] Unit tests verify correct sorting behavior
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -43,16 +43,16 @@ As a developer, I want the _sort() function to swap the entire TokenConfig struc
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-013 is complete
-- [ ] contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol exists
-- [ ] Current _sort() implementation only swaps .token field
+- [x] CRANE-013 is complete
+- [x] contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol exists
+- [x] Current _sort() implementation only swaps .token field (was true, now fixed)
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Unit tests added
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Unit tests added
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 

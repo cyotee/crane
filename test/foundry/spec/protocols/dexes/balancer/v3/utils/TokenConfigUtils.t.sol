@@ -15,10 +15,10 @@ import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/uti
  * @dev Tests verify sorting correctness, struct field alignment preservation,
  *      and edge cases with 2, 3, and 4 token configurations.
  *
- * IMPORTANT BUG DISCOVERY: The current TokenConfigUtils._sort() implementation
- * only swaps the `token` field during sorting, NOT the full TokenConfig struct.
- * This means tokenType, rateProvider, and paysYieldFees fields become misaligned
- * after sorting. The tests in this file document and verify this bug.
+ * NOTE: A previous bug in _sort() only swapped the `token` field, not the full
+ * TokenConfig struct. This was fixed in commit 0acfd35. These tests verify that
+ * all struct fields (token, tokenType, rateProvider, paysYieldFees) remain
+ * correctly aligned after sorting.
  */
 contract TokenConfigUtils_Test is Test {
     using TokenConfigUtils for TokenConfig[];
