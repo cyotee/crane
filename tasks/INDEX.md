@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-019 | Add Test Edge Cases and Cleanup | In Progress | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
-| CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
+| CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-030 | Add FEE_LOWEST Constant to TestBase | Ready | CRANE-008 | `fix/fee-lowest-constant` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
