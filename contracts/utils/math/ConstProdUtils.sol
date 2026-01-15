@@ -229,6 +229,17 @@ library ConstProdUtils {
 
     /**
      * @dev Calculates the expected LP tokens from a swap deposit operation, accounting for protocol fees.
+     *
+     * @notice This function uses a heuristic to infer the fee denominator from the fee percent value.
+     * The heuristic assumes:
+     * - feePercent <= 10: Legacy pool (denominator = 1000, e.g., 3/1000 = 0.3%)
+     * - feePercent > 10: Modern pool (denominator = 100,000, e.g., 300/100000 = 0.3%)
+     *
+     * @custom:edge-case This heuristic can misclassify low modern fees. For example, a modern
+     * pool with 0.01% fee uses feePercent=10 with denominator=100,000 (10/100000), but the
+     * heuristic would incorrectly treat it as a legacy 1% fee (10/1000). If you know the exact
+     * fee denominator, use the overload that accepts explicit `feeDenominator` parameter.
+     *
      * @param amountIn The amount of token being deposited.
      * @param lpTotalSupply The current total supply of LP tokens.
      * @param reserveIn The reserve of the input token.
@@ -255,6 +266,50 @@ library ConstProdUtils {
         args.reserveIn = reserveIn;
         args.reserveOut = reserveOut;
         args.feePercent = feePercent;
+        // Heuristic: infer denominator from fee magnitude
+        // See @custom:edge-case in NatSpec above for limitations
+        args.feeDenominator = (feePercent <= 10) ? 1000 : FEE_DENOMINATOR;
+        args.kLast = kLast;
+        args.ownerFeeShare = ownerFeeShare;
+        args.feeOn = feeOn;
+        return _quoteSwapDepositWithFee(args);
+    }
+
+    /**
+     * @dev Calculates the expected LP tokens from a swap deposit operation with explicit fee denominator.
+     *
+     * @notice This overload allows specifying the exact fee denominator, avoiding the heuristic
+     * that can misclassify low modern fees (e.g., 10/100000 = 0.01%) as legacy fees (10/1000 = 1%).
+     *
+     * @param amountIn The amount of token being deposited.
+     * @param lpTotalSupply The current total supply of LP tokens.
+     * @param reserveIn The reserve of the input token.
+     * @param reserveOut The reserve of the output token.
+     * @param feePercent The swap fee percentage (numerator).
+     * @param feeDenominator The fee denominator (e.g., 1000 for legacy, 100000 for modern pools).
+     * @param kLast The last stored K value before the operation.
+     * @param ownerFeeShare The fee share percentage for the protocol owner (e.g., 30000 for 30%).
+     * @param feeOn Whether protocol fees are enabled.
+     * @return lpAmt The expected amount of LP tokens after accounting for protocol fees.
+     */
+    function _quoteSwapDepositWithFee(
+        uint256 amountIn,
+        uint256 lpTotalSupply,
+        uint256 reserveIn,
+        uint256 reserveOut,
+        uint256 feePercent,
+        uint256 feeDenominator,
+        uint256 kLast,
+        uint256 ownerFeeShare,
+        bool feeOn
+    ) internal pure returns (uint256 lpAmt) {
+        SwapDepositArgs memory args;
+        args.amountIn = amountIn;
+        args.lpTotalSupply = lpTotalSupply;
+        args.reserveIn = reserveIn;
+        args.reserveOut = reserveOut;
+        args.feePercent = feePercent;
+        args.feeDenominator = feeDenominator;
         args.kLast = kLast;
         args.ownerFeeShare = ownerFeeShare;
         args.feeOn = feeOn;
@@ -267,14 +322,20 @@ library ConstProdUtils {
         uint256 reserveIn;
         uint256 reserveOut;
         uint256 feePercent;
+        uint256 feeDenominator;
         uint256 kLast;
         uint256 ownerFeeShare;
         bool feeOn;
     }
 
+    /**
+     * @dev Internal implementation using SwapDepositArgs struct.
+     * @notice The feeDenominator field in args determines how feePercent is interpreted.
+     * Callers should set args.feeDenominator explicitly, or use the convenience overloads.
+     */
     function _quoteSwapDepositWithFee(SwapDepositArgs memory args) internal pure returns (uint256 lpAmt) {
-        // First calculate the standard LP tokens
-        uint256 feeDenom = (args.feePercent <= 10) ? 1000 : FEE_DENOMINATOR;
+        // Use explicit denominator from args (set by caller or heuristic in overload)
+        uint256 feeDenom = args.feeDenominator;
         uint256 amtInSaleAmt = _swapDepositSaleAmt(args.amountIn, args.reserveIn, args.feePercent, feeDenom);
         uint256 opTokenAmtIn = _saleQuote(amtInSaleAmt, args.reserveIn, args.reserveOut, args.feePercent, feeDenom);
         args.amountIn -= amtInSaleAmt;

@@ -36,12 +36,12 @@ Options:
 As a developer integrating with modern DEXes, I want to specify the fee denominator explicitly so that low-percentage fees (like 0.01%) are calculated correctly.
 
 **Acceptance Criteria:**
-- [ ] Add `_quoteSwapDepositWithFee` overload accepting explicit `feeDenominator`
-- [ ] Existing API preserved for backward compatibility
-- [ ] Document heuristic edge cases in code comments
-- [ ] Add test cases for boundary conditions (feePercent = 10)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Add `_quoteSwapDepositWithFee` overload accepting explicit `feeDenominator`
+- [x] Existing API preserved for backward compatibility
+- [x] Document heuristic edge cases in code comments
+- [x] Add test cases for boundary conditions (feePercent = 10)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -56,14 +56,14 @@ As a developer integrating with modern DEXes, I want to specify the fee denomina
 
 Before starting, verify:
 - [x] CRANE-006 is complete (archived)
-- [ ] Affected file exists: `contracts/utils/math/ConstProdUtils.sol`
-- [ ] Identify all call sites using the heuristic
+- [x] Affected file exists: `contracts/utils/math/ConstProdUtils.sol`
+- [x] Identify all call sites using the heuristic
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] Tests pass
+- [x] Build succeeds
 
 ---
 
