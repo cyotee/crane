@@ -34,8 +34,8 @@ Actionable items for follow-up tasks:
 **Description:** Add a focused test that asserts `ERC5267Facet.facetInterfaces()` returns an array of length 1 and does not contain `bytes4(0)`.
 **Affected Files:**
 - (Likely) a new `*.t.sol` under `test/foundry/spec/utils/cryptography/ERC5267/` or an existing `IFacet`-style test suite.
-**User Response:** (pending)
-**Notes:** This is likely addressed by CRANE-023; keep as a dedicated regression if not already covered there.
+**User Response:** Skipped (covered by CRANE-023)
+**Notes:** User confirmed this regression test is already addressed by CRANE-023 (Add ERC-5267 Test Coverage).
 
 ---
 
