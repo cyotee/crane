@@ -49,6 +49,9 @@
 | CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Ready | CRANE-053 | `test/exact-out-rounding` |
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Ready | CRANE-023 | `refactor/erc5267-testbase` |
 | CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Ready | CRANE-023 | `test/erc5267-proxy-integration` |
+| CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Ready | CRANE-038 | `test/slipstream-zapin-conservation` |
+| CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Ready | CRANE-038 | `test/slipstream-singletick-guard` |
+| CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
 
 ## Status Legend
 
@@ -90,6 +93,11 @@
 - CRANE-041: Add Slipstream Invariant Tests (High)
 - CRANE-042: Add Unstaked Fee Handling (Medium)
 - CRANE-043: Add Reward Quoting Utilities (Low)
+
+**Slipstream Fuzz Test Follow-ups (3 tasks - from CRANE-038):**
+- CRANE-066: Strengthen Zap-In Value Conservation Assertions (Medium)
+- CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
+- CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
 **Camelot V2 Follow-ups (7 tasks - from CRANE-012):**
 - **CRANE-044: Add Camelot V2 Asymmetric Fee Tests (Critical)**

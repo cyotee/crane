@@ -56,29 +56,29 @@ Questions asked to understand review criteria:
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Strengthen zap-in “value conservation” assertions
+### Suggestion 1: Strengthen zap-in "value conservation" assertions
 **Priority:** Medium
-**Description:** `testFuzz_zapIn_valueConservation` currently checks basic sanity (`swapAmountIn <= amountIn` and some value is produced) but doesn’t assert a meaningful conservation relationship (even allowing for fees). Consider adding a tighter invariant such as bounding dust + used value relative to `amountIn` in the input token domain, or at least asserting dust percent is bounded for this scenario too.
+**Description:** `testFuzz_zapIn_valueConservation` currently checks basic sanity (`swapAmountIn <= amountIn` and some value is produced) but doesn't assert a meaningful conservation relationship (even allowing for fees). Consider adding a tighter invariant such as bounding dust + used value relative to `amountIn` in the input token domain, or at least asserting dust percent is bounded for this scenario too.
 **Affected Files:**
 - test/foundry/spec/utils/math/slipstreamUtils/SlipstreamZapQuoter_fuzz.t.sol
-**User Response:** (pending)
-**Notes:** Keep it tolerant of fee mechanics and avoid brittle accounting across token domains.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-066
 
-### Suggestion 2: Add an explicit “single-tick” guard assertion
+### Suggestion 2: Add an explicit "single-tick" guard assertion
 **Priority:** Low
-**Description:** The quote-vs-swap tests rely on the documented single-tick assumption via high liquidity + bounded amounts. Adding an explicit post-swap assertion (e.g., pool tick unchanged / swap didn’t cross) would make failures easier to interpret and would harden the test against accidental parameter drift.
+**Description:** The quote-vs-swap tests rely on the documented single-tick assumption via high liquidity + bounded amounts. Adding an explicit post-swap assertion (e.g., pool tick unchanged / swap didn't cross) would make failures easier to interpret and would harden the test against accidental parameter drift.
 **Affected Files:**
 - test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_fuzz.t.sol
-**User Response:** (pending)
-**Notes:** If tick movement is expected even without crossing, prefer checking that the swap stayed within the same initialized tick range.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-067
 
 ### Suggestion 3: Make build/test evidence easy to reproduce
 **Priority:** Low
 **Description:** Consider recording the exact `forge test --match-path ...` command (and/or expected run counts) in PROGRESS.md so reviewers can quickly reproduce the subset run locally.
 **Affected Files:**
 - tasks/CRANE-038-slipstream-fuzz-tests/PROGRESS.md
-**User Response:** (pending)
-**Notes:** Not required, but helps future audits.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-068
 
 ---
 
