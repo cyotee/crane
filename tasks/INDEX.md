@@ -28,7 +28,6 @@
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
 | CRANE-043 | Add Reward Quoting Utilities | Ready | CRANE-011 | `feature/slipstream-reward-utils` |
-| CRANE-044 | Add Camelot V2 Asymmetric Fee Tests | Complete | CRANE-012 | `test/camelot-asymmetric-fees` |
 | CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Ready | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | Ready | CRANE-012 | `test/camelot-protocol-fee-parity` |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | Ready | CRANE-012 | `test/camelot-fot-integration` |
@@ -99,8 +98,7 @@
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
-**Camelot V2 Follow-ups (7 tasks - from CRANE-012):**
-- **CRANE-044: Add Camelot V2 Asymmetric Fee Tests (Critical)**
+**Camelot V2 Follow-ups (6 tasks - from CRANE-012):**
 - CRANE-045: Add Camelot V2 Stable Swap Pool Tests (High)
 - CRANE-049: Add K Invariant Preservation Tests (High)
 - CRANE-046: Add Protocol Fee Mint Parity Tests (Medium)
@@ -166,6 +164,7 @@
 | CRANE-025 | Replace Fee-Denominator Heuristic | 2026-01-14 | archive/CRANE-025-explicit-fee-denominator/ |
 | CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | 2026-01-14 | archive/CRANE-053-balancer-v3-comprehensive-tests/ |
 | CRANE-038 | Add Slipstream Fuzz Tests | 2026-01-15 | archive/CRANE-038-slipstream-fuzz-tests/ |
+| CRANE-044 | Add Camelot V2 Asymmetric Fee Tests | 2026-01-15 | archive/CRANE-044-camelot-asymmetric-fee-tests/ |
 
 ## Cross-Repo Dependencies
 
