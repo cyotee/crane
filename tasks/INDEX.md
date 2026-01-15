@@ -51,6 +51,7 @@
 | CRANE-070 | Reduce Noisy Logs from Camelot Stubs | Ready | CRANE-044 | `fix/camelot-stub-logs` |
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
+| CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Ready | CRANE-026 | `fix/tighten-overflow-assertions` |
 
 ## Status Legend
 
@@ -129,6 +130,9 @@
 **ERC5267 Follow-ups (2 tasks - from CRANE-023):**
 - CRANE-064: Adopt IFacet TestBase Pattern for ERC5267 (Low)
 - CRANE-065: Add ERC5267 Diamond Proxy Integration Test (Low)
+
+**Overflow Boundary Test Follow-ups (1 task - from CRANE-026):**
+- CRANE-073: Tighten Non-Revert Assertions in Overflow Tests (Low)
 
 ### Blocked
 

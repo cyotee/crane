@@ -28,8 +28,8 @@ Actionable items for follow-up tasks:
 **Description:** Replace vacuous assertions (e.g., `feeA >= 0`) and tautologies in the success-path tests with meaningful bounds or expected relationships so the tests verify correctness beyond “no revert.” For example, assert `feeA + feeB` is bounded by `claimableA + claimableB`, or check specific expected outputs for known inputs.
 **Affected Files:**
 - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_OverflowBoundary.t.sol
-**User Response:** (pending)
-**Notes:** The overflow tests are solid; this would just improve signal on the success-path checks.
+**User Response:** Accepted
+**Notes:** The overflow tests are solid; this would just improve signal on the success-path checks. Converted to task CRANE-073.
 
 ---
 
