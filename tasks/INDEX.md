@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
-| CRANE-026 | Strengthen Overflow Boundary Tests | In Progress | CRANE-006 | `test/overflow-boundary-tests` |
+| CRANE-026 | Strengthen Overflow Boundary Tests | Pending Merge | CRANE-006 | `test/overflow-boundary-tests` |
 | CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |

@@ -1,8 +1,9 @@
 # Task CRANE-026: Strengthen Overflow Boundary Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
+**Completed:** 2026-01-15
 **Dependencies:** CRANE-006
 **Worktree:** `test/overflow-boundary-tests`
 **Origin:** Code review suggestion from CRANE-006
@@ -32,12 +33,12 @@ The goal is to assert "reverts (no wrap)", especially around multi-multiply expr
 As a developer relying on ConstProdUtils, I want tests proving that overflow conditions revert cleanly so that I can trust the library won't produce silently incorrect results.
 
 **Acceptance Criteria:**
-- [ ] Add tests for quadratic path overflow in `_swapDepositSaleAmt`
-- [ ] Add tests for multi-multiply overflow in `_calculateFeePortionForPosition`
-- [ ] Use `vm.expectRevert()` to prove revert behavior (not wrap)
-- [ ] Document which input magnitudes trigger overflow
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Add tests for quadratic path overflow in `_swapDepositSaleAmt`
+- [x] Add tests for multi-multiply overflow in `_calculateFeePortionForPosition`
+- [x] Use `vm.expectRevert()` to prove revert behavior (not wrap)
+- [x] Document which input magnitudes trigger overflow
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -47,19 +48,19 @@ As a developer relying on ConstProdUtils, I want tests proving that overflow con
 OR
 
 **New Files:**
-- `test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_OverflowBoundary.t.sol`
+- `test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_OverflowBoundary.t.sol` (CREATED)
 
 ## Inventory Check
 
 Before starting, verify:
 - [x] CRANE-006 is complete (archived)
-- [ ] Affected test file exists: `test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_InvariantPreservation.t.sol`
+- [x] Affected test file exists: `test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_InvariantPreservation.t.sol`
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] Tests pass (14/14 overflow tests, 350/350 constProdUtils tests)
+- [x] Build succeeds
 
 ---
 
