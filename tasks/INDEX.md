@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-017 | Add Negative Assertions to Test Framework | Complete | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-026 | Strengthen Overflow Boundary Tests | In Progress | CRANE-006 | `test/overflow-boundary-tests` |
@@ -174,6 +173,7 @@
 | CRANE-044 | Add Camelot V2 Asymmetric Fee Tests | 2026-01-15 | archive/CRANE-044-camelot-asymmetric-fee-tests/ |
 | CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | 2026-01-15 | archive/CRANE-051-fix-tokenconfig-sort-bug/ |
 | CRANE-016 | Add End-to-End Factory Deployment Tests | 2026-01-15 | archive/CRANE-016-add-factory-tests/ |
+| CRANE-017 | Add Negative Assertions to Test Framework | 2026-01-15 | archive/CRANE-017-test-negative-assertions/ |
 
 ## Cross-Repo Dependencies
 
