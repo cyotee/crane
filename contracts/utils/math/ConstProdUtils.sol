@@ -518,7 +518,9 @@ library ConstProdUtils {
         }
         // Adjust lpTotalSupply for protocol fee
         // uint256 lpTotalSupply = args.lpTotalSupply;
-        if (args.feeOn && args.kLast != 0) {
+        // Guard: if ownerFeeShare == 0, treat as "fees disabled" to avoid division-by-zero
+        // (consistent with _calculateProtocolFee behavior)
+        if (args.feeOn && args.kLast != 0 && args.ownerFeeShare != 0) {
             uint256 rootK = Math._sqrt(args.reserveDesired * args.reserveOther);
             uint256 rootKLast = Math._sqrt(args.kLast);
             if (rootK > rootKLast) {
