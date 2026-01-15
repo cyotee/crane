@@ -11,7 +11,6 @@
 | CRANE-017 | Add Negative Assertions to Test Framework | Ready | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
-| CRANE-023 | Add ERC-5267 Test Coverage | Complete | CRANE-005 | `test/erc5267-coverage` |
 | CRANE-024 | Harden Zap-Out Fee-On Input Validation | In Progress | CRANE-006 | `fix/zapout-fee-validation` |
 | CRANE-025 | Replace Fee-Denominator Heuristic | In Progress | CRANE-006 | `fix/explicit-fee-denominator` |
 | CRANE-026 | Strengthen Overflow Boundary Tests | Ready | CRANE-006 | `test/overflow-boundary-tests` |
@@ -71,7 +70,6 @@
 - CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
-- CRANE-023: Add ERC-5267 Test Coverage (from CRANE-005)
 - **CRANE-024: Harden Zap-Out Fee-On Input Validation (High - from CRANE-006)**
 - CRANE-025: Replace Fee-Denominator Heuristic (from CRANE-006)
 - CRANE-026: Strengthen Overflow Boundary Tests (from CRANE-006)
@@ -153,6 +151,7 @@
 | CRANE-020 | Fix Critical ERC20 transferFrom Allowance Bypass | 2026-01-14 | archive/CRANE-020-fix-erc20-transferfrom-allowance/ |
 | CRANE-021 | Fix ERC5267Facet Array Size Bug | 2026-01-14 | archive/CRANE-021-fix-erc5267-array-size/ |
 | CRANE-022 | Rename EIP721_TYPE_HASH to EIP712_TYPE_HASH | 2026-01-14 | archive/CRANE-022-fix-eip712-typehash-typo/ |
+| CRANE-023 | Add ERC-5267 Test Coverage | 2026-01-14 | archive/CRANE-023-add-erc5267-tests/ |
 | CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | 2026-01-14 | archive/CRANE-053-balancer-v3-comprehensive-tests/ |
 
 ## Cross-Repo Dependencies
