@@ -62,35 +62,35 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Fix TokenConfigUtils._sort by swapping full structs
 **Priority:** P0
-**Description:** Replace the token-only swap with a full `TokenConfig` element swap. This is required for correctness and will enable the “fields remain aligned after sorting” acceptance criterion to be enforced.
+**Description:** Replace the token-only swap with a full `TokenConfig` element swap. This is required for correctness and will enable the "fields remain aligned after sorting" acceptance criterion to be enforced.
 **Affected Files:**
 - [contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol](../../contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol)
-**User Response:** (pending)
-**Notes:** After fixing, update the “KNOWN_BUG” tests to assert correct alignment (or remove/rename them).
+**User Response:** Accepted
+**Notes:** Already fixed as part of CRANE-053 implementation. Also covered by existing task CRANE-051.
 
 ### Suggestion 2: Add real factory deployment + postDeploy registration test
 **Priority:** P1
 **Description:** Implement an integration-style test that deploys the DFPkg and a proxy via the actual factory stack and asserts that `postDeploy` causes the expected Balancer Vault registration behavior.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol](../../test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol)
-**User Response:** (pending)
-**Notes:** Use existing Crane patterns (`InitDevService`) rather than mocks.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-061
 
 ### Suggestion 3: Strengthen order-independence tests with heterogeneous TokenConfig fields
 **Priority:** P1
 **Description:** Add `calcSalt`/`processArgs` tests where each token has distinct config fields (rate provider, token type, fee flags) to ensure sorting preserves alignment and order-independence holds under realistic inputs.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol](../../test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol)
-**User Response:** (pending)
-**Notes:** This will likely fail until Suggestion 1 is implemented.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-062
 
 ### Suggestion 4: Add explicit EXACT_OUT pool-favorable rounding assertions
 **Priority:** P2
-**Description:** Add a test specifically asserting pool-favorable behavior for EXACT_OUT swaps (ceil required input) and tighten/remove “allow small decrease” tolerances once correctness is verified.
+**Description:** Add a test specifically asserting pool-favorable behavior for EXACT_OUT swaps (ceil required input) and tighten/remove "allow small decrease" tolerances once correctness is verified.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3RoundingInvariants.t.sol](../../test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3RoundingInvariants.t.sol)
-**User Response:** (pending)
-**Notes:** Consider brute-forcing small balances/amounts to deterministically find rounding edge cases.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-063
 
 ---
 

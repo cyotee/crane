@@ -42,14 +42,6 @@
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
 | CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | Ready | CRANE-013 | `fix/tokenconfig-sort-bug` |
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
-<<<<<<< HEAD
-
-
-
-
-
-| CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | Complete | CRANE-013 | `test/balancer-v3-comprehensive` |
-
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
 | CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
@@ -57,6 +49,9 @@
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-059 | Add ERC165Repo Storage Overload Test | Ready | CRANE-015 | `test/erc165-storage-overload` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
+| CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
+| CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
+| CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Ready | CRANE-053 | `test/exact-out-rounding` |
 
 ## Status Legend
 
@@ -111,11 +106,13 @@
 - CRANE-048: Add Referrer Fee Integration Tests (Low)
 - CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
 
-**Balancer V3 Follow-ups (5 tasks - from CRANE-013):**
+**Balancer V3 Follow-ups (7 tasks - from CRANE-013/CRANE-053):**
 - **CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug (High)**
-- **CRANE-053: Create Comprehensive Test Suite for Balancer V3 (Critical)**
 - **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
+- **CRANE-061: Add DFPkg Deployment Integration Test (High - from CRANE-053)**
+- **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
 - CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
+- CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
 - CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)
 
 **ERC2535 Follow-ups (3 tasks - from CRANE-014):**
@@ -157,6 +154,7 @@
 | CRANE-015 | Fix ERC165Repo Overload Bug | 2026-01-14 | archive/CRANE-015-fix-erc165-overload/ |
 | CRANE-020 | Fix Critical ERC20 transferFrom Allowance Bypass | 2026-01-14 | archive/CRANE-020-fix-erc20-transferfrom-allowance/ |
 | CRANE-021 | Fix ERC5267Facet Array Size Bug | 2026-01-14 | archive/CRANE-021-fix-erc5267-array-size/ |
+| CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | 2026-01-14 | archive/CRANE-053-balancer-v3-comprehensive-tests/ |
 
 ## Cross-Repo Dependencies
 
