@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-018 | Improve Test Verification Rigor | In Progress | CRANE-003 | `fix/test-verification-rigor` |
+| CRANE-018 | Improve Test Verification Rigor | Pending Merge | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | Ready | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | Ready | CRANE-007 | `test/price-impact-tests` |
@@ -67,8 +67,7 @@
 
 ### Ready for Agent
 
-**Core Framework (15 tasks):**
-- CRANE-018: Improve Test Verification Rigor (from CRANE-003)
+**Core Framework (14 tasks):**
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
 - CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
 - CRANE-028: Add Price Impact Tests (from CRANE-007)

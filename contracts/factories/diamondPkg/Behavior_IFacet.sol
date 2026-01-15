@@ -310,4 +310,90 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "hasValid_IFacet_facetFuncs");
     }
+
+    /* -------------------------- facetMetadata() -------------------------- */
+
+    /// forge-lint: disable-next-line(mixed-case-function)
+    function funcSig_IFacet_facetMetadata() public pure returns (string memory) {
+        return "facetMetadata()";
+    }
+
+    /**
+     * @notice Validates that facetMetadata() returns values consistent with individual getters
+     * @dev This ensures the aggregate function matches facetName(), facetInterfaces(), and facetFuncs()
+     * @param subject The facet contract to test
+     * @return valid True if all metadata components match their individual getter counterparts
+     */
+    /// forge-lint: disable-next-line(mixed-case-function)
+    function isValid_IFacet_facetMetadata_consistency(IFacet subject) public returns (bool valid) {
+        console.logBehaviorEntry(_Behavior_IFacetName(), "isValid_IFacet_facetMetadata_consistency");
+
+        // Get values from aggregate function
+        (string memory metaName, bytes4[] memory metaInterfaces, bytes4[] memory metaFuncs) = subject.facetMetadata();
+
+        // Get values from individual getters
+        string memory individualName = subject.facetName();
+        bytes4[] memory individualInterfaces = subject.facetInterfaces();
+        bytes4[] memory individualFuncs = subject.facetFuncs();
+
+        // Validate name consistency
+        bool nameValid = areValid_IFacet_facetName(
+            vm.getLabel(address(subject)),
+            individualName,
+            metaName
+        );
+
+        if (!nameValid) {
+            console.logBehaviorError(
+                _Behavior_IFacetName(),
+                "isValid_IFacet_facetMetadata_consistency",
+                "facetMetadata().name does not match",
+                "facetName()"
+            );
+        }
+
+        // Validate interfaces consistency
+        bool interfacesValid = areValid_IFacet_facetInterfaces(
+            subject,
+            individualInterfaces,
+            metaInterfaces
+        );
+
+        if (!interfacesValid) {
+            console.logBehaviorError(
+                _Behavior_IFacetName(),
+                "isValid_IFacet_facetMetadata_consistency",
+                "facetMetadata().interfaces does not match",
+                "facetInterfaces()"
+            );
+        }
+
+        // Validate functions consistency
+        bool funcsValid = areValid_IFacet_facetFuncs(
+            subject,
+            individualFuncs,
+            metaFuncs
+        );
+
+        if (!funcsValid) {
+            console.logBehaviorError(
+                _Behavior_IFacetName(),
+                "isValid_IFacet_facetMetadata_consistency",
+                "facetMetadata().functions does not match",
+                "facetFuncs()"
+            );
+        }
+
+        valid = nameValid && interfacesValid && funcsValid;
+
+        console.logBehaviorValidation(
+            _Behavior_IFacetName(),
+            "isValid_IFacet_facetMetadata_consistency",
+            "metadata consistency",
+            valid
+        );
+
+        console.logBehaviorExit(_Behavior_IFacetName(), "isValid_IFacet_facetMetadata_consistency");
+        return valid;
+    }
 }
