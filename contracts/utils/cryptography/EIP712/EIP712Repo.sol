@@ -11,7 +11,7 @@ import {ShortString, ShortStrings} from "@openzeppelin/contracts/utils/ShortStri
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EIP721_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
+import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {MessageHashUtils} from "@crane/contracts/utils/cryptography/hash/MessageHashUtils.sol";
 
@@ -95,7 +95,7 @@ library EIP712Repo {
     function _buildDomainSeparator(EIP712Layout storage layout) private view returns (bytes32) {
         // return keccak256(abi.encode(TYPE_HASH, layout._hashedName, layout._hashedVersion, block.chainid, address(this)));
         return
-            abi.encode(EIP721_TYPE_HASH, layout._hashedName, layout._hashedVersion, block.chainid, address(this))
+            abi.encode(EIP712_TYPE_HASH, layout._hashedName, layout._hashedVersion, block.chainid, address(this))
                 ._hash();
     }
 

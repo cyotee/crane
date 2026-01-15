@@ -12,7 +12,7 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {EIP712Repo, EIP712Layout} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
-import {EIP721_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
+import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
@@ -46,7 +46,7 @@ contract EIP712RepoHarness {
     function computeDomainSeparator(string memory name, string memory version) external view returns (bytes32) {
         return keccak256(
             abi.encode(
-                EIP721_TYPE_HASH,
+                EIP712_TYPE_HASH,
                 keccak256(bytes(name)),
                 keccak256(bytes(version)),
                 block.chainid,
@@ -128,7 +128,7 @@ contract EIP712Repo_Test is Test {
         // Manually compute expected separator
         bytes32 expected = keccak256(
             abi.encode(
-                EIP721_TYPE_HASH,
+                EIP712_TYPE_HASH,
                 keccak256(bytes(NAME)),
                 keccak256(bytes(VERSION)),
                 block.chainid,
@@ -186,7 +186,7 @@ contract EIP712Repo_Test is Test {
         // Verify new separator is correct for new chain ID
         bytes32 expected = keccak256(
             abi.encode(
-                EIP721_TYPE_HASH,
+                EIP712_TYPE_HASH,
                 keccak256(bytes(NAME)),
                 keccak256(bytes(VERSION)),
                 42161, // New chain ID

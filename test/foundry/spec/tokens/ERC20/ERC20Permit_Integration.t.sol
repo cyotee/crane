@@ -18,7 +18,7 @@ import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {ERC20PermitTarget} from "@crane/contracts/tokens/ERC20/ERC20PermitTarget.sol";
 import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
-import {EIP721_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
+import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
@@ -255,7 +255,7 @@ contract ERC20Permit_Integration_Test is Test {
     function test_DOMAIN_SEPARATOR_matchesExpectedComputation() public view {
         bytes32 expected = keccak256(
             abi.encode(
-                EIP721_TYPE_HASH,
+                EIP712_TYPE_HASH,
                 keccak256(bytes(TOKEN_NAME)),
                 keccak256(bytes(TOKEN_VERSION)),
                 block.chainid,

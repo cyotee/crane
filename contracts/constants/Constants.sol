@@ -88,7 +88,7 @@ string constant DIV = "---------------------------------------------------------
 // bytes32 constant PERMIT_TYPEHASH
 //     = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
-bytes32 constant EIP721_TYPE_HASH =
+bytes32 constant EIP712_TYPE_HASH =
     keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
 bytes32 constant _PERMIT_TYPEHASH =
