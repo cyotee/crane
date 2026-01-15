@@ -1,8 +1,9 @@
 # Task CRANE-016: Add End-to-End Factory Deployment Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-12
+**Completed:** 2026-01-15
 **Dependencies:** CRANE-002
 **Worktree:** `test/factory-e2e`
 **Origin:** Code review suggestion from CRANE-002
@@ -33,56 +34,56 @@ The test file `test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFact
 As a developer, I want to verify that factory deployment produces deterministic addresses so that cross-chain deployments work correctly.
 
 **Acceptance Criteria:**
-- [ ] Test deploys minimal package twice with same args
-- [ ] Asserts both deployments return same address
-- [ ] Asserts second deployment is idempotent (no-op)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys minimal package twice with same args
+- [x] Asserts both deployments return same address
+- [x] Asserts second deployment is idempotent (no-op)
+- [x] Tests pass
+- [x] Build succeeds
 
 ### US-CRANE-016.2: Test base facet installation
 
 As a developer, I want to verify that base facets are installed correctly so that all proxies have required core functionality.
 
 **Acceptance Criteria:**
-- [ ] Test deploys minimal package
-- [ ] Asserts base facets are present in proxy
-- [ ] Asserts base facet selectors route correctly
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys minimal package
+- [x] Asserts base facets are present in proxy
+- [x] Asserts base facet selectors route correctly
+- [x] Tests pass
+- [x] Build succeeds
 
 ### US-CRANE-016.3: Test package facet installation
 
 As a developer, I want to verify that package-specific facets are installed correctly so that custom functionality is available.
 
 **Acceptance Criteria:**
-- [ ] Test deploys package with custom facets
-- [ ] Asserts package facets are present in proxy
-- [ ] Asserts package facet selectors route correctly
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys package with custom facets
+- [x] Asserts package facets are present in proxy
+- [x] Asserts package facet selectors route correctly
+- [x] Tests pass
+- [x] Build succeeds
 
 ### US-CRANE-016.4: Test postDeploy hook removal
 
 As a developer, I want to verify that the postDeploy hook is removed after deployment so that it cannot be called again.
 
 **Acceptance Criteria:**
-- [ ] Test deploys minimal package
-- [ ] Asserts `postDeploy()` selector is NOT routable after deployment
-- [ ] Asserts calling `postDeploy()` reverts
-- [ ] Asserts postDeploy facet is removed from facet address set
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys minimal package
+- [x] Asserts `postDeploy()` selector is NOT routable after deployment
+- [x] Asserts calling `postDeploy()` reverts
+- [x] Asserts postDeploy facet is removed from facet address set
+- [x] Tests pass
+- [x] Build succeeds
 
 ### US-CRANE-016.5: Test initAccount delegatecall
 
 As a developer, I want to verify that initAccount is called correctly during deployment so that proxy storage is initialized properly.
 
 **Acceptance Criteria:**
-- [ ] Test deploys package with initialization logic
-- [ ] Asserts storage is initialized correctly
-- [ ] Asserts initialization happened via delegatecall (proxy context)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys package with initialization logic
+- [x] Asserts storage is initialized correctly
+- [x] Asserts initialization happened via delegatecall (proxy context)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -90,24 +91,24 @@ As a developer, I want to verify that initAccount is called correctly during dep
 - test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFactory.t.sol
 
 **Supporting Files (may need to create):**
-- contracts/test/stubs/MinimalTestPackage.sol (minimal package for testing)
-- contracts/test/stubs/MinimalTestFacet.sol (minimal facet for testing)
+- contracts/test/stubs/MinimalTestPackage.sol (minimal package for testing) - CREATED INLINE
+- contracts/test/stubs/MinimalTestFacet.sol (minimal facet for testing) - NOT NEEDED
 
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-002 is complete or in progress
-- [ ] contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol exists
-- [ ] test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFactory.t.sol exists (currently empty)
-- [ ] Understand DiamondPackageCallBackFactory.deploy() flow
+- [x] CRANE-002 is complete or in progress
+- [x] contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol exists
+- [x] test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFactory.t.sol exists (currently empty)
+- [x] Understand DiamondPackageCallBackFactory.deploy() flow
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Comprehensive end-to-end tests added
-- [ ] Tests cover: deterministic deploy, facet installation, postDeploy removal, initAccount
-- [ ] `forge test --match-path test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFactory.t.sol` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Comprehensive end-to-end tests added
+- [x] Tests cover: deterministic deploy, facet installation, postDeploy removal, initAccount
+- [x] `forge test --match-path test/foundry/spec/factories/diamondPlg/DiamondPackageCallBackFactory.t.sol` passes
+- [x] `forge build` succeeds
 
 ---
 
