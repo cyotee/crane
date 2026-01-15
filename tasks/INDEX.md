@@ -34,7 +34,6 @@
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
-| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | Complete | CRANE-013 | `fix/tokenconfig-sort-bug` |
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
@@ -112,8 +111,7 @@
 - CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
 - CRANE-070: Reduce Noisy Logs from Camelot Stubs (Low)
 
-**Balancer V3 Follow-ups (7 tasks - from CRANE-013/CRANE-053):**
-- **CRANE-051: Fix TokenConfigUtils._sort() Data Corruption Bug (High)**
+**Balancer V3 Follow-ups (6 tasks - from CRANE-013/CRANE-053):**
 - **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
 - **CRANE-061: Add DFPkg Deployment Integration Test (High - from CRANE-053)**
 - **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
@@ -171,6 +169,7 @@
 | CRANE-053 | Create Comprehensive Test Suite for Balancer V3 | 2026-01-14 | archive/CRANE-053-balancer-v3-comprehensive-tests/ |
 | CRANE-038 | Add Slipstream Fuzz Tests | 2026-01-15 | archive/CRANE-038-slipstream-fuzz-tests/ |
 | CRANE-044 | Add Camelot V2 Asymmetric Fee Tests | 2026-01-15 | archive/CRANE-044-camelot-asymmetric-fee-tests/ |
+| CRANE-051 | Fix TokenConfigUtils._sort() Data Corruption Bug | 2026-01-15 | archive/CRANE-051-fix-tokenconfig-sort-bug/ |
 
 ## Cross-Repo Dependencies
 
