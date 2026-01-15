@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-017 | Add Negative Assertions to Test Framework | In Progress | CRANE-003 | `fix/test-negative-assertions` |
+| CRANE-017 | Add Negative Assertions to Test Framework | Pending Merge | CRANE-003 | `fix/test-negative-assertions` |
 | CRANE-018 | Improve Test Verification Rigor | Ready | CRANE-003 | `fix/test-verification-rigor` |
 | CRANE-019 | Add Test Edge Cases and Cleanup | Ready | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-026 | Strengthen Overflow Boundary Tests | In Progress | CRANE-006 | `test/overflow-boundary-tests` |
@@ -68,8 +68,7 @@
 
 ### Ready for Agent
 
-**Core Framework (19 tasks):**
-- CRANE-017: Add Negative Assertions to Test Framework (from CRANE-003)
+**Core Framework (18 tasks):**
 - CRANE-018: Improve Test Verification Rigor (from CRANE-003)
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
 - **CRANE-024: Harden Zap-Out Fee-On Input Validation (High - from CRANE-006)**

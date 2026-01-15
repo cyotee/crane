@@ -71,12 +71,20 @@ abstract contract TestBase_IFacet is Test {
     /**
      * @notice Tests that the facet returns the correct interface IDs
      * @dev Uses Behavior_IFacet's areValid_IFacet_facetInterfaces function
+     *      First asserts length equality for clearer error messages
      */
     function test_IFacet_FacetInterfaces() public {
+        bytes4[] memory expected = controlFacetInterfaces();
+        bytes4[] memory actual = testFacet.facetInterfaces();
+
+        assertEq(
+            actual.length,
+            expected.length,
+            "Facet interfaces count mismatch - extra or missing declarations"
+        );
+
         assertTrue(
-            Behavior_IFacet.areValid_IFacet_facetInterfaces(
-                testFacet, controlFacetInterfaces(), testFacet.facetInterfaces()
-            ),
+            Behavior_IFacet.areValid_IFacet_facetInterfaces(testFacet, expected, actual),
             "Facet should return valid interface IDs"
         );
     }
@@ -84,10 +92,20 @@ abstract contract TestBase_IFacet is Test {
     /**
      * @notice Tests that the facet returns the correct function selectors
      * @dev Uses Behavior_IFacet's areValid_IFacet_facetFuncs function
+     *      First asserts length equality for clearer error messages
      */
     function test_IFacet_FacetFunctions() public {
+        bytes4[] memory expected = controlFacetFuncs();
+        bytes4[] memory actual = testFacet.facetFuncs();
+
+        assertEq(
+            actual.length,
+            expected.length,
+            "Facet function selectors count mismatch - extra or missing declarations"
+        );
+
         assertTrue(
-            Behavior_IFacet.areValid_IFacet_facetFuncs(testFacet, controlFacetFuncs(), testFacet.facetFuncs()),
+            Behavior_IFacet.areValid_IFacet_facetFuncs(testFacet, expected, actual),
             "Facet should return valid function selectors"
         );
     }

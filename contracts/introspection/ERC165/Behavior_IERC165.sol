@@ -202,6 +202,20 @@ library Behavior_IERC165 {
             isValid_ = isValid_ && result;
         }
 
+        // Negative test: verify invalid interface returns false
+        // 0xffffffff is explicitly invalid per ERC165 spec
+        bool negativeResult =
+            isValid_IERC165_supportsInterfaces(subject, false, subject.supportsInterface(bytes4(0xffffffff)));
+        if (!negativeResult) {
+            console.logBehaviorError(
+                _Behavior_IERC165Name(),
+                "hasValid_IERC165_supportsInterface",
+                "Invalid interface 0xffffffff should return false",
+                "always-true implementation detected"
+            );
+        }
+        isValid_ = isValid_ && negativeResult;
+
         console.logBehaviorValidation(
             _Behavior_IERC165Name(), "hasValid_IERC165_supportsInterface", "all interfaces", isValid_
         );

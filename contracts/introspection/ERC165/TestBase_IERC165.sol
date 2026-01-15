@@ -23,6 +23,9 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {Behavior_IERC165} from "@crane/contracts/introspection/ERC165/Behavior_IERC165.sol";
 
 abstract contract TestBase_IERC165 is Test {
+    /// @dev ERC165 interface ID (0x01ffc9a7)
+    bytes4 internal constant ERC165_INTERFACE_ID = type(IERC165).interfaceId;
+
     IERC165 erc165TestSubject;
 
     function setUp() public virtual {
@@ -37,6 +40,16 @@ abstract contract TestBase_IERC165 is Test {
     function expected_IERC165_interfaces() public virtual returns (bytes4[] memory expectedInterfaces_);
 
     function test_IERC165_supportsInterface() public virtual {
-        Behavior_IERC165.hasValid_IERC165_supportsInterface(erc165TestSubject);
+        // Verify ERC165 self-support (0x01ffc9a7) - required by ERC165 spec
+        assertTrue(
+            erc165TestSubject.supportsInterface(ERC165_INTERFACE_ID),
+            "Contract must support ERC165 interface (0x01ffc9a7)"
+        );
+
+        // Validate all expected interfaces using Behavior library
+        assertTrue(
+            Behavior_IERC165.hasValid_IERC165_supportsInterface(erc165TestSubject),
+            "ERC165 interface support validation failed"
+        );
     }
 }
