@@ -43,24 +43,24 @@ Actionable items for follow-up tasks:
 **Description:** Add a fuzz test that generates `(sqrtPriceCurrentX96, sqrtPriceNextTickX96, sqrtPriceLimitX96)`, derives `sqrtPriceTargetX96 = getSqrtPriceTarget(zeroForOne, sqrtPriceNextTickX96, sqrtPriceLimitX96)`, then asserts `sqrtPriceNextX96` returned by `computeSwapStep` never crosses `sqrtPriceLimitX96`. The current tests bound `sqrtPriceNextX96` vs the *target*, which is correct for `computeSwapStep` in isolation, but an explicit limit-based assertion would map 1:1 to the acceptance criterion wording.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`
-**User Response:** (pending)
-**Notes:** This also validates the intended call composition used by pool swap loops.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-086
 
 ### Suggestion 2: Handle `amountRemaining == type(int256).min` deliberately
 **Priority:** Low
 **Description:** Consider either (a) adding `vm.assume(amountRemaining != type(int256).min)` in fuzz tests where you want to avoid the negation wrap semantics, or (b) add a dedicated test that documents and asserts the expected behavior when `amountRemaining` is `int256.min` (since `uint256(-amountRemaining)` is a special-case wrap in unchecked code).
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`
-**User Response:** (pending)
-**Notes:** Current tests appear stable even with this input, but making the intent explicit improves maintainability.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-087
 
 ### Suggestion 3: Remove minor test cruft
 **Priority:** Low
 **Description:** Remove unused import (`SqrtPriceMath`) and redundant non-negativity asserts on `uint256` values, or reframe them as overflow/underflow invariants where they add signal.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`
-**User Response:** (pending)
-**Notes:** Non-functional cleanup; keep only if you prefer stricter lint cleanliness.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-088
 
 ---
 
