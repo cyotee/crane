@@ -1,7 +1,7 @@
 # Task CRANE-036: Optimize StateLibrary Hashing with BetterEfficientHashLib
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-009
 **Worktree:** `fix/statelibrary-hash-optimize`
@@ -26,12 +26,12 @@ Replace `keccak256(abi.encodePacked(...))` with `BetterEfficientHashLib` in Stat
 As a developer, I want StateLibrary to use efficient hashing so that gas costs are minimized.
 
 **Acceptance Criteria:**
-- [ ] Replace `keccak256(abi.encodePacked(...))` at line 177 with BetterEfficientHashLib
-- [ ] Replace `keccak256(abi.encodePacked(...))` at line 182 with BetterEfficientHashLib
-- [ ] Replace `keccak256(abi.encodePacked(...))` at line 188 with BetterEfficientHashLib
-- [ ] Verify output is identical (same hash values)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Replace `keccak256(abi.encodePacked(...))` at line 177 with BetterEfficientHashLib
+- [x] Replace `keccak256(abi.encodePacked(...))` at line 182 with BetterEfficientHashLib
+- [x] Replace `keccak256(abi.encodePacked(...))` at line 188 with BetterEfficientHashLib
+- [x] Verify output is identical (same hash values)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -50,9 +50,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/fork/ethereum_main/uniswapV4/`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/fork/ethereum_main/uniswapV4/`)
+- [x] Build succeeds (`forge build`)
 
 ---
 

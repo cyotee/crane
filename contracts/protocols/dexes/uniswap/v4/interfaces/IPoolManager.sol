@@ -5,6 +5,7 @@ import {Currency} from "../types/Currency.sol";
 import {PoolKey} from "../types/PoolKey.sol";
 import {IHooks} from "./IHooks.sol";
 import {PoolId} from "../types/PoolId.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice Interface for the PoolManager
 /// @dev Ported from Uniswap V4 for compatibility with Solidity 0.8.30
@@ -50,6 +51,7 @@ interface IPoolManager {
 /// @notice Library for reading V4 pool state via extsload
 /// @dev Ported from Uniswap V4 StateLibrary for compatibility with Solidity 0.8.30
 library StateLibrary {
+    using BetterEfficientHashLib for bytes32;
     /// @notice index of pools mapping in the PoolManager
     bytes32 public constant POOLS_SLOT = bytes32(uint256(6));
 
@@ -174,17 +176,17 @@ library StateLibrary {
     {
         bytes32 stateSlot = _getPoolStateSlot(poolId);
         bytes32 tickBitmapMapping = bytes32(uint256(stateSlot) + TICK_BITMAP_OFFSET);
-        bytes32 slot = keccak256(abi.encodePacked(int256(wordPos), tickBitmapMapping));
+        bytes32 slot = bytes32(uint256(int256(wordPos)))._hash(tickBitmapMapping);
         tickBitmap = uint256(manager.extsload(slot));
     }
 
     function _getPoolStateSlot(PoolId poolId) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(PoolId.unwrap(poolId), POOLS_SLOT));
+        return PoolId.unwrap(poolId)._hash(POOLS_SLOT);
     }
 
     function _getTickInfoSlot(PoolId poolId, int24 tick) internal pure returns (bytes32) {
         bytes32 stateSlot = _getPoolStateSlot(poolId);
         bytes32 ticksMappingSlot = bytes32(uint256(stateSlot) + TICKS_OFFSET);
-        return keccak256(abi.encodePacked(int256(tick), ticksMappingSlot));
+        return bytes32(uint256(int256(tick)))._hash(ticksMappingSlot);
     }
 }
