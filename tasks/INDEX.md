@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Complete | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
@@ -172,6 +171,7 @@
 | CRANE-019 | Add Test Edge Cases and Cleanup | 2026-01-15 | archive/CRANE-019-test-edge-cases/ |
 | CRANE-027 | Add Multi-hop Routing Tests | 2026-01-15 | archive/CRANE-027-multihop-routing-tests/ |
 | CRANE-028 | Add Price Impact Tests | 2026-01-15 | archive/CRANE-028-price-impact-tests/ |
+| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | 2026-01-15 | archive/CRANE-029-constprodutils-cleanup/ |
 
 ## Cross-Repo Dependencies
 
