@@ -7,9 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-041 | Add Slipstream Invariant Tests | Complete | CRANE-011 | `test/slipstream-invariants` |
-| CRANE-042 | Add Unstaked Fee Handling | Complete | CRANE-011 | `feature/slipstream-unstaked-fee` |
-| CRANE-043 | Add Reward Quoting Utilities | Complete | CRANE-011 | `feature/slipstream-reward-utils` |
 | CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Ready | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | Ready | CRANE-012 | `test/camelot-protocol-fee-parity` |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | Ready | CRANE-012 | `test/camelot-fot-integration` |
@@ -78,10 +75,13 @@
 **Core Framework (1 task):**
 - CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test (from CRANE-036)
 
-**Slipstream Follow-ups (3 tasks - from CRANE-011):**
-- CRANE-041: Add Slipstream Invariant Tests (High)
-- CRANE-042: Add Unstaked Fee Handling (Medium)
-- CRANE-043: Add Reward Quoting Utilities (Low)
+**Slipstream Unstaked Fee Follow-ups (2 tasks - from CRANE-042):**
+- CRANE-095: Add Slipstream Combined Fee Guard (Medium)
+- CRANE-096: Add Unstaked Fee Positive-Path Tests (Medium)
+
+**Slipstream RewardUtils Follow-ups (2 tasks - from CRANE-043):**
+- CRANE-097: Add SlipstreamRewardUtils Fork Test (Low)
+- CRANE-098: Document SlipstreamRewardUtils Limitations (Low)
 
 **Slipstream Edge Case Follow-ups (3 tasks - from CRANE-040):**
 - CRANE-092: Tighten Slipstream Edge Case Test Assertions (Medium)
@@ -201,6 +201,9 @@
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | 2026-01-16 | archive/CRANE-035-v4-dynamic-fee-docs/ |
 | CRANE-036 | Optimize StateLibrary Hashing | 2026-01-16 | archive/CRANE-036-statelibrary-hash-optimize/ |
 | CRANE-040 | Add Slipstream Edge Case Tests | 2026-01-16 | archive/CRANE-040-slipstream-edge-cases/ |
+| CRANE-041 | Add Slipstream Invariant Tests | 2026-01-16 | archive/CRANE-041-slipstream-invariants/ |
+| CRANE-042 | Add Unstaked Fee Handling | 2026-01-16 | archive/CRANE-042-slipstream-unstaked-fee/ |
+| CRANE-043 | Add Reward Quoting Utilities | 2026-01-16 | archive/CRANE-043-slipstream-reward-utils/ |
 
 ## Cross-Repo Dependencies
 
