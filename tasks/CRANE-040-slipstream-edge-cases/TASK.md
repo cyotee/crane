@@ -1,8 +1,9 @@
 # Task CRANE-040: Add Slipstream Edge Case Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
+**Completed:** 2026-01-16
 **Dependencies:** CRANE-011
 **Worktree:** `test/slipstream-edge-cases`
 **Origin:** Code review suggestion from CRANE-011
@@ -26,61 +27,61 @@ Add tests for edge cases identified in the Slipstream review: MIN_TICK/MAX_TICK 
 As a developer, I want tests for edge tick values so that boundary conditions are verified.
 
 **Acceptance Criteria:**
-- [ ] Test positions at MIN_TICK
-- [ ] Test positions at MAX_TICK
-- [ ] Test positions spanning MIN_TICK to MAX_TICK
-- [ ] Verify graceful handling at boundaries
+- [x] Test positions at MIN_TICK
+- [x] Test positions at MAX_TICK
+- [x] Test positions spanning MIN_TICK to MAX_TICK
+- [x] Verify graceful handling at boundaries
 
 ### US-CRANE-040.2: Extreme Value Tests
 
 As a developer, I want tests for extreme liquidity and amount values so that overflow safety is verified.
 
 **Acceptance Criteria:**
-- [ ] Test with uint128.max liquidity
-- [ ] Test zero liquidity swaps (graceful failure)
-- [ ] Test with very small amounts (1 wei)
-- [ ] Test with very large amounts (1e30+)
+- [x] Test with uint128.max liquidity
+- [x] Test zero liquidity swaps (graceful failure)
+- [x] Test with very small amounts (1 wei)
+- [x] Test with very large amounts (1e30+)
 
 ### US-CRANE-040.3: Tick Spacing Variation Tests
 
 As a developer, I want tests across all standard tick spacings so that compatibility is verified.
 
 **Acceptance Criteria:**
-- [ ] Test with tick spacing 1
-- [ ] Test with tick spacing 10
-- [ ] Test with tick spacing 50
-- [ ] Test with tick spacing 100
-- [ ] Test with tick spacing 200
+- [x] Test with tick spacing 1
+- [x] Test with tick spacing 10
+- [x] Test with tick spacing 50
+- [x] Test with tick spacing 100
+- [x] Test with tick spacing 200
 
 ### US-CRANE-040.4: Price Limit Exactness Tests
 
 As a developer, I want tests verifying swaps stop exactly at price limits.
 
 **Acceptance Criteria:**
-- [ ] Test swap stops at sqrtPriceLimitX96
-- [ ] Verify no overshoot
+- [x] Test swap stops at sqrtPriceLimitX96
+- [x] Verify no overshoot
 
 ## Files to Create/Modify
 
 **New Files:**
-- `test/foundry/protocols/dexes/aerodrome/slipstream/SlipstreamUtils_edgeCases.t.sol`
+- `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_edgeCases.t.sol` ✅
 
 **Reference Files:**
-- `test/foundry/protocols/dexes/aerodrome/slipstream/SlipstreamUtils_quoteExactInput.t.sol`
-- `contracts/protocols/dexes/aerodrome/slipstream/SlipstreamUtils.sol`
+- `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_quoteExactInput.t.sol`
+- `contracts/utils/math/SlipstreamUtils.sol`
 
 ## Inventory Check
 
 Before starting, verify:
-- [ ] TickMath constants (MIN_TICK, MAX_TICK) accessible
-- [ ] MockCLPool supports edge configurations
-- [ ] Standard tick spacings documented
+- [x] TickMath constants (MIN_TICK, MAX_TICK) accessible
+- [x] MockCLPool supports edge configurations
+- [x] Standard tick spacings documented
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
