@@ -38,19 +38,19 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Align fuzz test name with behavior
 **Priority:** Low
-**Description:** Rename `testFuzz_priceImpact_increasesWithTradeSize` to reflect what it asserts (e.g., “boundedByTheoretical”/“reasonableBounds”), or modify it to actually compare price impact at two sizes and assert monotonicity.
+**Description:** Rename `testFuzz_priceImpact_increasesWithTradeSize` to reflect what it asserts (e.g., "boundedByTheoretical"/"reasonableBounds"), or modify it to actually compare price impact at two sizes and assert monotonicity.
 **Affected Files:**
 - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_priceImpact.t.sol
-**User Response:** (pending)
-**Notes:** Monotonicity is already covered by `testFuzz_priceImpact_monotonic`; this is primarily clarity/maintainability.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-075
 
 ### Suggestion 2: Reduce console output
 **Priority:** Low
 **Description:** Remove `console.log` output from passing tests (or gate it) to keep CI output clean.
 **Affected Files:**
 - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_priceImpact.t.sol
-**User Response:** (pending)
-**Notes:** Not required for correctness; optional quality improvement.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-076
 
 ---
 

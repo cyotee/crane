@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Progress | CRANE-007 | `fix/constprodutils-cleanup` |
+| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Review | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
@@ -48,6 +48,8 @@
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Ready | CRANE-026 | `fix/tighten-overflow-assertions` |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Ready | CRANE-027 | `refactor/multihop-testbase-alignment` |
+| CRANE-075 | Rename Price Impact Fuzz Test for Clarity | Ready | CRANE-028 | `fix/priceimpact-test-rename` |
+| CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 
 ## Status Legend
 
@@ -63,8 +65,7 @@
 
 ### Ready for Agent
 
-**Core Framework (11 tasks):**
-- CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
+**Core Framework (10 tasks):**
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
 - CRANE-032: Add TickMath Bijection Fuzz Tests (from CRANE-008)
 - CRANE-033: Add Uniswap V4 Pure Math Unit Tests (from CRANE-009)
