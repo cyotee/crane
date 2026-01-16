@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-028 | Add Price Impact Tests | Complete | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Progress | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
@@ -170,6 +169,7 @@
 | CRANE-030 | Add FEE_LOWEST Constant to TestBase | 2026-01-15 | archive/CRANE-030-fee-lowest-constant/ |
 | CRANE-019 | Add Test Edge Cases and Cleanup | 2026-01-15 | archive/CRANE-019-test-edge-cases/ |
 | CRANE-027 | Add Multi-hop Routing Tests | 2026-01-15 | archive/CRANE-027-multihop-routing-tests/ |
+| CRANE-028 | Add Price Impact Tests | 2026-01-15 | archive/CRANE-028-price-impact-tests/ |
 
 ## Cross-Repo Dependencies
 
