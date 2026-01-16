@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-019 | Add Test Edge Cases and Cleanup | Complete | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
@@ -170,6 +169,7 @@
 | CRANE-026 | Strengthen Overflow Boundary Tests | 2026-01-15 | archive/CRANE-026-overflow-boundary-tests/ |
 | CRANE-018 | Improve Test Verification Rigor | 2026-01-15 | archive/CRANE-018-test-verification-rigor/ |
 | CRANE-030 | Add FEE_LOWEST Constant to TestBase | 2026-01-15 | archive/CRANE-030-fee-lowest-constant/ |
+| CRANE-019 | Add Test Edge Cases and Cleanup | 2026-01-15 | archive/CRANE-019-test-edge-cases/ |
 
 ## Cross-Repo Dependencies
 
