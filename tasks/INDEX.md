@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
+| CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | In Progress | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
