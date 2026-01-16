@@ -7,6 +7,26 @@ import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRo
 import {IPoolFactory} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPoolFactory.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 
+/**
+ * @title AerodromService
+ * @notice Library for interacting with Aerodrome pools
+ *
+ * @custom:deprecated This library is deprecated. Use the specialized libraries instead:
+ *   - AerodromServiceVolatile.sol - For volatile pools (xy = k curve)
+ *   - AerodromServiceStable.sol - For stable pools (x³y + xy³ = k curve)
+ *
+ * This library only supports volatile pools (stable: false). The new libraries provide:
+ *   - Explicit pool type in function names (no ambiguity)
+ *   - Separate struct types for each pool type
+ *   - Clearer API for developers who need only one pool type
+ *
+ * Migration guide:
+ *   - AerodromService.SwapParams -> AerodromServiceVolatile.SwapVolatileParams
+ *   - AerodromService._swap() -> AerodromServiceVolatile._swapVolatile()
+ *   - AerodromService._swapDepositVolatile() -> AerodromServiceVolatile._swapDepositVolatile()
+ *   - AerodromService._withdrawSwapVolatile() -> AerodromServiceVolatile._withdrawSwapVolatile()
+ *   - AerodromService._quoteSwapDepositSaleAmt() -> AerodromServiceVolatile._quoteSwapDepositSaleAmtVolatile()
+ */
 library AerodromService {
 
     struct SwapParams {

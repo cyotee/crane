@@ -10,22 +10,29 @@ import {Pool} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Pool.sol
 import {Aero} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Aero.sol";
 
 contract TestBase_Aerodrome_Pools is TestBase_Aerodrome {
-    // Aerodrome test tokens - Balanced
+    // Aerodrome test tokens - Balanced (Volatile)
     ERC20PermitMintableStub aeroBalancedTokenA;
     ERC20PermitMintableStub aeroBalancedTokenB;
 
-    // Aerodrome test tokens - Unbalanced
+    // Aerodrome test tokens - Unbalanced (Volatile)
     ERC20PermitMintableStub aeroUnbalancedTokenA;
     ERC20PermitMintableStub aeroUnbalancedTokenB;
 
-    // Aerodrome test tokens - Extreme Unbalanced
+    // Aerodrome test tokens - Extreme Unbalanced (Volatile)
     ERC20PermitMintableStub aeroExtremeTokenA;
     ERC20PermitMintableStub aeroExtremeTokenB;
 
-    // Aerodrome pools
+    // Aerodrome test tokens - Stable pools
+    ERC20PermitMintableStub aeroStableTokenA;
+    ERC20PermitMintableStub aeroStableTokenB;
+
+    // Aerodrome volatile pools
     Pool aeroBalancedPool;
     Pool aeroUnbalancedPool;
     Pool aeroExtremeUnbalancedPool;
+
+    // Aerodrome stable pools
+    Pool aeroStablePool;
 
     // Standard test amounts
     uint256 constant INITIAL_LIQUIDITY = 10000e18;
@@ -61,9 +68,17 @@ contract TestBase_Aerodrome_Pools is TestBase_Aerodrome {
 
         aeroExtremeTokenB = new ERC20PermitMintableStub("AerodromeExtremeTokenB", "AEROEXB", 18, address(this), 0);
         vm.label(address(aeroExtremeTokenB), "AerodromeExtremeTokenB");
+
+        // Stable pool tokens (simulating stablecoins with same decimals)
+        aeroStableTokenA = new ERC20PermitMintableStub("AerodromeStableTokenA", "AEROSTA", 18, address(this), 0);
+        vm.label(address(aeroStableTokenA), "AerodromeStableTokenA");
+
+        aeroStableTokenB = new ERC20PermitMintableStub("AerodromeStableTokenB", "AEROSTB", 18, address(this), 0);
+        vm.label(address(aeroStableTokenB), "AerodromeStableTokenB");
     }
 
     function _createAerodromePools() internal {
+        // Volatile pools (stable: false)
         address poolAddr1 = aerodromePoolFactory.createPool(address(aeroBalancedTokenA), address(aeroBalancedTokenB), false);
         aeroBalancedPool = Pool(poolAddr1);
         vm.label(poolAddr1, string.concat("AerodromeBalancedPool - ", aeroBalancedTokenA.symbol(), " / ", aeroBalancedTokenB.symbol()));
@@ -75,6 +90,11 @@ contract TestBase_Aerodrome_Pools is TestBase_Aerodrome {
         address poolAddr3 = aerodromePoolFactory.createPool(address(aeroExtremeTokenA), address(aeroExtremeTokenB), false);
         aeroExtremeUnbalancedPool = Pool(poolAddr3);
         vm.label(poolAddr3, string.concat("AerodromeExtremeUnbalancedPool - ", aeroExtremeTokenA.symbol(), " / ", aeroExtremeTokenB.symbol()));
+
+        // Stable pool (stable: true)
+        address poolAddr4 = aerodromePoolFactory.createPool(address(aeroStableTokenA), address(aeroStableTokenB), true);
+        aeroStablePool = Pool(poolAddr4);
+        vm.label(poolAddr4, string.concat("AerodromeStablePool - ", aeroStableTokenA.symbol(), " / ", aeroStableTokenB.symbol()));
     }
 
     function _initializeAerodromeBalancedPools() internal {
@@ -141,6 +161,69 @@ contract TestBase_Aerodrome_Pools is TestBase_Aerodrome {
                 balanceA,
                 0,
                 routes,
+                address(this),
+                block.timestamp + 300
+            );
+        }
+    }
+
+    /// @notice Initialize stable pool with 1:1 ratio (like stablecoins)
+    function _initializeAerodromeStablePool() internal {
+        aeroStableTokenA.mint(address(this), INITIAL_LIQUIDITY);
+        aeroStableTokenA.approve(address(aerodromeRouter), INITIAL_LIQUIDITY);
+        aeroStableTokenB.mint(address(this), INITIAL_LIQUIDITY);
+        aeroStableTokenB.approve(address(aerodromeRouter), INITIAL_LIQUIDITY);
+
+        // Note: stable pools require equal value deposits (1:1 for same-decimals tokens)
+        aerodromeRouter.addLiquidity(
+            address(aeroStableTokenA),
+            address(aeroStableTokenB),
+            true, // stable: true
+            INITIAL_LIQUIDITY,
+            INITIAL_LIQUIDITY,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
+    }
+
+    /// @notice Execute trades on a stable pool to generate fees
+    function _executeAerodromeStableTradesToGenerateFees() internal {
+        uint256 swapAmountA = 100e18;
+        aeroStableTokenA.mint(address(this), swapAmountA);
+        aeroStableTokenA.approve(address(aerodromeRouter), swapAmountA);
+
+        IRouter.Route[] memory routes = new IRouter.Route[](1);
+        routes[0] = IRouter.Route({
+            from: address(aeroStableTokenA),
+            to: address(aeroStableTokenB),
+            stable: true, // stable pool
+            factory: address(aerodromePoolFactory)
+        });
+
+        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            swapAmountA,
+            0,
+            routes,
+            address(this),
+            block.timestamp + 300
+        );
+
+        uint256 balanceB = aeroStableTokenB.balanceOf(address(this));
+        if (balanceB > 0) {
+            aeroStableTokenB.approve(address(aerodromeRouter), balanceB);
+            IRouter.Route[] memory routesRev = new IRouter.Route[](1);
+            routesRev[0] = IRouter.Route({
+                from: address(aeroStableTokenB),
+                to: address(aeroStableTokenA),
+                stable: true,
+                factory: address(aerodromePoolFactory)
+            });
+            aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                balanceB,
+                0,
+                routesRev,
                 address(this),
                 block.timestamp + 300
             );

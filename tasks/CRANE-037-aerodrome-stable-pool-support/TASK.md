@@ -34,31 +34,31 @@ The existing `AerodromService.sol` will be deprecated with a notice pointing to 
 As a developer who only needs volatile pools, I want a dedicated volatile pool library so that I don't need to include stable pool code or manage conditional flow control.
 
 **Acceptance Criteria:**
-- [ ] `AerodromServiceVolatile.sol` contains all volatile-only functions
-- [ ] Functions: `_swapVolatile`, `_swapDepositVolatile`, `_withdrawSwapVolatile`, `_quoteSwapDepositSaleAmtVolatile`
-- [ ] All functions explicitly pass `stable: false` to router/factory calls
-- [ ] Uses `ConstProdUtils` for volatile pool math (`xy = k`)
-- [ ] Existing volatile pool tests pass with the new library
+- [x] `AerodromServiceVolatile.sol` contains all volatile-only functions
+- [x] Functions: `_swapVolatile`, `_swapDepositVolatile`, `_withdrawSwapVolatile`, `_quoteSwapDepositSaleAmtVolatile`
+- [x] All functions explicitly pass `stable: false` to router/factory calls
+- [x] Uses `ConstProdUtils` for volatile pool math (`xy = k`)
+- [x] Existing volatile pool tests pass with the new library
 
 ### US-CRANE-037.2: Stable Pool Library
 
 As a developer who only needs stable pools, I want a dedicated stable pool library so that I don't need to include volatile pool code.
 
 **Acceptance Criteria:**
-- [ ] `AerodromServiceStable.sol` contains all stable-only functions
-- [ ] Functions: `_swapStable`, `_swapDepositStable`, `_withdrawSwapStable`, `_quoteSwapDepositSaleAmtStable`
-- [ ] All functions explicitly pass `stable: true` to router/factory calls
-- [ ] Implements stable pool curve math (`x³y + xy³ = k`) for quoting
-- [ ] New tests for stable pool swaps
+- [x] `AerodromServiceStable.sol` contains all stable-only functions
+- [x] Functions: `_swapStable`, `_swapDepositStable`, `_withdrawSwapStable`, `_quoteSwapDepositSaleAmtStable`
+- [x] All functions explicitly pass `stable: true` to router/factory calls
+- [x] Implements stable pool curve math (`x³y + xy³ = k`) for quoting
+- [x] New tests for stable pool swaps
 
 ### US-CRANE-037.3: Deprecate Original Library
 
 As a developer, I want clear guidance on migrating from the old library so that I know which new library to use.
 
 **Acceptance Criteria:**
-- [ ] `AerodromService.sol` marked as deprecated with NatSpec comment
-- [ ] Deprecation notice references `AerodromServiceVolatile` and `AerodromServiceStable`
-- [ ] Old tests updated to use new volatile library (since old library was volatile-only)
+- [x] `AerodromService.sol` marked as deprecated with NatSpec comment
+- [x] Deprecation notice references `AerodromServiceVolatile` and `AerodromServiceStable`
+- [x] Old tests updated to use new volatile library (since old library was volatile-only)
 
 ## Technical Details
 
@@ -117,14 +117,14 @@ Before starting, verify:
 - [x] CRANE-010 is complete
 - [x] AerodromService.sol exists
 - [x] Pool.sol stub exists with stable pool implementation
-- [ ] Understand stable pool `_k()` formula from Pool.sol
+- [x] Understand stable pool `_k()` formula from Pool.sol
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/aerodrome/`)
-- [ ] Build succeeds (`forge build`)
-- [ ] No regressions in existing volatile pool functionality
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/aerodrome/`)
+- [x] Build succeeds (`forge build`)
+- [x] No regressions in existing volatile pool functionality
 
 ---
 
