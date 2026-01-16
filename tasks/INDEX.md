@@ -11,7 +11,7 @@
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Complete | CRANE-009 | `feature/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-039 | Add Slipstream Fork Tests | Pending Merge | CRANE-011 | `feature/slipstream-fork-tests` |
+| CRANE-039 | Add Slipstream Fork Tests | Complete | CRANE-011 | `feature/slipstream-fork-tests` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
