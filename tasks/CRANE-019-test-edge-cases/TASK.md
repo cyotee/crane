@@ -1,7 +1,7 @@
 # Task CRANE-019: Add Test Edge Cases and Cleanup
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-003
 **Worktree:** `fix/test-edge-cases`
@@ -29,20 +29,20 @@ These are edge cases and hygiene improvements, not critical for current safety, 
 As a developer, I want ERC20 handlers to test re-entrant scenarios so that I can verify tokens behave correctly under callback conditions.
 
 **Acceptance Criteria:**
-- [ ] Evaluate whether `TestBase_ERC20.sol` handlers need re-entrancy test coverage
-- [ ] If needed, add test case for re-entrant `transfer()` or `transferFrom()` calls
-- [ ] Document decision if re-entrancy tests are not applicable
-- [ ] Tests pass
+- [x] Evaluate whether `TestBase_ERC20.sol` handlers need re-entrancy test coverage
+- [x] If needed, add test case for re-entrant `transfer()` or `transferFrom()` calls → **Not needed: ERC20 has no callbacks**
+- [x] Document decision if re-entrancy tests are not applicable → **Documented in PROGRESS.md**
+- [x] Tests pass
 
 ### US-CRANE-019.2: ComparatorRepo Cleanup Mechanism
 
 As a developer, I want a way to clear stored expectations in ComparatorRepo so that tests can run in isolation without stale state.
 
 **Acceptance Criteria:**
-- [ ] Evaluate whether `Bytes4SetComparatorRepo` needs a cleanup function
-- [ ] If needed, add `_clear(address subject, bytes4 selector)` function
-- [ ] Document decision if cleanup is not needed (e.g., tests already isolated by fork)
-- [ ] Tests pass
+- [x] Evaluate whether `Bytes4SetComparatorRepo` needs a cleanup function
+- [x] If needed, add `_clear(address subject, bytes4 selector)` function → **Not needed: Foundry isolates tests**
+- [x] Document decision if cleanup is not needed (e.g., tests already isolated by fork) → **Documented in PROGRESS.md**
+- [x] Tests pass
 
 ## Files to Create/Modify
 
@@ -54,8 +54,8 @@ As a developer, I want a way to clear stored expectations in ComparatorRepo so t
 
 Before starting, verify:
 - [x] CRANE-003 is complete
-- [ ] Affected files exist and compile
-- [ ] Current tests pass before changes
+- [x] Affected files exist and compile
+- [x] Current tests pass before changes
 
 ## Notes
 
@@ -63,11 +63,11 @@ This task may result in documentation-only changes if the features are deemed un
 
 ## Completion Criteria
 
-- [ ] Both user stories evaluated and documented
-- [ ] Any necessary code changes implemented
-- [ ] All existing tests still pass
-- [ ] `forge build` succeeds
-- [ ] `forge test` passes
+- [x] Both user stories evaluated and documented
+- [x] Any necessary code changes implemented → **No code changes needed**
+- [x] All existing tests still pass
+- [x] `forge build` succeeds
+- [x] `forge test` passes
 
 ---
 

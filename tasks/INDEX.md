@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-019 | Add Test Edge Cases and Cleanup | In Progress | CRANE-003 | `fix/test-edge-cases` |
+| CRANE-019 | Add Test Edge Cases and Cleanup | Pending Merge | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
@@ -65,10 +65,7 @@
 
 ### Ready for Agent
 
-**Core Framework (13 tasks):**
-- CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
-- CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
-- CRANE-028: Add Price Impact Tests (from CRANE-007)
+**Core Framework (11 tasks):**
 - CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
 - CRANE-032: Add TickMath Bijection Fuzz Tests (from CRANE-008)
