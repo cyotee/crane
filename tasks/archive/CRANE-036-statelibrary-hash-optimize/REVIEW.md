@@ -44,8 +44,8 @@ Actionable items for follow-up tasks:
 **Description:** Add a small unit test that asserts `BetterEfficientHashLib` hashing matches `keccak256(abi.encodePacked(...))` for representative negative values (e.g., `wordPos = -1`, `tick = -1`, plus a couple positive cases). This makes the “identical output” claim locally provable without relying solely on fork-based integration coverage.
 **Affected Files:**
 - test/foundry/spec/ (new or existing small unit test)
-**User Response:** (pending)
-**Notes:** Not required for this task’s acceptance criteria (fork tests already pass), but it hardens the optimization against future refactors.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-091. Not required for this task's acceptance criteria (fork tests already pass), but it hardens the optimization against future refactors.
 
 ---
 
