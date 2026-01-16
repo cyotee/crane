@@ -23,11 +23,13 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     IUniswapV3Factory internal uniswapV3Factory;
 
     // Standard fee tiers (in pips: 1 pip = 0.0001%)
+    uint24 internal constant FEE_LOWEST = 100;   // 0.01%
     uint24 internal constant FEE_LOW = 500;      // 0.05%
     uint24 internal constant FEE_MEDIUM = 3000;  // 0.3%
     uint24 internal constant FEE_HIGH = 10000;   // 1%
 
     // Standard tick spacings for each fee tier
+    int24 internal constant TICK_SPACING_LOWEST = 1;
     int24 internal constant TICK_SPACING_LOW = 10;
     int24 internal constant TICK_SPACING_MEDIUM = 60;
     int24 internal constant TICK_SPACING_HIGH = 200;
@@ -275,6 +277,7 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
 
     /// @notice Get tick spacing for a fee tier
     function getTickSpacing(uint24 fee) internal pure returns (int24) {
+        if (fee == FEE_LOWEST) return TICK_SPACING_LOWEST;
         if (fee == FEE_LOW) return TICK_SPACING_LOW;
         if (fee == FEE_MEDIUM) return TICK_SPACING_MEDIUM;
         if (fee == FEE_HIGH) return TICK_SPACING_HIGH;
