@@ -1,13 +1,13 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-14
+**Last Updated:** 2026-01-15
 
 ## Active Tasks
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
+| CRANE-027 | Add Multi-hop Routing Tests | Pending Merge | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Progress | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
