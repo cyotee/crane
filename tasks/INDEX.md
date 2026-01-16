@@ -50,6 +50,7 @@
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | Ready | CRANE-032 | `fix/tickmath-revert-expectations` |
+| CRANE-079 | Remove Unused `using` Directive in ERC165Repo Stub | Ready | CRANE-059 | `fix/erc165-unused-using` |
 
 ## Status Legend
 

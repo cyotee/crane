@@ -34,8 +34,8 @@ Actionable items for follow-up tasks:
 **Description:** `using ERC165Repo for ERC165Repo.Storage;` is currently unused in `ERC165RepoStub`. Removing it would keep the stub minimal.
 **Affected Files:**
 - test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol
-**User Response:** (pending)
-**Notes:** Optional nit; not required for CRANE-059.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-079
 
 ---
 
