@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
-| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
+| CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Progress | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
