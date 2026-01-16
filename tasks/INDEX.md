@@ -8,7 +8,6 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
-| CRANE-032 | Add TickMath Bijection Fuzz Tests | Complete | CRANE-008 | `feature/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Ready | CRANE-009 | `test/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
@@ -50,6 +49,7 @@
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | Ready | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
+| CRANE-078 | Tighten TickMath Revert Expectations | Ready | CRANE-032 | `fix/tickmath-revert-expectations` |
 
 ## Status Legend
 
@@ -132,6 +132,9 @@
 
 **ConstProdUtils Cleanup Follow-ups (1 task - from CRANE-029):**
 - CRANE-077: Remove Commented-Out Parameter Stubs (Low)
+
+**TickMath Follow-ups (1 task - from CRANE-032):**
+- CRANE-078: Tighten TickMath Revert Expectations (Low)
 
 ### Blocked
 

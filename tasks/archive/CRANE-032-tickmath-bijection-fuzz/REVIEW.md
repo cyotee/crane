@@ -47,8 +47,8 @@ This makes failures more diagnostic and reduces the chance of masking unrelated 
 
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol
-**User Response:** (pending)
-**Notes:** Optional; current tests are already correct and passing.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-078
 
 ---
 
