@@ -43,29 +43,29 @@ Questions asked to understand review criteria:
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Add a handful of “golden vector” exact-output assertions for SwapMath
+### Suggestion 1: Add a handful of "golden vector" exact-output assertions for SwapMath
 **Priority:** Medium
-**Description:** `computeSwapStep()` is well-covered for invariants (directionality, input conservation, fee bounds) and a few exact corner cases (e.g. max fee implies no movement), but it would benefit from 3–6 deterministic “known inputs → exact outputs” vectors (from the upstream reference implementation) to catch subtle rounding/fee regressions.
+**Description:** `computeSwapStep()` is well-covered for invariants (directionality, input conservation, fee bounds) and a few exact corner cases (e.g. max fee implies no movement), but it would benefit from 3–6 deterministic "known inputs → exact outputs" vectors (from the upstream reference implementation) to catch subtle rounding/fee regressions.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol](test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol)
-**User Response:** (pending)
-**Notes:** Target both directions and both modes (exact-in/exact-out), with at least one case that reaches target and one that exhausts amount.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-080
 
 ### Suggestion 2: Add explicit tests for remaining SqrtPriceMath custom errors
 **Priority:** Low
 **Description:** Add minimal deterministic test cases for `NotEnoughLiquidity()` and `PriceOverflow()` to cover the remaining assembly-based guard rails.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.t.sol](test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.t.sol)
-**User Response:** (pending)
-**Notes:** Keep these cases small and targeted; no fuzzing required.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-081
 
 ### Suggestion 3: Add more exact tick↔sqrtPrice known pairs in TickMath
 **Priority:** Low
-**Description:** TickMath already asserts exact values for tick 0 / MIN_TICK / MAX_TICK and uses inequality checks for several other ticks. Adding exact constants for a few more pairs (e.g. ±1, ±10, ±60, ±200) would better satisfy the “known values” intent and reduce the chance of an off-by-one regression.
+**Description:** TickMath already asserts exact values for tick 0 / MIN_TICK / MAX_TICK and uses inequality checks for several other ticks. Adding exact constants for a few more pairs (e.g. ±1, ±10, ±60, ±200) would better satisfy the "known values" intent and reduce the chance of an off-by-one regression.
 **Affected Files:**
 - [test/foundry/spec/protocols/dexes/uniswap/v4/libraries/TickMath.t.sol](test/foundry/spec/protocols/dexes/uniswap/v4/libraries/TickMath.t.sol)
-**User Response:** (pending)
-**Notes:** Hardcode constants derived from the upstream reference library/tooling.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-082
 
 ---
 
