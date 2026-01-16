@@ -64,7 +64,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0  // unlimited
+            maxSteps: 0,  // unlimited
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -83,7 +84,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountOut,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactOutput(params);
@@ -105,7 +107,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -124,7 +127,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: false,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MAX_SQRT_RATIO - 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -147,7 +151,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -177,7 +182,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory unlimitedResult = SlipstreamQuoter.quoteExactInput(unlimitedParams);
@@ -188,7 +194,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 1
+            maxSteps: 1,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory limitedResult = SlipstreamQuoter.quoteExactInput(limitedParams);
@@ -210,7 +217,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountInToCross * 2,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -229,7 +237,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: 0,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -246,7 +255,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: 1,  // 1 wei
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -273,7 +283,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: sqrtPriceLimitX96,
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
@@ -292,7 +303,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: 1e18,
             sqrtPriceLimitX96: currentPrice + 1,  // Invalid: above current for zeroForOne
-            maxSteps: 0
+            maxSteps: 0,
+            includeUnstakedFee: false
         });
 
         bool reverted = false;

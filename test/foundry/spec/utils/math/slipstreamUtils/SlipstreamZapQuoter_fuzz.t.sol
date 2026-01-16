@@ -88,7 +88,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: searchIters
+            searchIters: searchIters,
+            includeUnstakedFee: false
         });
 
         // Quote zap-in
@@ -145,7 +146,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 8
+            searchIters: 8,
+            includeUnstakedFee: false
         });
         SlipstreamZapQuoter.ZapInQuote memory quoteLow = SlipstreamZapQuoter.quoteZapInSingleCore(paramsLow);
 
@@ -158,7 +160,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 24
+            searchIters: 24,
+            includeUnstakedFee: false
         });
         SlipstreamZapQuoter.ZapInQuote memory quoteHigh = SlipstreamZapQuoter.quoteZapInSingleCore(paramsHigh);
 
@@ -201,7 +204,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: DEFAULT_SEARCH_ITERS
+            searchIters: DEFAULT_SEARCH_ITERS,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
@@ -260,7 +264,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -310,7 +315,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -365,7 +371,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -416,7 +423,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
         SlipstreamZapQuoter.ZapOutQuote memory quote0 = SlipstreamZapQuoter.quoteZapOutSingleCore(params0);
 
@@ -428,7 +436,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: false,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
         SlipstreamZapQuoter.ZapOutQuote memory quote1 = SlipstreamZapQuoter.quoteZapOutSingleCore(params1);
 
@@ -486,7 +495,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             amountIn: amountIn,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: DEFAULT_SEARCH_ITERS
+            searchIters: DEFAULT_SEARCH_ITERS,
+            includeUnstakedFee: false
         });
 
         // Should not revert for valid parameters
@@ -534,7 +544,8 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             liquidity: burnLiquidity,
             wantToken0: wantToken0,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);

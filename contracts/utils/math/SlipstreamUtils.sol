@@ -14,6 +14,9 @@ import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 /// @dev The core AMM math is identical to Uniswap V3, so we reuse the same libraries
 /// @dev Does NOT implement deposit/withdrawal quotes (Slipstream uses NFT positions)
 /// @dev Assumes swaps stay within current tick (no tick crossing)
+/// @dev Supports unstaked fee: Slipstream pools charge an additional fee on swaps against unstaked liquidity.
+///      Use the overloads with `unstakedFeePips` parameter when quoting for unstaked positions.
+///      Total fee = pool.fee() + pool.unstakedFee() for unstaked positions.
 library SlipstreamUtils {
     /* -------------------------------------------------------------------------- */
     /*                                 Constants                                  */
@@ -77,6 +80,50 @@ library SlipstreamUtils {
         return _quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, feePips, zeroForOne);
     }
 
+    /// @notice Quote swap output for exact input with unstaked fee support
+    /// @dev Use this overload when quoting swaps against unstaked liquidity positions
+    /// @dev Unstaked liquidity incurs an additional fee on top of the pool's base fee
+    /// @param amountIn Amount of input token to swap
+    /// @param sqrtPriceX96 Current pool sqrt price (Q64.96 format)
+    /// @param liquidity Available liquidity in current tick
+    /// @param feePips Base fee in pips (e.g., 3000 = 0.3%)
+    /// @param unstakedFeePips Additional unstaked fee in pips (from pool.unstakedFee())
+    /// @param zeroForOne Swap direction: true = token0->token1, false = token1->token0
+    /// @return amountOut Output amount after all fees
+    function _quoteExactInputSingle(
+        uint256 amountIn,
+        uint160 sqrtPriceX96,
+        uint128 liquidity,
+        uint24 feePips,
+        uint24 unstakedFeePips,
+        bool zeroForOne
+    ) internal pure returns (uint256 amountOut) {
+        // Combine base fee and unstaked fee
+        uint24 totalFee = feePips + unstakedFeePips;
+        return _quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, totalFee, zeroForOne);
+    }
+
+    /// @notice Quote swap output for exact input with unstaked fee (tick overload)
+    /// @dev Overload that accepts tick instead of sqrtPriceX96
+    /// @param amountIn Amount of input token to swap
+    /// @param tick Current pool tick
+    /// @param liquidity Available liquidity in current tick
+    /// @param feePips Base fee in pips
+    /// @param unstakedFeePips Additional unstaked fee in pips
+    /// @param zeroForOne Swap direction
+    /// @return amountOut Output amount after all fees
+    function _quoteExactInputSingle(
+        uint256 amountIn,
+        int24 tick,
+        uint128 liquidity,
+        uint24 feePips,
+        uint24 unstakedFeePips,
+        bool zeroForOne
+    ) internal pure returns (uint256 amountOut) {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
+        return _quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, feePips, unstakedFeePips, zeroForOne);
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                           ExactOut Swap Quote                              */
     /* -------------------------------------------------------------------------- */
@@ -134,6 +181,50 @@ library SlipstreamUtils {
     ) internal pure returns (uint256 amountIn) {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         return _quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, feePips, zeroForOne);
+    }
+
+    /// @notice Quote input required for exact output with unstaked fee support
+    /// @dev Use this overload when quoting swaps against unstaked liquidity positions
+    /// @dev Unstaked liquidity incurs an additional fee on top of the pool's base fee
+    /// @param amountOut Desired output amount
+    /// @param sqrtPriceX96 Current pool sqrt price (Q64.96 format)
+    /// @param liquidity Available liquidity in current tick
+    /// @param feePips Base fee in pips
+    /// @param unstakedFeePips Additional unstaked fee in pips (from pool.unstakedFee())
+    /// @param zeroForOne Swap direction: true = token0->token1, false = token1->token0
+    /// @return amountIn Required input amount (includes all fees)
+    function _quoteExactOutputSingle(
+        uint256 amountOut,
+        uint160 sqrtPriceX96,
+        uint128 liquidity,
+        uint24 feePips,
+        uint24 unstakedFeePips,
+        bool zeroForOne
+    ) internal pure returns (uint256 amountIn) {
+        // Combine base fee and unstaked fee
+        uint24 totalFee = feePips + unstakedFeePips;
+        return _quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, totalFee, zeroForOne);
+    }
+
+    /// @notice Quote input required for exact output with unstaked fee (tick overload)
+    /// @dev Overload that accepts tick instead of sqrtPriceX96
+    /// @param amountOut Desired output amount
+    /// @param tick Current pool tick
+    /// @param liquidity Available liquidity in current tick
+    /// @param feePips Base fee in pips
+    /// @param unstakedFeePips Additional unstaked fee in pips
+    /// @param zeroForOne Swap direction
+    /// @return amountIn Required input amount (includes all fees)
+    function _quoteExactOutputSingle(
+        uint256 amountOut,
+        int24 tick,
+        uint128 liquidity,
+        uint24 feePips,
+        uint24 unstakedFeePips,
+        bool zeroForOne
+    ) internal pure returns (uint256 amountIn) {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
+        return _quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, feePips, unstakedFeePips, zeroForOne);
     }
 
     /* -------------------------------------------------------------------------- */

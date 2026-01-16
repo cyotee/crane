@@ -54,7 +54,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,  // Output is token0
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -73,7 +74,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: false,  // Output is token1
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -94,7 +96,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -123,7 +126,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.PoolZapOutExecution memory exec = SlipstreamZapQuoter.quoteZapOutPool(params);
@@ -144,7 +148,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: false,  // Want token1
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.PositionManagerZapOutExecution memory exec = SlipstreamZapQuoter.quoteZapOutPositionManager(params);
@@ -231,7 +236,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: 0,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         bool reverted = false;
@@ -252,7 +258,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         bool reverted = false;
@@ -292,7 +299,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,  // Want token0 as output
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -314,7 +322,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,
             sqrtPriceLimitX96: 0,
-            maxSwapSteps: 0
+            maxSwapSteps: 0,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);
@@ -337,7 +346,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
                 liquidity: liquidityAmounts[i],
                 wantToken0: true,
                 sqrtPriceLimitX96: 0,
-                maxSwapSteps: 0
+                maxSwapSteps: 0,
+                includeUnstakedFee: false
             });
 
             SlipstreamZapQuoter.ZapOutQuote memory quote = SlipstreamZapQuoter.quoteZapOutSingleCore(params);

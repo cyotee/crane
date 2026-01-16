@@ -55,7 +55,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,  // Use default
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
@@ -76,7 +77,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
@@ -99,7 +101,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 24  // More iterations for better optimization
+            searchIters: 24,  // More iterations for better optimization
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
@@ -125,7 +128,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.PoolZapInExecution memory exec = SlipstreamZapQuoter.quoteZapInPool(params);
@@ -146,7 +150,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.PositionManagerZapInExecution memory exec = SlipstreamZapQuoter.quoteZapInPositionManager(params);
@@ -238,7 +243,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: 0,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         bool reverted = false;
@@ -260,7 +266,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         bool reverted = false;
@@ -289,7 +296,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: smallAmount,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 20
+            searchIters: 20,
+            includeUnstakedFee: false
         });
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
@@ -313,7 +321,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
                 amountIn: ZAP_AMOUNT,
                 sqrtPriceLimitX96: 0,
                 maxSwapSteps: 0,
-                searchIters: iterCounts[i]
+                searchIters: iterCounts[i],
+                includeUnstakedFee: false
             });
 
             SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);

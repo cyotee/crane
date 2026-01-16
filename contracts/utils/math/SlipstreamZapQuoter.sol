@@ -10,6 +10,7 @@ import {SlipstreamUtils} from "./SlipstreamUtils.sol";
 /// @notice Quoting library for Aerodrome Slipstream (CL) zap operations (zap-in and zap-out)
 /// @dev Zap-in: single-sided liquidity provision with binary search optimization
 /// @dev Zap-out: burn liquidity and optionally swap to single token output
+/// @dev Supports unstaked fee: set `includeUnstakedFee` to true when quoting for unstaked positions.
 library SlipstreamZapQuoter {
     using SlipstreamQuoter for SlipstreamQuoter.SwapQuoteParams;
     using SlipstreamUtils for *;
@@ -28,6 +29,7 @@ library SlipstreamZapQuoter {
         uint160 sqrtPriceLimitX96;
         uint32 maxSwapSteps;   // 0 == unlimited
         uint16 searchIters;    // binary search iterations (e.g., 16-24)
+        bool includeUnstakedFee; // When true, adds pool.unstakedFee() to the swap fee
     }
 
     /// @notice Result of zap-in quote
@@ -77,6 +79,7 @@ library SlipstreamZapQuoter {
         bool wantToken0;           // true if output is token0, false if token1
         uint160 sqrtPriceLimitX96;
         uint32 maxSwapSteps;       // 0 == unlimited
+        bool includeUnstakedFee;   // When true, adds pool.unstakedFee() to the swap fee
     }
 
     /// @notice Result of zap-out quote
@@ -232,7 +235,8 @@ library SlipstreamZapQuoter {
                 zeroForOne: p.zeroForOne,
                 amount: swapAmount,
                 sqrtPriceLimitX96: p.sqrtPriceLimitX96,
-                maxSteps: p.maxSwapSteps
+                maxSteps: p.maxSwapSteps,
+                includeUnstakedFee: p.includeUnstakedFee
             });
 
             q.swap = SlipstreamQuoter.quoteExactInput(swapParams);
@@ -322,6 +326,7 @@ library SlipstreamZapQuoter {
 
     /// @notice Create ZapInParams from token address
     /// @dev Determines zeroForOne based on whether tokenIn is token0 or token1
+    /// @dev For backwards compatibility, this overload defaults includeUnstakedFee to false
     function createZapInParams(
         ICLPool pool,
         int24 tickLower,
@@ -331,6 +336,31 @@ library SlipstreamZapQuoter {
         uint160 sqrtPriceLimitX96,
         uint32 maxSwapSteps,
         uint16 searchIters
+    ) internal view returns (ZapInParams memory p) {
+        return createZapInParams(pool, tickLower, tickUpper, tokenIn, amountIn, sqrtPriceLimitX96, maxSwapSteps, searchIters, false);
+    }
+
+    /// @notice Create ZapInParams from token address with unstaked fee support
+    /// @dev Determines zeroForOne based on whether tokenIn is token0 or token1
+    /// @param pool The Slipstream pool
+    /// @param tickLower Lower tick of the position
+    /// @param tickUpper Upper tick of the position
+    /// @param tokenIn Input token address
+    /// @param amountIn Amount of input token
+    /// @param sqrtPriceLimitX96 Price limit for the swap
+    /// @param maxSwapSteps Maximum swap steps
+    /// @param searchIters Binary search iterations
+    /// @param includeUnstakedFee When true, adds pool.unstakedFee() to the swap fee
+    function createZapInParams(
+        ICLPool pool,
+        int24 tickLower,
+        int24 tickUpper,
+        address tokenIn,
+        uint256 amountIn,
+        uint160 sqrtPriceLimitX96,
+        uint32 maxSwapSteps,
+        uint16 searchIters,
+        bool includeUnstakedFee
     ) internal view returns (ZapInParams memory p) {
         address token0 = pool.token0();
         address token1 = pool.token1();
@@ -345,6 +375,7 @@ library SlipstreamZapQuoter {
         p.sqrtPriceLimitX96 = sqrtPriceLimitX96;
         p.maxSwapSteps = maxSwapSteps;
         p.searchIters = searchIters;
+        p.includeUnstakedFee = includeUnstakedFee;
     }
 
     /* -------------------------------------------------------------------------- */
@@ -409,7 +440,8 @@ library SlipstreamZapQuoter {
             zeroForOne: zeroForOne,
             amount: q.swapAmountIn,
             sqrtPriceLimitX96: sqrtPriceLimitX96,
-            maxSteps: p.maxSwapSteps
+            maxSteps: p.maxSwapSteps,
+            includeUnstakedFee: p.includeUnstakedFee
         });
 
         q.swap = SlipstreamQuoter.quoteExactInput(swapParams);
@@ -464,6 +496,7 @@ library SlipstreamZapQuoter {
 
     /// @notice Create ZapOutParams from token address
     /// @dev Determines wantToken0 based on whether tokenOut is token0 or token1
+    /// @dev For backwards compatibility, this overload defaults includeUnstakedFee to false
     function createZapOutParams(
         ICLPool pool,
         int24 tickLower,
@@ -472,6 +505,29 @@ library SlipstreamZapQuoter {
         address tokenOut,
         uint160 sqrtPriceLimitX96,
         uint32 maxSwapSteps
+    ) internal view returns (ZapOutParams memory p) {
+        return createZapOutParams(pool, tickLower, tickUpper, liquidity, tokenOut, sqrtPriceLimitX96, maxSwapSteps, false);
+    }
+
+    /// @notice Create ZapOutParams from token address with unstaked fee support
+    /// @dev Determines wantToken0 based on whether tokenOut is token0 or token1
+    /// @param pool The Slipstream pool
+    /// @param tickLower Lower tick of the position
+    /// @param tickUpper Upper tick of the position
+    /// @param liquidity Amount of liquidity to burn
+    /// @param tokenOut Desired output token address
+    /// @param sqrtPriceLimitX96 Price limit for the swap
+    /// @param maxSwapSteps Maximum swap steps
+    /// @param includeUnstakedFee When true, adds pool.unstakedFee() to the swap fee
+    function createZapOutParams(
+        ICLPool pool,
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 liquidity,
+        address tokenOut,
+        uint160 sqrtPriceLimitX96,
+        uint32 maxSwapSteps,
+        bool includeUnstakedFee
     ) internal view returns (ZapOutParams memory p) {
         address token0 = pool.token0();
         address token1 = pool.token1();
@@ -485,5 +541,6 @@ library SlipstreamZapQuoter {
         p.wantToken0 = tokenOut == token0;
         p.sqrtPriceLimitX96 = sqrtPriceLimitX96;
         p.maxSwapSteps = maxSwapSteps;
+        p.includeUnstakedFee = includeUnstakedFee;
     }
 }

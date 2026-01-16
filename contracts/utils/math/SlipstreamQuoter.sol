@@ -11,6 +11,8 @@ import {LiquidityMath} from "@crane/contracts/protocols/dexes/uniswap/v3/librari
 /// @notice View-based Aerodrome Slipstream (CL) swap quoting that can cross initialized ticks
 /// @dev Mirrors the `CLPool.swap` loop, but only reads pool state
 /// @dev Slipstream is a Uniswap V3 fork, so the core swap math is identical
+/// @dev Supports unstaked fee: set `includeUnstakedFee` to true when quoting for unstaked positions.
+///      Total fee = pool.fee() + pool.unstakedFee() for unstaked positions.
 library SlipstreamQuoter {
     struct SwapQuoteParams {
         ICLPool pool;
@@ -18,6 +20,7 @@ library SlipstreamQuoter {
         uint256 amount;
         uint160 sqrtPriceLimitX96;
         uint32 maxSteps; // 0 == unlimited
+        bool includeUnstakedFee; // When true, adds pool.unstakedFee() to the base fee
     }
 
     struct SwapQuoteResult {
@@ -74,6 +77,10 @@ library SlipstreamQuoter {
 
         int24 tickSpacing = pool.tickSpacing();
         uint24 fee = pool.fee();
+        // Add unstaked fee if requested (for quoting swaps against unstaked liquidity)
+        if (p.includeUnstakedFee) {
+            fee += pool.unstakedFee();
+        }
 
         _SwapState memory state = _SwapState({
             amountSpecifiedRemaining: exactInput ? int256(p.amount) : -int256(p.amount),
