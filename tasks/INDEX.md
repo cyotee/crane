@@ -11,7 +11,6 @@
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
-| CRANE-030 | Add FEE_LOWEST Constant to TestBase | Complete | CRANE-008 | |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
@@ -66,12 +65,11 @@
 
 ### Ready for Agent
 
-**Core Framework (14 tasks):**
+**Core Framework (13 tasks):**
 - CRANE-019: Add Test Edge Cases and Cleanup (from CRANE-003)
 - CRANE-027: Add Multi-hop Routing Tests (from CRANE-007)
 - CRANE-028: Add Price Impact Tests (from CRANE-007)
 - CRANE-029: ConstProdUtils Code Cleanup and NatSpec (from CRANE-007)
-- CRANE-030: Add FEE_LOWEST Constant to TestBase (from CRANE-008)
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
 - CRANE-032: Add TickMath Bijection Fuzz Tests (from CRANE-008)
 - CRANE-033: Add Uniswap V4 Pure Math Unit Tests (from CRANE-009)
@@ -174,6 +172,7 @@
 | CRANE-017 | Add Negative Assertions to Test Framework | 2026-01-15 | archive/CRANE-017-test-negative-assertions/ |
 | CRANE-026 | Strengthen Overflow Boundary Tests | 2026-01-15 | archive/CRANE-026-overflow-boundary-tests/ |
 | CRANE-018 | Improve Test Verification Rigor | 2026-01-15 | archive/CRANE-018-test-verification-rigor/ |
+| CRANE-030 | Add FEE_LOWEST Constant to TestBase | 2026-01-15 | archive/CRANE-030-fee-lowest-constant/ |
 
 ## Cross-Repo Dependencies
 
