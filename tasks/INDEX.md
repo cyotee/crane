@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Complete | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Complete | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-040 | Add Slipstream Edge Case Tests | Pending Merge | CRANE-011 | `test/slipstream-edge-cases` |
+| CRANE-040 | Add Slipstream Edge Case Tests | Complete | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
 | CRANE-043 | Add Reward Quoting Utilities | Ready | CRANE-011 | `feature/slipstream-reward-utils` |
