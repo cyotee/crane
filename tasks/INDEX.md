@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-019 | Add Test Edge Cases and Cleanup | Pending Merge | CRANE-003 | `fix/test-edge-cases` |
+| CRANE-019 | Add Test Edge Cases and Cleanup | Complete | CRANE-003 | `fix/test-edge-cases` |
 | CRANE-027 | Add Multi-hop Routing Tests | In Progress | CRANE-007 | `test/multihop-routing-tests` |
 | CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | Ready | CRANE-007 | `fix/constprodutils-cleanup` |
