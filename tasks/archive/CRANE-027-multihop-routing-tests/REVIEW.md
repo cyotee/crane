@@ -43,8 +43,8 @@ Actionable items for follow-up tasks:
 **Description:** Consider aligning the multihop test to the existing ConstProdUtils Camelot testbase patterns (naming/helpers) for consistency.
 **Affected Files:**
 - test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_multihop.t.sol
-**User Response:** (n/a)
-**Notes:** Not required for correctness; tests already follow Foundry conventions.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-074
 
 ---
 
