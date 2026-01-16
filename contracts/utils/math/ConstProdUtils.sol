@@ -1,15 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-// import "forge-std/console.sol";
-// import "forge-std/console.sol";
-// import "forge-std/console2.sol";
-import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
-
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "@crane/contracts/constants/Constants.sol";
 import "@crane/contracts/GeneralErrors.sol";
-// import { Uint512, BetterMath} from "./BetterMath.sol";
 import {Uint512, BetterMath as Math} from "@crane/contracts/utils/math/BetterMath.sol";
 import {Math as UniV2Math} from "@crane/contracts/protocols/dexes/uniswap/v2/stubs/deps/libs/Math.sol";
 import {Math as CamMath} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/Math.sol";
@@ -371,19 +365,8 @@ library ConstProdUtils {
             amountB = amountBDesired;
         }
 
-        // Diagnostic logging for parity debugging
-        // console.log("[DIAG helper] amountADesired", amountADesired);
-        // console.log("[DIAG helper] amountBDesired", amountBDesired);
-        // console.log("[DIAG helper] amountBOptimal", amountBOptimal);
-        // console.log("[DIAG helper] amountA_selected", amountA);
-        // console.log("[DIAG helper] amountB_selected", amountB);
-        // console.log("[DIAG helper] lpTotalBefore (maybe adj)", args.lpTotalSupply);
-        // console.log("[DIAG helper] newReserveIn", args.reserveIn);
-        // console.log("[DIAG helper] newReserveOut", args.reserveOut);
-
         // Calculate standard LP amount using selected integer pair
         lpAmt = _depositQuote(amountA, amountB, args.lpTotalSupply, args.reserveIn, args.reserveOut);
-        // console.log("[DIAG helper] lpAmt", lpAmt);
         return (lpAmt);
     }
 
@@ -413,12 +396,7 @@ library ConstProdUtils {
         uint256 twoMinusFee = (2 * feeDenominator) - feePercent; // corresponds to (2 - f) scaled by D
         uint256 term1 = twoMinusFee * twoMinusFee * saleReserve * saleReserve;
         uint256 term2 = 4 * oneMinusFee * feeDenominator * amountIn * saleReserve;
-        // console.log("_swapDepositSaleAmt: oneMinusFee", oneMinusFee);
-        // console.log("_swapDepositSaleAmt: twoMinusFee", twoMinusFee);
-        // console.log("_swapDepositSaleAmt: term1", term1);
-        // console.log("_swapDepositSaleAmt: term2", term2);
         uint256 sqrtTerm = Math._sqrt(term1 + term2);
-        // console.log("_swapDepositSaleAmt: sqrtTerm", sqrtTerm);
         if (sqrtTerm <= twoMinusFee * saleReserve) {
             return amountIn / 2; // Fallback for small deposits
         }
@@ -426,7 +404,6 @@ library ConstProdUtils {
         if (saleAmt > amountIn) {
             saleAmt = amountIn; // Cap at amountIn
         }
-        // console.log("_swapDepositSaleAmt: saleAmt", saleAmt);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -661,13 +638,8 @@ library ConstProdUtils {
         uint256 finalOutput = _computeZapOut(low, args.lpTotalSupply, args);
         while (finalOutput < args.desiredOut && lpNeeded < args.lpTotalSupply) {
             lpNeeded++;
-            // low = args.lpTotalSupply;
             finalOutput = _computeZapOut(lpNeeded, args.lpTotalSupply, args);
         }
-        // Log for debugging
-        // console.log("Quadratic guess:", quadraticGuess);
-        // console.log("Final lpNeeded:", lpNeeded);
-        // console.log("Simulated output:", finalOutput);
         return lpNeeded;
     }
 
@@ -675,21 +647,10 @@ library ConstProdUtils {
      * @dev Computes the exact output for a given LP burn amount using integer math (simulates ZapOut).
      * @param lp Amount of LP to burn.
      * @param lpTotalSupply Adjusted total LP supply.
-     * reserveDesired Reserve of desired token.
-     * reserveOther Reserve of other token.
-     * feePercent Swap fee percent.
-     * feeDenominator Fee denominator.
+     * @param args The zap out parameters (reserves, fees, etc).
      * @return totalOut The total output in the desired token.
      */
-    function _computeZapOut(
-        uint256 lp,
-        uint256 lpTotalSupply,
-        // uint256 reserveDesired,
-        // uint256 reserveOther,
-        // uint256 feePercent,
-        // uint256 feeDenominator
-        ZapOutToTargetWithFeeArgs memory args
-    )
+    function _computeZapOut(uint256 lp, uint256 lpTotalSupply, ZapOutToTargetWithFeeArgs memory args)
         internal
         pure
         returns (uint256 totalOut)
@@ -823,14 +784,8 @@ library ConstProdUtils {
         liquidity = numerator / denominator;
     }
 
-    /* ------------------------------------ ! ----------------------------------- */
     /* -------------------------------------------------------------------------- */
-    /*                          REFACTORED CODE IS ABOVE                          */
-    /* -------------------------------------------------------------------------- */
-    /* ------------------------------------ ! ----------------------------------- */
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   Deposit                                  */
+    /*                             Additional Deposit                             */
     /* -------------------------------------------------------------------------- */
 
     // tag::_equivLiquidity[]
@@ -881,210 +836,19 @@ library ConstProdUtils {
         return (lpAmt);
     }
 
-    /* ------------------------------------ ! ----------------------------------- */
-    /* -------------------------------------------------------------------------- */
-    /*                          REFACTORED CODE IS ABOVE                          */
-    /* -------------------------------------------------------------------------- */
-    /* ------------------------------------ ! ----------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                Reserves                                */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                 Deposit                                */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                  SWAP                                  */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                               ZapIn Quote                              */
-    /* ---------------------------------------------------------------------- */
-
-    // /**
-    //  * @dev Find minimal zap-in amount that produces at least 1 unit of equivalent liquidity
-    //  * Uses exponential search + binary search and existing helpers for parity.
-    //  */
-    // function _minZapInAmount(
-    //     uint256 reserveA,
-    //     uint256 reserveB,
-    //     uint256 /* lpTotalSupply */,
-    //     uint256 feePercent,
-    //     uint256 feeDenominator
-    // ) internal pure returns (uint256) {
-    //     if (reserveA == 0 || reserveB == 0) return 0;
-
-    //     uint256 low = 1;
-    //     uint256 high = 1;
-
-    //     // Exponential search to find an upper bound where equivalent liquidity >= 1
-    //     while (true) {
-    //         uint256 sale = _swapDepositSaleAmt(high, reserveA, feePercent, feeDenominator);
-    //         uint256 equiv = 0;
-    //         if (sale > 0) {
-    //             equiv = _equivLiquidity(sale, reserveA, reserveB);
-    //         }
-    //         if (equiv >= 1) break;
-    //         // prevent overflow
-    //         if (high >= type(uint256).max / 2) {
-    //             high = type(uint256).max;
-    //             break;
-    //         }
-    //         high = high * 2;
-    //     }
-
-    //     // Binary search between low and high for minimal amount
-    //     uint256 l = low;
-    //     uint256 h = high;
-    //     while (l < h) {
-    //         uint256 m = l + (h - l) / 2;
-    //         uint256 sale = _swapDepositSaleAmt(m, reserveA, feePercent, feeDenominator);
-    //         uint256 equiv = 0;
-    //         if (sale > 0) {
-    //             equiv = _equivLiquidity(sale, reserveA, reserveB);
-    //         }
-    //         if (equiv >= 1) {
-    //             h = m;
-    //         } else {
-    //             l = m + 1;
-    //         }
-    //     }
-    //     return l;
-    // }
-
-    // // Overload that accepts explicit feeDenominator for pool parity
-    // function _quoteSwapDepositWithFee(
-    //     uint256 amountIn,
-    //     uint256 lpTotalSupply,
-    //     uint256 reserveIn,
-    //     uint256 reserveOut,
-    //     uint256 feePercent,
-    //     uint256 feeDenominator,
-    //     uint256 kLast,
-    //     uint256 ownerFeeShare,
-    //     bool feeOn
-    // ) internal pure returns (uint256 lpAmt) {
-    //     if (amountIn == 0 || reserveIn == 0 || reserveOut == 0 || feePercent >= feeDenominator) {
-    //         return 0;
-    //     }
-    //     uint256 amtInSaleAmt = _swapDepositSaleAmt(amountIn, reserveIn, feePercent, feeDenominator);
-    //     uint256 opTokenAmtIn = _saleQuote(amtInSaleAmt, reserveIn, reserveOut, feePercent, feeDenominator);
-    //     uint256 remaining = amountIn - amtInSaleAmt;
-    //     // Swap adds full sold amount to input reserve; fee is accounted in output calculation
-    //     uint256 newReserveIn = reserveIn + amtInSaleAmt;
-    //     uint256 newReserveOut = reserveOut - opTokenAmtIn;
-    //     if (feeOn && kLast != 0) {
-    //         // Only Uniswap-style feeTo minting adjusts LP supply
-    //         if (ownerFeeShare >= 16666 && ownerFeeShare <= 16667) {
-    //             uint256 newK = newReserveIn * newReserveOut;
-    //             uint256 protocolFee = _calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
-    //             lpTotalSupply += protocolFee;
-    //         }
-    //     }
-
-    //     // Replicate UniswapV2Router._addLiquidity integer-quoting branch exactly.
-    //     // Router computes amountBOptimal = quote(amountADesired, reserveA, reserveB)
-    //     // and if amountBOptimal <= amountBDesired uses (amountADesired, amountBOptimal),
-    //     // otherwise computes amountAOptimal = quote(amountBDesired, reserveB, reserveA)
-    //     // and uses (amountAOptimal, amountBDesired). Use floor division for parity.
-    //     uint256 amountADesired = remaining;
-    //     uint256 amountBDesired = opTokenAmtIn;
-    //     uint256 amountA;
-    //     uint256 amountB;
-
-    //     if (newReserveIn == 0 || newReserveOut == 0) {
-    //         return 0;
-    //     }
-
-    //     uint256 amountBOptimal = (amountADesired * newReserveOut) / newReserveIn;
-    //     if (amountBOptimal <= amountBDesired) {
-    //         amountA = amountADesired;
-    //         amountB = amountBOptimal;
-    //     } else {
-    //         uint256 amountAOptimal = (amountBDesired * newReserveIn) / newReserveOut;
-    //         amountA = amountAOptimal;
-    //         amountB = amountBDesired;
-    //     }
-
-    //     // Diagnostic logging for parity debugging
-    //     // console.log("[DIAG helper] amountADesired", amountADesired);
-    //     // console.log("[DIAG helper] amountBDesired", amountBDesired);
-    //     // console.log("[DIAG helper] amountBOptimal", amountBOptimal);
-    //     // console.log("[DIAG helper] amountA_selected", amountA);
-    //     // console.log("[DIAG helper] amountB_selected", amountB);
-    //     // console.log("[DIAG helper] lpTotalSupply (maybe adj)", lpTotalSupply);
-    //     // console.log("[DIAG helper] newReserveIn", newReserveIn);
-    //     // console.log("[DIAG helper] newReserveOut", newReserveOut);
-
-    //     lpAmt = _depositQuote(amountA, amountB, lpTotalSupply, newReserveIn, newReserveOut);
-    //     // console.log("[DIAG helper] lpAmt", lpAmt);
-    // }
-
-    /* ---------------------------------------------------------------------- */
-    /*                              ZapOut Quote                              */
-    /* ---------------------------------------------------------------------- */
-
-    // function _quoteWithdrawSwapWithFee(
-    //     uint256 ownedLPAmount,
-    //     uint256 lpTotalSupply,
-    //     uint256 reserveA,
-    //     uint256 reserveB,
-    //     uint256 feePercent,
-    //     uint256 kLast,
-    //     uint256 ownerFeeShare,
-    //     bool feeOn
-    // ) internal pure returns (uint256 totalAmountA) {
-    //     if (ownedLPAmount == 0 || lpTotalSupply == 0 || reserveA == 0 || reserveB == 0 || feePercent >= FEE_DENOMINATOR)
-    //     {
-    //         return (0);
-    //     }
-    //     if (ownedLPAmount > lpTotalSupply) {
-    //         return (0);
-    //     }
-    //     // console.log("_quoteWithdrawSwapWithFee: ownedLPAmount", ownedLPAmount);
-    //     // console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (start)", lpTotalSupply);
-    //     // console.log("_quoteWithdrawSwapWithFee: reserveA (start)", reserveA);
-    //     // console.log("_quoteWithdrawSwapWithFee: reserveB (start)", reserveB);
-    //     // console.log("_quoteWithdrawSwapWithFee: feePercent", feePercent);
-    //     // console.log("_quoteWithdrawSwapWithFee: feeOn", feeOn ? 1 : 0);
-    //     // console.log("_quoteWithdrawSwapWithFee: kLast", kLast);
-    //     // console.log("_quoteWithdrawSwapWithFee: ownerFeeShare", ownerFeeShare);
-    //     // Protocol fee is minted before burns in V2-like pairs; use current reserves (pre-withdrawal)
-    //     if (feeOn && kLast != 0) {
-    //         if (ownerFeeShare >= 16666 && ownerFeeShare <= 16667) {
-    //             uint256 protocolFee = _calculateProtocolFeeMint(lpTotalSupply, reserveA, reserveB, kLast);
-    //             lpTotalSupply += protocolFee;
-    //             // console.log("_quoteWithdrawSwapWithFee: uniswap protocolFee", protocolFee);
-    //         } else {
-    //             uint256 newK = reserveA * reserveB;
-    //             uint256 protocolFee = _calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
-    //             lpTotalSupply += protocolFee;
-    //             // console.log("_quoteWithdrawSwapWithFee: generic protocolFee", protocolFee);
-    //         }
-    //         // console.log("_quoteWithdrawSwapWithFee: lpTotalSupply (adj)", lpTotalSupply);
-    //     }
-    //     // Get direct amounts from LP withdrawal with adjusted supply
-    //     (uint256 amountAWD, uint256 amountBWD) = _withdrawQuote(ownedLPAmount, lpTotalSupply, reserveA, reserveB);
-    //     // console.log("_quoteWithdrawSwapWithFee: amountAWD", amountAWD);
-    //     // console.log("_quoteWithdrawSwapWithFee: amountBWD", amountBWD);
-    //     // Calculate new reserves after withdrawal for swap calculation
-    //     uint256 newReserveB = reserveB - amountBWD;
-    //     uint256 newReserveA = reserveA - amountAWD;
-    //     // console.log("_quoteWithdrawSwapWithFee: newReserveA", newReserveA);
-    //     // console.log("_quoteWithdrawSwapWithFee: newReserveB", newReserveB);
-    //     // Swap amountB to token A (force Uniswap denom when small integer fee is used)
-    //     uint256 denom = (feePercent <= 10) ? 1000 : FEE_DENOMINATOR;
-    //     // console.log("_quoteWithdrawSwapWithFee: denom", denom);
-    //     uint256 swapOut = _saleQuote(amountBWD, newReserveB, newReserveA, feePercent, denom);
-    //     // console.log("_quoteWithdrawSwapWithFee: swapOut", swapOut);
-    //     totalAmountA = amountAWD + swapOut;
-    //     // console.log("_quoteWithdrawSwapWithFee: totalAmountA", totalAmountA);
-    //     return (totalAmountA);
-    // }
-
-    // Overload that accepts explicit feeDenominator for swap math parity with pool
+    /**
+     * @dev Quotes the amount of tokens received from a withdrawal followed by a swap.
+     * @param ownedLPAmount The amount of LP tokens to burn.
+     * @param lpTotalSupply The current total supply of LP tokens.
+     * @param reserveA The reserve of Token A.
+     * @param reserveB The reserve of Token B.
+     * @param feePercent The swap fee percentage.
+     * @param feeDenominator The fee denominator.
+     * @param kLast The last stored K value.
+     * @param ownerFeeShare The protocol fee share.
+     * @param feeOn Whether protocol fees are enabled.
+     * @return totalAmountA The total amount of Token A received.
+     */
     function _quoteWithdrawSwapWithFee(
         uint256 ownedLPAmount,
         uint256 lpTotalSupply,
@@ -1120,252 +884,4 @@ library ConstProdUtils {
         totalAmountA = amountAWD + swapOut;
         return (totalAmountA);
     }
-
-    /* ---------------------------------------------------------------------- */
-    /*                         ZapOut to Target Quote                         */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                           Yield Calculations                           */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                              Protocol Fees                             */
-    /* ---------------------------------------------------------------------- */
-
-    // /**
-    //  * @dev Legacy-compatible wrapper: calculate vault fee (LP tokens) and return newK.
-    //  * This implements the older `_calculateVaultFee` behaviour used by legacy tests.
-    //  */
-    // function _calculateVaultFee(
-    //     uint256 reserveA,
-    //     uint256 reserveB,
-    //     uint256 totalSupply,
-    //     uint256 lastK,
-    //     uint256 vaultFee,
-    //     uint256 feeDenominator
-    // ) internal pure returns (uint256 feeAmount, uint256 newK) {
-    //     newK = reserveA * reserveB;
-    //     if (lastK == 0 || newK <= lastK || totalSupply == 0 || vaultFee == 0) {
-    //         return (0, newK);
-    //     }
-    //     uint256 rootK = CamMath.sqrt(newK);
-    //     uint256 rootKLast = CamMath.sqrt(lastK);
-    //     if (rootK <= rootKLast) {
-    //         return (0, newK);
-    //     }
-    //     uint256 d = (feeDenominator * 100) / vaultFee;
-    //     if (d <= 100) return (0, newK);
-    //     d = d - 100;
-    //     uint256 numerator = totalSupply * (rootK - rootKLast) * 100;
-    //     uint256 denominator = (rootK * d) + (rootKLast * 100);
-    //     if (denominator == 0) return (0, newK);
-    //     feeAmount = numerator / denominator;
-    //     return (feeAmount, newK);
-    // }
-
-    // /**
-    //  * @dev Legacy-compatible: calculate LP-of-yield without returning newK.
-    //  */
-    // function _calculateVaultFeeNoNewK(
-    //     uint256 reserveA,
-    //     uint256 reserveB,
-    //     uint256 totalSupply,
-    //     uint256 lastK,
-    //     uint256 vaultFee,
-    //     uint256 feeDenominator
-    // ) internal pure returns (uint256 lpOfYield) {
-    //     uint256 newK = reserveA * reserveB;
-    //     if (lastK == 0 || newK <= lastK || totalSupply == 0 || vaultFee == 0) {
-    //         return 0;
-    //     }
-    //     uint256 rootK = CamMath.sqrt(newK);
-    //     uint256 rootKLast = CamMath.sqrt(lastK);
-    //     if (rootK <= rootKLast) return 0;
-    //     uint256 d = (feeDenominator * 100) / vaultFee;
-    //     if (d <= 100) return 0;
-    //     d = d - 100;
-    //     uint256 numerator = totalSupply * (rootK - rootKLast) * 100;
-    //     uint256 denominator = (rootK * d) + (rootKLast * 100);
-    //     if (denominator == 0) return 0;
-    //     lpOfYield = numerator / denominator;
-    //     return lpOfYield;
-    // }
-
-    /* ---------------------------------------------------------------------- */
-    /*                                Reserves                                */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                WITHDRAW                                */
-    /* ---------------------------------------------------------------------- */
-
-    // /**
-    //  * @dev Calculates the amount of LP to withdraw to extract a desired amount of one token.
-    //  * @dev Returns 0 for edge cases: zero LP supply, zero reserves, or insufficient reserves.
-    //  * @param targetOutAmt The amount of the token to withdraw.
-    //  * @param lpTotalSupply The total supply of the LP token.
-    //  * @param outRes The reserve of the token to withdraw.
-    //  * @return lpWithdrawAmt The amount of the LP token to withdraw.
-    //  */
-    // function _withdrawTargetQuote(uint256 targetOutAmt, uint256 lpTotalSupply, uint256 outRes)
-    //     internal
-    //     pure
-    //     returns (uint256 lpWithdrawAmt)
-    // {
-    //     if (lpTotalSupply == 0 || outRes == 0 || targetOutAmt == 0) {
-    //         return 0;
-    //     }
-
-    //     // Check if target amount exceeds available reserves
-    //     if (targetOutAmt > outRes) {
-    //         return 0;
-    //     }
-
-    //     // Calculate LP amount needed, using ceiling division to ensure enough LP is provided
-    //     lpWithdrawAmt = (targetOutAmt * lpTotalSupply + outRes - 1) / outRes;
-    // }
-
-    /* ---------------------------------------------------------------------- */
-    /*                                  SWAP                                  */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                           Yield Calculations                           */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                    !                                   */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------- ! --------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                          REFACTORED CODE ABOVE                         */
-    /* ---------------------------------------------------------------------- */
-
-    /* ---------------------------------- ! --------------------------------- */
-
-    /* ---------------------------------------------------------------------- */
-    /*                                    !                                   */
-    /* ---------------------------------------------------------------------- */
-
-    // function _k(uint256 balanceA, uint256 balanceB) internal pure returns (uint256) {
-    //     return balanceA * balanceB;
-    // }
-
-    /* ---------------------------------- ! --------------------------------- */
-
-    // struct ZapQuoteParams {
-    //     uint256 amountIn;
-    //     uint256 reserveIn;
-    //     uint256 reserveOut;
-    //     uint256 lpTotalSupply;
-    //     uint256 feePercent;
-    //     uint256 feeDenominator;
-    //     uint256 ownerFeeShare;
-    //     uint256 ownerFeeDenominator;
-    //     uint256 kLast;
-    //     uint256 desiredLP;
-    // }
-
-    /* ---------------------------------- ! --------------------------------- */
-
-    // // Computes swap output for withdrawing Token A where Token B is swapped to A
-    // // using post-burn reserves to reflect execution order
-    // function _swapOutAfterBurn(
-    //     uint256 amountIn,
-    //     uint256 reserveIn,
-    //     uint256 reserveOut,
-    //     uint256 amountOut,
-    //     uint256 gamma,
-    //     uint256 denom
-    // ) private pure returns (uint256) {
-    //     if (amountIn == 0) return 0;
-    //     uint256 num = amountIn * gamma * (reserveOut - amountOut);
-    //     uint256 den = ((reserveIn - amountIn) * denom) + (amountIn * gamma);
-    //     return den > 0 ? num / den : 0;
-    // }
-
-    // // Total Token A out given an LP burn amount and post-burn swap of Token B -> A
-    // function _totalOutAfterBurn(
-    //     uint256 lpAmount,
-    //     uint256 reserveOut,
-    //     uint256 reserveIn,
-    //     uint256 lpTotalSupply,
-    //     uint256 gamma,
-    //     uint256 denom
-    // ) private pure returns (uint256) {
-    //     if (lpAmount == 0) return 0;
-    //     uint256 amountOut = (lpAmount * reserveOut) / lpTotalSupply;
-    //     uint256 amountIn = (lpAmount * reserveIn) / lpTotalSupply;
-    //     uint256 swapOut = _swapOutAfterBurn(amountIn, reserveIn, reserveOut, amountOut, gamma, denom);
-    //     return amountOut + swapOut;
-    // }
-
-    // function _withdrawSwapTargetQuote(
-    //     uint256 desiredAmountOut,
-    //     uint256 reserveOut, // token A
-    //     uint256 reserveIn, // token B
-    //     uint256 lpTotalSupply,
-    //     uint256 feePercent
-    // ) internal pure returns (uint256 lpAmountToBurn) {
-    //     require(lpTotalSupply > 0, "Supply must be greater than zero");
-    //     require(reserveIn > 0 && reserveOut > 0, "Reserves must be greater than zero");
-    //     require(desiredAmountOut <= reserveOut, "Desired amount exceeds reserve");
-    //     require(feePercent < FEE_DENOMINATOR, "Fee percent too high");
-
-    //     if (desiredAmountOut == 0) {
-    //         return 0;
-    //     }
-    //     uint256 denom = (feePercent <= 10) ? 1000 : FEE_DENOMINATOR;
-    //     uint256 gamma = denom - feePercent;
-
-    //     // Binary search the minimal LP burn where totalOut >= desiredAmountOut
-    //     // Start with an upper bound that does NOT overshoot pure burn output
-    //     uint256 hi = (desiredAmountOut * lpTotalSupply) / reserveOut; // floor
-    //     if (hi > lpTotalSupply) hi = lpTotalSupply;
-    //     // Ensure feasibility: if totalOut at hi is still below desired, bump once
-    //     if (_totalOutAfterBurn(hi, reserveOut, reserveIn, lpTotalSupply, gamma, denom) < desiredAmountOut) {
-    //         if (hi < lpTotalSupply) {
-    //             unchecked {
-    //                 hi += 1;
-    //             }
-    //         }
-    //     }
-    //     uint256 lo = 0;
-    //     uint256 mid;
-    //     while (lo < hi) {
-    //         mid = (lo + hi) >> 1;
-    //         uint256 totalOutMid = _totalOutAfterBurn(mid, reserveOut, reserveIn, lpTotalSupply, gamma, denom);
-    //         if (totalOutMid >= desiredAmountOut) {
-    //             hi = mid;
-    //         } else {
-    //             lo = mid + 1;
-    //         }
-    //     }
-    //     lpAmountToBurn = hi;
-    //     // Prefer exact equality if possible: step down a few wei to hit exact target
-    //     uint256 adjustI = 0;
-    //     while (lpAmountToBurn > 0 && adjustI < 32) {
-    //         uint256 t = _totalOutAfterBurn(lpAmountToBurn, reserveOut, reserveIn, lpTotalSupply, gamma, denom);
-    //         if (t == desiredAmountOut) {
-    //             break;
-    //         }
-    //         if (t > desiredAmountOut) {
-    //             unchecked {
-    //                 lpAmountToBurn -= 1;
-    //                 adjustI++;
-    //             }
-    //             continue;
-    //         }
-    //         // If we went under, revert the last decrement and stop
-    //         unchecked {
-    //             lpAmountToBurn += 1;
-    //         }
-    //         break;
-    //     }
-
-    //     return lpAmountToBurn;
-    // }
 }
