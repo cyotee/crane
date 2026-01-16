@@ -49,6 +49,7 @@
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Ready | CRANE-027 | `refactor/multihop-testbase-alignment` |
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | Ready | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
+| CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
 
 ## Status Legend
 
@@ -124,6 +125,14 @@
 
 **Overflow Boundary Test Follow-ups (1 task - from CRANE-026):**
 - CRANE-073: Tighten Non-Revert Assertions in Overflow Tests (Low)
+
+**Multihop/Price Impact Test Follow-ups (3 tasks - from CRANE-027/CRANE-028):**
+- CRANE-074: Align Multihop Test with Camelot TestBase Patterns (Low - from CRANE-027)
+- CRANE-075: Rename Price Impact Fuzz Test for Clarity (Low - from CRANE-028)
+- CRANE-076: Remove Console Logs from Price Impact Tests (Low - from CRANE-028)
+
+**ConstProdUtils Cleanup Follow-ups (1 task - from CRANE-029):**
+- CRANE-077: Remove Commented-Out Parameter Stubs (Low)
 
 ### Blocked
 
