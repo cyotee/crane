@@ -10,12 +10,18 @@ import {BitMath} from "../libraries/BitMath.sol";
 import {LiquidityMath} from "../libraries/LiquidityMath.sol";
 
 /// @title UniswapV4Quoter
-/// @notice View-based Uniswap V4 swap quoting that can cross initialized ticks.
+/// @notice View-based Uniswap V4 swap quoting that can cross initialized ticks. IMPORTANT: For pools
+///         with dynamic fees (FEE_DYNAMIC flag = 0x800000), quotes may differ from actual swap results
+///         because hooks can modify fees at execution time. Use quotes from dynamic-fee pools as
+///         estimates only.
 /// @dev V4 Architecture Key Points:
 ///      - PoolManager is a singleton - pool state is read via extsload
 ///      - Pools are identified by PoolKey (currency0, currency1, fee, tickSpacing, hooks)
 ///      - Uses StateLibrary to read pool state without requiring unlock
 ///      - Mirrors the Pool.swap loop, but only reads pool state
+/// @dev Dynamic Fee Pools: Pools can set the FEE_DYNAMIC flag (0x800000 in the fee field) to indicate
+///      that hooks may override the LP fee during beforeSwap(). Since this library reads state without
+///      executing hooks, the quoted fee may not match the actual fee charged at execution time.
 /// @dev This library provides equivalent functionality to UniswapV3Quoter, adapted for V4's PoolManager architecture
 library UniswapV4Quoter {
     using StateLibrary for IPoolManager;
@@ -71,14 +77,20 @@ library UniswapV4Quoter {
     /*                              Public Functions                              */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Quote an exact input swap
+    /// @notice Quote an exact input swap. For dynamic fee pools (fee & 0x800000 != 0), treat results
+    ///         as estimates since hooks can modify fees at execution time.
+    /// @dev Dynamic fee pools: the actual fee charged during execution may differ from the quote
+    ///      because hooks can override fees in beforeSwap().
     /// @param p Swap quote parameters
     /// @return r Swap quote result
     function quoteExactInput(SwapQuoteParams memory p) internal view returns (SwapQuoteResult memory r) {
         return _quote(p, true);
     }
 
-    /// @notice Quote an exact output swap
+    /// @notice Quote an exact output swap. For dynamic fee pools (fee & 0x800000 != 0), treat results
+    ///         as estimates since hooks can modify fees at execution time.
+    /// @dev Dynamic fee pools: the actual fee charged during execution may differ from the quote
+    ///      because hooks can override fees in beforeSwap().
     /// @param p Swap quote parameters
     /// @return r Swap quote result
     function quoteExactOutput(SwapQuoteParams memory p) internal view returns (SwapQuoteResult memory r) {

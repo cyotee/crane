@@ -9,13 +9,19 @@ import {UniswapV4Quoter} from "./UniswapV4Quoter.sol";
 import {UniswapV4Utils} from "./UniswapV4Utils.sol";
 
 /// @title UniswapV4ZapQuoter
-/// @notice Quoting library for Uniswap V4 zap operations (zap-in and zap-out)
+/// @notice Quoting library for Uniswap V4 zap operations (zap-in and zap-out). IMPORTANT: For pools
+///         with dynamic fees (FEE_DYNAMIC flag = 0x800000), quotes may differ from actual execution
+///         results because hooks can modify fees at swap time. Use quotes from dynamic-fee pools as
+///         estimates only.
 /// @dev V4 Architecture Key Points:
 ///      - PoolManager is a singleton - pool state is read via extsload
 ///      - Pools are identified by PoolKey (currency0, currency1, fee, tickSpacing, hooks)
 ///      - Uses StateLibrary to read pool state without requiring unlock
 ///      - Zap-in: single-sided liquidity provision with binary search optimization
 ///      - Zap-out: burn liquidity and optionally swap to single token output
+/// @dev Dynamic Fee Pools: Pools can set the FEE_DYNAMIC flag (0x800000 in the fee field) to indicate
+///      that hooks may override the LP fee during beforeSwap(). Since this library reads state without
+///      executing hooks, the swap portion of zap quotes may not match actual execution fees.
 /// @dev This library provides equivalent functionality to UniswapV3ZapQuoter, adapted for V4's PoolManager architecture
 library UniswapV4ZapQuoter {
     using StateLibrary for IPoolManager;
@@ -133,9 +139,12 @@ library UniswapV4ZapQuoter {
     /*                              Zap-In Core                                   */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Quote a zap-in operation (single-sided liquidity provision)
+    /// @notice Quote a zap-in operation (single-sided liquidity provision). For dynamic fee pools
+    ///         (fee & 0x800000 != 0), treat swap portion as an estimate since hooks can modify fees.
     /// @dev Uses binary search to find optimal swap amount that maximizes liquidity
     /// @dev V4-specific: Reads pool state via StateLibrary.getSlot0()
+    /// @dev Dynamic fee pools: actual swap fees may differ from quoted fees because hooks can
+    ///      override fees in beforeSwap().
     /// @param p Zap-in parameters
     /// @return q Zap-in quote result
     function quoteZapInSingleCore(ZapInParams memory p) internal view returns (ZapInQuote memory q) {
@@ -350,9 +359,12 @@ library UniswapV4ZapQuoter {
     /*                              Zap-Out Core                                  */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Quote a zap-out operation (burn liquidity → single currency output)
+    /// @notice Quote a zap-out operation (burn liquidity → single currency output). For dynamic fee
+    ///         pools (fee & 0x800000 != 0), treat swap portion as an estimate since hooks can modify fees.
     /// @dev Burns liquidity to get currency0 and currency1, then swaps unwanted currency to wanted currency
     /// @dev V4-specific: Reads pool state via StateLibrary.getSlot0()
+    /// @dev Dynamic fee pools: actual swap fees may differ from quoted fees because hooks can
+    ///      override fees in beforeSwap().
     /// @param p Zap-out parameters
     /// @return q Zap-out quote result
     function quoteZapOutSingleCore(ZapOutParams memory p) internal view returns (ZapOutQuote memory q) {
