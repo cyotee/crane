@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-041 | Add Slipstream Invariant Tests | Complete | CRANE-011 | `test/slipstream-invariants` |
-| CRANE-042 | Add Unstaked Fee Handling | Pending Merge | CRANE-011 | `feature/slipstream-unstaked-fee` |
+| CRANE-042 | Add Unstaked Fee Handling | Complete | CRANE-011 | `feature/slipstream-unstaked-fee` |
 | CRANE-043 | Add Reward Quoting Utilities | In Progress | CRANE-011 | `feature/slipstream-reward-utils` |
 | CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Ready | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | Ready | CRANE-012 | `test/camelot-protocol-fee-parity` |
