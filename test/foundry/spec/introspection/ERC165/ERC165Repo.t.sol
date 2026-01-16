@@ -9,8 +9,6 @@ import {ERC165Repo} from "@crane/contracts/introspection/ERC165/ERC165Repo.sol";
  * @title ERC165RepoStub - Exposes internal ERC165Repo functions for testing
  */
 contract ERC165RepoStub {
-    using ERC165Repo for ERC165Repo.Storage;
-
     function registerInterface(bytes4 interfaceId) external {
         ERC165Repo._registerInterface(interfaceId);
     }

@@ -26,9 +26,9 @@ Remove the unused `using ERC165Repo for ERC165Repo.Storage;` directive from the 
 As a developer, I want to remove unused `using` directives from test stubs so that the code remains minimal and clean.
 
 **Acceptance Criteria:**
-- [ ] `using ERC165Repo for ERC165Repo.Storage;` removed from ERC165RepoStub
-- [ ] Tests still pass after removal
-- [ ] Build succeeds
+- [x] `using ERC165Repo for ERC165Repo.Storage;` removed from ERC165RepoStub
+- [x] Tests still pass after removal
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -43,9 +43,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Unused using directive removed
-- [ ] `forge build` succeeds
-- [ ] `forge test --match-path test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol` passes
+- [x] Unused using directive removed
+- [x] `forge build` succeeds
+- [x] `forge test --match-path test/foundry/spec/introspection/ERC165/ERC165Repo.t.sol` passes
 
 ---
 
