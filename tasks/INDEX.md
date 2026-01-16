@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Ready | CRANE-012 | `test/camelot-stable-swap` |
+| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | In Progress | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | Ready | CRANE-012 | `test/camelot-protocol-fee-parity` |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | Ready | CRANE-012 | `test/camelot-fot-integration` |
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
