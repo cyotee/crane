@@ -72,24 +72,24 @@ Actionable items for follow-up tasks:
 **Description:** Decide whether `AerodromService.t.sol` is meant to (a) keep verifying backwards compatibility, or (b) be migrated to `AerodromServiceVolatile` as the new canonical API. Update naming/comments accordingly.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromService.t.sol
-**User Response:** (pending)
-**Notes:** This is mostly about aligning with TASK.md acceptance criteria and preventing developers from copy/pasting deprecated usage.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-083
 
 ### Suggestion 2: Strengthen stable-vs-volatile comparison assertion
 **Priority:** Low
-**Description:** Make the “lower slippage” comparison a real assertion (`stableOut > volatileOut` or similar), or rename the test to match what it actually checks.
+**Description:** Make the "lower slippage" comparison a real assertion (`stableOut > volatileOut` or similar), or rename the test to match what it actually checks.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol
-**User Response:** (pending)
-**Notes:** With current stub fees (stable 0.05%, volatile 0.3%) this should be stable and meaningful.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-084
 
 ### Suggestion 3: Consider a gas/complexity note for stable swap-deposit quoting
 **Priority:** Low
 **Description:** `_swapDepositStable` uses a 20-iteration binary search, each calling Newton-Raphson up to 255 iterations in the worst case. Consider documenting expected convergence/gas, or adding early-exit heuristics if this will be used heavily on-chain.
 **Affected Files:**
 - contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.sol
-**User Response:** (pending)
-**Notes:** This is not a correctness blocker; tests pass and the approach matches Aerodrome’s pool math.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-085
 
 ---
 

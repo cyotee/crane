@@ -12,7 +12,7 @@
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Ready | CRANE-009 | `test/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-037 | Add Aerodrome Stable Pool Support | Complete | CRANE-010 | `feature/aerodrome-stable-pool` |
+| CRANE-037 | Add Aerodrome Stable Pool Support | Complete | CRANE-010 | - |
 | CRANE-039 | Add Slipstream Fork Tests | Ready | CRANE-011 | `test/slipstream-fork-tests` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
@@ -54,6 +54,9 @@
 | CRANE-080 | Add SwapMath Golden Vector Tests | Ready | CRANE-033 | `test/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | Ready | CRANE-033 | `test/sqrtpricemath-errors` |
 | CRANE-082 | Add TickMath Exact Known Pairs | Ready | CRANE-033 | `test/tickmath-exact-pairs` |
+| CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |
+| CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Ready | CRANE-037 | `test/aerodrome-slippage-assertion` |
+| CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Ready | CRANE-037 | `docs/aerodrome-stable-gas` |
 
 ## Status Legend
 
