@@ -26,9 +26,9 @@ Update PROGRESS.md table to show 14 tests for EdgeCases instead of 19. This is a
 As a developer, I want accurate test counts in documentation so that I can trust the documentation.
 
 **Acceptance Criteria:**
-- [ ] Update EdgeCases test count from 19 to 14 in PROGRESS.md
-- [ ] Verify actual test count matches documentation
-- [ ] Build succeeds
+- [x] Update EdgeCases test count from 19 to 14 in PROGRESS.md
+- [x] Verify actual test count matches documentation
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -43,8 +43,8 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] Test count corrected
-- [ ] Build succeeds (`forge build`)
+- [x] Test count corrected
+- [x] Build succeeds (`forge build`)
 
 ---
 

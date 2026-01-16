@@ -338,7 +338,7 @@ function invariant_liquidityConsistency() public {
 | `UniswapV3Utils_quoteExactInput.t.sol` | 7 | Reviewed |
 | `UniswapV3Utils_quoteExactOutput.t.sol` | - | Reviewed |
 | `UniswapV3Utils_LiquidityAmounts.t.sol` | 14 | Reviewed |
-| `UniswapV3Utils_EdgeCases.t.sol` | 19 | Reviewed |
+| `UniswapV3Utils_EdgeCases.t.sol` | 14 | Reviewed |
 | `UniswapV3Quoter_tickCrossing.t.sol` | 2 | Reviewed |
 | `UniswapV3ZapQuoter_ZapIn.t.sol` | 11 | Reviewed |
 | `UniswapV3ZapQuoter_ZapOut.t.sol` | 9 | Reviewed |
