@@ -1,15 +1,12 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-16
 
 ## Active Tasks
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Complete | CRANE-009 | `fix/v4-dynamic-fee-docs` |
-| CRANE-036 | Optimize StateLibrary Hashing | Complete | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-040 | Add Slipstream Edge Case Tests | Complete | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
 | CRANE-043 | Add Reward Quoting Utilities | Ready | CRANE-011 | `feature/slipstream-reward-utils` |
@@ -56,6 +53,9 @@
 | CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |
 | CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
 | CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
+| CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
+| CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
+| CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Ready | CRANE-040 | `fix/slipstream-pragma-style` |
 
 ## Status Legend
 
@@ -71,15 +71,18 @@
 
 ### Ready for Agent
 
-**Core Framework (2 tasks):**
-- CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
-- CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
+**Core Framework (1 task):**
+- CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test (from CRANE-036)
 
-**Slipstream Follow-ups (4 tasks - from CRANE-011):**
-- CRANE-040: Add Slipstream Edge Case Tests (High)
+**Slipstream Follow-ups (3 tasks - from CRANE-011):**
 - CRANE-041: Add Slipstream Invariant Tests (High)
 - CRANE-042: Add Unstaked Fee Handling (Medium)
 - CRANE-043: Add Reward Quoting Utilities (Low)
+
+**Slipstream Edge Case Follow-ups (3 tasks - from CRANE-040):**
+- CRANE-092: Tighten Slipstream Edge Case Test Assertions (Medium)
+- CRANE-093: Make Slipstream Price-Limit Exactness Provable (Medium)
+- CRANE-094: Align Slipstream Test Pragma with Repo Conventions (Low)
 
 **Slipstream Fuzz Test Follow-ups (3 tasks - from CRANE-038):**
 - CRANE-066: Strengthen Zap-In Value Conservation Assertions (Medium)
@@ -191,6 +194,9 @@
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | 2026-01-15 | archive/CRANE-034-v4-swapmath-fuzz/ |
 | CRANE-039 | Add Slipstream Fork Tests | 2026-01-15 | archive/CRANE-039-slipstream-fork-tests/ |
 | CRANE-079 | Remove Unused `using` Directive in ERC165Repo Stub | 2026-01-15 | archive/CRANE-079-erc165-unused-using/ |
+| CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | 2026-01-16 | archive/CRANE-035-v4-dynamic-fee-docs/ |
+| CRANE-036 | Optimize StateLibrary Hashing | 2026-01-16 | archive/CRANE-036-statelibrary-hash-optimize/ |
+| CRANE-040 | Add Slipstream Edge Case Tests | 2026-01-16 | archive/CRANE-040-slipstream-edge-cases/ |
 
 ## Cross-Repo Dependencies
 
