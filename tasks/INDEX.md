@@ -7,11 +7,8 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-031 | Fix EdgeCases Test Count Documentation | Complete | CRANE-008 | `fix/edgecases-count-doc` |
-| CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Complete | CRANE-009 | `feature/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-039 | Add Slipstream Fork Tests | Complete | CRANE-011 | `feature/slipstream-fork-tests` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
 | CRANE-042 | Add Unstaked Fee Handling | Ready | CRANE-011 | `feature/slipstream-unstaked-fee` |
@@ -47,7 +44,6 @@
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | Ready | CRANE-032 | `fix/tickmath-revert-expectations` |
-| CRANE-079 | Remove Unused `using` Directive in ERC165Repo Stub | Complete | CRANE-059 | `feature/erc165-unused-using` |
 | CRANE-080 | Add SwapMath Golden Vector Tests | Ready | CRANE-033 | `test/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | Ready | CRANE-033 | `test/sqrtpricemath-errors` |
 | CRANE-082 | Add TickMath Exact Known Pairs | Ready | CRANE-033 | `test/tickmath-exact-pairs` |
@@ -74,16 +70,11 @@
 
 ### Ready for Agent
 
-**Core Framework (3 tasks):**
-- CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
+**Core Framework (2 tasks):**
 - CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
 - CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
 
-**Pending Merge:**
-- CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests (from CRANE-009)
-
-**Slipstream Follow-ups (5 tasks - from CRANE-011):**
-- ~~CRANE-039: Add Slipstream Fork Tests (High)~~ - In Review
+**Slipstream Follow-ups (4 tasks - from CRANE-011):**
 - CRANE-040: Add Slipstream Edge Case Tests (High)
 - CRANE-041: Add Slipstream Invariant Tests (High)
 - CRANE-042: Add Unstaked Fee Handling (Medium)
@@ -195,6 +186,10 @@
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | 2026-01-15 | archive/CRANE-033-v4-pure-math-tests/ |
 | CRANE-037 | Add Aerodrome Stable Pool Support | 2026-01-15 | archive/CRANE-037-aerodrome-stable-pool-support/ |
 | CRANE-059 | Add ERC165Repo Storage Overload Test | 2026-01-15 | archive/CRANE-059-erc165-storage-overload-test/ |
+| CRANE-031 | Fix EdgeCases Test Count Documentation | 2026-01-15 | archive/CRANE-031-edgecases-count-fix/ |
+| CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | 2026-01-15 | archive/CRANE-034-v4-swapmath-fuzz/ |
+| CRANE-039 | Add Slipstream Fork Tests | 2026-01-15 | archive/CRANE-039-slipstream-fork-tests/ |
+| CRANE-079 | Remove Unused `using` Directive in ERC165Repo Stub | 2026-01-15 | archive/CRANE-079-erc165-unused-using/ |
 
 ## Cross-Repo Dependencies
 
