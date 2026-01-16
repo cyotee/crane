@@ -1,8 +1,9 @@
 # Task CRANE-032: Add TickMath Bijection Fuzz Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
+**Completed:** 2026-01-15
 **Dependencies:** CRANE-008
 **Worktree:** `test/tickmath-bijection-fuzz`
 **Origin:** Code review suggestion from CRANE-008 (Suggestion 3)
@@ -28,12 +29,12 @@ This strengthens confidence in the vendored library integration.
 As a developer, I want fuzz tests that verify the TickMath bijection property so that I can be confident the tick <-> sqrtPrice conversions are correct.
 
 **Acceptance Criteria:**
-- [ ] Fuzz test: `getSqrtRatioAtTick(getTickAtSqrtRatio(sqrtPrice))` approximates `sqrtPrice` within acceptable bounds
-- [ ] Fuzz test: `getTickAtSqrtRatio(getSqrtRatioAtTick(tick)) == tick` for all valid ticks
-- [ ] Tests cover MIN_TICK to MAX_TICK range
-- [ ] Tests handle edge cases (MIN_SQRT_RATIO, MAX_SQRT_RATIO)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Fuzz test: `getSqrtRatioAtTick(getTickAtSqrtRatio(sqrtPrice))` approximates `sqrtPrice` within acceptable bounds
+- [x] Fuzz test: `getTickAtSqrtRatio(getSqrtRatioAtTick(tick)) == tick` for all valid ticks
+- [x] Tests cover MIN_TICK to MAX_TICK range
+- [x] Tests handle edge cases (MIN_SQRT_RATIO, MAX_SQRT_RATIO)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -52,9 +53,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol`)
+- [x] Build succeeds (`forge build`)
 
 ---
 
