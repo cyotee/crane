@@ -62,16 +62,16 @@ Actionable items for follow-up tasks:
 **Description:** Add a fork test that uses a real Slipstream pool on Base mainnet to verify the reward estimation matches actual claimable amounts. This would validate the library against real reward mechanics.
 **Affected Files:**
 - `test/foundry/fork/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.fork.t.sol` (new)
-**User Response:** (pending)
-**Notes:** This is optional but would increase confidence in production deployments.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-097
 
 ### Suggestion 2: Document Limitations in NatSpec
 **Priority:** Low
 **Description:** Add NatSpec comments noting that estimations assume constant reward rate and liquidity. The APR calculation is for estimation purposes only and doesn't account for compounding or liquidity changes.
 **Affected Files:**
 - `contracts/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.sol`
-**User Response:** (pending)
-**Notes:** Existing NatSpec is good but could be more explicit about estimation accuracy.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-098
 
 ---
 
