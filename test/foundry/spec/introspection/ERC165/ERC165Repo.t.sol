@@ -30,6 +30,10 @@ contract ERC165RepoStub {
     function supportsInterface(bytes4 interfaceId) external view returns (bool) {
         return ERC165Repo._supportsInterface(interfaceId);
     }
+
+    function supportsInterfaceWithStorage(bytes4 interfaceId) external view returns (bool) {
+        return ERC165Repo._supportsInterface(ERC165Repo._layout(), interfaceId);
+    }
 }
 
 /**
@@ -135,6 +139,76 @@ contract ERC165Repo_Test is Test {
         assertTrue(stub.supportsInterface(ierc165Id), "IERC165 interface should be supported");
     }
 
+    /* ------ _supportsInterface(Storage, bytes4) Tests ------ */
+
+    function test_supportsInterface_storage_overload_registered() public {
+        // Register an interface first
+        stub.registerInterface(TEST_INTERFACE_1);
+
+        // Verify using storage-parameterized overload
+        assertTrue(
+            stub.supportsInterfaceWithStorage(TEST_INTERFACE_1),
+            "_supportsInterface(Storage, bytes4) should return true for registered interface"
+        );
+    }
+
+    function test_supportsInterface_storage_overload_unregistered() public {
+        // Verify unregistered interface returns false via storage-parameterized overload
+        assertFalse(
+            stub.supportsInterfaceWithStorage(TEST_INTERFACE_1),
+            "_supportsInterface(Storage, bytes4) should return false for unregistered interface"
+        );
+    }
+
+    function test_supportsInterface_storage_overload_multiple() public {
+        // Register multiple interfaces
+        bytes4[] memory interfaces = new bytes4[](2);
+        interfaces[0] = TEST_INTERFACE_1;
+        interfaces[1] = TEST_INTERFACE_2;
+        stub.registerInterfaces(interfaces);
+
+        // Verify all registered interfaces via storage-parameterized overload
+        assertTrue(
+            stub.supportsInterfaceWithStorage(TEST_INTERFACE_1),
+            "_supportsInterface(Storage, bytes4) should return true for first registered interface"
+        );
+        assertTrue(
+            stub.supportsInterfaceWithStorage(TEST_INTERFACE_2),
+            "_supportsInterface(Storage, bytes4) should return true for second registered interface"
+        );
+
+        // Verify unregistered interface returns false
+        assertFalse(
+            stub.supportsInterfaceWithStorage(TEST_INTERFACE_3),
+            "_supportsInterface(Storage, bytes4) should return false for unregistered interface"
+        );
+    }
+
+    function test_supportsInterface_both_overloads_equivalent() public {
+        // Register an interface
+        stub.registerInterface(TEST_INTERFACE_1);
+
+        // Both overloads should return the same result
+        bool resultDefault = stub.supportsInterface(TEST_INTERFACE_1);
+        bool resultStorage = stub.supportsInterfaceWithStorage(TEST_INTERFACE_1);
+
+        assertEq(
+            resultDefault,
+            resultStorage,
+            "Both _supportsInterface overloads should return equivalent results for registered interface"
+        );
+
+        // Test unregistered interface
+        bool unregDefault = stub.supportsInterface(TEST_INTERFACE_2);
+        bool unregStorage = stub.supportsInterfaceWithStorage(TEST_INTERFACE_2);
+
+        assertEq(
+            unregDefault,
+            unregStorage,
+            "Both _supportsInterface overloads should return equivalent results for unregistered interface"
+        );
+    }
+
     /* ------ Fuzz Tests ------ */
 
     function testFuzz_registerInterface(bytes4 interfaceId) public {
@@ -146,5 +220,22 @@ contract ERC165Repo_Test is Test {
 
         // Should be registered after
         assertTrue(stub.supportsInterface(interfaceId), "Interface should be registered after registration");
+    }
+
+    function testFuzz_supportsInterface_storage_overload(bytes4 interfaceId) public {
+        // Should not be registered initially via storage overload
+        assertFalse(
+            stub.supportsInterfaceWithStorage(interfaceId),
+            "_supportsInterface(Storage, bytes4) should return false for unregistered interface"
+        );
+
+        // Register
+        stub.registerInterface(interfaceId);
+
+        // Should be registered after via storage overload
+        assertTrue(
+            stub.supportsInterfaceWithStorage(interfaceId),
+            "_supportsInterface(Storage, bytes4) should return true after registration"
+        );
     }
 }
