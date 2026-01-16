@@ -1,7 +1,7 @@
 # Task CRANE-028: Add Price Impact Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-007
 **Worktree:** `test/price-impact-tests`
@@ -26,13 +26,13 @@ Add explicit price impact percentage tests across various trade sizes. Currently
 As a developer, I want tests that verify price impact calculations so that I can ensure swap calculations account for slippage correctly across different trade sizes.
 
 **Acceptance Criteria:**
-- [ ] Tests for small trades (< 1% of reserves) - minimal price impact
-- [ ] Tests for medium trades (1-10% of reserves) - moderate price impact
-- [ ] Tests for large trades (> 10% of reserves) - significant price impact
-- [ ] Tests verify price impact formula: `priceImpact = 1 - (effectivePrice / spotPrice)`
-- [ ] Fuzz tests across trade sizes and reserve ratios
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Tests for small trades (< 1% of reserves) - minimal price impact
+- [x] Tests for medium trades (1-10% of reserves) - moderate price impact
+- [x] Tests for large trades (> 10% of reserves) - significant price impact
+- [x] Tests verify price impact formula: `priceImpact = 1 - (effectivePrice / spotPrice)`
+- [x] Fuzz tests across trade sizes and reserve ratios
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -52,9 +52,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_priceImpact.t.sol`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_priceImpact.t.sol`)
+- [x] Build succeeds (`forge build`)
 
 ---
 

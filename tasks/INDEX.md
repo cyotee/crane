@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-028 | Add Price Impact Tests | In Progress | CRANE-007 | `test/price-impact-tests` |
+| CRANE-028 | Add Price Impact Tests | Pending Merge | CRANE-007 | `test/price-impact-tests` |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | In Progress | CRANE-007 | `fix/constprodutils-cleanup` |
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | Ready | CRANE-008 | `test/tickmath-bijection-fuzz` |
