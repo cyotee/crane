@@ -11,6 +11,16 @@
 
 ## Session Log
 
+### 2026-01-15 - Task Refined
+
+- Task definition updated via /design:design
+- Changed approach: split into separate libraries instead of parameterizing
+- New design:
+  - Create `AerodromServiceVolatile.sol` for volatile pools only
+  - Create `AerodromServiceStable.sol` for stable pools only
+  - Deprecate original `AerodromService.sol`
+- Rationale: Developers can import only the pool type they need, no conditional flow control required
+
 ### 2026-01-13 - Task Created
 
 - Task created from code review suggestion
