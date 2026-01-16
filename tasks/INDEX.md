@@ -180,6 +180,7 @@
 | CRANE-027 | Add Multi-hop Routing Tests | 2026-01-15 | archive/CRANE-027-multihop-routing-tests/ |
 | CRANE-028 | Add Price Impact Tests | 2026-01-15 | archive/CRANE-028-price-impact-tests/ |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | 2026-01-15 | archive/CRANE-029-constprodutils-cleanup/ |
+| CRANE-032 | Add TickMath Bijection Fuzz Tests | 2026-01-15 | archive/CRANE-032-tickmath-bijection-fuzz/ |
 
 ## Cross-Repo Dependencies
 
