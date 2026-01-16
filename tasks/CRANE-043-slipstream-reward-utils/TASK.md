@@ -1,7 +1,7 @@
 # Task CRANE-043: Add Reward Quoting Utilities
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-011
 **Worktree:** `feature/slipstream-reward-utils`
@@ -26,19 +26,19 @@ Add utilities for reward quoting and claiming for Slipstream gauge integration. 
 As a developer, I want utilities to estimate pending rewards so that reward accrual can be predicted.
 
 **Acceptance Criteria:**
-- [ ] Function to estimate pending rewards for a position
-- [ ] Function to calculate reward rate for a tick range
-- [ ] Handle `rewardGrowthGlobalX128` and `getRewardGrowthInside()`
-- [ ] Tests verify reward estimation accuracy
+- [x] Function to estimate pending rewards for a position
+- [x] Function to calculate reward rate for a tick range
+- [x] Handle `rewardGrowthGlobalX128` and `getRewardGrowthInside()`
+- [x] Tests verify reward estimation accuracy
 
 ### US-CRANE-043.2: Reward Claiming Helpers
 
 As a developer, I want helpers for reward claiming operations so that integration is simplified.
 
 **Acceptance Criteria:**
-- [ ] Helper to prepare reward claim parameters
-- [ ] Documentation on gauge interaction
-- [ ] Tests for helper functions
+- [x] Helper to prepare reward claim parameters
+- [x] Documentation on gauge interaction
+- [x] Tests for helper functions
 
 ## Technical Details
 
@@ -77,15 +77,15 @@ function estimatePendingReward(
 ## Inventory Check
 
 Before starting, verify:
-- [ ] `ICLPool` reward functions exist in interface
-- [ ] Understand reward accrual mechanics
-- [ ] Identify staking vs non-staking reward differences
+- [x] `ICLPool` reward functions exist in interface
+- [x] Understand reward accrual mechanics
+- [x] Identify staking vs non-staking reward differences
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
