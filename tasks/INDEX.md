@@ -8,11 +8,9 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
-| CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Complete | CRANE-009 | - |
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Ready | CRANE-009 | `test/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
-| CRANE-037 | Add Aerodrome Stable Pool Support | Complete | CRANE-010 | - |
 | CRANE-039 | Add Slipstream Fork Tests | Ready | CRANE-011 | `test/slipstream-fork-tests` |
 | CRANE-040 | Add Slipstream Edge Case Tests | Ready | CRANE-011 | `test/slipstream-edge-cases` |
 | CRANE-041 | Add Slipstream Invariant Tests | Ready | CRANE-011 | `test/slipstream-invariants` |
@@ -30,7 +28,6 @@
 | CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
 | CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
-| CRANE-059 | Add ERC165Repo Storage Overload Test | Complete | CRANE-015 | - |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
@@ -72,13 +69,11 @@
 
 ### Ready for Agent
 
-**Core Framework (10 tasks):**
+**Core Framework (4 tasks):**
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
-- ~~CRANE-033: Add Uniswap V4 Pure Math Unit Tests~~ (In Review)
 - CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests (from CRANE-009)
 - CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
 - CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
-- CRANE-037: Add Aerodrome Stable Pool Support (from CRANE-010)
 
 **Slipstream Follow-ups (5 tasks - from CRANE-011):**
 - CRANE-039: Add Slipstream Fork Tests (High)
@@ -121,8 +116,7 @@
 - CRANE-056: Add Proxy-Level Routing Regression Test (Medium)
 - CRANE-058: Implement Partial Remove Semantics (Medium)
 
-**ERC165 Follow-ups (2 tasks - from CRANE-015):**
-- CRANE-059: Add ERC165Repo Storage Overload Test (Low)
+**ERC165 Follow-ups (1 task - from CRANE-015):**
 - CRANE-060: Add ERC-165 Strict Semantics for 0xffffffff (Low)
 
 **ERC5267 Follow-ups (2 tasks - from CRANE-023):**
@@ -191,6 +185,9 @@
 | CRANE-028 | Add Price Impact Tests | 2026-01-15 | archive/CRANE-028-price-impact-tests/ |
 | CRANE-029 | ConstProdUtils Code Cleanup and NatSpec | 2026-01-15 | archive/CRANE-029-constprodutils-cleanup/ |
 | CRANE-032 | Add TickMath Bijection Fuzz Tests | 2026-01-15 | archive/CRANE-032-tickmath-bijection-fuzz/ |
+| CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | 2026-01-15 | archive/CRANE-033-v4-pure-math-tests/ |
+| CRANE-037 | Add Aerodrome Stable Pool Support | 2026-01-15 | archive/CRANE-037-aerodrome-stable-pool-support/ |
+| CRANE-059 | Add ERC165Repo Storage Overload Test | 2026-01-15 | archive/CRANE-059-erc165-storage-overload-test/ |
 
 ## Cross-Repo Dependencies
 
