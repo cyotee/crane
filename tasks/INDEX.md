@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
-| CRANE-032 | Add TickMath Bijection Fuzz Tests | In Review | CRANE-008 | `feature/tickmath-bijection-fuzz` |
+| CRANE-032 | Add TickMath Bijection Fuzz Tests | Pending Merge | CRANE-008 | `feature/tickmath-bijection-fuzz` |
 | CRANE-033 | Add Uniswap V4 Pure Math Unit Tests | Ready | CRANE-009 | `test/v4-pure-math-tests` |
 | CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Ready | CRANE-009 | `test/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
