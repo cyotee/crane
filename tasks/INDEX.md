@@ -56,6 +56,8 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Ready | CRANE-040 | `fix/slipstream-pragma-style` |
+| CRANE-095 | Add Slipstream Combined Fee Guard | Ready | CRANE-042 | `fix/slipstream-fee-guard` |
+| CRANE-096 | Add Unstaked Fee Positive-Path Tests | Ready | CRANE-042 | `test/unstaked-fee-positive` |
 
 ## Status Legend
 

@@ -55,8 +55,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - [contracts/utils/math/SlipstreamUtils.sol](../../contracts/utils/math/SlipstreamUtils.sol)
 - [contracts/utils/math/SlipstreamQuoter.sol](../../contracts/utils/math/SlipstreamQuoter.sol)
-**User Response:** (pending)
-**Notes:** The Slipstream core likely constrains fees already; this is mostly defensive clarity.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-095
 
 ### Suggestion 2: Add positive-path tests for `includeUnstakedFee=true`
 **Priority:** Medium
@@ -67,8 +67,8 @@ Actionable items for follow-up tasks:
 - [test/foundry/spec/utils/math/slipstreamUtils/SlipstreamQuoter_tickCrossing.t.sol](../../test/foundry/spec/utils/math/slipstreamUtils/SlipstreamQuoter_tickCrossing.t.sol)
 - [test/foundry/spec/utils/math/slipstreamUtils/SlipstreamZapQuoter_ZapIn.t.sol](../../test/foundry/spec/utils/math/slipstreamUtils/SlipstreamZapQuoter_ZapIn.t.sol)
 - [test/foundry/spec/utils/math/slipstreamUtils/SlipstreamZapQuoter_ZapOut.t.sol](../../test/foundry/spec/utils/math/slipstreamUtils/SlipstreamZapQuoter_ZapOut.t.sol)
-**User Response:** (pending)
-**Notes:** This is easiest if `MockCLPool` exposes a configurable `unstakedFee()`.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-096
 
 ---
 
