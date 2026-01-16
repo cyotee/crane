@@ -1,7 +1,7 @@
 # Task CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-009
 **Worktree:** `test/v4-swapmath-fuzz`
@@ -26,13 +26,13 @@ Add fuzz tests for `SwapMath.computeSwapStep()` to discover edge cases via rando
 As a developer, I want fuzz tests for SwapMath so that edge cases are discovered via randomized testing.
 
 **Acceptance Criteria:**
-- [ ] Fuzz test for `computeSwapStep()` with randomized inputs
-- [ ] Invariant: `amountIn + feeAmount <= abs(amountRemaining)` for exactIn swaps
-- [ ] Invariant: `amountOut <= abs(amountRemaining)` for exactOut swaps
-- [ ] Test sqrtPriceNext is bounded by sqrtPriceLimit
-- [ ] Test fee calculations are non-negative
-- [ ] Tests pass with default fuzz runs
-- [ ] Build succeeds
+- [x] Fuzz test for `computeSwapStep()` with randomized inputs
+- [x] Invariant: `amountIn + feeAmount <= abs(amountRemaining)` for exactIn swaps
+- [x] Invariant: `amountOut <= abs(amountRemaining)` for exactOut swaps
+- [x] Test sqrtPriceNext is bounded by sqrtPriceLimit
+- [x] Test fee calculations are non-negative
+- [x] Tests pass with default fuzz runs
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -51,9 +51,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`)
+- [x] Build succeeds (`forge build`)
 
 ---
 

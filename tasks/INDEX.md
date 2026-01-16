@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-031 | Fix EdgeCases Test Count Documentation | Ready | CRANE-008 | `fix/edgecases-count-doc` |
-| CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | In Progress | CRANE-009 | `feature/v4-swapmath-fuzz` |
+| CRANE-034 | Add Uniswap V4 SwapMath Fuzz Tests | Pending Merge | CRANE-009 | `feature/v4-swapmath-fuzz` |
 | CRANE-035 | Document Uniswap V4 Dynamic Fee Pool Limitations | Ready | CRANE-009 | `fix/v4-dynamic-fee-docs` |
 | CRANE-036 | Optimize StateLibrary Hashing | Ready | CRANE-009 | `fix/statelibrary-hash-optimize` |
 | CRANE-039 | Add Slipstream Fork Tests | In Progress | CRANE-011 | `feature/slipstream-fork-tests` |
@@ -69,11 +69,13 @@
 
 ### Ready for Agent
 
-**Core Framework (4 tasks):**
+**Core Framework (3 tasks):**
 - CRANE-031: Fix EdgeCases Test Count Documentation (from CRANE-008)
-- CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests (from CRANE-009)
 - CRANE-035: Document Uniswap V4 Dynamic Fee Pool Limitations (from CRANE-009)
 - CRANE-036: Optimize StateLibrary Hashing (from CRANE-009)
+
+**Pending Merge:**
+- CRANE-034: Add Uniswap V4 SwapMath Fuzz Tests (from CRANE-009)
 
 **Slipstream Follow-ups (5 tasks - from CRANE-011):**
 - CRANE-039: Add Slipstream Fork Tests (High)
