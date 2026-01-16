@@ -39,11 +39,11 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Gate fork tests with an explicit env flag
 **Priority:** Medium
-**Description:** `setUp()` currently skips fork tests when `INFURA_KEY` is unset. Consider also gating behind something like `RUN_FORK_TESTS=1` (and keeping the `INFURA_KEY` check) so CI/local runs don’t silently skip when a key exists but forks are not desired.
+**Description:** `setUp()` currently skips fork tests when `INFURA_KEY` is unset. Consider also gating behind something like `RUN_FORK_TESTS=1` (and keeping the `INFURA_KEY` check) so CI/local runs don't silently skip when a key exists but forks are not desired.
 **Affected Files:**
 - test/foundry/fork/base_main/slipstream/TestBase_SlipstreamFork.sol
-**User Response:** (pending)
-**Notes:** This keeps behavior explicit and avoids accidental fork usage.
+**User Response:** Rejected
+**Notes:** Current INFURA_KEY check is sufficient.
 
 ### Suggestion 2: Add at least one additional high-liquidity pool (with existence check)
 **Priority:** Medium
@@ -51,16 +51,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - test/foundry/fork/base_main/slipstream/TestBase_SlipstreamFork.sol
 - test/foundry/fork/base_main/slipstream/SlipstreamUtils_Fork.t.sol
-**User Response:** (pending)
-**Notes:** Even a single extra pair would materially improve confidence.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-089
 
 ### Suggestion 3: Round out the edge-case matrix for exact-output
 **Priority:** Low
 **Description:** There is a zero-amount test for exact-input. Consider adding `quoteExactOutputSingle(0, …) == 0` and (optionally) a “dust exact-output” test with slightly relaxed tolerance.
 **Affected Files:**
 - test/foundry/fork/base_main/slipstream/SlipstreamUtils_Fork.t.sol
-**User Response:** (pending)
-**Notes:** Helps ensure behavior remains stable as utils evolve.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-090
 
 ---
 

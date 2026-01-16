@@ -57,6 +57,8 @@
 | CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | Ready | CRANE-034 | `test/swapmath-sqrtpricelimit-fuzz` |
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | Ready | CRANE-034 | `test/swapmath-int256min-edge` |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | Ready | CRANE-034 | `fix/swapmath-test-cleanup` |
+| CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |
+| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
 
 ## Status Legend
 
