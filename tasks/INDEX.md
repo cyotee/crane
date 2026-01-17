@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Complete | CRANE-013 | `feature/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Complete | CRANE-013 | `feature/dfpkg-deployment-test` |
-| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | In Progress | CRANE-013 | `feature/weighted-pool-facet` |
+| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Pending Merge | CRANE-013 | `feature/weighted-pool-facet` |
 | CRANE-056 | Add Proxy-Level Routing Regression Test | In Progress | CRANE-014 | `test/proxy-routing-regression` |
 | CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
@@ -123,7 +123,7 @@
 - **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
 - CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
 - CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
-- CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)
+- ~~CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)~~ → Pending Merge
 
 **ERC2535 Follow-ups (3 tasks - from CRANE-014):**
 - **CRANE-057: Fix Remove Selector Ownership Validation (High)**
