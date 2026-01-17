@@ -55,3 +55,18 @@
 [submodule "lib/comet"]
 	path = lib/comet
 	url = https://github.com/compound-finance/comet
+[submodule "lib/ethereum-vault-connector"]
+	path = lib/ethereum-vault-connector
+	url = https://github.com/euler-xyz/ethereum-vault-connector
+[submodule "lib/euler-price-oracle"]
+	path = lib/euler-price-oracle
+	url = https://github.com/euler-xyz/euler-price-oracle
+[submodule "lib/euler-vault-kit"]
+	path = lib/euler-vault-kit
+	url = https://github.com/euler-xyz/euler-vault-kit
+[submodule "lib/evk-periphery"]
+	path = lib/evk-periphery
+	url = https://github.com/euler-xyz/evk-periphery
+[submodule "lib/evc-playground"]
+	path = lib/evc-playground
+	url = https://github.com/euler-xyz/evc-playground

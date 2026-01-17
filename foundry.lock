@@ -23,6 +23,24 @@
   "lib/balancer-v3-monorepo": {
     "rev": "a2fe650f622e1bd6201537cc5c754afe7feac24a"
   },
+  "lib/comet": {
+    "rev": "ed6ebcd84ac00906e8e725716891d482f4bef8b9"
+  },
+  "lib/ethereum-vault-connector": {
+    "tag": {
+      "name": "v1.0.1",
+      "rev": "a7d3c29ef7e4964736e47675e0588630d6afbfd7"
+    }
+  },
+  "lib/euler-price-oracle": {
+    "rev": "ffc3cb82615fc7d003a7f431175bd1eaf0bf41c5"
+  },
+  "lib/euler-vault-kit": {
+    "rev": "5b98b42048ba11ae82fb62dfec06d1010c8e41e6"
+  },
+  "lib/evk-periphery": {
+    "rev": "3d9563e2399a1b31427ecbb202f0690863a3adfb"
+  },
   "lib/forge-std": {
     "rev": "100b0d756adda67bc70aab816fa5a1a95dcf78b6"
   },
