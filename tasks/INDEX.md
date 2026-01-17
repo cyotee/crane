@@ -61,6 +61,8 @@
 | CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/mock-cleanup` |
 | CRANE-113 | Replace require String with Custom Error in WeightedTokenConfigUtils | Ready | CRANE-055 | `fix/weighted-pool-custom-error` |
 | CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/weight-validation-negative-tests` |
+| CRANE-115 | Enforce Correct Facet Address During Remove | Ready | CRANE-058 | `fix/remove-facet-address-validation` |
+| CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/remove-mismatch-negative` |
 
 ## Status Legend
 
@@ -138,6 +140,10 @@
 
 **TickMath Follow-ups (1 task - from CRANE-032):**
 - CRANE-078: Tighten TickMath Revert Expectations (Low)
+
+**ERC2535 Remove Semantics Follow-ups (2 tasks - from CRANE-058):**
+- **CRANE-115: Enforce Correct Facet Address During Remove (High)**
+- CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium)
 
 ### Blocked
 

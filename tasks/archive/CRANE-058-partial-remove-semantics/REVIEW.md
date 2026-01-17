@@ -56,8 +56,8 @@ Update `_removeFacet()` to mirror `_replaceFacet()`’s pattern:
 This prevents loupe inconsistencies even if `facetCut.facetAddress` is incorrect.
 **Affected Files:**
 - contracts/introspection/ERC2535/ERC2535Repo.sol
-**User Response:** (pending)
-**Notes:** This is a correctness hardening; only-owner access reduces exploitability but not invariant risk.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-115
 
 ### Suggestion 2: Add a negative test for facet/selector mismatch during remove
 **Priority:** Medium
@@ -67,8 +67,8 @@ Add a test that registers two facets, then attempts a remove cut where `facetAdd
 - state remains consistent (selector removed from the correct facet set, and events reflect reality).
 **Affected Files:**
 - test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol
-**User Response:** (pending)
-**Notes:** This locks in the intended API semantics for `Remove` and prevents future regressions.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-116
 
 ---
 
