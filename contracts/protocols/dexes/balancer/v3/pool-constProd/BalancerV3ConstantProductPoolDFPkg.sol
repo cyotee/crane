@@ -54,6 +54,7 @@ import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
 import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
 
 interface IBalancerV3ConstantProductPoolStandardVaultPkg {
     struct PkgInit {
@@ -118,6 +119,8 @@ contract BalancerV3ConstantProductPoolDFPkg is
         BalancerV3AuthenticationRepo._initialize(
             keccak256(abi.encode(address(this)))
         );
+        // Initialize vault repo so postDeploy can call _registerPoolWithBalV3Vault
+        BalancerV3VaultAwareRepo._initialize(pkgInit.balancerV3Vault);
     }
 
     function _diamondPkgFactory() internal view virtual override returns (IDiamondPackageCallBackFactory) {
