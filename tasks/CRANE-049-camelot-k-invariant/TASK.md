@@ -1,7 +1,7 @@
 # Task CRANE-049: Add K Invariant Preservation Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Pending Merge
 **Created:** 2026-01-13
 **Dependencies:** CRANE-012
 **Worktree:** `test/camelot-k-invariant`

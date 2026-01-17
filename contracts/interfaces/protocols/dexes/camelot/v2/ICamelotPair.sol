@@ -38,6 +38,8 @@ interface ICamelotPair is BetterIERC20, IERC20Permit {
     event Sync(uint112 reserve0, uint112 reserve1);
 
     function stableSwap() external view returns (bool);
+    function precisionMultiplier0() external view returns (uint256);
+    function precisionMultiplier1() external view returns (uint256);
 
     function MINIMUM_LIQUIDITY() external pure returns (uint256);
     function factory() external view returns (address);
@@ -51,6 +53,7 @@ interface ICamelotPair is BetterIERC20, IERC20Permit {
     function kLast() external view returns (uint256);
 
     function setFeePercent(uint16 token0FeePercent, uint16 token1FeePercent) external;
+    function setStableSwap(bool stable, uint112 expectedReserve0, uint112 expectedReserve1) external;
     function mint(address to) external returns (uint256 liquidity);
     function burn(address to) external returns (uint256 amount0, uint256 amount1);
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;

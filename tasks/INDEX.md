@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-048 | Add Referrer Fee Integration Tests | Complete | CRANE-012 | `feature/camelot-referrer-fee` |
-| CRANE-049 | Add K Invariant Preservation Tests | In Progress | CRANE-012 | `feature/camelot-k-invariant` |
+| CRANE-049 | Add K Invariant Preservation Tests | Pending Merge | CRANE-012 | `feature/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | In Progress | CRANE-012 | `feature/camelot-multihop-fees` |
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
@@ -95,11 +95,11 @@
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
-**Camelot V2 Follow-ups (4 tasks - from CRANE-012):**
-- CRANE-049: Add K Invariant Preservation Tests (High)
-- CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)
-- ~~CRANE-048: Add Referrer Fee Integration Tests (In Review)~~
-- CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
+**Camelot V2 Follow-ups (1 task - from CRANE-012):**
+- CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (In Progress)
+
+**Pending Merge:**
+- CRANE-049: Add K Invariant Preservation Tests (from CRANE-012) - Approved
 
 **Camelot Asymmetric Fee Test Follow-ups (2 tasks - from CRANE-044):**
 - CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
