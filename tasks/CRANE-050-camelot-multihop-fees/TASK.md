@@ -1,7 +1,7 @@
 # Task CRANE-050: Add Multi-Hop Swap with Directional Fees Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-012
 **Worktree:** `test/camelot-multihop-fees`
@@ -26,11 +26,11 @@ Add tests for router multi-hop path handling with different fee configurations p
 As a developer, I want tests for multi-hop swaps with varying directional fees so that path accuracy is verified.
 
 **Acceptance Criteria:**
-- [ ] Test path with different fee configurations per hop
-- [ ] Test accumulated fee impact on final output
-- [ ] Test path: A->B (0.3%) -> B->C (0.5%) -> C->D (0.1%)
-- [ ] Verify cumulative quote matches actual swap
-- [ ] Tests pass
+- [x] Test path with different fee configurations per hop
+- [x] Test accumulated fee impact on final output
+- [x] Test path: A->B (0.3%) -> B->C (0.5%) -> C->D (0.1%)
+- [x] Verify cumulative quote matches actual swap
+- [x] Tests pass
 
 ## Technical Details
 
@@ -52,7 +52,7 @@ Hop 3: ARB/GMX pool (token0Fee=0.1%, token1Fee=0.3%) - selling ARB (depends on s
 ## Files to Create/Modify
 
 **New Files:**
-- `test/foundry/protocols/dexes/camelot/v2/CamelotV2_multihop.t.sol`
+- `test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_multihop.t.sol`
 
 **Reference Files:**
 - `contracts/protocols/dexes/camelot/v2/stubs/CamelotRouter.sol`
@@ -61,14 +61,14 @@ Hop 3: ARB/GMX pool (token0Fee=0.1%, token1Fee=0.3%) - selling ARB (depends on s
 ## Inventory Check
 
 Before starting, verify:
-- [ ] Router multi-hop functions exist
-- [ ] Can deploy multiple pairs with different fee configs
+- [x] Router multi-hop functions exist
+- [x] Can deploy multiple pairs with different fee configs
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
