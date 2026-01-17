@@ -46,16 +46,16 @@ Actionable items for follow-up tasks:
 **Description:** Both `computeBalance()` and `onSwap()` form a product (`a * b`) before dividing. For extremely large balances, `a * b` can overflow and revert even when the final quotient would fit. Using OpenZeppelin’s 512-bit `Math.mulDiv` with explicit rounding (ceil for pool-favorable EXACT_OUT / computeBalance) would make the math more robust.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol
-**User Response:** (pending)
-**Notes:** This is a robustness improvement; current bounds in tests pass and typical real-world balances likely fit, but it’s a nice hardening step.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-108
 
 ### Suggestion 2: Optional guardrails / clearer invariants around “2-token only” assumption
 **Priority:** Low
 **Description:** The implementation assumes 2-token pools (`computeBalance()` hardcodes the “other token index”). `computeInvariant()` comments “expects exactly 2 tokens” but does not enforce it. Consider adding a require/assert or tightening docs to avoid misuse.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol
-**User Response:** (pending)
-**Notes:** Only do this if callers might pass non-2-token balances; tests currently include a 1-token edge case for `computeInvariant()`.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-109
 
 ---
 

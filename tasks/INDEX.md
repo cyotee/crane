@@ -60,6 +60,8 @@
 | CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/k-burn-clarification` |
 | CRANE-106 | Use Balance Deltas Consistently in Multihop Tests | Ready | CRANE-050 | `fix/multihop-balance-deltas` |
 | CRANE-107 | Reduce Stub Log Noise in Verbose Test Runs | Ready | CRANE-050 | `fix/stub-log-noise` |
+| CRANE-108 | Use Math.mulDiv for Overflow Protection in Balancer V3 Pool | Ready | CRANE-052 | `fix/muldiv-overflow-protection` |
+| CRANE-109 | Add 2-Token Pool Guardrails to Balancer V3 Pool | Ready | CRANE-052 | `fix/two-token-guardrails` |
 
 ## Status Legend
 
