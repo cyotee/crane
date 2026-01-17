@@ -59,6 +59,8 @@
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
 | CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Ready | CRANE-047 | `test/fot-fixup-input-verification` |
 | CRANE-103 | Add Guards for Extreme Tax Values Near 100% | Ready | CRANE-047 | `test/fot-extreme-tax-guards` |
+| CRANE-104 | Add Burn Proportional Invariant Check | Ready | CRANE-049 | `test/burn-proportional-invariant` |
+| CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/k-burn-clarification` |
 
 ## Status Legend
 

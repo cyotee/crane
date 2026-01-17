@@ -88,8 +88,10 @@ CamelotV2_invariant_stable (5 tests):
 
 #### Suggested Follow-ups (Optional)
 
-- Consider adding an explicit burn-specific check (e.g., proportional invariants tied to LP supply) if we want stronger coverage for “burn correctness” beyond “reserves remain positive”.
-- The task acceptance criteria line “K never decreases after burns” should remain documented as clarified/incorrect, since K decreasing on burn is expected.
+- Consider adding an explicit burn-specific check (e.g., proportional invariants tied to LP supply) if we want stronger coverage for "burn correctness" beyond "reserves remain positive".
+  - **Converted to task:** CRANE-104
+- The task acceptance criteria line "K never decreases after burns" should remain documented as clarified/incorrect, since K decreasing on burn is expected.
+  - **Converted to task:** CRANE-105
 
 ### Decision
 
