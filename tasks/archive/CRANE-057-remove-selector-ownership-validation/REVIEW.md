@@ -34,8 +34,8 @@ Actionable items for follow-up tasks:
 **Description:** `_removeFacet()` unconditionally deletes `facetFunctionSelectors[facetCut.facetAddress]` and removes `facetCut.facetAddress` from `facetAddresses`. That’s correct when the cut removes *all* selectors for that facet, but if a caller accidentally passes only a subset, the remaining selectors can still map to the facet while loupe bookkeeping is wiped. If partial removal is not supported by design, consider adding an explicit validation (e.g., verify the facet’s selector set is empty after removals before removing from `facetAddresses`, or require the cut to include all selectors).
 **Affected Files:**
 - contracts/introspection/ERC2535/ERC2535Repo.sol
-**User Response:** (pending)
-**Notes:** This is adjacent to CRANE-057’s risk model and may already be addressed by other work (e.g., partial remove semantics workstreams).
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-117
 
 ---
 

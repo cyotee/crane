@@ -63,6 +63,7 @@
 | CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/weight-validation-negative-tests` |
 | CRANE-115 | Enforce Correct Facet Address During Remove | Ready | CRANE-058 | `fix/remove-facet-address-validation` |
 | CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/remove-mismatch-negative` |
+| CRANE-117 | Guard Against Partial Facet Removal Bookkeeping Corruption | Ready | CRANE-057 | `fix/partial-removal-guardrails` |
 
 ## Status Legend
 
@@ -141,9 +142,10 @@
 **TickMath Follow-ups (1 task - from CRANE-032):**
 - CRANE-078: Tighten TickMath Revert Expectations (Low)
 
-**ERC2535 Remove Semantics Follow-ups (2 tasks - from CRANE-058):**
-- **CRANE-115: Enforce Correct Facet Address During Remove (High)**
-- CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium)
+**ERC2535 Remove Semantics Follow-ups (3 tasks - from CRANE-057/CRANE-058):**
+- **CRANE-115: Enforce Correct Facet Address During Remove (High - from CRANE-058)**
+- CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium - from CRANE-058)
+- CRANE-117: Guard Against Partial Facet Removal Bookkeeping Corruption (Medium - from CRANE-057)
 
 ### Blocked
 
