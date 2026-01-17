@@ -57,6 +57,8 @@
 | CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Ready | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | Ready | CRANE-045 | `test/stableswap-balance-deltas` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
+| CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Ready | CRANE-047 | `test/fot-fixup-input-verification` |
+| CRANE-103 | Add Guards for Extreme Tax Values Near 100% | Ready | CRANE-047 | `test/fot-extreme-tax-guards` |
 
 ## Status Legend
 

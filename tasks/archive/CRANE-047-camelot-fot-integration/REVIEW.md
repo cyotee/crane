@@ -41,16 +41,16 @@ Actionable items for follow-up tasks:
 **Description:** The deterministic `_purchaseQuote()` tests compute a `requiredInput` estimate (quotedInput adjusted by $(1-\text{tax})^{-1}$), but never execute a swap with `requiredInput` to demonstrate that it achieves `desiredOutput` (or hits it within rounding). Adding that second swap (fresh pool or reset state) would make the underestimation story airtight.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_feeOnTransfer.t.sol
-**User Response:** (pending)
-**Notes:** Keep state isolation in mind (either create a fresh pair per test-case or snapshot/revert).
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-102
 
 ### Suggestion 2: Add a guard/test for extreme tax values near 100%
 **Priority:** Low
 **Description:** Several helpers compute `amountToSend = INITIAL_LIQUIDITY * 10000 / (10000 - taxBps)`. This will divide-by-zero at 100% tax and grows rapidly near 100%, which can cause unrealistic liquidity / overflow hazards in future test extensions.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_feeOnTransfer.t.sol
-**User Response:** (pending)
-**Notes:** Either constrain tax to `< 10000` (e.g., `require(taxBps < 10000)` in helpers) or add explicit tests documenting the expected behavior at 100% tax.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-103
 
 ---
 
