@@ -644,6 +644,365 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                Heterogeneous TokenConfig Order-Independence Tests          */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Test that calcSalt produces same result with fully distinct per-token configs
+     * @dev Tests all permutations of token ordering to ensure true order-independence
+     *      with heterogeneous fields. This would have failed before the TokenConfigUtils._sort()
+     *      fix if only token addresses were swapped (not full structs).
+     */
+    function test_calcSalt_orderIndependent_allPermutations_heterogeneousConfigs() public {
+        pkg = _deployPkg();
+
+        // Define completely distinct configs for each token
+        // Token A: WITH_RATE, has rateProvider, pays yield fees
+        // Token B: STANDARD, different rateProvider, no yield fees
+        address rateProviderA = makeAddr("rateProviderA");
+        address rateProviderB = makeAddr("rateProviderB");
+
+        // Create both permutations (A,B) and (B,A)
+        TokenConfig[] memory configsAB = new TokenConfig[](2);
+        configsAB[0] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderA, true);
+        configsAB[1] = _createTokenConfig(address(tokenB), TokenType.STANDARD, rateProviderB, false);
+
+        TokenConfig[] memory configsBA = new TokenConfig[](2);
+        configsBA[0] = _createTokenConfig(address(tokenB), TokenType.STANDARD, rateProviderB, false);
+        configsBA[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderA, true);
+
+        bytes memory argsAB = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configsAB,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes memory argsBA = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configsBA,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes32 saltAB = pkg.calcSalt(argsAB);
+        bytes32 saltBA = pkg.calcSalt(argsBA);
+
+        assertEq(saltAB, saltBA, "calcSalt must be order-independent with heterogeneous configs");
+    }
+
+    /**
+     * @notice Test calcSalt with maximum config diversity (all fields differ)
+     * @dev Covers the case where tokenType, rateProvider, and paysYieldFees are all distinct
+     */
+    function test_calcSalt_orderIndependent_maxDiversity() public {
+        pkg = _deployPkg();
+
+        // Use completely different addresses for rate providers
+        address rateProviderHigh = address(0xffFfFFfFfFFfFfffFFFFfffFFffFFFfFfFFf1111);
+        address rateProviderLow = address(0x0000000000000000000000000000000000001111);
+
+        // Token with high address has one set of params
+        // Token with low address has completely opposite params
+        TokenConfig[] memory configs1 = new TokenConfig[](2);
+        configs1[0] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderHigh, true);
+        configs1[1] = _createTokenConfig(address(tokenB), TokenType.STANDARD, rateProviderLow, false);
+
+        TokenConfig[] memory configs2 = new TokenConfig[](2);
+        configs2[0] = _createTokenConfig(address(tokenB), TokenType.STANDARD, rateProviderLow, false);
+        configs2[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderHigh, true);
+
+        bytes memory args1 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs1,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes memory args2 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs2,
+                hooksContract: address(0)
+            })
+        );
+
+        assertEq(pkg.calcSalt(args1), pkg.calcSalt(args2), "Salt must match with max diversity configs");
+    }
+
+    /**
+     * @notice Test that DIFFERENT heterogeneous configs produce DIFFERENT salts
+     * @dev Ensures the salt actually incorporates all TokenConfig fields, not just addresses
+     */
+    function test_calcSalt_differentConfigs_produceDifferentSalts() public {
+        pkg = _deployPkg();
+
+        // Same tokens, but different configs for tokenA
+        TokenConfig[] memory configs1 = new TokenConfig[](2);
+        configs1[0] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, address(0x1111), true);
+        configs1[1] = _createTokenConfig(address(tokenB), TokenType.STANDARD, address(0), false);
+
+        TokenConfig[] memory configs2 = new TokenConfig[](2);
+        configs2[0] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false); // Different!
+        configs2[1] = _createTokenConfig(address(tokenB), TokenType.STANDARD, address(0), false);
+
+        bytes memory args1 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs1,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes memory args2 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs2,
+                hooksContract: address(0)
+            })
+        );
+
+        assertTrue(
+            pkg.calcSalt(args1) != pkg.calcSalt(args2),
+            "Different tokenType configs should produce different salts"
+        );
+    }
+
+    /**
+     * @notice Fuzz test for order-independence with heterogeneous configs
+     * @dev Randomly assigns tokenType, rateProvider, and paysYieldFees to each token
+     */
+    function testFuzz_calcSalt_orderIndependence_heterogeneous(
+        address token1,
+        address token2,
+        uint8 tokenType1Seed,
+        uint8 tokenType2Seed,
+        address rateProvider1,
+        address rateProvider2,
+        bool paysYieldFees1,
+        bool paysYieldFees2
+    ) public {
+        vm.assume(token1 != address(0) && token2 != address(0));
+        vm.assume(token1 != token2);
+
+        vm.mockCall(token1, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token1"));
+        vm.mockCall(token2, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token2"));
+
+        pkg = _deployPkg();
+
+        // Map seeds to TokenType (STANDARD=0, WITH_RATE=1)
+        TokenType type1 = tokenType1Seed % 2 == 0 ? TokenType.STANDARD : TokenType.WITH_RATE;
+        TokenType type2 = tokenType2Seed % 2 == 0 ? TokenType.STANDARD : TokenType.WITH_RATE;
+
+        // Create configs in order (1, 2)
+        TokenConfig[] memory configs1 = new TokenConfig[](2);
+        configs1[0] = _createTokenConfig(token1, type1, rateProvider1, paysYieldFees1);
+        configs1[1] = _createTokenConfig(token2, type2, rateProvider2, paysYieldFees2);
+
+        // Create configs in reversed order (2, 1)
+        TokenConfig[] memory configs2 = new TokenConfig[](2);
+        configs2[0] = _createTokenConfig(token2, type2, rateProvider2, paysYieldFees2);
+        configs2[1] = _createTokenConfig(token1, type1, rateProvider1, paysYieldFees1);
+
+        bytes memory args1 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs1,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes memory args2 = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs2,
+                hooksContract: address(0)
+            })
+        );
+
+        assertEq(
+            pkg.calcSalt(args1),
+            pkg.calcSalt(args2),
+            "Salt must be order-independent with any heterogeneous config combination"
+        );
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                  Heterogeneous ProcessArgs Alignment Tests                 */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Test processArgs preserves field alignment with known token addresses
+     * @dev Uses tokens created in setUp() which have deterministic relative ordering
+     */
+    function test_processArgs_heterogeneous_preservesAlignment_knownTokens() public {
+        pkg = _deployPkg();
+
+        // Get actual token addresses to understand their sort order
+        address addrA = address(tokenA);
+        address addrB = address(tokenB);
+
+        // Create configs in reverse sorted order to force a swap
+        TokenConfig[] memory configs;
+        address expectedFirst;
+        address expectedSecond;
+
+        if (addrA < addrB) {
+            // A < B, so pass in (B, A) to force swap
+            configs = new TokenConfig[](2);
+            configs[0] = _createTokenConfig(addrB, TokenType.STANDARD, address(0xBBBB), false);
+            configs[1] = _createTokenConfig(addrA, TokenType.WITH_RATE, address(0xAAAA), true);
+            expectedFirst = addrA;
+            expectedSecond = addrB;
+        } else {
+            // B < A, so pass in (A, B) to force swap
+            configs = new TokenConfig[](2);
+            configs[0] = _createTokenConfig(addrA, TokenType.WITH_RATE, address(0xAAAA), true);
+            configs[1] = _createTokenConfig(addrB, TokenType.STANDARD, address(0xBBBB), false);
+            expectedFirst = addrB;
+            expectedSecond = addrA;
+        }
+
+        bytes memory args = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs,
+                hooksContract: address(0)
+            })
+        );
+
+        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded = abi.decode(
+            pkg.processArgs(args),
+            (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs)
+        );
+
+        // Verify tokens are sorted
+        assertEq(address(decoded.tokenConfigs[0].token), expectedFirst, "First token incorrect");
+        assertEq(address(decoded.tokenConfigs[1].token), expectedSecond, "Second token incorrect");
+
+        // Verify fields are correctly aligned to their tokens
+        if (expectedFirst == addrA) {
+            // Token A should have WITH_RATE, 0xAAAA, true
+            assertTrue(decoded.tokenConfigs[0].tokenType == TokenType.WITH_RATE, "TokenA type mismatch");
+            assertEq(address(decoded.tokenConfigs[0].rateProvider), address(0xAAAA), "TokenA rateProvider mismatch");
+            assertTrue(decoded.tokenConfigs[0].paysYieldFees, "TokenA paysYieldFees mismatch");
+            // Token B should have STANDARD, 0xBBBB, false
+            assertTrue(decoded.tokenConfigs[1].tokenType == TokenType.STANDARD, "TokenB type mismatch");
+            assertEq(address(decoded.tokenConfigs[1].rateProvider), address(0xBBBB), "TokenB rateProvider mismatch");
+            assertFalse(decoded.tokenConfigs[1].paysYieldFees, "TokenB paysYieldFees mismatch");
+        } else {
+            // Token B is first
+            assertTrue(decoded.tokenConfigs[0].tokenType == TokenType.STANDARD, "TokenB type mismatch");
+            assertEq(address(decoded.tokenConfigs[0].rateProvider), address(0xBBBB), "TokenB rateProvider mismatch");
+            assertFalse(decoded.tokenConfigs[0].paysYieldFees, "TokenB paysYieldFees mismatch");
+            // Token A is second
+            assertTrue(decoded.tokenConfigs[1].tokenType == TokenType.WITH_RATE, "TokenA type mismatch");
+            assertEq(address(decoded.tokenConfigs[1].rateProvider), address(0xAAAA), "TokenA rateProvider mismatch");
+            assertTrue(decoded.tokenConfigs[1].paysYieldFees, "TokenA paysYieldFees mismatch");
+        }
+    }
+
+    /**
+     * @notice Fuzz test for processArgs alignment preservation
+     * @dev Verifies that after sorting, each token's config fields stay with it
+     */
+    function testFuzz_processArgs_preservesAlignment_heterogeneous(
+        address token1,
+        address token2,
+        uint8 tokenType1Seed,
+        uint8 tokenType2Seed,
+        address rateProvider1,
+        address rateProvider2,
+        bool paysYieldFees1,
+        bool paysYieldFees2
+    ) public {
+        vm.assume(token1 != address(0) && token2 != address(0));
+        vm.assume(token1 != token2);
+
+        vm.mockCall(token1, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token1"));
+        vm.mockCall(token2, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token2"));
+
+        pkg = _deployPkg();
+
+        TokenType type1 = tokenType1Seed % 2 == 0 ? TokenType.STANDARD : TokenType.WITH_RATE;
+        TokenType type2 = tokenType2Seed % 2 == 0 ? TokenType.STANDARD : TokenType.WITH_RATE;
+
+        TokenConfig[] memory configs = new TokenConfig[](2);
+        configs[0] = _createTokenConfig(token1, type1, rateProvider1, paysYieldFees1);
+        configs[1] = _createTokenConfig(token2, type2, rateProvider2, paysYieldFees2);
+
+        bytes memory args = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs,
+                hooksContract: address(0)
+            })
+        );
+
+        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded = abi.decode(
+            pkg.processArgs(args),
+            (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs)
+        );
+
+        // Verify sorted order
+        assertTrue(
+            address(decoded.tokenConfigs[0].token) < address(decoded.tokenConfigs[1].token),
+            "Tokens must be sorted"
+        );
+
+        // Verify alignment: find which original config corresponds to each position
+        for (uint256 i = 0; i < 2; i++) {
+            address sortedToken = address(decoded.tokenConfigs[i].token);
+
+            if (sortedToken == token1) {
+                // This position should have token1's config
+                assertTrue(decoded.tokenConfigs[i].tokenType == type1, "type1 alignment broken");
+                assertEq(address(decoded.tokenConfigs[i].rateProvider), rateProvider1, "rateProvider1 alignment broken");
+                assertEq(decoded.tokenConfigs[i].paysYieldFees, paysYieldFees1, "paysYieldFees1 alignment broken");
+            } else {
+                // This position should have token2's config
+                assertEq(sortedToken, token2, "Unknown token in sorted configs");
+                assertTrue(decoded.tokenConfigs[i].tokenType == type2, "type2 alignment broken");
+                assertEq(address(decoded.tokenConfigs[i].rateProvider), rateProvider2, "rateProvider2 alignment broken");
+                assertEq(decoded.tokenConfigs[i].paysYieldFees, paysYieldFees2, "paysYieldFees2 alignment broken");
+            }
+        }
+    }
+
+    /**
+     * @notice Test that processArgs and calcSalt are consistent
+     * @dev Verifies that calcSalt(args) == calcSalt(processArgs(args)) for heterogeneous configs
+     */
+    function testFuzz_processArgs_calcSalt_consistent(
+        address token1,
+        address token2,
+        uint8 tokenType1Seed,
+        address rateProvider1,
+        bool paysYieldFees1
+    ) public {
+        vm.assume(token1 != address(0) && token2 != address(0));
+        vm.assume(token1 != token2);
+
+        vm.mockCall(token1, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token1"));
+        vm.mockCall(token2, abi.encodeWithSelector(IERC20Metadata.name.selector), abi.encode("Token2"));
+
+        pkg = _deployPkg();
+
+        TokenType type1 = tokenType1Seed % 2 == 0 ? TokenType.STANDARD : TokenType.WITH_RATE;
+
+        TokenConfig[] memory configs = new TokenConfig[](2);
+        configs[0] = _createTokenConfig(token1, type1, rateProvider1, paysYieldFees1);
+        configs[1] = _createTokenConfig(token2, TokenType.STANDARD, address(0), false);
+
+        bytes memory args = abi.encode(
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
+                tokenConfigs: configs,
+                hooksContract: address(0)
+            })
+        );
+
+        bytes32 saltBefore = pkg.calcSalt(args);
+        bytes memory processedArgs = pkg.processArgs(args);
+        bytes32 saltAfter = pkg.calcSalt(processedArgs);
+
+        // calcSalt should be idempotent (sorting happens internally)
+        assertEq(saltBefore, saltAfter, "calcSalt must be consistent before/after processArgs");
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                           Helper Functions                                  */
     /* -------------------------------------------------------------------------- */
 
