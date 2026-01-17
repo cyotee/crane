@@ -140,15 +140,19 @@ library ERC2535Repo {
             if (actualFacet == address(0)) {
                 revert IDiamondLoupe.FunctionNotPresent(selector);
             }
+            // CRANE-057: Validate selector belongs to specified facet
             if (actualFacet != facetCut.facetAddress) {
                 revert IDiamondLoupe.SelectorFacetMismatch(selector, facetCut.facetAddress, actualFacet);
             }
             layout.facetAddress[selector] = address(0);
+            // CRANE-058: Remove selector from facet's selector set (supports partial removal)
+            layout.facetFunctionSelectors[facetCut.facetAddress]._remove(selector);
             emit IERC8109Update.DiamondFunctionRemoved(selector, facetCut.facetAddress);
         }
-        // Does not actually delete values, just unmaps storage pointer.
-        delete layout.facetFunctionSelectors[facetCut.facetAddress];
-        layout.facetAddresses._remove(facetCut.facetAddress);
+        // Only remove facet from facetAddresses when its selector set becomes empty
+        if (layout.facetFunctionSelectors[facetCut.facetAddress]._length() == 0) {
+            layout.facetAddresses._remove(facetCut.facetAddress);
+        }
     }
 
     /**

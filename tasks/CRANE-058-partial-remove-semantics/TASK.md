@@ -38,12 +38,12 @@ EIP-2535 doesn't explicitly define partial remove behavior, so either approach i
 As a diamond maintainer, I want clear semantics for partial selector removal so that the behavior is predictable and documented.
 
 **Acceptance Criteria:**
-- [ ] Design decision documented (Option A or B)
-- [ ] Implementation matches chosen design
-- [ ] Tests cover both full and attempted partial removal
-- [ ] Error messages are clear if partial removal is rejected
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Design decision documented (Option A or B)
+- [x] Implementation matches chosen design
+- [x] Tests cover both full and attempted partial removal
+- [x] Error messages are clear if partial removal is rejected
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -56,9 +56,9 @@ As a diamond maintainer, I want clear semantics for partial selector removal so 
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-014 is complete
-- [ ] CRANE-057 is complete (selector ownership validation)
-- [ ] contracts/introspection/ERC2535/ERC2535Repo.sol exists
+- [x] CRANE-014 is complete
+- [x] CRANE-057 is complete (selector ownership validation) - Note: soft dependency, not blocking
+- [x] contracts/introspection/ERC2535/ERC2535Repo.sol exists
 
 ## Design Decision Required
 
@@ -68,11 +68,11 @@ Before implementing, clarify with user:
 
 ## Completion Criteria
 
-- [ ] Design decision made and documented
-- [ ] Implementation complete
-- [ ] All acceptance criteria met
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] Design decision made and documented
+- [x] Implementation complete
+- [x] All acceptance criteria met
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 

@@ -519,7 +519,7 @@ contract DiamondCutTest is Test {
         diamond.diamondCut(cuts, address(0), "");
     }
 
-    /// @notice CRANE-057: Verify remove reverts when selector belongs to different facet
+/// @notice CRANE-057: Verify remove reverts when selector belongs to different facet
     function test_diamondCut_removeFacet_revertsOnSelectorFacetMismatch() public {
         // Add two different facets
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](2);
@@ -583,6 +583,224 @@ contract DiamondCutTest is Test {
             address(mockFacetC),
             "mockFunctionC should still point to mockFacetC"
         );
+    }
+
+    /// @notice CRANE-058: Verify partial remove keeps facet in set when it still has selectors
+    function test_diamondCut_removeFacet_partialRemove_keepsFacetInSet() public {
+        // Add facet with multiple selectors
+        bytes4[] memory selectorsA = mockFacetA.facetFuncs();
+        assertTrue(selectorsA.length >= 2, "test requires facet with at least 2 selectors");
+
+        IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
+        addCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: selectorsA
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(addCuts, address(0), "");
+
+        // Verify facet has all selectors
+        bytes4[] memory selectorsBefore = diamond.facetFunctionSelectors(address(mockFacetA));
+        assertEq(selectorsBefore.length, selectorsA.length, "facet should have all selectors before partial remove");
+
+        // Remove only ONE selector (partial remove)
+        bytes4[] memory partialSelectors = new bytes4[](1);
+        partialSelectors[0] = selectorsA[0];
+
+        IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
+        removeCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Remove,
+            functionSelectors: partialSelectors
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(removeCuts, address(0), "");
+
+        // Verify removed selector returns address(0)
+        assertEq(
+            diamond.facetAddress(selectorsA[0]),
+            address(0),
+            "removed selector must return address(0)"
+        );
+
+        // Verify remaining selectors still point to facet
+        for (uint256 i = 1; i < selectorsA.length; i++) {
+            assertEq(
+                diamond.facetAddress(selectorsA[i]),
+                address(mockFacetA),
+                "remaining selectors must still point to facet"
+            );
+        }
+
+        // Facet should STILL be in the list (has remaining selectors)
+        address[] memory facetsAfter = diamond.facetAddresses();
+        bool foundFacet = false;
+        for (uint256 i = 0; i < facetsAfter.length; i++) {
+            if (facetsAfter[i] == address(mockFacetA)) {
+                foundFacet = true;
+                break;
+            }
+        }
+        assertTrue(foundFacet, "facet should remain in facetAddresses when it still has selectors");
+
+        // Verify facet still has remaining selectors in loupe
+        bytes4[] memory remainingSelectors = diamond.facetFunctionSelectors(address(mockFacetA));
+        assertEq(remainingSelectors.length, selectorsA.length - 1, "facet should have one less selector");
+    }
+
+    /// @notice CRANE-058: Verify complete remove removes facet from set
+    function test_diamondCut_removeFacet_fullRemove_removesFacetFromSet() public {
+        // Add facet
+        IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
+        addCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: mockFacetA.facetFuncs()
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(addCuts, address(0), "");
+
+        // Verify facet is in the list
+        address[] memory facetsBefore = diamond.facetAddresses();
+        bool foundBefore = false;
+        for (uint256 i = 0; i < facetsBefore.length; i++) {
+            if (facetsBefore[i] == address(mockFacetA)) {
+                foundBefore = true;
+                break;
+            }
+        }
+        assertTrue(foundBefore, "facet should be in facetAddresses before removal");
+
+        // Remove ALL selectors
+        IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
+        removeCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Remove,
+            functionSelectors: mockFacetA.facetFuncs()
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(removeCuts, address(0), "");
+
+        // Verify facet is removed from facetAddresses
+        address[] memory facetsAfter = diamond.facetAddresses();
+        for (uint256 i = 0; i < facetsAfter.length; i++) {
+            assertTrue(facetsAfter[i] != address(mockFacetA), "facet must be removed from facetAddresses after full removal");
+        }
+
+        // Verify facet has no selectors
+        bytes4[] memory selectorsAfter = diamond.facetFunctionSelectors(address(mockFacetA));
+        assertEq(selectorsAfter.length, 0, "facet should have no selectors after full removal");
+    }
+
+    /// @notice CRANE-058: Verify incremental partial removes work correctly
+    function test_diamondCut_removeFacet_incrementalRemove_cleansUpAtEnd() public {
+        // Add facet with multiple selectors
+        bytes4[] memory selectorsA = mockFacetA.facetFuncs();
+        assertTrue(selectorsA.length >= 2, "test requires facet with at least 2 selectors");
+
+        IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
+        addCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: selectorsA
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(addCuts, address(0), "");
+
+        // Remove selectors one by one
+        for (uint256 i = 0; i < selectorsA.length; i++) {
+            bytes4[] memory singleSelector = new bytes4[](1);
+            singleSelector[0] = selectorsA[i];
+
+            IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
+            removeCuts[0] = IDiamond.FacetCut({
+                facetAddress: address(mockFacetA),
+                action: IDiamond.FacetCutAction.Remove,
+                functionSelectors: singleSelector
+            });
+
+            vm.prank(owner);
+            diamond.diamondCut(removeCuts, address(0), "");
+
+            // Check facet address status after each removal
+            uint256 remainingCount = selectorsA.length - i - 1;
+            bytes4[] memory remaining = diamond.facetFunctionSelectors(address(mockFacetA));
+            assertEq(remaining.length, remainingCount, "facet selector count should decrease");
+
+            // Check facet presence in facetAddresses
+            address[] memory facets = diamond.facetAddresses();
+            bool found = false;
+            for (uint256 j = 0; j < facets.length; j++) {
+                if (facets[j] == address(mockFacetA)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (remainingCount > 0) {
+                assertTrue(found, "facet should remain in facetAddresses while selectors exist");
+            } else {
+                assertFalse(found, "facet should be removed from facetAddresses when no selectors remain");
+            }
+        }
+    }
+
+    /// @notice CRANE-058: Verify partial remove correctly updates facetFunctionSelectors
+    function test_diamondCut_removeFacet_partialRemove_updatesSelectorsCorrectly() public {
+        // Add facet
+        bytes4[] memory selectorsA = mockFacetA.facetFuncs();
+        assertTrue(selectorsA.length >= 2, "test requires facet with at least 2 selectors");
+
+        IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
+        addCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: selectorsA
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(addCuts, address(0), "");
+
+        // Remove first selector
+        bytes4[] memory partialSelectors = new bytes4[](1);
+        partialSelectors[0] = selectorsA[0];
+
+        IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
+        removeCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Remove,
+            functionSelectors: partialSelectors
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(removeCuts, address(0), "");
+
+        // Verify facetFunctionSelectors returns correct remaining selectors
+        bytes4[] memory remainingSelectors = diamond.facetFunctionSelectors(address(mockFacetA));
+        assertEq(remainingSelectors.length, selectorsA.length - 1, "should have one less selector");
+
+        // Verify removed selector is not in remaining
+        for (uint256 i = 0; i < remainingSelectors.length; i++) {
+            assertTrue(remainingSelectors[i] != selectorsA[0], "removed selector should not be in remaining list");
+        }
+
+        // Verify remaining selectors are all from original set (excluding removed)
+        for (uint256 i = 0; i < remainingSelectors.length; i++) {
+            bool found = false;
+            for (uint256 j = 1; j < selectorsA.length; j++) {
+                if (remainingSelectors[i] == selectorsA[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found, "remaining selector should be from original set");
+        }
     }
 
     /* -------------------------------------------------------------------------- */
