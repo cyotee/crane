@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-058 | Implement Partial Remove Semantics | In Review | CRANE-014 | `fix/partial-remove-semantics` |
+| CRANE-058 | Implement Partial Remove Semantics | Pending Merge | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
@@ -120,7 +120,7 @@
 - CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
 
 **ERC2535 Follow-ups (1 task - from CRANE-014):**
-- ~~CRANE-058: Implement Partial Remove Semantics (Medium)~~ - **In Review**
+- ~~CRANE-058: Implement Partial Remove Semantics (Medium)~~ - **Pending Merge**
 
 **ERC165 Follow-ups (1 task - from CRANE-015):**
 - CRANE-060: Add ERC-165 Strict Semantics for 0xffffffff (Low)
