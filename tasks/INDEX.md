@@ -1,16 +1,12 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-16
+**Last Updated:** 2026-01-17
 
 ## Active Tasks
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Complete | CRANE-013 | `feature/balancer-fixedpoint-rounding` |
-| CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Complete | CRANE-013 | `feature/dfpkg-deployment-test` |
-| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Complete | CRANE-013 | `feature/weighted-pool-facet` |
-| CRANE-056 | Add Proxy-Level Routing Regression Test | Complete | CRANE-014 | `test/proxy-routing-regression` |
 | CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
@@ -119,17 +115,13 @@
 - CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test (Medium)
 - CRANE-071: Remove Unused IERC20 Import from TokenConfigUtils (Low)
 
-**Balancer V3 Follow-ups (6 tasks - from CRANE-013/CRANE-053):**
-- **CRANE-054: Add DFPkg Deployment Test for Selector Collision (High)**
+**Balancer V3 Follow-ups (3 tasks - from CRANE-053):**
 - **CRANE-061: Add DFPkg Deployment Integration Test (High - from CRANE-053)**
 - **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
-- CRANE-052: Add FixedPoint Rounding to Balancer V3 Swaps (Medium)
 - CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
-- ~~CRANE-055: Implement Balancer V3 Weighted Pool Facet/Target (Low)~~ → Pending Merge
 
-**ERC2535 Follow-ups (3 tasks - from CRANE-014):**
+**ERC2535 Follow-ups (2 tasks - from CRANE-014):**
 - **CRANE-057: Fix Remove Selector Ownership Validation (High)**
-- CRANE-056: Add Proxy-Level Routing Regression Test (Medium)
 - CRANE-058: Implement Partial Remove Semantics (Medium)
 
 **ERC165 Follow-ups (1 task - from CRANE-015):**
@@ -220,6 +212,10 @@
 | CRANE-048 | Add Referrer Fee Integration Tests | 2026-01-16 | archive/CRANE-048-camelot-referrer-fee/ |
 | CRANE-049 | Add K Invariant Preservation Tests | 2026-01-16 | archive/CRANE-049-camelot-k-invariant/ |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | 2026-01-16 | archive/CRANE-050-camelot-multihop-fees/ |
+| CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | 2026-01-17 | archive/CRANE-052-balancer-fixedpoint-rounding/ |
+| CRANE-054 | Add DFPkg Deployment Test for Selector Collision | 2026-01-17 | archive/CRANE-054-dfpkg-deployment-test/ |
+| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | 2026-01-17 | archive/CRANE-055-weighted-pool-facet/ |
+| CRANE-056 | Add Proxy-Level Routing Regression Test | 2026-01-17 | archive/CRANE-056-proxy-routing-regression-test/ |
 
 ## Cross-Repo Dependencies
 
