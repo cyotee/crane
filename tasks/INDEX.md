@@ -62,6 +62,9 @@
 | CRANE-107 | Reduce Stub Log Noise in Verbose Test Runs | Ready | CRANE-050 | `fix/stub-log-noise` |
 | CRANE-108 | Use Math.mulDiv for Overflow Protection in Balancer V3 Pool | Ready | CRANE-052 | `fix/muldiv-overflow-protection` |
 | CRANE-109 | Add 2-Token Pool Guardrails to Balancer V3 Pool | Ready | CRANE-052 | `fix/two-token-guardrails` |
+| CRANE-110 | Add Non-Zero Selector Guard to DFPkg Tests | Ready | CRANE-054 | `test/selector-nonzero-guard` |
+| CRANE-111 | Add Factory Integration Deployment Test for DFPkg | Ready | CRANE-054 | `test/factory-deployment-test` |
+| CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/mock-cleanup` |
 
 ## Status Legend
 

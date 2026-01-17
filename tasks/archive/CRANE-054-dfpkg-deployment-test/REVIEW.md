@@ -41,24 +41,24 @@ Actionable items for follow-up tasks:
 **Description:** In addition to checking duplicates, add a guard that no selector equals `bytes4(0)` (this catches “partially initialized array” issues even if they don’t produce duplicates).
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg_RealFacets.t.sol
-**User Response:** (pending)
-**Notes:** The current duplicate check would not fail if there is exactly one `0x00000000` selector.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-110
 
 ### Suggestion 2: Add an integration-style deployment test via factory
 **Priority:** Medium
 **Description:** Add a separate test that uses the canonical factory bootstrap (`InitDevService.initEnv(...)`) to deploy the DFPkg + proxy via `DiamondPackageCallBackFactory`, and then asserts initialization results (e.g., vault-aware storage set, token configs sorted/recorded, etc.).
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/...
-**User Response:** (pending)
-**Notes:** This would turn “selector collision detection” into a true “deployment regression” test.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-111
 
 ### Suggestion 3: Don’t reuse `MockPoolInfoFacet` for unrelated init fields
 **Priority:** Low
 **Description:** In `_deployPkgWithRealFacets()`, the `standardSwapFeePercentageBoundsFacet` and `unbalancedLiquidityInvariantRatioBoundsFacet` are populated with the pool-info mock. If/when those fields begin affecting `facetCuts()`, the test could become misleading. Prefer dedicated mocks or explicit assertions that those fields are currently unused.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg_RealFacets.t.sol
-**User Response:** (pending)
-**Notes:** Not a blocker today because the DFPkg’s `facetCuts()` uses only 5 facets.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-112
 
 ---
 
