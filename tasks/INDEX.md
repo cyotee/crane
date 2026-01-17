@@ -7,9 +7,9 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-061 | Add DFPkg Deployment Integration Test | Pending Merge | CRANE-053 | `feature/dfpkg-deployment-integration-test` |
-| CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
-| CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Ready | CRANE-053 | `test/exact-out-rounding` |
+| CRANE-061 | Add DFPkg Deployment Integration Test | Complete | CRANE-053 | - |
+| CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | In Progress | CRANE-053 | feature/tokenconfig-heterogeneous-tests |
+| CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | In Progress | CRANE-053 | feature/exact-out-rounding-tests |
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Ready | CRANE-023 | `refactor/erc5267-testbase` |
 | CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Ready | CRANE-023 | `test/erc5267-proxy-integration` |
 | CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Ready | CRANE-038 | `test/slipstream-zapin-conservation` |
