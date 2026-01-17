@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-058 | Implement Partial Remove Semantics | Pending Merge | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
@@ -119,9 +118,6 @@
 - **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
 - CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
 
-**ERC2535 Follow-ups (1 task - from CRANE-014):**
-- ~~CRANE-058: Implement Partial Remove Semantics (Medium)~~ - **Pending Merge**
-
 **ERC165 Follow-ups (1 task - from CRANE-015):**
 - CRANE-060: Add ERC-165 Strict Semantics for 0xffffffff (Low)
 
@@ -215,6 +211,7 @@
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | 2026-01-17 | archive/CRANE-055-weighted-pool-facet/ |
 | CRANE-056 | Add Proxy-Level Routing Regression Test | 2026-01-17 | archive/CRANE-056-proxy-routing-regression-test/ |
 | CRANE-057 | Fix Remove Selector Ownership Validation | 2026-01-17 | archive/CRANE-057-remove-selector-ownership-validation/ |
+| CRANE-058 | Implement Partial Remove Semantics | 2026-01-17 | archive/CRANE-058-partial-remove-semantics/ |
 
 ## Cross-Repo Dependencies
 
