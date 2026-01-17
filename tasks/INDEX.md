@@ -61,6 +61,8 @@
 | CRANE-103 | Add Guards for Extreme Tax Values Near 100% | Ready | CRANE-047 | `test/fot-extreme-tax-guards` |
 | CRANE-104 | Add Burn Proportional Invariant Check | Ready | CRANE-049 | `test/burn-proportional-invariant` |
 | CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/k-burn-clarification` |
+| CRANE-106 | Use Balance Deltas Consistently in Multihop Tests | Ready | CRANE-050 | `fix/multihop-balance-deltas` |
+| CRANE-107 | Reduce Stub Log Noise in Verbose Test Runs | Ready | CRANE-050 | `fix/stub-log-noise` |
 
 ## Status Legend
 

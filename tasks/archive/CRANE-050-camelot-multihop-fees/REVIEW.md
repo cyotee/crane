@@ -41,16 +41,16 @@ Actionable items for follow-up tasks:
 **Description:** Update multi-hop tests to compute outputs via deltas (e.g., `uint256 before = tokenD.balanceOf(address(this)); ...; uint256 actual = tokenD.balanceOf(address(this)) - before;`). This makes the suite more resilient to future changes that might leave token dust.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_multihop.t.sol
-**User Response:** (n/a)
-**Notes:** Not required for acceptance criteria; purely hardening.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-106
 
 ### Suggestion 2: Consider reducing stub log noise in verbose runs
 **Priority:** Very Low
 **Description:** Verbose test runs (`-vvv`) emit a lot of `CamelotPair._getAmountOut` logs from the stub. If this is unintended, consider gating those logs behind a debug flag or removing them.
 **Affected Files:**
 - contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol
-**User Response:** (n/a)
-**Notes:** This isn’t introduced by CRANE-050, but it made the review runs noisy.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-107 (may overlap with CRANE-070, CRANE-101)
 
 ---
 
