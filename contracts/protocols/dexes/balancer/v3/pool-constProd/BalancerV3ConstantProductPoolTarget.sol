@@ -81,7 +81,8 @@ contract BalancerV3ConstantProductPoolTarget is IBalancerV3Pool {
     {
         uint256 otherTokenIndex = tokenInIndex == 0 ? 1 : 0;
         uint256 newInvariant = computeInvariant(balancesLiveScaled18, Rounding.ROUND_DOWN).mulDown(invariantRatio);
-        newBalance = ((newInvariant * newInvariant) / balancesLiveScaled18[otherTokenIndex]);
+        // Round UP to favor the pool (user provides more tokens)
+        newBalance = FixedPoint.divUpRaw(newInvariant * newInvariant, balancesLiveScaled18[otherTokenIndex]);
     }
 
     /**
@@ -104,11 +105,14 @@ contract BalancerV3ConstantProductPoolTarget is IBalancerV3Pool {
         if (params.kind == SwapKind.EXACT_IN) {
             uint256 amountTokenIn = params.amountGivenScaled18; // dx
             // dy = (Y * dx) / (X + dx)
+            // Round DOWN: user receives less tokens (pool-favorable)
             amountCalculatedScaled18 = (poolBalanceTokenOut * amountTokenIn) / (poolBalanceTokenIn + amountTokenIn);
         } else {
             uint256 amountTokenOut = params.amountGivenScaled18; // dy
             // dx = (X * dy) / (Y - dy)
-            amountCalculatedScaled18 = (poolBalanceTokenIn * amountTokenOut) / (poolBalanceTokenOut - amountTokenOut);
+            // Round UP: user provides more tokens (pool-favorable)
+            amountCalculatedScaled18 =
+                FixedPoint.divUpRaw(poolBalanceTokenIn * amountTokenOut, poolBalanceTokenOut - amountTokenOut);
         }
     }
 }

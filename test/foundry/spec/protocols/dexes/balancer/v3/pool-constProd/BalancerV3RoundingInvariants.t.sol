@@ -571,4 +571,171 @@ contract BalancerV3RoundingInvariants_Test is Test {
 
         assertGe(productAfter, productBefore - 1, "Product should never decrease (within rounding)");
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*             EXACT_OUT Rounding UP Tests (Pool-Favorable)                    */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Verify EXACT_OUT rounds UP (user provides more tokens)
+     * @dev For EXACT_OUT: dx = (X * dy) / (Y - dy), should round UP
+     */
+    function test_onSwap_exactOut_roundsUp_poolFavorable() public view {
+        // Use values that will cause rounding
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = 1000e18 + 1; // Slightly off to cause rounding
+        balances[1] = 1000e18;
+
+        uint256 amountOut = 100e18 + 7; // Non-round to cause rounding
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        // Calculate raw (round-down) result for comparison
+        uint256 rawResult = (balances[0] * amountOut) / (balances[1] - amountOut);
+
+        // Pool's result should be >= raw result (rounded UP)
+        assertGe(amountIn, rawResult, "EXACT_OUT should round UP (user pays more)");
+    }
+
+    /**
+     * @notice Fuzz test that EXACT_OUT always rounds UP or equals raw division
+     */
+    function testFuzz_onSwap_exactOut_roundsUp(
+        uint256 bal0,
+        uint256 bal1,
+        uint256 amountOut
+    ) public view {
+        bal0 = bound(bal0, 1e18, 1e27);
+        bal1 = bound(bal1, 1e18, 1e27);
+        // Ensure amountOut is much smaller than bal1 to avoid issues
+        amountOut = bound(amountOut, 1e15, bal1 / 100);
+
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = bal0;
+        balances[1] = bal1;
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        // Calculate raw (round-down) result
+        uint256 rawResult = (bal0 * amountOut) / (bal1 - amountOut);
+
+        // Pool's result should be >= raw result (rounded UP favors pool)
+        assertGe(amountIn, rawResult, "EXACT_OUT must round UP");
+    }
+
+    /**
+     * @notice Verify that EXACT_OUT rounding protects the pool by ensuring
+     *         invariant increases after the swap
+     */
+    function testFuzz_onSwap_exactOut_invariantIncreases(
+        uint256 bal0,
+        uint256 bal1,
+        uint256 amountOut
+    ) public view {
+        bal0 = bound(bal0, 1e18, 1e25);
+        bal1 = bound(bal1, 1e18, 1e25);
+        amountOut = bound(amountOut, 1e15, bal1 / 100);
+
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = bal0;
+        balances[1] = bal1;
+
+        uint256 invariantBefore = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        uint256[] memory newBalances = new uint256[](2);
+        newBalances[0] = balances[0] + amountIn;
+        newBalances[1] = balances[1] - amountOut;
+
+        uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
+
+        // With proper rounding UP for EXACT_OUT, invariant should increase or stay same
+        assertGe(invariantAfter, invariantBefore, "EXACT_OUT with round UP must preserve/increase invariant");
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*             computeBalance Rounding UP Tests (Pool-Favorable)               */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Verify computeBalance rounds UP (user provides more tokens)
+     * @dev newBalance = newInvariant^2 / otherBalance, should round UP
+     */
+    function test_computeBalance_roundsUp_poolFavorable() public view {
+        // Use values that will cause rounding
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = 1000e18 + 3; // Non-round numbers
+        balances[1] = 999e18 + 7;
+
+        uint256 ratio = 1.1e18; // 10% increase
+
+        uint256 newBalance = pool.computeBalance(balances, 0, ratio);
+
+        // Calculate what raw division would give
+        uint256 invariant = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+        uint256 newInvariant = invariant.mulDown(ratio);
+        uint256 otherBalance = balances[1]; // tokenInIndex=0 uses balances[1]
+        uint256 rawResult = (newInvariant * newInvariant) / otherBalance;
+
+        // Pool's result should be >= raw result (rounded UP favors pool)
+        assertGe(newBalance, rawResult, "computeBalance should round UP (user provides more)");
+    }
+
+    /**
+     * @notice Fuzz test that computeBalance always rounds UP or equals raw division
+     */
+    function testFuzz_computeBalance_roundsUp(
+        uint256 bal0,
+        uint256 bal1,
+        uint256 ratio
+    ) public view {
+        bal0 = bound(bal0, 1e15, 1e27);
+        bal1 = bound(bal1, 1e15, 1e27);
+        ratio = bound(ratio, 0.5e18, 2e18);
+
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = bal0;
+        balances[1] = bal1;
+
+        uint256 newBalance = pool.computeBalance(balances, 0, ratio);
+
+        // Calculate what raw division would give
+        uint256 invariant = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+        uint256 newInvariant = invariant.mulDown(ratio);
+        uint256 rawResult = (newInvariant * newInvariant) / bal1;
+
+        // Pool's result should be >= raw result (rounded UP favors pool)
+        assertGe(newBalance, rawResult, "computeBalance must round UP");
+    }
 }
