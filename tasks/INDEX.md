@@ -65,6 +65,8 @@
 | CRANE-110 | Add Non-Zero Selector Guard to DFPkg Tests | Ready | CRANE-054 | `test/selector-nonzero-guard` |
 | CRANE-111 | Add Factory Integration Deployment Test for DFPkg | Ready | CRANE-054 | `test/factory-deployment-test` |
 | CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/mock-cleanup` |
+| CRANE-113 | Replace require String with Custom Error in WeightedTokenConfigUtils | Ready | CRANE-055 | `fix/weighted-pool-custom-error` |
+| CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/weight-validation-negative-tests` |
 
 ## Status Legend
 

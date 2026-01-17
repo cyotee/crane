@@ -68,16 +68,16 @@ Actionable items for follow-up tasks:
 **Description:** `WeightedTokenConfigUtils._sortWithWeights()` uses `require(..., "Length mismatch")`. Prefer a custom error for consistency, lower bytecode, and standardized revert semantics across Crane.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-weighted/WeightedTokenConfigUtils.sol
-**User Response:** (pending)
-**Notes:** Also consider updating the docstring: `sortedConfigs = tokenConfigs;` does not copy; it sorts in-place on the memory array.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-113. Also consider updating the docstring: `sortedConfigs = tokenConfigs;` does not copy; it sorts in-place on the memory array.
 
 ### Suggestion 2: Add explicit negative tests for weight validation
 **Priority:** Low
 **Description:** Add unit tests asserting reverts for `ZeroWeight()` and `WeightsMustSumToOne()` during initialization, to lock in Finding 3 behavior.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolTarget.t.sol (or a new repo-focused spec)
-**User Response:** (pending)
-**Notes:** Not required for correctness given current implementation, but strengthens regression coverage.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-114. Not required for correctness given current implementation, but strengthens regression coverage.
 
 ---
 
