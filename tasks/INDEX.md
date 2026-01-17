@@ -7,9 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-048 | Add Referrer Fee Integration Tests | Complete | CRANE-012 | `feature/camelot-referrer-fee` |
-| CRANE-049 | Add K Invariant Preservation Tests | Complete | CRANE-012 | `feature/camelot-k-invariant` |
-| CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Complete | CRANE-012 | `feature/camelot-multihop-fees` |
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | Ready | CRANE-013 | `fix/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | Ready | CRANE-013 | `test/dfpkg-deployment` |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
@@ -99,8 +96,13 @@
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
-**Pending Merge:**
-- CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (from CRANE-012) - Approved
+**Camelot K Invariant Follow-ups (2 tasks - from CRANE-049):**
+- CRANE-104: Add Burn Proportional Invariant Check (Low)
+- CRANE-105: Document K-on-Burn Behavior Clarification (Low)
+
+**Camelot Multihop Follow-ups (2 tasks - from CRANE-050):**
+- CRANE-106: Use Balance Deltas Consistently in Multihop Tests (Low)
+- CRANE-107: Reduce Stub Log Noise in Verbose Test Runs (Very Low)
 
 **Camelot Asymmetric Fee Test Follow-ups (2 tasks - from CRANE-044):**
 - CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
@@ -208,6 +210,9 @@
 | CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | 2026-01-16 | archive/CRANE-045-camelot-stable-swap-tests/ |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | 2026-01-16 | archive/CRANE-046-camelot-protocol-fee-parity/ |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | 2026-01-16 | archive/CRANE-047-camelot-fot-integration/ |
+| CRANE-048 | Add Referrer Fee Integration Tests | 2026-01-16 | archive/CRANE-048-camelot-referrer-fee/ |
+| CRANE-049 | Add K Invariant Preservation Tests | 2026-01-16 | archive/CRANE-049-camelot-k-invariant/ |
+| CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | 2026-01-16 | archive/CRANE-050-camelot-multihop-fees/ |
 
 ## Cross-Repo Dependencies
 
