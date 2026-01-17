@@ -92,9 +92,8 @@
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
-**Camelot V2 Follow-ups (5 tasks - from CRANE-012):**
+**Camelot V2 Follow-ups (4 tasks - from CRANE-012):**
 - CRANE-049: Add K Invariant Preservation Tests (High)
-- CRANE-046: Add Protocol Fee Mint Parity Tests (Medium)
 - CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)
 - CRANE-048: Add Referrer Fee Integration Tests (Low)
 - CRANE-050: Add Multi-Hop Swap with Directional Fees Tests (Low)
