@@ -1,7 +1,7 @@
 # Task CRANE-048: Add Referrer Fee Integration Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
 **Dependencies:** CRANE-012
 **Worktree:** `test/camelot-referrer-fee`
@@ -26,11 +26,11 @@ Add tests for referrer fee share - quote accuracy when referrer rebate applies a
 As a developer, I want tests for referrer fee handling so that quote accuracy with rebates is verified.
 
 **Acceptance Criteria:**
-- [ ] Test quote accuracy when referrer rebate applies
-- [ ] Test fee distribution with referrer
-- [ ] Test `referrersFeeShare()` factory lookup
-- [ ] Verify referrer receives correct fee portion
-- [ ] Tests pass
+- [x] Test quote accuracy when referrer rebate applies
+- [x] Test fee distribution with referrer
+- [x] Test `referrersFeeShare()` factory lookup
+- [x] Verify referrer receives correct fee portion
+- [x] Tests pass
 
 ## Technical Details
 
@@ -50,7 +50,7 @@ if (referrerInputFeeShare > 0) {
 ## Files to Create/Modify
 
 **New Files:**
-- `test/foundry/protocols/dexes/camelot/v2/CamelotV2_referrerFee.t.sol`
+- `test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_referrerFee.t.sol`
 
 **Reference Files:**
 - `contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol`
@@ -59,14 +59,14 @@ if (referrerInputFeeShare > 0) {
 ## Inventory Check
 
 Before starting, verify:
-- [ ] `referrersFeeShare()` in CamelotFactory
-- [ ] Referrer handling in CamelotPair._swap()
+- [x] `referrersFeeShare()` in CamelotFactory
+- [x] Referrer handling in CamelotPair._swap()
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 

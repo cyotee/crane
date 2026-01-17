@@ -1,33 +1,50 @@
-# Review: CRANE-048 — Referrer Fee Integration Tests
+# Code Review: CRANE-048
 
-## Status: Awaiting Implementation
+**Reviewer:** (pending)
+**Review Started:** 2026-01-16
+**Status:** In Progress
 
-## Review Checklist
+---
 
-### Deliverables Present
-- [ ] Referrer fee test file exists
-- [ ] Quote accuracy with rebate tests
-- [ ] Fee distribution tests
+## Clarifying Questions
 
-### Quality Checks
-- [ ] Tests are comprehensive
-- [ ] No regressions introduced
+Questions asked to understand review criteria:
 
-### Build Verification
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+(Questions and answers will be recorded here during review)
 
-## Review Notes
+---
 
-**Reviewer:** (not assigned)
-**Date:** (not reviewed)
+## Review Findings
 
-### Feedback
+### Finding 1: (pending)
+**File:** (pending)
+**Severity:** (pending)
+**Description:** (pending)
+**Status:** Open
+**Resolution:** (pending)
 
-(none yet)
+---
 
-### Decision
+## Suggestions
 
-- [ ] Approved
-- [ ] Changes Requested
-- [ ] Blocked
+Actionable items for follow-up tasks:
+
+### Suggestion 1: (pending)
+**Priority:** (pending)
+**Description:** (pending)
+**Affected Files:**
+- (pending)
+**User Response:** (pending)
+**Notes:** (pending)
+
+---
+
+## Review Summary
+
+**Findings:** (pending)
+**Suggestions:** (pending)
+**Recommendation:** (pending)
+
+---
+
+**When review complete, output:** `<promise>REVIEW_COMPLETE</promise>`
