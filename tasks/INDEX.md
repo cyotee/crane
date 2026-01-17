@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-047 | Add Fee-on-Transfer Token Integration Tests | In Progress | CRANE-012 | feature/camelot-fot-integration |
+| CRANE-047 | Add Fee-on-Transfer Token Integration Tests | Pending Merge | CRANE-012 | feature/camelot-fot-integration |
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
 | CRANE-050 | Add Multi-Hop Swap with Directional Fees Tests | Ready | CRANE-012 | `test/camelot-multihop-fees` |
