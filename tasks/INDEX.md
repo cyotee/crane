@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | In Progress | CRANE-012 | `test/camelot-stable-swap` |
+| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Pending Merge | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | In Progress | CRANE-012 | feature/camelot-protocol-fee-parity |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | In Progress | CRANE-012 | feature/camelot-fot-integration |
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
@@ -93,8 +93,7 @@
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
-**Camelot V2 Follow-ups (6 tasks - from CRANE-012):**
-- CRANE-045: Add Camelot V2 Stable Swap Pool Tests (High)
+**Camelot V2 Follow-ups (5 tasks - from CRANE-012):**
 - CRANE-049: Add K Invariant Preservation Tests (High)
 - CRANE-046: Add Protocol Fee Mint Parity Tests (Medium)
 - CRANE-047: Add Fee-on-Transfer Token Integration Tests (Medium)

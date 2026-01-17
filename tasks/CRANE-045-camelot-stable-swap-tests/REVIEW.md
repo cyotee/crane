@@ -32,7 +32,13 @@ That check is directionally useful, but it does not actually prove `_k()` implem
 **Description:**
 The test file correctly notes that `CamelotV2Service._swap()`’s returned amount is derived from constant-product math, while the *actual* swap execution (via the pair) uses stable-swap math when `stableSwap=true`.
 
-However, multiple tests still assert on the `_swap()` return value (e.g. the `_get_y()` “convergence” tests, reserve-limit test, and sequential swaps). This risks false positives/negatives (or flakiness if rounding returns `0` while the pair transfer is nonzero).
+However, multiple tests still assert on the `_swap()` return value (not balance deltas), notably:
+- `test_getY_convergence_smallAmount/largeAmount/unbalancedReserves`
+- `test_swapOutput_bidirectional`
+- `test_stableSwap_nearReserveLimit`
+- `test_stableSwap_multipleSequentialSwaps`
+
+This risks false positives/negatives if the service’s return semantics change, or if rounding makes the returned value `0` while the executed swap still transfers a nonzero amount.
 **Status:** Open
 **Resolution:** Suggestion 2
 
@@ -42,7 +48,7 @@ However, multiple tests still assert on the `_swap()` return value (e.g. the `_g
 **Description:**
 `CamelotPair._getAmountOut()` emits multiple `console.log` lines in both stable and non-stable code paths, and `_mintFee()` has additional logs. These logs are very spammy under fuzzing and make `forge test` output harder to interpret.
 
-This isn’t a functional correctness issue, but it increases maintenance cost and can cause CI pain (slowdowns / log truncation) as more Camelot tests are added.
+This isn’t a functional correctness issue. In default `forge test` output, Foundry may not print these logs for passing tests, but they will still surface under verbose runs and/or failing tests, and can add significant noise as the test suite grows.
 **Status:** Open
 **Resolution:** Suggestion 3
 
@@ -97,9 +103,9 @@ This becomes more important as Camelot coverage expands.
 
 **Findings:** 3 (2 medium, 1 low)
 **Suggestions:** 3 (2 high, 1 medium)
-**Recommendation:** Approve once the high-priority test robustness items are addressed.
+**Recommendation:** Approve as-is (tests pass), but file follow-ups for stronger regression-catching assertions.
 
-**Notes:** Local `forge test` execution was attempted in this environment but was interrupted by a tooling timeout; pass/fail status is taken from the task's PROGRESS.md (19/19 passing).
+**Notes:** Verified locally in this worktree: `forge test --match-path test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol` (19/19 passing).
 
 ---
 
