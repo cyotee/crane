@@ -28,12 +28,12 @@ Note: `DefaultPoolInfoFacet` is in `old/` directory (deprecated). The DFPkg's `P
 As a deployer, I want deployment tests that catch selector collisions so that misconfigured packages fail fast.
 
 **Acceptance Criteria:**
-- [ ] Test deploys BalancerV3ConstantProductPoolDFPkg
-- [ ] Test asserts no duplicate selectors in facetCuts
-- [ ] Test verifies pool metadata after deployment
-- [ ] Test verifies vault registration flow
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test deploys BalancerV3ConstantProductPoolDFPkg
+- [x] Test asserts no duplicate selectors in facetCuts
+- [x] Test verifies pool metadata after deployment
+- [x] Test verifies vault registration flow
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -46,16 +46,16 @@ As a deployer, I want deployment tests that catch selector collisions so that mi
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-013 is complete
-- [ ] contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.sol exists
-- [ ] Check if DefaultPoolInfoFacet reference needs updating (in old/ directory)
+- [x] CRANE-013 is complete
+- [x] contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.sol exists
+- [x] Check if DefaultPoolInfoFacet reference needs updating (in old/ directory) - Note: Using MockPoolInfoFacet for testing
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Deployment test catches any selector collisions
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Deployment test catches any selector collisions
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 

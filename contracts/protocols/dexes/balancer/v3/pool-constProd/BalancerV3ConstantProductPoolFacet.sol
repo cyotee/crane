@@ -43,7 +43,7 @@ contract BalancerV3ConstantProductPoolFacet is BalancerV3ConstantProductPoolTarg
     }
 
     function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces) {
-        interfaces = new bytes4[](3);
+        interfaces = new bytes4[](1);
 
         interfaces[0] = type(IBalancerV3Pool).interfaceId;
     }
@@ -57,7 +57,7 @@ contract BalancerV3ConstantProductPoolFacet is BalancerV3ConstantProductPoolTarg
             bytes4[] memory funcs
         )
     {
-        funcs = new bytes4[](9);
+        funcs = new bytes4[](3);
 
         funcs[0] = IBalancerV3Pool.computeInvariant.selector;
         funcs[1] = IBalancerV3Pool.computeBalance.selector;
