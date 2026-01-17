@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-046 | Add Protocol Fee Mint Parity Tests | In Progress | CRANE-012 | feature/camelot-protocol-fee-parity |
+| CRANE-046 | Add Protocol Fee Mint Parity Tests | Pending Merge | CRANE-012 | feature/camelot-protocol-fee-parity |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | In Progress | CRANE-012 | feature/camelot-fot-integration |
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
 | CRANE-049 | Add K Invariant Preservation Tests | Ready | CRANE-012 | `test/camelot-k-invariant` |
