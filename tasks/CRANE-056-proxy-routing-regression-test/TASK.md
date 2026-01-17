@@ -1,8 +1,9 @@
 # Task CRANE-056: Add Proxy-Level Routing Regression Test
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-14
+**Completed:** 2026-01-17
 **Dependencies:** CRANE-014
 **Worktree:** `test/proxy-routing-regression`
 **Origin:** Code review suggestion from CRANE-014
@@ -28,16 +29,16 @@ Current tests validate `facetAddress(selector) == address(0)` after removal, whi
 As a developer, I want a test that verifies calls to removed selectors revert at the proxy layer so that I can be confident the full routing path is tested.
 
 **Acceptance Criteria:**
-- [ ] Test removes a facet's selector via diamondCut
-- [ ] Test calls the removed selector through the proxy
-- [ ] Test expects revert with `Proxy.NoTargetFor(selector)` error
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test removes a facet's selector via diamondCut
+- [x] Test calls the removed selector through the proxy
+- [x] Test expects revert with `Proxy.NoTargetFor(selector)` error
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
 **New/Modified Test Files:**
-- test/foundry/spec/introspection/ERC2535/DiamondCut.t.sol (or new proxy-focused test)
+- test/foundry/spec/introspection/ERC2535/ProxyRoutingRegression.t.sol (new proxy-focused test)
 
 **Reference Files:**
 - contracts/proxies/Proxy.sol (for expected error selector)
@@ -45,16 +46,16 @@ As a developer, I want a test that verifies calls to removed selectors revert at
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-014 is complete
-- [ ] MinimalDiamondCallBackProxy exists
-- [ ] Proxy.NoTargetFor error is defined
+- [x] CRANE-014 is complete
+- [x] MinimalDiamondCallBackProxy exists
+- [x] Proxy.NoTargetFor error is defined
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Proxy routing test added
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Proxy routing test added
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
