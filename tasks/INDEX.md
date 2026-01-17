@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-052 | Add FixedPoint Rounding to Balancer V3 Swaps | In Progress | CRANE-013 | `feature/balancer-fixedpoint-rounding` |
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | In Progress | CRANE-013 | `feature/dfpkg-deployment-test` |
-| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | Ready | CRANE-013 | `feature/weighted-pool-facet` |
+| CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | In Progress | CRANE-013 | `feature/weighted-pool-facet` |
 | CRANE-056 | Add Proxy-Level Routing Regression Test | Ready | CRANE-014 | `test/proxy-routing-regression` |
 | CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
