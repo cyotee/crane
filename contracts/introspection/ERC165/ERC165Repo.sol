@@ -4,6 +4,18 @@ pragma solidity ^0.8.24;
 /**
  * @title ERC165Repo - Repository library for ERC165 relevant state.
  * @author cyotee doge <doge.cyotee>
+ * @notice Generic interface registry that maps bytes4 interface IDs to support status.
+ * @dev This is a low-level storage library that intentionally does NOT enforce ERC-165
+ * strict semantics (i.e., rejecting 0xffffffff). The ERC-165 specification reserves
+ * 0xffffffff as an invalid interface ID that must always return false from supportsInterface().
+ *
+ * This Repo is designed as a generic mapping to allow flexibility:
+ * - Higher-level Targets or Facets should enforce ERC-165 compliance by checking
+ *   `interfaceId != 0xffffffff` in their supportsInterface() implementations.
+ * - The ERC165Target/ERC165Facet implementations handle this constraint.
+ *
+ * If 0xffffffff is registered via _registerInterface(), _supportsInterface() will return true,
+ * which violates ERC-165. Callers are responsible for preventing this at the appropriate layer.
  */
 library ERC165Repo {
     bytes32 internal constant ERC165_STORAGE_SLOT = keccak256(abi.encode("eip.erc.165"));

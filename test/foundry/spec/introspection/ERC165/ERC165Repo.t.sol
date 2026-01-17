@@ -45,6 +45,9 @@ contract ERC165Repo_Test is Test {
     bytes4 internal constant TEST_INTERFACE_2 = 0xcafebabe;
     bytes4 internal constant TEST_INTERFACE_3 = 0x12345678;
 
+    /// @dev ERC-165 specifies this as an invalid interface ID that must always return false
+    bytes4 internal constant INVALID_INTERFACE_ID = 0xffffffff;
+
     function setUp() public {
         stub = new ERC165RepoStub();
     }
@@ -207,9 +210,48 @@ contract ERC165Repo_Test is Test {
         );
     }
 
+    /* ------ 0xffffffff Behavior Documentation Tests ------ */
+
+    /**
+     * @notice Documents that ERC165Repo is a generic mapping that does NOT enforce ERC-165 strict semantics.
+     * @dev ERC-165 specifies that supportsInterface(0xffffffff) MUST return false.
+     * This Repo intentionally allows any bytes4 to be registered; higher-level contracts
+     * (ERC165Target/ERC165Facet) are responsible for enforcing ERC-165 compliance.
+     *
+     * This test documents the behavior: if 0xffffffff is registered, the Repo will return true.
+     * This would violate ERC-165 if exposed directly, but the Repo is internal infrastructure.
+     */
+    function test_registerInterface_0xffffffff_allowed_by_repo() public {
+        // Initially not registered
+        assertFalse(
+            stub.supportsInterface(INVALID_INTERFACE_ID),
+            "0xffffffff should not be registered initially"
+        );
+
+        // Repo allows registration (it's a generic mapping)
+        stub.registerInterface(INVALID_INTERFACE_ID);
+
+        // Repo returns true after registration (violates ERC-165 if exposed directly)
+        assertTrue(
+            stub.supportsInterface(INVALID_INTERFACE_ID),
+            "Repo allows 0xffffffff registration - higher-level contracts must enforce ERC-165 compliance"
+        );
+    }
+
     /* ------ Fuzz Tests ------ */
 
+    /**
+     * @notice Fuzz test for _registerInterface excluding ERC-165 invalid interface ID.
+     * @dev Excludes 0xffffffff because:
+     * 1. ERC-165 specifies it as invalid and must always return false
+     * 2. The Repo is a generic mapping that doesn't enforce this constraint
+     * 3. Testing it would assert true for a value that ERC-165 says must be false
+     * See test_registerInterface_0xffffffff_allowed_by_repo for explicit 0xffffffff behavior documentation.
+     */
     function testFuzz_registerInterface(bytes4 interfaceId) public {
+        // Exclude ERC-165 invalid interface ID - see NatSpec above for rationale
+        vm.assume(interfaceId != INVALID_INTERFACE_ID);
+
         // Should not be registered initially
         assertFalse(stub.supportsInterface(interfaceId), "Interface should not be registered initially");
 
@@ -220,7 +262,14 @@ contract ERC165Repo_Test is Test {
         assertTrue(stub.supportsInterface(interfaceId), "Interface should be registered after registration");
     }
 
+    /**
+     * @notice Fuzz test for _supportsInterface storage overload excluding ERC-165 invalid interface ID.
+     * @dev Excludes 0xffffffff for ERC-165 compliance reasons. See testFuzz_registerInterface NatSpec.
+     */
     function testFuzz_supportsInterface_storage_overload(bytes4 interfaceId) public {
+        // Exclude ERC-165 invalid interface ID
+        vm.assume(interfaceId != INVALID_INTERFACE_ID);
+
         // Should not be registered initially via storage overload
         assertFalse(
             stub.supportsInterfaceWithStorage(interfaceId),
