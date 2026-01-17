@@ -1,8 +1,9 @@
 # Task CRANE-045: Add Camelot V2 Stable Swap Pool Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-13
+**Completed:** 2026-01-16
 **Dependencies:** CRANE-012
 **Worktree:** `test/camelot-stable-swap`
 **Origin:** Code review suggestion from CRANE-012
@@ -26,12 +27,12 @@ Add tests for CamelotPair.stableSwap mode which uses a cubic invariant (`x^3*y +
 As a developer, I want tests verifying the cubic invariant is preserved so that stable swap math is proven correct.
 
 **Acceptance Criteria:**
-- [ ] Test cubic invariant: `x^3*y + y^3*x >= k`
-- [ ] Test `_k()` calculation for stable pools
-- [ ] Test `_get_y()` Newton-Raphson convergence
-- [ ] Test swap output accuracy for stable pairs
-- [ ] Invariant fuzz test for K preservation
-- [ ] Tests pass
+- [x] Test cubic invariant: `x^3*y + y^3*x >= k`
+- [x] Test `_k()` calculation for stable pools
+- [x] Test `_get_y()` Newton-Raphson convergence
+- [x] Test swap output accuracy for stable pairs
+- [x] Invariant fuzz test for K preservation
+- [x] Tests pass
 
 ## Technical Details
 
@@ -54,7 +55,7 @@ function _k(uint256 balance0, uint256 balance1) internal view returns (uint256) 
 ## Files to Create/Modify
 
 **New Files:**
-- `test/foundry/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol`
+- `test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol`
 
 **Reference Files:**
 - `contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol`
@@ -62,15 +63,15 @@ function _k(uint256 balance0, uint256 balance1) internal view returns (uint256) 
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CamelotPair.stableSwap mode exists
-- [ ] MockCamelotPair can simulate stable pool
-- [ ] `_get_y()` function implementation
+- [x] CamelotPair.stableSwap mode exists
+- [x] MockCamelotPair can simulate stable pool
+- [x] `_get_y()` function implementation
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 
