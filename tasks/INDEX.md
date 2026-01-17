@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
+| CRANE-061 | Add DFPkg Deployment Integration Test | Pending Merge | CRANE-053 | `feature/dfpkg-deployment-integration-test` |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Ready | CRANE-053 | `test/tokenconfig-heterogeneous` |
 | CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Ready | CRANE-053 | `test/exact-out-rounding` |
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Ready | CRANE-023 | `refactor/erc5267-testbase` |
