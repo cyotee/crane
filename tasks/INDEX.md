@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-057 | Fix Remove Selector Ownership Validation | Complete | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |
@@ -215,6 +214,7 @@
 | CRANE-054 | Add DFPkg Deployment Test for Selector Collision | 2026-01-17 | archive/CRANE-054-dfpkg-deployment-test/ |
 | CRANE-055 | Implement Balancer V3 Weighted Pool Facet/Target | 2026-01-17 | archive/CRANE-055-weighted-pool-facet/ |
 | CRANE-056 | Add Proxy-Level Routing Regression Test | 2026-01-17 | archive/CRANE-056-proxy-routing-regression-test/ |
+| CRANE-057 | Fix Remove Selector Ownership Validation | 2026-01-17 | archive/CRANE-057-remove-selector-ownership-validation/ |
 
 ## Cross-Repo Dependencies
 
