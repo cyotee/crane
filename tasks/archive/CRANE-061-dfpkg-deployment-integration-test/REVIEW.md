@@ -63,32 +63,32 @@ Questions asked to understand review criteria:
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Make the integration test truly “factory-stack” end-to-end
+### Suggestion 1: Make the integration test truly "factory-stack" end-to-end
 **Priority:** P1
 **Description:** Deploy all real facets and the DFPkg via `ICreate3Factory` (instead of `new`) so the test validates deterministic deployment + registry behavior.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg_Integration.t.sol
-**User Response:** (pending)
-**Notes:** This is required to satisfy US-CRANE-061.1 as written.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-118
 
 ### Suggestion 2: Add proxy-state assertions for pool + vault-aware repos
 **Priority:** P1
 **Description:**
 - Initialize `BalancerV3VaultAwareRepo` during `initAccount()` and add assertions that `IBalancerV3VaultAware(proxy).balV3Vault()` equals the configured vault.
-- Add assertions that the pool’s token list/state is correctly stored/accessible after deployment.
+- Add assertions that the pool's token list/state is correctly stored/accessible after deployment.
 **Affected Files:**
 - contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.sol
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg_Integration.t.sol
-**User Response:** (pending)
-**Notes:** This closes the gap in US-CRANE-061.2 and strengthens US-CRANE-061.3.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-119
 
 ### Suggestion 3: Tighten postDeploy call expectations
 **Priority:** P2
 **Description:** Validate the full `registerPool(...)` call payload (token configs, hooks, fee params, and caller) rather than only checking that a call happened.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg_Integration.t.sol
-**User Response:** (pending)
-**Notes:** The existing `MockBalancerV3Vault` already emits `PoolRegistered(...)`, so this can be done without invasive changes.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-120
 
 ---
 

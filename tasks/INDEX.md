@@ -63,6 +63,9 @@
 | CRANE-115 | Enforce Correct Facet Address During Remove | Ready | CRANE-058 | `fix/remove-facet-address-validation` |
 | CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/remove-mismatch-negative` |
 | CRANE-117 | Guard Against Partial Facet Removal Bookkeeping Corruption | Ready | CRANE-057 | `fix/partial-removal-guardrails` |
+| CRANE-118 | Make Integration Test Truly Factory-Stack E2E | Ready | CRANE-061 | `feature/factory-stack-integration-test` |
+| CRANE-119 | Add Proxy-State Assertions for Pool/Vault-Aware Repos | Ready | CRANE-061 | `feature/proxy-state-assertions` |
+| CRANE-120 | Tighten postDeploy Call Expectations | Ready | CRANE-061 | `feature/postdeploy-payload-validation` |
 
 ## Status Legend
 
