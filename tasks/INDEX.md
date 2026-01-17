@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-057 | Fix Remove Selector Ownership Validation | Ready | CRANE-014 | `fix/remove-selector-ownership` |
+| CRANE-057 | Fix Remove Selector Ownership Validation | In Review | CRANE-014 | `fix/remove-selector-ownership` |
 | CRANE-058 | Implement Partial Remove Semantics | Ready | CRANE-014 | `fix/partial-remove-semantics` |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | Ready | CRANE-015 | `fix/erc165-strict-semantics` |
 | CRANE-061 | Add DFPkg Deployment Integration Test | Ready | CRANE-053 | `test/dfpkg-deployment-integration` |

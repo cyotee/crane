@@ -132,12 +132,19 @@ library ERC2535Repo {
             /*
             If the action is Remove, remove the function selector mapping for each functionSelectors item.
             If any of the functionSelectors were previously unset, revert instead.
+            Validate that each selector actually belongs to the specified facet to prevent owner errors
+            from corrupting loupe bookkeeping.
             */
-            if (layout.facetAddress[facetCut.functionSelectors[cursor]] == address(0)) {
-                revert IDiamondLoupe.FunctionNotPresent(facetCut.functionSelectors[cursor]);
+            bytes4 selector = facetCut.functionSelectors[cursor];
+            address actualFacet = layout.facetAddress[selector];
+            if (actualFacet == address(0)) {
+                revert IDiamondLoupe.FunctionNotPresent(selector);
             }
-            layout.facetAddress[facetCut.functionSelectors[cursor]] = address(0);
-            emit IERC8109Update.DiamondFunctionRemoved(facetCut.functionSelectors[cursor], facetCut.facetAddress);
+            if (actualFacet != facetCut.facetAddress) {
+                revert IDiamondLoupe.SelectorFacetMismatch(selector, facetCut.facetAddress, actualFacet);
+            }
+            layout.facetAddress[selector] = address(0);
+            emit IERC8109Update.DiamondFunctionRemoved(selector, facetCut.facetAddress);
         }
         // Does not actually delete values, just unmaps storage pointer.
         delete layout.facetFunctionSelectors[facetCut.facetAddress];

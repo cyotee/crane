@@ -18,6 +18,8 @@ interface IDiamondLoupe {
     error FacetAlreadyPresent(address facet);
     error FunctionNotPresent(bytes4 functionSelector);
     error FacetNotPresent(address facet);
+    /// @notice Thrown when attempting to remove a selector that belongs to a different facet
+    error SelectorFacetMismatch(bytes4 functionSelector, address expectedFacet, address actualFacet);
 
     /**
      * @notice Gets all facet addresses and their four byte function selectors.

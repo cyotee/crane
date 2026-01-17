@@ -519,6 +519,72 @@ contract DiamondCutTest is Test {
         diamond.diamondCut(cuts, address(0), "");
     }
 
+    /// @notice CRANE-057: Verify remove reverts when selector belongs to different facet
+    function test_diamondCut_removeFacet_revertsOnSelectorFacetMismatch() public {
+        // Add two different facets
+        IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](2);
+        addCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetA),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: mockFacetA.facetFuncs()
+        });
+        addCuts[1] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetC),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: mockFacetC.facetFuncs()
+        });
+
+        vm.prank(owner);
+        diamond.diamondCut(addCuts, address(0), "");
+
+        // Verify both facets are registered
+        assertEq(
+            diamond.facetAddress(MockFacet.mockFunctionA.selector),
+            address(mockFacetA),
+            "mockFunctionA should point to mockFacetA"
+        );
+        assertEq(
+            diamond.facetAddress(MockFacetC.mockFunctionC.selector),
+            address(mockFacetC),
+            "mockFunctionC should point to mockFacetC"
+        );
+
+        // Try to remove mockFacetA's selector but claim it belongs to mockFacetC
+        bytes4[] memory wrongSelectors = new bytes4[](1);
+        wrongSelectors[0] = MockFacet.mockFunctionA.selector;
+
+        IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
+        removeCuts[0] = IDiamond.FacetCut({
+            facetAddress: address(mockFacetC), // Wrong facet!
+            action: IDiamond.FacetCutAction.Remove,
+            functionSelectors: wrongSelectors
+        });
+
+        // Should revert with SelectorFacetMismatch
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IDiamondLoupe.SelectorFacetMismatch.selector,
+                MockFacet.mockFunctionA.selector,
+                address(mockFacetC), // expected (what caller specified)
+                address(mockFacetA) // actual (what selector actually maps to)
+            )
+        );
+        vm.prank(owner);
+        diamond.diamondCut(removeCuts, address(0), "");
+
+        // Verify state is unchanged - both facets should still be registered
+        assertEq(
+            diamond.facetAddress(MockFacet.mockFunctionA.selector),
+            address(mockFacetA),
+            "mockFunctionA should still point to mockFacetA"
+        );
+        assertEq(
+            diamond.facetAddress(MockFacetC.mockFunctionC.selector),
+            address(mockFacetC),
+            "mockFunctionC should still point to mockFacetC"
+        );
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                          Batch Operations Tests                            */
     /* -------------------------------------------------------------------------- */

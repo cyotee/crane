@@ -33,11 +33,11 @@ This prevents owner error from corrupting loupe bookkeeping.
 As a diamond owner, I want selector removal to validate that each selector belongs to the specified facet so that owner errors don't corrupt the diamond state.
 
 **Acceptance Criteria:**
-- [ ] `_removeFacet()` validates each selector maps to `facetCut.facetAddress`
-- [ ] Revert with descriptive error if selector doesn't belong to specified facet
-- [ ] Negative test: attempt to remove selector belonging to different facet
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] `_removeFacet()` validates each selector maps to `facetCut.facetAddress`
+- [x] Revert with descriptive error if selector doesn't belong to specified facet
+- [x] Negative test: attempt to remove selector belonging to different facet
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -50,17 +50,17 @@ As a diamond owner, I want selector removal to validate that each selector belon
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-014 is complete
-- [ ] contracts/introspection/ERC2535/ERC2535Repo.sol exists
-- [ ] `_removeFacet()` function identified (lines 130-145)
+- [x] CRANE-014 is complete
+- [x] contracts/introspection/ERC2535/ERC2535Repo.sol exists
+- [x] `_removeFacet()` function identified (lines 130-152)
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Selector ownership validation implemented
-- [ ] Negative test added
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Selector ownership validation implemented
+- [x] Negative test added
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
