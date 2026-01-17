@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | Pending Merge | CRANE-012 | `test/camelot-stable-swap` |
 | CRANE-046 | Add Protocol Fee Mint Parity Tests | In Progress | CRANE-012 | feature/camelot-protocol-fee-parity |
 | CRANE-047 | Add Fee-on-Transfer Token Integration Tests | In Progress | CRANE-012 | feature/camelot-fot-integration |
 | CRANE-048 | Add Referrer Fee Integration Tests | Ready | CRANE-012 | `test/camelot-referrer-fee` |
@@ -203,6 +202,7 @@
 | CRANE-041 | Add Slipstream Invariant Tests | 2026-01-16 | archive/CRANE-041-slipstream-invariants/ |
 | CRANE-042 | Add Unstaked Fee Handling | 2026-01-16 | archive/CRANE-042-slipstream-unstaked-fee/ |
 | CRANE-043 | Add Reward Quoting Utilities | 2026-01-16 | archive/CRANE-043-slipstream-reward-utils/ |
+| CRANE-045 | Add Camelot V2 Stable Swap Pool Tests | 2026-01-16 | archive/CRANE-045-camelot-stable-swap-tests/ |
 
 ## Cross-Repo Dependencies
 
