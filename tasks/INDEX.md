@@ -54,6 +54,9 @@
 | CRANE-096 | Add Unstaked Fee Positive-Path Tests | Ready | CRANE-042 | `test/unstaked-fee-positive` |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | Ready | CRANE-043 | `test/reward-utils-fork` |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | Ready | CRANE-043 | `docs/reward-utils-natspec` |
+| CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Ready | CRANE-045 | `test/stableswap-k-assertion` |
+| CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | Ready | CRANE-045 | `test/stableswap-balance-deltas` |
+| CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
 
 ## Status Legend
 

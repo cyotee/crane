@@ -71,9 +71,8 @@ The goal is a regression-catching assertion that fails if `_k()` math changes.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol
 - contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol (if adding a helper)
-**User Response:** (pending)
-**Notes:**
-Current test computes `expectedK` but doesn’t use it.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-099
 
 ### Suggestion 2: Assert stable-swap behavior using balance deltas (or `getAmountOut`), not `_swap()` return values
 **Priority:** High
@@ -83,9 +82,8 @@ For tests that currently do `uint256 out = CamelotV2Service._swap(...); assertGt
 This aligns with the test’s own comment and makes the tests robust to future changes in `CamelotV2Service` return semantics.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol
-**User Response:** (pending)
-**Notes:**
-This also makes the “Newton-Raphson convergence” tests assert the real executed path.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-100
 
 ### Suggestion 3: Remove or gate `console.log` in Camelot stubs
 **Priority:** Medium
@@ -93,9 +91,8 @@ This also makes the “Newton-Raphson convergence” tests assert the real execu
 Either remove the `console.log` calls or gate them behind a constant flag so fuzz-heavy suites don’t spam output.
 **Affected Files:**
 - contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol
-**User Response:** (pending)
-**Notes:**
-This becomes more important as Camelot coverage expands.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-101
 
 ---
 
