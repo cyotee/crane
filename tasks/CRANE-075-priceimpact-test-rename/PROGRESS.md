@@ -2,8 +2,8 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** Implementation complete
-**Next step:** Commit changes
+**Last checkpoint:** Task complete
+**Next step:** None
 **Build status:** ✅ Passing
 **Test status:** ✅ Passing (15/15 tests)
 
@@ -28,6 +28,12 @@
 **Verification:**
 - All 15 tests pass in `ConstProdUtils_priceImpact.t.sol`
 - Build succeeds
+
+### 2026-01-18 - Review Finalized
+
+**Review:**
+- Marked CRANE-075 acceptance criteria as verified in `tasks/CRANE-075-priceimpact-test-rename/REVIEW.md`
+- Updated `tasks/INDEX.md` to reflect CRANE-075 as Complete
 
 ### 2026-01-15 - Task Created
 
