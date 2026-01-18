@@ -1,7 +1,7 @@
 # Task CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-14
 **Dependencies:** CRANE-053
 **Worktree:** `test/exact-out-rounding`
@@ -33,27 +33,27 @@ This task adds:
 As a developer, I want tests that find rounding edge cases for EXACT_OUT swaps so that pool value is never lost.
 
 **Acceptance Criteria:**
-- [ ] Test searches small input space for rounding edge cases
-- [ ] Test identifies any cases where floor division under-charges `amountIn`
-- [ ] Test asserts invariant (k) never decreases after EXACT_OUT swap
+- [x] Test searches small input space for rounding edge cases
+- [x] Test identifies any cases where floor division under-charges `amountIn`
+- [x] Test asserts invariant (k) never decreases after EXACT_OUT swap
 
 ### US-CRANE-063.2: Tighten rounding tolerances
 
 As a developer, I want strict pool-favorable rounding assertions so that tolerances don't mask bugs.
 
 **Acceptance Criteria:**
-- [ ] Remove or tighten "allow small decrease" tolerances
-- [ ] Invariant assertions use strict >= comparison (no decrease)
-- [ ] Tests document any legitimate tolerance reasons
+- [x] Remove or tighten "allow small decrease" tolerances
+- [x] Invariant assertions use strict >= comparison (no decrease)
+- [x] Tests document any legitimate tolerance reasons
 
 ### US-CRANE-063.3: Add ceil division for EXACT_OUT (if needed)
 
 As a developer, I want EXACT_OUT to use ceiling division for amountIn if floor division causes value loss.
 
 **Acceptance Criteria:**
-- [ ] Analyze if current implementation needs fix
-- [ ] If fix needed, implement ceil division for EXACT_OUT amountIn
-- [ ] Tests pass with strict assertions
+- [x] Analyze if current implementation needs fix
+- [x] If fix needed, implement ceil division for EXACT_OUT amountIn
+- [x] Tests pass with strict assertions
 
 ## Files to Create/Modify
 
@@ -66,16 +66,16 @@ As a developer, I want EXACT_OUT to use ceiling division for amountIn if floor d
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-053 is complete
-- [ ] BalancerV3RoundingInvariants.t.sol exists
-- [ ] Current onSwap implementation uses floor division for both swap kinds
+- [x] CRANE-053 is complete
+- [x] BalancerV3RoundingInvariants.t.sol exists
+- [x] Current onSwap implementation uses floor division for both swap kinds
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] All tests pass with strict assertions
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] All tests pass with strict assertions
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 

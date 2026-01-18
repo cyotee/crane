@@ -272,12 +272,13 @@ contract BalancerV3RoundingInvariants_Test is Test {
 
         uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
 
-        // Invariant should be preserved or slightly increased (due to rounding)
-        // Pool-favorable rounding means invariant never decreases
+        // Invariant should be preserved or increased (due to pool-favorable rounding).
+        // EXACT_IN rounds DOWN amountOut - user receives less, so pool gains value.
+        // No tolerance needed: pool-favorable rounding guarantees invariant never decreases.
         assertGe(
             invariantAfter,
-            invariantBefore - 1e9, // Allow tiny rounding error (< 1e9 wei)
-            "Invariant should not decrease significantly after swap"
+            invariantBefore,
+            "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
         );
     }
 
@@ -307,14 +308,17 @@ contract BalancerV3RoundingInvariants_Test is Test {
 
         uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
 
+        // Invariant should be preserved or increased (due to pool-favorable rounding).
+        // EXACT_OUT rounds UP amountIn via FixedPoint.divUpRaw - user pays more, so pool gains value.
+        // No tolerance needed: pool-favorable rounding guarantees invariant never decreases.
         assertGe(
             invariantAfter,
-            invariantBefore - 1e9,
-            "Invariant should not decrease significantly after exact out swap"
+            invariantBefore,
+            "Invariant must not decrease after EXACT_OUT swap (pool-favorable rounding)"
         );
     }
 
-    function testFuzz_swap_invariantPreserved(
+    function testFuzz_swap_invariantPreserved_exactIn(
         uint256 bal0,
         uint256 bal1,
         uint256 amountIn
@@ -348,11 +352,13 @@ contract BalancerV3RoundingInvariants_Test is Test {
 
         uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
 
-        // Allow small relative error (0.01%)
+        // Strict assertion: invariant must never decrease.
+        // EXACT_IN rounds DOWN amountOut - user receives less, so pool gains value.
+        // No tolerance needed: pool-favorable rounding guarantees this property.
         assertGe(
-            invariantAfter * 10000,
-            invariantBefore * 9999,
-            "Invariant should not decrease by more than 0.01%"
+            invariantAfter,
+            invariantBefore,
+            "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
         );
     }
 
@@ -569,7 +575,9 @@ contract BalancerV3RoundingInvariants_Test is Test {
         uint256 newBal1 = balances[1] - amountOut;
         uint256 productAfter = newBal0 * newBal1 / 1e18;
 
-        assertGe(productAfter, productBefore - 1, "Product should never decrease (within rounding)");
+        // Strict assertion: product (k) must never decrease.
+        // Pool-favorable rounding guarantees this property.
+        assertGe(productAfter, productBefore, "Product must never decrease (pool-favorable rounding)");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -737,5 +745,282 @@ contract BalancerV3RoundingInvariants_Test is Test {
 
         // Pool's result should be >= raw result (rounded UP favors pool)
         assertGe(newBalance, rawResult, "computeBalance must round UP");
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*   CRANE-063: Targeted EXACT_OUT Rounding Edge Case Tests                    */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Search small input space for EXACT_OUT rounding edge cases.
+     * @dev Iterates over values [1..100] for balance offsets and amountOut
+     *      to find any case where floor division would under-charge amountIn.
+     *      This targeted search complements the broader fuzz tests.
+     */
+    function test_exactOut_smallInputSpace_noUndercharge() public view {
+        // Search through small values that are likely to expose rounding issues
+        for (uint256 balOffset = 1; balOffset <= 100; balOffset++) {
+            for (uint256 amtOffset = 1; amtOffset <= 100; amtOffset++) {
+                uint256[] memory balances = new uint256[](2);
+                balances[0] = 1000e18 + balOffset; // Non-round balance
+                balances[1] = 1000e18;
+
+                uint256 amountOut = 100e18 + amtOffset; // Non-round amount
+
+                PoolSwapParams memory params = PoolSwapParams({
+                    kind: SwapKind.EXACT_OUT,
+                    amountGivenScaled18: amountOut,
+                    balancesScaled18: balances,
+                    indexIn: 0,
+                    indexOut: 1,
+                    router: address(0),
+                    userData: ""
+                });
+
+                uint256 amountIn = pool.onSwap(params);
+
+                // Calculate floor division result (what an incorrect implementation would give)
+                uint256 floorResult = (balances[0] * amountOut) / (balances[1] - amountOut);
+
+                // Pool must return >= floor result (ceiling division)
+                assertGe(
+                    amountIn,
+                    floorResult,
+                    "EXACT_OUT must not under-charge: divUpRaw required"
+                );
+            }
+        }
+    }
+
+    /**
+     * @notice Verify EXACT_OUT ceil rounding by checking remainder behavior.
+     * @dev When (X * dy) % (Y - dy) != 0, ceil division should add 1 to floor result.
+     */
+    function test_exactOut_ceilRounding_addsOneWhenRemainder() public view {
+        // Choose values that guarantee a non-zero remainder
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = 1000e18 + 7; // X
+        balances[1] = 1000e18 + 3; // Y
+        uint256 amountOut = 100e18 + 11; // dy
+
+        uint256 numerator = balances[0] * amountOut;
+        uint256 denominator = balances[1] - amountOut;
+        uint256 remainder = numerator % denominator;
+
+        // Ensure this test is valid (has remainder)
+        assertTrue(remainder > 0, "Test setup requires non-zero remainder");
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+        uint256 floorResult = numerator / denominator;
+
+        // When there's a remainder, ceil = floor + 1
+        assertEq(amountIn, floorResult + 1, "Ceil division must add 1 when remainder exists");
+    }
+
+    /**
+     * @notice Verify EXACT_OUT equals floor division when evenly divisible.
+     * @dev When (X * dy) % (Y - dy) == 0, ceil and floor should be equal.
+     */
+    function test_exactOut_noCeilPenalty_whenExactlyDivisible() public view {
+        // Choose values that divide evenly
+        // X = 1000e18, Y = 500e18, dy = 100e18
+        // numerator = 1000e18 * 100e18 = 1e38
+        // denominator = 500e18 - 100e18 = 400e18
+        // 1e38 / 400e18 = 250e18 (exact)
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = 1000e18;
+        balances[1] = 500e18;
+        uint256 amountOut = 100e18;
+
+        uint256 numerator = balances[0] * amountOut;
+        uint256 denominator = balances[1] - amountOut;
+        uint256 remainder = numerator % denominator;
+
+        // Verify this divides evenly
+        assertEq(remainder, 0, "Test setup requires exact division");
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+        uint256 expected = numerator / denominator;
+
+        // Should equal floor when exactly divisible
+        assertEq(amountIn, expected, "No ceil penalty when exactly divisible");
+    }
+
+    /**
+     * @notice Fuzz test: EXACT_OUT invariant (k) must never decrease.
+     * @dev Strict assertion - no tolerance allowed.
+     */
+    function testFuzz_swap_invariantPreserved_exactOut(
+        uint256 bal0,
+        uint256 bal1,
+        uint256 amountOut
+    ) public view {
+        bal0 = bound(bal0, 1e18, 1e27);
+        bal1 = bound(bal1, 1e18, 1e27);
+        // Ensure amountOut is reasonable (max 10% of bal1 to avoid edge cases)
+        amountOut = bound(amountOut, 1e15, bal1 / 10);
+
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = bal0;
+        balances[1] = bal1;
+
+        uint256 invariantBefore = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        uint256[] memory newBalances = new uint256[](2);
+        newBalances[0] = balances[0] + amountIn;
+        newBalances[1] = balances[1] - amountOut;
+
+        uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
+
+        // Strict assertion: invariant must never decrease.
+        // EXACT_OUT rounds UP amountIn - user pays more, so pool gains value.
+        // No tolerance allowed: pool-favorable rounding guarantees this property.
+        assertGe(
+            invariantAfter,
+            invariantBefore,
+            "EXACT_OUT invariant must not decrease (pool-favorable rounding)"
+        );
+    }
+
+    /**
+     * @notice Verify EXACT_OUT protects pool even with extreme imbalance.
+     * @dev Tests 1000:1 pool ratio to ensure rounding holds.
+     */
+    function test_exactOut_extremeImbalance_invariantPreserved() public view {
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = 1e18;       // Very small X
+        balances[1] = 1000e18;    // Large Y (1000:1 ratio)
+
+        uint256 invariantBefore = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+
+        // Request small amount out (1% of Y)
+        uint256 amountOut = 10e18;
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        uint256[] memory newBalances = new uint256[](2);
+        newBalances[0] = balances[0] + amountIn;
+        newBalances[1] = balances[1] - amountOut;
+
+        uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
+
+        assertGe(invariantAfter, invariantBefore, "Extreme imbalance: invariant must not decrease");
+    }
+
+    /**
+     * @notice Verify EXACT_OUT protects pool with minimum meaningful amounts.
+     * @dev Tests smallest amounts that produce non-zero results.
+     */
+    function test_exactOut_minimumAmounts_invariantPreserved() public view {
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = STANDARD_BALANCE;
+        balances[1] = STANDARD_BALANCE;
+
+        uint256 invariantBefore = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
+
+        // Smallest meaningful amountOut
+        uint256 amountOut = 1e15; // 0.001 tokens
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        uint256[] memory newBalances = new uint256[](2);
+        newBalances[0] = balances[0] + amountIn;
+        newBalances[1] = balances[1] - amountOut;
+
+        uint256 invariantAfter = pool.computeInvariant(newBalances, Rounding.ROUND_DOWN);
+
+        assertGe(invariantAfter, invariantBefore, "Minimum amounts: invariant must not decrease");
+    }
+
+    /**
+     * @notice Property: EXACT_OUT should charge at least as much as required for k preservation.
+     * @dev For x*y=k: if user wants dy out, they must provide dx such that (x+dx)*(y-dy) >= x*y
+     *      This means dx >= (x*dy) / (y-dy), with ceil rounding to ensure >=.
+     */
+    function testFuzz_exactOut_chargesEnoughForKPreservation(
+        uint256 bal0,
+        uint256 bal1,
+        uint256 amountOut
+    ) public view {
+        bal0 = bound(bal0, 1e18, 1e24);
+        bal1 = bound(bal1, 1e18, 1e24);
+        amountOut = bound(amountOut, 1e15, bal1 / 10);
+
+        uint256[] memory balances = new uint256[](2);
+        balances[0] = bal0;
+        balances[1] = bal1;
+
+        uint256 kBefore = bal0 * bal1;
+
+        PoolSwapParams memory params = PoolSwapParams({
+            kind: SwapKind.EXACT_OUT,
+            amountGivenScaled18: amountOut,
+            balancesScaled18: balances,
+            indexIn: 0,
+            indexOut: 1,
+            router: address(0),
+            userData: ""
+        });
+
+        uint256 amountIn = pool.onSwap(params);
+
+        uint256 newBal0 = balances[0] + amountIn;
+        uint256 newBal1 = balances[1] - amountOut;
+        uint256 kAfter = newBal0 * newBal1;
+
+        // k must be preserved or increased
+        assertGe(kAfter, kBefore, "EXACT_OUT must charge enough to preserve k");
     }
 }
