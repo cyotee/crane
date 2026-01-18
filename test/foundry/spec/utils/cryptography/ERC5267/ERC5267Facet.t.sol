@@ -21,6 +21,7 @@ import {ERC5267Facet} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267F
 import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {TestBase_IFacet} from "@crane/contracts/factories/diamondPkg/TestBase_IFacet.sol";
 
 /**
  * @title ERC5267Harness
@@ -39,7 +40,6 @@ contract ERC5267Harness is ERC5267Target {
  */
 contract ERC5267Facet_Test is Test {
     ERC5267Harness internal harness;
-    ERC5267Facet internal facet;
 
     string constant NAME = "TestToken";
     string constant VERSION = "1";
@@ -47,8 +47,6 @@ contract ERC5267Facet_Test is Test {
     function setUp() public {
         harness = new ERC5267Harness();
         harness.initialize(NAME, VERSION);
-
-        facet = new ERC5267Facet();
     }
 
     /* -------------------------------------------------------------------------- */
@@ -249,36 +247,6 @@ contract ERC5267Facet_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                          IFacet Interface Tests                             */
-    /* -------------------------------------------------------------------------- */
-
-    function test_facetName_returnsCorrectName() public view {
-        assertEq(facet.facetName(), "ERC5267Facet", "Facet name should be ERC5267Facet");
-    }
-
-    function test_facetInterfaces_containsIERC5267() public view {
-        bytes4[] memory interfaces = facet.facetInterfaces();
-        assertEq(interfaces.length, 1, "Should have exactly one interface");
-        assertEq(interfaces[0], type(IERC5267).interfaceId, "Should be IERC5267 interface");
-    }
-
-    function test_facetFuncs_containsEip712Domain() public view {
-        bytes4[] memory funcs = facet.facetFuncs();
-        assertEq(funcs.length, 1, "Should have exactly one function");
-        assertEq(funcs[0], IERC5267.eip712Domain.selector, "Should be eip712Domain selector");
-    }
-
-    function test_facetMetadata_returnsAllMetadata() public view {
-        (string memory name, bytes4[] memory interfaces, bytes4[] memory functions) = facet.facetMetadata();
-
-        assertEq(name, "ERC5267Facet", "Name should match");
-        assertEq(interfaces.length, 1, "Should have one interface");
-        assertEq(interfaces[0], type(IERC5267).interfaceId, "Interface should be IERC5267");
-        assertEq(functions.length, 1, "Should have one function");
-        assertEq(functions[0], IERC5267.eip712Domain.selector, "Function should be eip712Domain");
-    }
-
-    /* -------------------------------------------------------------------------- */
     /*                             Consistency Tests                               */
     /* -------------------------------------------------------------------------- */
 
@@ -357,5 +325,36 @@ contract ERC5267Facet_Test is Test {
 
         (bytes1 fields,,,,,, ) = harness2.eip712Domain();
         assertEq(fields, hex"0f", "Fields should always be 0x0f regardless of name/version");
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            IFacet Pattern Tests                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * @title ERC5267Facet_IFacet_Test
+ * @notice Tests ERC5267Facet's IFacet implementation using the TestBase_IFacet pattern.
+ * @dev Validates facet metadata (name, interfaces, functions) using Behavior_IFacet.
+ */
+contract ERC5267Facet_IFacet_Test is TestBase_IFacet {
+    function facetTestInstance() public virtual override returns (IFacet) {
+        return new ERC5267Facet();
+    }
+
+    function controlFacetName() public view virtual override returns (string memory facetName) {
+        return type(ERC5267Facet).name;
+    }
+
+    function controlFacetInterfaces() public view virtual override returns (bytes4[] memory controlInterfaces) {
+        controlInterfaces = new bytes4[](1);
+
+        controlInterfaces[0] = type(IERC5267).interfaceId;
+    }
+
+    function controlFacetFuncs() public view virtual override returns (bytes4[] memory controlFuncs) {
+        controlFuncs = new bytes4[](1);
+
+        controlFuncs[0] = IERC5267.eip712Domain.selector;
     }
 }
