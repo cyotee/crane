@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
@@ -113,7 +112,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // Small trades should have minimal price impact (< 1%)
         assertLt(data.priceImpactBP, SMALL_TRADE_MAX_IMPACT_BP, "Small trade should have < 1% price impact");
-        console.log("Price impact for 0.1% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_smallTrade_0_5_percent_balanced() public {
@@ -126,7 +124,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // 0.5% trade should have < 1% price impact
         assertLt(data.priceImpactBP, SMALL_TRADE_MAX_IMPACT_BP, "0.5% trade should have < 1% price impact");
-        console.log("Price impact for 0.5% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_smallTrade_0_1_percent_unbalanced() public {
@@ -139,7 +136,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // Small trades should still have minimal price impact in unbalanced pools
         assertLt(data.priceImpactBP, SMALL_TRADE_MAX_IMPACT_BP, "Small trade in unbalanced pool should have < 1% price impact");
-        console.log("Price impact for 0.1% trade (unbalanced):", data.priceImpactBP, "bp");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -157,7 +153,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // 1% trade should have noticeable but moderate price impact
         assertGe(data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP / 2, "1% trade should have >= 0.5% price impact");
         assertLt(data.priceImpactBP, MEDIUM_TRADE_MAX_IMPACT_BP, "1% trade should have < 10% price impact");
-        console.log("Price impact for 1% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_mediumTrade_5_percent_balanced() public {
@@ -171,7 +166,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // 5% trade should have moderate price impact
         assertGe(data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP, "5% trade should have >= 1% price impact");
         assertLt(data.priceImpactBP, MEDIUM_TRADE_MAX_IMPACT_BP, "5% trade should have < 10% price impact");
-        console.log("Price impact for 5% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_mediumTrade_10_percent_balanced() public {
@@ -184,7 +178,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // 10% trade should have significant price impact, approaching threshold
         assertGe(data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP, "10% trade should have >= 1% price impact");
-        console.log("Price impact for 10% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_mediumTrade_5_percent_unbalanced() public {
@@ -197,7 +190,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // Medium trades in unbalanced pools should still show moderate impact
         assertGe(data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP, "5% trade in unbalanced pool should have >= 1% price impact");
-        console.log("Price impact for 5% trade (unbalanced):", data.priceImpactBP, "bp");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -214,7 +206,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // 20% trade should have significant price impact
         assertGe(data.priceImpactBP, LARGE_TRADE_MIN_IMPACT_BP, "20% trade should have >= 10% price impact");
-        console.log("Price impact for 20% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_largeTrade_50_percent_balanced() public {
@@ -228,7 +219,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // 50% trade should have very significant price impact (> 33%)
         uint256 expectedMinImpact = 3000; // 30% minimum
         assertGe(data.priceImpactBP, expectedMinImpact, "50% trade should have >= 30% price impact");
-        console.log("Price impact for 50% trade:", data.priceImpactBP, "bp");
     }
 
     function test_priceImpact_largeTrade_extreme_unbalanced() public {
@@ -241,7 +231,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // Large trades in extreme pools should show significant impact
         assertGe(data.priceImpactBP, LARGE_TRADE_MIN_IMPACT_BP, "Large trade in extreme pool should have >= 10% price impact");
-        console.log("Price impact for 20% trade (extreme):", data.priceImpactBP, "bp");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -279,10 +268,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
                 : theoreticalImpact - data.priceImpactBP;
 
             assertLe(diff, tolerance, "Actual price impact should be close to theoretical");
-
-            console.log("Trade size %:", (tradeSizes[i] * 100) / INITIAL_LIQUIDITY);
-            console.log("  Theoretical impact (bp):", theoreticalImpact);
-            console.log("  Actual impact (bp):", data.priceImpactBP);
         }
     }
 
@@ -314,10 +299,6 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         // Calculate price impact
         uint256 priceImpactBP = PRECISION_BP - ((effectivePriceScaled * PRECISION_BP) / spotPriceScaled);
-
-        console.log("Spot price (scaled):", spotPriceScaled);
-        console.log("Effective price (scaled):", effectivePriceScaled);
-        console.log("Price impact (bp):", priceImpactBP);
 
         // Verify price impact is positive and within expected range for 10% trade
         assertGt(priceImpactBP, 0, "Price impact should be positive");
