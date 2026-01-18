@@ -26,13 +26,13 @@ Add 3-6 deterministic "golden vector" exact-output assertions for `SwapMath.comp
 As a developer, I want deterministic test vectors for SwapMath so that I can catch subtle rounding and fee calculation regressions.
 
 **Acceptance Criteria:**
-- [ ] 3-6 exact input/output test vectors added
-- [ ] Covers both swap directions (zeroForOne true/false)
-- [ ] Covers both modes (exactIn/exactOut)
-- [ ] At least one case that reaches target price
-- [ ] At least one case that exhausts amount before reaching target
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] 3-6 exact input/output test vectors added
+- [x] Covers both swap directions (zeroForOne true/false)
+- [x] Covers both modes (exactIn/exactOut)
+- [x] At least one case that reaches target price
+- [x] At least one case that exhausts amount before reaching target
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -47,9 +47,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge test --match-path 'test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol'` passes
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] `forge test --match-path 'test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol'` passes
+- [x] Build succeeds
 
 ---
 

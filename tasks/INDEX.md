@@ -10,7 +10,7 @@
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Complete | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Complete | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | Complete | CRANE-032 | `fix/tickmath-revert-expectations` |
-| CRANE-080 | Add SwapMath Golden Vector Tests | In Progress | CRANE-033 | `feature/swapmath-golden-vectors` |
+| CRANE-080 | Add SwapMath Golden Vector Tests | Pending Merge | CRANE-033 | `feature/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | In Progress | CRANE-033 | `feature/sqrtpricemath-error-tests` |
 | CRANE-082 | Add TickMath Exact Known Pairs | Ready | CRANE-033 | `test/tickmath-exact-pairs` |
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |

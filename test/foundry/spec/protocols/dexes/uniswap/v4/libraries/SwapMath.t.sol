@@ -385,6 +385,250 @@ contract SwapMath_V4_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                      Golden Vector Tests                                   */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Golden vector test: exactIn oneForZero capped at price target
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_exactAmountIn_oneForZero_thatGetsCappedAtPriceTargetIn
+     *
+     * Scenario: Selling token1 for token0 (oneForZero) with exact input of 1 ether.
+     * The swap reaches the price target (101:100 ratio) before exhausting input.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 79228162514264337593543950336 (1:1 price, 2^96)
+     * - sqrtPriceTarget: 79623317895830914510639640423 (101:100 price)
+     * - liquidity: 2 ether
+     * - amountRemaining: -1 ether (exact input)
+     * - feePips: 600 (0.06%)
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - sqrtPriceNext: 79623317895830914510639640423 (reaches target)
+     * - amountIn: 9975124224178055
+     * - amountOut: 9925619580021728
+     * - feeAmount: 5988667735148
+     */
+    function test_goldenVector_exactIn_oneForZero_cappedAtTarget() public pure {
+        uint160 sqrtPriceCurrent = 79228162514264337593543950336;
+        uint160 sqrtPriceTarget = 79623317895830914510639640423;
+        uint128 liquidity = 2 ether;
+        int256 amountRemaining = -1 ether;
+        uint24 feePips = 600;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
+        assertEq(amountIn, 9975124224178055, "Golden: amountIn mismatch");
+        assertEq(amountOut, 9925619580021728, "Golden: amountOut mismatch");
+        assertEq(feeAmount, 5988667735148, "Golden: feeAmount mismatch");
+    }
+
+    /**
+     * @notice Golden vector test: exactIn oneForZero fully spent (exhausts input before target)
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_exactAmountIn_oneForZero_thatIsFullySpentIn
+     *
+     * Scenario: Selling token1 for token0 (oneForZero) with exact input of 1 ether.
+     * The target price is far away (1000:100 = 10x) so input is exhausted before reaching target.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 79228162514264337593543950336 (1:1 price)
+     * - sqrtPriceTarget: 250541448375047931186413801569 (1000:100 = 10x price)
+     * - liquidity: 2 ether
+     * - amountRemaining: -1 ether (exact input)
+     * - feePips: 600 (0.06%)
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - amountIn: 999400000000000000
+     * - amountOut: 666399946655997866
+     * - feeAmount: 600000000000000
+     */
+    function test_goldenVector_exactIn_oneForZero_fullySpent() public pure {
+        uint160 sqrtPriceCurrent = 79228162514264337593543950336;
+        uint160 sqrtPriceTarget = 250541448375047931186413801569;
+        uint128 liquidity = 2 ether;
+        int256 amountRemaining = -1 ether;
+        uint24 feePips = 600;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        // Input is exhausted, so sqrtPriceNext does not reach target
+        assertGt(sqrtPriceTarget, sqrtPriceNext, "Golden: should not reach target (input exhausted)");
+        assertEq(amountIn, 999400000000000000, "Golden: amountIn mismatch");
+        assertEq(amountOut, 666399946655997866, "Golden: amountOut mismatch");
+        assertEq(feeAmount, 600000000000000, "Golden: feeAmount mismatch");
+        // Verify conservation: fee + amountIn = total input (when input exhausted)
+        assertEq(amountIn + feeAmount, uint256(-amountRemaining), "Golden: input conservation");
+    }
+
+    /**
+     * @notice Golden vector test: exactOut oneForZero capped at target
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_exactAmountOut_oneForZero_thatGetsCappedAtPriceTargetIn
+     *
+     * Scenario: Exact output of 1 ether, but capped at price target.
+     * Uses same parameters as exactIn capped test for comparison.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 79228162514264337593543950336 (1:1 price)
+     * - sqrtPriceTarget: 79623317895830914510639640423 (101:100 price)
+     * - liquidity: 2 ether
+     * - amountRemaining: 1 ether (exact output requested)
+     * - feePips: 600 (0.06%)
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - amountIn: 9975124224178055
+     * - amountOut: 9925619580021728
+     * - feeAmount: 5988667735148
+     */
+    function test_goldenVector_exactOut_oneForZero_cappedAtTarget() public pure {
+        uint160 sqrtPriceCurrent = 79228162514264337593543950336;
+        uint160 sqrtPriceTarget = 79623317895830914510639640423;
+        uint128 liquidity = 2 ether;
+        int256 amountRemaining = 1 ether;
+        uint24 feePips = 600;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
+        assertEq(amountIn, 9975124224178055, "Golden: amountIn mismatch");
+        assertEq(amountOut, 9925619580021728, "Golden: amountOut mismatch");
+        assertEq(feeAmount, 5988667735148, "Golden: feeAmount mismatch");
+    }
+
+    /**
+     * @notice Golden vector test: exactOut oneForZero fully received
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_exactAmountOut_oneForZero_thatIsFullyReceivedIn
+     *
+     * Scenario: Exact output of 1 ether is fully satisfied because target is far away.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 79228162514264337593543950336 (1:1 price)
+     * - sqrtPriceTarget: 792281625142643375935439503360 (10000:100 = 100x price)
+     * - liquidity: 2 ether
+     * - amountRemaining: 1 ether (exact output)
+     * - feePips: 600 (0.06%)
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - amountIn: 2000000000000000000
+     * - amountOut: 1 ether
+     * - feeAmount: 1200720432259356
+     */
+    function test_goldenVector_exactOut_oneForZero_fullyReceived() public pure {
+        uint160 sqrtPriceCurrent = 79228162514264337593543950336;
+        uint160 sqrtPriceTarget = 792281625142643375935439503360;
+        uint128 liquidity = 2 ether;
+        int256 amountRemaining = 1 ether;
+        uint24 feePips = 600;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        // Did not reach target since output was satisfied first
+        assertLt(sqrtPriceNext, sqrtPriceTarget, "Golden: should not reach target (output satisfied)");
+        assertEq(amountIn, 2000000000000000000, "Golden: amountIn mismatch");
+        assertEq(amountOut, 1 ether, "Golden: amountOut mismatch");
+        assertEq(feeAmount, 1200720432259356, "Golden: feeAmount mismatch");
+    }
+
+    /**
+     * @notice Golden vector test: amountOut capped at desired amount (edge case)
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_amountOut_isCappedAtTheDesiredAmountOut
+     *
+     * Scenario: Edge case where computed output would be 2 but requested is 1.
+     * Tests proper capping of output amount.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 417332158212080721273783715441582
+     * - sqrtPriceTarget: 1452870262520218020823638996
+     * - liquidity: 159344665391607089467575320103
+     * - amountRemaining: 1 (exact output)
+     * - feePips: 1
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - sqrtPriceNext: 417332158212080721273783715441581
+     * - amountIn: 1
+     * - amountOut: 1 (capped from 2)
+     * - feeAmount: 1
+     */
+    function test_goldenVector_exactOut_cappedAtDesiredAmount() public pure {
+        uint160 sqrtPriceCurrent = 417332158212080721273783715441582;
+        uint160 sqrtPriceTarget = 1452870262520218020823638996;
+        uint128 liquidity = 159344665391607089467575320103;
+        int256 amountRemaining = 1;
+        uint24 feePips = 1;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        assertEq(sqrtPriceNext, 417332158212080721273783715441581, "Golden: sqrtPriceNext mismatch");
+        assertEq(amountIn, 1, "Golden: amountIn mismatch");
+        assertEq(amountOut, 1, "Golden: amountOut mismatch (should be capped)");
+        assertEq(feeAmount, 1, "Golden: feeAmount mismatch");
+    }
+
+    /**
+     * @notice Golden vector test: zeroForOne (selling token0) reaching target price
+     * @dev Derived from Uniswap V4 reference: test_computeSwapStep_oneForZero_handlesIntermediateInsufficientLiquidityInExactOutputCase
+     *
+     * Note: This test uses a zeroForOne direction by having current > target.
+     * Uses low liquidity to test edge case handling.
+     *
+     * Inputs:
+     * - sqrtPriceCurrent: 20282409603651670423947251286016
+     * - sqrtPriceTarget: (sqrtPriceCurrent * 9) / 10 = 18254168643286503381552526157414
+     * - liquidity: 1024
+     * - amountRemaining: 263000 (exact output)
+     * - feePips: 3000 (0.3%)
+     *
+     * Expected outputs (from Uniswap V4 tests):
+     * - sqrtPriceNext: target price
+     * - amountIn: 1
+     * - amountOut: 26214
+     * - feeAmount: 1
+     */
+    function test_goldenVector_zeroForOne_lowLiquidity_reachTarget() public pure {
+        uint160 sqrtPriceCurrent = 20282409603651670423947251286016;
+        uint160 sqrtPriceTarget = (sqrtPriceCurrent * 9) / 10;
+        uint128 liquidity = 1024;
+        int256 amountRemaining = 263000;
+        uint24 feePips = 3000;
+
+        (
+            uint160 sqrtPriceNext,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
+        assertEq(amountIn, 1, "Golden: amountIn mismatch");
+        assertEq(amountOut, 26214, "Golden: amountOut mismatch");
+        assertEq(feeAmount, 1, "Golden: feeAmount mismatch");
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                          Invariant Tests                                   */
     /* -------------------------------------------------------------------------- */
 
