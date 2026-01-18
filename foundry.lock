@@ -38,6 +38,9 @@
   "lib/euler-vault-kit": {
     "rev": "5b98b42048ba11ae82fb62dfec06d1010c8e41e6"
   },
+  "lib/evc-playground": {
+    "rev": "cc3f4987bbeebca49c40d544fe08b3b5a7735cd0"
+  },
   "lib/evk-periphery": {
     "rev": "3d9563e2399a1b31427ecbb202f0690863a3adfb"
   },

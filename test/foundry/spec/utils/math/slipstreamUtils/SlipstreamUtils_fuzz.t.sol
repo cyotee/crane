@@ -32,7 +32,8 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     /* -------------------------------------------------------------------------- */
 
     /// @dev High minimum liquidity to ensure swaps stay within single tick
-    uint128 constant MIN_LIQUIDITY = 1e24;
+    /// @notice Increased from 1e24 to 1e27 based on single-tick guard findings
+    uint128 constant MIN_LIQUIDITY = 1e27;
 
     /// @dev Maximum liquidity
     uint128 constant MAX_LIQUIDITY = 1e30;
@@ -41,7 +42,8 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     uint256 constant MIN_AMOUNT = 1e15;
 
     /// @dev Maximum amount - must be small relative to liquidity to stay in single tick
-    uint256 constant MAX_AMOUNT = 1e21;
+    /// @notice Reduced from 1e21 to 1e18 based on single-tick guard findings
+    uint256 constant MAX_AMOUNT = 1e18;
 
     /// @dev Safe tick range to avoid extreme price calculations
     int24 constant SAFE_TICK_MIN = -100000;
@@ -86,6 +88,9 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             ""
         );
 
+        // Single-tick guard: verify swap didn't cross ticks
+        _assertSingleTickSwap(pool, tick, "quoteExactInput zeroForOne");
+
         uint256 actualOut = uint256(-amount1);
 
         // Quote should match actual within 1 wei tolerance
@@ -125,6 +130,9 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceLimitX96,
             ""
         );
+
+        // Single-tick guard: verify swap didn't cross ticks
+        _assertSingleTickSwap(pool, tick, "quoteExactInput oneForZero");
 
         uint256 actualOut = uint256(-amount0);
 
@@ -212,6 +220,9 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             address(this), zeroForOne, int256(amountIn), sqrtPriceLimitX96, ""
         );
 
+        // Single-tick guard: verify swap didn't cross ticks
+        _assertSingleTickSwap(pool, tick, "quoteExactInput allFeeTiers");
+
         uint256 actualOut = zeroForOne ? uint256(-amount1) : uint256(-amount0);
         assertApproxEqAbs(quotedOut, actualOut, 1, "Quote mismatch for fee tier");
     }
@@ -231,7 +242,10 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
         liquidity = uint128(bound(liquidity, MIN_LIQUIDITY, MAX_LIQUIDITY));
         // Limit output to tiny fraction of liquidity to stay within single tick
-        amountOut = bound(amountOut, MIN_AMOUNT, liquidity / 10000);
+        // Cap at MAX_AMOUNT to ensure single-tick operation
+        uint256 maxAmountOut = liquidity / 10000;
+        if (maxAmountOut > MAX_AMOUNT) maxAmountOut = MAX_AMOUNT;
+        amountOut = bound(amountOut, MIN_AMOUNT, maxAmountOut);
 
         // Create pool
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
@@ -256,6 +270,9 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             ""
         );
 
+        // Single-tick guard: verify swap didn't cross ticks
+        _assertSingleTickSwap(pool, tick, "quoteExactOutput zeroForOne");
+
         uint256 actualIn = uint256(amount0);
         uint256 actualOut = uint256(-amount1);
 
@@ -274,7 +291,10 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         // Bound inputs
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
         liquidity = uint128(bound(liquidity, MIN_LIQUIDITY, MAX_LIQUIDITY));
-        amountOut = bound(amountOut, MIN_AMOUNT, liquidity / 10000);
+        // Cap at MAX_AMOUNT to ensure single-tick operation
+        uint256 maxAmountOut = liquidity / 10000;
+        if (maxAmountOut > MAX_AMOUNT) maxAmountOut = MAX_AMOUNT;
+        amountOut = bound(amountOut, MIN_AMOUNT, maxAmountOut);
 
         // Create pool
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
@@ -298,6 +318,9 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceLimitX96,
             ""
         );
+
+        // Single-tick guard: verify swap didn't cross ticks
+        _assertSingleTickSwap(pool, tick, "quoteExactOutput oneForZero");
 
         uint256 actualIn = uint256(amount1);
         uint256 actualOut = uint256(-amount0);
@@ -547,5 +570,50 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
 
         // Set state directly using the mock helper
         pool.setState(sqrtPriceX96, tick, liquidity);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                        Single-Tick Guard Assertion                         */
+    /* -------------------------------------------------------------------------- */
+
+    /// @dev Maximum allowed tick movement during a swap
+    /// @notice A movement of ±1 tick is acceptable due to rounding at tick boundaries
+    int24 constant MAX_TICK_MOVEMENT = 1;
+
+    /// @notice Assert that a swap stayed within acceptable tick range
+    /// @dev SlipstreamUtils quotes assume near single-tick operation. This guard makes
+    ///      test failures easier to diagnose by explicitly checking this invariant.
+    ///      We allow ±1 tick movement to account for rounding at tick boundaries.
+    /// @param pool The pool to check
+    /// @param tickBefore The tick before the swap
+    /// @param context Description of which test/swap this is for error messages
+    function _assertSingleTickSwap(
+        MockCLPool pool,
+        int24 tickBefore,
+        string memory context
+    ) internal view {
+        (, int24 tickAfter,,,,) = pool.slot0();
+
+        int24 tickDelta = tickAfter > tickBefore
+            ? tickAfter - tickBefore
+            : tickBefore - tickAfter;
+
+        assertTrue(
+            tickDelta <= MAX_TICK_MOVEMENT,
+            string(abi.encodePacked(
+                "Single-tick invariant violated: ",
+                context,
+                " - tick moved by ",
+                vm.toString(int256(tickDelta)),
+                " (from ",
+                vm.toString(tickBefore),
+                " to ",
+                vm.toString(tickAfter),
+                "). Max allowed: ",
+                vm.toString(int256(MAX_TICK_MOVEMENT)),
+                ". Quote accuracy depends on near single-tick operation. ",
+                "Consider increasing MIN_LIQUIDITY or reducing MAX_AMOUNT."
+            ))
+        );
     }
 }

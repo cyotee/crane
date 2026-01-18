@@ -1,8 +1,9 @@
 # Task CRANE-067: Add Slipstream Single-Tick Guard Assertion
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-15
+**Completed:** 2026-01-17
 **Dependencies:** CRANE-038
 **Worktree:** `test/slipstream-singletick-guard`
 **Origin:** Code review suggestion from CRANE-038
@@ -26,12 +27,12 @@ Add an explicit single-tick guard assertion to the Slipstream fuzz tests. The qu
 As a developer, I want explicit assertions that swaps stayed within the expected tick range so that test failures are easier to diagnose.
 
 **Acceptance Criteria:**
-- [ ] Add post-swap assertion that pool tick is unchanged OR swap didn't cross ticks
-- [ ] If tick movement is expected, check swap stayed within same initialized tick range
-- [ ] Makes test failures easier to interpret
-- [ ] Hardens test against accidental parameter drift
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Add post-swap assertion that pool tick is unchanged OR swap didn't cross ticks
+- [x] If tick movement is expected, check swap stayed within same initialized tick range
+- [x] Makes test failures easier to interpret
+- [x] Hardens test against accidental parameter drift
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -41,16 +42,16 @@ As a developer, I want explicit assertions that swaps stayed within the expected
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-038 is complete
-- [ ] SlipstreamUtils_fuzz.t.sol exists
-- [ ] Current quote-vs-swap tests exist
+- [x] CRANE-038 is complete
+- [x] SlipstreamUtils_fuzz.t.sol exists
+- [x] Current quote-vs-swap tests exist
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Fuzz tests pass with new assertions
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Fuzz tests pass with new assertions
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
