@@ -7,7 +7,6 @@ import "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/Math.sol";
 import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 import "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Callee.sol";
-import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
 
 contract CamelotPair is
 
@@ -163,23 +162,13 @@ contract CamelotPair is
             if (_kLast != 0) {
                 uint256 rootK = Math.sqrt(_k(uint256(_reserve0), uint256(_reserve1)));
                 uint256 rootKLast = Math.sqrt(_kLast);
-                console.log("_mintFee: ownerFeeShare", ownerFeeShare);
-                console.log("_mintFee: feeTo (as uint160)", uint256(uint160(feeTo)));
-                console.log("_mintFee: _kLast", _kLast);
-                console.log("_mintFee: rootK, rootKLast", rootK, rootKLast);
                 if (rootK > rootKLast) {
                     uint256 d = (FEE_DENOMINATOR.mul(100) / ownerFeeShare).sub(100);
                     uint256 numerator = totalSupply.mul(rootK.sub(rootKLast)).mul(100);
                     uint256 denominator = rootK.mul(d).add(rootKLast.mul(100));
                     uint256 liquidity = numerator / denominator;
-                    console.log("_mintFee: d", d);
-                    console.log("_mintFee: numerator", numerator);
-                    console.log("_mintFee: denominator", denominator);
-                    console.log("_mintFee: liquidity (to mint)", liquidity);
                     if (liquidity > 0) {
                         _mint(feeTo, liquidity);
-                        console.log("_mintFee: minted liquidity", liquidity);
-                        console.log("_mintFee: totalSupply after mint", totalSupply);
                     }
                 }
             }
@@ -225,16 +214,10 @@ contract CamelotPair is
         uint256 balance1 = IERC20(_token1).balanceOf(address(this));
         uint256 liquidity = balanceOf[address(this)];
 
-        console.log("CamelotPair.burn: liquidity", liquidity);
-        console.log("CamelotPair.burn: balances", balance0, balance1);
-        console.log("CamelotPair.burn: reserves", uint256(_reserve0), uint256(_reserve1));
         bool feeOn = _mintFee(_reserve0, _reserve1);
         uint256 _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
-        console.log("CamelotPair.burn: feeOn", feeOn ? 1 : 0);
-        console.log("CamelotPair.burn: totalSupply", _totalSupply);
         amount0 = liquidity.mul(balance0) / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity.mul(balance1) / _totalSupply; // using balances ensures pro-rata distribution
-        console.log("CamelotPair.burn: computed amount0,amount1", amount0, amount1);
         require(amount0 > 0 && amount1 > 0, "CamelotPair: INSUFFICIENT_LIQUIDITY_BURNED");
         _burn(address(this), liquidity);
         _safeTransfer(_token0, to, amount0);
@@ -425,10 +408,6 @@ contract CamelotPair is
         view
         returns (uint256)
     {
-        console.log("CamelotPair._getAmountOut: amountIn", amountIn);
-        console.log("CamelotPair._getAmountOut: tokenIn (as uint160)", uint256(uint160(tokenIn)));
-        console.log("CamelotPair._getAmountOut: reserves", _reserve0, _reserve1);
-        console.log("CamelotPair._getAmountOut: feePercent", feePercent);
         if (stableSwap) {
             amountIn = amountIn.sub(amountIn.mul(feePercent) / FEE_DENOMINATOR); // remove fee from amount received
             uint256 xy = _k(_reserve0, _reserve1);
@@ -439,13 +418,11 @@ contract CamelotPair is
             amountIn =
                 tokenIn == token0 ? amountIn * 1e18 / precisionMultiplier0 : amountIn * 1e18 / precisionMultiplier1;
             uint256 y = reserveB - _get_y(amountIn + reserveA, xy, reserveB);
-            console.log("CamelotPair._getAmountOut: stable out", y);
             return y * (tokenIn == token0 ? precisionMultiplier1 : precisionMultiplier0) / 1e18;
         } else {
             (uint256 reserveA, uint256 reserveB) = tokenIn == token0 ? (_reserve0, _reserve1) : (_reserve1, _reserve0);
             amountIn = amountIn.mul(FEE_DENOMINATOR.sub(feePercent));
             uint256 out = (amountIn.mul(reserveB)) / (reserveA.mul(FEE_DENOMINATOR).add(amountIn));
-            console.log("CamelotPair._getAmountOut: uni out", out);
             return out;
         }
     }

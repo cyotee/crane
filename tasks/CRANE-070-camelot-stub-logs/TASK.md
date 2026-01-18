@@ -28,11 +28,11 @@ Note: This is pre-existing behavior, not introduced by CRANE-044.
 As a developer, I want clean CI output without noisy debug logs so that test failures are easier to identify.
 
 **Acceptance Criteria:**
-- [ ] Remove or gate debug logs from `CamelotPair._getAmountOut`
-- [ ] Consider using a DEBUG flag or environment variable for optional verbose output
-- [ ] CI output is clean without spurious log lines
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Remove or gate debug logs from `CamelotPair._getAmountOut`
+- [x] Consider using a DEBUG flag or environment variable for optional verbose output
+- [x] CI output is clean without spurious log lines
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -42,16 +42,16 @@ As a developer, I want clean CI output without noisy debug logs so that test fai
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-044 is complete
-- [ ] CamelotPair.sol stub exists
-- [ ] Debug logs are present in `_getAmountOut`
+- [x] CRANE-044 is complete
+- [x] CamelotPair.sol stub exists
+- [x] Debug logs are present in `_getAmountOut`
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] CI output is clean
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] CI output is clean
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
