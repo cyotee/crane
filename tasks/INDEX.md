@@ -7,9 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-061 | Add DFPkg Deployment Integration Test | Complete | CRANE-053 | - |
-| CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | Complete | CRANE-053 | - |
-| CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | Complete | CRANE-053 | feature/exact-out-rounding-tests |
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Ready | CRANE-023 | `refactor/erc5267-testbase` |
 | CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Ready | CRANE-023 | `test/erc5267-proxy-integration` |
 | CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Ready | CRANE-038 | `test/slipstream-zapin-conservation` |
@@ -120,10 +117,9 @@
 - CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test (Medium)
 - CRANE-071: Remove Unused IERC20 Import from TokenConfigUtils (Low)
 
-**Balancer V3 Follow-ups (3 tasks - from CRANE-053):**
-- **CRANE-061: Add DFPkg Deployment Integration Test (High - from CRANE-053)**
-- **CRANE-062: Add Heterogeneous TokenConfig Order-Independence Tests (High - from CRANE-053)**
-- CRANE-063: Add EXACT_OUT Pool-Favorable Rounding Tests (Medium - from CRANE-053)
+**Balancer V3 Follow-ups (2 tasks - from CRANE-052):**
+- CRANE-108: Use Math.mulDiv for Overflow Protection in Balancer V3 Pool (Low - from CRANE-052)
+- CRANE-109: Add 2-Token Pool Guardrails to Balancer V3 Pool (Low - from CRANE-052)
 
 **ERC5267 Follow-ups (2 tasks - from CRANE-023):**
 - CRANE-064: Adopt IFacet TestBase Pattern for ERC5267 (Low)
@@ -222,6 +218,9 @@
 | CRANE-057 | Fix Remove Selector Ownership Validation | 2026-01-17 | archive/CRANE-057-remove-selector-ownership-validation/ |
 | CRANE-058 | Implement Partial Remove Semantics | 2026-01-17 | archive/CRANE-058-partial-remove-semantics/ |
 | CRANE-060 | Add ERC-165 Strict Semantics for 0xffffffff | 2026-01-17 | archive/CRANE-060-erc165-strict-semantics/ |
+| CRANE-061 | Add DFPkg Deployment Integration Test | 2026-01-17 | archive/CRANE-061-dfpkg-deployment-integration-test/ |
+| CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | 2026-01-17 | archive/CRANE-062-tokenconfig-heterogeneous-tests/ |
+| CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | 2026-01-17 | archive/CRANE-063-exact-out-rounding-tests/ |
 
 ## Cross-Repo Dependencies
 
