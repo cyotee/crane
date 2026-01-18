@@ -44,6 +44,8 @@ Questions asked to understand review criteria:
 Actionable items for follow-up tasks:
 
 - (Optional, low priority) Consider follow-up tasks to reduce baseline `forge build` warnings (e.g., address the `unchecked-call` lint warning and investigate the repeated "AST source not found" messages) if you want a fully clean build output.
+  - **Converted to:** CRANE-126 (unchecked-call lint warning)
+  - **Note:** "AST source not found" messages are from submodule dependencies and not actionable
 
 ---
 

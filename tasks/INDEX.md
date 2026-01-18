@@ -61,6 +61,7 @@
 | CRANE-123 | Split ERC5267 IFacet Tests into Dedicated File | Ready | CRANE-064 | `refactor/erc5267-split-ifacet` |
 | CRANE-124 | Use Canonical Proxy Fixture for ERC5267 Integration Test | Ready | CRANE-065 | `refactor/erc5267-canonical-proxy` |
 | CRANE-125 | Align ERC5267 Integration Test Pragma with Repo Version | Ready | CRANE-065 | `fix/erc5267-pragma-alignment` |
+| CRANE-126 | Fix Unchecked-Call Lint Warning | Ready | CRANE-071 | `fix/unchecked-call-lint` |
 
 ## Status Legend
 
