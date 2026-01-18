@@ -328,7 +328,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
     /*                               Fuzz Tests                                   */
     /* -------------------------------------------------------------------------- */
 
-    function testFuzz_priceImpact_increasesWithTradeSize(uint256 tradePercent) public {
+    function testFuzz_priceImpact_boundedByTheoretical(uint256 tradePercent) public {
         // Bound trade percent between 0.01% and 90%
         tradePercent = bound(tradePercent, 1, 9000);
 
