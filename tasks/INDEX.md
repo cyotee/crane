@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Complete | CRANE-051 | `fix/tokenconfig-unused-import` |
-| CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | In Progress | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
+| CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Pending Merge | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | In Progress | CRANE-026 | `fix/tighten-overflow-assertions` |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | In Progress | CRANE-027 | `refactor/multihop-testbase-alignment` |
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | In Progress | CRANE-028 | `fix/priceimpact-test-rename` |

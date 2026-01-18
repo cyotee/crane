@@ -22,4 +22,4 @@ forge-std/=lib/forge-std/src/
 
 v4-periphery/=lib/v4-periphery/
 v4-core/=lib/v4-periphery/lib/v4-core/src/
-permit2/=lib/v4-periphery/lib/permit2/
+permit2/=lib/permit2/

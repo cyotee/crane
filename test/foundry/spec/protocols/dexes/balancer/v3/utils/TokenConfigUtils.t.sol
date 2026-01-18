@@ -358,9 +358,138 @@ contract TokenConfigUtils_Test is Test {
         assertEq(sorted.length, length, "Length should be preserved");
     }
 
+    /**
+     * @notice Fuzz test that verifies field alignment is preserved after sorting.
+     * @dev Assigns distinct per-token metadata derived deterministically from the token address,
+     *      then asserts that after sorting, each token still maps to its original metadata.
+     *      This directly guards against regressions of the "swap only token address" bug class.
+     */
+    function testFuzz_sort_preservesFieldAlignment_twoTokens(
+        address tokenA,
+        address tokenB
+    ) public pure {
+        vm.assume(tokenA != address(0) && tokenB != address(0));
+        vm.assume(tokenA != tokenB);
+
+        // Generate distinct metadata from token addresses
+        TokenConfig[] memory configs = new TokenConfig[](2);
+        configs[0] = _createConfigWithDerivedMetadata(tokenA);
+        configs[1] = _createConfigWithDerivedMetadata(tokenB);
+
+        TokenConfig[] memory sorted = configs._sort();
+
+        // Verify each token still has its original metadata
+        for (uint256 i = 0; i < sorted.length; i++) {
+            _assertConfigHasDerivedMetadata(sorted[i]);
+        }
+    }
+
+    /**
+     * @notice Fuzz test for 3-token field alignment preservation.
+     */
+    function testFuzz_sort_preservesFieldAlignment_threeTokens(
+        address tokenA,
+        address tokenB,
+        address tokenC
+    ) public pure {
+        vm.assume(tokenA != address(0) && tokenB != address(0) && tokenC != address(0));
+        vm.assume(tokenA != tokenB && tokenB != tokenC && tokenA != tokenC);
+
+        TokenConfig[] memory configs = new TokenConfig[](3);
+        configs[0] = _createConfigWithDerivedMetadata(tokenA);
+        configs[1] = _createConfigWithDerivedMetadata(tokenB);
+        configs[2] = _createConfigWithDerivedMetadata(tokenC);
+
+        TokenConfig[] memory sorted = configs._sort();
+
+        for (uint256 i = 0; i < sorted.length; i++) {
+            _assertConfigHasDerivedMetadata(sorted[i]);
+        }
+    }
+
+    /**
+     * @notice Fuzz test for 4-token field alignment preservation.
+     */
+    function testFuzz_sort_preservesFieldAlignment_fourTokens(
+        address tokenA,
+        address tokenB,
+        address tokenC,
+        address tokenD
+    ) public pure {
+        vm.assume(tokenA != address(0) && tokenB != address(0));
+        vm.assume(tokenC != address(0) && tokenD != address(0));
+        vm.assume(tokenA != tokenB && tokenA != tokenC && tokenA != tokenD);
+        vm.assume(tokenB != tokenC && tokenB != tokenD);
+        vm.assume(tokenC != tokenD);
+
+        TokenConfig[] memory configs = new TokenConfig[](4);
+        configs[0] = _createConfigWithDerivedMetadata(tokenA);
+        configs[1] = _createConfigWithDerivedMetadata(tokenB);
+        configs[2] = _createConfigWithDerivedMetadata(tokenC);
+        configs[3] = _createConfigWithDerivedMetadata(tokenD);
+
+        TokenConfig[] memory sorted = configs._sort();
+
+        for (uint256 i = 0; i < sorted.length; i++) {
+            _assertConfigHasDerivedMetadata(sorted[i]);
+        }
+    }
+
     /* ---------------------------------------------------------------------- */
     /*                       Helper Functions                                  */
     /* ---------------------------------------------------------------------- */
+
+    /**
+     * @notice Creates a TokenConfig with metadata deterministically derived from the token address.
+     * @dev Uses XOR to derive rateProvider and bit extraction for tokenType and paysYieldFees.
+     *      This ensures each token has unique, predictable metadata that can be verified after sorting.
+     */
+    function _createConfigWithDerivedMetadata(address token) internal pure returns (TokenConfig memory) {
+        uint160 tokenVal = uint160(token);
+        // Derive rateProvider by XOR with a constant
+        address rateProvider = address(tokenVal ^ 0x1234);
+        // Derive tokenType from bit 0: 0 = STANDARD, 1 = WITH_RATE
+        TokenType tokenType = (tokenVal & 1 == 0) ? TokenType.STANDARD : TokenType.WITH_RATE;
+        // Derive paysYieldFees from bit 1
+        bool paysYieldFees = (tokenVal & 2) != 0;
+
+        return TokenConfig({
+            token: IERC20(token),
+            tokenType: tokenType,
+            rateProvider: IRateProvider(rateProvider),
+            paysYieldFees: paysYieldFees
+        });
+    }
+
+    /**
+     * @notice Asserts that a TokenConfig has metadata correctly derived from its token address.
+     * @dev Recomputes expected metadata from the token address and compares against actual values.
+     */
+    function _assertConfigHasDerivedMetadata(TokenConfig memory config) internal pure {
+        address token = address(config.token);
+        uint160 tokenVal = uint160(token);
+
+        // Recompute expected values
+        address expectedRateProvider = address(tokenVal ^ 0x1234);
+        TokenType expectedTokenType = (tokenVal & 1 == 0) ? TokenType.STANDARD : TokenType.WITH_RATE;
+        bool expectedPaysYieldFees = (tokenVal & 2) != 0;
+
+        // Assert alignment
+        assertEq(
+            address(config.rateProvider),
+            expectedRateProvider,
+            string.concat("rateProvider mismatch for token ", vm.toString(token))
+        );
+        assertTrue(
+            config.tokenType == expectedTokenType,
+            string.concat("tokenType mismatch for token ", vm.toString(token))
+        );
+        assertEq(
+            config.paysYieldFees,
+            expectedPaysYieldFees,
+            string.concat("paysYieldFees mismatch for token ", vm.toString(token))
+        );
+    }
 
     function _createConfig(
         address token,

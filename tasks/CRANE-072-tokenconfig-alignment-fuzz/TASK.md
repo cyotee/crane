@@ -1,7 +1,7 @@
 # Task CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-15
 **Dependencies:** CRANE-051
 **Worktree:** `test/tokenconfig-alignment-fuzz`
@@ -28,11 +28,11 @@ This would directly guard against regressions of the original "swap only token a
 As a developer, I want fuzz tests that verify field alignment is preserved under arbitrary inputs so that I can catch regressions where only the token address is swapped but metadata is corrupted.
 
 **Acceptance Criteria:**
-- [ ] Add fuzz test that generates distinct per-token metadata
-- [ ] Assert that after sorting, each token maps to its original `rateProvider`, `tokenType`, and `paysYieldFees`
-- [ ] Use deterministic metadata derivation (e.g., `address(uint160(token) ^ 0x1234)`)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Add fuzz test that generates distinct per-token metadata
+- [x] Assert that after sorting, each token maps to its original `rateProvider`, `tokenType`, and `paysYieldFees`
+- [x] Use deterministic metadata derivation (e.g., `address(uint160(token) ^ 0x1234)`)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -42,16 +42,16 @@ As a developer, I want fuzz tests that verify field alignment is preserved under
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-051 is complete
-- [ ] TokenConfigUtils.t.sol exists
-- [ ] Current fuzz tests exist for ordering/length
+- [x] CRANE-051 is complete
+- [x] TokenConfigUtils.t.sol exists
+- [x] Current fuzz tests exist for ordering/length
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Fuzz tests pass
-- [ ] `forge test` passes
-- [ ] `forge build` succeeds
+- [x] All acceptance criteria met
+- [x] Fuzz tests pass
+- [x] `forge test` passes
+- [x] `forge build` succeeds
 
 ---
 
