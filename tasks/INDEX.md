@@ -66,6 +66,8 @@
 | CRANE-118 | Make Integration Test Truly Factory-Stack E2E | Ready | CRANE-061 | `feature/factory-stack-integration-test` |
 | CRANE-119 | Add Proxy-State Assertions for Pool/Vault-Aware Repos | Ready | CRANE-061 | `feature/proxy-state-assertions` |
 | CRANE-120 | Tighten postDeploy Call Expectations | Ready | CRANE-061 | `feature/postdeploy-payload-validation` |
+| CRANE-121 | Tighten Fuzz Assumptions for Realism | Ready | CRANE-062 | `feature/tighten-fuzz-assumptions` |
+| CRANE-122 | Remove Unnecessary ERC20 Metadata Mocks | Ready | CRANE-062 | `feature/remove-erc20-mocks` |
 
 ## Status Legend
 

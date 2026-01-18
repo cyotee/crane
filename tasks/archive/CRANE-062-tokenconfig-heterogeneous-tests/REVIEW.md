@@ -45,14 +45,16 @@ Actionable items for follow-up tasks:
 This would keep fuzz inputs closer to real pool configs while preserving the alignment/order-independence goal.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol
-**Notes:** Not required for correctness of sorting/alignment; purely to reduce "degenerate" fuzz cases.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-121
 
 ### Suggestion 2: Remove unnecessary ERC20 metadata mocks (optional)
 **Priority:** P3
 **Description:** `vm.mockCall(... IERC20Metadata.name ...)` in the heterogeneous fuzz tests appears unnecessary for `calcSalt`/`processArgs` (those paths do not call token metadata). Removing it would slightly simplify tests.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.t.sol
-**Notes:** If future implementations start reading metadata in these functions, keeping the mocks is harmless.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-122
 
 ---
 
