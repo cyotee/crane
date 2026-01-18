@@ -10,7 +10,7 @@
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Complete | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Complete | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Complete | CRANE-026 | `fix/tighten-overflow-assertions` |
-| CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Pending Merge | CRANE-027 | `refactor/multihop-testbase-alignment` |
+| CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Complete | CRANE-027 | `refactor/multihop-testbase-alignment` |
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | In Progress | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
