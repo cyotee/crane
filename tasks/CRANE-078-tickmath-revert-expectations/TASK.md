@@ -1,6 +1,6 @@
 # CRANE-078: Tighten TickMath Revert Expectations
 
-**Status:** Ready
+**Status:** Complete
 **Priority:** Low
 **Origin:** CRANE-032 REVIEW.md Suggestion 1
 **Dependencies:** CRANE-032
@@ -26,11 +26,11 @@ During CRANE-032 (Add TickMath Bijection Fuzz Tests), the review noted that bare
 
 ### US-CRANE-078.1: Tighten Revert Expectations
 
-- [ ] Replace `vm.expectRevert()` with `vm.expectRevert(bytes("T"))` for tick out-of-range tests
-- [ ] Replace `vm.expectRevert()` with `vm.expectRevert(bytes("R"))` for sqrt price out-of-range tests
-- [ ] Verify the expected revert reasons match actual library behavior
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Replace `vm.expectRevert()` with `vm.expectRevert(bytes("T"))` for tick out-of-range tests
+- [x] Replace `vm.expectRevert()` with `vm.expectRevert(bytes("R"))` for sqrt price out-of-range tests
+- [x] Verify the expected revert reasons match actual library behavior
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Verification
 
