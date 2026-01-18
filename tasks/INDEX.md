@@ -62,6 +62,8 @@
 | CRANE-124 | Use Canonical Proxy Fixture for ERC5267 Integration Test | Ready | CRANE-065 | `refactor/erc5267-canonical-proxy` |
 | CRANE-125 | Align ERC5267 Integration Test Pragma with Repo Version | Ready | CRANE-065 | `fix/erc5267-pragma-alignment` |
 | CRANE-126 | Fix Unchecked-Call Lint Warning | Ready | CRANE-071 | `fix/unchecked-call-lint` |
+| CRANE-127 | Assert Zero-Fee Outcome in Safe Boundary Test | Ready | CRANE-073 | `test/zero-fee-assertion` |
+| CRANE-128 | Replace Heuristic Percent Bounds with Explicit Tolerances | Ready | CRANE-073 | `test/explicit-tolerances` |
 
 ## Status Legend
 
@@ -120,8 +122,9 @@
 - CRANE-124: Use Canonical Proxy Fixture for ERC5267 Integration Test (from CRANE-065)
 - CRANE-125: Align ERC5267 Integration Test Pragma with Repo Version (from CRANE-065)
 
-**Overflow Boundary Test Follow-ups (from CRANE-026):**
-- CRANE-073: Pending Merge
+**Overflow Boundary Test Follow-ups (from CRANE-026/CRANE-073):**
+- CRANE-127: Assert Zero-Fee Outcome in Safe Boundary Test (Low - from CRANE-073)
+- CRANE-128: Replace Heuristic Percent Bounds with Explicit Tolerances (Low - from CRANE-073)
 
 **Multihop/Price Impact Test Follow-ups (3 tasks - from CRANE-027/CRANE-028):**
 - CRANE-074: Align Multihop Test with Camelot TestBase Patterns (Low - from CRANE-027)

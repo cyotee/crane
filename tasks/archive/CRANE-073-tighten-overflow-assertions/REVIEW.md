@@ -43,8 +43,11 @@ Questions asked to understand review criteria:
 
 Actionable items for follow-up tasks:
 
-1. Consider tightening the “safe boundary” fee test to assert the expected zero-fee outcome for the chosen inputs.
+1. Consider tightening the "safe boundary" fee test to assert the expected zero-fee outcome for the chosen inputs.
+   **Converted to:** CRANE-127
+
 2. Consider replacing heuristic percent bounds with derived expectations + explicit tolerances in the quote tests if long-term stability becomes an issue.
+   **Converted to:** CRANE-128
 
 ---
 
