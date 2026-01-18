@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | In Progress | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Complete | CRANE-038 | - |
-| CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Complete | CRANE-044 | `test/camelot-bidirectional-fuzz` |
+| CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Complete | CRANE-044 | - |
 | CRANE-070 | Reduce Noisy Logs from Camelot Stubs | In Progress | CRANE-044 | `fix/camelot-stub-logs` |
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
