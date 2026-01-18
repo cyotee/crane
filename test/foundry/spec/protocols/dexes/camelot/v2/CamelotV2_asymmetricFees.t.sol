@@ -302,7 +302,8 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         assertGt(amountOut, 0, "Output should be positive");
     }
 
-    /// @notice Fuzz test verifying both swap directions with same input amount
+    /// @notice Fuzz test verifying both swap directions with output validation against expected quote
+    /// @dev Uses snapshot/restore to validate each direction independently against known reserves
     function testFuzz_asymmetricFees_bothDirections(
         uint16 token0Fee,
         uint16 token1Fee,
@@ -322,60 +323,77 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         _initializeAsymmetricPool();
         _setAsymmetricFees(token0Fee, token1Fee);
 
-        // Mint tokens for both directions
-        asymmetricTokenA.mint(address(this), swapAmount);
-        asymmetricTokenA.approve(address(camelotV2Router), swapAmount);
-        asymmetricTokenB.mint(address(this), swapAmount);
-        asymmetricTokenB.approve(address(camelotV2Router), swapAmount);
+        // Mint tokens for both directions (before snapshot so they're available after restore)
+        asymmetricTokenA.mint(address(this), swapAmount * 2);
+        asymmetricTokenA.approve(address(camelotV2Router), swapAmount * 2);
+        asymmetricTokenB.mint(address(this), swapAmount * 2);
+        asymmetricTokenB.approve(address(camelotV2Router), swapAmount * 2);
 
-        // Get initial balances
-        uint256 balanceABefore = asymmetricTokenA.balanceOf(address(this));
-        uint256 balanceBBefore = asymmetricTokenB.balanceOf(address(this));
-
-        // Swap A -> B
-        uint256 outputAToB = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
-        );
-
-        // Get new reserves after first swap
-        (uint112 reserve0After, uint112 reserve1After, , ) = asymmetricPair.getReserves();
-
-        // Swap B -> A
-        uint256 outputBToA = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenB,
-            asymmetricTokenA,
-            address(0)
-        );
-
-        // Both swaps should produce positive output
-        assertGt(outputAToB, 0, "A->B swap should produce output");
-        assertGt(outputBToA, 0, "B->A swap should produce output");
-
-        // With asymmetric fees, the outputs should generally be different
-        // (unless the reserves happen to make them equal, which is unlikely)
-        // We can't assert they're always different due to mathematical edge cases,
-        // but we verify the fee selection mechanism works
+        // Determine token ordering for fee selection
         address token0 = asymmetricPair.token0();
         bool tokenAIsToken0 = (address(asymmetricTokenA) == token0);
 
-        // Verify fee selection is correct by checking reserves struct
-        CamelotV2Service.ReserveInfo memory resA = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
-        CamelotV2Service.ReserveInfo memory resB = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
+        // Get reserves for quote calculation (same for both directions at this point)
+        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
 
-        if (tokenAIsToken0) {
-            assertEq(resA.feePercent, token0Fee, "TokenA input should use token0Fee");
-            assertEq(resB.feePercent, token1Fee, "TokenB input should use token1Fee");
-        } else {
-            assertEq(resA.feePercent, token1Fee, "TokenA input should use token1Fee");
-            assertEq(resB.feePercent, token0Fee, "TokenB input should use token0Fee");
+        // Take snapshot after pool setup - both directions will use same initial state
+        uint256 snapshotId = vm.snapshotState();
+
+        // --- Phase 1: Test A -> B swap ---
+        {
+            // Calculate expected quote for A -> B
+            uint256 expectedFeeAToB = tokenAIsToken0 ? token0Fee : token1Fee;
+            uint256 reserveInAToB = tokenAIsToken0 ? reserve0 : reserve1;
+            uint256 reserveOutAToB = tokenAIsToken0 ? reserve1 : reserve0;
+            uint256 expectedOutAToB = ConstProdUtils._saleQuote(swapAmount, reserveInAToB, reserveOutAToB, expectedFeeAToB);
+
+            // Execute swap A -> B
+            uint256 outputAToB = CamelotV2Service._swap(
+                camelotV2Router,
+                asymmetricPair,
+                swapAmount,
+                asymmetricTokenA,
+                asymmetricTokenB,
+                address(0)
+            );
+
+            // Validate output matches expected quote
+            assertEq(outputAToB, expectedOutAToB, "A->B output should match ConstProdUtils._saleQuote");
+            assertGt(outputAToB, 0, "A->B swap should produce output");
+
+            // Verify fee selection is correct
+            CamelotV2Service.ReserveInfo memory resA = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
+            assertEq(resA.feePercent, expectedFeeAToB, "A->B should use correct directional fee");
+        }
+
+        // Restore to snapshot for clean B -> A test
+        vm.revertToState(snapshotId);
+
+        // --- Phase 2: Test B -> A swap ---
+        {
+            // Calculate expected quote for B -> A
+            uint256 expectedFeeBToA = tokenAIsToken0 ? token1Fee : token0Fee;
+            uint256 reserveInBToA = tokenAIsToken0 ? reserve1 : reserve0;
+            uint256 reserveOutBToA = tokenAIsToken0 ? reserve0 : reserve1;
+            uint256 expectedOutBToA = ConstProdUtils._saleQuote(swapAmount, reserveInBToA, reserveOutBToA, expectedFeeBToA);
+
+            // Execute swap B -> A
+            uint256 outputBToA = CamelotV2Service._swap(
+                camelotV2Router,
+                asymmetricPair,
+                swapAmount,
+                asymmetricTokenB,
+                asymmetricTokenA,
+                address(0)
+            );
+
+            // Validate output matches expected quote
+            assertEq(outputBToA, expectedOutBToA, "B->A output should match ConstProdUtils._saleQuote");
+            assertGt(outputBToA, 0, "B->A swap should produce output");
+
+            // Verify fee selection is correct
+            CamelotV2Service.ReserveInfo memory resB = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
+            assertEq(resB.feePercent, expectedFeeBToA, "B->A should use correct directional fee");
         }
     }
 
