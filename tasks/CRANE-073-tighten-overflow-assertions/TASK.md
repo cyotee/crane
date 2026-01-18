@@ -1,7 +1,7 @@
 # Task CRANE-073: Tighten Non-Revert Assertions in Overflow Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-15
 **Dependencies:** CRANE-026
 **Worktree:** `fix/tighten-overflow-assertions`
@@ -31,11 +31,11 @@ For example:
 As a developer, I want overflow boundary tests to have meaningful assertions so that passing tests provide confidence in correctness, not just absence of reverts.
 
 **Acceptance Criteria:**
-- [ ] Replace `feeA >= 0` style assertions with bounded checks
-- [ ] Add relationship assertions (e.g., fees <= claimable amounts)
-- [ ] Add known-input/expected-output spot checks where applicable
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Replace `feeA >= 0` style assertions with bounded checks
+- [x] Add relationship assertions (e.g., fees <= claimable amounts)
+- [x] Add known-input/expected-output spot checks where applicable
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -50,10 +50,10 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All vacuous assertions replaced with meaningful bounds
-- [ ] Relationship assertions added where applicable
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] All vacuous assertions replaced with meaningful bounds
+- [x] Relationship assertions added where applicable
+- [x] Tests pass
+- [x] Build succeeds
 
 ---
 

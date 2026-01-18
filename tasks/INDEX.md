@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Complete | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Complete | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
-| CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | In Progress | CRANE-026 | `fix/tighten-overflow-assertions` |
+| CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Pending Merge | CRANE-026 | `fix/tighten-overflow-assertions` |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | In Progress | CRANE-027 | `refactor/multihop-testbase-alignment` |
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | In Progress | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
@@ -120,8 +120,8 @@
 - CRANE-124: Use Canonical Proxy Fixture for ERC5267 Integration Test (from CRANE-065)
 - CRANE-125: Align ERC5267 Integration Test Pragma with Repo Version (from CRANE-065)
 
-**Overflow Boundary Test Follow-ups (1 task - from CRANE-026):**
-- CRANE-073: Tighten Non-Revert Assertions in Overflow Tests (Low)
+**Overflow Boundary Test Follow-ups (from CRANE-026):**
+- CRANE-073: In Review
 
 **Multihop/Price Impact Test Follow-ups (3 tasks - from CRANE-027/CRANE-028):**
 - CRANE-074: Align Multihop Test with Camelot TestBase Patterns (Low - from CRANE-027)
