@@ -11,7 +11,7 @@
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | In Progress | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | In Progress | CRANE-026 | `fix/tighten-overflow-assertions` |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | In Progress | CRANE-027 | `refactor/multihop-testbase-alignment` |
-| CRANE-075 | Rename Price Impact Fuzz Test for Clarity | Ready | CRANE-028 | `fix/priceimpact-test-rename` |
+| CRANE-075 | Rename Price Impact Fuzz Test for Clarity | In Progress | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | Ready | CRANE-032 | `fix/tickmath-revert-expectations` |
