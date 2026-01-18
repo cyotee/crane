@@ -34,16 +34,16 @@ Actionable items for follow-up tasks:
 **Description:** If/when a lightweight fixture exists for deploying a real Diamond proxy (via the callback factory), switch the integration test to use it. That would ensure the ERC-5267 verifyingContract invariant holds through the exact production routing path.
 **Affected Files:**
 - test/foundry/spec/utils/cryptography/ERC5267/ERC5267ProxyIntegration.t.sol
-**User Response:** (pending)
-**Notes:** Current stub is acceptable and keeps the test focused.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-124
 
 ### Suggestion 2: Align test pragma with repo version
 **Priority:** P4
-**Description:** Consider bumping `pragma solidity ^0.8.0` to `pragma solidity ^0.8.30` (or the project’s pinned version) for consistency across the test suite.
+**Description:** Consider bumping `pragma solidity ^0.8.0` to `pragma solidity ^0.8.30` (or the project's pinned version) for consistency across the test suite.
 **Affected Files:**
 - test/foundry/spec/utils/cryptography/ERC5267/ERC5267ProxyIntegration.t.sol
-**User Response:** (pending)
-**Notes:** This is stylistic; current pragma range compiles cleanly.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-125
 
 ---
 

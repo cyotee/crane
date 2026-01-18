@@ -66,6 +66,8 @@
 | CRANE-121 | Tighten Fuzz Assumptions for Realism | Ready | CRANE-062 | `feature/tighten-fuzz-assumptions` |
 | CRANE-122 | Remove Unnecessary ERC20 Metadata Mocks | Ready | CRANE-062 | `feature/remove-erc20-mocks` |
 | CRANE-123 | Split ERC5267 IFacet Tests into Dedicated File | Ready | CRANE-064 | `refactor/erc5267-split-ifacet` |
+| CRANE-124 | Use Canonical Proxy Fixture for ERC5267 Integration Test | Ready | CRANE-065 | `refactor/erc5267-canonical-proxy` |
+| CRANE-125 | Align ERC5267 Integration Test Pragma with Repo Version | Ready | CRANE-065 | `fix/erc5267-pragma-alignment` |
 
 ## Status Legend
 
