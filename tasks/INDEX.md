@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
+| CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | In Progress | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Ready | CRANE-026 | `fix/tighten-overflow-assertions` |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Ready | CRANE-027 | `refactor/multihop-testbase-alignment` |
