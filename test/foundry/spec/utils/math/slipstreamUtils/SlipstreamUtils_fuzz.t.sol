@@ -1,6 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+// ═══════════════════════════════════════════════════════════════════════════
+// TEST REPRODUCTION
+// ═══════════════════════════════════════════════════════════════════════════
+// Run all fuzz tests in this file (11 tests):
+//   forge test --match-path test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_fuzz.t.sol -vvv
+//
+// Run all Slipstream fuzz tests (both files, 20 tests):
+//   forge test --match-path "test/foundry/spec/utils/math/slipstreamUtils/*_fuzz.t.sol" -vvv
+//
+// Run specific test with more fuzz runs (default: 256):
+//   forge test --match-test testFuzz_quoteExactInput_zeroForOne_matchesSwap --fuzz-runs 1000 -vvv
+// ═══════════════════════════════════════════════════════════════════════════
+
 import "forge-std/Test.sol";
 
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
