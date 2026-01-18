@@ -121,7 +121,7 @@
 - CRANE-125: Align ERC5267 Integration Test Pragma with Repo Version (from CRANE-065)
 
 **Overflow Boundary Test Follow-ups (from CRANE-026):**
-- CRANE-073: In Review
+- CRANE-073: Pending Merge
 
 **Multihop/Price Impact Test Follow-ups (3 tasks - from CRANE-027/CRANE-028):**
 - CRANE-074: Align Multihop Test with Camelot TestBase Patterns (Low - from CRANE-027)
