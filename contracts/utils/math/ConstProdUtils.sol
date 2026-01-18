@@ -497,7 +497,6 @@ library ConstProdUtils {
      * @param kLast Last K value before the operation.
      * @param ownerFeeShare Protocol fee share (e.g., 16667 for 1/6).
      * @param feeOn Whether protocol fees are enabled.
-     * bufferPct Buffer percentage in basis points (e.g., 10 for 0.1%).
      * @return lpNeeded Amount of LP tokens to burn (overestimated).
      */
     function _quoteZapOutToTargetWithFee(
@@ -510,14 +509,7 @@ library ConstProdUtils {
         uint256 kLast,
         uint256 ownerFeeShare,
         bool feeOn
-    )
-        // uint256 bufferPct
-        internal
-        pure
-        returns (uint256 lpNeeded)
-    {
-        // 10 Is too low
-        // uint256 bufferPct = 100;
+    ) internal pure returns (uint256 lpNeeded) {
         ZapOutToTargetWithFeeArgs memory args = ZapOutToTargetWithFeeArgs({
             desiredOut: desiredOut,
             lpTotalSupply: lpTotalSupply,
@@ -585,7 +577,6 @@ library ConstProdUtils {
             uint256 b4 = args.reserveOther * args.reserveDesired * gamma;
             uint256 bNum = b1 - b2 + b3 + b4;
             uint256 bDen = args.lpTotalSupply * D;
-            // uint256
             b = bNum / bDen;
         }
         {
