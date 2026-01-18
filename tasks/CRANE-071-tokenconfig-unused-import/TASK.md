@@ -1,7 +1,7 @@
 # Task CRANE-071: Remove Unused IERC20 Import from TokenConfigUtils
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-15
 **Dependencies:** CRANE-051
 **Worktree:** `fix/tokenconfig-unused-import`
@@ -26,11 +26,11 @@ Remove the unused `IERC20` import in `TokenConfigUtils.sol` to reduce compiler w
 As a developer, I want clean imports without unused dependencies so that compiler warnings are minimized and code intent is clear.
 
 **Acceptance Criteria:**
-- [ ] Verify if `IERC20` import is actually needed for `TokenConfig` type resolution
-- [ ] If not needed: remove the import
-- [ ] If needed: document why and close as "Won't Fix"
-- [ ] Build succeeds without new warnings
-- [ ] Tests pass
+- [x] Verify if `IERC20` import is actually needed for `TokenConfig` type resolution
+- [x] If not needed: remove the import
+- [ ] ~~If needed: document why and close as "Won't Fix"~~ (N/A - import was not needed)
+- [x] Build succeeds without new warnings
+- [x] Tests pass
 
 ## Files to Create/Modify
 
@@ -40,15 +40,15 @@ As a developer, I want clean imports without unused dependencies so that compile
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-051 is complete
-- [ ] TokenConfigUtils.sol exists
-- [ ] Verify `IERC20` import usage
+- [x] CRANE-051 is complete
+- [x] TokenConfigUtils.sol exists
+- [x] Verify `IERC20` import usage
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` succeeds
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` succeeds
+- [x] `forge test` passes
 
 ---
 
