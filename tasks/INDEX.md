@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Complete | CRANE-028 | `fix/priceimpact-remove-logs` |
-| CRANE-077 | Remove Commented-Out Parameter Stubs | Pending Merge | CRANE-029 | `fix/remove-param-stubs` |
+| CRANE-077 | Remove Commented-Out Parameter Stubs | Complete | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | In Progress | CRANE-032 | `fix/tickmath-revert-expectations` |
 | CRANE-080 | Add SwapMath Golden Vector Tests | Ready | CRANE-033 | `test/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | Ready | CRANE-033 | `test/sqrtpricemath-errors` |
