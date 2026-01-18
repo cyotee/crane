@@ -1,36 +1,28 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-/// forge-lint: disable-next-line(unaliased-plain-import)
-import "forge-std/Test.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {FEE_DENOMINATOR} from "@crane/contracts/constants/Constants.sol";
 import {ICamelotPair} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol";
-import {TestBase_CamelotV2} from "@crane/contracts/protocols/dexes/camelot/v2/test/bases/TestBase_CamelotV2.sol";
+import {TestBase_ConstProdUtils_Camelot} from "./TestBase_ConstProdUtils_Camelot.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
 /**
- * @title ConstProdUtils Multi-hop Routing Tests
+ * @title ConstProdUtils Multi-hop Routing Tests for Camelot
  * @notice Tests for chained swap calculations across multiple pools (multi-hop routes)
  * @dev Verifies that intermediate amounts in multi-hop routes match expected values
  */
-contract ConstProdUtils_multihop is TestBase_CamelotV2 {
+contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
     using ConstProdUtils for uint256;
 
-    // Tokens for multi-hop routes
-    ERC20PermitMintableStub tokenA;
-    ERC20PermitMintableStub tokenB;
-    ERC20PermitMintableStub tokenC;
-    ERC20PermitMintableStub tokenD;
+    // Additional tokens for multi-hop routes (C and D)
+    ERC20PermitMintableStub camelotMultihopTokenC;
+    ERC20PermitMintableStub camelotMultihopTokenD;
 
-    // Pairs for multi-hop routes
-    ICamelotPair pairAB;
-    ICamelotPair pairBC;
-    ICamelotPair pairCD;
-
-    // Standard liquidity amounts
-    uint256 constant INITIAL_LIQUIDITY = 10000e18;
+    // Additional pairs for multi-hop routes
+    ICamelotPair camelotPairBC;
+    ICamelotPair camelotPairCD;
 
     // Standard test swap amount
     uint256 constant SWAP_AMOUNT = 100e18;
@@ -44,58 +36,60 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
     }
 
     function setUp() public override {
-        TestBase_CamelotV2.setUp();
-        _createTokens();
-        _createPairs();
-        _initializeLiquidity();
+        TestBase_ConstProdUtils_Camelot.setUp();
+        _createMultihopTokens();
+        _createMultihopPairs();
     }
 
-    function _createTokens() internal {
-        tokenA = new ERC20PermitMintableStub("Token A", "TKA", 18, address(this), 0);
-        vm.label(address(tokenA), "TokenA");
+    function _createMultihopTokens() internal {
+        camelotMultihopTokenC = new ERC20PermitMintableStub("CamelotMultihopTokenC", "CAMMHC", 18, address(this), 0);
+        vm.label(address(camelotMultihopTokenC), "CamelotMultihopTokenC");
 
-        tokenB = new ERC20PermitMintableStub("Token B", "TKB", 18, address(this), 0);
-        vm.label(address(tokenB), "TokenB");
-
-        tokenC = new ERC20PermitMintableStub("Token C", "TKC", 18, address(this), 0);
-        vm.label(address(tokenC), "TokenC");
-
-        tokenD = new ERC20PermitMintableStub("Token D", "TKD", 18, address(this), 0);
-        vm.label(address(tokenD), "TokenD");
+        camelotMultihopTokenD = new ERC20PermitMintableStub("CamelotMultihopTokenD", "CAMMHD", 18, address(this), 0);
+        vm.label(address(camelotMultihopTokenD), "CamelotMultihopTokenD");
     }
 
-    function _createPairs() internal {
-        pairAB = ICamelotPair(camelotV2Factory.createPair(address(tokenA), address(tokenB)));
-        vm.label(address(pairAB), "PairAB");
+    function _createMultihopPairs() internal {
+        // Pair B-C uses the balanced TokenB
+        camelotPairBC = ICamelotPair(
+            camelotV2Factory.createPair(address(camelotBalancedTokenB), address(camelotMultihopTokenC))
+        );
+        vm.label(
+            address(camelotPairBC),
+            string.concat("CamelotPairBC - ", camelotBalancedTokenB.symbol(), " / ", camelotMultihopTokenC.symbol())
+        );
 
-        pairBC = ICamelotPair(camelotV2Factory.createPair(address(tokenB), address(tokenC)));
-        vm.label(address(pairBC), "PairBC");
-
-        pairCD = ICamelotPair(camelotV2Factory.createPair(address(tokenC), address(tokenD)));
-        vm.label(address(pairCD), "PairCD");
+        // Pair C-D
+        camelotPairCD = ICamelotPair(
+            camelotV2Factory.createPair(address(camelotMultihopTokenC), address(camelotMultihopTokenD))
+        );
+        vm.label(
+            address(camelotPairCD),
+            string.concat("CamelotPairCD - ", camelotMultihopTokenC.symbol(), " / ", camelotMultihopTokenD.symbol())
+        );
     }
 
-    function _initializeLiquidity() internal {
-        // Initialize pair A-B (balanced)
-        tokenA.mint(address(this), INITIAL_LIQUIDITY);
-        tokenA.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        tokenB.mint(address(this), INITIAL_LIQUIDITY);
-        tokenB.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        CamelotV2Service._deposit(camelotV2Router, tokenA, tokenB, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY);
+    function _initializeMultihopPools() internal {
+        // Initialize balanced pair A-B (uses existing TestBase function)
+        _initializeCamelotBalancedPools();
 
         // Initialize pair B-C (balanced)
-        tokenB.mint(address(this), INITIAL_LIQUIDITY);
-        tokenB.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        tokenC.mint(address(this), INITIAL_LIQUIDITY);
-        tokenC.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        CamelotV2Service._deposit(camelotV2Router, tokenB, tokenC, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY);
+        camelotBalancedTokenB.mint(address(this), INITIAL_LIQUIDITY);
+        camelotBalancedTokenB.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
+        camelotMultihopTokenC.mint(address(this), INITIAL_LIQUIDITY);
+        camelotMultihopTokenC.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router, camelotBalancedTokenB, camelotMultihopTokenC, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY
+        );
 
         // Initialize pair C-D (balanced)
-        tokenC.mint(address(this), INITIAL_LIQUIDITY);
-        tokenC.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        tokenD.mint(address(this), INITIAL_LIQUIDITY);
-        tokenD.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
-        CamelotV2Service._deposit(camelotV2Router, tokenC, tokenD, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY);
+        camelotMultihopTokenC.mint(address(this), INITIAL_LIQUIDITY);
+        camelotMultihopTokenC.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
+        camelotMultihopTokenD.mint(address(this), INITIAL_LIQUIDITY);
+        camelotMultihopTokenD.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router, camelotMultihopTokenC, camelotMultihopTokenD, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -106,21 +100,22 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test 2-hop _saleQuote: A -> B -> C
      * @dev Verifies chained forward swap calculations match actual router execution
      */
-    function test_multihop_saleQuote_2hop_AtoC() public {
+    function test_saleQuote_Camelot_multihop_2hop_AtoC() public {
+        _initializeMultihopPools();
         uint256 amountIn = SWAP_AMOUNT;
 
         // Calculate expected output through 2 hops using ConstProdUtils
-        uint256 expectedAmountB = _calculateSaleQuote(pairAB, address(tokenA), amountIn);
-        uint256 expectedAmountC = _calculateSaleQuote(pairBC, address(tokenB), expectedAmountB);
+        uint256 expectedAmountB = _calculateSaleQuote(camelotBalancedPair, address(camelotBalancedTokenA), amountIn);
+        uint256 expectedAmountC = _calculateSaleQuote(camelotPairBC, address(camelotBalancedTokenB), expectedAmountB);
 
         // Execute actual swap through router
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path = new address[](3);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn,
@@ -131,7 +126,7 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
             block.timestamp + 300
         );
 
-        uint256 actualAmountC = tokenC.balanceOf(address(this));
+        uint256 actualAmountC = camelotMultihopTokenC.balanceOf(address(this));
 
         // Verify the calculated amount matches actual
         assertEq(actualAmountC, expectedAmountC, "2-hop saleQuote should match actual output");
@@ -141,32 +136,30 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test 2-hop _purchaseQuote: C -> B -> A (reverse direction)
      * @dev Verifies chained reverse quote calculations to get desired output
      */
-    function test_multihop_purchaseQuote_2hop_AtoC() public {
+    function test_purchaseQuote_Camelot_multihop_2hop_AtoC() public {
+        _initializeMultihopPools();
         uint256 desiredAmountC = SWAP_AMOUNT / 2; // Want 50e18 of token C
 
         // Calculate required input through 2 hops using ConstProdUtils (working backwards)
-        uint256 requiredAmountB = _calculatePurchaseQuote(pairBC, address(tokenC), desiredAmountC);
-        uint256 requiredAmountA = _calculatePurchaseQuote(pairAB, address(tokenB), requiredAmountB);
+        uint256 requiredAmountB =
+            _calculatePurchaseQuote(camelotPairBC, address(camelotMultihopTokenC), desiredAmountC);
+        uint256 requiredAmountA =
+            _calculatePurchaseQuote(camelotBalancedPair, address(camelotBalancedTokenB), requiredAmountB);
 
         // Execute actual swap through router with calculated input
-        tokenA.mint(address(this), requiredAmountA);
-        tokenA.approve(address(camelotV2Router), requiredAmountA);
+        camelotBalancedTokenA.mint(address(this), requiredAmountA);
+        camelotBalancedTokenA.approve(address(camelotV2Router), requiredAmountA);
 
         address[] memory path = new address[](3);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            requiredAmountA,
-            desiredAmountC, // Minimum output
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            requiredAmountA, desiredAmountC, path, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountC = tokenC.balanceOf(address(this));
+        uint256 actualAmountC = camelotMultihopTokenC.balanceOf(address(this));
 
         // Verify we got at least the desired amount
         assertGe(actualAmountC, desiredAmountC, "2-hop purchaseQuote should yield at least desired output");
@@ -176,48 +169,48 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test intermediate amounts in 2-hop route
      * @dev Verifies each hop's output matches expected intermediate values
      */
-    function test_multihop_intermediateAmounts_2hop() public {
+    function test_saleQuote_Camelot_multihop_intermediateAmounts_2hop() public {
+        _initializeMultihopPools();
         uint256 amountIn = SWAP_AMOUNT;
 
         // Get reserves before any swap
-        HopData memory hop1 = _getHopData(pairAB, address(tokenA));
-        HopData memory hop2 = _getHopData(pairBC, address(tokenB));
+        HopData memory hop1 = _getHopData(camelotBalancedPair, address(camelotBalancedTokenA));
+        HopData memory hop2 = _getHopData(camelotPairBC, address(camelotBalancedTokenB));
 
         // Calculate expected intermediate amounts
-        uint256 expectedAmountB = ConstProdUtils._saleQuote(
-            amountIn, hop1.reserveIn, hop1.reserveOut, hop1.feePercent, FEE_DENOMINATOR
-        );
+        uint256 expectedAmountB =
+            ConstProdUtils._saleQuote(amountIn, hop1.reserveIn, hop1.reserveOut, hop1.feePercent, FEE_DENOMINATOR);
         uint256 expectedAmountC = ConstProdUtils._saleQuote(
             expectedAmountB, hop2.reserveIn, hop2.reserveOut, hop2.feePercent, FEE_DENOMINATOR
         );
 
         // Execute first hop only
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path1 = new address[](2);
-        path1[0] = address(tokenA);
-        path1[1] = address(tokenB);
+        path1[0] = address(camelotBalancedTokenA);
+        path1[1] = address(camelotBalancedTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn, 0, path1, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountB = tokenB.balanceOf(address(this));
+        uint256 actualAmountB = camelotBalancedTokenB.balanceOf(address(this));
         assertEq(actualAmountB, expectedAmountB, "Intermediate amount B should match");
 
         // Execute second hop
-        tokenB.approve(address(camelotV2Router), actualAmountB);
+        camelotBalancedTokenB.approve(address(camelotV2Router), actualAmountB);
 
         address[] memory path2 = new address[](2);
-        path2[0] = address(tokenB);
-        path2[1] = address(tokenC);
+        path2[0] = address(camelotBalancedTokenB);
+        path2[1] = address(camelotMultihopTokenC);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             actualAmountB, 0, path2, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountC = tokenC.balanceOf(address(this));
+        uint256 actualAmountC = camelotMultihopTokenC.balanceOf(address(this));
         assertEq(actualAmountC, expectedAmountC, "Final amount C should match");
     }
 
@@ -229,34 +222,30 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test 3-hop _saleQuote: A -> B -> C -> D
      * @dev Verifies chained forward swap calculations across 3 pools
      */
-    function test_multihop_saleQuote_3hop_AtoD() public {
+    function test_saleQuote_Camelot_multihop_3hop_AtoD() public {
+        _initializeMultihopPools();
         uint256 amountIn = SWAP_AMOUNT;
 
         // Calculate expected output through 3 hops using ConstProdUtils
-        uint256 expectedAmountB = _calculateSaleQuote(pairAB, address(tokenA), amountIn);
-        uint256 expectedAmountC = _calculateSaleQuote(pairBC, address(tokenB), expectedAmountB);
-        uint256 expectedAmountD = _calculateSaleQuote(pairCD, address(tokenC), expectedAmountC);
+        uint256 expectedAmountB = _calculateSaleQuote(camelotBalancedPair, address(camelotBalancedTokenA), amountIn);
+        uint256 expectedAmountC = _calculateSaleQuote(camelotPairBC, address(camelotBalancedTokenB), expectedAmountB);
+        uint256 expectedAmountD = _calculateSaleQuote(camelotPairCD, address(camelotMultihopTokenC), expectedAmountC);
 
         // Execute actual swap through router
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path = new address[](4);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
-        path[3] = address(tokenD);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
+        path[3] = address(camelotMultihopTokenD);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountIn,
-            0,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            amountIn, 0, path, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountD = tokenD.balanceOf(address(this));
+        uint256 actualAmountD = camelotMultihopTokenD.balanceOf(address(this));
 
         assertEq(actualAmountD, expectedAmountD, "3-hop saleQuote should match actual output");
     }
@@ -265,34 +254,33 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test 3-hop _purchaseQuote: D -> C -> B -> A
      * @dev Verifies chained reverse quote calculations across 3 pools
      */
-    function test_multihop_purchaseQuote_3hop_AtoD() public {
+    function test_purchaseQuote_Camelot_multihop_3hop_AtoD() public {
+        _initializeMultihopPools();
         uint256 desiredAmountD = SWAP_AMOUNT / 4; // Want 25e18 of token D
 
         // Calculate required input through 3 hops using ConstProdUtils (working backwards)
-        uint256 requiredAmountC = _calculatePurchaseQuote(pairCD, address(tokenD), desiredAmountD);
-        uint256 requiredAmountB = _calculatePurchaseQuote(pairBC, address(tokenC), requiredAmountC);
-        uint256 requiredAmountA = _calculatePurchaseQuote(pairAB, address(tokenB), requiredAmountB);
+        uint256 requiredAmountC =
+            _calculatePurchaseQuote(camelotPairCD, address(camelotMultihopTokenD), desiredAmountD);
+        uint256 requiredAmountB =
+            _calculatePurchaseQuote(camelotPairBC, address(camelotMultihopTokenC), requiredAmountC);
+        uint256 requiredAmountA =
+            _calculatePurchaseQuote(camelotBalancedPair, address(camelotBalancedTokenB), requiredAmountB);
 
         // Execute actual swap through router with calculated input
-        tokenA.mint(address(this), requiredAmountA);
-        tokenA.approve(address(camelotV2Router), requiredAmountA);
+        camelotBalancedTokenA.mint(address(this), requiredAmountA);
+        camelotBalancedTokenA.approve(address(camelotV2Router), requiredAmountA);
 
         address[] memory path = new address[](4);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
-        path[3] = address(tokenD);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
+        path[3] = address(camelotMultihopTokenD);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            requiredAmountA,
-            desiredAmountD,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            requiredAmountA, desiredAmountD, path, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountD = tokenD.balanceOf(address(this));
+        uint256 actualAmountD = camelotMultihopTokenD.balanceOf(address(this));
 
         assertGe(actualAmountD, desiredAmountD, "3-hop purchaseQuote should yield at least desired output");
     }
@@ -301,18 +289,18 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Test all intermediate amounts in 3-hop route
      * @dev Verifies each hop's output matches expected intermediate values
      */
-    function test_multihop_intermediateAmounts_3hop() public {
+    function test_saleQuote_Camelot_multihop_intermediateAmounts_3hop() public {
+        _initializeMultihopPools();
         uint256 amountIn = SWAP_AMOUNT;
 
         // Get reserves before any swap
-        HopData memory hop1 = _getHopData(pairAB, address(tokenA));
-        HopData memory hop2 = _getHopData(pairBC, address(tokenB));
-        HopData memory hop3 = _getHopData(pairCD, address(tokenC));
+        HopData memory hop1 = _getHopData(camelotBalancedPair, address(camelotBalancedTokenA));
+        HopData memory hop2 = _getHopData(camelotPairBC, address(camelotBalancedTokenB));
+        HopData memory hop3 = _getHopData(camelotPairCD, address(camelotMultihopTokenC));
 
         // Calculate expected intermediate amounts
-        uint256 expectedAmountB = ConstProdUtils._saleQuote(
-            amountIn, hop1.reserveIn, hop1.reserveOut, hop1.feePercent, FEE_DENOMINATOR
-        );
+        uint256 expectedAmountB =
+            ConstProdUtils._saleQuote(amountIn, hop1.reserveIn, hop1.reserveOut, hop1.feePercent, FEE_DENOMINATOR);
         uint256 expectedAmountC = ConstProdUtils._saleQuote(
             expectedAmountB, hop2.reserveIn, hop2.reserveOut, hop2.feePercent, FEE_DENOMINATOR
         );
@@ -321,39 +309,39 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
         );
 
         // Execute hop 1
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path = new address[](2);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn, 0, path, address(this), address(0), block.timestamp + 300
         );
-        uint256 actualAmountB = tokenB.balanceOf(address(this));
+        uint256 actualAmountB = camelotBalancedTokenB.balanceOf(address(this));
         assertEq(actualAmountB, expectedAmountB, "Intermediate B should match");
 
         // Execute hop 2
-        tokenB.approve(address(camelotV2Router), actualAmountB);
-        path[0] = address(tokenB);
-        path[1] = address(tokenC);
+        camelotBalancedTokenB.approve(address(camelotV2Router), actualAmountB);
+        path[0] = address(camelotBalancedTokenB);
+        path[1] = address(camelotMultihopTokenC);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             actualAmountB, 0, path, address(this), address(0), block.timestamp + 300
         );
-        uint256 actualAmountC = tokenC.balanceOf(address(this));
+        uint256 actualAmountC = camelotMultihopTokenC.balanceOf(address(this));
         assertEq(actualAmountC, expectedAmountC, "Intermediate C should match");
 
         // Execute hop 3
-        tokenC.approve(address(camelotV2Router), actualAmountC);
-        path[0] = address(tokenC);
-        path[1] = address(tokenD);
+        camelotMultihopTokenC.approve(address(camelotV2Router), actualAmountC);
+        path[0] = address(camelotMultihopTokenC);
+        path[1] = address(camelotMultihopTokenD);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             actualAmountC, 0, path, address(this), address(0), block.timestamp + 300
         );
-        uint256 actualAmountD = tokenD.balanceOf(address(this));
+        uint256 actualAmountD = camelotMultihopTokenD.balanceOf(address(this));
         assertEq(actualAmountD, expectedAmountD, "Final D should match");
     }
 
@@ -365,35 +353,37 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Fuzz test 2-hop route with varying input amounts
      * @dev Verifies calculation accuracy across a range of swap sizes
      */
-    function testFuzz_multihop_2hop_varyingAmounts(uint256 amountIn) public {
+    function testFuzz_saleQuote_Camelot_multihop_2hop_varyingAmounts(uint256 amountIn) public {
+        _initializeMultihopPools();
+
         // Bound input to reasonable range (avoid dust and reserve-draining amounts)
         amountIn = bound(amountIn, 1e15, INITIAL_LIQUIDITY / 10);
 
         // Calculate expected output through 2 hops
-        uint256 expectedAmountB = _calculateSaleQuote(pairAB, address(tokenA), amountIn);
+        uint256 expectedAmountB = _calculateSaleQuote(camelotBalancedPair, address(camelotBalancedTokenA), amountIn);
 
         // Skip if first hop produces 0 output
         vm.assume(expectedAmountB > 0);
 
-        uint256 expectedAmountC = _calculateSaleQuote(pairBC, address(tokenB), expectedAmountB);
+        uint256 expectedAmountC = _calculateSaleQuote(camelotPairBC, address(camelotBalancedTokenB), expectedAmountB);
 
         // Skip if final output is 0
         vm.assume(expectedAmountC > 0);
 
         // Execute actual swap
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path = new address[](3);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn, 0, path, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountC = tokenC.balanceOf(address(this));
+        uint256 actualAmountC = camelotMultihopTokenC.balanceOf(address(this));
         assertEq(actualAmountC, expectedAmountC, "Fuzz 2-hop output should match");
     }
 
@@ -401,35 +391,37 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Fuzz test 3-hop route with varying input amounts
      * @dev Verifies calculation accuracy across 3 pools with varied sizes
      */
-    function testFuzz_multihop_3hop_varyingAmounts(uint256 amountIn) public {
+    function testFuzz_saleQuote_Camelot_multihop_3hop_varyingAmounts(uint256 amountIn) public {
+        _initializeMultihopPools();
+
         // Bound input to reasonable range
         amountIn = bound(amountIn, 1e15, INITIAL_LIQUIDITY / 20);
 
         // Calculate expected output through 3 hops
-        uint256 expectedAmountB = _calculateSaleQuote(pairAB, address(tokenA), amountIn);
+        uint256 expectedAmountB = _calculateSaleQuote(camelotBalancedPair, address(camelotBalancedTokenA), amountIn);
         vm.assume(expectedAmountB > 0);
 
-        uint256 expectedAmountC = _calculateSaleQuote(pairBC, address(tokenB), expectedAmountB);
+        uint256 expectedAmountC = _calculateSaleQuote(camelotPairBC, address(camelotBalancedTokenB), expectedAmountB);
         vm.assume(expectedAmountC > 0);
 
-        uint256 expectedAmountD = _calculateSaleQuote(pairCD, address(tokenC), expectedAmountC);
+        uint256 expectedAmountD = _calculateSaleQuote(camelotPairCD, address(camelotMultihopTokenC), expectedAmountC);
         vm.assume(expectedAmountD > 0);
 
         // Execute actual swap
-        tokenA.mint(address(this), amountIn);
-        tokenA.approve(address(camelotV2Router), amountIn);
+        camelotBalancedTokenA.mint(address(this), amountIn);
+        camelotBalancedTokenA.approve(address(camelotV2Router), amountIn);
 
         address[] memory path = new address[](4);
-        path[0] = address(tokenA);
-        path[1] = address(tokenB);
-        path[2] = address(tokenC);
-        path[3] = address(tokenD);
+        path[0] = address(camelotBalancedTokenA);
+        path[1] = address(camelotBalancedTokenB);
+        path[2] = address(camelotMultihopTokenC);
+        path[3] = address(camelotMultihopTokenD);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn, 0, path, address(this), address(0), block.timestamp + 300
         );
 
-        uint256 actualAmountD = tokenD.balanceOf(address(this));
+        uint256 actualAmountD = camelotMultihopTokenD.balanceOf(address(this));
         assertEq(actualAmountD, expectedAmountD, "Fuzz 3-hop output should match");
     }
 
@@ -437,7 +429,7 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      * @notice Fuzz test with varying pool reserves
      * @dev Creates new pools with fuzzed reserves and tests multi-hop accuracy
      */
-    function testFuzz_multihop_varyingReserves(
+    function testFuzz_saleQuote_Camelot_multihop_varyingReserves(
         uint256 reserveAB_A,
         uint256 reserveAB_B,
         uint256 reserveBC_B,
@@ -455,13 +447,18 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
         amountIn = bound(amountIn, 1e15, maxInput > 1e15 ? maxInput : 1e16);
 
         // Create new tokens for this test
-        ERC20PermitMintableStub fuzzTokenA = new ERC20PermitMintableStub("FuzzA", "FA", 18, address(this), 0);
-        ERC20PermitMintableStub fuzzTokenB = new ERC20PermitMintableStub("FuzzB", "FB", 18, address(this), 0);
-        ERC20PermitMintableStub fuzzTokenC = new ERC20PermitMintableStub("FuzzC", "FC", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenA =
+            new ERC20PermitMintableStub("CamelotFuzzA", "CAMFZA", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenB =
+            new ERC20PermitMintableStub("CamelotFuzzB", "CAMFZB", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenC =
+            new ERC20PermitMintableStub("CamelotFuzzC", "CAMFZC", 18, address(this), 0);
 
         // Create pairs with fuzzed reserves
-        ICamelotPair fuzzPairAB = ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenA), address(fuzzTokenB)));
-        ICamelotPair fuzzPairBC = ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenB), address(fuzzTokenC)));
+        ICamelotPair fuzzPairAB =
+            ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenA), address(fuzzTokenB)));
+        ICamelotPair fuzzPairBC =
+            ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenB), address(fuzzTokenC)));
 
         // Initialize pair AB
         fuzzTokenA.mint(address(this), reserveAB_A);
@@ -510,9 +507,8 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
      */
     function _getHopData(ICamelotPair pair, address tokenIn) internal view returns (HopData memory data) {
         (uint112 r0, uint112 r1, uint16 token0Fee, uint16 token1Fee) = pair.getReserves();
-        (data.reserveIn, data.feePercent, data.reserveOut,) = ConstProdUtils._sortReserves(
-            tokenIn, pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee)
-        );
+        (data.reserveIn, data.feePercent, data.reserveOut,) =
+            ConstProdUtils._sortReserves(tokenIn, pair.token0(), r0, uint256(token0Fee), r1, uint256(token1Fee));
     }
 
     /**
@@ -539,7 +535,8 @@ contract ConstProdUtils_multihop is TestBase_CamelotV2 {
         // tokenOut is what we want, so the "in" token is the other token
         address tokenIn = pair.token0() == tokenOut ? pair.token1() : pair.token0();
         HopData memory data = _getHopData(pair, tokenIn);
-        return
-            ConstProdUtils._purchaseQuote(amountOut, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR);
+        return ConstProdUtils._purchaseQuote(
+            amountOut, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR
+        );
     }
 }

@@ -26,11 +26,11 @@ Align the multihop routing test with the existing ConstProdUtils Camelot testbas
 As a developer, I want the multihop test to follow the same patterns as other ConstProdUtils tests so that the test suite is consistent and maintainable.
 
 **Acceptance Criteria:**
-- [ ] Test naming follows Camelot testbase conventions
-- [ ] Helper functions align with existing patterns in the test suite
-- [ ] No functional changes to test coverage
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test naming follows Camelot testbase conventions
+- [x] Helper functions align with existing patterns in the test suite
+- [x] No functional changes to test coverage
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -49,9 +49,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test --match-path test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_multihop.t.sol`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test --match-path test/foundry/spec/utils/math/constProdUtils/ConstProdUtils_multihop_Camelot.t.sol`)
+- [x] Build succeeds (`forge build`)
 
 ---
 
