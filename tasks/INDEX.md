@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Complete | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Ready | CRANE-026 | `fix/tighten-overflow-assertions` |
@@ -93,8 +92,8 @@
 - CRANE-093: Make Slipstream Price-Limit Exactness Provable (Medium)
 - CRANE-094: Align Slipstream Test Pragma with Repo Conventions (Low)
 
-**Slipstream Fuzz Test Follow-ups (1 task - from CRANE-038):**
-- CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
+**Slipstream Fuzz Test Follow-ups (completed - from CRANE-038):**
+(All follow-up tasks from CRANE-038 have been completed)
 
 **Camelot K Invariant Follow-ups (2 tasks - from CRANE-049):**
 - CRANE-104: Add Burn Proportional Invariant Check (Low)
@@ -222,6 +221,7 @@
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | 2026-01-18 | archive/CRANE-068-slipstream-repro-notes/ |
 | CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | 2026-01-18 | archive/CRANE-069-camelot-bidirectional-fuzz/ |
 | CRANE-070 | Reduce Noisy Logs from Camelot Stubs | 2026-01-18 | archive/CRANE-070-camelot-stub-logs/ |
+| CRANE-067 | Add Slipstream Single-Tick Guard Assertion | 2026-01-18 | archive/CRANE-067-slipstream-singletick-guard/ |
 
 ## Cross-Repo Dependencies
 
