@@ -7,9 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Complete | CRANE-023 | `refactor/erc5267-testbase` |
-| CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Complete | CRANE-023 | - |
-| CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Complete | CRANE-038 | - |
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Ready | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
 | CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Ready | CRANE-044 | `test/camelot-bidirectional-fuzz` |
@@ -123,9 +120,10 @@
 - CRANE-108: Use Math.mulDiv for Overflow Protection in Balancer V3 Pool (Low - from CRANE-052)
 - CRANE-109: Add 2-Token Pool Guardrails to Balancer V3 Pool (Low - from CRANE-052)
 
-**ERC5267 Follow-ups (2 tasks - from CRANE-023):**
-- CRANE-064: Adopt IFacet TestBase Pattern for ERC5267 (Low)
-- CRANE-065: Add ERC5267 Diamond Proxy Integration Test (Low)
+**ERC5267 Follow-ups (4 tasks - from CRANE-023/CRANE-064/CRANE-065):**
+- CRANE-123: Split ERC5267 IFacet Tests into Dedicated File (from CRANE-064)
+- CRANE-124: Use Canonical Proxy Fixture for ERC5267 Integration Test (from CRANE-065)
+- CRANE-125: Align ERC5267 Integration Test Pragma with Repo Version (from CRANE-065)
 
 **Overflow Boundary Test Follow-ups (1 task - from CRANE-026):**
 - CRANE-073: Tighten Non-Revert Assertions in Overflow Tests (Low)
@@ -223,6 +221,9 @@
 | CRANE-061 | Add DFPkg Deployment Integration Test | 2026-01-17 | archive/CRANE-061-dfpkg-deployment-integration-test/ |
 | CRANE-062 | Add Heterogeneous TokenConfig Order-Independence Tests | 2026-01-17 | archive/CRANE-062-tokenconfig-heterogeneous-tests/ |
 | CRANE-063 | Add EXACT_OUT Pool-Favorable Rounding Tests | 2026-01-17 | archive/CRANE-063-exact-out-rounding-tests/ |
+| CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | 2026-01-17 | archive/CRANE-064-erc5267-ifacet-testbase/ |
+| CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | 2026-01-17 | archive/CRANE-065-erc5267-proxy-integration/ |
+| CRANE-066 | Strengthen Zap-In Value Conservation Assertions | 2026-01-17 | archive/CRANE-066-slipstream-zapin-conservation/ |
 
 ## Cross-Repo Dependencies
 
