@@ -65,6 +65,7 @@
 | CRANE-120 | Tighten postDeploy Call Expectations | Ready | CRANE-061 | `feature/postdeploy-payload-validation` |
 | CRANE-121 | Tighten Fuzz Assumptions for Realism | Ready | CRANE-062 | `feature/tighten-fuzz-assumptions` |
 | CRANE-122 | Remove Unnecessary ERC20 Metadata Mocks | Ready | CRANE-062 | `feature/remove-erc20-mocks` |
+| CRANE-123 | Split ERC5267 IFacet Tests into Dedicated File | Ready | CRANE-064 | `refactor/erc5267-split-ifacet` |
 
 ## Status Legend
 

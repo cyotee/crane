@@ -34,8 +34,8 @@ Actionable items for follow-up tasks:
 **Description:** Many facets keep `*_IFacet.t.sol` separate from behavior/feature tests (e.g., `ERC165Facet_IFacet.t.sol`). If desired, `ERC5267Facet_IFacet_Test` could be moved to its own file for consistency and quicker `--match-path` targeting.
 **Affected Files:**
 - test/foundry/spec/utils/cryptography/ERC5267/ERC5267Facet.t.sol
-**User Response:** (not requested)
-**Notes:** Not required by CRANE-064; current implementation is acceptable.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-123
 
 ---
 
