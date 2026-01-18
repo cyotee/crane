@@ -8,9 +8,6 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | In Progress | CRANE-038 | `test/slipstream-singletick-guard` |
-| CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Complete | CRANE-038 | - |
-| CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Complete | CRANE-044 | - |
-| CRANE-070 | Reduce Noisy Logs from Camelot Stubs | Complete | CRANE-044 | `fix/camelot-stub-logs` |
 | CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Ready | CRANE-051 | `fix/tokenconfig-unused-import` |
 | CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Ready | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Ready | CRANE-026 | `fix/tighten-overflow-assertions` |
@@ -96,9 +93,8 @@
 - CRANE-093: Make Slipstream Price-Limit Exactness Provable (Medium)
 - CRANE-094: Align Slipstream Test Pragma with Repo Conventions (Low)
 
-**Slipstream Fuzz Test Follow-ups (2 tasks - from CRANE-038):**
+**Slipstream Fuzz Test Follow-ups (1 task - from CRANE-038):**
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
-- CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
 **Camelot K Invariant Follow-ups (2 tasks - from CRANE-049):**
 - CRANE-104: Add Burn Proportional Invariant Check (Low)
@@ -108,9 +104,8 @@
 - CRANE-106: Use Balance Deltas Consistently in Multihop Tests (Low)
 - CRANE-107: Reduce Stub Log Noise in Verbose Test Runs (Very Low)
 
-**Camelot Asymmetric Fee Test Follow-ups (2 tasks - from CRANE-044):**
-- CRANE-069: Tighten Camelot Bidirectional Fuzz Assertion (Medium)
-- CRANE-070: Reduce Noisy Logs from Camelot Stubs (Low)
+**Camelot Asymmetric Fee Test Follow-ups (completed - from CRANE-044):**
+(All follow-up tasks from CRANE-044 have been completed)
 
 **TokenConfigUtils Follow-ups (2 tasks - from CRANE-051):**
 - CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test (Medium)
@@ -224,6 +219,9 @@
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | 2026-01-17 | archive/CRANE-064-erc5267-ifacet-testbase/ |
 | CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | 2026-01-17 | archive/CRANE-065-erc5267-proxy-integration/ |
 | CRANE-066 | Strengthen Zap-In Value Conservation Assertions | 2026-01-17 | archive/CRANE-066-slipstream-zapin-conservation/ |
+| CRANE-068 | Add Slipstream Fuzz Test Repro Notes | 2026-01-18 | archive/CRANE-068-slipstream-repro-notes/ |
+| CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | 2026-01-18 | archive/CRANE-069-camelot-bidirectional-fuzz/ |
+| CRANE-070 | Reduce Noisy Logs from Camelot Stubs | 2026-01-18 | archive/CRANE-070-camelot-stub-logs/ |
 
 ## Cross-Repo Dependencies
 
