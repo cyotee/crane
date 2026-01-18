@@ -174,7 +174,9 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         );
     }
 
-    /// @notice Fuzz test: zap-in conserves value (input >= output + dust)
+    /// @notice Fuzz test: zap-in conserves value in the input token domain
+    /// @dev Asserts exact conservation: amountIn = swapAmountIn + usedInput + dustInput
+    /// @dev Also asserts dust percentage is bounded relative to input
     /// @param amountIn Input amount (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param zeroForOne Input direction
@@ -210,21 +212,80 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
 
         SlipstreamZapQuoter.ZapInQuote memory quote = SlipstreamZapQuoter.quoteZapInSingleCore(params);
 
-        // Total output = amounts used for liquidity + dust + fees
-        // For zeroForOne=true: input was token0, swapped some to get token1
-        // So: swapAmountIn + remaining token0 should equal amountIn (minus fees)
+        // ═══════════════════════════════════════════════════════════════════
+        // INVARIANT 1: Input Token Conservation (Exact)
+        // ═══════════════════════════════════════════════════════════════════
+        // For zeroForOne=true: amountIn = swap.amountIn + amount0 + dust0
+        // For zeroForOne=false: amountIn = swap.amountIn + amount1 + dust1
+        //
+        // This holds exactly because:
+        // - swap.amountIn is the actual amount consumed by the swap
+        // - remainingInput = amountIn - swap.amountIn
+        // - amount{X} + dust{X} = remainingInput (where X is the input token)
+        // ═══════════════════════════════════════════════════════════════════
 
-        // Basic check: swap amount should not exceed input
-        assertTrue(quote.swapAmountIn <= amountIn, "Swap amount exceeds input");
+        uint256 inputUsed;
+        uint256 inputDust;
+        if (zeroForOne) {
+            inputUsed = quote.amount0;
+            inputDust = quote.dust0;
+        } else {
+            inputUsed = quote.amount1;
+            inputDust = quote.dust1;
+        }
 
-        // Check that we account for all input
-        // After swap: we have (amountIn - swapAmountIn) of input token + swapOut of other token
-        // Used amounts + dust should account for everything
-        uint256 usedTotal = quote.amount0 + quote.amount1;
-        uint256 dustTotal = quote.dust0 + quote.dust1;
+        uint256 totalAccountedInput = quote.swap.amountIn + inputUsed + inputDust;
 
-        // At minimum, used + dust should be positive
-        assertTrue(usedTotal + dustTotal > 0, "Should have some value");
+        assertEq(
+            totalAccountedInput,
+            amountIn,
+            "Input token conservation violated"
+        );
+
+        // ═══════════════════════════════════════════════════════════════════
+        // INVARIANT 2: Dust Percentage Bound (Relative to Input)
+        // ═══════════════════════════════════════════════════════════════════
+        // Total dust (both tokens) should be bounded relative to input.
+        // We use the MAX_DUST_PERCENT constant (5%) as the bound.
+        // This ensures the zap is reasonably efficient.
+        // ═══════════════════════════════════════════════════════════════════
+
+        uint256 totalDust = quote.dust0 + quote.dust1;
+        uint256 maxAllowedDust = (amountIn * MAX_DUST_PERCENT) / 10000;
+
+        assertTrue(
+            totalDust <= maxAllowedDust,
+            "Dust exceeds 5% of input"
+        );
+
+        // ═══════════════════════════════════════════════════════════════════
+        // INVARIANT 3: Liquidity Production
+        // ═══════════════════════════════════════════════════════════════════
+        // A valid zap should produce liquidity unless we're at an extreme
+        // range. This ensures the optimization actually works.
+        // ═══════════════════════════════════════════════════════════════════
+
+        assertTrue(
+            quote.liquidity > 0,
+            "Zap should produce liquidity"
+        );
+
+        // ═══════════════════════════════════════════════════════════════════
+        // INVARIANT 4: Swap Amount Sanity
+        // ═══════════════════════════════════════════════════════════════════
+        // The requested swap amount should never exceed the input amount.
+        // And the actual swap consumption should not exceed the request.
+        // ═══════════════════════════════════════════════════════════════════
+
+        assertTrue(
+            quote.swapAmountIn <= amountIn,
+            "Requested swap amount exceeds input"
+        );
+
+        assertTrue(
+            quote.swap.amountIn <= quote.swapAmountIn,
+            "Actual swap consumption exceeds request"
+        );
     }
 
     /* -------------------------------------------------------------------------- */

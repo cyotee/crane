@@ -9,7 +9,7 @@
 |----|-------|--------|--------------|----------|
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Complete | CRANE-023 | `refactor/erc5267-testbase` |
 | CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | In Progress | CRANE-023 | `test/erc5267-proxy-integration` |
-| CRANE-066 | Strengthen Zap-In Value Conservation Assertions | In Progress | CRANE-038 | `test/slipstream-zapin-conservation` |
+| CRANE-066 | Strengthen Zap-In Value Conservation Assertions | In Review | CRANE-038 | `test/slipstream-zapin-conservation` |
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Ready | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
 | CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | Ready | CRANE-044 | `test/camelot-bidirectional-fuzz` |
@@ -97,8 +97,7 @@
 - CRANE-093: Make Slipstream Price-Limit Exactness Provable (Medium)
 - CRANE-094: Align Slipstream Test Pragma with Repo Conventions (Low)
 
-**Slipstream Fuzz Test Follow-ups (3 tasks - from CRANE-038):**
-- CRANE-066: Strengthen Zap-In Value Conservation Assertions (Medium)
+**Slipstream Fuzz Test Follow-ups (2 tasks - from CRANE-038):**
 - CRANE-067: Add Slipstream Single-Tick Guard Assertion (Low)
 - CRANE-068: Add Slipstream Fuzz Test Repro Notes (Low)
 
