@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-064 | Adopt IFacet TestBase Pattern for ERC5267 | Complete | CRANE-023 | `refactor/erc5267-testbase` |
-| CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | In Progress | CRANE-023 | `test/erc5267-proxy-integration` |
+| CRANE-065 | Add ERC5267 Diamond Proxy Integration Test | Pending Merge | CRANE-023 | `test/erc5267-proxy-integration` |
 | CRANE-066 | Strengthen Zap-In Value Conservation Assertions | Complete | CRANE-038 | - |
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | Ready | CRANE-038 | `test/slipstream-singletick-guard` |
 | CRANE-068 | Add Slipstream Fuzz Test Repro Notes | Ready | CRANE-038 | `docs/slipstream-repro-notes` |
