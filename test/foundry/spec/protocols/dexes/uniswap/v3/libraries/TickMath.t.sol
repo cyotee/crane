@@ -195,34 +195,38 @@ contract TickMath_Bijection_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     /**
-     * @notice Tests that ticks outside valid range revert
+     * @notice Tests that ticks outside valid range revert with 'T'
+     * @dev TickMath.getSqrtRatioAtTick reverts with bytes("T") when tick is out of range
      */
     function test_revert_tickOutOfRange_tooLow() public {
-        vm.expectRevert();
+        vm.expectRevert(bytes("T"));
         this.external_getSqrtRatioAtTick(MIN_TICK - 1);
     }
 
     /**
-     * @notice Tests that ticks outside valid range revert
+     * @notice Tests that ticks outside valid range revert with 'T'
+     * @dev TickMath.getSqrtRatioAtTick reverts with bytes("T") when tick is out of range
      */
     function test_revert_tickOutOfRange_tooHigh() public {
-        vm.expectRevert();
+        vm.expectRevert(bytes("T"));
         this.external_getSqrtRatioAtTick(MAX_TICK + 1);
     }
 
     /**
-     * @notice Tests that sqrtPrice below MIN_SQRT_RATIO reverts
+     * @notice Tests that sqrtPrice below MIN_SQRT_RATIO reverts with 'R'
+     * @dev TickMath.getTickAtSqrtRatio reverts with bytes("R") when sqrtPrice is out of range
      */
     function test_revert_sqrtPriceTooLow() public {
-        vm.expectRevert();
+        vm.expectRevert(bytes("R"));
         this.external_getTickAtSqrtRatio(MIN_SQRT_RATIO - 1);
     }
 
     /**
-     * @notice Tests that sqrtPrice at or above MAX_SQRT_RATIO reverts
+     * @notice Tests that sqrtPrice at or above MAX_SQRT_RATIO reverts with 'R'
+     * @dev TickMath.getTickAtSqrtRatio reverts with bytes("R") when sqrtPrice >= MAX_SQRT_RATIO
      */
     function test_revert_sqrtPriceTooHigh() public {
-        vm.expectRevert();
+        vm.expectRevert(bytes("R"));
         this.external_getTickAtSqrtRatio(MAX_SQRT_RATIO);
     }
 

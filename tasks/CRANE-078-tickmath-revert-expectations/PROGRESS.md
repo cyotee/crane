@@ -2,14 +2,48 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** Not started
-**Next step:** Read TASK.md and begin implementation
-**Build status:** Not checked
-**Test status:** Not checked
+**Last checkpoint:** Implementation complete
+**Next step:** Commit changes
+**Build status:** PASS
+**Test status:** PASS (16/16 tests)
 
 ---
 
 ## Session Log
+
+### 2026-01-18 - Implementation Complete
+
+**Changes Made:**
+
+Updated `test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol`:
+
+1. **Tick out-of-range tests** - Replaced bare `vm.expectRevert()` with `vm.expectRevert(bytes("T"))`:
+   - `test_revert_tickOutOfRange_tooLow()` - tick < MIN_TICK
+   - `test_revert_tickOutOfRange_tooHigh()` - tick > MAX_TICK
+
+2. **SqrtPrice out-of-range tests** - Replaced bare `vm.expectRevert()` with `vm.expectRevert(bytes("R"))`:
+   - `test_revert_sqrtPriceTooLow()` - sqrtPrice < MIN_SQRT_RATIO
+   - `test_revert_sqrtPriceTooHigh()` - sqrtPrice >= MAX_SQRT_RATIO
+
+3. **Updated NatSpec** - Added documentation noting the specific revert messages
+
+**Verification:**
+
+Confirmed revert messages in TickMath library:
+- Line 25: `require(absTick <= uint256(int256(MAX_TICK)), 'T');`
+- Line 63: `require(sqrtPriceX96 >= MIN_SQRT_RATIO && sqrtPriceX96 < MAX_SQRT_RATIO, 'R');`
+
+**Test Results:**
+```
+Ran 16 tests for test/foundry/spec/protocols/dexes/uniswap/v3/libraries/TickMath.t.sol:TickMath_Bijection_Test
+[PASS] test_revert_sqrtPriceTooHigh() (gas: 4912)
+[PASS] test_revert_sqrtPriceTooLow() (gas: 4669)
+[PASS] test_revert_tickOutOfRange_tooHigh() (gas: 4907)
+[PASS] test_revert_tickOutOfRange_tooLow() (gas: 5121)
+... (all 16 tests passed)
+```
+
+**Build:** Successful with only pre-existing warnings (unrelated to this task)
 
 ### 2026-01-18 - Task Launched
 
