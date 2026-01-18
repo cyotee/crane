@@ -7,11 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | Complete | CRANE-051 | `fix/tokenconfig-unused-import` |
-| CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | Complete | CRANE-051 | `test/tokenconfig-alignment-fuzz` |
-| CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | Complete | CRANE-026 | `fix/tighten-overflow-assertions` |
-| CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | Complete | CRANE-027 | `refactor/multihop-testbase-alignment` |
-| CRANE-075 | Rename Price Impact Fuzz Test for Clarity | Complete | CRANE-028 | `fix/priceimpact-test-rename` |
 | CRANE-076 | Remove Console Logs from Price Impact Tests | Ready | CRANE-028 | `fix/priceimpact-remove-logs` |
 | CRANE-077 | Remove Commented-Out Parameter Stubs | Ready | CRANE-029 | `fix/remove-param-stubs` |
 | CRANE-078 | Tighten TickMath Revert Expectations | Ready | CRANE-032 | `fix/tickmath-revert-expectations` |
@@ -109,9 +104,8 @@
 **Camelot Asymmetric Fee Test Follow-ups (completed - from CRANE-044):**
 (All follow-up tasks from CRANE-044 have been completed)
 
-**TokenConfigUtils Follow-ups (2 tasks - from CRANE-051):**
-- CRANE-072: Add TokenConfigUtils Field Alignment Fuzz Test (Medium)
-- CRANE-071: Remove Unused IERC20 Import from TokenConfigUtils (Low)
+**TokenConfigUtils Follow-ups (completed - from CRANE-051):**
+(All follow-up tasks from CRANE-051 have been completed)
 
 **Balancer V3 Follow-ups (2 tasks - from CRANE-052):**
 - CRANE-108: Use Math.mulDiv for Overflow Protection in Balancer V3 Pool (Low - from CRANE-052)
@@ -126,9 +120,7 @@
 - CRANE-127: Assert Zero-Fee Outcome in Safe Boundary Test (Low - from CRANE-073)
 - CRANE-128: Replace Heuristic Percent Bounds with Explicit Tolerances (Low - from CRANE-073)
 
-**Multihop/Price Impact Test Follow-ups (3 tasks - from CRANE-027/CRANE-028):**
-- CRANE-074: Align Multihop Test with Camelot TestBase Patterns (Low - from CRANE-027)
-- CRANE-075: Rename Price Impact Fuzz Test for Clarity (Low - from CRANE-028)
+**Multihop/Price Impact Test Follow-ups (1 task - from CRANE-027/CRANE-028):**
 - CRANE-076: Remove Console Logs from Price Impact Tests (Low - from CRANE-028)
 
 **ConstProdUtils Cleanup Follow-ups (1 task - from CRANE-029):**
@@ -226,6 +218,11 @@
 | CRANE-069 | Tighten Camelot Bidirectional Fuzz Assertion | 2026-01-18 | archive/CRANE-069-camelot-bidirectional-fuzz/ |
 | CRANE-070 | Reduce Noisy Logs from Camelot Stubs | 2026-01-18 | archive/CRANE-070-camelot-stub-logs/ |
 | CRANE-067 | Add Slipstream Single-Tick Guard Assertion | 2026-01-18 | archive/CRANE-067-slipstream-singletick-guard/ |
+| CRANE-071 | Remove Unused IERC20 Import from TokenConfigUtils | 2026-01-18 | archive/CRANE-071-tokenconfig-unused-import/ |
+| CRANE-072 | Add TokenConfigUtils Field Alignment Fuzz Test | 2026-01-18 | archive/CRANE-072-tokenconfig-alignment-fuzz/ |
+| CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | 2026-01-18 | archive/CRANE-073-tighten-overflow-assertions/ |
+| CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | 2026-01-18 | archive/CRANE-074-multihop-testbase-alignment/ |
+| CRANE-075 | Rename Price Impact Fuzz Test for Clarity | 2026-01-18 | archive/CRANE-075-priceimpact-test-rename/ |
 
 ## Cross-Repo Dependencies
 
