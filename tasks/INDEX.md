@@ -12,7 +12,7 @@
 | CRANE-078 | Tighten TickMath Revert Expectations | Complete | CRANE-032 | `fix/tickmath-revert-expectations` |
 | CRANE-080 | Add SwapMath Golden Vector Tests | Complete | CRANE-033 | `feature/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | In Progress | CRANE-033 | `feature/sqrtpricemath-error-tests` |
-| CRANE-082 | Add TickMath Exact Known Pairs | Ready | CRANE-033 | `test/tickmath-exact-pairs` |
+| CRANE-082 | Add TickMath Exact Known Pairs | Complete | CRANE-033 | `test/tickmath-exact-pairs` |
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Ready | CRANE-037 | `test/aerodrome-slippage-assertion` |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Ready | CRANE-037 | `docs/aerodrome-stable-gas` |
