@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-081 | Add SqrtPriceMath Custom Error Tests | Complete | CRANE-033 | `feature/sqrtpricemath-error-tests` |
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Ready | CRANE-037 | `test/aerodrome-slippage-assertion` |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Ready | CRANE-037 | `docs/aerodrome-stable-gas` |
@@ -225,6 +224,7 @@
 | CRANE-078 | Tighten TickMath Revert Expectations | 2026-01-18 | archive/CRANE-078-tighten-tickmath-revert-expectations/ |
 | CRANE-080 | Add SwapMath Golden Vector Tests | 2026-01-18 | archive/CRANE-080-swapmath-golden-vectors/ |
 | CRANE-082 | Add TickMath Exact Known Pairs | 2026-01-18 | archive/CRANE-082-tickmath-exact-pairs/ |
+| CRANE-081 | Add SqrtPriceMath Custom Error Tests | 2026-01-18 | archive/CRANE-081-sqrtpricemath-error-tests/ |
 
 ## Cross-Repo Dependencies
 
