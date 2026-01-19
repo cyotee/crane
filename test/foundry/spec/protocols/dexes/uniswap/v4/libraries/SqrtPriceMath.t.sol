@@ -168,6 +168,59 @@ contract SqrtPriceMath_V4_Test is Test {
         this.external_getNextSqrtPriceFromOutput(SQRT_PRICE_1_1, 0, 1e18, true);
     }
 
+    /**
+     * @notice Tests that getNextSqrtPriceFromOutput reverts with NotEnoughLiquidity
+     * @dev Occurs when zeroForOne=true and output amount would cause sqrt price to go to 0 or negative.
+     *      This path calls getNextSqrtPriceFromAmount1RoundingDown(sqrtPX96, liquidity, amountOut, false).
+     *      The error triggers when sqrtPX96 <= quotient, where quotient = amountOut * Q96 / liquidity.
+     *      To trigger: set amountOut very large so that quotient >= sqrtPX96.
+     */
+    function test_getNextSqrtPriceFromOutput_revert_notEnoughLiquidity() public {
+        // Use a small liquidity and moderate price
+        uint160 sqrtPriceX96 = SQRT_PRICE_1_1; // 2^96
+        uint128 liquidity = 1e18;
+
+        // For NotEnoughLiquidity to trigger, we need quotient >= sqrtPX96
+        // quotient = (amountOut << 96) / liquidity
+        // We want quotient >= 2^96
+        // So amountOut * 2^96 / 1e18 >= 2^96
+        // amountOut >= 1e18
+        // But the amount needs to be large enough to exceed the price completely
+        // Let's use a very large amount that will definitely cause the check to fail
+        uint256 amountOut = type(uint128).max;
+
+        vm.expectRevert(SqrtPriceMath.NotEnoughLiquidity.selector);
+        this.external_getNextSqrtPriceFromOutput(sqrtPriceX96, liquidity, amountOut, true);
+    }
+
+    /**
+     * @notice Tests that getNextSqrtPriceFromOutput reverts with PriceOverflow
+     * @dev Occurs when zeroForOne=false and removing currency0 causes overflow or underflow.
+     *      This path calls getNextSqrtPriceFromAmount0RoundingUp(sqrtPX96, liquidity, amountOut, false).
+     *      The error triggers when product overflows or numerator1 <= product.
+     *      To trigger: set amountOut very large so that amount * sqrtPX96 overflows or
+     *      liquidity << 96 <= amount * sqrtPX96.
+     */
+    function test_getNextSqrtPriceFromOutput_revert_priceOverflow() public {
+        // Use moderate price and liquidity
+        uint160 sqrtPriceX96 = SQRT_PRICE_1_1; // 2^96
+        uint128 liquidity = 1e18;
+
+        // For PriceOverflow to trigger (when add=false):
+        // Either product = amount * sqrtPX96 overflows
+        // Or numerator1 (= liquidity << 96) <= product
+        //
+        // numerator1 = 1e18 << 96 ≈ 7.92e46
+        // For overflow condition: amount * 2^96 >= numerator1
+        // amount >= 1e18
+        // But we need product to overflow OR numerator1 <= product
+        // Using a very large amount will cause product to overflow
+        uint256 amountOut = type(uint128).max;
+
+        vm.expectRevert(SqrtPriceMath.PriceOverflow.selector);
+        this.external_getNextSqrtPriceFromOutput(sqrtPriceX96, liquidity, amountOut, false);
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                       getAmount0Delta Tests                                */
     /* -------------------------------------------------------------------------- */

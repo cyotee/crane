@@ -26,11 +26,11 @@ Add explicit tests for remaining SqrtPriceMath custom errors: `NotEnoughLiquidit
 As a developer, I want explicit tests for SqrtPriceMath error conditions so that the assembly-based guard rails are verified.
 
 **Acceptance Criteria:**
-- [ ] Test case for `NotEnoughLiquidity()` revert
-- [ ] Test case for `PriceOverflow()` revert
-- [ ] Tests are small and targeted (no fuzzing required)
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test case for `NotEnoughLiquidity()` revert
+- [x] Test case for `PriceOverflow()` revert
+- [x] Tests are small and targeted (no fuzzing required)
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -45,9 +45,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge test --match-path 'test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.t.sol'` passes
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] `forge test --match-path 'test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.t.sol'` passes
+- [x] Build succeeds
 
 ---
 

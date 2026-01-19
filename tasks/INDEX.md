@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-081 | Add SqrtPriceMath Custom Error Tests | In Progress | CRANE-033 | `feature/sqrtpricemath-error-tests` |
+| CRANE-081 | Add SqrtPriceMath Custom Error Tests | Pending Merge | CRANE-033 | `feature/sqrtpricemath-error-tests` |
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Ready | CRANE-037 | `test/aerodrome-slippage-assertion` |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Ready | CRANE-037 | `docs/aerodrome-stable-gas` |
