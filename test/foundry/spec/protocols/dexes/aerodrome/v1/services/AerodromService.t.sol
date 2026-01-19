@@ -1,6 +1,26 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+/* -------------------------------------------------------------------------- */
+/*                        DEPRECATED API TEST COVERAGE                          */
+/* -------------------------------------------------------------------------- */
+/*
+ * IMPORTANT: This test file provides BACKWARD COMPATIBILITY coverage for the
+ * deprecated AerodromService library. DO NOT copy usage patterns from here.
+ *
+ * For new code, use the specialized libraries instead:
+ *   - AerodromServiceVolatile.sol - For volatile pools (xy = k curve)
+ *   - AerodromServiceStable.sol   - For stable pools (x³y + xy³ = k curve)
+ *
+ * See AerodromServiceVolatile.t.sol for the canonical test patterns.
+ *
+ * This test file is retained to:
+ *   1. Ensure the deprecated API continues to work for existing integrations
+ *   2. Prevent regression in legacy code paths
+ *   3. Validate the migration guide in AerodromService.sol
+ */
+/* -------------------------------------------------------------------------- */
+
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IPool} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPool.sol";
 import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRouter.sol";
@@ -12,7 +32,9 @@ import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20Permit
 
 /**
  * @title AerodromService_Test
- * @notice Tests for the AerodromService library functions
+ * @notice DEPRECATED: Backward compatibility tests for the legacy AerodromService library
+ * @dev For new volatile pool tests, see AerodromServiceVolatile.t.sol
+ *      For new stable pool tests, see AerodromServiceStable.t.sol
  */
 contract AerodromService_Test is TestBase_Aerodrome_Pools {
     using ConstProdUtils for uint256;
