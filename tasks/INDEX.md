@@ -7,12 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-076 | Remove Console Logs from Price Impact Tests | Complete | CRANE-028 | `fix/priceimpact-remove-logs` |
-| CRANE-077 | Remove Commented-Out Parameter Stubs | Complete | CRANE-029 | `fix/remove-param-stubs` |
-| CRANE-078 | Tighten TickMath Revert Expectations | Complete | CRANE-032 | `fix/tickmath-revert-expectations` |
-| CRANE-080 | Add SwapMath Golden Vector Tests | Complete | CRANE-033 | `feature/swapmath-golden-vectors` |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | In Progress | CRANE-033 | `feature/sqrtpricemath-error-tests` |
-| CRANE-082 | Add TickMath Exact Known Pairs | Complete | CRANE-033 | `test/tickmath-exact-pairs` |
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Ready | CRANE-037 | `fix/aerodrome-deprecated-test-intent` |
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Ready | CRANE-037 | `test/aerodrome-slippage-assertion` |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Ready | CRANE-037 | `docs/aerodrome-stable-gas` |
@@ -122,14 +117,14 @@
 - CRANE-127: Assert Zero-Fee Outcome in Safe Boundary Test (Low - from CRANE-073)
 - CRANE-128: Replace Heuristic Percent Bounds with Explicit Tolerances (Low - from CRANE-073)
 
-**Multihop/Price Impact Test Follow-ups (1 task - from CRANE-027/CRANE-028):**
-- CRANE-076: Remove Console Logs from Price Impact Tests (Low - from CRANE-028)
+**Multihop/Price Impact Test Follow-ups (completed - from CRANE-027/CRANE-028):**
+(All follow-up tasks from CRANE-028 have been completed)
 
-**ConstProdUtils Cleanup Follow-ups (1 task - from CRANE-029):**
-- CRANE-077: Remove Commented-Out Parameter Stubs (Low)
+**ConstProdUtils Cleanup Follow-ups (completed - from CRANE-029):**
+(All follow-up tasks from CRANE-029 have been completed)
 
-**TickMath Follow-ups (1 task - from CRANE-032):**
-- CRANE-078: Tighten TickMath Revert Expectations (Low)
+**TickMath Follow-ups (completed - from CRANE-032):**
+(All follow-up tasks from CRANE-032 have been completed)
 
 **ERC2535 Remove Semantics Follow-ups (3 tasks - from CRANE-057/CRANE-058):**
 - **CRANE-115: Enforce Correct Facet Address During Remove (High - from CRANE-058)**
@@ -225,6 +220,11 @@
 | CRANE-073 | Tighten Non-Revert Assertions in Overflow Tests | 2026-01-18 | archive/CRANE-073-tighten-overflow-assertions/ |
 | CRANE-074 | Align Multihop Test with Camelot TestBase Patterns | 2026-01-18 | archive/CRANE-074-multihop-testbase-alignment/ |
 | CRANE-075 | Rename Price Impact Fuzz Test for Clarity | 2026-01-18 | archive/CRANE-075-priceimpact-test-rename/ |
+| CRANE-076 | Remove Console Logs from Price Impact Tests | 2026-01-18 | archive/CRANE-076-priceimpact-remove-logs/ |
+| CRANE-077 | Remove Commented-Out Parameter Stubs | 2026-01-18 | archive/CRANE-077-remove-param-stubs/ |
+| CRANE-078 | Tighten TickMath Revert Expectations | 2026-01-18 | archive/CRANE-078-tighten-tickmath-revert-expectations/ |
+| CRANE-080 | Add SwapMath Golden Vector Tests | 2026-01-18 | archive/CRANE-080-swapmath-golden-vectors/ |
+| CRANE-082 | Add TickMath Exact Known Pairs | 2026-01-18 | archive/CRANE-082-tickmath-exact-pairs/ |
 
 ## Cross-Repo Dependencies
 
