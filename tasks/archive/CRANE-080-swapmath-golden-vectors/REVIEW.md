@@ -31,19 +31,19 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Align golden-vector comments with upstream naming
 **Priority:** Low
-**Description:** Update the `@dev Derived from Uniswap V4 reference:` string in `test_goldenVector_zeroForOne_lowLiquidity_reachTarget` to match the upstream test name/direction (or clarify that the upstream naming is counterintuitive). This keeps the “golden vectors are upstream-derived” breadcrumb reliable.
+**Description:** Update the `@dev Derived from Uniswap V4 reference:` string in `test_goldenVector_zeroForOne_lowLiquidity_reachTarget` to match the upstream test name/direction (or clarify that the upstream naming is counterintuitive). This keeps the "golden vectors are upstream-derived" breadcrumb reliable.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol
-**User Response:** (pending)
-**Notes:** No functional change; purely documentation.
+**User Response:** Accepted
+**Notes:** No functional change; purely documentation. Converted to task CRANE-129.
 
 ### Suggestion 2: Add an explicit direction assertion in the fully-spent exactIn case
 **Priority:** Low
-**Description:** In `test_goldenVector_exactIn_oneForZero_fullySpent`, consider also asserting `sqrtPriceNext > sqrtPriceCurrent` (or `>=`) to make the directionality explicit in addition to the “did not reach target” assertion. The test already validates the exact outputs, so this is optional, but it makes intent clearer.
+**Description:** In `test_goldenVector_exactIn_oneForZero_fullySpent`, consider also asserting `sqrtPriceNext > sqrtPriceCurrent` (or `>=`) to make the directionality explicit in addition to the "did not reach target" assertion. The test already validates the exact outputs, so this is optional, but it makes intent clearer.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.t.sol
-**User Response:** (pending)
-**Notes:** Optional readability improvement.
+**User Response:** Accepted
+**Notes:** Optional readability improvement. Converted to task CRANE-130.
 
 ---
 

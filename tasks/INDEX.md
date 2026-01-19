@@ -59,6 +59,8 @@
 | CRANE-126 | Fix Unchecked-Call Lint Warning | Ready | CRANE-071 | `fix/unchecked-call-lint` |
 | CRANE-127 | Assert Zero-Fee Outcome in Safe Boundary Test | Ready | CRANE-073 | `test/zero-fee-assertion` |
 | CRANE-128 | Replace Heuristic Percent Bounds with Explicit Tolerances | Ready | CRANE-073 | `test/explicit-tolerances` |
+| CRANE-129 | Align SwapMath Golden Vector Comments with Upstream | Ready | CRANE-080 | `fix/swapmath-golden-vector-comments` |
+| CRANE-130 | Add Direction Assertion to SwapMath Fully-Spent Test | Ready | CRANE-080 | `fix/swapmath-direction-assertion` |
 
 ## Status Legend
 
