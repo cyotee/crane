@@ -67,8 +67,8 @@ The `vm.assume()` calls do correctly skip edge cases where limit == current (nei
 
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol:438-444
-**User Response:** (pending)
-**Notes:** This is a minor style observation, not a correctness issue. The test is functionally correct as-is. Leaving as-is is acceptable since the explicit assumptions document intent clearly.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-137
 
 ### Suggestion 2: Consider Testing Edge Case Where Limit Equals Current
 **Priority:** Low
@@ -76,8 +76,8 @@ The `vm.assume()` calls do correctly skip edge cases where limit == current (nei
 
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol
-**User Response:** (pending)
-**Notes:** This could be a follow-up task. The current test is valid for its stated purpose of testing swaps that should not cross the limit.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-138
 
 ---
 
