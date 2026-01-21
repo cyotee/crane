@@ -10,7 +10,7 @@
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Complete | CRANE-037 | |
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Complete | CRANE-037 | |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Complete | CRANE-037 | |
-| CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | In Progress | CRANE-034 | `test/swapmath-sqrtpricelimit-fuzz` |
+| CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | Pending Merge | CRANE-034 | `test/swapmath-sqrtpricelimit-fuzz` |
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | Ready | CRANE-034 | `test/swapmath-int256min-edge` |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | Ready | CRANE-034 | `fix/swapmath-test-cleanup` |
 | CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |

@@ -392,6 +392,100 @@ contract SwapMath_V4_Fuzz_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                   sqrtPriceLimit Bound Fuzz Tests                          */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Fuzz test: sqrtPriceNextX96 never crosses sqrtPriceLimitX96
+     * @dev This test validates the swap loop composition by:
+     *      1. Generating (sqrtPriceCurrentX96, sqrtPriceNextTickX96, sqrtPriceLimitX96)
+     *      2. Deriving sqrtPriceTargetX96 via getSqrtPriceTarget
+     *      3. Asserting sqrtPriceNextX96 never crosses sqrtPriceLimitX96
+     *
+     *      The existing tests bound sqrtPriceNextX96 vs the *target*, which is correct
+     *      for computeSwapStep in isolation. This test validates the intended call
+     *      composition used by pool swap loops where the limit is the user-specified
+     *      price boundary.
+     *
+     * @param sqrtPriceCurrentX96 Current sqrt price (will be bounded)
+     * @param sqrtPriceNextTickX96 Sqrt price at the next initialized tick (will be bounded)
+     * @param sqrtPriceLimitX96 User-specified sqrt price limit (will be bounded)
+     * @param liquidity Pool liquidity
+     * @param amountRemaining Amount remaining (negative = exact in, positive = exact out)
+     * @param feePips Fee in hundredths of a bip
+     */
+    function testFuzz_computeSwapStep_sqrtPriceLimitNeverCrossed(
+        uint160 sqrtPriceCurrentX96,
+        uint160 sqrtPriceNextTickX96,
+        uint160 sqrtPriceLimitX96,
+        uint128 liquidity,
+        int256 amountRemaining,
+        uint24 feePips
+    ) public pure {
+        // Bound all prices to valid Uniswap V4 range
+        sqrtPriceCurrentX96 = uint160(bound(sqrtPriceCurrentX96, MIN_SQRT_PRICE, MAX_SQRT_PRICE));
+        sqrtPriceNextTickX96 = uint160(bound(sqrtPriceNextTickX96, MIN_SQRT_PRICE, MAX_SQRT_PRICE));
+        sqrtPriceLimitX96 = uint160(bound(sqrtPriceLimitX96, MIN_SQRT_PRICE, MAX_SQRT_PRICE));
+        liquidity = uint128(bound(liquidity, 1, type(uint128).max));
+
+        // Determine swap direction from relationship between current and limit
+        // zeroForOne: selling token0 for token1, price decreases, limit must be below current
+        // oneForZero: selling token1 for token0, price increases, limit must be above current
+        bool zeroForOne = sqrtPriceLimitX96 < sqrtPriceCurrentX96;
+
+        // Ensure limit is on the correct side of current price for the swap direction
+        // (This is a requirement for valid swap parameters)
+        if (zeroForOne) {
+            // For zeroForOne, limit must be strictly below current
+            vm.assume(sqrtPriceLimitX96 < sqrtPriceCurrentX96);
+        } else {
+            // For oneForZero, limit must be strictly above current
+            vm.assume(sqrtPriceLimitX96 > sqrtPriceCurrentX96);
+        }
+
+        // Handle fee constraints based on swap type
+        if (amountRemaining >= 0) {
+            // Exact output requires fee < 100%
+            feePips = uint24(bound(feePips, 0, MAX_SWAP_FEE - 1));
+        } else {
+            feePips = uint24(bound(feePips, 0, MAX_SWAP_FEE));
+        }
+
+        // Derive sqrtPriceTargetX96 via getSqrtPriceTarget (as pool swap loops do)
+        uint160 sqrtPriceTargetX96 = SwapMath.getSqrtPriceTarget(
+            zeroForOne,
+            sqrtPriceNextTickX96,
+            sqrtPriceLimitX96
+        );
+
+        // Execute the swap step
+        (uint160 sqrtPriceNextX96,,,) = SwapMath.computeSwapStep(
+            sqrtPriceCurrentX96,
+            sqrtPriceTargetX96,
+            liquidity,
+            amountRemaining,
+            feePips
+        );
+
+        // CORE INVARIANT: sqrtPriceNextX96 must never cross sqrtPriceLimitX96
+        if (zeroForOne) {
+            // For zeroForOne swaps, price decreases but must not go below limit
+            assertGe(
+                sqrtPriceNextX96,
+                sqrtPriceLimitX96,
+                "zeroForOne: sqrtPriceNextX96 crossed below sqrtPriceLimitX96"
+            );
+        } else {
+            // For oneForZero swaps, price increases but must not go above limit
+            assertLe(
+                sqrtPriceNextX96,
+                sqrtPriceLimitX96,
+                "oneForZero: sqrtPriceNextX96 crossed above sqrtPriceLimitX96"
+            );
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                     Direction Consistency Fuzz Tests                       */
     /* -------------------------------------------------------------------------- */
 

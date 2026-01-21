@@ -28,11 +28,11 @@ The current tests bound `sqrtPriceNextX96` vs the *target*, which is correct for
 As a developer, I want a fuzz test that validates sqrtPriceNextX96 never crosses sqrtPriceLimitX96 so that the swap loop composition is validated.
 
 **Acceptance Criteria:**
-- [ ] Fuzz test generates (sqrtPriceCurrentX96, sqrtPriceNextTickX96, sqrtPriceLimitX96)
-- [ ] Test derives sqrtPriceTargetX96 via getSqrtPriceTarget
-- [ ] Test asserts sqrtPriceNextX96 never crosses sqrtPriceLimitX96
-- [ ] Tests pass with default fuzz runs
-- [ ] Build succeeds
+- [x] Fuzz test generates (sqrtPriceCurrentX96, sqrtPriceNextTickX96, sqrtPriceLimitX96)
+- [x] Test derives sqrtPriceTargetX96 via getSqrtPriceTarget
+- [x] Test asserts sqrtPriceNextX96 never crosses sqrtPriceLimitX96
+- [x] Tests pass with default fuzz runs
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -47,9 +47,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` succeeds
-- [ ] Tests pass
+- [x] All acceptance criteria met
+- [x] `forge build` succeeds
+- [x] Tests pass
 
 ---
 
