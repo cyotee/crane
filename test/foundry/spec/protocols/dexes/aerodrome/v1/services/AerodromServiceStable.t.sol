@@ -433,5 +433,7 @@ contract AerodromServiceStable_Test is TestBase_Aerodrome_Pools {
         // Note: Both should be close since reserves are balanced, but stable has slight edge
         assertGt(stableOut, 0, "Stable pool should produce output");
         assertGt(volatileOut, 0, "Volatile pool should produce output");
+        // Stable pool (0.05% fee) should outperform volatile pool (0.3% fee) for equivalent swaps
+        assertGt(stableOut, volatileOut, "Stable pool should have higher output (lower slippage) than volatile pool");
     }
 }

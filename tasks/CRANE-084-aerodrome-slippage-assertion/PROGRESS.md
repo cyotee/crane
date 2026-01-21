@@ -2,14 +2,25 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** Not started
-**Next step:** Read TASK.md and begin implementation
-**Build status:** ⏳ Not checked
-**Test status:** ⏳ Not checked
+**Last checkpoint:** COMPLETE
+**Next step:** N/A - Task complete
+**Build status:** ✅ Passing
+**Test status:** ✅ All 12 tests pass
 
 ---
 
 ## Session Log
+
+### 2026-01-20 - Task Completed
+
+- Added `assertGt(stableOut, volatileOut, ...)` assertion to `test_stableVsVolatile_stableHasLowerSlippage()`
+- Added comment explaining why stable pool should outperform volatile (0.05% vs 0.3% fee)
+- Verified all 12 tests in AerodromServiceStable.t.sol pass
+- Verified forge build succeeds
+
+**Changes made:**
+- `test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol:437`
+  - Added: `assertGt(stableOut, volatileOut, "Stable pool should have higher output (lower slippage) than volatile pool");`
 
 ### 2026-01-18 - Task Launched
 

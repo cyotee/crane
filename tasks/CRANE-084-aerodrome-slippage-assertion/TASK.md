@@ -1,7 +1,7 @@
 # Task CRANE-084: Strengthen Stable-vs-Volatile Slippage Assertion
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete (Reviewed)
 **Created:** 2026-01-15
 **Dependencies:** CRANE-037
 **Worktree:** `test/aerodrome-slippage-assertion`
@@ -28,10 +28,10 @@ Add a real assertion such as `assertGt(stableOut, volatileOut, ...)`. With curre
 As a developer, I want the slippage comparison test to actually assert the expected behavior so that the test is meaningful and not just smoke testing.
 
 **Acceptance Criteria:**
-- [ ] `assertGt(stableOut, volatileOut, ...)` or equivalent assertion added
-- [ ] Test name matches what it actually checks
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] `assertGt(stableOut, volatileOut, ...)` or equivalent assertion added
+- [x] Test name matches what it actually checks
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -46,9 +46,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge test --match-path 'test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol'` passes
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] `forge test --match-path 'test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol'` passes
+- [x] Build succeeds
 
 ---
 
