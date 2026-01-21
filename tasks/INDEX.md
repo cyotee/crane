@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Complete | CRANE-037 | |
-| CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Pending Merge | CRANE-037 | `test/aerodrome-slippage-assertion` |
+| CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Complete | CRANE-037 | |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | In Progress | CRANE-037 | `docs/aerodrome-stable-gas` |
 | CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | Ready | CRANE-034 | `test/swapmath-sqrtpricelimit-fuzz` |
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | Ready | CRANE-034 | `test/swapmath-int256min-edge` |
