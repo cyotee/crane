@@ -7,10 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | Complete | CRANE-037 | |
-| CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | Complete | CRANE-037 | |
-| CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | Complete | CRANE-037 | |
-| CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | Complete | CRANE-034 | |
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | Ready | CRANE-034 | `test/swapmath-int256min-edge` |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | Ready | CRANE-034 | `fix/swapmath-test-cleanup` |
 | CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |
@@ -233,6 +229,10 @@
 | CRANE-080 | Add SwapMath Golden Vector Tests | 2026-01-18 | archive/CRANE-080-swapmath-golden-vectors/ |
 | CRANE-082 | Add TickMath Exact Known Pairs | 2026-01-18 | archive/CRANE-082-tickmath-exact-pairs/ |
 | CRANE-081 | Add SqrtPriceMath Custom Error Tests | 2026-01-18 | archive/CRANE-081-sqrtpricemath-error-tests/ |
+| CRANE-083 | Clarify Deprecated Aerodrome Library Test Intent | 2026-01-21 | archive/CRANE-083-aerodrome-deprecated-test-intent/ |
+| CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | 2026-01-21 | archive/CRANE-084-aerodrome-slippage-assertion/ |
+| CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | 2026-01-21 | archive/CRANE-085-aerodrome-stable-gas-docs/ |
+| CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | 2026-01-21 | archive/CRANE-086-swapmath-sqrtpricelimit-fuzz/ |
 
 ## Cross-Repo Dependencies
 
