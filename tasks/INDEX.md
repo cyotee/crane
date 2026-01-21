@@ -55,6 +55,8 @@
 | CRANE-128 | Replace Heuristic Percent Bounds with Explicit Tolerances | Ready | CRANE-073 | `test/explicit-tolerances` |
 | CRANE-129 | Align SwapMath Golden Vector Comments with Upstream | Ready | CRANE-080 | `fix/swapmath-golden-vector-comments` |
 | CRANE-130 | Add Direction Assertion to SwapMath Fully-Spent Test | Ready | CRANE-080 | `fix/swapmath-direction-assertion` |
+| CRANE-131 | Delete Deprecated AerodromService Test File | Ready | CRANE-083 | `fix/delete-deprecated-aerodrome-test` |
+| CRANE-132 | Align Aerodrome Test Pragma with Repo Version | Ready | CRANE-083 | `fix/aerodrome-pragma-alignment` |
 
 ## Status Legend
 

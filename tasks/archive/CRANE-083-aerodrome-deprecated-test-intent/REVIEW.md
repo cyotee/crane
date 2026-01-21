@@ -41,16 +41,16 @@ Actionable items for follow-up tasks:
 **Description:** To further prevent copy/paste of deprecated usage patterns, consider renaming the test file and/or contract to include `Deprecated` (e.g., `AerodromServiceDeprecated.t.sol`, `AerodromService_Deprecated_Test`).
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromService.t.sol
-**User Response:** (pending)
-**Notes:** Not required by CRANE-083; current banner already provides strong guidance.
+**User Response:** Modified - Delete file instead of rename
+**Notes:** Converted to task CRANE-131 (delete instead of rename per user preference)
 
 ### Suggestion 2: Align pragma with repo compiler version
 **Priority:** Low
-**Description:** Consider updating `pragma solidity ^0.8.0;` to match the repo’s pinned compiler version for consistency (if that’s the prevailing convention elsewhere in `test/`).
+**Description:** Consider updating `pragma solidity ^0.8.0;` to match the repo's pinned compiler version for consistency (if that's the prevailing convention elsewhere in `test/`).
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromService.t.sol
-**User Response:** (pending)
-**Notes:** Not required; current pragma range is compatible.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-132
 
 ---
 
