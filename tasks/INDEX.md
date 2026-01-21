@@ -59,6 +59,8 @@
 | CRANE-132 | Align Aerodrome Test Pragma with Repo Version | Ready | CRANE-083 | `fix/aerodrome-pragma-alignment` |
 | CRANE-133 | Make Stable-vs-Volatile Comparison Apples-to-Apples | Ready | CRANE-084 | `test/aerodrome-apples-to-apples` |
 | CRANE-134 | Assert Aerodrome Fee Config in Stub | Ready | CRANE-084 | `test/aerodrome-fee-assertion` |
+| CRANE-135 | Tighten/Clarify Aerodrome Gas Estimate Language | Ready | CRANE-085 | `docs/aerodrome-gas-clarity` |
+| CRANE-136 | Simplify _k_from_f Helper in Aerodrome Stable | Ready | CRANE-085 | `fix/aerodrome-k-helper-simplify` |
 
 ## Status Legend
 

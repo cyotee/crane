@@ -38,19 +38,19 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Tighten/clarify gas estimate language
 **Priority:** P2
-**Description:** Update the NatSpec gas notes to avoid “~25 gwei” (cost vs gas confusion), and clearly label the gas figures as “rough order-of-magnitude” / “environment-dependent” with a pointer to a reproducible measurement method (e.g., a Foundry gas snapshot or dedicated micro-benchmark test).
+**Description:** Update the NatSpec gas notes to avoid "~25 gwei" (cost vs gas confusion), and clearly label the gas figures as "rough order-of-magnitude" / "environment-dependent" with a pointer to a reproducible measurement method (e.g., a Foundry gas snapshot or dedicated micro-benchmark test).
 **Affected Files:**
 - `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.sol`
-**User Response:** (pending)
-**Notes:** Consider measuring the quote path with a minimal harness that calls `_quoteSwapDepositSaleAmtStable` without including pool initialization costs.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-135
 
 ### Suggestion 2: Simplify `_k_from_f` helper
 **Priority:** P3
 **Description:** Replace `_k_from_f(x0, y + 1)` with `_f(x0, y + 1)` (or rename the helper to something more explicit). Keeps the Newton-Raphson section easier to audit.
 **Affected Files:**
 - `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.sol`
-**User Response:** (pending)
-**Notes:** Optional nit; no functional impact.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-136
 
 ---
 
