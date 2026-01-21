@@ -38,16 +38,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome_Pools.sol
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol
-**User Response:** (pending)
-**Notes:** Optional hardening only; current test meets CRANE-084 acceptance.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-133
 
 ### Suggestion 2: Assert the fee config used by the stub
 **Priority:** Low
 **Description:** Add an assertion that the factory fees match expectations (stable 5 bps, volatile 30 bps) so the test fails loudly if stub defaults change.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.t.sol
-**User Response:** (pending)
-**Notes:** This can be a quick precondition check near the comparison test.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-134
 
 ---
 

@@ -57,6 +57,8 @@
 | CRANE-130 | Add Direction Assertion to SwapMath Fully-Spent Test | Ready | CRANE-080 | `fix/swapmath-direction-assertion` |
 | CRANE-131 | Delete Deprecated AerodromService Test File | Ready | CRANE-083 | `fix/delete-deprecated-aerodrome-test` |
 | CRANE-132 | Align Aerodrome Test Pragma with Repo Version | Ready | CRANE-083 | `fix/aerodrome-pragma-alignment` |
+| CRANE-133 | Make Stable-vs-Volatile Comparison Apples-to-Apples | Ready | CRANE-084 | `test/aerodrome-apples-to-apples` |
+| CRANE-134 | Assert Aerodrome Fee Config in Stub | Ready | CRANE-084 | `test/aerodrome-fee-assertion` |
 
 ## Status Legend
 
