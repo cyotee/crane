@@ -18,6 +18,49 @@ endif::[]
 
 image::humor/Code_Not_the_Same.jpeg[align=center]
 
+== Claude Code Plugin
+
+Crane includes a Claude Code plugin that provides AI-assisted development guidance for the framework.
+The plugin includes skills for architecture patterns, testing, deployment, code style, and NatSpec documentation, plus code generation commands and convention review agents.
+
+=== Installation
+
+When Crane is installed as a git submodule (e.g., at `lib/crane/`), install the plugin with:
+
+[source,bash]
+----
+# Add the Crane marketplace
+/plugin marketplace add ./lib/crane
+
+# Install the crane plugin
+/plugin install crane@crane-plugins
+----
+
+=== Available Components
+
+*Skills* (activate automatically based on context):
+
+* `crane-architecture` - Facet-Target-Repo pattern, Storage Slots, Guard Functions, DFPkg
+* `crane-testing` - TestBase pattern, Behavior libraries, Handler pattern, invariant testing
+* `crane-deployment` - CREATE3, DiamondPackageCallBackFactory, FactoryService
+* `crane-code-style` - Section headers, imports, naming conventions, viaIR prohibition
+* `crane-natspec` - NatSpec standards, AsciiDoc include-tags, custom tags, cast commands
+
+*Commands* (invoke explicitly):
+
+* `/crane:new-facet <name>` - Generate Facet + Target + Repo + Interface scaffold
+* `/crane:new-test <name>` - Generate TestBase + Behavior library + test spec
+* `/crane:new-dfpkg <name>` - Generate Diamond Factory Package
+* `/crane:check-natspec [file]` - Validate NatSpec documentation
+* `/crane:check-style [file]` - Validate code style conventions
+
+*Agents* (triggered by context or request):
+
+* `crane-reviewer` - Review code for Crane conventions
+* `crane-test-generator` - Generate tests following Crane patterns
+
+== Overview
+
 Crane is a Diamond first opinionated Solidity development framework.
 It is inspired by Open Zeppelin, Nick Mudge's work defining ERC2535, and Spring.
 Developer's are expected to reuse the deployed Facets wherever possible.

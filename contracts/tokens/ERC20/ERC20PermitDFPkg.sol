@@ -98,7 +98,7 @@ contract ERC20PermitDFPkg is IERC20PermitDFPkg, IDiamondFactoryPackage {
             // FacetCutAction action;
             action: IDiamond.FacetCutAction.Add,
             // bytes4[] functionSelectors;
-            functionSelectors: ERC20_FACET.facetFuncs()
+            functionSelectors: ERC5267_FACET.facetFuncs()
         });
         facetCuts_[2] = IDiamond.FacetCut({
             // address facetAddress;

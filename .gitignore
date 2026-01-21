@@ -69,3 +69,9 @@ node_modules
 ignition/deployments/chain-31337
 
 cache_forge/
+
+# Local AI/agent artifacts
+.opencode/
+.claude-plugin/
+plugins/
+PLUGIN_PRD.md

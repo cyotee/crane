@@ -15,7 +15,7 @@ import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.so
  * @notice Simplifies Assembly operations upon the related Struct.
  */
 library ERC20Repo {
-    bytes32 internal constant _DEFAULT_SLOT = keccak256(abi.encode("eip.erc.20"));
+    bytes32 internal constant DEFAULT_SLOT = keccak256(abi.encode("eip.erc.20"));
 
     // tag::Storage[]
     /// forge-lint: disable-next-line(pascal-case-struct)
@@ -43,7 +43,7 @@ library ERC20Repo {
     // end::_layout(bytes32)[]
 
     function _layout() internal pure returns (Storage storage layout) {
-        return _layout(_DEFAULT_SLOT);
+        return _layout(DEFAULT_SLOT);
     }
 
     function _initialize(Storage storage layout, string memory name_, string memory symbol_, uint8 decimals_)
