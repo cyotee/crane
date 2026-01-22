@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-087 | Handle amountRemaining == int256.min Edge Case | Complete | CRANE-034 | - |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | In Progress | CRANE-034 | fix/swapmath-test-cleanup |
 | CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |
 | CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
@@ -233,6 +232,7 @@
 | CRANE-084 | Strengthen Stable-vs-Volatile Slippage Assertion | 2026-01-21 | archive/CRANE-084-aerodrome-slippage-assertion/ |
 | CRANE-085 | Document Stable Swap-Deposit Gas/Complexity | 2026-01-21 | archive/CRANE-085-aerodrome-stable-gas-docs/ |
 | CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | 2026-01-21 | archive/CRANE-086-swapmath-sqrtpricelimit-fuzz/ |
+| CRANE-087 | Handle amountRemaining == int256.min Edge Case | 2026-01-21 | archive/CRANE-087-swapmath-int256min-edge/ |
 
 ## Cross-Repo Dependencies
 
