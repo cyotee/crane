@@ -29,8 +29,8 @@ Actionable items for follow-up tasks:
 **Description:** `testFuzz_computeSwapStep_feeNonNegative` no longer asserts non-negativity (it asserts `feePips == 0 => feeAmount == 0`). Consider renaming the test and/or updating its NatSpec to avoid misleading intent.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol
-**User Response:** (pending)
-**Notes:** Not required for CRANE-088 acceptance criteria, but improves clarity.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-140
 
 ---
 
