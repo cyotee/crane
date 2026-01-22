@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-087 | Handle amountRemaining == int256.min Edge Case | Pending Merge | CRANE-034 | feature/swapmath-int256min-edge |
+| CRANE-087 | Handle amountRemaining == int256.min Edge Case | Complete | CRANE-034 | - |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | In Progress | CRANE-034 | fix/swapmath-test-cleanup |
 | CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-multipool` |
 | CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
