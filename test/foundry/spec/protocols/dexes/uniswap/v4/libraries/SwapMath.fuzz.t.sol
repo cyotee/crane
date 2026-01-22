@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/SwapMath.sol";
-import {SqrtPriceMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.sol";
 
 /**
  * @title SwapMath_V4_Fuzz_Test
@@ -219,9 +218,6 @@ contract SwapMath_V4_Fuzz_Test is Test {
             inputAmount,
             "exactIn: amountIn + feeAmount exceeds input amount"
         );
-
-        // Fee should be non-negative (guaranteed by uint256 but verify no underflow scenarios)
-        assertTrue(feeAmount >= 0, "feeAmount should be non-negative");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -283,9 +279,6 @@ contract SwapMath_V4_Fuzz_Test is Test {
             outputAmount,
             "exactOut: amountOut exceeds requested output"
         );
-
-        // Fee should be non-negative
-        assertTrue(feeAmount >= 0, "feeAmount should be non-negative");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -384,9 +377,6 @@ contract SwapMath_V4_Fuzz_Test is Test {
             amountRemaining,
             feePips
         );
-
-        // Fee is non-negative (uint256 ensures this)
-        assertTrue(feeAmount >= 0, "feeAmount should be non-negative");
 
         // If fee rate is 0, fee amount should be 0
         if (feePips == 0) {

@@ -1,31 +1,52 @@
 # Code Review: CRANE-088
 
-**Reviewer:** (pending)
-**Review Started:** (pending)
-**Status:** Not Started
+**Reviewer:** OpenCode
+**Review Started:** 2026-01-21
+**Status:** Complete
 
 ---
 
 ## Clarifying Questions
 
-(To be filled during review)
+Questions asked to understand review criteria:
+
+- None.
 
 ---
 
 ## Review Findings
 
-(To be filled during review)
+- No blocking findings.
 
 ---
 
 ## Suggestions
 
-(To be filled during review)
+Actionable items for follow-up tasks:
+
+### Suggestion 1: Align fee test naming/docs with assertions
+**Priority:** Low
+**Description:** `testFuzz_computeSwapStep_feeNonNegative` no longer asserts non-negativity (it asserts `feePips == 0 => feeAmount == 0`). Consider renaming the test and/or updating its NatSpec to avoid misleading intent.
+**Affected Files:**
+- test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol
+**User Response:** (pending)
+**Notes:** Not required for CRANE-088 acceptance criteria, but improves clarity.
 
 ---
 
 ## Review Summary
 
-**Findings:** (pending)
-**Suggestions:** (pending)
-**Recommendation:** (pending)
+**Findings:** None (changes are safe, purely cleanup)
+**Suggestions:** 1 low-priority clarity tweak
+**Recommendation:** Approve
+
+## Acceptance Criteria Verification
+
+- [x] Remove unused `SqrtPriceMath` import (`test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`)
+- [x] Remove/reframe redundant non-negativity asserts on `uint256` values (removed from 3 tests; overflow guard remains in all-invariants test)
+- [x] Tests pass (reviewer ran `forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol`)
+- [x] Build succeeds (reviewer ran `forge build`)
+
+---
+
+**When review complete, output:** `<promise>REVIEW_COMPLETE</promise>`
