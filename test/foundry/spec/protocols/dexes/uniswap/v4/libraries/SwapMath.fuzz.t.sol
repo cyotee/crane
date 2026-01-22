@@ -70,7 +70,13 @@ contract SwapMath_V4_Fuzz_Test is Test {
 
     /**
      * @notice Comprehensive fuzz test for computeSwapStep covering all invariants
-     * @dev Tests all acceptance criteria in a single fuzz test for efficiency
+     * @dev Tests all acceptance criteria in a single fuzz test for efficiency.
+     *
+     *      NOTE: This test intentionally allows amountRemaining == type(int256).min.
+     *      When negating int256.min in unchecked Solidity, uint256(-int256.min) == 2^255,
+     *      which is mathematically correct in two's complement arithmetic. This edge case
+     *      is explicitly tested in test_computeSwapStep_int256Min_edgeCase.
+     *
      * @param sqrtPriceRaw Current sqrt price (raw input, will be bounded)
      * @param sqrtPriceTargetRaw Target sqrt price (raw input, will be bounded)
      * @param liquidity Pool liquidity
@@ -482,6 +488,93 @@ contract SwapMath_V4_Fuzz_Test is Test {
                 sqrtPriceLimitX96,
                 "oneForZero: sqrtPriceNextX96 crossed above sqrtPriceLimitX96"
             );
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                  int256.min Edge Case Documentation Test                   */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Explicit test documenting the int256.min edge case behavior
+     * @dev When amountRemaining == type(int256).min (-2^255), the negation cannot be
+     *      represented as int256 (since int256.max is 2^255 - 1). However, in unchecked
+     *      Solidity, uint256(-int256.min) correctly evaluates to 2^255 due to two's
+     *      complement arithmetic.
+     *
+     *      This test explicitly documents that:
+     *      1. int256.min is a valid input to computeSwapStep
+     *      2. The unchecked negation uint256(-int256.min) == 2^255 is intentional
+     *      3. All invariants hold for this extreme input value
+     *
+     *      We chose to ALLOW int256.min rather than exclude it via vm.assume because:
+     *      - The SwapMath library handles it correctly
+     *      - Excluding it would reduce test coverage
+     *      - The behavior is mathematically well-defined in two's complement
+     *
+     * @param sqrtPriceCurrent Current sqrt price (bounded to valid range)
+     * @param sqrtPriceTarget Target sqrt price (bounded to valid range)
+     * @param liquidity Pool liquidity
+     * @param feePips Fee in hundredths of a bip (exact input allows up to 100%)
+     */
+    function test_computeSwapStep_int256Min_edgeCase(
+        uint160 sqrtPriceCurrent,
+        uint160 sqrtPriceTarget,
+        uint128 liquidity,
+        uint24 feePips
+    ) public pure {
+        // Bound inputs to valid ranges
+        sqrtPriceCurrent = uint160(bound(sqrtPriceCurrent, MIN_SQRT_PRICE, MAX_SQRT_PRICE));
+        sqrtPriceTarget = uint160(bound(sqrtPriceTarget, MIN_SQRT_PRICE, MAX_SQRT_PRICE));
+        liquidity = uint128(bound(liquidity, 1, type(uint128).max));
+        // int256.min represents exact input, so fee can be up to 100%
+        feePips = uint24(bound(feePips, 0, MAX_SWAP_FEE));
+
+        // The critical edge case: amountRemaining == int256.min
+        int256 amountRemaining = type(int256).min;
+
+        // Verify our understanding: uint256(-int256.min) == 2^255
+        // This is the key insight - unchecked negation of int256.min wraps to 2^255
+        uint256 expectedAbsValue = uint256(type(int256).max) + 1; // 2^255
+        unchecked {
+            assertEq(uint256(-amountRemaining), expectedAbsValue, "uint256(-int256.min) should equal 2^255");
+        }
+
+        // Execute the swap step with int256.min
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+
+        // INVARIANT 1: Fee is non-negative and no overflow
+        assertLe(amountIn, type(uint256).max - feeAmount, "amountIn + feeAmount would overflow");
+
+        // INVARIANT 2: For exact input (negative amountRemaining), amountIn + feeAmount <= abs(amountRemaining)
+        // With int256.min, abs(amountRemaining) == 2^255
+        unchecked {
+            assertLe(amountIn + feeAmount, expectedAbsValue, "exactIn with int256.min: amountIn + fee exceeds 2^255");
+        }
+
+        // INVARIANT 3: Price bounds are respected
+        if (sqrtPriceTarget <= sqrtPriceCurrent) {
+            // zeroForOne direction
+            assertLe(sqrtPriceNext, sqrtPriceCurrent, "int256.min zeroForOne: next price exceeds current");
+            assertGe(sqrtPriceNext, sqrtPriceTarget, "int256.min zeroForOne: next price below target");
+        } else {
+            // oneForZero direction
+            assertGe(sqrtPriceNext, sqrtPriceCurrent, "int256.min oneForZero: next price below current");
+            assertLe(sqrtPriceNext, sqrtPriceTarget, "int256.min oneForZero: next price exceeds target");
+        }
+
+        // INVARIANT 4: If prices are equal, no swap occurs
+        if (sqrtPriceCurrent == sqrtPriceTarget) {
+            assertEq(amountIn, 0, "int256.min: No swap when prices equal (amountIn)");
+            assertEq(amountOut, 0, "int256.min: No swap when prices equal (amountOut)");
+            assertEq(feeAmount, 0, "int256.min: No swap when prices equal (feeAmount)");
+        }
+
+        // INVARIANT 5: If target not reached, entire amount must be consumed
+        if (sqrtPriceNext != sqrtPriceTarget && sqrtPriceCurrent != sqrtPriceTarget) {
+            // For exact input with int256.min, the full 2^255 should be consumed
+            assertEq(amountIn + feeAmount, expectedAbsValue, "int256.min: If target not reached, full input consumed");
         }
     }
 

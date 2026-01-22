@@ -30,10 +30,10 @@ Current tests appear stable even with this input, but making the intent explicit
 As a developer, I want explicit handling for the int256.min edge case so that the behavior is documented and intentional.
 
 **Acceptance Criteria:**
-- [ ] Either add vm.assume to exclude int256.min, OR add dedicated test documenting expected behavior
-- [ ] Choice is documented in code comments
-- [ ] Tests pass with default fuzz runs
-- [ ] Build succeeds
+- [x] Either add vm.assume to exclude int256.min, OR add dedicated test documenting expected behavior
+- [x] Choice is documented in code comments
+- [x] Tests pass with default fuzz runs
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -48,9 +48,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` succeeds
-- [ ] Tests pass
+- [x] All acceptance criteria met
+- [x] `forge build` succeeds
+- [x] Tests pass
 
 ---
 
