@@ -34,8 +34,8 @@ No issues found that block merge.
 **Description:** Remove `assertTrue(feeAmount >= 0, ...)` assertions (since `feeAmount` is `uint256`). Keep the more meaningful overflow guard `assertLe(amountIn, type(uint256).max - feeAmount, ...)`.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/uniswap/v4/libraries/SwapMath.fuzz.t.sol
-**User Response:** (pending)
-**Notes:** Optional; not required for CRANE-087 acceptance criteria.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-139
 
 ---
 

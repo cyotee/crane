@@ -57,6 +57,7 @@
 | CRANE-136 | Simplify _k_from_f Helper in Aerodrome Stable | Ready | CRANE-085 | `fix/aerodrome-k-helper-simplify` |
 | CRANE-137 | Remove Redundant vm.assume in SwapMath Fuzz Test | Ready | CRANE-086 | `fix/swapmath-redundant-assume` |
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
+| CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 
 ## Status Legend
 
