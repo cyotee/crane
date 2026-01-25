@@ -10,7 +10,9 @@
       "Bash(ls:*)",
       "Bash(uv run:*)",
       "Bash(python3:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebSearch",
+      "WebFetch(domain:basescan.org)"
     ]
   }
 }

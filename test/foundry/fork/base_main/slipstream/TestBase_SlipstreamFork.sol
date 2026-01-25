@@ -18,7 +18,8 @@ abstract contract TestBase_SlipstreamFork is Test {
 
     /// @dev Block number for fork reproducibility (Jan 2026 - adjust as needed)
     /// Use a recent block with known pool states for deterministic testing
-    uint256 internal constant FORK_BLOCK = 26_000_000;
+    /// Block 28,000,000 is a more recent block where AERO/USDC pool has liquidity
+    uint256 internal constant FORK_BLOCK = 28_000_000;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */
@@ -53,8 +54,8 @@ abstract contract TestBase_SlipstreamFork is Test {
     address internal constant WETH_USDC_CL_500 = 0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59;  // 0.05% fee
     address internal constant WETH_USDC_CL_100 = 0xcDAC0d6c6C59727a65F871236188350531885C43;  // Lower fee variant
 
-    // AERO/USDC pools (native Aerodrome token pair)
-    address internal constant AERO_USDC_CL = 0x6cDcb1C4A4D1C3C6d054b27AC5B77e89eAFb971d;
+    // cbBTC/WETH Slipstream pool (high liquidity Bitcoin pair)
+    address internal constant cbBTC_WETH_CL = 0x70aCDF2Ad0bf2402C957154f944c19Ef4e1cbAE1;  // 0.05% fee
 
     /* -------------------------------------------------------------------------- */
     /*                                   Setup                                    */
@@ -89,7 +90,7 @@ abstract contract TestBase_SlipstreamFork is Test {
         // Label well-known pools
         vm.label(WETH_USDC_CL_500, "WETH_USDC_CL_0.05%");
         vm.label(WETH_USDC_CL_100, "WETH_USDC_CL_low");
-        vm.label(AERO_USDC_CL, "AERO_USDC_CL");
+        vm.label(cbBTC_WETH_CL, "cbBTC_WETH_CL_0.05%");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -258,6 +259,35 @@ abstract contract TestBase_SlipstreamFork is Test {
         ICLPool pool = ICLPool(msg.sender);
         if (amount0Delta > 0) IERC20PermitProxy(pool.token0()).transfer(msg.sender, uint256(amount0Delta));
         if (amount1Delta > 0) IERC20PermitProxy(pool.token1()).transfer(msg.sender, uint256(amount1Delta));
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                          Pool Existence Check                              */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Check if a pool exists and has sufficient liquidity at the fork block
+    /// @param poolAddress The address of the pool to check
+    /// @return exists True if the pool exists and has non-zero liquidity
+    function poolExistsAndHasLiquidity(address poolAddress) internal view returns (bool exists) {
+        // Check if address has code
+        if (poolAddress.code.length == 0) return false;
+
+        // Try to get liquidity from the pool
+        try ICLPool(poolAddress).liquidity() returns (uint128 liq) {
+            exists = liq > 0;
+        } catch {
+            exists = false;
+        }
+    }
+
+    /// @notice Skip the current test if the pool doesn't exist or has no liquidity
+    /// @param poolAddress The address of the pool to check
+    /// @param poolName Human-readable name for logging
+    function skipIfPoolInvalid(address poolAddress, string memory poolName) internal {
+        if (!poolExistsAndHasLiquidity(poolAddress)) {
+            console.log("Skipping test - pool not available at fork block:", poolName);
+            vm.skip(true);
+        }
     }
 
     /* -------------------------------------------------------------------------- */

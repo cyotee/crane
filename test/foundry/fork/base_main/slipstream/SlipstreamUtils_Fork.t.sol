@@ -151,18 +151,152 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                      Additional Pool Tests (Commented)                     */
+    /*                      cbBTC/WETH Pool Tests                                 */
     /* -------------------------------------------------------------------------- */
 
-    // Note: The WETH_USDC_CL_100 and AERO_USDC_CL pools may not exist at the
-    // fork block number or may have different addresses. The core WETH/USDC_500
-    // pool tests above validate the quote accuracy. Additional pools can be
-    // added when verified addresses are available.
-    //
-    // To add more pool tests:
-    // 1. Verify pool address exists at the fork block
-    // 2. Check pool has sufficient liquidity
-    // 3. Ensure callback functions are compatible with pool interface
+    /// @notice Test quoteExactInputSingle on cbBTC/WETH pool (sell WETH for cbBTC)
+    function test_quoteExactInputSingle_cbBTC_WETH_buycbBTC() public {
+        // Skip if pool doesn't exist at fork block
+        skipIfPoolInvalid(cbBTC_WETH_CL, "cbBTC_WETH_CL");
+
+        ICLPool pool = getPool(cbBTC_WETH_CL);
+
+        // Get pool state
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        // Log pool state for debugging
+        console.log("Pool: cbBTC/WETH CL 0.05%");
+        console.log("  token0:", pool.token0());
+        console.log("  token1:", pool.token1());
+        console.log("  fee:", fee);
+        console.log("  liquidity:", liquidity);
+        console.log("  sqrtPriceX96:", sqrtPriceX96);
+
+        // Small swap amount to stay within single tick (0.1 WETH)
+        uint256 amountIn = 0.1 ether; // 0.1 WETH
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
+
+        // Quote using SlipstreamUtils
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
+            amountIn,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        console.log("  amountIn (WETH):", amountIn);
+        console.log("  quotedOut (cbBTC):", quotedOut);
+
+        // Execute actual swap
+        uint256 actualOut = swapExactInputTokens(pool, WETH, cbBTC, amountIn, address(this));
+
+        console.log("  actualOut (cbBTC):", actualOut);
+
+        // Assert quote accuracy (0.1% tolerance)
+        assertQuoteAccuracy(quotedOut, actualOut, "cbBTC/WETH exactIn quote mismatch");
+    }
+
+    /// @notice Test quoteExactInputSingle on cbBTC/WETH pool (sell cbBTC for WETH)
+    function test_quoteExactInputSingle_cbBTC_WETH_sellcbBTC() public {
+        // Skip if pool doesn't exist at fork block
+        skipIfPoolInvalid(cbBTC_WETH_CL, "cbBTC_WETH_CL");
+
+        ICLPool pool = getPool(cbBTC_WETH_CL);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        // Small cbBTC swap to stay in single tick (0.001 cbBTC = ~$100 worth)
+        uint256 amountIn = 0.001e8; // 0.001 cbBTC (8 decimals)
+
+        bool zeroForOne = zeroForOneForTokens(pool, cbBTC, WETH);
+
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
+            amountIn,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        uint256 actualOut = swapExactInputTokens(pool, cbBTC, WETH, amountIn, address(this));
+
+        console.log("Pool: cbBTC/WETH CL (sell cbBTC)");
+        console.log("  amountIn (cbBTC):", amountIn);
+        console.log("  quotedOut (WETH):", quotedOut);
+        console.log("  actualOut (WETH):", actualOut);
+
+        assertQuoteAccuracy(quotedOut, actualOut, "cbBTC/WETH sellcbBTC quote mismatch");
+    }
+
+    /// @notice Test quoteExactOutputSingle on cbBTC/WETH pool (buy exact cbBTC)
+    function test_quoteExactOutputSingle_cbBTC_WETH_buycbBTC() public {
+        // Skip if pool doesn't exist at fork block
+        skipIfPoolInvalid(cbBTC_WETH_CL, "cbBTC_WETH_CL");
+
+        ICLPool pool = getPool(cbBTC_WETH_CL);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        // Want 0.001 cbBTC (~$100)
+        uint256 amountOut = 0.001e8;
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
+
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        uint256 actualIn = swapExactOutputTokens(pool, WETH, cbBTC, amountOut, address(this));
+
+        console.log("Pool: cbBTC/WETH CL (exactOut buy cbBTC)");
+        console.log("  amountOut (cbBTC):", amountOut);
+        console.log("  quotedIn (WETH):", quotedIn);
+        console.log("  actualIn (WETH):", actualIn);
+
+        assertQuoteAccuracy(quotedIn, actualIn, "cbBTC/WETH exactOut quote mismatch");
+    }
+
+    /// @notice Test quoteExactOutputSingle on cbBTC/WETH pool (buy exact WETH with cbBTC)
+    function test_quoteExactOutputSingle_cbBTC_WETH_buyWETH() public {
+        // Skip if pool doesn't exist at fork block
+        skipIfPoolInvalid(cbBTC_WETH_CL, "cbBTC_WETH_CL");
+
+        ICLPool pool = getPool(cbBTC_WETH_CL);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        // Want 0.1 WETH
+        uint256 amountOut = 0.1 ether;
+
+        bool zeroForOne = zeroForOneForTokens(pool, cbBTC, WETH);
+
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        uint256 actualIn = swapExactOutputTokens(pool, cbBTC, WETH, amountOut, address(this));
+
+        console.log("Pool: cbBTC/WETH CL (exactOut buy WETH)");
+        console.log("  amountOut (WETH):", amountOut);
+        console.log("  quotedIn (cbBTC):", quotedIn);
+        console.log("  actualIn (cbBTC):", actualIn);
+
+        assertQuoteAccuracy(quotedIn, actualIn, "cbBTC/WETH exactOut buyWETH quote mismatch");
+    }
 
     /* -------------------------------------------------------------------------- */
     /*                          Tick Overload Tests                               */

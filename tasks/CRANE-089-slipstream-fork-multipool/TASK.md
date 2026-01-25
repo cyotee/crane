@@ -1,7 +1,7 @@
 # Task CRANE-089: Add Additional High-Liquidity Pool to Fork Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-15
 **Dependencies:** CRANE-039
 **Worktree:** `test/slipstream-fork-multipool`
@@ -28,11 +28,11 @@ If address stability at the fork block is uncertain, add a lightweight "pool exi
 As a developer, I want fork tests against multiple Slipstream pools so that pair-specific assumptions are caught.
 
 **Acceptance Criteria:**
-- [ ] Add AERO/USDC or another high-liquidity Slipstream pool
-- [ ] Add pool existence check with vm.skip if pool doesn't exist at fork block
-- [ ] Quote accuracy tests for the new pool
-- [ ] Tests pass on fork
-- [ ] Build succeeds
+- [x] Add AERO/USDC or another high-liquidity Slipstream pool (cbBTC/WETH 0.05% CL pool)
+- [x] Add pool existence check with vm.skip if pool doesn't exist at fork block
+- [x] Quote accuracy tests for the new pool (4 tests: exactIn/exactOut for both directions)
+- [x] Tests pass on fork (all 24 tests pass)
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -48,9 +48,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` succeeds
-- [ ] Fork tests pass
+- [x] All acceptance criteria met
+- [x] `forge build` succeeds
+- [x] Fork tests pass
 
 ---
 
