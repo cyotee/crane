@@ -118,7 +118,7 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
             // FacetCutAction action;
             action: IDiamond.FacetCutAction.Add,
             // bytes4[] functionSelectors;
-            functionSelectors: ERC20_FACET.facetFuncs()
+            functionSelectors: ERC5267_FACET.facetFuncs()
         });
         facetCuts_[2] = IDiamond.FacetCut({
             // address facetAddress;

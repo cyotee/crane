@@ -12,7 +12,9 @@
       "Bash(python3:*)",
       "Bash(tree:*)",
       "WebSearch",
-      "WebFetch(domain:basescan.org)"
+      "WebFetch(domain:basescan.org)",
+      "WebFetch(domain:opencode.ai)",
+      "Bash(chmod:*)"
     ]
   }
 }
