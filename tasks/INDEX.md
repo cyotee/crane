@@ -59,13 +59,20 @@
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
 | CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
-| CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Pending Merge | - | `feature/balancer-v3-vault-facets` |
-| CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Blocked | CRANE-141 | `feature/balancer-v3-router-facets` |
-| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-weighted` |
-| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-stable` |
-| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-gyro` |
-| CRANE-146 | Refactor Balancer V3 CoW Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-cow` |
-| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-hooks` |
+| CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
+| CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Ready | CRANE-141 | `feature/balancer-v3-router-facets` |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-weighted` |
+| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-stable` |
+| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
+| CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
+| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
+| CRANE-148 | Verify Aerodrome Contract Port Completeness | Ready | - | `feature/aerodrome-port-verification` |
+| CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
+| CRANE-150 | Verify Permit2 Contract Port Completeness | Ready | - | `feature/permit2-port-verification` |
+| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
+| CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
+| CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
+| CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Ready | - | `feature/sky-dss-port` |
 
 ## Status Legend
 
@@ -141,18 +148,37 @@
 - CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium - from CRANE-058)
 - CRANE-117: Guard Against Partial Facet Removal Bookkeeping Corruption (Medium - from CRANE-057)
 
-**Balancer V3 Lite (Deployable Refactor) (1 task ready, 6 blocked):**
-- **CRANE-141: Refactor Balancer V3 Vault as Diamond Facets (Ready - start here)**
+**Balancer V3 Lite (Deployable Refactor) (7 tasks ready):**
+- CRANE-141: Refactor Balancer V3 Vault as Diamond Facets ✓ **Complete**
+- **CRANE-142: Refactor Balancer V3 Router as Diamond Facets (Ready)**
+- **CRANE-143: Refactor Balancer V3 Weighted Pool Package (Ready)**
+- **CRANE-144: Refactor Balancer V3 Stable Pool Package (Ready)**
+- **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
+- **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
+- **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
+- **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
+
+**Aerodrome Port Verification (1 task):**
+- **CRANE-148: Verify Aerodrome Contract Port Completeness (Ready - enables submodule removal)**
+
+**Permit2 Port Verification (1 task):**
+- **CRANE-150: Verify Permit2 Contract Port Completeness (Ready - enables submodule removal)**
+
+**Uniswap V3 Port (1 task):**
+- **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (Ready - enables submodule removal)**
+
+**Uniswap V4 Port (1 task):**
+- **CRANE-152: Port and Verify Uniswap V4 Core + Periphery (Ready - enables submodule removal)**
+
+**Resupply CDP Port (1 task):**
+- **CRANE-153: Port Resupply Protocol to Local Contracts (Ready - enables submodule removal)**
+
+**Sky/DSS CDP Port (1 task):**
+- **CRANE-154: Port Sky/DSS Protocol to Local Contracts (Ready - MakerDAO Multi-Collateral DAI system)**
 
 ### Blocked
 
-**Balancer V3 Lite - Waiting on CRANE-141 (Vault):**
-- CRANE-142: Refactor Balancer V3 Router as Diamond Facets
-- CRANE-143: Refactor Balancer V3 Weighted Pool Package
-- CRANE-144: Refactor Balancer V3 Stable Pool Package
-- CRANE-145: Refactor Balancer V3 Gyro Pool Package
-- CRANE-146: Refactor Balancer V3 CoW Pool Package
-- CRANE-147: Refactor Balancer V3 Pool Hooks Package
+(No tasks currently blocked)
 
 ## Retired Tasks
 
