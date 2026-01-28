@@ -73,6 +73,10 @@
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Ready | - | `feature/sky-dss-port` |
+| CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Ready | CRANE-141 | `feature/vault-interface-coverage-tests` |
+| CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Ready | CRANE-141 | `feature/fix-pool-token-selectors` |
+| CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Ready | CRANE-141 | `feature/implement-missing-vault-functions` |
+| CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Ready | CRANE-141 | `feature/vault-diamond-loupe` |
 
 ## Status Legend
 
@@ -157,6 +161,12 @@
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
 - **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
+
+**Balancer V3 Vault Review Follow-ups (4 tasks - from CRANE-141 code review):**
+- **CRANE-155: Add Balancer V3 Vault Interface Coverage Tests (High)**
+- **CRANE-156: Fix Pool Token Selector Signatures in Vault Tests (High)**
+- **CRANE-157: Implement Missing Balancer V3 Vault Interface Functions (High)**
+- **CRANE-158: Add DiamondLoupe Support to Balancer V3 Vault (Medium)**
 
 **Aerodrome Port Verification (1 task):**
 - **CRANE-148: Verify Aerodrome Contract Port Completeness (Ready - enables submodule removal)**
