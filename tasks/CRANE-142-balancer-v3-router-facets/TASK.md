@@ -1,7 +1,7 @@
 # Task CRANE-142: Refactor Balancer V3 Router Contracts as Diamond Facets
 
 **Repo:** Crane Framework
-**Status:** Blocked
+**Status:** In Progress
 **Created:** 2026-01-28
 **Dependencies:** CRANE-141 (Vault facets must be complete first)
 **Worktree:** `feature/balancer-v3-router-facets`
