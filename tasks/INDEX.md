@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-28
 
 ## Active Tasks
 
@@ -59,6 +59,13 @@
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
 | CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
+| CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Ready | - | `feature/balancer-v3-vault-facets` |
+| CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Blocked | CRANE-141 | `feature/balancer-v3-router-facets` |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-weighted` |
+| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-stable` |
+| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-gyro` |
+| CRANE-146 | Refactor Balancer V3 CoW Pool Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-cow` |
+| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Blocked | CRANE-141 | `feature/balancer-v3-pool-hooks` |
 
 ## Status Legend
 
@@ -134,9 +141,18 @@
 - CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium - from CRANE-058)
 - CRANE-117: Guard Against Partial Facet Removal Bookkeeping Corruption (Medium - from CRANE-057)
 
+**Balancer V3 Lite (Deployable Refactor) (1 task ready, 6 blocked):**
+- **CRANE-141: Refactor Balancer V3 Vault as Diamond Facets (Ready - start here)**
+
 ### Blocked
 
-(No blocked tasks)
+**Balancer V3 Lite - Waiting on CRANE-141 (Vault):**
+- CRANE-142: Refactor Balancer V3 Router as Diamond Facets
+- CRANE-143: Refactor Balancer V3 Weighted Pool Package
+- CRANE-144: Refactor Balancer V3 Stable Pool Package
+- CRANE-145: Refactor Balancer V3 Gyro Pool Package
+- CRANE-146: Refactor Balancer V3 CoW Pool Package
+- CRANE-147: Refactor Balancer V3 Pool Hooks Package
 
 ## Retired Tasks
 
