@@ -80,6 +80,12 @@
 | CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | Complete | CRANE-142 | - |
 | CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Ready | CRANE-159 | `fix/vault-facet-selector-cleanup` |
 | CRANE-161 | Resolve Vault Loupe and Router Integration | Ready | CRANE-159 | `fix/vault-loupe-router-integration` |
+| CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/router-functional-tests` |
+| CRANE-163 | Fix Prepaid Router Mode for Permit2-less Operations | Ready | CRANE-142 | `fix/router-prepaid-mode` |
+| CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/router-target-layer` |
+| CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
+| CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
+| CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | Ready | CRANE-142 | `test/router-testbase-behavior` |
 
 ## Status Legend
 
@@ -168,6 +174,14 @@
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
 - **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
+
+**Balancer V3 Router Review Follow-ups (6 tasks - from CRANE-142):**
+- **CRANE-162: Expand Balancer V3 Router Test Coverage (Ready - HIGH)**
+- **CRANE-163: Fix Prepaid Router Mode for Permit2-less Operations (Ready - HIGH)**
+- **CRANE-164: Add Target Layer to Router Facets (Ready - HIGH)**
+- CRANE-165: Add NatSpec Custom Tags to Router Contracts (Medium)
+- CRANE-166: Refactor Router Guards to Follow Repo Pattern (Medium)
+- CRANE-167: Add TestBase and Behavior Patterns to Router Tests (Medium)
 
 **Balancer V3 Vault Review Follow-ups (Superseded by CRANE-159):**
 - ~~CRANE-155: Add Balancer V3 Vault Interface Coverage Tests~~ → Superseded

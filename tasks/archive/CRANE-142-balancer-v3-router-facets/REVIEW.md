@@ -34,7 +34,7 @@ Questions asked to understand review criteria:
 **File:** contracts/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterModifiers.sol
 **Severity:** High
 **Description:** `_takeTokenIn(...)` unconditionally calls `permit2.transferFrom(...)` for non-WETH inputs. For prepaid routers `permit2 == address(0)`, this will revert. Some facets handle prepaid settlement explicitly (e.g. batch/composite settle paths), but others directly call `_takeTokenIn(...)` (e.g. `BufferRouterFacet.initializeBufferHook`, `BufferRouterFacet.addLiquidityToBufferHook`, and parts of composite ERC4626 flows), so those functions are not actually usable in prepaid mode.
-**Status:** Open
+**Status:** ✅ Converted to task CRANE-163
 **Resolution:** Needs implementation - extend `_takeTokenIn()` to check `_isPrepaid()` and use vault.settle without Permit2 transfer when in prepaid mode.
 
 ### Finding 4: Solidity version standard mismatch (repo compiles with 0.8.30, router/vault use ^0.8.24)
@@ -74,7 +74,7 @@ Selector references fixed to use `this.function.selector` for functions not in p
 **File:** contracts/protocols/dexes/balancer/v3/router/diamond/facets/*.sol
 **Severity:** High
 **Description:** AGENTS.md requires a three-tier architecture where **Target** contracts contain business logic and **Facet** contracts are thin wrappers that extend Targets. Current implementation places all business logic directly in Facet contracts (e.g., `RouterSwapFacet` contains swap logic instead of extending a `RouterSwapTarget`). This violates the core Crane architectural separation.
-**Status:** Open
+**Status:** ✅ Converted to task CRANE-164
 **Resolution:** Deferred - would require significant refactoring. Current implementation functional but doesn't follow full Crane three-tier pattern. Consider for future iteration.
 
 ### Finding 9: Missing NatSpec custom tags and AsciiDoc include-tags
@@ -86,7 +86,7 @@ Selector references fixed to use `this.function.selector` for functions not in p
 - Events: `@custom:signature` and `@custom:topiczero`
 - AsciiDoc include-tags: `// tag::MySymbol[]` / `// end::MySymbol[]`
 None of these are present in the implementation.
-**Status:** Open
+**Status:** ✅ Converted to task CRANE-165
 **Resolution:** Deferred - documentation tags can be added as a follow-up task without affecting functionality.
 
 ### Finding 10: Guard functions not following Repo pattern
@@ -100,7 +100,7 @@ function _onlyVault() internal view { ... }
 modifier onlyVault() { BalancerV3RouterStorageRepo._onlyVault(); _; }
 ```
 Current implementation places guard logic in `BalancerV3RouterModifiers` instead of the Repo.
-**Status:** Open
+**Status:** ✅ Converted to task CRANE-166
 **Resolution:** Deferred - minor architectural deviation, doesn't affect functionality. Consider for future refactoring.
 
 ### Finding 11: Missing TestBase and Behavior library patterns
@@ -111,7 +111,7 @@ Current implementation places guard logic in `BalancerV3RouterModifiers` instead
 2. `Behavior_*.sol` libraries for validation logic
 3. Test specs in `test/foundry/spec/` mirroring `contracts/` structure
 Missing: `TestBase_BalancerV3Router.sol`, `Behavior_IRouter.sol`
-**Status:** Open
+**Status:** ✅ Converted to task CRANE-167
 **Resolution:** Deferred - current test suite covers basic functionality. TestBase/Behavior patterns can be added as enhancement.
 
 ---
@@ -126,8 +126,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.t.sol
 - test/foundry/spec/protocols/dexes/balancer/v3/router/**
-**User Response:** (pending)
-**Notes:** No fork tests or adapted upstream Balancer router tests were found under `test/foundry/spec/protocols/dexes/balancer/v3/router/`.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-162
 
 ---
 
