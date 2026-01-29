@@ -66,9 +66,9 @@
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
-| CRANE-148 | Verify Aerodrome Contract Port Completeness | Ready | - | `feature/aerodrome-port-verification` |
+| CRANE-148 | Verify Aerodrome Contract Port Completeness | In Progress | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
-| CRANE-150 | Verify Permit2 Contract Port Completeness | Ready | - | `feature/permit2-port-verification` |
+| CRANE-150 | Verify Permit2 Contract Port Completeness | In Progress | - | `feature/permit2-port-verification` |
 | CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
@@ -190,10 +190,10 @@
 - ~~CRANE-158: Add DiamondLoupe Support to Balancer V3 Vault~~ → Superseded
 
 **Aerodrome Port Verification (1 task):**
-- **CRANE-148: Verify Aerodrome Contract Port Completeness (Ready - enables submodule removal)**
+- **CRANE-148: Verify Aerodrome Contract Port Completeness (In Progress - enables submodule removal)**
 
 **Permit2 Port Verification (1 task):**
-- **CRANE-150: Verify Permit2 Contract Port Completeness (Ready - enables submodule removal)**
+- **CRANE-150: Verify Permit2 Contract Port Completeness (In Progress - enables submodule removal)**
 
 **Uniswap V3 Port (1 task):**
 - **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (Ready - enables submodule removal)**
