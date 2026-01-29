@@ -82,3 +82,6 @@
 [submodule "lib/dss-test"]
 	path = lib/dss-test
 	url = https://github.com/sky-ecosystem/dss-test
+[submodule "lib/dss-deploy"]
+	path = lib/dss-deploy
+	url = https://github.com/sky-ecosystem/dss-deploy
