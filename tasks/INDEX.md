@@ -73,10 +73,11 @@
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Ready | - | `feature/sky-dss-port` |
-| CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Ready | CRANE-141 | `feature/vault-interface-coverage-tests` |
-| CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Ready | CRANE-141 | `feature/fix-pool-token-selectors` |
-| CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Ready | CRANE-141 | `feature/implement-missing-vault-functions` |
-| CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Ready | CRANE-141 | `feature/vault-diamond-loupe` |
+| CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
+| CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
+| CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
+| CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Superseded | CRANE-141 | - |
+| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | Ready | CRANE-142 | `feature/balancer-v3-vault-dfpkg-fix` |
 
 ## Status Legend
 
@@ -87,6 +88,7 @@
 - **Pending Merge** - Approved and rebased, ready for fast-forward merge
 - **Complete** - Review passed, ready to archive with `/backlog:prune`
 - **Blocked** - Waiting on dependencies
+- **Superseded** - Consolidated into another task, will be archived
 
 ## Quick Filters
 
@@ -152,9 +154,10 @@
 - CRANE-116: Add Negative Test for Facet/Selector Mismatch During Remove (Medium - from CRANE-058)
 - CRANE-117: Guard Against Partial Facet Removal Bookkeeping Corruption (Medium - from CRANE-057)
 
-**Balancer V3 Lite (Deployable Refactor) (7 tasks ready):**
+**Balancer V3 Lite (Deployable Refactor):**
 - CRANE-141: Refactor Balancer V3 Vault as Diamond Facets ✓ **Complete**
-- **CRANE-142: Refactor Balancer V3 Router as Diamond Facets (In Progress)**
+- CRANE-142: Refactor Balancer V3 Router as Diamond Facets ✓ **Complete**
+- **CRANE-159: Fix Balancer V3 Vault Diamond with DFPkg Pattern (Ready - HIGH PRIORITY)**
 - **CRANE-143: Refactor Balancer V3 Weighted Pool Package (Ready)**
 - **CRANE-144: Refactor Balancer V3 Stable Pool Package (Ready)**
 - **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
@@ -162,11 +165,11 @@
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
 - **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
 
-**Balancer V3 Vault Review Follow-ups (4 tasks - from CRANE-141 code review):**
-- **CRANE-155: Add Balancer V3 Vault Interface Coverage Tests (High)**
-- **CRANE-156: Fix Pool Token Selector Signatures in Vault Tests (High)**
-- **CRANE-157: Implement Missing Balancer V3 Vault Interface Functions (High)**
-- **CRANE-158: Add DiamondLoupe Support to Balancer V3 Vault (Medium)**
+**Balancer V3 Vault Review Follow-ups (Superseded by CRANE-159):**
+- ~~CRANE-155: Add Balancer V3 Vault Interface Coverage Tests~~ → Superseded
+- ~~CRANE-156: Fix Pool Token Selector Signatures in Vault Tests~~ → Superseded
+- ~~CRANE-157: Implement Missing Balancer V3 Vault Interface Functions~~ → Superseded
+- ~~CRANE-158: Add DiamondLoupe Support to Balancer V3 Vault~~ → Superseded
 
 **Aerodrome Port Verification (1 task):**
 - **CRANE-148: Verify Aerodrome Contract Port Completeness (Ready - enables submodule removal)**
