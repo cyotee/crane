@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {IVaultMain} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultMain.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
 import {BalancerV3MultiTokenRepo} from "../BalancerV3MultiTokenRepo.sol";
@@ -20,7 +21,42 @@ import {BalancerV3MultiTokenRepo} from "../BalancerV3MultiTokenRepo.sol";
  * BPT tokens are managed by the Vault on behalf of pools. Each pool address
  * acts as a "token address" in the multi-token accounting system.
  */
-contract VaultPoolTokenFacet is BalancerV3VaultModifiers {
+contract VaultPoolTokenFacet is BalancerV3VaultModifiers, IFacet {
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultPoolTokenFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultMain).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        // Only transfer and transferFrom are in IVaultMain
+        // totalSupply, balanceOf, allowance, approve are in IVaultExtension (handled by VaultQueryFacet)
+        funcs = new bytes4[](2);
+        funcs[0] = this.transfer.selector;
+        funcs[1] = this.transferFrom.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
+    }
 
     /* ========================================================================== */
     /*                              EXTERNAL FUNCTIONS                            */

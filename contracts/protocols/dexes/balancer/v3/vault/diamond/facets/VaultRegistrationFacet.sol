@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+
 import {IBasePool} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
+import {IVaultExtension} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultExtension.sol";
 import {IHooks} from "@balancer-labs/v3-interfaces/contracts/vault/IHooks.sol";
 import {IProtocolFeeController} from "@balancer-labs/v3-interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IERC20MultiTokenErrors} from "@balancer-labs/v3-interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
@@ -41,7 +44,7 @@ import {BalancerV3MultiTokenRepo} from "../BalancerV3MultiTokenRepo.sol";
  * - Protocol fee controller integration
  * - Rate provider setup for yield-bearing tokens
  */
-contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErrors {
+contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErrors, IFacet {
     using PackedTokenBalance for bytes32;
     using PoolConfigLib for PoolConfigBits;
     using HooksConfigLib for PoolConfigBits;
@@ -66,6 +69,39 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         PoolRoleAccounts roleAccounts;
         address poolHooksContract;
         LiquidityManagement liquidityManagement;
+    }
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultRegistrationFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultExtension).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](2);
+        funcs[0] = this.registerPool.selector;
+        funcs[1] = this.initialize.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 
     /* ========================================================================== */

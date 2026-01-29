@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {IVaultExtension} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultExtension.sol";
 import "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
 
 import {PackedTokenBalance} from "@balancer-labs/v3-solidity-utils/contracts/helpers/PackedTokenBalance.sol";
@@ -38,7 +40,7 @@ import {BalancerV3MultiTokenRepo} from "../BalancerV3MultiTokenRepo.sol";
  * - Roundtrip fee protection if add liquidity was called in same tx
  * - Raw balances only (no rate scaling)
  */
-contract VaultRecoveryFacet is BalancerV3VaultModifiers {
+contract VaultRecoveryFacet is BalancerV3VaultModifiers, IFacet {
     using PackedTokenBalance for bytes32;
     using PoolConfigLib for PoolConfigBits;
     using FixedPoint for uint256;
@@ -53,6 +55,38 @@ contract VaultRecoveryFacet is BalancerV3VaultModifiers {
         uint256[] swapFeeAmountsRaw;
         uint256[] balancesRaw;
         bool chargeRoundtripFee;
+    }
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultRecoveryFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultExtension).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](1);
+        funcs[0] = this.removeLiquidityRecovery.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 
     /* ========================================================================== */

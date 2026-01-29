@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
@@ -11,6 +11,8 @@ import "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
 
 import {PackedTokenBalance} from "@balancer-labs/v3-solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 import {BufferHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/BufferHelpers.sol";
+
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {BalancerV3VaultStorageRepo} from "../BalancerV3VaultStorageRepo.sol";
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
@@ -33,11 +35,43 @@ import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
  * - Automatic rebalancing when buffer is imbalanced
  * - Query mode support for simulations
  */
-contract VaultBufferFacet is BalancerV3VaultModifiers {
+contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
     using PackedTokenBalance for bytes32;
     using BufferHelpers for bytes32;
     using SafeCast for *;
     using SafeERC20 for IERC20;
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultBufferFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultMain).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](1);
+        funcs[0] = this.erc4626BufferWrapOrUnwrap.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
+    }
 
     /* ========================================================================== */
     /*                              EXTERNAL FUNCTIONS                            */

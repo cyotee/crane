@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 import {IVaultMain} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultMain.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {StorageSlotExtension} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
 import {TransientStorageHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
@@ -31,7 +32,7 @@ import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
  * token deltas (debits and credits) within a single transaction. All deltas
  * must settle to zero before the unlock context closes.
  */
-contract VaultTransientFacet is BalancerV3VaultModifiers {
+contract VaultTransientFacet is BalancerV3VaultModifiers, IFacet {
     using SafeERC20 for IERC20;
     using Address for address;
     using TransientStorageHelpers for *;
@@ -76,6 +77,46 @@ contract VaultTransientFacet is BalancerV3VaultModifiers {
             // separate unlock calls within the same transaction.
             _sessionIdSlot().tIncrement();
         }
+    }
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultTransientFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultMain).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](8);
+        funcs[0] = this.unlock.selector;
+        funcs[1] = this.settle.selector;
+        funcs[2] = this.sendTo.selector;
+        funcs[3] = this.isUnlocked.selector;
+        funcs[4] = this.reentrancyGuardEntered.selector;
+        // IVaultExtension transient accounting reads
+        funcs[5] = this.getNonzeroDeltaCount.selector;
+        funcs[6] = this.getTokenDelta.selector;
+        funcs[7] = this.getAddLiquidityCalledFlag.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 
     /* ========================================================================== */
@@ -170,5 +211,35 @@ contract VaultTransientFacet is BalancerV3VaultModifiers {
      */
     function reentrancyGuardEntered() external view returns (bool) {
         return _reentrancyGuardEntered();
+    }
+
+    /**
+     * @notice Returns the count of non-zero token deltas.
+     * @dev Part of IVaultExtension. Used to check if all balances are settled.
+     * @return nonzeroDeltaCount The number of tokens with non-zero deltas
+     */
+    function getNonzeroDeltaCount() external view returns (uint256) {
+        return _nonZeroDeltaCount().tload();
+    }
+
+    /**
+     * @notice Retrieves the token delta for a specific token.
+     * @dev Part of IVaultExtension. Returns the current credit/debit for a token.
+     * @param token The token to query
+     * @return tokenDelta The current delta (positive = credit, negative = debit)
+     */
+    function getTokenDelta(IERC20 token) external view returns (int256) {
+        return _tokenDeltas().tGet(token);
+    }
+
+    /**
+     * @notice Returns whether addLiquidity was called for a pool in the current session.
+     * @dev Part of IVaultExtension. Used for round-trip fee protection.
+     * @param pool The pool address
+     * @return liquidityAdded True if liquidity was added in this session
+     */
+    function getAddLiquidityCalledFlag(address pool) external view returns (bool) {
+        uint256 sessionId = _sessionIdSlot().tload();
+        return _addLiquidityCalled().tGet(sessionId, pool);
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.30;
 
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -17,6 +17,7 @@ import {HooksConfigLib} from "@balancer-labs/v3-vault/contracts/lib/HooksConfigL
 import {PoolConfigLib, PoolConfigBits} from "@balancer-labs/v3-vault/contracts/lib/PoolConfigLib.sol";
 import {PoolDataLib} from "@balancer-labs/v3-vault/contracts/lib/PoolDataLib.sol";
 
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3VaultStorageRepo} from "../BalancerV3VaultStorageRepo.sol";
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
 
@@ -41,7 +42,7 @@ import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
  * 7. Update pool balances
  * 8. Call afterSwap hook (if configured)
  */
-contract VaultSwapFacet is BalancerV3VaultModifiers {
+contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
     using PackedTokenBalance for bytes32;
     using FixedPoint for *;
     using SafeCast for *;
@@ -59,6 +60,40 @@ contract VaultSwapFacet is BalancerV3VaultModifiers {
         uint256 totalSwapFeeAmountScaled18;
         uint256 totalSwapFeeAmountRaw;
         uint256 aggregateFeeAmountRaw;
+    }
+
+    /* ========================================================================== */
+    /*                                  IFacet                                    */
+    /* ========================================================================== */
+
+    /// @inheritdoc IFacet
+    function facetName() public pure returns (string memory name) {
+        return type(VaultSwapFacet).name;
+    }
+
+    /// @inheritdoc IFacet
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
+        // This facet implements part of IVaultMain (swap functions only)
+        interfaces = new bytes4[](1);
+        interfaces[0] = type(IVaultMain).interfaceId;
+    }
+
+    /// @inheritdoc IFacet
+    function facetFuncs() public pure returns (bytes4[] memory funcs) {
+        funcs = new bytes4[](2);
+        funcs[0] = this.swap.selector;
+        funcs[1] = this.getPoolTokenCountAndIndexOfToken.selector;
+    }
+
+    /// @inheritdoc IFacet
+    function facetMetadata()
+        external
+        pure
+        returns (string memory name_, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name_ = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
     }
 
     /* ========================================================================== */
