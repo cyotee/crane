@@ -1,7 +1,7 @@
 # Task CRANE-159: Fix Balancer V3 Vault Diamond with DFPkg Pattern
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** In Progress
 **Created:** 2026-01-28
 **Dependencies:** CRANE-142 (Router implementation as reference)
 **Worktree:** `feature/balancer-v3-vault-dfpkg-fix`

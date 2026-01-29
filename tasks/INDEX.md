@@ -77,7 +77,7 @@
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
 | CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
 | CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Superseded | CRANE-141 | - |
-| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | Ready | CRANE-142 | `feature/balancer-v3-vault-dfpkg-fix` |
+| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | In Progress | CRANE-142 | `feature/balancer-v3-vault-dfpkg-fix` |
 
 ## Status Legend
 
