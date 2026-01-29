@@ -14,7 +14,8 @@
       "WebSearch",
       "WebFetch(domain:basescan.org)",
       "WebFetch(domain:opencode.ai)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Skill(design:design)"
     ]
   }
 }
