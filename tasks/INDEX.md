@@ -77,7 +77,7 @@
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
 | CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
 | CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Superseded | CRANE-141 | - |
-| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | In Review | CRANE-142 | `feature/balancer-v3-vault-dfpkg-fix` |
+| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | Pending Merge | CRANE-142 | `feature/balancer-v3-vault-dfpkg-fix` |
 
 ## Status Legend
 
@@ -157,7 +157,7 @@
 **Balancer V3 Lite (Deployable Refactor):**
 - CRANE-141: Refactor Balancer V3 Vault as Diamond Facets ✓ **Complete**
 - CRANE-142: Refactor Balancer V3 Router as Diamond Facets ✓ **Complete**
-- **CRANE-159: Fix Balancer V3 Vault Diamond with DFPkg Pattern (In Review)**
+- **CRANE-159: Fix Balancer V3 Vault Diamond with DFPkg Pattern (Pending Merge)**
 - **CRANE-143: Refactor Balancer V3 Weighted Pool Package (Ready)**
 - **CRANE-144: Refactor Balancer V3 Stable Pool Package (Ready)**
 - **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
