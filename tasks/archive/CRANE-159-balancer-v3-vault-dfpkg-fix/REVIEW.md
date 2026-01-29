@@ -83,8 +83,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol`
 - `contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol`
-**User Response:** (pending)
-**Notes:** Reduces future selector-maintenance risk.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-160
 
 ### Suggestion 2: Resolve TASK.md vs implementation mismatch (loupe + router integration)
 **Priority:** High
@@ -93,8 +93,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `tasks/CRANE-159-balancer-v3-vault-dfpkg-fix/TASK.md`
 - `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.t.sol`
-**User Response:** (pending)
-**Notes:** Prevents “tests pass but acceptance not met” ambiguity.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-161
 
 ---
 
