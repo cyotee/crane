@@ -68,7 +68,7 @@
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
 | CRANE-148 | Verify Aerodrome Contract Port Completeness | In Progress | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
-| CRANE-150 | Verify Permit2 Contract Port Completeness | Pending Merge | - | `feature/permit2-port-verification` |
+| CRANE-150 | Verify Permit2 Contract Port Completeness | In Review | - | `feature/permit2-port-verification` |
 | CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
@@ -193,7 +193,7 @@
 - **CRANE-148: Verify Aerodrome Contract Port Completeness (In Progress - enables submodule removal)**
 
 **Permit2 Port Verification (1 task):**
-- **CRANE-150: Verify Permit2 Contract Port Completeness (Pending Merge - enables submodule removal)**
+- **CRANE-150: Verify Permit2 Contract Port Completeness (In Review - enables submodule removal)**
 
 **Uniswap V3 Port (1 task):**
 - **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (Ready - enables submodule removal)**
