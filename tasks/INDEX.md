@@ -61,7 +61,7 @@
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
 | CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
 | CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
-| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-weighted` |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | In Progress | CRANE-141 | `feature/balancer-v3-pool-weighted` |
 | CRANE-144 | Refactor Balancer V3 Stable Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-stable` |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
@@ -86,9 +86,9 @@
 | CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
 | CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
 | CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | Complete | CRANE-142 | `test/router-testbase-behavior` |
-| CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/safecast160-tests` |
+| CRANE-168 | Add SafeCast160 Unit Tests | In Progress | CRANE-150 | `test/safecast160-tests` |
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
-| CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
+| CRANE-170 | Document DeployPermit2 Bytecode Source | In Progress | CRANE-150 | `docs/deploypermit2-docs` |
 | CRANE-171 | Remove lib/permit2 Submodule | Ready | CRANE-168, CRANE-169 | `chore/remove-permit2-submodule` |
 | CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
 | CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |

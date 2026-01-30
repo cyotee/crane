@@ -15,7 +15,11 @@
       "WebFetch(domain:basescan.org)",
       "WebFetch(domain:opencode.ai)",
       "Bash(chmod:*)",
-      "Skill(design:design)"
+      "Skill(design:design)",
+      "Bash(find:*)",
+      "Bash(git submodule:*)",
+      "WebFetch(domain:github.com)",
+      "Skill(backlog:list)"
     ]
   },
   "sandbox": {
