@@ -16,6 +16,13 @@ None required - task requirements were clear and well-documented.
 
 ## Review Findings
 
+### Finding 5: Reproducing Tests Requires Submodule Fixes
+**File:** `tasks/CRANE-148-aerodrome-port-verification/PROGRESS.md`
+**Severity:** Medium
+**Description:** In this worktree I could not independently re-run the Aerodrome test suite because the git submodules are not present/initialized (e.g., `lib/aerodrome-contracts` is an empty directory) and `forge test` attempted to install missing deps but failed fetching `lib/dss-deploy` at the pinned SHA (`not our ref ...`). This leads to missing dependency files such as `lib/forge-std/src/Vm.sol` and a compile failure.
+**Status:** Open
+**Resolution:** Not resolved in this review. To make verification reproducible from a fresh checkout/worktree, ensure `git submodule update --init --recursive` succeeds (or update the pinned submodule SHAs to commits that exist on their remotes).
+
 ### Finding 1: Documentation Accurately Reflects Structure
 **File:** `contracts/protocols/dexes/aerodrome/v1/README.md`
 **Severity:** Info (Positive)
@@ -86,9 +93,9 @@ Actionable items for follow-up tasks:
 
 ## Review Summary
 
-**Findings:** 4 findings - all positive/informational, no issues identified
+**Findings:** 5 findings (4 positive/info, 1 medium reproducibility concern)
 **Suggestions:** 2 low-priority suggestions for future cleanup
-**Recommendation:** **APPROVE** - Task is complete and ready for merge
+**Recommendation:** **APPROVE (with note)** - Task appears complete, but consider addressing Finding 5 so reviewers/CI can reliably re-run the verification tests.
 
 The implementation thoroughly verifies the Aerodrome contract port:
 1. All acceptance criteria are met
