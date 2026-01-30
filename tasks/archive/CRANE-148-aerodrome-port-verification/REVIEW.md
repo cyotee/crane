@@ -78,16 +78,16 @@ Actionable items for follow-up tasks:
 **Description:** `AerodromService.sol` is marked as DEPRECATED in the README. Consider removing it in a future cleanup task to reduce maintenance burden.
 **Affected Files:**
 - `contracts/protocols/dexes/aerodrome/v1/services/AerodromService.sol`
-**User Response:** (pending)
-**Notes:** Not blocking - the deprecation is documented.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-172
 
 ### Suggestion 2: Add Interface Comparison Report as Artifact
 **Priority:** Low
 **Description:** TASK.md mentions "Create interface comparison report" under Analysis Files, but PROGRESS.md contains the results inline. Consider extracting this to a standalone INTERFACE_COMPARISON.md file for future reference.
 **Affected Files:**
-- Create `tasks/CRANE-148-aerodrome-port-verification/INTERFACE_COMPARISON.md`
-**User Response:** (pending)
-**Notes:** Optional - current inline documentation is sufficient.
+- Create `contracts/protocols/dexes/aerodrome/v1/INTERFACE_COMPARISON.md`
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-173
 
 ---
 

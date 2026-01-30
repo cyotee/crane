@@ -90,6 +90,8 @@
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
 | CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
 | CRANE-171 | Remove lib/permit2 Submodule | Ready | CRANE-168, CRANE-169 | `chore/remove-permit2-submodule` |
+| CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
+| CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
 
 ## Status Legend
 
