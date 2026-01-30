@@ -209,7 +209,7 @@
 - **CRANE-153: Port Resupply Protocol to Local Contracts (Ready - enables submodule removal)**
 
 **Sky/DSS CDP Port (1 task):**
-- **CRANE-154: Port Sky/DSS Protocol to Local Contracts (Ready - MakerDAO Multi-Collateral DAI system)**
+- ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete
 
 ### Blocked
 
