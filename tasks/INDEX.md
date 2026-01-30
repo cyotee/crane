@@ -61,7 +61,7 @@
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
 | CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
 | CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
-| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | In Review | CRANE-141 | - |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Complete | CRANE-141 | - |
 | CRANE-144 | Refactor Balancer V3 Stable Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-stable` |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
