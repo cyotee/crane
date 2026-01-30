@@ -72,7 +72,7 @@
 | CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
-| CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Pending Merge | - | `feature/sky-dss-port` |
+| CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Complete | - | `feature/sky-dss-port` |
 | CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
 | CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
