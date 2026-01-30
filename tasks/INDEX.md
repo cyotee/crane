@@ -193,7 +193,7 @@
 - **CRANE-148: Verify Aerodrome Contract Port Completeness (In Progress - enables submodule removal)**
 
 **Permit2 Port Verification (1 task):**
-- **CRANE-150: Verify Permit2 Contract Port Completeness (In Review - enables submodule removal)**
+- ~~CRANE-150: Verify Permit2 Contract Port Completeness~~ → Complete
 
 **Uniswap V3 Port (1 task):**
 - **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (Ready - enables submodule removal)**
