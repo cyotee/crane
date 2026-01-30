@@ -22,4 +22,10 @@ forge-std/=lib/forge-std/src/
 
 v4-periphery/=lib/v4-periphery/
 v4-core/=lib/v4-periphery/lib/v4-core/src/
+permit2/src/interfaces/IPermit2.sol=contracts/interfaces/protocols/utils/permit2/IPermit2.sol
+permit2/src/interfaces/IAllowanceTransfer.sol=contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol
+permit2/src/interfaces/ISignatureTransfer.sol=contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol
+permit2/src/interfaces/IEIP712.sol=contracts/interfaces/IEIP712.sol
+permit2/src/interfaces/IDAIPermit.sol=contracts/interfaces/protocols/utils/permit2/IDAIPermit.sol
+permit2/test/utils/DeployPermit2.sol=contracts/protocols/utils/permit2/test/utils/DeployPermit2.sol
 permit2/=lib/permit2/
