@@ -85,24 +85,24 @@ No clarifying questions needed - the task requirements are clear from TASK.md an
 **Description:** Add unit tests for SafeCast160 library to verify boundary conditions and revert behavior.
 **Affected Files:**
 - `test/foundry/spec/protocols/utils/permit2/SafeCast160.t.sol` (new)
-**User Response:** (pending)
-**Notes:** Simple test - values at/near uint160 max should pass/fail appropriately.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-168
 
 ### Suggestion 2: Add Permit2Lib Integration Tests
 **Priority:** Medium
 **Description:** Add tests for Permit2Lib to verify fallback logic works correctly with various token types.
 **Affected Files:**
 - `test/foundry/spec/protocols/utils/permit2/Permit2Lib.t.sol` (new)
-**User Response:** (pending)
-**Notes:** Should test: standard ERC20, DAI-style permit, tokens without permit.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-169
 
 ### Suggestion 3: Document DeployPermit2 Bytecode Source
 **Priority:** Low
 **Description:** Add comment documenting the source and version of the hardcoded Permit2 bytecode.
 **Affected Files:**
 - `contracts/protocols/utils/permit2/test/utils/DeployPermit2.sol`
-**User Response:** (pending)
-**Notes:** Add comment: "// Permit2 bytecode compiled from commit XXX with Solc 0.8.17 viaIR"
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-170
 
 ### Suggestion 4: Consider Removing lib/permit2 Submodule
 **Priority:** High
@@ -110,8 +110,8 @@ No clarifying questions needed - the task requirements are clear from TASK.md an
 **Affected Files:**
 - `.gitmodules`
 - `lib/permit2` (remove)
-**User Response:** (pending)
-**Notes:** This was the goal of CRANE-150. Ready to execute after review approval.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-171
 
 ---
 
