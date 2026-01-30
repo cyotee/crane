@@ -92,6 +92,8 @@
 | CRANE-171 | Remove lib/permit2 Submodule | Ready | CRANE-168, CRANE-169 | `chore/remove-permit2-submodule` |
 | CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
 | CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
+| CRANE-174 | Add Router getWeth/getPermit2 Validation | Ready | CRANE-167 | `test/router-weth-permit2-validation` |
+| CRANE-175 | Consolidate Router Facet Size Checks | Ready | CRANE-167 | `refactor/router-facet-size-consolidation` |
 
 ## Status Legend
 

@@ -49,8 +49,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/router/diamond/Behavior_IRouter.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.t.sol`
-**User Response:** (pending)
-**Notes:** Keeps the TestBase/Behavior adoption consistent and improves coverage of router initialization.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-174
 
 ### Suggestion 2: Consider using Behavior_IRouter for facet size checks everywhere
 **Priority:** Low
@@ -58,8 +58,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/router/diamond/TestBase_BalancerV3Router.sol`
 - `contracts/protocols/dexes/balancer/v3/router/diamond/Behavior_IRouter.sol`
-**User Response:** (pending)
-**Notes:** Pure refactor; not required for correctness.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-175
 
 ---
 
