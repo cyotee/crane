@@ -61,7 +61,7 @@
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
 | CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
 | CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
-| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | In Progress | CRANE-141 | `feature/balancer-v3-pool-weighted` |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Complete | CRANE-141 | - |
 | CRANE-144 | Refactor Balancer V3 Stable Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-stable` |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
@@ -176,7 +176,7 @@
 - CRANE-159: Fix Balancer V3 Vault Diamond with DFPkg Pattern ✓ **Complete**
 - **CRANE-160: Remove Non-Routed Duplicate Selectors from Vault Facets (Ready - HIGH)**
 - **CRANE-161: Resolve Vault Loupe and Router Integration (Ready - HIGH)**
-- **CRANE-143: Refactor Balancer V3 Weighted Pool Package (Ready)**
+- CRANE-143: Refactor Balancer V3 Weighted Pool Package ✓ **Complete**
 - **CRANE-144: Refactor Balancer V3 Stable Pool Package (Ready)**
 - **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
