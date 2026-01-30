@@ -66,7 +66,7 @@
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
-| CRANE-148 | Verify Aerodrome Contract Port Completeness | Pending Merge | - | `feature/aerodrome-port-verification` |
+| CRANE-148 | Verify Aerodrome Contract Port Completeness | Complete | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
 | CRANE-150 | Verify Permit2 Contract Port Completeness | Complete | - | `feature/permit2-port-verification` |
 | CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
