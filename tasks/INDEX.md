@@ -94,6 +94,10 @@
 | CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
 | CRANE-174 | Add Router getWeth/getPermit2 Validation | Ready | CRANE-167 | `test/router-weth-permit2-validation` |
 | CRANE-175 | Consolidate Router Facet Size Checks | Ready | CRANE-167 | `refactor/router-facet-size-consolidation` |
+| CRANE-176 | Replace LBP String Revert with Custom Error | Ready | CRANE-143 | `fix/lbp-custom-error` |
+| CRANE-177 | Add NatSpec Examples to GradualValueChange | Ready | CRANE-143 | `docs/gradualvaluechange-natspec` |
+| CRANE-178 | Integration Tests for Weighted Pool Package | Ready | CRANE-143 | `test/pool-weighted-integration` |
+| CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/lbp-dfpkg-calcsalt` |
 
 ## Status Legend
 

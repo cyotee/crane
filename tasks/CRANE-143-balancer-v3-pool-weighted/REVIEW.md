@@ -77,24 +77,24 @@ None - acceptance criteria were clear from TASK.md.
 **Description:** Replace string revert with custom error for gas optimization.
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTarget.sol`
-**User Response:** (pending)
-**Notes:** Minor gas savings, low priority.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-176
 
 ### Suggestion 2: Add NatSpec to GradualValueChange Library
 **Priority:** Low
 **Description:** The library has good function docs but could benefit from usage examples in the contract-level NatSpec.
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/GradualValueChange.sol`
-**User Response:** (pending)
-**Notes:** Documentation improvement only.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-177
 
 ### Suggestion 3: Create Integration Test Task
 **Priority:** Medium
 **Description:** Create a follow-up task for integration testing WeightedPool and LBPool with actual Diamond Vault deployment.
 **Affected Files:**
 - New test files
-**User Response:** (pending)
-**Notes:** This was noted as deferred in PROGRESS.md.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-178
 
 ---
 
@@ -122,3 +122,35 @@ None - acceptance criteria were clear from TASK.md.
 ---
 
 **Review Complete**
+
+## Second Opinion
+
+### Finding 1: LBP DFPkg calcSalt omits config (address collisions)
+**File:** `contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolDFPkg.sol:267`
+**Severity:** High
+**Description:** `calcSalt()` hashes only `(token0, token1, projectTokenStartWeight, projectTokenEndWeight, startTime, endTime)` and omits `hooksContract`, `blockProjectTokenSwapsIn`, and `reserveTokenVirtualBalance`.
+**Impact:** Deployments that differ only by these omitted fields will deterministically collide to the same address (and the second deployment should fail). This is surprising for a "factory/package" and makes it impossible to deploy multiple LBPs over the same pair + schedule with different hook/behavior.
+**Recommendation:** Include all configuration that changes pool behavior/state in the salt (at minimum: `hooksContract`, `blockProjectTokenSwapsIn`, `reserveTokenVirtualBalance`, and arguably `reserveTokenScalingFactor`-derivation inputs like `reserveToken` already included).
+**User Response:** Accepted - Converted to task CRANE-179
+
+### Finding 2: Reserve token decimals > 18 causes underflow in LBP initAccount
+**File:** `contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolDFPkg.sol:72`
+**Severity:** Medium
+**Description:** `uint256 reserveScalingFactor = 10 ** (18 - IERC20Metadata(decodedArgs.reserveToken).decimals());` will revert if `decimals() > 18`.
+**Recommendation:** Either explicitly validate `decimals <= 18` with a custom error (clearer revert), or implement proper scaling for >18-decimal tokens.
+
+### Finding 3: WeightedTokenConfigUtils mutates input despite comment
+**File:** `contracts/protocols/dexes/balancer/v3/pool-weighted/WeightedTokenConfigUtils.sol:32`
+**Severity:** Info
+**Description:** The comment says it “work[s] on copies to avoid modifying originals”, but `sortedConfigs = tokenConfigs; sortedWeights = weights;` aliases memory arrays. The function mutates the provided arrays.
+**Recommendation:** Either adjust the comment to reflect actual behavior, or allocate new arrays and copy before sorting.
+
+### Finding 4: Unused errors / incomplete validation in LBP DFPkg
+**File:** `contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolDFPkg.sol`
+**Severity:** Low
+**Description:** `InvalidTokenCount` and `InvalidWeights` are declared but never used; `processArgs()`/`calcSalt()` only validate time ordering.
+**Recommendation:** Either remove unused errors or add validations consistent with `BalancerV3LBPoolRepo._initialize` (min weight bounds, etc.).
+
+### Second Opinion Recommendation
+
+I would not fully approve as-is due to Finding 1 (salt collisions). If the intent is “only one LBP per token-pair + schedule”, document that explicitly and enforce it (e.g., omit fields intentionally and add comments/tests). Otherwise, fix `calcSalt()`.
