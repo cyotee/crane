@@ -2,10 +2,20 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** TASK COMPLETE
-**Next step:** Merge to main
+**Last checkpoint:** PHASE 1 COMPLETE (Pending Merge)
+**Next step:** Run `/backlog:complete CRANE-150` from MAIN worktree
 **Build status:** ✅ PASS (warnings only)
 **Test status:** DEFERRED (follow-up task recommended)
+**Branch status:** Rebased onto main, marked Pending Merge
+
+### To Complete This Task
+
+From the **main worktree** (not this task worktree):
+```bash
+cd /Users/cyotee/Development/github-cyotee/indexedex/.git/modules/lib/daosys/modules/lib/crane
+# Start Claude and run:
+/backlog:complete CRANE-150
+```
 
 ## Summary
 
