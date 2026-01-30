@@ -17,5 +17,9 @@
       "Bash(chmod:*)",
       "Skill(design:design)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
   }
 }
