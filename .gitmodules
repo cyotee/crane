@@ -76,12 +76,3 @@
 [submodule "lib/resupply"]
 	path = lib/resupply
 	url = https://github.com/resupplyfi/resupply
-[submodule "lib/dss"]
-	path = lib/dss
-	url = https://github.com/sky-ecosystem/dss
-[submodule "lib/dss-test"]
-	path = lib/dss-test
-	url = https://github.com/sky-ecosystem/dss-test
-[submodule "lib/dss-deploy"]
-	path = lib/dss-deploy
-	url = https://github.com/sky-ecosystem/dss-deploy
