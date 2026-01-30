@@ -85,7 +85,7 @@
 | CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/router-target-layer` |
 | CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
 | CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
-| CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | In Progress | CRANE-142 | `test/router-testbase-behavior` |
+| CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | Pending Merge | CRANE-142 | `test/router-testbase-behavior` |
 | CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/safecast160-tests` |
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
 | CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
