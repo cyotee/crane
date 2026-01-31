@@ -6,7 +6,7 @@
 
 ## Summary
 
-Reduced submodule count from **26 to 8**, significantly improving worktree creation performance.
+Reduced submodule count from **26 to 7** (73% reduction), significantly improving worktree creation performance.
 
 ---
 
@@ -296,4 +296,5 @@ Updated:
 | CRANE-182 | Final Submodule Cleanup | 🔄 In Progress |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | ✅ Complete |
 | NEW | Port EfficientHashLib from solady | 📋 Ready |
-| NEW | Remove solmate submodule | 📋 Ready |
+| NEW | Remove solmate submodule | ✅ Complete |
+| NEW | Remove v4-core + v4-periphery submodules | 📋 Ready (if not needed) |
