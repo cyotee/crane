@@ -68,7 +68,7 @@
 | CRANE-148 | Verify Aerodrome Contract Port Completeness | Complete | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
 | CRANE-150 | Verify Permit2 Contract Port Completeness | Complete | - | `feature/permit2-port-verification` |
-| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Ready | - | `feature/uniswap-v3-port-verification` |
+| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | In Review | - | `feature/uniswap-v3-port-verification` |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Complete | - | `feature/sky-dss-port` |
@@ -98,6 +98,13 @@
 | CRANE-178 | Integration Tests for Weighted Pool Package | Ready | CRANE-143 | `test/pool-weighted-integration` |
 | CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/lbp-dfpkg-calcsalt` |
 | CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
+| CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/remove-aerodrome-submodule` |
+| CRANE-182 | Final Submodule Cleanup and forge-std Installation | Blocked | CRANE-171, CRANE-181, CRANE-186 | `chore/final-submodule-cleanup` |
+| CRANE-183 | Refactor V3 NFT Metadata to Fix Stack-Too-Deep | Ready | CRANE-151 | `fix/v3-nft-metadata-refactor` |
+| CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/v3-quoter-tests` |
+| CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
+| CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
+| CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
 
 ## Status Legend
 
@@ -202,13 +209,13 @@
 - ~~CRANE-158: Add DiamondLoupe Support to Balancer V3 Vault~~ → Superseded
 
 **Aerodrome Port Verification (1 task):**
-- **CRANE-148: Verify Aerodrome Contract Port Completeness (In Progress - enables submodule removal)**
+- ~~CRANE-148: Verify Aerodrome Contract Port Completeness~~ → Complete
 
 **Permit2 Port Verification (1 task):**
 - ~~CRANE-150: Verify Permit2 Contract Port Completeness~~ → Complete
 
 **Uniswap V3 Port (1 task):**
-- **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (Ready - enables submodule removal)**
+- **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (In Review - enables submodule removal)**
 
 **Uniswap V4 Port (1 task):**
 - **CRANE-152: Port and Verify Uniswap V4 Core + Periphery (Ready - enables submodule removal)**
@@ -219,9 +226,14 @@
 **Sky/DSS CDP Port (1 task):**
 - ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete
 
+**Submodule Removal (3 tasks):**
+- **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
+- **CRANE-181: Remove lib/aerodrome-contracts Submodule (Ready)**
+- **CRANE-182: Final Submodule Cleanup and forge-std Installation (Blocked - waiting on all removals)**
+
 ### Blocked
 
-(No tasks currently blocked)
+- CRANE-182: Final Submodule Cleanup (waiting on CRANE-171, CRANE-181, and future removal tasks)
 
 ## Retired Tasks
 
