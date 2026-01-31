@@ -9,8 +9,6 @@ forge-std/=lib/forge-std/src/
 
 @openzeppelin/=lib/openzeppelin-contracts/
 
-@aerodrome/=lib/aerodrome/
-
 @balancer-labs/v3-reclamm=lib/reclamm
 @balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/
 @balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/
