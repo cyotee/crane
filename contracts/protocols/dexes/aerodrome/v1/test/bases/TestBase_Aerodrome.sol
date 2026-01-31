@@ -33,7 +33,7 @@ import {IWETH} from "@crane/contracts/interfaces/protocols/tokens/wrappers/weth/
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {SigUtils} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/test/SigUtils.sol";
-import {Forwarder} from "@opengsn/contracts/src/forwarder/Forwarder.sol";
+import {Forwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/Forwarder.sol";
 import {BetterTest} from "@crane/contracts/test/BetterTest.sol";
 import {TestBase_Weth9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/TestBase_Weth9.sol";
 

@@ -16,63 +16,9 @@
 [submodule "lib/solmate"]
 	path = lib/solmate
 	url = https://github.com/transmissions11/solmate
-[submodule "lib/scaffold-eth-2"]
-	path = lib/scaffold-eth-2
-	url = https://github.com/scaffold-eth/scaffold-eth-2.git
-[submodule "lib/solplot"]
-	path = lib/solplot
-	url = https://github.com/cyotee/solplot
-[submodule "lib/solidity-lib"]
-	path = lib/solidity-lib
-	url = https://github.com/cyotee/solidity-lib
-[submodule "lib/aerodrome-contracts"]
-	path = lib/aerodrome-contracts
-	url = https://github.com/aerodrome-finance/contracts
-[submodule "lib/gsn"]
-	path = lib/gsn
-	url = https://github.com/opengsn/gsn
-[submodule "lib/slipstream"]
-	path = lib/slipstream
-	url = https://github.com/aerodrome-finance/slipstream
-[submodule "lib/v3-core"]
-	path = lib/v3-core
-	url = https://github.com/Uniswap/v3-core
-[submodule "lib/v3-periphery"]
-	path = lib/v3-periphery
-	url = https://github.com/Uniswap/v3-periphery
 [submodule "lib/v4-core"]
 	path = lib/v4-core
 	url = https://github.com/Uniswap/v4-core
 [submodule "lib/v4-periphery"]
 	path = lib/v4-periphery
 	url = https://github.com/Uniswap/v4-periphery
-[submodule "lib/aave-v3-horizon"]
-	path = lib/aave-v3-horizon
-	url = https://github.com/aave/aave-v3-horizon
-[submodule "lib/aave-v4"]
-	path = lib/aave-v4
-	url = https://github.com/aave/aave-v4
-[submodule "lib/comet"]
-	path = lib/comet
-	url = https://github.com/compound-finance/comet
-[submodule "lib/ethereum-vault-connector"]
-	path = lib/ethereum-vault-connector
-	url = https://github.com/euler-xyz/ethereum-vault-connector
-[submodule "lib/euler-price-oracle"]
-	path = lib/euler-price-oracle
-	url = https://github.com/euler-xyz/euler-price-oracle
-[submodule "lib/euler-vault-kit"]
-	path = lib/euler-vault-kit
-	url = https://github.com/euler-xyz/euler-vault-kit
-[submodule "lib/evk-periphery"]
-	path = lib/evk-periphery
-	url = https://github.com/euler-xyz/evk-periphery
-[submodule "lib/evc-playground"]
-	path = lib/evc-playground
-	url = https://github.com/euler-xyz/evc-playground
-[submodule "lib/balancer-v3-monorepo"]
-	path = lib/balancer-v3-monorepo
-	url = https://github.com/balancer/balancer-v3-monorepo.git
-[submodule "lib/resupply"]
-	path = lib/resupply
-	url = https://github.com/resupplyfi/resupply

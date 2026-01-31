@@ -9,8 +9,6 @@ forge-std/=lib/forge-std/src/
 
 @openzeppelin/=lib/openzeppelin-contracts/
 
-@opengsn/contracts/=lib/gsn/packages/contracts/
-
 @aerodrome/=lib/aerodrome/
 
 @balancer-labs/v3-reclamm=lib/reclamm
