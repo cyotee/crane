@@ -10,14 +10,14 @@ Reduced submodule count from **26 to 8**, significantly improving worktree creat
 
 ---
 
-## Current State: 8 Submodules
+## Current State: 7 Submodules
 
 | Submodule | Import Count | Porting Difficulty | Status |
 |-----------|--------------|-------------------|--------|
 | `forge-std` | 100+ (tests) | ❌ Not practical | KEEP |
 | `openzeppelin-contracts` | 261 across 116 files | ❌ Not practical | KEEP |
 | `solady` | 10 files (1 library) | ✅ Easy | REMOVABLE |
-| `solmate` | 0 direct usage | ✅ Easy | REMOVABLE |
+| ~~`solmate`~~ | ~~0 direct usage~~ | ~~✅ Easy~~ | ✅ REMOVED |
 | `reclamm` | 301 across 78 files | ⚠️ Complex | KEEP (for now) |
 | `permit2` | 48 across 23 files | ⚠️ Moderate | IN PROGRESS |
 | `v4-core` | 0 direct usage | ✅ Not used yet | REMOVABLE |
@@ -84,25 +84,18 @@ import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
 
 ---
 
-### 4. solmate (REMOVABLE - Easy)
+### 4. solmate (✅ REMOVED)
 
-**Usage:** 0 direct imports in `contracts/`
-**Status:** Only used internally by other submodules (permit2, v4-core, v4-periphery, reclamm)
+**Status:** Removed on 2026-01-31
 
-The solmate library is referenced inside other submodules but NOT directly by Crane contracts.
+**What was done:**
+1. Removed from `.gitmodules`
+2. Removed `lib/solmate` directory
+3. Removed `@solmate/` remapping
+4. Created `contracts/test/mocks/MockERC20.sol` to replace solmate's mock
+5. Updated `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/UniswapV3PeripheryRepo.t.sol`
 
-**Porting Difficulty:** ✅ None required
-
-**Work Required:**
-1. Verify no direct imports exist (confirmed: 0)
-2. Remove from `.gitmodules`
-3. Remove `lib/solmate` directory
-
-**Estimated Effort:** 5 minutes
-
-**Recommendation:** Remove immediately - it's not used.
-
-**CAUTION:** Other submodules (permit2, v4-*) have their own solmate copy in their lib/. Removing the top-level solmate won't affect them.
+**Note:** Other submodules (permit2, v4-*) have their own solmate copy in their lib/. Removing the top-level solmate didn't affect them.
 
 ---
 
@@ -214,7 +207,7 @@ Same situation as v4-core.
 
 ### Immediate (No Risk)
 
-1. **solmate** - Not used at all
+1. ~~**solmate** - Not used at all~~ ✅ DONE
 2. **v4-core** + **v4-periphery** - Not used (unless V4 work is planned)
 
 ### Short-term (Easy Port)
@@ -240,7 +233,8 @@ Same situation as v4-core.
 
 | Phase | Submodules | Count |
 |-------|------------|-------|
-| Current | forge-std, openzeppelin, solady, solmate, reclamm, permit2, v4-core, v4-periphery | 8 |
+| ~~Original~~ | ~~forge-std, openzeppelin, solady, solmate, reclamm, permit2, v4-core, v4-periphery~~ | ~~8~~ |
+| **Current** | forge-std, openzeppelin, solady, reclamm, permit2, v4-core, v4-periphery | **7** |
 | After Immediate | forge-std, openzeppelin, solady, reclamm, permit2 | 5 |
 | After Short-term | forge-std, openzeppelin, reclamm, permit2 | 4 |
 | After Medium-term | forge-std, openzeppelin, reclamm | 3 |
@@ -276,6 +270,13 @@ Created:
 Updated:
 - `contracts/protocols/dexes/aerodrome/v1/stubs/ProtocolForwarder.sol`
 - `contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome.sol`
+
+### Removed solmate (Session 2)
+
+- Removed `lib/solmate` submodule
+- Removed `@solmate/` remapping
+- Created `contracts/test/mocks/MockERC20.sol` (local replacement)
+- Updated `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/UniswapV3PeripheryRepo.t.sol`
 
 ---
 
