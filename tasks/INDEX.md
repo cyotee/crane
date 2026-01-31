@@ -62,7 +62,6 @@
 | CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
 | CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
 | CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Complete | CRANE-141 | - |
-| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Complete | CRANE-141 | - |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
@@ -182,7 +181,7 @@
 - **CRANE-160: Remove Non-Routed Duplicate Selectors from Vault Facets (Ready - HIGH)**
 - **CRANE-161: Resolve Vault Loupe and Router Integration (Ready - HIGH)**
 - CRANE-143: Refactor Balancer V3 Weighted Pool Package ✓ **Complete**
-- CRANE-144: Refactor Balancer V3 Stable Pool Package ✓ **Complete**
+- ~~CRANE-144: Refactor Balancer V3 Stable Pool Package~~ → Archived
 - **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
@@ -321,6 +320,7 @@
 | CRANE-086 | Add Explicit sqrtPriceLimit Bound Test | 2026-01-21 | archive/CRANE-086-swapmath-sqrtpricelimit-fuzz/ |
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | 2026-01-21 | archive/CRANE-087-swapmath-int256min-edge/ |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | 2026-01-21 | archive/CRANE-088-swapmath-test-cleanup/ |
+| CRANE-144 | Refactor Balancer V3 Stable Pool Package | 2026-01-30 | archive/CRANE-144-balancer-v3-pool-stable/ |
 
 ## Cross-Repo Dependencies
 
