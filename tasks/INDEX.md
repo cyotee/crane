@@ -68,7 +68,7 @@
 | CRANE-148 | Verify Aerodrome Contract Port Completeness | Complete | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
 | CRANE-150 | Verify Permit2 Contract Port Completeness | Complete | - | `feature/permit2-port-verification` |
-| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | In Review | - | `feature/uniswap-v3-port-verification` |
+| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Complete | - | - |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Complete | - | `feature/sky-dss-port` |
@@ -215,7 +215,7 @@
 - ~~CRANE-150: Verify Permit2 Contract Port Completeness~~ → Complete
 
 **Uniswap V3 Port (1 task):**
-- **CRANE-151: Port and Verify Uniswap V3 Core + Periphery (In Review - enables submodule removal)**
+- ~~CRANE-151: Port and Verify Uniswap V3 Core + Periphery~~ → Complete
 
 **Uniswap V4 Port (1 task):**
 - **CRANE-152: Port and Verify Uniswap V4 Core + Periphery (Ready - enables submodule removal)**
