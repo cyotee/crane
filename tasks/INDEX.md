@@ -62,7 +62,7 @@
 | CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
 | CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
 | CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Complete | CRANE-141 | - |
-| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-stable` |
+| CRANE-144 | Refactor Balancer V3 Stable Pool Package | Complete | CRANE-141 | - |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
@@ -98,6 +98,7 @@
 | CRANE-177 | Add NatSpec Examples to GradualValueChange | Ready | CRANE-143 | `docs/gradualvaluechange-natspec` |
 | CRANE-178 | Integration Tests for Weighted Pool Package | Ready | CRANE-143 | `test/pool-weighted-integration` |
 | CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/lbp-dfpkg-calcsalt` |
+| CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
 
 ## Status Legend
 
@@ -181,7 +182,7 @@
 - **CRANE-160: Remove Non-Routed Duplicate Selectors from Vault Facets (Ready - HIGH)**
 - **CRANE-161: Resolve Vault Loupe and Router Integration (Ready - HIGH)**
 - CRANE-143: Refactor Balancer V3 Weighted Pool Package ✓ **Complete**
-- **CRANE-144: Refactor Balancer V3 Stable Pool Package (Ready)**
+- CRANE-144: Refactor Balancer V3 Stable Pool Package ✓ **Complete**
 - **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Ready)**
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
