@@ -6,7 +6,7 @@ import {TestBase_UniswapV3Periphery} from "@crane/contracts/protocols/dexes/unis
 import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/IUniswapV3Pool.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {INonfungiblePositionManager} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/interfaces/INonfungiblePositionManager.sol";
-import {MockERC20} from "@solmate/test/utils/mocks/MockERC20.sol";
+import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 
 /// @title Uniswap V3 Periphery Repository Tests
 /// @notice Verifies the ported V3 periphery contracts work correctly
