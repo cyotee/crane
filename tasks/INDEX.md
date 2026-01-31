@@ -1,13 +1,12 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-01-31
 
 ## Active Tasks
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | Complete | CRANE-039 | - |
 | CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
 | CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
@@ -59,24 +58,16 @@
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
 | CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
-| CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | Complete | - | - |
-| CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | Complete | CRANE-141 | - |
-| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | Complete | CRANE-141 | - |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
-| CRANE-148 | Verify Aerodrome Contract Port Completeness | Complete | - | `feature/aerodrome-port-verification` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
-| CRANE-150 | Verify Permit2 Contract Port Completeness | Complete | - | `feature/permit2-port-verification` |
-| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | Complete | - | - |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
-| CRANE-154 | Port Sky/DSS Protocol to Local Contracts | Complete | - | `feature/sky-dss-port` |
 | CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
 | CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
 | CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Superseded | CRANE-141 | - |
-| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | Complete | CRANE-142 | - |
 | CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Ready | CRANE-159 | `fix/vault-facet-selector-cleanup` |
 | CRANE-161 | Resolve Vault Loupe and Router Integration | Ready | CRANE-159 | `fix/vault-loupe-router-integration` |
 | CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/router-functional-tests` |
@@ -84,7 +75,6 @@
 | CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/router-target-layer` |
 | CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
 | CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
-| CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | Complete | CRANE-142 | `test/router-testbase-behavior` |
 | CRANE-168 | Add SafeCast160 Unit Tests | In Progress | CRANE-150 | `test/safecast160-tests` |
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
 | CRANE-170 | Document DeployPermit2 Bytecode Source | In Progress | CRANE-150 | `docs/deploypermit2-docs` |
@@ -333,6 +323,16 @@
 | CRANE-087 | Handle amountRemaining == int256.min Edge Case | 2026-01-21 | archive/CRANE-087-swapmath-int256min-edge/ |
 | CRANE-088 | Remove Minor Test Cruft from SwapMath Fuzz Tests | 2026-01-21 | archive/CRANE-088-swapmath-test-cleanup/ |
 | CRANE-144 | Refactor Balancer V3 Stable Pool Package | 2026-01-30 | archive/CRANE-144-balancer-v3-pool-stable/ |
+| CRANE-089 | Add Additional High-Liquidity Pool to Fork Tests | 2026-01-31 | archive/CRANE-089-slipstream-fork-multipool/ |
+| CRANE-141 | Refactor Balancer V3 Vault as Diamond Facets | 2026-01-31 | archive/CRANE-141-balancer-v3-vault-facets/ |
+| CRANE-142 | Refactor Balancer V3 Router as Diamond Facets | 2026-01-31 | archive/CRANE-142-balancer-v3-router-facets/ |
+| CRANE-143 | Refactor Balancer V3 Weighted Pool Package | 2026-01-31 | archive/CRANE-143-balancer-v3-pool-weighted/ |
+| CRANE-148 | Verify Aerodrome Contract Port Completeness | 2026-01-31 | archive/CRANE-148-aerodrome-port-verification/ |
+| CRANE-150 | Verify Permit2 Contract Port Completeness | 2026-01-31 | archive/CRANE-150-permit2-port-verification/ |
+| CRANE-151 | Port and Verify Uniswap V3 Core + Periphery | 2026-01-31 | archive/CRANE-151-uniswap-v3-port-verification/ |
+| CRANE-154 | Port Sky/DSS Protocol to Local Contracts | 2026-01-31 | archive/CRANE-154-sky-dss-port/ |
+| CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | 2026-01-31 | archive/CRANE-159-balancer-v3-vault-dfpkg-fix/ |
+| CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | 2026-01-31 | archive/CRANE-167-router-testbase-behavior/ |
 
 ## Cross-Repo Dependencies
 
