@@ -50,8 +50,7 @@ ignored_error_codes = [
 ]
 ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
 
-# Exclude lib/reclamm test files from compilation - they use node_modules imports
-exclude_paths = ["lib/reclamm/test"]
+skip = ["lib/reclamm/**"]
 
 [invariant]
 runs = 50
