@@ -75,3 +75,4 @@ cache_forge/
 .claude-plugin/
 plugins/
 PLUGIN_PRD.md
+.claude/homunculus/observations.jsonl
