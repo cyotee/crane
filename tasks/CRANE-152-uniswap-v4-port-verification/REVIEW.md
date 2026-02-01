@@ -2,7 +2,7 @@
 
 **Reviewer:** OpenCode (AI)
 **Review Started:** 2026-02-01
-**Status:** In Progress
+**Status:** ✅ Complete
 
 ---
 
@@ -76,9 +76,9 @@ This provides good confidence in the port, but it is not a proof of byte-for-byt
 ### Finding 6: TASK.md expected file layout differs from actual layout
 **File:** `tasks/CRANE-152-uniswap-v4-port-verification/TASK.md`
 **Severity:** Low
-**Description:** `TASK.md` “File Structure After Port” suggests `contracts/protocols/dexes/uniswap/v4/periphery/PositionManager.sol` etc. In the current port, `PositionManager.sol` and `V4Router.sol` are at `contracts/protocols/dexes/uniswap/v4/` (no `periphery/` subdir).
-**Status:** Open
-**Resolution:** Update `TASK.md` structure example or move files for consistency.
+**Description:** `TASK.md` "File Structure After Port" suggests `contracts/protocols/dexes/uniswap/v4/periphery/PositionManager.sol` etc. In the current port, `PositionManager.sol` and `V4Router.sol` are at `contracts/protocols/dexes/uniswap/v4/` (no `periphery/` subdir).
+**Status:** Closed (Won't Fix)
+**Resolution:** The flat structure is preferable - it keeps all V4 contracts co-located. TASK.md was an example structure, not a hard requirement. The current layout is cleaner and consistent with how Crane organizes protocol ports.
 
 ---
 
@@ -127,4 +127,4 @@ Actionable items for follow-up tasks:
 
 ---
 
-**When review complete, output:** `<promise>PHASE_DONE</promise>`
+<promise>PHASE_DONE</promise>
