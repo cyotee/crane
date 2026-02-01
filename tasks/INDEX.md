@@ -103,6 +103,9 @@
 | CRANE-195 | Make lib/reclamm Submodule Removal Possible | Ready | CRANE-149 | `fix/reclamm-submodule-removal-enablement` |
 | CRANE-196 | Replace Unsupported Foundry Config Key | Ready | CRANE-149 | `fix/foundry-config-cleanup` |
 | CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/reclamm-deterministic-address-test` |
+| CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
+| CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
+| CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
 
 ## Status Legend
 

@@ -86,23 +86,23 @@ This provides good confidence in the port, but it is not a proof of byte-for-byt
 
 Actionable items for follow-up tasks:
 
-### Suggestion 1: Add a “submodules removable” verification step to CI / task checklist
+### Suggestion 1: Add a "submodules removable" verification step to CI / task checklist
 **Priority:** High
 **Description:** Add a deterministic check that the repo builds/tests without `lib/v4-core` and `lib/v4-periphery` present (or at minimum, ensure no active remappings require them). This turns the task goal into a mechanically verifiable invariant.
 **Affected Files:**
 - `foundry.toml`
 - `remappings.txt`
 - (Optional) CI pipeline config
-**User Response:** (pending)
-**Notes:** Recommended approach: remove the v4-submodule remappings, then run `forge build` + the two known-good V4 test commands.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-198. Recommended approach: remove the v4-submodule remappings, then run `forge build` + the two known-good V4 test commands.
 
 ### Suggestion 2: Resolve TASK scope mismatch explicitly
 **Priority:** High
 **Description:** Decide whether `PositionDescriptor.sol`, WETH/WstETH hooks, and DeployerCompetition are required for CRANE-152. If optional, update `tasks/CRANE-152-uniswap-v4-port-verification/TASK.md` acceptance criteria to reflect that.
 **Affected Files:**
 - `tasks/CRANE-152-uniswap-v4-port-verification/TASK.md`
-**User Response:** (pending)
-**Notes:** This is currently the main blocker to marking the task as “complete” under the written acceptance criteria.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-199. Low priority - documentation cleanup only.
 
 ### Suggestion 3: Remove or replace v4-periphery-coupled `permit2/` + `solmate/` remappings
 **Priority:** Medium
@@ -110,8 +110,8 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `foundry.toml`
 - `remappings.txt`
-**User Response:** (pending)
-**Notes:** After removal, rerun `forge build` + V4 tests to confirm no hidden dependency.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-200. After removal, rerun `forge build` + V4 tests to confirm no hidden dependency.
 
 ---
 
