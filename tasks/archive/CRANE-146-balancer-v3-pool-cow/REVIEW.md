@@ -53,20 +53,20 @@ Actionable items for follow-up tasks:
 
 ### Suggestion 1: Add DFPkg(s) (or initializer facet) for CoW pool + router
 **Priority:** High
-**Description:** Introduce a proper deployment story that wires required storage in `CowPoolRepo` and `CowRouterRepo` during diamond initialization (e.g., `IDiamondFactoryPackage.initAccount()`), and ensure it’s covered by tests.
+**Description:** Introduce a proper deployment story that wires required storage in `CowPoolRepo` and `CowRouterRepo` during diamond initialization (e.g., `IDiamondFactoryPackage.initAccount()`), and ensure it's covered by tests.
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/pools/cow/*`
 - (new) `contracts/**/Cow*DFPkg*.sol` (or equivalent initializer facet)
-**User Response:** (pending)
-**Notes:** This also resolves Finding 2.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-191. This also resolves Finding 2.
 
 ### Suggestion 2: Add input length validation in router settlement paths
 **Priority:** Medium
 **Description:** Consider explicit `require`/custom errors to enforce `donationAmounts.length == tokens.length` and `transferAmountHints.length == tokens.length` to avoid out-of-bounds reverts and to provide clearer failure modes.
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterTarget.sol`
-**User Response:** (pending)
-**Notes:** This is a safety/usability improvement; weigh against bytecode size constraints.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-192. Safety/usability improvement; custom errors minimize bytecode impact.
 
 ---
 
