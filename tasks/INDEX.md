@@ -58,7 +58,7 @@
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
 | CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
-| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | In Review | CRANE-141 | `feature/balancer-v3-pool-gyro` |
+| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Pending Merge | CRANE-141 | `feature/balancer-v3-pool-gyro` |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Ready | CRANE-141 | `feature/balancer-v3-pool-cow` |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Ready | CRANE-141 | `feature/balancer-v3-pool-hooks` |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
@@ -179,7 +179,7 @@
 - **CRANE-161: Resolve Vault Loupe and Router Integration (Ready - HIGH)**
 - CRANE-143: Refactor Balancer V3 Weighted Pool Package ✓ **Complete**
 - ~~CRANE-144: Refactor Balancer V3 Stable Pool Package~~ → Archived
-- **CRANE-145: Refactor Balancer V3 Gyro Pool Package (In Review)**
+- **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Pending Merge)**
 - **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
 - **CRANE-147: Refactor Balancer V3 Pool Hooks Package (Ready)**
 - **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
