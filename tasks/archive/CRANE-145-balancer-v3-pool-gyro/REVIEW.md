@@ -49,16 +49,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolDFPkg_Integration.t.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolDFPkg_Integration.t.sol`
-**User Response:** (pending)
-**Notes:** Current tests validate deployment + vault registration, but do not explicitly validate ordering determinism.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-190
 
 ### Suggestion 2: Record test + size evidence in this review
 **Priority:** Low
 **Description:** Keep the exact `forge test` and `forge build --sizes` outputs summarized here so reviewers do not need to re-run locally to confirm acceptance criteria.
 **Affected Files:**
 - `tasks/CRANE-145-balancer-v3-pool-gyro/REVIEW.md`
-**User Response:** (pending)
-**Notes:** Added below in Review Summary.
+**User Response:** Rejected
+**Notes:** Already recorded in Review Summary - no separate task needed.
 
 ---
 
