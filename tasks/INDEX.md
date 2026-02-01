@@ -62,7 +62,7 @@
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Complete | CRANE-141 | - |
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Complete | CRANE-141 | - |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | In Progress | CRANE-141 | `feature/reclamm-port` |
-| CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
+| CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | In Review | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |

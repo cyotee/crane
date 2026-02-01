@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IPoolManager, StateLibrary} from "../interfaces/IPoolManager.sol";
+import {IPoolManager} from "../interfaces/IPoolManager.sol";
+import {StateLibrary} from "../libraries/StateLibrary.sol";
 import {PoolKey} from "../types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "../types/PoolId.sol";
 import {SwapMath} from "../libraries/SwapMath.sol";
