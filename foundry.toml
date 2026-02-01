@@ -50,6 +50,8 @@ ignored_error_codes = [
 ]
 ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
 
+skip = ["lib/reclamm/**"]
+
 [invariant]
 runs = 50
 depth = 5
