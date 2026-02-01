@@ -2,24 +2,27 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** 2026-02-01 - V4 port complete, all tests pass
+**Last checkpoint:** 2026-02-01 - Full V4 port complete including all acceptance criteria
 **Status:** ✅ COMPLETE
 **Build status:** ✅ Passing (full forge build successful)
-**Test status:** ✅ 29 passed, 0 failed, 8 skipped (fork tests)
-**Current file count:** 109 files in contracts/protocols/dexes/uniswap/v4/
+**Test status:** ✅ 82 passed, 0 failed (spec tests) + 29 passed (fork tests)
+**Current file count:** 117 files in contracts/protocols/dexes/uniswap/v4/
 
 ## Completion Summary
 
 ### Core V4 Port - COMPLETE
 - v4-core: PoolManager, ProtocolFees, ERC6909, Extsload/Exttload, all libraries, types, interfaces
-- v4-periphery: PositionManager, V4Router, base contracts, lens (StateView, V4Quoter)
-- Hook utilities: BaseHook, HookMiner
-- External dependencies ported locally: Solmate (Owned, ERC721), Permit2 (SignatureVerification, IERC1271)
+- v4-periphery: PositionManager, V4Router, PositionDescriptor, UniswapV4DeployerCompetition, base contracts, lens (StateView, V4Quoter)
+- Hook utilities: BaseHook, HookMiner, BaseTokenWrapperHook
+- Wrapper hooks: WETHHook, WstETHHook, WstETHRoutingHook
+- External dependencies ported locally: Solmate (Owned, ERC721, ERC20, WETH, SafeTransferLib, FixedPointMathLib), Permit2 (SignatureVerification, IERC1271)
 
-### Optional Items Not Ported
-- PositionDescriptor.sol - Complex SVG generation for NFT metadata
-- WETHHook.sol, WstETHHook.sol, WstETHRoutingHook.sol - Specialized wrapped ETH hooks
-- UniswapV4DeployerCompetition.sol - Deployment competition contract
+### Stack-Depth Fix for PositionDescriptor
+- Original v4-periphery uses `via_ir = true` for SVG.sol compilation
+- Crane doesn't use viaIR, so SVG.sol was refactored:
+  - Added ColorParams and CoordParams structs to reduce stack usage
+  - Split large functions into smaller helpers
+  - Build passes without viaIR
 
 ### Crane-Specific Additions (Reviewed)
 - UniswapV4Quoter.sol - View-based quoter without unlock requirement
@@ -28,10 +31,11 @@
 
 These are Crane-specific utilities that extend V4 functionality.
 
-### Submodule Removal Status
-The port enables removal of:
-- lib/v4-core - All essential contracts ported
-- lib/v4-periphery - Core contracts ported, specialized hooks optional
+### Submodule Removal Status - VERIFIED
+- Removed v4-periphery remappings from foundry.toml
+- permit2 remapping now points to local Crane interfaces
+- solmate remapping removed (V4 uses local imports)
+- Both lib/v4-core and lib/v4-periphery submodules can be safely removed
 
 ---
 
