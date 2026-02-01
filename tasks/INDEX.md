@@ -60,7 +60,7 @@
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
 | CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Complete | CRANE-141 | - |
 | CRANE-146 | Refactor Balancer V3 CoW Pool Package | Complete | CRANE-141 | - |
-| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Pending Merge | CRANE-141 | `feature/balancer-v3-pool-hooks` |
+| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Complete | CRANE-141 | - |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Ready | CRANE-141 | `feature/reclamm-port` |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Ready | - | `feature/uniswap-v4-port-verification` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
