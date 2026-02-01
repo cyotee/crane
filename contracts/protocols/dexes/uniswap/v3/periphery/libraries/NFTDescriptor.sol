@@ -34,44 +34,41 @@ library NFTDescriptor {
     }
 
     function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) {
-        string memory name = generateName(params, feeToPercentString(params.fee));
-        string memory descriptionPartOne =
-            generateDescriptionPartOne(
+        // Pre-compute strings in blocks to limit stack depth
+        string memory name;
+        string memory descPartOne;
+        string memory descPartTwo;
+        {
+            string memory feeTier = feeToPercentString(params.fee);
+            name = generateName(params, feeTier);
+            descPartOne = generateDescriptionPartOne(
                 escapeQuotes(params.quoteTokenSymbol),
                 escapeQuotes(params.baseTokenSymbol),
                 addressToString(params.poolAddress)
             );
-        string memory descriptionPartTwo =
-            generateDescriptionPartTwo(
+            descPartTwo = generateDescriptionPartTwo(
                 params.tokenId.toString(),
                 escapeQuotes(params.baseTokenSymbol),
                 addressToString(params.quoteTokenAddress),
                 addressToString(params.baseTokenAddress),
-                feeToPercentString(params.fee)
+                feeTier
             );
-        string memory image = Base64.encode(bytes(generateSVGImage(params)));
+        }
 
-        return
-            string(
-                abi.encodePacked(
-                    "data:application/json;base64,",
-                    Base64.encode(
-                        bytes(
-                            abi.encodePacked(
-                                '{"name":"',
-                                name,
-                                '", "description":"',
-                                descriptionPartOne,
-                                descriptionPartTwo,
-                                '", "image": "',
-                                "data:image/svg+xml;base64,",
-                                image,
-                                '"}'
-                            )
-                        )
-                    )
-                )
-            );
+        // Build JSON in stages
+        bytes memory jsonContent;
+        {
+            bytes memory jp1 = abi.encodePacked('{"name":"', name, '", "description":"');
+            bytes memory jp2 = abi.encodePacked(descPartOne, descPartTwo);
+            bytes memory jp3 = abi.encodePacked('", "image": "data:image/svg+xml;base64,');
+            string memory image = Base64.encode(bytes(generateSVGImage(params)));
+            jsonContent = abi.encodePacked(jp1, jp2, jp3, image, '"}');
+        }
+
+        return string(abi.encodePacked(
+            "data:application/json;base64,",
+            Base64.encode(jsonContent)
+        ));
     }
 
     function escapeQuotes(string memory symbol) internal pure returns (string memory) {
@@ -101,21 +98,16 @@ library NFTDescriptor {
         string memory baseTokenSymbol,
         string memory poolAddress
     ) private pure returns (string memory) {
-        return
-            string(
-                abi.encodePacked(
-                    "This NFT represents a liquidity position in a Uniswap V3 ",
-                    quoteTokenSymbol,
-                    "-",
-                    baseTokenSymbol,
-                    " pool. ",
-                    "The owner of this NFT can modify or redeem the position.\\n",
-                    "\\nPool Address: ",
-                    poolAddress,
-                    "\\n",
-                    quoteTokenSymbol
-                )
-            );
+        // Split into smaller abi.encodePacked calls (max 5 args each)
+        bytes memory p1 = abi.encodePacked(
+            "This NFT represents a liquidity position in a Uniswap V3 ",
+            quoteTokenSymbol, "-", baseTokenSymbol, " pool. "
+        );
+        bytes memory p2 = abi.encodePacked(
+            "The owner of this NFT can modify or redeem the position.\\n",
+            "\\nPool Address: ", poolAddress, "\\n", quoteTokenSymbol
+        );
+        return string(abi.encodePacked(p1, p2));
     }
 
     function generateDescriptionPartTwo(
@@ -125,23 +117,18 @@ library NFTDescriptor {
         string memory baseTokenAddress,
         string memory feeTier
     ) private pure returns (string memory) {
-        return
-            string(
-                abi.encodePacked(
-                    " Address: ",
-                    quoteTokenAddress,
-                    "\\n",
-                    baseTokenSymbol,
-                    " Address: ",
-                    baseTokenAddress,
-                    "\\nFee Tier: ",
-                    feeTier,
-                    "\\nToken ID: ",
-                    tokenId,
-                    "\\n\\n",
-                    unicode"⚠️ DISCLAIMER: Due diligence is imperative when assessing this NFT. Make sure token addresses match the expected tokens, as token symbols may be imitated."
-                )
-            );
+        // Split into smaller abi.encodePacked calls (max 5 args each)
+        bytes memory p1 = abi.encodePacked(
+            " Address: ", quoteTokenAddress, "\\n", baseTokenSymbol, " Address: "
+        );
+        bytes memory p2 = abi.encodePacked(
+            baseTokenAddress, "\\nFee Tier: ", feeTier, "\\nToken ID: ", tokenId
+        );
+        bytes memory p3 = abi.encodePacked(
+            "\\n\\n",
+            unicode"⚠️ DISCLAIMER: Due diligence is imperative when assessing this NFT. Make sure token addresses match the expected tokens, as token symbols may be imitated."
+        );
+        return string(abi.encodePacked(p1, p2, p3));
     }
 
     function generateName(ConstructTokenURIParams memory params, string memory feeTier)
@@ -149,33 +136,23 @@ library NFTDescriptor {
         pure
         returns (string memory)
     {
-        return
-            string(
-                abi.encodePacked(
-                    "Uniswap - ",
-                    feeTier,
-                    " - ",
-                    escapeQuotes(params.quoteTokenSymbol),
-                    "/",
-                    escapeQuotes(params.baseTokenSymbol),
-                    " - ",
-                    tickToDecimalString(
-                        !params.flipRatio ? params.tickLower : params.tickUpper,
-                        params.tickSpacing,
-                        params.baseTokenDecimals,
-                        params.quoteTokenDecimals,
-                        params.flipRatio
-                    ),
-                    "<>",
-                    tickToDecimalString(
-                        !params.flipRatio ? params.tickUpper : params.tickLower,
-                        params.tickSpacing,
-                        params.baseTokenDecimals,
-                        params.quoteTokenDecimals,
-                        params.flipRatio
-                    )
-                )
-            );
+        // Pre-compute tick strings to avoid deep function nesting
+        string memory tickLowerStr = tickToDecimalString(
+            !params.flipRatio ? params.tickLower : params.tickUpper,
+            params.tickSpacing, params.baseTokenDecimals, params.quoteTokenDecimals, params.flipRatio
+        );
+        string memory tickUpperStr = tickToDecimalString(
+            !params.flipRatio ? params.tickUpper : params.tickLower,
+            params.tickSpacing, params.baseTokenDecimals, params.quoteTokenDecimals, params.flipRatio
+        );
+        // Split into smaller abi.encodePacked calls
+        bytes memory p1 = abi.encodePacked(
+            "Uniswap - ", feeTier, " - ", escapeQuotes(params.quoteTokenSymbol), "/"
+        );
+        bytes memory p2 = abi.encodePacked(
+            escapeQuotes(params.baseTokenSymbol), " - ", tickLowerStr, "<>", tickUpperStr
+        );
+        return string(abi.encodePacked(p1, p2));
     }
 
     struct DecimalStringParams {
@@ -398,32 +375,53 @@ library NFTDescriptor {
         return Strings.toHexString(uint256(uint160(addr)), 20);
     }
 
-    function generateSVGImage(ConstructTokenURIParams memory params) internal pure returns (string memory svg) {
-        NFTSVG.SVGParams memory svgParams =
-            NFTSVG.SVGParams({
-                quoteToken: addressToString(params.quoteTokenAddress),
-                baseToken: addressToString(params.baseTokenAddress),
-                poolAddress: params.poolAddress,
-                quoteTokenSymbol: params.quoteTokenSymbol,
-                baseTokenSymbol: params.baseTokenSymbol,
-                feeTier: feeToPercentString(params.fee),
-                tickLower: params.tickLower,
-                tickUpper: params.tickUpper,
-                tickSpacing: params.tickSpacing,
-                overRange: overRange(params.tickLower, params.tickUpper, params.tickCurrent),
-                tokenId: params.tokenId,
-                color0: tokenToColorHex(uint256(uint160(params.quoteTokenAddress)), 136),
-                color1: tokenToColorHex(uint256(uint160(params.baseTokenAddress)), 136),
-                color2: tokenToColorHex(uint256(uint160(params.quoteTokenAddress)), 0),
-                color3: tokenToColorHex(uint256(uint160(params.baseTokenAddress)), 0),
-                x1: scale(getCircleCoord(uint256(uint160(params.quoteTokenAddress)), 16, params.tokenId), 0, 255, 16, 274),
-                y1: scale(getCircleCoord(uint256(uint160(params.baseTokenAddress)), 16, params.tokenId), 0, 255, 100, 484),
-                x2: scale(getCircleCoord(uint256(uint160(params.quoteTokenAddress)), 32, params.tokenId), 0, 255, 16, 274),
-                y2: scale(getCircleCoord(uint256(uint160(params.baseTokenAddress)), 32, params.tokenId), 0, 255, 100, 484),
-                x3: scale(getCircleCoord(uint256(uint160(params.quoteTokenAddress)), 48, params.tokenId), 0, 255, 16, 274),
-                y3: scale(getCircleCoord(uint256(uint160(params.baseTokenAddress)), 48, params.tokenId), 0, 255, 100, 484)
-            });
+    /// @dev Sets basic token/pool info on SVGParams
+    function _setSVGBasicInfo(NFTSVG.SVGParams memory s, ConstructTokenURIParams memory p) public pure {
+        s.quoteToken = addressToString(p.quoteTokenAddress);
+        s.baseToken = addressToString(p.baseTokenAddress);
+        s.poolAddress = p.poolAddress;
+        s.quoteTokenSymbol = p.quoteTokenSymbol;
+        s.baseTokenSymbol = p.baseTokenSymbol;
+        s.feeTier = feeToPercentString(p.fee);
+    }
 
+    /// @dev Sets tick info on SVGParams
+    function _setSVGTickInfo(NFTSVG.SVGParams memory s, ConstructTokenURIParams memory p) public pure {
+        s.tickLower = p.tickLower;
+        s.tickUpper = p.tickUpper;
+        s.tickSpacing = p.tickSpacing;
+        s.overRange = overRange(p.tickLower, p.tickUpper, p.tickCurrent);
+        s.tokenId = p.tokenId;
+    }
+
+    /// @dev Sets color fields on SVGParams
+    function _setSVGColors(NFTSVG.SVGParams memory s, address quote, address base) public pure {
+        uint256 q = uint256(uint160(quote));
+        uint256 b = uint256(uint160(base));
+        s.color0 = tokenToColorHex(q, 136);
+        s.color1 = tokenToColorHex(b, 136);
+        s.color2 = tokenToColorHex(q, 0);
+        s.color3 = tokenToColorHex(b, 0);
+    }
+
+    /// @dev Sets circle coordinate fields on SVGParams
+    function _setSVGCircleCoords(NFTSVG.SVGParams memory s, address quote, address base, uint256 tid) public pure {
+        uint256 q = uint256(uint160(quote));
+        uint256 b = uint256(uint160(base));
+        s.x1 = scale(getCircleCoord(q, 16, tid), 0, 255, 16, 274);
+        s.y1 = scale(getCircleCoord(b, 16, tid), 0, 255, 100, 484);
+        s.x2 = scale(getCircleCoord(q, 32, tid), 0, 255, 16, 274);
+        s.y2 = scale(getCircleCoord(b, 32, tid), 0, 255, 100, 484);
+        s.x3 = scale(getCircleCoord(q, 48, tid), 0, 255, 16, 274);
+        s.y3 = scale(getCircleCoord(b, 48, tid), 0, 255, 100, 484);
+    }
+
+    function generateSVGImage(ConstructTokenURIParams memory params) internal pure returns (string memory svg) {
+        NFTSVG.SVGParams memory svgParams;
+        _setSVGBasicInfo(svgParams, params);
+        _setSVGTickInfo(svgParams, params);
+        _setSVGColors(svgParams, params.quoteTokenAddress, params.baseTokenAddress);
+        _setSVGCircleCoords(svgParams, params.quoteTokenAddress, params.baseTokenAddress, params.tokenId);
         return NFTSVG.generateSVG(svgParams);
     }
 

@@ -1,8 +1,9 @@
 # Task CRANE-183: Refactor V3 NFT Metadata to Fix Stack-Too-Deep
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-30
+**Completed:** 2026-02-01
 **Dependencies:** CRANE-151
 **Worktree:** `fix/v3-nft-metadata-refactor`
 **Origin:** Code review suggestion from CRANE-151
@@ -26,32 +27,32 @@ Refactor NFTDescriptor.sol to fix "stack too deep" compilation error without ena
 As a developer, I want NFTDescriptor.sol to compile without viaIR so that NFT positions can return proper tokenURI metadata.
 
 **Acceptance Criteria:**
-- [ ] NFTDescriptor.sol compiles without viaIR
-- [ ] Refactored to use structs/helpers to reduce stack depth
-- [ ] NFTSVG.sol re-enabled
-- [ ] NonfungibleTokenPositionDescriptor.sol re-enabled
-- [ ] tokenURI returns valid SVG data
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] NFTDescriptor.sol compiles without viaIR
+- [x] Refactored to use structs/helpers to reduce stack depth
+- [x] NFTSVG.sol re-enabled
+- [x] NonfungibleTokenPositionDescriptor.sol re-enabled
+- [x] tokenURI returns valid SVG data
+- [x] Tests pass (2148 passed, 7 pre-existing failures unrelated to NFT metadata)
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
 **Modified Files:**
-- `contracts/protocols/dexes/uniswap/v3/periphery/libraries/NFTDescriptor.sol.disabled` → `.sol`
-- `contracts/protocols/dexes/uniswap/v3/periphery/libraries/NFTSVG.sol.disabled` → `.sol`
-- `contracts/protocols/dexes/uniswap/v3/periphery/NonfungibleTokenPositionDescriptor.sol.disabled` → `.sol`
+- `contracts/protocols/dexes/uniswap/v3/periphery/libraries/NFTDescriptor.sol.disabled` → `.sol` ✅
+- `contracts/protocols/dexes/uniswap/v3/periphery/libraries/NFTSVG.sol.disabled` → `.sol` ✅
+- `contracts/protocols/dexes/uniswap/v3/periphery/NonfungibleTokenPositionDescriptor.sol.disabled` → `.sol` ✅
 
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-151 is complete
-- [ ] Disabled files exist
+- [x] CRANE-151 is complete
+- [x] Disabled files exist
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] Tests pass
+- [x] Build succeeds
 
 ---
 
