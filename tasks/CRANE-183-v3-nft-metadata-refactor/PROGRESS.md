@@ -2,11 +2,15 @@
 
 ## Current Checkpoint
 
-**Status:** ✅ COMPLETE
+**Status:** ✅ PHASE 1 COMPLETE - Pending Merge
 **Build status:** ✅ Passes
 **Test status:** ✅ Passes (2148 passed, 7 pre-existing failures unrelated to NFT metadata)
+**Branch:** fix/v3-nft-metadata-refactor
+**Commits:** All changes committed and rebased onto main
 
-All acceptance criteria verified and met. Task ready for merge.
+All acceptance criteria verified and met. Task is marked "Pending Merge" in INDEX.md.
+
+**Next Step:** Run `/backlog:complete CRANE-183` from the MAIN worktree to complete Phase 2.
 
 ---
 
