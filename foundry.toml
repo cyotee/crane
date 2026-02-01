@@ -19,7 +19,10 @@ optimizer_runs = 1
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@crane/contracts/=contracts/",
-    "@opengsn/contracts/=lib/gsn/packages/contracts/"
+    "@opengsn/contracts/=lib/gsn/packages/contracts/",
+    # Permit2 interfaces - mapped to local Crane interfaces
+    "permit2/src/interfaces/=contracts/interfaces/protocols/utils/permit2/",
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"
     # "@balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/",
     # "@balancer-labs/v3-pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/",
     # "@balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/",

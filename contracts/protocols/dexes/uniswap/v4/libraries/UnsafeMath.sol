@@ -15,4 +15,16 @@ library UnsafeMath {
             z := add(div(x, y), gt(mod(x, y), 0))
         }
     }
+
+    /// @notice Calculates floor(a×b÷denominator)
+    /// @dev Division by 0 will return 0, and should be checked externally
+    /// @param a The multiplicand
+    /// @param b The multiplier
+    /// @param denominator The divisor
+    /// @return result The 256-bit result, floor(a×b÷denominator)
+    function simpleMulDiv(uint256 a, uint256 b, uint256 denominator) internal pure returns (uint256 result) {
+        assembly ("memory-safe") {
+            result := div(mul(a, b), denominator)
+        }
+    }
 }

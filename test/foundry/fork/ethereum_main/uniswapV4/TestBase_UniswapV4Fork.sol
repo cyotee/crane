@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IPoolManager, StateLibrary} from "../../../../../contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol";
+import {IPoolManager} from "../../../../../contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol";
+import {StateLibrary} from "../../../../../contracts/protocols/dexes/uniswap/v4/libraries/StateLibrary.sol";
 import {PoolKey} from "../../../../../contracts/protocols/dexes/uniswap/v4/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "../../../../../contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
 import {Currency, CurrencyLibrary} from "../../../../../contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
