@@ -90,7 +90,7 @@
 | CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
 | CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/remove-aerodrome-submodule` |
 | CRANE-182 | Final Submodule Cleanup and forge-std Installation | Blocked | CRANE-171, CRANE-181, CRANE-186 | `chore/final-submodule-cleanup` |
-| CRANE-183 | Refactor V3 NFT Metadata to Fix Stack-Too-Deep | Ready | CRANE-151 | `fix/v3-nft-metadata-refactor` |
+| CRANE-183 | Refactor V3 NFT Metadata to Fix Stack-Too-Deep | Pending Merge | CRANE-151 | `fix/v3-nft-metadata-refactor` |
 | CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/v3-quoter-tests` |
 | CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
