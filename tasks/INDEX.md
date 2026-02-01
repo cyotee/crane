@@ -98,6 +98,8 @@
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
 | CRANE-191 | Add DFPkg for CoW Pool and Router Initialization | In Progress | CRANE-146 | `feature/cow-pool-dfpkg` |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
+| CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
+| CRANE-194 | Align Hook Comments With Actual Behavior | Ready | CRANE-147 | `fix/hooks-comment-alignment` |
 
 ## Status Legend
 

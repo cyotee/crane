@@ -67,17 +67,17 @@ Actionable items for follow-up tasks:
 **Description:** Add a small integration suite that deploys Crane's Balancer V3 Diamond Vault and validates hook registration + one swap + one proportional add/remove per hook.
 **Affected Files:**
 - New test(s) under `test/foundry/spec/protocols/dexes/balancer/v3/hooks/`
-**User Response:** (pending)
-**Notes:** This directly closes the primary integration acceptance criteria.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-193. This directly closes the primary integration acceptance criteria.
 
 ### Suggestion 2: Align Comments With Actual Behavior
 **Priority:** Low
-**Description:** Fix minor comment mismatches (Vault vs Router `msg.sender`, “linear” vs binary discount wording).
+**Description:** Fix minor comment mismatches (Vault vs Router `msg.sender`, "linear" vs binary discount wording).
 **Affected Files:**
 - `contracts/protocols/dexes/balancer/v3/hooks/ExitFeeHookExample.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/hooks/VeBALFeeDiscountHookExample.t.sol`
-**User Response:** (pending)
-**Notes:** Non-blocking; improves readability.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-194. Non-blocking; improves readability.
 
 ---
 
