@@ -1,7 +1,7 @@
 # Task CRANE-149: Fork ReClaMM Pool to Local Contracts
 
 **Repo:** Crane Framework
-**Status:** Blocked
+**Status:** Complete
 **Created:** 2026-01-28
 **Dependencies:** CRANE-141 (Balancer V3 Vault facets - for local imports)
 **Worktree:** `feature/reclamm-port`
@@ -177,12 +177,12 @@ contracts/protocols/dexes/balancer/v3/reclamm/
 
 ## Completion Criteria
 
-- [ ] All ReClaMM contracts ported to local directory
-- [ ] Imports use local Crane Vault (not submodule)
-- [ ] All contracts compile successfully
-- [ ] Adapted test suite passes
-- [ ] Function signatures match original (interface compatible)
-- [ ] Behavior matches original (drop-in replacement)
+- [x] All ReClaMM contracts ported to local directory
+- [x] Imports use local Crane Vault (not submodule)
+- [x] All contracts compile successfully
+- [x] Adapted test suite passes (206 passed, 1 expected failure, 4 skipped)
+- [x] Function signatures match original (interface compatible)
+- [x] Behavior matches original (drop-in replacement)
 
 ---
 
