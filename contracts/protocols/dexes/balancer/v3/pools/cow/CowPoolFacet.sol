@@ -60,7 +60,7 @@ contract CowPoolFacet is CowPoolTarget, IFacet {
      * @return funcs Array of function selectors.
      */
     function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](22);
+        funcs = new bytes4[](19);
 
         // ICowPool functions
         funcs[0] = ICowPool.getTrustedCowRouter.selector;
@@ -89,11 +89,6 @@ contract CowPoolFacet is CowPoolTarget, IFacet {
         // IBalancerV3WeightedPool functions
         funcs[18] = IBalancerV3WeightedPool.getNormalizedWeights.selector;
 
-        // These are inherited but not in core interfaces - reserve slots
-        // Index 19-21 reserved for future use
-        funcs[19] = bytes4(0);
-        funcs[20] = bytes4(0);
-        funcs[21] = bytes4(0);
     }
 
     /**

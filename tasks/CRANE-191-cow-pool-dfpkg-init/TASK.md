@@ -1,7 +1,7 @@
 # Task CRANE-191: Add DFPkg for CoW Pool and Router Initialization
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-01-31
 **Dependencies:** CRANE-146
 **Worktree:** `feature/cow-pool-dfpkg`
@@ -36,29 +36,29 @@ This task creates DFPkg contracts that properly initialize:
 As a deployer, I want a DFPkg that initializes CoW pool storage so that pool registration succeeds against the Vault.
 
 **Acceptance Criteria:**
-- [ ] `CowPoolDFPkg` implements `IDiamondFactoryPackage`
-- [ ] `initAccount()` calls `CowPoolRepo._initialize(cowPoolFactory, trustedCowRouter)`
-- [ ] `calcSalt()` includes relevant config in deterministic address calculation
-- [ ] Pool can successfully register with Vault after deployment
+- [x] `CowPoolDFPkg` implements `IDiamondFactoryPackage`
+- [x] `initAccount()` calls `CowPoolRepo._initialize(cowPoolFactory, trustedCowRouter)`
+- [x] `calcSalt()` includes relevant config in deterministic address calculation
+- [x] Pool can successfully register with Vault after deployment
 
 ### US-CRANE-191.2: CoW Router DFPkg with Proper Initialization
 
 As a deployer, I want a DFPkg that initializes CoW router storage so that fee collection works correctly.
 
 **Acceptance Criteria:**
-- [ ] `CowRouterDFPkg` implements `IDiamondFactoryPackage`
-- [ ] `initAccount()` calls `CowRouterRepo._initialize(protocolFeePercentage, feeSweeper)`
-- [ ] `calcSalt()` includes relevant config in deterministic address calculation
-- [ ] Fee sweeper is correctly configured after deployment
+- [x] `CowRouterDFPkg` implements `IDiamondFactoryPackage`
+- [x] `initAccount()` calls `CowRouterRepo._initialize(protocolFeePercentage, feeSweeper)`
+- [x] `calcSalt()` includes relevant config in deterministic address calculation
+- [x] Fee sweeper is correctly configured after deployment
 
 ### US-CRANE-191.3: Integration Tests for DFPkg Deployment
 
 As a developer, I want integration tests verifying the DFPkg deployment flow.
 
 **Acceptance Criteria:**
-- [ ] Test deploys CoW pool via DFPkg and verifies storage initialization
-- [ ] Test deploys CoW router via DFPkg and verifies storage initialization
-- [ ] Test verifies Vault registration succeeds after initialization
+- [x] Test deploys CoW pool via DFPkg and verifies storage initialization
+- [x] Test deploys CoW router via DFPkg and verifies storage initialization
+- [x] Test verifies Vault registration succeeds after initialization
 
 ## Files to Create/Modify
 
@@ -67,6 +67,8 @@ As a developer, I want integration tests verifying the DFPkg deployment flow.
 - `contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterDFPkg.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/CowPoolDFPkg.t.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/CowRouterDFPkg.t.sol`
+- `test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/CowPoolDFPkg_Integration.t.sol`
+- `test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/CowRouterDFPkg_Integration.t.sol`
 
 **Modified Files:**
 - `contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolRepo.sol` (if visibility changes needed)
@@ -76,8 +78,8 @@ As a developer, I want integration tests verifying the DFPkg deployment flow.
 
 Before starting, verify:
 - [x] CRANE-146 is complete
-- [ ] CowPoolRepo.sol exists with _initialize function
-- [ ] CowRouterRepo.sol exists with _initialize function
+- [x] CowPoolRepo.sol exists with _initialize function
+- [x] CowRouterRepo.sol exists with _initialize function
 
 ## Implementation Notes
 
@@ -88,10 +90,10 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass: `forge test --match-path 'test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/**/*.t.sol'`
-- [ ] Build succeeds
-- [ ] Contract sizes within limits
+- [x] All acceptance criteria met
+- [x] Tests pass: `forge test --match-path 'test/foundry/spec/protocols/dexes/balancer/v3/pools/cow/**/*.t.sol'`
+- [x] Build succeeds
+- [x] Contract sizes within limits
 
 ---
 
