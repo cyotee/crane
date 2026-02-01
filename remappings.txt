@@ -13,6 +13,7 @@ forge-std/=lib/forge-std/src/
 @balancer-labs/v3-pool-weighted/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-weighted/
 @balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/
 @balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/
+@balancer-labs/pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/
 
 v4-periphery/=lib/v4-periphery/
 v4-core/=lib/v4-periphery/lib/v4-core/src/
