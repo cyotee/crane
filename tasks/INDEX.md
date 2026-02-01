@@ -100,6 +100,9 @@
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 | CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
 | CRANE-194 | Align Hook Comments With Actual Behavior | Ready | CRANE-147 | `fix/hooks-comment-alignment` |
+| CRANE-195 | Make lib/reclamm Submodule Removal Possible | Ready | CRANE-149 | `fix/reclamm-submodule-removal-enablement` |
+| CRANE-196 | Replace Unsupported Foundry Config Key | Ready | CRANE-149 | `fix/foundry-config-cleanup` |
+| CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/reclamm-deterministic-address-test` |
 
 ## Status Legend
 

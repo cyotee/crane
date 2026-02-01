@@ -51,24 +51,24 @@ Actionable items for follow-up tasks:
 - `contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol`
 - `contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolExtension.sol`
 - `contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.sol`
-**User Response:** (pending)
-**Notes:** `contracts/interfaces/protocols/dexes/balancer/v3/IVault.sol` currently re-exports the upstream interface via `@balancer-labs/v3-interfaces`.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-195. Original note: `contracts/interfaces/protocols/dexes/balancer/v3/IVault.sol` currently re-exports the upstream interface via `@balancer-labs/v3-interfaces`.
 
 ### Suggestion 2: Replace unsupported Foundry config key
 **Priority:** Medium
 **Description:** Remove `exclude_paths` and use supported Foundry configuration to avoid compiling unwanted submodule test sources.
 **Affected Files:**
 - `foundry.toml`
-**User Response:** (pending)
-**Notes:** Implemented by switching to `skip = ["lib/reclamm/**"]`.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-196. Partially implemented by switching to `skip = ["lib/reclamm/**"]`.
 
 ### Suggestion 3: Stabilize or relax deterministic-address test
 **Priority:** Low
 **Description:** Change `testDeploymentAddress()` to validate deterministic behavior without hard-coding a single expected address.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.t.sol`
-**User Response:** (pending)
-**Notes:** This also makes CI/worktree differences less brittle.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-197. This also makes CI/worktree differences less brittle.
 
 ---
 
