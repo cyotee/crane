@@ -96,7 +96,7 @@
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
 | CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
-| CRANE-191 | Add DFPkg for CoW Pool and Router Initialization | Ready | CRANE-146 | `feature/cow-pool-dfpkg` |
+| CRANE-191 | Add DFPkg for CoW Pool and Router Initialization | In Progress | CRANE-146 | `feature/cow-pool-dfpkg` |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 
 ## Status Legend
