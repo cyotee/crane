@@ -338,6 +338,7 @@
 | CRANE-154 | Port Sky/DSS Protocol to Local Contracts | 2026-01-31 | archive/CRANE-154-sky-dss-port/ |
 | CRANE-159 | Fix Balancer V3 Vault Diamond with DFPkg Pattern | 2026-01-31 | archive/CRANE-159-balancer-v3-vault-dfpkg-fix/ |
 | CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | 2026-01-31 | archive/CRANE-167-router-testbase-behavior/ |
+| CRANE-149 | Fork ReClaMM Pool to Local Contracts | 2026-02-01 | archive/CRANE-149-reclamm-port/ |
 
 ## Cross-Repo Dependencies
 
