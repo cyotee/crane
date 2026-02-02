@@ -53,6 +53,8 @@ None.
 - decoded SVG starts with `<svg` and ends with `</svg>`
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/*.t.sol` (or a new dedicated spec)
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-201
 
 ---
 

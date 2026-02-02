@@ -106,6 +106,7 @@
 | CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
+| CRANE-201 | Add V3 NFT tokenURI Shape Test | Ready | CRANE-183 | `test/v3-tokenuri-shape-test` |
 
 ## Status Legend
 
