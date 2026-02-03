@@ -1,7 +1,7 @@
 # Task CRANE-211: OpenGSN Forwarder Port + Fork Parity Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-02-02
 **Dependencies:** None
 **Worktree:** `feature/opengsn-forwarder-port-and-tests`
@@ -33,25 +33,25 @@ None.
 As a developer, I want the OpenGSN Forwarder port verified against its upstream source so I can trust it as a meta-tx primitive in protocol tests.
 
 **Acceptance Criteria:**
-- [ ] Confirm which upstream contract(s) are ported (Forwarder + interface)
-- [ ] Confirm the ported files carry correct license attribution (per upstream)
-- [ ] Confirm the ported Forwarder compiles under the repo compiler (Solidity 0.8.30)
+- [x] Confirm which upstream contract(s) are ported (Forwarder + interface)
+- [x] Confirm the ported files carry correct license attribution (per upstream)
+- [x] Confirm the ported Forwarder compiles under the repo compiler (Solidity 0.8.30)
 
 ### US-CRANE-211.2: Fork Parity Tests vs Upstream Forwarder
 
 As a developer, I want fork-parity tests that compare the ported Forwarder to upstream OpenGSN so that behavior is provably equivalent.
 
 **Acceptance Criteria:**
-- [ ] Tests are gated/skipped when `INFURA_KEY` is not set
-- [ ] Tests fork Ethereum mainnet using a foundry rpc alias (e.g. `ethereum_mainnet_infura`)
-- [ ] Deploy our ported `Forwarder` and an upstream OpenGSN `Forwarder` (from pinned upstream source) into the fork
-- [ ] Parity assertions cover at least:
+- [x] Tests are gated/skipped when `INFURA_KEY` is not set
+- [x] Tests fork Ethereum mainnet using a foundry rpc alias (e.g. `ethereum_mainnet_infura`)
+- [x] Deploy our ported `Forwarder` and an upstream OpenGSN `Forwarder` (from pinned upstream source) into the fork
+- [x] Parity assertions cover at least:
   - domain separator / EIP-712 domain values used for request signing
   - `getNonce(from)` behavior
   - `verify(request, signature)` (valid + invalid cases)
   - `execute(request, signature)` success path and revert paths
   - appended sender semantics on recipient side (use a small test recipient)
-- [ ] `forge test --match-path "test/foundry/fork/ethereum_main/gsn/*.t.sol"` passes when fork enabled
+- [x] `forge test --match-path "test/foundry/fork/ethereum_main/gsn/*.t.sol"` passes when fork enabled
 
 ## Technical Details
 
@@ -81,15 +81,15 @@ As a developer, I want fork-parity tests that compare the ported Forwarder to up
 ## Inventory Check
 
 Before starting, verify:
-- [ ] `contracts/protocols/utils/gsn/forwarder/Forwarder.sol` exists and compiles
-- [ ] foundry has an Ethereum fork rpc alias configured
-- [ ] You have an `INFURA_KEY` for fork tests
+- [x] `contracts/protocols/utils/gsn/forwarder/Forwarder.sol` exists and compiles
+- [x] foundry has an Ethereum fork rpc alias configured
+- [x] You have an `INFURA_KEY` for fork tests
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] Tests pass
+- [x] Build succeeds
 
 ---
 
