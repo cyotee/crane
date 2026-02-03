@@ -370,6 +370,7 @@
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | 2026-02-01 | archive/CRANE-152-uniswap-v4-port-verification/ |
 | CRANE-202 | Add Uniswap V2 Fork Comparison Tests | 2026-02-02 | archive/CRANE-202-uniswap-v2-fork-comparison-tests/ |
 | CRANE-203 | Add Aerodrome V1 Fork Comparison Tests | 2026-02-02 | archive/CRANE-203-aerodrome-v1-fork-comparison-tests/ |
+| CRANE-204 | Add Uniswap V3 Ported Contract Parity Tests | 2026-02-02 | archive/CRANE-204-uniswap-v3-ported-contract-parity-tests/ |
 
 ## Cross-Repo Dependencies
 
