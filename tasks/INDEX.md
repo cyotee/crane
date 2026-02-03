@@ -98,7 +98,7 @@
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
 | CRANE-201 | Add V3 NFT tokenURI Shape Test | Ready | CRANE-183 | `test/v3-tokenuri-shape-test` |
-| CRANE-202 | Add Uniswap V2 Fork Comparison Tests | In Progress | - | `test/uniswap-v2-fork-comparison` |
+| CRANE-202 | Add Uniswap V2 Fork Comparison Tests | Pending Merge | - | `test/uniswap-v2-fork-comparison` |
 | CRANE-203 | Add Aerodrome V1 Fork Comparison Tests | In Progress | - | `test/aerodrome-v1-fork-comparison` |
 | CRANE-204 | Add Uniswap V3 Ported Contract Parity Tests | Ready | - | `test/uniswap-v3-ported-parity` |
 | CRANE-205 | Add Uniswap V4 Ported Contract Parity Tests | Ready | - | `test/uniswap-v4-ported-parity` |
