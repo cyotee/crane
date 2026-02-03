@@ -238,13 +238,13 @@
 - ~~CRANE-205: Add Uniswap V4 Ported Contract Parity Tests~~ → Complete
 
 **Balancer V3 Gyro Pool Parity Tests (1 task):**
-- **CRANE-206: Add Balancer V3 Gyro Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates Gyro 2-CLP + ECLP ports)**
+- ~~CRANE-206: Add Balancer V3 Gyro Pool Fork Parity Tests~~ → Complete
 
 **Balancer V3 CoW Pool Parity Tests (1 task):**
-- **CRANE-207: Add Balancer V3 CoW Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates CoW pool + router ports)**
+- ~~CRANE-207: Add Balancer V3 CoW Pool Fork Parity Tests~~ → Complete
 
 **Balancer V3 Weighted Pool Parity Tests (1 task):**
-- **CRANE-208: Add Balancer V3 Weighted Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates 50/50, 80/20, multi-token pools)**
+- ~~CRANE-208: Add Balancer V3 Weighted Pool Fork Parity Tests~~ → Complete
 
 **Slipstream Port and Parity Tests (1 task):**
 - **CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install) (Ready - HIGH PRIORITY - ports + validates against deployed Slipstream)**
@@ -374,6 +374,7 @@
 | CRANE-205 | Add Uniswap V4 Ported Contract Parity Tests | 2026-02-02 | archive/CRANE-205-uniswap-v4-ported-contract-parity-tests/ |
 | CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-207-balancer-v3-cow-pool-fork-parity-tests/ |
 | CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-206-balancer-v3-gyro-pool-fork-parity-tests/ |
+| CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-208-balancer-v3-weighted-pool-fork-parity-tests/ |
 
 ## Cross-Repo Dependencies
 
