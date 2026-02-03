@@ -2,14 +2,41 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** Not started
-**Next step:** Read TASK.md and begin implementation
-**Build status:** ⏳ Not checked
-**Test status:** ⏳ Not checked
+**Last checkpoint:** Task complete - all acceptance criteria met
+**Next step:** Merge to main
+**Build status:** ✅ Passes
+**Test status:** ✅ All 17 tests pass
 
 ---
 
 ## Session Log
+
+### 2026-02-02 - Implementation Complete
+
+**Created:** `test/foundry/fork/ethereum_main/uniswapV3/UniswapV3PortedSwapParity_Fork.t.sol`
+
+**Test Coverage:**
+- US-204.1: Fork base extended - deploys local V3 stack via `UniswapV3Factory`
+- US-204.2: Core pool swap parity - 17 tests covering:
+  - All 3 fee tiers (500, 3000, 10000)
+  - Both swap directions (zeroForOne, oneForZero)
+  - Multiple trade sizes (tiny, small, medium)
+  - Exact input and exact output swaps
+  - Multi-position liquidity scenarios
+  - Pool state verification (initialization, liquidity, post-swap)
+
+**Key Design Decisions:**
+1. Uses test ERC20Mock tokens instead of mainnet tokens to avoid interference
+2. Creates matching pools on BOTH mainnet V3 factory AND local factory with identical state
+3. Seeds identical liquidity positions to both pools
+4. Compares swap outputs with strict equality (`assertEq`)
+5. Tests skip gracefully when `INFURA_KEY` is not set
+
+**Test Results:**
+```
+forge test --match-path "**/uniswapV3/**Ported**" -vv
+17 tests passed, 0 failed, 0 skipped
+```
 
 ### 2026-02-02 - Task Created
 

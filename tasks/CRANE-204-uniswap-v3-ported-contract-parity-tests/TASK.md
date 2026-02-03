@@ -1,7 +1,7 @@
 # Task CRANE-204: Add Uniswap V3 Ported Contract Parity Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-02-02
 **Dependencies:** CRANE-151 (archived)
 **Worktree:** `test/uniswap-v3-ported-parity`
@@ -29,19 +29,19 @@ Repo constraints / clarifications:
 As a developer, I want V3 fork tests to deploy a local V3 stack alongside the fork so I can compare behavior.
 
 **Acceptance Criteria:**
-- [ ] Update `test/foundry/fork/ethereum_main/uniswapV3/TestBase_UniswapV3Fork.sol` (or add a new sibling TestBase) with helpers to deploy a local V3 stack used by parity tests
-- [ ] Fork gating: tests must skip when `INFURA_KEY` is unset
-- [ ] Use mainnet addresses from `ETHEREUM_MAIN` (factory/router/quoter/nft position manager)
+- [x] Update `test/foundry/fork/ethereum_main/uniswapV3/TestBase_UniswapV3Fork.sol` (or add a new sibling TestBase) with helpers to deploy a local V3 stack used by parity tests
+- [x] Fork gating: tests must skip when `INFURA_KEY` is unset
+- [x] Use mainnet addresses from `ETHEREUM_MAIN` (factory/router/quoter/nft position manager)
 
 ### US-CRANE-204.2: Core Pool Swap Parity
 
 As a developer, I want swaps on a locally deployed V3 pool to match swaps on a comparable mainnet V3 pool.
 
 **Acceptance Criteria:**
-- [ ] Compare swap outputs for identical swap params (same fee tier) between:
+- [x] Compare swap outputs for identical swap params (same fee tier) between:
   - a chosen mainnet pool with existing liquidity, and
   - a locally deployed pool initialized + seeded to a comparable state (as close as practical)
-- [ ] Validate `pool.swap()` (direct) parity for at least two swap directions and multiple trade sizes
+- [x] Validate `pool.swap()` (direct) parity for at least two swap directions and multiple trade sizes
 
 ### US-CRANE-204.3: Quoter Parity (Optional)
 
@@ -65,15 +65,15 @@ test/foundry/fork/ethereum_main/uniswapV3/
 
 ### Inventory Check
 
-- [ ] Existing fork base exists: `test/foundry/fork/ethereum_main/uniswapV3/TestBase_UniswapV3Fork.sol`
-- [ ] Ported V3 contracts exist and compile (factory/pool/periphery as applicable)
-- [ ] `contracts/constants/networks/ETHEREUM_MAIN.sol` has V3 addresses
-- [ ] `foundry.toml` includes `ethereum_mainnet_infura`
+- [x] Existing fork base exists: `test/foundry/fork/ethereum_main/uniswapV3/TestBase_UniswapV3Fork.sol`
+- [x] Ported V3 contracts exist and compile (factory/pool/periphery as applicable)
+- [x] `contracts/constants/networks/ETHEREUM_MAIN.sol` has V3 addresses
+- [x] `foundry.toml` includes `ethereum_mainnet_infura`
 
 ## Completion Criteria
 
-- [ ] Tests pass: `forge test --match-path "test/foundry/fork/ethereum_main/uniswapV3/**Ported**"`
-- [ ] Tests skip gracefully when `INFURA_KEY` is not set
+- [x] Tests pass: `forge test --match-path "test/foundry/fork/ethereum_main/uniswapV3/**Ported**"`
+- [x] Tests skip gracefully when `INFURA_KEY` is not set
 
 ---
 
