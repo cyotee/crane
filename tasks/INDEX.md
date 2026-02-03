@@ -106,7 +106,8 @@
 | CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | Complete | CRANE-146, CRANE-191 | `test/balancer-v3-cow-fork-parity` |
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Complete | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
 | CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Ready | - | `feature/slipstream-port-and-parity` |
-| CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Ready | - | `feature/opengsn-forwarder-port-and-tests` |
+| CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | In Progress | - | `feature/opengsn-forwarder-port-and-tests` |
+| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
 
 ## Status Legend
 
@@ -245,6 +246,9 @@
 
 **Balancer V3 Weighted Pool Parity Tests (1 task):**
 - ~~CRANE-208: Add Balancer V3 Weighted Pool Fork Parity Tests~~ → Complete
+
+**Balancer V3 Stable Pool Parity Tests (1 task):**
+- **CRANE-213: Add Balancer V3 Stable Pool Fork Parity Tests (Ready)**
 
 **Slipstream Port and Parity Tests (1 task):**
 - **CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install) (Ready - HIGH PRIORITY - ports + validates against deployed Slipstream)**
