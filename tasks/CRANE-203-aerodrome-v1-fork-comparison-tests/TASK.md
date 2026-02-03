@@ -1,7 +1,7 @@
 # Task CRANE-203: Add Aerodrome V1 Fork Comparison Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-02-02
 **Dependencies:** CRANE-148 (archived)
 **Worktree:** `test/aerodrome-v1-fork-comparison`
@@ -30,35 +30,35 @@ Scope note: much of the Aerodrome service code routes through Aerodrome's router
 As a developer, I want a Base fork TestBase for Aerodrome so tests share setup and are reproducible.
 
 **Acceptance Criteria:**
-- [ ] Create `test/foundry/fork/base_main/aerodrome/TestBase_AerodromeFork.sol`
-- [ ] Fork gating: tests must skip when `INFURA_KEY` is unset
-- [ ] Fork uses `vm.createSelectFork("base_mainnet_infura", blockNumber)`
-- [ ] Addresses pulled from `BASE_MAIN` (at minimum `AERODROME_POOL_FACTORY`, `AERODROME_ROUTER`)
+- [x] Create `test/foundry/fork/base_main/aerodrome/TestBase_AerodromeFork.sol`
+- [x] Fork gating: tests must skip when `INFURA_KEY` is unset
+- [x] Fork uses `vm.createSelectFork("base_mainnet_infura", blockNumber)`
+- [x] Addresses pulled from `BASE_MAIN` (at minimum `AERODROME_POOL_FACTORY`, `AERODROME_ROUTER`)
 
 ### US-CRANE-203.2: Volatile Pool Quote Parity (Core Deliverable)
 
 As a developer, I want volatile quotes and swap math to match deployed pools.
 
 **Acceptance Criteria:**
-- [ ] For an existing volatile pool with nonzero reserves, validate `AerodromeUtils` / `AerodromServiceVolatile` amount-out calculations against on-chain pool/router execution
-- [ ] Include tests for multiple trade sizes and both swap directions
-- [ ] Validate fee handling (Aerodrome uses a 10_000 denominator)
+- [x] For an existing volatile pool with nonzero reserves, validate `AerodromeUtils` / `AerodromServiceVolatile` amount-out calculations against on-chain pool/router execution
+- [x] Include tests for multiple trade sizes and both swap directions
+- [x] Validate fee handling (Aerodrome uses a 10_000 denominator)
 
 ### US-CRANE-203.3: Stable Pool Quote Parity (Core Deliverable)
 
 As a developer, I want stable pool quote math (solver) to match deployed pools.
 
 **Acceptance Criteria:**
-- [ ] For an existing stable pool with nonzero reserves, validate `AerodromServiceStable` / `AerodromeUtils` amount-out calculations against on-chain pool/router execution
-- [ ] Include tests for multiple trade sizes and both swap directions
+- [x] For an existing stable pool with nonzero reserves, validate `AerodromServiceStable` / `AerodromeUtils` amount-out calculations against on-chain pool/router execution
+- [x] Include tests for multiple trade sizes and both swap directions
 
 ### US-CRANE-203.4: Minimal Execution Sanity
 
 As a developer, I want one end-to-end swap test so failures show up as obvious execution issues.
 
 **Acceptance Criteria:**
-- [ ] Execute one swap through the mainnet router on a known pool with a funded impersonated account
-- [ ] Assert balances change as expected and output amount matches quote within integer equality (when quoting method matches the router/pool)
+- [x] Execute one swap through the mainnet router on a known pool with a funded impersonated account
+- [x] Assert balances change as expected and output amount matches quote within integer equality (when quoting method matches the router/pool)
 
 ## Technical Details
 
@@ -74,16 +74,16 @@ test/foundry/fork/base_main/
 
 ### Inventory Check
 
-- [ ] `contracts/constants/networks/BASE_MAIN.sol` contains Aerodrome addresses
-- [ ] `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceVolatile.sol` exists
-- [ ] `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.sol` exists
-- [ ] `contracts/utils/math/AerodromeUtils.sol` exists
-- [ ] `foundry.toml` includes `base_mainnet_infura`
+- [x] `contracts/constants/networks/BASE_MAIN.sol` contains Aerodrome addresses
+- [x] `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceVolatile.sol` exists
+- [x] `contracts/protocols/dexes/aerodrome/v1/services/AerodromServiceStable.sol` exists
+- [x] `contracts/utils/math/AerodromeUtils.sol` exists
+- [x] `foundry.toml` includes `base_mainnet_infura`
 
 ## Completion Criteria
 
-- [ ] Tests pass: `forge test --match-path "test/foundry/fork/base_main/aerodrome/**"`
-- [ ] Tests skip gracefully when `INFURA_KEY` is not set
+- [x] Tests pass: `forge test --match-path "test/foundry/fork/base_main/aerodrome/**"`
+- [x] Tests skip gracefully when `INFURA_KEY` is not set
 
 ---
 
