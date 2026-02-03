@@ -105,9 +105,10 @@
 | CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | Complete | CRANE-145 | `test/balancer-v3-gyro-fork-parity` |
 | CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | Complete | CRANE-146, CRANE-191 | `test/balancer-v3-cow-fork-parity` |
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Complete | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
-| CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Pending Merge | - | `feature/slipstream-port-and-parity` |
+| CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Complete | - | `feature/slipstream-port-and-parity` |
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Complete | - | `feature/opengsn-forwarder-port-and-tests` |
 | CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
+| CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
 
 ## Status Legend
 
@@ -250,8 +251,11 @@
 **Balancer V3 Stable Pool Parity Tests (1 task):**
 - **CRANE-213: Add Balancer V3 Stable Pool Fork Parity Tests (Ready)**
 
+**OpenGSN Forwarder Follow-ups (1 task - from CRANE-211):**
+- CRANE-214: Add Upstream Execute Parity Assertions (Low)
+
 **Slipstream Port and Parity Tests (1 task):**
-- **CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install) (Ready - HIGH PRIORITY - ports + validates against deployed Slipstream)**
+- ~~CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install)~~ → Complete
 
 **Submodule Removal (3 tasks):**
 - **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
@@ -380,6 +384,7 @@
 | CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-206-balancer-v3-gyro-pool-fork-parity-tests/ |
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-208-balancer-v3-weighted-pool-fork-parity-tests/ |
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | 2026-02-03 | archive/CRANE-211-opengsn-forwarder-port-and-tests/ |
+| CRANE-212 | Port Slipstream + Add Fork Parity Tests | 2026-02-03 | archive/CRANE-212-slipstream-port-and-parity/ |
 
 ## Cross-Repo Dependencies
 
