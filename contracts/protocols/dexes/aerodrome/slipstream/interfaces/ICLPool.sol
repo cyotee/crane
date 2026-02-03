@@ -250,6 +250,24 @@ interface ICLPool {
         uint128 amount1Requested
     ) external returns (uint128 amount0, uint128 amount1);
 
+    /// @notice Collects tokens owed to a position (NFT manager variant)
+    /// @param recipient The address which should receive the fees collected
+    /// @param tickLower The lower tick of the position
+    /// @param tickUpper The upper tick of the position
+    /// @param amount0Requested How much token0 should be withdrawn
+    /// @param amount1Requested How much token1 should be withdrawn
+    /// @param owner The owner of the position
+    /// @return amount0 The amount of fees collected in token0
+    /// @return amount1 The amount of fees collected in token1
+    function collect(
+        address recipient,
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount0Requested,
+        uint128 amount1Requested,
+        address owner
+    ) external returns (uint128 amount0, uint128 amount1);
+
     /// @notice Burn liquidity from the sender and account tokens owed for the liquidity to the position
     /// @param tickLower The lower tick of the position
     /// @param tickUpper The upper tick of the position
@@ -257,6 +275,17 @@ interface ICLPool {
     /// @return amount0 The amount of token0 sent to the recipient
     /// @return amount1 The amount of token1 sent to the recipient
     function burn(int24 tickLower, int24 tickUpper, uint128 amount)
+        external
+        returns (uint256 amount0, uint256 amount1);
+
+    /// @notice Burn liquidity for a specific owner (NFT manager variant)
+    /// @param tickLower The lower tick of the position
+    /// @param tickUpper The upper tick of the position
+    /// @param amount How much liquidity to burn
+    /// @param owner The owner of the position
+    /// @return amount0 The amount of token0 sent to the recipient
+    /// @return amount1 The amount of token1 sent to the recipient
+    function burn(int24 tickLower, int24 tickUpper, uint128 amount, address owner)
         external
         returns (uint256 amount0, uint256 amount1);
 

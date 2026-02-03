@@ -400,7 +400,15 @@ contract MockCLPool is ICLPool {
         return (0, 0);
     }
 
+    function collect(address, int24, int24, uint128, uint128, address) external pure override returns (uint128, uint128) {
+        return (0, 0);
+    }
+
     function burn(int24, int24, uint128) external pure override returns (uint256, uint256) {
+        return (0, 0);
+    }
+
+    function burn(int24, int24, uint128, address) external pure override returns (uint256, uint256) {
         return (0, 0);
     }
 
