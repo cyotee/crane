@@ -1,7 +1,7 @@
-# Task CRANE-209: Port Slipstream Contracts to Local Codebase
+# Task CRANE-209: Port Slipstream Contracts to Local Codebase (Superseded)
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Superseded
 **Created:** 2026-02-02
 **Dependencies:** None
 **Worktree:** `feature/slipstream-contract-port`
@@ -11,7 +11,7 @@
 
 ## Description
 
-Port Aerodrome Slipstream (concentrated liquidity AMM, a Uniswap V3 fork) core + periphery contracts into Crane under `contracts/protocols/dexes/aerodrome/slipstream/`.
+Superseded by CRANE-212, which consolidates the port + fork parity validation and requires a temporary upstream install workflow (create worktree -> `forge install` -> pin -> port -> parity -> remove dependency).
 
 Note: this repo already contains Slipstream-facing utilities/tests (e.g. `ICLPool`, `SlipstreamRewardUtils`, `SlipstreamQuoter`, `SlipstreamZapQuoter`, fork tests under `test/foundry/fork/base_main/slipstream/`). The missing piece is the actual on-chain-equivalent Slipstream implementation (factory/pool/router/NFT PM/quoter/fee modules) needed to support real deploy-and-compare parity (CRANE-210).
 

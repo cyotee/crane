@@ -1,17 +1,17 @@
-# Task CRANE-210: Add Slipstream Fork Parity Tests
+# Task CRANE-210: Add Slipstream Fork Parity Tests (Superseded)
 
 **Repo:** Crane Framework
-**Status:** Blocked
+**Status:** Superseded
 **Created:** 2026-02-02
-**Dependencies:** CRANE-209
-**Worktree:** `test/slipstream-fork-parity`
+**Dependencies:** CRANE-212
+**Worktree:** -
 **Priority:** HIGH
 
 ---
 
 ## Description
 
-Implement fork tests against Base mainnet that compare Aerodrome Slipstream **core** behavior between:
+Superseded by CRANE-212, which includes these parity tests as part of a single consolidated port+parity workflow.
 
 - the production Slipstream deployment (factory + pool implementation), and
 - our locally ported Slipstream contracts from CRANE-209.

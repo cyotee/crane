@@ -14,6 +14,8 @@ Crane previously depended on the OpenGSN `lib/gsn` submodule. The submodule was 
 
 This task hardens that port by (1) recording the exact upstream pin that was previously used as a submodule, and (2) adding fork-parity tests that compare our ported Forwarder behavior to the upstream OpenGSN Forwarder on a mainnet fork.
 
+Port-task dependency policy: use a temporary upstream install inside the worktree via `forge install <URL>`, pin to the commit below, run parity, then remove the installed dependency.
+
 ## Upstream Pin (historical)
 
 Previously installed as submodule:
@@ -61,9 +63,10 @@ As a developer, I want fork-parity tests that compare the ported Forwarder to up
 ### Test Strategy
 
 - Create a fork TestBase similar to existing fork suites (`test/foundry/fork/ethereum_main/uniswapV3/` and `test/foundry/fork/base_main/slipstream/`).
-- Bring in the upstream OpenGSN Forwarder code for testing ONLY, pinned to the commit above.
-  - Prefer vendoring minimal upstream sources under `contracts/protocols/utils/gsn/upstream/` or `test/foundry/fork/ethereum_main/gsn/upstream/`.
-  - Do not re-introduce `lib/gsn` as a git submodule.
+- In the worktree, install upstream for testing ONLY (temporary dependency), pinned to the commit above:
+  - `forge install https://github.com/opengsn/gsn`
+  - checkout commit `8e0c9ed23d9798b7384e8255054631c3cb414fdf`
+- Do not keep the dependency after tests pass; remove the installed `lib/` entry and any related remappings.
 
 ## Files to Create/Modify
 

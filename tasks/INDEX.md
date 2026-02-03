@@ -58,16 +58,7 @@
 | CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
 | CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
-| CRANE-145 | Refactor Balancer V3 Gyro Pool Package | Complete | CRANE-141 | - |
-| CRANE-146 | Refactor Balancer V3 CoW Pool Package | Complete | CRANE-141 | - |
-| CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Complete | CRANE-141 | - |
-| CRANE-149 | Fork ReClaMM Pool to Local Contracts | Complete | CRANE-141 | - |
-| CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Complete | - | - |
-| CRANE-153 | Port Resupply Protocol to Local Contracts | Blocked | Upstream resupply source must be pinned | `feature/resupply-port` |
-| CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
-| CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
-| CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
-| CRANE-158 | Add DiamondLoupe Support to Balancer V3 Vault | Superseded | CRANE-141 | - |
+| CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
 | CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Ready | CRANE-159 | `fix/vault-facet-selector-cleanup` |
 | CRANE-161 | Resolve Vault Loupe and Router Integration | Ready | CRANE-159 | `fix/vault-loupe-router-integration` |
 | CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/router-functional-tests` |
@@ -90,7 +81,6 @@
 | CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
 | CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/remove-aerodrome-submodule` |
 | CRANE-182 | Final Submodule Cleanup and forge-std Installation | Blocked | CRANE-171, CRANE-181, CRANE-186 | `chore/final-submodule-cleanup` |
-| CRANE-183 | Refactor V3 NFT Metadata to Fix Stack-Too-Deep | Complete | CRANE-151 | `fix/v3-nft-metadata-refactor` |
 | CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/v3-quoter-tests` |
 | CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
@@ -98,7 +88,6 @@
 | CRANE-188 | Remove lib/reclamm Submodule | Blocked | CRANE-195 | `chore/remove-reclamm-submodule` |
 | CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | Blocked | CRANE-200 | `chore/remove-v4-submodules` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
-| CRANE-191 | Add DFPkg for CoW Pool and Router Initialization | Complete | CRANE-146 | - |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 | CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
 | CRANE-194 | Align Hook Comments With Actual Behavior | Ready | CRANE-147 | `fix/hooks-comment-alignment` |
@@ -116,8 +105,7 @@
 | CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | Ready | CRANE-145 | `test/balancer-v3-gyro-fork-parity` |
 | CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | Ready | CRANE-146, CRANE-191 | `test/balancer-v3-cow-fork-parity` |
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Ready | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
-| CRANE-209 | Port Slipstream Contracts to Local Codebase | Ready | - | `feature/slipstream-contract-port` |
-| CRANE-210 | Add Slipstream Fork Parity Tests | Blocked | CRANE-209 | `test/slipstream-fork-parity` |
+| CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Ready | - | `feature/slipstream-port-and-parity` |
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Ready | - | `feature/opengsn-forwarder-port-and-tests` |
 
 ## Status Legend
@@ -203,10 +191,7 @@
 - **CRANE-161: Resolve Vault Loupe and Router Integration (Ready - HIGH)**
 - CRANE-143: Refactor Balancer V3 Weighted Pool Package ✓ **Complete**
 - ~~CRANE-144: Refactor Balancer V3 Stable Pool Package~~ → Archived
-- **CRANE-145: Refactor Balancer V3 Gyro Pool Package (Pending Merge)**
-- **CRANE-146: Refactor Balancer V3 CoW Pool Package (Ready)**
-- **CRANE-147: Refactor Balancer V3 Pool Hooks Package (In Review)**
-- **CRANE-149: Fork ReClaMM Pool to Local Contracts (Ready)**
+- (Complete tasks for this initiative are listed in **Archived Tasks**)
 
 **Balancer V3 Router Review Follow-ups (6 tasks - from CRANE-142):**
 - **CRANE-162: Expand Balancer V3 Router Test Coverage (Ready - HIGH)**
@@ -232,10 +217,10 @@
 - ~~CRANE-151: Port and Verify Uniswap V3 Core + Periphery~~ → Complete
 
 **Uniswap V4 Port (1 task):**
-- **CRANE-152: Port and Verify Uniswap V4 Core + Periphery (Ready - enables submodule removal)**
+- (Complete tasks for this initiative are listed in **Archived Tasks**)
 
 **Resupply CDP Port (1 task):**
-- **CRANE-153: Port Resupply Protocol to Local Contracts (Blocked - upstream source must be pinned)**
+- **CRANE-153: Port Resupply Protocol to Local Contracts (Ready)**
 
 **Sky/DSS CDP Port (1 task):**
 - ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete
@@ -261,9 +246,8 @@
 **Balancer V3 Weighted Pool Parity Tests (1 task):**
 - **CRANE-208: Add Balancer V3 Weighted Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates 50/50, 80/20, multi-token pools)**
 
-**Slipstream Port and Parity Tests (2 tasks):**
-- **CRANE-209: Port Slipstream Contracts to Local Codebase (Ready - HIGH PRIORITY - enables fork parity tests)**
-- **CRANE-210: Add Slipstream Fork Parity Tests (Blocked - waiting on CRANE-209)**
+**Slipstream Port and Parity Tests (1 task):**
+- **CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install) (Ready - HIGH PRIORITY - ports + validates against deployed Slipstream)**
 
 **Submodule Removal (3 tasks):**
 - **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
@@ -273,7 +257,6 @@
 ### Blocked
 
 - CRANE-182: Final Submodule Cleanup (waiting on CRANE-171, CRANE-181, and future removal tasks)
-- CRANE-210: Slipstream Fork Parity Tests (waiting on CRANE-209)
 
 ## Retired Tasks
 

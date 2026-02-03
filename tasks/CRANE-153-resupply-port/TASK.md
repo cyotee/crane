@@ -1,9 +1,9 @@
 # Task CRANE-153: Port Resupply Protocol to Local Contracts
 
 **Repo:** Crane Framework
-**Status:** Blocked
+**Status:** Ready
 **Created:** 2026-01-28
-**Dependencies:** Upstream Resupply source must be identified + pinned (repo + commit/tag)
+**Dependencies:** None
 **Worktree:** `feature/resupply-port`
 
 ---
@@ -14,7 +14,7 @@ Port the Resupply protocol contracts into `contracts/protocols/cdps/resupply/`.
 
 Resupply is a CDP (Collateralized Debt Position) protocol with a large surface area (DAO/governance, staking, emissions, lending pairs, oracles, and integrations with Curve/Frax/Convex/Prisma).
 
-Important: this repo currently does **not** contain a `lib/resupply` submodule, so this task must start by identifying an upstream Resupply source and pinning it to a specific commit/tag for deterministic porting.
+Important: follow the temporary dependency workflow. After creating the worktree, install upstream in the worktree via `forge install <URL>`, pin to the commit recorded below, port, then remove the installed dependency once validation/tests pass.
 
 ## Goal
 
@@ -24,6 +24,7 @@ Vendor Resupply locally (pin + port + tests) so Crane does not rely on an extern
 
 **Source:** https://github.com/resupplyfi/resupply
 **Pinned upstream commit:** 71e01acf3e40f5ff2888afc9e6a73d6079a2f71f
+**Temporary install (run inside worktree):** `forge install https://github.com/resupplyfi/resupply`
 **Target Location:** `contracts/protocols/cdps/resupply/`
 **Current Local Port:** none
 **Estimated Scope:** large (original task assumed ~160 Solidity files)
@@ -96,6 +97,22 @@ Pinned upstream source recorded above (repo + commit).
 - Chainlink (oracles)
 
 ## User Stories
+
+### US-CRANE-153.M1: Milestone - Minimal Compile + Proof-of-Use + Dependency Removal
+
+As a developer, I want a clear first milestone that proves the port is viable end-to-end (install upstream temporarily, port into Crane-owned paths, compile, run at least one meaningful test), then removes the upstream dependency before merging.
+
+**Acceptance Criteria:**
+- [ ] Create worktree `feature/resupply-port`
+- [ ] In the worktree, install upstream Resupply for reference only: `forge install https://github.com/resupplyfi/resupply`
+- [ ] Checkout pinned commit `71e01acf3e40f5ff2888afc9e6a73d6079a2f71f`
+- [ ] Port Resupply sources into `contracts/protocols/cdps/resupply/` (initial milestone scope: enough files to `forge build` the ported tree)
+- [ ] Add a minimal compile/deploy test that exercises at least one Resupply core contract interaction (smoke test; can use stubs/mocks for external integrations)
+- [ ] Remove the installed upstream dependency (`lib/resupply` and any remappings/lock entries it introduced)
+- [ ] Verify no lingering dependency remains:
+  - [ ] `rg "lib/resupply" -n .` has no matches
+  - [ ] `forge build` succeeds
+  - [ ] The new Resupply smoke test passes
 
 ### US-CRANE-153.0: Pin Upstream Source
 
@@ -323,6 +340,7 @@ contracts/protocols/cdps/resupply/
 ## Completion Criteria
 
 - [ ] Pinned upstream source recorded in this task (repo URL + commit/tag)
+- [ ] Temporary upstream dependency removed after validation (no lingering `lib/resupply` usage)
 - [ ] All required source files ported (count depends on upstream)
 - [ ] Directory structure preserved
 - [ ] All interfaces available
