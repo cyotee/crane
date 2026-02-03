@@ -2,10 +2,11 @@
 
 ## Current Checkpoint
 
-**Last checkpoint:** Implementation complete
-**Next step:** Code review
+**Last checkpoint:** Phase 1 Complete - Pending Merge
+**Next step:** Run `/backlog:complete CRANE-207 --push` from main worktree
 **Build status:** ✅ Passes
 **Test status:** ✅ Tests compile (fork tests require INFURA_KEY to run)
+**Worktree Status:** Ready for Phase 2 merge
 
 ---
 
