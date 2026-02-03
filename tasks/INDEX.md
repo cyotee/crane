@@ -226,10 +226,10 @@
 - ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete
 
 **Uniswap V2 Fork Tests (1 task):**
-- **CRANE-202: Add Uniswap V2 Fork Comparison Tests (In Progress - validates stub parity)**
+- ~~CRANE-202: Add Uniswap V2 Fork Comparison Tests~~ → Complete
 
 **Aerodrome V1 Fork Tests (1 task):**
-- **CRANE-203: Add Aerodrome V1 Fork Comparison Tests (Ready - validates volatile + stable pool parity)**
+- **CRANE-203: Add Aerodrome V1 Fork Comparison Tests (In Progress - validates volatile + stable pool parity)**
 
 **Uniswap V3 Ported Contract Parity Tests (1 task):**
 - **CRANE-204: Add Uniswap V3 Ported Contract Parity Tests (Ready - validates ported V3 stack)**
@@ -368,6 +368,7 @@
 | CRANE-167 | Add TestBase and Behavior Patterns to Router Tests | 2026-01-31 | archive/CRANE-167-router-testbase-behavior/ |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | 2026-02-01 | archive/CRANE-149-reclamm-port/ |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | 2026-02-01 | archive/CRANE-152-uniswap-v4-port-verification/ |
+| CRANE-202 | Add Uniswap V2 Fork Comparison Tests | 2026-02-02 | archive/CRANE-202-uniswap-v2-fork-comparison-tests/ |
 
 ## Cross-Repo Dependencies
 
