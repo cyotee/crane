@@ -379,6 +379,7 @@
 | CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-207-balancer-v3-cow-pool-fork-parity-tests/ |
 | CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-206-balancer-v3-gyro-pool-fork-parity-tests/ |
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-208-balancer-v3-weighted-pool-fork-parity-tests/ |
+| CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | 2026-02-03 | archive/CRANE-211-opengsn-forwarder-port-and-tests/ |
 
 ## Cross-Repo Dependencies
 
