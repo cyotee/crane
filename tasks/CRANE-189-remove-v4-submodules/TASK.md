@@ -3,7 +3,7 @@
 **Repo:** Crane Framework
 **Status:** Ready
 **Created:** 2026-01-31
-**Dependencies:** CRANE-152
+**Dependencies:** CRANE-200
 **Worktree:** `chore/remove-v4-submodules`
 **Origin:** Submodule cleanup initiative
 
@@ -11,7 +11,7 @@
 
 ## Description
 
-Remove the `lib/v4-core` and `lib/v4-periphery` submodules after CRANE-152 has ported the Uniswap V4 contracts to local. This is a high-priority removal as these submodules contain significant nested dependencies:
+Remove the `lib/v4-core` and `lib/v4-periphery` submodules after CRANE-200 removes v4-submodule-coupled remappings/imports. This is a high-priority removal as these submodules contain significant nested dependencies:
 
 - lib/v4-core (~26M): Contains forge-std, openzeppelin-contracts, solmate
 - lib/v4-periphery (~47M): Contains permit2 (with all its deps), v4-core (duplicate), and more
@@ -20,7 +20,7 @@ Combined, removing both eliminates ~73M of disk space per worktree and removes d
 
 ## Dependencies
 
-- CRANE-152: Port and Verify Uniswap V4 Core + Periphery (must complete first)
+- CRANE-200: Remove v4-periphery-coupled Remappings (must complete first)
 
 ## User Stories
 
@@ -33,7 +33,7 @@ As a developer, I want to remove the lib/v4-core and lib/v4-periphery submodules
 - [ ] Remove lib/v4-periphery submodule entry from .gitmodules
 - [ ] Remove lib/v4-core directory
 - [ ] Remove lib/v4-periphery directory
-- [ ] Update any remaining direct imports (should be none after CRANE-152)
+- [ ] No remappings/imports resolve via lib/v4-core or lib/v4-periphery
 - [ ] Remove v4 remappings from remappings.txt if present
 - [ ] All existing tests still pass
 - [ ] Build succeeds
@@ -65,7 +65,7 @@ As a developer, I want to remove the lib/v4-core and lib/v4-periphery submodules
 ## Pre-Removal Checklist
 
 Before removing the submodules:
-- [ ] CRANE-152 is complete (Uniswap V4 ported to local)
+- [ ] CRANE-200 is complete (no v4-submodule-coupled remappings)
 - [ ] Verify no direct imports from `lib/v4-core/` or `lib/v4-periphery/`
 - [ ] Verify tests pass with current remappings
 - [ ] Verify build succeeds
@@ -73,6 +73,9 @@ Before removing the submodules:
 ## Removal Commands
 
 ```bash
+# Sanity: ensure no imports reference lib/v4-* paths
+rg "import\s+\"lib/v4-" -n contracts test --glob "*.sol"
+
 # Remove submodule entries from .gitmodules
 git submodule deinit -f lib/v4-core
 git submodule deinit -f lib/v4-periphery
@@ -90,6 +93,11 @@ git add .gitmodules lib/v4-core lib/v4-periphery
 
 # Update foundry.lock (remove v4-core and v4-periphery entries)
 # Update remappings.txt if needed
+
+# Verify
+forge build
+forge test --match-path "test/foundry/spec/protocols/dexes/uniswap/v4/**/*.t.sol"
+forge test --match-path "test/foundry/fork/ethereum_main/uniswapV4/*.t.sol"
 ```
 
 ## Inventory Check

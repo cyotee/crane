@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-01-31
+**Last Updated:** 2026-02-03
 
 ## Active Tasks
 
@@ -63,7 +63,7 @@
 | CRANE-147 | Refactor Balancer V3 Pool Hooks Package | Complete | CRANE-141 | - |
 | CRANE-149 | Fork ReClaMM Pool to Local Contracts | Complete | CRANE-141 | - |
 | CRANE-152 | Port and Verify Uniswap V4 Core + Periphery | Complete | - | - |
-| CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
+| CRANE-153 | Port Resupply Protocol to Local Contracts | Blocked | Upstream resupply source must be pinned | `feature/resupply-port` |
 | CRANE-155 | Add Balancer V3 Vault Interface Coverage Tests | Superseded | CRANE-141 | - |
 | CRANE-156 | Fix Pool Token Selector Signatures in Vault Tests | Superseded | CRANE-141 | - |
 | CRANE-157 | Implement Missing Balancer V3 Vault Interface Functions | Superseded | CRANE-141 | - |
@@ -75,9 +75,9 @@
 | CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/router-target-layer` |
 | CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
 | CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
-| CRANE-168 | Add SafeCast160 Unit Tests | In Progress | CRANE-150 | `test/safecast160-tests` |
+| CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/safecast160-tests` |
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
-| CRANE-170 | Document DeployPermit2 Bytecode Source | In Progress | CRANE-150 | `docs/deploypermit2-docs` |
+| CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
 | CRANE-171 | Remove lib/permit2 Submodule | Ready | CRANE-168, CRANE-169 | `chore/remove-permit2-submodule` |
 | CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
 | CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
@@ -95,6 +95,8 @@
 | CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
 | CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
+| CRANE-188 | Remove lib/reclamm Submodule | Blocked | CRANE-195 | `chore/remove-reclamm-submodule` |
+| CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | Blocked | CRANE-200 | `chore/remove-v4-submodules` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
 | CRANE-191 | Add DFPkg for CoW Pool and Router Initialization | Complete | CRANE-146 | - |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
@@ -107,6 +109,15 @@
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
 | CRANE-201 | Add V3 NFT tokenURI Shape Test | Ready | CRANE-183 | `test/v3-tokenuri-shape-test` |
+| CRANE-202 | Add Uniswap V2 Fork Comparison Tests | Ready | - | `test/uniswap-v2-fork-comparison` |
+| CRANE-203 | Add Aerodrome V1 Fork Comparison Tests | Ready | - | `test/aerodrome-v1-fork-comparison` |
+| CRANE-204 | Add Uniswap V3 Ported Contract Parity Tests | Ready | - | `test/uniswap-v3-ported-parity` |
+| CRANE-205 | Add Uniswap V4 Ported Contract Parity Tests | Ready | - | `test/uniswap-v4-ported-parity` |
+| CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | Ready | CRANE-145 | `test/balancer-v3-gyro-fork-parity` |
+| CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | Ready | CRANE-146, CRANE-191 | `test/balancer-v3-cow-fork-parity` |
+| CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Ready | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
+| CRANE-209 | Port Slipstream Contracts to Local Codebase | Ready | - | `feature/slipstream-contract-port` |
+| CRANE-210 | Add Slipstream Fork Parity Tests | Blocked | CRANE-209 | `test/slipstream-fork-parity` |
 
 ## Status Legend
 
@@ -223,10 +234,35 @@
 - **CRANE-152: Port and Verify Uniswap V4 Core + Periphery (Ready - enables submodule removal)**
 
 **Resupply CDP Port (1 task):**
-- **CRANE-153: Port Resupply Protocol to Local Contracts (Ready - enables submodule removal)**
+- **CRANE-153: Port Resupply Protocol to Local Contracts (Blocked - upstream source must be pinned)**
 
 **Sky/DSS CDP Port (1 task):**
 - ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete
+
+**Uniswap V2 Fork Tests (1 task):**
+- **CRANE-202: Add Uniswap V2 Fork Comparison Tests (Ready - validates stub parity)**
+
+**Aerodrome V1 Fork Tests (1 task):**
+- **CRANE-203: Add Aerodrome V1 Fork Comparison Tests (Ready - validates volatile + stable pool parity)**
+
+**Uniswap V3 Ported Contract Parity Tests (1 task):**
+- **CRANE-204: Add Uniswap V3 Ported Contract Parity Tests (Ready - validates ported V3 stack)**
+
+**Uniswap V4 Ported Contract Parity Tests (1 task):**
+- **CRANE-205: Add Uniswap V4 Ported Contract Parity Tests (Ready - validates ported V4 stack with hooks)**
+
+**Balancer V3 Gyro Pool Parity Tests (1 task):**
+- **CRANE-206: Add Balancer V3 Gyro Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates Gyro 2-CLP + ECLP ports)**
+
+**Balancer V3 CoW Pool Parity Tests (1 task):**
+- **CRANE-207: Add Balancer V3 CoW Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates CoW pool + router ports)**
+
+**Balancer V3 Weighted Pool Parity Tests (1 task):**
+- **CRANE-208: Add Balancer V3 Weighted Pool Fork Parity Tests (Ready - HIGH PRIORITY - validates 50/50, 80/20, multi-token pools)**
+
+**Slipstream Port and Parity Tests (2 tasks):**
+- **CRANE-209: Port Slipstream Contracts to Local Codebase (Ready - HIGH PRIORITY - enables fork parity tests)**
+- **CRANE-210: Add Slipstream Fork Parity Tests (Blocked - waiting on CRANE-209)**
 
 **Submodule Removal (3 tasks):**
 - **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
@@ -236,6 +272,7 @@
 ### Blocked
 
 - CRANE-182: Final Submodule Cleanup (waiting on CRANE-171, CRANE-181, and future removal tasks)
+- CRANE-210: Slipstream Fork Parity Tests (waiting on CRANE-209)
 
 ## Retired Tasks
 

@@ -3,7 +3,7 @@
 **Repo:** Crane Framework
 **Status:** Ready
 **Created:** 2026-01-31
-**Dependencies:** CRANE-149
+**Dependencies:** CRANE-195
 **Worktree:** `chore/remove-reclamm-submodule`
 **Origin:** Submodule cleanup initiative
 
@@ -11,11 +11,11 @@
 
 ## Description
 
-Remove the `lib/reclamm` submodule after CRANE-149 has ported the ReClaMM pool contracts to local. This is a high-priority removal as it includes the nested `balancer-v3-monorepo` submodule, totaling ~62M of disk space per worktree.
+Remove the `lib/reclamm` submodule after CRANE-195 eliminates the build-time dependency on `lib/reclamm` (remappings/imports). This is a high-priority removal as it includes the nested `balancer-v3-monorepo` submodule, totaling ~62M of disk space per worktree.
 
 ## Dependencies
 
-- CRANE-149: Fork ReClaMM Pool to Local Contracts (must complete first)
+- CRANE-195: Make lib/reclamm Submodule Removal Possible (must complete first)
 
 ## User Stories
 
@@ -26,7 +26,7 @@ As a developer, I want to remove the lib/reclamm submodule so that worktrees are
 **Acceptance Criteria:**
 - [ ] Remove lib/reclamm submodule entry from .gitmodules
 - [ ] Remove lib/reclamm directory
-- [ ] Update any remaining direct imports (should be none after CRANE-149)
+- [ ] No remappings/imports resolve via lib/reclamm
 - [ ] Remove reclamm remapping from remappings.txt if present
 - [ ] All existing tests still pass
 - [ ] Build succeeds
@@ -52,7 +52,7 @@ As a developer, I want to remove the lib/reclamm submodule so that worktrees are
 ## Pre-Removal Checklist
 
 Before removing the submodule:
-- [ ] CRANE-149 is complete (ReClaMM ported to local)
+- [ ] CRANE-195 is complete (no build-time dependency on lib/reclamm)
 - [ ] Verify no direct imports from `lib/reclamm/`
 - [ ] Verify tests pass with current remappings
 - [ ] Verify build succeeds
@@ -60,6 +60,9 @@ Before removing the submodule:
 ## Removal Commands
 
 ```bash
+# Sanity: ensure no imports reference lib/reclamm
+rg "import\s+\"lib/reclamm/" -n contracts test --glob "*.sol"
+
 # Remove submodule entry from .gitmodules
 git submodule deinit -f lib/reclamm
 
@@ -74,6 +77,10 @@ git add .gitmodules lib/reclamm
 
 # Update foundry.lock (remove reclamm entry)
 # Update remappings.txt if needed
+
+# Verify
+forge build
+forge test
 ```
 
 ## Inventory Check

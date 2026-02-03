@@ -11,7 +11,7 @@
 
 ## Description
 
-If V4 and other Crane codepaths already rely on local Permit2 interfaces (`contracts/interfaces/protocols/utils/permit2/**`) and locally ported Solmate (`contracts/protocols/dexes/uniswap/v4/external/solmate/**`), then the `foundry.toml` remappings to `lib/v4-periphery/lib/*` are unnecessary coupling and should be removed.
+If V4 and other Crane codepaths already rely on local Permit2 interfaces and locally ported Solmate, then remappings to `lib/v4-periphery/**` (and `lib/v4-core/**`) are unnecessary coupling and should be removed.
 
 After removal, rerun `forge build` + V4 tests to confirm no hidden dependency.
 
@@ -28,9 +28,10 @@ After removal, rerun `forge build` + V4 tests to confirm no hidden dependency.
 As a developer, I want v4-periphery remappings removed so that the submodule can be safely deleted.
 
 **Acceptance Criteria:**
-- [ ] `permit2/` remapping points to local sources, not lib/v4-periphery
-- [ ] `solmate/` remapping removed or points to local sources
-- [ ] No other remappings to lib/v4-periphery
+- [ ] remappings.txt does not reference lib/v4-periphery or lib/v4-core
+- [ ] `permit2/` resolves to Crane-owned sources (or is removed if unused)
+- [ ] `solmate/` resolves to Crane-owned sources (or is removed if unused)
+- [ ] No other remappings to lib/v4-periphery or lib/v4-core
 - [ ] `forge build` succeeds
 - [ ] V4 tests pass
 - [ ] Build succeeds
@@ -40,6 +41,15 @@ As a developer, I want v4-periphery remappings removed so that the submodule can
 **Modified Files:**
 - `foundry.toml`
 - `remappings.txt`
+
+## Suggested Verification
+
+```bash
+rg "lib/v4-(core|periphery)" remappings.txt foundry.toml
+forge build
+forge test --match-path "test/foundry/spec/protocols/dexes/uniswap/v4/**/*.t.sol"
+forge test --match-path "test/foundry/fork/ethereum_main/uniswapV4/*.t.sol"
+```
 
 ## Inventory Check
 

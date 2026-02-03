@@ -11,9 +11,9 @@
 
 ## Description
 
-Add a deterministic check that the repo builds/tests without `lib/v4-core` and `lib/v4-periphery` present (or at minimum, ensure no active remappings require them). This turns the task goal into a mechanically verifiable invariant.
+Add a deterministic check that the repo builds/tests without `lib/v4-core` and `lib/v4-periphery` present (or at minimum, ensure no active remappings require them). This turns submodule independence into a mechanically verifiable invariant.
 
-Recommended approach: Remove the v4-submodule remappings, then run `forge build` + the two known-good V4 test commands:
+Recommended approach: After CRANE-200 removes v4-submodule-coupled remappings, run `forge build` + the two known-good V4 test commands:
 - `forge test --match-path "test/foundry/spec/protocols/dexes/uniswap/v4/**/*.t.sol"`
 - `forge test --match-path "test/foundry/fork/ethereum_main/uniswapV4/*.t.sol"`
 
@@ -21,7 +21,8 @@ Recommended approach: Remove the v4-submodule remappings, then run `forge build`
 
 ## Dependencies
 
-- CRANE-152: Port and Verify Uniswap V4 Core + Periphery (parent task)
+- CRANE-200: Remove v4-periphery-coupled Remappings (enables running without v4 submodules)
+- CRANE-189: Remove lib/v4-core and lib/v4-periphery Submodules (optional, but ideal)
 
 ## User Stories
 
@@ -30,8 +31,7 @@ Recommended approach: Remove the v4-submodule remappings, then run `forge build`
 As a developer, I want CI to verify that v4-core and v4-periphery submodules are not required so that submodule removal remains a verifiable invariant.
 
 **Acceptance Criteria:**
-- [ ] CI/test script verifies build works without lib/v4-core remappings
-- [ ] CI/test script verifies build works without lib/v4-periphery remappings
+- [ ] CI/test script verifies build works without v4-submodule remappings
 - [ ] V4 tests pass with local sources only
 - [ ] Tests pass
 - [ ] Build succeeds
@@ -46,7 +46,7 @@ As a developer, I want CI to verify that v4-core and v4-periphery submodules are
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-152 is complete
+- [ ] CRANE-200 is complete
 - [ ] V4 contracts exist locally
 
 ## Completion Criteria

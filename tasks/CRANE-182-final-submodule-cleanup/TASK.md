@@ -10,32 +10,31 @@
 
 ## Description
 
-After all submodules have been removed (except forge-std), perform a comprehensive cleanup of the repository to ensure all imports use local ported code, remappings are cleaned up, empty lib/ directories are removed, and forge-std is properly configured as the sole remaining submodule. This task ensures the repository can use Foundry with minimal external dependencies.
+After the targeted protocol submodule removals are complete (Permit2, Aerodrome, Uniswap v3/v4, ReClaMM, and any other protocol ports), do a comprehensive cleanup so Foundry builds/tests without protocol submodules. This task is explicitly NOT the place where we decide to remove core dev/library dependencies like OpenZeppelin or Solady; keep those as submodules unless/until there is an explicit task to remove them.
 
 ## Goal
 
 The end state should be:
-- Only `lib/forge-std` remains as a submodule
-- All other protocol code lives in `contracts/protocols/`
-- All remappings point to local contracts
-- Clean, minimal `.gitmodules` file
+- No protocol submodules are required for `forge build` / `forge test`
+- All protocol code lives in `contracts/protocols/` and is imported via Crane-owned paths
+- Remappings do not reference removed protocol submodules
+- `.gitmodules` contains only the submodules we intentionally keep (e.g., forge-std, openzeppelin-contracts, solady)
 - Build and tests pass
 
 ## Dependencies
 
-**Completed Ports (submodule removal tasks must be done first):**
-- CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)
-- CRANE-181: Remove lib/aerodrome-contracts Submodule (Ready)
+**Protocol removal tasks (must be done first):**
+- CRANE-171: Remove lib/permit2 Submodule
+- CRANE-181: Remove lib/aerodrome-contracts Submodule
+- CRANE-186: Remove v3-core and v3-periphery Submodules
+- CRANE-189: Remove lib/v4-core and lib/v4-periphery Submodules
+- CRANE-188: Remove lib/reclamm Submodule
 
-**In Progress / Future Ports (removal tasks TBD):**
-- Uniswap V3: CRANE-151 (In Progress) → removal task TBD
-- Uniswap V4: CRANE-152 (Ready) → removal task TBD
-- Resupply: CRANE-153 (Ready) → removal task TBD
-- Slipstream: No port task yet (uses submodule)
-- Balancer V3: CRANE-141-147 (various statuses)
-- Other submodules: aave-v3, aave-v4, comet, euler-*, openzeppelin-contracts, etc.
+**Notes:**
+- Submodule removals should be tracked as their own tasks; if a protocol is still consumed via submodule, create a dedicated removal/enablement task rather than expanding this one.
+- OpenZeppelin and Solady are core library dependencies; do not remove them as part of this task.
 
-**Note:** This task should only be started when ALL protocol submodules have been ported and removed, leaving only forge-std.
+**Note:** This task should only be started when the protocol submodule removal tasks above are complete.
 
 ## User Stories
 
@@ -44,27 +43,16 @@ The end state should be:
 As a developer, I want all remappings updated to point only to local contracts and forge-std.
 
 **Acceptance Criteria:**
-- [ ] Remove all submodule remappings from foundry.toml (except forge-std)
-- [ ] Add/verify remappings for all local protocol ports:
-  - `@crane/contracts/=contracts/`
-  - `@aerodrome/=contracts/protocols/dexes/aerodrome/`
-  - `@uniswap/v3/=contracts/protocols/dexes/uniswap/v3/`
-  - `@uniswap/v4/=contracts/protocols/dexes/uniswap/v4/`
-  - `@balancer/v3/=contracts/protocols/dexes/balancer/v3/`
-  - `@permit2/=contracts/protocols/infra/permit2/`
-  - `@sky/=contracts/protocols/cdps/sky/`
-  - etc.
-- [ ] Verify all import paths resolve correctly
-- [ ] Build succeeds with new remappings
+- [ ] remappings.txt and foundry.toml do not reference removed protocol submodules (permit2, v3, v4, reclamm, aerodrome)
+- [ ] Add/verify remappings for Crane-owned protocol ports (only if actually used in code)
+- [ ] `forge build` succeeds
 
 ### US-CRANE-182.2: Update All Import Statements
 
 As a developer, I want all imports updated to use the new local paths.
 
 **Acceptance Criteria:**
-- [ ] Search for any remaining submodule imports (e.g., `import "lib/...`)
-- [ ] Update all imports to use remapped paths or relative paths
-- [ ] No import references `lib/` except `lib/forge-std`
+- [ ] No Solidity import references removed protocol submodules (`lib/permit2`, `lib/v3-*`, `lib/v4-*`, `lib/reclamm`, `lib/aerodrome-contracts`)
 - [ ] All contracts compile
 
 ### US-CRANE-182.3: Remove Empty lib/ Directories
@@ -72,24 +60,17 @@ As a developer, I want all imports updated to use the new local paths.
 As a developer, I want the lib/ directory cleaned of removed submodule remnants.
 
 **Acceptance Criteria:**
-- [ ] Remove any empty directories in lib/
-- [ ] Remove any leftover .git files from submodule removal
-- [ ] Verify lib/ only contains forge-std
-- [ ] Verify .git/modules/ is cleaned (only forge-std module)
+- [ ] Remove any empty directories in lib/ left by protocol submodule removals
+- [ ] Verify .git/modules/ does not contain removed protocol submodules
 
 ### US-CRANE-182.4: Update .gitmodules
 
 As a developer, I want .gitmodules to only contain forge-std.
 
 **Acceptance Criteria:**
-- [ ] .gitmodules contains only forge-std entry:
-  ```ini
-  [submodule "lib/forge-std"]
-      path = lib/forge-std
-      url = https://github.com/foundry-rs/forge-std
-  ```
-- [ ] No other submodule entries remain
-- [ ] git submodule status shows only forge-std
+- [ ] .gitmodules contains only the intentionally kept submodules (forge-std + any core libs still intentionally tracked)
+- [ ] No removed protocol submodule entries remain
+- [ ] git submodule status does not include removed protocol submodules
 
 ### US-CRANE-182.5: Update CI/Documentation
 
@@ -106,81 +87,37 @@ As a developer, I want CI and documentation updated to reflect the new structure
 As a developer, I want complete verification that the cleanup is successful.
 
 **Acceptance Criteria:**
-- [ ] Fresh clone test: `git clone --recursive` works and only fetches forge-std
+- [ ] Fresh clone test: `git clone --recursive` works with the intended remaining submodules
 - [ ] `forge build` succeeds
-- [ ] `forge test` passes (all tests)
-- [ ] No compiler warnings about missing imports
-- [ ] `forge coverage` works (if applicable)
+- [ ] `forge test` passes
 
 ## Technical Details
 
-### Current Submodules (to be removed before this task)
+### Targeted Removals Covered by This Epic
 
-Based on `git submodule status`:
-```
-lib/aave-v3-horizon
-lib/aave-v4
-lib/aerodrome-contracts       → CRANE-181
-lib/balancer-v3-monorepo
-lib/comet
-lib/ethereum-vault-connector
-lib/euler-price-oracle
-lib/euler-vault-kit
-lib/evc-playground
-lib/evk-periphery
-lib/forge-std                 → KEEP (only this remains)
-lib/gsn
-lib/openzeppelin-contracts
-lib/permit2                   → CRANE-171
-lib/reclamm
-lib/resupply
-lib/scaffold-eth-2
-lib/slipstream
-lib/solady
-lib/solidity-lib
-lib/solmate
-lib/solplot
-lib/v3-core                   → After CRANE-151
-lib/v3-periphery              → After CRANE-151
-lib/v4-core                   → After CRANE-152
-lib/v4-periphery              → After CRANE-152
-```
+This cleanup assumes the following protocol submodules have already been removed by their dedicated tasks:
+- lib/permit2
+- lib/aerodrome-contracts
+- lib/v3-core
+- lib/v3-periphery
+- lib/v4-core
+- lib/v4-periphery
+- lib/reclamm
 
 ### Expected Final State
 
-```
-lib/
-└── forge-std/                # Only submodule remaining
+- Protocol imports resolve from `contracts/` (no dependency on removed protocol submodules)
+- `.gitmodules` no longer contains removed protocol submodules
+- `forge build` and `forge test` succeed
 
-.gitmodules:
-[submodule "lib/forge-std"]
-    path = lib/forge-std
-    url = https://github.com/foundry-rs/forge-std
+### Verification Commands
 
-foundry.toml remappings:
-[
-    "forge-std/=lib/forge-std/src/",
-    "@crane/=contracts/",
-    "@aerodrome/=contracts/protocols/dexes/aerodrome/",
-    "@balancer/v3/=contracts/protocols/dexes/balancer/v3/",
-    "@uniswap/v3/=contracts/protocols/dexes/uniswap/v3/",
-    "@uniswap/v4/=contracts/protocols/dexes/uniswap/v4/",
-    "@permit2/=contracts/protocols/infra/permit2/",
-    "@sky/=contracts/protocols/cdps/sky/",
-    ...
-]
-```
-
-### Import Update Script
-
-Create a script to find and report remaining submodule imports:
+Use these commands as quick invariants:
 
 ```bash
-#!/bin/bash
-# Find imports still referencing lib/ (except forge-std)
-grep -r "import.*lib/" contracts/ test/ --include="*.sol" | \
-  grep -v "forge-std" | \
-  grep -v "node_modules"
+rg "import\s+\"lib/(permit2|aerodrome-contracts|v3-|v4-|reclamm)/" -n contracts test --glob "*.sol"
+forge build
+forge test
 ```
 
 ## Files to Create/Modify

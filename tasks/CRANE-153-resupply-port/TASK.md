@@ -1,29 +1,33 @@
 # Task CRANE-153: Port Resupply Protocol to Local Contracts
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Blocked
 **Created:** 2026-01-28
-**Dependencies:** None
+**Dependencies:** Upstream Resupply source must be identified + pinned (repo + commit/tag)
 **Worktree:** `feature/resupply-port`
 
 ---
 
 ## Description
 
-Port the Resupply protocol contracts from `lib/resupply/src/` into `contracts/protocols/cdps/resupply/`. Resupply is a CDP (Collateralized Debt Position) protocol with 160 source files covering DAO governance, staking, emissions, lending pairs, oracles, and integrations with Curve, Frax, Convex, and Prisma. The ported contracts must be behavior and interface equivalent as drop-in replacements, enabling eventual removal of the submodule.
+Port the Resupply protocol contracts into `contracts/protocols/cdps/resupply/`.
+
+Resupply is a CDP (Collateralized Debt Position) protocol with a large surface area (DAO/governance, staking, emissions, lending pairs, oracles, and integrations with Curve/Frax/Convex/Prisma).
+
+Important: this repo currently does **not** contain a `lib/resupply` submodule, so this task must start by identifying an upstream Resupply source and pinning it to a specific commit/tag for deterministic porting.
 
 ## Goal
 
-Enable removal of `lib/resupply` submodule by having a complete local port with functional test suite.
+Vendor Resupply locally (pin + port + tests) so Crane does not rely on an external Resupply source.
 
 ## Source Analysis
 
-**Submodule Location:** `lib/resupply/src/`
+**Source:** TBD (must be a pinned upstream repo + commit/tag)
 **Target Location:** `contracts/protocols/cdps/resupply/`
-**Current Local Port:** Empty directory (0 files)
-**Total Files to Port:** 160
+**Current Local Port:** none
+**Estimated Scope:** large (original task assumed ~160 Solidity files)
 
-### Source Structure
+### Source Structure (to be confirmed once upstream is pinned)
 
 ```
 src/
@@ -81,7 +85,7 @@ src/
 
 ## Dependencies
 
-None — this is a port task.
+Blocked until an upstream Resupply source is identified and pinned.
 
 **External Protocol Dependencies (interfaces only):**
 - Curve Finance (lending, pools, gauges)
@@ -91,6 +95,16 @@ None — this is a port task.
 - Chainlink (oracles)
 
 ## User Stories
+
+### US-CRANE-153.0: Pin Upstream Source
+
+As a developer, I want the Resupply source pinned so porting is deterministic.
+
+**Acceptance Criteria:**
+- [ ] Record upstream repo URL
+- [ ] Record pinned commit hash or release tag
+- [ ] Record the exact upstream source root we are porting from (e.g. `src/`)
+- [ ] Add a short note on license and any required attributions
 
 ### US-CRANE-153.1: Port DAO Core Contracts
 
@@ -299,20 +313,21 @@ contracts/protocols/cdps/resupply/
 
 ## Files to Create/Modify
 
-**New Files (160):**
-- All contracts from lib/resupply/src/
+**New Files:**
+- All required Resupply contracts copied from the pinned upstream source
 
 **Tests:**
 - `test/foundry/protocols/cdps/resupply/*.t.sol`
 
 ## Completion Criteria
 
-- [ ] All 160 source files ported
+- [ ] Pinned upstream source recorded in this task (repo URL + commit/tag)
+- [ ] All required source files ported (count depends on upstream)
 - [ ] Directory structure preserved
 - [ ] All interfaces available
 - [ ] Import paths use local contracts only
 - [ ] Adapted test suite passes
-- [ ] Submodule can be safely removed
+- [ ] No dependency on an external `lib/resupply` source remains
 
 ---
 

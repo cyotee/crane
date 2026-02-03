@@ -3,7 +3,7 @@
 ## Current Checkpoint
 
 **Last checkpoint:** Not started
-**Next step:** Begin porting Constants.sol and dependencies/
+**Next step:** Identify upstream Resupply source and pin repo+commit
 **Build status:** Not checked
 **Test status:** Not checked
 
@@ -19,8 +19,8 @@
 
 ### Initial Analysis
 
-**Submodule:** 160 .sol files in lib/resupply/src/
-**Local port:** 0 files (empty directory exists)
+**Upstream:** TBD (must be pinned)
+**Local port:** none
 
 Major components to port:
 - **DAO (27 files):** Core, GovToken, Voter, Treasury, emissions, operators, staking, TGE
