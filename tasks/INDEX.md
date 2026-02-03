@@ -118,6 +118,7 @@
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Ready | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
 | CRANE-209 | Port Slipstream Contracts to Local Codebase | Ready | - | `feature/slipstream-contract-port` |
 | CRANE-210 | Add Slipstream Fork Parity Tests | Blocked | CRANE-209 | `test/slipstream-fork-parity` |
+| CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Ready | - | `feature/opengsn-forwarder-port-and-tests` |
 
 ## Status Legend
 
