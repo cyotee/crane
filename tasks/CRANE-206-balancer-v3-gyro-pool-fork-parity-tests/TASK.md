@@ -1,8 +1,9 @@
 # Task CRANE-206: Add Balancer V3 Gyro Pool Fork Parity Tests
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-02-02
+**Completed:** 2026-02-03
 **Dependencies:** CRANE-145 (complete)
 **Worktree:** `test/balancer-v3-gyro-fork-parity`
 **Priority:** HIGH
@@ -30,29 +31,29 @@ Repo constraints / clarifications:
 As a developer, I want a Gyro fork TestBase so tests share setup and are reproducible.
 
 **Acceptance Criteria:**
-- [ ] Create `test/foundry/fork/ethereum_main/balancerV3/TestBase_BalancerV3GyroFork.sol`
+- [x] Create `test/foundry/fork/ethereum_main/balancerV3/TestBase_BalancerV3GyroFork.sol`
 - [ ] Optional: create `test/foundry/fork/base_main/balancerV3/TestBase_BalancerV3GyroForkBase.sol`
-- [ ] Fork gating: tests must skip when `INFURA_KEY` is unset
-- [ ] Use vault/router/factory addresses from `ETHEREUM_MAIN` / `BASE_MAIN`
+- [x] Fork gating: tests must skip when `INFURA_KEY` is unset
+- [x] Use vault/router/factory addresses from `ETHEREUM_MAIN` / `BASE_MAIN`
 
 ### US-CRANE-206.2: 2-CLP Parity (Core)
 
 As a developer, I want Gyro 2-CLP math entrypoints to match a deployed mainnet Gyro 2-CLP pool.
 
 **Acceptance Criteria:**
-- [ ] Select an existing deployed Gyro 2-CLP pool from network constants (e.g. `*_MOCK_GYRO_2CLP_POOL`)
-- [ ] Compare at least: `computeInvariant`, `computeBalance`, and `onSwap` results between:
+- [x] Select an existing deployed Gyro 2-CLP pool from network constants (e.g. `*_MOCK_GYRO_2CLP_POOL`)
+- [x] Compare at least: `computeInvariant`, `computeBalance`, and `onSwap` results between:
   - the deployed pool, and
   - the ported implementation executed locally with identical inputs
-- [ ] Cover both swap directions and multiple trade sizes
+- [x] Cover both swap directions and multiple trade sizes
 
 ### US-CRANE-206.3: ECLP Parity (Core)
 
 As a developer, I want Gyro ECLP math entrypoints to match a deployed mainnet Gyro ECLP pool.
 
 **Acceptance Criteria:**
-- [ ] Select an existing deployed Gyro ECLP pool from network constants (e.g. `BLANACER_V3_MOCK_GYRO_ECLP_POOL`)
-- [ ] Compare `computeInvariant`, `computeBalance`, and `onSwap` results between mainnet and local ported code
+- [x] Select an existing deployed Gyro ECLP pool from network constants (e.g. `BLANACER_V3_MOCK_GYRO_ECLP_POOL`)
+- [x] Compare `computeInvariant`, `computeBalance`, and `onSwap` results between mainnet and local ported code
 
 ## Technical Details
 
@@ -72,17 +73,17 @@ test/foundry/fork/
 
 ### Inventory Check
 
-- [ ] Ported Gyro pool contracts exist and compile
-- [ ] `contracts/constants/networks/ETHEREUM_MAIN.sol` has Gyro addresses
-- [ ] `contracts/constants/networks/BASE_MAIN.sol` has Gyro addresses (if Base coverage is added)
-- [ ] `foundry.toml` includes `ethereum_mainnet_infura` (and `base_mainnet_infura` if Base coverage is added)
+- [x] Ported Gyro pool contracts exist and compile
+- [x] `contracts/constants/networks/ETHEREUM_MAIN.sol` has Gyro addresses
+- [x] `contracts/constants/networks/BASE_MAIN.sol` has Gyro addresses (if Base coverage is added)
+- [x] `foundry.toml` includes `ethereum_mainnet_infura` (and `base_mainnet_infura` if Base coverage is added)
 
 ## Completion Criteria
 
-- [ ] Tests pass:
+- [x] Tests pass:
   - `forge test --match-path "test/foundry/fork/ethereum_main/balancerV3/**Gyro**"`
   - optional Base: `forge test --match-path "test/foundry/fork/base_main/balancerV3/**Gyro**"`
-- [ ] Tests skip gracefully when `INFURA_KEY` is not set
+- [x] Tests skip gracefully when `INFURA_KEY` is not set
 
 ---
 
