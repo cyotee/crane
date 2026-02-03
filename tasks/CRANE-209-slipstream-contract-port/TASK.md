@@ -110,7 +110,7 @@ Identify and port from Aerodrome Slipstream upstream:
 - https://github.com/aerodrome-finance/slipstream
 
 Before starting the port, pin the exact source revision here:
-- Upstream commit/tag: (fill in)
+- Upstream commit/tag: 7844368af8f83459b5056ff5f3334ff041232382
 - Upstream paths ported: (fill in)
 
 ### Key Differences from Uniswap V3

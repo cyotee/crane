@@ -22,7 +22,8 @@ Vendor Resupply locally (pin + port + tests) so Crane does not rely on an extern
 
 ## Source Analysis
 
-**Source:** TBD (must be a pinned upstream repo + commit/tag)
+**Source:** https://github.com/resupplyfi/resupply
+**Pinned upstream commit:** 71e01acf3e40f5ff2888afc9e6a73d6079a2f71f
 **Target Location:** `contracts/protocols/cdps/resupply/`
 **Current Local Port:** none
 **Estimated Scope:** large (original task assumed ~160 Solidity files)
@@ -85,7 +86,7 @@ src/
 
 ## Dependencies
 
-Blocked until an upstream Resupply source is identified and pinned.
+Pinned upstream source recorded above (repo + commit).
 
 **External Protocol Dependencies (interfaces only):**
 - Curve Finance (lending, pools, gauges)

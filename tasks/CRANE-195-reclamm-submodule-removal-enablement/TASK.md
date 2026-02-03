@@ -38,7 +38,7 @@ As a developer, I want the ReClaMM contracts to compile without `lib/reclamm` so
 **Acceptance Criteria:**
 - [ ] ReClaMM contracts compile without `lib/reclamm` submodule present
 - [ ] remappings.txt no longer resolves `@balancer-labs/v3-*` via `lib/reclamm/**`
-- [ ] If vendoring is used, vendored Balancer v3 packages are pinned to a specific upstream commit/tag
+- [ ] If vendoring is used, vendored Balancer v3 packages are pinned to a specific upstream commit/tag (previously pinned submodule commit: ddb0d82de24a9db960d90b33649203e2462cf1c9)
 - [ ] Tests pass
 - [ ] Build succeeds
 
