@@ -59,6 +59,8 @@ Actionable items for follow-up tasks:
 **Description:** Add a test that calls `NonfungibleTokenPositionDescriptor.tokenURI()` with stubbed `INonfungiblePositionManager` + `IUniswapV3Pool` (returning controlled `positions()`, `factory()`, `slot0()`, `tickSpacing()`), then runs the same shape assertions. This directly satisfies the acceptance criterion and covers integration wiring.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/NFTDescriptorTokenURI.t.sol`
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-215
 
 ### Suggestion 2: Add A Regression Test For `POOL_INIT_CODE_HASH`
 **Priority:** High
@@ -66,12 +68,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `contracts/protocols/dexes/uniswap/v3/periphery/libraries/PoolAddress.sol`
 - New test file near `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/`
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-216
 
 ### Suggestion 3: Reduce False Positives In JSON Validation
 **Priority:** Low
 **Description:** Instead of only searching for the SVG prefix substring anywhere in JSON, extract the `"image":"..."` value and assert it starts with `data:image/svg+xml;base64,`. This avoids passing if the prefix ever appears in another field.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/uniswap/v3/periphery/NFTDescriptorTokenURI.t.sol`
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-217
 
 ---
 

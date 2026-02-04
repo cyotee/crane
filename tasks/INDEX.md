@@ -109,6 +109,9 @@
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Complete | - | `feature/opengsn-forwarder-port-and-tests` |
 | CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | In Progress | - | `test/balancer-v3-stable-fork-parity` |
 | CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
+| CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
+| CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
+| CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
 
 ## Status Legend
 
