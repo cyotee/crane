@@ -1,7 +1,7 @@
 # Task CRANE-201: Add V3 NFT tokenURI Shape Test
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** Complete
 **Created:** 2026-02-01
 **Dependencies:** CRANE-183
 **Worktree:** `test/v3-tokenuri-shape-test`
@@ -26,12 +26,12 @@ Add a focused test that validates the shape and structure of the `tokenURI()` ou
 As a developer, I want a test that verifies the NFT position `tokenURI()` returns properly formatted data so that I can be confident the metadata generation is correct.
 
 **Acceptance Criteria:**
-- [ ] Test mints a position (or stubs the manager/pool)
-- [ ] Asserts `tokenURI()` returns prefix `data:application/json;base64,`
-- [ ] Decoded JSON includes `image` field with prefix `data:image/svg+xml;base64,`
-- [ ] Decoded SVG starts with `<svg` and ends with `</svg>`
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test mints a position (or stubs the manager/pool)
+- [x] Asserts `tokenURI()` returns prefix `data:application/json;base64,`
+- [x] Decoded JSON includes `image` field with prefix `data:image/svg+xml;base64,`
+- [x] Decoded SVG starts with `<svg` and ends with `</svg>`
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -44,9 +44,9 @@ As a developer, I want a test that verifies the NFT position `tokenURI()` return
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-183 is complete (merged to main)
-- [ ] `NonfungibleTokenPositionDescriptor.sol` is enabled and compiles
-- [ ] `NFTDescriptor.sol` and `NFTSVG.sol` are enabled and compile
+- [x] CRANE-183 is complete (merged to main)
+- [x] `NonfungibleTokenPositionDescriptor.sol` is enabled and compiles
+- [x] `NFTDescriptor.sol` and `NFTSVG.sol` are enabled and compile
 
 ## Implementation Notes
 
@@ -61,9 +61,9 @@ Consider using Foundry's string manipulation capabilities or a simple Base64 lib
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass with `forge test --match-contract NFTDescriptorTokenURI`
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] Tests pass with `forge test --match-contract NFTDescriptorTokenURI`
+- [x] Build succeeds
 
 ---
 

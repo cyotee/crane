@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 library PoolAddress {
     /// @dev Computed as keccak256(type(UniswapV3Pool).creationCode)
     /// @dev Original Uniswap hash: 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54
-    /// @dev This hash is for the ported Crane UniswapV3Pool (Solidity 0.8.x)
-    bytes32 internal constant POOL_INIT_CODE_HASH = 0xa4334d95c5b4e4f6414face10c5d0046c8cc40d2cc81815bc44cdb004edeacc7;
+    /// @dev This hash is for the ported Crane UniswapV3Pool (Solidity 0.8.30)
+    bytes32 internal constant POOL_INIT_CODE_HASH = 0x584c6e4f141eff3eeccbcb5bfaefd2fbe7bd8d47df1d09bb7aa82f9663dadce9;
 
     /// @notice The identifying key of the pool
     struct PoolKey {
