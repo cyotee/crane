@@ -102,7 +102,7 @@
 | CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
-| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | In Progress | - | `feature/balancer-v3-test-mock-port` |
+| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | Pending Merge | - | `feature/balancer-v3-test-mock-port` |
 
 ## Status Legend
 
