@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-02-03
+**Last Updated:** 2026-02-04
 
 ## Active Tasks
 
@@ -97,21 +97,12 @@
 | CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
-| CRANE-201 | Add V3 NFT tokenURI Shape Test | Complete | CRANE-183 | `test/v3-tokenuri-shape-test` |
-| CRANE-202 | Add Uniswap V2 Fork Comparison Tests | Complete | - | `test/uniswap-v2-fork-comparison` |
-| CRANE-203 | Add Aerodrome V1 Fork Comparison Tests | Complete | - | `test/aerodrome-v1-fork-comparison` |
-| CRANE-204 | Add Uniswap V3 Ported Contract Parity Tests | Complete | - | `test/uniswap-v3-ported-parity` |
-| CRANE-205 | Add Uniswap V4 Ported Contract Parity Tests | Complete | - | `test/uniswap-v4-ported-parity` |
-| CRANE-206 | Add Balancer V3 Gyro Pool Fork Parity Tests | Complete | CRANE-145 | `test/balancer-v3-gyro-fork-parity` |
-| CRANE-207 | Add Balancer V3 CoW Pool Fork Parity Tests | Complete | CRANE-146, CRANE-191 | `test/balancer-v3-cow-fork-parity` |
-| CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Complete | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
-| CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Complete | - | `feature/slipstream-port-and-parity` |
-| CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Complete | - | `feature/opengsn-forwarder-port-and-tests` |
-| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | In Progress | - | `test/balancer-v3-stable-fork-parity` |
+| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
 | CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
 | CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
+| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | In Progress | - | `feature/balancer-v3-test-mock-port` |
 
 ## Status Legend
 
