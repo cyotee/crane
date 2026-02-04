@@ -27,12 +27,12 @@ contract RecipientStub {
     /* -------------------------------------------------------------------------- */
 
     /**
-     * @notice Test function that extracts the appended sender from calldata
+     * @notice Stub function that extracts the appended sender from calldata
      * @return msgSender The actual msg.sender (the Forwarder)
      * @return extractedFrom The appended original sender from meta-tx
      * @return data The original data without the appended sender
      */
-    function testCall(uint256) external returns (address msgSender, address extractedFrom, bytes memory data) {
+    function stubCall(uint256) external returns (address msgSender, address extractedFrom, bytes memory data) {
         msgSender = msg.sender;
         extractedFrom = _getForwardedSender();
 
@@ -50,18 +50,18 @@ contract RecipientStub {
     }
 
     /**
-     * @notice Function that reverts with a custom message
+     * @notice Stub function that reverts with a custom message
      * @param message The revert message
      */
-    function testRevert(string calldata message) external pure {
+    function stubRevert(string calldata message) external pure {
         revert(message);
     }
 
     /**
-     * @notice Function that accepts ETH value
+     * @notice Stub function that accepts ETH value
      * @return value The ETH value received
      */
-    function testValue() external payable returns (uint256 value) {
+    function stubValue() external payable returns (uint256 value) {
         value = msg.value;
         return value;
     }

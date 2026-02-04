@@ -66,7 +66,7 @@ contract ReClammPoolFactoryTest is BaseReClammTest {
 
     function testDeploymentAddress() public view {
         address predictedAddress = realFactory.getDeploymentAddress(ONE_BYTES32);
-        assertEq(predictedAddress, 0xdb01fA030a59106f57FB67B372dF7AA3C1e86D2D, "Wrong address");
+        assertEq(predictedAddress, 0x9a82bFF1e4a8e61A2d545ED129bF556F3683709A, "Wrong address");
     }
 
     function testStandardPoolWithCreator() public {

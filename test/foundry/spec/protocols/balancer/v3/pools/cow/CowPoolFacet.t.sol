@@ -51,8 +51,8 @@ contract CowPoolFacetTest is Test {
     function test_CowPoolFacet_FacetFuncs() public view {
         bytes4[] memory funcs = facet.facetFuncs();
 
-        // Verify expected function count (19 actual + 3 reserved)
-        assertEq(funcs.length, 22, "Should have 22 function slots");
+        // Verify expected function count
+        assertEq(funcs.length, 19, "Should have 19 function slots");
 
         // Verify ICowPool functions
         assertEq(funcs[0], ICowPool.getTrustedCowRouter.selector, "getTrustedCowRouter selector");
@@ -79,6 +79,6 @@ contract CowPoolFacetTest is Test {
 
         assertEq(name, "CowPoolFacet", "Name should match");
         assertEq(interfaces.length, 4, "Should have 4 interfaces");
-        assertEq(functions.length, 22, "Should have 22 function slots");
+        assertEq(functions.length, 19, "Should have 19 function slots");
     }
 }

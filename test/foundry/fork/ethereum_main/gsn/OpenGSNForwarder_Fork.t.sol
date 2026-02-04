@@ -75,7 +75,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      */
     function test_getNonce_incrementsAfterExecute() public {
         // Build and sign requests
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -108,7 +108,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify valid signature passes verification
      */
     function test_verify_validSignature() public view {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -129,7 +129,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify invalid signature reverts
      */
     function test_verify_invalidSignature_reverts() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -153,7 +153,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify wrong nonce reverts
      */
     function test_verify_wrongNonce_reverts() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         // Build request with nonce 999 (should be 0)
         IForwarder.ForwardRequest memory portedReq = IForwarder.ForwardRequest({
@@ -192,7 +192,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify unregistered domain separator reverts
      */
     function test_verify_unregisteredDomain_reverts() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -208,7 +208,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify unregistered type hash reverts
      */
     function test_verify_unregisteredTypeHash_reverts() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -228,7 +228,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify execute success path
      */
     function test_execute_success() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 200_000, callData);
@@ -245,7 +245,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify execute with target revert returns failure
      */
     function test_execute_targetReverts() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testRevert.selector, "Test revert");
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubRevert.selector, "Test revert");
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 100_000, callData);
@@ -263,7 +263,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
     function test_execute_withValue() public {
         vm.deal(address(this), 1 ether);
 
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testValue.selector);
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubValue.selector);
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0.1 ether, 100_000, callData);
@@ -286,7 +286,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @dev The recipient should be able to extract the original sender
      */
     function test_appendedSender_semantics() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         IForwarder.ForwardRequest memory portedReq =
             _buildPortedRequest(signer, address(recipient), 0, 200_000, callData);
@@ -311,7 +311,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      * @notice Verify appended sender parity between ported and upstream
      */
     function test_appendedSender_parity() public {
-        bytes memory callData = abi.encodeWithSelector(RecipientStub.testCall.selector, uint256(42));
+        bytes memory callData = abi.encodeWithSelector(RecipientStub.stubCall.selector, uint256(42));
 
         // Execute on ported
         IForwarder.ForwardRequest memory portedReq =

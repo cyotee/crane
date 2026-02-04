@@ -18,7 +18,7 @@ import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {WeightedPool8020Factory} from "@balancer-labs/v3-pool-weighted/contracts/WeightedPool8020Factory.sol";
 import {WeightedPool} from "@balancer-labs/v3-pool-weighted/contracts/WeightedPool.sol";
 import {TestBase_BalancerV3Vault} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3Vault.sol";
-import {WeightedPoolContractsDeployer} from "@balancer-labs/v3-pool-weighted/test/foundry/utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPoolContractsDeployer} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/WeightedPoolContractsDeployer.sol";
 
 contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, WeightedPoolContractsDeployer {
 

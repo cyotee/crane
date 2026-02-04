@@ -108,6 +108,18 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
 
         // Cache pool state
         _cachePoolState();
+
+        // Skip tests if pool has no liquidity (empty or not yet initialized)
+        bool hasLiquidity = false;
+        for (uint256 i = 0; i < balancesLiveScaled18.length; i++) {
+            if (balancesLiveScaled18[i] > 0) {
+                hasLiquidity = true;
+                break;
+            }
+        }
+        if (!hasLiquidity) {
+            vm.skip(true);
+        }
     }
 
     /// @notice Cache the pool's tokens, weights, and balances for test assertions

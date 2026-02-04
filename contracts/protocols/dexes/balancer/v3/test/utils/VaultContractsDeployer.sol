@@ -10,10 +10,10 @@ import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPer
 import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
 import {BasicAuthorizerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
 import {PoolHooksMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolHooksMock.sol";
-import {ProtocolFeeControllerMock} from "@balancer-labs/v3-vault/contracts/test/ProtocolFeeControllerMock.sol";
-import {VaultAdminMock} from "@balancer-labs/v3-vault/contracts/test/VaultAdminMock.sol";
-import {VaultExtensionMock} from "@balancer-labs/v3-vault/contracts/test/VaultExtensionMock.sol";
-import {VaultMock} from "@balancer-labs/v3-vault/contracts/test/VaultMock.sol";
+import {ProtocolFeeControllerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ProtocolFeeControllerMock.sol";
+import {VaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultAdminMock.sol";
+import {VaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultExtensionMock.sol";
+import {VaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultMock.sol";
 
 import {RouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RouterMock.sol";
 import {BatchRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BatchRouterMock.sol";

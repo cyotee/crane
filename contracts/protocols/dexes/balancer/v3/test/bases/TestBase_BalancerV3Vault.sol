@@ -38,7 +38,7 @@ import {InitDevService} from "@crane/contracts/InitDevService.sol";
 import {ERC4626RateProviderFactoryService} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
 import {TestBase_Permit2} from "@crane/contracts/protocols/utils/permit2/test/bases/TestBase_Permit2.sol";
 import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
-import {VaultContractsDeployer} from "@balancer-labs/v3-vault/test/foundry/utils/VaultContractsDeployer.sol";
+import {VaultContractsDeployer} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/VaultContractsDeployer.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import { CastingHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ArrayHelpers.sol";

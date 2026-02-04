@@ -10,9 +10,9 @@ import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {CastingHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {InputHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import {ERC4626TestToken} from "@balancer-labs/v3-solidity-utils/contracts/test/ERC4626TestToken.sol";
-import {ERC20TestToken} from "@balancer-labs/v3-solidity-utils/contracts/test/ERC20TestToken.sol";
-import {WETHTestToken} from "@balancer-labs/v3-solidity-utils/contracts/test/WETHTestToken.sol";
+import {ERC4626TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC4626TestToken.sol";
+import {ERC20TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC20TestToken.sol";
+import {WETHTestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/WETHTestToken.sol";
 
 /// @notice Minimal port of Balancer V3's BaseTest, used by Crane Balancer V3 TestBases.
 /// @dev This keeps Crane independent from Balancer's `test/foundry/utils` sources.
