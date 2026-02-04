@@ -97,7 +97,7 @@
 | CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
-| CRANE-201 | Add V3 NFT tokenURI Shape Test | Ready | CRANE-183 | `test/v3-tokenuri-shape-test` |
+| CRANE-201 | Add V3 NFT tokenURI Shape Test | In Progress | CRANE-183 | `test/v3-tokenuri-shape-test` |
 | CRANE-202 | Add Uniswap V2 Fork Comparison Tests | Complete | - | `test/uniswap-v2-fork-comparison` |
 | CRANE-203 | Add Aerodrome V1 Fork Comparison Tests | Complete | - | `test/aerodrome-v1-fork-comparison` |
 | CRANE-204 | Add Uniswap V3 Ported Contract Parity Tests | Complete | - | `test/uniswap-v3-ported-parity` |
@@ -107,7 +107,7 @@
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | Complete | CRANE-143 | `test/balancer-v3-weighted-fork-parity` |
 | CRANE-212 | Port Slipstream + Add Fork Parity Tests (Temporary forge install) | Complete | - | `feature/slipstream-port-and-parity` |
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | Complete | - | `feature/opengsn-forwarder-port-and-tests` |
-| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
+| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | In Progress | - | `test/balancer-v3-stable-fork-parity` |
 | CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
 
 ## Status Legend

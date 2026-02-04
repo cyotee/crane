@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BasicAuthorizerMock} from "@balancer-labs/v3-vault/contracts/test/BasicAuthorizerMock.sol";
-import {RateProviderMock} from "@balancer-labs/v3-vault/contracts/test/RateProviderMock.sol";
-import {BatchRouterMock} from "@balancer-labs/v3-vault/contracts/test/BatchRouterMock.sol";
-import {CompositeLiquidityRouterMock} from "@balancer-labs/v3-vault/contracts/test/CompositeLiquidityRouterMock.sol";
-import {PoolFactoryMock} from "@balancer-labs/v3-vault/contracts/test/PoolFactoryMock.sol";
-import {PoolHooksMock} from "@balancer-labs/v3-vault/contracts/test/PoolHooksMock.sol";
-import {RouterMock} from "@balancer-labs/v3-vault/contracts/test/RouterMock.sol";
-import {BufferRouterMock} from "@balancer-labs/v3-vault/contracts/test/BufferRouterMock.sol";
+import {BasicAuthorizerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
+import {BatchRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BatchRouterMock.sol";
+import {CompositeLiquidityRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
+import {RouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RouterMock.sol";
+import {BufferRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BufferRouterMock.sol";
+import {RateProviderMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RateProviderMock.sol";
+import {PoolFactoryMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolFactoryMock.sol";
+import {PoolHooksMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolHooksMock.sol";
 // import { HookFlags, FEE_SCALING_FACTOR, Rounding } from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
 import { IProtocolFeeController } from "@balancer-labs/v3-interfaces/contracts/vault/IProtocolFeeController.sol";
 import { IVaultExtension } from "@balancer-labs/v3-interfaces/contracts/vault/IVaultExtension.sol";
 import { IVaultAdmin } from "@balancer-labs/v3-interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultMock } from "@balancer-labs/v3-interfaces/contracts/test/IVaultMock.sol";
+import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
 import { IBasePool } from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
 import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
 import {
@@ -31,19 +31,19 @@ import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balance
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
-import {BaseTest} from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
-import {BaseVaultTest} from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
+import {BaseTest} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/BaseTest.sol";
+// import {BaseVaultTest} from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
 import {TestBase_BalancerV3} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3.sol";
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
 import {ERC4626RateProviderFactoryService} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
 import {TestBase_Permit2} from "@crane/contracts/protocols/utils/permit2/test/bases/TestBase_Permit2.sol";
 import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
-import { VaultContractsDeployer } from "@balancer-labs/v3-vault/test/foundry/utils/VaultContractsDeployer.sol";
+import {VaultContractsDeployer} from "@balancer-labs/v3-vault/test/foundry/utils/VaultContractsDeployer.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import { CastingHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@balancer-labs/v3-solidity-utils/contracts/test/ArrayHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ArrayHelpers.sol";
 import { FixedPoint } from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseTest } from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseTest.sol";
+
 
 contract TestBase_BalancerV3Vault is
     TestBase_BalancerV3,
