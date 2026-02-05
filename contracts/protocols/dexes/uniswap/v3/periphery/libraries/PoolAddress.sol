@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
+import {UniswapV3Pool} from "../../UniswapV3Pool.sol";
+
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
 library PoolAddress {
-    /// @dev Computed as keccak256(type(UniswapV3Pool).creationCode)
-    /// @dev Original Uniswap hash: 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54
-    /// @dev This hash is for the ported Crane UniswapV3Pool (Solidity 0.8.30)
-    bytes32 internal constant POOL_INIT_CODE_HASH = 0x584c6e4f141eff3eeccbcb5bfaefd2fbe7bd8d47df1d09bb7aa82f9663dadce9;
+    /// @dev Pool init-code hash used for CREATE2 address derivation.
+    /// @dev Kept as a computed constant so it stays in sync with the ported pool bytecode.
+    bytes32 internal constant POOL_INIT_CODE_HASH = keccak256(type(UniswapV3Pool).creationCode);
 
     /// @notice The identifying key of the pool
     struct PoolKey {

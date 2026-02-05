@@ -86,7 +86,7 @@
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
 | CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
 | CRANE-188 | Remove lib/reclamm Submodule | Blocked | CRANE-195 | `chore/remove-reclamm-submodule` |
-| CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | Blocked | CRANE-200 | `chore/remove-v4-submodules` |
+| CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | Blocked | CRANE-221 | `chore/remove-v4-submodules` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 | CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
@@ -96,13 +96,16 @@
 | CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/reclamm-deterministic-address-test` |
 | CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
-| CRANE-200 | Remove v4-periphery-coupled Remappings | Ready | CRANE-152 | `fix/v4-periphery-remapping-removal` |
+| CRANE-200 | Remove v4-periphery-coupled Remappings | Superseded | CRANE-221 | - |
 | CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
 | CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
 | CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
-| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | Pending Merge | - | `feature/balancer-v3-test-mock-port` |
+| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | Complete | - | `feature/balancer-v3-test-mock-port` |
+| CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | Ready | - | `feature/openzeppelin-port` |
+| CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
+| CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
 
 ## Status Legend
 
@@ -212,8 +215,9 @@
 **Uniswap V3 Port (1 task):**
 - ~~CRANE-151: Port and Verify Uniswap V3 Core + Periphery~~ → Complete
 
-**Uniswap V4 Port (1 task):**
-- (Complete tasks for this initiative are listed in **Archived Tasks**)
+**Uniswap V4 Port Verification (1 task):**
+- **CRANE-221: Complete Uniswap V4 Port Verification with Base Fork Tests (Ready)**
+- (Previous tasks CRANE-152, CRANE-205 are archived as Complete)
 
 **Resupply CDP Port (1 task):**
 - **CRANE-153: Port Resupply Protocol to Local Contracts (Ready)**
@@ -251,7 +255,9 @@
 **Slipstream Port and Parity Tests (1 task):**
 - ~~CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install)~~ → Complete
 
-**Submodule Removal (3 tasks):**
+**Submodule Removal (5 tasks):**
+- **CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency (Ready - HIGH)**
+- **CRANE-220: Port Solady Code to Remove Submodule Dependency (Ready - Small)**
 - **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
 - **CRANE-181: Remove lib/aerodrome-contracts Submodule (Ready)**
 - **CRANE-182: Final Submodule Cleanup and forge-std Installation (Blocked - waiting on all removals)**
