@@ -3,8 +3,8 @@
 
 pragma solidity ^0.8.24;
 
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 
 import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 

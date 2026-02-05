@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 /*                              OpenZeppelin                                  */
 /* -------------------------------------------------------------------------- */
 
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              Balancer V3 Interfaces                        */

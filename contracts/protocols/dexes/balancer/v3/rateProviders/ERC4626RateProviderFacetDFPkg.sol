@@ -2,16 +2,10 @@
 pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
-/*                                   Solday                                   */
-/* -------------------------------------------------------------------------- */
-
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
-
-/* -------------------------------------------------------------------------- */
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-// import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+// import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */
@@ -22,9 +16,10 @@ import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import "@crane/contracts/GeneralErrors.sol";
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -50,7 +45,7 @@ interface IERC4626RateProviderFacetDFPkg is IDiamondFactoryPackage {
 contract ERC4626RateProviderFacetDFPkg is
     IERC4626RateProviderFacetDFPkg
 {
-    using EfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
     IFacet immutable ERC4626_RATE_PROVIDER_FACET;
 
@@ -124,7 +119,7 @@ contract ERC4626RateProviderFacetDFPkg is
     }
 
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
-        return pkgArgs.hash();
+        return pkgArgs._hash();
     }
 
     function processArgs(bytes memory pkgArgs) public pure returns (bytes memory processedPkgArgs) {

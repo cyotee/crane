@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import { IBufferRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";

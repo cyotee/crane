@@ -5,13 +5,13 @@ pragma solidity ^0.8.24;
 /*                                   Solday                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 import "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import "@crane/contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol";
 
 contract CamelotFactory is ICamelotFactory {
-    using EfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
     address public owner;
     address public feePercentOwner;
@@ -67,7 +67,7 @@ contract CamelotFactory is ICamelotFactory {
         require(getPair[token0][token1] == address(0), "CamelotFactory: PAIR_EXISTS"); // single check is sufficient
         bytes memory bytecode = type(CamelotPair).creationCode;
         // bytes32 salt = keccak256(abi.encodePacked(token0, token1));
-        bytes32 salt = abi.encodePacked(token0, token1).hash();
+        bytes32 salt = abi.encodePacked(token0, token1)._hash();
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }

@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { SignedMath } from "@openzeppelin/contracts/utils/math/SignedMath.sol";
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import {SignedMath} from "@crane/contracts/utils/math/SignedMath.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 
 /**
  * @notice Library for encoding and decoding values stored inside a 256 bit word.

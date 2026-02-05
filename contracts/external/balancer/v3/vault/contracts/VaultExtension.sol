@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
-import { Proxy } from "@openzeppelin/contracts/proxy/Proxy.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
+import {Proxy} from "@crane/contracts/proxy/Proxy.sol";
 
 import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";

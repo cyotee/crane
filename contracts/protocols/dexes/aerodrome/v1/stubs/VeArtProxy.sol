@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import {PerlinNoise} from "./art/PerlinNoise.sol";
 import {Trig} from "./art/Trig.sol";
 import {BokkyPooBahsDateTimeLibrary} from "./art/BokkyPooBahsDateTimeLibrary.sol";
-import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
+import {Base64} from "@crane/contracts/utils/Base64.sol";
 import {IVeArtProxy} from "../interfaces/IVeArtProxy.sol";
 import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
 

@@ -5,13 +5,13 @@ pragma solidity ^0.8.17;
 /*                                   Solday                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 import {ISignatureTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol";
 
 library PermitHash {
-    using EfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
     /// forge-lint: disable-next-line(asm-keccak256)
     bytes32 public constant _PERMIT_DETAILS_TYPEHASH =
@@ -51,7 +51,7 @@ library PermitHash {
     function hash(IAllowanceTransfer.PermitSingle memory permitSingle) internal pure returns (bytes32) {
         bytes32 permitHash = _hashPermitDetails(permitSingle.details);
         // return keccak256(abi.encode(_PERMIT_SINGLE_TYPEHASH, permitHash, permitSingle.spender, permitSingle.sigDeadline));
-        return abi.encode(_PERMIT_SINGLE_TYPEHASH, permitHash, permitSingle.spender, permitSingle.sigDeadline).hash();
+        return abi.encode(_PERMIT_SINGLE_TYPEHASH, permitHash, permitSingle.spender, permitSingle.sigDeadline)._hash();
     }
 
     function hash(IAllowanceTransfer.PermitBatch memory permitBatch) internal pure returns (bytes32) {
@@ -70,7 +70,7 @@ library PermitHash {
         // );
         return abi.encode(
                 _PERMIT_BATCH_TYPEHASH,
-                abi.encodePacked(permitHashes).hash(),
+                abi.encodePacked(permitHashes)._hash(),
                 permitBatch.spender,
                 permitBatch.sigDeadline
             ).
@@ -85,7 +85,7 @@ library PermitHash {
         // );
         return abi.encode(
                 _PERMIT_TRANSFER_FROM_TYPEHASH, tokenPermissionsHash, msg.sender, permit.nonce, permit.deadline
-            ).hash();
+            )._hash();
     }
 
     function hash(ISignatureTransfer.PermitBatchTransferFrom memory permit) internal view returns (bytes32) {
@@ -107,7 +107,7 @@ library PermitHash {
         // );
         return abi.encode(
                 _PERMIT_BATCH_TRANSFER_FROM_TYPEHASH,
-                abi.encodePacked(tokenPermissionHashes).hash(),
+                abi.encodePacked(tokenPermissionHashes)._hash(),
                 msg.sender,
                 permit.nonce,
                 permit.deadline
@@ -122,11 +122,11 @@ library PermitHash {
         string calldata witnessTypeString
     ) internal view returns (bytes32) {
         // bytes32 typeHash = keccak256(abi.encodePacked(_PERMIT_TRANSFER_FROM_WITNESS_TYPEHASH_STUB, witnessTypeString));
-        bytes32 typeHash = abi.encodePacked(_PERMIT_TRANSFER_FROM_WITNESS_TYPEHASH_STUB, witnessTypeString).hash();
+        bytes32 typeHash = abi.encodePacked(_PERMIT_TRANSFER_FROM_WITNESS_TYPEHASH_STUB, witnessTypeString)._hash();
 
         bytes32 tokenPermissionsHash = _hashTokenPermissions(permit.permitted);
         // return keccak256(abi.encode(typeHash, tokenPermissionsHash, msg.sender, permit.nonce, permit.deadline, witness));
-        return abi.encode(typeHash, tokenPermissionsHash, msg.sender, permit.nonce, permit.deadline, witness).hash();
+        return abi.encode(typeHash, tokenPermissionsHash, msg.sender, permit.nonce, permit.deadline, witness)._hash();
     }
 
     function hashWithWitness(
@@ -135,7 +135,7 @@ library PermitHash {
         string calldata witnessTypeString
     ) internal view returns (bytes32) {
         // bytes32 typeHash = keccak256(abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString));
-        bytes32 typeHash = abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString).hash();
+        bytes32 typeHash = abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString)._hash();
 
         uint256 numPermitted = permit.permitted.length;
         bytes32[] memory tokenPermissionHashes = new bytes32[](numPermitted);
@@ -156,7 +156,7 @@ library PermitHash {
         // );
         return abi.encode(
                 typeHash,
-                abi.encodePacked(tokenPermissionHashes).hash(),
+                abi.encodePacked(tokenPermissionHashes)._hash(),
                 msg.sender,
                 permit.nonce,
                 permit.deadline,
@@ -168,7 +168,7 @@ library PermitHash {
 
     function _hashPermitDetails(IAllowanceTransfer.PermitDetails memory details) private pure returns (bytes32) {
         // return keccak256(abi.encode(_PERMIT_DETAILS_TYPEHASH, details));
-        return abi.encode(_PERMIT_DETAILS_TYPEHASH, details).hash();
+        return abi.encode(_PERMIT_DETAILS_TYPEHASH, details)._hash();
     }
 
     function _hashTokenPermissions(ISignatureTransfer.TokenPermissions memory permitted)
@@ -177,6 +177,6 @@ library PermitHash {
         returns (bytes32)
     {
         // return keccak256(abi.encode(_TOKEN_PERMISSIONS_TYPEHASH, permitted));
-        return abi.encode(_TOKEN_PERMISSIONS_TYPEHASH, permitted).hash();
+        return abi.encode(_TOKEN_PERMISSIONS_TYPEHASH, permitted)._hash();
     }
 }

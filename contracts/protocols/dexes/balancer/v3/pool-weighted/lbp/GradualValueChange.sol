@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 
 // solhint-disable not-rely-on-time
 

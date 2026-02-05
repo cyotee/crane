@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
 import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 
 import { IRouterCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
 import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";

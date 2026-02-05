@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@crane/contracts/tokens/ERC20/TestBase_ERC20.sol";
 import "@crane/contracts/interfaces/IERC2612.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// Test base that adds ERC2612 permit selectors to the fuzz target.

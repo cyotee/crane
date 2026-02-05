@@ -6,7 +6,7 @@ import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/int
 import {IFeeModule} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/fees/IFeeModule.sol";
 import {IVoter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IVoter.sol";
 import {IFactoryRegistry} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
-import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {Clones} from "@crane/contracts/proxy/Clones.sol";
 import {CLPool} from "./CLPool.sol";
 
 /// @title CLFactory

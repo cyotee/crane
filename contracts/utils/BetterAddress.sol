@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

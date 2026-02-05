@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {IAero} from "./IAero.sol";
 import {IVotingEscrow} from "./IVotingEscrow.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "@crane/contracts/access/Ownable.sol";
 
 interface IAirdropDistributor {
     error InvalidParams();

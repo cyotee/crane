@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 
 import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 import { ITimelockAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ITimelockAuthorizer.sol";

@@ -6,9 +6,9 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 
 import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
+import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

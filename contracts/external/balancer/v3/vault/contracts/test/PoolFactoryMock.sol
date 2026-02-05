@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
+import {Create2} from "@crane/contracts/utils/Create2.sol";
 
 import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
 import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";

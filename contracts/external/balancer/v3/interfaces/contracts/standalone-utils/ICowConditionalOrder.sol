@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 // See https://github.com/curvefi/curve-burners/blob/main/contracts/burners/CowSwapBurner.vy#L44:L56
 struct GPv2Order {

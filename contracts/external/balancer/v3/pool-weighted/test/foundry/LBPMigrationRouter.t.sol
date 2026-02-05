@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import { ILBPMigrationRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPMigrationRouter.sol";
 import { IWeightedPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";

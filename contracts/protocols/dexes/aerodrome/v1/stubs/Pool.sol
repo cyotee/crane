@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.19;
 
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 import {IPool} from "../interfaces/IPool.sol";
 import {IVoter} from "../interfaces/IVoter.sol";
 import {IPoolCallee} from "../interfaces/IPoolCallee.sol";
 import {IPoolFactory} from "../interfaces/factories/IPoolFactory.sol";
 import {PoolFees} from "./PoolFees.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {ReentrancyGuard} from "@crane/contracts/utils/ReentrancyGuard.sol";
 
 /// @title Pool
 /// @author velodrome.finance, Solidly, Uniswap Labs, @figs999, @pegahcarter

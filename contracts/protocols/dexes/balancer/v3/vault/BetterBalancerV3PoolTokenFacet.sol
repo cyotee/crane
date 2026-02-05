@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
+import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */
@@ -30,7 +30,7 @@ import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/ba
 import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 // import {Create3AwareContract} from "contracts/crane/factories/create2/aware/Create3AwareContract.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {ERC2612Repo} from "@crane/contracts/tokens/ERC2612/ERC2612Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";

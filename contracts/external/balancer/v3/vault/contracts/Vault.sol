@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
-import { Proxy } from "@openzeppelin/contracts/proxy/Proxy.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
+import {Proxy} from "@crane/contracts/proxy/Proxy.sol";
 
 import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";

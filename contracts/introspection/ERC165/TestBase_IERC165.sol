@@ -12,7 +12,7 @@ import "forge-std/Test.sol";
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

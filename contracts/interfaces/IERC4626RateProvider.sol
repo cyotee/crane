@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */

@@ -9,7 +9,7 @@ import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/Ti
 import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FullMath.sol";
 import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FixedPoint96.sol";
 import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /// @title TestBase_SlipstreamFork
 /// @notice Base test contract for Slipstream fork tests on Base mainnet

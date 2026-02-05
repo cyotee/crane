@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 
 import { RevertCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
 

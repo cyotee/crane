@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 

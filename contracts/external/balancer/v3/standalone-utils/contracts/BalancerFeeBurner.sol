@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import { IProtocolFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
 import { IBalancerFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerFeeBurner.sol";

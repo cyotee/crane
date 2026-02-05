@@ -9,7 +9,7 @@ import {SafeCast160} from "@crane/contracts/protocols/utils/permit2/SafeCast160.
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 
 // tag::Permit2Lib[]

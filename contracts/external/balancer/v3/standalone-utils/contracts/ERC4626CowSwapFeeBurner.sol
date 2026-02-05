@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC4626 } from "@openzeppelin/contracts/interfaces/IERC4626.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import { IComposableCow } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IComposableCow.sol";
 import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";

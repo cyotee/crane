@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import { IRouterCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";

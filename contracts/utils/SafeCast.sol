@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {SafeCastLib} from "@solady/utils/SafeCastLib.sol";
+import {SafeCastLib} from "@crane/contracts/utils/SafeCastLib.sol";
 
 /**
  * @dev OpenZeppelin-compatible SafeCast wrapper using Solady's SafeCastLib.

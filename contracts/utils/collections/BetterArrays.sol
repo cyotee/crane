@@ -10,7 +10,7 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 
 import {Arrays} from "@openzeppelin/contracts/utils/Arrays.sol";
-import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
+import {Panic} from "@crane/contracts/utils/Panic.sol";
 import {StorageSlot} from "@openzeppelin/contracts/utils/StorageSlot.sol";
 
 /* -------------------------------------------------------------------------- */

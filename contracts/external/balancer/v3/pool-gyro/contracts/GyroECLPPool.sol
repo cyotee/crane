@@ -4,8 +4,8 @@
 
 pragma solidity ^0.8.27;
 
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";

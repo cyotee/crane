@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC1271} from "@crane/contracts/interfaces/IERC1271.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import { ICowConditionalOrderGenerator } from "./ICowConditionalOrderGenerator.sol";
 import { ICowConditionalOrder, GPv2Order } from "./ICowConditionalOrder.sol";

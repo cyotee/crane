@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.24;
 
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
+import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol";
+import {EIP712} from "@crane/contracts/utils/cryptography/EIP712.sol";
+import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {Nonces} from "@crane/contracts/utils/Nonces.sol";
 
 import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";

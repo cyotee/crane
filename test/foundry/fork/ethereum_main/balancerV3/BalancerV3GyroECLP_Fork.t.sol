@@ -8,7 +8,7 @@ import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/bala
 
 import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
 import {TestBase_BalancerV3GyroFork} from "./TestBase_BalancerV3GyroFork.sol";
 

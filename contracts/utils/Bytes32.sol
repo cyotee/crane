@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
+import {Panic} from "@crane/contracts/utils/Panic.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

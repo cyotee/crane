@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IERC20Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 import { IVaultExtensionMock } from "./IVaultExtensionMock.sol";
 import { IVaultStorageMock } from "./IVaultStorageMock.sol";

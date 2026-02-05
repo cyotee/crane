@@ -2,20 +2,12 @@
 pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
-
-/* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-// import {ERC20MintBurnOwnableStorage} from "@crane/contracts/crane/token/ERC20/utils/ERC20MintBurnOwnableStorage.sol";
-// import {BetterIERC20 as IERC20} from "@crane/contracts/crane/interfaces/BetterIERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 import {IERC20MintBurn} from "@crane/contracts/interfaces/IERC20MintBurn.sol";
@@ -144,9 +136,9 @@ contract ERC20MintBurnOwnableOperableDFPkg is
         returns (bytes4[] memory interfaces)
     {
         interfaces = new bytes4[](8);
-        interfaces[0] = type(OZIERC20).interfaceId;
+        interfaces[0] = type(IERC20).interfaceId;
         interfaces[1] = type(IERC20Metadata).interfaceId;
-        interfaces[2] = type(IERC20Metadata).interfaceId ^ type(OZIERC20).interfaceId;
+        interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
         interfaces[3] = type(IERC20Permit).interfaceId;
         interfaces[4] = type(IERC5267).interfaceId;
         interfaces[5] = type(IERC20MintBurn).interfaceId;

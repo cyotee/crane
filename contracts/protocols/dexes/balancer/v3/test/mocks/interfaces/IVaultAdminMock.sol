@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 interface IVaultAdminMock {
     function manualPauseVault() external;

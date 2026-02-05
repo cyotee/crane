@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.19;
 
-import {IERC6372} from "@openzeppelin/contracts/interfaces/IERC6372.sol";
+import {IERC6372} from "@crane/contracts/interfaces/IERC6372.sol";
 import {IVotes} from "../../interfaces/IVotes.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {GovernorSimple} from "./GovernorSimple.sol";
 
 /**

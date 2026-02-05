@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Errors, IERC721Errors, IERC1155Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 // Handler that deploys or targets an ERC20 (SUT) and exposes operations for fuzzing.

@@ -16,5 +16,5 @@ import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
  * @dev see https://github.com/ethereum/EIPs/issues/20
  * @notice Composes IERC20Errors and IERC20Metadata.
  */
-interface BetterIERC20 is IERC20Errors, IERC20Metadata, IERC20 {}
+interface BetterIERC20 is IERC20Errors, IERC20Metadata {}
 // end::BetterIERC20[]

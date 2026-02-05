@@ -14,7 +14,7 @@ import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/c
 /*                                  OpenZeppelin                              */
 /* -------------------------------------------------------------------------- */
 
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

@@ -3,7 +3,7 @@
 pragma solidity ^0.8.24;
 
 import "./CodeDeployer.sol";
-import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
+import {Create2} from "@crane/contracts/utils/Create2.sol";
 
 /**
  * @dev Base factory for contracts whose creation code is so large that the factory cannot hold it. This happens when

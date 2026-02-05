@@ -2,7 +2,7 @@
 // OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC5267.sol)
 pragma solidity ^0.8.0;
 
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 import {EIP712Layout, EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 
 /**

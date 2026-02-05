@@ -5,14 +5,14 @@ pragma solidity ^0.8.0;
 /*                                   Solday                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
 import {IUniswapV2ERC20} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2ERC20.sol";
 import {SafeMath} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/SafeMath.sol";
 
 contract UniswapV2ERC20 is ERC5267Target, IUniswapV2ERC20 {
-    using EfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
     using SafeMath for uint256;
 
@@ -39,11 +39,11 @@ contract UniswapV2ERC20 is ERC5267Target, IUniswapV2ERC20 {
         DOMAIN_SEPARATOR = keccak256(
             abi.encode(
                 // keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
-                bytes("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)").hash(),
+                bytes("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)")._hash(),
                 // keccak256(bytes(name)),
-                bytes(name).hash(),
+                bytes(name)._hash(),
                 // keccak256(bytes('1')),
-                bytes("1").hash(),
+                bytes("1")._hash(),
                 chainId,
                 address(this)
             )
@@ -108,7 +108,7 @@ contract UniswapV2ERC20 is ERC5267Target, IUniswapV2ERC20 {
                 "\x19\x01",
                 DOMAIN_SEPARATOR,
                 keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, nonces[owner]++, deadline))
-            ).hash();
+            )._hash();
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(recoveredAddress != address(0) && recoveredAddress == owner, "UniswapV2: INVALID_SIGNATURE");
         _approve(owner, spender, value);

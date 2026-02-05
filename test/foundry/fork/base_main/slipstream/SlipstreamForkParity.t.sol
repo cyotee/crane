@@ -11,7 +11,7 @@ import {ICLMintCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipst
 import {ICLSwapCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLSwapCallback.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 contract SlipstreamCallbackHarness is ICLMintCallback, ICLSwapCallback {
     function uniswapV3MintCallback(uint256 amount0Owed, uint256 amount1Owed, bytes calldata data) external {

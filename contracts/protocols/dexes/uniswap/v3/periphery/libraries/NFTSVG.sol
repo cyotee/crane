@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/Base64.sol";
+import {Strings} from "@crane/contracts/utils/Strings.sol";
+import {Base64} from "@crane/contracts/utils/Base64.sol";
 import "../../libraries/BitMath.sol";
 
 /// @title NFTSVG

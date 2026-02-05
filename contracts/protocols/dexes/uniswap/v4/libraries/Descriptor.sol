@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 import {TickMath} from "./TickMath.sol";
 import {FullMath} from "./FullMath.sol";
 import {LPFeeLibrary} from "./LPFeeLibrary.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
+import {Strings} from "@crane/contracts/utils/Strings.sol";
+import {Base64} from "@crane/contracts/utils/Base64.sol";
 import {SVG} from "./SVG.sol";
 import {HexStrings} from "./HexStrings.sol";
 

@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
-import { SignedMath } from "@openzeppelin/contracts/utils/math/SignedMath.sol";
+import {Math} from "@crane/contracts/utils/Math.sol";
+import {SignedMath} from "@crane/contracts/utils/math/SignedMath.sol";
 
 import { WordCodec } from "../../contracts/helpers/WordCodec.sol";
 

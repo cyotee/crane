@@ -3,8 +3,8 @@ pragma solidity ^0.8.24;
 
 import {IHooks} from "../interfaces/IHooks.sol";
 import {BitMath} from "./BitMath.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
+import {Strings} from "@crane/contracts/utils/Strings.sol";
+import {Base64} from "@crane/contracts/utils/Base64.sol";
 
 /// @title SVG
 /// @notice Provides a function for generating an SVG associated with a Uniswap NFT

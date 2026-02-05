@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 /*                                   Solday                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
 
@@ -13,7 +13,7 @@ import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
 /// @dev Maintains cross-chain replay protection in the event of a fork
 /// @dev Reference: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/EIP712.sol
 contract EIP712 is IEIP712 {
-    using EfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
     // Cache the domain separator as an immutable value, but also store the chain id that it
     // corresponds to, in order to invalidate the cached domain separator if the chain id changes.
@@ -41,12 +41,12 @@ contract EIP712 is IEIP712 {
     /// @notice Builds a domain separator using the current chainId and contract address.
     function _buildDomainSeparator(bytes32 typeHash, bytes32 nameHash) private view returns (bytes32) {
         // return keccak256(abi.encode(typeHash, nameHash, block.chainid, address(this)));
-        return abi.encode(typeHash, nameHash, block.chainid, address(this)).hash();
+        return abi.encode(typeHash, nameHash, block.chainid, address(this))._hash();
     }
 
     /// @notice Creates an EIP-712 typed data hash
     function _hashTypedData(bytes32 dataHash) internal view returns (bytes32) {
         // return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), dataHash));
-        return abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), dataHash).hash();
+        return abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), dataHash)._hash();
     }
 }

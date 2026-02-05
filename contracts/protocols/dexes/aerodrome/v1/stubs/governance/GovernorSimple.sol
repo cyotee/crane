@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.19;
 
-import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import {IERC1155Receiver} from "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
-import {ERC165, IERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import {IERC6372} from "@openzeppelin/contracts/interfaces/IERC6372.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";
+import {IERC1155Receiver} from "@crane/contracts/interfaces/IERC1155Receiver.sol";
+import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
+import {EIP712} from "@crane/contracts/utils/cryptography/EIP712.sol";
+import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol"; import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
+import {IERC6372} from "@crane/contracts/interfaces/IERC6372.sol";
+import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/utils/Address.sol";
 import {ERC2771Context} from "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 import {Timers} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/dependencies/Timers.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {Strings} from "@crane/contracts/utils/Strings.sol";
 import {IGovernor} from "./IGovernor.sol";
 import {IMinter} from "../../interfaces/IMinter.sol";
 import {ProtocolTimeLibrary} from "../libraries/ProtocolTimeLibrary.sol";

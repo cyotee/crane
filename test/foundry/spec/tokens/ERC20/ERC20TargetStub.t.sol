@@ -7,8 +7,8 @@ import "forge-std/Test.sol";
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "contracts/tokens/ERC20TargetStub.sol";
 import "contracts/tokens/ERC20/TestBase_ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Errors, IERC721Errors, IERC1155Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 contract ERC20TargetStubInvariantTest is TestBase_ERC20 {
     function _deployToken(ERC20TargetStubHandler handler_) internal virtual override returns (IERC20 token_) {

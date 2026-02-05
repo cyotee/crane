@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
+import {Strings} from "@crane/contracts/utils/Strings.sol";
 
 import { LogExpMath } from "../../contracts/math/LogExpMath.sol";
 import { LogExpMathMock } from "../../contracts/test/LogExpMathMock.sol";

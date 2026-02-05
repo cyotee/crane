@@ -6,7 +6,7 @@ import {TestBase_ConstProdUtils_Aerodrome} from "./TestBase_ConstProdUtils_Aerod
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {IRouter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IRouter.sol";
 import {Pool} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Pool.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerodrome {
     using ConstProdUtils for uint256;

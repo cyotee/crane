@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {IERC721Receiver} from "@openzeppelin/contracts/interfaces/IERC721Receiver.sol";
-import {IERC721Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";
+import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
