@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import {StableMath} from "@balancer-labs/v3-solidity-utils/contracts/math/StableMath.sol";
+import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
 import {BalancerV3StablePoolTargetStub} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTargetStub.sol";
 import {BalancerV3StablePoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";

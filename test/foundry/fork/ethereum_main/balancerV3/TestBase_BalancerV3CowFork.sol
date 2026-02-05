@@ -5,10 +5,10 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IHooks} from "@balancer-labs/v3-interfaces/contracts/vault/IHooks.sol";
-import {ICowPool} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowPool.sol";
-import {HookFlags} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
+import {HookFlags} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.sol";
 

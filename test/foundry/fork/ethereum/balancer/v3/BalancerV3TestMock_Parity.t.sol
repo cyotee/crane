@@ -7,23 +7,23 @@ import {Test} from "forge-std/Test.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {TokenConfig, VaultState} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {WeightedPool8020Factory} from "@balancer-labs/v3-pool-weighted/contracts/WeightedPool8020Factory.sol";
-import {CREATE3} from "@balancer-labs/v3-solidity-utils/contracts/solmate/CREATE3.sol";
+import {TokenConfig, VaultState} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {WeightedPool8020Factory} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              Upstream (Balancer)                            */
 /* -------------------------------------------------------------------------- */
 
-import {ERC20TestToken as UpstreamERC20TestToken} from "@balancer-labs/v3-solidity-utils/contracts/test/ERC20TestToken.sol";
-import {IVaultMock as UpstreamIVaultMock} from "@balancer-labs/v3-interfaces/contracts/test/IVaultMock.sol";
-import {BasicAuthorizerMock as UpstreamBasicAuthorizerMock} from "@balancer-labs/v3-vault/contracts/test/BasicAuthorizerMock.sol";
-import {ProtocolFeeControllerMock as UpstreamProtocolFeeControllerMock} from "@balancer-labs/v3-vault/contracts/test/ProtocolFeeControllerMock.sol";
-import {VaultAdminMock as UpstreamVaultAdminMock} from "@balancer-labs/v3-vault/contracts/test/VaultAdminMock.sol";
-import {VaultExtensionMock as UpstreamVaultExtensionMock} from "@balancer-labs/v3-vault/contracts/test/VaultExtensionMock.sol";
-import {VaultMock as UpstreamVaultMock} from "@balancer-labs/v3-vault/contracts/test/VaultMock.sol";
+import {ERC20TestToken as UpstreamERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {IVaultMock as UpstreamIVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {BasicAuthorizerMock as UpstreamBasicAuthorizerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
+import {ProtocolFeeControllerMock as UpstreamProtocolFeeControllerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/ProtocolFeeControllerMock.sol";
+import {VaultAdminMock as UpstreamVaultAdminMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultAdminMock.sol";
+import {VaultExtensionMock as UpstreamVaultExtensionMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultExtensionMock.sol";
+import {VaultMock as UpstreamVaultMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   Crane                                    */

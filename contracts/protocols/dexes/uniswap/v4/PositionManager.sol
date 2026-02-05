@@ -9,7 +9,7 @@ import {SafeCast} from "./libraries/SafeCast.sol";
 import {Position} from "./libraries/Position.sol";
 import {StateLibrary} from "./libraries/StateLibrary.sol";
 import {TransientStateLibrary} from "./libraries/TransientStateLibrary.sol";
-import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
+import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 import {TickMath} from "./libraries/TickMath.sol";
 import {ModifyLiquidityParams, SwapParams} from "./types/PoolOperation.sol";
 

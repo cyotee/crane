@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-// import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC20} from "./IERC20.sol";
 
 /**
  * @dev Interface for the optional metadata functions from the ERC-20 standard.
+ * @notice Native Crane implementation - no external dependencies
  */
-interface IERC20Metadata {
+interface IERC20Metadata is IERC20 {
     /**
      * @dev Returns the name of the token.
      */

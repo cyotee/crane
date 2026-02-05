@@ -11,20 +11,20 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IBasePool} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
-import {IPoolInfo} from "@balancer-labs/v3-interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@balancer-labs/v3-interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
-} from "@balancer-labs/v3-interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {ICowPool} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowPool.sol";
-import {IHooks} from "@balancer-labs/v3-interfaces/contracts/vault/IHooks.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                  OpenZeppelin                              */

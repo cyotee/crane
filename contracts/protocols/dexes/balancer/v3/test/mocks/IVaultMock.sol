@@ -8,7 +8,7 @@ import {IVaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/
 import {IVaultStorageMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultStorageMock.sol";
 import {IVaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultAdminMock.sol";
 import {IVaultMainMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultMainMock.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 /// @dev One-fits-all solution for hardhat tests. Use the typechain type for errors, events and functions.
 interface IVaultMock is IVault, IVaultMainMock, IVaultExtensionMock, IVaultAdminMock, IVaultStorageMock, IERC20Errors {

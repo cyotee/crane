@@ -3,13 +3,13 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@balancer-labs/v3-interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
-import {IGyroECLPPool, GyroECLPPoolImmutableData, GyroECLPPoolDynamicData} from "@balancer-labs/v3-interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {Rounding} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
+import {IGyroECLPPool, GyroECLPPoolImmutableData, GyroECLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {Gyro2CLPMath} from "@balancer-labs/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
-import {GyroECLPMath} from "@balancer-labs/pool-gyro/contracts/lib/GyroECLPMath.sol";
+import {Gyro2CLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
+import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.sol";

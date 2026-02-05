@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.30;
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     TokenConfig,
     PoolSwapParams,
     SwapKind
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {ScalingHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import {StablePool} from "@balancer-labs/v3-pool-stable/contracts/StablePool.sol";
+import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
 import {SurgeHookCommon} from "./SurgeHookCommon.sol";
-import {ISurgeHookCommon} from "@balancer-labs/v3-interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {ISurgeHookCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 import {StableSurgeMedianMath} from "./utils/StableSurgeMedianMath.sol";
 
 /* -------------------------------------------------------------------------- */

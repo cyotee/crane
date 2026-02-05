@@ -12,11 +12,11 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IRouter} from "@balancer-labs/v3-interfaces/contracts/vault/IRouter.sol";
-import {IRouterCommon} from "@balancer-labs/v3-interfaces/contracts/vault/IRouterCommon.sol";
-import {IBatchRouter} from "@balancer-labs/v3-interfaces/contracts/vault/IBatchRouter.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {IBatchRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

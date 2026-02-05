@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
 
-import {IBasePoolFactory} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePoolFactory.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {LiquidityManagement, PoolRoleAccounts, TokenConfig} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {LiquidityManagement, PoolRoleAccounts, TokenConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {FactoryWidePauseWindow} from "@balancer-labs/v3-solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
+import {FactoryWidePauseWindow} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
 
-import {SingletonAuthentication} from "@balancer-labs/v3-vault/contracts/SingletonAuthentication.sol";
+import {SingletonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 
 import {PoolMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolMock.sol";
 

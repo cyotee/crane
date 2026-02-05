@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import {IPoolLiquidity} from "@balancer-labs/v3-interfaces/contracts/vault/IPoolLiquidity.sol";
-import {IBasePool} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     IERC20,
     PoolSwapParams,
@@ -14,11 +14,11 @@ import {
     Rounding,
     TokenInfo,
     PoolConfig
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import {BalancerPoolToken} from "@balancer-labs/v3-vault/contracts/BalancerPoolToken.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
 contract PoolMock is IBasePool, IPoolLiquidity, BalancerPoolToken {
     using FixedPoint for uint256;

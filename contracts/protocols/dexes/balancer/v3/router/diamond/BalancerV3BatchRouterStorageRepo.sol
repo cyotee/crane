@@ -3,11 +3,11 @@ pragma solidity ^0.8.30;
 
 import {
     TransientEnumerableSet
-} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
 import {
     TransientStorageHelpers,
     AddressToUintMappingSlot
-} from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                      BalancerV3BatchRouterStorageRepo                      */

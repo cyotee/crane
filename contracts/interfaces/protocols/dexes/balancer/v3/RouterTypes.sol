@@ -10,4 +10,4 @@ import {
     SwapSingleTokenHookParams,
     AddLiquidityHookParams,
     RemoveLiquidityHookParams
-} from "@balancer-labs/v3-interfaces/contracts/vault/RouterTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";

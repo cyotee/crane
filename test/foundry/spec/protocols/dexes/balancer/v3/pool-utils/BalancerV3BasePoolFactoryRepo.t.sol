@@ -14,8 +14,8 @@ import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/ba
  * @notice Exposes BalancerV3BasePoolFactoryRepo library functions for testing.
  */
 contract BalancerV3BasePoolFactoryRepoHarness {
-    function initialize(uint32 pauseWindowDuration, address poolFeeManager) external {
-        BalancerV3BasePoolFactoryRepo._initialize(pauseWindowDuration, poolFeeManager);
+    function initialize(uint32 pauseWindowDuration_, address poolFeeManager_) external {
+        BalancerV3BasePoolFactoryRepo._initialize(pauseWindowDuration_, poolFeeManager_);
     }
 
     function isDisabled() external view returns (bool) {

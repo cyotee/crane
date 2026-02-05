@@ -7,13 +7,13 @@ import "forge-std/Test.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { BaseContractsDeployer } from "@balancer-labs/v3-solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
-import { IRateProvider } from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { PoolRoleAccounts } from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultMock } from "@balancer-labs/v3-interfaces/contracts/test/IVaultMock.sol";
-import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
+import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
 import { ReClammPoolParams, ReClammPriceParams } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
 import { ReClammPoolFactoryMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
@@ -64,10 +64,6 @@ contract ReClammPoolContractsDeployer is BaseContractsDeployer {
             factoryVersion: "ReClamm Pool Factory v1"
         });
 
-        // if this external artifact path exists, it means we are running outside of this repo
-        if (vm.exists("artifacts/@balancer-labs/v3-pool-reClamm/")) {
-            artifactsRootDir = "artifacts/@balancer-labs/v3-pool-reClamm/";
-        }
     }
 
     function createReClammPool(

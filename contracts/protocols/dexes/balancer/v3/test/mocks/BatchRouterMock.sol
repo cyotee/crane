@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
-import {AddressToUintMappingSlot} from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {TransientEnumerableSet} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
+import {AddressToUintMappingSlot} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {TransientEnumerableSet} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
 
-import {BatchRouter} from "@balancer-labs/v3-vault/contracts/BatchRouter.sol";
+import {BatchRouter} from "@crane/contracts/external/balancer/v3/vault/contracts/BatchRouter.sol";
 
 string constant MOCK_BATCH_ROUTER_VERSION = "Mock BatchRouter v1";
 

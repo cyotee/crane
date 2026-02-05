@@ -7,12 +7,12 @@ import "forge-std/Test.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IRouter} from "@balancer-labs/v3-interfaces/contracts/vault/IRouter.sol";
-import {IBasePool} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
-import {PoolSwapParams, Rounding, SwapKind, TokenInfo} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import {WeightedMath} from "@balancer-labs/v3-solidity-utils/contracts/math/WeightedMath.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {PoolSwapParams, Rounding, SwapKind, TokenInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

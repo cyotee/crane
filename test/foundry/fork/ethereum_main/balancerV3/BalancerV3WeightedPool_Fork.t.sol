@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import {TestBase_BalancerV3WeightedFork} from "./TestBase_BalancerV3WeightedFork.sol";
-import {Rounding} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
-import {IBasePool} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePool.sol";
-import {WeightedMath} from "@balancer-labs/v3-solidity-utils/contracts/math/WeightedMath.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
 /// @title BalancerV3WeightedPool_Fork
 /// @notice Fork parity tests for Balancer V3 Weighted pool math

@@ -14,9 +14,9 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

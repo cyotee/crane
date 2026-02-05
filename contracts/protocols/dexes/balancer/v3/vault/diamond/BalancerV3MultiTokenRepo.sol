@@ -3,10 +3,10 @@ pragma solidity ^0.8.24;
 
 import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 
-import {IERC20MultiTokenErrors} from "@balancer-labs/v3-interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
-import {EVMCallModeHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {IERC20MultiTokenErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
+import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 
-import {BalancerPoolToken} from "@balancer-labs/v3-vault/contracts/BalancerPoolToken.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                          BalancerV3MultiTokenRepo                          */

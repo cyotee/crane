@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {PoolSwapParams, Rounding, SwapKind} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 /**
  * @custom:interfaceid 0xfc24db8e

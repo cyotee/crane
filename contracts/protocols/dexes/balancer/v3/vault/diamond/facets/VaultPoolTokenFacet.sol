@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.30;
 
-import {IVaultMain} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultMain.sol";
+import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";

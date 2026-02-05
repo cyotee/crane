@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import { FixedPoint } from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import { Rounding } from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import { PriceRatioState, ReClammMath } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
 import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";

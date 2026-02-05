@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import {PackedTokenBalance} from "@balancer-labs/v3-solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import {VaultAdmin} from "@balancer-labs/v3-vault/contracts/VaultAdmin.sol";
+import {VaultAdmin} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultAdmin.sol";
 
 import {IVaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultAdminMock.sol";
 

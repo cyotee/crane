@@ -3,11 +3,11 @@ pragma solidity ^0.8.30;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import {IRouter} from "@balancer-labs/v3-interfaces/contracts/vault/IRouter.sol";
-import "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import "@balancer-labs/v3-interfaces/contracts/vault/RouterTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3RouterStorageRepo} from "../BalancerV3RouterStorageRepo.sol";
@@ -226,7 +226,7 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         IWETH weth = BalancerV3RouterStorageRepo._weth();
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
-        if (!isPrepaid || (params.wethIsEth && params.tokenIn == weth)) {
+        if (!isPrepaid || (params.wethIsEth && address(params.tokenIn) == address(weth))) {
             _takeTokenIn(params.sender, params.tokenIn, amountIn, params.wethIsEth);
         } else {
             _handlePrepaidTokenIn(params, vault, amountIn);
@@ -234,7 +234,7 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
 
         _sendTokenOut(params.sender, params.tokenOut, amountOut, params.wethIsEth);
 
-        if (params.tokenIn == weth) {
+        if (address(params.tokenIn) == address(weth)) {
             _returnEth(params.sender);
         }
     }

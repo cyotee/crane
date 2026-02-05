@@ -3,11 +3,11 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@balancer-labs/v3-interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
-import {PoolSwapParams, Rounding, SwapKind} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
+import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {Gyro2CLPMath} from "@balancer-labs/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
+import {Gyro2CLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import {TestBase_BalancerV3GyroFork} from "./TestBase_BalancerV3GyroFork.sol";
 

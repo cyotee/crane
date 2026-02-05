@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
 import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /* -------------------------------------------------------------------------- */

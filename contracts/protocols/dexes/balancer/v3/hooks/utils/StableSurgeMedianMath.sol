@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.30;
 
-import {Arrays} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/Arrays.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
+import {Arrays} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/Arrays.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                          StableSurgeMedianMath                             */

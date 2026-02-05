@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IWETHAware} from "@crane/contracts/interfaces/IWETHAware.sol";
 import {WETHAwareRepo} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETHAwareRepo.sol";
 

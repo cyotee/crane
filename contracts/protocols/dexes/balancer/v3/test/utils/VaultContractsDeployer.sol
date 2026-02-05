@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
@@ -20,7 +20,7 @@ import {BatchRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test
 import {BufferRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BufferRouterMock.sol";
 import {CompositeLiquidityRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
 
-import {CREATE3} from "@balancer-labs/v3-solidity-utils/contracts/solmate/CREATE3.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
 /// @notice Minimal Crane-local port of Balancer's VaultContractsDeployer.
 /// @dev This intentionally does not support artifact reuse; it only deploys the small set of mocks Crane TestBases use.

@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IVaultAdmin} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
 import {
     HooksConfig,
     LiquidityManagement,
@@ -14,26 +14,26 @@ import {
     SwapKind,
     TokenConfig,
     PoolSwapParams
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {CastingHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/CastingHelpers.sol";
-import {ArrayHelpers} from "@balancer-labs/v3-solidity-utils/contracts/test/ArrayHelpers.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import {StableMath} from "@balancer-labs/v3-solidity-utils/contracts/math/StableMath.sol";
+import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import {StablePool} from "@balancer-labs/v3-pool-stable/contracts/StablePool.sol";
-import {StablePoolFactory} from "@balancer-labs/v3-pool-stable/contracts/StablePoolFactory.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {StablePoolFactory} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
 import {
     StablePoolContractsDeployer
-} from "@balancer-labs/v3-pool-stable/test/foundry/utils/StablePoolContractsDeployer.sol";
+} from "@crane/contracts/external/balancer/v3/pool-stable/test/foundry/utils/StablePoolContractsDeployer.sol";
 
-import {BaseVaultTest} from "@balancer-labs/v3-vault/test/foundry/utils/BaseVaultTest.sol";
-import {PoolFactoryMock} from "@balancer-labs/v3-vault/contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 
 import {StableSurgeHook} from
     "@crane/contracts/protocols/dexes/balancer/v3/hooks/StableSurgeHook.sol";
 import {ISurgeHookCommon} from
-    "@balancer-labs/v3-interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+    "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 
 /**
  * @title StableSurgeHookTest

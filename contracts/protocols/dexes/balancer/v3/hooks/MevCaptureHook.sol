@@ -5,9 +5,9 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import {
     IBalancerContractRegistry
-} from "@balancer-labs/v3-interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import {ISenderGuard} from "@balancer-labs/v3-interfaces/contracts/vault/ISenderGuard.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     HooksConfig,
@@ -17,9 +17,9 @@ import {
     RemoveLiquidityKind,
     TokenConfig,
     MAX_FEE_PERCENTAGE
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {SingletonAuthentication} from "@balancer-labs/v3-vault/contracts/SingletonAuthentication.sol";
+import {SingletonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 
 import {BaseHooksTarget} from "./BaseHooksTarget.sol";
 

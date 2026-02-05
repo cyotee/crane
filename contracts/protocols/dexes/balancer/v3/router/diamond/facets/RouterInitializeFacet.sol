@@ -4,9 +4,9 @@ pragma solidity ^0.8.30;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import {IRouter} from "@balancer-labs/v3-interfaces/contracts/vault/IRouter.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import "@balancer-labs/v3-interfaces/contracts/vault/RouterTypes.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3RouterStorageRepo} from "../BalancerV3RouterStorageRepo.sol";

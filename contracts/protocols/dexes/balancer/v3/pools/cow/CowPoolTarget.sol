@@ -7,10 +7,10 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {ICowPool} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowPool.sol";
-import {ICowPoolFactory} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowPoolFactory.sol";
-import {IHooks} from "@balancer-labs/v3-interfaces/contracts/vault/IHooks.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
+import {ICowPoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPoolFactory.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     AfterSwapParams,
@@ -20,7 +20,7 @@ import {
     PoolSwapParams,
     RemoveLiquidityKind,
     TokenConfig
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

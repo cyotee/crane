@@ -33,4 +33,4 @@ import {
     FEE_BITLENGTH,
     FEE_SCALING_FACTOR,
     MAX_FEE_PERCENTAGE
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";

@@ -19,15 +19,14 @@ pragma solidity ^0.8.24;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 contract WETH9 is IWETH {
     string public name = "Wrapped Ether";
     string public symbol = "WETH";
     uint8 public decimals = 18;
 
-    // event  Approval(address indexed src, address indexed guy, uint wad);
-    // event  Transfer(address indexed src, address indexed dst, uint wad);
+    // IERC20 events (Transfer/Approval) are inherited via IWETH -> IERC20.
     event Deposit(address indexed dst, uint256 wad);
     event Withdrawal(address indexed src, uint256 wad);
 

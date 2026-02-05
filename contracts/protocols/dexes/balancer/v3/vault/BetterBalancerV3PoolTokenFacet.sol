@@ -14,7 +14,7 @@ import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IRateProvider} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

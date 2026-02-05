@@ -5,4 +5,4 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";

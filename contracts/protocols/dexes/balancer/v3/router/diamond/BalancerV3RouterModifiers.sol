@@ -4,12 +4,12 @@ pragma solidity ^0.8.30;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IRouterCommon} from "@balancer-labs/v3-interfaces/contracts/vault/IRouterCommon.sol";
-import {ISenderGuard} from "@balancer-labs/v3-interfaces/contracts/vault/ISenderGuard.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 
 import {BalancerV3RouterStorageRepo} from "./BalancerV3RouterStorageRepo.sol";
 
@@ -217,7 +217,7 @@ abstract contract BalancerV3RouterModifiers is ISenderGuard {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         IPermit2 permit2 = BalancerV3RouterStorageRepo._permit2();
 
-        if (wethIsEth && tokenIn == weth) {
+        if (wethIsEth && address(tokenIn) == address(weth)) {
             // Wrap ETH and settle with vault
             if (address(this).balance < amountIn) {
                 revert InsufficientEth();
@@ -249,7 +249,7 @@ abstract contract BalancerV3RouterModifiers is ISenderGuard {
         IWETH weth = BalancerV3RouterStorageRepo._weth();
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
-        if (wethIsEth && tokenOut == weth) {
+        if (wethIsEth && address(tokenOut) == address(weth)) {
             // Receive WETH from vault, unwrap, and send ETH
             vault.sendTo(tokenOut, address(this), amountOut);
             weth.withdraw(amountOut);

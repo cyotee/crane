@@ -4,16 +4,16 @@ pragma solidity ^0.8.30;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IRouterCommon} from "@balancer-labs/v3-interfaces/contracts/vault/IRouterCommon.sol";
-import {ISenderGuard} from "@balancer-labs/v3-interfaces/contracts/vault/ISenderGuard.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 
-import {InputHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/InputHelpers.sol";
-import {RevertCodec} from "@balancer-labs/v3-solidity-utils/contracts/helpers/RevertCodec.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {RevertCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3RouterStorageRepo} from "../BalancerV3RouterStorageRepo.sol";

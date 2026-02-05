@@ -13,9 +13,9 @@ import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol
 
 /* ------------------------ Interfaces Solidity-Utils ----------------------- */
 
-import {IBasePoolFactory} from "@balancer-labs/v3-interfaces/contracts/vault/IBasePoolFactory.sol";
-import {IPoolVersion} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import {PoolRoleAccounts, TokenConfig} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {IPoolVersion} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {PoolRoleAccounts, TokenConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

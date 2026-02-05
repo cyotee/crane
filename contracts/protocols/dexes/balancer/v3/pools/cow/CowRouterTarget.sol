@@ -12,15 +12,15 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /*                              Balancer V3 Interfaces                        */
 /* -------------------------------------------------------------------------- */
 
-import {ICowRouter} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowRouter.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {ICowRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     AddLiquidityParams,
     SwapKind,
     VaultSwapParams
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.5.0) (interfaces/IERC4626.sol)
+pragma solidity ^0.8.0;
 
-pragma solidity >=0.6.2;
-
-// import {IERC20} from "../token/ERC20/IERC20.sol";
-// import {IERC20Metadata} from "../token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC4626Errors} from "@crane/contracts/interfaces/IERC4626Errors.sol";
+import {IERC20} from "./IERC20.sol";
+import {IERC20Metadata} from "./IERC20Metadata.sol";
+import {IERC4626Errors} from "./IERC4626Errors.sol";
 
 /**
  * @dev Interface of the ERC-4626 "Tokenized Vault Standard", as defined in
  * https://eips.ethereum.org/EIPS/eip-4626[ERC-4626].
+ * @notice Native Crane implementation - no external dependencies
  */
-interface IERC4626 is IERC4626Errors {
+interface IERC4626 is IERC20, IERC20Metadata, IERC4626Errors {
     event Deposit(address indexed sender, address indexed owner, uint256 assets, uint256 shares);
 
     event Withdraw(
@@ -27,7 +26,7 @@ interface IERC4626 is IERC4626Errors {
     function asset() external view returns (address assetTokenAddress);
 
     /**
-     * @dev Returns the total amount of the underlying asset that is “managed” by Vault.
+     * @dev Returns the total amount of the underlying asset that is "managed" by Vault.
      *
      * - SHOULD include any compounding that occurs from yield.
      * - MUST be inclusive of any fees that are charged against assets in the Vault.
@@ -44,8 +43,8 @@ interface IERC4626 is IERC4626Errors {
      * - MUST NOT reflect slippage or other on-chain conditions, when performing the actual exchange.
      * - MUST NOT revert.
      *
-     * NOTE: This calculation MAY NOT reflect the “per-user” price-per-share, and instead should reflect the
-     * “average-user’s” price-per-share, meaning what the average user should expect to see when exchanging to and
+     * NOTE: This calculation MAY NOT reflect the "per-user" price-per-share, and instead should reflect the
+     * "average-user's" price-per-share, meaning what the average user should expect to see when exchanging to and
      * from.
      */
     function convertToShares(uint256 assets) external view returns (uint256 shares);
@@ -59,8 +58,8 @@ interface IERC4626 is IERC4626Errors {
      * - MUST NOT reflect slippage or other on-chain conditions, when performing the actual exchange.
      * - MUST NOT revert.
      *
-     * NOTE: This calculation MAY NOT reflect the “per-user” price-per-share, and instead should reflect the
-     * “average-user’s” price-per-share, meaning what the average user should expect to see when exchanging to and
+     * NOTE: This calculation MAY NOT reflect the "per-user" price-per-share, and instead should reflect the
+     * "average-user's" price-per-share, meaning what the average user should expect to see when exchanging to and
      * from.
      */
     function convertToAssets(uint256 shares) external view returns (uint256 assets);
@@ -101,7 +100,7 @@ interface IERC4626 is IERC4626Errors {
      * - MUST revert if all of assets cannot be deposited (due to deposit limit being reached, slippage, the user not
      *   approving enough underlying tokens to the Vault contract, etc).
      *
-     * NOTE: most implementations will require pre-approval of the Vault with the Vault’s underlying asset token.
+     * NOTE: most implementations will require pre-approval of the Vault with the Vault's underlying asset token.
      */
     function deposit(uint256 assets, address receiver) external returns (uint256 shares);
 
@@ -139,7 +138,7 @@ interface IERC4626 is IERC4626Errors {
      * - MUST revert if all of shares cannot be minted (due to deposit limit being reached, slippage, the user not
      *   approving enough underlying tokens to the Vault contract, etc).
      *
-     * NOTE: most implementations will require pre-approval of the Vault with the Vault’s underlying asset token.
+     * NOTE: most implementations will require pre-approval of the Vault with the Vault's underlying asset token.
      */
     function mint(uint256 shares, address receiver) external returns (uint256 assets);
 

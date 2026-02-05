@@ -10,7 +10,7 @@ import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.s
 import {ICamelotV2Router} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 import {UniswapV2Library} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/UniswapV2Library.sol";
 import {SafeMath} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/SafeMath.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 contract CamelotRouter is ICamelotV2Router {
     using SafeMath for uint256;

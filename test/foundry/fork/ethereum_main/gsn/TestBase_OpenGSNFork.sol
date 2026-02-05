@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {Forwarder as PortedForwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/Forwarder.sol";
 import {IForwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/IForwarder.sol";
-import {Forwarder as UpstreamForwarder} from "@opengsn/contracts/src/forwarder/Forwarder.sol";
-import {IForwarder as IUpstreamForwarder} from "@opengsn/contracts/src/forwarder/IForwarder.sol";
+import {Forwarder as UpstreamForwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/Forwarder.sol";
+import {IForwarder as IUpstreamForwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/IForwarder.sol";
 
 import {RecipientStub} from "./RecipientStub.sol";
 
@@ -199,7 +199,7 @@ abstract contract TestBase_OpenGSNFork is Test {
                 req.gas,
                 req.nonce,
                 keccak256(req.data),
-                req.validUntil,
+                req.validUntilTime,
                 bytes("")  // empty suffix data
             )
         );
@@ -252,7 +252,7 @@ abstract contract TestBase_OpenGSNFork is Test {
             gas: gas,
             nonce: upstreamForwarder.getNonce(from),
             data: data,
-            validUntil: block.number + 1000
+            validUntilTime: block.number + 1000
         });
     }
 }

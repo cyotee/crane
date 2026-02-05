@@ -7,12 +7,12 @@ import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
-import {IVaultAdmin} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultAdmin.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import {PoolConfigLib, PoolConfigBits} from "@balancer-labs/v3-vault/contracts/lib/PoolConfigLib.sol";
-import {VaultExtension} from "@balancer-labs/v3-vault/contracts/VaultExtension.sol";
+import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {VaultExtension} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultExtension.sol";
 
 import {IVaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultExtensionMock.sol";
 

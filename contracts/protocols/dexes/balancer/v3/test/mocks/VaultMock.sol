@@ -4,31 +4,31 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {IProtocolFeeController} from "@balancer-labs/v3-interfaces/contracts/vault/IProtocolFeeController.sol";
-import {IRateProvider} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import {IVaultExtension} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultExtension.sol";
-import {IAuthorizer} from "@balancer-labs/v3-interfaces/contracts/vault/IAuthorizer.sol";
-import {IVaultAdmin} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultAdmin.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {IHooks} from "@balancer-labs/v3-interfaces/contracts/vault/IHooks.sol";
-import "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {StorageSlotExtension} from "@balancer-labs/v3-solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import {PackedTokenBalance} from "@balancer-labs/v3-solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import {BufferHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/BufferHelpers.sol";
+import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {BufferHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BufferHelpers.sol";
 import {
     TransientStorageHelpers,
     TokenDeltaMappingSlotType
-} from "@balancer-labs/v3-solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {WordCodec} from "@balancer-labs/v3-solidity-utils/contracts/helpers/WordCodec.sol";
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
 
-import {VaultStateLib, VaultStateBits} from "@balancer-labs/v3-vault/contracts/lib/VaultStateLib.sol";
-import {PoolConfigLib, PoolConfigBits} from "@balancer-labs/v3-vault/contracts/lib/PoolConfigLib.sol";
-import {HooksConfigLib} from "@balancer-labs/v3-vault/contracts/lib/HooksConfigLib.sol";
-import {PoolConfigConst} from "@balancer-labs/v3-vault/contracts/lib/PoolConfigConst.sol";
-import {PoolDataLib} from "@balancer-labs/v3-vault/contracts/lib/PoolDataLib.sol";
-import {VaultExtension} from "@balancer-labs/v3-vault/contracts/VaultExtension.sol";
-import {Vault} from "@balancer-labs/v3-vault/contracts/Vault.sol";
+import {VaultStateLib, VaultStateBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
+import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
+import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
+import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
+import {VaultExtension} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultExtension.sol";
+import {Vault} from "@crane/contracts/external/balancer/v3/vault/contracts/Vault.sol";
 
 import {IVaultMainMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultMainMock.sol";
 import {InputHelpersMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/InputHelpersMock.sol";

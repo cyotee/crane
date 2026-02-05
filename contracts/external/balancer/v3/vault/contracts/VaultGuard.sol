@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import {IVaultErrors} from "@balancer-labs/v3-interfaces/contracts/vault/IVaultErrors.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 /// @notice Contract that shares the modifier `onlyVault`.
 /// @dev Vendored from Balancer V3 Vault.

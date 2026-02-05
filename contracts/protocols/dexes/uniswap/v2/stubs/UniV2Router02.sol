@@ -13,7 +13,7 @@ import {TransferHelper} from "./deps/libs/TransferHelper.sol";
 import {IUniswapV2Router} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";
 import {IUniswapV2Pair} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {UniswapV2Library} from "@crane/contracts/protocols/dexes/uniswap/v2/stubs/deps/libs/UniswapV2Library.sol";
-import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 //
 

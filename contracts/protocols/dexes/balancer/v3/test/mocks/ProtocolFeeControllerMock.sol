@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {ProtocolFeeController} from "@balancer-labs/v3-vault/contracts/ProtocolFeeController.sol";
+import {ProtocolFeeController} from "@crane/contracts/external/balancer/v3/vault/contracts/ProtocolFeeController.sol";
 
 import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
 

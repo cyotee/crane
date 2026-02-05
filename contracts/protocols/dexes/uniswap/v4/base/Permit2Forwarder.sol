@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {IPermit2Forwarder} from "../interfaces/IPermit2Forwarder.sol";
-import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
+import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 
 /// @notice Permit2Forwarder allows permitting this contract as a spender on permit2
 /// @dev This contract does not enforce the spender to be this contract, but that is the intended use case

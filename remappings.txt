@@ -6,24 +6,3 @@ forge-std/=lib/forge-std/src/
 @solady/=lib/solady/src/
 
 @openzeppelin/=lib/openzeppelin-contracts/
-
-@balancer-labs/v3-reclamm=lib/reclamm
-@balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/
-@balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/
-@balancer-labs/v3-pool-stable/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-stable/
-@balancer-labs/v3-pool-weighted/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-weighted/
-@balancer-labs/v3-pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/
-@balancer-labs/v3-pool-hooks/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-hooks/
-@balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/
-@balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/
-@balancer-labs/pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/
-
-v4-periphery/=lib/v4-periphery/
-v4-core/=lib/v4-periphery/lib/v4-core/src/
-permit2/src/interfaces/IPermit2.sol=contracts/interfaces/protocols/utils/permit2/IPermit2.sol
-permit2/src/interfaces/IAllowanceTransfer.sol=contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol
-permit2/src/interfaces/ISignatureTransfer.sol=contracts/interfaces/protocols/utils/permit2/ISignatureTransfer.sol
-permit2/src/interfaces/IEIP712.sol=contracts/interfaces/IEIP712.sol
-permit2/src/interfaces/IDAIPermit.sol=contracts/interfaces/protocols/utils/permit2/IDAIPermit.sol
-permit2/test/utils/DeployPermit2.sol=contracts/protocols/utils/permit2/test/utils/DeployPermit2.sol
-permit2/=lib/permit2/

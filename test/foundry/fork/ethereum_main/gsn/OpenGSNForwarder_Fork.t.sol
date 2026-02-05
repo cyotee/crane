@@ -174,7 +174,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
             gas: 100_000,
             nonce: 999,
             data: callData,
-            validUntil: block.number + 1000
+            validUntilTime: block.number + 1000
         });
         bytes memory upstreamSig = _signUpstreamRequest(upstreamReq, SIGNER_PK);
 

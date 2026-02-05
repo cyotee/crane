@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import { IVault } from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import { ReClammStorage } from "./ReClammStorage.sol";
 import { ReClammMath } from "./lib/ReClammMath.sol";

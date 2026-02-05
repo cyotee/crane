@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
-import {ICowRouter} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ICowRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowRouter.sol";
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";

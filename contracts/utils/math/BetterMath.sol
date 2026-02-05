@@ -2,19 +2,11 @@
 pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
-/*                                    Forge                                   */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {Panic} from "@openzeppelin/contracts/utils/Panic.sol";
-
-/* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
+
+import {Math} from "@crane/contracts/utils/Math.sol";
+import {Panic} from "@crane/contracts/utils/Panic.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
 import "@crane/contracts/constants/Constants.sol";

@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                              Balancer V3 Interfaces                        */
 /* -------------------------------------------------------------------------- */
 
-import {ICowRouter} from "@balancer-labs/v3-interfaces/contracts/pool-cow/ICowRouter.sol";
+import {ICowRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowRouter.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

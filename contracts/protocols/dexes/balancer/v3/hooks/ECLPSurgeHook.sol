@@ -3,23 +3,23 @@ pragma solidity ^0.8.30;
 
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import {IECLPSurgeHook} from "@balancer-labs/v3-interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
-import {IGyroECLPPool} from "@balancer-labs/v3-interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import {IVault} from "@balancer-labs/v3-interfaces/contracts/vault/IVault.sol";
+import {IECLPSurgeHook} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     TokenConfig,
     PoolSwapParams,
     SwapKind
-} from "@balancer-labs/v3-interfaces/contracts/vault/VaultTypes.sol";
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {ScalingHelpers} from "@balancer-labs/v3-solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import {SignedFixedPoint} from "@balancer-labs/v3-pool-gyro/contracts/lib/SignedFixedPoint.sol";
-import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedPoint.sol";
-import {GyroECLPMath} from "@balancer-labs/v3-pool-gyro/contracts/lib/GyroECLPMath.sol";
+import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {SignedFixedPoint} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/SignedFixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 
 import {SurgeHookCommon} from "./SurgeHookCommon.sol";
-import {ISurgeHookCommon} from "@balancer-labs/v3-interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {ISurgeHookCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              ECLPSurgeHook                                 */

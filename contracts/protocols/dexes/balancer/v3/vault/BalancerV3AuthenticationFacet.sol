@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IAuthentication} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
