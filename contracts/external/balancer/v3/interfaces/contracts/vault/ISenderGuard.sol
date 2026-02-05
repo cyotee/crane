@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+pragma solidity ^0.8.24;
+
+/// @notice Interface for Router sender access.
+interface ISenderGuard {
+    function getSender() external view returns (address);
+}
