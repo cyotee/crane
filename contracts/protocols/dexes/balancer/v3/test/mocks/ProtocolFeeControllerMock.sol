@@ -8,7 +8,7 @@ import {ProtocolFeeController} from "@balancer-labs/v3-vault/contracts/ProtocolF
 import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
 
 /// @notice Crane-local port of Balancer's ProtocolFeeControllerMock for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract ProtocolFeeControllerMock is ProtocolFeeController {
     constructor(
         IVaultMock vault_,

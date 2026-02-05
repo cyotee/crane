@@ -17,7 +17,7 @@ import {VaultExtension} from "@balancer-labs/v3-vault/contracts/VaultExtension.s
 import {IVaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultExtensionMock.sol";
 
 /// @notice Crane-local port of Balancer's VaultExtensionMock for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract VaultExtensionMock is IVaultExtensionMock, VaultExtension {
     using PoolConfigLib for PoolConfigBits;
 

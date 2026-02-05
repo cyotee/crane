@@ -42,7 +42,7 @@ struct SwapInternalStateLocals {
 }
 
 /// @notice Crane-local port of Balancer's VaultMock for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract VaultMock is IVaultMainMock, Vault {
     using PackedTokenBalance for bytes32;
     using PoolConfigLib for PoolConfigBits;

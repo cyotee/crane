@@ -5,7 +5,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IWETH} from "@balancer-labs/v3-interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 /// @notice Crane-local port of Balancer's WETHTestToken for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract WETHTestToken is IWETH, ERC20 {
     // Events taken from actual WETH implementation in mainnet
     event Deposit(address indexed dst, uint256 wad);

@@ -13,7 +13,7 @@ import {VaultAdmin} from "@balancer-labs/v3-vault/contracts/VaultAdmin.sol";
 import {IVaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultAdminMock.sol";
 
 /// @notice Crane-local port of Balancer's VaultAdminMock for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
     using PackedTokenBalance for bytes32;
 

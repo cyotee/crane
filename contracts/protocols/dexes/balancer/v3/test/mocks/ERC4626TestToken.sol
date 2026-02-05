@@ -13,7 +13,7 @@ import {FixedPoint} from "@balancer-labs/v3-solidity-utils/contracts/math/FixedP
 import {ERC20TestToken} from "./ERC20TestToken.sol";
 
 /// @notice Crane-local port of Balancer's ERC4626TestToken for testing purposes.
-/// @dev This enables Crane to test without importing from @balancer-labs/.../contracts/test/
+/// @dev This enables Crane to test without importing from upstream Balancer test contracts.
 contract ERC4626TestToken is ERC4626, IRateProvider {
     using FixedPoint for uint256;
     using SafeERC20 for IERC20;
