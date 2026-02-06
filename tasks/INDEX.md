@@ -109,7 +109,7 @@
 | CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Complete | - | - |
 | CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | Complete | - | `fix/error-selector-mismatches` |
 | CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
-| CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | In Review | - | `fix/erc4626-fuzz-bounds` |
+| CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | Pending Merge | - | `fix/erc4626-fuzz-bounds` |
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | In Progress | - | `fix/betterstrings-hex-prefix` |
 | CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Ready | - | `fix/stablesurgehook-error-expectation` |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | In Progress | - | `fix/pin-gyro-fork-block` |
@@ -268,7 +268,7 @@
 - ~~CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests~~ → Complete
 - ~~CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests~~ → Complete
 - ~~CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests~~ → Complete
-- **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (In Review)**
+- **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (Pending Merge)**
 - **CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test (Ready)**
 - **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (Ready)**
 
