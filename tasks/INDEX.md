@@ -7,7 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Complete | CRANE-039 | - |
 | CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
@@ -102,14 +101,6 @@
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
-| CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Complete | - | - |
-| CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | Complete | - | `fix/error-selector-mismatches` |
-| CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
-| CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | Complete | - | `fix/erc4626-fuzz-bounds` |
-| CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | Complete | - | - |
-| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Complete | - | - |
-| CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
-| CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Complete | CRANE-224 | - |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 | CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/usdt-increase-decrease-allowance` |
 | CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/slipstream-near-depletion` |
@@ -402,6 +393,7 @@
 | CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | 2026-02-06 | archive/CRANE-219-openzeppelin-port/ |
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | 2026-02-06 | archive/CRANE-220-solady-port/ |
 | CRANE-182 | Final Submodule Cleanup and forge-std Installation | 2026-02-06 | archive/CRANE-182-final-submodule-cleanup/ |
+| CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | 2026-02-06 | archive/CRANE-228-pin-gyro-fork-block/ |
 
 ## Cross-Repo Dependencies
 
