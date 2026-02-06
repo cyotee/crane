@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-02-04
+**Last Updated:** 2026-02-05
 
 ## Active Tasks
 
@@ -106,6 +106,12 @@
 | CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | Ready | - | `feature/openzeppelin-port` |
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
+| CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Ready | - | `fix/internal-expect-revert-depth` |
+| CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | Ready | - | `fix/error-selector-mismatches` |
+| CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Ready | - | `fix/bettersafeerc20-error-expectations` |
+| CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | Ready | - | `fix/erc4626-fuzz-bounds` |
+| CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | Ready | - | `fix/betterstrings-hex-prefix` |
+| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Ready | - | `fix/stablesurgehook-error-expectation` |
 
 ## Status Legend
 
@@ -254,6 +260,14 @@
 
 **Slipstream Port and Parity Tests (1 task):**
 - ~~CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install)~~ → Complete
+
+**Test Failure Fix Groups (6 tasks - 43 failures total, all parallelizable):**
+- **CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests (Ready - foundry.toml flag)**
+- **CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests (Ready)**
+- **CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests (Ready)**
+- **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (Ready)**
+- **CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test (Ready)**
+- **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (Ready)**
 
 **Submodule Removal (5 tasks):**
 - **CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency (Ready - HIGH)**

@@ -12,7 +12,7 @@ import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {ReentrancyLockModifiers} from "@crane/contracts/access/reentrancy/ReentrancyLockModifiers.sol";
 
-abstract contract ERC4626Target is ReentrancyLockModifiers, IERC4626, IERC4626Events {
+contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     using BetterMath for uint256;
     using BetterSafeERC20 for IERC20;
     using ERC4626Repo for ERC4626Repo.Storage;
@@ -87,11 +87,11 @@ abstract contract ERC4626Target is ReentrancyLockModifiers, IERC4626, IERC4626Ev
         return assets;
     }
 
-    function asset() public view virtual override returns (address) {
+    function asset() public view virtual returns (address) {
         return address(ERC4626Repo._reserveAsset());
     }
 
-    function totalAssets() public view virtual override returns (uint256) {
+    function totalAssets() public view virtual returns (uint256) {
         return ERC4626Repo._lastTotalAssets();
     }
 
