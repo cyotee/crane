@@ -11,7 +11,7 @@ import "forge-std/Test.sol";
 /*                                  Balancer                                  */
 /* -------------------------------------------------------------------------- */
 
-import {IPermit2} from "permit2/src/interfaces/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";

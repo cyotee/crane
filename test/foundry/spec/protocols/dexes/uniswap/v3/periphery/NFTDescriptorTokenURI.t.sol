@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {NFTDescriptor} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/libraries/NFTDescriptor.sol";
-import {Base64 as SoladyBase64} from "solady/utils/Base64.sol";
+import {Base64 as SoladyBase64} from "@crane/contracts/utils/Base64.sol";
 
 /// @title NFT Descriptor TokenURI Shape Test
 /// @notice Validates that tokenURI() returns correctly structured metadata

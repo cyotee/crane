@@ -8,9 +8,9 @@ import {IPoolCallee} from "../interfaces/IPoolCallee.sol";
 import {IPoolFactory} from "../interfaces/factories/IPoolFactory.sol";
 import {PoolFees} from "./PoolFees.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/ERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC20Permit} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
 import {ReentrancyGuard} from "@crane/contracts/utils/ReentrancyGuard.sol";
 
 /// @title Pool

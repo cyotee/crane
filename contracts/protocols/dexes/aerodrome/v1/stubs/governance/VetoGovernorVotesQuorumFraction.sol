@@ -4,7 +4,7 @@
 pragma solidity ^0.8.0;
 
 import {VetoGovernorVotes} from "./VetoGovernorVotes.sol";
-import {Checkpoints} from "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
+import {Checkpoints} from "@crane/contracts/external/openzeppelin/utils/structs/Checkpoints.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
 /**

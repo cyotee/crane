@@ -10,9 +10,9 @@ import {EIP712} from "@crane/contracts/utils/cryptography/EIP712.sol";
 import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol"; import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC6372} from "@crane/contracts/interfaces/IERC6372.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
-import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
+import {DoubleEndedQueue} from "@crane/contracts/external/openzeppelin/utils/structs/DoubleEndedQueue.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin/utils/Context.sol";
 import "./IVetoGovernor.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 

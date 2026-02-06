@@ -7,7 +7,7 @@ import "forge-std/Test.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {Create2} from "@crane/contracts/utils/Create2.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
-import { Errors } from "@openzeppelin/contracts/utils/Errors.sol";
+import { Errors } from "@crane/contracts/external/openzeppelin/utils/Errors.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 

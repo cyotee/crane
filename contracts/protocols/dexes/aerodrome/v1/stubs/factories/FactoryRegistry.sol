@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 import {IFactoryRegistry} from "../../interfaces/factories/IFactoryRegistry.sol";
-import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
 
 /// @title Protocol Factory Registry
 /// @author Carter Carlson (@pegahcarter)

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
 
 import { IPoolHelperCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolHelperCommon.sol";
 import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";

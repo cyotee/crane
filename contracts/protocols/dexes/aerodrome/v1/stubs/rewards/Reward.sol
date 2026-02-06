@@ -6,7 +6,7 @@ import {IReward} from "../../interfaces/IReward.sol";
 import {IVoter} from "../../interfaces/IVoter.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {ERC2771Context} from "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+import {ERC2771Context} from "@crane/contracts/external/openzeppelin/metatx/ERC2771Context.sol";
 import {ReentrancyGuard} from "@crane/contracts/utils/ReentrancyGuard.sol";
 import {ProtocolTimeLibrary} from "../libraries/ProtocolTimeLibrary.sol";
 

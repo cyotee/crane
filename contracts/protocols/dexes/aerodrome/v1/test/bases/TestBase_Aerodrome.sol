@@ -31,7 +31,7 @@ import {EpochGovernor} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs
 import {SafeCastLibrary} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/libraries/SafeCastLibrary.sol";
 import {IWETH} from "@crane/contracts/interfaces/protocols/tokens/wrappers/weth/v9/IWETH.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/ERC20.sol";
 import {SigUtils} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/test/SigUtils.sol";
 import {Forwarder} from "@crane/contracts/protocols/utils/gsn/forwarder/Forwarder.sol";
 import {BetterTest} from "@crane/contracts/test/BetterTest.sol";

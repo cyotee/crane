@@ -16,37 +16,10 @@ viaIR = false
 # optimizer_runs = 16683
 # optimizer_runs = 999
 optimizer_runs = 1
-  remappings = [
-      "forge-std/=lib/forge-std/src/",
-      "@crane/contracts/=contracts/",
-      "@opengsn/contracts/=lib/gsn/packages/contracts/",
-      # Permit2 - mapped to local Crane port (no submodule dependency)
-      "permit2/src/interfaces/=contracts/interfaces/protocols/utils/permit2/",
-      "permit2/src/libraries/=contracts/protocols/utils/permit2/",
-      "permit2/src/=contracts/protocols/utils/permit2/",
-      "permit2/test/utils/=contracts/protocols/utils/permit2/test/utils/",
-      "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"
-      # "@balancer-labs/v3-interfaces/=lib/reclamm/lib/balancer-v3-monorepo/pkg/interfaces/",
-      # "@balancer-labs/v3-pool-gyro/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-gyro/",
-      # "@balancer-labs/v3-pool-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-utils/",
-      # "@balancer-labs/v3-pool-weighted/=lib/reclamm/lib/balancer-v3-monorepo/pkg/pool-weighted/",
-      # "@balancer-labs/v3-solidity-utils/=lib/reclamm/lib/balancer-v3-monorepo/pkg/solidity-utils/",
-      # "@balancer-labs/v3-vault/=lib/reclamm/lib/balancer-v3-monorepo/pkg/vault/",
-      # "@openzeppelin/=lib/reclamm/node_modules/@openzeppelin/",
-      # "Compose/=lib/Compose/",
-      # "balancer-v3-monorepo/=lib/balancer-v3-monorepo/",
-      # "ds-test/=lib/solmate/lib/ds-test/src/",
-      # "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
-      # "forge-gas-snapshot/=lib/permit2/lib/forge-gas-snapshot/src/",
-      # "forge-std/=lib/forge-std/src/",
-      # "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
-      # "openzeppelin-contracts/=lib/openzeppelin-contracts/",
-      # "permit2/=lib/permit2/",
-      # "reclamm/=lib/reclamm/contracts/",
-      # "scaffold-eth-2/=lib/scaffold-eth-2/",
-      # "solady/=lib/solady/src/",
-      # "solmate/=lib/solmate/src/",
-  ]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@crane/contracts/=contracts/"
+]
 
 ignored_error_codes = [
     2394, 
