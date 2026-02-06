@@ -103,7 +103,7 @@
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
 | CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | Complete | - | `feature/balancer-v3-test-mock-port` |
-| CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | In Progress | - | `feature/openzeppelin-port` |
+| CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | Complete | - | `feature/openzeppelin-port` |
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
 | CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Ready | - | `fix/internal-expect-revert-depth` |
