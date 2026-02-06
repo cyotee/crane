@@ -50,8 +50,8 @@ None required. The task scope is clear: add `allow_internal_expect_revert = true
 - `BetterStrings.t.sol` (1 test): hex string format assertion mismatch
 **Affected Files:**
 - Various test files under `contracts/external/balancer/v3/` and `test/foundry/spec/`
-**User Response:** (pending)
-**Notes:** This is tracked knowledge; the full test suite has never been green in this branch lineage due to these mismatches.
+**User Response:** Already tracked
+**Notes:** All failures are covered by existing tasks: CRANE-223 (selector mismatches), CRANE-224 (BetterSafeERC20, now complete), CRANE-225 (ERC4626 fuzz), CRANE-226 (BetterStrings), CRANE-227 (StableSurgeHook). No new tasks needed.
 
 ---
 
