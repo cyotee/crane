@@ -108,7 +108,7 @@
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
 | CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | In Progress | - | `fix/internal-expect-revert-depth` |
 | CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | In Progress | - | `fix/error-selector-mismatches` |
-| CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | In Review | - | `fix/bettersafeerc20-error-expectations` |
+| CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Pending Merge | - | `fix/bettersafeerc20-error-expectations` |
 | CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | In Progress | - | `fix/erc4626-fuzz-bounds` |
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | In Progress | - | `fix/betterstrings-hex-prefix` |
 | CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Ready | - | `fix/stablesurgehook-error-expectation` |
