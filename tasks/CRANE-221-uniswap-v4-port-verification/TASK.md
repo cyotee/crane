@@ -81,6 +81,29 @@ As a developer, I want CRANE-189 (Remove v4 submodules) to be unblocked after th
 
 ## Technical Details
 
+### Obtaining Original Uniswap V4 Source Code
+
+The agent **must** clone the original upstream Uniswap V4 repositories to use as a reference for interface completeness verification and behavioral comparison. Clone these into a temporary directory (not into the project tree):
+
+```bash
+# Clone into scratchpad/temp directory for comparison
+SCRATCH=$(mktemp -d)
+git clone https://github.com/Uniswap/v4-core.git "$SCRATCH/v4-core"
+git clone https://github.com/Uniswap/v4-periphery.git "$SCRATCH/v4-periphery"
+```
+
+**Upstream Repos:**
+- **v4-core:** `https://github.com/Uniswap/v4-core.git` — Contains PoolManager, libraries (TickMath, SwapMath, etc.), and core interfaces
+- **v4-periphery:** `https://github.com/Uniswap/v4-periphery.git` — Contains PositionManager, Quoter, StateView, and periphery interfaces
+
+Use these cloned repos to:
+1. Compare ported interface lists against originals (US-CRANE-221.2)
+2. Verify no interfaces or functions were missed during porting
+3. Cross-reference function signatures and event/error definitions
+4. Document any intentional omissions with justification
+
+After verification is complete, the temporary clones can be deleted.
+
 ### Directory Structure
 
 ```
@@ -151,6 +174,7 @@ forge test --evm-version cancun --match-path "test/foundry/fork/base_main/uniswa
 ## Inventory Check
 
 Before starting, verify:
+- [ ] Can clone upstream repos: `https://github.com/Uniswap/v4-core.git` and `https://github.com/Uniswap/v4-periphery.git`
 - [ ] Ethereum mainnet fork tests exist and pass
 - [ ] Ported V4 contracts compile
 - [ ] V4 addresses exist in `BASE_MAIN.sol`
