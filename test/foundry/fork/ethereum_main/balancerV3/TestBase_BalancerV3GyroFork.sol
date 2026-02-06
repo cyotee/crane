@@ -29,10 +29,8 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
     /*                              Fork Configuration                            */
     /* -------------------------------------------------------------------------- */
 
-    /// @dev Block number for fork reproducibility
-    /// Use 0 for latest block since Gyro pools may have been deployed recently
-    /// For CI/reproducibility, set to a specific block where pools are known to exist
-    uint256 internal constant FORK_BLOCK = 0; // 0 = latest block
+    /// @dev Block number for fork reproducibility and RPC cache reliability
+    uint256 internal constant FORK_BLOCK = 21_700_000;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */
@@ -72,13 +70,8 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
             vm.skip(true);
         }
 
-        // Create fork - uses latest block if FORK_BLOCK is 0
-        // Uses the rpc_endpoints defined in foundry.toml
-        if (FORK_BLOCK == 0) {
-            vm.createSelectFork("ethereum_mainnet_infura");
-        } else {
-            vm.createSelectFork("ethereum_mainnet_infura", FORK_BLOCK);
-        }
+        // Create fork at pinned block for RPC cache reliability
+        vm.createSelectFork("ethereum_mainnet_infura", FORK_BLOCK);
 
         // Set up contract references
         balancerVault = IVault(ETHEREUM_MAIN.BALANCER_V3_VAULT);
