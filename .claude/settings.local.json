@@ -23,7 +23,8 @@
       "Skill(backlog:review)",
       "Skill(backlog:complete)",
       "Bash(git rm:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git push:*)"
     ]
   },
   "sandbox": {
