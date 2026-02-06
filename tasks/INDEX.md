@@ -265,7 +265,7 @@
 **Test Failure Fix Groups (6 tasks - 43 failures total, all parallelizable):**
 - **CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests (Ready - foundry.toml flag)**
 - **CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests (Ready)**
-- **CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests (Ready)**
+- ~~CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests~~ → Complete
 - **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (Ready)**
 - **CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test (Ready)**
 - **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (Ready)**
