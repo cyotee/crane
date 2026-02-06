@@ -9,7 +9,7 @@ import {UniswapV3Factory} from "@crane/contracts/protocols/dexes/uniswap/v3/Unis
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {TestBase_UniswapV3Fork} from "./TestBase_UniswapV3Fork.sol";
 
-import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
+import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 
 /// @title UniswapV3 Ported Swap Parity Fork Tests
 /// @notice Validates that our ported Uniswap V3 stack produces identical swap outputs to mainnet V3
@@ -36,10 +36,10 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /*                              Test Tokens                                   */
     /* -------------------------------------------------------------------------- */
 
-    ERC20Mock internal tokenA; // 18 decimals (like WETH)
-    ERC20Mock internal tokenB; // 6 decimals (like USDC)
-    ERC20Mock internal tokenC; // 8 decimals (like WBTC)
-    ERC20Mock internal tokenD; // 18 decimals (another standard token)
+    MockERC20 internal tokenA; // 18 decimals (like WETH)
+    MockERC20 internal tokenB; // 6 decimals (like USDC)
+    MockERC20 internal tokenC; // 8 decimals (like WBTC)
+    MockERC20 internal tokenD; // 18 decimals (another standard token)
 
     /* -------------------------------------------------------------------------- */
     /*                              Test Parameters                               */
@@ -66,19 +66,19 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         vm.label(address(localFactory), "LocalV3Factory");
 
         // Deploy test tokens
-        tokenA = new ERC20Mock();
+        tokenA = new MockERC20("TokenA", "TKA", 18);
         tokenA.mint(address(this), 1e30);
         vm.label(address(tokenA), "TokenA_18dec");
 
-        tokenB = new ERC20Mock();
+        tokenB = new MockERC20("TokenB", "TKB", 6);
         tokenB.mint(address(this), 1e30);
         vm.label(address(tokenB), "TokenB_6dec");
 
-        tokenC = new ERC20Mock();
+        tokenC = new MockERC20("TokenC", "TKC", 8);
         tokenC.mint(address(this), 1e30);
         vm.label(address(tokenC), "TokenC_8dec");
 
-        tokenD = new ERC20Mock();
+        tokenD = new MockERC20("TokenD", "TKD", 18);
         tokenD.mint(address(this), 1e30);
         vm.label(address(tokenD), "TokenD_18dec");
     }

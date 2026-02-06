@@ -13,6 +13,7 @@ import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils
 import {ERC4626TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC4626TestToken.sol";
 import {ERC20TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC20TestToken.sol";
 import {WETHTestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/WETHTestToken.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 /// @notice Minimal port of Balancer V3's BaseTest, used by Crane Balancer V3 TestBases.
 /// @dev This keeps Crane independent from Balancer's `test/foundry/utils` sources.
@@ -64,7 +65,7 @@ abstract contract BaseTest is Test {
     ERC20TestToken internal dai;
     ERC20TestToken internal usdc;
     ERC20TestToken internal usdt;
-    WETHTestToken internal weth;
+    IWETH internal weth;
     ERC20TestToken internal wsteth;
     ERC20TestToken internal veBAL;
     ERC4626TestToken internal waDAI;
@@ -125,7 +126,7 @@ abstract contract BaseTest is Test {
         usdc = createERC20("USDC", 18);
         usdt = createERC20("USDT", 18);
         wsteth = createERC20("WSTETH", 18);
-        weth = new WETHTestToken();
+        weth = IWETH(address(new WETHTestToken()));
         vm.label(address(weth), "WETH");
         veBAL = createERC20("veBAL", 18);
 

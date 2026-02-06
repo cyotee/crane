@@ -17,7 +17,7 @@ import {BetterIERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 // import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 
-contract ERC20MetadataTarget is IERC20Metadata {
+abstract contract ERC20MetadataTarget is IERC20Metadata {
     /* -------------------------------------------------------------------------- */
     /*                          IERC20Metadata Functions                          */
     /* -------------------------------------------------------------------------- */

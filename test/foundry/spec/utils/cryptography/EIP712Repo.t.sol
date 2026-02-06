@@ -13,7 +13,7 @@ import "forge-std/Test.sol";
 
 import {EIP712Repo, EIP712Layout} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @title EIP712RepoHarness

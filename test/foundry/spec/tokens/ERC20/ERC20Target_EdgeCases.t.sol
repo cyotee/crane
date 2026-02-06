@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
+import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {ERC20TargetStub} from "@crane/contracts/tokens/ERC20TargetStub.sol";
 
 /**
@@ -69,7 +70,7 @@ contract ERC20Target_EdgeCases is Test {
         uint256 amount = 100e18;
         vm.prank(alice);
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Transfer(alice, bob, amount);
+        emit IERC20Events.Transfer(alice, bob, amount);
         token.transfer(bob, amount);
     }
 
@@ -111,7 +112,7 @@ contract ERC20Target_EdgeCases is Test {
         uint256 amount = 100e18;
         vm.prank(alice);
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Approval(alice, bob, amount);
+        emit IERC20Events.Approval(alice, bob, amount);
         token.approve(bob, amount);
     }
 
@@ -200,7 +201,7 @@ contract ERC20Target_EdgeCases is Test {
 
         vm.prank(bob);
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Transfer(alice, bob, amount);
+        emit IERC20Events.Transfer(alice, bob, amount);
         token.transferFrom(alice, bob, amount);
     }
 

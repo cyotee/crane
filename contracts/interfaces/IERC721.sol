@@ -3,23 +3,13 @@ pragma solidity ^0.8.0;
 
 /**
  * @dev Required interface of an ERC-721 compliant contract.
+ * @notice Native Crane implementation - no external dependencies.
+ * @dev Events (Transfer, Approval, ApprovalForAll) are NOT defined here to avoid conflicts
+ *      when contracts inherit both this interface and a base implementation (like Solady's ERC721)
+ *      which also defines these events. Contracts implementing IERC721 without a base
+ *      implementation should inherit from IERC721Events to get the event definitions.
  */
 interface IERC721 {
-    /**
-     * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
-     */
-    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-
-    /**
-     * @dev Emitted when `owner` enables `approved` to manage the `tokenId` token.
-     */
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
-
-    /**
-     * @dev Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.
-     */
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
-
     /**
      * @dev Returns the number of tokens in ``owner``'s account.
      */
@@ -48,7 +38,7 @@ interface IERC721 {
      *
      * Emits a {Transfer} event.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external payable;
 
     /**
      * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
@@ -66,7 +56,7 @@ interface IERC721 {
      *
      * Emits a {Transfer} event.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    function safeTransferFrom(address from, address to, uint256 tokenId) external payable;
 
     /**
      * @dev Transfers `tokenId` token from `from` to `to`.
@@ -84,7 +74,7 @@ interface IERC721 {
      *
      * Emits a {Transfer} event.
      */
-    function transferFrom(address from, address to, uint256 tokenId) external;
+    function transferFrom(address from, address to, uint256 tokenId) external payable;
 
     /**
      * @dev Gives permission to `to` to transfer `tokenId` token to another account.
@@ -99,7 +89,7 @@ interface IERC721 {
      *
      * Emits an {Approval} event.
      */
-    function approve(address to, uint256 tokenId) external;
+    function approve(address to, uint256 tokenId) external payable;
 
     /**
      * @dev Approve or remove `operator` as an operator for the caller.

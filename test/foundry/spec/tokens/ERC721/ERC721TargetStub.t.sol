@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
-import {IERC721Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
+import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {ERC721TargetStub} from "@crane/contracts/tokens/ERC721/ERC721TargetStub.sol";
 import {Behavior_IERC721} from "@crane/contracts/tokens/ERC721/Behavior_IERC721.sol";
 
@@ -58,7 +59,7 @@ contract ERC721TargetStub_Test is Test {
 
     function test_mint_emitsTransferEvent() public {
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Transfer(address(0), alice, 0);
+        emit IERC721Events.Transfer(address(0), alice, 0);
         token.mint(alice);
     }
 
@@ -149,7 +150,7 @@ contract ERC721TargetStub_Test is Test {
 
         vm.prank(alice);
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Transfer(alice, bob, tokenId);
+        emit IERC721Events.Transfer(alice, bob, tokenId);
         token.transferFrom(alice, bob, tokenId);
     }
 
@@ -187,7 +188,7 @@ contract ERC721TargetStub_Test is Test {
 
         vm.prank(alice);
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Approval(alice, operator, tokenId);
+        emit IERC721Events.Approval(alice, operator, tokenId);
         token.approve(operator, tokenId);
     }
 
@@ -221,7 +222,7 @@ contract ERC721TargetStub_Test is Test {
     function test_setApprovalForAll_emitsEvent() public {
         vm.prank(alice);
         vm.expectEmit(true, true, false, true);
-        emit IERC721.ApprovalForAll(alice, operator, true);
+        emit IERC721Events.ApprovalForAll(alice, operator, true);
         token.setApprovalForAll(operator, true);
     }
 
@@ -281,7 +282,7 @@ contract ERC721TargetStub_Test is Test {
 
         vm.prank(alice);
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Transfer(alice, address(0), tokenId);
+        emit IERC721Events.Transfer(alice, address(0), tokenId);
         token.burn(tokenId);
     }
 

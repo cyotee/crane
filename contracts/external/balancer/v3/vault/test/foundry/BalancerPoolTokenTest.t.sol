@@ -7,6 +7,7 @@ import "forge-std/Test.sol";
 import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import { IEIP712 } from "@crane/contracts/interfaces/IEIP712.sol";
 
 import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
@@ -52,7 +53,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
     function testMint() public {
         vm.expectEmit();
-        emit IERC20.Transfer(address(0), user, DEFAULT_AMOUNT);
+        emit IERC20Events.Transfer(address(0), user, DEFAULT_AMOUNT);
 
         vault.mintERC20(address(poolToken), user, DEFAULT_AMOUNT);
 
@@ -65,7 +66,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         vault.mintERC20(pool, user, DEFAULT_AMOUNT);
 
         vm.expectEmit();
-        emit IERC20.Transfer(user, address(0), burnAmount);
+        emit IERC20Events.Transfer(user, address(0), burnAmount);
         vault.burnERC20(pool, user, burnAmount);
 
         assertEq(poolToken.balanceOf(user), POOL_MINIMUM_TOTAL_SUPPLY, "balance mismatch");
@@ -75,7 +76,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         vault.mintERC20(pool, address(this), DEFAULT_AMOUNT);
 
         vm.expectEmit();
-        emit IERC20.Approval(address(this), user, DEFAULT_AMOUNT);
+        emit IERC20Events.Approval(address(this), user, DEFAULT_AMOUNT);
         assertTrue(poolToken.approve(user, DEFAULT_AMOUNT), "approve failed");
 
         assertEq(poolToken.allowance(address(this), user), DEFAULT_AMOUNT, "allowance mismatch");
@@ -85,7 +86,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         vault.mintERC20(pool, address(this), DEFAULT_AMOUNT);
 
         vm.expectEmit();
-        emit IERC20.Transfer(address(this), user, DEFAULT_AMOUNT);
+        emit IERC20Events.Transfer(address(this), user, DEFAULT_AMOUNT);
         assertTrue(poolToken.transfer(user, DEFAULT_AMOUNT), "transfer failed");
         assertEq(poolToken.totalSupply(), DEFAULT_AMOUNT, "total supply mismatch");
 
@@ -102,10 +103,10 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         poolToken.approve(address(this), DEFAULT_AMOUNT);
 
         vm.expectEmit();
-        emit IERC20.Approval(from, address(this), 0);
+        emit IERC20Events.Approval(from, address(this), 0);
 
         vm.expectEmit();
-        emit IERC20.Transfer(from, user, DEFAULT_AMOUNT);
+        emit IERC20Events.Transfer(from, user, DEFAULT_AMOUNT);
 
         assertTrue(poolToken.transferFrom(from, user, DEFAULT_AMOUNT), "transferFrom failed");
 
@@ -116,7 +117,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
     function testEmitTransfer() public {
         vm.expectEmit();
-        emit IERC20.Transfer(user, address(this), DEFAULT_AMOUNT);
+        emit IERC20Events.Transfer(user, address(this), DEFAULT_AMOUNT);
 
         vm.prank(address(vault));
         poolToken.emitTransfer(user, address(this), DEFAULT_AMOUNT);
@@ -124,7 +125,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
     function testEmitApproval() public {
         vm.expectEmit();
-        emit IERC20.Approval(user, address(this), DEFAULT_AMOUNT);
+        emit IERC20Events.Approval(user, address(this), DEFAULT_AMOUNT);
 
         vm.prank(address(vault));
         poolToken.emitApproval(user, address(this), DEFAULT_AMOUNT);

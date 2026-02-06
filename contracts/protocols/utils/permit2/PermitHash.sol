@@ -73,9 +73,7 @@ library PermitHash {
                 abi.encodePacked(permitHashes)._hash(),
                 permitBatch.spender,
                 permitBatch.sigDeadline
-            ).
-            // keccak256(abi.encodePacked(permitHashes)),
-            hash();
+            )._hash();
     }
 
     function hash(ISignatureTransfer.PermitTransferFrom memory permit) internal view returns (bytes32) {
@@ -111,9 +109,7 @@ library PermitHash {
                 msg.sender,
                 permit.nonce,
                 permit.deadline
-            ).
-            // keccak256(abi.encodePacked(tokenPermissionHashes)),
-            hash();
+            )._hash();
     }
 
     function hashWithWitness(
@@ -161,9 +157,7 @@ library PermitHash {
                 permit.nonce,
                 permit.deadline,
                 witness
-            ).
-            // keccak256(abi.encodePacked(tokenPermissionHashes)),
-            hash();
+            )._hash();
     }
 
     function _hashPermitDetails(IAllowanceTransfer.PermitDetails memory details) private pure returns (bytes32) {

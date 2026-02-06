@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {IERC4626Events} from "@crane/contracts/interfaces/IERC4626Events.sol";
 // import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {ERC4626Repo} from "@crane/contracts/tokens/ERC4626/ERC4626Repo.sol";
 import {ERC4626Service} from "@crane/contracts/tokens/ERC4626/ERC4626Service.sol";
@@ -11,7 +12,7 @@ import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {ReentrancyLockModifiers} from "@crane/contracts/access/reentrancy/ReentrancyLockModifiers.sol";
 
-abstract contract ERC4626Target is ReentrancyLockModifiers, IERC4626 {
+abstract contract ERC4626Target is ReentrancyLockModifiers, IERC4626, IERC4626Events {
     using BetterMath for uint256;
     using BetterSafeERC20 for IERC20;
     using ERC4626Repo for ERC4626Repo.Storage;

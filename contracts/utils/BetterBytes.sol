@@ -9,10 +9,10 @@
 pragma solidity ^0.8.24;
 
 /* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
+/*                                   Solady                                   */
 /* -------------------------------------------------------------------------- */
 
-import {Bytes} from "@openzeppelin/contracts/utils/Bytes.sol";
+import {LibBytes} from "@crane/contracts/solady/utils/LibBytes.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -25,27 +25,36 @@ import {BetterStrings as Strings} from "@crane/contracts/utils/BetterStrings.sol
 // TODO Write NatSpec comments.
 // TODO Complete unit testing for all functions.
 library BetterBytes {
-    using Bytes for bytes;
+    using LibBytes for bytes;
     using Strings for bytes;
 
     /* ---------------------------------------------------------------------- */
     /*             Wrapper function to support drop-in replacement            */
     /* ---------------------------------------------------------------------- */
 
+    /// @dev Constant returned when search is not found
+    uint256 internal constant NOT_FOUND = type(uint256).max;
+
     function _indexOf(bytes memory buffer, bytes1 s) internal pure returns (uint256) {
-        return buffer.indexOf(s);
+        return buffer.indexOfByte(s, 0);
     }
 
     function _indexOf(bytes memory buffer, bytes1 s, uint256 pos) internal pure returns (uint256) {
-        return buffer.indexOf(s, pos);
+        return buffer.indexOfByte(s, pos);
     }
 
     function _lastIndexOf(bytes memory buffer, bytes1 s) internal pure returns (uint256) {
-        return buffer.lastIndexOf(s);
+        // Solady's lastIndexOf takes bytes memory for the needle
+        bytes memory needle = new bytes(1);
+        needle[0] = s;
+        return buffer.lastIndexOf(needle);
     }
 
     function _lastIndexOf(bytes memory buffer, bytes1 s, uint256 pos) internal pure returns (uint256) {
-        return buffer.lastIndexOf(s, pos);
+        // Solady's lastIndexOf takes bytes memory for the needle
+        bytes memory needle = new bytes(1);
+        needle[0] = s;
+        return buffer.lastIndexOf(needle, pos);
     }
 
     function _slice(bytes memory buffer, uint256 start) internal pure returns (bytes memory) {

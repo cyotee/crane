@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LibClone} from "@solady/utils/LibClone.sol";
+import {LibClone} from "@crane/contracts/solady/utils/LibClone.sol";
 
 /**
  * @dev OpenZeppelin-compatible Clones library using Solady's LibClone.

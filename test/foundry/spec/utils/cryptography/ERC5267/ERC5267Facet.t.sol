@@ -11,7 +11,7 @@ import "forge-std/Test.sol";
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {IERC5267} from "@openzeppelin/contracts/interfaces/IERC5267.sol";
+import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

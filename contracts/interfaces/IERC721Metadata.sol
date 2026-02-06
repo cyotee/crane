@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.4.0) (token/ERC721/extensions/IERC721Metadata.sol)
+pragma solidity ^0.8.0;
 
-pragma solidity >=0.6.2;
+import {IERC721} from "./IERC721.sol";
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
+ * @notice Native Crane implementation - no external dependencies.
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
-interface IERC721Metadata {
+interface IERC721Metadata is IERC721 {
     /**
      * @dev Returns the token collection name.
      */

@@ -9,7 +9,7 @@ import {IERC721Metadata} from "@crane/contracts/interfaces/IERC721Metadata.sol";
 import {ERC721MetadataRepo} from "@crane/contracts/tokens/ERC721/ERC721MetadataRepo.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
-contract ERC721MetadataFacet is IFacet, IERC721Metadata {
+abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
 
     /* ------------------------------- IFacet ------------------------------- */
 

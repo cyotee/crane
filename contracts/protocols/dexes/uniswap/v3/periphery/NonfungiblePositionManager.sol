@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/introspection/IERC165.sol';
-import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {IERC721Metadata} from "@crane/contracts/interfaces/IERC721Metadata.sol";
+import {IERC721Enumerable} from "@crane/contracts/interfaces/IERC721Enumerable.sol";
+import {ERC721} from "@crane/contracts/tokens/ERC721/ERC721.sol";
+import {ERC721Enumerable} from "@crane/contracts/tokens/ERC721/ERC721Enumerable.sol";
 
 import '../interfaces/IUniswapV3Pool.sol';
 import '../libraries/FixedPoint128.sol';
@@ -187,11 +191,6 @@ contract NonfungiblePositionManager is
         address owner = _ownerOf(tokenId);
         require(_isAuthorized(owner, msg.sender, tokenId), 'Not approved');
         _;
-    }
-
-    function tokenURI(uint256 tokenId) public view override(ERC721, IERC721Metadata) returns (string memory) {
-        _requireOwned(tokenId);
-        return INonfungibleTokenPositionDescriptor(_tokenDescriptor).tokenURI(this, tokenId);
     }
 
     /// @inheritdoc INonfungiblePositionManager
@@ -386,31 +385,91 @@ contract NonfungiblePositionManager is
     }
 
     /// @inheritdoc IERC721
-    function getApproved(uint256 tokenId) public view override(ERC721, IERC721) returns (address) {
+    function getApproved(uint256 tokenId) public view override(ERC721Permit, IERC721) returns (address) {
         _requireOwned(tokenId);
         return _positions[tokenId].operator;
     }
 
     /// @dev Overrides _approve to use the operator in the position, which is packed with the position permit nonce
-    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal override(ERC721) {
+    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal override {
         _positions[tokenId].operator = to;
         if (emitEvent) {
             emit Approval(ownerOf(tokenId), to, tokenId);
         }
     }
 
-    /// @dev Override required by ERC721Enumerable
-    function _update(address to, uint256 tokenId, address auth) internal override(ERC721Enumerable) returns (address) {
+    /// @dev Override required by inheritance chain
+    function _update(address to, uint256 tokenId, address auth) internal override returns (address) {
         return super._update(to, tokenId, auth);
     }
 
-    /// @dev Override required by ERC721Enumerable
-    function _increaseBalance(address account, uint128 value) internal override(ERC721Enumerable) {
+    /// @dev Override required by inheritance chain
+    function _increaseBalance(address account, uint128 value) internal override {
         super._increaseBalance(account, value);
     }
 
     /// @dev Override required for multiple inheritance
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721Enumerable, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721Enumerable) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    // Explicit overrides to resolve diamond inheritance between IERC721/IERC721Metadata
+    // (via INonfungiblePositionManager) and ERC721Permit (via Solady's ERC721)
+    function approve(address to, uint256 tokenId) public payable virtual override(ERC721Permit, IERC721) {
+        super.approve(to, tokenId);
+    }
+
+    function balanceOf(address owner) public view virtual override(ERC721Permit, IERC721) returns (uint256) {
+        return super.balanceOf(owner);
+    }
+
+    function isApprovedForAll(address owner, address operator) public view virtual override(ERC721Permit, IERC721) returns (bool) {
+        return super.isApprovedForAll(owner, operator);
+    }
+
+    function ownerOf(uint256 tokenId) public view virtual override(ERC721Permit, IERC721) returns (address) {
+        return super.ownerOf(tokenId);
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId) public payable virtual override(ERC721Permit, IERC721) {
+        super.safeTransferFrom(from, to, tokenId);
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public payable virtual override(ERC721Permit, IERC721) {
+        super.safeTransferFrom(from, to, tokenId, data);
+    }
+
+    function setApprovalForAll(address operator, bool approved) public virtual override(ERC721Permit, IERC721) {
+        super.setApprovalForAll(operator, approved);
+    }
+
+    function transferFrom(address from, address to, uint256 tokenId) public payable virtual override(ERC721Permit, IERC721) {
+        super.transferFrom(from, to, tokenId);
+    }
+
+    // Override IERC721Metadata functions
+    function name() public view virtual override(ERC721, IERC721Metadata) returns (string memory) {
+        return super.name();
+    }
+
+    function symbol() public view virtual override(ERC721, IERC721Metadata) returns (string memory) {
+        return super.symbol();
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override(ERC721, IERC721Metadata) returns (string memory) {
+        return INonfungibleTokenPositionDescriptor(_tokenDescriptor).tokenURI(this, tokenId);
+    }
+
+    // Override IERC721Enumerable functions
+    function totalSupply() public view virtual override(ERC721Enumerable, IERC721Enumerable) returns (uint256) {
+        return ERC721Enumerable.totalSupply();
+    }
+
+    function tokenByIndex(uint256 index) public view virtual override(ERC721Enumerable, IERC721Enumerable) returns (uint256) {
+        return ERC721Enumerable.tokenByIndex(index);
+    }
+
+    function tokenOfOwnerByIndex(address owner, uint256 index) public view virtual override(ERC721Enumerable, IERC721Enumerable) returns (uint256) {
+        return ERC721Enumerable.tokenOfOwnerByIndex(owner, index);
     }
 }

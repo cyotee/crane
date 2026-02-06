@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+import "@crane/contracts/tokens/ERC721/ERC721Enumerable.sol";
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {ERC721 as SoladyERC721} from "@crane/contracts/solady/tokens/ERC721.sol";
 
 import '../libraries/ChainId.sol';
 import '../interfaces/external/IERC1271.sol';
@@ -11,6 +13,42 @@ import './BlockTimestamp.sol';
 /// @title ERC721 with permit
 /// @notice Nonfungible tokens that support an approve via signature, i.e. permit
 abstract contract ERC721Permit is BlockTimestamp, ERC721Enumerable, IERC721Permit {
+    // Explicit overrides to resolve diamond inheritance between IERC721 and Solady's ERC721
+    function approve(address to, uint256 tokenId) public payable virtual override(IERC721, SoladyERC721) {
+        SoladyERC721.approve(to, tokenId);
+    }
+
+    function balanceOf(address owner) public view virtual override(IERC721, SoladyERC721) returns (uint256) {
+        return SoladyERC721.balanceOf(owner);
+    }
+
+    function getApproved(uint256 tokenId) public view virtual override(IERC721, SoladyERC721) returns (address) {
+        return SoladyERC721.getApproved(tokenId);
+    }
+
+    function isApprovedForAll(address owner, address operator) public view virtual override(IERC721, SoladyERC721) returns (bool) {
+        return SoladyERC721.isApprovedForAll(owner, operator);
+    }
+
+    function ownerOf(uint256 tokenId) public view virtual override(IERC721, SoladyERC721) returns (address) {
+        return SoladyERC721.ownerOf(tokenId);
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId) public payable virtual override(IERC721, SoladyERC721) {
+        SoladyERC721.safeTransferFrom(from, to, tokenId);
+    }
+
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public payable virtual override(IERC721, SoladyERC721) {
+        SoladyERC721.safeTransferFrom(from, to, tokenId, data);
+    }
+
+    function setApprovalForAll(address operator, bool approved) public virtual override(IERC721, SoladyERC721) {
+        SoladyERC721.setApprovalForAll(operator, approved);
+    }
+
+    function transferFrom(address from, address to, uint256 tokenId) public payable virtual override(IERC721, SoladyERC721) {
+        SoladyERC721.transferFrom(from, to, tokenId);
+    }
     /// @dev Gets the current nonce for a token ID and then increments it, returning the original value
     function _getAndIncrementNonce(uint256 tokenId) internal virtual returns (uint256);
 

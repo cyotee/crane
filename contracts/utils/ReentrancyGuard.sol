@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ReentrancyGuard as SoladyReentrancyGuard} from "@solady/utils/ReentrancyGuard.sol";
+import {ReentrancyGuard as SoladyReentrancyGuard} from "@crane/contracts/solady/utils/ReentrancyGuard.sol";
 
 /**
  * @dev OpenZeppelin-compatible ReentrancyGuard using Solady's implementation.

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 import {IVeArtProxy} from "../interfaces/IVeArtProxy.sol";
 import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
 import {IVoter} from "../interfaces/IVoter.sol";
@@ -12,7 +13,7 @@ import {IERC6372} from "@crane/contracts/interfaces/IERC6372.sol";
 import {IReward} from "../interfaces/IReward.sol";
 import {IFactoryRegistry} from "../interfaces/factories/IFactoryRegistry.sol";
 import {IManagedRewardsFactory} from "../interfaces/factories/IManagedRewardsFactory.sol";
-import {ERC2771Context} from "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+import {ERC2771Context} from "@crane/contracts/metatx/ERC2771Context.sol";
 import {ReentrancyGuard} from "@crane/contracts/utils/ReentrancyGuard.sol";
 import {DelegationLogicLibrary} from "./libraries/DelegationLogicLibrary.sol";
 import {BalanceLogicLibrary} from "./libraries/BalanceLogicLibrary.sol";
@@ -26,7 +27,7 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /// @author Modified from Curve (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy)
 /// @author velodrome.finance, Solidly, @figs999, @pegahcarter
 /// @dev Vote weight decays linearly over time. Lock time cannot be more than `MAXTIME` (4 years).
-contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
+contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, ReentrancyGuard {
     using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
     using SafeCastLibrary for uint256;
@@ -337,7 +338,7 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
     //////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IVotingEscrow
-    function approve(address _approved, uint256 _tokenId) external {
+    function approve(address _approved, uint256 _tokenId) external payable {
         address sender = _msgSender();
         address owner = _ownerOf(_tokenId);
         // Throws if `_tokenId` is not a valid NFT
@@ -384,13 +385,13 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
     }
 
     /// @inheritdoc IVotingEscrow
-    function transferFrom(address _from, address _to, uint256 _tokenId) external {
+    function transferFrom(address _from, address _to, uint256 _tokenId) external payable {
         _transferFrom(_from, _to, _tokenId, _msgSender());
     }
 
     /// @inheritdoc IVotingEscrow
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
-        safeTransferFrom(_from, _to, _tokenId, "");
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable {
+        _safeTransferFromWithData(_from, _to, _tokenId, "");
     }
 
     function _isContract(address account) internal view returns (bool) {
@@ -405,7 +406,11 @@ contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
     }
 
     /// @inheritdoc IVotingEscrow
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) public {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external payable {
+        _safeTransferFromWithData(_from, _to, _tokenId, _data);
+    }
+
+    function _safeTransferFromWithData(address _from, address _to, uint256 _tokenId, bytes memory _data) internal {
         address sender = _msgSender();
         _transferFrom(_from, _to, _tokenId, sender);
 

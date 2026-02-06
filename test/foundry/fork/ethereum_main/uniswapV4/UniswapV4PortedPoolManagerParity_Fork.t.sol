@@ -20,7 +20,7 @@ import {
     SwapParams
 } from "../../../../../contracts/protocols/dexes/uniswap/v4/types/PoolOperation.sol";
 import {TestBase_UniswapV4EthereumMainnetFork} from "./TestBase_UniswapV4Fork.sol";
-import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /// @title TestBase_UniswapV4PortedParity
 /// @notice Extended base for parity testing between mainnet V4 and locally deployed ported V4 stack

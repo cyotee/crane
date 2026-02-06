@@ -10,6 +10,7 @@ import {IERC20PermitProxy} from "contracts/interfaces/proxies/IERC20PermitProxy.
 import {IERC4626PermitProxy} from "contracts/interfaces/proxies/IERC4626PermitProxy.sol";
 import {ERC4626TargetStub} from "contracts/tokens/ERC4626/ERC4626TargetStub.sol";
 import {IERC4626} from "contracts/interfaces/IERC4626.sol";
+import {IERC4626Events} from "contracts/interfaces/IERC4626Events.sol";
 
 contract ERC4626TargetStubTest is Test {
     IPermit2 permit2;
@@ -50,7 +51,7 @@ contract ERC4626TargetStubTest is Test {
         reserveAsset.approve(address(vault), depositAmt);
         uint256 previewShares = vault.previewDeposit(depositAmt);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), depositAmt, previewShares);
+        emit IERC4626Events.Deposit(address(this), address(this), depositAmt, previewShares);
         uint256 sharesMinted = vault.deposit(depositAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - depositAmt);
         assertEq(reserveAsset.balanceOf(address(vault)), depositAmt);
@@ -66,7 +67,7 @@ contract ERC4626TargetStubTest is Test {
         permit2.approve(address(reserveAsset), address(vault), uint160(depositAmt), type(uint48).max);
         uint256 previewShares = vault.previewDeposit(depositAmt);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), depositAmt, previewShares);
+        emit IERC4626Events.Deposit(address(this), address(this), depositAmt, previewShares);
         uint256 sharesMinted = vault.deposit(depositAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - depositAmt);
         assertEq(reserveAsset.balanceOf(address(vault)), depositAmt);
@@ -81,7 +82,7 @@ contract ERC4626TargetStubTest is Test {
         uint256 previewShares = vault.previewDeposit(depositAmt);
         reserveAsset.transfer(address(vault), depositAmt);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), depositAmt, previewShares);
+        emit IERC4626Events.Deposit(address(this), address(this), depositAmt, previewShares);
         // Pre-transfer the assets to the vault
         uint256 sharesMinted = vault.deposit(depositAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - depositAmt);
@@ -97,7 +98,7 @@ contract ERC4626TargetStubTest is Test {
         uint256 previewAssets = vault.previewMint(mintAmt);
         reserveAsset.approve(address(vault), previewAssets);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), previewAssets, mintAmt);
+        emit IERC4626Events.Deposit(address(this), address(this), previewAssets, mintAmt);
         uint256 assetsDeposited = vault.mint(mintAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - previewAssets);
         assertEq(reserveAsset.balanceOf(address(vault)), previewAssets);
@@ -113,7 +114,7 @@ contract ERC4626TargetStubTest is Test {
         reserveAsset.approve(address(permit2), type(uint256).max);
         permit2.approve(address(reserveAsset), address(vault), uint160(previewAssets), type(uint48).max);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), previewAssets, mintAmt);
+        emit IERC4626Events.Deposit(address(this), address(this), previewAssets, mintAmt);
         uint256 assetsDeposited = vault.mint(mintAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - previewAssets);
         assertEq(reserveAsset.balanceOf(address(vault)), previewAssets);
@@ -128,7 +129,7 @@ contract ERC4626TargetStubTest is Test {
         uint256 previewAssets = vault.previewMint(mintAmt);
         reserveAsset.transfer(address(vault), previewAssets);
         vm.expectEmit(true, true, false, true);
-        emit IERC4626.Deposit(address(this), address(this), previewAssets, mintAmt);
+        emit IERC4626Events.Deposit(address(this), address(this), previewAssets, mintAmt);
         // Pre-transfer the assets to the vault
         uint256 assetsDeposited = vault.mint(mintAmt, address(this));
         assertEq(reserveAsset.balanceOf(address(this)), prevReserveBal - previewAssets);
@@ -146,7 +147,7 @@ contract ERC4626TargetStubTest is Test {
 
         uint256 previewShares = vault.previewWithdraw(withdrawAmt);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(this), address(this), address(this), withdrawAmt, previewShares);
+        emit IERC4626Events.Withdraw(address(this), address(this), address(this), withdrawAmt, previewShares);
         uint256 sharesBurned = vault.withdraw(withdrawAmt, address(this), address(this));
         // 80000000000000000000000000
         // 80000000000000000000000
@@ -171,7 +172,7 @@ contract ERC4626TargetStubTest is Test {
         // Pre-transfer the assets to the vault
         vault.transfer(address(vault), previewShares);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(this), address(this), address(vault), withdrawAmt, previewShares);
+        emit IERC4626Events.Withdraw(address(this), address(this), address(vault), withdrawAmt, previewShares);
         uint256 sharesBurned = vault.withdraw(withdrawAmt, address(this), address(vault));
         // assertEq(assetsWithdrawn, withdrawAmt, "Withdrawn amount mismatch");
         assertEq(
@@ -197,7 +198,7 @@ contract ERC4626TargetStubTest is Test {
         vault.approve(spender, previewShares);
         vm.prank(spender);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(spender), address(this), address(this), withdrawAmt, previewShares);
+        emit IERC4626Events.Withdraw(address(spender), address(this), address(this), withdrawAmt, previewShares);
         uint256 sharesBurned = vault.withdraw(withdrawAmt, address(this), address(this));
         // assertEq(assetsWithdrawn, withdrawAmt, "Withdrawn amount mismatch");
         assertEq(
@@ -218,7 +219,7 @@ contract ERC4626TargetStubTest is Test {
 
         uint256 previewAssets = vault.previewRedeem(redeemAmt);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(this), address(this), address(this), previewAssets, redeemAmt);
+        emit IERC4626Events.Withdraw(address(this), address(this), address(this), previewAssets, redeemAmt);
         uint256 assetsWithdrawn = vault.redeem(redeemAmt, address(this), address(this));
         // assertEq(assetsWithdrawn, previewAssets, "Withdrawn amount mismatch");
         assertEq(
@@ -241,7 +242,7 @@ contract ERC4626TargetStubTest is Test {
         // Pre-transfer the assets to the vault
         vault.transfer(address(vault), redeemAmt);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(this), address(this), address(vault), previewAssets, redeemAmt);
+        emit IERC4626Events.Withdraw(address(this), address(this), address(vault), previewAssets, redeemAmt);
         uint256 assetsWithdrawn = vault.redeem(redeemAmt, address(this), address(vault));
         // assertEq(assetsWithdrawn, previewAssets, "Withdrawn amount mismatch");
         assertEq(
@@ -266,7 +267,7 @@ contract ERC4626TargetStubTest is Test {
         vault.approve(spender, redeemAmt);
         vm.prank(spender);
         vm.expectEmit(true, true, true, true);
-        emit IERC4626.Withdraw(address(spender), address(this), address(this), previewAssets, redeemAmt);
+        emit IERC4626Events.Withdraw(address(spender), address(this), address(this), previewAssets, redeemAmt);
         uint256 assetsWithdrawn = vault.redeem(redeemAmt, address(this), address(this));
         // assertEq(assetsWithdrawn, previewAssets, "Withdrawn amount mismatch");
         assertEq(

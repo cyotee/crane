@@ -14,6 +14,7 @@ import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 import {UInt256Set, UInt256SetRepo} from "@crane/contracts/utils/collections/sets/UInt256SetRepo.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 
 library ERC721Repo {
     using UInt256SetRepo for UInt256Set;
@@ -110,7 +111,7 @@ library ERC721Repo {
         layout_.ownerOfTokenId[tokenId] = to;
         layout_.balanceOfAccount[from]--;
         layout_.balanceOfAccount[to]++;
-        emit IERC721.Transfer(from, to, tokenId);
+        emit IERC721Events.Transfer(from, to, tokenId);
     }
 
     function _transferFrom(address from, address to, uint256 tokenId) internal {
@@ -126,7 +127,7 @@ library ERC721Repo {
             revert IERC721Errors.ERC721IncorrectOwner(msg.sender, tokenId, owner);
         }
         layout_.approvedForTokenId[tokenId] = operator;
-        emit IERC721.Approval(owner, operator, tokenId);
+        emit IERC721Events.Approval(owner, operator, tokenId);
     }
 
     function _approve(address operator, uint256 tokenId) internal {
@@ -138,7 +139,7 @@ library ERC721Repo {
             revert IERC721Errors.ERC721InvalidOperator(operator);
         }
         layout_.operatorApprovals[msg.sender][operator] = approved;
-        emit IERC721.ApprovalForAll(msg.sender, operator, approved);
+        emit IERC721Events.ApprovalForAll(msg.sender, operator, approved);
     }
 
     function _setApprovalForAll(address operator, bool approved) internal {
@@ -173,7 +174,7 @@ library ERC721Repo {
         layout_.allTokenIds._add(tokenId);
         layout_.ownerOfTokenId[tokenId] = to;
         layout_.balanceOfAccount[to]++;
-        emit IERC721.Transfer(address(0), to, tokenId);
+        emit IERC721Events.Transfer(address(0), to, tokenId);
     }
 
     function _mint(address to) internal returns (uint256 tokenId) {
@@ -195,7 +196,7 @@ library ERC721Repo {
         delete layout_.approvedForTokenId[tokenId];
         layout_.allTokenIds._remove(tokenId);
         layout_.balanceOfAccount[owner]--;
-        emit IERC721.Transfer(owner, address(0), tokenId);
+        emit IERC721Events.Transfer(owner, address(0), tokenId);
     }
 
     function _burn(address owner, uint256 tokenId) internal {

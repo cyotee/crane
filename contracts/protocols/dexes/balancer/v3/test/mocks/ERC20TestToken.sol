@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 
 /// @notice Crane-local port of Balancer's ERC20TestToken for testing purposes.
 /// @dev This enables Crane to test without importing from upstream Balancer test contracts.

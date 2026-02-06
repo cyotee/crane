@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-/* -------------------------------------------------------------------------- */
-/*                                   Solday                                   */
-/* -------------------------------------------------------------------------- */
-
-// import {EfficientHashLib} from "@solady/utils/EfficientHashLib.sol";
-
 library BetterEfficientHashLib {
     function __hash(bytes32 v0) internal pure returns (bytes32 result) {
         // result = EfficientHashLib.hash(v0);

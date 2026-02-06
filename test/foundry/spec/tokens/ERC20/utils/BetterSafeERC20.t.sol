@@ -11,7 +11,7 @@ import "forge-std/Test.sol";
 /*                                Open Zeppelin                               */
 /* -------------------------------------------------------------------------- */
 
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 /**
  * @title FeeOnTransferToken
@@ -12,7 +13,7 @@ import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.so
  *      Tax is specified in basis points (1 bp = 0.01%, so 500 = 5%).
  *      Tax denominator is 10000 (100% = 10000 bp).
  */
-contract FeeOnTransferToken is IERC20, IERC20Metadata {
+contract FeeOnTransferToken is IERC20, IERC20Events, IERC20Metadata {
     /* -------------------------------------------------------------------------- */
     /*                                  Constants                                 */
     /* -------------------------------------------------------------------------- */

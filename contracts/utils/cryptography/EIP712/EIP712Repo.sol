@@ -2,14 +2,10 @@
 pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {ShortString, ShortStrings} from "@openzeppelin/contracts/utils/ShortStrings.sol";
-
-/* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
+
+import {ShortString, ShortStrings} from "@crane/contracts/utils/ShortStrings.sol";
 
 import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";

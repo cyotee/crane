@@ -2,11 +2,12 @@
 pragma solidity ^0.8.0;
 
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
-import {IERC721, IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import {IERC721Metadata} from "@crane/contracts/interfaces/IERC721Metadata.sol";
 import {IERC6372} from "@crane/contracts/interfaces/IERC6372.sol";
-import {IERC4906} from "@openzeppelin/contracts/interfaces/IERC4906.sol";
+import {IERC4906} from "@crane/contracts/interfaces/IERC4906.sol";
 import {IVotes} from "./IVotes.sol";
 
+/// @dev Full interface for Voting Escrow NFT contract
 interface IVotingEscrow is IERC165, IVotes, IERC4906, IERC6372, IERC721Metadata {
     struct LockedBalance {
         int128 amount;
@@ -268,20 +269,20 @@ interface IVotingEscrow is IERC165, IVotes, IERC4906, IERC6372, IERC721Metadata 
     /// @dev Mapping from owner address to mapping of index to tokenId
     function ownerToNFTokenIdList(address _owner, uint256 _index) external view returns (uint256 _tokenId);
 
-    /// @inheritdoc IERC721
+    /// @dev Returns the owner of the `tokenId` token.
     function ownerOf(uint256 tokenId) external view returns (address owner);
 
-    /// @inheritdoc IERC721
+    /// @dev Returns the number of tokens in ``owner``'s account.
     function balanceOf(address owner) external view returns (uint256 balance);
 
     /*//////////////////////////////////////////////////////////////
                          ERC721 APPROVAL STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IERC721
+    /// @dev Returns the account approved for `tokenId` token.
     function getApproved(uint256 _tokenId) external view returns (address operator);
 
-    /// @inheritdoc IERC721
+    /// @dev Returns if the `operator` is allowed to manage all of the assets of `owner`.
     function isApprovedForAll(address owner, address operator) external view returns (bool);
 
     /// @notice Check whether spender is owner or an approved user for a given veNFT
@@ -293,26 +294,26 @@ interface IVotingEscrow is IERC165, IVotes, IERC4906, IERC6372, IERC721Metadata 
                               ERC721 LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IERC721
-    function approve(address to, uint256 tokenId) external;
+    /// @dev Gives permission to `to` to transfer `tokenId` token to another account.
+    function approve(address to, uint256 tokenId) external payable;
 
-    /// @inheritdoc IERC721
+    /// @dev Approve or remove `operator` as an operator for the caller.
     function setApprovalForAll(address operator, bool approved) external;
 
-    /// @inheritdoc IERC721
-    function transferFrom(address from, address to, uint256 tokenId) external;
+    /// @dev Transfers `tokenId` token from `from` to `to`.
+    function transferFrom(address from, address to, uint256 tokenId) external payable;
 
-    /// @inheritdoc IERC721
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    /// @dev Safely transfers `tokenId` token from `from` to `to`.
+    function safeTransferFrom(address from, address to, uint256 tokenId) external payable;
 
-    /// @inheritdoc IERC721
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
+    /// @dev Safely transfers `tokenId` token from `from` to `to`.
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external payable;
 
     /*//////////////////////////////////////////////////////////////
                               ERC165 LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IERC165
+    /// @dev See {IERC165-supportsInterface}.
     function supportsInterface(bytes4 _interfaceID) external view returns (bool);
 
     /*//////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 // tag::ERC20Repo[]
@@ -64,7 +65,7 @@ library ERC20Repo {
             revert IERC20Errors.ERC20InvalidSpender(spender);
         }
         layout.allowances[owner][spender] = amount;
-        emit IERC20.Approval(owner, spender, amount);
+        emit IERC20Events.Approval(owner, spender, amount);
     }
 
     function _approve(address owner, address spender, uint256 amount) internal {
@@ -121,7 +122,7 @@ library ERC20Repo {
         _decreaseBalanceOf(layout, owner, amount);
         // Increase the balance of `recipient` by `amount`.
         _increaseBalanceOf(layout, recipient, amount);
-        emit IERC20.Transfer(owner, recipient, amount);
+        emit IERC20Events.Transfer(owner, recipient, amount);
     }
 
     function _transfer(address owner, address recipient, uint256 amount) internal {
@@ -143,7 +144,7 @@ library ERC20Repo {
         // _increaseBalanceOf(layout, recipient, amount);
         layout.balanceOf[recipient] += amount;
         layout.totalSupply += amount;
-        emit IERC20.Transfer(address(0), recipient, amount);
+        emit IERC20Events.Transfer(address(0), recipient, amount);
     }
 
     function _mint(address recipient, uint256 amount) internal {
@@ -154,7 +155,7 @@ library ERC20Repo {
         // _decreaseBalanceOf(layout, account, amount);
         layout.balanceOf[account] -= amount;
         layout.totalSupply -= amount;
-        emit IERC20.Transfer(account, address(0), amount);
+        emit IERC20Events.Transfer(account, address(0), amount);
     }
 
     function _burn(address account, uint256 amount) internal {

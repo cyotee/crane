@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {IERC20Errors, IERC721Errors, IERC1155Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
@@ -62,7 +63,7 @@ contract ERC20TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Transfer(owner, to, amount);
+        emit IERC20Events.Transfer(owner, to, amount);
         sut.transfer(to, amount);
     }
 
@@ -81,7 +82,7 @@ contract ERC20TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Approval(approver, spender, amount);
+        emit IERC20Events.Approval(approver, spender, amount);
         sut.approve(spender, amount);
 
         // record expected allowance
@@ -125,7 +126,7 @@ contract ERC20TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, false, true);
-        emit IERC20.Transfer(owner, recipient, amount);
+        emit IERC20Events.Transfer(owner, recipient, amount);
         sut.transferFrom(owner, recipient, amount);
 
         // allowance should decrease by amount

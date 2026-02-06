@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Ownable as SoladyOwnable} from "@solady/auth/Ownable.sol";
+import {Ownable as SoladyOwnable} from "@crane/contracts/solady/auth/Ownable.sol";
 
 /**
  * @dev OpenZeppelin-compatible Ownable contract using Solady's implementation.

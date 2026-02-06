@@ -5,7 +5,7 @@ import {IERC20} from "./IERC20.sol";
 
 /**
  * @dev Interface for the optional metadata functions from the ERC-20 standard.
- * @notice Native Crane implementation - no external dependencies
+ * @notice Native Crane implementation - no external dependencies.
  */
 interface IERC20Metadata is IERC20 {
     /**

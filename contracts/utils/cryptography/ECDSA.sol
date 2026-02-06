@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ECDSA as SoladyECDSA} from "@solady/utils/ECDSA.sol";
+import {ECDSA as SoladyECDSA} from "@crane/contracts/solady/utils/ECDSA.sol";
 
 /**
  * @dev OpenZeppelin-compatible ECDSA library using Solady's ECDSA.

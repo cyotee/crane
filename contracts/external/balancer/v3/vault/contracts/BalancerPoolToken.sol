@@ -8,6 +8,7 @@ import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol";
 import {EIP712} from "@crane/contracts/utils/cryptography/EIP712.sol";
 import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {Nonces} from "@crane/contracts/utils/Nonces.sol";
 
 import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
@@ -19,7 +20,7 @@ import {VaultGuard} from "./VaultGuard.sol";
  * @notice `BalancerPoolToken` is a fully ERC20-compatible token to be used as the base contract for Balancer Pools.
  * @dev Vendored from Balancer V3 Vault.
  */
-contract BalancerPoolToken is IERC20, IERC20Metadata, IERC20Permit, IRateProvider, EIP712, Nonces, ERC165, VaultGuard {
+contract BalancerPoolToken is IERC20, IERC20Events, IERC20Metadata, IERC20Permit, IRateProvider, EIP712, Nonces, ERC165, VaultGuard {
     bytes32 public constant PERMIT_TYPEHASH =
         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 

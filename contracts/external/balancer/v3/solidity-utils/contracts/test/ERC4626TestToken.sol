@@ -4,8 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
-import { ERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { ERC4626 } from "@crane/contracts/tokens/ERC20/extensions/ERC4626.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
 import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
@@ -16,7 +15,6 @@ import { FixedPoint } from "../math/FixedPoint.sol";
 contract ERC4626TestToken is ERC4626, IRateProvider {
     using FixedPoint for uint256;
     using SafeERC20 for IERC20;
-    using FixedPoint for uint256;
 
     uint8 private immutable _wrappedTokenDecimals;
     IERC20 private _overrideAsset;
@@ -28,7 +26,7 @@ contract ERC4626TestToken is ERC4626, IRateProvider {
         string memory tokenName,
         string memory tokenSymbol,
         uint8 tokenDecimals
-    ) ERC4626(underlyingToken) ERC20(tokenName, tokenSymbol) {
+    ) ERC4626(underlyingToken, tokenName, tokenSymbol) {
         _wrappedTokenDecimals = tokenDecimals;
         _overrideAsset = underlyingToken;
     }
@@ -39,7 +37,8 @@ contract ERC4626TestToken is ERC4626, IRateProvider {
 
     function getRate() external view returns (uint256) {
         // The rate is calculated using the most pessimistic scenario, which is rounding down.
-        return _convertToAssets(FixedPoint.ONE, Math.Rounding.Floor);
+        // Solady's convertToAssets rounds down by default
+        return convertToAssets(FixedPoint.ONE);
     }
 
     /**

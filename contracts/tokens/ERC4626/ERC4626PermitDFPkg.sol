@@ -13,6 +13,7 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
+import {IERC4626Events} from "@crane/contracts/interfaces/IERC4626Events.sol";
 import {IPostDeployAccountHook} from "@crane/contracts/interfaces/IPostDeployAccountHook.sol";
 import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
@@ -236,7 +237,7 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
                     initialDeposit, 0, totalSupply_, ERC4626Repo._decimalOffset(erc4626)
                 );
                 ERC20Repo._mint(erc20, recipient, shares);
-                emit IERC4626.Deposit(depositor, recipient, initialDeposit, shares);
+                emit IERC4626Events.Deposit(depositor, recipient, initialDeposit, shares);
                 ReentrancyLockRepo._unlock();
             }
         }

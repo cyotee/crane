@@ -8,7 +8,8 @@ pragma solidity ^0.8.0;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 // import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
-import {IERC1363} from "@openzeppelin/contracts/interfaces/IERC1363.sol";
+// NOTE: IERC1363 removed - requires OpenZeppelin dependency
+// import {IERC1363} from "@openzeppelin/contracts/interfaces/IERC1363.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -32,7 +33,8 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 library BetterSafeERC20 {
     using BetterAddress for address;
     using SafeERC20 for IERC20;
-    using SafeERC20 for IERC1363;
+    // NOTE: IERC1363 support removed - requires OpenZeppelin dependency
+    // using SafeERC20 for IERC1363;
 
     /* ---------------------------------------------------------------------- */
     /*               Wrapper Functions for Drop-In Compatibility              */
@@ -68,19 +70,21 @@ library BetterSafeERC20 {
         token.forceApprove(spender, value);
     }
 
-    function transferAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
-        token.transferAndCallRelaxed(to, value, data);
-    }
+    // NOTE: IERC1363 relaxed transfer functions removed because they require
+    // OpenZeppelin's SafeERC20 which has these methods. Add back when crane
+    // has native IERC1363 support.
+    // function transferAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+    //     token.transferAndCallRelaxed(to, value, data);
+    // }
+    // function transferFromAndCallRelaxed(IERC1363 token, address from, address to, uint256 value, bytes memory data)
+    //     internal
+    // {
+    //     token.transferFromAndCallRelaxed(from, to, value, data);
+    // }
 
-    function transferFromAndCallRelaxed(IERC1363 token, address from, address to, uint256 value, bytes memory data)
-        internal
-    {
-        token.transferFromAndCallRelaxed(from, to, value, data);
-    }
-
-    function approveAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
-        token.approveAndCallRelaxed(to, value, data);
-    }
+    // function approveAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+    //     token.approveAndCallRelaxed(to, value, data);
+    // }
 
     /* ---------------------------------------------------------------------- */
     /*                                New Logic                               */

@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
@@ -175,12 +176,12 @@ contract BalancerV3PoolTokenFacet is
 
     /// @dev Emit the Transfer event. This function can only be called by the MultiToken.
     function emitTransfer(address from, address to, uint256 amount) external onlyBalancerV3Vault {
-        emit IERC20.Transfer(from, to, amount);
+        emit IERC20Events.Transfer(from, to, amount);
     }
 
     /// @dev Emit the Approval event. This function can only be called by the MultiToken.
     function emitApproval(address owner, address spender, uint256 amount) external onlyBalancerV3Vault {
-        emit IERC20.Approval(owner, spender, amount);
+        emit IERC20Events.Approval(owner, spender, amount);
     }
 
     /**

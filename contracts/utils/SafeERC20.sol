@@ -93,4 +93,37 @@ library SafeERC20 {
     function forceApprove(IERC20 token, address spender, bool approve) internal {
         forceApprove(token, spender, approve ? type(uint256).max : 0);
     }
+
+    /**
+     * @dev Try to transfer `value` amount of `token` from the calling contract to `to`.
+     * Returns true if successful, false otherwise.
+     */
+    function trySafeTransfer(IERC20 token, address to, uint256 value) internal returns (bool) {
+        // Solady doesn't have trySafeTransfer for ERC20 (only for ETH), so we implement it
+        // by catching the revert from safeTransfer
+        try IERC20(token).transfer(to, value) returns (bool success) {
+            // Check for non-standard tokens that don't return a value
+            return success || _hasNoCode(address(token));
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * @dev Try to transfer `value` amount of `token` from `from` to `to`.
+     * Returns true if successful, false otherwise.
+     */
+    function trySafeTransferFrom(IERC20 token, address from, address to, uint256 value) internal returns (bool) {
+        return SafeTransferLib.trySafeTransferFrom(address(token), from, to, value);
+    }
+
+    /**
+     * @dev Helper to check if an address has no code (used for non-standard token handling).
+     */
+    function _hasNoCode(address account) private view returns (bool result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            result := iszero(extcodesize(account))
+        }
+    }
 }

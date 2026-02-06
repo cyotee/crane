@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 import {ERC721TargetStub} from "@crane/contracts/tokens/ERC721/ERC721TargetStub.sol";
 
@@ -100,7 +101,7 @@ contract ERC721TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Transfer(owner, to, tokenId);
+        emit IERC721Events.Transfer(owner, to, tokenId);
         sut.transferFrom(owner, to, tokenId);
     }
 
@@ -126,7 +127,7 @@ contract ERC721TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Approval(owner, operator, tokenId);
+        emit IERC721Events.Approval(owner, operator, tokenId);
         sut.approve(operator, tokenId);
     }
 
@@ -148,7 +149,7 @@ contract ERC721TargetStubHandler is Test {
         }
 
         vm.expectEmit(true, true, false, true);
-        emit IERC721.ApprovalForAll(owner, operator, approved);
+        emit IERC721Events.ApprovalForAll(owner, operator, approved);
         sut.setApprovalForAll(operator, approved);
     }
 
@@ -165,7 +166,7 @@ contract ERC721TargetStubHandler is Test {
 
         vm.prank(owner);
         vm.expectEmit(true, true, true, true);
-        emit IERC721.Transfer(owner, address(0), tokenId);
+        emit IERC721Events.Transfer(owner, address(0), tokenId);
         sut.burn(tokenId);
 
         _removeToken(tokenId);

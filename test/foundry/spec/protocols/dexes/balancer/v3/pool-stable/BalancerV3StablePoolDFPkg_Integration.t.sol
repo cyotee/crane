@@ -8,7 +8,8 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Balancer V3                                */
@@ -49,7 +50,7 @@ import {
  * @title MockERC20
  * @notice Simple ERC20 mock for testing pool deployment.
  */
-contract MockERC20 is IERC20, IERC20Metadata {
+contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
     string private _name;
     string private _symbol;
     uint8 private _decimals;

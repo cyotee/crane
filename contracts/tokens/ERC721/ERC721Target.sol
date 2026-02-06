@@ -36,28 +36,28 @@ contract ERC721Target is IERC721 {
     /**
      * @inheritdoc IERC721
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public virtual {
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public payable virtual {
         ERC721Repo._safeTransferFrom(from, to, tokenId, data);
     }
 
     /**
      * @inheritdoc IERC721
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual {
+    function safeTransferFrom(address from, address to, uint256 tokenId) public payable virtual {
         ERC721Repo._safeTransferFrom(from, to, tokenId);
     }
 
     /**
      * @inheritdoc IERC721
      */
-    function transferFrom(address from, address to, uint256 tokenId) public virtual {
+    function transferFrom(address from, address to, uint256 tokenId) public payable virtual {
         ERC721Repo._transferFrom(from, to, tokenId);
     }
 
     /**
      * @inheritdoc IERC721
      */
-    function approve(address to, uint256 tokenId) public virtual {
+    function approve(address to, uint256 tokenId) public payable virtual {
         ERC721Repo._approve(to, tokenId);
     }
 

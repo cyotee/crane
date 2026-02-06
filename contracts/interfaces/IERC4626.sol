@@ -8,14 +8,13 @@ import {IERC4626Errors} from "./IERC4626Errors.sol";
 /**
  * @dev Interface of the ERC-4626 "Tokenized Vault Standard", as defined in
  * https://eips.ethereum.org/EIPS/eip-4626[ERC-4626].
- * @notice Native Crane implementation - no external dependencies
+ * @notice Native Crane implementation - no external dependencies.
  */
 interface IERC4626 is IERC20, IERC20Metadata, IERC4626Errors {
-    event Deposit(address indexed sender, address indexed owner, uint256 assets, uint256 shares);
-
-    event Withdraw(
-        address indexed sender, address indexed receiver, address indexed owner, uint256 assets, uint256 shares
-    );
+    // NOTE: Events removed to avoid duplication with Solady's ERC4626.
+    // Contracts inheriting from Solady's ERC4626 get events from there.
+    // See IERC4626Events for contracts that need to emit events without
+    // inheriting from Solady's ERC4626.
 
     /**
      * @dev Returns the address of the underlying token used for the Vault for accounting, depositing, and withdrawing.

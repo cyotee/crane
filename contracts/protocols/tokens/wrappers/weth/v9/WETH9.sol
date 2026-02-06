@@ -20,8 +20,9 @@ pragma solidity ^0.8.24;
 /* -------------------------------------------------------------------------- */
 
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
-contract WETH9 is IWETH {
+contract WETH9 is IWETH, IERC20Events {
     string public name = "Wrapped Ether";
     string public symbol = "WETH";
     uint8 public decimals = 18;

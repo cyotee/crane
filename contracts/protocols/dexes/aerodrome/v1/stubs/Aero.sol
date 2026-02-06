@@ -2,18 +2,18 @@
 pragma solidity ^0.8.19;
 
 import {IAero} from "../interfaces/IAero.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 
 /// @title Aero
 /// @author velodrome.finance, Solidly
 /// @notice The native token in the Protocol ecosystem
-/// @dev Emitted by the Minter
-contract Aero is IAero, ERC20Permit {
+/// @dev Emitted by the Minter. Uses Solady's ERC20 which includes EIP-2612 permit functionality.
+contract Aero is IAero, ERC20 {
     address public minter;
     address private owner;
 
-    constructor() ERC20("Aerodrome", "AERO") ERC20Permit("Aerodrome") {
+    constructor() ERC20("Aerodrome", "AERO") {
         minter = msg.sender;
         owner = msg.sender;
     }
@@ -28,5 +28,30 @@ contract Aero is IAero, ERC20Permit {
         if (msg.sender != minter) revert NotMinter();
         _mint(account, amount);
         return true;
+    }
+
+    // Explicit overrides to resolve diamond inheritance between IAero (IERC20) and ERC20
+    function totalSupply() public view override(IERC20, ERC20) returns (uint256) {
+        return ERC20.totalSupply();
+    }
+
+    function balanceOf(address account) public view override(IERC20, ERC20) returns (uint256) {
+        return ERC20.balanceOf(account);
+    }
+
+    function transfer(address to, uint256 value) public override(IERC20, ERC20) returns (bool) {
+        return ERC20.transfer(to, value);
+    }
+
+    function allowance(address owner_, address spender) public view override(IERC20, ERC20) returns (uint256) {
+        return ERC20.allowance(owner_, spender);
+    }
+
+    function approve(address spender, uint256 value) public override(IERC20, ERC20) returns (bool) {
+        return ERC20.approve(spender, value);
+    }
+
+    function transferFrom(address from, address to, uint256 value) public override(IERC20, ERC20) returns (bool) {
+        return ERC20.transferFrom(from, to, value);
     }
 }

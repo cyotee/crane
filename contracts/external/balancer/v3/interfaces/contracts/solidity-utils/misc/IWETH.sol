@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
+// NOTE: IERC20Events removed because implementations inherit from ERC20 which has these events.
 interface IWETH is IERC20 {
     function deposit() external payable;
 

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import {BetterAddress} from "contracts/utils/BetterAddress.sol";
-import {IERC20 as OZIERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20 as OZIERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {BetterIERC20 as IERC20} from "contracts/interfaces/BetterIERC20.sol";
 
 // contract Empty {}
