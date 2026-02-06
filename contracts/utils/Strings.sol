@@ -42,7 +42,7 @@ library Strings {
      * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
      */
     function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {
-        return LibString.toHexStringNoPrefix(value, length);
+        return LibString.toHexString(value, length);
     }
 
     /**
