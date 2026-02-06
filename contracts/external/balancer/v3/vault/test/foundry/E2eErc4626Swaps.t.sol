@@ -440,18 +440,20 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
     }
 
     function _setPoolBalances(uint256 liquidityWaDai, uint256 liquidityWaWeth) private {
-        // 1% to 10000% of erc4626 initial pool liquidity.
+        // 10% to 1000% of erc4626 initial pool liquidity.
+        // Matches E2eSwap.t.sol bounds to avoid StableMath MaxImbalanceRatioExceeded
+        // (worst-case ratio is 100:1, well within MAX_IMBALANCE_RATIO of 10,000).
         liquidityWaDai = bound(
             liquidityWaDai,
-            erc4626PoolInitialAmount.mulDown(1e16),
-            erc4626PoolInitialAmount.mulDown(10000e16)
+            erc4626PoolInitialAmount / 10,
+            10 * erc4626PoolInitialAmount
         );
         liquidityWaDai = _vaultPreviewDeposit(waDAI, liquidityWaDai);
-        // 1% to 10000% of erc4626 initial pool liquidity.
+        // 10% to 1000% of erc4626 initial pool liquidity.
         liquidityWaWeth = bound(
             liquidityWaWeth,
-            erc4626PoolInitialAmount.mulDown(1e16),
-            erc4626PoolInitialAmount.mulDown(10000e16)
+            erc4626PoolInitialAmount / 10,
+            10 * erc4626PoolInitialAmount
         );
         liquidityWaWeth = _vaultPreviewDeposit(waWETH, liquidityWaWeth);
 
