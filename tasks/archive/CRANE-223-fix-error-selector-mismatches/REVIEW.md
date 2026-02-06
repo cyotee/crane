@@ -58,8 +58,8 @@ None needed. Requirements and implementation are straightforward.
 **Description:** The `SafeCast.sol` wrapper declares `SafeCastOverflowedUintDowncast` but delegates to `SafeCastLib` which throws `Overflow()`. This is a subtlety that could trip up future developers. A brief NatSpec comment in `SafeCast.sol` noting that runtime reverts use `SafeCastLib.Overflow` (not the declared error) would prevent confusion.
 **Affected Files:**
 - `contracts/utils/SafeCast.sol`
-**User Response:** (pending)
-**Notes:** Not blocking. The current code works correctly; this is a documentation improvement.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-230
 
 ---
 

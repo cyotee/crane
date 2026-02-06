@@ -114,6 +114,7 @@
 | CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Ready | - | `fix/stablesurgehook-error-expectation` |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | In Progress | - | `fix/pin-gyro-fork-block` |
 | CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Ready | CRANE-224 | `fix/forceapprove-usdt-retry` |
+| CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 
 ## Status Legend
 
