@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Ready | CRANE-039 | `test/slipstream-fork-exactout-edge` |
+| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | In Progress | CRANE-039 | `test/slipstream-fork-exactout-edge` |
 | CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
@@ -109,7 +109,7 @@
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | In Progress | - | `fix/betterstrings-hex-prefix` |
 | CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | In Progress | - | `fix/stablesurgehook-error-expectation` |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
-| CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Ready | CRANE-224 | `fix/forceapprove-usdt-retry` |
+| CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | In Progress | CRANE-224 | `fix/forceapprove-usdt-retry` |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 
 ## Status Legend
