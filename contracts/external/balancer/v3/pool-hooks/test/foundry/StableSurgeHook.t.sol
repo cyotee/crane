@@ -143,7 +143,7 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
             "Not surging after add"
         );
 
-        vm.expectRevert(IVaultErrors.AfterAddLiquidityHookFailed.selector);
+        vm.expectRevert(StableMath.MaxImbalanceRatioExceeded.selector);
         vm.prank(alice);
         router.addLiquidityUnbalanced(pool, amountsIn, 0, false, "");
 

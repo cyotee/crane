@@ -3,7 +3,7 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {SafeCastLib} from "@crane/contracts/utils/SafeCastLib.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
@@ -110,7 +110,7 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         SwapPathExactAmountIn[] memory paths = _wrapExactInPath(overflowAmount, 0, IERC20(address(waDAI)));
 
         vm.prank(lp);
-        vm.expectRevert(abi.encodeWithSelector(SafeCast.SafeCastOverflowedUintDowncast.selector, 160, overflowAmount));
+        vm.expectRevert(SafeCastLib.Overflow.selector);
         batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
     }
 

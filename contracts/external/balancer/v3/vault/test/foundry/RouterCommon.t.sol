@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
 import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
+import {SafeCastLib} from "@crane/contracts/utils/SafeCastLib.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
 
@@ -117,7 +117,7 @@ contract RouterCommonTest is BaseVaultTest {
         IERC20(weth).approve(address(permit2), type(uint256).max);
         permit2.approve(address(weth), address(routerMock), type(uint160).max, type(uint48).max);
 
-        vm.expectRevert(abi.encodeWithSelector(SafeCast.SafeCastOverflowedUintDowncast.selector, 160, amountToDeposit));
+        vm.expectRevert(SafeCastLib.Overflow.selector);
         routerMock.mockTakeTokenIn(bob, IERC20(weth), amountToDeposit, false);
         vm.stopPrank();
     }
