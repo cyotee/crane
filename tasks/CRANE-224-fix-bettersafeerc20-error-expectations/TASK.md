@@ -23,9 +23,9 @@
 As a developer, I want the BetterSafeERC20 tests to correctly assert the error types thrown by Solady's SafeTransferLib so that the test suite validates actual library behavior.
 
 **Acceptance Criteria:**
-- [ ] All 5 BetterSafeERC20 test failures are resolved
-- [ ] Tests correctly expect `TransferFailed()`, `TransferFromFailed()`, or `ApproveFailed()` as appropriate
-- [ ] The forceApprove USDT test either passes or is correctly documented if it's a logic bug
+- [x] All 5 BetterSafeERC20 test failures are resolved
+- [x] Tests correctly expect `TransferFailed()`, `TransferFromFailed()`, or `ApproveFailed()` as appropriate
+- [x] The forceApprove USDT test either passes or is correctly documented if it's a logic bug
 
 ## Technical Details
 
@@ -83,9 +83,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All 5 BetterSafeERC20 tests pass
-- [ ] No regression in other tests
-- [ ] If forceApprove is a library bug (not just a test bug), file a follow-up task
+- [x] All 5 BetterSafeERC20 tests pass
+- [x] No regression in other tests
+- [x] If forceApprove is a library bug (not just a test bug), file a follow-up task
 
 ---
 
