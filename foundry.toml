@@ -16,6 +16,8 @@ viaIR = false
 # optimizer_runs = 16683
 # optimizer_runs = 999
 optimizer_runs = 1
+# Allow vm.expectRevert() for internal/library function calls (Foundry v1.0+ changed depth requirements)
+allow_internal_expect_revert = true
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@crane/contracts/=contracts/"
