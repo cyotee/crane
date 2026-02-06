@@ -2,3 +2,8 @@ forge-std/=lib/forge-std/src/
 
 @crane/contracts/=contracts/
 @crane/test/=test/
+
+@solady/=lib/solady/src/
+solady/=lib/solady/src/
+
+@openzeppelin/=lib/openzeppelin-contracts/
