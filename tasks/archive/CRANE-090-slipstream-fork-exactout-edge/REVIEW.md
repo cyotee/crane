@@ -60,16 +60,16 @@ Actionable items for follow-up tasks:
 **Affected Files:**
 - `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_quoteExactOutput.t.sol` (7 instances)
 - `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_edgeCases.t.sol` (5 instances, 3 pre-existing from CRANE-040)
-**User Response:** (pending)
-**Notes:** This is covered by CRANE-092 (Tighten Slipstream Edge Case Test Assertions) which is already in the backlog. The CRANE-090 instances could be rolled into that task.
+**User Response:** Accepted
+**Notes:** Rolled into existing CRANE-092 (Tighten Slipstream Edge Case Test Assertions) - scope expanded to include quoteExactOutput file.
 
 ### Suggestion 2: Add near-depletion test
 **Priority:** Very Low
 **Description:** US-CRANE-090.1 lists "near-depletion" as P2 priority - output that consumes most available liquidity without crossing tick. While implicit in the large-amount tests, no test explicitly validates the near-depletion boundary behavior.
 **Affected Files:**
 - `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_quoteExactOutput.t.sol`
-**User Response:** (pending)
-**Notes:** The large-amount tests (1e18 to 1e27 range) partially cover this, and the tick-spacing tests with mock swap verification provide strong coverage. This is a minor gap.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-232
 
 ---
 

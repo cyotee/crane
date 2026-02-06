@@ -15,6 +15,8 @@ Replace tautological assertions (e.g., `assertTrue(x >= 0)` for unsigned ints) w
 
 (Created from code review of CRANE-040)
 
+**Additional scope from CRANE-090 review:** Also fix 7 tautological `assertTrue(quotedIn >= 0)` assertions in `SlipstreamUtils_quoteExactOutput.t.sol` (lines 278, 556, 573, 585, 597, 611, 624) and 2 new instances in `SlipstreamUtils_edgeCases.t.sol` added by CRANE-090.
+
 ## Dependencies
 
 - CRANE-040: Add Slipstream Edge Case Tests (parent task - completed)
@@ -37,6 +39,7 @@ As a developer, I want test assertions that fail on meaningful regressions so th
 
 **Modified Files:**
 - `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_edgeCases.t.sol`
+- `test/foundry/spec/utils/math/slipstreamUtils/SlipstreamUtils_quoteExactOutput.t.sol`
 
 ## Inventory Check
 
