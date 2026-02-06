@@ -143,6 +143,10 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
             "Not surging after add"
         );
 
+        // StableMath.ensureBalancesWithinMaxImbalanceRange() reverts BEFORE the Vault
+        // calls onAfterAddLiquidity, so the hook never gets to return (false, ...) which
+        // would trigger AfterAddLiquidityHookFailed. The 10:100_000 ratio (10_000x) hits
+        // the MAX_IMBALANCE_RATIO guard first.
         vm.expectRevert(StableMath.MaxImbalanceRatioExceeded.selector);
         vm.prank(alice);
         router.addLiquidityUnbalanced(pool, amountsIn, 0, false, "");

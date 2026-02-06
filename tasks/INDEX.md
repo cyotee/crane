@@ -107,7 +107,7 @@
 | CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
 | CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | Complete | - | `fix/erc4626-fuzz-bounds` |
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | Complete | - | - |
-| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | In Progress | - | `fix/stablesurgehook-error-expectation` |
+| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | In Review | - | `fix/stablesurgehook-error-expectation` |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
 | CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | In Progress | CRANE-224 | `fix/forceapprove-usdt-retry` |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
@@ -265,8 +265,8 @@
 - ~~CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests~~ → Complete
 - ~~CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests~~ → Complete
 - ~~CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests~~ → Complete
-- ~~CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test~~ → Pending Merge
-- **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (Ready)**
+- ~~CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test~~ → Complete
+- **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (In Review)**
 
 **Submodule Removal (3 tasks):**
 - ~~CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency~~ → Complete
