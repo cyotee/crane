@@ -82,7 +82,7 @@ library SafeERC20 {
      * set here.
      */
     function forceApprove(IERC20 token, address spender, uint256 value) internal {
-        SafeTransferLib.safeApprove(address(token), spender, value);
+        SafeTransferLib.safeApproveWithRetry(address(token), spender, value);
     }
 
     /**

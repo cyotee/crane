@@ -237,11 +237,10 @@ contract BetterSafeERC20_Test is Test {
         harness.forceApprove(IERC20(address(usdtApprovalToken)), spender, TRANSFER_AMOUNT);
         assertEq(usdtApprovalToken.allowance(address(harness), spender), TRANSFER_AMOUNT, "Initial allowance set");
 
-        // BUG: SafeERC20.forceApprove() delegates to SafeTransferLib.safeApprove() which does NOT
-        // have USDT zero-first retry logic. It should use safeApproveWithRetry() instead.
-        // See follow-up task for the library fix.
-        vm.expectRevert(SafeTransferLib.ApproveFailed.selector);
-        harness.forceApprove(IERC20(address(usdtApprovalToken)), spender, TRANSFER_AMOUNT * 2);
+        // Second approval (non-zero to non-zero) works via safeApproveWithRetry zero-first retry
+        uint256 newAllowance = TRANSFER_AMOUNT * 2;
+        harness.forceApprove(IERC20(address(usdtApprovalToken)), spender, newAllowance);
+        assertEq(usdtApprovalToken.allowance(address(harness), spender), newAllowance, "Allowance overwritten");
     }
 
     /* -------------------------------------------------------------------------- */
