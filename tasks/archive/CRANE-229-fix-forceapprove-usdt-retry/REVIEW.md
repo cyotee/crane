@@ -62,8 +62,8 @@ The `vm.expectRevert` and BUG comment were correctly removed. The `MockERC20USDT
 **Description:** `safeIncreaseAllowance` and `safeDecreaseAllowance` both call `forceApprove` internally, which means they now also handle USDT-like tokens correctly. Adding tests that exercise these paths with `MockERC20USDTApproval` would improve coverage and document this behavior.
 **Affected Files:**
 - `test/foundry/spec/tokens/ERC20/utils/BetterSafeERC20.t.sol`
-**User Response:** (pending)
-**Notes:** Not a blocker for this task. The core fix is correct and well-tested.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-231
 
 ---
 

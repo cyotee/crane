@@ -111,6 +111,7 @@
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
 | CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Complete | CRANE-224 | - |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
+| CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/usdt-increase-decrease-allowance` |
 
 ## Status Legend
 
