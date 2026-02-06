@@ -107,7 +107,7 @@
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
 | CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Complete | - | - |
-| CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | In Progress | - | `fix/error-selector-mismatches` |
+| CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | Pending Merge | - | `fix/error-selector-mismatches` |
 | CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
 | CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | In Progress | - | `fix/erc4626-fuzz-bounds` |
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | In Progress | - | `fix/betterstrings-hex-prefix` |
