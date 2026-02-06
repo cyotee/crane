@@ -109,7 +109,7 @@
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | Complete | - | - |
 | CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Complete | - | - |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
-| CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | In Progress | CRANE-224 | `fix/forceapprove-usdt-retry` |
+| CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Pending Merge | CRANE-224 | `fix/forceapprove-usdt-retry` |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 
 ## Status Legend
