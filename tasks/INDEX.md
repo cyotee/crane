@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-06
 
 ## Active Tasks
 
@@ -80,7 +80,6 @@
 | CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/lbp-dfpkg-calcsalt` |
 | CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
 | CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/remove-aerodrome-submodule` |
-| CRANE-182 | Final Submodule Cleanup and forge-std Installation | Blocked | CRANE-171, CRANE-181, CRANE-186 | `chore/final-submodule-cleanup` |
 | CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/v3-quoter-tests` |
 | CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
@@ -102,17 +101,14 @@
 | CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
 | CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
 | CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
-| CRANE-218 | Port Balancer V3 Test Mocks and Tokens to Crane | Complete | - | `feature/balancer-v3-test-mock-port` |
-| CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | Complete | - | `feature/openzeppelin-port` |
-| CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
 | CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Complete | - | - |
 | CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | Complete | - | `fix/error-selector-mismatches` |
 | CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
 | CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | Complete | - | `fix/erc4626-fuzz-bounds` |
 | CRANE-226 | Fix BetterStrings toHexString Missing 0x Prefix (1 test) | In Progress | - | `fix/betterstrings-hex-prefix` |
-| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | Ready | - | `fix/stablesurgehook-error-expectation` |
-| CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | In Progress | - | `fix/pin-gyro-fork-block` |
+| CRANE-227 | Fix StableSurgeHook Error Expectation (1 test) | In Progress | - | `fix/stablesurgehook-error-expectation` |
+| CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | Complete | - | - |
 | CRANE-229 | Fix SafeERC20.forceApprove() to Use safeApproveWithRetry() | Ready | CRANE-224 | `fix/forceapprove-usdt-retry` |
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 
@@ -268,20 +264,19 @@
 - ~~CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests~~ → Complete
 - ~~CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests~~ → Complete
 - ~~CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests~~ → Complete
-- **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (Complete)**
+- ~~CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests~~ → Complete
 - **CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test (Ready)**
 - **CRANE-227: Fix StableSurgeHook Error Expectation - 1 test (Ready)**
 
-**Submodule Removal (5 tasks):**
-- **CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency (Ready - HIGH)**
-- **CRANE-220: Port Solady Code to Remove Submodule Dependency (Ready - Small)**
+**Submodule Removal (3 tasks):**
+- ~~CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency~~ → Complete
+- ~~CRANE-220: Port Solady Code to Remove Submodule Dependency~~ → Complete
 - **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
 - **CRANE-181: Remove lib/aerodrome-contracts Submodule (Ready)**
-- **CRANE-182: Final Submodule Cleanup and forge-std Installation (Blocked - waiting on all removals)**
-
 ### Blocked
 
-- CRANE-182: Final Submodule Cleanup (waiting on CRANE-171, CRANE-181, and future removal tasks)
+- CRANE-188: Remove lib/reclamm Submodule (waiting on CRANE-195)
+- CRANE-189: Remove lib/v4-core and lib/v4-periphery Submodules (waiting on CRANE-221)
 
 ## Retired Tasks
 
@@ -402,6 +397,9 @@
 | CRANE-208 | Add Balancer V3 Weighted Pool Fork Parity Tests | 2026-02-03 | archive/CRANE-208-balancer-v3-weighted-pool-fork-parity-tests/ |
 | CRANE-211 | OpenGSN Forwarder Port + Fork Parity Tests | 2026-02-03 | archive/CRANE-211-opengsn-forwarder-port-and-tests/ |
 | CRANE-212 | Port Slipstream + Add Fork Parity Tests | 2026-02-03 | archive/CRANE-212-slipstream-port-and-parity/ |
+| CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | 2026-02-06 | archive/CRANE-219-openzeppelin-port/ |
+| CRANE-220 | Port Solady Code to Remove Submodule Dependency | 2026-02-06 | archive/CRANE-220-solady-port/ |
+| CRANE-182 | Final Submodule Cleanup and forge-std Installation | 2026-02-06 | archive/CRANE-182-final-submodule-cleanup/ |
 
 ## Cross-Repo Dependencies
 
