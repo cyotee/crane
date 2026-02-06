@@ -444,6 +444,172 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*              CRANE-090: Exact-Output Edge Cases (Fork)                     */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Test zero output returns zero input on real pool
+    function test_quoteExactOutputSingle_zeroAmount_fork() public {
+        ICLPool pool = getPool(WETH_USDC_CL_500);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            0,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        assertEq(quotedIn, 0, "Zero output should require zero input on real pool");
+    }
+
+    /// @notice Test dust output (1 wei WETH) on real WETH/USDC pool
+    function test_quoteExactOutputSingle_dustAmount_fork() public {
+        ICLPool pool = getPool(WETH_USDC_CL_500);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
+        // 1 wei WETH output
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            1,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        console.log("Dust exactOutput (1 wei WETH):");
+        console.log("  quotedIn (USDC):", quotedIn);
+
+        // Should require at least 1 unit input
+        assertTrue(quotedIn >= 1, "Dust output should require non-zero input");
+    }
+
+    /// @notice Test small exact output (0.001 WETH) on real pool
+    function test_quoteExactOutputSingle_smallAmount_fork() public {
+        ICLPool pool = getPool(WETH_USDC_CL_500);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        uint256 amountOut = 0.001 ether; // 0.001 WETH
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
+
+        console.log("Small exactOutput (0.001 WETH):");
+        console.log("  quotedIn (USDC):", quotedIn);
+        console.log("  actualIn (USDC):", actualIn);
+
+        // Allow higher tolerance for small amounts
+        assertQuoteAccuracy(quotedIn, actualIn, 50, "Small exactOutput quote mismatch"); // 0.5% tolerance
+    }
+
+    /// @notice Test exact output tick overload parity on real WETH/USDC pool
+    function test_quoteExactOutputSingle_tickOverloadParity_fork() public {
+        ICLPool pool = getPool(WETH_USDC_CL_500);
+
+        (uint160 sqrtPriceX96, int24 tick, uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        uint256 amountOut = 0.005 ether;
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
+        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut, sqrtPriceX96, liquidity, fee, zeroForOne
+        );
+
+        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut, tick, liquidity, fee, zeroForOne
+        );
+
+        uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
+
+        console.log("ExactOutput tick overload parity (fork):");
+        console.log("  quotedWithSqrtPrice:", quotedWithSqrtPrice);
+        console.log("  quotedWithTick:", quotedWithTick);
+        console.log("  actualIn:", actualIn);
+
+        // sqrtPrice overload should be more accurate
+        assertQuoteAccuracy(quotedWithSqrtPrice, actualIn, "sqrtPrice overload exactOutput mismatch");
+        // tick overload allows higher tolerance
+        assertQuoteAccuracy(quotedWithTick, actualIn, 50, "tick overload exactOutput mismatch"); // 0.5%
+    }
+
+    /// @notice Test exact output on cbBTC/WETH pool with dust amount
+    function test_quoteExactOutputSingle_cbBTC_WETH_dustAmount_fork() public {
+        skipIfPoolInvalid(cbBTC_WETH_CL, "cbBTC_WETH_CL");
+
+        ICLPool pool = getPool(cbBTC_WETH_CL);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        // 1 satoshi of cbBTC (smallest unit = 1e-8 BTC)
+        uint256 amountOut = 1;
+
+        bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
+
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
+            amountOut,
+            sqrtPriceX96,
+            liquidity,
+            fee,
+            zeroForOne
+        );
+
+        console.log("cbBTC/WETH dust exactOutput (1 sat):");
+        console.log("  quotedIn (WETH):", quotedIn);
+
+        // Should compute without reverting
+        assertTrue(quotedIn >= 0, "Dust cbBTC output should compute gracefully");
+    }
+
+    /// @notice Test exact output round-trip on real pool: exactOut -> exactIn should be consistent
+    function test_quoteExactOutput_roundTrip_fork() public {
+        ICLPool pool = getPool(WETH_USDC_CL_500);
+
+        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        uint24 fee = getPoolFee(pool);
+
+        uint256 desiredOutput = 0.01 ether; // 0.01 WETH
+
+        bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
+
+        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
+            desiredOutput, sqrtPriceX96, liquidity, fee, zeroForOne
+        );
+
+        uint256 actualOutput = SlipstreamUtils._quoteExactInputSingle(
+            requiredInput, sqrtPriceX96, liquidity, fee, zeroForOne
+        );
+
+        console.log("Round-trip test on real pool:");
+        console.log("  desiredOutput:", desiredOutput);
+        console.log("  requiredInput:", requiredInput);
+        console.log("  actualOutput:", actualOutput);
+
+        assertApproxEqRel(actualOutput, desiredOutput, 0.001e18, "Round-trip on real pool should be consistent");
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                      Liquidity Amount Helper Tests                         */
     /* -------------------------------------------------------------------------- */
 

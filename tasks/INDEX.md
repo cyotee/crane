@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | In Progress | CRANE-039 | `test/slipstream-fork-exactout-edge` |
+| CRANE-090 | Add Exact-Output Edge Case Tests to Slipstream Fork Tests | Pending Merge | CRANE-039 | `test/slipstream-fork-exactout-edge` |
 | CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
