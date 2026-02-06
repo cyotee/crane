@@ -66,8 +66,8 @@ This is the right approach: document the bug in the test, assert the actual (bug
 **Description:** `SafeERC20.forceApprove()` at line 85 of `contracts/utils/SafeERC20.sol` calls `SafeTransferLib.safeApprove()` instead of `SafeTransferLib.safeApproveWithRetry()`. This breaks USDT-like tokens that require zero-first approval. This is already documented in MEMORY.md and in the test comment.
 **Affected Files:**
 - `contracts/utils/SafeERC20.sol` (line 85)
-**User Response:** Needs a follow-up task (may already be tracked informally)
-**Notes:** When fixed, `test_forceApprove_usdtApprovalToken_overwritesExistingAllowance` should be updated to expect success and re-add the final `assertEq` for the updated allowance value.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-229. When fixed, `test_forceApprove_usdtApprovalToken_overwritesExistingAllowance` should be updated to expect success and re-add the final `assertEq` for the updated allowance value.
 
 ---
 
