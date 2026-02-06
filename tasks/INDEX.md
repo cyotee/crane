@@ -106,7 +106,7 @@
 | CRANE-219 | Port OpenZeppelin Code to Remove Submodule Dependency | Complete | - | `feature/openzeppelin-port` |
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | Ready | - | `feature/solady-port` |
 | CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
-| CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Pending Merge | - | `fix/internal-expect-revert-depth` |
+| CRANE-222 | Fix Internal expectRevert Depth Failures (24 tests) | Complete | - | - |
 | CRANE-223 | Fix Error Selector Mismatches After OZ Removal (4 tests) | In Progress | - | `fix/error-selector-mismatches` |
 | CRANE-224 | Fix BetterSafeERC20 Test Error Expectations (5 tests) | Complete | - | - |
 | CRANE-225 | Fix E2eErc4626Swaps Fuzz Input Bounds (4 tests) | In Progress | - | `fix/erc4626-fuzz-bounds` |
@@ -264,7 +264,7 @@
 - ~~CRANE-212: Port Slipstream + Add Fork Parity Tests (Temporary forge install)~~ → Complete
 
 **Test Failure Fix Groups (6 tasks - 43 failures total, all parallelizable):**
-- **CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests (Ready - foundry.toml flag)**
+- ~~CRANE-222: Fix Internal expectRevert Depth Failures - 24 tests~~ → Complete
 - **CRANE-223: Fix Error Selector Mismatches After OZ Removal - 4 tests (Ready)**
 - ~~CRANE-224: Fix BetterSafeERC20 Test Error Expectations - 5 tests~~ → Complete
 - **CRANE-225: Fix E2eErc4626Swaps Fuzz Input Bounds - 4 tests (Ready)**
