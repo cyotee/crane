@@ -26,12 +26,12 @@ Add a small unit test that asserts `BetterEfficientHashLib._hash()` produces ide
 As a developer, I want a unit test that proves BetterEfficientHashLib produces identical hashes to keccak256(abi.encodePacked()) so that the optimization is verified locally and protected against future refactors.
 
 **Acceptance Criteria:**
-- [ ] Test covers negative int values (e.g., wordPos = -1, tick = -1)
-- [ ] Test covers positive int values
-- [ ] Test covers bytes32 values
-- [ ] Test asserts `._hash()` == `keccak256(abi.encodePacked(...))` for all cases
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Test covers negative int values (e.g., wordPos = -1, tick = -1)
+- [x] Test covers positive int values
+- [x] Test covers bytes32 values
+- [x] Test asserts `._hash()` == `keccak256(abi.encode(...))` for all cases
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Files to Create/Modify
 
@@ -50,9 +50,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests pass (`forge test`)
-- [ ] Build succeeds (`forge build`)
+- [x] All acceptance criteria met
+- [x] Tests pass (`forge test`)
+- [x] Build succeeds (`forge build`)
 
 ---
 

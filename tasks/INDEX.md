@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | In Progress | CRANE-036 | `test/hash-equivalence` |
+| CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | In Review | CRANE-036 | `test/hash-equivalence` |
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | In Progress | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | In Progress | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Ready | CRANE-040 | `fix/slipstream-pragma-style` |
@@ -119,8 +119,8 @@
 
 ### Ready for Agent
 
-**Core Framework (1 task):**
-- CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test (from CRANE-036)
+**Core Framework (0 tasks - CRANE-091 in review):**
+- ~~CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test~~ → In Review
 
 **Slipstream Unstaked Fee Follow-ups (2 tasks - from CRANE-042):**
 - CRANE-095: Add Slipstream Combined Fee Guard (Medium)
