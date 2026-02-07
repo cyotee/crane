@@ -146,7 +146,11 @@ library SlipstreamRewardUtils {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Estimate pending rewards for a staked position
-    /// @dev This calculates the rewards that would be claimable if getReward were called now
+    /// @dev This calculates the rewards that would be claimable if getReward were called now.
+    ///      Assumes constant reward rate since the pool's last update (`lastUpdated`). Actual
+    ///      claimable amount may differ due to on-chain reward rate changes, liquidity shifts,
+    ///      or timing differences between this call and the claim transaction.
+    ///      Use for UI estimation purposes; for exact amounts, query the gauge directly.
     /// @param pool The Slipstream CL pool
     /// @param tickLower Lower tick of the position
     /// @param tickUpper Upper tick of the position
@@ -173,6 +177,9 @@ library SlipstreamRewardUtils {
     }
 
     /// @notice Estimate pending rewards with detailed result
+    /// @dev Assumes constant reward rate since the pool's last update. The returned
+    ///      `pendingReward` is an approximation; actual claimable rewards depend on the
+    ///      on-chain state at claim time.
     /// @param params The reward estimation parameters
     /// @return result Detailed estimation result including growth values
     function _estimatePendingRewardDetailed(RewardEstimateParams memory params)
@@ -198,7 +205,10 @@ library SlipstreamRewardUtils {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Calculate the reward rate per unit of liquidity in the given tick range
-    /// @dev Only returns non-zero if the current tick is within the range (position is in-range)
+    /// @dev Only returns non-zero if the current tick is within the range (position is in-range).
+    ///      Assumes current staked liquidity remains constant. In practice, staked liquidity changes
+    ///      as positions are staked/unstaked, which alters each position's share of rewards.
+    ///      The returned rate is a point-in-time snapshot, not a guaranteed future rate.
     /// @param pool The Slipstream CL pool
     /// @param tickLower Lower tick of the range
     /// @param tickUpper Upper tick of the range
@@ -232,7 +242,10 @@ library SlipstreamRewardUtils {
     }
 
     /// @notice Estimate rewards that would accrue over a time period for a position
-    /// @dev Assumes reward rate and liquidity remain constant
+    /// @dev Assumes constant reward rate and staked liquidity over the entire duration.
+    ///      Does not account for reward epoch transitions, liquidity changes, or tick
+    ///      movements that could move the position out of range. Duration is capped at the
+    ///      remaining reward period. For estimation/UI purposes only.
     /// @param pool The Slipstream CL pool
     /// @param tickLower Lower tick of the position
     /// @param tickUpper Upper tick of the position
@@ -265,7 +278,11 @@ library SlipstreamRewardUtils {
     }
 
     /// @notice Calculate APR for a position based on current reward rate
-    /// @dev Returns APR in basis points (1% = 100, 100% = 10000)
+    /// @dev For estimation purposes only. Returns a simple annualized rate (APR), not APY.
+    ///      Does not account for compounding, reward epoch changes, liquidity fluctuations,
+    ///      or price movements. The extrapolation assumes the current reward rate and staked
+    ///      liquidity persist for a full year, which is unlikely in practice.
+    ///      Returns APR in basis points (1% = 100, 100% = 10000).
     /// @param pool The Slipstream CL pool
     /// @param tickLower Lower tick of the position
     /// @param tickUpper Upper tick of the position

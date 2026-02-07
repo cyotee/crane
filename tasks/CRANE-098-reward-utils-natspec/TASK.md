@@ -26,12 +26,12 @@ Add NatSpec comments noting that estimations assume constant reward rate and liq
 As a developer, I want clear documentation of estimation assumptions so that I understand the accuracy limitations when using the library.
 
 **Acceptance Criteria:**
-- [ ] NatSpec on `_estimatePendingReward` notes timing assumptions
-- [ ] NatSpec on `_calculateRewardRateForRange` notes liquidity assumptions
-- [ ] NatSpec on `_estimateAPR` notes it's for estimation only, no compounding
-- [ ] NatSpec on `_projectFutureRewards` notes constant-rate assumption
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] NatSpec on `_estimatePendingReward` notes timing assumptions
+- [x] NatSpec on `_calculateRewardRateForRange` notes liquidity assumptions
+- [x] NatSpec on `_estimateAPR` notes it's for estimation only, no compounding
+- [x] NatSpec on `_projectFutureRewards` notes constant-rate assumption
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ## Technical Details
 
@@ -52,14 +52,14 @@ Add `@notice` or `@dev` comments like:
 ## Inventory Check
 
 Before starting, verify:
-- [ ] CRANE-043 is complete
-- [ ] SlipstreamRewardUtils.sol exists with existing NatSpec
+- [x] CRANE-043 is complete
+- [x] SlipstreamRewardUtils.sol exists with existing NatSpec
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] NatSpec improvements applied
-- [ ] Build succeeds
+- [x] All acceptance criteria met
+- [x] NatSpec improvements applied
+- [x] Build succeeds
 
 ---
 
