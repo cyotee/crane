@@ -11,7 +11,7 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Progress | CRANE-043 | `test/reward-utils-fork` |
+| CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Review | CRANE-043 | `test/reward-utils-fork` |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | In Progress | CRANE-043 | `docs/reward-utils-natspec` |
 | CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | In Progress | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | Ready | CRANE-045 | `test/stableswap-balance-deltas` |
