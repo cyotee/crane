@@ -11,10 +11,10 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-095 | Add Slipstream Combined Fee Guard | Ready | CRANE-042 | `fix/slipstream-fee-guard` |
-| CRANE-096 | Add Unstaked Fee Positive-Path Tests | Ready | CRANE-042 | `test/unstaked-fee-positive` |
-| CRANE-097 | Add SlipstreamRewardUtils Fork Test | Ready | CRANE-043 | `test/reward-utils-fork` |
-| CRANE-098 | Document SlipstreamRewardUtils Limitations | Ready | CRANE-043 | `docs/reward-utils-natspec` |
+| CRANE-095 | Add Slipstream Combined Fee Guard | In Progress | CRANE-042 | `fix/slipstream-fee-guard` |
+| CRANE-096 | Add Unstaked Fee Positive-Path Tests | In Progress | CRANE-042 | `test/unstaked-fee-positive` |
+| CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Progress | CRANE-043 | `test/reward-utils-fork` |
+| CRANE-098 | Document SlipstreamRewardUtils Limitations | In Progress | CRANE-043 | `docs/reward-utils-natspec` |
 | CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Ready | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | Ready | CRANE-045 | `test/stableswap-balance-deltas` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
@@ -68,7 +68,6 @@
 | CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/safecast160-tests` |
 | CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
 | CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
-| CRANE-171 | Remove lib/permit2 Submodule | Ready | CRANE-168, CRANE-169 | `chore/remove-permit2-submodule` |
 | CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
 | CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
 | CRANE-174 | Add Router getWeth/getPermit2 Validation | Ready | CRANE-167 | `test/router-weth-permit2-validation` |
@@ -83,7 +82,6 @@
 | CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
 | CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
-| CRANE-188 | Remove lib/reclamm Submodule | Blocked | CRANE-195 | `chore/remove-reclamm-submodule` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 | CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
@@ -93,7 +91,6 @@
 | CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/reclamm-deterministic-address-test` |
 | CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
 | CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
-| CRANE-200 | Remove v4-periphery-coupled Remappings | Superseded | CRANE-221 | - |
 | CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
 | CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
 | CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
@@ -262,14 +259,12 @@
 - ~~CRANE-226: Fix BetterStrings toHexString Missing 0x Prefix - 1 test~~ → Complete
 - ~~CRANE-227: Fix StableSurgeHook Error Expectation - 1 test~~ → Complete
 
-**Submodule Removal (3 tasks):**
+**Submodule Removal (1 task):**
 - ~~CRANE-219: Port OpenZeppelin Code to Remove Submodule Dependency~~ → Complete
 - ~~CRANE-220: Port Solady Code to Remove Submodule Dependency~~ → Complete
-- **CRANE-171: Remove lib/permit2 Submodule (Ready - depends on CRANE-168, CRANE-169)**
+- ~~CRANE-171: Remove lib/permit2 Submodule~~ → Complete
 - **CRANE-181: Remove lib/aerodrome-contracts Submodule (Ready)**
-### Blocked
-
-- CRANE-188: Remove lib/reclamm Submodule (waiting on CRANE-195)
+- ~~CRANE-188: Remove lib/reclamm Submodule~~ → Complete
 
 ## Retired Tasks
 
@@ -395,6 +390,9 @@
 | CRANE-182 | Final Submodule Cleanup and forge-std Installation | 2026-02-06 | archive/CRANE-182-final-submodule-cleanup/ |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | 2026-02-06 | archive/CRANE-228-pin-gyro-fork-block/ |
 | CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | 2026-02-06 | archive/CRANE-189-remove-v4-submodules/ |
+| CRANE-171 | Remove lib/permit2 Submodule | 2026-02-07 | archive/CRANE-171-remove-permit2-submodule/ |
+| CRANE-188 | Remove lib/reclamm Submodule | 2026-02-07 | archive/CRANE-188-remove-reclamm-submodule/ |
+| CRANE-200 | Remove v4-periphery-coupled Remappings | 2026-02-07 | archive/CRANE-200-v4-periphery-remapping-removal/ |
 
 ## Cross-Repo Dependencies
 
