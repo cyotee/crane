@@ -77,8 +77,8 @@ If both values sum to > 16,777,215 (uint24 max), Solidity 0.8.x checked arithmet
 **Description:** Add a test that verifies the `SL:INVALID_FEE` guard in SlipstreamQuoter when `includeUnstakedFee` is true and the combined fee exceeds 1e6. This would require mocking the `ICLPool` interface.
 **Affected Files:**
 - New test file or extension of existing Slipstream quoter tests
-**User Response:** (pending)
-**Notes:** Not a blocker for CRANE-095 completion. Could be tracked as a follow-up task.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-235
 
 ---
 

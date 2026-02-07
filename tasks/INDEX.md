@@ -101,6 +101,7 @@
 | CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/slipstream-near-depletion` |
 | CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/hash-task-typo` |
 | CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/hash-extended-overloads` |
+| CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/quoter-fee-guard-revert` |
 
 ## Status Legend
 
@@ -120,9 +121,10 @@
 **Core Framework (0 tasks - CRANE-091 in review):**
 - ~~CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test~~ → In Review
 
-**Slipstream Unstaked Fee Follow-ups (1 task - from CRANE-042):**
+**Slipstream Unstaked Fee Follow-ups (2 tasks - from CRANE-042/CRANE-095):**
 - ~~CRANE-095: Add Slipstream Combined Fee Guard~~ → Complete
 - CRANE-096: Add Unstaked Fee Positive-Path Tests (Medium)
+- CRANE-235: Add SlipstreamQuoter Fee Guard Revert Test (Low, from CRANE-095 review)
 
 **Slipstream RewardUtils Follow-ups (2 tasks - from CRANE-043):**
 - CRANE-097: Add SlipstreamRewardUtils Fork Test (Low)
