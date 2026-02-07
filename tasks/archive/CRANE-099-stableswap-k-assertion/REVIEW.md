@@ -57,7 +57,7 @@ This is correct for verifying consistency. The `_calculateK()` helper (line 691-
 **Description:** The `k()` wrapper could also be tested in constant-product mode (stableSwap=false), where `_k()` returns `balance0 * balance1`. This would provide full branch coverage of `_k()`. Currently, the `test_kCalculation_stableVsConstantProduct` test compares outputs but doesn't directly assert the constant-product K value.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol`
-**User Response:** (pending)
+**User Response:** Accepted, Converted to task CRANE-236
 **Notes:** Very low priority -- the constant-product branch is trivial (`balance0 * balance1`), and the stable branch is the important one to validate.
 
 ### Suggestion 2: Add k() assertion for mixed-decimal pair
@@ -65,7 +65,7 @@ This is correct for verifying consistency. The `_calculateK()` helper (line 691-
 **Description:** `test_cubicInvariant_calculation` only tests the 18-decimal pair. Adding a similar direct assertion for the `mixedDecimalPair` (6+8 decimals) would verify that the precision-multiplier normalization in `_k()` works correctly across decimal combinations.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_stableSwap.t.sol`
-**User Response:** (pending)
+**User Response:** Accepted, Converted to task CRANE-237
 **Notes:** Low priority because `_calculateK()` helper already handles different decimals and is exercised by `testFuzz_kPreservation`, but a direct assertion would be more explicit.
 
 ---

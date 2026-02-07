@@ -98,6 +98,8 @@
 | CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/hash-task-typo` |
 | CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/hash-extended-overloads` |
 | CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/quoter-fee-guard-revert` |
+| CRANE-236 | Add k() Assertion for Constant-Product Mode | Ready | CRANE-099 | `test/k-constant-product-assertion` |
+| CRANE-237 | Add k() Assertion for Mixed-Decimal Pair | Ready | CRANE-099 | `test/k-mixed-decimal-assertion` |
 
 ## Status Legend
 
