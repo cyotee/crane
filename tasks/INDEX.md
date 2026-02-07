@@ -11,7 +11,6 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-095 | Add Slipstream Combined Fee Guard | Pending Merge | CRANE-042 | `fix/slipstream-fee-guard` |
 | CRANE-096 | Add Unstaked Fee Positive-Path Tests | In Progress | CRANE-042 | `test/unstaked-fee-positive` |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Progress | CRANE-043 | `test/reward-utils-fork` |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | In Progress | CRANE-043 | `docs/reward-utils-natspec` |
@@ -121,8 +120,8 @@
 **Core Framework (0 tasks - CRANE-091 in review):**
 - ~~CRANE-091: Add BetterEfficientHashLib Hash Equivalence Test~~ → In Review
 
-**Slipstream Unstaked Fee Follow-ups (2 tasks - from CRANE-042):**
-- CRANE-095: Add Slipstream Combined Fee Guard (Medium)
+**Slipstream Unstaked Fee Follow-ups (1 task - from CRANE-042):**
+- ~~CRANE-095: Add Slipstream Combined Fee Guard~~ → Complete
 - CRANE-096: Add Unstaked Fee Positive-Path Tests (Medium)
 
 **Slipstream RewardUtils Follow-ups (2 tasks - from CRANE-043):**
@@ -393,6 +392,7 @@
 | CRANE-171 | Remove lib/permit2 Submodule | 2026-02-07 | archive/CRANE-171-remove-permit2-submodule/ |
 | CRANE-188 | Remove lib/reclamm Submodule | 2026-02-07 | archive/CRANE-188-remove-reclamm-submodule/ |
 | CRANE-200 | Remove v4-periphery-coupled Remappings | 2026-02-07 | archive/CRANE-200-v4-periphery-remapping-removal/ |
+| CRANE-095 | Add Slipstream Combined Fee Guard | 2026-02-07 | archive/CRANE-095-slipstream-fee-guard/ |
 
 ## Cross-Repo Dependencies
 
