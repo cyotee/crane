@@ -11,7 +11,6 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-098 | Document SlipstreamRewardUtils Limitations | Complete | CRANE-043 | `docs/reward-utils-natspec` |
 | CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | In Progress | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | In Progress | CRANE-045 | `test/stableswap-balance-deltas` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
@@ -124,9 +123,9 @@
 - ~~CRANE-096: Add Unstaked Fee Positive-Path Tests~~ → Complete
 - CRANE-235: Add SlipstreamQuoter Fee Guard Revert Test (Low, from CRANE-095 review)
 
-**Slipstream RewardUtils Follow-ups (1 task - from CRANE-043):**
+**Slipstream RewardUtils Follow-ups (completed - from CRANE-043):**
 - ~~CRANE-097: Add SlipstreamRewardUtils Fork Test~~ → Complete
-- CRANE-098: Document SlipstreamRewardUtils Limitations (Low)
+- ~~CRANE-098: Document SlipstreamRewardUtils Limitations~~ → Complete
 
 **Slipstream Edge Case Follow-ups (3 tasks - from CRANE-040):**
 - CRANE-092: Tighten Slipstream Edge Case Test Assertions (Medium)
@@ -395,6 +394,7 @@
 | CRANE-095 | Add Slipstream Combined Fee Guard | 2026-02-07 | archive/CRANE-095-slipstream-fee-guard/ |
 | CRANE-096 | Add Unstaked Fee Positive-Path Tests | 2026-02-07 | archive/CRANE-096-unstaked-fee-positive-tests/ |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | 2026-02-07 | archive/CRANE-097-reward-utils-fork-test/ |
+| CRANE-098 | Document SlipstreamRewardUtils Limitations | 2026-02-07 | archive/CRANE-098-reward-utils-natspec/ |
 
 ## Cross-Repo Dependencies
 
