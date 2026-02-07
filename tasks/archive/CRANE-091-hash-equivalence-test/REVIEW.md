@@ -67,14 +67,16 @@
 **Description:** Change `keccak256(abi.encodePacked(...))` to `keccak256(abi.encode(...))` in the task description (line 14 of TASK.md) to match the actual library semantics.
 **Affected Files:**
 - `tasks/CRANE-091-hash-equivalence-test/TASK.md`
-**Notes:** Non-blocking. The acceptance criteria are already correct.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-233
 
 ### Suggestion 2: Extend coverage to 5+ arg overloads in a follow-up task
 **Priority:** Low
 **Description:** Add equivalence tests for 5, 6, 7, 8+ arg overloads. While the pattern is proven correct by existing tests, explicit coverage would provide stronger regression protection if the library is ever modified. Could also cover `_set`, `_malloc`, `_free`, `_eq`, and slice hashing for completeness.
 **Affected Files:**
 - `test/foundry/spec/utils/BetterEfficientHashLib_equivalence.t.sol`
-**Notes:** Not required for CRANE-091 acceptance. Suitable as a separate low-priority task.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-234
 
 ---
 

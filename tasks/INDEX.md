@@ -103,6 +103,8 @@
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
 | CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/usdt-increase-decrease-allowance` |
 | CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/slipstream-near-depletion` |
+| CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/hash-task-typo` |
+| CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/hash-extended-overloads` |
 
 ## Status Legend
 
