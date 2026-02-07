@@ -11,7 +11,6 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Complete | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | In Progress | CRANE-045 | `test/stableswap-balance-deltas` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
 | CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Ready | CRANE-047 | `test/fot-fixup-input-verification` |
@@ -395,6 +394,7 @@
 | CRANE-096 | Add Unstaked Fee Positive-Path Tests | 2026-02-07 | archive/CRANE-096-unstaked-fee-positive-tests/ |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | 2026-02-07 | archive/CRANE-097-reward-utils-fork-test/ |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | 2026-02-07 | archive/CRANE-098-reward-utils-natspec/ |
+| CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | 2026-02-07 | archive/CRANE-099-stableswap-k-assertion/ |
 
 ## Cross-Repo Dependencies
 
