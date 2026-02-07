@@ -355,6 +355,12 @@ contract CamelotPair is
         emit ICamelotPair.Swap(msg.sender, amount0In, amount1In, tokensData.amount0Out, tokensData.amount1Out, to);
     }
 
+    /// @notice Exposes _k() for testing - returns the invariant for current reserves
+    /// @dev Testing-only view method for direct assertion of the cubic invariant
+    function k() external view returns (uint256) {
+        return _k(uint256(reserve0), uint256(reserve1));
+    }
+
     function _k(uint256 balance0, uint256 balance1) internal view returns (uint256) {
         if (stableSwap) {
             uint256 _x = balance0.mul(1e18) / precisionMultiplier0;

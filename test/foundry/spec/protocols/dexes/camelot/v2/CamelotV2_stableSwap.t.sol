@@ -117,7 +117,8 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     }
 
     /// @notice Test cubic invariant formula: x^3*y + y^3*x
-    /// @dev Verifies _k() calculation matches expected cubic formula
+    /// @dev Verifies _k() calculation matches expected cubic formula by directly
+    ///      comparing the test-computed expectedK against the stub's k() return value.
     function test_cubicInvariant_calculation() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -137,20 +138,20 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         uint256 b = (x * x / 1e18) + (y * y / 1e18);
         uint256 expectedK = (a * b) / 1e18;
 
-        // Get actual K via getAmountOut (which uses _k internally)
-        // We verify by checking swap output is calculated correctly
+        // Direct assertion: compare test-computed expectedK against the stub's k()
+        uint256 actualK = CamelotPair(address(stablePair)).k();
+        assertEq(actualK, expectedK, "On-chain _k() must match expected cubic invariant xy(x^2 + y^2)");
+
+        // Also verify swap output uses the cubic invariant (lower slippage)
         uint256 amountIn = 100e18;
         stableTokenA.mint(address(this), amountIn);
 
         uint256 amountOut = stablePair.getAmountOut(amountIn, address(stableTokenA));
 
         // For stable pairs with equal reserves, output should be close to input (minus fees)
-        // This validates the cubic invariant is being used
         uint256 expectedFee = amountIn * DEFAULT_FEE / FEE_DENOMINATOR;
         uint256 expectedOutApprox = amountIn - expectedFee;
 
-        // With cubic invariant, slippage is much lower than constant product
-        // Output should be very close to input minus fee for balanced pools
         assertGt(amountOut, expectedOutApprox * 95 / 100, "Stable swap output should be close to input minus fee");
         assertLt(amountOut, expectedOutApprox * 105 / 100, "Stable swap output should not exceed expected range");
     }
