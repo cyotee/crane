@@ -28,12 +28,12 @@ This makes the tests robust to future changes in return semantics and ensures th
 As a developer, I want stable swap tests to assert on actual token balance changes so that tests verify the real execution path rather than internal return values.
 
 **Acceptance Criteria:**
-- [ ] Identify all tests that assert on `_swap()` return value
-- [ ] Refactor to measure balance deltas (before/after swap)
-- [ ] Optionally compare to `pair.getAmountOut()` for expected values
-- [ ] Tests for Newton-Raphson convergence now assert real executed path
-- [ ] Tests pass
-- [ ] Build succeeds
+- [x] Identify all tests that assert on `_swap()` return value
+- [x] Refactor to measure balance deltas (before/after swap)
+- [x] Optionally compare to `pair.getAmountOut()` for expected values
+- [x] Tests for Newton-Raphson convergence now assert real executed path
+- [x] Tests pass
+- [x] Build succeeds
 
 ## Technical Details
 
@@ -72,9 +72,9 @@ Before starting, verify:
 
 ## Completion Criteria
 
-- [ ] All acceptance criteria met
-- [ ] `forge build` passes
-- [ ] `forge test` passes
+- [x] All acceptance criteria met
+- [x] `forge build` passes
+- [x] `forge test` passes
 
 ---
 

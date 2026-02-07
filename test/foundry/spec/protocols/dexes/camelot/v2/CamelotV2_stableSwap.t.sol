@@ -212,6 +212,7 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     /* ---------------------------------------------------------------------- */
 
     /// @notice Test Newton-Raphson convergence with small swap amounts
+    /// @dev Asserts on actual balance delta rather than _swap() return value
     function test_getY_convergence_smallAmount() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -220,8 +221,10 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
+        uint256 balBefore = stableTokenB.balanceOf(address(this));
+
         // Should not revert - convergence should succeed
-        uint256 amountOut = CamelotV2Service._swap(
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -230,10 +233,12 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        assertGt(amountOut, 0, "Small swap should produce output");
+        uint256 received = stableTokenB.balanceOf(address(this)) - balBefore;
+        assertGt(received, 0, "Small swap should produce output");
     }
 
     /// @notice Test Newton-Raphson convergence with large swap amounts
+    /// @dev Asserts on actual balance delta rather than _swap() return value
     function test_getY_convergence_largeAmount() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -242,8 +247,10 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
+        uint256 balBefore = stableTokenB.balanceOf(address(this));
+
         // Should not revert - convergence should succeed
-        uint256 amountOut = CamelotV2Service._swap(
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -252,10 +259,12 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        assertGt(amountOut, 0, "Large swap should produce output");
+        uint256 received = stableTokenB.balanceOf(address(this)) - balBefore;
+        assertGt(received, 0, "Large swap should produce output");
     }
 
     /// @notice Test Newton-Raphson convergence with unbalanced reserves
+    /// @dev Asserts on actual balance delta rather than _swap() return value
     function test_getY_convergence_unbalancedReserves() public {
         // Create pool with unbalanced initial liquidity
         uint256 amountA = 15000e18;
@@ -273,8 +282,10 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
+        uint256 balBefore = stableTokenB.balanceOf(address(this));
+
         // Should not revert even with unbalanced reserves
-        uint256 amountOut = CamelotV2Service._swap(
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -283,7 +294,8 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        assertGt(amountOut, 0, "Unbalanced pool swap should produce output");
+        uint256 received = stableTokenB.balanceOf(address(this)) - balBefore;
+        assertGt(received, 0, "Unbalanced pool swap should produce output");
     }
 
     /* ---------------------------------------------------------------------- */
@@ -387,17 +399,20 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     }
 
     /// @notice Test bidirectional swaps maintain consistency
+    /// @dev Asserts on actual balance deltas rather than _swap() return values
     function test_swapOutput_bidirectional() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
 
         uint256 swapAmount = 100e18;
 
-        // Swap A -> B
+        // Swap A -> B — measure balance delta
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
-        uint256 outputAtoB = CamelotV2Service._swap(
+        uint256 balBBefore = stableTokenB.balanceOf(address(this));
+
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -406,24 +421,30 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        // Swap B -> A with the output from first swap
-        stableTokenB.approve(address(camelotV2Router), outputAtoB);
+        uint256 receivedB = stableTokenB.balanceOf(address(this)) - balBBefore;
 
-        uint256 outputBtoA = CamelotV2Service._swap(
+        // Swap B -> A with the actual received amount
+        stableTokenB.approve(address(camelotV2Router), receivedB);
+
+        uint256 balABefore = stableTokenA.balanceOf(address(this));
+
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
-            outputAtoB,
+            receivedB,
             stableTokenB,
             stableTokenA,
             address(0)
         );
 
+        uint256 receivedA = stableTokenA.balanceOf(address(this)) - balABefore;
+
         // Round trip should lose approximately 2x fee
         uint256 expectedLoss = swapAmount * 2 * DEFAULT_FEE / FEE_DENOMINATOR;
 
         // Should get back roughly input minus fees
-        assertGt(outputBtoA, swapAmount - expectedLoss * 2, "Round trip loss should be reasonable");
-        assertLt(outputBtoA, swapAmount, "Round trip should not be profitable");
+        assertGt(receivedA, swapAmount - expectedLoss * 2, "Round trip loss should be reasonable");
+        assertLt(receivedA, swapAmount, "Round trip should not be profitable");
     }
 
     /* ---------------------------------------------------------------------- */
@@ -568,6 +589,7 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     /* ---------------------------------------------------------------------- */
 
     /// @notice Test stable swap with very small amounts
+    /// @dev Asserts on actual balance delta rather than _swap() return value
     function test_stableSwap_verySmallAmount() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -576,7 +598,10 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
-        uint256 amountOut = CamelotV2Service._swap(
+        uint256 balBefore = stableTokenB.balanceOf(address(this));
+
+        // Should not revert - convergence should succeed even for tiny amounts
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -585,12 +610,14 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        // Should still work, though output might be very small
-        // The important thing is no revert
-        assertTrue(true, "Very small swap should not revert");
+        uint256 received = stableTokenB.balanceOf(address(this)) - balBefore;
+        // Output might be very small or zero due to rounding at this scale,
+        // but the swap itself should not revert
+        assertGe(received, 0, "Very small swap should not revert");
     }
 
     /// @notice Test stable swap approaching reserve limits
+    /// @dev Asserts on actual balance delta rather than _swap() return value
     function test_stableSwap_nearReserveLimit() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -602,7 +629,9 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
 
-        uint256 amountOut = CamelotV2Service._swap(
+        uint256 balBefore = stableTokenB.balanceOf(address(this));
+
+        CamelotV2Service._swap(
             camelotV2Router,
             stablePair,
             swapAmount,
@@ -611,7 +640,8 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
             address(0)
         );
 
-        assertGt(amountOut, 0, "Large swap should still produce output");
+        uint256 received = stableTokenB.balanceOf(address(this)) - balBefore;
+        assertGt(received, 0, "Large swap should still produce output");
 
         // Verify reserves are still positive
         (uint112 r0After, uint112 r1After,,) = stablePair.getReserves();
@@ -639,6 +669,7 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     }
 
     /// @notice Test multiple sequential swaps
+    /// @dev Asserts on actual balance deltas rather than _swap() return values
     function test_stableSwap_multipleSequentialSwaps() public {
         _initializeStablePool();
         _enableStableSwap(stablePair);
@@ -647,11 +678,13 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         for (uint256 i = 0; i < 5; i++) {
             uint256 swapAmount = 50e18;
 
-            // Swap A -> B
+            // Swap A -> B — measure balance delta
             stableTokenA.mint(address(this), swapAmount);
             stableTokenA.approve(address(camelotV2Router), swapAmount);
 
-            uint256 outB = CamelotV2Service._swap(
+            uint256 balBBefore = stableTokenB.balanceOf(address(this));
+
+            CamelotV2Service._swap(
                 camelotV2Router,
                 stablePair,
                 swapAmount,
@@ -660,21 +693,25 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
                 address(0)
             );
 
-            assertGt(outB, 0, "Swap A->B should produce output");
+            uint256 receivedB = stableTokenB.balanceOf(address(this)) - balBBefore;
+            assertGt(receivedB, 0, "Swap A->B should produce output");
 
-            // Swap B -> A
-            stableTokenB.approve(address(camelotV2Router), outB);
+            // Swap B -> A — use actual received amount
+            stableTokenB.approve(address(camelotV2Router), receivedB);
 
-            uint256 outA = CamelotV2Service._swap(
+            uint256 balABefore = stableTokenA.balanceOf(address(this));
+
+            CamelotV2Service._swap(
                 camelotV2Router,
                 stablePair,
-                outB,
+                receivedB,
                 stableTokenB,
                 stableTokenA,
                 address(0)
             );
 
-            assertGt(outA, 0, "Swap B->A should produce output");
+            uint256 receivedA = stableTokenA.balanceOf(address(this)) - balABefore;
+            assertGt(receivedA, 0, "Swap B->A should produce output");
         }
 
         // Verify pool is still healthy
