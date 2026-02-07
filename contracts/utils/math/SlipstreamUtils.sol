@@ -100,6 +100,7 @@ library SlipstreamUtils {
     ) internal pure returns (uint256 amountOut) {
         // Combine base fee and unstaked fee
         uint24 totalFee = feePips + unstakedFeePips;
+        require(totalFee < 1e6, "SL:INVALID_FEE");
         return _quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, totalFee, zeroForOne);
     }
 
@@ -203,6 +204,7 @@ library SlipstreamUtils {
     ) internal pure returns (uint256 amountIn) {
         // Combine base fee and unstaked fee
         uint24 totalFee = feePips + unstakedFeePips;
+        require(totalFee < 1e6, "SL:INVALID_FEE");
         return _quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, totalFee, zeroForOne);
     }
 

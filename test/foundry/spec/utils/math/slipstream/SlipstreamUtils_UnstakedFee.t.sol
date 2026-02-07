@@ -375,6 +375,127 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                     Combined Fee Guard Revert Tests                        */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Test that exact input reverts when combined fee equals 1e6
+    function test_quoteExactInputSingle_revert_combinedFeeEqualsDenominator() public {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        // feePips + unstakedFeePips == 1e6 should revert
+        uint24 feePips = 500_000;
+        uint24 unstakedFeePips = 500_000;
+
+        vm.expectRevert("SL:INVALID_FEE");
+        SlipstreamUtils._quoteExactInputSingle(
+            AMOUNT_IN,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+    }
+
+    /// @notice Test that exact input reverts when combined fee exceeds 1e6
+    function test_quoteExactInputSingle_revert_combinedFeeExceedsDenominator() public {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        // feePips + unstakedFeePips > 1e6 should revert
+        uint24 feePips = 999_000;
+        uint24 unstakedFeePips = 2_000;
+
+        vm.expectRevert("SL:INVALID_FEE");
+        SlipstreamUtils._quoteExactInputSingle(
+            AMOUNT_IN,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+    }
+
+    /// @notice Test that exact output reverts when combined fee equals 1e6
+    function test_quoteExactOutputSingle_revert_combinedFeeEqualsDenominator() public {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        uint24 feePips = 500_000;
+        uint24 unstakedFeePips = 500_000;
+
+        vm.expectRevert("SL:INVALID_FEE");
+        SlipstreamUtils._quoteExactOutputSingle(
+            AMOUNT_OUT,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+    }
+
+    /// @notice Test that exact output reverts when combined fee exceeds 1e6
+    function test_quoteExactOutputSingle_revert_combinedFeeExceedsDenominator() public {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        uint24 feePips = 999_000;
+        uint24 unstakedFeePips = 2_000;
+
+        vm.expectRevert("SL:INVALID_FEE");
+        SlipstreamUtils._quoteExactOutputSingle(
+            AMOUNT_OUT,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+    }
+
+    /// @notice Test that combined fee just below 1e6 still works
+    function test_quoteExactInputSingle_combinedFeeJustBelowDenominator() public pure {
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        // feePips + unstakedFeePips == 999_999 should NOT revert
+        uint24 feePips = 500_000;
+        uint24 unstakedFeePips = 499_999;
+
+        uint256 result = SlipstreamUtils._quoteExactInputSingle(
+            AMOUNT_IN,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+
+        // With ~99.9999% fee, output should be near zero but valid
+        assertTrue(result >= 0, "Should not revert for totalFee < 1e6");
+    }
+
+    /// @notice Fuzz test: combined fee >= 1e6 always reverts for exact input
+    function testFuzz_quoteExactInputSingle_revert_invalidCombinedFee(
+        uint24 feePips,
+        uint24 unstakedFeePips
+    ) public {
+        // Ensure combined fee >= 1e6
+        feePips = uint24(bound(feePips, 1, 999_999));
+        unstakedFeePips = uint24(bound(unstakedFeePips, uint256(1e6) - feePips, type(uint24).max - feePips));
+
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
+
+        vm.expectRevert("SL:INVALID_FEE");
+        SlipstreamUtils._quoteExactInputSingle(
+            AMOUNT_IN,
+            sqrtPriceX96,
+            LIQUIDITY,
+            feePips,
+            unstakedFeePips,
+            true
+        );
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                          Various Fee Tier Tests                            */
     /* -------------------------------------------------------------------------- */
 

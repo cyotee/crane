@@ -80,6 +80,7 @@ library SlipstreamQuoter {
         // Add unstaked fee if requested (for quoting swaps against unstaked liquidity)
         if (p.includeUnstakedFee) {
             fee += pool.unstakedFee();
+            require(fee < 1e6, "SL:INVALID_FEE");
         }
 
         _SwapState memory state = _SwapState({
