@@ -416,6 +416,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     /* ========================================================================== */
 
     /// @notice Test swap stops exactly at sqrtPriceLimitX96 (zeroForOne)
+    /// @dev CRANE-093: Enhanced with exact equality assertion and input consumption check.
+    ///      When amountSpecified far exceeds what is needed to reach the limit,
+    ///      SwapMath.computeSwapStep sets sqrtRatioNextX96 = sqrtRatioTargetX96 exactly.
+    ///      No rounding tolerance is needed because the mock uses a single-tick swap
+    ///      and SwapMath assigns the target price directly when the limit is reached.
     function test_priceLimitExactness_zeroForOne() public {
         MockCLPool pool = createMockPoolOneToOne(
             makeAddr("TokenA_limit"),
@@ -447,15 +452,31 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         // Get final price
         (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
 
-        // Final price should be at or before the limit (not past it)
-        // For zeroForOne, price decreases, so final >= limit
+        // Guard: final price should not overshoot limit (zeroForOne: price decreases, so final >= limit)
         assertTrue(
             sqrtPriceX96End >= sqrtPriceLimitX96,
             "Price should not overshoot limit (zeroForOne)"
         );
+
+        // CRANE-093: Assert end price equals the price limit exactly
+        assertEq(
+            sqrtPriceX96End,
+            sqrtPriceLimitX96,
+            "End price must equal sqrtPriceLimitX96 exactly (zeroForOne)"
+        );
+
+        // CRANE-093: Assert swap consumed enough input to plausibly reach the limit
+        // amount0 is positive (tokens in), and must be less than LARGE_AMOUNT to prove
+        // the swap was constrained by the price limit, not by running out of input
+        uint256 consumed = uint256(amount0);
+        assertTrue(consumed > 0, "Swap must consume some input (zeroForOne)");
+        assertTrue(consumed < LARGE_AMOUNT, "Swap must be limit-constrained, not input-constrained (zeroForOne)");
     }
 
     /// @notice Test swap stops exactly at sqrtPriceLimitX96 (oneForZero)
+    /// @dev CRANE-093: Enhanced with exact equality assertion and input consumption check.
+    ///      Same reasoning as zeroForOne — SwapMath assigns the target price directly
+    ///      when the amount specified exceeds the amount needed to reach the price limit.
     function test_priceLimitExactness_oneForZero() public {
         MockCLPool pool = createMockPoolOneToOne(
             makeAddr("TokenA_limit2"),
@@ -486,12 +507,24 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         // Get final price
         (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
 
-        // Final price should be at or before the limit
-        // For oneForZero, price increases, so final <= limit
+        // Guard: final price should not overshoot limit (oneForZero: price increases, so final <= limit)
         assertTrue(
             sqrtPriceX96End <= sqrtPriceLimitX96,
             "Price should not overshoot limit (oneForZero)"
         );
+
+        // CRANE-093: Assert end price equals the price limit exactly
+        assertEq(
+            sqrtPriceX96End,
+            sqrtPriceLimitX96,
+            "End price must equal sqrtPriceLimitX96 exactly (oneForZero)"
+        );
+
+        // CRANE-093: Assert swap consumed enough input to plausibly reach the limit
+        // amount1 is positive (tokens in), and must be less than LARGE_AMOUNT
+        uint256 consumed = uint256(amount1);
+        assertTrue(consumed > 0, "Swap must consume some input (oneForZero)");
+        assertTrue(consumed < LARGE_AMOUNT, "Swap must be limit-constrained, not input-constrained (oneForZero)");
     }
 
     /// @notice Test that quote uses correct price limits internally
@@ -511,6 +544,121 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         // Both should produce valid outputs
         assertTrue(quoteZeroForOne > 0, "zeroForOne quote should be positive");
         assertTrue(quoteOneForZero > 0, "oneForZero quote should be positive");
+    }
+
+    /// @notice Test price-limit exactness across multiple target ticks (zeroForOne)
+    /// @dev CRANE-093: Proves the exact-landing property holds for various price targets
+    function test_priceLimitExactness_zeroForOne_multipleTargets() public {
+        int24[4] memory targetTicks = [int24(-100), int24(-500), int24(-2000), int24(-10000)];
+
+        for (uint256 i = 0; i < targetTicks.length; i++) {
+            // Fresh pool for each target
+            MockCLPool pool = createMockPoolOneToOne(
+                makeAddr(string(abi.encodePacked("TokenA_mt_zfo_", vm.toString(i)))),
+                makeAddr(string(abi.encodePacked("TokenB_mt_zfo_", vm.toString(i)))),
+                FEE_MEDIUM,
+                TICK_SPACING_MEDIUM
+            );
+
+            int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
+            int24 tickUpper = nearestUsableTick(60000, TICK_SPACING_MEDIUM);
+            addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
+
+            uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTicks[i]);
+
+            (int256 amount0, ) = pool.swap(
+                address(this), true, int256(LARGE_AMOUNT), sqrtPriceLimitX96, ""
+            );
+
+            (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+
+            assertEq(
+                sqrtPriceX96End,
+                sqrtPriceLimitX96,
+                string(abi.encodePacked(
+                    "End price must equal limit at target tick ",
+                    vm.toString(int256(targetTicks[i]))
+                ))
+            );
+            assertTrue(uint256(amount0) < LARGE_AMOUNT, "Must be limit-constrained");
+        }
+    }
+
+    /// @notice Test price-limit exactness across multiple target ticks (oneForZero)
+    /// @dev CRANE-093: Proves the exact-landing property holds for various price targets
+    function test_priceLimitExactness_oneForZero_multipleTargets() public {
+        int24[4] memory targetTicks = [int24(100), int24(500), int24(2000), int24(10000)];
+
+        for (uint256 i = 0; i < targetTicks.length; i++) {
+            MockCLPool pool = createMockPoolOneToOne(
+                makeAddr(string(abi.encodePacked("TokenA_mt_ofz_", vm.toString(i)))),
+                makeAddr(string(abi.encodePacked("TokenB_mt_ofz_", vm.toString(i)))),
+                FEE_MEDIUM,
+                TICK_SPACING_MEDIUM
+            );
+
+            int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
+            int24 tickUpper = nearestUsableTick(60000, TICK_SPACING_MEDIUM);
+            addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
+
+            uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTicks[i]);
+
+            ( , int256 amount1) = pool.swap(
+                address(this), false, int256(LARGE_AMOUNT), sqrtPriceLimitX96, ""
+            );
+
+            (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+
+            assertEq(
+                sqrtPriceX96End,
+                sqrtPriceLimitX96,
+                string(abi.encodePacked(
+                    "End price must equal limit at target tick ",
+                    vm.toString(int256(targetTicks[i]))
+                ))
+            );
+            assertTrue(uint256(amount1) < LARGE_AMOUNT, "Must be limit-constrained");
+        }
+    }
+
+    /// @notice Test price-limit exactness with exact-output swaps
+    /// @dev CRANE-093: When the exact-output amount exceeds what's available before hitting
+    ///      the price limit, the swap should stop exactly at the limit price.
+    function test_priceLimitExactness_exactOutput_hitsLimit() public {
+        MockCLPool pool = createMockPoolOneToOne(
+            makeAddr("TokenA_eo_limit"),
+            makeAddr("TokenB_eo_limit"),
+            FEE_MEDIUM,
+            TICK_SPACING_MEDIUM
+        );
+
+        int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
+        int24 tickUpper = nearestUsableTick(60000, TICK_SPACING_MEDIUM);
+        addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
+
+        // zeroForOne exact output with large desired output and tight price limit
+        int24 targetTick = -500;
+        uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTick);
+
+        pool.swap(
+            address(this),
+            true,  // zeroForOne
+            -int256(LARGE_AMOUNT),  // negative = exact output
+            sqrtPriceLimitX96,
+            ""
+        );
+
+        (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+
+        // Guard: no overshoot
+        assertTrue(sqrtPriceX96End >= sqrtPriceLimitX96, "No overshoot (exact output, zeroForOne)");
+
+        // Exact landing
+        assertEq(
+            sqrtPriceX96End,
+            sqrtPriceLimitX96,
+            "End price must equal limit exactly (exact output, zeroForOne)"
+        );
     }
 
     /// @notice Test no overshoot with exact output quotes
