@@ -7,10 +7,6 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Complete | CRANE-036 | `test/hash-equivalence` |
-| CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
-| CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
-| CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
 | CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Ready | CRANE-047 | `test/fot-fixup-input-verification` |
 | CRANE-103 | Add Guards for Extreme Tax Values Near 100% | Ready | CRANE-047 | `test/fot-extreme-tax-guards` |
