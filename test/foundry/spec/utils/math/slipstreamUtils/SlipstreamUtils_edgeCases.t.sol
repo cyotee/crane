@@ -315,8 +315,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             DUST_AMOUNT
         );
 
-        // Dust might result in 0 liquidity, which is acceptable
-        assertTrue(liquidityFromDust >= 0, "Should handle dust amounts gracefully");
+        // Dust amounts should produce less (or equal) liquidity than large amounts
+        assertTrue(liquidityFromDust <= liquidityFromLarge, "Dust liquidity should not exceed large-amount liquidity");
     }
 
     /* ========================================================================== */
@@ -591,8 +591,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             false  // oneForZero (can still go up from near-min)
         );
 
-        // Should produce output without reverting
-        assertTrue(quotedOut >= 0, "Should handle MIN_SQRT_RATIO boundary");
+        // oneForZero at near-minimum price should produce non-zero output
+        assertTrue(quotedOut > 0, "Should produce positive output at MIN_SQRT_RATIO boundary");
     }
 
     /// @notice Test sqrtPrice at MAX_SQRT_RATIO boundary
@@ -608,7 +608,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             true  // zeroForOne (can still go down from near-max)
         );
 
-        assertTrue(quotedOut >= 0, "Should handle MAX_SQRT_RATIO boundary");
+        assertTrue(quotedOut > 0, "Should produce positive output at MAX_SQRT_RATIO boundary");
     }
 
     /// @notice Test getSqrtPriceFromReserves edge cases
@@ -927,7 +927,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             false  // oneForZero
         );
 
-        assertTrue(quotedIn >= 0, "ExactOutput should handle MIN_SQRT_RATIO boundary");
+        assertTrue(quotedIn > 0, "ExactOutput should produce positive input at MIN_SQRT_RATIO boundary");
     }
 
     /// @notice Test exact output at MAX_SQRT_RATIO boundary
@@ -942,6 +942,6 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             true  // zeroForOne
         );
 
-        assertTrue(quotedIn >= 0, "ExactOutput should handle MAX_SQRT_RATIO boundary");
+        assertTrue(quotedIn > 0, "ExactOutput should produce positive input at MAX_SQRT_RATIO boundary");
     }
 }

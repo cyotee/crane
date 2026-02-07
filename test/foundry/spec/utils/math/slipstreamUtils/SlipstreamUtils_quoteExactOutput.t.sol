@@ -274,8 +274,9 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             true
         );
 
-        // With minimal liquidity and minimal output, should compute without overflow
-        assertTrue(quotedIn >= 0, "Should handle minimal liquidity gracefully");
+        // With minimal liquidity, input should be at least as large as output (due to fees)
+        // or zero if the math rounds down completely
+        assertTrue(quotedIn == 0 || quotedIn >= 1, "Minimal liquidity should produce zero or valid input");
     }
 
     /// @notice Max liquidity (uint128.max) should not overflow
@@ -553,7 +554,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             false  // oneForZero
         );
 
-        assertTrue(quotedIn >= 0, "Should handle MIN_SQRT_RATIO boundary for exact output");
+        assertTrue(quotedIn > 0, "Should produce positive input at MIN_SQRT_RATIO boundary for exact output");
     }
 
     /// @notice MAX_SQRT_RATIO - 1 boundary
@@ -570,7 +571,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             true  // zeroForOne
         );
 
-        assertTrue(quotedIn >= 0, "Should handle MAX_SQRT_RATIO boundary for exact output");
+        assertTrue(quotedIn > 0, "Should produce positive input at MAX_SQRT_RATIO boundary for exact output");
     }
 
     /// @notice MIN_TICK boundary via tick overload
@@ -582,7 +583,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             1e6, tick, liquidity, FEE_MEDIUM, false  // oneForZero
         );
 
-        assertTrue(quotedIn >= 0, "Should handle MIN_TICK boundary via tick overload");
+        assertTrue(quotedIn > 0, "Should produce positive input at MIN_TICK boundary via tick overload");
     }
 
     /// @notice MAX_TICK boundary via tick overload
@@ -594,7 +595,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             1e6, tick, liquidity, FEE_MEDIUM, true  // zeroForOne
         );
 
-        assertTrue(quotedIn >= 0, "Should handle MAX_TICK boundary via tick overload");
+        assertTrue(quotedIn > 0, "Should produce positive input at MAX_TICK boundary via tick overload");
     }
 
     /// @notice Extreme price ratios (high)
@@ -608,7 +609,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             1e6, sqrtPriceX96, liquidity, FEE_MEDIUM, true
         );
 
-        assertTrue(quotedIn >= 0, "Should handle high price ratio");
+        assertTrue(quotedIn > 0, "Should produce positive input at high price ratio");
     }
 
     /// @notice Extreme price ratios (low)
@@ -621,7 +622,7 @@ contract SlipstreamUtils_quoteExactOutput_Test is TestBase_Slipstream {
             1e6, sqrtPriceX96, liquidity, FEE_MEDIUM, false
         );
 
-        assertTrue(quotedIn >= 0, "Should handle low price ratio");
+        assertTrue(quotedIn > 0, "Should produce positive input at low price ratio");
     }
 
     /* ========================================================================== */
