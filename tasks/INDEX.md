@@ -7,8 +7,8 @@
 
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
-| CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | Ready | CRANE-036 | `test/hash-equivalence` |
-| CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Ready | CRANE-040 | `fix/tighten-slipstream-assertions` |
+| CRANE-091 | Add BetterEfficientHashLib Hash Equivalence Test | In Progress | CRANE-036 | `test/hash-equivalence` |
+| CRANE-092 | Tighten Slipstream Edge Case Test Assertions | In Progress | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Ready | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Ready | CRANE-040 | `fix/slipstream-pragma-style` |
 | CRANE-095 | Add Slipstream Combined Fee Guard | Ready | CRANE-042 | `fix/slipstream-fee-guard` |
@@ -84,7 +84,6 @@
 | CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
 | CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
 | CRANE-188 | Remove lib/reclamm Submodule | Blocked | CRANE-195 | `chore/remove-reclamm-submodule` |
-| CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | Blocked | CRANE-221 | `chore/remove-v4-submodules` |
 | CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
 | CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
 | CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
@@ -269,7 +268,6 @@
 ### Blocked
 
 - CRANE-188: Remove lib/reclamm Submodule (waiting on CRANE-195)
-- CRANE-189: Remove lib/v4-core and lib/v4-periphery Submodules (waiting on CRANE-221)
 
 ## Retired Tasks
 
@@ -394,6 +392,7 @@
 | CRANE-220 | Port Solady Code to Remove Submodule Dependency | 2026-02-06 | archive/CRANE-220-solady-port/ |
 | CRANE-182 | Final Submodule Cleanup and forge-std Installation | 2026-02-06 | archive/CRANE-182-final-submodule-cleanup/ |
 | CRANE-228 | Pin Gyro Fork Test Block Number for RPC Cache Reliability | 2026-02-06 | archive/CRANE-228-pin-gyro-fork-block/ |
+| CRANE-189 | Remove lib/v4-core and lib/v4-periphery Submodules | 2026-02-06 | archive/CRANE-189-remove-v4-submodules/ |
 
 ## Cross-Repo Dependencies
 
