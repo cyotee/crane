@@ -307,6 +307,124 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
         assertTrue(quote.swapAmountIn <= smallAmount, "Swap should not exceed input");
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                     Unstaked Fee Positive-Path Tests                       */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Test that includeUnstakedFee=true changes zap-in swap quote for token0 input
+    function test_zapIn_unstakedFee_token0_reducesSwapOutput() public {
+        uint24 unstakedFee = 500; // 0.05%
+        pool.setUnstakedFee(unstakedFee);
+
+        // Baseline: without unstaked fee
+        SlipstreamZapQuoter.ZapInParams memory baseline = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: true,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: false
+        });
+        SlipstreamZapQuoter.ZapInQuote memory baseQuote = SlipstreamZapQuoter.quoteZapInSingleCore(baseline);
+
+        // With unstaked fee
+        SlipstreamZapQuoter.ZapInParams memory withFee = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: true,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: true
+        });
+        SlipstreamZapQuoter.ZapInQuote memory feeQuote = SlipstreamZapQuoter.quoteZapInSingleCore(withFee);
+
+        assertTrue(baseQuote.liquidity > 0, "Baseline should produce liquidity");
+        assertTrue(feeQuote.liquidity > 0, "Fee quote should produce liquidity");
+        // Higher fees mean the swap portion produces less output, so less liquidity
+        assertTrue(feeQuote.liquidity <= baseQuote.liquidity, "Unstaked fee should not increase liquidity");
+    }
+
+    /// @notice Test that includeUnstakedFee=true changes zap-in for token1 input
+    function test_zapIn_unstakedFee_token1_reducesSwapOutput() public {
+        uint24 unstakedFee = 500; // 0.05%
+        pool.setUnstakedFee(unstakedFee);
+
+        SlipstreamZapQuoter.ZapInParams memory baseline = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: false,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: false
+        });
+        SlipstreamZapQuoter.ZapInQuote memory baseQuote = SlipstreamZapQuoter.quoteZapInSingleCore(baseline);
+
+        SlipstreamZapQuoter.ZapInParams memory withFee = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: false,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: true
+        });
+        SlipstreamZapQuoter.ZapInQuote memory feeQuote = SlipstreamZapQuoter.quoteZapInSingleCore(withFee);
+
+        assertTrue(baseQuote.liquidity > 0, "Baseline should produce liquidity");
+        assertTrue(feeQuote.liquidity > 0, "Fee quote should produce liquidity");
+        assertTrue(feeQuote.liquidity <= baseQuote.liquidity, "Unstaked fee should not increase liquidity for token1 input");
+    }
+
+    /// @notice Test that includeUnstakedFee=true produces distinct swap amounts
+    function test_zapIn_unstakedFee_swapAmountsDiffer() public {
+        uint24 unstakedFee = 1000; // 0.1% — larger fee to ensure visible difference
+        pool.setUnstakedFee(unstakedFee);
+
+        SlipstreamZapQuoter.ZapInParams memory baseline = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: true,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: false
+        });
+        SlipstreamZapQuoter.ZapInQuote memory baseQuote = SlipstreamZapQuoter.quoteZapInSingleCore(baseline);
+
+        SlipstreamZapQuoter.ZapInParams memory withFee = SlipstreamZapQuoter.ZapInParams({
+            pool: ICLPool(address(pool)),
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            zeroForOne: true,
+            amountIn: ZAP_AMOUNT,
+            sqrtPriceLimitX96: 0,
+            maxSwapSteps: 0,
+            searchIters: 20,
+            includeUnstakedFee: true
+        });
+        SlipstreamZapQuoter.ZapInQuote memory feeQuote = SlipstreamZapQuoter.quoteZapInSingleCore(withFee);
+
+        // The swap output should differ because the effective fee changed
+        assertTrue(
+            baseQuote.swap.amountOut != feeQuote.swap.amountOut
+            || baseQuote.swapAmountIn != feeQuote.swapAmountIn,
+            "Swap amounts should differ when unstaked fee is included"
+        );
+    }
+
     /// @notice Test zap-in varying search iterations
     function test_zapIn_varyingSearchIterations() public {
         uint16[3] memory iterCounts = [uint16(5), uint16(15), uint16(25)];

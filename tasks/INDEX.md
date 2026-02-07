@@ -11,7 +11,7 @@
 | CRANE-092 | Tighten Slipstream Edge Case Test Assertions | Complete | CRANE-040 | `fix/tighten-slipstream-assertions` |
 | CRANE-093 | Make Slipstream Price-Limit Exactness Provable | Complete | CRANE-040 | `fix/price-limit-exactness` |
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
-| CRANE-096 | Add Unstaked Fee Positive-Path Tests | In Progress | CRANE-042 | `test/unstaked-fee-positive` |
+| CRANE-096 | Add Unstaked Fee Positive-Path Tests | In Review | CRANE-042 | `test/unstaked-fee-positive` |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Progress | CRANE-043 | `test/reward-utils-fork` |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | In Progress | CRANE-043 | `docs/reward-utils-natspec` |
 | CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Ready | CRANE-045 | `test/stableswap-k-assertion` |
@@ -123,7 +123,7 @@
 
 **Slipstream Unstaked Fee Follow-ups (2 tasks - from CRANE-042/CRANE-095):**
 - ~~CRANE-095: Add Slipstream Combined Fee Guard~~ → Complete
-- CRANE-096: Add Unstaked Fee Positive-Path Tests (Medium)
+- ~~CRANE-096: Add Unstaked Fee Positive-Path Tests~~ → In Review
 - CRANE-235: Add SlipstreamQuoter Fee Guard Revert Test (Low, from CRANE-095 review)
 
 **Slipstream RewardUtils Follow-ups (2 tasks - from CRANE-043):**

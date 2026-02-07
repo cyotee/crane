@@ -320,4 +320,142 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
     function helperQuoteExactInput(SlipstreamQuoter.SwapQuoteParams memory params) external view {
         SlipstreamQuoter.quoteExactInput(params);
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                     Unstaked Fee Positive-Path Tests                       */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Test that includeUnstakedFee=true reduces exact-in output
+    function test_quoteExactInput_unstakedFee_reducesOutput() public {
+        uint24 unstakedFee = 500; // 0.05%
+        pool.setUnstakedFee(unstakedFee);
+        uint256 amountIn = 10e18;
+
+        // Baseline: without unstaked fee
+        SlipstreamQuoter.SwapQuoteParams memory baseline = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: false
+        });
+        SlipstreamQuoter.SwapQuoteResult memory baseResult = SlipstreamQuoter.quoteExactInput(baseline);
+
+        // With unstaked fee
+        SlipstreamQuoter.SwapQuoteParams memory withFee = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: true
+        });
+        SlipstreamQuoter.SwapQuoteResult memory feeResult = SlipstreamQuoter.quoteExactInput(withFee);
+
+        assertTrue(baseResult.amountOut > 0, "Baseline should produce output");
+        assertTrue(feeResult.amountOut > 0, "Fee result should produce output");
+        assertTrue(feeResult.amountOut < baseResult.amountOut, "Unstaked fee should reduce exact-in output");
+        assertTrue(feeResult.feeAmount > baseResult.feeAmount, "Fee amount should increase with unstaked fee");
+    }
+
+    /// @notice Test that includeUnstakedFee=true increases exact-out input requirement
+    function test_quoteExactOutput_unstakedFee_increasesInput() public {
+        uint24 unstakedFee = 500; // 0.05%
+        pool.setUnstakedFee(unstakedFee);
+        uint256 amountOut = 1e18;
+
+        // Baseline: without unstaked fee
+        SlipstreamQuoter.SwapQuoteParams memory baseline = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountOut,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: false
+        });
+        SlipstreamQuoter.SwapQuoteResult memory baseResult = SlipstreamQuoter.quoteExactOutput(baseline);
+
+        // With unstaked fee
+        SlipstreamQuoter.SwapQuoteParams memory withFee = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountOut,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: true
+        });
+        SlipstreamQuoter.SwapQuoteResult memory feeResult = SlipstreamQuoter.quoteExactOutput(withFee);
+
+        assertTrue(baseResult.amountIn > 0, "Baseline should require input");
+        assertTrue(feeResult.amountIn > 0, "Fee result should require input");
+        assertTrue(feeResult.amountIn > baseResult.amountIn, "Unstaked fee should increase exact-out input");
+    }
+
+    /// @notice Test includeUnstakedFee with oneForZero direction
+    function test_quoteExactInput_unstakedFee_oneForZero() public {
+        uint24 unstakedFee = 1000; // 0.1%
+        pool.setUnstakedFee(unstakedFee);
+        uint256 amountIn = 5e18;
+
+        SlipstreamQuoter.SwapQuoteParams memory baseline = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: false,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MAX_SQRT_RATIO - 1,
+            maxSteps: 0,
+            includeUnstakedFee: false
+        });
+        SlipstreamQuoter.SwapQuoteResult memory baseResult = SlipstreamQuoter.quoteExactInput(baseline);
+
+        SlipstreamQuoter.SwapQuoteParams memory withFee = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: false,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MAX_SQRT_RATIO - 1,
+            maxSteps: 0,
+            includeUnstakedFee: true
+        });
+        SlipstreamQuoter.SwapQuoteResult memory feeResult = SlipstreamQuoter.quoteExactInput(withFee);
+
+        assertTrue(feeResult.amountOut < baseResult.amountOut, "Unstaked fee should reduce output for oneForZero");
+    }
+
+    /// @notice Test includeUnstakedFee with tick-crossing swap
+    function test_quoteExactInput_unstakedFee_tickCrossing() public {
+        uint24 unstakedFee = 500; // 0.05%
+        pool.setUnstakedFee(unstakedFee);
+
+        // Use an amount just large enough to cross a tick boundary but NOT exhaust all liquidity.
+        // amountInToCross gets us from current price to the -5000 tick boundary; multiply by
+        // ~1.1 to push slightly past it into the second liquidity range.
+        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        uint160 sqrtPriceAtMinus5000 = TickMath.getSqrtRatioAtTick(nearestUsableTick(-5000, TICK_SPACING_MEDIUM));
+        uint128 activeLiquidity = pool.liquidity();
+        uint256 amountInToCross = SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
+        uint256 amountIn = amountInToCross + (amountInToCross / 10); // ~10% past the tick boundary
+
+        SlipstreamQuoter.SwapQuoteParams memory baseline = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: false
+        });
+        SlipstreamQuoter.SwapQuoteResult memory baseResult = SlipstreamQuoter.quoteExactInput(baseline);
+
+        SlipstreamQuoter.SwapQuoteParams memory withFee = SlipstreamQuoter.SwapQuoteParams({
+            pool: ICLPool(address(pool)),
+            zeroForOne: true,
+            amount: amountIn,
+            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
+            maxSteps: 0,
+            includeUnstakedFee: true
+        });
+        SlipstreamQuoter.SwapQuoteResult memory feeResult = SlipstreamQuoter.quoteExactInput(withFee);
+
+        assertTrue(baseResult.steps > 1, "Baseline should cross ticks");
+        assertTrue(feeResult.amountOut < baseResult.amountOut, "Unstaked fee should reduce output across tick crossings");
+    }
 }

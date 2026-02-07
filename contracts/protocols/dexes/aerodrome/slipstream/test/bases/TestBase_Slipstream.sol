@@ -171,6 +171,7 @@ contract MockCLPool is ICLPool {
     address public override token0;
     address public override token1;
     uint24 internal _fee;
+    uint24 internal _unstakedFee;
     int24 public override tickSpacing;
     address public override factory;
 
@@ -256,8 +257,8 @@ contract MockCLPool is ICLPool {
         return _fee;
     }
 
-    function unstakedFee() external pure override returns (uint24) {
-        return 0;  // No unstaked fee in mock
+    function unstakedFee() external view override returns (uint24) {
+        return _unstakedFee;
     }
 
     function maxLiquidityPerTick() external pure override returns (uint128) {
@@ -529,6 +530,11 @@ contract MockCLPool is ICLPool {
         int16 wordPos = int16(compressed >> 8);
         uint8 bitPos = uint8(uint24(compressed % 256));
         _tickBitmap[wordPos] ^= (1 << bitPos);
+    }
+
+    /// @notice Set unstaked fee for testing
+    function setUnstakedFee(uint24 unstakedFee_) external {
+        _unstakedFee = unstakedFee_;
     }
 
     /// @notice Set pool state directly for testing
