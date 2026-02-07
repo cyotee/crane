@@ -13,7 +13,7 @@
 | CRANE-094 | Align Slipstream Test Pragma with Repo Conventions | Complete | CRANE-040 | `fix/slipstream-pragma-style` |
 | CRANE-097 | Add SlipstreamRewardUtils Fork Test | In Progress | CRANE-043 | `test/reward-utils-fork` |
 | CRANE-098 | Document SlipstreamRewardUtils Limitations | In Progress | CRANE-043 | `docs/reward-utils-natspec` |
-| CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | Ready | CRANE-045 | `test/stableswap-k-assertion` |
+| CRANE-099 | Add Direct Assertion for Cubic Invariant _k() | In Progress | CRANE-045 | `test/stableswap-k-assertion` |
 | CRANE-100 | Assert Stable-Swap Behavior Using Balance Deltas | Ready | CRANE-045 | `test/stableswap-balance-deltas` |
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Ready | CRANE-045 | `fix/camelot-stub-logs` |
 | CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Ready | CRANE-047 | `test/fot-fixup-input-verification` |
