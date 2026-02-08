@@ -97,6 +97,7 @@
 | CRANE-237 | Add k() Assertion for Mixed-Decimal Pair | Ready | CRANE-099 | `test/k-mixed-decimal-assertion` |
 | CRANE-238 | Fix test_calculateRewardAPR_livePool Assertion | Ready | - | `fix/reward-apr-sanity-bound` |
 | CRANE-239 | Fix OpenGSN Forwarder Fork Test Type Hash Registration | Ready | - | `fix/opengsn-forwarder-typehash` |
+| CRANE-240 | Remove Commented-Out Console Imports from CamelotV2Service | Ready | - | `fix/remove-commented-console-imports` |
 
 ## Status Legend
 

@@ -50,8 +50,8 @@ These are dead code -- they produce no bytecode and cause no test output noise. 
 **Description:** Remove the three commented-out console import lines from CamelotV2Service.sol (lines 4-6). They are dead code that clutters the file and creates false positives during console.log audits. Git history preserves them if ever needed again.
 **Affected Files:**
 - contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol
-**User Response:** (pending)
-**Notes:** This is outside the strict scope of CRANE-101 (which targets stubs, not services). Could be folded into a general code hygiene pass.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-240. This is outside the strict scope of CRANE-101 (which targets stubs, not services).
 
 ---
 
