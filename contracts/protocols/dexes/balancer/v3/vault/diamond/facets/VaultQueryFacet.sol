@@ -370,22 +370,6 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
     /* ========================================================================== */
 
     /**
-     * @notice Check if the vault is paused.
-     * @return True if paused
-     */
-    function isVaultPaused() external view returns (bool) {
-        return _isVaultPaused();
-    }
-
-    /**
-     * @notice Check if queries are disabled.
-     * @return True if disabled
-     */
-    function isQueryDisabled() external view returns (bool) {
-        return BalancerV3VaultStorageRepo._layout().vaultStateBits.isQueryDisabled();
-    }
-
-    /**
      * @notice Check if queries are permanently disabled.
      * @return True if permanently disabled
      */
