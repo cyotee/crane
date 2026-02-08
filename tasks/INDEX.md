@@ -10,96 +10,96 @@
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Complete | CRANE-045 | `fix/camelot-stub-logs` |
 | CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Complete | CRANE-047 | `test/fot-fixup-input-verification` |
 | CRANE-103 | Add Guards for Extreme Tax Values Near 100% | Complete | CRANE-047 | `test/fot-extreme-tax-guards` |
-| CRANE-104 | Add Burn Proportional Invariant Check | Ready | CRANE-049 | `test/burn-proportional-invariant` |
-| CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/k-burn-clarification` |
-| CRANE-106 | Use Balance Deltas Consistently in Multihop Tests | Ready | CRANE-050 | `fix/multihop-balance-deltas` |
-| CRANE-107 | Reduce Stub Log Noise in Verbose Test Runs | Ready | CRANE-050 | `fix/stub-log-noise` |
-| CRANE-108 | Use Math.mulDiv for Overflow Protection in Balancer V3 Pool | Ready | CRANE-052 | `fix/muldiv-overflow-protection` |
-| CRANE-109 | Add 2-Token Pool Guardrails to Balancer V3 Pool | Ready | CRANE-052 | `fix/two-token-guardrails` |
-| CRANE-110 | Add Non-Zero Selector Guard to DFPkg Tests | Ready | CRANE-054 | `test/selector-nonzero-guard` |
-| CRANE-111 | Add Factory Integration Deployment Test for DFPkg | Ready | CRANE-054 | `test/factory-deployment-test` |
-| CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/mock-cleanup` |
-| CRANE-113 | Replace require String with Custom Error in WeightedTokenConfigUtils | Ready | CRANE-055 | `fix/weighted-pool-custom-error` |
-| CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/weight-validation-negative-tests` |
+| CRANE-104 | Add Burn Proportional Invariant Check | Ready | CRANE-049 | `test/CRANE-104-burn-proportional-invariant` |
+| CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/CRANE-105-k-burn-docs` |
+| CRANE-106 | Use Balance Deltas Consistently in Multihop Tests | Ready | CRANE-050 | `fix/CRANE-106-multihop-balance-deltas` |
+| CRANE-107 | Reduce Stub Log Noise in Verbose Test Runs | Ready | CRANE-050 | `fix/CRANE-107-stub-log-noise` |
+| CRANE-108 | Use Math.mulDiv for Overflow Protection in Balancer V3 Pool | Ready | CRANE-052 | `fix/CRANE-108-muldiv-overflow-protection` |
+| CRANE-109 | Add 2-Token Pool Guardrails to Balancer V3 Pool | Ready | CRANE-052 | `fix/CRANE-109-two-token-guardrails` |
+| CRANE-110 | Add Non-Zero Selector Guard to DFPkg Tests | Ready | CRANE-054 | `test/CRANE-110-selector-nonzero-guard` |
+| CRANE-111 | Add Factory Integration Deployment Test for DFPkg | Ready | CRANE-054 | `test/CRANE-111-factory-deployment-test` |
+| CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/CRANE-112-mock-cleanup` |
+| CRANE-113 | Replace require String with Custom Error in WeightedTokenConfigUtils | Ready | CRANE-055 | `fix/CRANE-113-weighted-pool-custom-error` |
+| CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/CRANE-114-weight-validation-negative-tests` |
 | CRANE-115 | Enforce Correct Facet Address During Remove | Complete | CRANE-058 | `fix/remove-facet-address-validation` |
-| CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/remove-mismatch-negative` |
-| CRANE-117 | Guard Against Partial Facet Removal Bookkeeping Corruption | Ready | CRANE-057 | `fix/partial-removal-guardrails` |
-| CRANE-118 | Make Integration Test Truly Factory-Stack E2E | Ready | CRANE-061 | `feature/factory-stack-integration-test` |
-| CRANE-119 | Add Proxy-State Assertions for Pool/Vault-Aware Repos | Ready | CRANE-061 | `feature/proxy-state-assertions` |
-| CRANE-120 | Tighten postDeploy Call Expectations | Ready | CRANE-061 | `feature/postdeploy-payload-validation` |
-| CRANE-121 | Tighten Fuzz Assumptions for Realism | Ready | CRANE-062 | `feature/tighten-fuzz-assumptions` |
-| CRANE-122 | Remove Unnecessary ERC20 Metadata Mocks | Ready | CRANE-062 | `feature/remove-erc20-mocks` |
-| CRANE-123 | Split ERC5267 IFacet Tests into Dedicated File | Ready | CRANE-064 | `refactor/erc5267-split-ifacet` |
-| CRANE-124 | Use Canonical Proxy Fixture for ERC5267 Integration Test | Ready | CRANE-065 | `refactor/erc5267-canonical-proxy` |
-| CRANE-125 | Align ERC5267 Integration Test Pragma with Repo Version | Ready | CRANE-065 | `fix/erc5267-pragma-alignment` |
-| CRANE-126 | Fix Unchecked-Call Lint Warning | Ready | CRANE-071 | `fix/unchecked-call-lint` |
-| CRANE-127 | Assert Zero-Fee Outcome in Safe Boundary Test | Ready | CRANE-073 | `test/zero-fee-assertion` |
-| CRANE-128 | Replace Heuristic Percent Bounds with Explicit Tolerances | Ready | CRANE-073 | `test/explicit-tolerances` |
-| CRANE-129 | Align SwapMath Golden Vector Comments with Upstream | Ready | CRANE-080 | `fix/swapmath-golden-vector-comments` |
-| CRANE-130 | Add Direction Assertion to SwapMath Fully-Spent Test | Ready | CRANE-080 | `fix/swapmath-direction-assertion` |
-| CRANE-131 | Delete Deprecated AerodromService Test File | Ready | CRANE-083 | `fix/delete-deprecated-aerodrome-test` |
-| CRANE-132 | Align Aerodrome Test Pragma with Repo Version | Ready | CRANE-083 | `fix/aerodrome-pragma-alignment` |
-| CRANE-133 | Make Stable-vs-Volatile Comparison Apples-to-Apples | Ready | CRANE-084 | `test/aerodrome-apples-to-apples` |
-| CRANE-134 | Assert Aerodrome Fee Config in Stub | Ready | CRANE-084 | `test/aerodrome-fee-assertion` |
-| CRANE-135 | Tighten/Clarify Aerodrome Gas Estimate Language | Ready | CRANE-085 | `docs/aerodrome-gas-clarity` |
-| CRANE-136 | Simplify _k_from_f Helper in Aerodrome Stable | Ready | CRANE-085 | `fix/aerodrome-k-helper-simplify` |
-| CRANE-137 | Remove Redundant vm.assume in SwapMath Fuzz Test | Ready | CRANE-086 | `fix/swapmath-redundant-assume` |
-| CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/swapmath-limit-equals-current` |
-| CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/swapmath-feeamount-assertions` |
-| CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/swapmath-fee-test-rename` |
-| CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/resupply-port` |
-| CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Ready | CRANE-159 | `fix/vault-facet-selector-cleanup` |
-| CRANE-161 | Resolve Vault Loupe and Router Integration | Ready | CRANE-159 | `fix/vault-loupe-router-integration` |
-| CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/router-functional-tests` |
-| CRANE-163 | Fix Prepaid Router Mode for Permit2-less Operations | Ready | CRANE-142 | `fix/router-prepaid-mode` |
-| CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/router-target-layer` |
-| CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/router-natspec-tags` |
-| CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/router-guard-pattern` |
-| CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/safecast160-tests` |
-| CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/permit2lib-tests` |
-| CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/deploypermit2-docs` |
-| CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/remove-deprecated-aerodrom-service` |
-| CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/aerodrome-interface-comparison` |
-| CRANE-174 | Add Router getWeth/getPermit2 Validation | Ready | CRANE-167 | `test/router-weth-permit2-validation` |
-| CRANE-175 | Consolidate Router Facet Size Checks | Ready | CRANE-167 | `refactor/router-facet-size-consolidation` |
-| CRANE-176 | Replace LBP String Revert with Custom Error | Ready | CRANE-143 | `fix/lbp-custom-error` |
-| CRANE-177 | Add NatSpec Examples to GradualValueChange | Ready | CRANE-143 | `docs/gradualvaluechange-natspec` |
-| CRANE-178 | Integration Tests for Weighted Pool Package | Ready | CRANE-143 | `test/pool-weighted-integration` |
-| CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/lbp-dfpkg-calcsalt` |
-| CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/stable-pool-salt-consistency` |
-| CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/remove-aerodrome-submodule` |
-| CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/v3-quoter-tests` |
-| CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/v3-migrator-tests` |
-| CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/remove-v3-submodules` |
-| CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/v3-init-code-hash-test` |
-| CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/gyro-token-order-tests` |
-| CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/cow-router-length-validation` |
-| CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/hooks-diamond-vault-integration` |
-| CRANE-194 | Align Hook Comments With Actual Behavior | Ready | CRANE-147 | `fix/hooks-comment-alignment` |
-| CRANE-195 | Make lib/reclamm Submodule Removal Possible | Ready | CRANE-149 | `fix/reclamm-submodule-removal-enablement` |
-| CRANE-196 | Replace Unsupported Foundry Config Key | Ready | CRANE-149 | `fix/foundry-config-cleanup` |
-| CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/reclamm-deterministic-address-test` |
-| CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/v4-submodule-removal-ci-check` |
-| CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/v4-task-scope-cleanup` |
-| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/balancer-v3-stable-fork-parity` |
-| CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/opengsn-execute-parity` |
-| CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/v3-tokenuri-e2e-shape` |
-| CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/pool-init-code-hash-regression` |
-| CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/json-image-field-extraction` |
-| CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/v4-port-complete-verification` |
-| CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/safecast-delegation-pattern` |
-| CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/usdt-increase-decrease-allowance` |
-| CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/slipstream-near-depletion` |
-| CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/hash-task-typo` |
-| CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/hash-extended-overloads` |
-| CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/quoter-fee-guard-revert` |
-| CRANE-236 | Add k() Assertion for Constant-Product Mode | Ready | CRANE-099 | `test/k-constant-product-assertion` |
-| CRANE-237 | Add k() Assertion for Mixed-Decimal Pair | Ready | CRANE-099 | `test/k-mixed-decimal-assertion` |
-| CRANE-238 | Fix test_calculateRewardAPR_livePool Assertion | Ready | - | `fix/reward-apr-sanity-bound` |
-| CRANE-239 | Fix OpenGSN Forwarder Fork Test Type Hash Registration | Ready | - | `fix/opengsn-forwarder-typehash` |
-| CRANE-240 | Remove Commented-Out Console Imports from CamelotV2Service | Ready | - | `fix/remove-commented-console-imports` |
-| CRANE-241 | Add FoT Output Token Fix-Up Verification Tests | Ready | CRANE-102 | `test/fot-output-fixup-verification` |
-| CRANE-242 | Add Fix-Up Sanity Assertion to FoT Tests | Ready | CRANE-102 | `test/fixup-sanity-assertion` |
+| CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/CRANE-116-remove-mismatch-negative-test` |
+| CRANE-117 | Guard Against Partial Facet Removal Bookkeeping Corruption | Ready | CRANE-057 | `fix/CRANE-117-partial-removal-guardrails` |
+| CRANE-118 | Make Integration Test Truly Factory-Stack E2E | Ready | CRANE-061 | `feature/CRANE-118-factory-stack-integration-test` |
+| CRANE-119 | Add Proxy-State Assertions for Pool/Vault-Aware Repos | Ready | CRANE-061 | `feature/CRANE-119-proxy-state-assertions` |
+| CRANE-120 | Tighten postDeploy Call Expectations | Ready | CRANE-061 | `feature/CRANE-120-postdeploy-payload-validation` |
+| CRANE-121 | Tighten Fuzz Assumptions for Realism | Ready | CRANE-062 | `feature/CRANE-121-tighten-fuzz-assumptions` |
+| CRANE-122 | Remove Unnecessary ERC20 Metadata Mocks | Ready | CRANE-062 | `feature/CRANE-122-remove-erc20-mocks` |
+| CRANE-123 | Split ERC5267 IFacet Tests into Dedicated File | Ready | CRANE-064 | `refactor/CRANE-123-erc5267-split-ifacet-tests` |
+| CRANE-124 | Use Canonical Proxy Fixture for ERC5267 Integration Test | Ready | CRANE-065 | `refactor/CRANE-124-erc5267-canonical-proxy-fixture` |
+| CRANE-125 | Align ERC5267 Integration Test Pragma with Repo Version | Ready | CRANE-065 | `fix/CRANE-125-erc5267-pragma-alignment` |
+| CRANE-126 | Fix Unchecked-Call Lint Warning | Ready | CRANE-071 | `fix/CRANE-126-fix-unchecked-call-lint` |
+| CRANE-127 | Assert Zero-Fee Outcome in Safe Boundary Test | Ready | CRANE-073 | `test/CRANE-127-zero-fee-assertion` |
+| CRANE-128 | Replace Heuristic Percent Bounds with Explicit Tolerances | Ready | CRANE-073 | `test/CRANE-128-explicit-tolerances` |
+| CRANE-129 | Align SwapMath Golden Vector Comments with Upstream | Ready | CRANE-080 | `fix/CRANE-129-swapmath-golden-vector-comments` |
+| CRANE-130 | Add Direction Assertion to SwapMath Fully-Spent Test | Ready | CRANE-080 | `fix/CRANE-130-swapmath-direction-assertion` |
+| CRANE-131 | Delete Deprecated AerodromService Test File | Ready | CRANE-083 | `fix/CRANE-131-delete-deprecated-aerodrome-test` |
+| CRANE-132 | Align Aerodrome Test Pragma with Repo Version | Ready | CRANE-083 | `fix/CRANE-132-aerodrome-pragma-alignment` |
+| CRANE-133 | Make Stable-vs-Volatile Comparison Apples-to-Apples | Ready | CRANE-084 | `test/CRANE-133-aerodrome-apples-to-apples-comparison` |
+| CRANE-134 | Assert Aerodrome Fee Config in Stub | Ready | CRANE-084 | `test/CRANE-134-aerodrome-fee-config-assertion` |
+| CRANE-135 | Tighten/Clarify Aerodrome Gas Estimate Language | Ready | CRANE-085 | `docs/CRANE-135-aerodrome-gas-estimate-clarity` |
+| CRANE-136 | Simplify _k_from_f Helper in Aerodrome Stable | Ready | CRANE-085 | `fix/CRANE-136-aerodrome-k-helper-simplify` |
+| CRANE-137 | Remove Redundant vm.assume in SwapMath Fuzz Test | Ready | CRANE-086 | `fix/CRANE-137-swapmath-redundant-assume` |
+| CRANE-138 | Test SwapMath Edge Case Where Limit Equals Current | Ready | CRANE-086 | `test/CRANE-138-swapmath-limit-equals-current` |
+| CRANE-139 | Remove Always-True feeAmount >= 0 Assertions | Ready | CRANE-087 | `fix/CRANE-139-swapmath-feeamount-assertions` |
+| CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/CRANE-140-swapmath-fee-test-rename` |
+| CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/CRANE-153-resupply-port` |
+| CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Ready | CRANE-159 | `fix/CRANE-160-vault-facet-selector-cleanup` |
+| CRANE-161 | Resolve Vault Loupe and Router Integration | Ready | CRANE-159 | `fix/CRANE-161-vault-loupe-router-integration` |
+| CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/CRANE-162-router-test-coverage` |
+| CRANE-163 | Fix Prepaid Router Mode for Permit2-less Operations | Ready | CRANE-142 | `fix/CRANE-163-router-prepaid-mode-fix` |
+| CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/CRANE-164-router-target-layer` |
+| CRANE-165 | Add NatSpec Custom Tags to Router Contracts | Ready | CRANE-142 | `docs/CRANE-165-router-natspec-tags` |
+| CRANE-166 | Refactor Router Guards to Follow Repo Pattern | Ready | CRANE-142 | `refactor/CRANE-166-router-guard-repo-pattern` |
+| CRANE-168 | Add SafeCast160 Unit Tests | Ready | CRANE-150 | `test/CRANE-168-safecast160-tests` |
+| CRANE-169 | Add Permit2Lib Integration Tests | Ready | CRANE-150 | `test/CRANE-169-permit2lib-tests` |
+| CRANE-170 | Document DeployPermit2 Bytecode Source | Ready | CRANE-150 | `docs/CRANE-170-deploypermit2-docs` |
+| CRANE-172 | Remove Deprecated AerodromService | Ready | CRANE-148 | `chore/CRANE-172-remove-deprecated-aerodrom-service` |
+| CRANE-173 | Add Aerodrome Interface Comparison Report | Ready | CRANE-148 | `docs/CRANE-173-aerodrome-interface-comparison-doc` |
+| CRANE-174 | Add Router getWeth/getPermit2 Validation | Ready | CRANE-167 | `test/CRANE-174-router-weth-permit2-validation` |
+| CRANE-175 | Consolidate Router Facet Size Checks | Ready | CRANE-167 | `refactor/CRANE-175-router-facet-size-consolidation` |
+| CRANE-176 | Replace LBP String Revert with Custom Error | Ready | CRANE-143 | `fix/CRANE-176-lbp-custom-error` |
+| CRANE-177 | Add NatSpec Examples to GradualValueChange | Ready | CRANE-143 | `docs/CRANE-177-gradualvaluechange-natspec` |
+| CRANE-178 | Integration Tests for Weighted Pool Package | Ready | CRANE-143 | `test/CRANE-178-pool-weighted-integration-tests` |
+| CRANE-179 | Fix LBP DFPkg calcSalt Address Collisions | Ready | CRANE-143 | `fix/CRANE-179-lbp-dfpkg-calcsalt-fix` |
+| CRANE-180 | Add Stable Pool DFPkg Salt Consistency Tests | Ready | CRANE-144 | `test/CRANE-180-stable-pool-salt-consistency-tests` |
+| CRANE-181 | Remove lib/aerodrome-contracts Submodule | Ready | CRANE-148 | `chore/CRANE-181-remove-aerodrome-submodule` |
+| CRANE-184 | Add V3 Quoter Function Tests | Ready | CRANE-151 | `test/CRANE-184-v3-quoter-tests` |
+| CRANE-185 | Add V3Migrator Integration Test | Ready | CRANE-151 | `test/CRANE-185-v3-migrator-tests` |
+| CRANE-186 | Remove v3-core and v3-periphery Submodules | Ready | CRANE-151 | `chore/CRANE-186-remove-v3-submodules` |
+| CRANE-187 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-151 | `test/CRANE-187-v3-init-code-hash-test` |
+| CRANE-190 | Add Gyro Pool Token-Order Independence Tests | Ready | CRANE-145 | `test/CRANE-190-gyro-token-order-independence-tests` |
+| CRANE-192 | Add Input Length Validation in CoW Router | Ready | CRANE-146 | `fix/CRANE-192-cow-router-length-validation` |
+| CRANE-193 | Add Diamond-Vault Integration Tests for Hooks | Ready | CRANE-147 | `test/CRANE-193-hooks-diamond-vault-integration` |
+| CRANE-194 | Align Hook Comments With Actual Behavior | Ready | CRANE-147 | `fix/CRANE-194-hooks-comment-alignment` |
+| CRANE-195 | Make lib/reclamm Submodule Removal Possible | Ready | CRANE-149 | `fix/CRANE-195-reclamm-submodule-removal-enablement` |
+| CRANE-196 | Replace Unsupported Foundry Config Key | Ready | CRANE-149 | `fix/CRANE-196-foundry-config-cleanup` |
+| CRANE-197 | Stabilize ReClaMM Deterministic Address Test | Ready | CRANE-149 | `fix/CRANE-197-reclamm-deterministic-address-test` |
+| CRANE-198 | Add Submodule Removal Verification to CI | Ready | CRANE-152 | `feature/CRANE-198-v4-submodule-removal-ci-check` |
+| CRANE-199 | Resolve CRANE-152 TASK.md Scope Mismatch | Ready | CRANE-152 | `fix/CRANE-199-v4-task-scope-cleanup` |
+| CRANE-213 | Add Balancer V3 Stable Pool Fork Parity Tests | Ready | - | `test/CRANE-213-balancer-v3-stable-pool-fork-parity-tests` |
+| CRANE-214 | Add Upstream Execute Parity Assertions | Ready | CRANE-211 | `test/CRANE-214-execute-parity-upstream-assertions` |
+| CRANE-215 | Add End-to-End tokenURI() Shape Test | Ready | CRANE-201 | `test/CRANE-215-v3-tokenuri-e2e-shape-test` |
+| CRANE-216 | Add POOL_INIT_CODE_HASH Regression Test | Ready | CRANE-201 | `test/CRANE-216-pool-init-code-hash-regression` |
+| CRANE-217 | Reduce False Positives In JSON Validation | Ready | CRANE-201 | `test/CRANE-217-json-image-field-extraction` |
+| CRANE-221 | Complete Uniswap V4 Port Verification with Base Fork Tests | Ready | - | `feature/CRANE-221-uniswap-v4-port-verification` |
+| CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/CRANE-230-document-safecast-delegation-pattern` |
+| CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/CRANE-231-add-usdt-approval-tests-increase-decrease` |
+| CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/CRANE-232-slipstream-near-depletion-test` |
+| CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/CRANE-233-fix-hash-task-typo` |
+| CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/CRANE-234-hash-extended-overload-tests` |
+| CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/CRANE-235-quoter-fee-guard-revert-test` |
+| CRANE-236 | Add k() Assertion for Constant-Product Mode | Ready | CRANE-099 | `test/CRANE-236-k-constant-product-assertion` |
+| CRANE-237 | Add k() Assertion for Mixed-Decimal Pair | Ready | CRANE-099 | `test/CRANE-237-k-mixed-decimal-assertion` |
+| CRANE-238 | Fix test_calculateRewardAPR_livePool Assertion | Ready | - | `fix/CRANE-238-fix-reward-apr-sanity-bound` |
+| CRANE-239 | Fix OpenGSN Forwarder Fork Test Type Hash Registration | Ready | - | `fix/CRANE-239-fix-opengsn-forwarder-typehash-registration` |
+| CRANE-240 | Remove Commented-Out Console Imports from CamelotV2Service | Ready | - | `fix/CRANE-240-remove-commented-console-imports` |
+| CRANE-241 | Add FoT Output Token Fix-Up Verification Tests | Ready | CRANE-102 | `test/CRANE-241-fot-output-token-fixup-verification` |
+| CRANE-242 | Add Fix-Up Sanity Assertion to FoT Tests | Ready | CRANE-102 | `test/CRANE-242-fixup-sanity-assertion` |
 
 ## Status Legend
 
