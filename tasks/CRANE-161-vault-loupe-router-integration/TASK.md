@@ -1,25 +1,30 @@
 # Task CRANE-161: Resolve Vault Loupe and Router Integration
 
 **Repo:** Crane Framework
-**Status:** Ready
+**Status:** In Progress
 **Created:** 2026-01-29
 **Dependencies:** CRANE-159
-**Worktree:** `fix/vault-loupe-router-integration`
+**Worktree:** `feature/CRANE-161-vault-loupe-router-integration`
 **Origin:** Code review suggestion from CRANE-159
 
 ---
 
 ## Description
 
-Resolve the mismatch between CRANE-159 TASK.md requirements and the actual implementation:
+Resolve the mismatch between CRANE-159 TASK.md requirements and the actual implementation.
 
-1. **Loupe Facet (US-CRANE-159.5):** The task required creating `VaultLoupeFacet.sol` and bundling it in the Vault DFPkg. The implementation uses the factory-provided `DiamondLoupeFacet` instead.
+### Architectural Decision: No VaultLoupeFacet
 
-2. **Router Integration (US-CRANE-159.7):** The task required updating Router tests to deploy/use the real `BalancerV3VaultDFPkg`. Current tests use `MockVault` and do not exercise end-to-end Router-Vault integration.
+**Decision:** The Vault Diamond MUST use the default Diamond Loupe provided by the Diamond Factory. A custom `VaultLoupeFacet.sol` is NOT needed and MUST NOT be created.
 
-This task should either:
-- (A) Update archived TASK.md to reflect the factory-provided loupe facet approach and document router tests as deferred, OR
-- (B) Implement the missing pieces (VaultLoupeFacet + router integration tests)
+**Rationale:** The factory-provided `DiamondLoupeFacet` already handles all EIP-2535 introspection requirements. DFPkg packages add application-specific facets; the loupe is infrastructure that the factory provides universally to all diamonds. Creating a vault-specific loupe would duplicate functionality and deviate from the standard Crane Diamond Factory pattern.
+
+### Remaining Work: Router Integration
+
+The CRANE-159 task required updating Router tests to deploy/use the real `BalancerV3VaultDFPkg`. Current tests use `MockVault` and do not exercise end-to-end Router-Vault integration. This task should:
+
+1. Update the archived CRANE-159 TASK.md to document the factory-provided loupe decision
+2. Integrate the real Vault DFPkg into Router tests for end-to-end coverage
 
 (Created from code review of CRANE-159)
 
@@ -29,15 +34,14 @@ This task should either:
 
 ## User Stories
 
-### US-CRANE-161.1: Resolve Loupe Facet Strategy
+### US-CRANE-161.1: Document Factory-Provided Loupe Decision
 
-As a developer, I want clarity on whether the Vault Diamond should bundle its own loupe facet or rely on the factory-provided one so that the architecture is documented and consistent.
+As a developer, I want the archived CRANE-159 TASK.md updated to reflect that the Vault Diamond uses the factory-provided DiamondLoupeFacet (not a custom VaultLoupeFacet) so that the architecture is documented accurately.
 
 **Acceptance Criteria:**
-- [ ] Decision documented: factory-provided loupe OR custom VaultLoupeFacet
-- [ ] If factory-provided: archived TASK.md updated to reflect this approach
-- [ ] If custom: VaultLoupeFacet.sol created and included in DFPkg
-- [ ] Tests validate loupe functionality
+- [ ] Archived CRANE-159 TASK.md updated: US-CRANE-159.5 notes that factory-provided loupe is the correct approach
+- [ ] No `VaultLoupeFacet.sol` exists in the codebase
+- [ ] Any references to a custom vault loupe facet are removed or corrected
 
 ### US-CRANE-161.2: Integrate Real Vault in Router Tests
 
@@ -53,22 +57,22 @@ As a developer, I want Router tests to deploy and use the real BalancerV3VaultDF
 ## Files to Create/Modify
 
 **Modified Files:**
-- `tasks/archive/CRANE-159-balancer-v3-vault-dfpkg-fix/TASK.md` (if updating requirements)
-- `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.t.sol`
+- `tasks/archive/CRANE-159-balancer-v3-vault-dfpkg-fix/TASK.md` - Update loupe facet notes
+- `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.t.sol` - Add real Vault integration
 
-**Potentially Created Files:**
-- `contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLoupeFacet.sol` (if option B)
+**No New Contract Files** - VaultLoupeFacet.sol must NOT be created.
 
 ## Inventory Check
 
 Before starting, verify:
 - [ ] CRANE-159 is complete
-- [ ] Understand current factory-provided loupe behavior
-- [ ] Review existing Router test structure
+- [ ] Confirm factory-provided DiamondLoupeFacet is already deployed with Vault diamonds
+- [ ] Review existing Router test structure to understand MockVault usage
 
 ## Completion Criteria
 
-- [ ] Loupe facet strategy documented and implemented
+- [ ] Factory-provided loupe decision documented in archived CRANE-159 TASK.md
+- [ ] No custom VaultLoupeFacet exists
 - [ ] Router tests use real Vault Diamond
 - [ ] All tests pass
 - [ ] Build succeeds
