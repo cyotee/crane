@@ -8,7 +8,7 @@
 | ID | Title | Status | Dependencies | Worktree |
 |----|-------|--------|--------------|----------|
 | CRANE-101 | Remove/Gate console.log in Camelot Stubs | Complete | CRANE-045 | `fix/camelot-stub-logs` |
-| CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Pending Merge | CRANE-047 | `test/fot-fixup-input-verification` |
+| CRANE-102 | Strengthen _purchaseQuote() Tests with Fix-Up Input Verification | Complete | CRANE-047 | `test/fot-fixup-input-verification` |
 | CRANE-103 | Add Guards for Extreme Tax Values Near 100% | In Progress | CRANE-047 | `test/fot-extreme-tax-guards` |
 | CRANE-104 | Add Burn Proportional Invariant Check | Ready | CRANE-049 | `test/burn-proportional-invariant` |
 | CRANE-105 | Document K-on-Burn Behavior Clarification | Ready | CRANE-049 | `docs/k-burn-clarification` |
