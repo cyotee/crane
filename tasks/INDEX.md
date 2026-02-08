@@ -98,6 +98,8 @@
 | CRANE-238 | Fix test_calculateRewardAPR_livePool Assertion | Ready | - | `fix/reward-apr-sanity-bound` |
 | CRANE-239 | Fix OpenGSN Forwarder Fork Test Type Hash Registration | Ready | - | `fix/opengsn-forwarder-typehash` |
 | CRANE-240 | Remove Commented-Out Console Imports from CamelotV2Service | Ready | - | `fix/remove-commented-console-imports` |
+| CRANE-241 | Add FoT Output Token Fix-Up Verification Tests | Ready | CRANE-102 | `test/fot-output-fixup-verification` |
+| CRANE-242 | Add Fix-Up Sanity Assertion to FoT Tests | Ready | CRANE-102 | `test/fixup-sanity-assertion` |
 
 ## Status Legend
 

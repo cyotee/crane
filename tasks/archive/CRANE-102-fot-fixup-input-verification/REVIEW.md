@@ -78,16 +78,16 @@ Assertion at line 749: `assertGe(actualOutput + 1, desiredOutput)` allows exactl
 **Description:** The current fix-up tests only verify the case where the FoT token is the *input* token (selling FoT to buy standard). There's a complementary scenario: when the *output* token is FoT, the `_saleQuote()` overestimates because the recipient gets less than the pool sends. A corresponding fix-up for sale quotes could be verified: `requiredOutput = quotedOutput * (10000 - taxBps) / 10000` to get the actual received amount. However, this is a different formula (scaling down, not up) and was not in scope for CRANE-102.
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_feeOnTransfer.t.sol
-**User Response:** (pending)
-**Notes:** Out of scope for CRANE-102, which focused specifically on `_purchaseQuote()` underestimation. Could be a follow-up task.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-241.
 
 ### Suggestion 2: Add explicit `assertGt(p.requiredInput, p.quotedInput)` sanity check
 **Priority:** Low
 **Description:** Adding an assertion that the fix-up input is strictly greater than the quoted input would make the test self-documenting about *why* the fix-up is needed. Currently, this relationship is implied by the math but not explicitly asserted. For example, after line 736: `assertGt(p.requiredInput, p.quotedInput, "Fix-up should exceed naive quote for non-zero tax");`
 **Affected Files:**
 - test/foundry/spec/protocols/dexes/camelot/v2/CamelotV2_feeOnTransfer.t.sol
-**User Response:** (pending)
-**Notes:** Purely a readability improvement. The math guarantees this for taxBps > 0, but explicit assertion documents intent.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-242.
 
 ---
 
