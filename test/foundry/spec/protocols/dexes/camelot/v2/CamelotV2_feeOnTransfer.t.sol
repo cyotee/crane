@@ -658,6 +658,150 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*              Fix-Up Input Verification Tests                               */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Proves the fix-up input formula achieves the desired output
+     * @dev The fix-up compensates for FoT tax: requiredInput = quotedInput / (1 - taxRate)
+     *
+     * Pattern:
+     *   1. Snapshot pool state (pristine reserves)
+     *   2. Compute quotedInput via _purchaseQuote(desiredOutput)
+     *   3. Apply fix-up: requiredInput = quotedInput * 10000 / (10000 - taxBps)
+     *   4. Execute swap with requiredInput
+     *   5. Assert actualOutput >= desiredOutput (within rounding tolerance)
+     */
+    function test_fixUpInput_achievesDesiredOutput_5percent() public {
+        _testFixUpInputAchievesDesiredOutput(
+            fotToken5Percent,
+            standardToken,
+            standardVsFotPair5,
+            TAX_5_PERCENT
+        );
+    }
+
+    function test_fixUpInput_achievesDesiredOutput_1percent() public {
+        _testFixUpInputAchievesDesiredOutput(
+            fotToken1Percent,
+            standardToken,
+            standardVsFotPair1,
+            TAX_1_PERCENT
+        );
+    }
+
+    function test_fixUpInput_achievesDesiredOutput_10percent() public {
+        _testFixUpInputAchievesDesiredOutput(
+            fotToken10Percent,
+            standardToken,
+            standardVsFotPair10,
+            TAX_10_PERCENT
+        );
+    }
+
+    /// @dev Struct to avoid stack too deep in fix-up verification tests
+    struct FixUpTestParams {
+        uint256 reserveIn;
+        uint256 reserveOut;
+        uint256 feePercent;
+        uint256 desiredOutput;
+        uint256 quotedInput;
+        uint256 requiredInput;
+        uint256 snapshotId;
+        uint256 outputBalanceBefore;
+        uint256 actualOutput;
+    }
+
+    function _testFixUpInputAchievesDesiredOutput(
+        FeeOnTransferToken tokenIn,
+        ERC20PermitMintableStub tokenOut,
+        ICamelotPair pair,
+        uint256 taxBps
+    ) internal {
+        FixUpTestParams memory p;
+
+        // Snapshot pristine pool state
+        p.snapshotId = vm.snapshot();
+
+        // Get reserves
+        (p.reserveIn, p.reserveOut, p.feePercent) = _getReservesForTokenInput(pair, address(tokenIn));
+
+        // Desired output amount
+        p.desiredOutput = 10e18;
+
+        // Step 1: Compute quoted input (doesn't account for FoT tax)
+        p.quotedInput = ConstProdUtils._purchaseQuote(p.desiredOutput, p.reserveIn, p.reserveOut, p.feePercent);
+
+        // Step 2: Apply fix-up formula: requiredInput = quotedInput / (1 - taxRate)
+        p.requiredInput = (p.quotedInput * 10000) / (10000 - taxBps);
+
+        // Mint the fix-up amount and approve
+        tokenIn.mint(address(this), p.requiredInput);
+        tokenIn.approve(address(camelotV2Router), p.requiredInput);
+
+        // Step 3: Execute swap with corrected input
+        p.outputBalanceBefore = tokenOut.balanceOf(address(this));
+        _executeSwapForPurchase(address(tokenIn), address(tokenOut), p.requiredInput);
+        p.actualOutput = tokenOut.balanceOf(address(this)) - p.outputBalanceBefore;
+
+        // Step 4: Assert actual output meets or exceeds desired output
+        // Allow 1 wei tolerance for integer rounding in the AMM math
+        assertGe(
+            p.actualOutput + 1,
+            p.desiredOutput,
+            "Fix-up input should achieve desired output (within 1 wei rounding)"
+        );
+
+        emit log_named_uint("Tax Rate (bps)", taxBps);
+        emit log_named_uint("Desired Output", p.desiredOutput);
+        emit log_named_uint("Quoted Input (naive)", p.quotedInput);
+        emit log_named_uint("Required Input (fix-up)", p.requiredInput);
+        emit log_named_uint("Actual Output", p.actualOutput);
+
+        // Restore pristine pool state for other tests
+        vm.revertTo(p.snapshotId);
+    }
+
+    /**
+     * @notice Fuzz test for fix-up input verification across variable desired outputs and tax rates
+     * @dev Creates a fresh pool per fuzz run for complete isolation
+     */
+    function testFuzz_fixUpInput_achievesDesiredOutput(uint256 taxBps_, uint256 desiredOutput_) public {
+        uint256 taxBps = bound(taxBps_, 1, 5000);
+        uint256 desiredOutput = bound(desiredOutput_, 1e15, 100e18);
+
+        // Create fresh pool with the given tax rate
+        (FeeOnTransferToken fuzzFotToken, ICamelotPair fuzzPair) = _createFuzzPair(taxBps);
+
+        // Get reserves
+        (uint256 reserveIn, uint256 reserveOut, uint256 feePercent) =
+            _getReservesForToken(fuzzPair, address(fuzzFotToken));
+
+        // Ensure desired output is feasible
+        vm.assume(desiredOutput < reserveOut / 2);
+
+        // Compute quoted input and apply fix-up
+        uint256 quotedInput = ConstProdUtils._purchaseQuote(desiredOutput, reserveIn, reserveOut, feePercent);
+        uint256 requiredInput = (quotedInput * 10000) / (10000 - taxBps);
+
+        // Mint and approve
+        fuzzFotToken.mint(address(this), requiredInput);
+        fuzzFotToken.approve(address(camelotV2Router), requiredInput);
+
+        // Execute swap
+        uint256 outputBalanceBefore = standardToken.balanceOf(address(this));
+        _executeSwap(address(fuzzFotToken), address(standardToken), requiredInput);
+        uint256 actualOutput = standardToken.balanceOf(address(this)) - outputBalanceBefore;
+
+        // Assert: fix-up input achieves the desired output (within 1 wei rounding)
+        assertGe(
+            actualOutput + 1,
+            desiredOutput,
+            "Fuzz: fix-up input should achieve desired output"
+        );
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                          Edge Case Tests                                   */
     /* -------------------------------------------------------------------------- */
 
