@@ -136,22 +136,22 @@ library ERC2535Repo {
             from corrupting loupe bookkeeping.
             */
             bytes4 selector = facetCut.functionSelectors[cursor];
-            address actualFacet = layout.facetAddress[selector];
-            if (actualFacet == address(0)) {
+            // CRANE-115: Resolve actual owning facet before clearing mappings
+            address currentFacet = layout.facetAddress[selector];
+            if (currentFacet == address(0)) {
                 revert IDiamondLoupe.FunctionNotPresent(selector);
             }
             // CRANE-057: Validate selector belongs to specified facet
-            if (actualFacet != facetCut.facetAddress) {
-                revert IDiamondLoupe.SelectorFacetMismatch(selector, facetCut.facetAddress, actualFacet);
+            if (currentFacet != facetCut.facetAddress) {
+                revert IDiamondLoupe.SelectorFacetMismatch(selector, facetCut.facetAddress, currentFacet);
             }
             layout.facetAddress[selector] = address(0);
-            // CRANE-058: Remove selector from facet's selector set (supports partial removal)
-            layout.facetFunctionSelectors[facetCut.facetAddress]._remove(selector);
-            emit IERC8109Update.DiamondFunctionRemoved(selector, facetCut.facetAddress);
-        }
-        // Only remove facet from facetAddresses when its selector set becomes empty
-        if (layout.facetFunctionSelectors[facetCut.facetAddress]._length() == 0) {
-            layout.facetAddresses._remove(facetCut.facetAddress);
+            // CRANE-115: Use resolved currentFacet (mirrors _replaceFacet pattern)
+            layout.facetFunctionSelectors[currentFacet]._remove(selector);
+            if (layout.facetFunctionSelectors[currentFacet]._length() == 0) {
+                layout.facetAddresses._remove(currentFacet);
+            }
+            emit IERC8109Update.DiamondFunctionRemoved(selector, currentFacet);
         }
     }
 
