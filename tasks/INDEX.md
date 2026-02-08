@@ -90,7 +90,7 @@
 | CRANE-230 | Document SafeCast Wrapper Delegation Pattern | Ready | CRANE-223 | `docs/CRANE-230-document-safecast-delegation-pattern` |
 | CRANE-231 | Add USDT Approval Tests for safeIncreaseAllowance/safeDecreaseAllowance | Ready | CRANE-229 | `test/CRANE-231-add-usdt-approval-tests-increase-decrease` |
 | CRANE-232 | Add Slipstream Near-Depletion Exact-Output Test | Ready | CRANE-090 | `test/CRANE-232-slipstream-near-depletion-test` |
-| CRANE-233 | Fix TASK.md encodePacked Typo | Ready | CRANE-091 | `fix/CRANE-233-fix-hash-task-typo` |
+| CRANE-233 | Fix TASK.md encodePacked Typo | In Progress | CRANE-091 | `fix/CRANE-233-fix-hash-task-typo` |
 | CRANE-234 | Add BetterEfficientHashLib Extended Overload Tests | Ready | CRANE-091 | `test/CRANE-234-hash-extended-overload-tests` |
 | CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/CRANE-235-quoter-fee-guard-revert-test` |
 | CRANE-236 | Add k() Assertion for Constant-Product Mode | Ready | CRANE-099 | `test/CRANE-236-k-constant-product-assertion` |

@@ -1,6 +1,7 @@
 # AGENTS.md
 
 This file provides guidance to AI Agents when working with code in this repository.
+If PROGRESS.md exists in the project root, read it for cross-session context before starting work.
 
 ## Codebase Overview
 
