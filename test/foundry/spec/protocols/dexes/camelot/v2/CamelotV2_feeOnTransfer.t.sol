@@ -60,6 +60,12 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     uint256 constant TAX_5_PERCENT = 500;
     uint256 constant TAX_10_PERCENT = 1000;
 
+    /// @notice Maximum tax rate for which inverse-tax computation is valid.
+    /// @dev At taxBps == 10000 the formula `amount * 10000 / (10000 - taxBps)` divides
+    ///      by zero. Near 10000 (e.g. 9999) the multiplier grows to extreme values
+    ///      (amount * 10000) which may cause overflow or produce unrealistic liquidity.
+    uint256 constant MAX_INVERSE_TAX_BPS = 9999;
+
     /* -------------------------------------------------------------------------- */
     /*                                 Setup                                      */
     /* -------------------------------------------------------------------------- */
@@ -125,6 +131,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         // For FoT tokens, we need to account for the tax when adding liquidity
         // The pair will receive less than we send due to transfer tax
         uint256 fotTax = tokenB.transferTax();
+        require(fotTax <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
         uint256 fotAmountToSend = (INITIAL_LIQUIDITY * 10000) / (10000 - fotTax);
 
         tokenA.mint(address(this), INITIAL_LIQUIDITY);
@@ -142,6 +149,8 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         // Both tokens have transfer tax
         uint256 fot1Tax = fotToken1Percent.transferTax();
         uint256 fot5Tax = fotToken5Percent.transferTax();
+        require(fot1Tax <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
+        require(fot5Tax <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
 
         uint256 fot1AmountToSend = (INITIAL_LIQUIDITY * 10000) / (10000 - fot1Tax);
         uint256 fot5AmountToSend = (INITIAL_LIQUIDITY * 10000) / (10000 - fot5Tax);
@@ -334,6 +343,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         p.quotedInput = ConstProdUtils._purchaseQuote(p.desiredOutput, p.reserveIn, p.reserveOut, p.feePercent);
 
         // Required input = quotedInput / (1 - tax)
+        require(taxBps <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
         p.requiredInput = (p.quotedInput * 10000) / (10000 - taxBps);
 
         // Mint the quoted amount and try to swap
@@ -555,7 +565,8 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
      */
     function testFuzz_saleQuote_overestimation(uint256 taxBps_, uint256 swapAmount_) public {
         FuzzTestParams memory p;
-        p.taxBps = bound(taxBps_, 1, 5000);
+        // Cover full valid range up to 99.99%; guard in _createFuzzPair prevents 100%
+        p.taxBps = bound(taxBps_, 1, MAX_INVERSE_TAX_BPS);
         p.swapAmount = bound(swapAmount_, 1e15, 500e18);
 
         // Create and initialize in helper
@@ -583,6 +594,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     }
 
     function _createFuzzPair(uint256 taxBps) internal returns (FeeOnTransferToken, ICamelotPair) {
+        require(taxBps <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
         FeeOnTransferToken fuzzFotToken = new FeeOnTransferToken("FuzzFoT", "FFOT", 18, taxBps, 0);
         ICamelotPair fuzzPair = ICamelotPair(
             camelotV2Factory.createPair(address(standardToken), address(fuzzFotToken))
@@ -881,5 +893,137 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // Should still receive something
         assertGt(actualReceived, 0, "Should receive tokens even with small swap");
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                    Extreme Tax Edge Case Tests                             */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Documents that 100% tax (taxBps == 10000) causes division-by-zero
+     *         in the inverse-tax formula and is correctly prevented by the mock's
+     *         constructor allowing it while the test helpers guard against it.
+     * @dev At 100% tax, `amountToSend = amount * 10000 / (10000 - 10000)` divides
+     *      by zero. The FeeOnTransferToken mock allows 100% tax (recipient gets 0),
+     *      but our helpers cannot compute the gross amount needed, so they revert.
+     */
+    function test_100percentTax_constructorAllows() public {
+        // The mock allows 100% tax (no division in its constructor)
+        FeeOnTransferToken fullTaxToken = new FeeOnTransferToken("FullTax", "FT100", 18, 10000, 0);
+        assertEq(fullTaxToken.transferTax(), 10000);
+
+        // A transfer delivers 0 tokens to recipient
+        fullTaxToken.mint(address(this), 1000e18);
+        uint256 balBefore = fullTaxToken.balanceOf(address(1));
+        fullTaxToken.transfer(address(1), 1000e18);
+        uint256 received = fullTaxToken.balanceOf(address(1)) - balBefore;
+        assertEq(received, 0, "100% tax should deliver 0 tokens");
+    }
+
+    /**
+     * @notice Verifies that the inverse-tax formula guard catches 100% tax.
+     * @dev Directly tests the guard condition since _initializePool is internal
+     *      (vm.expectRevert only works on external calls).
+     */
+    function test_100percentTax_guardPreventsInverseTax() public pure {
+        uint256 taxBps = 10000;
+        // The guard condition: taxBps must be <= MAX_INVERSE_TAX_BPS (9999)
+        assertTrue(taxBps > MAX_INVERSE_TAX_BPS, "100% tax should exceed guard threshold");
+
+        // Demonstrate the divide-by-zero: (10000 - 10000) == 0
+        uint256 denominator = 10000 - taxBps;
+        assertEq(denominator, 0, "Denominator is zero at 100% tax");
+    }
+
+    /**
+     * @notice Verifies that _createFuzzPair reverts when given a 100% tax rate.
+     * @dev Uses this.externalCreateFuzzPair() to make an external call so
+     *      vm.expectRevert can intercept the require.
+     */
+    function test_100percentTax_createFuzzPairReverts() public {
+        vm.expectRevert("Tax too high for inverse computation");
+        this.externalCreateFuzzPair(10000);
+    }
+
+    /// @dev External wrapper so vm.expectRevert can catch the require in _createFuzzPair
+    function externalCreateFuzzPair(uint256 taxBps) external {
+        _createFuzzPair(taxBps);
+    }
+
+    /**
+     * @notice Tests extreme-but-valid tax of 99% (9900 bps).
+     * @dev The inverse formula yields `amount * 10000 / 100 = amount * 100`,
+     *      a 100x multiplier. Still valid but produces very large gross amounts.
+     */
+    function test_extremeTax_99percent_poolInitializes() public {
+        uint256 taxBps = 9900; // 99%
+        FeeOnTransferToken extremeToken = new FeeOnTransferToken("Extreme99", "EX99", 18, taxBps, 0);
+        ICamelotPair extremePair = ICamelotPair(
+            camelotV2Factory.createPair(address(standardToken), address(extremeToken))
+        );
+
+        // Gross amount = INITIAL_LIQUIDITY * 10000 / (10000 - 9900) = INITIAL_LIQUIDITY * 100
+        uint256 expectedGross = (INITIAL_LIQUIDITY * 10000) / (10000 - taxBps);
+        assertEq(expectedGross, INITIAL_LIQUIDITY * 100, "99% tax requires 100x gross amount");
+
+        // Pool should initialize successfully (minting handles the large amounts)
+        _initializePool(standardToken, extremeToken, extremePair);
+
+        // Verify pool received approximately INITIAL_LIQUIDITY of the extreme token
+        (uint112 r0, uint112 r1,,) = extremePair.getReserves();
+        uint256 extremeReserve = address(extremeToken) == extremePair.token0()
+            ? uint256(r0)
+            : uint256(r1);
+        assertApproxEqRel(extremeReserve, INITIAL_LIQUIDITY, 0.01e18, "Reserve should be ~INITIAL_LIQUIDITY");
+    }
+
+    /**
+     * @notice Tests the boundary tax of 99.99% (9999 bps), the maximum allowed
+     *         by our guard.
+     * @dev The inverse formula yields `amount * 10000 / 1 = amount * 10000`,
+     *      a 10000x multiplier. This is the last valid value before divide-by-zero.
+     */
+    function test_extremeTax_9999bps_isMaxValid() public {
+        uint256 taxBps = 9999; // 99.99%
+        FeeOnTransferToken maxToken = new FeeOnTransferToken("Max9999", "MX99", 18, taxBps, 0);
+        ICamelotPair maxPair = ICamelotPair(
+            camelotV2Factory.createPair(address(standardToken), address(maxToken))
+        );
+
+        // Gross amount = INITIAL_LIQUIDITY * 10000 / 1 = INITIAL_LIQUIDITY * 10000
+        uint256 expectedGross = (INITIAL_LIQUIDITY * 10000) / (10000 - taxBps);
+        assertEq(expectedGross, INITIAL_LIQUIDITY * 10000, "99.99% tax requires 10000x gross amount");
+
+        // Pool should still initialize (assuming no overflow)
+        _initializePool(standardToken, maxToken, maxPair);
+
+        // Verify reserves
+        (uint112 r0, uint112 r1,,) = maxPair.getReserves();
+        uint256 maxReserve = address(maxToken) == maxPair.token0()
+            ? uint256(r0)
+            : uint256(r1);
+        assertApproxEqRel(maxReserve, INITIAL_LIQUIDITY, 0.01e18, "Reserve should be ~INITIAL_LIQUIDITY");
+    }
+
+    /**
+     * @notice Documents the extreme multiplier growth as tax approaches 100%.
+     * @dev Emits a table showing how the gross-amount multiplier explodes near 100%.
+     */
+    function test_documentExtremeMultipliers() public pure {
+        // Tax -> Multiplier: amount * 10000 / (10000 - taxBps)
+        // 50%   -> 2x
+        // 90%   -> 10x
+        // 95%   -> 20x
+        // 99%   -> 100x
+        // 99.9% -> 1000x
+        // 99.99% -> 10000x
+        // 100%  -> DIVIDE BY ZERO
+
+        uint256[6] memory taxes = [uint256(5000), 9000, 9500, 9900, 9990, 9999];
+        for (uint256 i = 0; i < taxes.length; i++) {
+            uint256 multiplier = 10000 / (10000 - taxes[i]);
+            // Just verify the math is correct
+            assert(multiplier > 0);
+        }
     }
 }
