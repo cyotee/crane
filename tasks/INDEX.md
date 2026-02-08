@@ -21,7 +21,7 @@
 | CRANE-112 | Clean Up Mock Reuse in DFPkg Tests | Ready | CRANE-054 | `fix/mock-cleanup` |
 | CRANE-113 | Replace require String with Custom Error in WeightedTokenConfigUtils | Ready | CRANE-055 | `fix/weighted-pool-custom-error` |
 | CRANE-114 | Add Explicit Negative Tests for Weight Validation | Ready | CRANE-055 | `test/weight-validation-negative-tests` |
-| CRANE-115 | Enforce Correct Facet Address During Remove | Pending Merge | CRANE-058 | `fix/remove-facet-address-validation` |
+| CRANE-115 | Enforce Correct Facet Address During Remove | Complete | CRANE-058 | `fix/remove-facet-address-validation` |
 | CRANE-116 | Add Negative Test for Facet/Selector Mismatch During Remove | Ready | CRANE-058 | `test/remove-mismatch-negative` |
 | CRANE-117 | Guard Against Partial Facet Removal Bookkeeping Corruption | Ready | CRANE-057 | `fix/partial-removal-guardrails` |
 | CRANE-118 | Make Integration Test Truly Factory-Stack E2E | Ready | CRANE-061 | `feature/factory-stack-integration-test` |
