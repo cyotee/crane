@@ -95,6 +95,8 @@
 | CRANE-235 | Add SlipstreamQuoter Fee Guard Revert Test | Ready | CRANE-095 | `test/quoter-fee-guard-revert` |
 | CRANE-236 | Add k() Assertion for Constant-Product Mode | Ready | CRANE-099 | `test/k-constant-product-assertion` |
 | CRANE-237 | Add k() Assertion for Mixed-Decimal Pair | Ready | CRANE-099 | `test/k-mixed-decimal-assertion` |
+| CRANE-238 | Fix test_calculateRewardAPR_livePool Assertion | Ready | - | `fix/reward-apr-sanity-bound` |
+| CRANE-239 | Fix OpenGSN Forwarder Fork Test Type Hash Registration | Ready | - | `fix/opengsn-forwarder-typehash` |
 
 ## Status Legend
 
@@ -239,7 +241,8 @@
 **Balancer V3 Stable Pool Parity Tests (1 task):**
 - **CRANE-213: Add Balancer V3 Stable Pool Fork Parity Tests (Ready)**
 
-**OpenGSN Forwarder Follow-ups (1 task - from CRANE-211):**
+**OpenGSN Forwarder Follow-ups (2 tasks - from CRANE-211):**
+- **CRANE-239: Fix OpenGSN Forwarder Fork Test Type Hash Registration (Ready - HIGH)**
 - CRANE-214: Add Upstream Execute Parity Assertions (Low)
 
 **Slipstream Port and Parity Tests (1 task):**
