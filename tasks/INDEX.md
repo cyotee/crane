@@ -49,7 +49,7 @@
 | CRANE-140 | Align Fee Test Naming with Assertions | Ready | CRANE-088 | `fix/CRANE-140-swapmath-fee-test-rename` |
 | CRANE-153 | Port Resupply Protocol to Local Contracts | Ready | - | `feature/CRANE-153-resupply-port` |
 | CRANE-160 | Remove Non-Routed Duplicate Selectors from Vault Facets | Complete | CRANE-159 | `feature/CRANE-160-vault-facet-selector-cleanup` |
-| CRANE-161 | Resolve Vault Loupe and Router Integration | In Review | CRANE-159 | `feature/CRANE-161-vault-loupe-router-integration` |
+| CRANE-161 | Resolve Vault Loupe and Router Integration | Pending Merge | CRANE-159 | `feature/CRANE-161-vault-loupe-router-integration` |
 | CRANE-162 | Expand Balancer V3 Router Test Coverage | Ready | CRANE-142 | `test/CRANE-162-router-test-coverage` |
 | CRANE-163 | Fix Prepaid Router Mode for Permit2-less Operations | Ready | CRANE-142 | `fix/CRANE-163-router-prepaid-mode-fix` |
 | CRANE-164 | Add Target Layer to Router Facets | Ready | CRANE-142 | `refactor/CRANE-164-router-target-layer` |
