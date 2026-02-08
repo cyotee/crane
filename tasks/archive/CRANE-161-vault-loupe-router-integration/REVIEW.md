@@ -92,16 +92,16 @@ No clarifying questions needed. Requirements and implementation approach are wel
 - `test/foundry/spec/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultDFPkg.t.sol`
 - `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterVaultIntegration.t.sol`
 - `contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3Vault.sol` (target)
-**User Response:** (pending)
-**Notes:** Low priority since the duplicated contracts are trivial (< 25 lines each). Can be batched with other cleanup.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-243. Low priority since the duplicated contracts are trivial (< 25 lines each). Can be batched with other cleanup.
 
 ### Suggestion 2: Add end-to-end swap integration test (future)
 **Priority:** Low (future enhancement)
 **Description:** A future task could add an integration test that performs an actual swap through the Router->Vault path. This would require deploying mock ERC20 tokens, registering a pool on the vault, and calling `router.swap()`. This is significantly more complex and was correctly scoped out of CRANE-161, but would provide stronger integration confidence.
 **Affected Files:**
 - `test/foundry/spec/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterVaultIntegration.t.sol`
-**User Response:** (pending)
-**Notes:** This is an enhancement suggestion, not a required fix. The current tests adequately validate the CRANE-161 requirements.
+**User Response:** Accepted
+**Notes:** Converted to task CRANE-244. This is an enhancement suggestion, not a required fix. The current tests adequately validate the CRANE-161 requirements.
 
 ---
 

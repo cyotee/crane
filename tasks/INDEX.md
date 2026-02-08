@@ -100,6 +100,8 @@
 | CRANE-240 | Remove Commented-Out Console Imports from CamelotV2Service | Ready | - | `fix/CRANE-240-remove-commented-console-imports` |
 | CRANE-241 | Add FoT Output Token Fix-Up Verification Tests | Ready | CRANE-102 | `test/CRANE-241-fot-output-token-fixup-verification` |
 | CRANE-242 | Add Fix-Up Sanity Assertion to FoT Tests | Ready | CRANE-102 | `test/CRANE-242-fixup-sanity-assertion` |
+| CRANE-243 | Extract Shared Vault Test Mocks to TestBase | Ready | CRANE-161 | `refactor/CRANE-243-extract-vault-test-mocks` |
+| CRANE-244 | Add End-to-End Swap Integration Test for Router-Vault | Ready | CRANE-161 | `test/CRANE-244-router-vault-swap-integration-test` |
 
 ## Status Legend
 
