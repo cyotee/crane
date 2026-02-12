@@ -1,0 +1,110 @@
+{
+  "contracts/gsn": {
+    "tag": {
+      "name": "v2.2.5",
+      "rev": "8e0c9ed23d9798b7384e8255054631c3cb414fdf"
+    }
+  },
+  "lib/Compose": {
+    "rev": "28d74826a532d067556a4c1067cd4722fa78d2ce"
+  },
+  "lib/aave-v3-horizon": {
+    "rev": "6e2a51ea2e67af8aacf63f835d2e2b26dc7a2741"
+  },
+  "lib/aave-v4": {
+    "tag": {
+      "name": "v0.5.6",
+      "rev": "6959e3219b5506bf2acae18551cbb2a68a5b8fba"
+    }
+  },
+  "lib/aerodrome-contracts": {
+    "rev": "a4fe56813c9e64907038f447a7358f83ec32dc14"
+  },
+  "lib/balancer-v3-monorepo": {
+    "rev": "a2fe650f622e1bd6201537cc5c754afe7feac24a"
+  },
+  "lib/comet": {
+    "rev": "ed6ebcd84ac00906e8e725716891d482f4bef8b9"
+  },
+  "lib/ethereum-vault-connector": {
+    "tag": {
+      "name": "v1.0.1",
+      "rev": "a7d3c29ef7e4964736e47675e0588630d6afbfd7"
+    }
+  },
+  "lib/euler-price-oracle": {
+    "rev": "ffc3cb82615fc7d003a7f431175bd1eaf0bf41c5"
+  },
+  "lib/euler-vault-kit": {
+    "rev": "5b98b42048ba11ae82fb62dfec06d1010c8e41e6"
+  },
+  "lib/evc-playground": {
+    "rev": "cc3f4987bbeebca49c40d544fe08b3b5a7735cd0"
+  },
+  "lib/evk-periphery": {
+    "rev": "3d9563e2399a1b31427ecbb202f0690863a3adfb"
+  },
+  "lib/forge-std": {
+    "rev": "100b0d756adda67bc70aab816fa5a1a95dcf78b6"
+  },
+  "lib/gsn": {
+    "tag": {
+      "name": "v2.2.5",
+      "rev": "8e0c9ed23d9798b7384e8255054631c3cb414fdf"
+    }
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "6308fdc5e8e0d5e8a94dc9d5d4c79f6331334c81"
+  },
+  "lib/permit2": {
+    "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
+  },
+  "lib/reclamm": {
+    "rev": "ab51e0b2ffc6c3a39df940dc1de4651a672cfa47"
+  },
+  "lib/scaffold-eth-2": {
+    "rev": "f94c6c368c5b83f331eb0e04f88650568fea67de"
+  },
+  "lib/slipstream": {
+    "tag": {
+      "name": "v1.0.0",
+      "rev": "37eead2c7e5302a204dec78bfa0775bbb8ff48a2"
+    }
+  },
+  "lib/solady": {
+    "rev": "73f13dd1483707ef6b4d16cb0543570b7e1715a8"
+  },
+  "lib/solidity-lib": {
+    "tag": {
+      "name": "v3.3.0",
+      "rev": "c3fc8b3c8439bfdbd55c86485a3418f2e167c962"
+    }
+  },
+  "lib/solmate": {
+    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
+  },
+  "lib/solplot": {
+    "rev": "f29f41afb44da7c7ed08115e167b2be8618d7f9b"
+  },
+  "lib/v3-core": {
+    "tag": {
+      "name": "v1.0.0",
+      "rev": "e3589b192d0be27e100cd0daaf6c97204fdb1899"
+    }
+  },
+  "lib/v3-periphery": {
+    "tag": {
+      "name": "v1.3.0",
+      "rev": "80f26c86c57b8a5e4b913f42844d4c8bd274d058"
+    }
+  },
+  "lib/v4-core": {
+    "tag": {
+      "name": "v4.0.0",
+      "rev": "e50237c43811bd9b526eff40f26772152a42daba"
+    }
+  },
+  "lib/v4-periphery": {
+    "rev": "3779387e5d296f39df543d23524b050f89a62917"
+  }
+}

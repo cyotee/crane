@@ -1,0 +1,173 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
+
+library BASE_MAIN {
+    uint256 constant CHAIN_ID = 8453;
+    
+    /* -------------------------------------------------------------------------- */
+    /*                                    WETH9                                   */
+    /* -------------------------------------------------------------------------- */
+
+    address payable constant WETH9 = payable(0x4200000000000000000000000000000000000006);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V2                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNISWAP_V2_FACTORY = 0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6;
+    // address constant UNISWAP_V2_FEE_TO_SETTER = 0x18e433c7Bf8A2E1d0197CE5d8f9AFAda1A771360;
+    address constant UNISWAP_V2_ROUTER = 0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V3                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNISWAP_V3_FACTORY = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
+    address constant UNISWAP_V3_PROXY_ADMIN = 0x3334d83e224aF5ef9C2E7DDA7c7C98Efd9621fA9;
+    address constant UNISWAP_V3_TICK_LENS = 0x0CdeE061c75D43c82520eD998C23ac2991c9ac6d;
+    address constant UNISWAP_V3_SWAP_ROUTER = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
+    address constant UNISWAP_V3_NFT_DESCRIPTOR = 0xF9d1077fd35670d4ACbD27af82652a8d84577d9F;
+    address constant UNISWAP_V3_NFT_POSITION_DESCRIPTOR = 0x4f225937EDc33EFD6109c4ceF7b560B2D6401009;
+    address constant UNISWAP_V3_TRANSPARENT_UPGRADEABLE_PROXY = 0x4615C383F85D0a2BbED973d83ccecf5CB7121463;
+    address constant UNISWAP_V3_NFT_POSITION_MANAGER = 0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1;
+    address constant UNISWAP_V3_MIGRATOR = 0x23cF10b1ee3AdfCA73B0eF17C07F7577e7ACd2d7;
+    address constant UNISWAP_V3_QUOTER_V2 = 0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a;
+    address constant UNISWAP_V3_SWAP_ROUTER_V2 = 0x2626664c2603336E57B271c5C0b26F421741e481;
+    address constant UNISWAP_V3_UNIVERSAL_ROUTER = 0x6fF5693b99212Da76ad316178A184AB56D299b43;
+    address constant UNISWAP_V3_STAKER = 0x42bE4D6527829FeFA1493e1fb9F3676d2425C3C1;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Uniswap V4                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant UNSWAP_V4_POOL_MNANAGER = 0x498581fF718922c3f8e6A244956aF099B2652b2b;
+    address constant UNSWAP_V4_POSITION_DESCRIPTOR = 0x25D093633990DC94BeDEeD76C8F3CDaa75f3E7D5;
+    address constant UNSWAP_V4_PPOSITION_MANAGER =	0x7C5f5A4bBd8fD63184577525326123B519429bDc;
+    address constant UNSWAP_V4_QUOTER =	0x0d5e0F971ED27FBfF6c2837bf31316121532048D;
+    address constant UNSWAP_V4_STATE_VIEW =	0xA3c0c9b65baD0b08107Aa264b0f3dB444b867A71;
+    address constant UNSWAP_V4_UNIVERSAL_ROUTER	= 0x6fF5693b99212Da76ad316178A184AB56D299b43;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Multicall                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant MULTICALL = 0x091e99cb1C49331a94dD62755D168E941AbD0693;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Permit2                                  */
+    /* -------------------------------------------------------------------------- */
+
+    address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Aerodrome                                 */
+    /* -------------------------------------------------------------------------- */
+
+    address constant AERODROME_ART_PROXY = 0xE9992487b2EE03b7a91241695A58E0ef3654643E;
+    address constant AERODROME_REWARDS_DISTRIBUTOR = 0x227f65131A261548b057215bB1D5Ab2997964C7d;
+    address constant AERODROME_FACTORY_REGISTRY = 0x5C3F18F06CC09CA1910767A34a20F771039E37C0;
+    address constant AERODROME_FORWARDER = 0x15e62707FCA7352fbE35F51a8D6b0F8066A05DCc;
+    address constant AERODROME_GAUGE_FACTORY = 0x35f35cA5B132CaDf2916BaB57639128eAC5bbcb5;
+    address constant AERODROME_MANAGED_REWARDS_FACTORY = 0xFdA1fb5A2a5B23638C7017950506a36dcFD2bDC3;
+    address constant AERODROME_MINTER = 0xeB018363F0a9Af8f91F06FEe6613a751b2A33FE5;
+    address constant AERODROME_POOL_FACTORY = 0x420DD381b31aEf6683db6B902084cB0FFECe40Da;
+    address constant AERODROME_ROUTER = 0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43;
+    address constant AERODROME_AERO = 0x940181a94A35A4569E4529A3CDfB74e38FD98631;
+    address constant AERODROME_VOTER = 0x16613524e02ad97eDfeF371bC883F2F5d6C480A5;
+    address constant AERODROME_VOTING_ESCROW = 0xeBf418Fe2512e7E6bd9b87a8F0f294aCDC67e6B4;
+    address constant AERODROME_VOTING_REWARDS_FACTORY = 0x45cA74858C579E717ee29A86042E0d53B252B504;
+    address constant AERODROME_POOL_IMPLEMENTATION = 0xA4e46b4f701c62e14DF11B48dCe76A7d793CD6d7;
+
+    /* -------------------------------------------------------------------------- */
+    /*                            Aerodrome Slipstream                            */
+    /* -------------------------------------------------------------------------- */
+
+    address constant AERODROME_SLIPSTREAM_GUAGE_FACTORY = 0xD30677bd8dd15132F251Cb54CbDA552d2A05Fb08;
+    address constant AERODROME_SLIPSTREAM_GUAGE_IMPLEMENTATION = 0xF5601F95708256A118EF5971820327F362442D2d;
+    address constant AERODROME_SLIPSTREAM_MIXED_QUOTER = 0x0A5aA5D3a4d28014f967Bf0f29EAA3FF9807D5c6;
+    address constant AERODROME_SLIPSTREAM_NONFUNGIBLE_POSITION_MANAGER = 0x827922686190790b37229fd06084350E74485b72;
+    address constant AERODROME_SLIPSTREAM_NONFUNGIBLE_TOKEN_POSITION_DESCRIPTOR = 0x01b0CaCB9A8004e08D075c919B5dF3b59FD53c55;
+    address constant AERODROME_SLIPSTREAM_POOL_FACTORY = 0x5e7BB104d84c7CB9B682AaC2F3d509f5F406809A;
+    address constant AERODROME_SLIPSTREAM_POOL_IMPLEMENTATION = 0xeC8E5342B19977B4eF8892e02D8DAEcfa1315831;
+    address constant AERODROME_SLIPSTREAM_QUOTER_V2 = 0x254cF9E1E6e233aa1AC962CB9B05b2cfeAaE15b0;
+    address constant AERODROME_SLIPSTREAM_CUSTOM_SWAP_FEE_MODULE = 0xF4171B0953b52Fa55462E4d76ecA1845Db69af00;
+    address constant AERODROME_SLIPSTREAM_CUSTOM_UNSTAKED_FEE_MODULE = 0x0AD08370c76Ff426F534bb2AFFD9b5555338ee68;
+    address constant AERODROME_SLIPSTREAM_SWAP_ROUTER = 0xBE6D8f0d05cC4be24d5167a3eF062215bE6D18a5;
+    address constant AERODROME_SLIPSTREAM_SUGAR_HELPER = 0x0AD09A66af0154a84e86F761313d02d0abB6edd5;
+    address constant AERODROME_SLIPSTREAM_DYNAMIC_SWAP_FEE_MODULE = 0xDB45818A6db280ecfeB33cbeBd445423d0216b5D;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                 Balancer V3                                */
+    /* -------------------------------------------------------------------------- */
+
+    /* ---------------------------------- Core ---------------------------------- */
+
+    address constant BALANCER_V3_PROTOCOL_FEE_CONTROLLER_1 = 0xa731C23D7c95436Baaae9D52782f966E1ed07cc8;
+    address constant BALANCER_V3_PROTOCOL_FEE_CONTROLLER_2 = 0x2FF226CD12C80511a641A6101F071d853A4e5363;
+    address constant BALANCER_V3_PROTOCOL_FEE_SWEEPER = 0xe2fa4e1d17725e72dcdAfe943Ecf45dF4B9E285b;
+    address constant BALANCER_V3_VAULT = 0xbA1333333333a1BA1108E8412f11850A5C319bA9;
+    address constant BALANCER_V3_VAULT_ADMIN = 0x35fFB749B273bEb20F40f35EdeB805012C539864;
+    address constant BALANCER_V3_VAULT_EXPLORER = 0xaD89051bEd8d96f045E8912aE1672c6C0bF8a85E;
+    address constant BALANCER_V3_VAULT_EXTENSION = 0x0E8B07657D719B86e06bF0806D6729e3D528C9A9;
+    address constant BALANCER_V3_VAULT_FACTORY = 0xAc27df81663d139072E615855eF9aB0Af3FBD281;
+
+    /* --------------------------------- Routers -------------------------------- */
+
+    address constant BALANCER_V3_AGGREGATOR_BATCH_ROUTER = 0xF39CA6ede9BF7820a952b52f3c94af526bAB9015;
+    address constant BALANCER_V3_AGGREGATOR_ROUTER = 0x013D4382F291be5688AFBcc741Ee8A24C66B2C92;
+    address constant BALANCER_V3_BATCH_ROUTER = 0x85a80afee867aDf27B50BdB7b76DA70f1E853062;
+    address constant BALANCER_V3_BUFFER_ROUTER = 0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8;
+    address constant BALANCER_V3_COMPOSITE_LIQUIDITY_ROUTER = 0xb21A277466e7dB6934556a1Ce12eb3F032815c8A;
+    address constant BALANCER_V3_LBP_MIGRATION_ROUTER = 0x4eff2d77D9fFbAeFB4b141A3e494c085b3FF4Cb5;
+    address constant BALANCER_V3_ROUTER = 0x3f170631ed9821Ca51A59D996aB095162438DC10;
+
+    /* ----------------------------- Pool Factories ----------------------------- */
+
+    address constant BALANCER_V3_FIXED_PRICE_LIQUIDITY_BOOSTING_POOL_FACTORY = 0xb96524227c4B5Ab908FC3d42005FE3B07abA40E9;
+    address constant BALANCER_V3_GYRO_2CLP_POOL_FACTORY = 0xf5CDdF6feD9C589f1Be04899F48f9738531daD59;
+    address constant BALANCER_V3_GYRO_ECLP_POOL_FACTORY = 0x5F6848976C2914403B425F18B589A65772F082E3;
+    address constant BALANCER_V3_LIQUIDITY_BOOSTING_POOL_FACTORY = 0x6eE18fbb1BBcC5CF700cD75ea1aef2bb21e3cB3F;
+    address constant BALANCER_V3_MOCK_GYRO_2CLP_POOL = 0x1E919A507c9381119a4E9CF43795b100fc8c988b;
+    address constant BLANACER_V3_MOCK_GYRO_ECLP_POOL = 0x2196Ddb2b51F706857A2934eE79D9FBB463C5372;
+    address constant BALANCER_V3_MOCK_LIQUIDITY_BOOSTING_POOL = 0x2Ad32195858fDe121251cFF637Ef4Cf0851fBe00;
+    address constant BALANCER_V3_MOCK_RECLAMM_POOL = 0x6147DCcc9aF9641CA5e86e3b0075E8c7c853AEF6;
+    address constant BALANCER_V3_MOCK_STABLE_POOL_V2 = 0xFC6f8a2f517E490eB46a1B09E8DFB47bF7175B53;
+    address constant BALANCER_V3_MOCK_STABLE_SURGE_POOL = 0xb5539ceaaA0045ab10BE6CBF5E535b0DA4981B09;
+    address constant BALANCER_V3_MOCK_WEIGHTED_POOL = 0xEcFfba4414bB9d52DA1598A313d9d3FEa11bFE99;
+    address constant BALANCER_V3_MOCK_WRAPPED_BALANCER_POOL_TOKEN = 0x3Eae4a1c2E36870A006E816930d9f55DF0a72a13;
+    address constant BALANCER_V3_RECLAMM_POOL_FACTORY = 0x201efd508c8DfE9DE1a13c2452863A78CB2a86Cc;
+    address constant BALANCER_V3_STABLE_POOL_FACTORY = 0xC49Ca921c4CD1117162eAEEc0ee969649997950c;
+    address constant BALANCER_V3_STABLE_SURGE_POOL_FACTORY = 0x8e3fEaAB11b7B351e3EA1E01247Ab6ccc847dD52;
+    address constant BALANCER_V3_WEIGHTED_POOL_FACTORY = 0x5cF4928a3205728bd12830E1840F7DB85c62a4B9;
+    address constant BALANCER_V3_WRAPPED_BALANCER_POOL_TOKEN_FACTORY = 0x22625eEDd92c81a219A83e1dc48f88d54786B017;
+
+    /* -------------------------- Hooks and Peripherals ------------------------- */
+
+    address constant BALANCER_V3_CONTRACT_REGISTRY = 0x81cFAE226343B24BA12EC6521Db2C79E7aeeb310;
+    address constant BALANCER_V3_COW_SWAP_FEE_BURNER = 0x5B42eC6D40f7B7965BE5308c70e2603c0281C1E9;
+    address constant BALANCER_V3_ERC4626_COW_SWAP_FEE_BURNER = 0x4b979eD48F982Ba0baA946cB69c1083eB799729c;
+    address constant BALANCER_V3_MEV_CAPTURE_HOOK = 0x7A2535f5fB47b8e44c02Ef5D9990588313fe8F05;
+    address constant BALANCER_V3_POOL_PAUSE_HELPER = 0xFc00536A0fd292c284deeF6af8F644d8373d9cad;
+    address constant BALANCER_V3_POOL_SWAP_FEE_HELPER = 0xFc00536A0fd292c284deeF6af8F644d8373d9cad;
+    address constant BALANCER_V3_STABLE_SURGE_HOOK = 0xDB8d758BCb971e482B2C45f7F8a7740283A1bd3A;
+
+    /* ------------------------- Authorization Contracts ------------------------ */
+
+    address constant BALANCER_V3_AUTHORIZER = 0x809B79b53F18E9bc08A961ED4678B901aC93213a;
+    address constant BALANCER_V3_AUTHORIZER_ADAPTOR = 0x6CaD2ea22BFA7F4C14Aae92E47F510Cd5C509bc7;
+    address constant BALANCER_V3_AUTHORIZER_ADAPTOR_ENTRYPOINT = 0x9129E834e15eA19b6069e8f08a8EcFc13686B8dC;
+    address constant BALANCER_V3_AUTHORIZER_WITH_ADAPTOR_VALIDATION = 0xA69E0Ccf150a29369D8Bbc0B3f510849dB7E8EEE;
+
+    /* ------------------------ Gauges and Governance ----------------------- */
+
+    address constant BALANCER_V3_CHILD_CHAIN_GUAGE = 0x9f7E65887413a8497b87bA2058cE6E4Ef4B37013;
+    address constant BALANCER_V3_CHILD_CHAIN_GUAGE_FACTORY = 0xb1a4FE1C6d25a0DDAb47431A92A723dd71d9021f;
+    address constant BALANCER_V3_GAUGE_WORKING_BALANCER_HELPER = 0xa7d524046ef89de9F8e4f2d7B029f66cCB738d48;
+    address constant BALANCER_V3_L2_BALANCER_PSEUDO_MINTER = 0x0c5538098EBe88175078972F514C9e101D325D4F;
+    address constant BALANCER_V3_L2_LAYER_ZERO_BRIDGE_FORWARDER = 0x8eA89804145c007e7D226001A96955ad53836087;
+    address constant BALANCER_V3_NULL_VOTING_ESCROW = 0x475D18169BE8a89357A9ee3Ab00ca386d20fA229;
+    address constant BALANCER_V3_OMNI_VOTING_ESCROW_CHILD = 0xE241C6e48CA045C7f631600a0f1403b2bFea05ad;
+    address constant BALANCER_V3_VEBOOST_V2 = 0xE42FFA682A26EF8F25891db4882932711D42e467;
+    address constant BALANCER_V3_VOTING_ESCROW_DELEGATION_PROXY = 0xD87F44Df0159DC78029AB9CA7D7e57E7249F5ACD;
+
+}

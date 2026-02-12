@@ -1,0 +1,68 @@
+@startuml DiamondPackageCallBackFactory
+actor User
+
+!pragma teoz true
+boundary DiamondPackageCallBackFactory
+User -> DiamondPackageCallBackFactory: deploy(pkg, pkgArgs)
+activate DiamondPackageCallBackFactory #lightgreen
+group "DELEGATECALL DiamondPackageCallBackFactory"
+    DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg.calcSalt(pkgArgs)
+    activate DiamondFactoryPackage #lightblue
+    DiamondPackageCallBackFactory //-- DiamondFactoryPackage: salt
+    deactivate DiamondFactoryPackage
+end
+DiamondPackageCallBackFactory --> DiamondPackageCallBackFactory: _create2AddressFromOf\n(PROXY_INIT_HASH, keccak256(abi.encode(pkg, salt)))
+alt address codesize > 0
+    DiamondPackageCallBackFactory --> User: proxy address
+else address codesize == 0
+    group "DELEGATECALL DiamondPackageCallBackFactory"
+        DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg._processArgs(pkgArgs)
+        activate DiamondFactoryPackage #lightblue
+        DiamondPackageCallBackFactory //-- DiamondFactoryPackage: pkgArgs
+        deactivate DiamondFactoryPackage
+    end
+end
+DiamondPackageCallBackFactory -> DiamondFactoryPackage: updatePkg
+boundary Proxy
+DiamondPackageCallBackFactory -> Proxy: CREATE2(PROXY_INIT_HASH, salt)
+activate Proxy #red
+group "DELEGATECALL Proxy"
+    DiamondPackageCallBackFactory //-- Proxy: initAccount()
+    DiamondPackageCallBackFactory -> DiamondFactoryPackage: diamondConfig()
+    activate DiamondFactoryPackage #lightblue
+    DiamondPackageCallBackFactory <- DiamondFactoryPackage: config
+    deactivate DiamondFactoryPackage
+    DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg._initAccount(args)
+    activate DiamondFactoryPackage #lightblue
+    deactivate DiamondFactoryPackage
+    DiamondPackageCallBackFactory --\\ Proxy: (initHash, salt)
+end
+DiamondPackageCallBackFactory <- Proxy: proxy address
+deactivate Proxy
+DiamondPackageCallBackFactory -> DiamondFactoryPackage: postDeploy(proxy)
+activate DiamondFactoryPackage #lightblue
+opt Post Deploy Hook
+    DiamondFactoryPackage -> Proxy: postDeploy()
+    activate Proxy #red
+    group "DELEGATECALL Proxy"
+        DiamondFactoryPackage //-- Proxy: postDeploy(proxy)
+        DiamondFactoryPackage --\\ Proxy: success
+    end
+    DiamondFactoryPackage <- Proxy: success
+    deactivate Proxy
+end
+DiamondPackageCallBackFactory <- DiamondFactoryPackage: success
+deactivate DiamondFactoryPackage
+DiamondPackageCallBackFactory -> Proxy: postDeploy()
+activate Proxy #red
+    group "DELEGATECALL Proxy"
+        DiamondPackageCallBackFactory //-- Proxy: postDeploy(proxy)
+        DiamondPackageCallBackFactory --> DiamondPackageCallBackFactory: postDeployFacetCuts()
+        DiamondPackageCallBackFactory --\\ Proxy: success
+    end
+DiamondPackageCallBackFactory <- Proxy: success
+deactivate Proxy
+User <- DiamondPackageCallBackFactory: proxy address
+deactivate DiamondPackageCallBackFactory
+
+@enduml

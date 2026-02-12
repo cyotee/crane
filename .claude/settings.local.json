@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(forge build:*)",
+      "Bash(forge test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(sort:*)",
+      "Bash(ls:*)",
+      "Bash(uv run:*)",
+      "Bash(python3:*)",
+      "Bash(tree:*)",
+      "WebSearch",
+      "WebFetch(domain:basescan.org)",
+      "WebFetch(domain:opencode.ai)",
+      "Bash(chmod:*)",
+      "Skill(design:design)",
+      "Bash(find:*)",
+      "Bash(git submodule:*)",
+      "WebFetch(domain:github.com)",
+      "Skill(backlog:list)",
+      "Skill(backlog:review)",
+      "Skill(backlog:complete)",
+      "Bash(git rm:*)",
+      "Bash(echo:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:eips.ethereum.org)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  }
+}

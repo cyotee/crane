@@ -1,0 +1,23 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions:
+  - name: custom-dictionary
+    path: ./.cspell/custom-dictionary.txt
+    addWords: true
+    scope: null
+  - name: Asciidoc
+    path: ./.cspell/asciidoc.txt
+    addWords: true
+    scope: null
+  - name: Solidity
+    path: ./.cspell/solidity.txt
+    addWords: true
+    scope: null
+dictionaries:
+  - custom-dictionary
+  - asciidoc
+  - solidity
+words:
+  - Example
+ignoreWords: []
+import: []

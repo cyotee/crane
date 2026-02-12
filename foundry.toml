@@ -1,0 +1,80 @@
+[profile.default]
+src = 'contracts'
+out = 'out'
+libs = ['node_modules', 'lib']
+test = 'test'
+cache_path  = 'cache_forge'
+fs_permissions = [
+    { access = "read", path = "./" },
+    # CRANE-270: allow fork parity tests to persist JSON artifacts.
+    { access = "read-write", path = "./tasks/CRANE-270-verify-balancer-v3-port/artifacts" },
+    # Existing scripts export JSON under script/output.
+    { access = "read-write", path = "./script/output" }
+]
+# block_gas_limit = "9223372036854775807"
+solc = "0.8.30"
+sizes = true
+optimizer = true
+# viaIR disabled - use structs to avoid "stack too deep" errors
+viaIR = false
+# optimizer_runs = 4294967295
+# CamelotFactory requires 16683 to fit within execution code size limits
+# optimizer_runs = 16683
+# optimizer_runs = 999
+optimizer_runs = 1
+# Allow vm.expectRevert() for internal/library function calls (Foundry v1.0+ changed depth requirements)
+allow_internal_expect_revert = true
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@crane/contracts/=contracts/"
+]
+
+ignored_error_codes = [
+    2394, 
+    3860, 
+    5574, 
+    2072
+]
+ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
+
+skip = ["lib/reclamm/**"]
+
+[invariant]
+runs = 50
+depth = 5
+# corpus_dir = 'corpus'
+# corpus_gzip = true
+
+[profile.default.fmt]
+skip = ["lib/"]
+
+[lint]
+exclude_lints = [
+    "erc20-unchecked-transfer",
+    "unused-import",
+    "mixed-case-variable",
+    "mixed-case-function",
+    "unaliased-plain-import",
+    "screaming-snake-case-immutable",
+    "screaming-snake-case-const",
+    "pascal-case-struct",
+    "incorrect-shift",
+    "divide-before-multiply",
+    "modifier-style",
+    "unsafe-typecast",
+    "unwrapped-modifier-logic",
+    "unsafe-cheatcode",
+    "named-struct-fields"
+]
+[rpc_endpoints]
+local = "http://127.0.0.1:8545"
+ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
+sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
+sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
+base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
+base_sepolia_infura = "https://base-sepolia.infura.io/v3/${INFURA_KEY}"
+apeChain_rpc = "https://rpc.apechain.com"
+apeChain_drpc = "https://apechain.drpc.org"
+apeChain_curtis_rpc = "https://rpc.curtis.apechain.com"
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
