@@ -4,20 +4,22 @@ pragma solidity ^0.8.24;
 
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BasePoolMathMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasePoolMathMock.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BasePoolMathMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasePoolMathMock.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 // Mock UniswapV2 to test rounding in BasePoolMath for consistency with other implementations.
 // This example is from the Balancer V3 documentation.
 contract UniswapV2BasePoolMathMock is BasePoolMathMock {
     using FixedPoint for uint256;
 
-    function computeInvariant(
-        uint256[] memory balancesLiveScaled18,
-        Rounding rounding
-    ) public pure override returns (uint256 invariant) {
+    function computeInvariant(uint256[] memory balancesLiveScaled18, Rounding rounding)
+        public
+        pure
+        override
+        returns (uint256 invariant)
+    {
         require(balancesLiveScaled18.length == 2, "UniswapV2BasePoolMathMock: Only 2 tokens are supported");
 
         if (rounding == Rounding.ROUND_DOWN) {
@@ -41,11 +43,12 @@ contract UniswapV2BasePoolMathMock is BasePoolMathMock {
      * @param invariantRatio The ratio of the new invariant (after an operation) to the old
      * @return newBalance The new balance of the selected token, after the operation
      */
-    function computeBalance(
-        uint256[] memory balancesLiveScaled18,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external pure override returns (uint256 newBalance) {
+    function computeBalance(uint256[] memory balancesLiveScaled18, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        pure
+        override
+        returns (uint256 newBalance)
+    {
         require(balancesLiveScaled18.length == 2, "UniswapV2BasePoolMathMock: Only 2 tokens are supported");
 
         uint256 otherTokenIndex = tokenInIndex == 0 ? 1 : 0;

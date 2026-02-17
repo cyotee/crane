@@ -9,7 +9,7 @@ interface RwaLiquidationOracleAbstract {
     function deny(address) external;
     function vat() external view returns (address);
     function vow() external view returns (address);
-    function ilks(bytes32) external view returns(string memory, address, uint48, uint48);
+    function ilks(bytes32) external view returns (string memory, address, uint48, uint48);
     function file(bytes32, address) external;
     function init(bytes32, uint256, string calldata, uint48) external;
     function bump(bytes32, uint256) external;

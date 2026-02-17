@@ -4,15 +4,15 @@ pragma solidity ^0.8.24;
 
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammPoolMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
-import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
-import { ReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
+import {ReClammMathMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
+import {ReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
 
 contract ReClammLiquidityTest is BaseReClammTest {
     using FixedPoint for uint256;
@@ -22,11 +22,9 @@ contract ReClammLiquidityTest is BaseReClammTest {
     uint256 constant _MAX_PRICE_ERROR_ABS = 5e4;
     uint256 constant _MAX_CENTEREDNESS_ERROR_ABS = 1e6;
 
-    function testAddLiquidity__Fuzz(
-        uint256 exactBptAmountOut,
-        uint256 initialDaiBalance,
-        uint256 initialUsdcBalance
-    ) public {
+    function testAddLiquidity__Fuzz(uint256 exactBptAmountOut, uint256 initialDaiBalance, uint256 initialUsdcBalance)
+        public
+    {
         // Setting balances to be at least 10 * min token balance, so LP can remove 90% of the liquidity
         // without reverting.
         initialDaiBalance = bound(initialDaiBalance, 10 * _MIN_TOKEN_BALANCE, dai.balanceOf(address(vault)));
@@ -41,14 +39,14 @@ contract ReClammLiquidityTest is BaseReClammTest {
         maxAmountsIn[daiIdx] = dai.balanceOf(alice);
         maxAmountsIn[usdcIdx] = usdc.balanceOf(alice);
 
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesBefore, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesBefore,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(alice);
         router.addLiquidityProportional(pool, maxAmountsIn, exactBptAmountOut, false, "");
 
-        (uint256[] memory virtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
 
         // Check if virtual balances were correctly updated.
         uint256 newTotalSupply = exactBptAmountOut + totalSupply;
@@ -89,15 +87,13 @@ contract ReClammLiquidityTest is BaseReClammTest {
 
         vm.warp(block.timestamp + 6 hours);
 
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
 
         // Make sure pool is out of range, so the virtual balances should be updated by the addLiquidity call.
         vm.assume(
             mathMock.isPoolWithinTargetRange(
-                initialBalancesScaled18,
-                virtualBalancesBefore,
-                _DEFAULT_CENTEREDNESS_MARGIN
-            ) == false
+                    initialBalancesScaled18, virtualBalancesBefore, _DEFAULT_CENTEREDNESS_MARGIN
+                ) == false
         );
 
         uint256 totalSupply = vault.totalSupply(pool);
@@ -110,8 +106,8 @@ contract ReClammLiquidityTest is BaseReClammTest {
         vm.prank(alice);
         router.addLiquidityProportional(pool, maxAmountsIn, exactBptAmountOut, false, "");
 
-        (uint256[] memory virtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
 
         // Check if virtual balances were correctly updated.
         uint256 newTotalSupply = exactBptAmountOut + totalSupply;
@@ -198,11 +194,9 @@ contract ReClammLiquidityTest is BaseReClammTest {
         );
     }
 
-    function testRemoveLiquidity__Fuzz(
-        uint256 exactBptAmountIn,
-        uint256 initialDaiBalance,
-        uint256 initialUsdcBalance
-    ) public {
+    function testRemoveLiquidity__Fuzz(uint256 exactBptAmountIn, uint256 initialDaiBalance, uint256 initialUsdcBalance)
+        public
+    {
         // Setting balances to be at least 10 * min token balance, so LP can remove 90% of the liquidity
         // without reverting.
         initialDaiBalance = bound(initialDaiBalance, 10 * _MIN_TOKEN_BALANCE, dai.balanceOf(address(vault)));
@@ -218,14 +212,14 @@ contract ReClammLiquidityTest is BaseReClammTest {
         minAmountsOut[daiIdx] = 0;
         minAmountsOut[usdcIdx] = 0;
 
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesBefore, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesBefore,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(lp);
         router.removeLiquidityProportional(pool, exactBptAmountIn, minAmountsOut, false, "");
 
-        (uint256[] memory virtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
 
         // Check if virtual balances were correctly updated.
         uint256 newTotalSupply = totalSupply - exactBptAmountIn;
@@ -262,15 +256,13 @@ contract ReClammLiquidityTest is BaseReClammTest {
 
         vm.warp(block.timestamp + 6 hours);
 
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
 
         // Make sure pool is out of range, so the virtual balances should be updated by the addLiquidity call.
         vm.assume(
             mathMock.isPoolWithinTargetRange(
-                initialBalancesScaled18,
-                virtualBalancesBefore,
-                _DEFAULT_CENTEREDNESS_MARGIN
-            ) == false
+                    initialBalancesScaled18, virtualBalancesBefore, _DEFAULT_CENTEREDNESS_MARGIN
+                ) == false
         );
 
         uint256 totalSupply = vault.totalSupply(pool);
@@ -283,8 +275,8 @@ contract ReClammLiquidityTest is BaseReClammTest {
         vm.prank(lp);
         router.removeLiquidityProportional(pool, exactBptAmountIn, minAmountsOut, false, "");
 
-        (uint256[] memory virtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
 
         // Check if virtual balances were correctly updated.
         uint256 newTotalSupply = totalSupply - exactBptAmountIn;
@@ -307,13 +299,7 @@ contract ReClammLiquidityTest is BaseReClammTest {
 
         uint256 proportion = FixedPoint.ONE - exactBptAmountIn.divUp(totalSupply);
 
-        _checkInvariant(
-            initialBalancesScaled18,
-            balancesAfter,
-            virtualBalancesBefore,
-            virtualBalancesAfter,
-            proportion
-        );
+        _checkInvariant(initialBalancesScaled18, balancesAfter, virtualBalancesBefore, virtualBalancesAfter, proportion);
     }
 
     function testRemoveLiquiditySingleTokenExactOut() public {
@@ -424,7 +410,7 @@ contract ReClammLiquidityTest is BaseReClammTest {
         exactBptAmountOut = bound(exactBptAmountOut, 1e6, 100 * totalSupply);
 
         // Store initial balances of pool
-        (, , uint256[] memory balancesBefore, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesBefore,) = vault.getPoolTokenInfo(pool);
         uint256 poolDaiBalanceBefore = balancesBefore[daiIdx];
         uint256 poolUsdcBalanceBefore = balancesBefore[usdcIdx];
 
@@ -437,20 +423,13 @@ contract ReClammLiquidityTest is BaseReClammTest {
         vm.prank(alice);
         router.addLiquidityProportional(pool, maxAmountsIn, exactBptAmountOut, false, "");
 
-        (, , uint256[] memory balancesScaled18, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesScaled18,) = vault.getPoolTokenInfo(pool);
 
         // Perform Bob's swap (DAI -> USDC)
         bobSwapAmountOut = bound(bobSwapAmountOut, 1e6, balancesScaled18[usdcIdx] - _MIN_TOKEN_BALANCE - 1);
         vm.startPrank(bob);
         router.swapSingleTokenExactOut(
-            pool,
-            dai,
-            usdc,
-            bobSwapAmountOut,
-            type(uint256).max,
-            type(uint256).max,
-            false,
-            ""
+            pool, dai, usdc, bobSwapAmountOut, type(uint256).max, type(uint256).max, false, ""
         );
         router.swapSingleTokenExactIn(pool, usdc, dai, bobSwapAmountOut, 0, type(uint256).max, false, "");
         vm.stopPrank();
@@ -464,7 +443,7 @@ contract ReClammLiquidityTest is BaseReClammTest {
         router.removeLiquidityProportional(pool, exactBptAmountOut, minAmountsOut, false, "");
 
         // Check final balances of pool
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
         uint256 poolDaiBalanceAfter = balancesAfter[daiIdx];
         uint256 poolUsdcBalanceAfter = balancesAfter[usdcIdx];
 
@@ -479,12 +458,10 @@ contract ReClammLiquidityTest is BaseReClammTest {
         uint256[] memory virtualBalancesAfter
     ) internal view {
         // Check if price is constant.
-        uint256 daiPriceBefore = (balancesBefore[usdcIdx] + virtualBalancesBefore[usdcIdx]).divDown(
-            balancesBefore[daiIdx] + virtualBalancesBefore[daiIdx]
-        );
-        uint256 daiPriceAfter = (balancesAfter[usdcIdx] + virtualBalancesAfter[usdcIdx]).divDown(
-            balancesAfter[daiIdx] + virtualBalancesAfter[daiIdx]
-        );
+        uint256 daiPriceBefore = (balancesBefore[usdcIdx] + virtualBalancesBefore[usdcIdx])
+        .divDown(balancesBefore[daiIdx] + virtualBalancesBefore[daiIdx]);
+        uint256 daiPriceAfter = (balancesAfter[usdcIdx] + virtualBalancesAfter[usdcIdx])
+        .divDown(balancesAfter[daiIdx] + virtualBalancesAfter[daiIdx]);
         assertApproxEqAbs(daiPriceAfter, daiPriceBefore, _MAX_PRICE_ERROR_ABS, "Price changed");
 
         // Check if centeredness is constant.
@@ -502,17 +479,11 @@ contract ReClammLiquidityTest is BaseReClammTest {
     ) internal view {
         // The invariant of ReClamm is squared, so we need to take the sqrt of the invariant to check the
         // proportionality.
-        uint256 invariantSquaredBefore = mathMock.computeInvariant(
-            balancesBefore,
-            virtualBalancesBefore,
-            Rounding.ROUND_DOWN
-        );
+        uint256 invariantSquaredBefore =
+            mathMock.computeInvariant(balancesBefore, virtualBalancesBefore, Rounding.ROUND_DOWN);
 
-        uint256 invariantSquaredAfter = mathMock.computeInvariant(
-            balancesAfter,
-            virtualBalancesAfter,
-            Rounding.ROUND_DOWN
-        );
+        uint256 invariantSquaredAfter =
+            mathMock.computeInvariant(balancesAfter, virtualBalancesAfter, Rounding.ROUND_DOWN);
 
         assertApproxEqRel(
             Math.sqrt(invariantSquaredAfter * FixedPoint.ONE),

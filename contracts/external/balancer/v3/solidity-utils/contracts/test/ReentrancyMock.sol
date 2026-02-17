@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { ReentrancyGuardTransient } from "../openzeppelin/ReentrancyGuardTransient.sol";
-import { ReentrancyAttack } from "./ReentrancyAttack.sol";
+import {ReentrancyGuardTransient} from "../openzeppelin/ReentrancyGuardTransient.sol";
+import {ReentrancyAttack} from "./ReentrancyAttack.sol";
 
 contract ReentrancyMock is ReentrancyGuardTransient {
     uint256 public counter;
@@ -26,7 +26,7 @@ contract ReentrancyMock is ReentrancyGuardTransient {
     function countThisRecursive(uint256 n) public nonReentrant {
         if (n > 0) {
             _count();
-            (bool success, ) = address(this).call(abi.encodeCall(this.countThisRecursive, (n - 1)));
+            (bool success,) = address(this).call(abi.encodeCall(this.countThisRecursive, (n - 1)));
             require(success, "ReentrancyMock: failed call");
         }
     }

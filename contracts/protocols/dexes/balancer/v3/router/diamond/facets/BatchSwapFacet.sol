@@ -18,7 +18,9 @@ import {
     TransientStorageHelpers,
     AddressToUintMappingSlot
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3RouterStorageRepo} from "../BalancerV3RouterStorageRepo.sol";
@@ -40,7 +42,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * - Transient storage for efficient tracking of token flows
  */
 contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -117,16 +118,10 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
     {
         SwapExactInHookParams memory params = SwapExactInHookParams({
-            sender: msg.sender,
-            paths: paths,
-            deadline: deadline,
-            wethIsEth: wethIsEth,
-            userData: userData
+            sender: msg.sender, paths: paths, deadline: deadline, wethIsEth: wethIsEth, userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.swapExactInHook, params)
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(abi.encodeCall(this.swapExactInHook, params));
         return abi.decode(result, (uint256[], address[], uint256[]));
     }
 
@@ -145,27 +140,17 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
     {
         SwapExactOutHookParams memory params = SwapExactOutHookParams({
-            sender: msg.sender,
-            paths: paths,
-            deadline: deadline,
-            wethIsEth: wethIsEth,
-            userData: userData
+            sender: msg.sender, paths: paths, deadline: deadline, wethIsEth: wethIsEth, userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.swapExactOutHook, params)
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(abi.encodeCall(this.swapExactOutHook, params));
         return abi.decode(result, (uint256[], address[], uint256[]));
     }
 
     /**
      * @notice Query batch swaps with exact input amounts (no execution).
      */
-    function querySwapExactIn(
-        SwapPathExactAmountIn[] memory paths,
-        address sender,
-        bytes calldata userData
-    )
+    function querySwapExactIn(SwapPathExactAmountIn[] memory paths, address sender, bytes calldata userData)
         external
         saveSender(sender)
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -176,27 +161,18 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
 
         SwapExactInHookParams memory params = SwapExactInHookParams({
-            sender: address(this),
-            paths: paths,
-            deadline: type(uint256).max,
-            wethIsEth: false,
-            userData: userData
+            sender: address(this), paths: paths, deadline: type(uint256).max, wethIsEth: false, userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.querySwapExactInHook, params)
-        );
+        bytes memory result =
+            BalancerV3RouterStorageRepo._vault().quote(abi.encodeCall(this.querySwapExactInHook, params));
         return abi.decode(result, (uint256[], address[], uint256[]));
     }
 
     /**
      * @notice Query batch swaps with exact output amounts (no execution).
      */
-    function querySwapExactOut(
-        SwapPathExactAmountOut[] memory paths,
-        address sender,
-        bytes calldata userData
-    )
+    function querySwapExactOut(SwapPathExactAmountOut[] memory paths, address sender, bytes calldata userData)
         external
         saveSender(sender)
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
@@ -207,16 +183,11 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
 
         SwapExactOutHookParams memory params = SwapExactOutHookParams({
-            sender: address(this),
-            paths: paths,
-            deadline: type(uint256).max,
-            wethIsEth: false,
-            userData: userData
+            sender: address(this), paths: paths, deadline: type(uint256).max, wethIsEth: false, userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.querySwapExactOutHook, params)
-        );
+        bytes memory result =
+            BalancerV3RouterStorageRepo._vault().quote(abi.encodeCall(this.querySwapExactOutHook, params));
         return abi.decode(result, (uint256[], address[], uint256[]));
     }
 
@@ -224,9 +195,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
     /*                              HOOK FUNCTIONS                                */
     /* ========================================================================== */
 
-    function swapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function swapExactInHook(SwapExactInHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -236,9 +205,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         _settlePaths(params.sender, params.wethIsEth);
     }
 
-    function querySwapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function querySwapExactInHook(SwapExactInHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -247,9 +214,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         return _swapExactInHook(params);
     }
 
-    function swapExactOutHook(
-        SwapExactOutHookParams calldata params
-    )
+    function swapExactOutHook(SwapExactOutHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -259,9 +224,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         _settlePaths(params.sender, params.wethIsEth);
     }
 
-    function querySwapExactOutHook(
-        SwapExactOutHookParams calldata params
-    )
+    function querySwapExactOutHook(SwapExactOutHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -274,9 +237,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
     /*                            INTERNAL FUNCTIONS                              */
     /* ========================================================================== */
 
-    function _swapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function _swapExactInHook(SwapExactInHookParams calldata params)
         internal
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
     {
@@ -292,7 +253,8 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
 
         for (uint256 i = 0; i < tokensOut.length; ++i) {
             uint256 settledAmount = BalancerV3BatchRouterStorageRepo._settledTokenAmounts().tGet(tokensOut[i]);
-            amountsOut[i] = BalancerV3BatchRouterStorageRepo._currentSwapTokenOutAmounts().tGet(tokensOut[i]) + settledAmount;
+            amountsOut[i] =
+                BalancerV3BatchRouterStorageRepo._currentSwapTokenOutAmounts().tGet(tokensOut[i]) + settledAmount;
 
             if (settledAmount != 0) {
                 BalancerV3BatchRouterStorageRepo._settledTokenAmounts().tSet(tokensOut[i], 0);
@@ -300,9 +262,10 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _computePathAmountsOut(
-        SwapExactInHookParams calldata params
-    ) internal returns (uint256[] memory pathAmountsOut) {
+    function _computePathAmountsOut(SwapExactInHookParams calldata params)
+        internal
+        returns (uint256[] memory pathAmountsOut)
+    {
         pathAmountsOut = new uint256[](params.paths.length);
         IVault vault = BalancerV3RouterStorageRepo._vault();
         bool isPrepaid = BalancerV3RouterStorageRepo._isPrepaid();
@@ -375,7 +338,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         bool isLastStep,
         bytes memory userData
     ) internal returns (uint256 amountOut) {
-        (, , amountOut) = vault.swap(
+        (,, amountOut) = vault.swap(
             VaultSwapParams({
                 kind: SwapKind.EXACT_IN,
                 pool: pool,
@@ -401,11 +364,9 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         uint256 minAmountOut,
         bool isLastStep
     ) internal returns (uint256 amountOut) {
-        WrappingDirection direction = pool == address(tokenIn)
-            ? WrappingDirection.UNWRAP
-            : WrappingDirection.WRAP;
+        WrappingDirection direction = pool == address(tokenIn) ? WrappingDirection.UNWRAP : WrappingDirection.WRAP;
 
-        (, , amountOut) = vault.erc4626BufferWrapOrUnwrap(
+        (,, amountOut) = vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_IN,
                 direction: direction,
@@ -420,9 +381,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _swapExactOutHook(
-        SwapExactOutHookParams calldata params
-    )
+    function _swapExactOutHook(SwapExactOutHookParams calldata params)
         internal
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
     {
@@ -452,9 +411,10 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _computePathAmountsIn(
-        SwapExactOutHookParams calldata params
-    ) internal returns (uint256[] memory pathAmountsIn) {
+    function _computePathAmountsIn(SwapExactOutHookParams calldata params)
+        internal
+        returns (uint256[] memory pathAmountsIn)
+    {
         pathAmountsIn = new uint256[](params.paths.length);
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
@@ -463,11 +423,10 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _processExactOutPath(
-        IVault vault,
-        SwapPathExactAmountOut memory path,
-        bytes calldata userData
-    ) internal returns (uint256 pathAmountIn) {
+    function _processExactOutPath(IVault vault, SwapPathExactAmountOut memory path, bytes calldata userData)
+        internal
+        returns (uint256 pathAmountIn)
+    {
         uint256 stepExactAmountOut = path.exactAmountOut;
         uint256 lastStepIndex = path.steps.length - 1;
         IERC20 finalTokenOut = path.steps[lastStepIndex].tokenOut;
@@ -486,7 +445,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
                 tokenOut: stepTokenOut,
                 amountGiven: stepExactAmountOut,
                 limit: isFirstStep ? path.maxAmountIn : type(uint256).max,
-                isLastStep: isFirstStep,  // In reverse, "first step" is the one we track
+                isLastStep: isFirstStep, // In reverse, "first step" is the one we track
                 isBuffer: step.isBuffer,
                 userData: userData
             });
@@ -525,7 +484,7 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         bool isFirstStep,
         bytes memory userData
     ) internal returns (uint256 amountIn) {
-        (, amountIn, ) = vault.swap(
+        (, amountIn,) = vault.swap(
             VaultSwapParams({
                 kind: SwapKind.EXACT_OUT,
                 pool: pool,
@@ -547,16 +506,15 @@ contract BatchSwapFacet is BalancerV3RouterModifiers, IFacet {
         IVault vault,
         address pool,
         IERC20 tokenIn,
-        IERC20 tokenOut,
+        IERC20,
+        /*tokenOut*/
         uint256 amountOut,
         uint256 maxAmountIn,
         bool isFirstStep
     ) internal returns (uint256 amountIn) {
-        WrappingDirection direction = pool == address(tokenIn)
-            ? WrappingDirection.UNWRAP
-            : WrappingDirection.WRAP;
+        WrappingDirection direction = pool == address(tokenIn) ? WrappingDirection.UNWRAP : WrappingDirection.WRAP;
 
-        (, amountIn, ) = vault.erc4626BufferWrapOrUnwrap(
+        (, amountIn,) = vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_OUT,
                 direction: direction,

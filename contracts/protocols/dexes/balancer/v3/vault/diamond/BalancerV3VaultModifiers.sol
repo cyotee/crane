@@ -8,21 +8,39 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
 import {PoolData, Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {
     TransientStorageHelpers,
     TokenDeltaMappingSlotType,
     UintToAddressToBooleanMappingSlot
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import {VaultStateBits, VaultStateLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
-import {PoolConfigBits, PoolConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    VaultStateBits,
+    VaultStateLib
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
+import {
+    PoolConfigBits,
+    PoolConfigLib
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
 
 import {BalancerV3VaultStorageRepo} from "./BalancerV3VaultStorageRepo.sol";
@@ -64,35 +82,35 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
     /**
      * @dev Returns the transient slot for unlock state.
      */
-    function _isUnlocked() internal view returns (StorageSlotExtension.BooleanSlotType slot) {
+    function _isUnlocked() internal pure returns (StorageSlotExtension.BooleanSlotType slot) {
         return BalancerV3VaultStorageRepo.IS_UNLOCKED_SLOT.asBoolean();
     }
 
     /**
      * @dev Returns the transient slot for non-zero delta count.
      */
-    function _nonZeroDeltaCount() internal view returns (StorageSlotExtension.Uint256SlotType slot) {
+    function _nonZeroDeltaCount() internal pure returns (StorageSlotExtension.Uint256SlotType slot) {
         return BalancerV3VaultStorageRepo.NON_ZERO_DELTA_COUNT_SLOT.asUint256();
     }
 
     /**
      * @dev Returns the transient slot for token deltas mapping.
      */
-    function _tokenDeltas() internal view returns (TokenDeltaMappingSlotType slot) {
+    function _tokenDeltas() internal pure returns (TokenDeltaMappingSlotType slot) {
         return TokenDeltaMappingSlotType.wrap(BalancerV3VaultStorageRepo.TOKEN_DELTAS_SLOT);
     }
 
     /**
      * @dev Returns the transient slot for add liquidity called flag.
      */
-    function _addLiquidityCalled() internal view returns (UintToAddressToBooleanMappingSlot slot) {
+    function _addLiquidityCalled() internal pure returns (UintToAddressToBooleanMappingSlot slot) {
         return UintToAddressToBooleanMappingSlot.wrap(BalancerV3VaultStorageRepo.ADD_LIQUIDITY_CALLED_SLOT);
     }
 
     /**
      * @dev Returns the transient slot for session ID.
      */
-    function _sessionIdSlot() internal view returns (StorageSlotExtension.Uint256SlotType slot) {
+    function _sessionIdSlot() internal pure returns (StorageSlotExtension.Uint256SlotType slot) {
         return BalancerV3VaultStorageRepo.SESSION_ID_SLOT.asUint256();
     }
 
@@ -255,8 +273,8 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
 
     function _isVaultPaused() internal view returns (bool) {
         // solhint-disable-next-line not-rely-on-time
-        return block.timestamp <= BalancerV3VaultStorageRepo._vaultBufferPeriodEndTime() &&
-               BalancerV3VaultStorageRepo._vaultStateBits().isVaultPaused();
+        return block.timestamp <= BalancerV3VaultStorageRepo._vaultBufferPeriodEndTime()
+            && BalancerV3VaultStorageRepo._vaultStateBits().isVaultPaused();
     }
 
     /* ------ Pool Pausing ------ */
@@ -268,7 +286,7 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
     }
 
     function _isPoolPaused(address pool) internal view returns (bool) {
-        (bool paused, ) = _getPoolPausedState(pool);
+        (bool paused,) = _getPoolPausedState(pool);
         return paused;
     }
 
@@ -281,7 +299,8 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
         // Use the Vault's buffer period.
         // solhint-disable-next-line not-rely-on-time
         return (
-            isPoolPaused && block.timestamp <= pauseWindowEndTime + BalancerV3VaultStorageRepo._vaultBufferPeriodDuration(),
+            isPoolPaused
+                && block.timestamp <= pauseWindowEndTime + BalancerV3VaultStorageRepo._vaultBufferPeriodDuration(),
             pauseWindowEndTime
         );
     }
@@ -358,10 +377,8 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
             BalancerV3VaultStorageRepo._poolTokenBalances(pool);
 
         for (uint256 i = 0; i < poolData.balancesRaw.length; ++i) {
-            poolBalances[i] = PackedTokenBalance.toPackedBalance(
-                poolData.balancesRaw[i],
-                poolData.balancesLiveScaled18[i]
-            );
+            poolBalances[i] =
+                PackedTokenBalance.toPackedBalance(poolData.balancesRaw[i], poolData.balancesLiveScaled18[i]);
         }
     }
 
@@ -383,10 +400,11 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
     /**
      * @dev Load pool data and update balances and yield fees in storage.
      */
-    function _loadPoolDataUpdatingBalancesAndYieldFees(
-        address pool,
-        Rounding roundingDirection
-    ) internal nonReentrant returns (PoolData memory poolData) {
+    function _loadPoolDataUpdatingBalancesAndYieldFees(address pool, Rounding roundingDirection)
+        internal
+        nonReentrant
+        returns (PoolData memory poolData)
+    {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
 
         poolData.load(
@@ -397,11 +415,7 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
             roundingDirection
         );
 
-        PoolDataLib.syncPoolBalancesAndFees(
-            poolData,
-            layout.poolTokenBalances[pool],
-            layout.aggregateFeeAmounts[pool]
-        );
+        PoolDataLib.syncPoolBalancesAndFees(poolData, layout.poolTokenBalances[pool], layout.aggregateFeeAmounts[pool]);
     }
 
     /**
@@ -415,16 +429,13 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
     ) internal pure returns (uint256) {
         poolData.balancesRaw[tokenIndex] = newRawBalance;
 
-        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection ==
-            Rounding.ROUND_UP
+        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection
+            == Rounding.ROUND_UP
             ? ScalingHelpers.toScaled18ApplyRateRoundUp
             : ScalingHelpers.toScaled18ApplyRateRoundDown;
 
-        poolData.balancesLiveScaled18[tokenIndex] = _upOrDown(
-            newRawBalance,
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
-        );
+        poolData.balancesLiveScaled18[tokenIndex] =
+            _upOrDown(newRawBalance, poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]);
 
         return _upOrDown(newRawBalance, poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]);
     }
@@ -452,7 +463,7 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
      */
     function _findTokenIndex(IERC20[] memory tokens, IERC20 token) internal pure returns (uint256) {
         for (uint256 i = 0; i < tokens.length; i++) {
-            if (tokens[i] == token) {
+            if (address(tokens[i]) == address(token)) {
                 return i;
             }
         }
@@ -463,8 +474,8 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
      * @dev Check if we're in a query context (static call with queries enabled).
      */
     function _isQueryContext() internal view returns (bool) {
-        return EVMCallModeHelpers.isStaticCall() &&
-               BalancerV3VaultStorageRepo._vaultStateBits().isQueryDisabled() == false;
+        return
+            EVMCallModeHelpers.isStaticCall() && BalancerV3VaultStorageRepo._vaultStateBits().isQueryDisabled() == false;
     }
 
     /* ------ Authentication ------ */

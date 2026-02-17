@@ -29,9 +29,9 @@ abstract contract TestBase_SlipstreamFork is Test {
     address internal slipstreamQuoterV2;
 
     // Standard fee tiers (in pips: 1 pip = 0.0001%)
-    uint24 internal constant FEE_LOW = 100;       // 0.01%
-    uint24 internal constant FEE_MEDIUM = 500;    // 0.05%
-    uint24 internal constant FEE_HIGH = 3000;     // 0.3%
+    uint24 internal constant FEE_LOW = 100; // 0.01%
+    uint24 internal constant FEE_MEDIUM = 500; // 0.05%
+    uint24 internal constant FEE_HIGH = 3000; // 0.3%
     uint24 internal constant FEE_HIGHEST = 10000; // 1%
 
     /* -------------------------------------------------------------------------- */
@@ -51,11 +51,11 @@ abstract contract TestBase_SlipstreamFork is Test {
 
     // WETH/USDC Slipstream pools
     // Pool addresses from GeckoTerminal and BaseScan
-    address internal constant WETH_USDC_CL_500 = 0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59;  // 0.05% fee
-    address internal constant WETH_USDC_CL_100 = 0xcDAC0d6c6C59727a65F871236188350531885C43;  // Lower fee variant
+    address internal constant WETH_USDC_CL_500 = 0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59; // 0.05% fee
+    address internal constant WETH_USDC_CL_100 = 0xcDAC0d6c6C59727a65F871236188350531885C43; // Lower fee variant
 
     // cbBTC/WETH Slipstream pool (high liquidity Bitcoin pair)
-    address internal constant cbBTC_WETH_CL = 0x70aCDF2Ad0bf2402C957154f944c19Ef4e1cbAE1;  // 0.05% fee
+    address internal constant cbBTC_WETH_CL = 0x70aCDF2Ad0bf2402C957154f944c19Ef4e1cbAE1; // 0.05% fee
 
     /* -------------------------------------------------------------------------- */
     /*                                   Setup                                    */
@@ -107,11 +107,7 @@ abstract contract TestBase_SlipstreamFork is Test {
 
     /// @notice Return swap direction for a specific tokenIn -> tokenOut route
     /// @dev zeroForOne means token0 -> token1
-    function zeroForOneForTokens(
-        ICLPool pool,
-        address tokenIn,
-        address tokenOut
-    ) internal view returns (bool) {
+    function zeroForOneForTokens(ICLPool pool, address tokenIn, address tokenOut) internal view returns (bool) {
         address token0 = pool.token0();
         address token1 = pool.token1();
         require(
@@ -127,12 +123,8 @@ abstract contract TestBase_SlipstreamFork is Test {
     }
 
     /// @notice Get current pool state (slot0)
-    function getPoolState(ICLPool pool)
-        internal
-        view
-        returns (uint160 sqrtPriceX96, int24 tick, uint128 liquidity)
-    {
-        (sqrtPriceX96, tick, , , , ) = pool.slot0();
+    function getPoolState(ICLPool pool) internal view returns (uint160 sqrtPriceX96, int24 tick, uint128 liquidity) {
+        (sqrtPriceX96, tick,,,,) = pool.slot0();
         liquidity = pool.liquidity();
     }
 
@@ -146,13 +138,10 @@ abstract contract TestBase_SlipstreamFork is Test {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Execute a swap (exact input) by specifying tokenIn/tokenOut
-    function swapExactInputTokens(
-        ICLPool pool,
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn,
-        address recipient
-    ) internal returns (uint256 amountOut) {
+    function swapExactInputTokens(ICLPool pool, address tokenIn, address tokenOut, uint256 amountIn, address recipient)
+        internal
+        returns (uint256 amountOut)
+    {
         bool zeroForOne = zeroForOneForTokens(pool, tokenIn, tokenOut);
         return swapExactInput(pool, zeroForOne, amountIn, recipient);
     }
@@ -175,12 +164,11 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param amountIn Amount to swap in
     /// @param recipient Recipient of output tokens
     /// @return amountOut Amount of tokens received
-    function swapExactInput(
-        ICLPool pool,
-        bool zeroForOne,
-        uint256 amountIn,
-        address recipient
-    ) internal virtual returns (uint256 amountOut) {
+    function swapExactInput(ICLPool pool, bool zeroForOne, uint256 amountIn, address recipient)
+        internal
+        virtual
+        returns (uint256 amountOut)
+    {
         address tokenIn = zeroForOne ? pool.token0() : pool.token1();
 
         // Deal tokens to this contract for the swap
@@ -190,18 +178,11 @@ abstract contract TestBase_SlipstreamFork is Test {
         IERC20PermitProxy(tokenIn).approve(address(pool), amountIn);
 
         // Set price limit to allow full swap
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Execute swap
-        (int256 amount0, int256 amount1) = pool.swap(
-            recipient,
-            zeroForOne,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            abi.encode(address(this))
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(recipient, zeroForOne, int256(amountIn), sqrtPriceLimitX96, abi.encode(address(this)));
 
         // Return output amount (negative because it's being sent out)
         amountOut = uint256(-(zeroForOne ? amount1 : amount0));
@@ -213,12 +194,11 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param amountOut Desired output amount
     /// @param recipient Recipient of output tokens
     /// @return amountIn Amount of tokens spent
-    function swapExactOutput(
-        ICLPool pool,
-        bool zeroForOne,
-        uint256 amountOut,
-        address recipient
-    ) internal virtual returns (uint256 amountIn) {
+    function swapExactOutput(ICLPool pool, bool zeroForOne, uint256 amountOut, address recipient)
+        internal
+        virtual
+        returns (uint256 amountIn)
+    {
         address tokenIn = zeroForOne ? pool.token0() : pool.token1();
 
         // Deal a large amount of input tokens (will refund unused)
@@ -230,18 +210,11 @@ abstract contract TestBase_SlipstreamFork is Test {
         IERC20PermitProxy(tokenIn).approve(address(pool), maxAmountIn);
 
         // Set price limit to allow full swap
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Execute swap (negative amount = exact output)
-        (int256 amount0, int256 amount1) = pool.swap(
-            recipient,
-            zeroForOne,
-            -int256(amountOut),
-            sqrtPriceLimitX96,
-            abi.encode(address(this))
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(recipient, zeroForOne, -int256(amountOut), sqrtPriceLimitX96, abi.encode(address(this)));
 
         // Return input amount (positive because it's being paid)
         amountIn = uint256(zeroForOne ? amount0 : amount1);
@@ -298,12 +271,10 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param quoted The quoted amount
     /// @param actual The actual amount from swap
     /// @param toleranceBps Tolerance in basis points (10 = 0.1%)
-    function assertQuoteAccuracy(
-        uint256 quoted,
-        uint256 actual,
-        uint256 toleranceBps,
-        string memory message
-    ) internal pure {
+    function assertQuoteAccuracy(uint256 quoted, uint256 actual, uint256 toleranceBps, string memory message)
+        internal
+        pure
+    {
         uint256 tolerance = (actual * toleranceBps) / 10000;
         if (tolerance == 0) tolerance = 1; // Minimum 1 wei tolerance
         assertApproxEqAbs(quoted, actual, tolerance, message);
@@ -319,11 +290,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Get nearest tick aligned to tick spacing
-    function nearestUsableTick(int24 tick, int24 tickSpacing)
-        internal
-        pure
-        returns (int24)
-    {
+    function nearestUsableTick(int24 tick, int24 tickSpacing) internal pure returns (int24) {
         int24 rounded = (tick / tickSpacing) * tickSpacing;
 
         if (rounded < TickMath.MIN_TICK) {

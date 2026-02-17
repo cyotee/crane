@@ -16,7 +16,9 @@ import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3Vaul
 // import {
 //     BalancerV3VaultAwareStorage
 // } from "@crane/contracts/protocols/dexes/balancer/v3/utils/BalancerV3VaultAwareStorage.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
 
 contract BalancerV3VaultAwareTarget is IBalancerV3VaultAware {
     function balV3Vault() external view returns (IVault) {

@@ -10,8 +10,7 @@ contract ERC20MinterFacadeFacet is ERC20MinterFacadeTarget {
         return type(ERC20MinterFacadeFacet).name;
     }
 
-    function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces)
-    {
+    function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](1);
 
         interfaces[0] = type(IERC20MinterFacade).interfaceId;

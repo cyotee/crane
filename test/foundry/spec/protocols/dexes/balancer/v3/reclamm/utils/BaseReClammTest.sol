@@ -8,31 +8,35 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     PoolRoleAccounts,
     LiquidityManagement,
     HookFlags
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { RateProviderMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {RateProviderMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { ReClammPoolFactoryMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
-import { ReClammPriceParams } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammPoolParams } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammPoolContractsDeployer } from "./ReClammPoolContractsDeployer.sol";
-import { ReClammPoolFactory } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.sol";
-import { ReClammPoolMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { a, b } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {ReClammPoolFactoryMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
+import {ReClammPriceParams} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolParams} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolContractsDeployer} from "./ReClammPoolContractsDeployer.sol";
+import {ReClammPoolFactory} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.sol";
+import {ReClammPoolMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {a, b} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
 
 contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
     using FixedPoint for uint256;
@@ -92,8 +96,8 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
 
         super.setUp();
 
-        (, , _initialBalances, ) = vault.getPoolTokenInfo(pool);
-        (_initialVirtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (,, _initialBalances,) = vault.getPoolTokenInfo(pool);
+        (_initialVirtualBalances,) = _computeCurrentVirtualBalances(pool);
         _initialFourthRootPriceRatio = IReClammPool(pool).computeCurrentFourthRootPriceRatio();
     }
 
@@ -132,10 +136,11 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
         return _createHook(hookFlags);
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ReClamm Pool";
         string memory symbol = "RECLAMM_POOL";
 
@@ -143,7 +148,7 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
 
         PoolRoleAccounts memory roleAccounts;
 
-        roleAccounts = PoolRoleAccounts({ pauseManager: address(0), swapFeeManager: admin, poolCreator: address(0) });
+        roleAccounts = PoolRoleAccounts({pauseManager: address(0), swapFeeManager: admin, poolCreator: address(0)});
 
         ReClammPriceParams memory priceParams = ReClammPriceParams({
             initialMinPrice: _initialMinPrice,
@@ -157,18 +162,19 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
         rateProviders[a] = _rateProviderA;
         rateProviders[b] = _rateProviderB;
 
-        newPool = ReClammPoolFactoryMock(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(sortedTokens, rateProviders),
-            roleAccounts,
-            _DEFAULT_SWAP_FEE,
-            poolHooksContract,
-            priceParams,
-            _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            bytes32(saltNumber++)
-        );
+        newPool = ReClammPoolFactoryMock(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(sortedTokens, rateProviders),
+                roleAccounts,
+                _DEFAULT_SWAP_FEE,
+                poolHooksContract,
+                priceParams,
+                _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
+                _DEFAULT_CENTEREDNESS_MARGIN,
+                bytes32(saltNumber++)
+            );
         vm.label(newPool, label);
         // Force the swap fee percentage, even if it's outside the allowed limits.
         setSwapFeePercentage(_DEFAULT_SWAP_FEE);
@@ -203,10 +209,10 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
         vm.stopPrank();
     }
 
-    function _setPoolBalances(
-        uint256 daiBalance,
-        uint256 usdcBalance
-    ) internal returns (uint256[] memory newPoolBalances) {
+    function _setPoolBalances(uint256 daiBalance, uint256 usdcBalance)
+        internal
+        returns (uint256[] memory newPoolBalances)
+    {
         newPoolBalances = new uint256[](2);
         newPoolBalances[daiIdx] = daiBalance;
         newPoolBalances[usdcIdx] = usdcBalance;
@@ -214,17 +220,19 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
         vault.manualSetPoolBalances(pool, newPoolBalances, newPoolBalances);
     }
 
-    function _balanceABtoDaiUsdcBalances(
-        uint256 balanceA,
-        uint256 balanceB
-    ) internal view returns (uint256 daiBalance, uint256 usdcBalance) {
+    function _balanceABtoDaiUsdcBalances(uint256 balanceA, uint256 balanceB)
+        internal
+        view
+        returns (uint256 daiBalance, uint256 usdcBalance)
+    {
         (daiBalance, usdcBalance) = (daiIdx < usdcIdx) ? (balanceA, balanceB) : (balanceB, balanceA);
     }
 
-    function _balanceDaiUsdcToBalances(
-        uint256 daiBalance,
-        uint256 usdcBalance
-    ) internal view returns (uint256[] memory balances) {
+    function _balanceDaiUsdcToBalances(uint256 daiBalance, uint256 usdcBalance)
+        internal
+        view
+        returns (uint256[] memory balances)
+    {
         balances = new uint256[](2);
         (balances[daiIdx], balances[usdcIdx]) = (daiBalance, usdcBalance);
     }
@@ -245,12 +253,14 @@ contract BaseReClammTest is ReClammPoolContractsDeployer, BaseVaultTest {
         (virtualBalances[a], virtualBalances[b]) = IReClammPool(_pool).getLastVirtualBalances();
     }
 
-    function _computeCurrentVirtualBalances(
-        address _pool
-    ) internal view returns (uint256[] memory currentVirtualBalances, bool changed) {
+    function _computeCurrentVirtualBalances(address _pool)
+        internal
+        view
+        returns (uint256[] memory currentVirtualBalances, bool changed)
+    {
         currentVirtualBalances = new uint256[](2);
-        (currentVirtualBalances[a], currentVirtualBalances[b], changed) = IReClammPool(_pool)
-            .computeCurrentVirtualBalances();
+        (currentVirtualBalances[a], currentVirtualBalances[b], changed) =
+            IReClammPool(_pool).computeCurrentVirtualBalances();
     }
 
     /**

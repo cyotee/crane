@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { PoolSwapParams } from "../vault/VaultTypes.sol";
+import {PoolSwapParams} from "../vault/VaultTypes.sol";
 
 interface ISurgeHookCommon {
     /// @notice The max surge fee and threshold values must be valid percentages.
@@ -94,9 +94,8 @@ interface ISurgeHookCommon {
      * @param staticSwapFeePercentage The static fee percentage for the pool (default if there is no surge)
      * @return isSurging True if the swap will surge, false otherwise
      */
-    function isSurgingSwap(
-        PoolSwapParams calldata params,
-        address pool,
-        uint256 staticSwapFeePercentage
-    ) external view returns (bool isSurging);
+    function isSurgingSwap(PoolSwapParams calldata params, address pool, uint256 staticSwapFeePercentage)
+        external
+        view
+        returns (bool isSurging);
 }

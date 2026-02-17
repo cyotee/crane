@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { ICompositeLiquidityRouterErrors } from "./ICompositeLiquidityRouterErrors.sol";
+import {ICompositeLiquidityRouterErrors} from "./ICompositeLiquidityRouterErrors.sol";
 
 /**
  * @notice The composite liquidity router supports add/remove liquidity operations on ERC4626 and nested pools.

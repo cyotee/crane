@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
 
 contract FeeBurnerAuthentication is Ownable2Step {
     IProtocolFeeSweeper public immutable protocolFeeSweeper;

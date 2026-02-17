@@ -12,7 +12,9 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /* -------------------------------------------------------------------------- */
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
@@ -316,10 +318,7 @@ contract BalancerV3VaultDFPkg is IDiamondFactoryPackage, IBalancerV3VaultDFPkg {
      * @notice Returns the diamond configuration.
      */
     function diamondConfig() public view returns (DiamondConfig memory config) {
-        config = IDiamondFactoryPackage.DiamondConfig({
-            facetCuts: facetCuts(),
-            interfaces: facetInterfaces()
-        });
+        config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
 
     /**
@@ -344,7 +343,11 @@ contract BalancerV3VaultDFPkg is IDiamondFactoryPackage, IBalancerV3VaultDFPkg {
     function updatePkg(
         address, // expectedProxy
         bytes memory // pkgArgs
-    ) public virtual returns (bool) {
+    )
+        public
+        virtual
+        returns (bool)
+    {
         // Vault doesn't support updates after deployment
         return false;
     }

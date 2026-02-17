@@ -5,8 +5,12 @@ import "forge-std/Test.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
-import {BalancerV3WeightedPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolFacet.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    BalancerV3WeightedPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolFacet.sol";
 
 /**
  * @title BalancerV3WeightedPoolFacet_IFacet_Test
@@ -41,7 +45,9 @@ contract BalancerV3WeightedPoolFacet_IFacet_Test is Test {
     function test_facetInterfaces_containsIBalancerV3WeightedPool() public view {
         bytes4[] memory interfaces = facet.facetInterfaces();
 
-        assertEq(interfaces[1], type(IBalancerV3WeightedPool).interfaceId, "Should include IBalancerV3WeightedPool interface");
+        assertEq(
+            interfaces[1], type(IBalancerV3WeightedPool).interfaceId, "Should include IBalancerV3WeightedPool interface"
+        );
     }
 
     function test_facetInterfaces_returnsCorrectLength() public view {
@@ -75,7 +81,11 @@ contract BalancerV3WeightedPoolFacet_IFacet_Test is Test {
     function test_facetFuncs_containsGetNormalizedWeights() public view {
         bytes4[] memory funcs = facet.facetFuncs();
 
-        assertEq(funcs[3], IBalancerV3WeightedPool.getNormalizedWeights.selector, "Should include getNormalizedWeights selector");
+        assertEq(
+            funcs[3],
+            IBalancerV3WeightedPool.getNormalizedWeights.selector,
+            "Should include getNormalizedWeights selector"
+        );
     }
 
     function test_facetFuncs_returnsCorrectLength() public view {

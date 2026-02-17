@@ -1,0 +1,39 @@
+{
+  "chain": {
+    "name": "megaEthTestnet",
+    "id": 6343
+  },
+  "updateTriggers": {},
+  "adapterContract": "0x9f0B0AE7a3b6671129633121149b7059d004EDa4",
+  "adapterContractType": "multi-feed",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "ETH": {
+      "priceFeedAddress": "0x9674Dbe42f9996e1470F8eC15a6D0aebA4a93AEb"
+    },
+    "BTC": {
+      "priceFeedAddress": "0x4bE899cF15a212fd6123E4A0E6e1B4925f493B96"
+    },
+    "USDT": {
+      "priceFeedAddress": "0xaA9B0b6E9632590C20bffdc666C20eA4A91f42a7"
+    },
+    "USDC": {
+      "priceFeedAddress": "0xA97BdaE430aC07FFe825B8C0059B62D2e4c0B42d"
+    },
+    "SOL": {
+      "priceFeedAddress": "0x14ab3aC2d32c46B3e3E88a338dD970A900d58c46"
+    },
+    "XRP": {
+      "priceFeedAddress": "0xE0f32F837a5CF63A308Ae4599d78D3916A994E72"
+    },
+    "BNB": {
+      "priceFeedAddress": "0x46EBcf21C3390e45e6365A0A99Fc5B9d390dff27"
+    },
+    "DOGE": {
+      "priceFeedAddress": "0x1E56Fc98Df8037810EaC15D9094E1359624a9dcA"
+    },
+    "ADA": {
+      "priceFeedAddress": "0x063bb6b56420D31431C9e2E0225011b0ec685f84"
+    }
+  }
+}

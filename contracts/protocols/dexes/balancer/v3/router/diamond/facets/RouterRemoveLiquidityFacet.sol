@@ -22,7 +22,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * @dev Implements remove liquidity functions from IRouter interface.
  */
 contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -80,10 +79,9 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsOut) {
         bytes memory result = _unlockRemove(
-            msg.sender, pool, minAmountsOut, exactBptAmountIn,
-            RemoveLiquidityKind.PROPORTIONAL, wethIsEth, userData
+            msg.sender, pool, minAmountsOut, exactBptAmountIn, RemoveLiquidityKind.PROPORTIONAL, wethIsEth, userData
         );
-        (, amountsOut, ) = abi.decode(result, (uint256, uint256[], bytes));
+        (, amountsOut,) = abi.decode(result, (uint256, uint256[], bytes));
     }
 
     function queryRemoveLiquidityProportional(
@@ -94,11 +92,9 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
     ) external saveSender(sender) returns (uint256[] memory amountsOut) {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         uint256[] memory minAmountsOut = new uint256[](vault.getPoolTokens(pool).length);
-        bytes memory result = _quoteRemove(
-            pool, minAmountsOut, exactBptAmountIn,
-            RemoveLiquidityKind.PROPORTIONAL, userData
-        );
-        (, amountsOut, ) = abi.decode(result, (uint256, uint256[], bytes));
+        bytes memory result =
+            _quoteRemove(pool, minAmountsOut, exactBptAmountIn, RemoveLiquidityKind.PROPORTIONAL, userData);
+        (, amountsOut,) = abi.decode(result, (uint256, uint256[], bytes));
     }
 
     function removeLiquiditySingleTokenExactIn(
@@ -109,14 +105,18 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 amountOut) {
-        (uint256[] memory minAmountsOut, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool, tokenOut, minAmountOut
-        );
+        (uint256[] memory minAmountsOut, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, tokenOut, minAmountOut);
         bytes memory result = _unlockRemove(
-            msg.sender, pool, minAmountsOut, exactBptAmountIn,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, wethIsEth, userData
+            msg.sender,
+            pool,
+            minAmountsOut,
+            exactBptAmountIn,
+            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN,
+            wethIsEth,
+            userData
         );
-        (, uint256[] memory amountsOut, ) = abi.decode(result, (uint256, uint256[], bytes));
+        (, uint256[] memory amountsOut,) = abi.decode(result, (uint256, uint256[], bytes));
         return amountsOut[tokenIndex];
     }
 
@@ -129,11 +129,9 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
     ) external saveSender(sender) returns (uint256 amountOut) {
         // We cannot use 0 as min amount, as this value is used to figure out the token index.
         (uint256[] memory minAmountsOut, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, 1);
-        bytes memory result = _quoteRemove(
-            pool, minAmountsOut, exactBptAmountIn,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, userData
-        );
-        (, uint256[] memory amountsOut, ) = abi.decode(result, (uint256, uint256[], bytes));
+        bytes memory result =
+            _quoteRemove(pool, minAmountsOut, exactBptAmountIn, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, userData);
+        (, uint256[] memory amountsOut,) = abi.decode(result, (uint256, uint256[], bytes));
         return amountsOut[tokenIndex];
     }
 
@@ -145,12 +143,17 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 bptAmountIn) {
-        (uint256[] memory minAmountsOut, ) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
+        (uint256[] memory minAmountsOut,) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
         bytes memory result = _unlockRemove(
-            msg.sender, pool, minAmountsOut, maxBptAmountIn,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT, wethIsEth, userData
+            msg.sender,
+            pool,
+            minAmountsOut,
+            maxBptAmountIn,
+            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
+            wethIsEth,
+            userData
         );
-        (bptAmountIn, , ) = abi.decode(result, (uint256, uint256[], bytes));
+        (bptAmountIn,,) = abi.decode(result, (uint256, uint256[], bytes));
     }
 
     function queryRemoveLiquiditySingleTokenExactOut(
@@ -160,12 +163,15 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountIn) {
-        (uint256[] memory minAmountsOut, ) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
+        (uint256[] memory minAmountsOut,) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
         bytes memory result = _quoteRemove(
-            pool, minAmountsOut, BalancerV3RouterStorageRepo.MAX_AMOUNT,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT, userData
+            pool,
+            minAmountsOut,
+            BalancerV3RouterStorageRepo.MAX_AMOUNT,
+            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
+            userData
         );
-        (bptAmountIn, , ) = abi.decode(result, (uint256, uint256[], bytes));
+        (bptAmountIn,,) = abi.decode(result, (uint256, uint256[], bytes));
     }
 
     function removeLiquidityCustom(
@@ -181,8 +187,7 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData)
     {
         bytes memory result = _unlockRemove(
-            msg.sender, pool, minAmountsOut, maxBptAmountIn,
-            RemoveLiquidityKind.CUSTOM, wethIsEth, userData
+            msg.sender, pool, minAmountsOut, maxBptAmountIn, RemoveLiquidityKind.CUSTOM, wethIsEth, userData
         );
         return abi.decode(result, (uint256, uint256[], bytes));
     }
@@ -194,42 +199,31 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData) {
-        bytes memory result = _quoteRemove(
-            pool, minAmountsOut, maxBptAmountIn,
-            RemoveLiquidityKind.CUSTOM, userData
-        );
+        bytes memory result = _quoteRemove(pool, minAmountsOut, maxBptAmountIn, RemoveLiquidityKind.CUSTOM, userData);
         return abi.decode(result, (uint256, uint256[], bytes));
     }
 
-    function removeLiquidityRecovery(
-        address pool,
-        uint256 exactBptAmountIn,
-        uint256[] memory minAmountsOut
-    ) external payable returns (uint256[] memory amountsOut) {
+    function removeLiquidityRecovery(address pool, uint256 exactBptAmountIn, uint256[] memory minAmountsOut)
+        external
+        payable
+        returns (uint256[] memory amountsOut)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         amountsOut = abi.decode(
             vault.unlock(
-                abi.encodeCall(
-                    this.removeLiquidityRecoveryHook,
-                    (pool, msg.sender, exactBptAmountIn, minAmountsOut)
-                )
+                abi.encodeCall(this.removeLiquidityRecoveryHook, (pool, msg.sender, exactBptAmountIn, minAmountsOut))
             ),
             (uint256[])
         );
     }
 
-    function queryRemoveLiquidityRecovery(
-        address pool,
-        uint256 exactBptAmountIn
-    ) external returns (uint256[] memory amountsOut) {
+    function queryRemoveLiquidityRecovery(address pool, uint256 exactBptAmountIn)
+        external
+        returns (uint256[] memory amountsOut)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         return abi.decode(
-            vault.quote(
-                abi.encodeCall(
-                    this.queryRemoveLiquidityRecoveryHook,
-                    (pool, address(this), exactBptAmountIn)
-                )
-            ),
+            vault.quote(abi.encodeCall(this.queryRemoveLiquidityRecoveryHook, (pool, address(this), exactBptAmountIn))),
             (uint256[])
         );
     }
@@ -238,9 +232,7 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
     /*                              HOOK FUNCTIONS                                */
     /* ========================================================================== */
 
-    function removeLiquidityHook(
-        RemoveLiquidityHookParams calldata params
-    )
+    function removeLiquidityHook(RemoveLiquidityHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -249,9 +241,11 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         return _removeLiquidityHook(params);
     }
 
-    function queryRemoveLiquidityHook(
-        RemoveLiquidityHookParams calldata params
-    ) external onlyVault returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData) {
+    function queryRemoveLiquidityHook(RemoveLiquidityHookParams calldata params)
+        external
+        onlyVault
+        returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData)
+    {
         return _queryRemoveLiquidityHook(params);
     }
 
@@ -264,11 +258,11 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         return _removeLiquidityRecoveryHook(pool, sender, exactBptAmountIn, minAmountsOut);
     }
 
-    function queryRemoveLiquidityRecoveryHook(
-        address pool,
-        address sender,
-        uint256 exactBptAmountIn
-    ) external onlyVault returns (uint256[] memory amountsOut) {
+    function queryRemoveLiquidityRecoveryHook(address pool, address sender, uint256 exactBptAmountIn)
+        external
+        onlyVault
+        returns (uint256[] memory amountsOut)
+    {
         return _queryRemoveLiquidityRecoveryHook(pool, sender, exactBptAmountIn);
     }
 
@@ -285,20 +279,21 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bool wethIsEth,
         bytes memory userData
     ) internal returns (bytes memory) {
-        return BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(
-                this.removeLiquidityHook,
-                RemoveLiquidityHookParams({
-                    sender: sender,
-                    pool: pool,
-                    minAmountsOut: minAmountsOut,
-                    maxBptAmountIn: maxBptAmountIn,
-                    kind: kind,
-                    wethIsEth: wethIsEth,
-                    userData: userData
-                })
-            )
-        );
+        return BalancerV3RouterStorageRepo._vault()
+            .unlock(
+                abi.encodeCall(
+                    this.removeLiquidityHook,
+                    RemoveLiquidityHookParams({
+                        sender: sender,
+                        pool: pool,
+                        minAmountsOut: minAmountsOut,
+                        maxBptAmountIn: maxBptAmountIn,
+                        kind: kind,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            );
     }
 
     function _quoteRemove(
@@ -308,25 +303,27 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         RemoveLiquidityKind kind,
         bytes memory userData
     ) internal returns (bytes memory) {
-        return BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(
-                this.queryRemoveLiquidityHook,
-                RemoveLiquidityHookParams({
-                    sender: address(this),
-                    pool: pool,
-                    minAmountsOut: minAmountsOut,
-                    maxBptAmountIn: maxBptAmountIn,
-                    kind: kind,
-                    wethIsEth: false,
-                    userData: userData
-                })
-            )
-        );
+        return BalancerV3RouterStorageRepo._vault()
+            .quote(
+                abi.encodeCall(
+                    this.queryRemoveLiquidityHook,
+                    RemoveLiquidityHookParams({
+                        sender: address(this),
+                        pool: pool,
+                        minAmountsOut: minAmountsOut,
+                        maxBptAmountIn: maxBptAmountIn,
+                        kind: kind,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            );
     }
 
-    function _removeLiquidityHook(
-        RemoveLiquidityHookParams calldata params
-    ) internal returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData) {
+    function _removeLiquidityHook(RemoveLiquidityHookParams calldata params)
+        internal
+        returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
         (bptAmountIn, amountsOut, returnData) = vault.removeLiquidity(
@@ -348,19 +345,21 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         _returnEth(params.sender);
     }
 
-    function _queryRemoveLiquidityHook(
-        RemoveLiquidityHookParams calldata params
-    ) internal returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData) {
-        return BalancerV3RouterStorageRepo._vault().removeLiquidity(
-            RemoveLiquidityParams({
-                pool: params.pool,
-                from: params.sender,
-                maxBptAmountIn: params.maxBptAmountIn,
-                minAmountsOut: params.minAmountsOut,
-                kind: params.kind,
-                userData: params.userData
-            })
-        );
+    function _queryRemoveLiquidityHook(RemoveLiquidityHookParams calldata params)
+        internal
+        returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData)
+    {
+        return BalancerV3RouterStorageRepo._vault()
+            .removeLiquidity(
+                RemoveLiquidityParams({
+                    pool: params.pool,
+                    from: params.sender,
+                    maxBptAmountIn: params.maxBptAmountIn,
+                    minAmountsOut: params.minAmountsOut,
+                    kind: params.kind,
+                    userData: params.userData
+                })
+            );
     }
 
     function _removeLiquidityRecoveryHook(
@@ -384,11 +383,10 @@ contract RouterRemoveLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         _returnEth(sender);
     }
 
-    function _queryRemoveLiquidityRecoveryHook(
-        address pool,
-        address sender,
-        uint256 exactBptAmountIn
-    ) internal returns (uint256[] memory amountsOut) {
+    function _queryRemoveLiquidityRecoveryHook(address pool, address sender, uint256 exactBptAmountIn)
+        internal
+        returns (uint256[] memory amountsOut)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         uint256[] memory minAmountsOut = new uint256[](vault.getPoolTokens(pool).length);
         return vault.removeLiquidityRecovery(pool, sender, exactBptAmountIn, minAmountsOut);

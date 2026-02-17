@@ -71,9 +71,9 @@ interface IVaultMain {
      * @return amountInRaw Amount of input tokens for the swap
      * @return amountOutRaw Amount of output tokens from the swap
      */
-    function swap(
-        VaultSwapParams memory vaultSwapParams
-    ) external returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
+    function swap(VaultSwapParams memory vaultSwapParams)
+        external
+        returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
 
     /***************************************************************************
                                    Add Liquidity
@@ -89,9 +89,9 @@ interface IVaultMain {
      * @return bptAmountOut Output pool token amount
      * @return returnData Arbitrary (optional) data with an encoded response from the pool
      */
-    function addLiquidity(
-        AddLiquidityParams memory params
-    ) external returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData);
+    function addLiquidity(AddLiquidityParams memory params)
+        external
+        returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData);
 
     /***************************************************************************
                                  Remove Liquidity
@@ -108,9 +108,9 @@ interface IVaultMain {
      * @return amountsOut Actual amounts of output tokens
      * @return returnData Arbitrary (optional) data with an encoded response from the pool
      */
-    function removeLiquidity(
-        RemoveLiquidityParams memory params
-    ) external returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData);
+    function removeLiquidity(RemoveLiquidityParams memory params)
+        external
+        returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData);
 
     /*******************************************************************************
                                     Pool Information
@@ -124,10 +124,10 @@ interface IVaultMain {
      * @return tokenCount Number of tokens in the pool
      * @return index Index corresponding to the given token in the pool's token list
      */
-    function getPoolTokenCountAndIndexOfToken(
-        address pool,
-        IERC20 token
-    ) external view returns (uint256 tokenCount, uint256 index);
+    function getPoolTokenCountAndIndexOfToken(address pool, IERC20 token)
+        external
+        view
+        returns (uint256 tokenCount, uint256 index);
 
     /*******************************************************************************
                                  Balancer Pool Tokens
@@ -172,9 +172,9 @@ interface IVaultMain {
      * @return amountInRaw Amount of input tokens for the swap
      * @return amountOutRaw Amount of output tokens from the swap
      */
-    function erc4626BufferWrapOrUnwrap(
-        BufferWrapOrUnwrapParams memory params
-    ) external returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
+    function erc4626BufferWrapOrUnwrap(BufferWrapOrUnwrapParams memory params)
+        external
+        returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
 
     /*******************************************************************************
                                      Miscellaneous

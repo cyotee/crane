@@ -5,7 +5,9 @@ pragma solidity ^0.8.24;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -27,6 +29,7 @@ contract BalancerV3AuthenticationFacet is BalancerV3AuthenticationTarget, IFacet
     function facetName() public pure returns (string memory name) {
         return type(BalancerV3AuthenticationFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -45,6 +48,7 @@ contract BalancerV3AuthenticationFacet is BalancerV3AuthenticationTarget, IFacet
         interfaces = new bytes4[](1);
         interfaces[0] = type(IAuthentication).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -63,6 +67,7 @@ contract BalancerV3AuthenticationFacet is BalancerV3AuthenticationTarget, IFacet
         funcs = new bytes4[](1);
         funcs[0] = IAuthentication.getActionId.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

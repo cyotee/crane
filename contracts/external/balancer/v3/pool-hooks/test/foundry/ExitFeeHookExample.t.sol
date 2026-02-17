@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     HooksConfig,
     LiquidityManagement,
@@ -15,15 +15,17 @@ import {
     TokenConfig
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { ExitFeeHookExample } from "../../contracts/ExitFeeHookExample.sol";
+import {ExitFeeHookExample} from "../../contracts/ExitFeeHookExample.sol";
 
 contract ExitFeeHookExampleTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -55,10 +57,12 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity and enables donation)
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -75,13 +79,10 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         vm.expectEmit();
         emit ExitFeeHookExample.ExitFeeHookExampleRegistered(poolHooksContract, newPool);
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(vault, name, symbol);
@@ -89,18 +90,16 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
 
     function testRegistryWithWrongDonationFlag() public {
         address exitFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
         vm.expectRevert(ExitFeeHookExample.PoolDoesNotSupportDonation.selector);
         _registerPoolWithHook(exitFeePool, tokenConfig, false);
     }
 
     function testSuccessfulRegistry() public {
         address exitFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         _registerPoolWithHook(exitFeePool, tokenConfig, true);
 

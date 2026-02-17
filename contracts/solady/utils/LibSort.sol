@@ -15,8 +15,7 @@ library LibSort {
 
     /// @dev Sorts the array in-place with insertion sort.
     function insertionSort(uint256[] memory a) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let n := mload(a) // Length of `a`.
             mstore(a, 0) // For insertion sort's inner loop to terminate.
             let h := add(a, shl(5, n)) // High slot.
@@ -67,8 +66,7 @@ library LibSort {
 
     /// @dev Sorts the array in-place with intro-quicksort.
     function sort(uint256[] memory a) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             function swap(a_, b_) -> _a, _b {
                 _b := a_
                 _a := b_
@@ -199,8 +197,7 @@ library LibSort {
 
     /// @dev Removes duplicate elements from a ascendingly sorted memory array.
     function uniquifySorted(uint256[] memory a) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             // If the length of `a` is greater than 1.
             if iszero(lt(mload(a), 2)) {
                 let x := add(a, 0x20)
@@ -236,41 +233,25 @@ library LibSort {
 
     /// @dev Returns whether `a` contains `needle`, and the index of `needle`.
     /// `index` precedence: equal to > nearest before > nearest after.
-    function searchSorted(uint256[] memory a, uint256 needle)
-        internal
-        pure
-        returns (bool found, uint256 index)
-    {
+    function searchSorted(uint256[] memory a, uint256 needle) internal pure returns (bool found, uint256 index) {
         (found, index) = _searchSorted(a, needle, 0);
     }
 
     /// @dev Returns whether `a` contains `needle`, and the index of `needle`.
     /// `index` precedence: equal to > nearest before > nearest after.
-    function searchSorted(int256[] memory a, int256 needle)
-        internal
-        pure
-        returns (bool found, uint256 index)
-    {
+    function searchSorted(int256[] memory a, int256 needle) internal pure returns (bool found, uint256 index) {
         (found, index) = _searchSorted(_toUints(a), uint256(needle), 1 << 255);
     }
 
     /// @dev Returns whether `a` contains `needle`, and the index of `needle`.
     /// `index` precedence: equal to > nearest before > nearest after.
-    function searchSorted(address[] memory a, address needle)
-        internal
-        pure
-        returns (bool found, uint256 index)
-    {
+    function searchSorted(address[] memory a, address needle) internal pure returns (bool found, uint256 index) {
         (found, index) = _searchSorted(_toUints(a), uint160(needle), 0);
     }
 
     /// @dev Returns whether `a` contains `needle`, and the index of `needle`.
     /// `index` precedence: equal to > nearest before > nearest after.
-    function searchSorted(bytes32[] memory a, bytes32 needle)
-        internal
-        pure
-        returns (bool found, uint256 index)
-    {
+    function searchSorted(bytes32[] memory a, bytes32 needle) internal pure returns (bool found, uint256 index) {
         (found, index) = _searchSorted(_toUints(a), uint256(needle), 0);
     }
 
@@ -296,8 +277,7 @@ library LibSort {
 
     /// @dev Reverses the array in-place.
     function reverse(uint256[] memory a) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             if iszero(lt(mload(a), 2)) {
                 let s := 0x20
                 let w := not(0x1f)
@@ -331,8 +311,7 @@ library LibSort {
 
     /// @dev Returns a copy of the array.
     function copy(uint256[] memory a) internal pure returns (uint256[] memory result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := mload(0x40)
             let end := add(add(result, 0x20), shl(5, mload(a)))
             let o := result
@@ -362,8 +341,7 @@ library LibSort {
 
     /// @dev Returns whether the array is sorted in ascending order.
     function isSorted(uint256[] memory a) internal pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -379,8 +357,7 @@ library LibSort {
 
     /// @dev Returns whether the array is sorted in ascending order.
     function isSorted(int256[] memory a) internal pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -406,8 +383,7 @@ library LibSort {
 
     /// @dev Returns whether the array is strictly ascending (sorted and uniquified).
     function isSortedAndUniquified(uint256[] memory a) internal pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -423,8 +399,7 @@ library LibSort {
 
     /// @dev Returns whether the array is strictly ascending (sorted and uniquified).
     function isSortedAndUniquified(int256[] memory a) internal pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -450,91 +425,55 @@ library LibSort {
 
     /// @dev Returns the sorted set difference of `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function difference(uint256[] memory a, uint256[] memory b)
-        internal
-        pure
-        returns (uint256[] memory c)
-    {
+    function difference(uint256[] memory a, uint256[] memory b) internal pure returns (uint256[] memory c) {
         c = _difference(a, b, 0);
     }
 
     /// @dev Returns the sorted set difference between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function difference(int256[] memory a, int256[] memory b)
-        internal
-        pure
-        returns (int256[] memory c)
-    {
+    function difference(int256[] memory a, int256[] memory b) internal pure returns (int256[] memory c) {
         c = _toInts(_difference(_toUints(a), _toUints(b), 1 << 255));
     }
 
     /// @dev Returns the sorted set difference between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function difference(address[] memory a, address[] memory b)
-        internal
-        pure
-        returns (address[] memory c)
-    {
+    function difference(address[] memory a, address[] memory b) internal pure returns (address[] memory c) {
         c = _toAddresses(_difference(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Returns the sorted set difference between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function difference(bytes32[] memory a, bytes32[] memory b)
-        internal
-        pure
-        returns (bytes32[] memory c)
-    {
+    function difference(bytes32[] memory a, bytes32[] memory b) internal pure returns (bytes32[] memory c) {
         c = _toBytes32s(_difference(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Returns the sorted set intersection between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function intersection(uint256[] memory a, uint256[] memory b)
-        internal
-        pure
-        returns (uint256[] memory c)
-    {
+    function intersection(uint256[] memory a, uint256[] memory b) internal pure returns (uint256[] memory c) {
         c = _intersection(a, b, 0);
     }
 
     /// @dev Returns the sorted set intersection between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function intersection(int256[] memory a, int256[] memory b)
-        internal
-        pure
-        returns (int256[] memory c)
-    {
+    function intersection(int256[] memory a, int256[] memory b) internal pure returns (int256[] memory c) {
         c = _toInts(_intersection(_toUints(a), _toUints(b), 1 << 255));
     }
 
     /// @dev Returns the sorted set intersection between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function intersection(address[] memory a, address[] memory b)
-        internal
-        pure
-        returns (address[] memory c)
-    {
+    function intersection(address[] memory a, address[] memory b) internal pure returns (address[] memory c) {
         c = _toAddresses(_intersection(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Returns the sorted set intersection between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function intersection(bytes32[] memory a, bytes32[] memory b)
-        internal
-        pure
-        returns (bytes32[] memory c)
-    {
+    function intersection(bytes32[] memory a, bytes32[] memory b) internal pure returns (bytes32[] memory c) {
         c = _toBytes32s(_intersection(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Returns the sorted set union of `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function union(uint256[] memory a, uint256[] memory b)
-        internal
-        pure
-        returns (uint256[] memory c)
-    {
+    function union(uint256[] memory a, uint256[] memory b) internal pure returns (uint256[] memory c) {
         c = _union(a, b, 0);
     }
 
@@ -546,29 +485,20 @@ library LibSort {
 
     /// @dev Returns the sorted set union between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function union(address[] memory a, address[] memory b)
-        internal
-        pure
-        returns (address[] memory c)
-    {
+    function union(address[] memory a, address[] memory b) internal pure returns (address[] memory c) {
         c = _toAddresses(_union(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Returns the sorted set union between `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function union(bytes32[] memory a, bytes32[] memory b)
-        internal
-        pure
-        returns (bytes32[] memory c)
-    {
+    function union(bytes32[] memory a, bytes32[] memory b) internal pure returns (bytes32[] memory c) {
         c = _toBytes32s(_union(_toUints(a), _toUints(b), 0));
     }
 
     /// @dev Cleans the upper 96 bits of the addresses.
     /// In case `a` is produced via assembly and might have dirty upper bits.
     function clean(address[] memory a) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let addressMask := shr(96, not(0))
             for { let end := add(a, shl(5, mload(a))) } iszero(eq(a, end)) {} {
                 a := add(a, 0x20)
@@ -579,8 +509,7 @@ library LibSort {
 
     /// @dev Sorts and uniquifies `keys`. Updates `values` with the grouped sums by key.
     function groupSum(uint256[] memory keys, uint256[] memory values) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             function mswap(i_, j_) {
                 let t_ := mload(i_)
                 mstore(i_, mload(j_))
@@ -655,8 +584,7 @@ library LibSort {
 
     /// @dev Returns if `a` has any duplicate. Does NOT mutate `a`. `O(n)`.
     function hasDuplicate(uint256[] memory a) internal pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             function p(i_, x_) -> _y {
                 _y := or(shr(i_, x_), x_)
             }
@@ -711,16 +639,14 @@ library LibSort {
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(int256[] memory a) private pure returns (uint256[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(address[] memory a) private pure returns (uint256[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             // As any address written to memory will have the upper 96 bits
             // of the word zeroized (as per Solidity spec), we can directly
             // compare these addresses as if they are whole uint256 words.
@@ -730,32 +656,28 @@ library LibSort {
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(bytes32[] memory a) private pure returns (uint256[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an int array.
     function _toInts(uint256[] memory a) private pure returns (int256[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an address array.
     function _toAddresses(uint256[] memory a) private pure returns (address[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an bytes32 array.
     function _toBytes32s(uint256[] memory a) private pure returns (bytes32[] memory casted) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             casted := a
         }
     }
@@ -763,8 +685,7 @@ library LibSort {
     /// @dev Converts an array of signed integers to unsigned
     /// integers suitable for sorting or vice versa.
     function _flipSign(int256[] memory a) private pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let q := shl(255, 1)
             for { let i := add(a, shl(5, mload(a))) } iszero(eq(a, i)) {} {
                 mstore(i, add(mload(i), q))
@@ -780,8 +701,7 @@ library LibSort {
         pure
         returns (bool found, uint256 index)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let w := not(0)
             let l := 1
             let h := mload(a)
@@ -813,8 +733,7 @@ library LibSort {
         pure
         returns (uint256[] memory c)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))
@@ -855,8 +774,7 @@ library LibSort {
         pure
         returns (uint256[] memory c)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))
@@ -887,13 +805,8 @@ library LibSort {
 
     /// @dev Returns the sorted set union of `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
-    function _union(uint256[] memory a, uint256[] memory b, uint256 signed)
-        private
-        pure
-        returns (uint256[] memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function _union(uint256[] memory a, uint256[] memory b, uint256 signed) private pure returns (uint256[] memory c) {
+        assembly ('memory-safe') {
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))

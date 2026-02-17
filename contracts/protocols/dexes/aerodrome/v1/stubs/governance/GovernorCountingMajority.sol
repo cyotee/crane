@@ -44,9 +44,12 @@ abstract contract GovernorCountingMajority is GovernorSimple {
     /**
      * @dev Accessor to the internal vote counts.
      */
-    function proposalVotes(
-        uint256 proposalId
-    ) public view virtual returns (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes) {
+    function proposalVotes(uint256 proposalId)
+        public
+        view
+        virtual
+        returns (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes)
+    {
         ProposalVote storage proposalVote = _proposalVotes[proposalId];
         return (proposalVote.againstVotes, proposalVote.forVotes, proposalVote.abstainVotes);
     }
@@ -77,7 +80,11 @@ abstract contract GovernorCountingMajority is GovernorSimple {
         uint8 support,
         uint256 weight,
         bytes memory // params
-    ) internal virtual override {
+    )
+        internal
+        virtual
+        override
+    {
         ProposalVote storage proposalVote = _proposalVotes[proposalId];
 
         require(!proposalVote.hasVoted[tokenId], "GovernorVotingSimple: vote already cast");

@@ -1,0 +1,411 @@
+import { ErrorCode } from "@ethersproject/logger";
+import { TransactionRequest, TransactionResponse } from "@ethersproject/providers";
+import { loggerFactory, RedstoneCommon, RedstoneLogger, Tx } from "@redstone-finance/utils";
+import { providers, utils } from "ethers";
+import _ from "lodash";
+import { EthersError, isEthersError } from "../common";
+import { AuctionModelGasEstimator } from "./AuctionModelGasEstimator";
+import {
+  RewardsPerBlockAggregationAlgorithm,
+  type DeliveryManTx,
+  type FeeStructure,
+  type TxDeliveryOpts,
+  type TxDeliveryOptsValidated,
+} from "./common";
+import { CHAIN_ID_TO_GAS_ORACLE } from "./CustomGasOracles";
+import { Eip1559GasEstimatorV1 } from "./Eip1559GasEstimatorV1";
+import { Eip1559GasEstimatorV2 } from "./Eip1559GasEstimatorV2";
+import { GasEstimator } from "./GasEstimator";
+import { GasLimitEstimator } from "./GasLimitEstimator";
+import { SplitTxWaitingStrategy } from "./SplitTxWaitingStrategy";
+import { AllocatedNonce, TxNonceCoordinator } from "./TxNonceCoordinator";
+import { TxWaitingStrategy } from "./TxWaitingStrategy";
+
+export type ContractOverrides = {
+  nonce: number;
+  gasLimit: number;
+} & FeeStructure;
+
+enum TransactionBroadcastErrorResult {
+  AlreadyDelivered,
+  Underpriced,
+  UnknownError,
+  InsufficientFunds,
+  AlreadyKnown,
+}
+
+const logger = loggerFactory("TxDelivery");
+
+export const DEFAULT_TX_DELIVERY_OPTS = {
+  isAuctionModel: false,
+  maxAttempts: 8,
+  multiplier: 1.4, //  1.4 ** 5 => 5.24 max scaler
+  gasLimitMultiplier: 1.2,
+  percentileOfPriorityFee: 50,
+  isEIP1559V2Estimator: false,
+  rewardsPerBlockAggregationAlgorithm: RewardsPerBlockAggregationAlgorithm.Max,
+  twoDimensionalFees: false,
+  gasOracleTimeout: 5_000,
+  forceDisableCustomGasOracle: false,
+  numberOfBlocksForFeeHistory: 2,
+  newestBlockForFeeHistory: "pending",
+  fastBroadcastMode: false,
+  txNonceStaleThresholdMs: 10_000,
+  minTxDeliveryTimeMs: 0,
+  splitWaitingForTxRetries: 0,
+  logger: logger.log.bind(logger) as (message: unknown) => void,
+};
+
+export type TxDeliverySigner = {
+  signTransaction: (tx: TransactionRequest) => Promise<string>;
+  getAddress: () => Promise<string>;
+};
+
+export class TxDelivery {
+  static repeatLogStart?: number;
+  static repeatCount = 0;
+
+  private readonly opts: TxDeliveryOptsValidated;
+  private readonly feeEstimator: GasEstimator<FeeStructure>;
+  private readonly gasLimitEstimator: GasLimitEstimator;
+  private readonly txWaitingStrategy: TxWaitingStrategy;
+  attempt = 1;
+
+  constructor(
+    opts: TxDeliveryOpts,
+    private readonly signer: TxDeliverySigner,
+    private readonly provider: providers.JsonRpcProvider,
+    private readonly txNonceCoordinator: TxNonceCoordinator,
+    private readonly deferredCallData?: () => Promise<string>,
+    private readonly allocatedNonce?: AllocatedNonce
+  ) {
+    TxDelivery.repeatLogStart ??= Date.now();
+    this.opts = _.merge({ ...DEFAULT_TX_DELIVERY_OPTS }, opts);
+    this.overridePercentileIfProvided(opts);
+    this.feeEstimator = this.opts.isAuctionModel
+      ? new AuctionModelGasEstimator(this.opts)
+      : this.opts.isEIP1559V2Estimator
+        ? new Eip1559GasEstimatorV2(this.opts)
+        : new Eip1559GasEstimatorV1(this.opts);
+    this.gasLimitEstimator = new GasLimitEstimator(this.opts);
+    this.txWaitingStrategy = new (
+      (opts.splitWaitingForTxRetries ?? 0) > 0 ? SplitTxWaitingStrategy : TxWaitingStrategy
+    )(this.opts, (tx) => this.hasNonceIncreased(tx));
+  }
+
+  /** Returns undefined if nonce of sending account was bumped, by different process */
+  public async deliver(call: Tx.TxDeliveryCall): Promise<TransactionResponse | undefined> {
+    RedstoneCommon.assert(
+      this.attempt === 1,
+      "TxDelivery.deliver can be called only once per instance"
+    );
+
+    let tx = await this.prepareTransactionRequest(call);
+    if (this.getNonceAttempt() > 0) {
+      tx = await this.updateTxParamsForNextAttempt(tx);
+    }
+
+    let result: TransactionResponse | undefined = undefined;
+
+    for (this.attempt = 1; this.attempt <= this.opts.maxAttempts; this.attempt++) {
+      this.logCurrentAttempt(tx);
+      try {
+        result = await this.signAndSendTx(tx);
+      } catch (ethersError) {
+        const broadcastErrorResult = this.handleTransactionBroadcastError(
+          ethersError,
+          result,
+          tx.nonce
+        );
+
+        switch (broadcastErrorResult) {
+          case TransactionBroadcastErrorResult.AlreadyKnown:
+            break;
+          case TransactionBroadcastErrorResult.AlreadyDelivered:
+            return result;
+          case TransactionBroadcastErrorResult.Underpriced:
+            tx = await this.updateTxParamsForNextAttempt(tx);
+            // skip sleeping
+            continue;
+          case TransactionBroadcastErrorResult.InsufficientFunds:
+            this.opts.logger(
+              `Aborting delivery due to insufficient funds. error=${RedstoneCommon.stringifyError(
+                ethersError
+              )}`
+            );
+            throw ethersError;
+          default:
+            this.opts.logger(
+              `Failed to delivery transaction with unknown error. Aborting delivery. error=${RedstoneCommon.stringifyError(
+                ethersError
+              )}`
+            );
+            throw ethersError;
+        }
+      }
+
+      if (this.opts.fastBroadcastMode) {
+        return result;
+      }
+
+      try {
+        await this.txWaitingStrategy.waitForTx(tx);
+        return result;
+      } catch {
+        this.opts.logger("Trying with new fees...");
+        tx = await this.updateTxParamsForNextAttempt(tx);
+      }
+    }
+
+    throw new Error(`Failed to deliver transaction after ${this.opts.maxAttempts} attempts`);
+  }
+
+  private logCurrentAttempt(tx: DeliveryManTx) {
+    let feesInfo: string;
+    if (tx.type === 0) {
+      feesInfo = `gasPrice=${tx.gasPrice}`;
+    } else {
+      feesInfo = `maxFeePerGas=${tx.maxFeePerGas} maxPriorityFeePerGas=${tx.maxPriorityFeePerGas}`;
+    }
+    if (this.attempt > 1) {
+      TxDelivery.repeatCount++;
+    }
+
+    const repeatsFactor = `${((TxDelivery.repeatCount * 1000) / (Date.now() - TxDelivery.repeatLogStart!)).toFixed(4)}`;
+    this.opts.logger(
+      `Trying to delivery transaction attempt=${this.attempt}/${this.opts.maxAttempts} txNonce=${tx.nonce} gasLimit=${tx.gasLimit} ${feesInfo} [repeatsFactor: ${repeatsFactor} txs per second]`
+    );
+  }
+
+  private async signAndSendTx(tx: DeliveryManTx): Promise<TransactionResponse> {
+    const signedTx = await this.signer.signTransaction(tx);
+    const result = await this.provider.sendTransaction(signedTx);
+    this.txNonceCoordinator.registerPendingTx(tx.nonce, result.hash, this.getNonceAttempt());
+    this.opts.logger(`Transaction ${result.hash} broadcasted successfully`);
+    return result;
+  }
+
+  private getNonceAttempt(): number {
+    return this.allocatedNonce?.attempt ?? 0;
+  }
+
+  private getAttemptFactor(): number {
+    return this.attempt + this.getNonceAttempt();
+  }
+
+  private async hasNonceIncreased(tx: DeliveryManTx): Promise<boolean> {
+    const currentNonce = await this.txNonceCoordinator.getNextNonceFromChain();
+    if (currentNonce > tx.nonce) {
+      // transaction was already delivered because nonce increased
+      this.opts.logger(`Transaction mined, nonce changed: ${tx.nonce} => ${currentNonce}`);
+
+      return true;
+    } else {
+      throw new Error(`Transaction was not delivered yet, account_nonce=${currentNonce}`);
+    }
+  }
+
+  private handleTransactionBroadcastError(
+    ethersError: unknown,
+    result: TransactionResponse | undefined,
+    nonce: number
+  ) {
+    RedstoneCommon.assert(isEthersError(ethersError), "Unknown non ethers error");
+
+    if (TxDelivery.isAlreadyKnownError(ethersError)) {
+      this.opts.logger(`Transaction ${result?.hash} already known, nonce: ${nonce}`);
+      return TransactionBroadcastErrorResult.AlreadyKnown;
+    } else if (TxDelivery.isNonceExpiredError(ethersError)) {
+      // if not by us, then it was delivered by someone else
+      if (!result) {
+        this.opts.logger(
+          `Transaction with same nonce ${nonce} was delivered by someone else originalError=${RedstoneCommon.stringifyError(ethersError)}`
+        );
+        return TransactionBroadcastErrorResult.AlreadyDelivered;
+      } else {
+        // it means that in meantime between check if transaction is delivered and sending new transaction
+        // previous transaction was already delivered by (maybe) us
+        this.opts.logger(
+          `Nonce expired error: Transaction hash=${result.hash} nonce=${nonce} mined originalError=${RedstoneCommon.stringifyError(ethersError)}`
+        );
+        return TransactionBroadcastErrorResult.AlreadyDelivered;
+      }
+      // if underpriced then bump fee and skip sleeping
+    } else if (TxDelivery.isUnderpricedError(ethersError)) {
+      this.opts.logger(
+        `Underpriced error occurred, trying with scaled fees without sleep originalError=${RedstoneCommon.stringifyError(ethersError)}`
+      );
+      return TransactionBroadcastErrorResult.Underpriced;
+    } else if (TxDelivery.isInsufficientFundsError(ethersError)) {
+      this.opts.logger(
+        `Insufficient funds error occurred, updater doesn't have enough tokens originalError=${RedstoneCommon.stringifyError(ethersError)}`
+      );
+      return TransactionBroadcastErrorResult.InsufficientFunds;
+    }
+
+    return TransactionBroadcastErrorResult.UnknownError;
+  }
+
+  private async updateTxParamsForNextAttempt(tx: DeliveryManTx): Promise<DeliveryManTx> {
+    const gasEstimateTx = Tx.convertToTxDeliveryCall(tx);
+    const [newFees, newGasLimit, newCalldata] = await logPerf(
+      () =>
+        Promise.all([
+          this.getFees(this.getAttemptFactor()),
+          this.gasLimitEstimator.getGasLimit(this.provider, gasEstimateTx),
+          this.resolveTxDeliveryCallData(gasEstimateTx),
+        ]),
+      "updateTxParamsForNextAttempt",
+      logger
+    );
+
+    return {
+      ...tx,
+      ...this.feeEstimator.scaleFees(newFees, this.getAttemptFactor()),
+      gasLimit: this.gasLimitEstimator.scaleGasLimit(newGasLimit, this.getAttemptFactor()),
+      data: newCalldata,
+    };
+  }
+
+  async prepareTransactionRequest(call: Tx.TxDeliveryCall): Promise<DeliveryManTx> {
+    const [currentNonce, fees, gasLimit, network] = await logPerf(
+      () =>
+        Promise.all([
+          this.allocatedNonce?.nonce ??
+            logPerf(
+              () => this.txNonceCoordinator.getNextNonceFromChain(),
+              "getNextNonceFromChain",
+              logger
+            ),
+          logPerf(() => this.getFees(0), "getFees", logger),
+          logPerf(
+            () =>
+              this.gasLimitEstimator.getGasLimit(this.provider, Tx.convertToTxDeliveryCall(call)),
+            "getGasLimit",
+            logger
+          ),
+          logPerf(() => this.provider.getNetwork(), "getNetwork", logger),
+        ]),
+      "prepareTransactionRequest",
+      logger
+    );
+
+    const { chainId } = network;
+
+    const scaledFees = this.feeEstimator.scaleFees(fees, 0);
+    const priceModelDeterminant =
+      "gasPrice" in scaledFees
+        ? { ...scaledFees, type: 0 as const }
+        : { ...scaledFees, type: 2 as const };
+
+    return {
+      ...call,
+      nonce: currentNonce,
+      chainId,
+      gasLimit,
+      ...priceModelDeterminant,
+      value: call.value ?? utils.parseEther("0").toHexString(),
+    };
+  }
+
+  private static messageContainsAny(e: { message: string }, ...messages: string[]) {
+    return messages.some((message) => e.message.includes(message));
+  }
+
+  private static isUnderpricedError(e: EthersError) {
+    return (
+      (this.messageContainsAny(e, "maxFeePerGas", "baseFeePerGas", "underpriced") ||
+        e.code === ErrorCode.REPLACEMENT_UNDERPRICED ||
+        e.code === ErrorCode.UNPREDICTABLE_GAS_LIMIT ||
+        (e.code === ErrorCode.SERVER_ERROR && this.messageContainsAny(e, "Gas limit too low"))) &&
+      !e.message.includes("VM Exception while processing transaction")
+    );
+  }
+
+  private static isNonceExpiredError(e: EthersError) {
+    return (
+      this.messageContainsAny(
+        e,
+        "nonce has already been used",
+        "invalid nonce",
+        "invalid sequence"
+      ) || e.code === ErrorCode.NONCE_EXPIRED
+    );
+  }
+
+  private static isAlreadyKnownError(e: EthersError) {
+    return (
+      e.code === ErrorCode.SERVER_ERROR &&
+      this.messageContainsAny(e, "already known", "existing transaction had higher priority")
+    );
+  }
+
+  private static isInsufficientFundsError(e: EthersError) {
+    return e.code === ErrorCode.INSUFFICIENT_FUNDS;
+  }
+
+  private async getFees(attempt: number = 0): Promise<FeeStructure> {
+    // some gas oracles relies on this fallback mechanism
+    try {
+      return await this.getFeeFromGasOracle(this.provider, attempt);
+    } catch {
+      return await this.feeEstimator.getFees(this.provider, attempt);
+    }
+  }
+
+  private async getFeeFromGasOracle(
+    provider: providers.JsonRpcProvider,
+    attempt: number
+  ): Promise<FeeStructure> {
+    const { chainId } = await provider.getNetwork();
+    const gasOracle = CHAIN_ID_TO_GAS_ORACLE[chainId];
+    if (!gasOracle) {
+      throw new Error(`Gas oracle is not defined for ${chainId}`);
+    }
+
+    if (this.opts.forceDisableCustomGasOracle) {
+      throw new Error(`Gas oracle was forcefully disabled`);
+    }
+
+    try {
+      return await RedstoneCommon.timeout(
+        gasOracle(this.opts, attempt),
+        this.opts.gasOracleTimeout,
+        `Custom gas oracle timeout after ${this.opts.gasOracleTimeout}`
+      );
+    } catch (e) {
+      logger.error(
+        `Custom gas oracle failed. Will fallback to feeEstimator. error=${RedstoneCommon.stringifyError(e)}`
+      );
+      throw e;
+    }
+  }
+
+  async resolveTxDeliveryCallData(tx: Tx.TxDeliveryCall): Promise<string> {
+    if (this.deferredCallData) {
+      return await this.deferredCallData();
+    }
+    return tx.data;
+  }
+  /**
+   * Override percentileOfPriorityFee if provided to avoid _.merge's array merging behavior.
+   * Without this, _.merge would merge arrays element-by-element
+   */
+  private overridePercentileIfProvided(opts: TxDeliveryOpts): void {
+    if (opts.percentileOfPriorityFee !== undefined) {
+      this.opts.percentileOfPriorityFee = opts.percentileOfPriorityFee;
+    }
+  }
+}
+
+function logPerf<T>(
+  fn: () => Promise<T>,
+  label: string,
+  originalLogger: RedstoneLogger
+): Promise<T> {
+  const startTime = performance.now();
+  return fn().finally(() => {
+    const duration = performance.now() - startTime;
+    originalLogger.debug(`${label}: ${duration}[ms]`, { duration });
+  });
+}

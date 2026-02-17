@@ -71,7 +71,6 @@ contract MultiStepOwnableHandler is IHandler {
     }
     // end::constructor(IMultiStepOwnable)[]
 
-
     // tag::selectors()[]
     /**
      * @notice Returns the exact handler function selectors registered for invariant fuzzing.
@@ -222,6 +221,7 @@ contract MultiStepOwnableHandler is IHandler {
     }
     // end::wrongGuy_acceptOwnershipTransfer(uint256)[]
 }
+
 // end::MultiStepOwnableHandler[]
 
 // tag::TestBase_IMultiStepOwnable[]
@@ -242,7 +242,6 @@ abstract contract TestBase_IMultiStepOwnable is StdInvariant, Test {
         handler = new MultiStepOwnableHandler(ownable);
 
         targetContract(address(handler));
-
 
         // Register only the explicit handler selectors for fuzzing (avoid fuzzing SUT directly)
         targetSelector(FuzzSelector({addr: address(handler), selectors: handler.selectors()}));
@@ -282,5 +281,4 @@ abstract contract TestBase_IMultiStepOwnable is StdInvariant, Test {
         }
     }
 }
-
 // end::TestBase_IMultiStepOwnable[]

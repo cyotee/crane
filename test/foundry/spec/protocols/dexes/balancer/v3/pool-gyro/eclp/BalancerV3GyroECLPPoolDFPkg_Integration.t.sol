@@ -15,9 +15,16 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -33,10 +40,18 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3GyroECLPPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3GyroECLPPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   DFPkg                                    */
@@ -66,11 +81,25 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
 
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
@@ -235,13 +264,7 @@ contract BalancerV3GyroECLPPoolDFPkg_Integration_Test is CraneTest {
     }
 
     function _createECLPParams() internal pure returns (IGyroECLPPool.EclpParams memory) {
-        return IGyroECLPPool.EclpParams({
-            alpha: ALPHA,
-            beta: BETA,
-            c: C,
-            s: S,
-            lambda: LAMBDA
-        });
+        return IGyroECLPPool.EclpParams({alpha: ALPHA, beta: BETA, c: C, s: S, lambda: LAMBDA});
     }
 
     function _createDerivedECLPParams() internal pure returns (IGyroECLPPool.DerivedEclpParams memory) {
@@ -249,12 +272,10 @@ contract BalancerV3GyroECLPPoolDFPkg_Integration_Test is CraneTest {
         // Source: balancer-v3-monorepo/pkg/pool-gyro/test/foundry/GyroECLPMath.t.sol
         return IGyroECLPPool.DerivedEclpParams({
             tauAlpha: IGyroECLPPool.Vector2({
-                x: -74906290317688162800819482607385924041,
-                y: 66249888081733516165500078448108672943
+                x: -74906290317688162800819482607385924041, y: 66249888081733516165500078448108672943
             }),
             tauBeta: IGyroECLPPool.Vector2({
-                x: 61281617359500229793875202705993079582,
-                y: 79022549780450643715972436171311055791
+                x: 61281617359500229793875202705993079582, y: 79022549780450643715972436171311055791
             }),
             u: 36232449191667733617897641246115478,
             v: 79022548876385493056482320848126240168,
@@ -284,7 +305,7 @@ contract BalancerV3GyroECLPPoolDFPkg_Integration_Test is CraneTest {
         pkg.calcSalt(invalidArgs);
     }
 
-    function test_calcAddress_isTokenOrderIndependent() public {
+    function test_calcAddress_isTokenOrderIndependent() public view {
         TokenConfig[] memory configsAB = _createTokenConfigPair(address(tokenA), address(tokenB));
         TokenConfig[] memory configsBA = _createTokenConfigPair(address(tokenB), address(tokenA));
 
@@ -378,12 +399,11 @@ contract BalancerV3GyroECLPPoolDFPkg_Integration_Test is CraneTest {
         return configs;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

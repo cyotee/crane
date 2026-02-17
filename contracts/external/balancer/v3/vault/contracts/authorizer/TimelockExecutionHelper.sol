@@ -10,7 +10,7 @@ import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { TimelockAuthorizer } from "./TimelockAuthorizer.sol";
+import {TimelockAuthorizer} from "./TimelockAuthorizer.sol";
 
 /**
  * @dev Helper contract that is used by the TimelockAuthorizer to execute scheduled executions.

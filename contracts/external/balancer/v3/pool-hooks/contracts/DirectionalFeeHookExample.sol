@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     TokenConfig,
@@ -12,9 +12,9 @@ import {
     HookFlags
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
 /**
  * @notice Increase the swap fee percentage on trades that move pools away from equilibrium.
@@ -44,9 +44,7 @@ contract DirectionalFeeHookExample is BaseHooks, VaultGuard {
      * @param pool The pool on which the hook was registered
      */
     event DirectionalFeeHookExampleRegistered(
-        address indexed hooksContract,
-        address indexed factory,
-        address indexed pool
+        address indexed hooksContract, address indexed factory, address indexed pool
     );
 
     constructor(IVault vault, address allowedStablePoolFactory) VaultGuard(vault) {
@@ -55,12 +53,12 @@ contract DirectionalFeeHookExample is BaseHooks, VaultGuard {
     }
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address factory,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address factory, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         emit DirectionalFeeHookExampleRegistered(address(this), factory, pool);
 
         // This hook only allows pools deployed by `_allowedStablePoolFactory` to register it.
@@ -79,13 +77,10 @@ contract DirectionalFeeHookExample is BaseHooks, VaultGuard {
         uint256 staticSwapFeePercentage
     ) public view override onlyVault returns (bool, uint256) {
         // Get pool balances
-        (, , , uint256[] memory lastBalancesLiveScaled18) = _vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory lastBalancesLiveScaled18) = _vault.getPoolTokenInfo(pool);
 
         uint256 calculatedSwapFeePercentage = _calculatedExpectedSwapFeePercentage(
-            lastBalancesLiveScaled18,
-            params.amountGivenScaled18,
-            params.indexIn,
-            params.indexOut
+            lastBalancesLiveScaled18, params.amountGivenScaled18, params.indexIn, params.indexOut
         );
 
         // Charge the static or calculated fee, whichever is greater.

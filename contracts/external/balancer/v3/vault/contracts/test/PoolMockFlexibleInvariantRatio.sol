@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { PoolMock } from "./PoolMock.sol";
-import { BalancerPoolToken } from "../BalancerPoolToken.sol";
+import {PoolMock} from "./PoolMock.sol";
+import {BalancerPoolToken} from "../BalancerPoolToken.sol";
 
 contract PoolMockFlexibleInvariantRatio is PoolMock {
     // Default min / max invariant ratio.

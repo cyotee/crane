@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { IReClammPoolExtension } from "../interfaces/IReClammPoolExtension.sol";
-import { ReClammPoolParams } from "../interfaces/IReClammPool.sol";
-import { ReClammMath, a } from "../lib/ReClammMath.sol";
-import { ReClammPool } from "../ReClammPool.sol";
+import {IReClammPoolExtension} from "../interfaces/IReClammPoolExtension.sol";
+import {ReClammPoolParams} from "../interfaces/IReClammPool.sol";
+import {ReClammMath, a} from "../lib/ReClammMath.sol";
+import {ReClammPool} from "../ReClammPool.sol";
 
 contract ReClammPoolMock is ReClammPool {
     using SafeCast for uint256;
@@ -61,9 +61,11 @@ contract ReClammPoolMock is ReClammPool {
         return _computeInitialBalanceRatioScaled18(rateA, rateB);
     }
 
-    function computeCurrentVirtualBalances(
-        uint256[] memory balancesScaled18
-    ) external view returns (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) {
+    function computeCurrentVirtualBalances(uint256[] memory balancesScaled18)
+        external
+        view
+        returns (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed)
+    {
         return _computeCurrentVirtualBalances(balancesScaled18);
     }
 

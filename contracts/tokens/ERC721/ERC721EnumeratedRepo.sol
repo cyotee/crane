@@ -64,13 +64,7 @@ library ERC721EnumeratedRepo {
         uint256 tokenId,
         bytes memory data
     ) internal {
-        ERC721Repo._safeTransferFrom(
-            layout_, 
-            from, 
-            to, 
-            tokenId, 
-            data
-        );
+        ERC721Repo._safeTransferFrom(layout_, from, to, tokenId, data);
         enumLayout_.ownedIds[from]._remove(tokenId);
         enumLayout_.ownedIds[to]._add(tokenId);
     }

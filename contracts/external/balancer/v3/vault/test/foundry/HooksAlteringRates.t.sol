@@ -4,21 +4,23 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IPoolLiquidity } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolHooksMock } from "../../contracts/test/PoolHooksMock.sol";
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolHooksMock} from "../../contracts/test/PoolHooksMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract HooksAlteringRatesTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -46,10 +48,8 @@ contract HooksAlteringRatesTest is BaseVaultTest {
         rateProvider = deployRateProviderMock();
         rateProviders[0] = rateProvider;
 
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20(),
-            rateProviders
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20(), rateProviders);
 
         newPool = address(deployPoolMock(IVault(address(vault)), name, symbol));
         vm.label(newPool, "pool");
@@ -94,10 +94,8 @@ contract HooksAlteringRatesTest is BaseVaultTest {
         IRateProvider[] memory rateProviders = new IRateProvider[](2);
         rateProviders[0] = rateProvider;
 
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20(),
-            rateProviders
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20(), rateProviders);
 
         PoolMock newPool = deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL");
         vm.label(address(newPool), "new-pool");
@@ -179,11 +177,7 @@ contract HooksAlteringRatesTest is BaseVaultTest {
         );
 
         router.addLiquidityUnbalanced(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_BPT_AMOUNT_ROUND_DOWN - 1,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_BPT_AMOUNT_ROUND_DOWN - 1, false, bytes("")
         );
     }
 
@@ -199,11 +193,7 @@ contract HooksAlteringRatesTest is BaseVaultTest {
 
         vm.prank(alice);
         router.addLiquidityUnbalanced(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_BPT_AMOUNT_ROUND_DOWN,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_BPT_AMOUNT_ROUND_DOWN, false, bytes("")
         );
 
         uint256[] memory expectedAmountsOut = new uint256[](2);

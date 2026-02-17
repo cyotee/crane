@@ -6,9 +6,12 @@ import {
     IBalancerContractRegistry,
     ContractType
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @notice On-chain registry of standard Balancer contracts.
@@ -39,6 +42,8 @@ import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/v
  * contract for the Vault address, so it doesn't need to be a type.
  */
 contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthentication {
+    using BetterEfficientHashLib for bytes;
+
     // ContractId is the hash of contract name. Names must be unique (cannot have the same name with different types).
     mapping(bytes32 contractId => address addr) private _contractRegistry;
 
@@ -114,11 +119,10 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
      */
 
     /// @inheritdoc IBalancerContractRegistry
-    function registerBalancerContract(
-        ContractType contractType,
-        string memory contractName,
-        address contractAddress
-    ) external authenticate {
+    function registerBalancerContract(ContractType contractType, string memory contractName, address contractAddress)
+        external
+        authenticate
+    {
         // Ensure arguments are valid.
         if (contractAddress == address(0)) {
             revert ZeroContractAddress();
@@ -154,11 +158,7 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
 
         // Record the address as active. The `isActive` flag enables differentiating between unregistered and deprecated
         // addresses.
-        _contractInfo[contractAddress] = ContractInfo({
-            contractType: contractType,
-            isRegistered: true,
-            isActive: true
-        });
+        _contractInfo[contractAddress] = ContractInfo({contractType: contractType, isRegistered: true, isActive: true});
 
         emit BalancerContractRegistered(contractType, contractName, contractAddress);
     }
@@ -217,10 +217,10 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
     }
 
     /// @inheritdoc IBalancerContractRegistry
-    function addOrUpdateBalancerContractAlias(
-        string memory contractAlias,
-        address contractAddress
-    ) external authenticate {
+    function addOrUpdateBalancerContractAlias(string memory contractAlias, address contractAddress)
+        external
+        authenticate
+    {
         // Ensure arguments are valid.
         if (bytes(contractAlias).length == 0) {
             revert InvalidContractAlias();
@@ -259,10 +259,11 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
         return _isActiveBalancerContract(contractType, contractAddress);
     }
 
-    function _isActiveBalancerContract(
-        ContractType contractType,
-        address contractAddress
-    ) internal view returns (bool) {
+    function _isActiveBalancerContract(ContractType contractType, address contractAddress)
+        internal
+        view
+        returns (bool)
+    {
         ContractInfo memory info = _contractInfo[contractAddress];
 
         // Ensure the address was registered as the given type - and that it's still active.
@@ -270,10 +271,11 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
     }
 
     /// @inheritdoc IBalancerContractRegistry
-    function getBalancerContract(
-        ContractType contractType,
-        string memory contractName
-    ) external view returns (address contractAddress, bool isActive) {
+    function getBalancerContract(ContractType contractType, string memory contractName)
+        external
+        view
+        returns (address contractAddress, bool isActive)
+    {
         bytes32 contractId = _getContractId(contractName);
         address registeredAddress = _contractRegistry[contractId];
 
@@ -303,6 +305,7 @@ contract BalancerContractRegistry is IBalancerContractRegistry, SingletonAuthent
     }
 
     function _getContractId(string memory contractName) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(contractName));
+        // return keccak256(abi.encodePacked(contractName));
+        return abi.encodePacked(contractName)._hash();
     }
 }

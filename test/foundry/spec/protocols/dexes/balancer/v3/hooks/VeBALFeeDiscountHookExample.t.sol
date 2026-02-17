@@ -17,7 +17,9 @@ import {
     PoolSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
@@ -25,8 +27,9 @@ import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/fo
 import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import {VeBALFeeDiscountHookExample} from
-    "@crane/contracts/protocols/dexes/balancer/v3/hooks/VeBALFeeDiscountHookExample.sol";
+import {
+    VeBALFeeDiscountHookExample
+} from "@crane/contracts/protocols/dexes/balancer/v3/hooks/VeBALFeeDiscountHookExample.sol";
 
 /**
  * @title MockVeBAL
@@ -90,19 +93,20 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
         veBALHook = address(
             new VeBALFeeDiscountHookExample(
                 IVault(address(vault)),
-                address(poolFactory),       // allowedFactory = poolFactory (mock)
-                address(mockVeBAL),         // veBAL token
-                address(router)             // trustedRouter
+                address(poolFactory), // allowedFactory = poolFactory (mock)
+                address(mockVeBAL), // veBAL token
+                address(router) // trustedRouter
             )
         );
         vm.label(veBALHook, "veBAL Fee Discount Hook");
         return veBALHook;
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "veBAL Pool";
         string memory symbol = "vBAL-POOL";
 
@@ -118,13 +122,10 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
         // because the hook's onRegister checks isPoolFromFactory()
         PoolFactoryMock(poolFactory).manualSetPoolFromFactory(newPool);
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -137,18 +138,12 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
         HooksConfig memory hooksConfig = vault.getHooksConfig(pool);
 
         assertEq(hooksConfig.hooksContract, poolHooksContract, "hooksContract is wrong");
-        assertTrue(
-            hooksConfig.shouldCallComputeDynamicSwapFee,
-            "shouldCallComputeDynamicSwapFee is false"
-        );
+        assertTrue(hooksConfig.shouldCallComputeDynamicSwapFee, "shouldCallComputeDynamicSwapFee is false");
     }
 
     function testHookFlagsSet() public view {
         HooksConfig memory hooksConfig = vault.getHooksConfig(pool);
-        assertTrue(
-            hooksConfig.shouldCallComputeDynamicSwapFee,
-            "Dynamic fee flag should be set"
-        );
+        assertTrue(hooksConfig.shouldCallComputeDynamicSwapFee, "Dynamic fee flag should be set");
     }
 
     /* ========================================================================== */
@@ -231,14 +226,9 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
 
         // Verify swap executed
         assertEq(
-            balancesBefore.bobTokens[daiIdx] - balancesAfter.bobTokens[daiIdx],
-            swapAmount,
-            "Bob DAI spent is wrong"
+            balancesBefore.bobTokens[daiIdx] - balancesAfter.bobTokens[daiIdx], swapAmount, "Bob DAI spent is wrong"
         );
-        assertTrue(
-            balancesAfter.bobTokens[usdcIdx] > balancesBefore.bobTokens[usdcIdx],
-            "Bob should receive USDC"
-        );
+        assertTrue(balancesAfter.bobTokens[usdcIdx] > balancesBefore.bobTokens[usdcIdx], "Bob should receive USDC");
     }
 
     function testSwapWithoutVeBAL() public {

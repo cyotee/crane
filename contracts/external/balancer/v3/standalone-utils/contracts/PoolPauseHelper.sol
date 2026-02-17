@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolPauseHelper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolPauseHelper.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolPauseHelper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolPauseHelper.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PoolHelperCommon } from "./PoolHelperCommon.sol";
+import {PoolHelperCommon} from "./PoolHelperCommon.sol";
 
 contract PoolPauseHelper is IPoolPauseHelper, PoolHelperCommon {
     constructor(IVault vault, address initialOwner) PoolHelperCommon(vault, initialOwner) {

@@ -6,12 +6,12 @@ import "forge-std/Test.sol";
 
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { WeightedMathMock } from "../../contracts/test/WeightedMathMock.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedMathMock} from "../../contracts/test/WeightedMathMock.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
 contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
     using FixedPoint for uint256;
@@ -71,21 +71,11 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         uint256 roundedUpAmountGiven = flipBit ? amountGiven + 1 : amountGiven;
         uint256 roundedDownAmountGiven = flipBit ? amountGiven - 1 : amountGiven;
 
-        uint256 roundedUpResult = mock.computeOutGivenExactIn(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            roundedUpAmountGiven
-        );
+        uint256 roundedUpResult =
+            mock.computeOutGivenExactIn(balanceIn, weightIn, balanceOut, weightOut, roundedUpAmountGiven);
 
-        uint256 roundedDownResult = mock.computeOutGivenExactIn(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            roundedDownAmountGiven
-        );
+        uint256 roundedDownResult =
+            mock.computeOutGivenExactIn(balanceIn, weightIn, balanceOut, weightOut, roundedDownAmountGiven);
 
         if (flipBit) {
             assertGe(roundedUpResult, standardResult, "roundedUpResult < standardResult (computeOutGivenExactIn)");
@@ -119,21 +109,11 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         uint256 roundedUpAmountGiven = flipBit ? amountGiven + 1 : amountGiven;
         uint256 roundedDownAmountGiven = flipBit ? amountGiven - 1 : amountGiven;
 
-        uint256 roundedUpResult = mock.computeInGivenExactOut(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            roundedUpAmountGiven
-        );
+        uint256 roundedUpResult =
+            mock.computeInGivenExactOut(balanceIn, weightIn, balanceOut, weightOut, roundedUpAmountGiven);
 
-        uint256 roundedDownResult = mock.computeInGivenExactOut(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            roundedDownAmountGiven
-        );
+        uint256 roundedDownResult =
+            mock.computeInGivenExactOut(balanceIn, weightIn, balanceOut, weightOut, roundedDownAmountGiven);
 
         if (flipBit) {
             assertGe(roundedUpResult, standardResult, "roundedUpResult < standardResult (computeInGivenExactOut)");
@@ -193,16 +173,12 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         _testComputeBalanceGivenOutRounding(invariantRatio, weight, currentBalance);
     }
 
-    function _testComputeBalanceGivenOutRounding(
-        uint256 invariantRatio,
-        uint256 weight,
-        uint256 currentBalance
-    ) internal pure {
-        uint256 standardNewBalance = WeightedMath.computeBalanceOutGivenInvariant(
-            currentBalance,
-            weight,
-            invariantRatio
-        );
+    function _testComputeBalanceGivenOutRounding(uint256 invariantRatio, uint256 weight, uint256 currentBalance)
+        internal
+        pure
+    {
+        uint256 standardNewBalance =
+            WeightedMath.computeBalanceOutGivenInvariant(currentBalance, weight, invariantRatio);
 
         uint256 newBalanceRoundDown = _computeBalanceOutGivenInvariantExpDown(currentBalance, weight, invariantRatio);
 
@@ -213,22 +189,22 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
     }
 
     /// @dev Same as computeBalanceOutGivenInvariant, rounding down always
-    function _computeBalanceOutGivenInvariantExpDown(
-        uint256 currentBalance,
-        uint256 weight,
-        uint256 invariantRatio
-    ) internal pure returns (uint256 newBalance) {
+    function _computeBalanceOutGivenInvariantExpDown(uint256 currentBalance, uint256 weight, uint256 invariantRatio)
+        internal
+        pure
+        returns (uint256 newBalance)
+    {
         uint256 balanceRatio = invariantRatio.powUp(FixedPoint.ONE.divDown(weight));
 
         return currentBalance.mulUp(balanceRatio);
     }
 
     /// @dev Same as computeBalanceOutGivenInvariant, rounding up always
-    function _computeBalanceOutGivenInvariantExpUp(
-        uint256 currentBalance,
-        uint256 weight,
-        uint256 invariantRatio
-    ) internal pure returns (uint256 newBalance) {
+    function _computeBalanceOutGivenInvariantExpUp(uint256 currentBalance, uint256 weight, uint256 invariantRatio)
+        internal
+        pure
+        returns (uint256 newBalance)
+    {
         uint256 balanceRatio = invariantRatio.powUp(FixedPoint.ONE.divUp(weight));
 
         return currentBalance.mulUp(balanceRatio);
@@ -366,21 +342,15 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         rate0 = bound(rate0, MIN_TEST_RATE, MAX_TEST_RATE);
         rate1 = bound(rate1, MIN_TEST_RATE, MAX_TEST_RATE);
         // Need small buffer here, otherwise the max amountOut1Scaled18 will be < MIN_SWAP_AMOUNT below.
-        balanceRaw1 = bound(
-            balanceRaw1,
-            (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO),
-            MAX_BALANCE_ROUNDING_TEST
-        );
+        balanceRaw1 =
+            bound(balanceRaw1, (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO), MAX_BALANCE_ROUNDING_TEST);
         weight0 = bound(weight0, MIN_TEST_WEIGHT, MAX_TEST_WEIGHT);
         uint256 weight1 = FixedPoint.ONE - weight0;
         uint256[] memory weights = [weight0, weight1].toMemoryArray();
 
         // Can't get more than the balance of the output token
-        amountOut1Scaled18 = bound(
-            amountOut1Scaled18,
-            MIN_SWAP_AMOUNT,
-            balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO)
-        );
+        amountOut1Scaled18 =
+            bound(amountOut1Scaled18, MIN_SWAP_AMOUNT, balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO));
 
         _testExactOut(balanceRaw0, rate0, balanceRaw1, rate1, weights, amountOut1Scaled18);
     }
@@ -396,18 +366,12 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         rate0 = bound(rate0, MIN_TEST_RATE, MAX_TEST_RATE);
         rate1 = bound(rate1, MIN_TEST_RATE, MAX_TEST_RATE);
         // Need small buffer here, otherwise the max amountOut1Scaled18 will be < MIN_SWAP_AMOUNT below.
-        balanceRaw1 = bound(
-            balanceRaw1,
-            (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO),
-            MAX_BALANCE_ROUNDING_TEST
-        );
+        balanceRaw1 =
+            bound(balanceRaw1, (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO), MAX_BALANCE_ROUNDING_TEST);
         uint256[] memory weights = [uint256(80e16), uint256(20e16)].toMemoryArray();
         // Can't get more than the balance of the output token
-        amountOut1Scaled18 = bound(
-            amountOut1Scaled18,
-            MIN_SWAP_AMOUNT,
-            balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO)
-        );
+        amountOut1Scaled18 =
+            bound(amountOut1Scaled18, MIN_SWAP_AMOUNT, balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO));
 
         _testExactOut(balanceRaw0, rate0, balanceRaw1, rate1, weights, amountOut1Scaled18);
     }
@@ -423,18 +387,12 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         rate0 = bound(rate0, MIN_TEST_RATE, MAX_TEST_RATE);
         rate1 = bound(rate1, MIN_TEST_RATE, MAX_TEST_RATE);
         // Need small buffer here, otherwise the max amountOut1Scaled18 will be < MIN_SWAP_AMOUNT below.
-        balanceRaw1 = bound(
-            balanceRaw1,
-            (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO),
-            MAX_BALANCE_ROUNDING_TEST
-        );
+        balanceRaw1 =
+            bound(balanceRaw1, (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO), MAX_BALANCE_ROUNDING_TEST);
         uint256[] memory weights = [uint256(20e16), uint256(80e16)].toMemoryArray();
         // Can't get more than the balance of the output token
-        amountOut1Scaled18 = bound(
-            amountOut1Scaled18,
-            MIN_SWAP_AMOUNT,
-            balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO)
-        );
+        amountOut1Scaled18 =
+            bound(amountOut1Scaled18, MIN_SWAP_AMOUNT, balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO));
 
         _testExactOut(balanceRaw0, rate0, balanceRaw1, rate1, weights, amountOut1Scaled18);
     }
@@ -450,18 +408,12 @@ contract WeightedMathRoundingTest is Test, WeightedPoolContractsDeployer {
         rate0 = bound(rate0, MIN_TEST_RATE, MAX_TEST_RATE);
         rate1 = bound(rate1, MIN_TEST_RATE, MAX_TEST_RATE);
         // Need small buffer here, otherwise the max amountOut1Scaled18 will be < MIN_SWAP_AMOUNT below.
-        balanceRaw1 = bound(
-            balanceRaw1,
-            (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO),
-            MAX_BALANCE_ROUNDING_TEST
-        );
+        balanceRaw1 =
+            bound(balanceRaw1, (MIN_SWAP_AMOUNT + 1).divUp(rate1).divUp(MAX_OUT_RATIO), MAX_BALANCE_ROUNDING_TEST);
         uint256[] memory weights = [uint256(50e16), uint256(50e16)].toMemoryArray();
         // Can't get more than the balance of the output token
-        amountOut1Scaled18 = bound(
-            amountOut1Scaled18,
-            MIN_SWAP_AMOUNT,
-            balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO)
-        );
+        amountOut1Scaled18 =
+            bound(amountOut1Scaled18, MIN_SWAP_AMOUNT, balanceRaw1.mulDown(rate1).mulDown(MAX_OUT_RATIO));
 
         _testExactOut(balanceRaw0, rate0, balanceRaw1, rate1, weights, amountOut1Scaled18);
     }

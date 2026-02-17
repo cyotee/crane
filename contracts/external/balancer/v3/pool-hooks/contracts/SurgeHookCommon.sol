@@ -4,16 +4,20 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { ISurgeHookCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
 /**
  * @notice This is a base contract for surge hook implementations (e.g. E-CLP, Stable).
@@ -80,12 +84,13 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
     }
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public virtual override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        virtual
+        override
+        onlyVault
+        returns (bool)
+    {
         // Initially set the max pool surge percentage to the default (can be changed by the pool swapFeeManager
         // in the future).
         _setMaxSurgeFeePercentage(pool, _defaultMaxSurgeFeePercentage);
@@ -173,12 +178,8 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
     ) public view returns (uint256 surgeFeePercentage) {
         SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
 
-        (bool isSurging, uint256 newTotalImbalance) = _isSurgingSwap(
-            params,
-            pool,
-            staticSwapFeePercentage,
-            surgeFeeData
-        );
+        (bool isSurging, uint256 newTotalImbalance) =
+            _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
 
         // surgeFee = staticFee + (maxFee - staticFee) * (pctImbalance - pctThreshold) / (1 - pctThreshold).
         //
@@ -189,12 +190,11 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
         // At 35%, the fee would be 1% + (0.95 - 0.01) * ((0.35 - 0.3)/(0.95-0.3)) = 1% + 0.94 * 0.0769 ~ 8.2%.
         // At 50% unbalanced, the fee would be 44%. At 99% unbalanced, the fee would be ~94%, very close to the maximum.
         if (isSurging) {
-            surgeFeePercentage =
-                staticSwapFeePercentage +
-                (surgeFeeData.maxSurgeFeePercentage - staticSwapFeePercentage).mulDown(
-                    (newTotalImbalance - surgeFeeData.thresholdPercentage).divDown(
-                        uint256(surgeFeeData.thresholdPercentage).complement()
-                    )
+            surgeFeePercentage = staticSwapFeePercentage
+                + (surgeFeeData.maxSurgeFeePercentage - staticSwapFeePercentage)
+                .mulDown(
+                    (newTotalImbalance - surgeFeeData.thresholdPercentage)
+                    .divDown(uint256(surgeFeeData.thresholdPercentage).complement())
                 );
         } else {
             surgeFeePercentage = staticSwapFeePercentage;
@@ -202,14 +202,14 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function isSurgingSwap(
-        PoolSwapParams calldata params,
-        address pool,
-        uint256 staticSwapFeePercentage
-    ) external view returns (bool isSurging) {
+    function isSurgingSwap(PoolSwapParams calldata params, address pool, uint256 staticSwapFeePercentage)
+        external
+        view
+        returns (bool isSurging)
+    {
         SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
 
-        (isSurging, ) = _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
+        (isSurging,) = _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
     }
 
     /***************************************************************************
@@ -237,18 +237,20 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function setMaxSurgeFeePercentage(
-        address pool,
-        uint256 newMaxSurgeSurgeFeePercentage
-    ) external withValidPercentage(newMaxSurgeSurgeFeePercentage) onlySwapFeeManagerOrGovernance(pool) {
+    function setMaxSurgeFeePercentage(address pool, uint256 newMaxSurgeSurgeFeePercentage)
+        external
+        withValidPercentage(newMaxSurgeSurgeFeePercentage)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setMaxSurgeFeePercentage(pool, newMaxSurgeSurgeFeePercentage);
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function setSurgeThresholdPercentage(
-        address pool,
-        uint256 newSurgeThresholdPercentage
-    ) external withValidPercentage(newSurgeThresholdPercentage) onlySwapFeeManagerOrGovernance(pool) {
+    function setSurgeThresholdPercentage(address pool, uint256 newSurgeThresholdPercentage)
+        external
+        withValidPercentage(newSurgeThresholdPercentage)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setSurgeThresholdPercentage(pool, newSurgeThresholdPercentage);
     }
 
@@ -256,11 +258,12 @@ abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooks, VaultGuard, Si
                                   Private Functions
     ***************************************************************************/
 
-    function _isSurging(
-        uint64 thresholdPercentage,
-        uint256 oldTotalImbalance,
-        uint256 newTotalImbalance
-    ) internal pure virtual returns (bool isSurging) {
+    function _isSurging(uint64 thresholdPercentage, uint256 oldTotalImbalance, uint256 newTotalImbalance)
+        internal
+        pure
+        virtual
+        returns (bool isSurging)
+    {
         // If we are balanced, or the balance has improved, do not surge: simply return the regular fee percentage.
         if (newTotalImbalance == 0) {
             return false;

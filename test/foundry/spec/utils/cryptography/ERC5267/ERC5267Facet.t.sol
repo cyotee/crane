@@ -79,7 +79,7 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_fieldsBitmap_correctBits() public view {
-        (bytes1 fields,,,,,, ) = harness.eip712Domain();
+        (bytes1 fields,,,,,,) = harness.eip712Domain();
 
         // 0x0f = 00001111 in binary
         // Bit 0 (0x01): name is present
@@ -101,7 +101,7 @@ contract ERC5267Facet_Test is Test {
     }
 
     function test_eip712Domain_fieldsBitmap_valueIs0x0f() public view {
-        (bytes1 fields,,,,,, ) = harness.eip712Domain();
+        (bytes1 fields,,,,,,) = harness.eip712Domain();
         assertEq(uint8(fields), 0x0f, "Fields bitmap should equal 15 (0x0f)");
     }
 
@@ -110,7 +110,7 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_name_matchesInitialized() public view {
-        (, string memory name,,,,, ) = harness.eip712Domain();
+        (, string memory name,,,,,) = harness.eip712Domain();
         assertEq(name, NAME, "Name should match initialized value");
     }
 
@@ -119,7 +119,7 @@ contract ERC5267Facet_Test is Test {
         string memory differentName = "DifferentToken";
         harness2.initialize(differentName, VERSION);
 
-        (, string memory name,,,,, ) = harness2.eip712Domain();
+        (, string memory name,,,,,) = harness2.eip712Domain();
         assertEq(name, differentName, "Name should match different initialized value");
     }
 
@@ -128,7 +128,7 @@ contract ERC5267Facet_Test is Test {
         string memory longName = "This is a very long token name that exceeds 31 bytes for ShortString storage";
         harness2.initialize(longName, VERSION);
 
-        (, string memory name,,,,, ) = harness2.eip712Domain();
+        (, string memory name,,,,,) = harness2.eip712Domain();
         assertEq(name, longName, "Long name should be correctly returned");
     }
 
@@ -137,7 +137,7 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_version_matchesInitialized() public view {
-        (,, string memory version,,,, ) = harness.eip712Domain();
+        (,, string memory version,,,,) = harness.eip712Domain();
         assertEq(version, VERSION, "Version should match initialized value");
     }
 
@@ -145,7 +145,7 @@ contract ERC5267Facet_Test is Test {
         ERC5267Harness harness2 = new ERC5267Harness();
         harness2.initialize(NAME, "2");
 
-        (,, string memory version,,,, ) = harness2.eip712Domain();
+        (,, string memory version,,,,) = harness2.eip712Domain();
         assertEq(version, "2", "Version should match initialized version 2");
     }
 
@@ -154,7 +154,7 @@ contract ERC5267Facet_Test is Test {
         string memory semver = "1.0.0";
         harness2.initialize(NAME, semver);
 
-        (,, string memory version,,,, ) = harness2.eip712Domain();
+        (,, string memory version,,,,) = harness2.eip712Domain();
         assertEq(version, semver, "Semver format should be correctly returned");
     }
 
@@ -163,37 +163,37 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_chainId_matchesBlockChainid() public view {
-        (,,, uint256 chainId,,, ) = harness.eip712Domain();
+        (,,, uint256 chainId,,,) = harness.eip712Domain();
         assertEq(chainId, block.chainid, "ChainId should match block.chainid");
     }
 
     function test_eip712Domain_chainId_updatesOnChainChange() public {
         // Get chainId on original chain
-        (,,, uint256 originalChainId,,, ) = harness.eip712Domain();
+        (,,, uint256 originalChainId,,,) = harness.eip712Domain();
         assertEq(originalChainId, block.chainid, "Should match original chain");
 
         // Change to Arbitrum
         vm.chainId(42161);
-        (,,, uint256 arbitrumChainId,,, ) = harness.eip712Domain();
+        (,,, uint256 arbitrumChainId,,,) = harness.eip712Domain();
         assertEq(arbitrumChainId, 42161, "Should return Arbitrum chainId");
 
         // Change to Mainnet
         vm.chainId(1);
-        (,,, uint256 mainnetChainId,,, ) = harness.eip712Domain();
+        (,,, uint256 mainnetChainId,,,) = harness.eip712Domain();
         assertEq(mainnetChainId, 1, "Should return Mainnet chainId");
     }
 
     function test_eip712Domain_chainId_multipleChains() public {
         uint256[] memory chainIds = new uint256[](5);
-        chainIds[0] = 1;      // Mainnet
-        chainIds[1] = 10;     // Optimism
-        chainIds[2] = 137;    // Polygon
-        chainIds[3] = 42161;  // Arbitrum
-        chainIds[4] = 8453;   // Base
+        chainIds[0] = 1; // Mainnet
+        chainIds[1] = 10; // Optimism
+        chainIds[2] = 137; // Polygon
+        chainIds[3] = 42161; // Arbitrum
+        chainIds[4] = 8453; // Base
 
         for (uint256 i = 0; i < chainIds.length; i++) {
             vm.chainId(chainIds[i]);
-            (,,, uint256 returnedChainId,,, ) = harness.eip712Domain();
+            (,,, uint256 returnedChainId,,,) = harness.eip712Domain();
             assertEq(returnedChainId, chainIds[i], "ChainId should match for each chain");
         }
     }
@@ -203,7 +203,7 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_verifyingContract_matchesAddressThis() public view {
-        (,,,, address verifyingContract,, ) = harness.eip712Domain();
+        (,,,, address verifyingContract,,) = harness.eip712Domain();
         assertEq(verifyingContract, address(harness), "VerifyingContract should be address(this)");
     }
 
@@ -211,8 +211,8 @@ contract ERC5267Facet_Test is Test {
         ERC5267Harness harness2 = new ERC5267Harness();
         harness2.initialize(NAME, VERSION);
 
-        (,,,, address vc1,, ) = harness.eip712Domain();
-        (,,,, address vc2,, ) = harness2.eip712Domain();
+        (,,,, address vc1,,) = harness.eip712Domain();
+        (,,,, address vc2,,) = harness2.eip712Domain();
 
         assertTrue(vc1 != vc2, "Different contracts should have different verifyingContract");
         assertEq(vc1, address(harness), "First should be harness address");
@@ -224,7 +224,7 @@ contract ERC5267Facet_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_eip712Domain_salt_isZero() public view {
-        (,,,,, bytes32 salt, ) = harness.eip712Domain();
+        (,,,,, bytes32 salt,) = harness.eip712Domain();
         assertEq(salt, bytes32(0), "Salt should be zero");
     }
 
@@ -291,7 +291,7 @@ contract ERC5267Facet_Test is Test {
         ERC5267Harness harness2 = new ERC5267Harness();
         harness2.initialize(fuzzName, VERSION);
 
-        (, string memory returnedName,,,,, ) = harness2.eip712Domain();
+        (, string memory returnedName,,,,,) = harness2.eip712Domain();
         assertEq(returnedName, fuzzName, "Name should match fuzzed input");
     }
 
@@ -302,7 +302,7 @@ contract ERC5267Facet_Test is Test {
         ERC5267Harness harness2 = new ERC5267Harness();
         harness2.initialize(NAME, fuzzVersion);
 
-        (,, string memory returnedVersion,,,, ) = harness2.eip712Domain();
+        (,, string memory returnedVersion,,,,) = harness2.eip712Domain();
         assertEq(returnedVersion, fuzzVersion, "Version should match fuzzed input");
     }
 
@@ -310,7 +310,7 @@ contract ERC5267Facet_Test is Test {
         vm.assume(fuzzChainId > 0);
 
         vm.chainId(fuzzChainId);
-        (,,, uint256 returnedChainId,,, ) = harness.eip712Domain();
+        (,,, uint256 returnedChainId,,,) = harness.eip712Domain();
         assertEq(returnedChainId, fuzzChainId, "ChainId should match fuzzed chainId");
     }
 
@@ -323,7 +323,7 @@ contract ERC5267Facet_Test is Test {
         ERC5267Harness harness2 = new ERC5267Harness();
         harness2.initialize(fuzzName, fuzzVersion);
 
-        (bytes1 fields,,,,,, ) = harness2.eip712Domain();
+        (bytes1 fields,,,,,,) = harness2.eip712Domain();
         assertEq(fields, hex"0f", "Fields should always be 0x0f regardless of name/version");
     }
 }

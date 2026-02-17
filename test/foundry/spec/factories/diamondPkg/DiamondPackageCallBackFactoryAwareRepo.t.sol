@@ -3,7 +3,10 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {DiamondPackageCallBackFactoryAwareRepo, DiamondPackageCallBackFactoryAwareLayout} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
+import {
+    DiamondPackageCallBackFactoryAwareRepo,
+    DiamondPackageCallBackFactoryAwareLayout
+} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 /**
@@ -17,8 +20,7 @@ contract DiamondPackageCallBackFactoryAwareHarness {
 
     function initializeWithSlot(bytes32 slot, IDiamondPackageCallBackFactory factory_) external {
         DiamondPackageCallBackFactoryAwareRepo._initialize(
-            DiamondPackageCallBackFactoryAwareRepo._layout(slot),
-            factory_
+            DiamondPackageCallBackFactoryAwareRepo._layout(slot), factory_
         );
     }
 
@@ -61,11 +63,7 @@ contract DiamondPackageCallBackFactoryAwareRepo_Test is Test {
 
     function test_initialize_storesFactory() public {
         harness.initialize(mockFactory);
-        assertEq(
-            address(harness.diamondPackageCallBackFactory()),
-            address(mockFactory),
-            "Factory should be stored"
-        );
+        assertEq(address(harness.diamondPackageCallBackFactory()), address(mockFactory), "Factory should be stored");
     }
 
     function test_initialize_canOverwrite() public {
@@ -74,11 +72,7 @@ contract DiamondPackageCallBackFactoryAwareRepo_Test is Test {
 
         harness.initialize(factory1);
         harness.initialize(factory2);
-        assertEq(
-            address(harness.diamondPackageCallBackFactory()),
-            address(factory2),
-            "Factory should be overwritten"
-        );
+        assertEq(address(harness.diamondPackageCallBackFactory()), address(factory2), "Factory should be overwritten");
     }
 
     function test_initializeWithSlot_storesAtCustomSlot() public {
@@ -108,11 +102,7 @@ contract DiamondPackageCallBackFactoryAwareRepo_Test is Test {
     }
 
     function test_diamondPackageCallBackFactory_returnsZeroBeforeInit() public view {
-        assertEq(
-            address(harness.diamondPackageCallBackFactory()),
-            address(0),
-            "Should return zero before init"
-        );
+        assertEq(address(harness.diamondPackageCallBackFactory()), address(0), "Should return zero before init");
     }
 
     function testFuzz_initialize_anyAddress(address factoryAddr) public {

@@ -142,12 +142,7 @@ contract ERC20PermitDFPkg_Test is Test {
 
     function test_calcSalt_emptyName_usesSymbolAsName() public view {
         IERC20PermitDFPkg.PkgArgs memory args = IERC20PermitDFPkg.PkgArgs({
-            name: "",
-            symbol: "TEST",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
+            name: "", symbol: "TEST", decimals: 18, totalSupply: 0, recipient: address(0), optionalSalt: bytes32(0)
         });
 
         // Should not revert - uses symbol as name
@@ -172,12 +167,7 @@ contract ERC20PermitDFPkg_Test is Test {
 
     function test_calcSalt_emptyNameAndSymbol_reverts() public {
         IERC20PermitDFPkg.PkgArgs memory args = IERC20PermitDFPkg.PkgArgs({
-            name: "",
-            symbol: "",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
+            name: "", symbol: "", decimals: 18, totalSupply: 0, recipient: address(0), optionalSalt: bytes32(0)
         });
 
         vm.expectRevert(IERC20PermitDFPkg.NoNameAndSymbol.selector);
@@ -245,12 +235,7 @@ contract ERC20PermitDFPkg_Test is Test {
 
     function test_processArgs_emptyName_usesSymbolAsName() public view {
         IERC20PermitDFPkg.PkgArgs memory args = IERC20PermitDFPkg.PkgArgs({
-            name: "",
-            symbol: "TEST",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
+            name: "", symbol: "TEST", decimals: 18, totalSupply: 0, recipient: address(0), optionalSalt: bytes32(0)
         });
 
         bytes memory processed = pkg.processArgs(abi.encode(args));
@@ -279,12 +264,7 @@ contract ERC20PermitDFPkg_Test is Test {
 
     function test_processArgs_emptyNameAndSymbol_reverts() public {
         IERC20PermitDFPkg.PkgArgs memory args = IERC20PermitDFPkg.PkgArgs({
-            name: "",
-            symbol: "",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
+            name: "", symbol: "", decimals: 18, totalSupply: 0, recipient: address(0), optionalSalt: bytes32(0)
         });
 
         vm.expectRevert(IERC20PermitDFPkg.NoNameAndSymbol.selector);
@@ -350,9 +330,7 @@ contract ERC20PermitDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall to set storage in this test contract
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount should succeed");
 
         // Verify ERC20 was initialized
@@ -372,9 +350,7 @@ contract ERC20PermitDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount should succeed");
 
         // Verify EIP712 was initialized
@@ -393,9 +369,7 @@ contract ERC20PermitDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount should succeed");
 
         // Verify tokens were minted
@@ -414,9 +388,7 @@ contract ERC20PermitDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount should succeed");
 
         // Verify no tokens were minted

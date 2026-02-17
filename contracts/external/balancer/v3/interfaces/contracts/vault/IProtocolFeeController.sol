@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "./IVault.sol";
+import {IVault} from "./IVault.sol";
 
 /// @notice Contract that handles protocol and pool creator fees for the Vault.
 interface IProtocolFeeController {
@@ -89,10 +89,7 @@ interface IProtocolFeeController {
      * @param amount The amount of the fee token that was withdrawn
      */
     event PoolCreatorFeesWithdrawn(
-        address indexed pool,
-        IERC20 indexed token,
-        address indexed recipient,
-        uint256 amount
+        address indexed pool, IERC20 indexed token, address indexed recipient, uint256 amount
     );
 
     /**
@@ -105,9 +102,7 @@ interface IProtocolFeeController {
      * @param isProtocolFeeExempt True if the pool is exempt from taking protocol fees initially
      */
     event InitialPoolAggregateSwapFeePercentage(
-        address indexed pool,
-        uint256 aggregateSwapFeePercentage,
-        bool isProtocolFeeExempt
+        address indexed pool, uint256 aggregateSwapFeePercentage, bool isProtocolFeeExempt
     );
 
     /**
@@ -120,9 +115,7 @@ interface IProtocolFeeController {
      * @param isProtocolFeeExempt True if the pool is exempt from taking protocol fees initially
      */
     event InitialPoolAggregateYieldFeePercentage(
-        address indexed pool,
-        uint256 aggregateYieldFeePercentage,
-        bool isProtocolFeeExempt
+        address indexed pool, uint256 aggregateYieldFeePercentage, bool isProtocolFeeExempt
     );
 
     /**
@@ -202,9 +195,10 @@ interface IProtocolFeeController {
      * @return protocolSwapFeePercentage The protocol swap fee percentage for the given pool
      * @return isOverride True if the protocol fee has been overridden
      */
-    function getPoolProtocolSwapFeeInfo(
-        address pool
-    ) external view returns (uint256 protocolSwapFeePercentage, bool isOverride);
+    function getPoolProtocolSwapFeeInfo(address pool)
+        external
+        view
+        returns (uint256 protocolSwapFeePercentage, bool isOverride);
 
     /**
      * @notice Getter for the current protocol yield fee for a given pool.
@@ -212,9 +206,10 @@ interface IProtocolFeeController {
      * @return protocolYieldFeePercentage The protocol yield fee percentage for the given pool
      * @return isOverride True if the protocol fee has been overridden
      */
-    function getPoolProtocolYieldFeeInfo(
-        address pool
-    ) external view returns (uint256 protocolYieldFeePercentage, bool isOverride);
+    function getPoolProtocolYieldFeeInfo(address pool)
+        external
+        view
+        returns (uint256 protocolYieldFeePercentage, bool isOverride);
 
     /**
      * @notice Getter for the current pool creator swap fee percentage for a given pool.
@@ -267,10 +262,10 @@ interface IProtocolFeeController {
      * @param poolCreatorFeePercentage The pool creator portion of the aggregate fee percentage
      * @return aggregateFeePercentage The computed aggregate percentage
      */
-    function computeAggregateFeePercentage(
-        uint256 protocolFeePercentage,
-        uint256 poolCreatorFeePercentage
-    ) external pure returns (uint256 aggregateFeePercentage);
+    function computeAggregateFeePercentage(uint256 protocolFeePercentage, uint256 poolCreatorFeePercentage)
+        external
+        pure
+        returns (uint256 aggregateFeePercentage);
 
     /**
      * @notice Override the protocol swap fee percentage for a specific pool.
@@ -306,11 +301,9 @@ interface IProtocolFeeController {
      * @return aggregateSwapFeePercentage The initial aggregate swap fee percentage
      * @return aggregateYieldFeePercentage The initial aggregate yield fee percentage
      */
-    function registerPool(
-        address pool,
-        address poolCreator,
-        bool protocolFeeExempt
-    ) external returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage);
+    function registerPool(address pool, address poolCreator, bool protocolFeeExempt)
+        external
+        returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage);
 
     /**
      * @notice Set the global protocol swap fee percentage, used by standard pools.

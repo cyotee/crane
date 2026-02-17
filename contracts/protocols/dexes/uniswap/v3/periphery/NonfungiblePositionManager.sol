@@ -8,21 +8,21 @@ import {IERC721Enumerable} from "@crane/contracts/interfaces/IERC721Enumerable.s
 import {ERC721} from "@crane/contracts/tokens/ERC721/ERC721.sol";
 import {ERC721Enumerable} from "@crane/contracts/tokens/ERC721/ERC721Enumerable.sol";
 
-import '../interfaces/IUniswapV3Pool.sol';
-import '../libraries/FixedPoint128.sol';
-import '../libraries/FullMath.sol';
+import "../interfaces/IUniswapV3Pool.sol";
+import "../libraries/FixedPoint128.sol";
+import "../libraries/FullMath.sol";
 
-import './interfaces/INonfungiblePositionManager.sol';
-import './interfaces/INonfungibleTokenPositionDescriptor.sol';
-import './libraries/PositionKey.sol';
-import './libraries/PoolAddress.sol';
-import './base/LiquidityManagement.sol';
-import './base/PeripheryImmutableState.sol';
-import './base/Multicall.sol';
-import './base/ERC721Permit.sol';
-import './base/PeripheryValidation.sol';
-import './base/SelfPermit.sol';
-import './base/PoolInitializer.sol';
+import "./interfaces/INonfungiblePositionManager.sol";
+import "./interfaces/INonfungibleTokenPositionDescriptor.sol";
+import "./libraries/PositionKey.sol";
+import "./libraries/PoolAddress.sol";
+import "./base/LiquidityManagement.sol";
+import "./base/PeripheryImmutableState.sol";
+import "./base/Multicall.sol";
+import "./base/ERC721Permit.sol";
+import "./base/PeripheryValidation.sol";
+import "./base/SelfPermit.sol";
+import "./base/PoolInitializer.sol";
 
 /// @title NFT positions
 /// @notice Wraps Uniswap V3 positions in the ERC721 non-fungible token interface
@@ -74,11 +74,10 @@ contract NonfungiblePositionManager is
     /// @dev The address of the token descriptor contract, which handles generating token URIs for position tokens
     address private immutable _tokenDescriptor;
 
-    constructor(
-        address _factory,
-        address _WETH9,
-        address _tokenDescriptor_
-    ) ERC721Permit('Uniswap V3 Positions NFT-V1', 'UNI-V3-POS', '1') PeripheryImmutableState(_factory, _WETH9) {
+    constructor(address _factory, address _WETH9, address _tokenDescriptor_)
+        ERC721Permit("Uniswap V3 Positions NFT-V1", "UNI-V3-POS", "1")
+        PeripheryImmutableState(_factory, _WETH9)
+    {
         _tokenDescriptor = _tokenDescriptor_;
     }
 
@@ -103,7 +102,7 @@ contract NonfungiblePositionManager is
         )
     {
         Position memory position = _positions[tokenId];
-        require(position.poolId != 0, 'Invalid token ID');
+        require(position.poolId != 0, "Invalid token ID");
         PoolAddress.PoolKey memory poolKey = _poolIdToPoolKey[position.poolId];
         return (
             position.nonce,
@@ -136,12 +135,7 @@ contract NonfungiblePositionManager is
         payable
         override
         checkDeadline(params.deadline)
-        returns (
-            uint256 tokenId,
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1
-        )
+        returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)
     {
         IUniswapV3Pool pool;
         (liquidity, amount0, amount1, pool) = addLiquidity(
@@ -162,14 +156,12 @@ contract NonfungiblePositionManager is
         _mint(params.recipient, (tokenId = _nextId++));
 
         bytes32 positionKey = PositionKey.compute(address(this), params.tickLower, params.tickUpper);
-        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, , ) = pool.positions(positionKey);
+        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128,,) = pool.positions(positionKey);
 
         // idempotent set
-        uint80 poolId =
-            cachePoolKey(
-                address(pool),
-                PoolAddress.PoolKey({token0: params.token0, token1: params.token1, fee: params.fee})
-            );
+        uint80 poolId = cachePoolKey(
+            address(pool), PoolAddress.PoolKey({token0: params.token0, token1: params.token1, fee: params.fee})
+        );
 
         _positions[tokenId] = Position({
             nonce: 0,
@@ -189,7 +181,7 @@ contract NonfungiblePositionManager is
 
     modifier isAuthorizedForToken(uint256 tokenId) {
         address owner = _ownerOf(tokenId);
-        require(_isAuthorized(owner, msg.sender, tokenId), 'Not approved');
+        require(_isAuthorized(owner, msg.sender, tokenId), "Not approved");
         _;
     }
 
@@ -199,11 +191,7 @@ contract NonfungiblePositionManager is
         payable
         override
         checkDeadline(params.deadline)
-        returns (
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1
-        )
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1)
     {
         Position storage position = _positions[params.tokenId];
 
@@ -228,20 +216,16 @@ contract NonfungiblePositionManager is
         bytes32 positionKey = PositionKey.compute(address(this), position.tickLower, position.tickUpper);
 
         // this is now updated to the current transaction
-        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, , ) = pool.positions(positionKey);
+        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128,,) = pool.positions(positionKey);
 
         position.tokensOwed0 += uint128(
             FullMath.mulDiv(
-                feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128,
-                position.liquidity,
-                FixedPoint128.Q128
+                feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128, position.liquidity, FixedPoint128.Q128
             )
         );
         position.tokensOwed1 += uint128(
             FullMath.mulDiv(
-                feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128,
-                position.liquidity,
-                FixedPoint128.Q128
+                feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128, position.liquidity, FixedPoint128.Q128
             )
         );
 
@@ -271,30 +255,24 @@ contract NonfungiblePositionManager is
         IUniswapV3Pool pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
         (amount0, amount1) = pool.burn(position.tickLower, position.tickUpper, params.liquidity);
 
-        require(amount0 >= params.amount0Min && amount1 >= params.amount1Min, 'Price slippage check');
+        require(amount0 >= params.amount0Min && amount1 >= params.amount1Min, "Price slippage check");
 
         bytes32 positionKey = PositionKey.compute(address(this), position.tickLower, position.tickUpper);
         // this is now updated to the current transaction
-        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, , ) = pool.positions(positionKey);
+        (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128,,) = pool.positions(positionKey);
 
-        position.tokensOwed0 +=
-            uint128(amount0) +
-            uint128(
-                FullMath.mulDiv(
-                    feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128,
-                    positionLiquidity,
-                    FixedPoint128.Q128
-                )
-            );
-        position.tokensOwed1 +=
-            uint128(amount1) +
-            uint128(
-                FullMath.mulDiv(
-                    feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128,
-                    positionLiquidity,
-                    FixedPoint128.Q128
-                )
-            );
+        position.tokensOwed0 += uint128(amount0)
+        + uint128(
+            FullMath.mulDiv(
+                feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128, positionLiquidity, FixedPoint128.Q128
+            )
+        );
+        position.tokensOwed1 += uint128(amount1)
+        + uint128(
+            FullMath.mulDiv(
+                feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128, positionLiquidity, FixedPoint128.Q128
+            )
+        );
 
         position.feeGrowthInside0LastX128 = feeGrowthInside0LastX128;
         position.feeGrowthInside1LastX128 = feeGrowthInside1LastX128;
@@ -327,21 +305,17 @@ contract NonfungiblePositionManager is
         // trigger an update of the position fees owed and fee growth snapshots if it has any liquidity
         if (position.liquidity > 0) {
             pool.burn(position.tickLower, position.tickUpper, 0);
-            (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, , ) =
+            (, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128,,) =
                 pool.positions(PositionKey.compute(address(this), position.tickLower, position.tickUpper));
 
             tokensOwed0 += uint128(
                 FullMath.mulDiv(
-                    feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128,
-                    position.liquidity,
-                    FixedPoint128.Q128
+                    feeGrowthInside0LastX128 - position.feeGrowthInside0LastX128, position.liquidity, FixedPoint128.Q128
                 )
             );
             tokensOwed1 += uint128(
                 FullMath.mulDiv(
-                    feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128,
-                    position.liquidity,
-                    FixedPoint128.Q128
+                    feeGrowthInside1LastX128 - position.feeGrowthInside1LastX128, position.liquidity, FixedPoint128.Q128
                 )
             );
 
@@ -350,20 +324,14 @@ contract NonfungiblePositionManager is
         }
 
         // compute the arguments to give to the pool#collect method
-        (uint128 amount0Collect, uint128 amount1Collect) =
-            (
-                params.amount0Max > tokensOwed0 ? tokensOwed0 : params.amount0Max,
-                params.amount1Max > tokensOwed1 ? tokensOwed1 : params.amount1Max
-            );
+        (uint128 amount0Collect, uint128 amount1Collect) = (
+            params.amount0Max > tokensOwed0 ? tokensOwed0 : params.amount0Max,
+            params.amount1Max > tokensOwed1 ? tokensOwed1 : params.amount1Max
+        );
 
         // the actual amounts collected are returned
-        (amount0, amount1) = pool.collect(
-            recipient,
-            position.tickLower,
-            position.tickUpper,
-            amount0Collect,
-            amount1Collect
-        );
+        (amount0, amount1) =
+            pool.collect(recipient, position.tickLower, position.tickUpper, amount0Collect, amount1Collect);
 
         // sometimes there will be a few less wei than expected due to rounding down in core, but we just subtract the full amount expected
         // instead of the actual amount so we can burn the token
@@ -375,7 +343,7 @@ contract NonfungiblePositionManager is
     /// @inheritdoc INonfungiblePositionManager
     function burn(uint256 tokenId) external payable override isAuthorizedForToken(tokenId) {
         Position storage position = _positions[tokenId];
-        require(position.liquidity == 0 && position.tokensOwed0 == 0 && position.tokensOwed1 == 0, 'Not cleared');
+        require(position.liquidity == 0 && position.tokensOwed0 == 0 && position.tokensOwed1 == 0, "Not cleared");
         delete _positions[tokenId];
         _burn(tokenId);
     }
@@ -391,7 +359,16 @@ contract NonfungiblePositionManager is
     }
 
     /// @dev Overrides _approve to use the operator in the position, which is packed with the position permit nonce
-    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal override {
+    function _approve(
+        address to,
+        uint256 tokenId,
+        address,
+        /*auth*/
+        bool emitEvent
+    )
+        internal
+        override
+    {
         _positions[tokenId].operator = to;
         if (emitEvent) {
             emit Approval(ownerOf(tokenId), to, tokenId);
@@ -423,7 +400,13 @@ contract NonfungiblePositionManager is
         return super.balanceOf(owner);
     }
 
-    function isApprovedForAll(address owner, address operator) public view virtual override(ERC721Permit, IERC721) returns (bool) {
+    function isApprovedForAll(address owner, address operator)
+        public
+        view
+        virtual
+        override(ERC721Permit, IERC721)
+        returns (bool)
+    {
         return super.isApprovedForAll(owner, operator);
     }
 
@@ -431,11 +414,21 @@ contract NonfungiblePositionManager is
         return super.ownerOf(tokenId);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId) public payable virtual override(ERC721Permit, IERC721) {
+    function safeTransferFrom(address from, address to, uint256 tokenId)
+        public
+        payable
+        virtual
+        override(ERC721Permit, IERC721)
+    {
         super.safeTransferFrom(from, to, tokenId);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public payable virtual override(ERC721Permit, IERC721) {
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data)
+        public
+        payable
+        virtual
+        override(ERC721Permit, IERC721)
+    {
         super.safeTransferFrom(from, to, tokenId, data);
     }
 
@@ -443,7 +436,12 @@ contract NonfungiblePositionManager is
         super.setApprovalForAll(operator, approved);
     }
 
-    function transferFrom(address from, address to, uint256 tokenId) public payable virtual override(ERC721Permit, IERC721) {
+    function transferFrom(address from, address to, uint256 tokenId)
+        public
+        payable
+        virtual
+        override(ERC721Permit, IERC721)
+    {
         super.transferFrom(from, to, tokenId);
     }
 
@@ -465,11 +463,23 @@ contract NonfungiblePositionManager is
         return ERC721Enumerable.totalSupply();
     }
 
-    function tokenByIndex(uint256 index) public view virtual override(ERC721Enumerable, IERC721Enumerable) returns (uint256) {
+    function tokenByIndex(uint256 index)
+        public
+        view
+        virtual
+        override(ERC721Enumerable, IERC721Enumerable)
+        returns (uint256)
+    {
         return ERC721Enumerable.tokenByIndex(index);
     }
 
-    function tokenOfOwnerByIndex(address owner, uint256 index) public view virtual override(ERC721Enumerable, IERC721Enumerable) returns (uint256) {
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        public
+        view
+        virtual
+        override(ERC721Enumerable, IERC721Enumerable)
+        returns (uint256)
+    {
         return ERC721Enumerable.tokenOfOwnerByIndex(owner, index);
     }
 }

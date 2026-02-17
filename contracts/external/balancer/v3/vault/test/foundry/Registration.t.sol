@@ -7,20 +7,22 @@ import "forge-std/Test.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { HooksConfigLib } from "../../contracts/lib/HooksConfigLib.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {HooksConfigLib} from "../../contracts/lib/HooksConfigLib.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract RegistrationTest is BaseVaultTest {
     using HooksConfigLib for PoolConfigBits;
@@ -100,9 +102,8 @@ contract RegistrationTest is BaseVaultTest {
 
     function testRegisterPoolAddressPoolToken() public {
         PoolRoleAccounts memory roleAccounts;
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            InputHelpers.sortTokens([address(pool), address(usdc)].toMemoryArray().asIERC20())
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig(InputHelpers.sortTokens([address(pool), address(usdc)].toMemoryArray().asIERC20()));
         tokenConfig[0].token = IERC20(address(0));
         LiquidityManagement memory liquidityManagement;
 
@@ -112,9 +113,8 @@ contract RegistrationTest is BaseVaultTest {
 
     function testRegisterPoolSameAddressToken() public {
         PoolRoleAccounts memory roleAccounts;
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(usdc), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(usdc), address(usdc)].toMemoryArray().asIERC20());
         LiquidityManagement memory liquidityManagement;
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.TokenAlreadyRegistered.selector, usdc));
@@ -128,14 +128,7 @@ contract RegistrationTest is BaseVaultTest {
         LiquidityManagement memory liquidityManagement;
 
         vault.registerPool(
-            pool,
-            tokenConfig,
-            swapFeePercentage,
-            0,
-            false,
-            roleAccounts,
-            address(0),
-            liquidityManagement
+            pool, tokenConfig, swapFeePercentage, 0, false, roleAccounts, address(0), liquidityManagement
         );
         // Stored value is truncated.
         assertEq(
@@ -153,14 +146,7 @@ contract RegistrationTest is BaseVaultTest {
 
         vm.expectRevert(IVaultErrors.SwapFeePercentageTooHigh.selector);
         vault.registerPool(
-            pool,
-            tokenConfig,
-            swapFeePercentage,
-            0,
-            false,
-            roleAccounts,
-            address(0),
-            liquidityManagement
+            pool, tokenConfig, swapFeePercentage, 0, false, roleAccounts, address(0), liquidityManagement
         );
     }
 
@@ -170,14 +156,7 @@ contract RegistrationTest is BaseVaultTest {
         LiquidityManagement memory liquidityManagement;
 
         vault.registerPool(
-            pool,
-            tokenConfig,
-            0,
-            pauseWindowEndTime,
-            false,
-            roleAccounts,
-            address(0),
-            liquidityManagement
+            pool, tokenConfig, 0, pauseWindowEndTime, false, roleAccounts, address(0), liquidityManagement
         );
         PoolConfig memory poolConfig = vault.getPoolConfig(pool);
         assertEq(poolConfig.pauseWindowEndTime, pauseWindowEndTime, "Wrong pause window end time");
@@ -195,7 +174,7 @@ contract RegistrationTest is BaseVaultTest {
         vm.mockCall(address(usdc), abi.encodeWithSelector(IERC20Metadata.decimals.selector), abi.encode(usdcDecimals));
         vault.registerPool(pool, tokenConfig, 0, 0, false, roleAccounts, address(0), liquidityManagement);
         // Test end to end that the decimal scaling factors are correct.
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(pool);
         assertEq(decimalScalingFactors[daiIdx], 10 ** (18 - daiDecimals), "Wrong dai decimal scaling factor");
         assertEq(decimalScalingFactors[usdcIdx], 10 ** (18 - usdcDecimals), "Wrong usdc decimal scaling factor");
     }
@@ -213,11 +192,8 @@ contract RegistrationTest is BaseVaultTest {
     function testRegisterEmitsEvents() public {
         uint256 swapFeePercentage = 3.1415e10;
         uint32 pauseWindowEndTime = 2.71e4;
-        PoolRoleAccounts memory roleAccounts = PoolRoleAccounts({
-            pauseManager: address(1),
-            swapFeeManager: address(2),
-            poolCreator: address(3)
-        });
+        PoolRoleAccounts memory roleAccounts =
+            PoolRoleAccounts({pauseManager: address(1), swapFeeManager: address(2), poolCreator: address(3)});
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(standardPoolTokens);
         LiquidityManagement memory liquidityManagement = LiquidityManagement({
             disableUnbalancedLiquidity: true,

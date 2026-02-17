@@ -9,8 +9,8 @@ import {
     SwapPathExactAmountIn,
     SwapPathExactAmountOut
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
-import { SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { BatchRouterE2ETest } from "./BatchRouterE2E.t.sol";
+import {SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {BatchRouterE2ETest} from "./BatchRouterE2E.t.sol";
 
 contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
     using SafeERC20 for IERC20;
@@ -19,9 +19,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
                                 Exact In
     ***************************************************************************/
 
-    function querySwapExactIn(
-        SwapPathExactAmountIn[] memory pathsExactIn
-    )
+    function querySwapExactIn(SwapPathExactAmountIn[] memory pathsExactIn)
         internal
         override
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -29,20 +27,13 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         uint256 snapshot = vm.snapshotState();
 
         _prankStaticCall();
-        (pathAmountsOut, tokensOut, amountsOut) = prepaidBatchRouter.querySwapExactIn(
-            pathsExactIn,
-            address(0),
-            bytes("")
-        );
+        (pathAmountsOut, tokensOut, amountsOut) =
+            prepaidBatchRouter.querySwapExactIn(pathsExactIn, address(0), bytes(""));
 
         vm.revertToState(snapshot);
     }
 
-    function swapExactIn(
-        SwapPathExactAmountIn[] memory pathsExactIn,
-        bool wethIsEth,
-        uint256 ethAmount
-    )
+    function swapExactIn(SwapPathExactAmountIn[] memory pathsExactIn, bool wethIsEth, uint256 ethAmount)
         internal
         override
         returns (uint256[] memory calculatedPathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -50,12 +41,8 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         vm.startPrank(alice);
         _prepay(pathsExactIn, wethIsEth);
 
-        (calculatedPathAmountsOut, tokensOut, amountsOut) = prepaidBatchRouter.swapExactIn{ value: ethAmount }(
-            pathsExactIn,
-            MAX_UINT256,
-            wethIsEth,
-            bytes("")
-        );
+        (calculatedPathAmountsOut, tokensOut, amountsOut) =
+            prepaidBatchRouter.swapExactIn{value: ethAmount}(pathsExactIn, MAX_UINT256, wethIsEth, bytes(""));
         vm.stopPrank();
     }
 
@@ -70,7 +57,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         _prepay(pathsExactIn, wethIsEth);
 
         vm.expectRevert(error);
-        prepaidBatchRouter.swapExactIn{ value: ethAmount }(pathsExactIn, deadline, wethIsEth, bytes(""));
+        prepaidBatchRouter.swapExactIn{value: ethAmount}(pathsExactIn, deadline, wethIsEth, bytes(""));
 
         vm.stopPrank();
     }
@@ -79,9 +66,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
                                 Exact Out
     ***************************************************************************/
 
-    function querySwapExactOut(
-        SwapPathExactAmountOut[] memory pathsExactOut
-    )
+    function querySwapExactOut(SwapPathExactAmountOut[] memory pathsExactOut)
         internal
         override
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
@@ -89,20 +74,13 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         uint256 snapshot = vm.snapshotState();
 
         _prankStaticCall();
-        (pathAmountsIn, tokensIn, amountsIn) = prepaidBatchRouter.querySwapExactOut(
-            pathsExactOut,
-            address(0),
-            bytes("")
-        );
+        (pathAmountsIn, tokensIn, amountsIn) =
+            prepaidBatchRouter.querySwapExactOut(pathsExactOut, address(0), bytes(""));
 
         vm.revertToState(snapshot);
     }
 
-    function swapExactOut(
-        SwapPathExactAmountOut[] memory pathsExactOut,
-        bool wethIsEth,
-        uint256 ethAmount
-    )
+    function swapExactOut(SwapPathExactAmountOut[] memory pathsExactOut, bool wethIsEth, uint256 ethAmount)
         internal
         override
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
@@ -110,12 +88,8 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         vm.startPrank(alice);
         _prepay(pathsExactOut, wethIsEth);
 
-        (pathAmountsIn, tokensIn, amountsIn) = prepaidBatchRouter.swapExactOut{ value: ethAmount }(
-            pathsExactOut,
-            MAX_UINT256,
-            wethIsEth,
-            bytes("")
-        );
+        (pathAmountsIn, tokensIn, amountsIn) =
+            prepaidBatchRouter.swapExactOut{value: ethAmount}(pathsExactOut, MAX_UINT256, wethIsEth, bytes(""));
         vm.stopPrank();
     }
 
@@ -130,7 +104,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
         _prepay(pathsExactOut, wethIsEth);
 
         vm.expectRevert(error);
-        prepaidBatchRouter.swapExactOut{ value: ethAmount }(pathsExactOut, deadline, wethIsEth, bytes(""));
+        prepaidBatchRouter.swapExactOut{value: ethAmount}(pathsExactOut, deadline, wethIsEth, bytes(""));
         vm.stopPrank();
     }
 

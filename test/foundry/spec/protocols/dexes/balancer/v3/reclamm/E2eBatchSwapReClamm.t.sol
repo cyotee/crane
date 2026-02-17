@@ -6,30 +6,31 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { E2eBatchSwapTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eBatchSwap.t.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {E2eBatchSwapTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eBatchSwap.t.sol";
 
-import { ReClammPoolContractsDeployer } from "./utils/ReClammPoolContractsDeployer.sol";
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolContractsDeployer} from "./utils/ReClammPoolContractsDeployer.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
 
 contract E2eBatchSwapReClammTest is E2eBatchSwapTest, ReClammPoolContractsDeployer {
     using FixedPoint for uint256;
 
     /// @notice Overrides BaseVaultTest _createPool(). This pool is used by E2eBatchSwapTest tests.
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address pool, bytes memory args) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address pool, bytes memory args)
+    {
         return createReClammPool(tokens, label, vault, lp);
     }
 
-    function _initPool(
-        address poolToInit,
-        uint256[] memory amountsIn,
-        uint256 minBptOut
-    ) internal override returns (uint256) {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(poolToInit);
+    function _initPool(address poolToInit, uint256[] memory amountsIn, uint256 minBptOut)
+        internal
+        override
+        returns (uint256)
+    {
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(poolToInit);
 
         uint256[] memory initialBalances = IReClammPool(poolToInit).computeInitialBalancesRaw(tokens[0], amountsIn[0]);
 

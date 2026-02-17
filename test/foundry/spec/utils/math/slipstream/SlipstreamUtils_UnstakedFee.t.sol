@@ -17,15 +17,15 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
     /* -------------------------------------------------------------------------- */
 
     // Standard fee tiers (in pips: 1 pip = 0.0001%)
-    uint24 internal constant FEE_LOW = 100;       // 0.01%
-    uint24 internal constant FEE_MEDIUM = 500;    // 0.05%
-    uint24 internal constant FEE_HIGH = 3000;     // 0.3%
+    uint24 internal constant FEE_LOW = 100; // 0.01%
+    uint24 internal constant FEE_MEDIUM = 500; // 0.05%
+    uint24 internal constant FEE_HIGH = 3000; // 0.3%
 
     // Typical unstaked fees
     uint24 internal constant UNSTAKED_FEE_NONE = 0;
-    uint24 internal constant UNSTAKED_FEE_LOW = 50;   // 0.005%
+    uint24 internal constant UNSTAKED_FEE_LOW = 50; // 0.005%
     uint24 internal constant UNSTAKED_FEE_MEDIUM = 100; // 0.01%
-    uint24 internal constant UNSTAKED_FEE_HIGH = 500;  // 0.05%
+    uint24 internal constant UNSTAKED_FEE_HIGH = 500; // 0.05%
 
     // Reasonable test values
     uint256 internal constant AMOUNT_IN = 1000e18;
@@ -52,12 +52,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote with unstaked fee function (0 unstaked fee)
         uint256 unstakedQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_NONE,
-            true
+            AMOUNT_IN, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_NONE, true
         );
 
         assertEq(baseQuote, unstakedQuote, "Zero unstaked fee should match base");
@@ -69,28 +64,15 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote without unstaked fee
         uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_NONE,
-            true
+            AMOUNT_IN, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_NONE, true
         );
 
         // Quote with unstaked fee
         uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
+            AMOUNT_IN, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true
         );
 
-        assertTrue(
-            withUnstakedFeeQuote < noUnstakedFeeQuote,
-            "Unstaked fee should reduce output"
-        );
+        assertTrue(withUnstakedFeeQuote < noUnstakedFeeQuote, "Unstaked fee should reduce output");
     }
 
     /// @notice Test that combined fee equals fee + unstakedFee
@@ -99,23 +81,13 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote using the unstaked fee overload
         uint256 unstakedQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
+            AMOUNT_IN, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true
         );
 
         // Quote using base function with manually combined fee
         uint24 combinedFee = FEE_MEDIUM + UNSTAKED_FEE_MEDIUM;
-        uint256 manualQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            combinedFee,
-            true
-        );
+        uint256 manualQuote =
+            SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, sqrtPriceX96, LIQUIDITY, combinedFee, true);
 
         assertEq(unstakedQuote, manualQuote, "Unstaked overload should equal manually combined fee");
     }
@@ -123,28 +95,14 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
     /// @notice Test tick overload with unstaked fee
     function test_quoteExactInputSingle_tickOverload_unstakedFee() public pure {
         // Quote using tick overload without unstaked fee
-        uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            TICK,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 noUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, TICK, LIQUIDITY, FEE_MEDIUM, true);
 
         // Quote using tick overload with unstaked fee
-        uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            TICK,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
-        );
+        uint256 withUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, TICK, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true);
 
-        assertTrue(
-            withUnstakedFeeQuote < noUnstakedFeeQuote,
-            "Tick overload: unstaked fee should reduce output"
-        );
+        assertTrue(withUnstakedFeeQuote < noUnstakedFeeQuote, "Tick overload: unstaked fee should reduce output");
     }
 
     /// @notice Test zeroForOne = false direction with unstaked fee
@@ -163,18 +121,10 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote with unstaked fee (reverse direction)
         uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            false
+            AMOUNT_IN, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, false
         );
 
-        assertTrue(
-            withUnstakedFeeQuote < noUnstakedFeeQuote,
-            "Reverse direction: unstaked fee should reduce output"
-        );
+        assertTrue(withUnstakedFeeQuote < noUnstakedFeeQuote, "Reverse direction: unstaked fee should reduce output");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -186,22 +136,12 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
 
         // Quote with base function
-        uint256 baseQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 baseQuote =
+            SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, true);
 
         // Quote with unstaked fee function (0 unstaked fee)
         uint256 unstakedQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_NONE,
-            true
+            AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_NONE, true
         );
 
         assertEq(baseQuote, unstakedQuote, "Zero unstaked fee should match base");
@@ -213,28 +153,15 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote without unstaked fee
         uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_NONE,
-            true
+            AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_NONE, true
         );
 
         // Quote with unstaked fee
         uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
+            AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true
         );
 
-        assertTrue(
-            withUnstakedFeeQuote > noUnstakedFeeQuote,
-            "Unstaked fee should increase required input"
-        );
+        assertTrue(withUnstakedFeeQuote > noUnstakedFeeQuote, "Unstaked fee should increase required input");
     }
 
     /// @notice Test that combined fee equals fee + unstakedFee for exact output
@@ -243,23 +170,13 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         // Quote using the unstaked fee overload
         uint256 unstakedQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
+            AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true
         );
 
         // Quote using base function with manually combined fee
         uint24 combinedFee = FEE_MEDIUM + UNSTAKED_FEE_MEDIUM;
-        uint256 manualQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            combinedFee,
-            true
-        );
+        uint256 manualQuote =
+            SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, combinedFee, true);
 
         assertEq(unstakedQuote, manualQuote, "Unstaked overload should equal manually combined fee");
     }
@@ -267,27 +184,15 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
     /// @notice Test tick overload with unstaked fee for exact output
     function test_quoteExactOutputSingle_tickOverload_unstakedFee() public pure {
         // Quote using tick overload without unstaked fee
-        uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            TICK,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 noUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, TICK, LIQUIDITY, FEE_MEDIUM, true);
 
         // Quote using tick overload with unstaked fee
-        uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            TICK,
-            LIQUIDITY,
-            FEE_MEDIUM,
-            UNSTAKED_FEE_MEDIUM,
-            true
-        );
+        uint256 withUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, TICK, LIQUIDITY, FEE_MEDIUM, UNSTAKED_FEE_MEDIUM, true);
 
         assertTrue(
-            withUnstakedFeeQuote > noUnstakedFeeQuote,
-            "Tick overload: unstaked fee should increase required input"
+            withUnstakedFeeQuote > noUnstakedFeeQuote, "Tick overload: unstaked fee should increase required input"
         );
     }
 
@@ -311,28 +216,13 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
 
-        uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            LIQUIDITY,
-            fee,
-            0,
-            true
-        );
+        uint256 noUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, LIQUIDITY, fee, 0, true);
 
-        uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            LIQUIDITY,
-            fee,
-            unstakedFee,
-            true
-        );
+        uint256 withUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, LIQUIDITY, fee, unstakedFee, true);
 
-        assertTrue(
-            withUnstakedFeeQuote <= noUnstakedFeeQuote,
-            "Unstaked fee should never increase output"
-        );
+        assertTrue(withUnstakedFeeQuote <= noUnstakedFeeQuote, "Unstaked fee should never increase output");
     }
 
     /// @notice Fuzz test: unstaked fee always increases exact output input requirement
@@ -350,28 +240,13 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
 
-        uint256 noUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            LIQUIDITY,
-            fee,
-            0,
-            true
-        );
+        uint256 noUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, LIQUIDITY, fee, 0, true);
 
-        uint256 withUnstakedFeeQuote = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            LIQUIDITY,
-            fee,
-            unstakedFee,
-            true
-        );
+        uint256 withUnstakedFeeQuote =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, LIQUIDITY, fee, unstakedFee, true);
 
-        assertTrue(
-            withUnstakedFeeQuote >= noUnstakedFeeQuote,
-            "Unstaked fee should never decrease required input"
-        );
+        assertTrue(withUnstakedFeeQuote >= noUnstakedFeeQuote, "Unstaked fee should never decrease required input");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -387,14 +262,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint24 unstakedFeePips = 500_000;
 
         vm.expectRevert("SL:INVALID_FEE");
-        SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
     }
 
     /// @notice Test that exact input reverts when combined fee exceeds 1e6
@@ -406,14 +274,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint24 unstakedFeePips = 2_000;
 
         vm.expectRevert("SL:INVALID_FEE");
-        SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
     }
 
     /// @notice Test that exact output reverts when combined fee equals 1e6
@@ -424,14 +285,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint24 unstakedFeePips = 500_000;
 
         vm.expectRevert("SL:INVALID_FEE");
-        SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
     }
 
     /// @notice Test that exact output reverts when combined fee exceeds 1e6
@@ -442,14 +296,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint24 unstakedFeePips = 2_000;
 
         vm.expectRevert("SL:INVALID_FEE");
-        SlipstreamUtils._quoteExactOutputSingle(
-            AMOUNT_OUT,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        SlipstreamUtils._quoteExactOutputSingle(AMOUNT_OUT, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
     }
 
     /// @notice Test that combined fee just below 1e6 still works
@@ -460,24 +307,15 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint24 feePips = 500_000;
         uint24 unstakedFeePips = 499_999;
 
-        uint256 result = SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        uint256 result =
+            SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
 
         // With ~99.9999% fee, output should be near zero but valid
         assertTrue(result >= 0, "Should not revert for totalFee < 1e6");
     }
 
     /// @notice Fuzz test: combined fee >= 1e6 always reverts for exact input
-    function testFuzz_quoteExactInputSingle_revert_invalidCombinedFee(
-        uint24 feePips,
-        uint24 unstakedFeePips
-    ) public {
+    function testFuzz_quoteExactInputSingle_revert_invalidCombinedFee(uint24 feePips, uint24 unstakedFeePips) public {
         // Ensure combined fee >= 1e6
         feePips = uint24(bound(feePips, 1, 999_999));
         unstakedFeePips = uint24(bound(unstakedFeePips, uint256(1e6) - feePips, type(uint24).max - feePips));
@@ -485,14 +323,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TICK);
 
         vm.expectRevert("SL:INVALID_FEE");
-        SlipstreamUtils._quoteExactInputSingle(
-            AMOUNT_IN,
-            sqrtPriceX96,
-            LIQUIDITY,
-            feePips,
-            unstakedFeePips,
-            true
-        );
+        SlipstreamUtils._quoteExactInputSingle(AMOUNT_IN, sqrtPriceX96, LIQUIDITY, feePips, unstakedFeePips, true);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -522,10 +353,7 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
         );
 
         // With very low fees, unstaked fee should still reduce output
-        assertTrue(
-            withUnstakedFeeQuote < noUnstakedFeeQuote,
-            "Low fee tier: unstaked fee should reduce output"
-        );
+        assertTrue(withUnstakedFeeQuote < noUnstakedFeeQuote, "Low fee tier: unstaked fee should reduce output");
     }
 
     /// @notice Test with high fee tier
@@ -550,9 +378,6 @@ contract SlipstreamUtils_UnstakedFee_Test is Test {
             true
         );
 
-        assertTrue(
-            withUnstakedFeeQuote < noUnstakedFeeQuote,
-            "High fee tier: unstaked fee should reduce output"
-        );
+        assertTrue(withUnstakedFeeQuote < noUnstakedFeeQuote, "High fee tier: unstaked fee should reduce output");
     }
 }

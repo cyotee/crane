@@ -5,12 +5,12 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { BaseBatchRouterE2ETest } from "./utils/BaseBatchRouterE2ETest.sol";
+import {BaseBatchRouterE2ETest} from "./utils/BaseBatchRouterE2ETest.sol";
 
 contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     bool private constant USE_ETH_TRUE = true;
@@ -41,12 +41,9 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function testSwapExactInIfAmountOutLessThenMin() public {
         SwapPathExactAmountIn[] memory path = new SwapPathExactAmountIn[](1);
         path[0] = SwapPathExactAmountIn({
-            tokenIn: weth,
-            steps: new SwapPathStep[](1),
-            exactAmountIn: DEFAULT_AMOUNT,
-            minAmountOut: MAX_UINT256
+            tokenIn: weth, steps: new SwapPathStep[](1), exactAmountIn: DEFAULT_AMOUNT, minAmountOut: MAX_UINT256
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
 
         expectRevertSwapExactIn(
             path,
@@ -67,19 +64,12 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function testSwapExactOutIfAmountInMoreThanMax() public {
         SwapPathExactAmountOut[] memory path = new SwapPathExactAmountOut[](1);
         path[0] = SwapPathExactAmountOut({
-            tokenIn: weth,
-            steps: new SwapPathStep[](1),
-            exactAmountOut: DEFAULT_AMOUNT,
-            maxAmountIn: 0
+            tokenIn: weth, steps: new SwapPathStep[](1), exactAmountOut: DEFAULT_AMOUNT, maxAmountIn: 0
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
 
         expectRevertSwapExactOut(
-            path,
-            MAX_UINT128,
-            false,
-            0,
-            abi.encodeWithSelector(IVaultErrors.SwapLimit.selector, DEFAULT_AMOUNT, 0)
+            path, MAX_UINT128, false, 0, abi.encodeWithSelector(IVaultErrors.SwapLimit.selector, DEFAULT_AMOUNT, 0)
         );
         expectRevertSwapExactOut(
             path,
@@ -114,13 +104,10 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSinglePath(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
         path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, wethIsEth ? DEFAULT_AMOUNT : 0, 0);
@@ -146,17 +133,14 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSinglePathIntermediateFinalSteps(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
         path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](5),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](5), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
 
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
-        path[0].steps[2] = SwapPathStep({ pool: getPool(dai, weth), tokenOut: weth, isBuffer: false });
-        path[0].steps[3] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[4] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
+        path[0].steps[2] = SwapPathStep({pool: getPool(dai, weth), tokenOut: weth, isBuffer: false});
+        path[0].steps[3] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[4] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, wethIsEth ? DEFAULT_AMOUNT : 0, 0);
@@ -182,21 +166,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSwapMultiPathSISO(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
 
         path[1] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](1),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](1), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[1].steps[0] = SwapPathStep({ pool: getPool(weth, dai), tokenOut: dai, isBuffer: false });
+        path[1].steps[0] = SwapPathStep({pool: getPool(weth, dai), tokenOut: dai, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, wethIsEth ? (2 * DEFAULT_AMOUNT) : 0, 0);
@@ -222,21 +200,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSwapMultiPathMISO(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: dai, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
 
         path[1] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](1),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: dai, steps: new SwapPathStep[](1), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[1].steps[0] = SwapPathStep({ pool: getPool(dai, weth), tokenOut: weth, isBuffer: false });
+        path[1].steps[0] = SwapPathStep({pool: getPool(dai, weth), tokenOut: weth, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, 0, 0);
@@ -262,21 +234,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSwapMultiPathSIMO(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
 
         path[1] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](1),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](1), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[1].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
+        path[1].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, wethIsEth ? (2 * DEFAULT_AMOUNT) : 0, 0);
@@ -302,13 +268,10 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSwapMultiPathMIMO(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: dai, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
 
         path[1] = UniversalSwapPath({
             tokenIn: IERC20(getPool(weth, usdc)),
@@ -323,9 +286,7 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
             isBuffer: false
         });
         path[1].steps[1] = SwapPathStep({
-            pool: getPool(getPool(usdc, dai), getPool(weth, dai)),
-            tokenOut: IERC20(getPool(weth, dai)),
-            isBuffer: false
+            pool: getPool(getPool(usdc, dai), getPool(weth, dai)), tokenOut: IERC20(getPool(weth, dai)), isBuffer: false
         });
 
         generateSimpleDiffs(path, kind);
@@ -352,21 +313,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     function _testSwapMultiPathCircular(SwapKind kind, bool wethIsEth) internal {
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](2),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: weth, steps: new SwapPathStep[](2), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(usdc, dai), tokenOut: dai, isBuffer: false});
 
         path[1] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](1),
-            givenAmount: DEFAULT_AMOUNT,
-            limit: DEFAULT_AMOUNT
+            tokenIn: dai, steps: new SwapPathStep[](1), givenAmount: DEFAULT_AMOUNT, limit: DEFAULT_AMOUNT
         });
-        path[1].steps[0] = SwapPathStep({ pool: getPool(dai, weth), tokenOut: weth, isBuffer: false });
+        path[1].steps[0] = SwapPathStep({pool: getPool(dai, weth), tokenOut: weth, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, wethIsEth ? DEFAULT_AMOUNT : 0, 0);
@@ -376,37 +331,37 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
                                     Wrap / Unwrap Exact In
     ***************************************************************************/
 
-    function _getWrapExactInAmount(
-        IERC4626 token,
-        uint256 amountInUnderlying
-    ) internal returns (uint256 amountOutWrapped) {
+    function _getWrapExactInAmount(IERC4626 token, uint256 amountInUnderlying)
+        internal
+        returns (uint256 amountOutWrapped)
+    {
         uint256 snapshot = vm.snapshotState();
         amountOutWrapped = _vaultPreviewDeposit(token, amountInUnderlying);
         vm.revertToState(snapshot);
     }
 
-    function _getWrapExactOutAmount(
-        IERC4626 token,
-        uint256 amountOutWrapped
-    ) internal returns (uint256 amountInUnderlying) {
+    function _getWrapExactOutAmount(IERC4626 token, uint256 amountOutWrapped)
+        internal
+        returns (uint256 amountInUnderlying)
+    {
         uint256 snapshot = vm.snapshotState();
         amountInUnderlying = _vaultPreviewMint(token, amountOutWrapped);
         vm.revertToState(snapshot);
     }
 
-    function _getUnwrapExactInAmount(
-        IERC4626 token,
-        uint256 amountInWrapped
-    ) internal returns (uint256 amountOutUnderlying) {
+    function _getUnwrapExactInAmount(IERC4626 token, uint256 amountInWrapped)
+        internal
+        returns (uint256 amountOutUnderlying)
+    {
         uint256 snapshot = vm.snapshotState();
         amountOutUnderlying = _vaultPreviewRedeem(token, amountInWrapped);
         vm.revertToState(snapshot);
     }
 
-    function _getUnwrapExactOutAmount(
-        IERC4626 token,
-        uint256 amountOutUnderlying
-    ) internal returns (uint256 amountInWrapped) {
+    function _getUnwrapExactOutAmount(IERC4626 token, uint256 amountOutUnderlying)
+        internal
+        returns (uint256 amountInWrapped)
+    {
         uint256 snapshot = vm.snapshotState();
         amountInWrapped = _vaultPreviewWithdraw(token, amountOutUnderlying);
         vm.revertToState(snapshot);
@@ -426,23 +381,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
         uint256 limit = _getWrapExactInAmount(waUSDC, DEFAULT_AMOUNT);
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
-        path[0] = UniversalSwapPath({
-            tokenIn: usdc,
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[0].steps[0] = SwapPathStep({ pool: address(waUSDC), tokenOut: waUSDC, isBuffer: true });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(waUSDC, weth), tokenOut: weth, isBuffer: false });
+        path[0] =
+            UniversalSwapPath({tokenIn: usdc, steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit});
+        path[0].steps[0] = SwapPathStep({pool: address(waUSDC), tokenOut: waUSDC, isBuffer: true});
+        path[0].steps[1] = SwapPathStep({pool: getPool(waUSDC, weth), tokenOut: weth, isBuffer: false});
 
-        path[1] = UniversalSwapPath({
-            tokenIn: usdc,
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[1].steps[0] = SwapPathStep({ pool: address(waUSDC), tokenOut: waUSDC, isBuffer: true });
-        path[1].steps[1] = SwapPathStep({ pool: getPool(waUSDC, weth), tokenOut: weth, isBuffer: false });
+        path[1] =
+            UniversalSwapPath({tokenIn: usdc, steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit});
+        path[1].steps[0] = SwapPathStep({pool: address(waUSDC), tokenOut: waUSDC, isBuffer: true});
+        path[1].steps[1] = SwapPathStep({pool: getPool(waUSDC, weth), tokenOut: weth, isBuffer: false});
 
         // Ignore these tokens because the operation causes a rebalancing inside the Vault.
         ignoreVaultChangesForTokens[address(usdc)] = true;
@@ -466,25 +413,17 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
         uint256 limit = _getUnwrapExactInAmount(waDAI, DEFAULT_AMOUNT);
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
-        path[0] = UniversalSwapPath({
-            tokenIn: waDAI,
-            steps: new SwapPathStep[](3),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[0].steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: dai, isBuffer: true });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
-        path[0].steps[2] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
+        path[0] =
+            UniversalSwapPath({tokenIn: waDAI, steps: new SwapPathStep[](3), givenAmount: givenAmount, limit: limit});
+        path[0].steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: dai, isBuffer: true});
+        path[0].steps[1] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
+        path[0].steps[2] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
 
-        path[1] = UniversalSwapPath({
-            tokenIn: waDAI,
-            steps: new SwapPathStep[](3),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[1].steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: dai, isBuffer: true });
-        path[1].steps[1] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
-        path[1].steps[2] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
+        path[1] =
+            UniversalSwapPath({tokenIn: waDAI, steps: new SwapPathStep[](3), givenAmount: givenAmount, limit: limit});
+        path[1].steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: dai, isBuffer: true});
+        path[1].steps[1] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
+        path[1].steps[2] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, 0, 0);
@@ -512,23 +451,14 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     }
 
     function _testJoinSwapSinglePathAndInitialAddLiquidityStep(SwapKind kind, bool wethIsEth) internal {
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR;
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
-        path[0] = UniversalSwapPath({
-            tokenIn: weth,
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[0].steps[0] = SwapPathStep({
-            pool: getPool(weth, usdc),
-            tokenOut: IERC20(getPool(weth, usdc)),
-            isBuffer: false
-        });
+        path[0] =
+            UniversalSwapPath({tokenIn: weth, steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit});
+        path[0].steps[0] =
+            SwapPathStep({pool: getPool(weth, usdc), tokenOut: IERC20(getPool(weth, usdc)), isBuffer: false});
         path[0].steps[1] = SwapPathStep({
             pool: getPool(getPool(weth, usdc), getPool(usdc, dai)),
             tokenOut: IERC20(getPool(usdc, dai)),
@@ -562,28 +492,17 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
     }
 
     function _testJoinSwapSinglePathAndIntermediateAddLiquidityStep(SwapKind kind, bool wethIsEth) internal {
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR;
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
-        path[0] = UniversalSwapPath({
-            tokenIn: usdc,
-            steps: new SwapPathStep[](3),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({
-            pool: getPool(weth, dai),
-            tokenOut: IERC20(getPool(weth, dai)),
-            isBuffer: false
-        });
+        path[0] =
+            UniversalSwapPath({tokenIn: usdc, steps: new SwapPathStep[](3), givenAmount: givenAmount, limit: limit});
+        path[0].steps[0] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
+        path[0].steps[1] =
+            SwapPathStep({pool: getPool(weth, dai), tokenOut: IERC20(getPool(weth, dai)), isBuffer: false});
         path[0].steps[2] = SwapPathStep({
-            pool: getPool(getPool(weth, dai), getPool(usdc, dai)),
-            tokenOut: IERC20(getPool(usdc, dai)),
-            isBuffer: false
+            pool: getPool(getPool(weth, dai), getPool(usdc, dai)), tokenOut: IERC20(getPool(usdc, dai)), isBuffer: false
         });
 
         generateSimpleDiffs(path, kind);
@@ -616,17 +535,10 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - ADD_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
-        path[0] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[0].steps[0] = SwapPathStep({
-            pool: getPool(dai, usdc),
-            tokenOut: IERC20(getPool(dai, usdc)),
-            isBuffer: false
-        });
+        path[0] =
+            UniversalSwapPath({tokenIn: dai, steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit});
+        path[0].steps[0] =
+            SwapPathStep({pool: getPool(dai, usdc), tokenOut: IERC20(getPool(dai, usdc)), isBuffer: false});
         path[0].steps[1] = SwapPathStep({
             pool: getPool(getPool(dai, usdc), getPool(weth, usdc)),
             tokenOut: IERC20(getPool(weth, usdc)),
@@ -634,18 +546,11 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
         });
         addExpectedPathAmount(limit);
 
-        path[1] = UniversalSwapPath({
-            tokenIn: dai,
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
-        });
-        path[1].steps[0] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
-        path[1].steps[1] = SwapPathStep({
-            pool: getPool(weth, usdc),
-            tokenOut: IERC20(getPool(weth, usdc)),
-            isBuffer: false
-        });
+        path[1] =
+            UniversalSwapPath({tokenIn: dai, steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit});
+        path[1].steps[0] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
+        path[1].steps[1] =
+            SwapPathStep({pool: getPool(weth, usdc), tokenOut: IERC20(getPool(weth, usdc)), isBuffer: false});
         addExpectedPathAmount(limit);
 
         addDiffForAlice(dai, -int256(givenAmount * 2));
@@ -682,19 +587,15 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
 
     function _testExitSwapSinglePathAndInitialRemoveLiquidityStep(SwapKind kind, bool wethIsEth) internal {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount =
+            kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
         path[0] = UniversalSwapPath({
-            tokenIn: IERC20(getPool(weth, usdc)),
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(getPool(weth, usdc)), steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit
         });
-        path[0].steps[0] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: weth, isBuffer: false });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(weth, dai), tokenOut: dai, isBuffer: false });
+        path[0].steps[0] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: weth, isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(weth, dai), tokenOut: dai, isBuffer: false});
         addExpectedPathAmount(DEFAULT_AMOUNT);
 
         addDiffForAlice(IERC20(getPool(weth, usdc)), -int256(DEFAULT_AMOUNT));
@@ -726,24 +627,17 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
 
     function _testExitSwapSinglePathAndIntermediateRemoveLiquidityStep(SwapKind kind, bool wethIsEth) internal {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount =
+            kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
         path[0] = UniversalSwapPath({
-            tokenIn: IERC20(weth),
-            steps: new SwapPathStep[](3),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(weth), steps: new SwapPathStep[](3), givenAmount: givenAmount, limit: limit
         });
-        path[0].steps[0] = SwapPathStep({
-            pool: getPool(weth, dai),
-            tokenOut: IERC20(getPool(weth, dai)),
-            isBuffer: false
-        });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(weth, dai), tokenOut: dai, isBuffer: false });
-        path[0].steps[2] = SwapPathStep({ pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false });
+        path[0].steps[0] =
+            SwapPathStep({pool: getPool(weth, dai), tokenOut: IERC20(getPool(weth, dai)), isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(weth, dai), tokenOut: dai, isBuffer: false});
+        path[0].steps[2] = SwapPathStep({pool: getPool(dai, usdc), tokenOut: usdc, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
 
@@ -770,23 +664,16 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
 
     function _testExitSwapSinglePathAndFinalRemoveLiquidityStep(SwapKind kind, bool wethIsEth) internal {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount =
+            kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](1);
         path[0] = UniversalSwapPath({
-            tokenIn: IERC20(dai),
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(dai), steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit
         });
-        path[0].steps[0] = SwapPathStep({
-            pool: getPool(weth, dai),
-            tokenOut: IERC20(getPool(weth, dai)),
-            isBuffer: false
-        });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(weth, dai), tokenOut: weth, isBuffer: false });
+        path[0].steps[0] =
+            SwapPathStep({pool: getPool(weth, dai), tokenOut: IERC20(getPool(weth, dai)), isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(weth, dai), tokenOut: weth, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
         testSwap(path, kind, wethIsEth, 0, REMOVE_LIQUIDITY_DELTA);
@@ -811,41 +698,28 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
 
     function _testExitSwapMultiPathAndFinalRemoveLiquidityStep(SwapKind kind, bool wethIsEth) internal {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount =
+            kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: IERC20(dai),
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(dai), steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit
         });
-        path[0].steps[0] = SwapPathStep({
-            pool: getPool(weth, dai),
-            tokenOut: IERC20(getPool(weth, dai)),
-            isBuffer: false
-        });
-        path[0].steps[1] = SwapPathStep({ pool: getPool(weth, dai), tokenOut: weth, isBuffer: false });
+        path[0].steps[0] =
+            SwapPathStep({pool: getPool(weth, dai), tokenOut: IERC20(getPool(weth, dai)), isBuffer: false});
+        path[0].steps[1] = SwapPathStep({pool: getPool(weth, dai), tokenOut: weth, isBuffer: false});
 
         path[1] = UniversalSwapPath({
-            tokenIn: IERC20(dai),
-            steps: new SwapPathStep[](3),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(dai), steps: new SwapPathStep[](3), givenAmount: givenAmount, limit: limit
         });
-        path[1].steps[0] = SwapPathStep({
-            pool: getPool(usdc, dai),
-            tokenOut: IERC20(getPool(usdc, dai)),
-            isBuffer: false
-        });
+        path[1].steps[0] =
+            SwapPathStep({pool: getPool(usdc, dai), tokenOut: IERC20(getPool(usdc, dai)), isBuffer: false});
         path[1].steps[1] = SwapPathStep({
             pool: getPool(getPool(usdc, dai), getPool(weth, usdc)),
             tokenOut: IERC20(getPool(weth, usdc)),
             isBuffer: false
         });
-        path[1].steps[2] = SwapPathStep({ pool: getPool(weth, usdc), tokenOut: weth, isBuffer: false });
+        path[1].steps[2] = SwapPathStep({pool: getPool(weth, usdc), tokenOut: weth, isBuffer: false});
 
         generateSimpleDiffs(path, kind);
 
@@ -875,16 +749,12 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
 
     function _testExitSwapMultiPathAndIntermediateRemoveLiquidityStep(SwapKind kind, bool wethIsEth) internal {
         uint256 limit = kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR : DEFAULT_AMOUNT;
-        uint256 givenAmount = kind == SwapKind.EXACT_IN
-            ? DEFAULT_AMOUNT
-            : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
+        uint256 givenAmount =
+            kind == SwapKind.EXACT_IN ? DEFAULT_AMOUNT : DEFAULT_AMOUNT - REMOVE_LIQUIDITY_ROUNDING_ERROR;
 
         UniversalSwapPath[] memory path = new UniversalSwapPath[](2);
         path[0] = UniversalSwapPath({
-            tokenIn: IERC20(getPool(usdc, weth)),
-            steps: new SwapPathStep[](1),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(getPool(usdc, weth)), steps: new SwapPathStep[](1), givenAmount: givenAmount, limit: limit
         });
         path[0].steps[0] = SwapPathStep({
             pool: getPool(getPool(usdc, weth), getPool(weth, dai)),
@@ -894,17 +764,14 @@ contract BatchRouterE2ETest is BaseBatchRouterE2ETest {
         addExpectedPathAmount(limit);
 
         path[1] = UniversalSwapPath({
-            tokenIn: IERC20(getPool(dai, usdc)),
-            steps: new SwapPathStep[](2),
-            givenAmount: givenAmount,
-            limit: limit
+            tokenIn: IERC20(getPool(dai, usdc)), steps: new SwapPathStep[](2), givenAmount: givenAmount, limit: limit
         });
         path[1].steps[0] = SwapPathStep({
             pool: getPool(getPool(dai, usdc), getPool(usdc, weth)),
             tokenOut: IERC20(getPool(usdc, weth)),
             isBuffer: false
         });
-        path[1].steps[1] = SwapPathStep({ pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false });
+        path[1].steps[1] = SwapPathStep({pool: getPool(usdc, weth), tokenOut: weth, isBuffer: false});
         addExpectedPathAmount(limit);
 
         addDiffForAlice(IERC20(getPool(usdc, weth)), -int256(givenAmount));

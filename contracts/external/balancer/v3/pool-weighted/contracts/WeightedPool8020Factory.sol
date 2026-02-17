@@ -4,15 +4,17 @@ pragma solidity ^0.8.24;
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
-import { WeightedPool } from "./WeightedPool.sol";
+import {WeightedPool} from "./WeightedPool.sol";
 
 /**
  * @notice Weighted Pool factory for 80/20 pools.
@@ -31,12 +33,10 @@ contract WeightedPool8020Factory is IPoolVersion, BasePoolFactory, Version {
 
     string private _poolVersion;
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        string memory factoryVersion,
-        string memory poolVersion
-    ) BasePoolFactory(vault, pauseWindowDuration, type(WeightedPool).creationCode) Version(factoryVersion) {
+    constructor(IVault vault, uint32 pauseWindowDuration, string memory factoryVersion, string memory poolVersion)
+        BasePoolFactory(vault, pauseWindowDuration, type(WeightedPool).creationCode)
+        Version(factoryVersion)
+    {
         _poolVersion = poolVersion;
     }
 
@@ -112,10 +112,11 @@ contract WeightedPool8020Factory is IPoolVersion, BasePoolFactory, Version {
         salt = keccak256(abi.encode(block.chainid, highWeightToken, lowWeightToken));
     }
 
-    function _calculateConstructorArgs(
-        IERC20 highWeightToken,
-        IERC20 lowWeightToken
-    ) private view returns (bytes memory constructorArgs) {
+    function _calculateConstructorArgs(IERC20 highWeightToken, IERC20 lowWeightToken)
+        private
+        view
+        returns (bytes memory constructorArgs)
+    {
         // Tokens must be sorted.
         (uint256 highWeightTokenIdx, uint256 lowWeightTokenIdx) = highWeightToken > lowWeightToken ? (1, 0) : (0, 1);
 

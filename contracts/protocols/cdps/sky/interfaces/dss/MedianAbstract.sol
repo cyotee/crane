@@ -21,5 +21,6 @@ interface MedianAbstract {
     function diss(address) external;
     function kiss(address[] calldata) external;
     function diss(address[] calldata) external;
-    function poke(uint256[] calldata, uint256[] calldata, uint8[] calldata, bytes32[] calldata, bytes32[] calldata) external;
+    function poke(uint256[] calldata, uint256[] calldata, uint8[] calldata, bytes32[] calldata, bytes32[] calldata)
+        external;
 }

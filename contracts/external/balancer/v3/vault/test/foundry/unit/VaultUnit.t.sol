@@ -8,20 +8,26 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BaseTest} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
 
-import { VaultContractsDeployer } from "../../../test/foundry/utils/VaultContractsDeployer.sol";
-import { PoolConfigLib } from "../../../contracts/lib/PoolConfigLib.sol";
+import {VaultContractsDeployer} from "../../../test/foundry/utils/VaultContractsDeployer.sol";
+import {PoolConfigLib} from "../../../contracts/lib/PoolConfigLib.sol";
 
 contract VaultUnitTest is BaseTest, VaultContractsDeployer {
     using ArrayHelpers for *;
@@ -96,14 +102,13 @@ contract VaultUnitTest is BaseTest, VaultContractsDeployer {
         aggregateSwapFeePercentage = (aggregateSwapFeePercentage / FEE_SCALING_FACTOR) * FEE_SCALING_FACTOR;
 
         uint256 expectedTotalSwapFeeAmountRaw = totalSwapFeeAmountScaled18.toRawUndoRateRoundDown(
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
+            poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]
         );
 
         uint256 expectedAggregateSwapFeeAmountRaw = expectedTotalSwapFeeAmountRaw.mulDown(aggregateSwapFeePercentage);
 
-        (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) = vault
-            .manualComputeAndChargeAggregateSwapFees(poolData, totalSwapFeeAmountScaled18, pool, dai, tokenIndex);
+        (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) =
+            vault.manualComputeAndChargeAggregateSwapFees(poolData, totalSwapFeeAmountScaled18, pool, dai, tokenIndex);
 
         assertEq(totalSwapFeeAmountRaw, expectedTotalSwapFeeAmountRaw, "Unexpected totalSwapFeeAmountRaw");
         assertEq(aggregateSwapFeeAmountRaw, expectedAggregateSwapFeeAmountRaw, "Unexpected aggregateSwapFeeAmountRaw");
@@ -123,8 +128,8 @@ contract VaultUnitTest is BaseTest, VaultContractsDeployer {
         poolData.poolConfigBits = poolData.poolConfigBits.setAggregateSwapFeePercentage(1.56464e16);
         poolData.poolConfigBits = poolData.poolConfigBits.setPoolInRecoveryMode(true);
 
-        (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) = vault
-            .manualComputeAndChargeAggregateSwapFees(poolData, 2e18, pool, dai, 0);
+        (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) =
+            vault.manualComputeAndChargeAggregateSwapFees(poolData, 2e18, pool, dai, 0);
 
         assertEq(totalSwapFeeAmountRaw, 2, "Unexpected totalSwapFeeAmountRaw");
         assertEq(aggregateSwapFeeAmountRaw, 0, "Unexpected aggregateSwapFeeAmountRaw");

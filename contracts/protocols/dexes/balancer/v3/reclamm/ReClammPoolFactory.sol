@@ -4,19 +4,21 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { CREATE3 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
-import { ReClammPoolParams, ReClammPriceParams } from "./interfaces/IReClammPool.sol";
-import { IReClammPoolMain } from "./interfaces/IReClammPoolMain.sol";
-import { ReClammPoolExtension } from "./ReClammPoolExtension.sol";
-import { ReClammPoolLib } from "./lib/ReClammPoolLib.sol";
-import { ReClammPool } from "./ReClammPool.sol";
+import {ReClammPoolParams, ReClammPriceParams} from "./interfaces/IReClammPool.sol";
+import {IReClammPoolMain} from "./interfaces/IReClammPoolMain.sol";
+import {ReClammPoolExtension} from "./ReClammPoolExtension.sol";
+import {ReClammPoolLib} from "./lib/ReClammPoolLib.sol";
+import {ReClammPool} from "./ReClammPool.sol";
 
 contract ReClammPoolFactory is IPoolVersion, BasePoolFactory, Version {
     using SafeCast for uint256;
@@ -26,12 +28,10 @@ contract ReClammPoolFactory is IPoolVersion, BasePoolFactory, Version {
     /// @notice The actual deployed address of the pool doesn't match the predicted value.
     error PoolAddressMismatch();
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        string memory factoryVersion,
-        string memory poolVersion
-    ) BasePoolFactory(vault, pauseWindowDuration, type(ReClammPool).creationCode) Version(factoryVersion) {
+    constructor(IVault vault, uint32 pauseWindowDuration, string memory factoryVersion, string memory poolVersion)
+        BasePoolFactory(vault, pauseWindowDuration, type(ReClammPool).creationCode)
+        Version(factoryVersion)
+    {
         _poolVersion = poolVersion;
     }
 
@@ -99,19 +99,14 @@ contract ReClammPoolFactory is IPoolVersion, BasePoolFactory, Version {
             });
 
             // Deploy pool extension with predicted pool address (regular create; we don't care about the address).
-            ReClammPoolExtension extensionContract = new ReClammPoolExtension(
-                IReClammPoolMain(pool),
-                getVault(),
-                params,
-                hookContract
-            );
+            ReClammPoolExtension extensionContract =
+                new ReClammPoolExtension(IReClammPoolMain(pool), getVault(), params, hookContract);
 
             // Deploy main pool with CREATE3.
             address deployed = CREATE3.deploy(
                 finalSalt,
                 abi.encodePacked(
-                    type(ReClammPool).creationCode,
-                    abi.encode(params, getVault(), extensionContract, hookContract)
+                    type(ReClammPool).creationCode, abi.encode(params, getVault(), extensionContract, hookContract)
                 ),
                 0
             );

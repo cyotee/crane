@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
-import {IDiamondFactoryPackage} from"@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
+import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IBalancerV3BasePoolFactory} from "@crane/contracts/interfaces/IBalancerV3BasePoolFactory.sol";
 import {IAuthentication} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IAuthentication.sol";
 import {IFactoryWidePauseWindow} from "@crane/contracts/interfaces/IFactoryWidePauseWindow.sol";
@@ -12,14 +12,26 @@ import {
     TokenType,
     TokenConfig
 } from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3BasePoolFactoryRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
 import {DiamondPackageFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageFactoryAwareRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3AuthenticationModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationModifiers.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3AuthenticationModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationModifiers.sol";
 
-abstract contract BalancerV3BasePoolFactory is BalancerV3AuthenticationModifiers, IAuthentication, IBalancerV3BasePoolFactory, IFactoryWidePauseWindow {
-
+abstract contract BalancerV3BasePoolFactory is
+    BalancerV3AuthenticationModifiers,
+    IAuthentication,
+    IBalancerV3BasePoolFactory,
+    IFactoryWidePauseWindow
+{
     /* -------------------------------------------------------------------------- */
     /*                              IBasePoolFactory                              */
     /* -------------------------------------------------------------------------- */

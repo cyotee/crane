@@ -226,13 +226,9 @@ interface ICLPool {
     /// @param data Any data that should be passed through to the callback
     /// @return amount0 The amount of token0 that was paid to mint the liquidity
     /// @return amount1 The amount of token1 that was paid to mint the liquidity
-    function mint(
-        address recipient,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 amount,
-        bytes calldata data
-    ) external returns (uint256 amount0, uint256 amount1);
+    function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amount, bytes calldata data)
+        external
+        returns (uint256 amount0, uint256 amount1);
 
     /// @notice Collects tokens owed to a position
     /// @param recipient The address which should receive the fees collected
@@ -274,9 +270,7 @@ interface ICLPool {
     /// @param amount How much liquidity to burn
     /// @return amount0 The amount of token0 sent to the recipient
     /// @return amount1 The amount of token1 sent to the recipient
-    function burn(int24 tickLower, int24 tickUpper, uint128 amount)
-        external
-        returns (uint256 amount0, uint256 amount1);
+    function burn(int24 tickLower, int24 tickUpper, uint128 amount) external returns (uint256 amount0, uint256 amount1);
 
     /// @notice Burn liquidity for a specific owner (NFT manager variant)
     /// @param tickLower The lower tick of the position

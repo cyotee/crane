@@ -10,7 +10,6 @@ import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/
 import {WETH9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
 
 abstract contract TestBase_Weth9 is Test {
-
     IWETH weth;
 
     function setUp() public virtual {

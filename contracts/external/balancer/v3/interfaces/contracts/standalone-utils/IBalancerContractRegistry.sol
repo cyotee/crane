@@ -37,9 +37,7 @@ interface IBalancerContractRegistry {
      * @param contractAddress The address of the contract being registered
      */
     event BalancerContractRegistered(
-        ContractType indexed contractType,
-        string indexed contractName,
-        address indexed contractAddress
+        ContractType indexed contractType, string indexed contractName, address indexed contractAddress
     );
 
     /**
@@ -49,9 +47,7 @@ interface IBalancerContractRegistry {
      * @param contractAddress The address of the contract being deregistered
      */
     event BalancerContractDeregistered(
-        ContractType indexed contractType,
-        string indexed contractName,
-        address indexed contractAddress
+        ContractType indexed contractType, string indexed contractName, address indexed contractAddress
     );
 
     /**
@@ -146,11 +142,8 @@ interface IBalancerContractRegistry {
      * @param contractName A text description of the contract, usually the deployed version (e.g., "v3-pool-weighted")
      * @param contractAddress The address of the contract
      */
-    function registerBalancerContract(
-        ContractType contractType,
-        string memory contractName,
-        address contractAddress
-    ) external;
+    function registerBalancerContract(ContractType contractType, string memory contractName, address contractAddress)
+        external;
 
     /**
      * @notice Deregister an official Balancer contract (e.g., a trusted router, standard pool factory, or hook).
@@ -195,10 +188,10 @@ interface IBalancerContractRegistry {
      * @param contractAddress The address of the contract
      * @return isActive True if the given address is a registered and active contract of the specified type
      */
-    function isActiveBalancerContract(
-        ContractType contractType,
-        address contractAddress
-    ) external view returns (bool isActive);
+    function isActiveBalancerContract(ContractType contractType, address contractAddress)
+        external
+        view
+        returns (bool isActive);
 
     /**
      * @notice Look up a registered contract by type and name.
@@ -210,10 +203,10 @@ interface IBalancerContractRegistry {
      * @return contractAddress The address of the associated contract, if registered, or zero
      * @return isActive True if the contract was registered and not deprecated
      */
-    function getBalancerContract(
-        ContractType contractType,
-        string memory contractName
-    ) external view returns (address contractAddress, bool isActive);
+    function getBalancerContract(ContractType contractType, string memory contractName)
+        external
+        view
+        returns (address contractAddress, bool isActive);
 
     /**
      * @notice Look up complete information about a registered contract by address.

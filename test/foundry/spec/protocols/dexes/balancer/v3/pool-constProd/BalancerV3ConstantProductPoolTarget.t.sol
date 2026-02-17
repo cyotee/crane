@@ -3,10 +3,16 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import {BalancerV3ConstantProductPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol";
+import {
+    BalancerV3ConstantProductPoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 
 /**
@@ -173,7 +179,10 @@ contract BalancerV3ConstantProductPoolTarget_Test is Test {
         assertTrue(newBalance1 > 0, "New balance for token 1 should be positive");
     }
 
-    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio) public view {
+    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio)
+        public
+        view
+    {
         bal0 = bound(bal0, 1e12, 1e27);
         bal1 = bound(bal1, 1e12, 1e27);
         ratio = bound(ratio, 0.5e18, 2e18);
@@ -355,7 +364,10 @@ contract BalancerV3ConstantProductPoolTarget_Test is Test {
         assertTrue(amountOut > 0, "Output should be positive");
     }
 
-    function testFuzz_onSwap_exactOut_inputGreaterThanOutput(uint256 balA, uint256 balB, uint256 amountOut) public view {
+    function testFuzz_onSwap_exactOut_inputGreaterThanOutput(uint256 balA, uint256 balB, uint256 amountOut)
+        public
+        view
+    {
         // Ensure balanced enough pools to avoid division by zero or precision issues
         balA = bound(balA, 1e18, 1e27);
         balB = bound(balB, 1e18, 1e27);

@@ -18,7 +18,6 @@ import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Sw
  * 5. getSqrtPriceTarget returns correct min/max based on direction
  */
 contract SwapMath_V4_Fuzz_Test is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                            Constants                                       */
     /* -------------------------------------------------------------------------- */
@@ -116,7 +115,11 @@ contract SwapMath_V4_Fuzz_Test is Test {
                 assertLe(amountOut, uint256(amountRemaining), "exactOut: amountOut exceeds amountRemaining");
             } else {
                 // Exact input: amountIn + feeAmount <= abs(amountRemaining)
-                assertLe(amountIn + feeAmount, uint256(-amountRemaining), "exactIn: amountIn + fee exceeds abs(amountRemaining)");
+                assertLe(
+                    amountIn + feeAmount,
+                    uint256(-amountRemaining),
+                    "exactIn: amountIn + fee exceeds abs(amountRemaining)"
+                );
             }
         }
 
@@ -144,7 +147,9 @@ contract SwapMath_V4_Fuzz_Test is Test {
                 assertEq(amountOut, absAmtRemaining, "If target not reached, exact output should be fully consumed");
             } else {
                 // Exact input: input + fee should equal the full input amount
-                assertEq(amountIn + feeAmount, absAmtRemaining, "If target not reached, exact input should be fully consumed");
+                assertEq(
+                    amountIn + feeAmount, absAmtRemaining, "If target not reached, exact input should be fully consumed"
+                );
             }
         }
 
@@ -199,25 +204,11 @@ contract SwapMath_V4_Fuzz_Test is Test {
         // Exact input uses negative amountRemaining
         int256 amountRemaining = -int256(inputAmount);
 
-        (
-            ,
-            uint256 amountIn,
-            ,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (, uint256 amountIn,, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Core invariant: amountIn + feeAmount <= abs(amountRemaining)
-        assertLe(
-            amountIn + feeAmount,
-            inputAmount,
-            "exactIn: amountIn + feeAmount exceeds input amount"
-        );
+        assertLe(amountIn + feeAmount, inputAmount, "exactIn: amountIn + feeAmount exceeds input amount");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -260,25 +251,11 @@ contract SwapMath_V4_Fuzz_Test is Test {
         // Exact output uses positive amountRemaining
         int256 amountRemaining = int256(outputAmount);
 
-        (
-            ,
-            ,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (,, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Core invariant: amountOut <= amountRemaining
-        assertLe(
-            amountOut,
-            outputAmount,
-            "exactOut: amountOut exceeds requested output"
-        );
+        assertLe(amountOut, outputAmount, "exactOut: amountOut exceeds requested output");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -313,13 +290,8 @@ contract SwapMath_V4_Fuzz_Test is Test {
             feePips = uint24(bound(feePips, 0, MAX_SWAP_FEE));
         }
 
-        (uint160 sqrtPriceNext,,,) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (uint160 sqrtPriceNext,,,) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         bool zeroForOne = sqrtPriceCurrent >= sqrtPriceTarget;
 
@@ -365,18 +337,8 @@ contract SwapMath_V4_Fuzz_Test is Test {
             vm.assume(feePips <= MAX_SWAP_FEE);
         }
 
-        (
-            ,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // If fee rate is 0, fee amount should be 0
         if (feePips == 0) {
@@ -448,35 +410,22 @@ contract SwapMath_V4_Fuzz_Test is Test {
         }
 
         // Derive sqrtPriceTargetX96 via getSqrtPriceTarget (as pool swap loops do)
-        uint160 sqrtPriceTargetX96 = SwapMath.getSqrtPriceTarget(
-            zeroForOne,
-            sqrtPriceNextTickX96,
-            sqrtPriceLimitX96
-        );
+        uint160 sqrtPriceTargetX96 = SwapMath.getSqrtPriceTarget(zeroForOne, sqrtPriceNextTickX96, sqrtPriceLimitX96);
 
         // Execute the swap step
-        (uint160 sqrtPriceNextX96,,,) = SwapMath.computeSwapStep(
-            sqrtPriceCurrentX96,
-            sqrtPriceTargetX96,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (uint160 sqrtPriceNextX96,,,) =
+            SwapMath.computeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountRemaining, feePips);
 
         // CORE INVARIANT: sqrtPriceNextX96 must never cross sqrtPriceLimitX96
         if (zeroForOne) {
             // For zeroForOne swaps, price decreases but must not go below limit
             assertGe(
-                sqrtPriceNextX96,
-                sqrtPriceLimitX96,
-                "zeroForOne: sqrtPriceNextX96 crossed below sqrtPriceLimitX96"
+                sqrtPriceNextX96, sqrtPriceLimitX96, "zeroForOne: sqrtPriceNextX96 crossed below sqrtPriceLimitX96"
             );
         } else {
             // For oneForZero swaps, price increases but must not go above limit
             assertLe(
-                sqrtPriceNextX96,
-                sqrtPriceLimitX96,
-                "oneForZero: sqrtPriceNextX96 crossed above sqrtPriceLimitX96"
+                sqrtPriceNextX96, sqrtPriceLimitX96, "oneForZero: sqrtPriceNextX96 crossed above sqrtPriceLimitX96"
             );
         }
     }
@@ -598,9 +547,7 @@ contract SwapMath_V4_Fuzz_Test is Test {
 
         // Ensure different prices
         if (sqrtPriceCurrent == sqrtPriceTarget) {
-            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE
-                ? sqrtPriceCurrent - 1
-                : sqrtPriceCurrent + 1;
+            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE ? sqrtPriceCurrent - 1 : sqrtPriceCurrent + 1;
         }
 
         // Use exact input (negative amountRemaining)
@@ -608,13 +555,8 @@ contract SwapMath_V4_Fuzz_Test is Test {
 
         bool zeroForOne = sqrtPriceCurrent >= sqrtPriceTarget;
 
-        (uint160 sqrtPriceNext,,,) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (uint160 sqrtPriceNext,,,) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Verify direction consistency
         if (zeroForOne) {

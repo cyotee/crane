@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { SwapPathExactAmountIn, SwapPathExactAmountOut } from "./BatchRouterTypes.sol";
+import {SwapPathExactAmountIn, SwapPathExactAmountOut} from "./BatchRouterTypes.sol";
 
 /// @notice Interface for the `BatchRouter`, supporting multi-hop swaps.
 interface IBatchRouterQueries {
@@ -16,11 +16,9 @@ interface IBatchRouterQueries {
      * @return tokensOut Output token addresses
      * @return amountsOut Calculated amounts of output tokens to be received, ordered by output token address
      */
-    function querySwapExactIn(
-        SwapPathExactAmountIn[] memory paths,
-        address sender,
-        bytes calldata userData
-    ) external returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut);
+    function querySwapExactIn(SwapPathExactAmountIn[] memory paths, address sender, bytes calldata userData)
+        external
+        returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut);
 
     /**
      * @notice Queries a swap operation involving multiple paths (steps), specifying exact output token amounts.
@@ -32,9 +30,7 @@ interface IBatchRouterQueries {
      * @return tokensIn Input token addresses
      * @return amountsIn Calculated amounts of input tokens to be received, ordered by input token address
      */
-    function querySwapExactOut(
-        SwapPathExactAmountOut[] memory paths,
-        address sender,
-        bytes calldata userData
-    ) external returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn);
+    function querySwapExactOut(SwapPathExactAmountOut[] memory paths, address sender, bytes calldata userData)
+        external
+        returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn);
 }

@@ -29,12 +29,7 @@ library SafeTransferLib {
                             ERC20 OPERATIONS
     //////////////////////////////////////////////////////////////*/
 
-    function safeTransferFrom(
-        ERC20 token,
-        address from,
-        address to,
-        uint256 amount
-    ) internal {
+    function safeTransferFrom(ERC20 token, address from, address to, uint256 amount) internal {
         bool success;
 
         /// @solidity memory-safe-assembly
@@ -63,11 +58,7 @@ library SafeTransferLib {
         require(success, "TRANSFER_FROM_FAILED");
     }
 
-    function safeTransfer(
-        ERC20 token,
-        address to,
-        uint256 amount
-    ) internal {
+    function safeTransfer(ERC20 token, address to, uint256 amount) internal {
         bool success;
 
         /// @solidity memory-safe-assembly
@@ -95,11 +86,7 @@ library SafeTransferLib {
         require(success, "TRANSFER_FAILED");
     }
 
-    function safeApprove(
-        ERC20 token,
-        address to,
-        uint256 amount
-    ) internal {
+    function safeApprove(ERC20 token, address to, uint256 amount) internal {
         bool success;
 
         /// @solidity memory-safe-assembly

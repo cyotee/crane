@@ -4,14 +4,17 @@ pragma solidity ^0.8.24;
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
-import {WeightedPoolFactory} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
-import {WeightedPool8020Factory} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
+import {
+    WeightedPoolFactory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
+import {
+    WeightedPool8020Factory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
 
 /// @notice Crane-local port of Balancer's WeightedPoolContractsDeployer for testing purposes.
 /// @dev This is a simplified version that doesn't support artifact reuse from hardhat.
 /// It directly deploys contracts using standard Solidity deployment.
 contract WeightedPoolContractsDeployer {
-
     function deployWeightedPoolFactory(
         IVault vault,
         uint32 pauseWindowDuration,

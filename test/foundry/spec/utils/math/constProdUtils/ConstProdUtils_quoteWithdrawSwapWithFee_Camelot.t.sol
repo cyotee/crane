@@ -117,23 +117,21 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
                 data.remainingReserveA = numerator / FEE_DENOMINATOR;
             }
 
-            data.swapAmount = (data.actualTokenB * data.remainingReserveA) / (data.remainingReserveB + data.actualTokenB);
+            data.swapAmount =
+                (data.actualTokenB * data.remainingReserveA) / (data.remainingReserveB + data.actualTokenB);
 
-            data.swapAmount = (data.actualTokenB * data.remainingReserveA) / (data.remainingReserveB + data.actualTokenB);
+            data.swapAmount =
+                (data.actualTokenB * data.remainingReserveA) / (data.remainingReserveB + data.actualTokenB);
 
             data.path = new address[](2);
             data.path[0] = data.tokenB;
             data.path[1] = data.tokenA;
 
             uint256 beforeA = IERC20(data.tokenA).balanceOf(address(this));
-            ICamelotV2Router(address(data.router)).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                data.actualTokenB,
-                0,
-                data.path,
-                address(this),
-                address(0),
-                block.timestamp + 300
-            );
+            ICamelotV2Router(address(data.router))
+                .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                    data.actualTokenB, 0, data.path, address(this), address(0), block.timestamp + 300
+                );
             uint256 afterA = IERC20(data.tokenA).balanceOf(address(this));
             uint256 receivedA = afterA - beforeA;
 
@@ -190,23 +188,21 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
                 data.remainingReserveB = numerator / FEE_DENOMINATOR;
             }
 
-            data.swapAmount = (data.actualTokenA * data.remainingReserveB) / (data.remainingReserveA + data.actualTokenA);
+            data.swapAmount =
+                (data.actualTokenA * data.remainingReserveB) / (data.remainingReserveA + data.actualTokenA);
 
-            data.swapAmount = (data.actualTokenA * data.remainingReserveB) / (data.remainingReserveA + data.actualTokenA);
+            data.swapAmount =
+                (data.actualTokenA * data.remainingReserveB) / (data.remainingReserveA + data.actualTokenA);
 
             data.path = new address[](2);
             data.path[0] = data.tokenA;
             data.path[1] = data.tokenB;
 
             uint256 beforeB = IERC20(data.tokenB).balanceOf(address(this));
-            ICamelotV2Router(address(data.router)).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                data.actualTokenA,
-                0,
-                data.path,
-                address(this),
-                address(0),
-                block.timestamp + 300
-            );
+            ICamelotV2Router(address(data.router))
+                .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                    data.actualTokenA, 0, data.path, address(this), address(0), block.timestamp + 300
+                );
             uint256 afterB = IERC20(data.tokenB).balanceOf(address(this));
             uint256 receivedB = afterB - beforeB;
 
@@ -250,14 +246,10 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
         pathAB[1] = address(tokenB);
 
         uint256 balanceBeforeB = IERC20(address(tokenB)).balanceOf(address(this));
-        ICamelotV2Router(address(camelotV2Router)).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            1,
-            pathAB,
-            address(this),
-            address(0),
-            block.timestamp
-        );
+        ICamelotV2Router(address(camelotV2Router))
+            .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                swapAmountA, 1, pathAB, address(this), address(0), block.timestamp
+            );
         uint256 receivedB = IERC20(address(tokenB)).balanceOf(address(this)) - balanceBeforeB;
 
         // Second swap: B -> A
@@ -267,14 +259,10 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
         pathBA[1] = address(tokenA);
 
         uint256 balanceBeforeA = IERC20(address(tokenA)).balanceOf(address(this));
-        ICamelotV2Router(address(camelotV2Router)).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            receivedB,
-            1,
-            pathBA,
-            address(this),
-            address(0),
-            block.timestamp
-        );
+        ICamelotV2Router(address(camelotV2Router))
+            .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                receivedB, 1, pathBA, address(this), address(0), block.timestamp
+            );
         uint256 receivedA = IERC20(address(tokenA)).balanceOf(address(this)) - balanceBeforeA;
 
         // trading activity complete
@@ -317,10 +305,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             data.totalLP = pair.totalSupply();
 
             (data.reserveA, data.reserveB) = ConstProdUtils._sortReserves(
-                data.tokenA,
-                pair.token0(),
-                uint256(data.reserveA),
-                uint256(data.reserveB)
+                data.tokenA, pair.token0(), uint256(data.reserveA), uint256(data.reserveB)
             );
         } else {
             // Ensure protocol fees are disabled when tests expect feesDisabled
@@ -328,7 +313,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
         }
 
         // owner fee share will be read by the quote function if needed
-        (uint256 ownerFeeShare, ) = camelotV2Factory.feeInfo();
+        (uint256 ownerFeeShare,) = camelotV2Factory.feeInfo();
 
         uint256 feePercent = _getPoolFeePercent(pair, data.tokenA);
 
@@ -353,15 +338,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
     function _getPoolFeePercent(ICamelotPair pair, address knownToken) internal view returns (uint256) {
         (uint112 r0, uint112 r1, uint16 fee0, uint16 fee1) = pair.getReserves();
         (, uint256 feeA,,) = ConstProdUtils._sortReserves(
-            knownToken,
-            pair.token0(),
-            uint256(r0),
-            uint256(fee0),
-            uint256(r1),
-            uint256(fee1)
+            knownToken, pair.token0(), uint256(r0), uint256(fee0), uint256(r1), uint256(fee1)
         );
         return feeA;
     }
+
     function test_quoteWithdrawSwapWithFee_Camelot_balancedPool_lowPercentage_feesDisabled_extractTokenA() public {
         _initializeCamelotBalancedPools();
         _testWithdrawSwapWithFee(camelotBalancedPair, LOW_PERCENTAGE, false);
@@ -379,7 +360,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
 
     function test_withdrawSwapQuote_Camelot_balancedPool() public {
         _initializeCamelotBalancedPools();
-        (uint112 reserve0, uint112 reserve1, uint16 token0Fee , uint16 token1Fee) = camelotBalancedPair.getReserves();
+        (uint112 reserve0, uint112 reserve1, uint16 token0Fee, uint16 token1Fee) = camelotBalancedPair.getReserves();
 
         (uint256 reserveA, uint256 feeA, uint256 reserveB, uint256 feeB) = ConstProdUtils._sortReserves(
             address(camelotBalancedTokenA),
@@ -402,7 +383,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
         uint256 lpBalance = camelotBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-            uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
             ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
@@ -455,7 +436,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
         uint256 lpBalance = camelotUnbalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-            uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
+        uint256 expectedTotalTokenA = CamelotV2Utils._quoteWithdrawSwapWithFee(
             ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
@@ -493,7 +474,8 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
 
     function test_withdrawSwapQuote_Camelot_extremeUnbalancedPool() public {
         _initializeCamelotExtremeUnbalancedPools();
-        (uint112 reserve0, uint112 reserve1, uint16 token0Fee, uint16 token1Fee) = camelotExtremeUnbalancedPair.getReserves();
+        (uint112 reserve0, uint112 reserve1, uint16 token0Fee, uint16 token1Fee) =
+            camelotExtremeUnbalancedPair.getReserves();
         (uint256 reserveA, uint256 feeA, uint256 reserveB, uint256 feeB) = ConstProdUtils._sortReserves(
             address(camelotExtremeTokenA),
             camelotExtremeUnbalancedPair.token0(),
@@ -520,10 +502,8 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
 
         uint256 initialTokenABalance = camelotExtremeTokenA.balanceOf(address(this));
 
-
         camelotExtremeUnbalancedPair.transfer(address(camelotExtremeUnbalancedPair), ownedLPAmount);
         (uint256 amountA, uint256 amountB) = camelotExtremeUnbalancedPair.burn(address(this));
-
 
         uint256 actualAmountA;
         uint256 actualAmountB;
@@ -534,7 +514,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             actualAmountA = amountB;
             actualAmountB = amountA;
         }
-
 
         if (actualAmountB > 0) {
             camelotExtremeTokenB.approve(address(camelotV2Router), actualAmountB);
@@ -549,8 +528,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
 
         uint256 finalTokenABalance = camelotExtremeTokenA.balanceOf(address(this));
         uint256 actualTotalTokenA = finalTokenABalance - initialTokenABalance;
-
-        
 
         assertEq(actualTotalTokenA, expectedTotalTokenA, "Should receive exactly the expected total TokenA amount");
     }
@@ -579,7 +556,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -611,7 +590,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -643,7 +624,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -675,7 +658,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -707,7 +692,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance = camelotBalancedTokenA.balanceOf(address(this));
@@ -739,7 +726,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Camelot is TestBase_ConstProdUt
             address[] memory path = new address[](2);
             path[0] = address(camelotBalancedTokenB);
             path[1] = address(camelotBalancedTokenA);
-            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountB2, 1, path, address(this), REFERRER, block.timestamp);
+            camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountB2, 1, path, address(this), REFERRER, block.timestamp
+            );
         }
 
         uint256 finalTokenABalance2 = camelotBalancedTokenA.balanceOf(address(this));

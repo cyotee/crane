@@ -91,19 +91,17 @@ library SqrtPriceMath {
         // if we're adding (subtracting), rounding down requires rounding the quotient down (up)
         // in both cases, avoid a mulDiv for most inputs
         if (add) {
-            uint256 quotient = (
-                amount <= type(uint160).max
+            uint256 quotient =
+                (amount <= type(uint160).max
                     ? (amount << FixedPoint96.RESOLUTION) / liquidity
-                    : FullMath.mulDiv(amount, FixedPoint96.Q96, liquidity)
-            );
+                    : FullMath.mulDiv(amount, FixedPoint96.Q96, liquidity));
 
             return (uint256(sqrtPX96) + quotient).toUint160();
         } else {
-            uint256 quotient = (
-                amount <= type(uint160).max
+            uint256 quotient =
+                (amount <= type(uint160).max
                     ? UnsafeMath.divRoundingUp(amount << FixedPoint96.RESOLUTION, liquidity)
-                    : FullMath.mulDivRoundingUp(amount, FixedPoint96.Q96, liquidity)
-            );
+                    : FullMath.mulDivRoundingUp(amount, FixedPoint96.Q96, liquidity));
 
             // equivalent: if (sqrtPX96 <= quotient) revert NotEnoughLiquidity();
             assembly ("memory-safe") {
@@ -205,7 +203,9 @@ library SqrtPriceMath {
             uint256 numerator2 = sqrtPriceBX96 - sqrtPriceAX96;
 
             return roundUp
-                ? UnsafeMath.divRoundingUp(FullMath.mulDivRoundingUp(numerator1, numerator2, sqrtPriceBX96), sqrtPriceAX96)
+                ? UnsafeMath.divRoundingUp(
+                    FullMath.mulDivRoundingUp(numerator1, numerator2, sqrtPriceBX96), sqrtPriceAX96
+                )
                 : FullMath.mulDiv(numerator1, numerator2, sqrtPriceBX96) / sqrtPriceAX96;
         }
     }
@@ -214,7 +214,10 @@ library SqrtPriceMath {
     function absDiff(uint160 a, uint160 b) internal pure returns (uint256 res) {
         assembly ("memory-safe") {
             let diff :=
-                sub(and(a, 0xffffffffffffffffffffffffffffffffffffffff), and(b, 0xffffffffffffffffffffffffffffffffffffffff))
+                sub(
+                    and(a, 0xffffffffffffffffffffffffffffffffffffffff),
+                    and(b, 0xffffffffffffffffffffffffffffffffffffffff)
+                )
             // mask = 0 if a >= b else -1 (all 1s)
             let mask := sar(255, diff)
             // if a >= b, res = a - b = 0 ^ (a - b)

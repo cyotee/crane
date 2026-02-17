@@ -7,22 +7,30 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import { EVMCallModeHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
-import { Authentication } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    Authentication
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { VaultStateBits, VaultStateLib } from "./lib/VaultStateLib.sol";
-import { PoolConfigLib, PoolConfigBits } from "./lib/PoolConfigLib.sol";
-import { VaultExtensionsLib } from "./lib/VaultExtensionsLib.sol";
-import { VaultCommon } from "./VaultCommon.sol";
-import { VaultGuard } from "./VaultGuard.sol";
+import {VaultStateBits, VaultStateLib} from "./lib/VaultStateLib.sol";
+import {PoolConfigLib, PoolConfigBits} from "./lib/PoolConfigLib.sol";
+import {VaultExtensionsLib} from "./lib/VaultExtensionsLib.sol";
+import {VaultCommon} from "./VaultCommon.sol";
+import {VaultGuard} from "./VaultGuard.sol";
 
 /**
  * @dev Bytecode extension for the Vault containing permissioned functions. Complementary to `VaultExtension`,
@@ -257,10 +265,11 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     *******************************************************************************/
 
     /// @inheritdoc IVaultAdmin
-    function setStaticSwapFeePercentage(
-        address pool,
-        uint256 swapFeePercentage
-    ) external onlyVaultDelegateCall withRegisteredPool(pool) {
+    function setStaticSwapFeePercentage(address pool, uint256 swapFeePercentage)
+        external
+        onlyVaultDelegateCall
+        withRegisteredPool(pool)
+    {
         _ensureAuthenticatedByExclusiveRole(pool, _poolRoleAccounts[pool].swapFeeManager);
         _ensureUnpaused(pool);
 
@@ -268,9 +277,7 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     }
 
     /// @inheritdoc IVaultAdmin
-    function collectAggregateFees(
-        address pool
-    )
+    function collectAggregateFees(address pool)
         public
         onlyVaultDelegateCall
         onlyWhenUnlocked
@@ -298,10 +305,7 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     }
 
     /// @inheritdoc IVaultAdmin
-    function updateAggregateSwapFeePercentage(
-        address pool,
-        uint256 newAggregateSwapFeePercentage
-    )
+    function updateAggregateSwapFeePercentage(address pool, uint256 newAggregateSwapFeePercentage)
         external
         onlyVaultDelegateCall
         withRegisteredPool(pool)
@@ -314,10 +318,7 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     }
 
     /// @inheritdoc IVaultAdmin
-    function updateAggregateYieldFeePercentage(
-        address pool,
-        uint256 newAggregateYieldFeePercentage
-    )
+    function updateAggregateYieldFeePercentage(address pool, uint256 newAggregateYieldFeePercentage)
         external
         onlyVaultDelegateCall
         withRegisteredPool(pool)
@@ -330,9 +331,12 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     }
 
     /// @inheritdoc IVaultAdmin
-    function setProtocolFeeController(
-        IProtocolFeeController newProtocolFeeController
-    ) external onlyVaultDelegateCall authenticate nonReentrant {
+    function setProtocolFeeController(IProtocolFeeController newProtocolFeeController)
+        external
+        onlyVaultDelegateCall
+        authenticate
+        nonReentrant
+    {
         _protocolFeeController = newProtocolFeeController;
 
         emit ProtocolFeeControllerChanged(newProtocolFeeController);
@@ -567,8 +571,7 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
 
         // Add the amountsIn to the current buffer balances.
         bufferBalances = PackedTokenBalance.toPackedBalance(
-            bufferBalances.getBalanceRaw() + amountUnderlyingRaw,
-            bufferBalances.getBalanceDerived() + amountWrappedRaw
+            bufferBalances.getBalanceRaw() + amountUnderlyingRaw, bufferBalances.getBalanceDerived() + amountWrappedRaw
         );
         _bufferTokenBalances[wrappedToken] = bufferBalances;
 
@@ -610,16 +613,15 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
         uint256 minAmountUnderlyingOutRaw,
         uint256 minAmountWrappedOutRaw
     ) external onlyVaultDelegateCall returns (uint256 removedUnderlyingBalanceRaw, uint256 removedWrappedBalanceRaw) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        VaultAdmin.removeLiquidityFromBufferHook,
-                        (wrappedToken, sharesToRemove, minAmountUnderlyingOutRaw, minAmountWrappedOutRaw, msg.sender)
-                    )
-                ),
-                (uint256, uint256)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    VaultAdmin.removeLiquidityFromBufferHook,
+                    (wrappedToken, sharesToRemove, minAmountUnderlyingOutRaw, minAmountWrappedOutRaw, msg.sender)
+                )
+            ),
+            (uint256, uint256)
+        );
     }
 
     /**
@@ -706,10 +708,7 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
         }
 
         emit LiquidityRemovedFromBuffer(
-            wrappedToken,
-            removedUnderlyingBalanceRaw,
-            removedWrappedBalanceRaw,
-            bufferBalances
+            wrappedToken, removedUnderlyingBalanceRaw, removedWrappedBalanceRaw, bufferBalances
         );
     }
 
@@ -741,17 +740,22 @@ contract VaultAdmin is IVaultAdmin, VaultCommon, Authentication, VaultGuard {
     }
 
     /// @inheritdoc IVaultAdmin
-    function getBufferAsset(
-        IERC4626 wrappedToken
-    ) external view onlyVaultDelegateCall returns (address underlyingToken) {
+    function getBufferAsset(IERC4626 wrappedToken)
+        external
+        view
+        onlyVaultDelegateCall
+        returns (address underlyingToken)
+    {
         return _bufferAssets[wrappedToken];
     }
 
     /// @inheritdoc IVaultAdmin
-    function getBufferOwnerShares(
-        IERC4626 token,
-        address user
-    ) external view onlyVaultDelegateCall returns (uint256 shares) {
+    function getBufferOwnerShares(IERC4626 token, address user)
+        external
+        view
+        onlyVaultDelegateCall
+        returns (uint256 shares)
+    {
         return _bufferLpShares[token][user];
     }
 

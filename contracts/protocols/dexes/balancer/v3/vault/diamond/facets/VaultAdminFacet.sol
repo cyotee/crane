@@ -6,18 +6,30 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
-import {VaultStateLib, VaultStateBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    VaultStateLib,
+    VaultStateBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
 
 import {BalancerV3VaultStorageRepo} from "../BalancerV3VaultStorageRepo.sol";
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
@@ -146,13 +158,13 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
     /**
      * @notice Returns the vault's paused state and time windows.
      */
-    function getVaultPausedState() external view returns (bool paused, uint32 pauseWindowEndTime, uint32 bufferPeriodEndTime) {
+    function getVaultPausedState()
+        external
+        view
+        returns (bool paused, uint32 pauseWindowEndTime, uint32 bufferPeriodEndTime)
+    {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        return (
-            layout.vaultStateBits.isVaultPaused(),
-            layout.vaultPauseWindowEndTime,
-            layout.vaultBufferPeriodEndTime
-        );
+        return (layout.vaultStateBits.isVaultPaused(), layout.vaultPauseWindowEndTime, layout.vaultBufferPeriodEndTime);
     }
 
     function _setVaultPaused(bool pausing) internal {
@@ -262,10 +274,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @param pool The pool address
      * @param swapFeePercentage The new swap fee percentage
      */
-    function setStaticSwapFeePercentage(
-        address pool,
-        uint256 swapFeePercentage
-    ) external withRegisteredPool(pool) {
+    function setStaticSwapFeePercentage(address pool, uint256 swapFeePercentage) external withRegisteredPool(pool) {
         _ensureUnpaused(pool);
 
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
@@ -284,18 +293,18 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Updates the aggregate swap fee percentage for a pool.
      * @dev Only callable by the protocol fee controller.
      */
-    function updateAggregateSwapFeePercentage(
-        address pool,
-        uint256 newAggregateSwapFeePercentage
-    ) external withRegisteredPool(pool) onlyProtocolFeeController {
+    function updateAggregateSwapFeePercentage(address pool, uint256 newAggregateSwapFeePercentage)
+        external
+        withRegisteredPool(pool)
+        onlyProtocolFeeController
+    {
         if (newAggregateSwapFeePercentage > FixedPoint.ONE) {
             revert IProtocolFeeController.ProtocolSwapFeePercentageTooHigh();
         }
 
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.poolConfigBits[pool] = layout.poolConfigBits[pool].setAggregateSwapFeePercentage(
-            newAggregateSwapFeePercentage
-        );
+        layout.poolConfigBits[pool] =
+            layout.poolConfigBits[pool].setAggregateSwapFeePercentage(newAggregateSwapFeePercentage);
         emit AggregateSwapFeePercentageChanged(pool, newAggregateSwapFeePercentage);
     }
 
@@ -303,18 +312,18 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Updates the aggregate yield fee percentage for a pool.
      * @dev Only callable by the protocol fee controller.
      */
-    function updateAggregateYieldFeePercentage(
-        address pool,
-        uint256 newAggregateYieldFeePercentage
-    ) external withRegisteredPool(pool) onlyProtocolFeeController {
+    function updateAggregateYieldFeePercentage(address pool, uint256 newAggregateYieldFeePercentage)
+        external
+        withRegisteredPool(pool)
+        onlyProtocolFeeController
+    {
         if (newAggregateYieldFeePercentage > FixedPoint.ONE) {
             revert IProtocolFeeController.ProtocolYieldFeePercentageTooHigh();
         }
 
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.poolConfigBits[pool] = layout.poolConfigBits[pool].setAggregateYieldFeePercentage(
-            newAggregateYieldFeePercentage
-        );
+        layout.poolConfigBits[pool] =
+            layout.poolConfigBits[pool].setAggregateYieldFeePercentage(newAggregateYieldFeePercentage);
         emit AggregateYieldFeePercentageChanged(pool, newAggregateYieldFeePercentage);
     }
 
@@ -329,9 +338,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @return totalSwapFees Swap fees per token
      * @return totalYieldFees Yield fees per token
      */
-    function collectAggregateFees(
-        address pool
-    )
+    function collectAggregateFees(address pool)
         external
         onlyWhenUnlocked
         onlyProtocolFeeController
@@ -489,9 +496,11 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Sets the protocol fee controller.
      * @param newProtocolFeeController The new fee controller
      */
-    function setProtocolFeeController(
-        IProtocolFeeController newProtocolFeeController
-    ) external authenticate nonReentrant {
+    function setProtocolFeeController(IProtocolFeeController newProtocolFeeController)
+        external
+        authenticate
+        nonReentrant
+    {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
         layout.protocolFeeController = newProtocolFeeController;
         emit ProtocolFeeControllerChanged(newProtocolFeeController);
@@ -626,7 +635,11 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
 
         // Check against maximums
         if (amountUnderlyingRaw > maxAmountUnderlyingInRaw || amountWrappedRaw > maxAmountWrappedInRaw) {
-            revert AmountInAboveMax(IERC20(address(wrappedToken)), amountUnderlyingRaw + amountWrappedRaw, maxAmountUnderlyingInRaw + maxAmountWrappedInRaw);
+            revert AmountInAboveMax(
+                IERC20(address(wrappedToken)),
+                amountUnderlyingRaw + amountWrappedRaw,
+                maxAmountUnderlyingInRaw + maxAmountWrappedInRaw
+            );
         }
 
         // Update state
@@ -635,8 +648,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         BalancerV3VaultStorageRepo._setBufferLpShares(wrappedToken, sharesOwner, existingShares + exactSharesToIssue);
 
         bytes32 newBalance = PackedTokenBalance.toPackedBalance(
-            currentUnderlying + amountUnderlyingRaw,
-            currentWrapped + amountWrappedRaw
+            currentUnderlying + amountUnderlyingRaw, currentWrapped + amountWrappedRaw
         );
         BalancerV3VaultStorageRepo._setBufferTokenBalance(wrappedToken, newBalance);
 
@@ -681,7 +693,9 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
 
         // Check minimums
         if (removedUnderlyingBalanceRaw < minAmountUnderlyingOutRaw) {
-            revert AmountOutBelowMin(IERC20(address(wrappedToken)), removedUnderlyingBalanceRaw, minAmountUnderlyingOutRaw);
+            revert AmountOutBelowMin(
+                IERC20(address(wrappedToken)), removedUnderlyingBalanceRaw, minAmountUnderlyingOutRaw
+            );
         }
         if (removedWrappedBalanceRaw < minAmountWrappedOutRaw) {
             revert AmountOutBelowMin(IERC20(address(wrappedToken)), removedWrappedBalanceRaw, minAmountWrappedOutRaw);
@@ -692,8 +706,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         BalancerV3VaultStorageRepo._setBufferLpShares(wrappedToken, msg.sender, senderShares - sharesToRemove);
 
         bytes32 newBalance = PackedTokenBalance.toPackedBalance(
-            currentUnderlying - removedUnderlyingBalanceRaw,
-            currentWrapped - removedWrappedBalanceRaw
+            currentUnderlying - removedUnderlyingBalanceRaw, currentWrapped - removedWrappedBalanceRaw
         );
         BalancerV3VaultStorageRepo._setBufferTokenBalance(wrappedToken, newBalance);
 

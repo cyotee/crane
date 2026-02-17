@@ -21,21 +21,26 @@ import {MCDUser} from "./MCDUser.sol";
 import {GodMode} from "./GodMode.sol";
 
 contract DSValue {
-    bool    has;
+    bool has;
     bytes32 val;
+
     function peek() public view returns (bytes32, bool) {
-        return (val,has);
+        return (val, has);
     }
+
     function read() external view returns (bytes32) {
-        bytes32 wut; bool haz;
+        bytes32 wut;
+        bool haz;
         (wut, haz) = peek();
         require(haz, "haz-not");
         return wut;
     }
+
     function poke(bytes32 wut) external {
         val = wut;
         has = true;
     }
+
     function void() external {
         val = bytes32(0);
         has = false;
@@ -67,7 +72,6 @@ struct DssIlkInstance {
 }
 
 library MCD {
-
     uint256 constant WAD = 10 ** 18;
     uint256 constant RAY = 10 ** 27;
     uint256 constant RAD = 10 ** 45;
@@ -109,7 +113,11 @@ library MCD {
         return out;
     }
 
-    function getIlk(DssInstance memory dss, string memory gem, string memory variant) internal view returns (DssIlkInstance memory) {
+    function getIlk(DssInstance memory dss, string memory gem, string memory variant)
+        internal
+        view
+        returns (DssIlkInstance memory)
+    {
         return DssIlkInstance(
             DSTokenAbstract(getAddressOrNull(dss, bytesToBytes32(bytes(gem)))),
             OsmAbstract(getAddressOrNull(dss, bytesToBytes32(abi.encodePacked("PIP_", gem)))),
@@ -119,33 +127,21 @@ library MCD {
     }
 
     /// @dev Initialize a dummy ilk with a $1 DSValue pip without liquidations
-    function initIlk(
-        DssInstance memory dss,
-        bytes32 ilk
-    ) internal {
+    function initIlk(DssInstance memory dss, bytes32 ilk) internal {
         DSValue pip = new DSValue();
         pip.poke(bytes32(WAD));
         initIlk(dss, ilk, address(0), address(pip));
     }
 
     /// @dev Initialize an ilk with a $1 DSValue pip without liquidations
-    function initIlk(
-        DssInstance memory dss,
-        bytes32 ilk,
-        address join
-    ) internal {
+    function initIlk(DssInstance memory dss, bytes32 ilk, address join) internal {
         DSValue pip = new DSValue();
         pip.poke(bytes32(WAD));
         initIlk(dss, ilk, join, address(pip));
     }
 
     /// @dev Initialize an ilk without liquidations
-    function initIlk(
-        DssInstance memory dss,
-        bytes32 ilk,
-        address join,
-        address pip
-    ) internal {
+    function initIlk(DssInstance memory dss, bytes32 ilk, address join, address pip) internal {
         dss.vat.init(ilk);
         dss.jug.init(ilk);
 
@@ -157,18 +153,14 @@ library MCD {
     }
 
     /// @dev Initialize an ilk with liquidations
-    function initIlk(
-        DssInstance memory dss,
-        bytes32 ilk,
-        address join,
-        address pip,
-        address clip,
-        address clipCalc
-    ) internal {
+    function initIlk(DssInstance memory dss, bytes32 ilk, address join, address pip, address clip, address clipCalc)
+        internal
+    {
         initIlk(dss, ilk, join, pip);
 
         // TODO liquidations
-        clip; clipCalc;
+        clip;
+        clipCalc;
     }
 
     /// @dev Give who a ward on all core contracts
@@ -193,5 +185,4 @@ library MCD {
     function newUser(DssInstance memory dss) internal returns (MCDUser) {
         return new MCDUser(dss);
     }
-
 }

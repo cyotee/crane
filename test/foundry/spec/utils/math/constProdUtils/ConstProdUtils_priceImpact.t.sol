@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
+import {
+    TestBase_ConstProdUtils_Uniswap
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 
@@ -62,12 +64,11 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
      * @param amountOut Amount of tokens received from swap
      * @return priceImpactBP Price impact in basis points (10000 = 100%)
      */
-    function _calculatePriceImpactBP(
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 amountIn,
-        uint256 amountOut
-    ) internal pure returns (uint256 priceImpactBP) {
+    function _calculatePriceImpactBP(uint256 reserveIn, uint256 reserveOut, uint256 amountIn, uint256 amountOut)
+        internal
+        pure
+        returns (uint256 priceImpactBP)
+    {
         if (amountIn == 0 || reserveIn == 0) return 0;
 
         // spotPrice = reserveOut / reserveIn (scaled by 1e18 for precision)
@@ -90,10 +91,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
      * @dev Calculates the theoretical price impact for a constant product AMM
      * Without fees: priceImpact = amountIn / (reserveIn + amountIn)
      */
-    function _theoreticalPriceImpactBP(
-        uint256 reserveIn,
-        uint256 amountIn
-    ) internal pure returns (uint256) {
+    function _theoreticalPriceImpactBP(uint256 reserveIn, uint256 amountIn) internal pure returns (uint256) {
         if (reserveIn == 0) return PRECISION_BP;
         return (amountIn * PRECISION_BP) / (reserveIn + amountIn);
     }
@@ -135,7 +133,11 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         );
 
         // Small trades should still have minimal price impact in unbalanced pools
-        assertLt(data.priceImpactBP, SMALL_TRADE_MAX_IMPACT_BP, "Small trade in unbalanced pool should have < 1% price impact");
+        assertLt(
+            data.priceImpactBP,
+            SMALL_TRADE_MAX_IMPACT_BP,
+            "Small trade in unbalanced pool should have < 1% price impact"
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -189,7 +191,9 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         );
 
         // Medium trades in unbalanced pools should still show moderate impact
-        assertGe(data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP, "5% trade in unbalanced pool should have >= 1% price impact");
+        assertGe(
+            data.priceImpactBP, MEDIUM_TRADE_MIN_IMPACT_BP, "5% trade in unbalanced pool should have >= 1% price impact"
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -230,7 +234,9 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         );
 
         // Large trades in extreme pools should show significant impact
-        assertGe(data.priceImpactBP, LARGE_TRADE_MIN_IMPACT_BP, "Large trade in extreme pool should have >= 10% price impact");
+        assertGe(
+            data.priceImpactBP, LARGE_TRADE_MIN_IMPACT_BP, "Large trade in extreme pool should have >= 10% price impact"
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -243,18 +249,15 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // Test multiple trade sizes to verify formula correctness
         uint256[5] memory tradeSizes = [
             INITIAL_LIQUIDITY / 1000, // 0.1%
-            INITIAL_LIQUIDITY / 100,  // 1%
-            INITIAL_LIQUIDITY / 20,   // 5%
-            INITIAL_LIQUIDITY / 10,   // 10%
-            INITIAL_LIQUIDITY / 5     // 20%
+            INITIAL_LIQUIDITY / 100, // 1%
+            INITIAL_LIQUIDITY / 20, // 5%
+            INITIAL_LIQUIDITY / 10, // 10%
+            INITIAL_LIQUIDITY / 5 // 20%
         ];
 
         for (uint256 i = 0; i < tradeSizes.length; i++) {
-            PriceImpactTestData memory data = _testPriceImpact(
-                uniswapBalancedTokenA,
-                uniswapBalancedTokenB,
-                tradeSizes[i]
-            );
+            PriceImpactTestData memory data =
+                _testPriceImpact(uniswapBalancedTokenA, uniswapBalancedTokenB, tradeSizes[i]);
 
             // Calculate theoretical price impact (without considering fees)
             uint256 theoreticalImpact = _theoreticalPriceImpactBP(data.reserveIn, data.amountIn);
@@ -279,9 +282,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // Get reserves
         (uint112 r0, uint112 r1,) = uniswapBalancedPair.getReserves();
         (uint256 reserveIn,, uint256 reserveOut,) = ConstProdUtils._sortReserves(
-            address(uniswapBalancedTokenA),
-            uniswapBalancedPair.token0(),
-            r0, FEE_PERCENT, r1, FEE_PERCENT
+            address(uniswapBalancedTokenA), uniswapBalancedPair.token0(), r0, FEE_PERCENT, r1, FEE_PERCENT
         );
 
         // Calculate amountOut using ConstProdUtils
@@ -318,11 +319,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         uint256 tradeAmount = (INITIAL_LIQUIDITY * tradePercent) / PRECISION_BP;
         if (tradeAmount == 0) tradeAmount = 1;
 
-        PriceImpactTestData memory data = _testPriceImpact(
-            uniswapBalancedTokenA,
-            uniswapBalancedTokenB,
-            tradeAmount
-        );
+        PriceImpactTestData memory data = _testPriceImpact(uniswapBalancedTokenA, uniswapBalancedTokenB, tradeAmount);
 
         // Price impact should always be non-negative
         assertGe(data.priceImpactBP, 0, "Price impact should be non-negative");
@@ -330,7 +327,9 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // Price impact should be bounded by theoretical maximum
         uint256 theoreticalMax = _theoreticalPriceImpactBP(data.reserveIn, data.amountIn);
         // Allow some tolerance for fee effects
-        assertLe(data.priceImpactBP, theoreticalMax + 100, "Price impact should not exceed theoretical max significantly");
+        assertLe(
+            data.priceImpactBP, theoreticalMax + 100, "Price impact should not exceed theoretical max significantly"
+        );
     }
 
     function testFuzz_priceImpact_reserveRatios(uint256 ratioA, uint256 ratioB) public {
@@ -351,14 +350,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         tokenB.approve(address(uniswapV2Router), ratioB);
 
         uniswapV2Router.addLiquidity(
-            address(tokenA),
-            address(tokenB),
-            ratioA,
-            ratioB,
-            1,
-            1,
-            address(this),
-            block.timestamp
+            address(tokenA), address(tokenB), ratioA, ratioB, 1, 1, address(this), block.timestamp
         );
 
         // Trade 1% of the smaller reserve
@@ -367,12 +359,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         if (tradeAmount == 0) return; // Skip if trade would be 0
 
         // Execute trade and verify price impact is reasonable
-        PriceImpactTestData memory data = _testPriceImpactCustomPool(
-            pair,
-            tokenA,
-            tokenB,
-            tradeAmount
-        );
+        PriceImpactTestData memory data = _testPriceImpactCustomPool(pair, tokenA, tokenB, tradeAmount);
 
         // For 1% trade, price impact should be around 1% (100 bp) with some tolerance
         assertLt(data.priceImpactBP, 500, "1% trade should have less than 5% price impact");
@@ -395,9 +382,7 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // Get reserves
         (uint112 r0, uint112 r1,) = uniswapBalancedPair.getReserves();
         (uint256 reserveIn,, uint256 reserveOut,) = ConstProdUtils._sortReserves(
-            address(uniswapBalancedTokenA),
-            uniswapBalancedPair.token0(),
-            r0, FEE_PERCENT, r1, FEE_PERCENT
+            address(uniswapBalancedTokenA), uniswapBalancedPair.token0(), r0, FEE_PERCENT, r1, FEE_PERCENT
         );
 
         // Calculate outputs using ConstProdUtils (without executing actual swaps)
@@ -416,11 +401,10 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
     /*                            Internal Test Helpers                           */
     /* -------------------------------------------------------------------------- */
 
-    function _testPriceImpact(
-        ERC20PermitMintableStub tokenIn,
-        ERC20PermitMintableStub tokenOut,
-        uint256 amountIn
-    ) internal returns (PriceImpactTestData memory data) {
+    function _testPriceImpact(ERC20PermitMintableStub tokenIn, ERC20PermitMintableStub tokenOut, uint256 amountIn)
+        internal
+        returns (PriceImpactTestData memory data)
+    {
         address pair = uniswapV2Factory.getPair(address(tokenIn), address(tokenOut));
         return _testPriceImpactCustomPool(pair, tokenIn, tokenOut, amountIn);
     }
@@ -434,15 +418,14 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
         // Get reserves before swap
         (uint112 r0, uint112 r1,) = IUniswapV2Pair(pair).getReserves();
         (data.reserveIn,, data.reserveOut,) = ConstProdUtils._sortReserves(
-            address(tokenIn),
-            IUniswapV2Pair(pair).token0(),
-            r0, FEE_PERCENT, r1, FEE_PERCENT
+            address(tokenIn), IUniswapV2Pair(pair).token0(), r0, FEE_PERCENT, r1, FEE_PERCENT
         );
 
         data.amountIn = amountIn;
 
         // Calculate expected output using ConstProdUtils
-        data.amountOut = ConstProdUtils._saleQuote(amountIn, data.reserveIn, data.reserveOut, FEE_PERCENT, FEE_DENOMINATOR);
+        data.amountOut =
+            ConstProdUtils._saleQuote(amountIn, data.reserveIn, data.reserveOut, FEE_PERCENT, FEE_DENOMINATOR);
 
         // Calculate price impact
         data.priceImpactBP = _calculatePriceImpactBP(data.reserveIn, data.reserveOut, data.amountIn, data.amountOut);
@@ -457,18 +440,11 @@ contract ConstProdUtils_priceImpact is TestBase_ConstProdUtils_Uniswap {
 
         uint256 balanceBefore = tokenOut.balanceOf(address(this));
 
-        uniswapV2Router.swapExactTokensForTokens(
-            amountIn,
-            0,
-            path,
-            address(this),
-            block.timestamp + 300
-        );
+        uniswapV2Router.swapExactTokensForTokens(amountIn, 0, path, address(this), block.timestamp + 300);
 
         uint256 actualOutput = tokenOut.balanceOf(address(this)) - balanceBefore;
 
         // Verify ConstProdUtils calculation matches actual swap
         assertEq(actualOutput, data.amountOut, "Calculated output should match actual swap output");
     }
-
 }

@@ -97,11 +97,7 @@ library BalancerV3StablePoolRepo {
      * @param rawEndValue Target amplification value (without precision multiplier).
      * @param endTime Timestamp when the update should complete.
      */
-    function _startAmplificationParameterUpdate(
-        Storage storage layout,
-        uint256 rawEndValue,
-        uint256 endTime
-    ) internal {
+    function _startAmplificationParameterUpdate(Storage storage layout, uint256 rawEndValue, uint256 endTime) internal {
         if (rawEndValue < StableMath.MIN_AMP) revert AmplificationFactorTooLow();
         if (rawEndValue > StableMath.MAX_AMP) revert AmplificationFactorTooHigh();
 
@@ -165,11 +161,11 @@ library BalancerV3StablePoolRepo {
             // Linear interpolation
             unchecked {
                 if (endValue > startValue) {
-                    value = startValue +
-                        ((endValue - startValue) * (block.timestamp - startTime)) / (endTime - startTime);
+                    value =
+                        startValue + ((endValue - startValue) * (block.timestamp - startTime)) / (endTime - startTime);
                 } else {
-                    value = startValue -
-                        ((startValue - endValue) * (block.timestamp - startTime)) / (endTime - startTime);
+                    value =
+                        startValue - ((startValue - endValue) * (block.timestamp - startTime)) / (endTime - startTime);
                 }
             }
         } else {
@@ -193,12 +189,7 @@ library BalancerV3StablePoolRepo {
     function _getAmplificationState(Storage storage layout)
         internal
         view
-        returns (
-            uint256 startValue,
-            uint256 endValue,
-            uint256 startTime,
-            uint256 endTime
-        )
+        returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
     {
         startValue = layout.startValue;
         endValue = layout.endValue;
@@ -209,12 +200,7 @@ library BalancerV3StablePoolRepo {
     function _getAmplificationState()
         internal
         view
-        returns (
-            uint256 startValue,
-            uint256 endValue,
-            uint256 startTime,
-            uint256 endTime
-        )
+        returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
     {
         return _getAmplificationState(_layout());
     }

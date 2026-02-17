@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
 pragma solidity ^0.8.24;
@@ -13,12 +13,11 @@ library GradualValueChange {
 
     using FixedPoint for uint256;
 
-    function getInterpolatedValue(
-        uint256 startValue,
-        uint256 endValue,
-        uint256 startTime,
-        uint256 endTime
-    ) internal view returns (uint256) {
+    function getInterpolatedValue(uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
+        internal
+        view
+        returns (uint256)
+    {
         uint256 pctProgress = calculateValueChangeProgress(startTime, endTime);
 
         return interpolateValue(startValue, endValue, pctProgress);
@@ -35,11 +34,11 @@ library GradualValueChange {
         }
     }
 
-    function interpolateValue(
-        uint256 startValue,
-        uint256 endValue,
-        uint256 pctProgress
-    ) internal pure returns (uint256) {
+    function interpolateValue(uint256 startValue, uint256 endValue, uint256 pctProgress)
+        internal
+        pure
+        returns (uint256)
+    {
         if (pctProgress >= FixedPoint.ONE || startValue == endValue) {
             return endValue;
         }

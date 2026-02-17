@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 
 interface IReClammPoolMain is IBasePool {
     /*******************************************************************************
@@ -55,9 +55,9 @@ interface IReClammPoolMain is IBasePool {
      * @return actualNewDailyPriceShiftExponent The actual new daily price shift exponent, after accounting for
      * precision loss incurred when dealing with the internal representation of the exponent
      */
-    function setDailyPriceShiftExponent(
-        uint256 newDailyPriceShiftExponent
-    ) external returns (uint256 actualNewDailyPriceShiftExponent);
+    function setDailyPriceShiftExponent(uint256 newDailyPriceShiftExponent)
+        external
+        returns (uint256 actualNewDailyPriceShiftExponent);
 
     /**
      * @notice Set the centeredness margin.
@@ -107,10 +107,10 @@ interface IReClammPoolMain is IBasePool {
      * @return initialBalancesRaw Initialization raw balances sorted in token registration order, including the given
      * amount and a calculated raw amount for the other token
      */
-    function computeInitialBalancesRaw(
-        IERC20 referenceToken,
-        uint256 referenceAmountInRaw
-    ) external view returns (uint256[] memory initialBalancesRaw);
+    function computeInitialBalancesRaw(IERC20 referenceToken, uint256 referenceAmountInRaw)
+        external
+        view
+        returns (uint256[] memory initialBalancesRaw);
 
     /*******************************************************************************
                                     Proxy Functions

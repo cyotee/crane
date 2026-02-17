@@ -1,0 +1,72 @@
+module Deploy where
+
+import Daml.Script
+import DA.List
+import DA.Map as M
+import RedStoneCore
+import RedStoneAdapter
+import RedStonePriceFeed
+import RedStonePricePillFactory
+import MockFeatured
+import RedStoneCoreFeaturedClient
+import Input
+
+main : Input -> Script ()
+main input = script do
+  let owner = input.owner
+  let updater = input.updater
+  let viewer = input.viewer
+  let client = input.client
+  let beneficiary = input.beneficiary
+  let dso = input.dso
+
+  coreCid <- submit (actAs [owner] <> readAs [updater, viewer]) do
+    createCmd RedStoneCore with
+      coreId = Input.adapterId
+      owner = owner
+      viewers = [viewer]
+
+  debug $ "RedStoneCore " <> show coreCid
+
+  adapterCid <- submit (actAs [owner] <> readAs [updater, viewer]) do
+    createCmd RedStoneAdapter with
+      adapterId = Input.adapterId
+      owner
+      updaters = [updater]
+      viewers = [viewer]
+      feedData = M.empty
+
+  debug $ "RedStoneAdapter " <> show adapterCid
+
+  feedCid <- submit (actAs [owner] <> readAs [viewer]) do
+    createCmd RedStonePriceFeed with
+      adapterId = Input.adapterId
+      owner
+      viewers = [viewer]
+      feedId = head input.feedIds
+      description = "XXX"
+
+  debug $ "RedStonePriceFeed " <> show feedCid
+
+  factoryCoreCid <- submit (actAs owner <> actAs beneficiary) do
+    createCmd RedStonePricePillFactory with
+      coreId = Input.adapterId
+      owner
+      viewers = [viewer]
+      beneficiary
+
+  debug $ "RedStonePricePillFactory " <> show factoryCoreCid
+
+  featuredCid <- submit dso do
+    createCmd MockFeaturedAppRight with dso, provider = owner
+
+  debug $ "MockFeaturedAppRight " <> show featuredCid
+
+  coreClientCid <- submit owner do
+    createCmd RedStoneCoreFeaturedClient with
+      owner = owner
+      viewers = [client]
+
+  debug $ "RedStoneCoreFeaturedClient " <> show coreClientCid
+
+  return ()

@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 /// forge-lint: disable-next-line(unaliased-plain-import)
-import "contracts/tokens/ERC20TargetStub.sol";
-import "contracts/tokens/ERC20/TestBase_ERC20.sol";
+import {ERC20TargetStub} from "@crane/contracts/tokens/ERC20TargetStub.sol";
+import {ERC20TargetStubHandler, TestBase_ERC20} from "@crane/contracts/tokens/ERC20/TestBase_ERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {IERC20Errors, IERC721Errors, IERC1155Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
+import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 contract ERC20TargetStubInvariantTest is TestBase_ERC20 {
     function _deployToken(ERC20TargetStubHandler handler_) internal virtual override returns (IERC20 token_) {

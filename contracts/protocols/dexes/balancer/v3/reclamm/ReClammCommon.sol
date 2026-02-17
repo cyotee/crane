@@ -4,10 +4,10 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { ReClammStorage } from "./ReClammStorage.sol";
-import { ReClammMath } from "./lib/ReClammMath.sol";
+import {ReClammStorage} from "./ReClammStorage.sol";
+import {ReClammMath} from "./lib/ReClammMath.sol";
 
 /**
  * @notice Functions and modifiers shared between the main ReClammPool and its extension contract.
@@ -33,15 +33,17 @@ abstract contract ReClammCommon is ReClammStorage {
      * @return The fourth root of the current price ratio, maintaining precision through fixed-point arithmetic
      */
     function _computeCurrentPriceRatio() internal view returns (uint256) {
-        (, , , uint256[] memory balancesScaled18) = _getBalancerVault().getPoolTokenInfo(address(this));
-        (uint256 virtualBalanceA, uint256 virtualBalanceB, ) = _computeCurrentVirtualBalances(balancesScaled18);
+        (,,, uint256[] memory balancesScaled18) = _getBalancerVault().getPoolTokenInfo(address(this));
+        (uint256 virtualBalanceA, uint256 virtualBalanceB,) = _computeCurrentVirtualBalances(balancesScaled18);
 
         return ReClammMath.computePriceRatio(balancesScaled18, virtualBalanceA, virtualBalanceB);
     }
 
-    function _computeCurrentVirtualBalances(
-        uint256[] memory balancesScaled18
-    ) internal view returns (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) {
+    function _computeCurrentVirtualBalances(uint256[] memory balancesScaled18)
+        internal
+        view
+        returns (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed)
+    {
         (currentVirtualBalanceA, currentVirtualBalanceB, changed) = ReClammMath.computeCurrentVirtualBalances(
             balancesScaled18,
             _lastVirtualBalanceA,

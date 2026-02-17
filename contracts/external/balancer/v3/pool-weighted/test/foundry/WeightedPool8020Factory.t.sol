@@ -10,21 +10,31 @@ import {Math} from "@crane/contracts/utils/Math.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { TokenConfig, TokenType, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseSplitCodeFactory } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
-import { VaultContractsDeployer } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { RateProviderMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
-import { VaultMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
+import {
+    BaseSplitCodeFactory
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
+import {
+    VaultContractsDeployer
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {RateProviderMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
+import {VaultMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
 
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
-import { WeightedPool8020Factory } from "../../contracts/WeightedPool8020Factory.sol";
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPool8020Factory} from "../../contracts/WeightedPool8020Factory.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract WeightedPool8020FactoryTest is WeightedPoolContractsDeployer, VaultContractsDeployer {
@@ -109,9 +119,7 @@ contract WeightedPool8020FactoryTest is WeightedPoolContractsDeployer, VaultCont
         WeightedPool invertedPool = _createPool(tokenB, tokenA);
 
         assertNotEq(
-            address(pool),
-            address(invertedPool),
-            "Pools with same tokens but different weights should be different"
+            address(pool), address(invertedPool), "Pools with same tokens but different weights should be different"
         );
     }
 

@@ -5,31 +5,36 @@ pragma solidity ^0.8.24;
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IProtocolFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
-import { IBalancerFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerFeeBurner.sol";
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
-import { SwapPathStep } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
+import {
+    IBalancerFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerFeeBurner.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {SwapPathStep} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
 
-import { FeeBurnerAuthentication } from "./FeeBurnerAuthentication.sol";
+import {FeeBurnerAuthentication} from "./FeeBurnerAuthentication.sol";
 
 contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, VaultGuard, FeeBurnerAuthentication {
     using SafeERC20 for IERC20;
 
     mapping(IERC20 => SwapPathStep[]) private _burnSteps;
 
-    constructor(
-        IVault vault,
-        IProtocolFeeSweeper _protocolFeeSweeper,
-        address initialOwner
-    ) VaultGuard(vault) FeeBurnerAuthentication(_protocolFeeSweeper, initialOwner) {
+    constructor(IVault vault, IProtocolFeeSweeper _protocolFeeSweeper, address initialOwner)
+        VaultGuard(vault)
+        FeeBurnerAuthentication(_protocolFeeSweeper, initialOwner)
+    {
         protocolFeeSweeper = _protocolFeeSweeper;
     }
 
@@ -140,7 +145,7 @@ contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, Vaul
             uint256 amountOut;
             uint256 minAmountOut = (i == lastStepIndex) ? params.minAmountOut : 0;
             if (step.isBuffer) {
-                (, , amountOut) = _vault.erc4626BufferWrapOrUnwrap(
+                (,, amountOut) = _vault.erc4626BufferWrapOrUnwrap(
                     BufferWrapOrUnwrapParams({
                         kind: SwapKind.EXACT_IN,
                         direction: step.pool == address(stepTokenIn)
@@ -152,7 +157,7 @@ contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, Vaul
                     })
                 );
             } else {
-                (, , amountOut) = _vault.swap(
+                (,, amountOut) = _vault.swap(
                     VaultSwapParams({
                         kind: SwapKind.EXACT_IN,
                         pool: step.pool,

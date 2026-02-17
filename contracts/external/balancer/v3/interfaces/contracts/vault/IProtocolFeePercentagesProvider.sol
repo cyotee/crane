@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { IBalancerContractRegistry } from "../standalone-utils/IBalancerContractRegistry.sol";
-import { IProtocolFeeController } from "./IProtocolFeeController.sol";
+import {IBalancerContractRegistry} from "../standalone-utils/IBalancerContractRegistry.sol";
+import {IProtocolFeeController} from "./IProtocolFeeController.sol";
 
 interface IProtocolFeePercentagesProvider {
     /**
@@ -13,9 +13,7 @@ interface IProtocolFeePercentagesProvider {
      * @param protocolYieldFeePercentage The protocol yield fee percentage intended for pools from this factory
      */
     event FactorySpecificProtocolFeePercentagesSet(
-        address indexed factory,
-        uint256 protocolSwapFeePercentage,
-        uint256 protocolYieldFeePercentage
+        address indexed factory, uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage
     );
 
     /// @notice The protocol fee controller was configured with an incorrect Vault address.
@@ -63,9 +61,10 @@ interface IProtocolFeePercentagesProvider {
      * @return protocolSwapFeePercentage The protocol swap fee percentage set for that factory
      * @return protocolYieldFeePercentage The protocol yield fee percentage set for that factory
      */
-    function getFactorySpecificProtocolFeePercentages(
-        address factory
-    ) external view returns (uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage);
+    function getFactorySpecificProtocolFeePercentages(address factory)
+        external
+        view
+        returns (uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage);
 
     /**
      * @notice Assign intended protocol fee percentages for a given factory.

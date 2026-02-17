@@ -43,11 +43,7 @@ contract UniswapV3Quoter_tickCrossing_Test is TestBase_UniswapV3 {
         uint256 amountIn = 100e18;
 
         UniswapV3Quoter.SwapQuoteParams memory p = UniswapV3Quoter.SwapQuoteParams({
-            pool: pool,
-            zeroForOne: true,
-            amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0
+            pool: pool, zeroForOne: true, amount: amountIn, sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1, maxSteps: 0
         });
 
         UniswapV3Quoter.SwapQuoteResult memory q = UniswapV3Quoter.quoteExactInput(p);
@@ -59,15 +55,11 @@ contract UniswapV3Quoter_tickCrossing_Test is TestBase_UniswapV3 {
         assertApproxEqAbs(q.amountOut, actualOut, 1, "quoted output mismatch");
     }
 
-    function test_quoteExactInput_maxSteps_stopsEarly() public {
+    function test_quoteExactInput_maxSteps_stopsEarly() public view {
         uint256 amountIn = 100e18;
 
         UniswapV3Quoter.SwapQuoteParams memory p = UniswapV3Quoter.SwapQuoteParams({
-            pool: pool,
-            zeroForOne: true,
-            amount: amountIn,
-            sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 1
+            pool: pool, zeroForOne: true, amount: amountIn, sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1, maxSteps: 1
         });
 
         UniswapV3Quoter.SwapQuoteResult memory q = UniswapV3Quoter.quoteExactInput(p);

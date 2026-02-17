@@ -6,7 +6,10 @@ import "forge-std/Test.sol";
 import {SlipstreamZapQuoter} from "@crane/contracts/utils/math/SlipstreamZapQuoter.sol";
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
 /// @title Test SlipstreamZapQuoter Zap-Out functionality
@@ -52,7 +55,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: BURN_LIQUIDITY,
-            wantToken0: true,  // Output is token0
+            wantToken0: true, // Output is token0
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
             includeUnstakedFee: false
@@ -72,7 +75,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: BURN_LIQUIDITY,
-            wantToken0: false,  // Output is token1
+            wantToken0: false, // Output is token1
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
             includeUnstakedFee: false
@@ -146,13 +149,14 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: BURN_LIQUIDITY,
-            wantToken0: false,  // Want token1
+            wantToken0: false, // Want token1
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
             includeUnstakedFee: false
         });
 
-        SlipstreamZapQuoter.PositionManagerZapOutExecution memory exec = SlipstreamZapQuoter.quoteZapOutPositionManager(params);
+        SlipstreamZapQuoter.PositionManagerZapOutExecution memory exec =
+            SlipstreamZapQuoter.quoteZapOutPositionManager(params);
 
         assertEq(exec.tickLower, tickLower, "tickLower should match");
         assertEq(exec.tickUpper, tickUpper, "tickUpper should match");
@@ -176,7 +180,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower,
             tickUpper,
             BURN_LIQUIDITY,
-            token0,  // Output token
+            token0, // Output token
             0,
             0
         );
@@ -189,7 +193,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower,
             tickUpper,
             BURN_LIQUIDITY,
-            token1,  // Output token
+            token1, // Output token
             0,
             0
         );
@@ -203,8 +207,9 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
 
         bool reverted = false;
         try this.helperCreateZapOutParams(invalidToken) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for invalid token");
@@ -213,13 +218,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
     /// @notice External helper for testing revert
     function helperCreateZapOutParams(address tokenOut) external view {
         SlipstreamZapQuoter.createZapOutParams(
-            ICLPool(address(pool)),
-            tickLower,
-            tickUpper,
-            BURN_LIQUIDITY,
-            tokenOut,
-            0,
-            0
+            ICLPool(address(pool)), tickLower, tickUpper, BURN_LIQUIDITY, tokenOut, 0, 0
         );
     }
 
@@ -242,8 +241,9 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
 
         bool reverted = false;
         try this.helperQuoteZapOut(params) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for zero liquidity");
@@ -253,7 +253,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
     function test_zapOut_invalidRange_reverts() public {
         SlipstreamZapQuoter.ZapOutParams memory params = SlipstreamZapQuoter.ZapOutParams({
             pool: ICLPool(address(pool)),
-            tickLower: tickUpper,  // Wrong order
+            tickLower: tickUpper, // Wrong order
             tickUpper: tickLower,
             liquidity: BURN_LIQUIDITY,
             wantToken0: true,
@@ -264,8 +264,9 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
 
         bool reverted = false;
         try this.helperQuoteZapOut(params) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for invalid range");
@@ -284,12 +285,8 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
         int24 upperTickLower = nearestUsableTick(10000, TICK_SPACING_MEDIUM);
         int24 upperTickUpper = nearestUsableTick(20000, TICK_SPACING_MEDIUM);
 
-        MockCLPool testPool = createMockPoolOneToOne(
-            makeAddr("TokenC"),
-            makeAddr("TokenD"),
-            FEE_MEDIUM,
-            TICK_SPACING_MEDIUM
-        );
+        MockCLPool testPool =
+            createMockPoolOneToOne(makeAddr("TokenC"), makeAddr("TokenD"), FEE_MEDIUM, TICK_SPACING_MEDIUM);
         addLiquidity(testPool, upperTickLower, upperTickUpper, BURN_LIQUIDITY);
 
         SlipstreamZapQuoter.ZapOutParams memory params = SlipstreamZapQuoter.ZapOutParams({
@@ -297,7 +294,7 @@ contract SlipstreamZapQuoter_ZapOut_Test is TestBase_Slipstream {
             tickLower: upperTickLower,
             tickUpper: upperTickUpper,
             liquidity: BURN_LIQUIDITY,
-            wantToken0: true,  // Want token0 as output
+            wantToken0: true, // Want token0 as output
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
             includeUnstakedFee: false

@@ -16,7 +16,9 @@ import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contract
 import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
 import {IBatchRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
 import {IBufferRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";
-import {ICompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -27,7 +29,10 @@ import {VM_ADDRESS} from "@crane/contracts/constants/FoundryConstants.sol";
 import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
 import {BehaviorUtils} from "@crane/contracts/test/behaviors/BehaviorUtils.sol";
 import {Bytes4SetComparatorRepo, Bytes4SetComparator} from "@crane/contracts/test/comparators/Bytes4SetComparator.sol";
-import {AddressSetComparatorRepo, AddressSetComparator} from "@crane/contracts/test/comparators/AddressSetComparator.sol";
+import {
+    AddressSetComparatorRepo,
+    AddressSetComparator
+} from "@crane/contracts/test/comparators/AddressSetComparator.sol";
 import {UInt256} from "@crane/contracts/utils/UInt256.sol";
 import {Bytes4} from "@crane/contracts/utils/Bytes4.sol";
 
@@ -151,11 +156,10 @@ library Behavior_IRouter {
      * @return valid True if the interface IDs match expectations
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function areValid_IRouter_interfaces(
-        string memory subjectName,
-        bytes4[] memory expected,
-        bytes4[] memory actual
-    ) public returns (bool valid) {
+    function areValid_IRouter_interfaces(string memory subjectName, bytes4[] memory expected, bytes4[] memory actual)
+        public
+        returns (bool valid)
+    {
         console.logBehaviorEntry(_Behavior_IRouterName(), "areValid_IRouter_interfaces");
 
         valid = Bytes4SetComparator._compare(
@@ -188,9 +192,7 @@ library Behavior_IRouter {
         );
 
         // Use a synthetic selector to key the expectation
-        Bytes4SetComparatorRepo._recExpectedBytes4(
-            subject, bytes4(keccak256("router.interfaces")), expectedInterfaces_
-        );
+        Bytes4SetComparatorRepo._recExpectedBytes4(subject, bytes4(keccak256("router.interfaces")), expectedInterfaces_);
 
         console.logBehaviorExit(_Behavior_IRouterName(), "expect_IRouter_interfaces");
     }
@@ -231,11 +233,11 @@ library Behavior_IRouter {
      * @return valid True if the addresses match
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function isValid_IRouterCommon_getVault(
-        string memory subjectLabel,
-        address expected,
-        address actual
-    ) public pure returns (bool valid) {
+    function isValid_IRouterCommon_getVault(string memory subjectLabel, address expected, address actual)
+        public
+        pure
+        returns (bool valid)
+    {
         console.logBehaviorEntry(_Behavior_IRouterName(), "isValid_IRouterCommon_getVault");
 
         valid = expected == actual;
@@ -256,9 +258,7 @@ library Behavior_IRouter {
             );
         }
 
-        console.logBehaviorValidation(
-            _Behavior_IRouterName(), "isValid_IRouterCommon_getVault", "vault address", valid
-        );
+        console.logBehaviorValidation(_Behavior_IRouterName(), "isValid_IRouterCommon_getVault", "vault address", valid);
 
         console.logBehaviorExit(_Behavior_IRouterName(), "isValid_IRouterCommon_getVault");
         return valid;
@@ -276,11 +276,7 @@ library Behavior_IRouter {
         view
         returns (bool valid)
     {
-        return isValid_IRouterCommon_getVault(
-            vm.getLabel(address(router)),
-            expectedVault,
-            address(router.getVault())
-        );
+        return isValid_IRouterCommon_getVault(vm.getLabel(address(router)), expectedVault, address(router.getVault()));
     }
 
     /**
@@ -293,10 +289,7 @@ library Behavior_IRouter {
         console.logBehaviorEntry(_Behavior_IRouterName(), "expect_IRouterCommon_getVault");
 
         console.logBehaviorExpectation(
-            _Behavior_IRouterName(),
-            "expect_IRouterCommon_getVault",
-            "vault",
-            vm.toString(expectedVault)
+            _Behavior_IRouterName(), "expect_IRouterCommon_getVault", "vault", vm.toString(expectedVault)
         );
 
         _recExpectedAddress(subject, IRouterCommon.getVault.selector, expectedVault);
@@ -313,15 +306,10 @@ library Behavior_IRouter {
     function hasValid_IRouterCommon_getVault(IRouterCommon router) public view returns (bool isValid_) {
         console.logBehaviorEntry(_Behavior_IRouterName(), "hasValid_IRouterCommon_getVault");
 
-        address expectedVault = _recedExpectedAddress(
-            address(router), IRouterCommon.getVault.selector
-        );
+        address expectedVault = _recedExpectedAddress(address(router), IRouterCommon.getVault.selector);
 
-        isValid_ = isValid_IRouterCommon_getVault(
-            vm.getLabel(address(router)),
-            expectedVault,
-            address(router.getVault())
-        );
+        isValid_ =
+            isValid_IRouterCommon_getVault(vm.getLabel(address(router)), expectedVault, address(router.getVault()));
 
         console.logBehaviorValidation(
             _Behavior_IRouterName(), "hasValid_IRouterCommon_getVault", "vault configuration", isValid_

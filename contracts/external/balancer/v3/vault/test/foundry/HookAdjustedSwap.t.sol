@@ -4,19 +4,21 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolHooksMock } from "../../contracts/test/PoolHooksMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolHooksMock} from "../../contracts/test/PoolHooksMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract HookAdjustedSwapTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -44,10 +46,11 @@ contract HookAdjustedSwapTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -60,13 +63,10 @@ contract HookAdjustedSwapTest is BaseVaultTest {
         LiquidityManagement memory liquidityManagement;
         liquidityManagement.disableUnbalancedLiquidity = true;
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -109,9 +109,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
         assertEq(
-            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx],
-            swapAmount,
-            "Bob DAI balance is wrong"
+            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx], swapAmount, "Bob DAI balance is wrong"
         );
         assertEq(balancesBefore.hookTokens[daiIdx], balancesAfter.hookTokens[daiIdx], "Hook DAI balance is wrong");
         assertEq(
@@ -171,9 +169,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
         assertEq(
-            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx],
-            swapAmount,
-            "Bob DAI balance is wrong"
+            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx], swapAmount, "Bob DAI balance is wrong"
         );
         assertEq(balancesBefore.hookTokens[daiIdx], balancesAfter.hookTokens[daiIdx], "Hook DAI balance is wrong");
         assertEq(
@@ -225,16 +221,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
             )
         );
 
-        router.swapSingleTokenExactOut(
-            address(pool),
-            dai,
-            usdc,
-            swapAmount,
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactOut(address(pool), dai, usdc, swapAmount, MAX_UINT256, MAX_UINT256, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
@@ -250,9 +237,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
             "Bob DAI balance is wrong"
         );
         assertEq(
-            balancesAfter.hookTokens[daiIdx] - balancesBefore.hookTokens[daiIdx],
-            hookFee,
-            "Hook DAI balance is wrong"
+            balancesAfter.hookTokens[daiIdx] - balancesBefore.hookTokens[daiIdx], hookFee, "Hook DAI balance is wrong"
         );
 
         _checkPoolAndVaultBalances(balancesBefore, balancesAfter, swapAmount);
@@ -296,16 +281,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
             )
         );
 
-        router.swapSingleTokenExactOut(
-            address(pool),
-            dai,
-            usdc,
-            swapAmount,
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactOut(address(pool), dai, usdc, swapAmount, MAX_UINT256, MAX_UINT256, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
@@ -362,16 +338,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
             abi.encodeWithSelector(IVaultErrors.HookAdjustedSwapLimit.selector, _swapAmount - hookFee, _swapAmount)
         );
 
-        router.swapSingleTokenExactIn(
-            address(pool),
-            dai,
-            usdc,
-            _swapAmount,
-            _swapAmount,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactIn(address(pool), dai, usdc, _swapAmount, _swapAmount, MAX_UINT256, false, bytes(""));
     }
 
     function testFeeExactOutLimitViolation() public {
@@ -409,14 +376,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
         );
 
         router.swapSingleTokenExactOut(
-            address(pool),
-            dai,
-            usdc,
-            _swapAmount,
-            _swapAmount,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(pool), dai, usdc, _swapAmount, _swapAmount, MAX_UINT256, false, bytes("")
         );
     }
 
@@ -451,16 +411,7 @@ contract HookAdjustedSwapTest is BaseVaultTest {
         // Check that the call reverted because balances were not settled.
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.BalanceNotSettled.selector));
 
-        router.swapSingleTokenExactIn(
-            address(pool),
-            dai,
-            usdc,
-            _swapAmount,
-            _swapAmount,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactIn(address(pool), dai, usdc, _swapAmount, _swapAmount, MAX_UINT256, false, bytes(""));
     }
 
     function _checkPoolAndVaultBalances(

@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Aerodrome} from "test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
+import {
+    TestBase_ConstProdUtils_Aerodrome
+} from "test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {IRouter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IRouter.sol";
 import {Pool} from "contracts/protocols/dexes/aerodrome/v1/stubs/Pool.sol";
@@ -14,32 +16,25 @@ contract ConstProdUtils_quoteWithdrawWithFee_Aerodrome is TestBase_ConstProdUtil
         TestBase_ConstProdUtils_Aerodrome.setUp();
     }
 
-    function _quotedWithdrawForPair(Pool pair, address tokenA) internal view returns (uint256 quotedA, uint256 quotedB) {
+    function _quotedWithdrawForPair(Pool pair, address tokenA)
+        internal
+        view
+        returns (uint256 quotedA, uint256 quotedB)
+    {
         uint256 lpReceived = pair.balanceOf(address(this));
         if (lpReceived == 0) return (0, 0);
 
         (uint256 r0, uint256 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
 
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            tokenA, 
-            pair.token0(), 
-            r0, 
-            r1 
-        );
+        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(tokenA, pair.token0(), r0, r1);
 
         // Aerodrome doesn't expose kLast / ownerFee in the same way; pass zeros
         uint256 kLast = 0;
         uint256 ownerFeeShare = 0;
 
         (quotedA, quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            kLast,
-            ownerFeeShare,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, kLast, ownerFeeShare, false
         );
     }
 

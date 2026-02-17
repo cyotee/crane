@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CommonAuthentication } from "../CommonAuthentication.sol";
+import {CommonAuthentication} from "../CommonAuthentication.sol";
 
 contract CommonAuthenticationMock is CommonAuthentication {
     constructor(IVault vault, bytes32 actionIdDisambiguator) CommonAuthentication(vault, actionIdDisambiguator) {

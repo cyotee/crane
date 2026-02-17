@@ -2,14 +2,16 @@
 
 pragma solidity ^0.8.24;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { StablePoolFactory } from "../../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../../contracts/StablePool.sol";
+import {StablePoolFactory} from "../../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../../contracts/StablePool.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "StablePool". These functions should have support for reusing artifacts from the hardhat compilation.
@@ -42,13 +44,12 @@ contract StablePoolContractsDeployer is BaseContractsDeployer {
         string memory poolVersion
     ) internal returns (StablePoolFactory) {
         if (reusingArtifacts) {
-            return
-                StablePoolFactory(
-                    deployCode(
-                        _computeStablePoolPath("StablePoolFactory"),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
-                    )
-                );
+            return StablePoolFactory(
+                deployCode(
+                    _computeStablePoolPath("StablePoolFactory"),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
+                )
+            );
         } else {
             return new StablePoolFactory(vault, pauseWindowDuration, factoryVersion, poolVersion);
         }

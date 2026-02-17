@@ -6,23 +6,27 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BasePoolMath } from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
 
-import { WeightedPoolMock } from "../../contracts/test/WeightedPoolMock.sol";
-import { WeightedMathMock } from "../../contracts/test/WeightedMathMock.sol";
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPoolMock} from "../../contracts/test/WeightedPoolMock.sol";
+import {WeightedMathMock} from "../../contracts/test/WeightedMathMock.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
 contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer {
     using CastingHelpers for address[];
@@ -69,10 +73,12 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         BaseVaultTest.setUp();
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         LiquidityManagement memory liquidityManagement;
         PoolRoleAccounts memory roleAccounts;
 
@@ -127,8 +133,8 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         amountsIn[daiIdx] = TOKEN_AMOUNT.mulDown(weights[daiIdx]);
         amountsIn[usdcIdx] = TOKEN_AMOUNT.mulDown(weights[usdcIdx]);
 
-        uint256 expectedBptAmountOut = math.computeInvariant(weights, amountsIn, Rounding.ROUND_DOWN) -
-            POOL_MINIMUM_TOTAL_SUPPLY;
+        uint256 expectedBptAmountOut =
+            math.computeInvariant(weights, amountsIn, Rounding.ROUND_DOWN) - POOL_MINIMUM_TOTAL_SUPPLY;
 
         // Cannot use vm.prank, because `_initPool` does multiple calls.
         vm.startPrank(lp);
@@ -194,7 +200,7 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         assertEq(dai.balanceOf(address(vault)), amountsIn[daiIdx], "Vault: Wrong DAI balance");
 
         // Tokens are deposited to the pool.
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
         assertEq(balances[daiIdx], amountsIn[daiIdx], "Pool: Wrong DAI balance");
         assertEq(balances[usdcIdx], amountsIn[usdcIdx], "Pool: Wrong USDC balance");
 
@@ -232,7 +238,7 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         assertEq(dai.balanceOf(address(vault)), expectedBalances[daiIdx], "Vault: Wrong DAI balance");
 
         // Tokens are deposited to the pool.
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(weightedPool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(weightedPool));
         assertEq(balances[daiIdx], expectedBalances[daiIdx], "Pool: Wrong DAI balance");
         assertEq(balances[usdcIdx], expectedBalances[usdcIdx], "Pool: Wrong USDC balance");
 
@@ -254,21 +260,14 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         startingBalances[usdcIdx] = usdc.balanceOf(bob);
 
         uint256[] memory amountsOut = router.removeLiquidityProportional(
-            address(weightedPool),
-            bptAmountIn,
-            [limit, limit].toMemoryArray(),
-            false,
-            bytes("")
+            address(weightedPool), bptAmountIn, [limit, limit].toMemoryArray(), false, bytes("")
         );
 
         vm.stopPrank();
 
         // Tokens are transferred to Bob.
         assertApproxEqAbs(
-            usdc.balanceOf(bob) - startingBalances[usdcIdx],
-            TOKEN_AMOUNT,
-            DELTA,
-            "LP: Wrong USDC balance"
+            usdc.balanceOf(bob) - startingBalances[usdcIdx], TOKEN_AMOUNT, DELTA, "LP: Wrong USDC balance"
         );
         assertApproxEqAbs(dai.balanceOf(bob) - startingBalances[daiIdx], TOKEN_AMOUNT, DELTA, "LP: Wrong DAI balance");
 
@@ -276,16 +275,11 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         expectedBalances[usdcIdx] = TOKEN_AMOUNT - amountsIn[usdcIdx];
 
         // Tokens are stored in the Vault.
-        assertApproxEqAbs(
-            usdc.balanceOf(address(vault)),
-            expectedBalances[usdcIdx],
-            DELTA,
-            "Vault: Wrong USDC balance"
-        );
+        assertApproxEqAbs(usdc.balanceOf(address(vault)), expectedBalances[usdcIdx], DELTA, "Vault: Wrong USDC balance");
         assertApproxEqAbs(dai.balanceOf(address(vault)), expectedBalances[daiIdx], DELTA, "Vault: Wrong DAI balance");
 
         // Tokens are deposited to the pool.
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
         assertApproxEqAbs(balances[daiIdx], expectedBalances[daiIdx], DELTA, "Pool: Wrong DAI balance");
         assertApproxEqAbs(balances[usdcIdx], expectedBalances[usdcIdx], DELTA, "Pool: Wrong USDC balance");
 
@@ -327,7 +321,7 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         assertEq(usdc.balanceOf(address(vault)), expectedBalances[usdcIdx], "Vault: Wrong USDC balance");
         assertEq(dai.balanceOf(address(vault)), expectedBalances[daiIdx], "Vault: Wrong DAI balance");
 
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         assertEq(balances[daiIdx], expectedBalances[daiIdx], "Pool: Wrong DAI balance");
         assertEq(balances[usdcIdx], expectedBalances[usdcIdx], "Pool: Wrong USDC balance");
@@ -350,7 +344,7 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
         unbalancedAmountsIn[daiIdx] = 100 * TOKEN_AMOUNT_IN;
         unbalancedAmountsIn[usdcIdx] = TOKEN_AMOUNT_IN;
 
-        (uint256 expectedBptAmountOut, ) = BasePoolMath.computeAddLiquidityUnbalanced(
+        (uint256 expectedBptAmountOut,) = BasePoolMath.computeAddLiquidityUnbalanced(
             IPoolInfo(address(weightedPool)).getCurrentLiveBalances(),
             unbalancedAmountsIn,
             weightedPool.totalSupply(),
@@ -363,9 +357,7 @@ contract WeightedPoolLimitsTest is BaseVaultTest, WeightedPoolContractsDeployer 
 
         // Tokens are transferred from Bob.
         assertEq(
-            usdc.balanceOf(bob),
-            startingBalances[usdcIdx] - unbalancedAmountsIn[usdcIdx],
-            "LP: Wrong USDC balance"
+            usdc.balanceOf(bob), startingBalances[usdcIdx] - unbalancedAmountsIn[usdcIdx], "LP: Wrong USDC balance"
         );
         assertEq(dai.balanceOf(bob), startingBalances[daiIdx] - unbalancedAmountsIn[daiIdx], "LP: Wrong DAI balance");
 

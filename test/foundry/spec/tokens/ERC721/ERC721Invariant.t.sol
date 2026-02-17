@@ -10,7 +10,6 @@ import {ERC721TargetStubHandler} from "@crane/contracts/tokens/ERC721/ERC721Targ
  * @notice Invariant tests for ERC721 implementation
  */
 contract ERC721Invariant_Test is TestBase_ERC721 {
-
     function _deployToken(ERC721TargetStubHandler handler_) internal override returns (ERC721TargetStub token_) {
         token_ = new ERC721TargetStub();
     }

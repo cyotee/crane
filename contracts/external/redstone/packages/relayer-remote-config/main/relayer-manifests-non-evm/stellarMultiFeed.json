@@ -1,0 +1,126 @@
+{
+  "adapterContractType": "multi-feed",
+  "chain": {
+    "name": "stellar-mainnet",
+    "id": "stellar/1"
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.2,
+    "timeSinceLastUpdateInMilliseconds": 86400000
+  },
+  "adapterContract": "CA526Y2NQWGWVVQ7RFFPGAZMU66PSYJ3UC2MTVAV4ZU7OM5BOPHDXUSG",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "ETH": {
+      "priceFeedAddress": "CBC3S2VH7CM3DLGC62QXM4UD4YKCQULRLENAEEO7ZZ6U4OMZIQ5B777O"
+    },
+    "BTC": {
+      "priceFeedAddress": "CBLEPHLNPTCW3DY2NF5BYCZVECIP2K6YWBA3JDTU3HMQV6AKXB5GKTXA"
+    },
+    "PYUSD": {
+      "priceFeedAddress": "CB3PNR7FSAHQH3UAVYKSJVPLWEQRPPYVFL2UIR4P3RYEPZLTOF7PL2L4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USDC": {
+      "priceFeedAddress": "CC2GB2TZTX24XIAM375YDWUDXA3PR2GDMNFUL2Z5VNXUMKPPOBES3CXM",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "EUROC/EUR": {
+      "priceFeedAddress": "CD4H2CN6ROCXVZFDTMLFCSU4O5CKLJP5BCFECNMNZEATNABEDRVGFKNI",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 240000
+      }
+    },
+    "iBENJI_ETHEREUM_FUNDAMENTAL": {
+      "priceFeedAddress": "CCFFK56RHKVSJF6ADIB35TLLRG7IN76H2WHO7P4SFVNYMLZOSVLLSDI2",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SolvBTC.BBN_FUNDAMENTAL": {
+      "priceFeedAddress": "CBCVJGBJGNPMYCEU3YVYQIH5Y6KSNATRLRLCZCMS26QTCUV367AD54BE",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "SolvBTC_FUNDAMENTAL": {
+      "priceFeedAddress": "CCE4HNAVDIJJAJQYETON5CCER57MDYXLW45JEXYXI2QMASWFAHAPL5PT",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "BENJI_ETHEREUM_FUNDAMENTAL": {
+      "priceFeedAddress": "CCDM2U5E3SBMPJUQCBIER4BSFAVSJTY5I5EQEZIRDZSA3YOJH3YM4TW5",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SPXU": {
+      "priceFeedAddress": "CBKC3LPRNTAOOJLNLG2GFKSMLLSDNHEUBVJO22Y2MY2RJLLYIXCRPK53",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "CETES": {
+      "priceFeedAddress": "CCYGBQZ5JKE2TGK2XNNVIZRKFEIT27NZADS3XJFSO4CCIH3LHIUP34LG",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "KTB": {
+      "priceFeedAddress": "CDF24LSSKG55VEN2MRKNHEWK3XT5YKQ6XRXNVTNSRBMFL2FOMAC2MZ5O",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USTRY": {
+      "priceFeedAddress": "CAEGYZFAJ3HLSDBUIVJ77SK5HLLS4MPE4LO5OB2W3L2TEDMAS6RCTMZ4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "TESOURO": {
+      "priceFeedAddress": "CAO3JDDO52PV5SNIR4WRLBNTE72CY6B4JO5PNSSRRM4TC5DZ5X5ZSJVC",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "EUROB": {
+      "priceFeedAddress": "CAY3Q4DVBMS6OXWQWZWNOCVG7M3JNO6GL2PNZSQ6YH3NJOLW7O7IUWES",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "GILTS": {
+      "priceFeedAddress": "CDIBUKDR3AUJFOG3Z5PH2UIKTNK6FQEUBODVH4FA7DST4NITPKKYHMAP",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "MXNe": {
+      "priceFeedAddress": "CDYTKTOHHMMZQSBGEVTFSOAMN6ABFCRZ6TCNLZNFQZ6OK3ZGDB3666IV",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    }
+  }
+}

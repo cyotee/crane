@@ -11,7 +11,6 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
@@ -26,7 +25,9 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IERC4626RateProvider} from "@crane/contracts/interfaces/IERC4626RateProvider.sol";
-import {ERC4626RateProviderRepo} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
+import {
+    ERC4626RateProviderRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 interface IERC4626RateProviderFacetDFPkg is IDiamondFactoryPackage {
@@ -42,9 +43,7 @@ interface IERC4626RateProviderFacetDFPkg is IDiamondFactoryPackage {
     function deployRateProvider(IERC4626 erc4626Vault) external returns (IERC4626RateProvider rateProvider);
 }
 
-contract ERC4626RateProviderFacetDFPkg is
-    IERC4626RateProviderFacetDFPkg
-{
+contract ERC4626RateProviderFacetDFPkg is IERC4626RateProviderFacetDFPkg {
     using BetterEfficientHashLib for bytes;
 
     IFacet immutable ERC4626_RATE_PROVIDER_FACET;
@@ -60,15 +59,9 @@ contract ERC4626RateProviderFacetDFPkg is
     /*                       IERC4626RateProviderFacetDFPkg                       */
     /* -------------------------------------------------------------------------- */
 
-    function deployRateProvider(IERC4626 erc4626Vault)
-        external
-        returns (IERC4626RateProvider rateProvider)
-    {
+    function deployRateProvider(IERC4626 erc4626Vault) external returns (IERC4626RateProvider rateProvider) {
         rateProvider = IERC4626RateProvider(
-            DIAMOND_PACKAGE_FACTORY.deploy(
-                this,
-                abi.encode(PkgArgs({erc4626Vault: erc4626Vault}))
-            )
+            DIAMOND_PACKAGE_FACTORY.deploy(this, abi.encode(PkgArgs({erc4626Vault: erc4626Vault})))
         );
         return rateProvider;
     }
@@ -86,11 +79,7 @@ contract ERC4626RateProviderFacetDFPkg is
         facetAddresses_[0] = address(ERC4626_RATE_PROVIDER_FACET);
     }
 
-    function facetInterfaces()
-        public
-        pure
-        returns (bytes4[] memory interfaces)
-    {
+    function facetInterfaces() public pure returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](2);
         interfaces[0] = type(IRateProvider).interfaceId;
         interfaces[1] = type(IERC4626RateProvider).interfaceId;
@@ -110,7 +99,9 @@ contract ERC4626RateProviderFacetDFPkg is
         facetCuts_ = new IDiamond.FacetCut[](1);
 
         facetCuts_[0] = IDiamond.FacetCut({
-            facetAddress: address(ERC4626_RATE_PROVIDER_FACET), action: IDiamond.FacetCutAction.Add, functionSelectors: ERC4626_RATE_PROVIDER_FACET.facetFuncs()
+            facetAddress: address(ERC4626_RATE_PROVIDER_FACET),
+            action: IDiamond.FacetCutAction.Add,
+            functionSelectors: ERC4626_RATE_PROVIDER_FACET.facetFuncs()
         });
     }
 
@@ -143,5 +134,4 @@ contract ERC4626RateProviderFacetDFPkg is
     function postDeploy(address) public pure returns (bool) {
         return true;
     }
-
 }

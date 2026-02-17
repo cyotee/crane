@@ -4,12 +4,12 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract AuxiliaryEventTest is BaseVaultTest {
     function setUp() public virtual override {

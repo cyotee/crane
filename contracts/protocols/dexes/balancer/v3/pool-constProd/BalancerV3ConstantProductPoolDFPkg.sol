@@ -13,7 +13,9 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
@@ -49,12 +51,18 @@ import {
     BalancerV3BasePoolFactory
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactory.sol";
 import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {
+    BalancerV3BasePoolFactoryRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
 
 interface IBalancerV3ConstantProductPoolStandardVaultPkg {
     struct PkgInit {
@@ -112,13 +120,8 @@ contract BalancerV3ConstantProductPoolDFPkg is
         DEFAULT_POOL_INFO_FACET = pkgInit.defaultPoolInfoFacet;
         BALANCER_V3_AUTHENTICATION_FACET = pkgInit.balancerV3AuthenticationFacet;
         BALANCER_V3_CONST_PROD_POOL_FACET = pkgInit.balancerV3ConstProdPoolFacet;
-        BalancerV3BasePoolFactoryRepo._initialize(
-            365 days,
-            pkgInit.poolFeeManager
-        );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3BasePoolFactoryRepo._initialize(365 days, pkgInit.poolFeeManager);
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
         // Initialize vault repo so postDeploy can call _registerPoolWithBalV3Vault
         BalancerV3VaultAwareRepo._initialize(pkgInit.balancerV3Vault);
     }
@@ -134,12 +137,7 @@ contract BalancerV3ConstantProductPoolDFPkg is
 
     function deployPool(TokenConfig[] calldata tokenConfigs_, address hooksContract) public returns (address vault) {
         vault = DIAMOND_PACKAGE_FACTORY.deploy(
-            this,
-            abi.encode(
-                PkgArgs({
-                    tokenConfigs: tokenConfigs_, hooksContract: hooksContract
-                })
-            )
+            this, abi.encode(PkgArgs({tokenConfigs: tokenConfigs_, hooksContract: hooksContract}))
         );
     }
 
@@ -230,8 +228,7 @@ contract BalancerV3ConstantProductPoolDFPkg is
     }
 
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
-        PkgArgs memory decodedArgs =
-            abi.decode(pkgArgs, (PkgArgs));
+        PkgArgs memory decodedArgs = abi.decode(pkgArgs, (PkgArgs));
 
         if (decodedArgs.tokenConfigs.length != 2) {
             revert InvalidTokensLength(2, 2, decodedArgs.tokenConfigs.length);
@@ -242,20 +239,18 @@ contract BalancerV3ConstantProductPoolDFPkg is
         return abi.encode(pkgArgs)._hash();
     }
 
-    function processArgs(bytes memory pkgArgs) public view returns (bytes memory processedPkgArgs) {
+    function processArgs(bytes memory pkgArgs) public pure returns (bytes memory processedPkgArgs) {
         // if (msg.sender != address(VAULT_REGISTRY)) {
         //     revert NotCalledByRegistry(msg.sender);
         // }
-        PkgArgs memory decodedArgs =
-            abi.decode(pkgArgs, (PkgArgs));
+        PkgArgs memory decodedArgs = abi.decode(pkgArgs, (PkgArgs));
         decodedArgs.tokenConfigs = decodedArgs.tokenConfigs._sort();
         processedPkgArgs = abi.encode(decodedArgs);
         return processedPkgArgs;
     }
 
     function updatePkg(address expectedProxy, bytes memory pkgArgs) public virtual returns (bool) {
-        PkgArgs memory decodedArgs =
-            abi.decode(pkgArgs, (PkgArgs));
+        PkgArgs memory decodedArgs = abi.decode(pkgArgs, (PkgArgs));
         BalancerV3BasePoolFactoryRepo._setTokenConfigs(expectedProxy, decodedArgs.tokenConfigs);
         BalancerV3BasePoolFactoryRepo._setHooksContract(expectedProxy, decodedArgs.hooksContract);
         return true;
@@ -264,37 +259,22 @@ contract BalancerV3ConstantProductPoolDFPkg is
     error InvalidTokensLength(uint256 maxLength, uint256 minLength, uint256 providedLength);
 
     function initAccount(bytes memory initArgs) public {
-        PkgArgs memory decodedArgs =
-            abi.decode(initArgs, (PkgArgs));
+        PkgArgs memory decodedArgs = abi.decode(initArgs, (PkgArgs));
 
         address[] memory tokens = new address[](decodedArgs.tokenConfigs.length);
         tokens[0] = address(decodedArgs.tokenConfigs[0].token);
         tokens[1] = address(decodedArgs.tokenConfigs[1].token);
 
-        string memory name = 
-            string.concat(
-                "BV3ConstProd of (", IERC20Metadata(tokens[0]).name(), " / ", IERC20Metadata(tokens[1]).name(), ")"
-            );
+        string memory name = string.concat(
+            "BV3ConstProd of (", IERC20Metadata(tokens[0]).name(), " / ", IERC20Metadata(tokens[1]).name(), ")"
+        );
 
-        ERC20Repo._initialize(
-            name,
-            "BPT",
-            18
-        );
-        EIP712Repo._initialize(
-            name,
-            "1"
-        );
+        ERC20Repo._initialize(name, "BPT", 18);
+        EIP712Repo._initialize(name, "1");
         BalancerV3PoolRepo._initialize(
-            _MIN_INVARIANT_RATIO,
-            _MAX_INVARIANT_RATIO,
-            _MIN_SWAP_FEE_PERCENTAGE,
-            _MAX_SWAP_FEE_PERCENTAGE,
-            tokens
+            _MIN_INVARIANT_RATIO, _MAX_INVARIANT_RATIO, _MIN_SWAP_FEE_PERCENTAGE, _MAX_SWAP_FEE_PERCENTAGE, tokens
         );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
         BalancerV3VaultAwareRepo._initialize(BALANCER_V3_VAULT);
     }
 
@@ -331,5 +311,4 @@ contract BalancerV3ConstantProductPoolDFPkg is
         );
         return true;
     }
-
 }

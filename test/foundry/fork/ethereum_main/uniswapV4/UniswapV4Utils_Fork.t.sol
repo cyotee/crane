@@ -56,20 +56,14 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         uint24 fee = hasWethUsdc3000 ? FEE_MEDIUM : FEE_LOW;
 
-        (uint160 sqrtPriceX96, , , uint24 lpFee) = getPoolState(key);
+        (uint160 sqrtPriceX96,,, uint24 lpFee) = getPoolState(key);
         uint128 liquidity = getPoolLiquidity(key);
 
         // Small swap amount to stay within single tick
         uint256 amountIn = 0.001 ether; // 0.001 WETH worth
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            lpFee,
-            zeroForOne
-        );
+        uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, lpFee, zeroForOne);
 
         // Basic sanity checks
         assertTrue(quotedOut > 0, "output should be > 0");
@@ -85,19 +79,13 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         uint24 fee = hasWethUsdc3000 ? FEE_MEDIUM : FEE_LOW;
 
-        (, int24 tick, , uint24 lpFee) = getPoolState(key);
+        (, int24 tick,, uint24 lpFee) = getPoolState(key);
         uint128 liquidity = getPoolLiquidity(key);
 
         uint256 amountIn = 100e6; // 100 USDC
         bool zeroForOne = tokenIsCurrency0(key, USDC);
 
-        uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(
-            amountIn,
-            tick,
-            liquidity,
-            lpFee,
-            zeroForOne
-        );
+        uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(amountIn, tick, liquidity, lpFee, zeroForOne);
 
         assertTrue(quotedOut > 0, "output should be > 0");
     }
@@ -110,31 +98,20 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
 
-        (uint160 sqrtPriceX96, , , uint24 lpFee) = getPoolState(key);
+        (uint160 sqrtPriceX96,,, uint24 lpFee) = getPoolState(key);
         uint128 liquidity = getPoolLiquidity(key);
 
         uint256 amountOut = 0.0001 ether; // Want 0.0001 WETH
         bool zeroForOne = tokenIsCurrency0(key, USDC); // USDC -> WETH
 
-        uint256 quotedIn = UniswapV4Utils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            lpFee,
-            zeroForOne
-        );
+        uint256 quotedIn = UniswapV4Utils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, lpFee, zeroForOne);
 
         assertTrue(quotedIn > 0, "input should be > 0");
 
         // Sanity via round-trip: quoting the computed input back should produce
         // at least the requested output (accounting for rounding).
-        uint256 roundTripOut = UniswapV4Utils._quoteExactInputSingle(
-            quotedIn,
-            sqrtPriceX96,
-            liquidity,
-            lpFee,
-            zeroForOne
-        );
+        uint256 roundTripOut =
+            UniswapV4Utils._quoteExactInputSingle(quotedIn, sqrtPriceX96, liquidity, lpFee, zeroForOne);
         assertTrue(roundTripOut >= amountOut, "round-trip output should cover amountOut");
 
         // Loose upper bound (prevents pathological results).
@@ -149,19 +126,13 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
 
-        (, int24 tick, , uint24 lpFee) = getPoolState(key);
+        (, int24 tick,, uint24 lpFee) = getPoolState(key);
         uint128 liquidity = getPoolLiquidity(key);
 
         uint256 amountOut = 10e6; // Want 10 USDC
         bool zeroForOne = tokenIsCurrency0(key, WETH); // WETH -> USDC
 
-        uint256 quotedIn = UniswapV4Utils._quoteExactOutputSingle(
-            amountOut,
-            tick,
-            liquidity,
-            lpFee,
-            zeroForOne
-        );
+        uint256 quotedIn = UniswapV4Utils._quoteExactOutputSingle(amountOut, tick, liquidity, lpFee, zeroForOne);
 
         assertTrue(quotedIn > 0, "input should be > 0");
     }
@@ -178,28 +149,16 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
 
-        (uint160 sqrtPriceX96, , , uint24 lpFee) = getPoolState(key);
+        (uint160 sqrtPriceX96,,, uint24 lpFee) = getPoolState(key);
         uint128 liquidity = getPoolLiquidity(key);
 
         uint256 amountIn = 1 ether;
 
         // Quote zeroForOne
-        uint256 outZeroForOne = UniswapV4Utils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            lpFee,
-            true
-        );
+        uint256 outZeroForOne = UniswapV4Utils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, lpFee, true);
 
         // Quote oneForZero
-        uint256 outOneForZero = UniswapV4Utils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            lpFee,
-            false
-        );
+        uint256 outOneForZero = UniswapV4Utils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, lpFee, false);
 
         // Both should produce output, but different amounts
         assertTrue(outZeroForOne > 0, "zeroForOne output should be > 0");
@@ -220,7 +179,7 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (uint160 sqrtPriceX96, int24 tick, , ) = getPoolState(key);
+        (uint160 sqrtPriceX96, int24 tick,,) = getPoolState(key);
 
         // Create a position around current tick
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
@@ -228,12 +187,8 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
         uint128 liquidity = 1e15; // Some liquidity amount
 
-        (uint256 amount0, uint256 amount1) = UniswapV4Utils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 amount0, uint256 amount1) =
+            UniswapV4Utils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
 
         // At least one amount should be > 0 if price is in range
         uint160 sqrtPriceLower = TickMath.getSqrtPriceAtTick(tickLower);
@@ -254,31 +209,22 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (uint160 sqrtPriceX96, int24 tick, , ) = getPoolState(key);
+        (uint160 sqrtPriceX96, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
 
-        uint256 amount0 = 0.1 ether;  // Some currency0
-        uint256 amount1 = 100e6;       // Some currency1 (assuming USDC decimals)
+        uint256 amount0 = 0.1 ether; // Some currency0
+        uint256 amount1 = 100e6; // Some currency1 (assuming USDC decimals)
 
-        uint128 liquidity = UniswapV4Utils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            amount0,
-            amount1
-        );
+        uint128 liquidity =
+            UniswapV4Utils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
 
         assertTrue(liquidity > 0, "liquidity should be > 0");
 
         // Verify round-trip: amounts for this liquidity should be <= provided
-        (uint256 required0, uint256 required1) = UniswapV4Utils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 required0, uint256 required1) =
+            UniswapV4Utils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
 
         assertTrue(required0 <= amount0 + 1, "required0 should be <= provided + rounding");
         assertTrue(required1 <= amount1 + 1, "required1 should be <= provided + rounding");
@@ -290,7 +236,7 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
     /// @notice Test getAmount0Delta
     function test_getAmount0Delta() public {
-        (uint160 sqrtPriceX96, , , ) = getPoolState(wethUsdcPool_3000);
+        (uint160 sqrtPriceX96,,,) = getPoolState(wethUsdcPool_3000);
         if (sqrtPriceX96 == 0) {
             vm.skip(true);
         }
@@ -323,7 +269,7 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
 
     /// @notice Test getAmount1Delta
     function test_getAmount1Delta() public {
-        (uint160 sqrtPriceX96, , , ) = getPoolState(wethUsdcPool_3000);
+        (uint160 sqrtPriceX96,,,) = getPoolState(wethUsdcPool_3000);
         if (sqrtPriceX96 == 0) {
             vm.skip(true);
         }
@@ -362,7 +308,7 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
             vm.skip(true);
         }
 
-        (uint160 sqrtPriceX96, , , uint24 lpFee) = getPoolState(wethUsdcPool_3000);
+        (uint160 sqrtPriceX96,,, uint24 lpFee) = getPoolState(wethUsdcPool_3000);
         uint128 liquidity = getPoolLiquidity(wethUsdcPool_3000);
 
         uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(
@@ -382,7 +328,7 @@ contract UniswapV4Utils_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumMa
             vm.skip(true);
         }
 
-        (uint160 sqrtPriceX96, , , uint24 lpFee) = getPoolState(wethUsdcPool_3000);
+        (uint160 sqrtPriceX96,,, uint24 lpFee) = getPoolState(wethUsdcPool_3000);
 
         // With zero liquidity, the quote should return 0 output
         uint256 quotedOut = UniswapV4Utils._quoteExactInputSingle(

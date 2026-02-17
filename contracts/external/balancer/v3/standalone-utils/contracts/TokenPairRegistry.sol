@@ -5,14 +5,19 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ITokenPairRegistry } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ITokenPairRegistry.sol";
-import { SwapPathStep } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    ITokenPairRegistry
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ITokenPairRegistry.sol";
+import {SwapPathStep} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { EnumerableSet } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {
+    EnumerableSet
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import { OwnableAuthentication } from "./OwnableAuthentication.sol";
+import {OwnableAuthentication} from "./OwnableAuthentication.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @notice Stores token pair swap paths on-chain, allowing an admin to maintain swap routes.
@@ -21,6 +26,7 @@ import { OwnableAuthentication } from "./OwnableAuthentication.sol";
  * Functions that add information to the registry are permissioned.
  */
 contract TokenPairRegistry is ITokenPairRegistry, OwnableAuthentication {
+    using BetterEfficientHashLib for bytes;
     using EnumerableSet for EnumerableSet.AddressSet;
 
     mapping(bytes32 pairId => SwapPathStep[][] paths) internal _pairsToPaths;
@@ -142,7 +148,7 @@ contract TokenPairRegistry is ITokenPairRegistry, OwnableAuthentication {
 
     function _addSimplePairStep(address poolOrBuffer, address tokenIn, address tokenOut, bool isBuffer) internal {
         bytes32 tokenId = _getTokenPairId(tokenIn, tokenOut);
-        SwapPathStep memory step = SwapPathStep({ pool: poolOrBuffer, tokenOut: IERC20(tokenOut), isBuffer: isBuffer });
+        SwapPathStep memory step = SwapPathStep({pool: poolOrBuffer, tokenOut: IERC20(tokenOut), isBuffer: isBuffer});
 
         SwapPathStep[][] storage paths = _pairsToPaths[tokenId];
         paths.push();
@@ -199,7 +205,8 @@ contract TokenPairRegistry is ITokenPairRegistry, OwnableAuthentication {
     }
 
     function _getTokenPairId(address tokenIn, address tokenOut) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(tokenIn, tokenOut));
+        // return keccak256(abi.encodePacked(tokenIn, tokenOut));
+        return abi.encodePacked(tokenIn, tokenOut)._hash();
     }
 
     function _checkBufferStep(address buffer, address tokenIn, address tokenOut) internal view {

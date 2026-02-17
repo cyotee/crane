@@ -7,10 +7,18 @@ import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC1271} from "@crane/contracts/interfaces/IERC1271.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IProtocolFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
-import { ICowSwapFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ICowSwapFeeBurner.sol";
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
-import { IComposableCow } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IComposableCow.sol";
+import {
+    IProtocolFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
+import {
+    ICowSwapFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ICowSwapFeeBurner.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {
+    IComposableCow
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IComposableCow.sol";
 import {
     ICowConditionalOrderGenerator
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ICowConditionalOrderGenerator.sol";
@@ -18,14 +26,14 @@ import {
     ICowConditionalOrder,
     GPv2Order
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/ICowConditionalOrder.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { FeeBurnerAuthentication } from "./FeeBurnerAuthentication.sol";
+import {FeeBurnerAuthentication} from "./FeeBurnerAuthentication.sol";
 
 // solhint-disable not-rely-on-time
 
@@ -80,7 +88,7 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
 
     /// @inheritdoc ICowSwapFeeBurner
     function getOrderStatus(IERC20 tokenIn) external view returns (OrderStatus status) {
-        (status, ) = _getOrderStatusAndBalance(tokenIn);
+        (status,) = _getOrderStatusAndBalance(tokenIn);
     }
 
     /// @inheritdoc ICowSwapFeeBurner
@@ -181,7 +189,7 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
             feeToken.safeTransferFrom(msg.sender, address(this), feeTokenAmount);
         }
 
-        (OrderStatus status, ) = _getOrderStatusAndBalance(feeToken, feeTokenAmount);
+        (OrderStatus status,) = _getOrderStatusAndBalance(feeToken, feeTokenAmount);
         if (status != OrderStatus.Nonexistent && status != OrderStatus.Filled) {
             // New order can only be created if no order exists or the previous one was completely filled.
             // This prevents overlapping orders for the same token.
@@ -207,13 +215,11 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
     ***************************************************************************/
 
     /// @inheritdoc ICowConditionalOrderGenerator
-    function getTradeableOrder(
-        address,
-        address,
-        bytes32,
-        bytes calldata staticInput,
-        bytes calldata
-    ) public view returns (GPv2Order memory) {
+    function getTradeableOrder(address, address, bytes32, bytes calldata staticInput, bytes calldata)
+        public
+        view
+        returns (GPv2Order memory)
+    {
         IERC20 tokenIn = IERC20(abi.decode(staticInput, (address)));
 
         return _getOrder(tokenIn);
@@ -247,22 +253,19 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
 
     /// @inheritdoc IERC1271
     function isValidSignature(bytes32 _hash, bytes memory signature) external view returns (bytes4) {
-        (GPv2Order memory order, IComposableCow.Payload memory payload) = abi.decode(
-            signature,
-            (GPv2Order, IComposableCow.Payload)
-        );
+        (GPv2Order memory order, IComposableCow.Payload memory payload) =
+            abi.decode(signature, (GPv2Order, IComposableCow.Payload));
 
         // Forward the query to ComposableCow
-        return
-            composableCow.isValidSafeSignature(
-                address(this),
-                msg.sender,
-                _hash,
-                composableCow.domainSeparator(),
-                bytes32(0),
-                abi.encode(order),
-                abi.encode(payload)
-            );
+        return composableCow.isValidSafeSignature(
+            address(this),
+            msg.sender,
+            _hash,
+            composableCow.domainSeparator(),
+            bytes32(0),
+            abi.encode(order),
+            abi.encode(payload)
+        );
     }
 
     /// @inheritdoc IERC165
@@ -272,11 +275,9 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
             revert InterfaceIsSignatureVerifierMuxer();
         }
 
-        return
-            interfaceId == type(ICowConditionalOrder).interfaceId ||
-            interfaceId == type(ICowConditionalOrderGenerator).interfaceId ||
-            interfaceId == type(IERC1271).interfaceId ||
-            interfaceId == type(IERC165).interfaceId;
+        return interfaceId == type(ICowConditionalOrder).interfaceId
+            || interfaceId == type(ICowConditionalOrderGenerator).interfaceId
+            || interfaceId == type(IERC1271).interfaceId || interfaceId == type(IERC165).interfaceId;
     }
 
     /***************************************************************************
@@ -290,31 +291,31 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
             revert OrderNotValid("Order does not exist");
         }
 
-        return
-            GPv2Order({
-                sellToken: tokenIn,
-                buyToken: shortOrder.tokenOut,
-                receiver: shortOrder.receiver,
-                sellAmount: tokenIn.balanceOf(address(this)),
-                buyAmount: shortOrder.minAmountOut,
-                validTo: shortOrder.deadline,
-                appData: appData,
-                feeAmount: 0,
-                kind: _sellKind,
-                partiallyFillable: true,
-                sellTokenBalance: _tokenBalance,
-                buyTokenBalance: _tokenBalance
-            });
+        return GPv2Order({
+            sellToken: tokenIn,
+            buyToken: shortOrder.tokenOut,
+            receiver: shortOrder.receiver,
+            sellAmount: tokenIn.balanceOf(address(this)),
+            buyAmount: shortOrder.minAmountOut,
+            validTo: shortOrder.deadline,
+            appData: appData,
+            feeAmount: 0,
+            kind: _sellKind,
+            partiallyFillable: true,
+            sellTokenBalance: _tokenBalance,
+            buyTokenBalance: _tokenBalance
+        });
     }
 
     function _getOrderStatusAndBalance(IERC20 tokenIn) private view returns (OrderStatus, uint256) {
         return _getOrderStatusAndBalance(tokenIn, 0);
     }
 
-    function _getOrderStatusAndBalance(
-        IERC20 tokenIn,
-        uint256 balanceDelta
-    ) private view returns (OrderStatus, uint256) {
+    function _getOrderStatusAndBalance(IERC20 tokenIn, uint256 balanceDelta)
+        private
+        view
+        returns (OrderStatus, uint256)
+    {
         ShortOrder storage shortOrder = _orders[tokenIn];
 
         uint256 deadline = shortOrder.deadline;
@@ -354,9 +355,7 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
     function _createCowOrder(IERC20 tokenIn) private {
         composableCow.create(
             ICowConditionalOrder.ConditionalOrderParams({
-                handler: ICowConditionalOrder(address(this)),
-                salt: bytes32(0),
-                staticData: abi.encode(tokenIn)
+                handler: ICowConditionalOrder(address(this)), salt: bytes32(0), staticData: abi.encode(tokenIn)
             }),
             true
         );

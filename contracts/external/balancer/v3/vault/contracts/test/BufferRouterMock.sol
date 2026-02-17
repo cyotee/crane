@@ -3,23 +3,21 @@
 pragma solidity ^0.8.24;
 
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BufferRouter } from "../BufferRouter.sol";
+import {BufferRouter} from "../BufferRouter.sol";
 
 string constant MOCK_BUFFER_ROUTER_VERSION = "Mock Router v1";
 
 contract BufferRouterMock is BufferRouter {
     error MockErrorCode();
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2
-    ) BufferRouter(vault, weth, permit2, MOCK_BUFFER_ROUTER_VERSION) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2)
+        BufferRouter(vault, weth, permit2, MOCK_BUFFER_ROUTER_VERSION)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 

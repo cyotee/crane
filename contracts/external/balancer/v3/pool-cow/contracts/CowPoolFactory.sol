@@ -2,21 +2,23 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { ICowPoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPoolFactory.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {ICowPoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPoolFactory.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { WeightedPool } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
-import { CowPool } from "./CowPool.sol";
+import {CowPool} from "./CowPool.sol";
 
 contract CowPoolFactory is ICowPoolFactory, IPoolVersion, BasePoolFactory, Version {
     string internal _poolVersion;

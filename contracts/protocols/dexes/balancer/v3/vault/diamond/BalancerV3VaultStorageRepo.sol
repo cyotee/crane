@@ -4,7 +4,9 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
@@ -74,24 +76,21 @@ library BalancerV3VaultStorageRepo {
      */
 
     /// @dev Transient slot for unlock state. Domain: VaultStorage, Key: isUnlocked
-    bytes32 internal constant IS_UNLOCKED_SLOT =
-        0x1369d017453f080f2416efe5ae39c8a4b4655ea0634227aaab0afdb9a9f93f00;
+    bytes32 internal constant IS_UNLOCKED_SLOT = 0x1369d017453f080f2416efe5ae39c8a4b4655ea0634227aaab0afdb9a9f93f00;
 
     /// @dev Transient slot for non-zero delta count. Domain: VaultStorage, Key: nonZeroDeltaCount
     bytes32 internal constant NON_ZERO_DELTA_COUNT_SLOT =
         0xbcbf50c510014a975eac30806436734486f167c41af035c1645353d475d57100;
 
     /// @dev Transient slot for token deltas mapping. Domain: VaultStorage, Key: tokenDeltas
-    bytes32 internal constant TOKEN_DELTAS_SLOT =
-        0xf74f46243717369ff9f20877dfc1ba8491e6be48bfe7acc5b65f5ac68f585c00;
+    bytes32 internal constant TOKEN_DELTAS_SLOT = 0xf74f46243717369ff9f20877dfc1ba8491e6be48bfe7acc5b65f5ac68f585c00;
 
     /// @dev Transient slot for add liquidity called flag. Domain: VaultStorage, Key: addLiquidityCalled
     bytes32 internal constant ADD_LIQUIDITY_CALLED_SLOT =
         0x3db93ac236d7287d4b8c711cce6b3cca52815a3bd1fc0fcef99ab26afea5d200;
 
     /// @dev Transient slot for session ID. Domain: VaultStorage, Key: sessionId
-    bytes32 internal constant SESSION_ID_SLOT =
-        0xa33ab5ae38c334f99ce8d4a88c1634397ed0415a9df15c29dfd3914852f29900;
+    bytes32 internal constant SESSION_ID_SLOT = 0xa33ab5ae38c334f99ce8d4a88c1634397ed0415a9df15c29dfd3914852f29900;
 
     /* ------ Storage Struct ------ */
 
@@ -205,7 +204,9 @@ library BalancerV3VaultStorageRepo {
     ) internal {
         require(!layout.initialized, "BalancerV3VaultStorageRepo: already initialized");
         require(pauseWindowDuration <= MAX_PAUSE_WINDOW_DURATION, "BalancerV3VaultStorageRepo: pause window too long");
-        require(bufferPeriodDuration <= MAX_BUFFER_PERIOD_DURATION, "BalancerV3VaultStorageRepo: buffer period too long");
+        require(
+            bufferPeriodDuration <= MAX_BUFFER_PERIOD_DURATION, "BalancerV3VaultStorageRepo: buffer period too long"
+        );
 
         layout.minimumTradeAmount = minimumTradeAmount_;
         layout.minimumWrapAmount = minimumWrapAmount_;
@@ -437,7 +438,11 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Pool Token Info ------ */
 
-    function _poolTokenInfo(Storage storage layout, address pool, IERC20 token) internal view returns (TokenInfo storage) {
+    function _poolTokenInfo(Storage storage layout, address pool, IERC20 token)
+        internal
+        view
+        returns (TokenInfo storage)
+    {
         return layout.poolTokenInfo[pool][token];
     }
 
@@ -447,7 +452,11 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Pool Token Balances ------ */
 
-    function _poolTokenBalances(Storage storage layout, address pool) internal view returns (mapping(uint256 => bytes32) storage) {
+    function _poolTokenBalances(Storage storage layout, address pool)
+        internal
+        view
+        returns (mapping(uint256 => bytes32) storage)
+    {
         return layout.poolTokenBalances[pool];
     }
 
@@ -457,7 +466,11 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Aggregate Fee Amounts ------ */
 
-    function _aggregateFeeAmounts(Storage storage layout, address pool) internal view returns (mapping(IERC20 => bytes32) storage) {
+    function _aggregateFeeAmounts(Storage storage layout, address pool)
+        internal
+        view
+        returns (mapping(IERC20 => bytes32) storage)
+    {
         return layout.aggregateFeeAmounts[pool];
     }
 
@@ -465,7 +478,11 @@ library BalancerV3VaultStorageRepo {
         return _aggregateFeeAmounts(_layout(), pool);
     }
 
-    function _getAggregateFeeAmount(Storage storage layout, address pool, IERC20 token) internal view returns (bytes32) {
+    function _getAggregateFeeAmount(Storage storage layout, address pool, IERC20 token)
+        internal
+        view
+        returns (bytes32)
+    {
         return layout.aggregateFeeAmounts[pool][token];
     }
 
@@ -501,7 +518,11 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Buffer LP Shares ------ */
 
-    function _bufferLpShares(Storage storage layout, IERC4626 wrappedToken, address user) internal view returns (uint256) {
+    function _bufferLpShares(Storage storage layout, IERC4626 wrappedToken, address user)
+        internal
+        view
+        returns (uint256)
+    {
         return layout.bufferLpShares[wrappedToken][user];
     }
 
@@ -552,5 +573,4 @@ library BalancerV3VaultStorageRepo {
     function _setBufferAsset(IERC4626 wrappedToken, address underlyingToken) internal {
         _setBufferAsset(_layout(), wrappedToken, underlyingToken);
     }
-
 }

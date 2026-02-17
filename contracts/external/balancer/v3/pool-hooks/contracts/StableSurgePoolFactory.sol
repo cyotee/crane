@@ -2,17 +2,21 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { StableSurgeHook } from "./StableSurgeHook.sol";
+import {StableSurgeHook} from "./StableSurgeHook.sol";
 
 /// @notice Stable Pool factory that deploys a standard StablePool with a StableSurgeHook.
 contract StableSurgePoolFactory is IPoolVersion, BasePoolFactory, Version {
@@ -27,9 +31,7 @@ contract StableSurgePoolFactory is IPoolVersion, BasePoolFactory, Version {
         string memory poolVersion
     )
         BasePoolFactory(
-            SingletonAuthentication(stableSurgeHook).getVault(),
-            pauseWindowDuration,
-            type(StablePool).creationCode
+            SingletonAuthentication(stableSurgeHook).getVault(), pauseWindowDuration, type(StablePool).creationCode
         )
         Version(factoryVersion)
     {
@@ -84,10 +86,7 @@ contract StableSurgePoolFactory is IPoolVersion, BasePoolFactory, Version {
         pool = _create(
             abi.encode(
                 StablePool.NewPoolParams({
-                    name: name,
-                    symbol: symbol,
-                    amplificationParameter: amplificationParameter,
-                    version: _poolVersion
+                    name: name, symbol: symbol, amplificationParameter: amplificationParameter, version: _poolVersion
                 }),
                 getVault()
             ),

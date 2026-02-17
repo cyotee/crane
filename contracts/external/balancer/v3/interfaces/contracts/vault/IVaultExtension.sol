@@ -5,10 +5,10 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthorizer } from "./IAuthorizer.sol";
-import { IProtocolFeeController } from "./IProtocolFeeController.sol";
-import { IVault } from "./IVault.sol";
-import { IHooks } from "./IHooks.sol";
+import {IAuthorizer} from "./IAuthorizer.sol";
+import {IProtocolFeeController} from "./IProtocolFeeController.sol";
+import {IVault} from "./IVault.sol";
+import {IHooks} from "./IHooks.sol";
 import "./VaultTypes.sol";
 
 /**
@@ -79,7 +79,7 @@ interface IVaultExtension {
      *
      * @param pool Address of the pool to check
      * @return liquidityAdded True if liquidity has been added to this pool in the current transaction
-     
+     *
      * Note that there is no `sessionId` argument; it always returns the value for the current (i.e., latest) session.
      */
     function getAddLiquidityCalledFlag(address pool) external view returns (bool liquidityAdded);
@@ -177,9 +177,10 @@ interface IVaultExtension {
      * calculations. FP(1) for 18-decimal tokens
      * @return tokenRates 18-decimal FP values for rate tokens (e.g., yield-bearing), or FP(1) for standard tokens
      */
-    function getPoolTokenRates(
-        address pool
-    ) external view returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates);
+    function getPoolTokenRates(address pool)
+        external
+        view
+        returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates);
 
     /**
      * @notice Returns comprehensive pool data for the given pool.
@@ -197,9 +198,7 @@ interface IVaultExtension {
      * @return balancesRaw Current native decimal balances of the pool tokens, sorted in token registration order
      * @return lastBalancesLiveScaled18 Last saved live balances, sorted in token registration order
      */
-    function getPoolTokenInfo(
-        address pool
-    )
+    function getPoolTokenInfo(address pool)
         external
         view
         returns (
@@ -304,9 +303,7 @@ interface IVaultExtension {
      * @return poolBufferPeriodEndTime The timestamp after which the Pool unpauses itself (if paused)
      * @return pauseManager The pause manager, or the zero address
      */
-    function getPoolPausedState(
-        address pool
-    )
+    function getPoolPausedState(address pool)
         external
         view
         returns (bool poolPaused, uint32 poolPauseWindowEndTime, uint32 poolBufferPeriodEndTime, address pauseManager);
@@ -375,10 +372,10 @@ interface IVaultExtension {
      * @param swapParams The swap parameters used to compute the fee
      * @return dynamicSwapFeePercentage The dynamic swap fee percentage
      */
-    function computeDynamicSwapFeePercentage(
-        address pool,
-        PoolSwapParams memory swapParams
-    ) external view returns (uint256 dynamicSwapFeePercentage);
+    function computeDynamicSwapFeePercentage(address pool, PoolSwapParams memory swapParams)
+        external
+        view
+        returns (uint256 dynamicSwapFeePercentage);
 
     /**
      * @notice Returns the Protocol Fee Controller address.

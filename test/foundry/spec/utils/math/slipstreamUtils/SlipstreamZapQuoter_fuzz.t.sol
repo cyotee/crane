@@ -19,7 +19,10 @@ import "forge-std/Test.sol";
 import {SlipstreamZapQuoter} from "@crane/contracts/utils/math/SlipstreamZapQuoter.sol";
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
 /// @title Fuzz Tests for SlipstreamZapQuoter
@@ -40,7 +43,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     uint128 constant MAX_POOL_LIQUIDITY = type(uint128).max / 4;
 
     /// @dev Minimum zap-in amount
-    uint256 constant MIN_ZAP_AMOUNT = 1e9;  // 1 gwei
+    uint256 constant MIN_ZAP_AMOUNT = 1e9; // 1 gwei
 
     /// @dev Maximum zap-in amount
     uint256 constant MAX_ZAP_AMOUNT = 1e24;
@@ -57,7 +60,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @dev Maximum acceptable dust percentage (5%)
     /// @dev Note: Binary search optimization can produce >1% dust in edge cases
     ///      with narrow tick ranges or specific price/amount combinations
-    uint256 constant MAX_DUST_PERCENT = 500;  // 5% = 500 basis points
+    uint256 constant MAX_DUST_PERCENT = 500; // 5% = 500 basis points
 
     /* -------------------------------------------------------------------------- */
     /*                          Fuzz: Zap-In Dust Bounds                          */
@@ -69,16 +72,11 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @param tickRange Tick range width (bounded)
     /// @param zeroForOne Input token direction
     /// @param searchIters Number of binary search iterations
-    function testFuzz_zapIn_dustBounds(
-        uint256 amountIn,
-        int24 tickRange,
-        bool zeroForOne,
-        uint16 searchIters
-    ) public {
+    function testFuzz_zapIn_dustBounds(uint256 amountIn, int24 tickRange, bool zeroForOne, uint16 searchIters) public {
         // Bound inputs - use realistic amounts relative to typical DeFi usage
-        amountIn = bound(amountIn, MIN_ZAP_AMOUNT, 1e22);  // Cap at 10,000 tokens (18 decimals)
-        tickRange = int24(bound(int256(tickRange), 1000, 10000));  // Wider range = more balanced = less dust
-        searchIters = uint16(bound(searchIters, 15, 30));  // Minimum 15 iterations for quality
+        amountIn = bound(amountIn, MIN_ZAP_AMOUNT, 1e22); // Cap at 10,000 tokens (18 decimals)
+        tickRange = int24(bound(int256(tickRange), 1000, 10000)); // Wider range = more balanced = less dust
+        searchIters = uint16(bound(searchIters, 15, 30)); // Minimum 15 iterations for quality
 
         // Create pool at 1:1 price with high liquidity
         MockCLPool pool = _createPoolWithLiquidity(MIN_POOL_LIQUIDITY);
@@ -117,10 +115,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         // Verify dust is within bounds
         assertTrue(
             totalDust <= maxDust,
-            string(abi.encodePacked(
-                "Dust exceeds 5%: dust=", vm.toString(totalDust),
-                " max=", vm.toString(maxDust)
-            ))
+            string(abi.encodePacked("Dust exceeds 5%: dust=", vm.toString(totalDust), " max=", vm.toString(maxDust)))
         );
 
         // Verify we actually produce liquidity
@@ -131,11 +126,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @param amountIn Input amount (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param zeroForOne Input direction
-    function testFuzz_zapIn_searchIterationsImproveDust(
-        uint256 amountIn,
-        int24 tickRange,
-        bool zeroForOne
-    ) public {
+    function testFuzz_zapIn_searchIterationsImproveDust(uint256 amountIn, int24 tickRange, bool zeroForOne) public {
         // Bound inputs
         amountIn = bound(amountIn, MIN_ZAP_AMOUNT, MAX_ZAP_AMOUNT);
         tickRange = int24(bound(int256(tickRange), 500, 5000));
@@ -193,11 +184,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @param amountIn Input amount (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param zeroForOne Input direction
-    function testFuzz_zapIn_valueConservation(
-        uint256 amountIn,
-        int24 tickRange,
-        bool zeroForOne
-    ) public {
+    function testFuzz_zapIn_valueConservation(uint256 amountIn, int24 tickRange, bool zeroForOne) public {
         // Bound inputs
         amountIn = bound(amountIn, MIN_ZAP_AMOUNT, MAX_ZAP_AMOUNT);
         tickRange = int24(bound(int256(tickRange), 200, 8000));
@@ -249,11 +236,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
 
         uint256 totalAccountedInput = quote.swap.amountIn + inputUsed + inputDust;
 
-        assertEq(
-            totalAccountedInput,
-            amountIn,
-            "Input token conservation violated"
-        );
+        assertEq(totalAccountedInput, amountIn, "Input token conservation violated");
 
         // ═══════════════════════════════════════════════════════════════════
         // INVARIANT 2: Dust Percentage Bound (Relative to Input)
@@ -266,10 +249,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         uint256 totalDust = quote.dust0 + quote.dust1;
         uint256 maxAllowedDust = (amountIn * MAX_DUST_PERCENT) / 10000;
 
-        assertTrue(
-            totalDust <= maxAllowedDust,
-            "Dust exceeds 5% of input"
-        );
+        assertTrue(totalDust <= maxAllowedDust, "Dust exceeds 5% of input");
 
         // ═══════════════════════════════════════════════════════════════════
         // INVARIANT 3: Liquidity Production
@@ -278,10 +258,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         // range. This ensures the optimization actually works.
         // ═══════════════════════════════════════════════════════════════════
 
-        assertTrue(
-            quote.liquidity > 0,
-            "Zap should produce liquidity"
-        );
+        assertTrue(quote.liquidity > 0, "Zap should produce liquidity");
 
         // ═══════════════════════════════════════════════════════════════════
         // INVARIANT 4: Swap Amount Sanity
@@ -290,15 +267,9 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         // And the actual swap consumption should not exceed the request.
         // ═══════════════════════════════════════════════════════════════════
 
-        assertTrue(
-            quote.swapAmountIn <= amountIn,
-            "Requested swap amount exceeds input"
-        );
+        assertTrue(quote.swapAmountIn <= amountIn, "Requested swap amount exceeds input");
 
-        assertTrue(
-            quote.swap.amountIn <= quote.swapAmountIn,
-            "Actual swap consumption exceeds request"
-        );
+        assertTrue(quote.swap.amountIn <= quote.swapAmountIn, "Actual swap consumption exceeds request");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -309,11 +280,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @param burnLiquidity Liquidity to burn (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param wantToken0 Output token preference
-    function testFuzz_zapOut_producesOutput(
-        uint128 burnLiquidity,
-        int24 tickRange,
-        bool wantToken0
-    ) public {
+    function testFuzz_zapOut_producesOutput(uint128 burnLiquidity, int24 tickRange, bool wantToken0) public {
         // Bound inputs
         burnLiquidity = uint128(bound(burnLiquidity, MIN_BURN_LIQUIDITY, MAX_BURN_LIQUIDITY));
         tickRange = int24(bound(int256(tickRange), 100, 10000));
@@ -352,21 +319,14 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         assertTrue(quote.burnAmount1 >= 0, "Burn amount1 should be non-negative");
 
         // At least one burn amount should be positive (we're in range at 1:1 price)
-        assertTrue(
-            quote.burnAmount0 > 0 || quote.burnAmount1 > 0,
-            "Should receive tokens from burn"
-        );
+        assertTrue(quote.burnAmount0 > 0 || quote.burnAmount1 > 0, "Should receive tokens from burn");
     }
 
     /// @notice Fuzz test: zap-out combines burn and swap correctly
     /// @param burnLiquidity Liquidity to burn (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param wantToken0 Output token preference
-    function testFuzz_zapOut_combinesBurnAndSwap(
-        uint128 burnLiquidity,
-        int24 tickRange,
-        bool wantToken0
-    ) public {
+    function testFuzz_zapOut_combinesBurnAndSwap(uint128 burnLiquidity, int24 tickRange, bool wantToken0) public {
         // Bound inputs
         burnLiquidity = uint128(bound(burnLiquidity, MIN_BURN_LIQUIDITY, MAX_BURN_LIQUIDITY / 10));
         tickRange = int24(bound(int256(tickRange), 200, 5000));
@@ -399,17 +359,13 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
         uint256 wantedBurnAmount = wantToken0 ? quote.burnAmount0 : quote.burnAmount1;
 
         // Output should be at least the burn amount of wanted token
-        assertTrue(
-            quote.amountOut >= wantedBurnAmount,
-            "Output should include burn amount of wanted token"
-        );
+        assertTrue(quote.amountOut >= wantedBurnAmount, "Output should include burn amount of wanted token");
 
         // If there was unwanted token to swap, output should be higher
         uint256 unwantedBurnAmount = wantToken0 ? quote.burnAmount1 : quote.burnAmount0;
         if (unwantedBurnAmount > 0 && quote.swap.amountOut > 0) {
             assertTrue(
-                quote.amountOut > wantedBurnAmount,
-                "Output should include swap proceeds when unwanted token exists"
+                quote.amountOut > wantedBurnAmount, "Output should include swap proceeds when unwanted token exists"
             );
         }
     }
@@ -418,11 +374,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @param burnLiquidity Liquidity to burn (bounded)
     /// @param tickRange Tick range (bounded)
     /// @param wantToken0 Output token preference
-    function testFuzz_zapOut_dustMinimal(
-        uint128 burnLiquidity,
-        int24 tickRange,
-        bool wantToken0
-    ) public {
+    function testFuzz_zapOut_dustMinimal(uint128 burnLiquidity, int24 tickRange, bool wantToken0) public {
         // Bound inputs - use smaller amounts to ensure swap can be fully filled
         burnLiquidity = uint128(bound(burnLiquidity, MIN_BURN_LIQUIDITY, MAX_BURN_LIQUIDITY / 100));
         tickRange = int24(bound(int256(tickRange), 500, 3000));
@@ -461,7 +413,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
             uint256 dustPercent = (quote.dust * 10000) / quote.swapAmountIn;
             // With high pool liquidity, dust should be very small
             assertTrue(
-                dustPercent < 100,  // Less than 1%
+                dustPercent < 100, // Less than 1%
                 "Dust should be less than 1% of swap amount"
             );
         }
@@ -470,10 +422,7 @@ contract SlipstreamZapQuoter_fuzz_Test is TestBase_Slipstream {
     /// @notice Fuzz test: opposite wantToken0 gives different outputs
     /// @param burnLiquidity Liquidity to burn (bounded)
     /// @param tickRange Tick range (bounded)
-    function testFuzz_zapOut_oppositeTokensGiveDifferentOutputs(
-        uint128 burnLiquidity,
-        int24 tickRange
-    ) public {
+    function testFuzz_zapOut_oppositeTokensGiveDifferentOutputs(uint128 burnLiquidity, int24 tickRange) public {
         // Bound inputs
         burnLiquidity = uint128(bound(burnLiquidity, MIN_BURN_LIQUIDITY, MAX_BURN_LIQUIDITY / 10));
         tickRange = int24(bound(int256(tickRange), 500, 5000));

@@ -11,7 +11,9 @@ import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mock
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 
 import {RateProviderMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RateProviderMock.sol";
 import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
@@ -74,12 +76,12 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
         shouldSettleDiscount = true;
     }
 
-    function onRegister(
-        address factory,
-        address,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public view override returns (bool) {
+    function onRegister(address factory, address, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        view
+        override
+        returns (bool)
+    {
         return _allowedFactories[factory];
     }
 
@@ -103,11 +105,12 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
         return !failOnAfterInitialize;
     }
 
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata params,
-        address,
-        uint256
-    ) public view override returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata params, address, uint256)
+        public
+        view
+        override
+        returns (bool, uint256)
+    {
         uint256 finalSwapFee = _dynamicSwapFee;
 
         if (_specialSender != address(0)) {
@@ -146,32 +149,28 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
 
     function onAfterSwap(AfterSwapParams calldata params) public override returns (bool, uint256) {
         // Check that actual pool balances match.
-        (IERC20[] memory tokens, , uint256[] memory balancesRaw, ) = _vault.getPoolTokenInfo(params.pool);
+        (IERC20[] memory tokens,, uint256[] memory balancesRaw,) = _vault.getPoolTokenInfo(params.pool);
 
         uint256[] memory currentLiveBalances = IVaultMock(address(_vault)).getCurrentLiveBalances(params.pool);
 
         (uint256[] memory scalingFactors, uint256[] memory rates) = _vault.getPoolTokenRates(params.pool);
 
         for (uint256 i = 0; i < tokens.length; ++i) {
-            if (tokens[i] == params.tokenIn) {
+            if (address(tokens[i]) == address(params.tokenIn)) {
                 if (params.tokenInBalanceScaled18 != currentLiveBalances[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
-                uint256 expectedTokenInBalanceRaw = params.tokenInBalanceScaled18.toRawUndoRateRoundDown(
-                    scalingFactors[i],
-                    rates[i]
-                );
+                uint256 expectedTokenInBalanceRaw =
+                    params.tokenInBalanceScaled18.toRawUndoRateRoundDown(scalingFactors[i], rates[i]);
                 if (expectedTokenInBalanceRaw != balancesRaw[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
-            } else if (tokens[i] == params.tokenOut) {
+            } else if (address(tokens[i]) == address(params.tokenOut)) {
                 if (params.tokenOutBalanceScaled18 != currentLiveBalances[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
-                uint256 expectedTokenOutBalanceRaw = params.tokenOutBalanceScaled18.toRawUndoRateRoundDown(
-                    scalingFactors[i],
-                    rates[i]
-                );
+                uint256 expectedTokenOutBalanceRaw =
+                    params.tokenOutBalanceScaled18.toRawUndoRateRoundDown(scalingFactors[i], rates[i]);
                 if (expectedTokenOutBalanceRaw != balancesRaw[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
@@ -279,7 +278,7 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
             return (true, forcedHookAdjustedAmountsLiquidity);
         }
 
-        (IERC20[] memory tokens, , , ) = _vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = _vault.getPoolTokenInfo(pool);
         hookAdjustedAmountsInRaw = amountsInRaw;
 
         if (addLiquidityHookFeePercentage > 0) {
@@ -321,7 +320,7 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
             return (true, forcedHookAdjustedAmountsLiquidity);
         }
 
-        (IERC20[] memory tokens, , , ) = _vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = _vault.getPoolTokenInfo(pool);
         hookAdjustedAmountsOutRaw = amountsOutRaw;
 
         if (removeLiquidityHookFeePercentage > 0) {
@@ -397,18 +396,16 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
         _newBalancesRaw = newBalancesRaw;
     }
 
-    function setChangePoolBalancesOnBeforeAddLiquidityHook(
-        bool changeBalances,
-        uint256[] memory newBalancesRaw
-    ) external {
+    function setChangePoolBalancesOnBeforeAddLiquidityHook(bool changeBalances, uint256[] memory newBalancesRaw)
+        external
+    {
         changePoolBalancesOnBeforeAddLiquidityHook = changeBalances;
         _newBalancesRaw = newBalancesRaw;
     }
 
-    function setChangePoolBalancesOnBeforeRemoveLiquidityHook(
-        bool changeBalances,
-        uint256[] memory newBalancesRaw
-    ) external {
+    function setChangePoolBalancesOnBeforeRemoveLiquidityHook(bool changeBalances, uint256[] memory newBalancesRaw)
+        external
+    {
         changePoolBalancesOnBeforeRemoveLiquidityHook = changeBalances;
         _newBalancesRaw = newBalancesRaw;
     }
@@ -423,11 +420,9 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
         _newTokenRate = newTokenRate;
     }
 
-    function setChangeTokenRateOnBeforeSwapHook(
-        bool changeRate,
-        RateProviderMock rateProvider,
-        uint256 newTokenRate
-    ) external {
+    function setChangeTokenRateOnBeforeSwapHook(bool changeRate, RateProviderMock rateProvider, uint256 newTokenRate)
+        external
+    {
         changeTokenRateOnBeforeSwapHook = changeRate;
         _rateProvider = rateProvider;
         _newTokenRate = newTokenRate;

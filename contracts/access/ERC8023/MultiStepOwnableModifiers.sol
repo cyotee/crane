@@ -11,7 +11,6 @@ import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwn
  * @dev Compiler will inline on the modifiers used in the inheriting contract.
  */
 abstract contract MultiStepOwnableModifiers {
-
     /**
      * @notice Restricts function access to the current contract owner.
      */

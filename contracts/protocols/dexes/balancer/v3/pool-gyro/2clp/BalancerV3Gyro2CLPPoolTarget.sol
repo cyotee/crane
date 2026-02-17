@@ -5,7 +5,11 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import {Gyro2CLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
@@ -15,8 +19,12 @@ import {Gyro2CLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/cont
 /* -------------------------------------------------------------------------- */
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3Gyro2CLPPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3Gyro2CLPPool.sol";
-import {BalancerV3Gyro2CLPPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolRepo.sol";
+import {
+    IBalancerV3Gyro2CLPPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3Gyro2CLPPool.sol";
+import {
+    BalancerV3Gyro2CLPPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolRepo.sol";
 
 /**
  * @title Balancer V3 Gyro 2-CLP Pool Target
@@ -160,19 +168,18 @@ contract BalancerV3Gyro2CLPPoolTarget is IBalancerV3Pool, IBalancerV3Gyro2CLPPoo
      * @return virtualBalanceIn Virtual offset for input token.
      * @return virtualBalanceOut Virtual offset for output token.
      */
-    function _getVirtualOffsets(
-        uint256 balanceTokenInScaled18,
-        uint256 balanceTokenOutScaled18,
-        bool tokenInIsToken0
-    ) internal view returns (uint256 virtualBalanceIn, uint256 virtualBalanceOut) {
+    function _getVirtualOffsets(uint256 balanceTokenInScaled18, uint256 balanceTokenOutScaled18, bool tokenInIsToken0)
+        internal
+        view
+        returns (uint256 virtualBalanceIn, uint256 virtualBalanceOut)
+    {
         uint256[] memory balances = new uint256[](2);
         balances[0] = tokenInIsToken0 ? balanceTokenInScaled18 : balanceTokenOutScaled18;
         balances[1] = tokenInIsToken0 ? balanceTokenOutScaled18 : balanceTokenInScaled18;
 
         (uint256 sqrtAlpha, uint256 sqrtBeta) = BalancerV3Gyro2CLPPoolRepo._get2CLPParams();
 
-        uint256 currentInvariant =
-            Gyro2CLPMath.calculateInvariant(balances, sqrtAlpha, sqrtBeta, Rounding.ROUND_DOWN);
+        uint256 currentInvariant = Gyro2CLPMath.calculateInvariant(balances, sqrtAlpha, sqrtBeta, Rounding.ROUND_DOWN);
 
         // virtualBalanceIn is always rounded up (conservative for protocol)
         // virtualBalanceOut is always rounded down (conservative for protocol)
@@ -182,8 +189,7 @@ contract BalancerV3Gyro2CLPPoolTarget is IBalancerV3Pool, IBalancerV3Gyro2CLPPoo
                 Gyro2CLPMath.calculateVirtualParameter1(currentInvariant, sqrtAlpha, Rounding.ROUND_DOWN);
         } else {
             virtualBalanceIn = Gyro2CLPMath.calculateVirtualParameter1(currentInvariant, sqrtAlpha, Rounding.ROUND_UP);
-            virtualBalanceOut =
-                Gyro2CLPMath.calculateVirtualParameter0(currentInvariant, sqrtBeta, Rounding.ROUND_DOWN);
+            virtualBalanceOut = Gyro2CLPMath.calculateVirtualParameter0(currentInvariant, sqrtBeta, Rounding.ROUND_DOWN);
         }
     }
 

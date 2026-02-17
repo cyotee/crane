@@ -4,18 +4,20 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
-import { FungibilityTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/Fungibility.t.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {FungibilityTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/Fungibility.t.sol";
 
-import { WeightedPoolFactory } from "../../contracts/WeightedPoolFactory.sol";
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPoolFactory} from "../../contracts/WeightedPoolFactory.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
 contract FungibilityWeightedTest is WeightedPoolContractsDeployer, FungibilityTest {
     using ArrayHelpers for *;
@@ -29,10 +31,11 @@ contract FungibilityWeightedTest is WeightedPoolContractsDeployer, FungibilityTe
     }
 
     /// @notice Overrides BaseVaultTest _createPool(). This pool is used by FungibilityTest.
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "80/20 Weighted Pool";
         string memory symbol = "80_20WP";
 
@@ -41,19 +44,20 @@ contract FungibilityWeightedTest is WeightedPoolContractsDeployer, FungibilityTe
         // Allow pools created by `factory` to use poolHooksMock hooks.
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            [uint256(80e16), uint256(20e16)].toMemoryArray(),
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE, // 1% swap fee, but test will force it to be 0
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            // NOTE: sends a unique salt.
-            bytes32(poolCreationNonce++)
-        );
+        newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                [uint256(80e16), uint256(20e16)].toMemoryArray(),
+                roleAccounts,
+                DEFAULT_SWAP_FEE_PERCENTAGE, // 1% swap fee, but test will force it to be 0
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                // NOTE: sends a unique salt.
+                bytes32(poolCreationNonce++)
+            );
         vm.label(newPool, label);
 
         uint256[] memory minTokenBalances = new uint256[](tokens.length);

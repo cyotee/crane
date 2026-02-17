@@ -792,9 +792,7 @@ library ConstProdUtils {
         pure
         returns (uint256 amountB)
     {
-        if (
-            amountA == 0 || reserveA == 0 || reserveB == 0
-        ) {
+        if (amountA == 0 || reserveA == 0 || reserveB == 0) {
             return 0;
         }
         amountB = (amountA * reserveB) / reserveA;

@@ -2,7 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {DiamondCutFacetDFPkg, IDiamondCutFacetDFPkg} from "@crane/contracts/introspection/ERC2535/DiamondCutFacetDFPkg.sol";
+import {
+    DiamondCutFacetDFPkg,
+    IDiamondCutFacetDFPkg
+} from "@crane/contracts/introspection/ERC2535/DiamondCutFacetDFPkg.sol";
 import {DiamondCutFacet} from "@crane/contracts/introspection/ERC2535/DiamondCutFacet.sol";
 import {MultiStepOwnableFacet} from "@crane/contracts/access/ERC8023/MultiStepOwnableFacet.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -35,11 +38,7 @@ contract MockFacetForPkg is IFacet {
     }
 
     function facetMetadata() external pure returns (string memory, bytes4[] memory, bytes4[] memory) {
-        return (
-            "MockFacetForPkg",
-            new bytes4[](0),
-            new bytes4[](1)
-        );
+        return ("MockFacetForPkg", new bytes4[](0), new bytes4[](1));
     }
 }
 
@@ -235,9 +234,7 @@ contract DiamondCutFacetDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall to set storage in this test contract
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount should succeed");
 
         // Verify owner was set
@@ -262,9 +259,7 @@ contract DiamondCutFacetDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount with diamond cut should succeed");
     }
 
@@ -282,9 +277,7 @@ contract DiamondCutFacetDFPkg_Test is Test {
         });
 
         // Call initAccount via delegatecall
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount with interfaces should succeed");
     }
 
@@ -298,9 +291,7 @@ contract DiamondCutFacetDFPkg_Test is Test {
         });
 
         // Should not revert with empty diamond cut
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount with empty cut should succeed");
     }
 
@@ -314,9 +305,7 @@ contract DiamondCutFacetDFPkg_Test is Test {
         });
 
         // Should not revert with empty interfaces
-        (bool success,) = address(pkg).delegatecall(
-            abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args))
-        );
+        (bool success,) = address(pkg).delegatecall(abi.encodeWithSelector(pkg.initAccount.selector, abi.encode(args)));
         assertTrue(success, "initAccount with empty interfaces should succeed");
     }
 

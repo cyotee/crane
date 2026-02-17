@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
@@ -57,8 +57,7 @@ library BalancerV3RouterStorageRepo {
      * Domain: "SenderGuard", Key: "sender"
      * This matches the original SenderGuard.sol immutable slot calculation.
      */
-    bytes32 internal constant SENDER_SLOT =
-        0x6c17b98ed641627be1f588a5e81d97edc6ddd1b560dfba5b46c2aa2c8ddd0d00;
+    bytes32 internal constant SENDER_SLOT = 0x6c17b98ed641627be1f588a5e81d97edc6ddd1b560dfba5b46c2aa2c8ddd0d00;
 
     /**
      * @dev Transient slot for ETH return lock state.
@@ -144,12 +143,7 @@ library BalancerV3RouterStorageRepo {
     /**
      * @notice Initialize using default storage slot.
      */
-    function _initialize(
-        IVault vault_,
-        IWETH weth_,
-        IPermit2 permit2_,
-        string memory routerVersion_
-    ) internal {
+    function _initialize(IVault vault_, IWETH weth_, IPermit2 permit2_, string memory routerVersion_) internal {
         _initialize(_layout(), vault_, weth_, permit2_, routerVersion_);
     }
 

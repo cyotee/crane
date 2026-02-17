@@ -15,7 +15,6 @@ import {UniV2Router02} from "@crane/contracts/protocols/dexes/uniswap/v2/stubs/U
 import {TestBase_Weth9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/TestBase_Weth9.sol";
 
 abstract contract TestBase_UniswapV2 is TestBase_Weth9 {
-
     address uniswapV2FeeToSetter;
 
     IUniswapV2Factory internal uniswapV2Factory;
@@ -28,10 +27,7 @@ abstract contract TestBase_UniswapV2 is TestBase_Weth9 {
             vm.label(address(uniswapV2FeeToSetter), "uniswapV2FeeToSetter");
             uniswapV2Factory = new UniV2Factory(uniswapV2FeeToSetter);
             vm.label(address(uniswapV2Factory), "uniswapV2Factory");
-            uniswapV2Router = new UniV2Router02(
-                address(uniswapV2Factory),
-                address(weth)
-            );
+            uniswapV2Router = new UniV2Router02(address(uniswapV2Factory), address(weth));
             vm.label(address(uniswapV2Router), "uniswapV2Router");
         }
     }
@@ -98,16 +94,15 @@ abstract contract TestBase_UniswapV2 is TestBase_Weth9 {
         IERC20PermitProxy(tokenB_).approve(address(uniswapV2Router), amountBDesired_);
 
         // Add liquidity
-        (amountA, amountB, liquidity) = uniswapV2Router
-            .addLiquidity(
-                tokenA_,
-                tokenB_,
-                amountADesired_,
-                amountBDesired_,
-                amountADesired_ * 95 / 100, // min amounts (5% slippage)
-                amountBDesired_ * 95 / 100,
-                recipient_,
-                block.timestamp + 300
-            );
+        (amountA, amountB, liquidity) = uniswapV2Router.addLiquidity(
+            tokenA_,
+            tokenB_,
+            amountADesired_,
+            amountBDesired_,
+            amountADesired_ * 95 / 100, // min amounts (5% slippage)
+            amountBDesired_ * 95 / 100,
+            recipient_,
+            block.timestamp + 300
+        );
     }
 }

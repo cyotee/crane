@@ -25,7 +25,9 @@ import {IWETH} from "@crane/contracts/interfaces/protocols/tokens/wrappers/weth/
 import {IAsset} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAsset.sol";
 import {IAuthorizer} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IAuthorizer.sol";
 import {IFlashLoanRecipient} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IFlashLoanRecipient.sol";
-import {IProtocolFeesCollector} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IProtocolFeesCollector.sol";
+import {
+    IProtocolFeesCollector
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v2/IProtocolFeesCollector.sol";
 
 /**
  * @dev Full external interface for the Vault core contract - no external or public methods exist in the contract that

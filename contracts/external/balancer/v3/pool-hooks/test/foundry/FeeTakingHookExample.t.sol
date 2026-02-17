@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     LiquidityManagement,
@@ -17,17 +17,19 @@ import {
     SwapKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BasePoolMath } from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { FeeTakingHookExample } from "../../contracts/FeeTakingHookExample.sol";
+import {FeeTakingHookExample} from "../../contracts/FeeTakingHookExample.sol";
 
 contract FeeTakingHookExampleTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -52,10 +54,11 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity)
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -71,13 +74,10 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
         vm.expectEmit();
         emit FeeTakingHookExample.FeeTakingHookExampleRegistered(poolHooksContract, newPool);
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -130,9 +130,7 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
         assertEq(
-            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx],
-            swapAmount,
-            "Bob DAI balance is wrong"
+            balancesBefore.userTokens[daiIdx] - balancesAfter.userTokens[daiIdx], swapAmount, "Bob DAI balance is wrong"
         );
         assertEq(balancesBefore.hookTokens[daiIdx], balancesAfter.hookTokens[daiIdx], "Hook DAI balance is wrong");
         assertEq(
@@ -193,16 +191,7 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
             emit FeeTakingHookExample.HookFeeCharged(poolHooksContract, IERC20(dai), hookFee);
         }
 
-        router.swapSingleTokenExactOut(
-            address(pool),
-            dai,
-            usdc,
-            swapAmount,
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactOut(address(pool), dai, usdc, swapAmount, MAX_UINT256, MAX_UINT256, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
@@ -218,9 +207,7 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
             "Bob DAI balance is wrong"
         );
         assertEq(
-            balancesAfter.hookTokens[daiIdx] - balancesBefore.hookTokens[daiIdx],
-            hookFee,
-            "Hook DAI balance is wrong"
+            balancesAfter.hookTokens[daiIdx] - balancesBefore.hookTokens[daiIdx], hookFee, "Hook DAI balance is wrong"
         );
 
         _checkPoolAndVaultBalancesAfterSwap(balancesBefore, balancesAfter, swapAmount);
@@ -251,15 +238,13 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
         }
 
         uint256[] memory actualAmountsIn = BasePoolMath.computeProportionalAmountsIn(
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            BalancerPoolToken(pool).totalSupply(),
-            expectedBptOut
+            [poolInitAmount, poolInitAmount].toMemoryArray(), BalancerPoolToken(pool).totalSupply(), expectedBptOut
         );
         uint256 actualAmountIn = actualAmountsIn[daiIdx]; // Proportional, so doesn't matter which token
         uint256 hookFee = actualAmountIn.mulUp(hookFeePercentage);
 
-        uint256[] memory expectedBalances = [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
@@ -300,11 +285,7 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
         // Add liquidity so bob has BPT to remove liquidity
         vm.prank(bob);
         router.addLiquidityProportional(
-            pool,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            2 * poolInitAmount,
-            false,
-            bytes("")
+            pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 2 * poolInitAmount, false, bytes("")
         );
 
         // Add fee between 0 and 100%
@@ -332,8 +313,8 @@ contract FeeTakingHookExampleTest is BaseVaultTest {
         uint256 actualAmountOut = actualAmountsOut[usdcIdx];
         uint256 hookFee = actualAmountOut.mulUp(hookFeePercentage);
 
-        uint256[] memory expectedBalances = [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 

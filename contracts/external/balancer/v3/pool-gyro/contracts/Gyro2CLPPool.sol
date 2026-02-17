@@ -4,8 +4,14 @@
 
 pragma solidity ^0.8.24;
 
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import { PoolSwapParams, Rounding, SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {
     IGyro2CLPPool,
     Gyro2CLPPoolDynamicData,
@@ -14,13 +20,13 @@ import {
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { PoolInfo } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {PoolInfo} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
 import "./lib/Gyro2CLPMath.sol";
 
@@ -36,10 +42,11 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
     uint256 private immutable _sqrtAlpha;
     uint256 private immutable _sqrtBeta;
 
-    constructor(
-        GyroParams memory params,
-        IVault vault
-    ) BalancerPoolToken(vault, params.name, params.symbol) PoolInfo(vault) Version(params.version) {
+    constructor(GyroParams memory params, IVault vault)
+        BalancerPoolToken(vault, params.name, params.symbol)
+        PoolInfo(vault)
+        Version(params.version)
+    {
         if (params.sqrtAlpha >= params.sqrtBeta) {
             revert SqrtParamsWrong();
         }
@@ -49,21 +56,22 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
     }
 
     /// @inheritdoc IBasePool
-    function computeInvariant(
-        uint256[] memory balancesLiveScaled18,
-        Rounding rounding
-    ) external view returns (uint256) {
+    function computeInvariant(uint256[] memory balancesLiveScaled18, Rounding rounding)
+        external
+        view
+        returns (uint256)
+    {
         (uint256 sqrtAlpha, uint256 sqrtBeta) = _getSqrtAlphaAndBeta();
 
         return Gyro2CLPMath.calculateInvariant(balancesLiveScaled18, sqrtAlpha, sqrtBeta, rounding);
     }
 
     /// @inheritdoc IBasePool
-    function computeBalance(
-        uint256[] memory balancesLiveScaled18,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external view returns (uint256 newBalance) {
+    function computeBalance(uint256[] memory balancesLiveScaled18, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        view
+        returns (uint256 newBalance)
+    {
         /**********************************************************************************************
         // Gyro invariant formula is:
         //                                    Lˆ2 = (x + a)(y + b)
@@ -90,12 +98,8 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
         // A bigger invariant in `computeAddLiquiditySingleTokenExactOut` means that more tokens are required to
         // fulfill the trade, and a bigger invariant in `computeRemoveLiquiditySingleTokenExactIn` means that the
         // amount out is lower. So, the invariant should always be rounded up.
-        uint256 invariant = Gyro2CLPMath.calculateInvariant(
-            balancesLiveScaled18,
-            sqrtAlpha,
-            sqrtBeta,
-            Rounding.ROUND_UP
-        );
+        uint256 invariant =
+            Gyro2CLPMath.calculateInvariant(balancesLiveScaled18, sqrtAlpha, sqrtBeta, Rounding.ROUND_UP);
         // New invariant
         invariant = invariant.mulUp(invariantRatio);
         uint256 squareNewInv = invariant * invariant;
@@ -121,11 +125,8 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
         uint256 balanceTokenOutScaled18 = request.balancesScaled18[request.indexOut];
 
         // All the calculations in one function to avoid Error Stack Too Deep
-        (uint256 virtualParamIn, uint256 virtualParamOut) = _getVirtualOffsets(
-            balanceTokenInScaled18,
-            balanceTokenOutScaled18,
-            tokenInIsToken0
-        );
+        (uint256 virtualParamIn, uint256 virtualParamOut) =
+            _getVirtualOffsets(balanceTokenInScaled18, balanceTokenOutScaled18, tokenInIsToken0);
 
         if (request.kind == SwapKind.EXACT_IN) {
             uint256 amountOutScaled18 = Gyro2CLPMath.calcOutGivenIn(
@@ -162,11 +163,12 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
      * offsets to concentrate the liquidity of the pool. The sum of real balance and offset is known as
      * "virtual balance". Here we return the offsets a and b.
      */
-    function _getVirtualOffsets(
-        uint256 balanceTokenInScaled18,
-        uint256 balanceTokenOutScaled18,
-        bool tokenInIsToken0
-    ) internal view virtual returns (uint256 virtualBalanceIn, uint256 virtualBalanceOut) {
+    function _getVirtualOffsets(uint256 balanceTokenInScaled18, uint256 balanceTokenOutScaled18, bool tokenInIsToken0)
+        internal
+        view
+        virtual
+        returns (uint256 virtualBalanceIn, uint256 virtualBalanceOut)
+    {
         uint256[] memory balances = new uint256[](2);
         balances[0] = tokenInIsToken0 ? balanceTokenInScaled18 : balanceTokenOutScaled18;
         balances[1] = tokenInIsToken0 ? balanceTokenOutScaled18 : balanceTokenInScaled18;
@@ -183,18 +185,11 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
         // * If swap is EXACT_OUT: a lower virtualBalanceOut leads to a bigger amount in;
         if (tokenInIsToken0) {
             virtualBalanceIn = Gyro2CLPMath.calculateVirtualParameter0(currentInvariant, sqrtBeta, Rounding.ROUND_UP);
-            virtualBalanceOut = Gyro2CLPMath.calculateVirtualParameter1(
-                currentInvariant,
-                sqrtAlpha,
-                Rounding.ROUND_DOWN
-            );
+            virtualBalanceOut =
+                Gyro2CLPMath.calculateVirtualParameter1(currentInvariant, sqrtAlpha, Rounding.ROUND_DOWN);
         } else {
             virtualBalanceIn = Gyro2CLPMath.calculateVirtualParameter1(currentInvariant, sqrtAlpha, Rounding.ROUND_UP);
-            virtualBalanceOut = Gyro2CLPMath.calculateVirtualParameter0(
-                currentInvariant,
-                sqrtBeta,
-                Rounding.ROUND_DOWN
-            );
+            virtualBalanceOut = Gyro2CLPMath.calculateVirtualParameter0(currentInvariant, sqrtBeta, Rounding.ROUND_DOWN);
         }
     }
 
@@ -237,7 +232,7 @@ contract Gyro2CLPPool is IGyro2CLPPool, BalancerPoolToken, PoolInfo, Version {
     /// @inheritdoc IGyro2CLPPool
     function getGyro2CLPPoolImmutableData() external view returns (Gyro2CLPPoolImmutableData memory data) {
         data.tokens = _vault.getPoolTokens(address(this));
-        (data.decimalScalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _vault.getPoolTokenRates(address(this));
         data.sqrtAlpha = _sqrtAlpha;
         data.sqrtBeta = _sqrtBeta;
     }

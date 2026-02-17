@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {TestBase_BalancerV3WeightedFork} from "./TestBase_BalancerV3WeightedFork.sol";
 import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
@@ -163,7 +165,9 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
             uint256 localBalance = computeBalanceLocal(balances, weights, tokenIndex, invariantRatio);
             uint256 onChainBalance = computeBalanceOnChain(balances, tokenIndex, invariantRatio);
 
-            assertParity(localBalance, onChainBalance, string.concat("computeBalance remove token ", vm.toString(tokenIndex)));
+            assertParity(
+                localBalance, onChainBalance, string.concat("computeBalance remove token ", vm.toString(tokenIndex))
+            );
 
             // New balance should be less than old balance
             assertLt(localBalance, balances[tokenIndex], "Balance should decrease for liquidity remove");
@@ -201,13 +205,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
 
         uint256 amountIn = MEDIUM_AMOUNT;
 
-        uint256 amountOut = computeSwapExactInLocal(
-            balances[0],
-            weights[0],
-            balances[1],
-            weights[1],
-            amountIn
-        );
+        uint256 amountOut = computeSwapExactInLocal(balances[0], weights[0], balances[1], weights[1], amountIn);
 
         // Output should be positive and less than balance
         assertGt(amountOut, 0, "Swap output should be positive");
@@ -223,13 +221,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
 
         uint256 amountIn = MEDIUM_AMOUNT;
 
-        uint256 amountOut = computeSwapExactInLocal(
-            balances[1],
-            weights[1],
-            balances[0],
-            weights[0],
-            amountIn
-        );
+        uint256 amountOut = computeSwapExactInLocal(balances[1], weights[1], balances[0], weights[0], amountIn);
 
         assertGt(amountOut, 0, "Swap output should be positive");
         assertLt(amountOut, balances[0], "Swap output should be less than pool balance");
@@ -245,13 +237,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         // Request 1% of token1 balance
         uint256 amountOut = balances[1] / 100;
 
-        uint256 amountIn = computeSwapExactOutLocal(
-            balances[0],
-            weights[0],
-            balances[1],
-            weights[1],
-            amountOut
-        );
+        uint256 amountIn = computeSwapExactOutLocal(balances[0], weights[0], balances[1], weights[1], amountOut);
 
         // Input should be positive
         assertGt(amountIn, 0, "Swap input should be positive");
@@ -267,13 +253,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         // Request 1% of token0 balance
         uint256 amountOut = balances[0] / 100;
 
-        uint256 amountIn = computeSwapExactOutLocal(
-            balances[1],
-            weights[1],
-            balances[0],
-            weights[0],
-            amountOut
-        );
+        uint256 amountIn = computeSwapExactOutLocal(balances[1], weights[1], balances[0], weights[0], amountOut);
 
         assertGt(amountIn, 0, "Swap input should be positive");
     }
@@ -288,13 +268,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         uint256 amountIn = MEDIUM_AMOUNT;
 
         // Swap token0 -> token1 (exact in)
-        uint256 amountOut = computeSwapExactInLocal(
-            balances[0],
-            weights[0],
-            balances[1],
-            weights[1],
-            amountIn
-        );
+        uint256 amountOut = computeSwapExactInLocal(balances[0], weights[0], balances[1], weights[1], amountIn);
 
         // Update balances after first swap
         uint256[] memory newBalances = new uint256[](2);
@@ -302,13 +276,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         newBalances[1] = balances[1] - amountOut;
 
         // Swap back: token1 -> token0 (exact in with the output from first swap)
-        uint256 amountBack = computeSwapExactInLocal(
-            newBalances[1],
-            weights[1],
-            newBalances[0],
-            weights[0],
-            amountOut
-        );
+        uint256 amountBack = computeSwapExactInLocal(newBalances[1], weights[1], newBalances[0], weights[0], amountOut);
 
         // Due to the constant product formula, we should get back slightly less
         // (this is the "slippage" from two trades)
@@ -330,13 +298,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         uint256 amountIn = (balances[0] * amountInBps) / 10000;
         if (amountIn == 0) return;
 
-        uint256 amountOut = computeSwapExactInLocal(
-            balances[0],
-            weights[0],
-            balances[1],
-            weights[1],
-            amountIn
-        );
+        uint256 amountOut = computeSwapExactInLocal(balances[0], weights[0], balances[1], weights[1], amountIn);
 
         // Output should be positive and bounded
         assertGt(amountOut, 0, "Swap output should be positive");
@@ -356,13 +318,7 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
         uint256 amountOut = (balances[1] * amountOutBps) / 10000;
         if (amountOut == 0) return;
 
-        uint256 amountIn = computeSwapExactOutLocal(
-            balances[0],
-            weights[0],
-            balances[1],
-            weights[1],
-            amountOut
-        );
+        uint256 amountIn = computeSwapExactOutLocal(balances[0], weights[0], balances[1], weights[1], amountOut);
 
         // Input should be positive
         assertGt(amountIn, 0, "Swap input should be positive");
@@ -388,26 +344,15 @@ contract BalancerV3WeightedPool_Fork is TestBase_BalancerV3WeightedFork {
             // Skip if amount is larger than pool balance
             if (amounts[i] >= balances[0]) continue;
 
-            uint256 amountOut = computeSwapExactInLocal(
-                balances[0],
-                weights[0],
-                balances[1],
-                weights[1],
-                amounts[i]
-            );
+            uint256 amountOut = computeSwapExactInLocal(balances[0], weights[0], balances[1], weights[1], amounts[i]);
 
             // Output should be positive
             assertGt(amountOut, 0, "Swap output should be positive");
 
             // Larger inputs should give larger outputs
             if (i > 0 && amounts[i - 1] < balances[0]) {
-                uint256 prevOut = computeSwapExactInLocal(
-                    balances[0],
-                    weights[0],
-                    balances[1],
-                    weights[1],
-                    amounts[i - 1]
-                );
+                uint256 prevOut =
+                    computeSwapExactInLocal(balances[0], weights[0], balances[1], weights[1], amounts[i - 1]);
                 assertGt(amountOut, prevOut, "Larger input should give larger output");
             }
         }

@@ -230,13 +230,7 @@ contract AerodromeVolatileUtils_Fork_Test is TestBase_AerodromeFork {
         uint256 reserveIn = wethIsToken0 ? reserve0 : reserve1;
         uint256 reserveOut = wethIsToken0 ? reserve1 : reserve0;
 
-        uint256 constProdQuote = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveIn,
-            reserveOut,
-            fee,
-            AERO_FEE_DENOM
-        );
+        uint256 constProdQuote = ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, fee, AERO_FEE_DENOM);
 
         console.log("ConstProdUtils parity test:");
         console.log("  amountIn (WETH):", amountIn);
@@ -248,10 +242,7 @@ contract AerodromeVolatileUtils_Fork_Test is TestBase_AerodromeFork {
 
         // Allow 1 wei tolerance for rounding differences
         assertApproxEqAbs(
-            constProdQuote,
-            poolQuote,
-            1,
-            "ConstProdUtils quote should match pool quote (1 wei tolerance)"
+            constProdQuote, poolQuote, 1, "ConstProdUtils quote should match pool quote (1 wei tolerance)"
         );
     }
 
@@ -277,25 +268,14 @@ contract AerodromeVolatileUtils_Fork_Test is TestBase_AerodromeFork {
         uint256 reserveIn = usdcIsToken0 ? reserve0 : reserve1;
         uint256 reserveOut = usdcIsToken0 ? reserve1 : reserve0;
 
-        uint256 constProdQuote = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveIn,
-            reserveOut,
-            fee,
-            AERO_FEE_DENOM
-        );
+        uint256 constProdQuote = ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, fee, AERO_FEE_DENOM);
 
         console.log("ConstProdUtils parity test (reverse):");
         console.log("  amountIn (USDC):", amountIn);
         console.log("  poolQuote:", poolQuote);
         console.log("  constProdQuote:", constProdQuote);
 
-        assertApproxEqAbs(
-            constProdQuote,
-            poolQuote,
-            1,
-            "ConstProdUtils quote should match pool quote (reverse)"
-        );
+        assertApproxEqAbs(constProdQuote, poolQuote, 1, "ConstProdUtils quote should match pool quote (reverse)");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -344,12 +324,7 @@ contract AerodromeVolatileUtils_Fork_Test is TestBase_AerodromeFork {
 
         console.log("  expectedOutput (manual calc):", expectedOutput);
 
-        assertApproxEqAbs(
-            poolQuote,
-            expectedOutput,
-            1,
-            "Pool output should match manual fee calculation"
-        );
+        assertApproxEqAbs(poolQuote, expectedOutput, 1, "Pool output should match manual fee calculation");
     }
 
     /// @notice Verify Aerodrome uses 10000 denominator (not 100000 like UniswapV2)

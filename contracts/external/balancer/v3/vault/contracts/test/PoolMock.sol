@@ -2,14 +2,14 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolLiquidity } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BalancerPoolToken } from "../BalancerPoolToken.sol";
+import {BalancerPoolToken} from "../BalancerPoolToken.sol";
 
 contract PoolMock is IBasePool, IPoolLiquidity, BalancerPoolToken {
     using FixedPoint for uint256;
@@ -34,11 +34,11 @@ contract PoolMock is IBasePool, IPoolLiquidity, BalancerPoolToken {
     }
 
     /// @inheritdoc IBasePool
-    function computeBalance(
-        uint256[] memory balances,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external pure returns (uint256 newBalance) {
+    function computeBalance(uint256[] memory balances, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        pure
+        returns (uint256 newBalance)
+    {
         // inv = x + y
         uint256 invariant = computeInvariant(balances, Rounding.ROUND_DOWN);
         return (balances[tokenInIndex] + invariant.mulDown(invariantRatio)) - invariant;
@@ -49,10 +49,9 @@ contract PoolMock is IBasePool, IPoolLiquidity, BalancerPoolToken {
     }
 
     function onSwap(PoolSwapParams calldata params) external view override returns (uint256 amountCalculated) {
-        return
-            params.kind == SwapKind.EXACT_IN
-                ? params.amountGivenScaled18.mulDown(_multiplier)
-                : params.amountGivenScaled18.divDown(_multiplier);
+        return params.kind == SwapKind.EXACT_IN
+            ? params.amountGivenScaled18.mulDown(_multiplier)
+            : params.amountGivenScaled18.divDown(_multiplier);
     }
 
     function onAddLiquidityCustom(
@@ -81,7 +80,7 @@ contract PoolMock is IBasePool, IPoolLiquidity, BalancerPoolToken {
 
     /// @dev Even though pools do not handle scaling, we still need this for the tests.
     function getDecimalScalingFactors() external view returns (uint256[] memory scalingFactors) {
-        (scalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (scalingFactors,) = _vault.getPoolTokenRates(address(this));
     }
 
     function getMinimumSwapFeePercentage() external pure override returns (uint256) {

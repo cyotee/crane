@@ -5,7 +5,9 @@ import {ICLFactory} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
 import {IFeeModule} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/fees/IFeeModule.sol";
 import {IVoter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IVoter.sol";
-import {IFactoryRegistry} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
+import {
+    IFactoryRegistry
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
 import {Clones} from "@crane/contracts/proxy/Clones.sol";
 import {CLPool} from "./CLPool.sol";
 
@@ -85,10 +87,10 @@ contract CLFactory is ICLFactory {
         emit DefaultUnstakedFeeChanged(0, 100_000);
 
         // Enable default tick spacings
-        _enableTickSpacing(1, 100);      // 0.01% fee
-        _enableTickSpacing(50, 500);     // 0.05% fee
-        _enableTickSpacing(100, 500);    // 0.05% fee
-        _enableTickSpacing(200, 3_000);  // 0.30% fee
+        _enableTickSpacing(1, 100); // 0.01% fee
+        _enableTickSpacing(50, 500); // 0.05% fee
+        _enableTickSpacing(100, 500); // 0.05% fee
+        _enableTickSpacing(200, 3_000); // 0.30% fee
         _enableTickSpacing(2_000, 10_000); // 1.00% fee
     }
 
@@ -117,19 +119,19 @@ contract CLFactory is ICLFactory {
 
         // Deploy pool as EIP-1167 minimal proxy
         pool = Clones.cloneDeterministic({
-            implementation: poolImplementation,
-            salt: keccak256(abi.encode(token0, token1, tickSpacing))
+            implementation: poolImplementation, salt: keccak256(abi.encode(token0, token1, tickSpacing))
         });
 
         // Initialize pool
-        CLPool(pool).initialize({
-            _factory: address(this),
-            _token0: token0,
-            _token1: token1,
-            _tickSpacing: tickSpacing,
-            _factoryRegistry: address(factoryRegistry),
-            _sqrtPriceX96: sqrtPriceX96
-        });
+        CLPool(pool)
+            .initialize({
+                _factory: address(this),
+                _token0: token0,
+                _token1: token1,
+                _tickSpacing: tickSpacing,
+                _factoryRegistry: address(factoryRegistry),
+                _sqrtPriceX96: sqrtPriceX96
+            });
 
         allPools.push(pool);
         _isPool[pool] = true;
@@ -149,7 +151,8 @@ contract CLFactory is ICLFactory {
         if (swapFeeModule != address(0)) {
             // Use gas-limited static call to fee module
             try IFeeModule(swapFeeModule).getFee{gas: 200_000}(pool) returns (uint24 fee) {
-                if (fee <= 100_000) { // Max 10%
+                if (fee <= 100_000) {
+                    // Max 10%
                     return fee;
                 }
             } catch {
@@ -168,7 +171,8 @@ contract CLFactory is ICLFactory {
         if (unstakedFeeModule != address(0)) {
             // Use gas-limited static call to fee module
             try IFeeModule(unstakedFeeModule).getFee{gas: 200_000}(pool) returns (uint24 fee) {
-                if (fee <= 1_000_000) { // Max 100%
+                if (fee <= 1_000_000) {
+                    // Max 100%
                     return fee;
                 }
             } catch {

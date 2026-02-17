@@ -23,8 +23,12 @@ import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamo
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
 import {CowRouterRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterRepo.sol";
 
 /**
@@ -64,10 +68,7 @@ interface ICowRouterDFPkg {
      * @param feeSweeper Address to receive fees.
      * @return router The deployed router address.
      */
-    function deployRouter(
-        uint256 protocolFeePercentage,
-        address feeSweeper
-    ) external returns (address router);
+    function deployRouter(uint256 protocolFeePercentage, address feeSweeper) external returns (address router);
 }
 
 /**
@@ -107,9 +108,7 @@ contract CowRouterDFPkg is IDiamondFactoryPackage, ICowRouterDFPkg {
         COW_ROUTER_FACET = pkgInit.cowRouterFacet;
 
         // Initialize authentication with package's action ID root
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
 
         // Initialize vault repo for later operations
         BalancerV3VaultAwareRepo._initialize(pkgInit.balancerV3Vault);
@@ -121,18 +120,9 @@ contract CowRouterDFPkg is IDiamondFactoryPackage, ICowRouterDFPkg {
      * @param feeSweeper_ Address to receive collected fees.
      * @return router The deployed router proxy address.
      */
-    function deployRouter(
-        uint256 protocolFeePercentage_,
-        address feeSweeper_
-    ) public returns (address router) {
+    function deployRouter(uint256 protocolFeePercentage_, address feeSweeper_) public returns (address router) {
         router = DIAMOND_PACKAGE_FACTORY.deploy(
-            this,
-            abi.encode(
-                PkgArgs({
-                    protocolFeePercentage: protocolFeePercentage_,
-                    feeSweeper: feeSweeper_
-                })
-            )
+            this, abi.encode(PkgArgs({protocolFeePercentage: protocolFeePercentage_, feeSweeper: feeSweeper_}))
         );
     }
 
@@ -211,8 +201,7 @@ contract CowRouterDFPkg is IDiamondFactoryPackage, ICowRouterDFPkg {
         // Validate protocol fee percentage
         if (decodedArgs.protocolFeePercentage > CowRouterRepo.MAX_PROTOCOL_FEE_PERCENTAGE) {
             revert ProtocolFeePercentageAboveLimit(
-                decodedArgs.protocolFeePercentage,
-                CowRouterRepo.MAX_PROTOCOL_FEE_PERCENTAGE
+                decodedArgs.protocolFeePercentage, CowRouterRepo.MAX_PROTOCOL_FEE_PERCENTAGE
             );
         }
 
@@ -242,16 +231,11 @@ contract CowRouterDFPkg is IDiamondFactoryPackage, ICowRouterDFPkg {
         BalancerV3VaultAwareRepo._initialize(BALANCER_V3_VAULT);
 
         // Initialize authentication with package's action ID root
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
 
         // CRITICAL: Initialize CoW router storage with fee settings
         // This is required for withdrawCollectedProtocolFees to work
-        CowRouterRepo._initialize(
-            decodedArgs.protocolFeePercentage,
-            decodedArgs.feeSweeper
-        );
+        CowRouterRepo._initialize(decodedArgs.protocolFeePercentage, decodedArgs.feeSweeper);
     }
 
     /**

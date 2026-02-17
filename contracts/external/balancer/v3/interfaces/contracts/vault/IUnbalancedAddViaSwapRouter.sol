@@ -64,9 +64,7 @@ interface IUnbalancedAddViaSwapRouter {
      * @param params Parameters for the add liquidity and swap operation
      * @return amountsIn Array of amounts in for each token added to the pool, sorted in token registration order.
      */
-    function queryAddLiquidityUnbalanced(
-        address pool,
-        address sender,
-        AddLiquidityAndSwapParams calldata params
-    ) external returns (uint256[] memory amountsIn);
+    function queryAddLiquidityUnbalanced(address pool, address sender, AddLiquidityAndSwapParams calldata params)
+        external
+        returns (uint256[] memory amountsIn);
 }

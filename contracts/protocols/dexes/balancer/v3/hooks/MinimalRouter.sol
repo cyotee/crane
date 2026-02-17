@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
@@ -99,12 +99,9 @@ contract MinimalRouter is RouterCommon {
      * @param permit2 The Permit2 contract address.
      * @param routerVersion Version string for this router.
      */
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) RouterCommon(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        RouterCommon(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -129,13 +126,7 @@ contract MinimalRouter is RouterCommon {
         bytes memory userData
     ) external payable returns (uint256[] memory amountsIn) {
         return _addLiquidityProportional(
-            pool,
-            msg.sender,
-            msg.sender,
-            maxAmountsIn,
-            exactBptAmountOut,
-            wethIsEth,
-            userData
+            pool, msg.sender, msg.sender, maxAmountsIn, exactBptAmountOut, wethIsEth, userData
         );
     }
 
@@ -156,13 +147,7 @@ contract MinimalRouter is RouterCommon {
         bytes memory userData
     ) external returns (uint256[] memory amountsOut) {
         return _removeLiquidityProportional(
-            pool,
-            msg.sender,
-            msg.sender,
-            exactBptAmountIn,
-            minAmountsOut,
-            wethIsEth,
-            userData
+            pool, msg.sender, msg.sender, exactBptAmountIn, minAmountsOut, wethIsEth, userData
         );
     }
 
@@ -179,7 +164,7 @@ contract MinimalRouter is RouterCommon {
         bool wethIsEth,
         bytes memory userData
     ) internal returns (uint256[] memory amountsIn) {
-        (amountsIn, , ) = abi.decode(
+        (amountsIn,,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     MinimalRouter.addLiquidityHook,
@@ -203,9 +188,7 @@ contract MinimalRouter is RouterCommon {
      * @notice Hook called by Vault during add liquidity.
      * @dev Only callable by the Vault.
      */
-    function addLiquidityHook(
-        ExtendedAddLiquidityHookParams calldata params
-    )
+    function addLiquidityHook(ExtendedAddLiquidityHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -252,7 +235,7 @@ contract MinimalRouter is RouterCommon {
         bool wethIsEth,
         bytes memory userData
     ) internal returns (uint256[] memory amountsOut) {
-        (, amountsOut, ) = abi.decode(
+        (, amountsOut,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     MinimalRouter.removeLiquidityHook,
@@ -276,9 +259,7 @@ contract MinimalRouter is RouterCommon {
      * @notice Hook called by Vault during remove liquidity.
      * @dev Only callable by the Vault.
      */
-    function removeLiquidityHook(
-        ExtendedRemoveLiquidityHookParams calldata params
-    )
+    function removeLiquidityHook(ExtendedRemoveLiquidityHookParams calldata params)
         external
         nonReentrant
         onlyVault

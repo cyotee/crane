@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { PoolConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {PoolConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract PoolDonationTest is BaseVaultTest {
     uint256 internal daiIdx;
@@ -59,10 +59,6 @@ contract PoolDonationTest is BaseVaultTest {
             amountToDonate,
             "Vault DAI balance is wrong"
         );
-        assertEq(
-            balancesAfter.vaultTokens[usdcIdx],
-            balancesBefore.vaultTokens[usdcIdx],
-            "Vault USDC balance is wrong"
-        );
+        assertEq(balancesAfter.vaultTokens[usdcIdx], balancesBefore.vaultTokens[usdcIdx], "Vault USDC balance is wrong");
     }
 }

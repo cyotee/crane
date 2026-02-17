@@ -320,10 +320,7 @@ contract MockERC20USDTApproval {
 
     // USDT-like: requires allowance to be 0 before changing to non-zero
     function approve(address spender, uint256 amount) external returns (bool) {
-        require(
-            allowance[msg.sender][spender] == 0 || amount == 0,
-            "Approve to non-zero from non-zero"
-        );
+        require(allowance[msg.sender][spender] == 0 || amount == 0, "Approve to non-zero from non-zero");
         allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;

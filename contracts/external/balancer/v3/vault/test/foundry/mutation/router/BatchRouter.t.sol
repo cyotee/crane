@@ -4,10 +4,10 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { BaseVaultTest } from "../../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../../utils/BaseVaultTest.sol";
 
 contract BatchRouterMutationTest is BaseVaultTest {
     function setUp() public virtual override {

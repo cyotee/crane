@@ -6,17 +6,17 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
 import {
     AddAndRemoveLiquidityMedusaTest
 } from "@crane/contracts/external/balancer/v3/vault/test/foundry/fuzz/AddAndRemoveLiquidity.medusa.sol";
 
-import { StablePoolFactory } from "../../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../../contracts/StablePool.sol";
+import {StablePoolFactory} from "../../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../../contracts/StablePool.sol";
 
 contract AddAndRemoveLiquidityStableMedusaTest is AddAndRemoveLiquidityMedusaTest {
     uint256 private constant DEFAULT_SWAP_FEE = 1e16;

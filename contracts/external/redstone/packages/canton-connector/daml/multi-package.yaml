@@ -1,0 +1,10 @@
+sdk-version: 3.4.10
+packages:
+  - ./sdk
+  - ./interface
+  - ./core
+  - ./adapter
+  - ./price_feed
+  - ./test
+  - ./featured
+  - ./factory

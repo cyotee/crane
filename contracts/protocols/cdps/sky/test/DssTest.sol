@@ -17,14 +17,8 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import { ScriptTools } from "./ScriptTools.sol";
-import {
-    GodMode,
-    MCD,
-    MCDUser,
-    DssInstance,
-    DssIlkInstance
-} from "./MCD.sol";
+import {ScriptTools} from "./ScriptTools.sol";
+import {GodMode, MCD, MCDUser, DssInstance, DssIlkInstance} from "./MCD.sol";
 
 interface AuthLike {
     function wards(address) external view returns (uint256);
@@ -39,7 +33,6 @@ interface FileLike is AuthLike {
 }
 
 abstract contract DssTest is Test {
-
     uint256 constant WAD = 10 ** 18;
     uint256 constant RAY = 10 ** 27;
     uint256 constant RAD = 10 ** 45;
@@ -49,7 +42,7 @@ abstract contract DssTest is Test {
     uint256 constant MILLION = 10 ** 6;
     uint256 constant BILLION = 10 ** 9;
 
-    address constant TEST_ADDRESS = address(bytes20(uint160(uint256(keccak256('random test address')))));
+    address constant TEST_ADDRESS = address(bytes20(uint160(uint256(keccak256("random test address")))));
 
     event Rely(address indexed usr);
     event Deny(address indexed usr);
@@ -79,7 +72,7 @@ abstract contract DssTest is Test {
     function assertRevert(address target, bytes memory data, uint256 value, string memory expectedMessage) internal {
         bool succeeded;
         bytes memory response;
-        (succeeded, response) = target.call{value:value}(data);
+        (succeeded, response) = target.call{value: value}(data);
         if (succeeded) {
             emit log("Error: call not reverted");
             fail();
@@ -149,12 +142,13 @@ abstract contract DssTest is Test {
             }
 
             // Read original value
-            (bool success, bytes memory result) = _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
+            (bool success, bytes memory result) =
+                _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
             assertTrue(success);
             uint256 origData = abi.decode(result, (uint256));
             uint256 newData;
             unchecked {
-                newData = origData + 1;   // Overflow is fine
+                newData = origData + 1; // Overflow is fine
             }
 
             // Update value
@@ -182,17 +176,20 @@ abstract contract DssTest is Test {
         // Reset admin access to what it was
         GodMode.setWard(_base, address(this), ward);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[1] memory _values) internal {
         string[] memory values = new string[](1);
         values[0] = _values[0];
         checkFileUint(_base, _contractName, values);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[2] memory _values) internal {
         string[] memory values = new string[](2);
         values[0] = _values[0];
         values[1] = _values[1];
         checkFileUint(_base, _contractName, values);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[3] memory _values) internal {
         string[] memory values = new string[](3);
         values[0] = _values[0];
@@ -200,6 +197,7 @@ abstract contract DssTest is Test {
         values[2] = _values[2];
         checkFileUint(_base, _contractName, values);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[4] memory _values) internal {
         string[] memory values = new string[](4);
         values[0] = _values[0];
@@ -208,6 +206,7 @@ abstract contract DssTest is Test {
         values[3] = _values[3];
         checkFileUint(_base, _contractName, values);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[5] memory _values) internal {
         string[] memory values = new string[](5);
         values[0] = _values[0];
@@ -217,6 +216,7 @@ abstract contract DssTest is Test {
         values[4] = _values[4];
         checkFileUint(_base, _contractName, values);
     }
+
     function checkFileUint(address _base, string memory _contractName, string[6] memory _values) internal {
         string[] memory values = new string[](6);
         values[0] = _values[0];
@@ -249,7 +249,8 @@ abstract contract DssTest is Test {
             }
 
             // Read original value
-            (bool success, bytes memory result) = _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
+            (bool success, bytes memory result) =
+                _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
             assertTrue(success);
             address origData = abi.decode(result, (address));
             address newData = TEST_ADDRESS;
@@ -279,17 +280,20 @@ abstract contract DssTest is Test {
         // Reset admin access to what it was
         GodMode.setWard(_base, address(this), ward);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[1] memory _values) internal {
         string[] memory values = new string[](1);
         values[0] = _values[0];
         checkFileAddress(_base, _contractName, values);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[2] memory _values) internal {
         string[] memory values = new string[](2);
         values[0] = _values[0];
         values[1] = _values[1];
         checkFileAddress(_base, _contractName, values);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[3] memory _values) internal {
         string[] memory values = new string[](3);
         values[0] = _values[0];
@@ -297,6 +301,7 @@ abstract contract DssTest is Test {
         values[2] = _values[2];
         checkFileAddress(_base, _contractName, values);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[4] memory _values) internal {
         string[] memory values = new string[](4);
         values[0] = _values[0];
@@ -305,6 +310,7 @@ abstract contract DssTest is Test {
         values[3] = _values[3];
         checkFileAddress(_base, _contractName, values);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[5] memory _values) internal {
         string[] memory values = new string[](5);
         values[0] = _values[0];
@@ -314,6 +320,7 @@ abstract contract DssTest is Test {
         values[4] = _values[4];
         checkFileAddress(_base, _contractName, values);
     }
+
     function checkFileAddress(address _base, string memory _contractName, string[6] memory _values) internal {
         string[] memory values = new string[](6);
         values[0] = _values[0];
@@ -346,7 +353,8 @@ abstract contract DssTest is Test {
             }
 
             // Read original value
-            (bool success, bytes memory result) = _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
+            (bool success, bytes memory result) =
+                _base.call(abi.encodeWithSignature(string(abi.encodePacked(value, "()"))));
             assertTrue(success);
             string memory origData = abi.decode(result, (string));
             string memory newData = string(abi.encodePacked(origData, " - NEW"));
@@ -376,17 +384,20 @@ abstract contract DssTest is Test {
         // Reset admin access to what it was
         GodMode.setWard(_base, address(this), ward);
     }
+
     function checkFileString(address _base, string memory _contractName, string[1] memory _values) internal {
         string[] memory values = new string[](1);
         values[0] = _values[0];
         checkFileString(_base, _contractName, values);
     }
+
     function checkFileString(address _base, string memory _contractName, string[2] memory _values) internal {
         string[] memory values = new string[](2);
         values[0] = _values[0];
         values[1] = _values[1];
         checkFileString(_base, _contractName, values);
     }
+
     function checkFileString(address _base, string memory _contractName, string[3] memory _values) internal {
         string[] memory values = new string[](3);
         values[0] = _values[0];
@@ -394,6 +405,7 @@ abstract contract DssTest is Test {
         values[2] = _values[2];
         checkFileString(_base, _contractName, values);
     }
+
     function checkFileString(address _base, string memory _contractName, string[4] memory _values) internal {
         string[] memory values = new string[](4);
         values[0] = _values[0];
@@ -402,6 +414,7 @@ abstract contract DssTest is Test {
         values[3] = _values[3];
         checkFileString(_base, _contractName, values);
     }
+
     function checkFileString(address _base, string memory _contractName, string[5] memory _values) internal {
         string[] memory values = new string[](5);
         values[0] = _values[0];
@@ -411,6 +424,7 @@ abstract contract DssTest is Test {
         values[4] = _values[4];
         checkFileString(_base, _contractName, values);
     }
+
     function checkFileString(address _base, string memory _contractName, string[6] memory _values) internal {
         string[] memory values = new string[](6);
         values[0] = _values[0];
@@ -430,17 +444,20 @@ abstract contract DssTest is Test {
             assertRevert(_base, abi.encodePacked(fsig, p), _revertMsg);
         }
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[1] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](1);
         fsigs[0] = _fsigs[0];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[2] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](2);
         fsigs[0] = _fsigs[0];
         fsigs[1] = _fsigs[1];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[3] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](3);
         fsigs[0] = _fsigs[0];
@@ -448,6 +465,7 @@ abstract contract DssTest is Test {
         fsigs[2] = _fsigs[2];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[4] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](4);
         fsigs[0] = _fsigs[0];
@@ -456,6 +474,7 @@ abstract contract DssTest is Test {
         fsigs[3] = _fsigs[3];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[5] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](5);
         fsigs[0] = _fsigs[0];
@@ -465,6 +484,7 @@ abstract contract DssTest is Test {
         fsigs[4] = _fsigs[4];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[6] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](6);
         fsigs[0] = _fsigs[0];
@@ -475,6 +495,7 @@ abstract contract DssTest is Test {
         fsigs[5] = _fsigs[5];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[7] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](7);
         fsigs[0] = _fsigs[0];
@@ -486,6 +507,7 @@ abstract contract DssTest is Test {
         fsigs[6] = _fsigs[6];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[8] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](8);
         fsigs[0] = _fsigs[0];
@@ -498,6 +520,7 @@ abstract contract DssTest is Test {
         fsigs[7] = _fsigs[7];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[9] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](9);
         fsigs[0] = _fsigs[0];
@@ -511,6 +534,7 @@ abstract contract DssTest is Test {
         fsigs[8] = _fsigs[8];
         checkModifier(_base, _revertMsg, fsigs);
     }
+
     function checkModifier(address _base, string memory _revertMsg, bytes4[10] memory _fsigs) internal {
         bytes4[] memory fsigs = new bytes4[](10);
         fsigs[0] = _fsigs[0];
@@ -525,5 +549,4 @@ abstract contract DssTest is Test {
         fsigs[9] = _fsigs[9];
         checkModifier(_base, _revertMsg, fsigs);
     }
-
 }

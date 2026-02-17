@@ -5,13 +5,17 @@ pragma solidity ^0.8.24;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
 
 contract BalancerV3AuthenticationTarget is IAuthentication {
     /// @inheritdoc IAuthentication

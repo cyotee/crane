@@ -94,9 +94,7 @@ contract OperableTest is Test {
 
     function test_setOperatorFor_grantsFunctionSpecificAccess() public {
         bytes4 funcSelector = operable.restrictedByOnlyOperatorSelector();
-        assertFalse(
-            operable.isOperatorFor(funcSelector, functionOperator), "Should not be function operator initially"
-        );
+        assertFalse(operable.isOperatorFor(funcSelector, functionOperator), "Should not be function operator initially");
 
         vm.expectEmit(true, true, true, true);
         emit IOperable.NewFunctionOperatorStatus(functionOperator, funcSelector, true);

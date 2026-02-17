@@ -15,9 +15,16 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -32,10 +39,18 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3Gyro2CLPPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3Gyro2CLPPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   DFPkg                                    */
@@ -65,11 +80,25 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
 
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
@@ -182,8 +211,8 @@ contract BalancerV3Gyro2CLPPoolDFPkg_Integration_Test is CraneTest {
     // 2-CLP parameters
     // sqrtAlpha and sqrtBeta define the price bounds
     // For a price range of [0.9, 1.1], sqrtAlpha ≈ 0.9487, sqrtBeta ≈ 1.0488
-    uint256 constant SQRT_ALPHA = 0.9487e18;  // sqrt(0.9)
-    uint256 constant SQRT_BETA = 1.0488e18;   // sqrt(1.1)
+    uint256 constant SQRT_ALPHA = 0.9487e18; // sqrt(0.9)
+    uint256 constant SQRT_BETA = 1.0488e18; // sqrt(1.1)
 
     function setUp() public override {
         CraneTest.setUp();
@@ -237,10 +266,7 @@ contract BalancerV3Gyro2CLPPoolDFPkg_Integration_Test is CraneTest {
 
         bytes memory pkgArgs = abi.encode(
             IBalancerV3Gyro2CLPPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                sqrtAlpha: SQRT_ALPHA,
-                sqrtBeta: SQRT_BETA,
-                hooksContract: address(0)
+                tokenConfigs: configs, sqrtAlpha: SQRT_ALPHA, sqrtBeta: SQRT_BETA, hooksContract: address(0)
             })
         );
 
@@ -255,10 +281,7 @@ contract BalancerV3Gyro2CLPPoolDFPkg_Integration_Test is CraneTest {
 
         bytes memory pkgArgs = abi.encode(
             IBalancerV3Gyro2CLPPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                sqrtAlpha: SQRT_ALPHA,
-                sqrtBeta: SQRT_BETA,
-                hooksContract: address(0)
+                tokenConfigs: configs, sqrtAlpha: SQRT_ALPHA, sqrtBeta: SQRT_BETA, hooksContract: address(0)
             })
         );
 
@@ -305,18 +328,17 @@ contract BalancerV3Gyro2CLPPoolDFPkg_Integration_Test is CraneTest {
 
         bytes memory invalidArgs = abi.encode(
             IBalancerV3Gyro2CLPPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                sqrtAlpha: SQRT_ALPHA,
-                sqrtBeta: SQRT_BETA,
-                hooksContract: address(0)
+                tokenConfigs: configs, sqrtAlpha: SQRT_ALPHA, sqrtBeta: SQRT_BETA, hooksContract: address(0)
             })
         );
 
-        vm.expectRevert(abi.encodeWithSelector(
-            BalancerV3Gyro2CLPPoolDFPkg.InvalidTokensLength.selector,
-            2, // required
-            3  // provided
-        ));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                BalancerV3Gyro2CLPPoolDFPkg.InvalidTokensLength.selector,
+                2, // required
+                3 // provided
+            )
+        );
         pkg.calcSalt(invalidArgs);
     }
 
@@ -327,12 +349,11 @@ contract BalancerV3Gyro2CLPPoolDFPkg_Integration_Test is CraneTest {
         return configs;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

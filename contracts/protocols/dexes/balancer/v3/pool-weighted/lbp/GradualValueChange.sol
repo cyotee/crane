@@ -27,12 +27,11 @@ library GradualValueChange {
      * @param endTime The end timestamp.
      * @return The interpolated value at the current block timestamp.
      */
-    function getInterpolatedValue(
-        uint256 startValue,
-        uint256 endValue,
-        uint256 startTime,
-        uint256 endTime
-    ) internal view returns (uint256) {
+    function getInterpolatedValue(uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
+        internal
+        view
+        returns (uint256)
+    {
         uint256 pctProgress = calculateValueChangeProgress(startTime, endTime);
         return interpolateValue(startValue, endValue, pctProgress);
     }
@@ -62,11 +61,11 @@ library GradualValueChange {
      * @param pctProgress Progress as an 18-decimal fixed point (0 to 1e18).
      * @return The interpolated value.
      */
-    function interpolateValue(
-        uint256 startValue,
-        uint256 endValue,
-        uint256 pctProgress
-    ) internal pure returns (uint256) {
+    function interpolateValue(uint256 startValue, uint256 endValue, uint256 pctProgress)
+        internal
+        pure
+        returns (uint256)
+    {
         if (pctProgress >= FixedPoint.ONE || startValue == endValue) {
             return endValue;
         }

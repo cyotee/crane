@@ -2,13 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
-import { BaseExtremeAmountsTest } from "./utils/BaseExtremeAmountsTest.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
+import {BaseExtremeAmountsTest} from "./utils/BaseExtremeAmountsTest.sol";
 
 contract LinearPoolExtremeAmountsTest is BaseExtremeAmountsTest {
     using CastingHelpers for *;
@@ -17,22 +19,19 @@ contract LinearPoolExtremeAmountsTest is BaseExtremeAmountsTest {
         BaseExtremeAmountsTest.setUp();
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool - DAI/USDC";
         string memory symbol = "ERC20_POOL_DAI_USDC";
 
         newPool = address(new PoolMock(IVault(address(vault)), name, symbol));
         vm.label(newPool, label);
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            address(0),
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens.asIERC20()), address(0), lp);
 
         poolArgs = abi.encode(vault, name, symbol);
     }

@@ -1,0 +1,59 @@
+module Test where
+
+import Daml.Script
+import DA.List
+import DA.Map as M
+import RedStoneAdapter
+import IRedStoneAdapter
+import RedStonePriceFeed
+import IRedStonePriceFeed
+import Input
+import VerifyResults
+
+main : Input -> Script ()
+main input = script do
+  owner <- allocateParty "RedStoneOracleOwner"
+  updater <- allocateParty "RedStoneOracleUpdater"
+  viewer <- allocateParty "RedStoneOracleViewer"
+
+  adapterCid <- submit owner do
+    createCmd RedStoneAdapter with
+      adapterId = "RedStoneAdapter-123"
+      owner = owner
+      updaters = [updater]
+      viewers = [viewer]
+      feedData = M.empty
+
+  feedCid <- submit owner do
+    createCmd RedStonePriceFeed with
+      owner = owner
+      viewers = [viewer]
+      adapterId = "RedStoneAdapter-123"
+      feedId = head input.feedIds
+      description = "RedStone Feed Id"
+
+  currentTime <- getTime
+
+  result <- submit viewer do
+    exerciseCmd (toInterfaceContractId @IRedStoneAdapter adapterCid) GetPrices with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+
+  debug $ "Processed result: " <> show result
+
+  newCid <- submit updater do
+    exerciseCmd (toInterfaceContractId @IRedStoneAdapter adapterCid) WritePrices with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+
+  readResult <- submit viewer do
+    exerciseCmd newCid ReadPriceData with
+      feedIds = input.feedIds
+
+  feedResult <- submit viewer do
+    exerciseCmd (toInterfaceContractId @IRedStonePriceFeed feedCid) ReadData with
+      adapterCid = newCid
+
+  verifyResults currentTime readResult feedResult

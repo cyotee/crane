@@ -7,18 +7,18 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
-import { BasePoolTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {BasePoolTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
-import { WeightedPoolFactory } from "../../contracts/WeightedPoolFactory.sol";
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPoolFactory} from "../../contracts/WeightedPoolFactory.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
 contract BigWeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
     string constant POOL_VERSION = "Pool v1";
@@ -66,18 +66,19 @@ contract BigWeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
         // Allow pools created by `factory` to use PoolHooksMock hooks.
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(bigPoolTokens),
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(bigPoolTokens),
+                weights,
+                roleAccounts,
+                DEFAULT_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(newPool, "Big weighted pool");
 
         uint256[] memory minTokenBalances = new uint256[](numTokens);

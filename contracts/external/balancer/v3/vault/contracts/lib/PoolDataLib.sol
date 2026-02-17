@@ -4,14 +4,23 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { PoolData, TokenInfo, TokenType, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    PoolData,
+    TokenInfo,
+    TokenType,
+    Rounding
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import { PoolConfigBits, PoolConfigLib } from "./PoolConfigLib.sol";
+import {PoolConfigBits, PoolConfigLib} from "./PoolConfigLib.sol";
 
 /**
  * @notice Helper functions to read/write a `PoolData` struct.
@@ -46,9 +55,9 @@ library PoolDataLib {
         poolData.decimalScalingFactors = PoolConfigLib.getDecimalScalingFactors(poolData.poolConfigBits, numTokens);
         poolData.tokenRates = new uint256[](numTokens);
 
-        bool poolSubjectToYieldFees = poolData.poolConfigBits.isPoolInitialized() &&
-            poolData.poolConfigBits.getAggregateYieldFeePercentage() > 0 &&
-            poolData.poolConfigBits.isPoolInRecoveryMode() == false;
+        bool poolSubjectToYieldFees = poolData.poolConfigBits.isPoolInitialized()
+            && poolData.poolConfigBits.getAggregateYieldFeePercentage() > 0
+            && poolData.poolConfigBits.isPoolInRecoveryMode() == false;
 
         for (uint256 i = 0; i < numTokens; ++i) {
             TokenInfo memory tokenInfo = poolTokenInfo[poolData.tokens[i]];
@@ -77,12 +86,8 @@ library PoolDataLib {
                 uint256 aggregateYieldFeePercentage = poolData.poolConfigBits.getAggregateYieldFeePercentage();
                 uint256 balanceRaw = poolData.balancesRaw[i];
 
-                uint256 aggregateYieldFeeAmountRaw = _computeYieldFeesDue(
-                    poolData,
-                    packedBalance.getBalanceDerived(),
-                    i,
-                    aggregateYieldFeePercentage
-                );
+                uint256 aggregateYieldFeeAmountRaw =
+                    _computeYieldFeesDue(poolData, packedBalance.getBalanceDerived(), i, aggregateYieldFeePercentage);
 
                 if (aggregateYieldFeeAmountRaw > 0) {
                     updateRawAndLiveBalance(poolData, i, balanceRaw - aggregateYieldFeeAmountRaw, roundingDirection);
@@ -94,7 +99,9 @@ library PoolDataLib {
     function syncPoolBalancesAndFees(
         PoolData memory poolData,
         mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolTokenBalances,
-        mapping(IERC20 token => bytes32 packedFeeAmounts) storage poolAggregateProtocolFeeAmounts
+        mapping(
+            IERC20 token => bytes32 packedFeeAmounts
+        ) storage poolAggregateProtocolFeeAmounts
     ) internal {
         uint256 numTokens = poolData.balancesRaw.length;
 
@@ -114,10 +121,8 @@ library PoolDataLib {
                 );
             }
 
-            poolTokenBalances[i] = PackedTokenBalance.toPackedBalance(
-                poolData.balancesRaw[i],
-                poolData.balancesLiveScaled18[i]
-            );
+            poolTokenBalances[i] =
+                PackedTokenBalance.toPackedBalance(poolData.balancesRaw[i], poolData.balancesLiveScaled18[i]);
         }
     }
 
@@ -169,16 +174,13 @@ library PoolDataLib {
     ) internal pure {
         poolData.balancesRaw[tokenIndex] = newRawBalance;
 
-        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection ==
-            Rounding.ROUND_UP
+        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection
+            == Rounding.ROUND_UP
             ? ScalingHelpers.toScaled18ApplyRateRoundUp
             : ScalingHelpers.toScaled18ApplyRateRoundDown;
 
-        poolData.balancesLiveScaled18[tokenIndex] = _upOrDown(
-            newRawBalance,
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
-        );
+        poolData.balancesLiveScaled18[tokenIndex] =
+            _upOrDown(newRawBalance, poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]);
     }
 
     // solhint-disable-next-line private-vars-leading-underscore
@@ -198,15 +200,13 @@ library PoolDataLib {
         if (currentLiveBalance > lastLiveBalance) {
             unchecked {
                 // Magnitudes are checked above, so it's safe to do unchecked math here.
-                uint256 aggregateYieldFeeAmountScaled18 = (currentLiveBalance - lastLiveBalance).mulUp(
-                    aggregateYieldFeePercentage
-                );
+                uint256 aggregateYieldFeeAmountScaled18 =
+                    (currentLiveBalance - lastLiveBalance).mulUp(aggregateYieldFeePercentage);
 
                 // A pool is subject to yield fees if poolSubjectToYieldFees is true, meaning that
                 // `protocolYieldFeePercentage > 0`. So, we don't need to check this again in here, saving some gas.
                 aggregateYieldFeeAmountRaw = aggregateYieldFeeAmountScaled18.toRawUndoRateRoundDown(
-                    poolData.decimalScalingFactors[tokenIndex],
-                    poolData.tokenRates[tokenIndex]
+                    poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]
                 );
             }
         }

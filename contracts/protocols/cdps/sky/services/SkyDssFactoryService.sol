@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import { Vat } from "../core/Vat.sol";
-import { Dai } from "../core/Dai.sol";
-import { GemJoin, DaiJoin } from "../core/Join.sol";
-import { Jug } from "../core/Jug.sol";
-import { Pot } from "../core/Pot.sol";
-import { Spotter } from "../core/Spot.sol";
-import { Vow } from "../core/Vow.sol";
-import { Dog } from "../core/Dog.sol";
-import { Flapper } from "../core/Flap.sol";
-import { Flopper } from "../core/Flop.sol";
-import { End } from "../core/End.sol";
+import {Vat} from "../core/Vat.sol";
+import {Dai} from "../core/Dai.sol";
+import {GemJoin, DaiJoin} from "../core/Join.sol";
+import {Jug} from "../core/Jug.sol";
+import {Pot} from "../core/Pot.sol";
+import {Spotter} from "../core/Spot.sol";
+import {Vow} from "../core/Vow.sol";
+import {Dog} from "../core/Dog.sol";
+import {Flapper} from "../core/Flap.sol";
+import {Flopper} from "../core/Flop.sol";
+import {End} from "../core/End.sol";
 
-import { MockChainlog } from "../test/mocks/MockChainlog.sol";
+import {MockChainlog} from "../test/mocks/MockChainlog.sol";
 
 /// @title SkyDssFactoryService
 /// @notice Library for deploying a complete DSS (Multi-Collateral DAI) system
@@ -64,11 +64,7 @@ library SkyDssFactoryService {
         deployment.flopper = new Flopper(address(deployment.vat), address(0)); // gov token set later
 
         // Deploy debt engine
-        deployment.vow = new Vow(
-            address(deployment.vat),
-            address(deployment.flapper),
-            address(deployment.flopper)
-        );
+        deployment.vow = new Vow(address(deployment.vat), address(deployment.flapper), address(deployment.flopper));
 
         // Deploy liquidation engine
         deployment.dog = new Dog(address(deployment.vat));
@@ -149,12 +145,7 @@ library SkyDssFactoryService {
     /// @param gem The collateral token address
     /// @param pip The price feed address
     /// @return join The created GemJoin adapter
-    function initIlk(
-        DssDeployment memory d,
-        bytes32 ilk,
-        address gem,
-        address pip
-    ) internal returns (GemJoin join) {
+    function initIlk(DssDeployment memory d, bytes32 ilk, address gem, address pip) internal returns (GemJoin join) {
         // Deploy join adapter
         join = new GemJoin(address(d.vat), ilk, gem);
 
@@ -205,11 +196,11 @@ library SkyDssFactoryService {
         d.vat.file("Line", 10_000_000 * RAD);
 
         // Vow parameters
-        d.vow.file("wait", 0);           // No delay for debt auctions
+        d.vow.file("wait", 0); // No delay for debt auctions
         d.vow.file("bump", 10_000 * RAD); // Surplus auction lot size
         d.vow.file("sump", 50_000 * RAD); // Debt auction bid size
-        d.vow.file("dump", 250 * WAD);    // Debt auction lot size
-        d.vow.file("hump", 0);            // Surplus buffer
+        d.vow.file("dump", 250 * WAD); // Debt auction lot size
+        d.vow.file("hump", 0); // Surplus buffer
 
         // Pot parameters (DSR = 0%)
         // DSR is set in ray, 1.0 = no interest

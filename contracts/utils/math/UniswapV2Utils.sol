@@ -22,7 +22,7 @@ library UniswapV2Utils {
      * @param lpTotalSupply current LP total supply
      * @param reserveA current reserve of TokenA
      * @param reserveB current reserve of TokenB
-    * @param feePercent swap fee numerator (e.g., 300 for 0.3% when denom=100000)
+     * @param feePercent swap fee numerator (e.g., 300 for 0.3% when denom=100000)
      * @param kLast pair.kLast value (used by Uniswap fee mint); pass 0 to disable
      * @param feeToOn whether Uniswap-style feeTo mint should be applied
      * @return totalAmountA amount of TokenA expected after burn+swap
@@ -33,7 +33,9 @@ library UniswapV2Utils {
         uint256 reserveA,
         uint256 reserveB,
         uint256 feePercent,
-        uint256 /* feeDenominator */, // kept for signature compatibility
+        uint256,
+        /* feeDenominator */
+        // kept for signature compatibility
         uint256 kLast,
         bool feeToOn
     ) internal pure returns (uint256 totalAmountA) {

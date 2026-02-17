@@ -5,12 +5,12 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { CallAndRevert } from "./CallAndRevert.sol";
+import {CallAndRevert} from "./CallAndRevert.sol";
 
 contract PriceImpactHelper is CallAndRevert {
     using FixedPoint for uint256;
@@ -28,11 +28,10 @@ contract PriceImpactHelper is CallAndRevert {
                                 Price Impact
     *******************************************************************************/
 
-    function calculateAddLiquidityUnbalancedPriceImpact(
-        address pool,
-        uint256[] memory exactAmountsIn,
-        address sender
-    ) external returns (uint256 priceImpact) {
+    function calculateAddLiquidityUnbalancedPriceImpact(address pool, uint256[] memory exactAmountsIn, address sender)
+        external
+        returns (uint256 priceImpact)
+    {
         uint256 bptAmountOut = _queryAddLiquidityUnbalanced(pool, exactAmountsIn, sender);
         uint256[] memory proportionalAmountsOut = _queryRemoveLiquidityProportional(pool, bptAmountOut, sender);
 
@@ -61,46 +60,32 @@ contract PriceImpactHelper is CallAndRevert {
                                 Router Queries
     *******************************************************************************/
 
-    function _queryAddLiquidityUnbalanced(
-        address pool,
-        uint256[] memory exactAmountsIn,
-        address sender
-    ) internal returns (uint256) {
-        return
-            abi.decode(
-                _callAndRevert(
-                    address(_router),
-                    abi.encodeWithSelector(
-                        IRouter.queryAddLiquidityUnbalanced.selector,
-                        pool,
-                        exactAmountsIn,
-                        sender,
-                        ""
-                    )
-                ),
-                (uint256)
-            );
+    function _queryAddLiquidityUnbalanced(address pool, uint256[] memory exactAmountsIn, address sender)
+        internal
+        returns (uint256)
+    {
+        return abi.decode(
+            _callAndRevert(
+                address(_router),
+                abi.encodeWithSelector(IRouter.queryAddLiquidityUnbalanced.selector, pool, exactAmountsIn, sender, "")
+            ),
+            (uint256)
+        );
     }
 
-    function _queryRemoveLiquidityProportional(
-        address pool,
-        uint256 bptAmountOut,
-        address sender
-    ) internal returns (uint256[] memory) {
-        return
-            abi.decode(
-                _callAndRevert(
-                    address(_router),
-                    abi.encodeWithSelector(
-                        IRouter.queryRemoveLiquidityProportional.selector,
-                        pool,
-                        bptAmountOut,
-                        sender,
-                        ""
-                    )
-                ),
-                (uint256[])
-            );
+    function _queryRemoveLiquidityProportional(address pool, uint256 bptAmountOut, address sender)
+        internal
+        returns (uint256[] memory)
+    {
+        return abi.decode(
+            _callAndRevert(
+                address(_router),
+                abi.encodeWithSelector(
+                    IRouter.queryRemoveLiquidityProportional.selector, pool, bptAmountOut, sender, ""
+                )
+            ),
+            (uint256[])
+        );
     }
 
     function _querySwapSingleTokenExactIn(
@@ -110,22 +95,15 @@ contract PriceImpactHelper is CallAndRevert {
         uint256 amountIn,
         address sender
     ) internal returns (uint256) {
-        return
-            abi.decode(
-                _callAndRevert(
-                    address(_router),
-                    abi.encodeWithSelector(
-                        IRouter.querySwapSingleTokenExactIn.selector,
-                        pool,
-                        tokenIn,
-                        tokenOut,
-                        amountIn,
-                        sender,
-                        ""
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _callAndRevert(
+                address(_router),
+                abi.encodeWithSelector(
+                    IRouter.querySwapSingleTokenExactIn.selector, pool, tokenIn, tokenOut, amountIn, sender, ""
+                )
+            ),
+            (uint256)
+        );
     }
 
     function _querySwapSingleTokenExactOut(
@@ -135,22 +113,15 @@ contract PriceImpactHelper is CallAndRevert {
         uint256 amountOut,
         address sender
     ) internal returns (uint256) {
-        return
-            abi.decode(
-                _callAndRevert(
-                    address(_router),
-                    abi.encodeWithSelector(
-                        IRouter.querySwapSingleTokenExactOut.selector,
-                        pool,
-                        tokenIn,
-                        tokenOut,
-                        amountOut,
-                        sender,
-                        ""
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _callAndRevert(
+                address(_router),
+                abi.encodeWithSelector(
+                    IRouter.querySwapSingleTokenExactOut.selector, pool, tokenIn, tokenOut, amountOut, sender, ""
+                )
+            ),
+            (uint256)
+        );
     }
 
     /*******************************************************************************
@@ -176,12 +147,10 @@ contract PriceImpactHelper is CallAndRevert {
         return delta > 0 ? result : -result;
     }
 
-    function _zeroOutDeltas(
-        address pool,
-        int256[] memory deltas,
-        int256[] memory deltaBPTs,
-        address sender
-    ) internal returns (uint256) {
+    function _zeroOutDeltas(address pool, int256[] memory deltas, int256[] memory deltaBPTs, address sender)
+        internal
+        returns (uint256)
+    {
         // Index of closest from 0 negative number in deltaBPTs array.
         uint256 maxNegativeDeltaIndex = 0;
         IERC20[] memory poolTokens = _vault.getPoolTokens(pool);
@@ -221,12 +190,8 @@ contract PriceImpactHelper is CallAndRevert {
             deltas[givenTokenIndex] = 0;
             deltaBPTs[givenTokenIndex] = 0;
             deltas[resultTokenIndex] += resultAmount.toInt256();
-            deltaBPTs[resultTokenIndex] = _queryAddLiquidityUnbalancedForTokenDeltas(
-                pool,
-                resultTokenIndex,
-                deltas,
-                sender
-            );
+            deltaBPTs[resultTokenIndex] =
+                _queryAddLiquidityUnbalancedForTokenDeltas(pool, resultTokenIndex, deltas, sender);
         }
 
         return maxNegativeDeltaIndex;

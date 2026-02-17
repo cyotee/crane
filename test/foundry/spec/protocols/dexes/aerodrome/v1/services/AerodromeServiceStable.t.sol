@@ -5,8 +5,12 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IPool} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPool.sol";
 import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRouter.sol";
 import {IPoolFactory} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPoolFactory.sol";
-import {AerodromeServiceStable} from "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceStable.sol";
-import {TestBase_Aerodrome_Pools} from "@crane/contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome_Pools.sol";
+import {
+    AerodromeServiceStable
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceStable.sol";
+import {
+    TestBase_Aerodrome_Pools
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome_Pools.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
 /**
@@ -15,7 +19,6 @@ import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20Permit
  * @dev Tests stable pool operations (x³y + xy³ = k curve)
  */
 contract AerodromeServiceStable_Test is TestBase_Aerodrome_Pools {
-
     /* ---------------------------------------------------------------------- */
     /*                                 Setup                                   */
     /* ---------------------------------------------------------------------- */
@@ -344,17 +347,18 @@ contract AerodromeServiceStable_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroStablePool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceStable.SwapDepositStableParams memory depositParams = AerodromeServiceStable.SwapDepositStableParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroStablePool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroStableTokenA)),
-            opposingToken: IERC20(address(aeroStableTokenB)),
-            amountIn: initialAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceStable.SwapDepositStableParams memory depositParams =
+            AerodromeServiceStable.SwapDepositStableParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroStablePool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroStableTokenA)),
+                opposingToken: IERC20(address(aeroStableTokenB)),
+                amountIn: initialAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceStable._swapDepositStable(depositParams);
         assertGt(lpAmount, 0, "Should have LP tokens after deposit");
@@ -362,16 +366,17 @@ contract AerodromeServiceStable_Test is TestBase_Aerodrome_Pools {
         // Step 2: Withdraw swap to get back tokenA
         aeroStablePool.approve(address(aerodromeRouter), lpAmount);
 
-        AerodromeServiceStable.WithdrawSwapStableParams memory withdrawParams = AerodromeServiceStable.WithdrawSwapStableParams({
-            aerodromeRouter: IRouter(address(aerodromeRouter)),
-            pool: IPool(address(aeroStablePool)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            tokenOut: IERC20(address(aeroStableTokenA)),
-            opposingToken: IERC20(address(aeroStableTokenB)),
-            lpBurnAmt: lpAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceStable.WithdrawSwapStableParams memory withdrawParams =
+            AerodromeServiceStable.WithdrawSwapStableParams({
+                aerodromeRouter: IRouter(address(aerodromeRouter)),
+                pool: IPool(address(aeroStablePool)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                tokenOut: IERC20(address(aeroStableTokenA)),
+                opposingToken: IERC20(address(aeroStableTokenB)),
+                lpBurnAmt: lpAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 amountBack = AerodromeServiceStable._withdrawSwapStable(withdrawParams);
 
@@ -419,13 +424,8 @@ contract AerodromeServiceStable_Test is TestBase_Aerodrome_Pools {
             factory: address(aerodromePoolFactory)
         });
 
-        uint256[] memory volatileAmounts = aerodromeRouter.swapExactTokensForTokens(
-            swapAmount,
-            0,
-            routes,
-            address(this),
-            block.timestamp + 300
-        );
+        uint256[] memory volatileAmounts =
+            aerodromeRouter.swapExactTokensForTokens(swapAmount, 0, routes, address(this), block.timestamp + 300);
         uint256 volatileOut = volatileAmounts[volatileAmounts.length - 1];
 
         // For same-value assets (1:1 ratio), stable pool should have equal or better output

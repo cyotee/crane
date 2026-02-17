@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { Arrays } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/Arrays.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {Arrays} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/Arrays.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import { StableSurgeMedianMathMock } from "../../contracts/test/StableSurgeMedianMathMock.sol";
+import {StableSurgeMedianMathMock} from "../../contracts/test/StableSurgeMedianMathMock.sol";
 
 contract StableSurgeMedianMathTest is BaseVaultTest {
     using Arrays for uint256[];
@@ -39,14 +39,10 @@ contract StableSurgeMedianMathTest is BaseVaultTest {
         assertEq(stableSurgeMedianMathMock.absSub(0, 1), 1, "abs(0 - 1) != 1");
         assertEq(stableSurgeMedianMathMock.absSub(1, 0), 1, "abs(1 - 0) != 1");
         assertEq(
-            stableSurgeMedianMathMock.absSub(MAX_UINT256, 1),
-            MAX_UINT256 - 1,
-            "abs(MAX_UINT256 - 1) != MAX_UINT256 - 1"
+            stableSurgeMedianMathMock.absSub(MAX_UINT256, 1), MAX_UINT256 - 1, "abs(MAX_UINT256 - 1) != MAX_UINT256 - 1"
         );
         assertEq(
-            stableSurgeMedianMathMock.absSub(1, MAX_UINT256),
-            MAX_UINT256 - 1,
-            "abs(1 - MAX_UINT256) != MAX_UINT256 - 1"
+            stableSurgeMedianMathMock.absSub(1, MAX_UINT256), MAX_UINT256 - 1, "abs(1 - MAX_UINT256) != MAX_UINT256 - 1"
         );
         assertEq(stableSurgeMedianMathMock.absSub(MAX_UINT256, 0), MAX_UINT256, "abs(MAX_UINT256 - 0) != MAX_UINT256");
         assertEq(stableSurgeMedianMathMock.absSub(0, MAX_UINT256), MAX_UINT256, "abs(0 - MAX_UINT256) != MAX_UINT256");

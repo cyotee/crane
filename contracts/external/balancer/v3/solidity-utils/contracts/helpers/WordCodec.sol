@@ -40,12 +40,11 @@ library WordCodec {
      * @dev Inserts an unsigned integer of bitLength, shifted by an offset, into a 256 bit word,
      * replacing the old value. Returns the new word.
      */
-    function insertUint(
-        bytes32 word,
-        uint256 value,
-        uint256 offset,
-        uint256 bitLength
-    ) internal pure returns (bytes32 result) {
+    function insertUint(bytes32 word, uint256 value, uint256 offset, uint256 bitLength)
+        internal
+        pure
+        returns (bytes32 result)
+    {
         _validateEncodingParams(value, offset, bitLength);
         // Equivalent to:
         // uint256 mask = (1 << bitLength) - 1;

@@ -9,10 +9,12 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 /**
  * @notice Test protection against denial-of-service (DoS) attacks during interactions with an ERC4626 wrapper.
@@ -90,7 +92,7 @@ contract BufferDoSProtectionTest is BaseVaultTest {
         );
         vm.stopPrank();
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
 
         (uint256 amountIn, uint256 amountOut) = abi.decode(
@@ -140,7 +142,7 @@ contract BufferDoSProtectionTest is BaseVaultTest {
         );
         vm.stopPrank();
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
 
         (uint256 amountIn, uint256 amountOut) = abi.decode(
@@ -316,11 +318,10 @@ contract BufferDoSProtectionTest is BaseVaultTest {
      * DoS vulnerabilities, we need a custom malicious router that performs the donation after the initial payment
      * and settlement. This will leave the Vault's reserves out of sync with its balances.
      */
-    function erc4626DoSHook(
-        BufferWrapOrUnwrapParams memory params,
-        address sender,
-        uint256 frontrunnerAmount
-    ) external returns (uint256 amountIn, uint256 amountOut) {
+    function erc4626DoSHook(BufferWrapOrUnwrapParams memory params, address sender, uint256 frontrunnerAmount)
+        external
+        returns (uint256 amountIn, uint256 amountOut)
+    {
         IERC20 underlyingToken = IERC20(params.wrappedToken.asset());
         IERC20 wrappedToken = IERC20(address(params.wrappedToken));
 

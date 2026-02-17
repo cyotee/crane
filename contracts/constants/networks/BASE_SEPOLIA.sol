@@ -2,7 +2,27 @@
 pragma solidity ^0.8.0;
 
 library BASE_SEPOLIA {
-    
+    uint256 constant CHAIN_ID = 84532;
+
+    uint256 constant DEFAULT_FORK_BLOCK = 10_400_000;
+
+    address constant WETH9 = 0x4200000000000000000000000000000000000006;
+    address constant L2_CROSSDOMAIN_MESSENGER = 0x4200000000000000000000000000000000000007;
+    address constant L2_STANDARD_BRIDGE = 0x4200000000000000000000000000000000000010;
+    address constant SEQUENCER_FEE_VAULT = 0x4200000000000000000000000000000000000011;
+    address constant OPTIMISM_MINTABLE_ERC20_FACTORY = 0x4200000000000000000000000000000000000012;
+    address constant GAS_PRICE_ORACLE = 0x420000000000000000000000000000000000000F;
+    address constant L1_BLOCK = 0x4200000000000000000000000000000000000015;
+    address constant L2_TO_L1_MESSAGE_PASSER = 0x4200000000000000000000000000000000000016;
+    address constant L2_ERC721_BRIDGE = 0x4200000000000000000000000000000000000014;
+    address constant OPTIMISM_MINTABLE_ERC721_FACTORY = 0x4200000000000000000000000000000000000017;
+    address constant PROXY_ADMIN = 0x4200000000000000000000000000000000000018;
+    address constant BASE_FEE_VAULT = 0x4200000000000000000000000000000000000019;
+    address constant L1_FEE_VAULT = 0x420000000000000000000000000000000000001A;
+    address constant EAS = 0x4200000000000000000000000000000000000021;
+    address constant EAS_SCHEMA_REGISTRY = 0x4200000000000000000000000000000000000020;
+    address constant LEGACY_ERC20_ETH = 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000;
+
     /* -------------------------------------------------------------------------- */
     /*                                 Uniswap V3                                 */
     /* -------------------------------------------------------------------------- */
@@ -32,5 +52,4 @@ library BASE_SEPOLIA {
     /* -------------------------------------------------------------------------- */
 
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
-
 }

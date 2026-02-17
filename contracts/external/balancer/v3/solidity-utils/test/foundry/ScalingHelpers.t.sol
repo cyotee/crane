@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { InputHelpers } from "../../contracts/helpers/InputHelpers.sol";
-import { ScalingHelpers } from "../../contracts/helpers/ScalingHelpers.sol";
+import {InputHelpers} from "../../contracts/helpers/InputHelpers.sol";
+import {ScalingHelpers} from "../../contracts/helpers/ScalingHelpers.sol";
 
 contract ScalingHelpersTest is Test {
     function testCopyToArray__Fuzz(uint256[4] memory input) public pure {

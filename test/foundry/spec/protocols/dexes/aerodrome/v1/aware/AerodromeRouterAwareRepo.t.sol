@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {AerodromeRouterAwareRepo} from "@crane/contracts/protocols/dexes/aerodrome/v1/aware/AerodromeRouterAwareRepo.sol";
+import {
+    AerodromeRouterAwareRepo
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/aware/AerodromeRouterAwareRepo.sol";
 import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRouter.sol";
 
 /**
@@ -71,9 +73,7 @@ contract AerodromeRouterAwareRepo_Test is Test {
 
         assertEq(address(harness.aerodromeRouter()), address(0), "Default slot should be empty");
         assertEq(
-            address(harness.aerodromeRouterFromSlot(customSlot)),
-            address(mockRouter),
-            "Custom slot should have router"
+            address(harness.aerodromeRouterFromSlot(customSlot)), address(mockRouter), "Custom slot should have router"
         );
     }
 

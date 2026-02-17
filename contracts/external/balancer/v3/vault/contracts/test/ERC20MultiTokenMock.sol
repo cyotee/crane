@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { ERC20MultiToken } from "../token/ERC20MultiToken.sol";
+import {ERC20MultiToken} from "../token/ERC20MultiToken.sol";
 
 contract ERC20MultiTokenMock is ERC20MultiToken {
     // View functions.

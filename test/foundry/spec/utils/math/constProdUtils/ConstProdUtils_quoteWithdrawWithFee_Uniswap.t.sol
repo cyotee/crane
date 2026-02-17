@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
+import {
+    TestBase_ConstProdUtils_Uniswap
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
@@ -25,23 +27,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         assertTrue(lpReceived > 0, "got lp");
 
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            16666,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), 16666, false
         );
 
         // Execute withdrawal
@@ -71,21 +77,25 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            16666,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), 16666, false
         );
 
         // Execute withdrawal
@@ -115,21 +125,25 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            16666,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), 16666, false
         );
 
         // Execute withdrawal
@@ -157,26 +171,30 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         assertTrue(lpReceived > 0, "got lp");
 
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         // low percentage fee
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, false
         );
 
         // Execute withdrawal
@@ -203,26 +221,30 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         assertTrue(lpReceived > 0, "got lp");
 
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         // low percentage fee
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, true
         );
 
         // Execute withdrawal
@@ -250,23 +272,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -289,23 +315,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, false
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -327,23 +357,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, true
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -366,23 +400,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -404,23 +442,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -442,23 +484,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -480,23 +526,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -519,23 +569,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, false
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -557,23 +611,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, true
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -595,23 +653,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -633,23 +695,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -671,23 +737,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -709,23 +779,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -748,23 +822,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, false
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -786,23 +864,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 lowPercent = 5;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            lowPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), lowPercent, true
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -824,23 +906,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -862,23 +948,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -900,23 +990,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -938,23 +1032,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenB), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -976,23 +1074,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -1014,23 +1116,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -1052,23 +1158,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapBalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapBalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapBalancedTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapBalancedTokenA.balanceOf(address(this));
@@ -1091,23 +1201,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -1129,23 +1243,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -1167,23 +1285,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -1205,23 +1327,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapUnbalancedTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapUnbalancedTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -1244,23 +1370,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, false
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -1282,23 +1412,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
 
         uint256 mediumPercent = 50;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            mediumPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), mediumPercent, true
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -1320,23 +1454,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            false
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, false
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));
@@ -1358,23 +1496,27 @@ contract ConstProdUtils_quoteWithdrawWithFee_Uniswap is TestBase_ConstProdUtils_
         uniswapExtremeTokenB.mint(address(this), TEST_LP_AMOUNT);
         uniswapExtremeTokenA.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), TEST_LP_AMOUNT);
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), TEST_LP_AMOUNT, TEST_LP_AMOUNT, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            TEST_LP_AMOUNT,
+            TEST_LP_AMOUNT,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpReceived = pair.balanceOf(address(this));
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(uniswapExtremeTokenA), pair.token0(), r0, r1);
 
         uint256 highPercent = 500;
 
         (uint256 quotedA, uint256 quotedB) = ConstProdUtils._quoteWithdrawWithFee(
-            lpReceived,
-            totalSupply,
-            reserveA,
-            reserveB,
-            pair.kLast(),
-            highPercent,
-            true
+            lpReceived, totalSupply, reserveA, reserveB, pair.kLast(), highPercent, true
         );
 
         uint256 beforeA = uniswapExtremeTokenA.balanceOf(address(this));

@@ -13,7 +13,7 @@ contract SimpleEIP7702Contract {
         results = new bytes[](calls.length);
         for (uint256 i = 0; i < calls.length; i++) {
             Call memory call = calls[i];
-            (bool success, bytes memory result) = call.to.call{ value: call.value }(call.data);
+            (bool success, bytes memory result) = call.to.call{value: call.value}(call.data);
             require(success == true);
             results[i] = result;
         }

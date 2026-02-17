@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity 0.8.30;
+pragma solidity ^0.8.30;
 
 /*
   CRANE-270: Verify Balancer V3 port vs upstream on a mainnet fork.
@@ -34,10 +34,14 @@ import {
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
@@ -45,54 +49,77 @@ import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/pe
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 // Vault facets
-import {VaultTransientFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
-import {VaultSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
-import {VaultLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
-import {VaultBufferFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
-import {VaultPoolTokenFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
-import {VaultQueryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
-import {VaultRegistrationFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
-import {VaultAdminFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
-import {VaultRecoveryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
+import {
+    VaultTransientFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
+import {VaultSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
+import {
+    VaultLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
+import {VaultBufferFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
+import {
+    VaultPoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
+import {VaultQueryFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
+import {
+    VaultRegistrationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
+import {VaultAdminFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
+import {
+    VaultRecoveryFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
 
-import {BalancerV3VaultDFPkg, IBalancerV3VaultDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultDFPkg.sol";
+import {
+    BalancerV3VaultDFPkg,
+    IBalancerV3VaultDFPkg
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultDFPkg.sol";
 
 // Router facets
-import {RouterSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterSwapFacet.sol";
-import {RouterAddLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterAddLiquidityFacet.sol";
-import {RouterRemoveLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterRemoveLiquidityFacet.sol";
-import {RouterInitializeFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterInitializeFacet.sol";
-import {RouterCommonFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterCommonFacet.sol";
-import {BatchSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BatchSwapFacet.sol";
-import {BufferRouterFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BufferRouterFacet.sol";
-import {CompositeLiquidityERC4626Facet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityERC4626Facet.sol";
-import {CompositeLiquidityNestedFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityNestedFacet.sol";
-import {BalancerV3RouterDFPkg, IBalancerV3RouterDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.sol";
+import {RouterSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterSwapFacet.sol";
+import {
+    RouterAddLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterAddLiquidityFacet.sol";
+import {
+    RouterRemoveLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterRemoveLiquidityFacet.sol";
+import {
+    RouterInitializeFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterInitializeFacet.sol";
+import {
+    RouterCommonFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterCommonFacet.sol";
+import {BatchSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BatchSwapFacet.sol";
+import {
+    BufferRouterFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BufferRouterFacet.sol";
+import {
+    CompositeLiquidityERC4626Facet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityERC4626Facet.sol";
+import {
+    CompositeLiquidityNestedFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityNestedFacet.sol";
+import {
+    BalancerV3RouterDFPkg,
+    IBalancerV3RouterDFPkg
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.sol";
 
 import {BalancerV3PoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolFacet.sol";
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3WeightedPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolFacet.sol";
-import {BalancerV3WeightedPoolDFPkg, IBalancerV3WeightedPoolDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolDFPkg.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3WeightedPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolFacet.sol";
+import {
+    BalancerV3WeightedPoolDFPkg,
+    IBalancerV3WeightedPoolDFPkg
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolDFPkg.sol";
 
 // Minimal mocks for local Vault deployment (query + pool registration).
 contract IntegrationMockAuthorizer is IAuthorizer {
@@ -238,15 +265,20 @@ contract BalancerV3_PortComparison is CraneTest {
 
         BalancerV3VaultDFPkg vaultPkg = new BalancerV3VaultDFPkg(
             IBalancerV3VaultDFPkg.PkgInit({
-                vaultTransientFacet: _deployFacet(type(VaultTransientFacet).creationCode, type(VaultTransientFacet).name),
+                vaultTransientFacet: _deployFacet(
+                    type(VaultTransientFacet).creationCode, type(VaultTransientFacet).name
+                ),
                 vaultSwapFacet: _deployFacet(type(VaultSwapFacet).creationCode, type(VaultSwapFacet).name),
-                vaultLiquidityFacet: _deployFacet(type(VaultLiquidityFacet).creationCode, type(VaultLiquidityFacet).name),
+                vaultLiquidityFacet: _deployFacet(
+                    type(VaultLiquidityFacet).creationCode, type(VaultLiquidityFacet).name
+                ),
                 vaultBufferFacet: _deployFacet(type(VaultBufferFacet).creationCode, type(VaultBufferFacet).name),
-                vaultPoolTokenFacet: _deployFacet(type(VaultPoolTokenFacet).creationCode, type(VaultPoolTokenFacet).name),
+                vaultPoolTokenFacet: _deployFacet(
+                    type(VaultPoolTokenFacet).creationCode, type(VaultPoolTokenFacet).name
+                ),
                 vaultQueryFacet: _deployFacet(type(VaultQueryFacet).creationCode, type(VaultQueryFacet).name),
                 vaultRegistrationFacet: _deployFacet(
-                    type(VaultRegistrationFacet).creationCode,
-                    type(VaultRegistrationFacet).name
+                    type(VaultRegistrationFacet).creationCode, type(VaultRegistrationFacet).name
                 ),
                 vaultAdminFacet: _deployFacet(type(VaultAdminFacet).creationCode, type(VaultAdminFacet).name),
                 vaultRecoveryFacet: _deployFacet(type(VaultRecoveryFacet).creationCode, type(VaultRecoveryFacet).name),
@@ -271,42 +303,32 @@ contract BalancerV3_PortComparison is CraneTest {
             IBalancerV3RouterDFPkg.PkgInit({
                 routerSwapFacet: _deployFacet(type(RouterSwapFacet).creationCode, type(RouterSwapFacet).name),
                 routerAddLiquidityFacet: _deployFacet(
-                    type(RouterAddLiquidityFacet).creationCode,
-                    type(RouterAddLiquidityFacet).name
+                    type(RouterAddLiquidityFacet).creationCode, type(RouterAddLiquidityFacet).name
                 ),
                 routerRemoveLiquidityFacet: _deployFacet(
-                    type(RouterRemoveLiquidityFacet).creationCode,
-                    type(RouterRemoveLiquidityFacet).name
+                    type(RouterRemoveLiquidityFacet).creationCode, type(RouterRemoveLiquidityFacet).name
                 ),
                 routerInitializeFacet: _deployFacet(
-                    type(RouterInitializeFacet).creationCode,
-                    type(RouterInitializeFacet).name
+                    type(RouterInitializeFacet).creationCode, type(RouterInitializeFacet).name
                 ),
                 routerCommonFacet: _deployFacet(type(RouterCommonFacet).creationCode, type(RouterCommonFacet).name),
                 batchSwapFacet: _deployFacet(type(BatchSwapFacet).creationCode, type(BatchSwapFacet).name),
                 bufferRouterFacet: _deployFacet(type(BufferRouterFacet).creationCode, type(BufferRouterFacet).name),
                 compositeLiquidityERC4626Facet: _deployFacet(
-                    type(CompositeLiquidityERC4626Facet).creationCode,
-                    type(CompositeLiquidityERC4626Facet).name
+                    type(CompositeLiquidityERC4626Facet).creationCode, type(CompositeLiquidityERC4626Facet).name
                 ),
                 compositeLiquidityNestedFacet: _deployFacet(
-                    type(CompositeLiquidityNestedFacet).creationCode,
-                    type(CompositeLiquidityNestedFacet).name
+                    type(CompositeLiquidityNestedFacet).creationCode, type(CompositeLiquidityNestedFacet).name
                 ),
                 diamondFactory: diamondFactory
             })
         );
 
-        address router = routerPkg.deployRouter(
-            vault,
-            IWETH(ETHEREUM_MAIN.WETH9),
-            IPermit2(ETHEREUM_MAIN.PERMIT2),
-            "CRANE-270"
-        );
+        address router =
+            routerPkg.deployRouter(vault, IWETH(ETHEREUM_MAIN.WETH9), IPermit2(ETHEREUM_MAIN.PERMIT2), "CRANE-270");
         vm.label(router, "BalancerV3Router_Local");
         return IRouter(router);
     }
-
 
     struct QuerySwapExactInResult {
         uint256 indexIn;
@@ -326,8 +348,7 @@ contract BalancerV3_PortComparison is CraneTest {
         // Non-fork preflight tests rely on write access to artifacts.
         // (The directory itself should already exist in the repo.)
         vm.createDir(
-            string(abi.encodePacked(vm.projectRoot(), "/tasks/CRANE-270-verify-balancer-v3-port/artifacts")),
-            true
+            string(abi.encodePacked(vm.projectRoot(), "/tasks/CRANE-270-verify-balancer-v3-port/artifacts")), true
         );
     }
 
@@ -335,7 +356,6 @@ contract BalancerV3_PortComparison is CraneTest {
         // Always pin a block number for determinism + RPC caching.
         // Let Forge/Foundry handle RPC credential errors.
         vm.createSelectFork("ethereum_mainnet_infura", FORK_BLOCK);
-
 
         _resetForkState();
 
@@ -376,7 +396,7 @@ contract BalancerV3_PortComparison is CraneTest {
         upstreamStaticSwapFeePercentage = 0;
     }
 
-    function _selectUpstreamWeightedPool() internal returns (address pool) {
+    function _selectUpstreamWeightedPool() internal view returns (address pool) {
         // Allow pinning a known-good pool via env without changing code.
         // Example: export BALANCER_V3_WEIGHTED_POOL=0x...
         pool = vm.envOr("BALANCER_V3_WEIGHTED_POOL", address(0));
@@ -428,16 +448,13 @@ contract BalancerV3_PortComparison is CraneTest {
         return ETHEREUM_MAIN.BALANCER_V3_MOCK_WEIGHTED_POOL;
     }
 
-    function _isUsableUpstreamWeightedPool(address candidate) internal returns (bool usable) {
+    function _isUsableUpstreamWeightedPool(address candidate) internal view returns (bool usable) {
         if (candidate == address(0) || candidate.code.length == 0) return false;
 
         IERC20[] memory tokens;
         uint256[] memory lastBalancesLiveScaled18;
         try upstreamVault.getPoolTokenInfo(candidate) returns (
-            IERC20[] memory t,
-            TokenInfo[] memory,
-            uint256[] memory,
-            uint256[] memory lastBalances
+            IERC20[] memory t, TokenInfo[] memory, uint256[] memory, uint256[] memory lastBalances
         ) {
             tokens = t;
             lastBalancesLiveScaled18 = lastBalances;
@@ -484,29 +501,19 @@ contract BalancerV3_PortComparison is CraneTest {
         string memory objectKey = "CRANE_270_balancer_v3_upstream_weighted_math";
 
         uint256 invariantDownLocal = WeightedMath.computeInvariantDown(normalizedWeights, balancesLiveScaled18);
-        uint256 invariantDownOnChain = IBasePool(upstreamWeightedPool).computeInvariant(
-            balancesLiveScaled18,
-            Rounding.ROUND_DOWN
-        );
+        uint256 invariantDownOnChain =
+            IBasePool(upstreamWeightedPool).computeInvariant(balancesLiveScaled18, Rounding.ROUND_DOWN);
 
         uint256 invariantUpLocal = WeightedMath.computeInvariantUp(normalizedWeights, balancesLiveScaled18);
-        uint256 invariantUpOnChain = IBasePool(upstreamWeightedPool).computeInvariant(
-            balancesLiveScaled18,
-            Rounding.ROUND_UP
-        );
+        uint256 invariantUpOnChain =
+            IBasePool(upstreamWeightedPool).computeInvariant(balancesLiveScaled18, Rounding.ROUND_UP);
 
         // Balance computation: small invariant bump (ratio in 1e18 FP).
         uint256 invariantRatio = 1_001e15; // 1.001e18
-        uint256 balance0Local = WeightedMath.computeBalanceOutGivenInvariant(
-            balancesLiveScaled18[0],
-            normalizedWeights[0],
-            invariantRatio
-        );
-        uint256 balance0OnChain = IBasePool(upstreamWeightedPool).computeBalance(
-            balancesLiveScaled18,
-            0,
-            invariantRatio
-        );
+        uint256 balance0Local =
+            WeightedMath.computeBalanceOutGivenInvariant(balancesLiveScaled18[0], normalizedWeights[0], invariantRatio);
+        uint256 balance0OnChain =
+            IBasePool(upstreamWeightedPool).computeBalance(balancesLiveScaled18, 0, invariantRatio);
 
         // Persist artifact BEFORE asserting so we still get a snapshot on failure.
         address[] memory tokenAddrs = new address[](poolTokens.length);
@@ -539,7 +546,9 @@ contract BalancerV3_PortComparison is CraneTest {
         setUpFork();
         QuerySwapExactInResult memory r = _computeUpstreamQuerySwapExactIn();
         _writeUpstreamQuerySwapExactInArtifact(r);
-        _assertApproxEqBps(r.amountOutScaled18Local, r.amountOutScaled18OnChain, PARITY_TOLERANCE_BPS, "querySwapExactIn");
+        _assertApproxEqBps(
+            r.amountOutScaled18Local, r.amountOutScaled18OnChain, PARITY_TOLERANCE_BPS, "querySwapExactIn"
+        );
     }
 
     function _computeUpstreamQuerySwapExactIn() internal returns (QuerySwapExactInResult memory r) {
@@ -571,13 +580,10 @@ contract BalancerV3_PortComparison is CraneTest {
         );
 
         try upstreamRouter.querySwapSingleTokenExactIn(
-            upstreamWeightedPool,
-            IERC20(r.tokenIn),
-            IERC20(r.tokenOut),
-            r.amountInRaw,
-            address(this),
-            bytes("")
-        ) returns (uint256 amountOutRaw) {
+            upstreamWeightedPool, IERC20(r.tokenIn), IERC20(r.tokenOut), r.amountInRaw, address(this), bytes("")
+        ) returns (
+            uint256 amountOutRaw
+        ) {
             r.amountOutRawOnChain = amountOutRaw;
         } catch {
             // Query paths can be sender- or hook-dependent; don't fail the suite if this pool can't be queried.
@@ -709,13 +715,10 @@ contract BalancerV3_PortComparison is CraneTest {
 
         uint256 upstreamAmountOutRaw;
         try upstreamRouter.querySwapSingleTokenExactIn(
-            upstreamWeightedPool,
-            tokenIn,
-            tokenOut,
-            amountInRaw,
-            address(this),
-            bytes("")
-        ) returns (uint256 out) {
+            upstreamWeightedPool, tokenIn, tokenOut, amountInRaw, address(this), bytes("")
+        ) returns (
+            uint256 out
+        ) {
             upstreamAmountOutRaw = out;
         } catch {
             vm.skip(true);
@@ -724,13 +727,10 @@ contract BalancerV3_PortComparison is CraneTest {
 
         uint256 localAmountOutRaw;
         try localRouter.querySwapSingleTokenExactIn(
-            localWeightedPool,
-            tokenIn,
-            tokenOut,
-            amountInRaw,
-            address(this),
-            bytes("")
-        ) returns (uint256 out) {
+            localWeightedPool, tokenIn, tokenOut, amountInRaw, address(this), bytes("")
+        ) returns (
+            uint256 out
+        ) {
             localAmountOutRaw = out;
         } catch {
             // If local deployment doesn't yet support the upstream pool's token config (rate providers / yield fees),
@@ -789,11 +789,15 @@ contract BalancerV3_PortComparison is CraneTest {
             }
         }
 
-        IFacet vaultAwareFacet = _deployFacet(type(BalancerV3VaultAwareFacet).creationCode, type(BalancerV3VaultAwareFacet).name);
-        IFacet poolTokenFacet = _deployFacet(type(BalancerV3PoolTokenFacet).creationCode, type(BalancerV3PoolTokenFacet).name);
+        IFacet vaultAwareFacet =
+            _deployFacet(type(BalancerV3VaultAwareFacet).creationCode, type(BalancerV3VaultAwareFacet).name);
+        IFacet poolTokenFacet =
+            _deployFacet(type(BalancerV3PoolTokenFacet).creationCode, type(BalancerV3PoolTokenFacet).name);
         IFacet poolInfoFacet = _deployFacet(type(BalancerV3PoolFacet).creationCode, type(BalancerV3PoolFacet).name);
-        IFacet authFacet = _deployFacet(type(BalancerV3AuthenticationFacet).creationCode, type(BalancerV3AuthenticationFacet).name);
-        IFacet weightedFacet = _deployFacet(type(BalancerV3WeightedPoolFacet).creationCode, type(BalancerV3WeightedPoolFacet).name);
+        IFacet authFacet =
+            _deployFacet(type(BalancerV3AuthenticationFacet).creationCode, type(BalancerV3AuthenticationFacet).name);
+        IFacet weightedFacet =
+            _deployFacet(type(BalancerV3WeightedPoolFacet).creationCode, type(BalancerV3WeightedPoolFacet).name);
 
         BalancerV3WeightedPoolDFPkg weightedPkg = new BalancerV3WeightedPoolDFPkg(
             IBalancerV3WeightedPoolDFPkg.PkgInit({
@@ -839,17 +843,19 @@ contract BalancerV3_PortComparison is CraneTest {
         }
 
         // Initialize the local pool with like-for-like raw balances.
-        try localRouter.initialize(localWeightedPool, poolTokens, balancesRaw, 0, false, bytes("")) returns (uint256) {
-            // no-op
-        } catch {
+        try localRouter.initialize(localWeightedPool, poolTokens, balancesRaw, 0, false, bytes("")) returns (
+            uint256
+        ) {
+        // no-op
+        }
+        catch {
             vm.skip(true);
         }
     }
 
     function _safeApprove(IERC20 token, address spender, uint256 amount) internal returns (bool ok) {
-        (bool success, bytes memory data) = address(token).call(
-            abi.encodeWithSelector(IERC20.approve.selector, spender, amount)
-        );
+        (bool success, bytes memory data) =
+            address(token).call(abi.encodeWithSelector(IERC20.approve.selector, spender, amount));
         if (!success) return false;
         if (data.length == 0) return true;
         if (data.length == 32) return abi.decode(data, (bool));
@@ -869,12 +875,7 @@ contract BalancerV3_PortComparison is CraneTest {
         if (!approved) revert("token-approve-permit2-failed");
 
         // Permit2 needs a (token, spender) allowance entry.
-        IAllowanceTransfer(address(permit2)).approve(
-            address(token),
-            spender,
-            type(uint160).max,
-            type(uint48).max
-        );
+        IAllowanceTransfer(address(permit2)).approve(address(token), spender, type(uint160).max, type(uint48).max);
     }
 
     function _deployAndSeedLocalWeightedPoolFromUpstream() internal {
@@ -943,7 +944,11 @@ contract BalancerV3_PortComparison is CraneTest {
         }
     }
 
-    function _diffDown(uint256[] memory beforeVals, uint256[] memory afterVals) internal pure returns (uint256[] memory d) {
+    function _diffDown(uint256[] memory beforeVals, uint256[] memory afterVals)
+        internal
+        pure
+        returns (uint256[] memory d)
+    {
         if (afterVals.length != beforeVals.length) revert("length-mismatch");
         d = new uint256[](afterVals.length);
         for (uint256 i = 0; i < afterVals.length; i++) {
@@ -1012,7 +1017,9 @@ contract BalancerV3_PortComparison is CraneTest {
         uint256 balInBefore = tokenIn.balanceOf(address(this));
         uint256 balOutBefore = tokenOut.balanceOf(address(this));
 
-        try router.swapSingleTokenExactIn(pool, tokenIn, tokenOut, amountInRaw, 0, type(uint256).max, false, bytes("")) returns (
+        try router.swapSingleTokenExactIn(
+            pool, tokenIn, tokenOut, amountInRaw, 0, type(uint256).max, false, bytes("")
+        ) returns (
             uint256 amountOut
         ) {
             r.amountOutRaw = amountOut;
@@ -1038,15 +1045,10 @@ contract BalancerV3_PortComparison is CraneTest {
         uint256 balOutBefore = tokenOut.balanceOf(address(this));
 
         try router.swapSingleTokenExactOut(
-            pool,
-            tokenIn,
-            tokenOut,
-            exactAmountOutRaw,
-            maxAmountInRaw,
-            type(uint256).max,
-            false,
-            bytes("")
-        ) returns (uint256 amountIn) {
+            pool, tokenIn, tokenOut, exactAmountOutRaw, maxAmountInRaw, type(uint256).max, false, bytes("")
+        ) returns (
+            uint256 amountIn
+        ) {
             r.amountInRaw = amountIn;
         } catch {
             vm.skip(true);
@@ -1088,20 +1090,10 @@ contract BalancerV3_PortComparison is CraneTest {
         _permit2ApproveTokenAndSpender(tokenIn, permit2, address(upstreamRouter));
         _permit2ApproveTokenAndSpender(tokenIn, permit2, address(localRouter));
 
-        SwapExactInExecResult memory upstreamR = _execSwapSingleTokenExactIn(
-            upstreamRouter,
-            upstreamWeightedPool,
-            tokenIn,
-            tokenOut,
-            amountInRaw
-        );
-        SwapExactInExecResult memory localR = _execSwapSingleTokenExactIn(
-            localRouter,
-            localWeightedPool,
-            tokenIn,
-            tokenOut,
-            amountInRaw
-        );
+        SwapExactInExecResult memory upstreamR =
+            _execSwapSingleTokenExactIn(upstreamRouter, upstreamWeightedPool, tokenIn, tokenOut, amountInRaw);
+        SwapExactInExecResult memory localR =
+            _execSwapSingleTokenExactIn(localRouter, localWeightedPool, tokenIn, tokenOut, amountInRaw);
 
         // Persist artifact BEFORE asserting.
         string memory objectKey = "CRANE_270_balancer_v3_port_weighted_swapExactIn_exec";
@@ -1120,7 +1112,8 @@ contract BalancerV3_PortComparison is CraneTest {
         json = vm.serializeUint(objectKey, "upstreamDeltaOut", upstreamR.deltaOut);
         json = vm.serializeUint(objectKey, "localDeltaIn", localR.deltaIn);
         json = vm.serializeUint(objectKey, "localDeltaOut", localR.deltaOut);
-        json = vm.serializeUint(objectKey, "upstreamAmountOutScaled18", _toScaled18(upstreamR.amountOutRaw, decimalsOut));
+        json =
+            vm.serializeUint(objectKey, "upstreamAmountOutScaled18", _toScaled18(upstreamR.amountOutRaw, decimalsOut));
         json = vm.serializeUint(objectKey, "localAmountOutScaled18", _toScaled18(localR.amountOutRaw, decimalsOut));
         json = vm.serializeUint(objectKey, "parityToleranceBps", PARITY_TOLERANCE_BPS);
         vm.writeJson(json, _artifactPath("port-weighted-swapExactIn-exec.json"));
@@ -1163,20 +1156,10 @@ contract BalancerV3_PortComparison is CraneTest {
         _permit2ApproveTokenAndSpender(tokenIn, permit2, address(localRouter));
 
         SwapExactOutExecResult memory upstreamR = _execSwapSingleTokenExactOut(
-            upstreamRouter,
-            upstreamWeightedPool,
-            tokenIn,
-            tokenOut,
-            exactAmountOutRaw,
-            maxAmountInRaw
+            upstreamRouter, upstreamWeightedPool, tokenIn, tokenOut, exactAmountOutRaw, maxAmountInRaw
         );
         SwapExactOutExecResult memory localR = _execSwapSingleTokenExactOut(
-            localRouter,
-            localWeightedPool,
-            tokenIn,
-            tokenOut,
-            exactAmountOutRaw,
-            maxAmountInRaw
+            localRouter, localWeightedPool, tokenIn, tokenOut, exactAmountOutRaw, maxAmountInRaw
         );
 
         // Persist artifact BEFORE asserting.
@@ -1230,18 +1213,10 @@ contract BalancerV3_PortComparison is CraneTest {
         IERC20 upstreamBpt = IERC20(upstreamWeightedPool);
         IERC20 localBpt = IERC20(localWeightedPool);
 
-        AddLiquidityExecResult memory upstreamR = _execAddLiquidityUnbalanced(
-            upstreamRouter,
-            upstreamWeightedPool,
-            upstreamBpt,
-            exactAmountsIn
-        );
-        AddLiquidityExecResult memory localR = _execAddLiquidityUnbalanced(
-            localRouter,
-            localWeightedPool,
-            localBpt,
-            exactAmountsIn
-        );
+        AddLiquidityExecResult memory upstreamR =
+            _execAddLiquidityUnbalanced(upstreamRouter, upstreamWeightedPool, upstreamBpt, exactAmountsIn);
+        AddLiquidityExecResult memory localR =
+            _execAddLiquidityUnbalanced(localRouter, localWeightedPool, localBpt, exactAmountsIn);
 
         address[] memory tokenAddrs = new address[](poolTokens.length);
         for (uint256 i = 0; i < poolTokens.length; i++) {
@@ -1269,7 +1244,12 @@ contract BalancerV3_PortComparison is CraneTest {
         _assertApproxEqBps(localR.bptOut, upstreamR.bptOut, PARITY_TOLERANCE_BPS, "addLiquidityUnbalanced bptOut");
         _assertApproxEqBps(localR.bptDelta, upstreamR.bptDelta, PARITY_TOLERANCE_BPS, "addLiquidityUnbalanced bptDelta");
         for (uint256 i = 0; i < poolTokens.length; i++) {
-            _assertApproxEqBps(localR.tokenDeltaIn[i], upstreamR.tokenDeltaIn[i], PARITY_TOLERANCE_BPS, "addLiquidityUnbalanced deltaIn");
+            _assertApproxEqBps(
+                localR.tokenDeltaIn[i],
+                upstreamR.tokenDeltaIn[i],
+                PARITY_TOLERANCE_BPS,
+                "addLiquidityUnbalanced deltaIn"
+            );
         }
     }
 
@@ -1305,8 +1285,12 @@ contract BalancerV3_PortComparison is CraneTest {
         IERC20 localBpt = IERC20(localWeightedPool);
 
         // Approve BPT for the Router + Permit2 (some code paths use ERC20 approvals, others Permit2).
-        if (!_safeApproveWithReset(upstreamBpt, address(upstreamRouter), type(uint256).max)) revert("bpt-approve-upstream-failed");
-        if (!_safeApproveWithReset(localBpt, address(localRouter), type(uint256).max)) revert("bpt-approve-local-failed");
+        if (!_safeApproveWithReset(upstreamBpt, address(upstreamRouter), type(uint256).max)) {
+            revert("bpt-approve-upstream-failed");
+        }
+        if (!_safeApproveWithReset(localBpt, address(localRouter), type(uint256).max)) {
+            revert("bpt-approve-local-failed");
+        }
         _permit2ApproveTokenAndSpender(upstreamBpt, permit2, address(upstreamRouter));
         _permit2ApproveTokenAndSpender(localBpt, permit2, address(localRouter));
 
@@ -1314,18 +1298,10 @@ contract BalancerV3_PortComparison is CraneTest {
             vm.skip(true);
         }
 
-        RemoveLiquidityExecResult memory upstreamR = _execRemoveLiquidityProportional(
-            upstreamRouter,
-            upstreamWeightedPool,
-            upstreamBpt,
-            exactBptIn
-        );
-        RemoveLiquidityExecResult memory localR = _execRemoveLiquidityProportional(
-            localRouter,
-            localWeightedPool,
-            localBpt,
-            exactBptIn
-        );
+        RemoveLiquidityExecResult memory upstreamR =
+            _execRemoveLiquidityProportional(upstreamRouter, upstreamWeightedPool, upstreamBpt, exactBptIn);
+        RemoveLiquidityExecResult memory localR =
+            _execRemoveLiquidityProportional(localRouter, localWeightedPool, localBpt, exactBptIn);
 
         if (upstreamR.amountsOut.length != poolTokens.length || localR.amountsOut.length != poolTokens.length) {
             vm.skip(true);
@@ -1352,10 +1328,22 @@ contract BalancerV3_PortComparison is CraneTest {
         json = vm.serializeUint(objectKey, "parityToleranceBps", PARITY_TOLERANCE_BPS);
         vm.writeJson(json, _artifactPath("port-weighted-removeLiquidityProportional-exec.json"));
 
-        _assertApproxEqBps(localR.bptDelta, upstreamR.bptDelta, PARITY_TOLERANCE_BPS, "removeLiquidityProportional bptDelta");
+        _assertApproxEqBps(
+            localR.bptDelta, upstreamR.bptDelta, PARITY_TOLERANCE_BPS, "removeLiquidityProportional bptDelta"
+        );
         for (uint256 i = 0; i < poolTokens.length; i++) {
-            _assertApproxEqBps(localR.amountsOut[i], upstreamR.amountsOut[i], PARITY_TOLERANCE_BPS, "removeLiquidityProportional amountsOut");
-            _assertApproxEqBps(localR.tokenDeltaOut[i], upstreamR.tokenDeltaOut[i], PARITY_TOLERANCE_BPS, "removeLiquidityProportional deltaOut");
+            _assertApproxEqBps(
+                localR.amountsOut[i],
+                upstreamR.amountsOut[i],
+                PARITY_TOLERANCE_BPS,
+                "removeLiquidityProportional amountsOut"
+            );
+            _assertApproxEqBps(
+                localR.tokenDeltaOut[i],
+                upstreamR.tokenDeltaOut[i],
+                PARITY_TOLERANCE_BPS,
+                "removeLiquidityProportional deltaOut"
+            );
         }
     }
 
@@ -1411,13 +1399,8 @@ contract BalancerV3_PortComparison is CraneTest {
     }
 
     function _artifactPath(string memory fileName) internal view returns (string memory path) {
-        path = string(
-            abi.encodePacked(
-                vm.projectRoot(),
-                "/tasks/CRANE-270-verify-balancer-v3-port/artifacts/",
-                fileName
-            )
-        );
+        path =
+            string(abi.encodePacked(vm.projectRoot(), "/tasks/CRANE-270-verify-balancer-v3-port/artifacts/", fileName));
     }
 
     function _decimalsOrSkip(address token) internal returns (uint8 decimals) {

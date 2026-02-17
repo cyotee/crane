@@ -6,22 +6,24 @@ import "forge-std/Test.sol";
 
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVersion} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { StableSurgeHookDeployer } from "./utils/StableSurgeHookDeployer.sol";
-import { StableSurgePoolFactoryDeployer } from "./utils/StableSurgePoolFactoryDeployer.sol";
-import { StableSurgeHook } from "../../contracts/StableSurgeHook.sol";
-import { StableSurgePoolFactory } from "../../contracts/StableSurgePoolFactory.sol";
+import {StableSurgeHookDeployer} from "./utils/StableSurgeHookDeployer.sol";
+import {StableSurgePoolFactoryDeployer} from "./utils/StableSurgePoolFactoryDeployer.sol";
+import {StableSurgeHook} from "../../contracts/StableSurgeHook.sol";
+import {StableSurgePoolFactory} from "../../contracts/StableSurgePoolFactory.sol";
 
 contract StableSurgePoolFactoryTest is BaseVaultTest, StableSurgeHookDeployer, StableSurgePoolFactoryDeployer {
     using CastingHelpers for address[];
@@ -43,19 +45,11 @@ contract StableSurgePoolFactoryTest is BaseVaultTest, StableSurgeHookDeployer, S
     function setUp() public override {
         super.setUp();
 
-        StableSurgeHook stableSurgeHook = deployStableSurgeHook(
-            vault,
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            "Test"
-        );
+        StableSurgeHook stableSurgeHook =
+            deployStableSurgeHook(vault, DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, "Test");
 
-        stablePoolFactory = deployStableSurgePoolFactory(
-            address(stableSurgeHook),
-            365 days,
-            FACTORY_VERSION,
-            POOL_VERSION
-        );
+        stablePoolFactory =
+            deployStableSurgePoolFactory(address(stableSurgeHook), 365 days, FACTORY_VERSION, POOL_VERSION);
         vm.label(address(stablePoolFactory), "stable pool factory");
 
         (daiIdx, usdcIdx) = getSortedIndexes(address(dai), address(usdc));

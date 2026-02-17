@@ -2,20 +2,22 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
-import { StablePool } from "./StablePool.sol";
+import {StablePool} from "./StablePool.sol";
 
 /**
  * @notice General Stable Pool factory.
@@ -25,12 +27,10 @@ import { StablePool } from "./StablePool.sol";
 contract StablePoolFactory is IPoolVersion, BasePoolFactory, Version {
     string private _poolVersion;
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        string memory factoryVersion,
-        string memory poolVersion
-    ) BasePoolFactory(vault, pauseWindowDuration, type(StablePool).creationCode) Version(factoryVersion) {
+    constructor(IVault vault, uint32 pauseWindowDuration, string memory factoryVersion, string memory poolVersion)
+        BasePoolFactory(vault, pauseWindowDuration, type(StablePool).creationCode)
+        Version(factoryVersion)
+    {
         _poolVersion = poolVersion;
     }
 
@@ -77,10 +77,7 @@ contract StablePoolFactory is IPoolVersion, BasePoolFactory, Version {
         pool = _create(
             abi.encode(
                 StablePool.NewPoolParams({
-                    name: name,
-                    symbol: symbol,
-                    amplificationParameter: amplificationParameter,
-                    version: _poolVersion
+                    name: name, symbol: symbol, amplificationParameter: amplificationParameter, version: _poolVersion
                 }),
                 getVault()
             ),

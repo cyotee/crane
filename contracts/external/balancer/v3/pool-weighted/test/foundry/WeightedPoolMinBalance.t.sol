@@ -5,13 +5,13 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { WeightedPoolFactory } from "../../contracts/WeightedPoolFactory.sol";
-import { WeightedPoolTest } from "./WeightedPool.t.sol";
+import {WeightedPoolFactory} from "../../contracts/WeightedPoolFactory.sol";
+import {WeightedPoolTest} from "./WeightedPool.t.sol";
 
 contract WeightedPoolMinBalanceTest is WeightedPoolTest {
     using ArrayHelpers for *;
@@ -230,18 +230,19 @@ contract WeightedPoolMinBalanceTest is WeightedPoolTest {
 
         PoolRoleAccounts memory roleAccounts;
 
-        address newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(poolTokens),
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE,
-            address(0),
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        address newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(poolTokens),
+                weights,
+                roleAccounts,
+                DEFAULT_SWAP_FEE,
+                address(0),
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
 
         vm.startPrank(lp);
         _initPool(newPool, [NEAR_MIN_BALANCE, MinTokenBalanceLib.ABSOLUTE_MIN_TOKEN_BALANCE + 100].toMemoryArray(), 0);
@@ -258,18 +259,19 @@ contract WeightedPoolMinBalanceTest is WeightedPoolTest {
 
         PoolRoleAccounts memory roleAccounts;
 
-        address newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(poolTokens),
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE,
-            address(0),
-            false,
-            false,
-            ONE_BYTES32
-        );
+        address newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(poolTokens),
+                weights,
+                roleAccounts,
+                DEFAULT_SWAP_FEE,
+                address(0),
+                false,
+                false,
+                ONE_BYTES32
+            );
 
         vm.startPrank(lp);
         _initPool(newPool, [SWAP_TEST_BALANCE_HIGH, SWAP_TEST_BALANCE_LOW].toMemoryArray(), 0);

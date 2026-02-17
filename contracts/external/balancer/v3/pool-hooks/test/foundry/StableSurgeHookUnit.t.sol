@@ -2,21 +2,27 @@
 
 pragma solidity ^0.8.24;
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { ISurgeHookCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
-import { IVaultExplorer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExplorer.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {IVaultExplorer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExplorer.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { StableSurgeMedianMathMock } from "../../contracts/test/StableSurgeMedianMathMock.sol";
-import { StableSurgeHookDeployer } from "./utils/StableSurgeHookDeployer.sol";
-import { StableSurgeHook } from "../../contracts/StableSurgeHook.sol";
+import {StableSurgeMedianMathMock} from "../../contracts/test/StableSurgeMedianMathMock.sol";
+import {StableSurgeHookDeployer} from "./utils/StableSurgeHookDeployer.sol";
+import {StableSurgeHook} from "../../contracts/StableSurgeHook.sol";
 
 contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
     using FixedPoint for uint256;
@@ -36,12 +42,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         super.setUp();
 
         vm.prank(address(poolFactory));
-        stableSurgeHook = deployStableSurgeHook(
-            vault,
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            VERSION
-        );
+        stableSurgeHook =
+            deployStableSurgeHook(vault, DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, VERSION);
 
         authorizer.grantRole(
             IAuthentication(address(stableSurgeHook)).getActionId(ISurgeHookCommon.setMaxSurgeFeePercentage.selector),
@@ -104,11 +106,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         vm.expectEmit();
         emit ISurgeHookCommon.ThresholdSurgePercentageChanged(pool, newSurgeThresholdPercentage);
 
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(this),
-            swapFeeManager: address(this),
-            poolCreator: address(this)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(this), swapFeeManager: address(this), poolCreator: address(this)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExplorer.getPoolRoleAccounts.selector, pool),
@@ -128,11 +127,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
     function testChangeSurgeThresholdPercentageRevertIfValueIsGreaterThanOne() public {
         uint256 newSurgeThresholdPercentage = 1.1e18;
 
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(this),
-            swapFeeManager: address(this),
-            poolCreator: address(this)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(this), swapFeeManager: address(this), poolCreator: address(this)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExplorer.getPoolRoleAccounts.selector, pool),
@@ -144,11 +140,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
     }
 
     function testChangeSurgeThresholdPercentageRevertIfSenderIsNotFeeManager() public {
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(0x01),
-            swapFeeManager: address(0x01),
-            poolCreator: address(0x01)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(0x01), swapFeeManager: address(0x01), poolCreator: address(0x01)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExplorer.getPoolRoleAccounts.selector, pool),
@@ -160,11 +153,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
     }
 
     function testChangeSurgeThresholdPercentageRevertIfFeeManagerIsZero() public {
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(0x00),
-            swapFeeManager: address(0x00),
-            poolCreator: address(0x00)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(0x00), swapFeeManager: address(0x00), poolCreator: address(0x00)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExplorer.getPoolRoleAccounts.selector, pool),
@@ -222,14 +212,8 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         SwapKind kind;
         uint256[] memory balances;
 
-        (length, indexIn, indexOut, amountGivenScaled18, kind, balances) = _boundValues(
-            length,
-            indexIn,
-            indexOut,
-            amountGivenScaled18,
-            kindRaw,
-            rawBalances
-        );
+        (length, indexIn, indexOut, amountGivenScaled18, kind, balances) =
+            _boundValues(length, indexIn, indexOut, amountGivenScaled18, kindRaw, rawBalances);
         PoolSwapParams memory swapParams = _buildSwapParams(indexIn, indexOut, amountGivenScaled18, kind, balances);
         uint256 surgeFeePercentage = stableSurgeHook.getSurgeFeePercentage(swapParams, pool, STATIC_FEE_PERCENTAGE);
         uint256[] memory newBalances = _computeNewBalances(swapParams);
@@ -253,22 +237,13 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         SwapKind kind;
         uint256[] memory balances;
 
-        (length, indexIn, indexOut, amountGivenScaled18, kind, balances) = _boundValues(
-            length,
-            indexIn,
-            indexOut,
-            amountGivenScaled18,
-            kindRaw,
-            rawBalances
-        );
+        (length, indexIn, indexOut, amountGivenScaled18, kind, balances) =
+            _boundValues(length, indexIn, indexOut, amountGivenScaled18, kindRaw, rawBalances);
 
         PoolSwapParams memory swapParams = _buildSwapParams(indexIn, indexOut, amountGivenScaled18, kind, balances);
         vm.prank(address(vault));
-        (bool success, uint256 surgeFeePercentage) = stableSurgeHook.onComputeDynamicSwapFeePercentage(
-            swapParams,
-            pool,
-            STATIC_FEE_PERCENTAGE
-        );
+        (bool success, uint256 surgeFeePercentage) =
+            stableSurgeHook.onComputeDynamicSwapFeePercentage(swapParams, pool, STATIC_FEE_PERCENTAGE);
         assertTrue(success, "onComputeDynamicSwapFeePercentage should return true");
 
         uint256[] memory newBalances = _computeNewBalances(swapParams);
@@ -294,9 +269,7 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         balances[indexOut] = 2e18;
 
         uint256 surgeFeePercentage = stableSurgeHook.getSurgeFeePercentage(
-            _buildSwapParams(indexIn, indexOut, 1e18, SwapKind.EXACT_IN, balances),
-            pool,
-            STATIC_FEE_PERCENTAGE
+            _buildSwapParams(indexIn, indexOut, 1e18, SwapKind.EXACT_IN, balances), pool, STATIC_FEE_PERCENTAGE
         );
 
         assertEq(surgeFeePercentage, STATIC_FEE_PERCENTAGE, "Surge fee percentage should be staticFeePercentage");
@@ -313,9 +286,7 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         balances[3] = 10000e18;
 
         uint256 surgeFeePercentage = stableSurgeHook.getSurgeFeePercentage(
-            _buildSwapParams(0, MAX_TOKENS - 1, 0, SwapKind.EXACT_IN, balances),
-            pool,
-            STATIC_FEE_PERCENTAGE
+            _buildSwapParams(0, MAX_TOKENS - 1, 0, SwapKind.EXACT_IN, balances), pool, STATIC_FEE_PERCENTAGE
         );
         assertEq(surgeFeePercentage, STATIC_FEE_PERCENTAGE, "Surge fee percentage should be staticFeePercentage");
     }
@@ -332,9 +303,7 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         balances[5] = 2e18;
 
         uint256 surgeFeePercentage = stableSurgeHook.getSurgeFeePercentage(
-            _buildSwapParams(0, MAX_TOKENS - 1, 1, SwapKind.EXACT_IN, balances),
-            pool,
-            STATIC_FEE_PERCENTAGE
+            _buildSwapParams(0, MAX_TOKENS - 1, 1, SwapKind.EXACT_IN, balances), pool, STATIC_FEE_PERCENTAGE
         );
         assertEq(surgeFeePercentage, STATIC_FEE_PERCENTAGE, "Surge fee percentage should be staticFeePercentage");
     }
@@ -390,16 +359,15 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
         SwapKind kind,
         uint256[] memory balances
     ) internal pure returns (PoolSwapParams memory) {
-        return
-            PoolSwapParams({
-                kind: kind,
-                indexIn: indexIn,
-                indexOut: indexOut,
-                amountGivenScaled18: amountGivenScaled18,
-                balancesScaled18: balances,
-                router: address(0),
-                userData: bytes("")
-            });
+        return PoolSwapParams({
+            kind: kind,
+            indexIn: indexIn,
+            indexOut: indexOut,
+            amountGivenScaled18: amountGivenScaled18,
+            balancesScaled18: balances,
+            router: address(0),
+            userData: bytes("")
+        });
     }
 
     function _computeNewBalances(PoolSwapParams memory params) internal view returns (uint256[] memory) {
@@ -421,18 +389,17 @@ contract StableSurgeHookUnitTest is BaseVaultTest, StableSurgeHookDeployer {
 
     function _calculateFee(uint256 newTotalImbalance, uint256 oldTotalImbalance) internal view returns (uint256) {
         if (
-            newTotalImbalance == 0 ||
-            (newTotalImbalance <= oldTotalImbalance || newTotalImbalance <= DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
+            newTotalImbalance == 0
+                || (newTotalImbalance <= oldTotalImbalance || newTotalImbalance <= DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
         ) {
             return STATIC_FEE_PERCENTAGE;
         }
 
-        return
-            STATIC_FEE_PERCENTAGE +
-            (stableSurgeHook.getMaxSurgeFeePercentage(pool) - STATIC_FEE_PERCENTAGE).mulDown(
-                (newTotalImbalance - DEFAULT_SURGE_THRESHOLD_PERCENTAGE).divDown(
-                    DEFAULT_SURGE_THRESHOLD_PERCENTAGE.complement()
-                )
-            );
+        return STATIC_FEE_PERCENTAGE
+            + (stableSurgeHook.getMaxSurgeFeePercentage(pool) - STATIC_FEE_PERCENTAGE)
+            .mulDown(
+            (newTotalImbalance - DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
+            .divDown(DEFAULT_SURGE_THRESHOLD_PERCENTAGE.complement())
+        );
     }
 }

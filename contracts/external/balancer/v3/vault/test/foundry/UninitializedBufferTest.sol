@@ -4,13 +4,15 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract UnInitializedBufferTest is BaseVaultTest {
     function setUp() public virtual override {
@@ -47,7 +49,7 @@ contract UnInitializedBufferTest is BaseVaultTest {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
         paths = new SwapPathExactAmountIn[](1);
 
-        steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: waDAI, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
         paths[0] = SwapPathExactAmountIn({
             tokenIn: dai,
             steps: steps,

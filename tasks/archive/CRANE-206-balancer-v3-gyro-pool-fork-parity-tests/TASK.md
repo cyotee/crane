@@ -52,7 +52,7 @@ As a developer, I want Gyro 2-CLP math entrypoints to match a deployed mainnet G
 As a developer, I want Gyro ECLP math entrypoints to match a deployed mainnet Gyro ECLP pool.
 
 **Acceptance Criteria:**
-- [x] Select an existing deployed Gyro ECLP pool from network constants (e.g. `BLANACER_V3_MOCK_GYRO_ECLP_POOL`)
+- [x] Select an existing deployed Gyro ECLP pool from network constants (e.g. `BALANCER_V3_MOCK_GYRO_ECLP_POOL`)
 - [x] Compare `computeInvariant`, `computeBalance`, and `onSwap` results between mainnet and local ported code
 
 ## Technical Details

@@ -53,9 +53,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountIn = 1 ether;
 
@@ -86,9 +84,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         // Try progressively larger amounts to find one that crosses ticks
         uint256 amountIn = 10 ether;
@@ -130,9 +126,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         // Swap USDC -> WETH
         bool zeroForOne = tokenIsCurrency0(key, USDC);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountIn = 10_000e6; // 10000 USDC
 
@@ -164,9 +158,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH); // WETH -> USDC
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountOut = 1000e6; // Want 1000 USDC
 
@@ -194,9 +186,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         // Large output to potentially cross ticks
         uint256 amountOut = 50_000e6; // Want 50000 USDC
@@ -228,9 +218,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountIn = 100 ether; // Large amount
 
@@ -264,9 +252,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountIn = 50 ether;
 
@@ -297,7 +283,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        (uint160 currentSqrtPrice, , , ) = getPoolState(key);
+        (uint160 currentSqrtPrice,,,) = getPoolState(key);
 
         // Set price limit ~1% away
         uint160 priceLimit = zeroForOne
@@ -344,7 +330,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
 
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_PRICE + 1;
 
-        (uint160 currentSqrtPrice, , , ) = getPoolState(key);
+        (uint160 currentSqrtPrice,,,) = getPoolState(key);
         uint128 currentLiquidity = getPoolLiquidity(key);
 
         UniswapV4Quoter.SwapQuoteParams memory params = UniswapV4Quoter.SwapQuoteParams({
@@ -378,9 +364,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountIn = 5 ether;
 
@@ -404,7 +388,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         assertTrue(quote.steps > 0, "steps > 0");
 
         // Price should move in swap direction
-        (uint160 priceBefore, , , ) = getPoolState(key);
+        (uint160 priceBefore,,,) = getPoolState(key);
         if (zeroForOne) {
             assertTrue(quote.sqrtPriceAfterX96 < priceBefore, "price should decrease for zeroForOne");
         } else {
@@ -421,9 +405,7 @@ contract UniswapV4Quoter_EthereumMainnetFork_Test is TestBase_UniswapV4EthereumM
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         bool zeroForOne = tokenIsCurrency0(key, WETH);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_PRICE + 1
-            : TickMath.MAX_SQRT_PRICE - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
 
         uint256 amountOut = 5000e6;
 

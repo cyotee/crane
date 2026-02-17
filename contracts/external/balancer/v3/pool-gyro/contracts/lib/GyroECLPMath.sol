@@ -6,12 +6,12 @@ pragma solidity ^0.8.27;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { SignedFixedPoint } from "./SignedFixedPoint.sol";
-import { GyroPoolMath } from "./GyroPoolMath.sol";
+import {SignedFixedPoint} from "./SignedFixedPoint.sol";
+import {GyroPoolMath} from "./GyroPoolMath.sol";
 
 /**
  * @notice ECLP math library. Pretty much a direct translation of the python version.
@@ -127,8 +127,8 @@ library GyroECLPMath {
         require(derived.z <= _ONE_XP, DerivedZWrong());
 
         require(
-            _ONE_XP - _DERIVED_DSQ_NORM_ACCURACY_XP <= derived.dSq &&
-                derived.dSq <= _ONE_XP + _DERIVED_DSQ_NORM_ACCURACY_XP,
+            _ONE_XP - _DERIVED_DSQ_NORM_ACCURACY_XP <= derived.dSq
+                && derived.dSq <= _ONE_XP + _DERIVED_DSQ_NORM_ACCURACY_XP,
             DerivedDsqWrong()
         );
 
@@ -144,10 +144,11 @@ library GyroECLPMath {
      * @param t2 Second vector
      * @return ret Scalar product of the two vectors
      */
-    function scalarProd(
-        IGyroECLPPool.Vector2 memory t1,
-        IGyroECLPPool.Vector2 memory t2
-    ) internal pure returns (int256 ret) {
+    function scalarProd(IGyroECLPPool.Vector2 memory t1, IGyroECLPPool.Vector2 memory t2)
+        internal
+        pure
+        returns (int256 ret)
+    {
         ret = t1.x.mulDownMag(t2.x) + t1.y.mulDownMag(t2.y);
     }
 
@@ -158,10 +159,11 @@ library GyroECLPMath {
      * @param t2 Second vector
      * @return ret Scalar product of the two vectors
      */
-    function scalarProdXp(
-        IGyroECLPPool.Vector2 memory t1,
-        IGyroECLPPool.Vector2 memory t2
-    ) internal pure returns (int256 ret) {
+    function scalarProdXp(IGyroECLPPool.Vector2 memory t1, IGyroECLPPool.Vector2 memory t2)
+        internal
+        pure
+        returns (int256 ret)
+    {
         ret = t1.x.mulXp(t2.x) + t1.y.mulXp(t2.y);
     }
 
@@ -181,13 +183,13 @@ library GyroECLPMath {
      * @param tp Point on the ellipse
      * @return t Point on the circle
      */
-    function mulA(
-        IGyroECLPPool.EclpParams memory params,
-        IGyroECLPPool.Vector2 memory tp
-    ) internal pure returns (IGyroECLPPool.Vector2 memory t) {
-        t.x =
-            params.c.mulDownMagU(tp.x).divDownMagU(params.lambda) -
-            params.s.mulDownMagU(tp.y).divDownMagU(params.lambda);
+    function mulA(IGyroECLPPool.EclpParams memory params, IGyroECLPPool.Vector2 memory tp)
+        internal
+        pure
+        returns (IGyroECLPPool.Vector2 memory t)
+    {
+        t.x = params.c.mulDownMagU(tp.x).divDownMagU(params.lambda)
+            - params.s.mulDownMagU(tp.y).divDownMagU(params.lambda);
         t.y = params.s.mulDownMagU(tp.x) + params.c.mulDownMagU(tp.y);
     }
 
@@ -200,10 +202,11 @@ library GyroECLPMath {
      * @param t Point on the circle
      * @return tp Point on the ellipse
      */
-    function mulAinv(
-        IGyroECLPPool.EclpParams memory params,
-        IGyroECLPPool.Vector2 memory t
-    ) internal pure returns (IGyroECLPPool.Vector2 memory tp) {
+    function mulAinv(IGyroECLPPool.EclpParams memory params, IGyroECLPPool.Vector2 memory t)
+        internal
+        pure
+        returns (IGyroECLPPool.Vector2 memory tp)
+    {
         tp.x = t.x.mulDownMag(params.lambda).mulDownMag(params.c) + t.y.mulDownMag(params.s);
         tp.y = -t.x.mulDownMag(params.lambda).mulDownMag(params.s) + t.y.mulDownMag(params.c);
     }
@@ -369,11 +372,8 @@ library GyroECLPMath {
         // Scale by a constant to account for errors in the scaling factor itself and limited compounding.
         // Calculating lambda^2 without decimals so that the calculation will never overflow, the lost precision isn't
         // important.
-        err =
-            err +
-            ((invariant.mulUpXpToNpU(mulDenominator) * ((params.lambda * params.lambda) / 1e36)) * 40) /
-            _ONE_XP +
-            1;
+        err = err + ((invariant.mulUpXpToNpU(mulDenominator) * ((params.lambda * params.lambda) / 1e36)) * 40) / _ONE_XP
+            + 1;
 
         require(invariant + err <= _MAX_INVARIANT, MaxInvariantExceeded());
 
@@ -389,12 +389,11 @@ library GyroECLPMath {
      * @param d Derived ECLP params u, v, w, z, dSq
      * @return val At \cdot A chi
      */
-    function calcAtAChi(
-        int256 x,
-        int256 y,
-        IGyroECLPPool.EclpParams memory p,
-        IGyroECLPPool.DerivedEclpParams memory d
-    ) internal pure returns (int256 val) {
+    function calcAtAChi(int256 x, int256 y, IGyroECLPPool.EclpParams memory p, IGyroECLPPool.DerivedEclpParams memory d)
+        internal
+        pure
+        returns (int256 val)
+    {
         // to save gas, pre-compute dSq^2 as it will be used 3 times
         int256 dSq2 = d.dSq.mulXpU(d.dSq);
 
@@ -422,10 +421,11 @@ library GyroECLPMath {
      * @param d Derived ECLP params u, v, w, z, dSq
      * @return val A chi \cdot A chi in extra precision
      */
-    function calcAChiAChiInXp(
-        IGyroECLPPool.EclpParams memory p,
-        IGyroECLPPool.DerivedEclpParams memory d
-    ) internal pure returns (int256 val) {
+    function calcAChiAChiInXp(IGyroECLPPool.EclpParams memory p, IGyroECLPPool.DerivedEclpParams memory d)
+        internal
+        pure
+        returns (int256 val)
+    {
         // To save gas, pre-compute dSq^3 as it will be used 4 times.
         int256 dSq3 = d.dSq.mulXpU(d.dSq).mulXpU(d.dSq);
 
@@ -469,19 +469,16 @@ library GyroECLPMath {
         int256 termNp = x.mulUpMagU(x).mulUpMagU(p.c).mulUpMagU(p.c) + y.mulUpMagU(y).mulUpMagU(p.s).mulUpMagU(p.s);
         termNp = termNp - x.mulDownMagU(y).mulDownMagU(p.c * 2).mulDownMagU(p.s);
 
-        int256 termXp = d.u.mulXpU(d.u) +
-            (2 * d.u).mulXpU(d.v).divDownMagU(p.lambda) +
-            d.v.mulXpU(d.v).divDownMagU(p.lambda).divDownMagU(p.lambda);
+        int256 termXp = d.u.mulXpU(d.u) + (2 * d.u).mulXpU(d.v).divDownMagU(p.lambda)
+            + d.v.mulXpU(d.v).divDownMagU(p.lambda).divDownMagU(p.lambda);
         termXp = termXp.divXpU(d.dSq.mulXpU(d.dSq).mulXpU(d.dSq).mulXpU(d.dSq));
         val = (-termNp).mulDownXpToNpU(termXp);
 
         // Now calculate (At)_x^2 accounting for possible rounding error to round down.
         // Need to do 1/dSq in a way so that there is no overflow for large balances.
-        val =
-            val +
-            (termNp - 9).divDownMagU(p.lambda).divDownMagU(p.lambda).mulDownXpToNpU(
-                SignedFixedPoint.ONE_XP.divXpU(d.dSq)
-            );
+        val = val
+            + (termNp - 9).divDownMagU(p.lambda).divDownMagU(p.lambda)
+                .mulDownXpToNpU(SignedFixedPoint.ONE_XP.divXpU(d.dSq));
     }
 
     /**
@@ -599,14 +596,10 @@ library GyroECLPMath {
         // Shift by virtual offsets to get v(t).
         // Ignore r rounding for spot price, precision will be lost in TWAP anyway.
         IGyroECLPPool.Vector2 memory r = IGyroECLPPool.Vector2(invariant, invariant);
-        IGyroECLPPool.Vector2 memory ab = IGyroECLPPool.Vector2(
-            virtualOffset0(params, derived, r),
-            virtualOffset1(params, derived, r)
-        );
-        IGyroECLPPool.Vector2 memory vec = IGyroECLPPool.Vector2(
-            balances[0].toInt256() - ab.x,
-            balances[1].toInt256() - ab.y
-        );
+        IGyroECLPPool.Vector2 memory ab =
+            IGyroECLPPool.Vector2(virtualOffset0(params, derived, r), virtualOffset1(params, derived, r));
+        IGyroECLPPool.Vector2 memory vec =
+            IGyroECLPPool.Vector2(balances[0].toInt256() - ab.x, balances[1].toInt256() - ab.y);
 
         // Transform to circle to get Av(t).
         vec = mulA(params, vec);
@@ -693,11 +686,8 @@ library GyroECLPMath {
     ) internal pure returns (int256 a, int256 b) {
         IGyroECLPPool.Vector2 memory invariant;
 
-        (int256 currentInvariant, int256 invErr) = calculateInvariantWithError(
-            balancesScaled18,
-            eclpParams,
-            derivedECLPParams
-        );
+        (int256 currentInvariant, int256 invErr) =
+            calculateInvariantWithError(balancesScaled18, eclpParams, derivedECLPParams);
         // invariant = overestimate in x-component, underestimate in y-component
         // No overflow in `+` due to constraints to the different values enforced in GyroECLPMath (the sum of the
         // balances of the tokens cannot exceed 1e34, so the invariant + err value is bounded by 3e37).
@@ -714,10 +704,11 @@ library GyroECLPMath {
      * @param eclpParams The E-CLP parameters
      * @return The clamped price
      */
-    function clampPriceToPoolRange(
-        uint256 price,
-        IGyroECLPPool.EclpParams memory eclpParams
-    ) internal pure returns (uint256) {
+    function clampPriceToPoolRange(uint256 price, IGyroECLPPool.EclpParams memory eclpParams)
+        internal
+        pure
+        returns (uint256)
+    {
         if (price < eclpParams.alpha.toUint256()) {
             return eclpParams.alpha.toUint256();
         } else if (price > eclpParams.beta.toUint256()) {
@@ -773,12 +764,9 @@ library GyroECLPMath {
         IGyroECLPPool.DerivedEclpParams memory derived,
         IGyroECLPPool.Vector2 memory invariant
     ) internal pure returns (uint256 amountOut, int256 a, int256 b) {
-        function(
-            int256,
-            IGyroECLPPool.EclpParams memory,
-            IGyroECLPPool.DerivedEclpParams memory,
-            IGyroECLPPool.Vector2 memory
-        ) pure returns (int256, int256, int256) calcGiven;
+        function(int256, IGyroECLPPool
+                        .EclpParams memory, IGyroECLPPool.DerivedEclpParams memory, IGyroECLPPool.Vector2 memory)
+            pure returns (int256, int256, int256) calcGiven;
         uint8 ixIn;
         uint8 ixOut;
         if (tokenInIsToken0) {
@@ -821,12 +809,9 @@ library GyroECLPMath {
         IGyroECLPPool.DerivedEclpParams memory derived,
         IGyroECLPPool.Vector2 memory invariant
     ) internal pure returns (uint256 amountIn, int256 a, int256 b) {
-        function(
-            int256,
-            IGyroECLPPool.EclpParams memory,
-            IGyroECLPPool.DerivedEclpParams memory,
-            IGyroECLPPool.Vector2 memory
-        ) pure returns (int256, int256, int256) calcGiven;
+        function(int256, IGyroECLPPool
+                        .EclpParams memory, IGyroECLPPool.DerivedEclpParams memory, IGyroECLPPool.Vector2 memory)
+            pure returns (int256, int256, int256) calcGiven;
         uint8 ixIn;
         uint8 ixOut;
         if (tokenInIsToken0) {
@@ -1059,14 +1044,7 @@ library GyroECLPMath {
         IGyroECLPPool.Vector2 memory ba = IGyroECLPPool.Vector2(b, a);
         // Change x->y, s->c, c->s, b->a, a->b, tauBeta.x -> -tauAlpha.x, tauBeta.y -> tauAlpha.y vs calcYGivenX.
         x = solveQuadraticSwap(
-            params.lambda,
-            y,
-            params.c,
-            params.s,
-            r,
-            ba,
-            IGyroECLPPool.Vector2(-d.tauAlpha.x, d.tauAlpha.y),
-            d.dSq
+            params.lambda, y, params.c, params.s, r, ba, IGyroECLPPool.Vector2(-d.tauAlpha.x, d.tauAlpha.y), d.dSq
         );
     }
 
@@ -1076,10 +1054,11 @@ library GyroECLPMath {
      * @param px price of asset x in terms of asset y in the rotated and translated ellipsis
      * @return tpp Balances of the normalized circle corresponding to price px in the ellipsis
      */
-    function tau(
-        IGyroECLPPool.EclpParams memory params,
-        int256 px
-    ) internal pure returns (IGyroECLPPool.Vector2 memory tpp) {
+    function tau(IGyroECLPPool.EclpParams memory params, int256 px)
+        internal
+        pure
+        returns (IGyroECLPPool.Vector2 memory tpp)
+    {
         return eta(zeta(params, px));
     }
 

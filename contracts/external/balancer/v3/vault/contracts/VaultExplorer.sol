@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IVaultExplorer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExplorer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IVaultExplorer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExplorer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenInfo,
     PoolRoleAccounts,
@@ -106,17 +106,20 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function getPoolTokenCountAndIndexOfToken(
-        address pool,
-        IERC20 token
-    ) external view returns (uint256 tokenCount, uint256 index) {
+    function getPoolTokenCountAndIndexOfToken(address pool, IERC20 token)
+        external
+        view
+        returns (uint256 tokenCount, uint256 index)
+    {
         return _vault.getPoolTokenCountAndIndexOfToken(pool, token);
     }
 
     /// @inheritdoc IVaultExplorer
-    function getPoolTokenRates(
-        address pool
-    ) external view returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates) {
+    function getPoolTokenRates(address pool)
+        external
+        view
+        returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates)
+    {
         return _vault.getPoolTokenRates(pool);
     }
 
@@ -126,9 +129,7 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function getPoolTokenInfo(
-        address pool
-    )
+    function getPoolTokenInfo(address pool)
         external
         view
         returns (
@@ -190,9 +191,7 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function getPoolPausedState(
-        address pool
-    )
+    function getPoolPausedState(address pool)
         external
         view
         returns (bool poolPaused, uint32 poolPauseWindowEndTime, uint32 poolBufferPeriodEndTime, address pauseManager)
@@ -225,10 +224,11 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function computeDynamicSwapFeePercentage(
-        address pool,
-        PoolSwapParams memory swapParams
-    ) external view returns (uint256 dynamicSwapFeePercentage) {
+    function computeDynamicSwapFeePercentage(address pool, PoolSwapParams memory swapParams)
+        external
+        view
+        returns (uint256 dynamicSwapFeePercentage)
+    {
         return _vault.computeDynamicSwapFeePercentage(pool, swapParams);
     }
 
@@ -332,9 +332,11 @@ contract VaultExplorer is IVaultExplorer {
     *******************************************************************************/
 
     /// @inheritdoc IVaultExplorer
-    function getAggregateFeePercentages(
-        address pool
-    ) external view returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage) {
+    function getAggregateFeePercentages(address pool)
+        external
+        view
+        returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage)
+    {
         PoolConfig memory poolConfig = _vault.getPoolConfig(pool);
 
         return (poolConfig.aggregateSwapFeePercentage, poolConfig.aggregateYieldFeePercentage);
@@ -365,10 +367,11 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function getBufferOwnerShares(
-        IERC4626 wrappedToken,
-        address liquidityOwner
-    ) external view returns (uint256 ownerShares) {
+    function getBufferOwnerShares(IERC4626 wrappedToken, address liquidityOwner)
+        external
+        view
+        returns (uint256 ownerShares)
+    {
         return _vault.getBufferOwnerShares(wrappedToken, liquidityOwner);
     }
 
@@ -378,9 +381,11 @@ contract VaultExplorer is IVaultExplorer {
     }
 
     /// @inheritdoc IVaultExplorer
-    function getBufferBalance(
-        IERC4626 wrappedToken
-    ) external view returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw) {
+    function getBufferBalance(IERC4626 wrappedToken)
+        external
+        view
+        returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw)
+    {
         return _vault.getBufferBalance(wrappedToken);
     }
 

@@ -2,8 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import {TokenDeltaMappingSlotType} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    TokenDeltaMappingSlotType
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
 interface IVaultStorageMock {
     function manualGetIsUnlocked() external pure returns (StorageSlotExtension.BooleanSlotType slot);

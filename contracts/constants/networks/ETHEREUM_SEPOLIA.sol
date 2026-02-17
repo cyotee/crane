@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 library ETHEREUM_SEPOLIA {
     uint256 constant CHAIN_ID = 11155111;
 
+    uint256 constant DEFAULT_FORK_BLOCK = 10_400_000;
+
     /* ---------------------------------------------------------------------- */
     /*                                  WETH9                                 */
     /* ---------------------------------------------------------------------- */
@@ -17,8 +19,6 @@ library ETHEREUM_SEPOLIA {
     /* ---------------------------------------------------------------------- */
     /*                               Uniswap V2                               */
     /* ---------------------------------------------------------------------- */
-
-    // TODO Get FeeTo from UniswapV2Factory
 
     address constant UNISWAP_V2_FACTORY = 0xF62c03E08ada871A0bEb309762E260a7a6a880E6;
     address constant UNISWAP_V2_ROUTER = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;
@@ -44,6 +44,9 @@ library ETHEREUM_SEPOLIA {
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
 
     /* ---------------------------------------------------------------------- */
+    address constant BASE_L1_CROSS_DOMAIN_MESSENGER = 0xC34855F4De64F1840e5686e64278da901e261f20;
+    address constant BASE_L1_STANDARD_BRIDGE = 0xfd0Bf71F60660E2f608ed56e1659C450eB113120;
+    address constant BASE_OPTIMISM_MINTABLE_ERC20_FACTORY = 0xb1efB9650aD6d0CC1ed3Ac4a0B7f1D5732696D37;
     /*                               Balancer V2                              */
     /* ---------------------------------------------------------------------- */
 
@@ -85,7 +88,7 @@ library ETHEREUM_SEPOLIA {
     address constant BALANCER_V3_GYRO_ECLP_POOL_FACTORY = 0x589cA6855C348d831b394676c25B125BcdC7F8ce;
     address constant BALANCER_V3_LB_POOL_FACTORY = 0xE92cF5185384f53B2af74A2eBA62ba3A9C0ED65B;
     address constant BALANCER_V3_MOCK_GYRO_2CLP_POOL = 0x4d1a7352311CA9f63AB8bEA96CA873796C72EBDf;
-    address constant BLANACER_V3_MOCK_GYRO_ECLP_POOL = 0xD2fB2b142c27094833f48c8a4a950ecc2e139F66;
+    address constant BALANCER_V3_MOCK_GYRO_ECLP_POOL = 0xD2fB2b142c27094833f48c8a4a950ecc2e139F66;
     address constant BALANCER_V3_MOCK_LB_POOL = 0xc432fC493269Cf9412ef419a8E571655657158a3;
     address constant BALANCER_V3_MOCK_RECLAMM_POOL = address(0x78bE2bd092045315D30D2b91d98CAbb15333e021);
     address constant BALANCER_V3_MOCK_STABLE_POOL_V2 = 0x1C72b94E0e291dEe39a239E6e9C47625b14dEA71;

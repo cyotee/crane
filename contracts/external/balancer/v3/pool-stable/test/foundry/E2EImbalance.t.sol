@@ -4,27 +4,35 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IStablePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IStablePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { RateProviderMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { BasePoolMath } from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {RateProviderMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
 
-import { VaultContractsDeployer } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
+import {
+    VaultContractsDeployer
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
 
 contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer, BaseVaultTest {
     using CastingHelpers for address[];
@@ -55,9 +63,8 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
         string memory symbol = "ERC20POOL";
 
         TokenConfig[] memory tokenConfigs = new TokenConfig[](2);
-        IERC20[] memory sortedTokens = InputHelpers.sortTokens(
-            [address(usdc6Decimals), address(wbtc8Decimals)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory sortedTokens =
+            InputHelpers.sortTokens([address(usdc6Decimals), address(wbtc8Decimals)].toMemoryArray().asIERC20());
         for (uint256 i = 0; i < sortedTokens.length; i++) {
             tokenConfigs[i].token = sortedTokens[i];
             tokenConfigs[i].tokenType = TokenType.WITH_RATE;
@@ -70,18 +77,19 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
         PoolRoleAccounts memory roleAccounts;
         roleAccounts.swapFeeManager = alice;
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            tokenConfigs,
-            DEFAULT_AMP_FACTOR / StableMath.AMP_PRECISION,
-            roleAccounts,
-            BASE_MIN_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfigs,
+                DEFAULT_AMP_FACTOR / StableMath.AMP_PRECISION,
+                roleAccounts,
+                BASE_MIN_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
@@ -96,7 +104,7 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     function testImbalanceSwapExactIn() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
         uint256 amountInRaw = poolData.balancesRaw[TOKEN_IN].mulDown(DEFAULT_AMOUNT_IN_RATIO);
         uint256 amountInScaled18 = _scaleAmountDown(poolData, amountInRaw, TOKEN_IN);
@@ -117,20 +125,13 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
 
         vm.expectRevert(StableMath.MaxImbalanceRatioExceeded.selector);
         prepaidRouter.swapSingleTokenExactIn(
-            pool,
-            tokens[TOKEN_IN],
-            tokens[TOKEN_OUT],
-            amountInRaw,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
+            pool, tokens[TOKEN_IN], tokens[TOKEN_OUT], amountInRaw, 0, MAX_UINT128, false, bytes("")
         );
         vm.stopPrank();
     }
 
     function testImbalanceSwapExactOut() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
 
         uint256 amountOutRaw = poolData.balancesRaw[TOKEN_OUT].mulDown(DEFAULT_AMOUNT_OUT_RATIO);
@@ -165,7 +166,7 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     function testAddLiquidityUnbalanced() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_UP);
 
         uint256[] memory balancesRaw = poolData.balancesRaw;
@@ -190,10 +191,10 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     function testAddLiquiditySingleTokenExactOut() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_UP);
 
-        (uint256 higherBalanceIndex, ) = _findHighAndLowBalanceIndexes(poolData.balancesLiveScaled18);
+        (uint256 higherBalanceIndex,) = _findHighAndLowBalanceIndexes(poolData.balancesLiveScaled18);
 
         vm.startPrank(alice);
 
@@ -217,31 +218,20 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
                 uint256 newBalance = StableMath.computeBalance(
                     DEFAULT_AMP_FACTOR,
                     newPoolData.balancesLiveScaled18,
-                    StablePool(pool).computeInvariant(newPoolData.balancesLiveScaled18, Rounding.ROUND_UP).mulUp(
-                        invariantRatio
-                    ),
+                    StablePool(pool).computeInvariant(newPoolData.balancesLiveScaled18, Rounding.ROUND_UP)
+                        .mulUp(invariantRatio),
                     higherBalanceIndex
                 );
                 newPoolData.balancesLiveScaled18[higherBalanceIndex] = newBalance;
 
                 vm.expectRevert(StableMath.MaxImbalanceRatioExceeded.selector);
                 prepaidRouter.addLiquiditySingleTokenExactOut(
-                    pool,
-                    token,
-                    maxAmountIn,
-                    exactBptAmountOut,
-                    false,
-                    bytes("")
+                    pool, token, maxAmountIn, exactBptAmountOut, false, bytes("")
                 );
             } else {
                 // Increase balance within allowed invariant ratio
                 prepaidRouter.addLiquiditySingleTokenExactOut(
-                    pool,
-                    token,
-                    maxAmountIn,
-                    exactBptAmountOut,
-                    false,
-                    bytes("")
+                    pool, token, maxAmountIn, exactBptAmountOut, false, bytes("")
                 );
             }
         }
@@ -250,7 +240,7 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     function testRemoveLiquiditySingleTokenExactIn() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
 
         (, uint256 lowerBalanceIndex) = _findHighAndLowBalanceIndexes(poolData.balancesLiveScaled18);
@@ -278,9 +268,8 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
                 uint256 newBalance = StableMath.computeBalance(
                     DEFAULT_AMP_FACTOR,
                     newPoolData.balancesLiveScaled18,
-                    StablePool(pool).computeInvariant(newPoolData.balancesLiveScaled18, Rounding.ROUND_UP).mulUp(
-                        invariantRatio
-                    ),
+                    StablePool(pool).computeInvariant(newPoolData.balancesLiveScaled18, Rounding.ROUND_UP)
+                        .mulUp(invariantRatio),
                     lowerBalanceIndex
                 );
                 newPoolData.balancesLiveScaled18[lowerBalanceIndex] = newBalance;
@@ -297,7 +286,7 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     function testRemoveLiquiditySingleTokenExactOut() public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         PoolData memory poolData = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
 
         (, uint256 lowerBalanceIndex) = _findHighAndLowBalanceIndexes(poolData.balancesLiveScaled18);
@@ -330,22 +319,12 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
 
                 vm.expectRevert(StableMath.MaxImbalanceRatioExceeded.selector);
                 prepaidRouter.removeLiquiditySingleTokenExactOut(
-                    pool,
-                    exactBptAmountIn,
-                    token,
-                    amountOutRaw,
-                    false,
-                    bytes("")
+                    pool, exactBptAmountIn, token, amountOutRaw, false, bytes("")
                 );
             } else {
                 // Decrease balance within allowed invariant ratio
                 prepaidRouter.removeLiquiditySingleTokenExactOut(
-                    pool,
-                    exactBptAmountIn,
-                    token,
-                    amountOutRaw,
-                    false,
-                    bytes("")
+                    pool, exactBptAmountIn, token, amountOutRaw, false, bytes("")
                 );
             }
         }
@@ -354,9 +333,11 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
     }
 
     // Private helper functions
-    function _findHighAndLowBalanceIndexes(
-        uint256[] memory balancesScaled18
-    ) private pure returns (uint256 higherBalanceIndex, uint256 lowerBalanceIndex) {
+    function _findHighAndLowBalanceIndexes(uint256[] memory balancesScaled18)
+        private
+        pure
+        returns (uint256 higherBalanceIndex, uint256 lowerBalanceIndex)
+    {
         higherBalanceIndex = 0;
         lowerBalanceIndex = 1;
         for (uint256 i = 0; i < balancesScaled18.length; i++) {
@@ -370,36 +351,33 @@ contract E2EImbalanceTest is StablePoolContractsDeployer, VaultContractsDeployer
         }
     }
 
-    function _scaleAmountUp(
-        PoolData memory poolData,
-        uint256 amountInRaw,
-        uint256 index
-    ) private pure returns (uint256 amountInScaled18) {
+    function _scaleAmountUp(PoolData memory poolData, uint256 amountInRaw, uint256 index)
+        private
+        pure
+        returns (uint256 amountInScaled18)
+    {
         amountInScaled18 = amountInRaw.toScaled18ApplyRateRoundUp(
-            poolData.decimalScalingFactors[index],
-            poolData.tokenRates[index].computeRateRoundUp()
+            poolData.decimalScalingFactors[index], poolData.tokenRates[index].computeRateRoundUp()
         );
     }
 
-    function _scaleAmountUpRateDown(
-        PoolData memory poolData,
-        uint256 amountInRaw,
-        uint256 index
-    ) private pure returns (uint256 amountInScaled18) {
+    function _scaleAmountUpRateDown(PoolData memory poolData, uint256 amountInRaw, uint256 index)
+        private
+        pure
+        returns (uint256 amountInScaled18)
+    {
         amountInScaled18 = amountInRaw.toScaled18ApplyRateRoundUp(
-            poolData.decimalScalingFactors[index],
-            poolData.tokenRates[index]
+            poolData.decimalScalingFactors[index], poolData.tokenRates[index]
         );
     }
 
-    function _scaleAmountDown(
-        PoolData memory poolData,
-        uint256 amountInRaw,
-        uint256 index
-    ) private pure returns (uint256 amountInScaled18) {
+    function _scaleAmountDown(PoolData memory poolData, uint256 amountInRaw, uint256 index)
+        private
+        pure
+        returns (uint256 amountInScaled18)
+    {
         amountInScaled18 = amountInRaw.toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[index],
-            poolData.tokenRates[index]
+            poolData.decimalScalingFactors[index], poolData.tokenRates[index]
         );
     }
 }

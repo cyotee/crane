@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import {IERC1271} from "@crane/contracts/interfaces/IERC1271.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ICowConditionalOrderGenerator } from "./ICowConditionalOrderGenerator.sol";
-import { ICowConditionalOrder, GPv2Order } from "./ICowConditionalOrder.sol";
-import { IProtocolFeeBurner } from "./IProtocolFeeBurner.sol";
+import {ICowConditionalOrderGenerator} from "./ICowConditionalOrderGenerator.sol";
+import {ICowConditionalOrder, GPv2Order} from "./ICowConditionalOrder.sol";
+import {IProtocolFeeBurner} from "./IProtocolFeeBurner.sol";
 
 interface ICowSwapFeeBurner is IERC1271, IProtocolFeeBurner, ICowConditionalOrder, ICowConditionalOrderGenerator {
     enum OrderStatus {

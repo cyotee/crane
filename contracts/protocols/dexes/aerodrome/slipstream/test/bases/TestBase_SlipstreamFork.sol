@@ -40,10 +40,10 @@ abstract contract TestBase_SlipstreamFork is Test {
     /*                              Standard Tick Spacings                        */
     /* -------------------------------------------------------------------------- */
 
-    int24 public constant TICK_SPACING_1 = 1;      // 0.01% fee
-    int24 public constant TICK_SPACING_50 = 50;    // 0.05% fee
-    int24 public constant TICK_SPACING_100 = 100;  // 0.05% fee (same as 50)
-    int24 public constant TICK_SPACING_200 = 200;  // 0.30% fee
+    int24 public constant TICK_SPACING_1 = 1; // 0.01% fee
+    int24 public constant TICK_SPACING_50 = 50; // 0.05% fee
+    int24 public constant TICK_SPACING_100 = 100; // 0.05% fee (same as 50)
+    int24 public constant TICK_SPACING_200 = 200; // 0.30% fee
     int24 public constant TICK_SPACING_2000 = 2000; // 1.00% fee
 
     /* -------------------------------------------------------------------------- */
@@ -122,11 +122,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param token1 Second token address
     /// @param tickSpacing The tick spacing
     /// @return pool The pool address, or address(0) if not found
-    function getProductionPool(address token0, address token1, int24 tickSpacing)
-        internal
-        view
-        returns (ICLPool pool)
-    {
+    function getProductionPool(address token0, address token1, int24 tickSpacing) internal view returns (ICLPool pool) {
         address poolAddr = productionFactory.getPool(token0, token1, tickSpacing);
         if (poolAddr != address(0)) {
             pool = ICLPool(poolAddr);
@@ -137,11 +133,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param reserve0 Reserve of token0
     /// @param reserve1 Reserve of token1
     /// @return sqrtPriceX96 The sqrt price in Q64.96 format
-    function encodePriceSqrt(uint256 reserve0, uint256 reserve1)
-        internal
-        pure
-        returns (uint160 sqrtPriceX96)
-    {
+    function encodePriceSqrt(uint256 reserve0, uint256 reserve1) internal pure returns (uint160 sqrtPriceX96) {
         require(reserve0 > 0, "reserve0 must be > 0");
 
         uint256 sqrtReserve0 = BetterMath._sqrt(reserve0);
@@ -154,11 +146,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @param tick The tick to align
     /// @param tickSpacing The tick spacing
     /// @return Aligned tick
-    function nearestUsableTick(int24 tick, int24 tickSpacing)
-        internal
-        pure
-        returns (int24)
-    {
+    function nearestUsableTick(int24 tick, int24 tickSpacing) internal pure returns (int24) {
         int24 rounded = (tick / tickSpacing) * tickSpacing;
 
         if (rounded < TickMath.MIN_TICK) {

@@ -6,17 +6,19 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BufferRouterTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -70,12 +72,8 @@ contract BufferRouterTest is BaseVaultTest {
         vm.revertToState(snapshotId);
 
         vm.prank(alice);
-        uint256 issuedShares = bufferRouter.initializeBuffer(
-            waDAI,
-            amountUnderlying,
-            amountWrapped,
-            expectedIssuedShares
-        );
+        uint256 issuedShares =
+            bufferRouter.initializeBuffer(waDAI, amountUnderlying, amountWrapped, expectedIssuedShares);
 
         assertEq(issuedShares, expectedIssuedShares, "Initialize buffer query mismatch");
     }
@@ -89,12 +87,8 @@ contract BufferRouterTest is BaseVaultTest {
         uint256 inputAmountRoundUp = inputAmount + 1;
 
         vm.prank(bob);
-        (uint256 actualAmountInUnderlying, uint256 actualAmountInWrapped) = bufferRouter.addLiquidityToBuffer(
-            waDAI,
-            inputAmountRoundUp,
-            inputAmountRoundUp,
-            sharesToIssue
-        );
+        (uint256 actualAmountInUnderlying, uint256 actualAmountInWrapped) =
+            bufferRouter.addLiquidityToBuffer(waDAI, inputAmountRoundUp, inputAmountRoundUp, sharesToIssue);
 
         assertEq(actualAmountInUnderlying, inputAmountRoundUp, "Wrong amount in underlying");
         assertEq(actualAmountInWrapped, inputAmountRoundUp, "Wrong amount in wrapped");
@@ -117,10 +111,7 @@ contract BufferRouterTest is BaseVaultTest {
         vm.prank(bob);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.AmountInAboveMax.selector,
-                IERC20(waDAI.asset()),
-                inputAmountRoundUp,
-                inputAmount
+                IVaultErrors.AmountInAboveMax.selector, IERC20(waDAI.asset()), inputAmountRoundUp, inputAmount
             )
         );
         bufferRouter.addLiquidityToBuffer(waDAI, inputAmount, inputAmountRoundUp, sharesToIssue);
@@ -137,10 +128,7 @@ contract BufferRouterTest is BaseVaultTest {
         vm.prank(bob);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.AmountInAboveMax.selector,
-                IERC20(waDAI),
-                inputAmountRoundUp,
-                inputAmount
+                IVaultErrors.AmountInAboveMax.selector, IERC20(waDAI), inputAmountRoundUp, inputAmount
             )
         );
         bufferRouter.addLiquidityToBuffer(waDAI, inputAmountRoundUp, inputAmount, sharesToIssue);
@@ -165,19 +153,14 @@ contract BufferRouterTest is BaseVaultTest {
         uint256 snapshotId = vm.snapshotState();
 
         _prankStaticCall();
-        (uint256 expectedAmountInUnderlying, uint256 expectedAmountInWrapped) = bufferRouter.queryAddLiquidityToBuffer(
-            waDAI,
-            expectedIssuedShares
-        );
+        (uint256 expectedAmountInUnderlying, uint256 expectedAmountInWrapped) =
+            bufferRouter.queryAddLiquidityToBuffer(waDAI, expectedIssuedShares);
 
         vm.revertToState(snapshotId);
 
         vm.prank(bob);
         (uint256 actualAmountInUnderlying, uint256 actualAmountInWrapped) = bufferRouter.addLiquidityToBuffer(
-            waDAI,
-            expectedAmountInUnderlying,
-            expectedAmountInWrapped,
-            expectedIssuedShares
+            waDAI, expectedAmountInUnderlying, expectedAmountInWrapped, expectedIssuedShares
         );
 
         assertEq(actualAmountInUnderlying, expectedAmountInUnderlying, "Expected amount in underlying mismatch");
@@ -203,17 +186,14 @@ contract BufferRouterTest is BaseVaultTest {
         uint256 snapshotId = vm.snapshotState();
 
         _prankStaticCall();
-        (uint256 expectedAmountOutUnderlying, uint256 expectedAmountOutWrapped) = bufferRouter
-            .queryRemoveLiquidityFromBuffer(waDAI, sharesToRemove);
+        (uint256 expectedAmountOutUnderlying, uint256 expectedAmountOutWrapped) =
+            bufferRouter.queryRemoveLiquidityFromBuffer(waDAI, sharesToRemove);
 
         vm.revertToState(snapshotId);
 
         vm.prank(alice);
         (uint256 actualAmountOutUnderlying, uint256 actualAmountOutWrapped) = vault.removeLiquidityFromBuffer(
-            waDAI,
-            sharesToRemove,
-            expectedAmountOutUnderlying,
-            expectedAmountOutWrapped
+            waDAI, sharesToRemove, expectedAmountOutUnderlying, expectedAmountOutWrapped
         );
 
         assertEq(actualAmountOutUnderlying, expectedAmountOutUnderlying, "Expected amount out underlying mismatch");

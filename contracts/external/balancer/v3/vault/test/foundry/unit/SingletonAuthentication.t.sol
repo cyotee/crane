@@ -4,10 +4,12 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 import "../../../contracts/test/SingletonAuthenticationMock.sol";
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
 import "../../../contracts/CommonAuthentication.sol";
 
 contract SingletonAuthenticationTest is BaseVaultTest {

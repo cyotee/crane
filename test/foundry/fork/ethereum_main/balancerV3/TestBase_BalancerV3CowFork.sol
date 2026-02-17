@@ -203,17 +203,14 @@ abstract contract TestBase_BalancerV3CowFork is Test {
     /// @param weights1 First weight array
     /// @param weights2 Second weight array
     /// @param message Error message prefix
-    function assertWeightsMatch(
-        uint256[] memory weights1,
-        uint256[] memory weights2,
-        string memory message
-    ) internal pure {
+    function assertWeightsMatch(uint256[] memory weights1, uint256[] memory weights2, string memory message)
+        internal
+        pure
+    {
         assertEq(weights1.length, weights2.length, string.concat(message, ": weight array length mismatch"));
 
         for (uint256 i = 0; i < weights1.length; i++) {
-            assertEq(
-                weights1[i], weights2[i], string.concat(message, ": weight mismatch at index ", vm.toString(i))
-            );
+            assertEq(weights1[i], weights2[i], string.concat(message, ": weight mismatch at index ", vm.toString(i)));
         }
     }
 

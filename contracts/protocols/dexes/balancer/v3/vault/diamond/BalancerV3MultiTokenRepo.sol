@@ -3,8 +3,12 @@ pragma solidity ^0.8.24;
 
 import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
-import {IERC20MultiTokenErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
-import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    IERC20MultiTokenErrors
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 
 import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
@@ -27,7 +31,6 @@ import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/con
  * - Total supply per pool
  */
 library BalancerV3MultiTokenRepo {
-
     /* ------ Storage Slot ------ */
 
     bytes32 internal constant STORAGE_SLOT = keccak256("protocols.dexes.balancer.v3.vault.multitoken");
@@ -83,7 +86,11 @@ library BalancerV3MultiTokenRepo {
         return _balanceOf(_layout(), pool, account);
     }
 
-    function _allowance(Storage storage layout, address pool, address owner, address spender) internal view returns (uint256) {
+    function _allowance(Storage storage layout, address pool, address owner, address spender)
+        internal
+        view
+        returns (uint256)
+    {
         if (owner == spender) {
             return type(uint256).max;
         }
@@ -204,7 +211,9 @@ library BalancerV3MultiTokenRepo {
         _approve(_layout(), pool, owner, spender, amount);
     }
 
-    function _spendAllowance(Storage storage layout, address pool, address owner, address spender, uint256 amount) internal {
+    function _spendAllowance(Storage storage layout, address pool, address owner, address spender, uint256 amount)
+        internal
+    {
         uint256 currentAllowance = _allowance(layout, pool, owner, spender);
         if (currentAllowance != type(uint256).max) {
             if (amount > currentAllowance) {

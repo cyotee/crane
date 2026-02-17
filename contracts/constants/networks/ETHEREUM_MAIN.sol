@@ -4,11 +4,36 @@ pragma solidity ^0.8.0;
 library ETHEREUM_MAIN {
     uint256 constant CHAIN_ID = 1;
 
+    uint256 constant DEFAULT_FORK_BLOCK = 24_666_122;
+
     /* ---------------------------------------------------------------------- */
     /*                                  WETH9                                 */
     /* ---------------------------------------------------------------------- */
 
     address payable constant WETH9 = payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                    BASE                                    */
+    /* -------------------------------------------------------------------------- */
+
+    address constant BASE_ADDRESS_MANAGER = 0x8EfB6B5c4767B09Dc9AA6Af4eAA89F749522BaE2;
+    address constant BASE_ANCHOR_STATE_REGISTRY_PROXY = 0x909f6cf47ed12f010A796527f562bFc26C7F4E72;
+    address constant BASE_DELAYED_WETH_PROXY_FDG = 0x2453c1216E49704d84eA98a4daCd95738F2fC8Ec;
+    address constant BASE_DELAYED_WETH_PROXY_PDG = 0x64AE5250958CdeB83f6b61f913B5Ac6Ebe8EFd4D;
+    address constant BASE_DISPUTE_GAME_FACTORY_PROXY = 0x43edB88C4B80fDD2AdFF2412A7BebF9dF42cB40e;
+    address constant BASE_FAULT_DISPUTE_GAME = 0x6dDBa09bc4cCB0D6Ca9Fc5350580f74165707499;
+    address constant BASE_FAULT_DISPUTE_GAME_KONA = 0x6dDBa09bc4cCB0D6Ca9Fc5350580f74165707499;
+    address constant BASE_L1_CROSS_DOMAIN_MESSENGER = 0x866E82a600A1414e583f7F13623F1aC5d58b0Afa;
+    address constant BASE_L1_ERC721_BRIDGE = 0x608d94945A64503E642E6370Ec598e519a2C1E53;
+    address constant BASE_L1_STANDARD_BRIDGE = 0x3154Cf16ccdb4C6d922629664174b904d80F2C35;
+    address constant BASE_MIPS = 0x6463dEE3828677F6270d83d45408044fc5eDB908;
+    address constant BASE_OPTIMISM_MINTABLE_ERC20_FACTORY = 0x05cc379EBD9B30BbA19C6fA282AB29218EC61D84;
+    address constant BASE_OPTIMISM_PORTAL	= 0x49048044D57e1C92A77f79988d21Fa8fAF74E97e;
+    address constant BASE_PERMISSIONED_DISPUTE_GAME = 0x58bf355C5d4EdFc723eF89d99582ECCfd143266A;
+    address constant BASE_PREIMAGE_ORACLE = 0x1fb8cdFc6831fc866Ed9C51aF8817Da5c287aDD3;
+    address constant BASE_PROXY_ADMIN = 0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E;
+    address constant BASE_SYSTEM_CONFIG = 0x73a79Fab69143498Ed3712e519A88a918e1f4072;
+    address constant BASE_SYSTEM_DICTATOR = 0x1fE3fdd1F0193Dd657C0a9AAC37314D6B479E557;
 
     /* ---------------------------------------------------------------------- */
     /*                               Uniswap V2                               */
@@ -41,12 +66,12 @@ library ETHEREUM_MAIN {
     /*                                 Uniswap V4                                 */
     /* -------------------------------------------------------------------------- */
 
-    address constant UNSWAP_V4_POOL_MNANAGER = 0x000000000004444c5dc75cB358380D2e3dE08A90;
-    address constant UNSWAP_V4_POSITION_DESCRIPTOR = 0xd1428Ba554F4C8450b763a0B2040A4935c63f06C;
-    address constant UNSWAP_V4_PPOSITION_MANAGER =	0xbD216513d74C8cf14cf4747E6AaA6420FF64ee9e;
-    address constant UNSWAP_V4_QUOTER =	0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203;
-    address constant UNSWAP_V4_STATE_VIEW =	0x7fFE42C4a5DEeA5b0feC41C94C136Cf115597227;
-    address constant UNSWAP_V4_UNIVERSAL_ROUTER	= 0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af;
+    address constant UNISWAP_V4_POOL_MANAGER = 0x000000000004444c5dc75cB358380D2e3dE08A90;
+    address constant UNISWAP_V4_POSITION_DESCRIPTOR = 0xd1428Ba554F4C8450b763a0B2040A4935c63f06C;
+    address constant UNISWAP_V4_POSITION_MANAGER = 0xbD216513d74C8cf14cf4747E6AaA6420FF64ee9e;
+    address constant UNISWAP_V4_QUOTER = 0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203;
+    address constant UNISWAP_V4_STATE_VIEW = 0x7fFE42C4a5DEeA5b0feC41C94C136Cf115597227;
+    address constant UNISWAP_V4_UNIVERSAL_ROUTER = 0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af;
 
     /* ---------------------------------------------------------------------- */
     /*                                Multicall                               */
@@ -99,7 +124,7 @@ library ETHEREUM_MAIN {
     address constant BALANCER_V3_GYRO_ECLP_POOL_FACTORY = 0xE9B0a3bc48178D7FE2F5453C8bc1415d73F966d0;
     address constant BALANCER_V3_LB_POOL_FACTORY = 0x4eff2d77D9fFbAeFB4b141A3e494c085b3FF4Cb5;
     address constant BALANCER_V3_MOCK_GYRO_2CLP_POOL = 0x4ffECD2dab8703a74BD13Ba10BcE3419B9f5fA80;
-    address constant BLANACER_V3_MOCK_GYRO_ECLP_POOL = 0xe912C791f7c4b6323EfBA294F66C0dE93c50eB5F;
+    address constant BALANCER_V3_MOCK_GYRO_ECLP_POOL = 0xe912C791f7c4b6323EfBA294F66C0dE93c50eB5F;
     address constant BALANCER_V3_MOCK_LB_POOL = 0xdBB8aD38C990Bd4ca2c88A6E6CfDF5045B0d4FB0;
     address constant BALANCER_V3_MOCK_RECLAMM_POOL = address(0x000aB3853737842bED7Dabe3540E3e5336FE62a6);
     address constant BALANCER_V3_MOCK_STABLE_POOL_V2 = 0x95BC5CA62Ed018b5206342479ded82e18e46dcbf;
@@ -129,10 +154,10 @@ library ETHEREUM_MAIN {
 
     /* ------------------------ Gauges and Governance ----------------------- */
 
-    address constant BALANCER_V3_ARBITRUM_ROOT_GUAGE = 0x6337949cbC4825Bbd09242c811770F6F6fee9FfC;
-    address constant BALANCER_V3_ARBITRUM_ROOT_GUAGE_FACTORY = 0x1c99324EDC771c82A0DCCB780CC7DDA0045E50e7;
-    address constant BALANCER_V3_AVALANCHE_ROOT_GUAGE = 0x3Eae4a1c2E36870A006E816930d9f55DF0a72a13;
-    address constant BALANCER_V3_AVALANCHE_ROOT_GUAGE_FACTORY = 0x22625eEDd92c81a219A83e1dc48f88d54786B017;
+    address constant BALANCER_V3_ARBITRUM_ROOT_GAUGE = 0x6337949cbC4825Bbd09242c811770F6F6fee9FfC;
+    address constant BALANCER_V3_ARBITRUM_ROOT_GAUGE_FACTORY = 0x1c99324EDC771c82A0DCCB780CC7DDA0045E50e7;
+    address constant BALANCER_V3_AVALANCHE_ROOT_GAUGE = 0x3Eae4a1c2E36870A006E816930d9f55DF0a72a13;
+    address constant BALANCER_V3_AVALANCHE_ROOT_GAUGE_FACTORY = 0x22625eEDd92c81a219A83e1dc48f88d54786B017;
     address constant BALANCER_V3_BALANCER_CONTRACT_REGISTRY = 0xa1D0791a41318c775707C56eAe247AF81a05322C;
     address constant BALANCER_V3_BALANCER_HELPERS = 0x5aDDCCa35b7A0D07C74063c48700C8590E87864E;
     address constant BALANCER_V3_BALANCER_MINTER = 0x239e55F427D44C3cc793f49bFB507ebe76638a2b;

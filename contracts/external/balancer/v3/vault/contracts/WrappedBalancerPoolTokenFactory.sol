@@ -8,9 +8,9 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {
     IWrappedBalancerPoolTokenFactory
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IWrappedBalancerPoolTokenFactory.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { WrappedBalancerPoolToken } from "./WrappedBalancerPoolToken.sol";
+import {WrappedBalancerPoolToken} from "./WrappedBalancerPoolToken.sol";
 
 /// @notice Factory contract for creating wrapped Balancer pool tokens.
 contract WrappedBalancerPoolTokenFactory is IWrappedBalancerPoolTokenFactory {

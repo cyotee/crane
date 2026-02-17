@@ -6,15 +6,25 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import { PoolData, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {PoolData, Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
 
-import { StorageSlotExtension } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import { EVMCallModeHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
@@ -22,11 +32,11 @@ import {
     TransientStorageHelpers
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { VaultStateBits, VaultStateLib } from "./lib/VaultStateLib.sol";
-import { PoolConfigBits, PoolConfigLib } from "./lib/PoolConfigLib.sol";
-import { ERC20MultiToken } from "./token/ERC20MultiToken.sol";
-import { PoolDataLib } from "./lib/PoolDataLib.sol";
-import { VaultStorage } from "./VaultStorage.sol";
+import {VaultStateBits, VaultStateLib} from "./lib/VaultStateLib.sol";
+import {PoolConfigBits, PoolConfigLib} from "./lib/PoolConfigLib.sol";
+import {ERC20MultiToken} from "./token/ERC20MultiToken.sol";
+import {PoolDataLib} from "./lib/PoolDataLib.sol";
+import {VaultStorage} from "./VaultStorage.sol";
 
 /**
  * @notice Functions and modifiers shared between the main Vault and its extension contracts.
@@ -164,7 +174,7 @@ abstract contract VaultCommon is IVaultEvents, IVaultErrors, VaultStorage, Reent
 
     /// @dev Check both the flag and timestamp to determine whether the pool is paused.
     function _isPoolPaused(address pool) internal view returns (bool) {
-        (bool paused, ) = _getPoolPausedState(pool);
+        (bool paused,) = _getPoolPausedState(pool);
 
         return paused;
     }
@@ -276,10 +286,8 @@ abstract contract VaultCommon is IVaultEvents, IVaultErrors, VaultStorage, Reent
 
         for (uint256 i = 0; i < poolData.balancesRaw.length; ++i) {
             // We assume all newBalances are properly ordered.
-            poolBalances[i] = PackedTokenBalance.toPackedBalance(
-                poolData.balancesRaw[i],
-                poolData.balancesLiveScaled18[i]
-            );
+            poolBalances[i] =
+                PackedTokenBalance.toPackedBalance(poolData.balancesRaw[i], poolData.balancesLiveScaled18[i]);
         }
     }
 
@@ -294,11 +302,7 @@ abstract contract VaultCommon is IVaultEvents, IVaultErrors, VaultStorage, Reent
      */
     function _loadPoolData(address pool, Rounding roundingDirection) internal view returns (PoolData memory poolData) {
         poolData.load(
-            _poolTokenBalances[pool],
-            _poolConfigBits[pool],
-            _poolTokenInfo[pool],
-            _poolTokens[pool],
-            roundingDirection
+            _poolTokenBalances[pool], _poolConfigBits[pool], _poolTokenInfo[pool], _poolTokens[pool], roundingDirection
         );
     }
 
@@ -308,17 +312,14 @@ abstract contract VaultCommon is IVaultEvents, IVaultErrors, VaultStorage, Reent
      * makes external calls, we are making anything that calls it and then modifies storage non-reentrant.
      * Side effects: updates `_aggregateFeeAmounts` and `_poolTokenBalances` in storage.
      */
-    function _loadPoolDataUpdatingBalancesAndYieldFees(
-        address pool,
-        Rounding roundingDirection
-    ) internal nonReentrant returns (PoolData memory poolData) {
+    function _loadPoolDataUpdatingBalancesAndYieldFees(address pool, Rounding roundingDirection)
+        internal
+        nonReentrant
+        returns (PoolData memory poolData)
+    {
         // Initialize poolData with base information for subsequent calculations.
         poolData.load(
-            _poolTokenBalances[pool],
-            _poolConfigBits[pool],
-            _poolTokenInfo[pool],
-            _poolTokens[pool],
-            roundingDirection
+            _poolTokenBalances[pool], _poolConfigBits[pool], _poolTokenInfo[pool], _poolTokens[pool], roundingDirection
         );
 
         PoolDataLib.syncPoolBalancesAndFees(poolData, _poolTokenBalances[pool], _aggregateFeeAmounts[pool]);
@@ -337,16 +338,13 @@ abstract contract VaultCommon is IVaultEvents, IVaultErrors, VaultStorage, Reent
     ) internal pure returns (uint256) {
         poolData.balancesRaw[tokenIndex] = newRawBalance;
 
-        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection ==
-            Rounding.ROUND_UP
+        function(uint256, uint256, uint256) internal pure returns (uint256) _upOrDown = roundingDirection
+            == Rounding.ROUND_UP
             ? ScalingHelpers.toScaled18ApplyRateRoundUp
             : ScalingHelpers.toScaled18ApplyRateRoundDown;
 
-        poolData.balancesLiveScaled18[tokenIndex] = _upOrDown(
-            newRawBalance,
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
-        );
+        poolData.balancesLiveScaled18[tokenIndex] =
+            _upOrDown(newRawBalance, poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]);
 
         return _upOrDown(newRawBalance, poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]);
     }

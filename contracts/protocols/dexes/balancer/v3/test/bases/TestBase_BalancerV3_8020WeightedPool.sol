@@ -15,13 +15,18 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IVault} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IVault.sol";
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
-import {WeightedPool8020Factory} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
+import {
+    WeightedPool8020Factory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
 import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
-import {TestBase_BalancerV3Vault} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3Vault.sol";
-import {WeightedPoolContractsDeployer} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/WeightedPoolContractsDeployer.sol";
+import {
+    TestBase_BalancerV3Vault
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3Vault.sol";
+import {
+    WeightedPoolContractsDeployer
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/WeightedPoolContractsDeployer.sol";
 
 contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, WeightedPoolContractsDeployer {
-
     uint256 private constant DEFAULT_SWAP_FEE = 1e16;
 
     WeightedPool8020Factory weighted8020Factory;
@@ -42,13 +47,7 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
         }
     }
 
-    function createPoolFactory()
-        internal
-        virtual
-        returns (
-            address newPoolFactory
-        )
-    {
+    function createPoolFactory() internal virtual returns (address newPoolFactory) {
         weighted8020Factory =
             deployWeightedPool8020Factory(IVault(address(vault)), 365 days, "Factory v1", "8020Pool v1");
         return address(weighted8020Factory);
@@ -77,9 +76,8 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
         TokenConfig memory daiConfig = standardTokenConfig(dai);
         TokenConfig memory usdcConfig = standardTokenConfig(usdc);
         PoolRoleAccounts memory roleAccounts;
-        daiUsdc8020WeightedPool = WeightedPool(
-            weighted8020Factory.create(daiConfig, usdcConfig, roleAccounts, DEFAULT_SWAP_FEE)
-        );
+        daiUsdc8020WeightedPool =
+            WeightedPool(weighted8020Factory.create(daiConfig, usdcConfig, roleAccounts, DEFAULT_SWAP_FEE));
         _approveForAllUsers(IERC20(address(daiUsdc8020WeightedPool)));
         _approveSpenderForAllUsers(address(router), IERC20(address(daiUsdc8020WeightedPool)));
         _approveSpenderForAllUsers(address(vault), IERC20(address(daiUsdc8020WeightedPool)));
@@ -108,5 +106,4 @@ contract TestBase_BalancerV3_8020WeightedPool is TestBase_BalancerV3Vault, Weigh
         lpAmount = daiUsdc8020WeightedPoolBptAmountOut;
         // console.log("TestBase_BalancerV38020WeightedPoolMath.initDaiUsdc8020WeightedPool():: Exiting function.");
     }
-
 }

@@ -6,30 +6,37 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { TokenConfig, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    TokenConfig,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     IWeightedPool,
     WeightedPoolImmutableData,
     WeightedPoolDynamicData
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { BasePoolTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BasePoolTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
-import { WeightedPoolFactory } from "../../contracts/WeightedPoolFactory.sol";
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPoolFactory} from "../../contracts/WeightedPoolFactory.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
 
 contract WeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
     using CastingHelpers for address[];
@@ -65,9 +72,7 @@ contract WeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
-        IERC20[] memory sortedTokens = InputHelpers.sortTokens(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory sortedTokens = InputHelpers.sortTokens([address(dai), address(usdc)].toMemoryArray().asIERC20());
         for (uint256 i = 0; i < sortedTokens.length; i++) {
             poolTokens.push(sortedTokens[i]);
             tokenAmounts.push(TOKEN_AMOUNT);
@@ -81,18 +86,19 @@ contract WeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
         // Allow pools created by `factory` to use poolHooksMock hooks
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(sortedTokens),
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(sortedTokens),
+                weights,
+                roleAccounts,
+                DEFAULT_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
@@ -134,18 +140,19 @@ contract WeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
         uint256 minimumSwapFeePercentage = IBasePool(pool).getMinimumSwapFeePercentage();
 
         vm.expectRevert(IVaultErrors.SwapFeePercentageTooLow.selector);
-        address lowFeeWeightedPool = WeightedPoolFactory(poolFactory).create(
-            "ERC20 Pool",
-            "ERC20POOL",
-            tokenConfigs,
-            [uint256(50e16), uint256(50e16)].toMemoryArray(),
-            roleAccounts,
-            minimumSwapFeePercentage - 1, // Swap fee too low
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            "Low fee pool"
-        );
+        address lowFeeWeightedPool = WeightedPoolFactory(poolFactory)
+            .create(
+                "ERC20 Pool",
+                "ERC20POOL",
+                tokenConfigs,
+                [uint256(50e16), uint256(50e16)].toMemoryArray(),
+                roleAccounts,
+                minimumSwapFeePercentage - 1, // Swap fee too low
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                "Low fee pool"
+            );
 
         // The pool was not deployed, so the address is 0x0.
         assertEq(address(lowFeeWeightedPool), address(0));
@@ -153,7 +160,7 @@ contract WeightedPoolTest is WeightedPoolContractsDeployer, BasePoolTest {
 
     function testGetWeightedPoolImmutableData() public view {
         WeightedPoolImmutableData memory data = IWeightedPool(pool).getWeightedPoolImmutableData();
-        (uint256[] memory scalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory scalingFactors,) = vault.getPoolTokenRates(pool);
         IERC20[] memory tokens = IPoolInfo(pool).getTokens();
         uint256 numTokens = tokens.length;
 

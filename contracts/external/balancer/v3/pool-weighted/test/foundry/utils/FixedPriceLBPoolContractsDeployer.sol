@@ -4,11 +4,13 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { FixedPriceLBPoolFactory } from "../../../contracts/lbp/FixedPriceLBPoolFactory.sol";
+import {FixedPriceLBPoolFactory} from "../../../contracts/lbp/FixedPriceLBPoolFactory.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "FixedPriceLBPool".
@@ -32,13 +34,12 @@ contract FixedPriceLBPoolContractsDeployer is BaseContractsDeployer {
         address router
     ) internal returns (FixedPriceLBPoolFactory) {
         if (reusingArtifacts) {
-            return
-                FixedPriceLBPoolFactory(
-                    deployCode(
-                        _computeLBPoolPath(type(FixedPriceLBPoolFactory).name),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, router)
-                    )
-                );
+            return FixedPriceLBPoolFactory(
+                deployCode(
+                    _computeLBPoolPath(type(FixedPriceLBPoolFactory).name),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, router)
+                )
+            );
         } else {
             return new FixedPriceLBPoolFactory(vault, pauseWindowDuration, factoryVersion, poolVersion, router);
         }

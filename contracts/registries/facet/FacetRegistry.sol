@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
@@ -19,7 +19,7 @@ contract FacetRegistry is MultiStepOwnableTarget, OperableModifiers, OperableTar
     using StringSetRepo for StringSet;
     using BetterEfficientHashLib for bytes;
 
-    ICreate3Factory public immutable create3Factory;
+    ICreate3FactoryProxy public immutable create3Factory;
 
     mapping(IFacet facet => string name) public nameOfFacet;
     mapping(IFacet facet => bytes4[] interfaces) public interfacesOfFacet;
@@ -29,7 +29,7 @@ contract FacetRegistry is MultiStepOwnableTarget, OperableModifiers, OperableTar
     mapping(bytes4 functionSelector => AddressSet facets) internal _facetsOfFunction;
     AddressSet internal _allFacets;
 
-    constructor(address owner_, ICreate3Factory create3Factory_) {
+    constructor(address owner_, ICreate3FactoryProxy create3Factory_) {
         create3Factory = create3Factory_;
         MultiStepOwnableRepo._initialize(owner_, 3 days);
         OperableRepo._setOperatorStatus(address(create3Factory_), true);

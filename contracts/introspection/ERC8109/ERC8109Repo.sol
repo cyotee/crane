@@ -15,10 +15,10 @@ library ERC8109Repo {
 
     bytes32 internal constant STORAGE_SLOT = ERC2535Repo.STORAGE_SLOT;
 
-    function _processDiamondUpgrade (
+    function _processDiamondUpgrade(
         IERC8109Update.FacetFunctions[] memory addFunctions,
         IERC8109Update.FacetFunctions[] memory replaceFunctions,
-        bytes4[] memory removeFunctions,           
+        bytes4[] memory removeFunctions,
         address delegate,
         bytes memory functionCall,
         bytes32 tag,
@@ -36,11 +36,11 @@ library ERC8109Repo {
         );
     }
 
-    function _processDiamondUpgrade (
+    function _processDiamondUpgrade(
         ERC2535Repo.Storage storage layout,
         IERC8109Update.FacetFunctions[] memory addFunctions,
         IERC8109Update.FacetFunctions[] memory replaceFunctions,
-        bytes4[] memory removeFunctions,           
+        bytes4[] memory removeFunctions,
         address delegate,
         bytes memory functionCall,
         bytes32 tag,
@@ -62,10 +62,9 @@ library ERC8109Repo {
         }
     }
 
-    function _addFunctions(
-        ERC2535Repo.Storage storage layout,
-        IERC8109Update.FacetFunctions memory functionsToAdd
-    ) internal {
+    function _addFunctions(ERC2535Repo.Storage storage layout, IERC8109Update.FacetFunctions memory functionsToAdd)
+        internal
+    {
         for (uint256 cursor = 0; cursor < functionsToAdd.selectors.length; cursor++) {
             address facetAddress = layout.facetAddress[functionsToAdd.selectors[cursor]];
             if (facetAddress != address(0)) {
@@ -102,17 +101,12 @@ library ERC8109Repo {
                 layout.facetAddresses._remove(facetAddress);
             }
             emit IERC8109Update.DiamondFunctionReplaced(
-                functionsToReplace.selectors[cursor],
-                facetAddress,
-                functionsToReplace.facet
+                functionsToReplace.selectors[cursor], facetAddress, functionsToReplace.facet
             );
         }
     }
 
-    function _removeFunctions(
-        ERC2535Repo.Storage storage layout,
-        bytes4[] memory functionSelectorsToRemove
-    ) internal {
+    function _removeFunctions(ERC2535Repo.Storage storage layout, bytes4[] memory functionSelectorsToRemove) internal {
         for (uint256 cursor = 0; cursor < functionSelectorsToRemove.length; cursor++) {
             address facetAddress = layout.facetAddress[functionSelectorsToRemove[cursor]];
             if (facetAddress == address(0)) {
@@ -131,9 +125,11 @@ library ERC8109Repo {
         return _functionFacetPairs(ERC2535Repo._layout());
     }
 
-    function _functionFacetPairs(
-        ERC2535Repo.Storage storage layout
-    ) internal view returns (IERC8109Introspection.FunctionFacetPair[] memory pairs) {
+    function _functionFacetPairs(ERC2535Repo.Storage storage layout)
+        internal
+        view
+        returns (IERC8109Introspection.FunctionFacetPair[] memory pairs)
+    {
         for (uint256 facetCursor = 0; facetCursor < layout.facetAddresses._length(); facetCursor++) {
             pairs = _getFacetFuncs(layout, pairs, layout.facetAddresses._index(facetCursor));
         }
@@ -144,17 +140,16 @@ library ERC8109Repo {
         IERC8109Introspection.FunctionFacetPair[] memory pairs,
         address facetAddress
     ) internal view returns (IERC8109Introspection.FunctionFacetPair[] memory updatedPairs) {
-        updatedPairs = new IERC8109Introspection.FunctionFacetPair[](pairs.length + layout.facetFunctionSelectors[facetAddress]._length());
+        updatedPairs = new IERC8109Introspection
+            .FunctionFacetPair[](pairs.length + layout.facetFunctionSelectors[facetAddress]._length());
         for (uint256 cursor = 0; cursor < pairs.length; cursor++) {
             updatedPairs[cursor] = pairs[cursor];
         }
         uint256 startIndex = pairs.length;
         for (uint256 funcCursor = 0; funcCursor < layout.facetFunctionSelectors[facetAddress]._length(); funcCursor++) {
             updatedPairs[startIndex + funcCursor] = IERC8109Introspection.FunctionFacetPair({
-                selector: layout.facetFunctionSelectors[facetAddress]._index(funcCursor),
-                facet: facetAddress
+                selector: layout.facetFunctionSelectors[facetAddress]._index(funcCursor), facet: facetAddress
             });
         }
     }
-
 }

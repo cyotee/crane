@@ -4,15 +4,19 @@ pragma solidity ^0.8.27;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
 
-import { GyroECLPPool } from "./GyroECLPPool.sol";
+import {GyroECLPPool} from "./GyroECLPPool.sol";
 
 /**
  * @notice Gyro E-CLP Pool factory.
@@ -26,12 +30,10 @@ contract GyroECLPPoolFactory is IPoolVersion, BasePoolFactory, Version {
 
     string private _poolVersion;
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        string memory factoryVersion,
-        string memory poolVersion
-    ) BasePoolFactory(vault, pauseWindowDuration, type(GyroECLPPool).creationCode) Version(factoryVersion) {
+    constructor(IVault vault, uint32 pauseWindowDuration, string memory factoryVersion, string memory poolVersion)
+        BasePoolFactory(vault, pauseWindowDuration, type(GyroECLPPool).creationCode)
+        Version(factoryVersion)
+    {
         _poolVersion = poolVersion;
     }
 

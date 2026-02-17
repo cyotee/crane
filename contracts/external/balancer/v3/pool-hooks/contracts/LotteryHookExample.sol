@@ -6,9 +6,9 @@ import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AfterSwapParams,
     LiquidityManagement,
@@ -17,10 +17,12 @@ import {
     HookFlags
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { EnumerableMap } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {
+    EnumerableMap
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
 /**
  * @notice Hook that randomly rewards accumulated fees to a user performing a swap.
@@ -84,10 +86,7 @@ contract LotteryHookExample is BaseHooks, VaultGuard, Ownable {
      * @param amountWon The amount of tokens won
      */
     event LotteryWinningsPaid(
-        address indexed hooksContract,
-        address indexed winner,
-        IERC20 indexed token,
-        uint256 amountWon
+        address indexed hooksContract, address indexed winner, IERC20 indexed token, uint256 amountWon
     );
 
     constructor(IVault vault, address router) VaultGuard(vault) Ownable(msg.sender) {
@@ -95,12 +94,12 @@ contract LotteryHookExample is BaseHooks, VaultGuard, Ownable {
     }
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         // NOTICE: In real hooks, make sure this function is properly implemented (e.g. check the factory, and check
         // that the given pool is from the factory). Returning true unconditionally allows any pool, with any
         // configuration, to use this hook.
@@ -122,9 +121,12 @@ contract LotteryHookExample is BaseHooks, VaultGuard, Ownable {
     }
 
     /// @inheritdoc IHooks
-    function onAfterSwap(
-        AfterSwapParams calldata params
-    ) public override onlyVault returns (bool success, uint256 hookAdjustedAmountCalculatedRaw) {
+    function onAfterSwap(AfterSwapParams calldata params)
+        public
+        override
+        onlyVault
+        returns (bool success, uint256 hookAdjustedAmountCalculatedRaw)
+    {
         uint8 drawnNumber;
         if (params.router == _trustedRouter) {
             // If the Router is trusted, draw a number as a lottery entry. (If router is not trusted, the user can
@@ -196,18 +198,16 @@ contract LotteryHookExample is BaseHooks, VaultGuard, Ownable {
     }
 
     // If drawnNumber == LUCKY_NUMBER, user wins the pot and pays no fees. Otherwise, the hook fee adds to the pot.
-    function _chargeFeeOrPayWinner(
-        address router,
-        uint8 drawnNumber,
-        IERC20 token,
-        uint256 hookFee
-    ) private returns (uint256) {
+    function _chargeFeeOrPayWinner(address router, uint8 drawnNumber, IERC20 token, uint256 hookFee)
+        private
+        returns (uint256)
+    {
         if (drawnNumber == LUCKY_NUMBER) {
             address user = ISenderGuard(router).getSender();
 
             // Iterating backwards is more efficient, since the last element is removed from the map on each iteration.
             for (uint256 i = _tokensWithAccruedFees.size; i > 0; i--) {
-                (IERC20 feeToken, ) = _tokensWithAccruedFees.at(i - 1);
+                (IERC20 feeToken,) = _tokensWithAccruedFees.at(i - 1);
                 _tokensWithAccruedFees.remove(feeToken);
 
                 uint256 amountWon = feeToken.balanceOf(address(this));
@@ -247,6 +247,6 @@ contract LotteryHookExample is BaseHooks, VaultGuard, Ownable {
     // Be aware that in real applications the random number must be generated with a help of an oracle, or some
     // other off-chain method. The output of this function is predictable on-chain.
     function _getRandomNumber() private view returns (uint8) {
-        return uint8((uint(keccak256(abi.encodePacked(block.prevrandao, _counter))) % MAX_NUMBER) + 1);
+        return uint8((uint256(keccak256(abi.encodePacked(block.prevrandao, _counter))) % MAX_NUMBER) + 1);
     }
 }

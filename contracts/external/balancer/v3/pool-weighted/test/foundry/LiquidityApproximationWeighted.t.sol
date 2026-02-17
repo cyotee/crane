@@ -6,23 +6,30 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { PoolRoleAccounts, LiquidityManagement } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { PoolConfigBits } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { WeightedPool } from "../../contracts/WeightedPool.sol";
-import { WeightedPoolMock } from "../../contracts/test/WeightedPoolMock.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedPool} from "../../contracts/WeightedPool.sol";
+import {WeightedPoolMock} from "../../contracts/test/WeightedPoolMock.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
-import { LiquidityApproximationTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/LiquidityApproximation.t.sol";
+import {
+    LiquidityApproximationTest
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/LiquidityApproximation.t.sol";
 
 contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, WeightedPoolContractsDeployer {
     using CastingHelpers for address[];
@@ -42,10 +49,11 @@ contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, Weigh
         excessRoundingDelta = 0.5e16; // 0.5%
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory symbol = "WEIGHTY";
         string memory poolVersion = "Pool v1";
 
@@ -121,9 +129,8 @@ contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, Weigh
         uint256 weightDai = WeightedPool(liquidityPool).getNormalizedWeights()[daiIdx];
         // `maxAmount` must be lower than 30% of the lowest pool liquidity. Below, `maxAmount` is calculated as 25%
         // of the lowest liquidity to have some error margin.
-        uint256 maxAmount = weightDai > 50e16
-            ? poolInitAmount.mulDown(weightDai.complement())
-            : poolInitAmount.mulDown(weightDai);
+        uint256 maxAmount =
+            weightDai > 50e16 ? poolInitAmount.mulDown(weightDai.complement()) : poolInitAmount.mulDown(weightDai);
         return maxAmount.mulDown(25e16);
     }
 
@@ -243,9 +250,9 @@ contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, Weigh
         } catch (bytes memory reason) {
             // We can also get here if the revert happens during the external call.
             assertTrue(
-                bytes4(reason) == bytes4(stdError.arithmeticError) ||
-                    keccak256(reason) ==
-                    keccak256(abi.encodeWithSelector(IVaultErrors.AmountOutBelowMin.selector, usdc, 0, 1)),
+                bytes4(reason) == bytes4(stdError.arithmeticError)
+                    || keccak256(reason)
+                        == keccak256(abi.encodeWithSelector(IVaultErrors.AmountOutBelowMin.selector, usdc, 0, 1)),
                 "Unexpected error"
             );
         }
@@ -276,9 +283,10 @@ contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, Weigh
         removeExactInArbitraryBptIn(exactBptAmountIn);
     }
 
-    function _setPoolBalancesWithDifferentWeights(
-        uint256 weightDai
-    ) private returns (uint256[] memory newPoolBalances) {
+    function _setPoolBalancesWithDifferentWeights(uint256 weightDai)
+        private
+        returns (uint256[] memory newPoolBalances)
+    {
         uint256[2] memory newWeights;
         newWeights[daiIdx] = weightDai;
         newWeights[usdcIdx] = weightDai.complement();
@@ -291,7 +299,7 @@ contract LiquidityApproximationWeightedTest is LiquidityApproximationTest, Weigh
         newPoolBalances[daiIdx] = (poolInitAmount).mulDown(newWeights[daiIdx]);
         newPoolBalances[usdcIdx] = (poolInitAmount).mulDown(newWeights[usdcIdx]);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(liquidityPool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(liquidityPool);
         // liveBalances = rawBalances because rate is 1 and both tokens are 18 decimals.
         vault.manualSetPoolTokensAndBalances(liquidityPool, tokens, newPoolBalances, newPoolBalances);
         vault.manualSetPoolTokensAndBalances(swapPool, tokens, newPoolBalances, newPoolBalances);

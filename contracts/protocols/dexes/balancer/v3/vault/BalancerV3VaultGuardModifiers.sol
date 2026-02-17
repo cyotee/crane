@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
 
 abstract contract BalancerV3VaultGuardModifiers {
     error NotBalancerV3Vault(address caller);
@@ -11,7 +13,7 @@ abstract contract BalancerV3VaultGuardModifiers {
         _;
     }
 
-    function  _onlyBalancerV3Vault() internal view {
+    function _onlyBalancerV3Vault() internal view {
         if (msg.sender != address(BalancerV3VaultAwareRepo._balancerV3Vault())) {
             revert NotBalancerV3Vault(msg.sender);
         }

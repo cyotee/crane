@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
 
-import { PriceImpactHelper } from "../PriceImpactHelper.sol";
+import {PriceImpactHelper} from "../PriceImpactHelper.sol";
 
 contract PriceImpactHelperMock is PriceImpactHelper {
     constructor(IVault vault, IRouter router) PriceImpactHelper(vault, router) {}
@@ -19,12 +19,10 @@ contract PriceImpactHelperMock is PriceImpactHelper {
         return _queryAddLiquidityUnbalancedForTokenDeltas(pool, tokenIndex, deltas, sender);
     }
 
-    function zeroOutDeltas(
-        address pool,
-        int256[] memory deltas,
-        int256[] memory deltaBPTs,
-        address sender
-    ) external returns (uint256) {
+    function zeroOutDeltas(address pool, int256[] memory deltas, int256[] memory deltaBPTs, address sender)
+        external
+        returns (uint256)
+    {
         return _zeroOutDeltas(pool, deltas, deltaBPTs, sender);
     }
 

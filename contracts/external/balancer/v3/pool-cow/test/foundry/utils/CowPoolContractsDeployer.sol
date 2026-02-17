@@ -4,13 +4,15 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { CowPoolFactory } from "../../../contracts/CowPoolFactory.sol";
-import { CowRouter } from "../../../contracts/CowRouter.sol";
-import { CowPool } from "../../../contracts/CowPool.sol";
+import {CowPoolFactory} from "../../../contracts/CowPoolFactory.sol";
+import {CowRouter} from "../../../contracts/CowRouter.sol";
+import {CowPool} from "../../../contracts/CowPool.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "Cow AMM Pool". These
@@ -34,31 +36,27 @@ contract CowPoolContractsDeployer is BaseContractsDeployer {
         address trustedCowRouter
     ) internal returns (CowPoolFactory) {
         if (reusingArtifacts) {
-            return
-                CowPoolFactory(
-                    deployCode(
-                        _computeCowPath(type(CowPoolFactory).name),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, trustedCowRouter)
-                    )
-                );
+            return CowPoolFactory(
+                deployCode(
+                    _computeCowPath(type(CowPoolFactory).name),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, trustedCowRouter)
+                )
+            );
         } else {
             return new CowPoolFactory(vault, pauseWindowDuration, factoryVersion, poolVersion, trustedCowRouter);
         }
     }
 
-    function deployCowPoolRouter(
-        IVault vault,
-        uint256 initialProtocolFeePercentage,
-        address feeSweeper
-    ) internal returns (CowRouter) {
+    function deployCowPoolRouter(IVault vault, uint256 initialProtocolFeePercentage, address feeSweeper)
+        internal
+        returns (CowRouter)
+    {
         if (reusingArtifacts) {
-            return
-                CowRouter(
-                    deployCode(
-                        _computeCowPath(type(CowRouter).name),
-                        abi.encode(vault, initialProtocolFeePercentage, feeSweeper)
-                    )
-                );
+            return CowRouter(
+                deployCode(
+                    _computeCowPath(type(CowRouter).name), abi.encode(vault, initialProtocolFeePercentage, feeSweeper)
+                )
+            );
         } else {
             return new CowRouter(vault, initialProtocolFeePercentage, feeSweeper);
         }

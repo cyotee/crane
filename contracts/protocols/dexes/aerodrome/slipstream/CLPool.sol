@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
 import {ICLFactory} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLFactory.sol";
-import {IFactoryRegistry} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
+import {
+    IFactoryRegistry
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
 
 import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SafeCast.sol";
 import {Tick} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/libraries/Tick.sol";
@@ -20,9 +22,15 @@ import {SqrtPriceMath} from "@crane/contracts/protocols/dexes/uniswap/v3/librari
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SwapMath.sol";
 
 import {IERC20Minimal} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/IERC20Minimal.sol";
-import {ICLMintCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLMintCallback.sol";
-import {ICLSwapCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLSwapCallback.sol";
-import {ICLFlashCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLFlashCallback.sol";
+import {
+    ICLMintCallback
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLMintCallback.sol";
+import {
+    ICLSwapCallback
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLSwapCallback.sol";
+import {
+    ICLFlashCallback
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLFlashCallback.sol";
 
 /// @title CLPool
 /// @notice Slipstream Concentrated Liquidity Pool implementation
@@ -262,21 +270,13 @@ contract CLPool is ICLPool {
             Tick.Info storage lower = ticks[tickLower];
             Tick.Info storage upper = ticks[tickUpper];
             bool initializedLower;
-            (tickCumulativeLower, secondsPerLiquidityOutsideLowerX128, secondsOutsideLower, initializedLower) = (
-                lower.tickCumulativeOutside,
-                lower.secondsPerLiquidityOutsideX128,
-                lower.secondsOutside,
-                lower.initialized
-            );
+            (tickCumulativeLower, secondsPerLiquidityOutsideLowerX128, secondsOutsideLower, initializedLower) =
+            (lower.tickCumulativeOutside, lower.secondsPerLiquidityOutsideX128, lower.secondsOutside, lower.initialized);
             require(initializedLower);
 
             bool initializedUpper;
-            (tickCumulativeUpper, secondsPerLiquidityOutsideUpperX128, secondsOutsideUpper, initializedUpper) = (
-                upper.tickCumulativeOutside,
-                upper.secondsPerLiquidityOutsideX128,
-                upper.secondsOutside,
-                upper.initialized
-            );
+            (tickCumulativeUpper, secondsPerLiquidityOutsideUpperX128, secondsOutsideUpper, initializedUpper) =
+            (upper.tickCumulativeOutside, upper.secondsPerLiquidityOutsideX128, upper.secondsOutside, upper.initialized);
             require(initializedUpper);
         }
 
@@ -608,7 +608,7 @@ contract CLPool is ICLPool {
 
             if (amount0 > 0 || amount1 > 0) {
                 (position.tokensOwed0, position.tokensOwed1) =
-                    (position.tokensOwed0 + uint128(amount0), position.tokensOwed1 + uint128(amount1));
+                (position.tokensOwed0 + uint128(amount0), position.tokensOwed1 + uint128(amount1));
             }
         }
 
@@ -813,7 +813,8 @@ contract CLPool is ICLPool {
                     }
 
                     state.currentLiquidity = LiquidityMath.addDelta(state.currentLiquidity, nets.liquidityNet);
-                    state.currentStakedLiquidity = LiquidityMath.addDelta(state.currentStakedLiquidity, nets.stakedLiquidityNet);
+                    state.currentStakedLiquidity =
+                        LiquidityMath.addDelta(state.currentStakedLiquidity, nets.stakedLiquidityNet);
                 }
 
                 unchecked {
@@ -835,7 +836,7 @@ contract CLPool is ICLPool {
                 slot0Start.observationCardinalityNext
             );
             (slot0.sqrtPriceX96, slot0.tick, slot0.observationIndex, slot0.observationCardinality) =
-                (state.sqrtPriceX96, state.tick, observationIndex, observationCardinality);
+            (state.sqrtPriceX96, state.tick, observationIndex, observationCardinality);
         } else {
             slot0.sqrtPriceX96 = state.sqrtPriceX96;
         }
@@ -918,19 +919,23 @@ contract CLPool is ICLPool {
             uint256 paid1 = balance1After - balance1Before;
 
             if (paid0 > 0) {
-                (uint256 feeGrowthGlobalX128_, uint256 stakedFeeAmount) = calculateFees(paid0, _liquidity, stakedLiquidity);
+                (uint256 feeGrowthGlobalX128_, uint256 stakedFeeAmount) =
+                    calculateFees(paid0, _liquidity, stakedLiquidity);
 
                 if (feeGrowthGlobalX128_ > 0) feeGrowthGlobal0X128 += feeGrowthGlobalX128_;
                 if (uint128(stakedFeeAmount) > 0) gaugeFees.token0 += uint128(stakedFeeAmount);
             }
             if (paid1 > 0) {
-                (uint256 feeGrowthGlobalX128_, uint256 stakedFeeAmount) = calculateFees(paid1, _liquidity, stakedLiquidity);
+                (uint256 feeGrowthGlobalX128_, uint256 stakedFeeAmount) =
+                    calculateFees(paid1, _liquidity, stakedLiquidity);
 
                 if (feeGrowthGlobalX128_ > 0) feeGrowthGlobal1X128 += feeGrowthGlobalX128_;
                 if (uint128(stakedFeeAmount) > 0) gaugeFees.token1 += uint128(stakedFeeAmount);
             }
         }
-        emit Flash(msg.sender, recipient, amount0, amount1, balance0After - balance0Before, balance1After - balance1Before);
+        emit Flash(
+            msg.sender, recipient, amount0, amount1, balance0After - balance0Before, balance1After - balance1Before
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -1039,8 +1044,10 @@ contract CLPool is ICLPool {
         // if there are staked and unstaked liquidities
         else {
             unchecked {
-                (uint256 unstakedFeeAmount, uint256 _stakedFeeAmount) = splitFees(feeAmount, _liquidity, _stakedLiquidity);
-                feeGrowthGlobalX128_ = FullMath.mulDiv(unstakedFeeAmount, FixedPoint128.Q128, _liquidity - _stakedLiquidity);
+                (uint256 unstakedFeeAmount, uint256 _stakedFeeAmount) =
+                    splitFees(feeAmount, _liquidity, _stakedLiquidity);
+                feeGrowthGlobalX128_ =
+                    FullMath.mulDiv(unstakedFeeAmount, FixedPoint128.Q128, _liquidity - _stakedLiquidity);
                 stakedFeeAmount = _stakedFeeAmount;
             }
         }
@@ -1136,8 +1143,7 @@ contract CLPool is ICLPool {
 
     /// @notice Emitted by the pool for increases to the number of observations that can be stored
     event IncreaseObservationCardinalityNext(
-        uint16 observationCardinalityNextOld,
-        uint16 observationCardinalityNextNew
+        uint16 observationCardinalityNextOld, uint16 observationCardinalityNextNew
     );
 
     /// @notice Emitted when fees are collected by the gauge

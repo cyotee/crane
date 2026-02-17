@@ -12,42 +12,29 @@ import {IERC8109Introspection} from "@crane/contracts/interfaces/IERC8109Introsp
  * @notice Test harness that exposes ERC8109Repo internal library functions
  */
 contract ERC8109RepoHarness {
-
     function processDiamondUpgrade(
-        IERC8109Update.FacetFunctions[] memory addFunctions,
-        IERC8109Update.FacetFunctions[] memory replaceFunctions,
-        bytes4[] memory removeFunctions,
+        IERC8109Update.FacetFunctions[] memory addFunctions_,
+        IERC8109Update.FacetFunctions[] memory replaceFunctions_,
+        bytes4[] memory removeFunctions_,
         address delegate,
         bytes memory functionCall,
         bytes32 tag,
         bytes memory metadata
     ) external {
         ERC8109Repo._processDiamondUpgrade(
-            addFunctions,
-            replaceFunctions,
-            removeFunctions,
-            delegate,
-            functionCall,
-            tag,
-            metadata
+            addFunctions_, replaceFunctions_, removeFunctions_, delegate, functionCall, tag, metadata
         );
     }
 
-    function addFunctions(
-        IERC8109Update.FacetFunctions memory functionsToAdd
-    ) external {
+    function addFunctions(IERC8109Update.FacetFunctions memory functionsToAdd) external {
         ERC8109Repo._addFunctions(ERC2535Repo._layout(), functionsToAdd);
     }
 
-    function replaceFunctions(
-        IERC8109Update.FacetFunctions memory functionsToReplace
-    ) external {
+    function replaceFunctions(IERC8109Update.FacetFunctions memory functionsToReplace) external {
         ERC8109Repo._replaceFunctions(ERC2535Repo._layout(), functionsToReplace);
     }
 
-    function removeFunctions(
-        bytes4[] memory functionSelectorsToRemove
-    ) external {
+    function removeFunctions(bytes4[] memory functionSelectorsToRemove) external {
         ERC8109Repo._removeFunctions(ERC2535Repo._layout(), functionSelectorsToRemove);
     }
 
@@ -106,10 +93,8 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        IERC8109Update.FacetFunctions memory toAdd = IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        });
+        IERC8109Update.FacetFunctions memory toAdd =
+            IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors});
 
         vm.expectEmit(true, true, false, true);
         emit IERC8109Update.DiamondFunctionAdded(selector1, facetA);
@@ -125,10 +110,8 @@ contract ERC8109Repo_Test is Test {
         selectors[1] = selector2;
         selectors[2] = selector3;
 
-        IERC8109Update.FacetFunctions memory toAdd = IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        });
+        IERC8109Update.FacetFunctions memory toAdd =
+            IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors});
 
         harness.addFunctions(toAdd);
 
@@ -141,19 +124,14 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        IERC8109Update.FacetFunctions memory toAdd = IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        });
+        IERC8109Update.FacetFunctions memory toAdd =
+            IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors});
 
         harness.addFunctions(toAdd);
 
         // Try to add the same selector again
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IERC8109Update.CannotAddFunctionToDiamondThatAlreadyExists.selector,
-                selector1
-            )
+            abi.encodeWithSelector(IERC8109Update.CannotAddFunctionToDiamondThatAlreadyExists.selector, selector1)
         );
         harness.addFunctions(toAdd);
     }
@@ -165,15 +143,9 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectorsB = new bytes4[](1);
         selectorsB[0] = selector2;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectorsA
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectorsA}));
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: selectorsB
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetB, selectors: selectorsB}));
 
         assertEq(harness.facetAddress(selector1), facetA);
         assertEq(harness.facetAddress(selector2), facetB);
@@ -188,10 +160,7 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         assertEq(harness.facetAddress(selector1), facetA);
 
@@ -199,10 +168,7 @@ contract ERC8109Repo_Test is Test {
         vm.expectEmit(true, true, true, true);
         emit IERC8109Update.DiamondFunctionReplaced(selector1, facetA, facetB);
 
-        harness.replaceFunctions(IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: selectors
-        }));
+        harness.replaceFunctions(IERC8109Update.FacetFunctions({facet: facetB, selectors: selectors}));
 
         assertEq(harness.facetAddress(selector1), facetB);
     }
@@ -212,15 +178,9 @@ contract ERC8109Repo_Test is Test {
         selectors[0] = selector1;
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IERC8109Update.CannotReplaceFunctionThatDoesNotExist.selector,
-                selector1
-            )
+            abi.encodeWithSelector(IERC8109Update.CannotReplaceFunctionThatDoesNotExist.selector, selector1)
         );
-        harness.replaceFunctions(IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: selectors
-        }));
+        harness.replaceFunctions(IERC8109Update.FacetFunctions({facet: facetB, selectors: selectors}));
     }
 
     function test_replaceFunctions_sameFacet_reverts() public {
@@ -228,22 +188,13 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         // Try to replace with the same facet
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IERC8109Update.CannotReplaceFunctionWithTheSameFacet.selector,
-                selector1
-            )
+            abi.encodeWithSelector(IERC8109Update.CannotReplaceFunctionWithTheSameFacet.selector, selector1)
         );
-        harness.replaceFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.replaceFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
     }
 
     function test_replaceFunctions_lastFunctionOnFacet_removesFacetFromAddresses() public {
@@ -251,16 +202,10 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectorsA = new bytes4[](1);
         selectorsA[0] = selector1;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectorsA
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectorsA}));
 
         // Replace it with facetB - facetA should be removed from facet addresses
-        harness.replaceFunctions(IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: selectorsA
-        }));
+        harness.replaceFunctions(IERC8109Update.FacetFunctions({facet: facetB, selectors: selectorsA}));
 
         // Verify selector1 now points to facetB
         assertEq(harness.facetAddress(selector1), facetB);
@@ -281,10 +226,7 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         assertEq(harness.facetAddress(selector1), facetA);
 
@@ -301,12 +243,7 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector1;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                IERC8109Update.CannotRemoveFunctionThatDoesNotExist.selector,
-                selector1
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(IERC8109Update.CannotRemoveFunctionThatDoesNotExist.selector, selector1));
         harness.removeFunctions(selectors);
     }
 
@@ -317,10 +254,7 @@ contract ERC8109Repo_Test is Test {
         selectors[1] = selector2;
         selectors[2] = selector3;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         // Remove all
         harness.removeFunctions(selectors);
@@ -335,10 +269,7 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectorsA = new bytes4[](1);
         selectorsA[0] = selector1;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectorsA
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectorsA}));
 
         // Remove it - facetA should be removed from facet addresses
         harness.removeFunctions(selectorsA);
@@ -357,23 +288,12 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](2);
         selectors[0] = selector1;
         selectors[1] = selector2;
-        addFuncs[0] = IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        });
+        addFuncs[0] = IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors});
 
         IERC8109Update.FacetFunctions[] memory replaceFuncs = new IERC8109Update.FacetFunctions[](0);
         bytes4[] memory removeFuncs = new bytes4[](0);
 
-        harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(0),
-            "",
-            bytes32(0),
-            ""
-        );
+        harness.processDiamondUpgrade(addFuncs, replaceFuncs, removeFuncs, address(0), "", bytes32(0), "");
 
         assertEq(harness.facetAddress(selector1), facetA);
         assertEq(harness.facetAddress(selector2), facetA);
@@ -386,40 +306,23 @@ contract ERC8109Repo_Test is Test {
         initialSelectors[1] = selector2;
         initialSelectors[2] = selector3;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: initialSelectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: initialSelectors}));
 
         // Now process an upgrade that adds, replaces, and removes
         IERC8109Update.FacetFunctions[] memory addFuncs = new IERC8109Update.FacetFunctions[](1);
         bytes4[] memory addSelectors = new bytes4[](1);
         addSelectors[0] = selector4;
-        addFuncs[0] = IERC8109Update.FacetFunctions({
-            facet: facetC,
-            selectors: addSelectors
-        });
+        addFuncs[0] = IERC8109Update.FacetFunctions({facet: facetC, selectors: addSelectors});
 
         IERC8109Update.FacetFunctions[] memory replaceFuncs = new IERC8109Update.FacetFunctions[](1);
         bytes4[] memory replaceSelectors = new bytes4[](1);
         replaceSelectors[0] = selector1;
-        replaceFuncs[0] = IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: replaceSelectors
-        });
+        replaceFuncs[0] = IERC8109Update.FacetFunctions({facet: facetB, selectors: replaceSelectors});
 
         bytes4[] memory removeFuncs = new bytes4[](1);
         removeFuncs[0] = selector3;
 
-        harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(0),
-            "",
-            bytes32(0),
-            ""
-        );
+        harness.processDiamondUpgrade(addFuncs, replaceFuncs, removeFuncs, address(0), "", bytes32(0), "");
 
         // Verify results
         assertEq(harness.facetAddress(selector1), facetB, "selector1 should be replaced to facetB");
@@ -433,22 +336,13 @@ contract ERC8109Repo_Test is Test {
         IERC8109Update.FacetFunctions[] memory replaceFuncs = new IERC8109Update.FacetFunctions[](0);
         bytes4[] memory removeFuncs = new bytes4[](0);
 
-        bytes memory functionCall = abi.encodeWithSelector(
-            MockDelegateTarget.executeWithValue.selector,
-            42
-        );
+        bytes memory functionCall = abi.encodeWithSelector(MockDelegateTarget.executeWithValue.selector, 42);
 
         vm.expectEmit(true, true, false, true);
         emit IERC8109Update.DiamondDelegateCall(address(delegateTarget), functionCall);
 
         harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(delegateTarget),
-            functionCall,
-            bytes32(0),
-            ""
+            addFuncs, replaceFuncs, removeFuncs, address(delegateTarget), functionCall, bytes32(0), ""
         );
     }
 
@@ -462,15 +356,7 @@ contract ERC8109Repo_Test is Test {
         vm.expectEmit(true, true, false, true);
         emit IERC8109Update.DiamondMetadata(tag, "");
 
-        harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(0),
-            "",
-            tag,
-            ""
-        );
+        harness.processDiamondUpgrade(addFuncs, replaceFuncs, removeFuncs, address(0), "", tag, "");
     }
 
     function test_processDiamondUpgrade_withMetadata_emitsMetadata() public {
@@ -483,15 +369,7 @@ contract ERC8109Repo_Test is Test {
         vm.expectEmit(true, true, false, true);
         emit IERC8109Update.DiamondMetadata(bytes32(0), metadata);
 
-        harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(0),
-            "",
-            bytes32(0),
-            metadata
-        );
+        harness.processDiamondUpgrade(addFuncs, replaceFuncs, removeFuncs, address(0), "", bytes32(0), metadata);
     }
 
     function test_processDiamondUpgrade_noTagNoMetadata_noMetadataEvent() public {
@@ -502,15 +380,7 @@ contract ERC8109Repo_Test is Test {
         // Record logs and verify no DiamondMetadata event
         vm.recordLogs();
 
-        harness.processDiamondUpgrade(
-            addFuncs,
-            replaceFuncs,
-            removeFuncs,
-            address(0),
-            "",
-            bytes32(0),
-            ""
-        );
+        harness.processDiamondUpgrade(addFuncs, replaceFuncs, removeFuncs, address(0), "", bytes32(0), "");
 
         Vm.Log[] memory logs = vm.getRecordedLogs();
         for (uint256 i = 0; i < logs.length; i++) {
@@ -525,10 +395,7 @@ contract ERC8109Repo_Test is Test {
         IERC8109Update.FacetFunctions[] memory replaceFuncs = new IERC8109Update.FacetFunctions[](0);
         bytes4[] memory removeFuncs = new bytes4[](0);
 
-        bytes memory functionCall = abi.encodeWithSelector(
-            MockDelegateTarget.executeWithValue.selector,
-            42
-        );
+        bytes memory functionCall = abi.encodeWithSelector(MockDelegateTarget.executeWithValue.selector, 42);
 
         // Record logs and verify no DiamondDelegateCall event
         vm.recordLogs();
@@ -589,10 +456,7 @@ contract ERC8109Repo_Test is Test {
         selectors[0] = selector1;
         selectors[1] = selector2;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         IERC8109Introspection.FunctionFacetPair[] memory pairs = harness.functionFacetPairs();
         assertEq(pairs.length, 2);
@@ -616,15 +480,9 @@ contract ERC8109Repo_Test is Test {
         selectorsB[0] = selector2;
         selectorsB[1] = selector3;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectorsA
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectorsA}));
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetB,
-            selectors: selectorsB
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetB, selectors: selectorsB}));
 
         IERC8109Introspection.FunctionFacetPair[] memory pairs = harness.functionFacetPairs();
         assertEq(pairs.length, 3);
@@ -653,10 +511,7 @@ contract ERC8109Repo_Test is Test {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = selector;
 
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         assertEq(harness.facetAddress(selector), facetA);
     }
@@ -668,10 +523,7 @@ contract ERC8109Repo_Test is Test {
         selectors[0] = selector;
 
         // Add
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
         assertEq(harness.facetAddress(selector), facetA);
 
         // Remove
@@ -687,16 +539,10 @@ contract ERC8109Repo_Test is Test {
         selectors[0] = selector1;
 
         // Add to facetA
-        harness.addFunctions(IERC8109Update.FacetFunctions({
-            facet: facetA,
-            selectors: selectors
-        }));
+        harness.addFunctions(IERC8109Update.FacetFunctions({facet: facetA, selectors: selectors}));
 
         // Replace with newFacet
-        harness.replaceFunctions(IERC8109Update.FacetFunctions({
-            facet: newFacet,
-            selectors: selectors
-        }));
+        harness.replaceFunctions(IERC8109Update.FacetFunctions({facet: newFacet, selectors: selectors}));
 
         assertEq(harness.facetAddress(selector1), newFacet);
     }

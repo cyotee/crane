@@ -4,9 +4,11 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { FEE_SCALING_FACTOR } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {FEE_SCALING_FACTOR} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {
     IProtocolFeePercentagesProvider
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeePercentagesProvider.sol";
@@ -14,11 +16,13 @@ import {
     IBalancerContractRegistry,
     ContractType
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { ProtocolFeeController } from "@crane/contracts/external/balancer/v3/vault/contracts/ProtocolFeeController.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {ProtocolFeeController} from "@crane/contracts/external/balancer/v3/vault/contracts/ProtocolFeeController.sol";
 
 contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, SingletonAuthentication {
     using SafeCast for uint256;
@@ -53,10 +57,10 @@ contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, Sing
         _trustedContractRegistry = trustedContractRegistry;
 
         // Read the maximum percentages from the `protocolFeeController`.
-        _maxProtocolSwapFeePercentage = ProtocolFeeController(address(protocolFeeController))
-            .MAX_PROTOCOL_SWAP_FEE_PERCENTAGE();
-        _maxProtocolYieldFeePercentage = ProtocolFeeController(address(protocolFeeController))
-            .MAX_PROTOCOL_YIELD_FEE_PERCENTAGE();
+        _maxProtocolSwapFeePercentage =
+            ProtocolFeeController(address(protocolFeeController)).MAX_PROTOCOL_SWAP_FEE_PERCENTAGE();
+        _maxProtocolYieldFeePercentage =
+            ProtocolFeeController(address(protocolFeeController)).MAX_PROTOCOL_YIELD_FEE_PERCENTAGE();
     }
 
     /// @inheritdoc IProtocolFeePercentagesProvider
@@ -70,9 +74,11 @@ contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, Sing
     }
 
     /// @inheritdoc IProtocolFeePercentagesProvider
-    function getFactorySpecificProtocolFeePercentages(
-        address factory
-    ) external view returns (uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage) {
+    function getFactorySpecificProtocolFeePercentages(address factory)
+        external
+        view
+        returns (uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage)
+    {
         FactoryProtocolFees memory factoryFees = _getValidatedProtocolFees(factory);
 
         protocolSwapFeePercentage = factoryFees.protocolSwapFeePercentage;
@@ -130,9 +136,7 @@ contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, Sing
             }
 
             _setPoolProtocolFees(
-                currentPool,
-                factoryFees.protocolSwapFeePercentage,
-                factoryFees.protocolYieldFeePercentage
+                currentPool, factoryFees.protocolSwapFeePercentage, factoryFees.protocolYieldFeePercentage
             );
         }
     }
@@ -149,11 +153,9 @@ contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, Sing
      * @dev These are permissioned functions on `ProtocolFeeController`, so governance will need to allow this contract
      * to call `setProtocolSwapFeePercentage` and `setProtocolYieldFeePercentage`.
      */
-    function _setPoolProtocolFees(
-        address pool,
-        uint256 protocolSwapFeePercentage,
-        uint256 protocolYieldFeePercentage
-    ) private {
+    function _setPoolProtocolFees(address pool, uint256 protocolSwapFeePercentage, uint256 protocolYieldFeePercentage)
+        private
+    {
         _protocolFeeController.setProtocolSwapFeePercentage(pool, protocolSwapFeePercentage);
         _protocolFeeController.setProtocolYieldFeePercentage(pool, protocolYieldFeePercentage);
     }

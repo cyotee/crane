@@ -109,11 +109,7 @@ abstract contract TestBase_AerodromeFork is Test {
     }
 
     /// @notice Get pool reserves
-    function getPoolReserves(IPool pool)
-        internal
-        view
-        returns (uint256 reserve0, uint256 reserve1)
-    {
+    function getPoolReserves(IPool pool) internal view returns (uint256 reserve0, uint256 reserve1) {
         (reserve0, reserve1,) = pool.getReserves();
     }
 
@@ -151,13 +147,10 @@ abstract contract TestBase_AerodromeFork is Test {
     /// @param stable True for stable pool, false for volatile
     /// @param recipient Address to receive output tokens
     /// @return amountOut Amount of tokenOut received
-    function swapViaRouter(
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn,
-        bool stable,
-        address recipient
-    ) internal returns (uint256 amountOut) {
+    function swapViaRouter(address tokenIn, address tokenOut, uint256 amountIn, bool stable, address recipient)
+        internal
+        returns (uint256 amountOut)
+    {
         // Deal tokens to this contract
         deal(tokenIn, address(this), amountIn);
 
@@ -166,12 +159,7 @@ abstract contract TestBase_AerodromeFork is Test {
 
         // Build route
         IRouter.Route[] memory routes = new IRouter.Route[](1);
-        routes[0] = IRouter.Route({
-            from: tokenIn,
-            to: tokenOut,
-            stable: stable,
-            factory: address(aerodromeFactory)
-        });
+        routes[0] = IRouter.Route({from: tokenIn, to: tokenOut, stable: stable, factory: address(aerodromeFactory)});
 
         // Execute swap
         uint256[] memory amounts = aerodromeRouter.swapExactTokensForTokens(
@@ -192,12 +180,10 @@ abstract contract TestBase_AerodromeFork is Test {
     /// @param amountIn Amount of tokenIn to swap
     /// @param recipient Address to receive output tokens
     /// @return amountOut Amount of tokenOut received
-    function swapViaPool(
-        IPool pool,
-        address tokenIn,
-        uint256 amountIn,
-        address recipient
-    ) internal returns (uint256 amountOut) {
+    function swapViaPool(IPool pool, address tokenIn, uint256 amountIn, address recipient)
+        internal
+        returns (uint256 amountOut)
+    {
         address token0 = pool.token0();
         address token1 = pool.token1();
         bool zeroForOne = tokenIn == token0;
@@ -255,12 +241,10 @@ abstract contract TestBase_AerodromeFork is Test {
     /// @param actual The actual amount from swap
     /// @param toleranceBps Tolerance in basis points (10 = 0.1%)
     /// @param message Error message
-    function assertQuoteAccuracy(
-        uint256 quoted,
-        uint256 actual,
-        uint256 toleranceBps,
-        string memory message
-    ) internal pure {
+    function assertQuoteAccuracy(uint256 quoted, uint256 actual, uint256 toleranceBps, string memory message)
+        internal
+        pure
+    {
         uint256 tolerance = (actual * toleranceBps) / 10000;
         if (tolerance == 0) tolerance = 1; // Minimum 1 wei tolerance
         assertApproxEqAbs(quoted, actual, tolerance, message);

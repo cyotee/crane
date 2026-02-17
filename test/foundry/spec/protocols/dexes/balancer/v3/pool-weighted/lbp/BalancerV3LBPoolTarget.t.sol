@@ -3,13 +3,23 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
-import {BalancerV3LBPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTarget.sol";
-import {BalancerV3LBPoolTargetStub} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTargetStub.sol";
-import {GradualValueChange} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/GradualValueChange.sol";
+import {
+    BalancerV3LBPoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTarget.sol";
+import {
+    BalancerV3LBPoolTargetStub
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTargetStub.sol";
+import {
+    GradualValueChange
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/GradualValueChange.sol";
 
 /**
  * @title BalancerV3LBPoolTarget_Test
@@ -22,7 +32,7 @@ contract BalancerV3LBPoolTarget_Test is Test {
 
     // LBP parameters for a typical 99/1 -> 50/50 sale
     uint256 constant PROJECT_START_WEIGHT = 0.99e18; // 99%
-    uint256 constant PROJECT_END_WEIGHT = 0.50e18;   // 50%
+    uint256 constant PROJECT_END_WEIGHT = 0.5e18; // 50%
     uint256 constant PROJECT_TOKEN_INDEX = 0;
     uint256 constant RESERVE_TOKEN_INDEX = 1;
 
@@ -58,7 +68,11 @@ contract BalancerV3LBPoolTarget_Test is Test {
 
         assertEq(weights.length, 2, "Should have 2 weights");
         assertEq(weights[PROJECT_TOKEN_INDEX], PROJECT_START_WEIGHT, "Project token should have start weight");
-        assertEq(weights[RESERVE_TOKEN_INDEX], FixedPoint.ONE - PROJECT_START_WEIGHT, "Reserve token should have complement weight");
+        assertEq(
+            weights[RESERVE_TOKEN_INDEX],
+            FixedPoint.ONE - PROJECT_START_WEIGHT,
+            "Reserve token should have complement weight"
+        );
     }
 
     function test_getNormalizedWeights_afterEnd_returnsEndWeights() public {
@@ -68,7 +82,11 @@ contract BalancerV3LBPoolTarget_Test is Test {
         uint256[] memory weights = pool.getNormalizedWeights();
 
         assertEq(weights[PROJECT_TOKEN_INDEX], PROJECT_END_WEIGHT, "Project token should have end weight");
-        assertEq(weights[RESERVE_TOKEN_INDEX], FixedPoint.ONE - PROJECT_END_WEIGHT, "Reserve token should have complement weight");
+        assertEq(
+            weights[RESERVE_TOKEN_INDEX],
+            FixedPoint.ONE - PROJECT_END_WEIGHT,
+            "Reserve token should have complement weight"
+        );
     }
 
     function test_getNormalizedWeights_midway_returnsInterpolatedWeights() public {
@@ -80,7 +98,12 @@ contract BalancerV3LBPoolTarget_Test is Test {
         // At midpoint, weight should be approximately halfway between start and end
         uint256 expectedProjectWeight = (PROJECT_START_WEIGHT + PROJECT_END_WEIGHT) / 2;
 
-        assertApproxEqRel(weights[PROJECT_TOKEN_INDEX], expectedProjectWeight, 1e14, "Project weight should be interpolated at midpoint");
+        assertApproxEqRel(
+            weights[PROJECT_TOKEN_INDEX],
+            expectedProjectWeight,
+            1e14,
+            "Project weight should be interpolated at midpoint"
+        );
     }
 
     function test_getNormalizedWeights_alwaysSumToOne() public {

@@ -4,11 +4,13 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { LBPoolFactory } from "../../../contracts/lbp/LBPoolFactory.sol";
+import {LBPoolFactory} from "../../../contracts/lbp/LBPoolFactory.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "LBPool".
@@ -33,13 +35,12 @@ contract LBPoolContractsDeployer is BaseContractsDeployer {
         address migrationRouter
     ) internal returns (LBPoolFactory) {
         if (reusingArtifacts) {
-            return
-                LBPoolFactory(
-                    deployCode(
-                        _computeLBPoolPath(type(LBPoolFactory).name),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, router, migrationRouter)
-                    )
-                );
+            return LBPoolFactory(
+                deployCode(
+                    _computeLBPoolPath(type(LBPoolFactory).name),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion, router, migrationRouter)
+                )
+            );
         } else {
             return new LBPoolFactory(vault, pauseWindowDuration, factoryVersion, poolVersion, router, migrationRouter);
         }

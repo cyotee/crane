@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { TransientEnumerableSet } from "../../contracts/openzeppelin/TransientEnumerableSet.sol";
+import {TransientEnumerableSet} from "../../contracts/openzeppelin/TransientEnumerableSet.sol";
 
 contract TransientEnumerableSetTest is Test {
     using TransientEnumerableSet for TransientEnumerableSet.AddressSet;

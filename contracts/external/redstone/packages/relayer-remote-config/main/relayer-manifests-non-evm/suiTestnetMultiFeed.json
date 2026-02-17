@@ -1,0 +1,20 @@
+{
+  "adapterContractType": "multi-feed",
+  "chain": {
+    "name": "testnet",
+    "id": "sui/1282977196"
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.5,
+    "timeSinceLastUpdateInMilliseconds": 86400000
+  },
+  "adapterContract": "0x6403f9f18301ba3b75cbc7ecca747160e47dbc29fa3b794332efce3f06160255",
+  "adapterContractPackageId": "0xc2102acb2616b695ba5a3ee2fc12f61b9a19e246d6c933ceb1912842bb2b9edb",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "LBTC": {},
+    "LBTC_FUNDAMENTAL": {},
+    "ETH": {},
+    "BTC": {}
+  }
+}

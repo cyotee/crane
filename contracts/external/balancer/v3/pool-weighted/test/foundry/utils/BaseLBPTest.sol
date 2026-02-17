@@ -6,17 +6,21 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ContractType } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    ContractType
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BalancerContractRegistry } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {
+    BalancerContractRegistry
+} from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { LBPMigrationRouterMock } from "../../../contracts/test/LBPMigrationRouterMock.sol";
-import { WeightedPoolContractsDeployer } from "./WeightedPoolContractsDeployer.sol";
-import { LBPMigrationRouterDeployer } from "./LBPMigrationRouterDeployer.sol";
-import { WeightedPoolFactory } from "../../../contracts/WeightedPoolFactory.sol";
+import {LBPMigrationRouterMock} from "../../../contracts/test/LBPMigrationRouterMock.sol";
+import {WeightedPoolContractsDeployer} from "./WeightedPoolContractsDeployer.sol";
+import {LBPMigrationRouterDeployer} from "./LBPMigrationRouterDeployer.sol";
+import {WeightedPoolFactory} from "../../../contracts/WeightedPoolFactory.sol";
 
 abstract contract BaseLBPTest is BaseVaultTest, WeightedPoolContractsDeployer, LBPMigrationRouterDeployer {
     using ArrayHelpers for *;
@@ -76,28 +80,20 @@ abstract contract BaseLBPTest is BaseVaultTest, WeightedPoolContractsDeployer, L
         poolInitAmountsNon18[projectIdxNon18] = 1e3 * 1e8;
         poolInitAmountsNon18[reserveIdxNon18] = 1e3 * 1e6;
 
-        weightedPoolFactory = deployWeightedPoolFactory(
-            IVault(address(vault)),
-            365 days,
-            "Weighted Factory v1",
-            "Weighted Pool v1"
-        );
+        weightedPoolFactory =
+            deployWeightedPoolFactory(IVault(address(vault)), 365 days, "Weighted Factory v1", "Weighted Pool v1");
 
         balancerContractRegistry = new BalancerContractRegistry(IVault(address(vault)));
         authorizer.grantRole(
-            balancerContractRegistry.getActionId(BalancerContractRegistry.registerBalancerContract.selector),
-            admin
+            balancerContractRegistry.getActionId(BalancerContractRegistry.registerBalancerContract.selector), admin
         );
         authorizer.grantRole(
-            balancerContractRegistry.getActionId(BalancerContractRegistry.deprecateBalancerContract.selector),
-            admin
+            balancerContractRegistry.getActionId(BalancerContractRegistry.deprecateBalancerContract.selector), admin
         );
 
         vm.prank(admin);
         balancerContractRegistry.registerBalancerContract(
-            ContractType.POOL_FACTORY,
-            "WeightedPool",
-            address(weightedPoolFactory)
+            ContractType.POOL_FACTORY, "WeightedPool", address(weightedPoolFactory)
         );
 
         migrationRouter = deployLBPMigrationRouterMock(balancerContractRegistry, migrationRouterVersion);
@@ -110,21 +106,19 @@ abstract contract BaseLBPTest is BaseVaultTest, WeightedPoolContractsDeployer, L
         vm.stopPrank();
     }
 
-    function _createLBPool(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime,
-        bool blockProjectTokenSwapsIn
-    ) internal virtual returns (address newPool, bytes memory poolArgs) {
+    function _createLBPool(address poolCreator, uint32 startTime, uint32 endTime, bool blockProjectTokenSwapsIn)
+        internal
+        virtual
+        returns (address newPool, bytes memory poolArgs)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
-    function _createLBPoolNon18(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime,
-        bool blockProjectTokenSwapsIn
-    ) internal virtual returns (address newPool, bytes memory poolArgs) {
+    function _createLBPoolNon18(address poolCreator, uint32 startTime, uint32 endTime, bool blockProjectTokenSwapsIn)
+        internal
+        virtual
+        returns (address newPool, bytes memory poolArgs)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -139,7 +133,7 @@ abstract contract BaseLBPTest is BaseVaultTest, WeightedPoolContractsDeployer, L
     }
 
     function _deployAndInitPoolNon18() internal {
-        (poolNon18, ) = _createLBPoolNon18(
+        (poolNon18,) = _createLBPoolNon18(
             address(0), // Pool creator
             uint32(block.timestamp + DEFAULT_START_OFFSET),
             uint32(block.timestamp + DEFAULT_END_OFFSET),

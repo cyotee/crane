@@ -4,18 +4,25 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { PoolRoleAccounts, TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract PoolSwapManagerTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -31,9 +38,8 @@ contract PoolSwapManagerTest is BaseVaultTest {
     function setUp() public virtual override {
         BaseVaultTest.setUp();
 
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         PoolRoleAccounts memory defaultRoleAccounts;
         PoolRoleAccounts memory adminRoleAccounts;
@@ -42,42 +48,25 @@ contract PoolSwapManagerTest is BaseVaultTest {
         pool = address(deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL"));
 
         // Make admin the swap fee manager.
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            pool,
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            adminRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(pool, tokenConfig, 0, 365 days, false, adminRoleAccounts, poolHooksContract);
 
         unmanagedPool = deployPoolMock(IVault(address(vault)), "Unmanaged Pool", "UNMANAGED");
 
         // Pass zero for the swap fee manager.
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            address(unmanagedPool),
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            defaultRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(
+                address(unmanagedPool), tokenConfig, 0, 365 days, false, defaultRoleAccounts, poolHooksContract
+            );
 
         // Pass zero for the swap fee manager.
         otherPool = deployPoolMock(IVault(address(vault)), "Other Pool", "OTHER");
 
         // Pass zero for the swap fee manager.
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            address(otherPool),
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            defaultRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(
+                address(otherPool), tokenConfig, 0, 365 days, false, defaultRoleAccounts, poolHooksContract
+            );
 
         factory = deployPoolFactoryMock(IVault(address(vault)), 365 days);
     }

@@ -5,8 +5,8 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IProtocolFeeController } from "../vault/IProtocolFeeController.sol";
-import { IProtocolFeeBurner } from "./IProtocolFeeBurner.sol";
+import {IProtocolFeeController} from "../vault/IProtocolFeeController.sol";
+import {IProtocolFeeBurner} from "./IProtocolFeeBurner.sol";
 
 interface IProtocolFeeSweeper {
     /**

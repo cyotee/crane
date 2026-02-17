@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "../vault/IBasePool.sol";
+import {IBasePool} from "../vault/IBasePool.sol";
 
 /**
  * @notice Gyro 2-CLP Pool data that cannot change after deployment.

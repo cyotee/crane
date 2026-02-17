@@ -4,10 +4,10 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     TokenConfig,
@@ -15,8 +15,8 @@ import {
     HookFlags
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
 /**
  * @notice Hook that gives a swap fee discount to veBAL holders.
@@ -39,9 +39,7 @@ contract VeBALFeeDiscountHookExample is BaseHooks, VaultGuard {
      * @param pool The pool on which the hook was registered
      */
     event VeBALFeeDiscountHookExampleRegistered(
-        address indexed hooksContract,
-        address indexed factory,
-        address indexed pool
+        address indexed hooksContract, address indexed factory, address indexed pool
     );
 
     constructor(IVault vault, address allowedFactory, address veBAL, address trustedRouter) VaultGuard(vault) {
@@ -56,12 +54,12 @@ contract VeBALFeeDiscountHookExample is BaseHooks, VaultGuard {
     }
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address factory,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address factory, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         // This hook implements a restrictive approach, where we check if the factory is an allowed factory and if
         // the pool was created by the allowed factory. Since we only use onComputeDynamicSwapFeePercentage, this
         // might be an overkill in real applications because the pool math doesn't play a role in the discount
@@ -73,11 +71,13 @@ contract VeBALFeeDiscountHookExample is BaseHooks, VaultGuard {
     }
 
     /// @inheritdoc IHooks
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata params,
-        address,
-        uint256 staticSwapFeePercentage
-    ) public view override onlyVault returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata params, address, uint256 staticSwapFeePercentage)
+        public
+        view
+        override
+        onlyVault
+        returns (bool, uint256)
+    {
         // If the Router is not trusted, do not apply the veBAL discount. `getSender` may be manipulated by a
         // malicious router.
         if (params.router != _trustedRouter) {

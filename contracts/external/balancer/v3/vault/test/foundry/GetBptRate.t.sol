@@ -4,20 +4,29 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { PoolRoleAccounts, TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { WeightedPoolFactory } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { WeightedPool } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
+import {
+    WeightedPoolFactory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract GetBptRateTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -44,10 +53,12 @@ contract GetBptRateTest is BaseVaultTest {
         return address(new WeightedPoolFactory(IVault(address(vault)), 365 days, "Factory v1", "Weighted Pool v1"));
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         PoolRoleAccounts memory roleAccounts;
 
         weights = [uint256(50e16), uint256(50e16)].toMemoryArray();
@@ -64,18 +75,19 @@ contract GetBptRateTest is BaseVaultTest {
 
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens.asIERC20(), rateProviders);
 
-        newPool = WeightedPoolFactory(poolFactory).create(
-            "ERC20 Pool",
-            "ERC20POOL",
-            tokenConfig,
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE,
-            address(0), // No hook contract
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                "ERC20 Pool",
+                "ERC20POOL",
+                tokenConfig,
+                weights,
+                roleAccounts,
+                DEFAULT_SWAP_FEE_PERCENTAGE,
+                address(0), // No hook contract
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(newPool, label);
 
         uint256[] memory minTokenBalances = MinTokenBalanceLib.computeMinTokenBalances(tokenConfig);

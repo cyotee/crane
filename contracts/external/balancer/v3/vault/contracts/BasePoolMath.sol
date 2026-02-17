@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 library BasePoolMath {
     using FixedPoint for uint256;
@@ -47,11 +47,11 @@ library BasePoolMath {
      * @param bptAmountOut The amount of pool tokens that need to be minted
      * @return amountsIn Array of amounts for each token to be deposited
      */
-    function computeProportionalAmountsIn(
-        uint256[] memory balances,
-        uint256 bptTotalSupply,
-        uint256 bptAmountOut
-    ) internal pure returns (uint256[] memory amountsIn) {
+    function computeProportionalAmountsIn(uint256[] memory balances, uint256 bptTotalSupply, uint256 bptAmountOut)
+        internal
+        pure
+        returns (uint256[] memory amountsIn)
+    {
         /************************************************************************************
         // computeProportionalAmountsIn                                                    //
         // (per token)                                                                     //
@@ -84,11 +84,11 @@ library BasePoolMath {
      * @param bptAmountIn The amount of pool tokens that will be burned
      * @return amountsOut Array of amounts for each token to be withdrawn
      */
-    function computeProportionalAmountsOut(
-        uint256[] memory balances,
-        uint256 bptTotalSupply,
-        uint256 bptAmountIn
-    ) internal pure returns (uint256[] memory amountsOut) {
+    function computeProportionalAmountsOut(uint256[] memory balances, uint256 bptTotalSupply, uint256 bptAmountIn)
+        internal
+        pure
+        returns (uint256[] memory amountsOut)
+    {
         /**********************************************************************************************
         // computeProportionalAmountsOut                                                             //
         // (per token)                                                                               //

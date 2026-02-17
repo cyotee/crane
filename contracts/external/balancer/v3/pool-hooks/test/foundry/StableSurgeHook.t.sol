@@ -4,27 +4,34 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { StablePoolFactory } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
-import { CommonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {StablePoolFactory} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
+import {CommonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { PoolSwapParams, SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    PoolSwapParams,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { StableSurgeHookDeployer } from "./utils/StableSurgeHookDeployer.sol";
-import { StableSurgeHook } from "../../contracts/StableSurgeHook.sol";
-import { StableSurgeHookMock } from "../../contracts/test/StableSurgeHookMock.sol";
-import { StableSurgeMedianMathMock } from "../../contracts/test/StableSurgeMedianMathMock.sol";
+import {StableSurgeHookDeployer} from "./utils/StableSurgeHookDeployer.sol";
+import {StableSurgeHook} from "../../contracts/StableSurgeHook.sol";
+import {StableSurgeHookMock} from "../../contracts/test/StableSurgeHookMock.sol";
+import {StableSurgeMedianMathMock} from "../../contracts/test/StableSurgeMedianMathMock.sol";
 
 contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
     using ArrayHelpers for *;
@@ -57,33 +64,32 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
     function createHook() internal override returns (address) {
         vm.prank(poolFactory);
         stableSurgeHook = deployStableSurgeHookMock(
-            vault,
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            "Test"
+            vault, DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, "Test"
         );
         vm.label(address(stableSurgeHook), "StableSurgeHook");
         return address(stableSurgeHook);
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         PoolRoleAccounts memory roleAccounts;
 
-        newPool = StablePoolFactory(poolFactory).create(
-            "Stable Pool",
-            "STABLEPOOL",
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE,
-            poolHooksContract,
-            false,
-            false,
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                "Stable Pool",
+                "STABLEPOOL",
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                DEFAULT_SWAP_FEE_PERCENTAGE,
+                poolHooksContract,
+                false,
+                false,
+                ZERO_BYTES32
+            );
         vm.label(address(newPool), label);
 
         return (
@@ -103,10 +109,7 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
     function testValidVault() public {
         vm.expectRevert(CommonAuthentication.VaultNotSet.selector);
         deployStableSurgeHook(
-            IVault(address(0)),
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            ""
+            IVault(address(0)), DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, ""
         );
     }
 
@@ -269,22 +272,12 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
         } else {
             vm.prank(alice);
             router.swapSingleTokenExactOut(
-                pool,
-                usdc,
-                dai,
-                amountGivenScaled18,
-                MAX_UINT256,
-                MAX_UINT256,
-                false,
-                bytes("")
+                pool, usdc, dai, amountGivenScaled18, MAX_UINT256, MAX_UINT256, false, bytes("")
             );
         }
 
         uint256 actualSwapFeePercentage = _calculateFee(
-            amountGivenScaled18,
-            kind,
-            swapFeePercentage,
-            [poolInitAmount, poolInitAmount].toMemoryArray()
+            amountGivenScaled18, kind, swapFeePercentage, [poolInitAmount, poolInitAmount].toMemoryArray()
         );
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(alice);
@@ -299,35 +292,36 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
             expectedAmountIn = amountGivenScaled18;
             uint256 swapAmount = amountGivenScaled18.mulUp(actualSwapFeePercentage);
 
-            uint256 amountCalculatedScaled18 = StablePool(pool).onSwap(
-                PoolSwapParams({
-                    kind: kind,
-                    indexIn: usdcIdx,
-                    indexOut: daiIdx,
-                    amountGivenScaled18: expectedAmountIn - swapAmount,
-                    balancesScaled18: [poolInitAmount, poolInitAmount].toMemoryArray(),
-                    router: address(0),
-                    userData: bytes("")
-                })
-            );
+            uint256 amountCalculatedScaled18 = StablePool(pool)
+                .onSwap(
+                    PoolSwapParams({
+                        kind: kind,
+                        indexIn: usdcIdx,
+                        indexOut: daiIdx,
+                        amountGivenScaled18: expectedAmountIn - swapAmount,
+                        balancesScaled18: [poolInitAmount, poolInitAmount].toMemoryArray(),
+                        router: address(0),
+                        userData: bytes("")
+                    })
+                );
 
             expectedAmountOut = amountCalculatedScaled18;
         } else {
             expectedAmountOut = amountGivenScaled18;
-            uint256 amountCalculatedScaled18 = StablePool(pool).onSwap(
-                PoolSwapParams({
-                    kind: kind,
-                    indexIn: usdcIdx,
-                    indexOut: daiIdx,
-                    amountGivenScaled18: expectedAmountOut,
-                    balancesScaled18: [poolInitAmount, poolInitAmount].toMemoryArray(),
-                    router: address(0),
-                    userData: bytes("")
-                })
-            );
-            expectedAmountIn =
-                amountCalculatedScaled18 +
-                amountCalculatedScaled18.mulDivUp(actualSwapFeePercentage, actualSwapFeePercentage.complement());
+            uint256 amountCalculatedScaled18 = StablePool(pool)
+                .onSwap(
+                    PoolSwapParams({
+                        kind: kind,
+                        indexIn: usdcIdx,
+                        indexOut: daiIdx,
+                        amountGivenScaled18: expectedAmountOut,
+                        balancesScaled18: [poolInitAmount, poolInitAmount].toMemoryArray(),
+                        router: address(0),
+                        userData: bytes("")
+                    })
+                );
+            expectedAmountIn = amountCalculatedScaled18
+                + amountCalculatedScaled18.mulDivUp(actualSwapFeePercentage, actualSwapFeePercentage.complement());
         }
 
         assertEq(expectedAmountIn, actualAmountIn, "Amount in should be expectedAmountIn");
@@ -340,17 +334,18 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
         uint256 swapFeePercentage,
         uint256[] memory balances
     ) internal view returns (uint256) {
-        uint256 amountCalculatedScaled18 = StablePool(pool).onSwap(
-            PoolSwapParams({
-                kind: kind,
-                indexIn: usdcIdx,
-                indexOut: daiIdx,
-                amountGivenScaled18: amountGivenScaled18,
-                balancesScaled18: balances,
-                router: address(0),
-                userData: bytes("")
-            })
-        );
+        uint256 amountCalculatedScaled18 = StablePool(pool)
+            .onSwap(
+                PoolSwapParams({
+                    kind: kind,
+                    indexIn: usdcIdx,
+                    indexOut: daiIdx,
+                    amountGivenScaled18: amountGivenScaled18,
+                    balancesScaled18: balances,
+                    router: address(0),
+                    userData: bytes("")
+                })
+            );
 
         uint256[] memory newBalances = new uint256[](balances.length);
         ScalingHelpers.copyToArray(balances, newBalances);
@@ -367,18 +362,17 @@ contract StableSurgeHookTest is BaseVaultTest, StableSurgeHookDeployer {
         uint256 oldTotalImbalance = stableSurgeMedianMathMock.calculateImbalance(balances);
 
         if (
-            newTotalImbalance == 0 ||
-            (newTotalImbalance <= oldTotalImbalance || newTotalImbalance <= DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
+            newTotalImbalance == 0
+                || (newTotalImbalance <= oldTotalImbalance || newTotalImbalance <= DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
         ) {
             return swapFeePercentage;
         }
 
-        return
-            swapFeePercentage +
-            (stableSurgeHook.getMaxSurgeFeePercentage(pool) - swapFeePercentage).mulDown(
-                (newTotalImbalance - DEFAULT_SURGE_THRESHOLD_PERCENTAGE).divDown(
-                    DEFAULT_SURGE_THRESHOLD_PERCENTAGE.complement()
-                )
-            );
+        return swapFeePercentage
+            + (stableSurgeHook.getMaxSurgeFeePercentage(pool) - swapFeePercentage)
+            .mulDown(
+            (newTotalImbalance - DEFAULT_SURGE_THRESHOLD_PERCENTAGE)
+            .divDown(DEFAULT_SURGE_THRESHOLD_PERCENTAGE.complement())
+        );
     }
 }

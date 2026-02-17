@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { AggregatorV3Interface } from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
 
 /**
  * @notice Interface to the LP oracle's sequencer uptime feed, used by L2s to indicate the L1 synchronization status.

@@ -1,0 +1,52 @@
+module Run where
+
+import Daml.Script
+import DA.List
+import DA.Assert
+import IRedStoneAdapter
+import IRedStonePriceFeed
+import Input
+import FindContract
+import VerifyResults
+
+main : Input -> Script ()
+main input = script do
+  let updater = input.updater
+  let viewer = input.viewer
+
+  currentTime <- getTime
+  adapterCid <- findOneAdapter Input.adapterId updater
+
+  values <- submit viewer do
+    exerciseCmd adapterCid GetPrices with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+  debug $ "Processed result: " <> show values
+
+  newCid <- submit updater do
+    exerciseCmd adapterCid WritePrices with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+
+  adapterCid <- findOneAdapter Input.adapterId viewer
+
+  readResult <- submit viewer do
+    exerciseCmd adapterCid ReadPriceData with
+      feedIds = input.feedIds
+
+  feedCid <- findOnePriceFeed Input.adapterId (head input.feedIds) viewer
+
+  feedResult <- submit viewer do
+    exerciseCmd feedCid ReadData with
+      adapterCid
+
+  signerCount <- submit viewer do
+    exerciseCmd adapterCid GetUniqueSignerThreshold
+
+  signerCount === 3
+
+  verifyResults currentTime readResult feedResult
+
+  pure ()

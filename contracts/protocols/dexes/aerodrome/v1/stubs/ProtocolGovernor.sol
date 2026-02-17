@@ -34,12 +34,11 @@ contract ProtocolGovernor is
     error ProposalNumeratorTooHigh();
     error ZeroAddress();
 
-    constructor(
-        IVotes _ve
-    )
+    constructor(IVotes _ve)
         VetoGovernor("Protocol Governor")
         VetoGovernorVotes(_ve)
         VetoGovernorVotesQuorumFraction(4) // 4%
+
     {
         ve = address(_ve);
         vetoer = msg.sender;

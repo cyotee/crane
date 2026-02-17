@@ -79,7 +79,7 @@ library EnumerableMap {
             // Equivalent to !contains(map, key).
             if (keyIndex == 0) {
                 uint256 previousLength = map._length;
-                map.entries[previousLength] = IERC20ToBytes32MapEntry({ key: key, value: value });
+                map.entries[previousLength] = IERC20ToBytes32MapEntry({key: key, value: value});
                 map._length = previousLength + 1;
 
                 // The entry is stored at previousLength, but we add 1 to all indexes

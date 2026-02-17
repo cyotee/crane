@@ -6,11 +6,15 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import {ICompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -32,7 +36,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * - Support for proportional and unbalanced operations
  */
 contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -120,9 +123,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.addLiquidityERC4626PoolUnbalancedHook, (params, wrapUnderlying))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(abi.encodeCall(this.addLiquidityERC4626PoolUnbalancedHook, (params, wrapUnderlying)));
         return abi.decode(result, (uint256));
     }
 
@@ -140,9 +142,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             pool, exactAmountsIn, 0, AddLiquidityKind.UNBALANCED, userData
         );
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.addLiquidityERC4626PoolUnbalancedHook, (params, wrapUnderlying))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.addLiquidityERC4626PoolUnbalancedHook, (params, wrapUnderlying)));
         return abi.decode(result, (uint256));
     }
 
@@ -167,9 +168,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.addLiquidityERC4626PoolProportionalHook, (params, wrapUnderlying))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(abi.encodeCall(this.addLiquidityERC4626PoolProportionalHook, (params, wrapUnderlying)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -187,9 +187,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             pool, new uint256[](0), exactBptAmountOut, AddLiquidityKind.PROPORTIONAL, userData
         );
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.addLiquidityERC4626PoolProportionalHook, (params, wrapUnderlying))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.addLiquidityERC4626PoolProportionalHook, (params, wrapUnderlying)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -214,9 +213,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.removeLiquidityERC4626PoolProportionalHook, (params, unwrapWrapped))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(abi.encodeCall(this.removeLiquidityERC4626PoolProportionalHook, (params, unwrapWrapped)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -243,9 +241,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = vault.quote(
-            abi.encodeCall(this.removeLiquidityERC4626PoolProportionalHook, (params, unwrapWrapped))
-        );
+        bytes memory result =
+            vault.quote(abi.encodeCall(this.removeLiquidityERC4626PoolProportionalHook, (params, unwrapWrapped)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -261,9 +258,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         bool[] calldata wrapUnderlying
     ) external nonReentrant onlyVault returns (uint256 bptAmountOut) {
         IVault vault = BalancerV3RouterStorageRepo._vault();
-        (IERC20[] memory poolTokens, ) = _validateERC4626HookParams(
-            vault, params.pool, params.maxAmountsIn.length, wrapUnderlying.length
-        );
+        (IERC20[] memory poolTokens,) =
+            _validateERC4626HookParams(vault, params.pool, params.maxAmountsIn.length, wrapUnderlying.length);
 
         ERC4626ProcessingContext memory ctx = ERC4626ProcessingContext({
             vault: vault,
@@ -274,7 +270,7 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
 
         uint256[] memory amountsIn = _processUnbalancedTokensIn(ctx, poolTokens, params.maxAmountsIn, wrapUnderlying);
 
-        (, bptAmountOut, ) = vault.addLiquidity(_buildAddLiquidityParams(params, amountsIn, params.sender));
+        (, bptAmountOut,) = vault.addLiquidity(_buildAddLiquidityParams(params, amountsIn, params.sender));
         _returnEth(params.sender);
     }
 
@@ -286,14 +282,12 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         bool[] calldata wrapUnderlying
     ) external nonReentrant onlyVault returns (uint256[] memory amountsIn) {
         IVault vault = BalancerV3RouterStorageRepo._vault();
-        (IERC20[] memory poolTokens, ) = _validateERC4626HookParams(
-            vault, params.pool, params.maxAmountsIn.length, wrapUnderlying.length
-        );
+        (IERC20[] memory poolTokens,) =
+            _validateERC4626HookParams(vault, params.pool, params.maxAmountsIn.length, wrapUnderlying.length);
 
         uint256[] memory maxAmounts = _maxTokenLimits(vault, params.pool);
-        (uint256[] memory actualAmountsIn, , ) = vault.addLiquidity(
-            _buildAddLiquidityParams(params, maxAmounts, params.sender)
-        );
+        (uint256[] memory actualAmountsIn,,) =
+            vault.addLiquidity(_buildAddLiquidityParams(params, maxAmounts, params.sender));
 
         ERC4626ProcessingContext memory ctx = ERC4626ProcessingContext({
             vault: vault,
@@ -314,9 +308,8 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         bool[] calldata unwrapWrapped
     ) external nonReentrant onlyVault returns (uint256[] memory amountsOut) {
         IVault vault = BalancerV3RouterStorageRepo._vault();
-        (IERC20[] memory poolTokens, uint256 numTokens) = _validateERC4626HookParams(
-            vault, params.pool, params.minAmountsOut.length, unwrapWrapped.length
-        );
+        (IERC20[] memory poolTokens, uint256 numTokens) =
+            _validateERC4626HookParams(vault, params.pool, params.minAmountsOut.length, unwrapWrapped.length);
 
         uint256[] memory actualAmountsOut = _removeLiquidityFromPool(vault, params, numTokens);
 
@@ -330,17 +323,15 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         amountsOut = _processTokensOut(ctx, poolTokens, actualAmountsOut, unwrapWrapped, params.minAmountsOut);
     }
 
-    function _removeLiquidityFromPool(
-        IVault vault,
-        RemoveLiquidityHookParams calldata params,
-        uint256 numTokens
-    ) internal returns (uint256[] memory actualAmountsOut) {
+    function _removeLiquidityFromPool(IVault vault, RemoveLiquidityHookParams calldata params, uint256 numTokens)
+        internal
+        returns (uint256[] memory actualAmountsOut)
+    {
         if (vault.isPoolInRecoveryMode(params.pool)) {
-            actualAmountsOut = vault.removeLiquidityRecovery(
-                params.pool, params.sender, params.maxBptAmountIn, params.minAmountsOut
-            );
+            actualAmountsOut =
+                vault.removeLiquidityRecovery(params.pool, params.sender, params.maxBptAmountIn, params.minAmountsOut);
         } else {
-            (, actualAmountsOut, ) = vault.removeLiquidity(_buildRemoveLiquidityParams(params, numTokens));
+            (, actualAmountsOut,) = vault.removeLiquidity(_buildRemoveLiquidityParams(params, numTokens));
         }
     }
 
@@ -390,12 +381,11 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
     /*                            INTERNAL FUNCTIONS                              */
     /* ========================================================================== */
 
-    function _validateERC4626HookParams(
-        IVault vault,
-        address pool,
-        uint256 amountsLength,
-        uint256 wrapLength
-    ) internal view returns (IERC20[] memory poolTokens, uint256 numTokens) {
+    function _validateERC4626HookParams(IVault vault, address pool, uint256 amountsLength, uint256 wrapLength)
+        internal
+        view
+        returns (IERC20[] memory poolTokens, uint256 numTokens)
+    {
         poolTokens = vault.getPoolTokens(pool);
         numTokens = poolTokens.length;
         InputHelpers.ensureInputLengthMatch(numTokens, amountsLength, wrapLength);
@@ -416,10 +406,11 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         });
     }
 
-    function _buildRemoveLiquidityParams(
-        RemoveLiquidityHookParams calldata hookParams,
-        uint256 numTokens
-    ) internal pure returns (RemoveLiquidityParams memory) {
+    function _buildRemoveLiquidityParams(RemoveLiquidityHookParams calldata hookParams, uint256 numTokens)
+        internal
+        pure
+        returns (RemoveLiquidityParams memory)
+    {
         return RemoveLiquidityParams({
             pool: hookParams.pool,
             from: hookParams.sender,
@@ -486,15 +477,16 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         }
 
         if (needToWrap && amountIn > 0) {
-            (, , actualAmountIn) = ctx.vault.erc4626BufferWrapOrUnwrap(
-                BufferWrapOrUnwrapParams({
-                    kind: SwapKind.EXACT_IN,
-                    direction: WrappingDirection.WRAP,
-                    wrappedToken: IERC4626(token),
-                    amountGivenRaw: amountIn,
-                    limitRaw: 0
-                })
-            );
+            (,, actualAmountIn) = ctx.vault
+                .erc4626BufferWrapOrUnwrap(
+                    BufferWrapOrUnwrapParams({
+                        kind: SwapKind.EXACT_IN,
+                        direction: WrappingDirection.WRAP,
+                        wrappedToken: IERC4626(token),
+                        amountGivenRaw: amountIn,
+                        limitRaw: 0
+                    })
+                );
         } else {
             actualAmountIn = amountIn;
         }
@@ -507,9 +499,7 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
         bool needToWrap,
         uint256 maxAmountIn
     ) internal returns (uint256 actualAmountIn) {
-        IERC20 settlementToken = needToWrap
-            ? IERC20(ctx.vault.getERC4626BufferAsset(IERC4626(token)))
-            : IERC20(token);
+        IERC20 settlementToken = needToWrap ? IERC20(ctx.vault.getERC4626BufferAsset(IERC4626(token))) : IERC20(token);
 
         if (needToWrap && address(settlementToken) == address(0)) {
             revert IVaultErrors.BufferNotInitialized(IERC4626(token));
@@ -521,15 +511,16 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
 
         if (amountIn > 0) {
             if (needToWrap) {
-                (, actualAmountIn, ) = ctx.vault.erc4626BufferWrapOrUnwrap(
-                    BufferWrapOrUnwrapParams({
-                        kind: SwapKind.EXACT_OUT,
-                        direction: WrappingDirection.WRAP,
-                        wrappedToken: IERC4626(token),
-                        amountGivenRaw: amountIn,
-                        limitRaw: maxAmountIn
-                    })
-                );
+                (, actualAmountIn,) = ctx.vault
+                    .erc4626BufferWrapOrUnwrap(
+                        BufferWrapOrUnwrapParams({
+                            kind: SwapKind.EXACT_OUT,
+                            direction: WrappingDirection.WRAP,
+                            wrappedToken: IERC4626(token),
+                            amountGivenRaw: amountIn,
+                            limitRaw: maxAmountIn
+                        })
+                    );
             } else {
                 actualAmountIn = amountIn;
             }
@@ -563,15 +554,16 @@ contract CompositeLiquidityERC4626Facet is BalancerV3RouterModifiers, IFacet {
             }
 
             if (amountOut > 0) {
-                (, , actualAmountOut) = ctx.vault.erc4626BufferWrapOrUnwrap(
-                    BufferWrapOrUnwrapParams({
-                        kind: SwapKind.EXACT_IN,
-                        direction: WrappingDirection.UNWRAP,
-                        wrappedToken: wrappedToken,
-                        amountGivenRaw: amountOut,
-                        limitRaw: minAmountOut
-                    })
-                );
+                (,, actualAmountOut) = ctx.vault
+                    .erc4626BufferWrapOrUnwrap(
+                        BufferWrapOrUnwrapParams({
+                            kind: SwapKind.EXACT_IN,
+                            direction: WrappingDirection.UNWRAP,
+                            wrappedToken: wrappedToken,
+                            amountGivenRaw: amountOut,
+                            limitRaw: minAmountOut
+                        })
+                    );
 
                 if (!ctx.isStaticCall) {
                     _sendTokenOut(ctx.sender, underlyingToken, actualAmountOut, ctx.wethIsEth);

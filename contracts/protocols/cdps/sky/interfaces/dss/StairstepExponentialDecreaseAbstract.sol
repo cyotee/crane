@@ -25,6 +25,6 @@ interface StairstepExponentialDecreaseAbstract {
     function deny(address) external;
     function step() external view returns (uint256);
     function cut() external view returns (uint256);
-    function file(bytes32,uint256) external;
-    function price(uint256,uint256) external view returns (uint256);
+    function file(bytes32, uint256) external;
+    function price(uint256, uint256) external view returns (uint256);
 }

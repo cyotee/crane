@@ -12,12 +12,12 @@ library LiquidityMath {
             unchecked {
                 z = x - uint128(-y);
             }
-            require(z < x, 'LS');
+            require(z < x, "LS");
         } else {
             unchecked {
                 z = x + uint128(y);
             }
-            require(z >= x, 'LA');
+            require(z >= x, "LA");
         }
     }
 }

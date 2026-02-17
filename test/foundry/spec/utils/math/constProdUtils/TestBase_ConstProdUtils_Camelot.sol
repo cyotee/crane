@@ -64,14 +64,33 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
     }
 
     function _createCamelotPairs() internal {
-        camelotBalancedPair = ICamelotPair(camelotV2Factory.createPair(address(camelotBalancedTokenA), address(camelotBalancedTokenB)));
-        vm.label(address(camelotBalancedPair), string.concat("CamelotBalancedPair - ", camelotBalancedTokenA.symbol(), " / ", camelotBalancedTokenB.symbol()));
+        camelotBalancedPair =
+            ICamelotPair(camelotV2Factory.createPair(address(camelotBalancedTokenA), address(camelotBalancedTokenB)));
+        vm.label(
+            address(camelotBalancedPair),
+            string.concat(
+                "CamelotBalancedPair - ", camelotBalancedTokenA.symbol(), " / ", camelotBalancedTokenB.symbol()
+            )
+        );
 
-        camelotUnbalancedPair = ICamelotPair(camelotV2Factory.createPair(address(camelotUnbalancedTokenA), address(camelotUnbalancedTokenB)));
-        vm.label(address(camelotUnbalancedPair), string.concat("CamelotUnbalancedPair - ", camelotUnbalancedTokenA.symbol(), " / ", camelotUnbalancedTokenB.symbol()));
+        camelotUnbalancedPair = ICamelotPair(
+            camelotV2Factory.createPair(address(camelotUnbalancedTokenA), address(camelotUnbalancedTokenB))
+        );
+        vm.label(
+            address(camelotUnbalancedPair),
+            string.concat(
+                "CamelotUnbalancedPair - ", camelotUnbalancedTokenA.symbol(), " / ", camelotUnbalancedTokenB.symbol()
+            )
+        );
 
-        camelotExtremeUnbalancedPair = ICamelotPair(camelotV2Factory.createPair(address(camelotExtremeTokenA), address(camelotExtremeTokenB)));
-        vm.label(address(camelotExtremeUnbalancedPair), string.concat("CamelotExtremeUnbalancedPair - ", camelotExtremeTokenA.symbol(), " / ", camelotExtremeTokenB.symbol()));
+        camelotExtremeUnbalancedPair =
+            ICamelotPair(camelotV2Factory.createPair(address(camelotExtremeTokenA), address(camelotExtremeTokenB)));
+        vm.label(
+            address(camelotExtremeUnbalancedPair),
+            string.concat(
+                "CamelotExtremeUnbalancedPair - ", camelotExtremeTokenA.symbol(), " / ", camelotExtremeTokenB.symbol()
+            )
+        );
     }
 
     function _initializeCamelotBalancedPools() internal {
@@ -80,7 +99,9 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
         camelotBalancedTokenB.mint(address(this), INITIAL_LIQUIDITY);
         camelotBalancedTokenB.approve(address(camelotV2Router), INITIAL_LIQUIDITY);
 
-        CamelotV2Service._deposit(camelotV2Router, camelotBalancedTokenA, camelotBalancedTokenB, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router, camelotBalancedTokenA, camelotBalancedTokenB, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY
+        );
     }
 
     function _initializeCamelotUnbalancedPools() internal {
@@ -89,7 +110,9 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
         camelotUnbalancedTokenB.mint(address(this), UNBALANCED_RATIO_B);
         camelotUnbalancedTokenB.approve(address(camelotV2Router), UNBALANCED_RATIO_B);
 
-        CamelotV2Service._deposit(camelotV2Router, camelotUnbalancedTokenA, camelotUnbalancedTokenB, UNBALANCED_RATIO_A, UNBALANCED_RATIO_B);
+        CamelotV2Service._deposit(
+            camelotV2Router, camelotUnbalancedTokenA, camelotUnbalancedTokenB, UNBALANCED_RATIO_A, UNBALANCED_RATIO_B
+        );
     }
 
     function _initializeCamelotExtremeUnbalancedPools() internal {
@@ -98,10 +121,14 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
         camelotExtremeTokenB.mint(address(this), UNBALANCED_RATIO_C);
         camelotExtremeTokenB.approve(address(camelotV2Router), UNBALANCED_RATIO_C);
 
-        CamelotV2Service._deposit(camelotV2Router, camelotExtremeTokenA, camelotExtremeTokenB, UNBALANCED_RATIO_A, UNBALANCED_RATIO_C);
+        CamelotV2Service._deposit(
+            camelotV2Router, camelotExtremeTokenA, camelotExtremeTokenB, UNBALANCED_RATIO_A, UNBALANCED_RATIO_C
+        );
     }
 
-    function _executeCamelotTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB) internal {
+    function _executeCamelotTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB)
+        internal
+    {
         uint256 swapAmountA = 100e18;
         tokenA.mint(address(this), swapAmountA);
         tokenA.approve(address(camelotV2Router), swapAmountA);
@@ -111,12 +138,7 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
         path[1] = address(tokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            0,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            swapAmountA, 0, path, address(this), address(0), block.timestamp + 300
         );
 
         uint256 balanceB = tokenB.balanceOf(address(this));
@@ -126,12 +148,7 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
             pathRev[0] = address(tokenB);
             pathRev[1] = address(tokenA);
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceB,
-                0,
-                pathRev,
-                address(this),
-                address(0),
-                block.timestamp + 300
+                balanceB, 0, pathRev, address(this), address(0), block.timestamp + 300
             );
         }
 
@@ -139,14 +156,8 @@ contract TestBase_ConstProdUtils_Camelot is TestBase_CamelotV2 {
         if (balanceA > 0) {
             tokenA.approve(address(camelotV2Router), balanceA);
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceA,
-                0,
-                path,
-                address(this),
-                address(0),
-                block.timestamp + 300
+                balanceA, 0, path, address(this), address(0), block.timestamp + 300
             );
         }
     }
-
 }

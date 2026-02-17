@@ -11,10 +11,15 @@ import {
 import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {VaultExtension} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultExtension.sol";
 
-import {IVaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultExtensionMock.sol";
+import {
+    IVaultExtensionMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/interfaces/IVaultExtensionMock.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice Crane-local port of Balancer's VaultExtensionMock for testing purposes.
@@ -39,16 +44,17 @@ contract VaultExtensionMock is IVaultExtensionMock, VaultExtension {
         address poolHooksContract,
         LiquidityManagement calldata liquidityManagement
     ) external nonReentrant {
-        IVault(address(this)).registerPool(
-            pool,
-            tokenConfig,
-            swapFeePercentage,
-            pauseWindowEndTime,
-            protocolFeeExempt,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        IVault(address(this))
+            .registerPool(
+                pool,
+                tokenConfig,
+                swapFeePercentage,
+                pauseWindowEndTime,
+                protocolFeeExempt,
+                roleAccounts,
+                poolHooksContract,
+                liquidityManagement
+            );
     }
 
     function manualInitializePoolReentrancy(

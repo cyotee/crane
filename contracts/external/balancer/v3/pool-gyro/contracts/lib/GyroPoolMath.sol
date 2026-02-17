@@ -4,7 +4,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 library GyroPoolMath {
     using FixedPoint for uint256;

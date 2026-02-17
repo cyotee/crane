@@ -131,7 +131,8 @@ library PermitHash {
         string calldata witnessTypeString
     ) internal view returns (bytes32) {
         // bytes32 typeHash = keccak256(abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString));
-        bytes32 typeHash = abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString)._hash();
+        bytes32 typeHash =
+            abi.encodePacked(_PERMIT_BATCH_WITNESS_TRANSFER_FROM_TYPEHASH_STUB, witnessTypeString)._hash();
 
         uint256 numPermitted = permit.permitted.length;
         bytes32[] memory tokenPermissionHashes = new bytes32[](numPermitted);

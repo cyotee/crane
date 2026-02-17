@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {Permit2AwareRepo} from "@crane/contracts/protocols/utils/permit2/aware/Permit2AwareRepo.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
@@ -40,9 +40,7 @@ library ERC4626Repo {
         _initialize(_layout(), reserveAsset_, reserveAssetDecimals_, decimalOffset_);
     }
 
-    function _setReserveAsset(Storage storage layout, IERC20 reserveAsset_, uint8 reserveAssetDecimals_)
-        internal
-    {
+    function _setReserveAsset(Storage storage layout, IERC20 reserveAsset_, uint8 reserveAssetDecimals_) internal {
         layout.reserveAsset = reserveAsset_;
         layout.reserveAssetDecimals = reserveAssetDecimals_;
     }

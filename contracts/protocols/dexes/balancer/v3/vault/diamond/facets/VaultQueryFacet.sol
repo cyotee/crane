@@ -7,15 +7,25 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
-import {VaultStateLib, VaultStateBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    VaultStateLib,
+    VaultStateBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
 import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
 
@@ -196,9 +206,7 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return balancesRaw Raw token balances
      * @return lastBalancesLiveScaled18 Last live balances (scaled to 18 decimals)
      */
-    function getPoolTokenInfo(
-        address pool
-    )
+    function getPoolTokenInfo(address pool)
         external
         view
         withRegisteredPool(pool)
@@ -231,9 +239,7 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return decimalScalingFactors Scaling factors for each token
      * @return tokenRates Current rates for each token
      */
-    function getPoolTokenRates(
-        address pool
-    )
+    function getPoolTokenRates(address pool)
         external
         view
         withRegisteredPool(pool)
@@ -248,9 +254,12 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @param pool The pool address
      * @return balancesLiveScaled18 Live balances scaled to 18 decimals
      */
-    function getCurrentLiveBalances(
-        address pool
-    ) external view withRegisteredPool(pool) returns (uint256[] memory balancesLiveScaled18) {
+    function getCurrentLiveBalances(address pool)
+        external
+        view
+        withRegisteredPool(pool)
+        returns (uint256[] memory balancesLiveScaled18)
+    {
         PoolData memory poolData = _loadPoolData(pool, Rounding.ROUND_DOWN);
         return poolData.balancesLiveScaled18;
     }
@@ -312,10 +321,12 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @param swapParams The swap parameters used to compute the fee
      * @return dynamicSwapFeePercentage The computed dynamic swap fee percentage
      */
-    function computeDynamicSwapFeePercentage(
-        address pool,
-        PoolSwapParams memory swapParams
-    ) external view withRegisteredPool(pool) returns (uint256 dynamicSwapFeePercentage) {
+    function computeDynamicSwapFeePercentage(address pool, PoolSwapParams memory swapParams)
+        external
+        view
+        withRegisteredPool(pool)
+        returns (uint256 dynamicSwapFeePercentage)
+    {
         PoolConfigBits config = BalancerV3VaultStorageRepo._poolConfigBits(pool);
 
         // If pool doesn't use dynamic swap fees, return static fee
@@ -331,11 +342,8 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
         }
 
         // Call the hooks contract to compute dynamic fee
-        (bool success, uint256 dynamicFee) = hooksContract.onComputeDynamicSwapFeePercentage(
-            swapParams,
-            pool,
-            config.getStaticSwapFeePercentage()
-        );
+        (bool success, uint256 dynamicFee) =
+            hooksContract.onComputeDynamicSwapFeePercentage(swapParams, pool, config.getStaticSwapFeePercentage());
 
         if (!success) {
             revert DynamicSwapFeeHookFailed();
@@ -349,9 +357,12 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @param pool The pool address
      * @return roleAccounts The role accounts (pause manager, swap fee manager, pool creator)
      */
-    function getPoolRoleAccounts(
-        address pool
-    ) external view withRegisteredPool(pool) returns (PoolRoleAccounts memory) {
+    function getPoolRoleAccounts(address pool)
+        external
+        view
+        withRegisteredPool(pool)
+        returns (PoolRoleAccounts memory)
+    {
         return BalancerV3VaultStorageRepo._poolRoleAccounts(pool);
     }
 
@@ -490,9 +501,11 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return underlyingBalance Underlying token balance
      * @return wrappedBalance Wrapped token balance
      */
-    function getBufferBalance(
-        IERC4626 wrappedToken
-    ) external view returns (uint256 underlyingBalance, uint256 wrappedBalance) {
+    function getBufferBalance(IERC4626 wrappedToken)
+        external
+        view
+        returns (uint256 underlyingBalance, uint256 wrappedBalance)
+    {
         bytes32 packedBalance = BalancerV3VaultStorageRepo._bufferTokenBalance(wrappedToken);
         return (packedBalance.getBalanceRaw(), packedBalance.getBalanceDerived());
     }
@@ -545,10 +558,11 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return swapFeeAmount Accumulated swap fees
      * @return yieldFeeAmount Accumulated yield fees
      */
-    function getAggregateSwapAndYieldFeeAmounts(
-        address pool,
-        IERC20 token
-    ) external view returns (uint256 swapFeeAmount, uint256 yieldFeeAmount) {
+    function getAggregateSwapAndYieldFeeAmounts(address pool, IERC20 token)
+        external
+        view
+        returns (uint256 swapFeeAmount, uint256 yieldFeeAmount)
+    {
         bytes32 packedFees = BalancerV3VaultStorageRepo._getAggregateFeeAmount(pool, token);
         return (packedFees.getBalanceRaw(), packedFees.getBalanceDerived());
     }
@@ -644,9 +658,7 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return poolBufferPeriodEndTime End of buffer period
      * @return pauseManager The pause manager address
      */
-    function getPoolPausedState(
-        address pool
-    )
+    function getPoolPausedState(address pool)
         external
         view
         withRegisteredPool(pool)

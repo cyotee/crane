@@ -49,9 +49,9 @@ test/foundry/fork/ethereum_main/balancerV3/
 - ✅ Ported Gyro pools exist: `BalancerV3Gyro2CLPPoolTarget.sol`, `BalancerV3GyroECLPPoolTarget.sol`
 - ✅ Network constants have Gyro addresses:
   - Ethereum: `BALANCER_V3_MOCK_GYRO_2CLP_POOL = 0x4ffECD2dab8703a74BD13Ba10BcE3419B9f5fA80`
-  - Ethereum: `BLANACER_V3_MOCK_GYRO_ECLP_POOL = 0xe912C791f7c4b6323EfBA294F66C0dE93c50eB5F`
+  - Ethereum: `BALANCER_V3_MOCK_GYRO_ECLP_POOL = 0xe912C791f7c4b6323EfBA294F66C0dE93c50eB5F`
   - Base: `BALANCER_V3_MOCK_GYRO_2CLP_POOL = 0x1E919A507c9381119a4E9CF43795b100fc8c988b`
-  - Base: `BLANACER_V3_MOCK_GYRO_ECLP_POOL = 0x2196Ddb2b51F706857A2934eE79D9FBB463C5372`
+  - Base: `BALANCER_V3_MOCK_GYRO_ECLP_POOL = 0x2196Ddb2b51F706857A2934eE79D9FBB463C5372`
 - ✅ RPC endpoints in foundry.toml: `ethereum_mainnet_infura`, `base_mainnet_infura`
 - ✅ INFURA_KEY gating pattern found in `TestBase_AerodromeFork.sol`
 

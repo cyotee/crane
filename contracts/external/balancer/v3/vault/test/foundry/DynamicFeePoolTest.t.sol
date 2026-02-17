@@ -4,22 +4,24 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolHooksMock } from "../../contracts/test/PoolHooksMock.sol";
-import { PoolConfigBits, PoolConfigLib } from "../../contracts/lib/PoolConfigLib.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolHooksMock} from "../../contracts/test/PoolHooksMock.sol";
+import {PoolConfigBits, PoolConfigLib} from "../../contracts/lib/PoolConfigLib.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract DynamicFeePoolTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -46,15 +48,17 @@ contract DynamicFeePoolTest is BaseVaultTest {
     function createPool() internal virtual override returns (address, bytes memory) {
         address[] memory tokens = [address(dai), address(usdc)].toMemoryArray();
 
-        (noFeeReferencePool, ) = _createPool(tokens, "noFeeReferencePool");
+        (noFeeReferencePool,) = _createPool(tokens, "noFeeReferencePool");
 
         return _createPool(tokens, "swapPool");
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -70,13 +74,14 @@ contract DynamicFeePoolTest is BaseVaultTest {
         liquidityManagement.enableAddLiquidityCustom = true;
         liquidityManagement.enableRemoveLiquidityCustom = true;
 
-        PoolFactoryMock(poolFactory).registerPool(
-            address(newPool),
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                address(newPool),
+                vault.buildTokenConfig(tokens.asIERC20()),
+                roleAccounts,
+                poolHooksContract,
+                liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -156,8 +161,7 @@ contract DynamicFeePoolTest is BaseVaultTest {
         vm.expectCall(
             address(poolHooksContract),
             abi.encodeCall(
-                PoolHooksMock.onComputeDynamicSwapFeePercentage,
-                (poolSwapParams, pool, staticSwapFeePercentage)
+                PoolHooksMock.onComputeDynamicSwapFeePercentage, (poolSwapParams, pool, staticSwapFeePercentage)
             ),
             1 // callCount
         );
@@ -185,11 +189,7 @@ contract DynamicFeePoolTest is BaseVaultTest {
 
         uint256 aliceBalanceAfter = usdc.balanceOf(alice);
         // Near 100% fee; should get nothing.
-        assertEq(
-            aliceBalanceAfter - aliceBalanceBefore,
-            DEFAULT_AMOUNT.mulDown(1e16),
-            "Wrong alice balance (high fee)"
-        );
+        assertEq(aliceBalanceAfter - aliceBalanceBefore, DEFAULT_AMOUNT.mulDown(1e16), "Wrong alice balance (high fee)");
 
         // Now set Alice as the special 0-fee sender.
         PoolHooksMock(poolHooksContract).setSpecialSender(alice);
@@ -255,29 +255,14 @@ contract DynamicFeePoolTest is BaseVaultTest {
         PoolHooksMock(poolHooksContract).setDynamicSwapFeePercentage(dynamicSwapFeePercentage);
 
         vm.prank(alice);
-        uint256 swapAmountOut = router.swapSingleTokenExactIn(
-            pool,
-            dai,
-            usdc,
-            DEFAULT_AMOUNT,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        uint256 swapAmountOut =
+            router.swapSingleTokenExactIn(pool, dai, usdc, DEFAULT_AMOUNT, 0, MAX_UINT256, false, bytes(""));
 
         PoolHooksMock(poolHooksContract).setDynamicSwapFeePercentage(0);
 
         vm.prank(bob);
         uint256 liquidityAmountOut = router.swapSingleTokenExactIn(
-            address(noFeeReferencePool),
-            dai,
-            usdc,
-            DEFAULT_AMOUNT,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(noFeeReferencePool), dai, usdc, DEFAULT_AMOUNT, 0, MAX_UINT256, false, bytes("")
         );
 
         assertEq(

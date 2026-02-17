@@ -6,12 +6,20 @@ import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
-import { IProtocolFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {
+    IProtocolFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
@@ -124,13 +132,7 @@ contract ProtocolFeeSweeper is IProtocolFeeSweeper, SingletonAuthentication, Ree
                     feeToken.forceApprove(address(feeBurner), withdrawnBalance);
                     // This is asynchronous; the burner will complete the action and emit an event.
                     feeBurner.burn(
-                        pool,
-                        feeToken,
-                        withdrawnBalance,
-                        targetToken,
-                        minTargetTokenAmountOut,
-                        _feeRecipient,
-                        deadline
+                        pool, feeToken, withdrawnBalance, targetToken, minTargetTokenAmountOut, _feeRecipient, deadline
                     );
 
                     if (feeToken.allowance(address(this), address(feeBurner)) > 0) {

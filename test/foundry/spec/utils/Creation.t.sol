@@ -67,7 +67,11 @@ contract CreationHarness {
         return Creation.create3WithArgs(initCode, initArgs, salt);
     }
 
-    function create2AddressFromOf(address deployer, bytes32 initCodeHash, bytes32 salt) external pure returns (address) {
+    function create2AddressFromOf(address deployer, bytes32 initCodeHash, bytes32 salt)
+        external
+        pure
+        returns (address)
+    {
         return Creation._create2AddressFromOf(deployer, initCodeHash, salt);
     }
 
@@ -225,12 +229,8 @@ contract Creation_Test is Test {
         bytes32 salt = bytes32(uint256(42));
         bytes memory initArgs = abi.encode(uint256(999), address(0xCAFE));
 
-        address predicted = harness.create2WithArgsAddressFromOf(
-            address(harness),
-            simpleContractWithArgsInitCode,
-            initArgs,
-            salt
-        );
+        address predicted =
+            harness.create2WithArgsAddressFromOf(address(harness), simpleContractWithArgsInitCode, initArgs, salt);
         address deployed = harness.create2WithArgs(simpleContractWithArgsInitCode, salt, initArgs);
 
         assertEq(deployed, predicted, "Address prediction should match deployment");

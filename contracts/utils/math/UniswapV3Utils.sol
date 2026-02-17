@@ -52,7 +52,7 @@ library UniswapV3Utils {
             sqrtPriceX96,
             sqrtPriceTargetX96,
             liquidity,
-            int256(amountIn),  // Positive for exact input
+            int256(amountIn), // Positive for exact input
             feePips
         );
     }
@@ -65,13 +65,11 @@ library UniswapV3Utils {
     /// @param feePips Fee in pips
     /// @param zeroForOne Swap direction
     /// @return amountOut Output amount after fees
-    function _quoteExactInputSingle(
-        uint256 amountIn,
-        int24 tick,
-        uint128 liquidity,
-        uint24 feePips,
-        bool zeroForOne
-    ) internal pure returns (uint256 amountOut) {
+    function _quoteExactInputSingle(uint256 amountIn, int24 tick, uint128 liquidity, uint24 feePips, bool zeroForOne)
+        internal
+        pure
+        returns (uint256 amountOut)
+    {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         return _quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, feePips, zeroForOne);
     }
@@ -97,9 +95,7 @@ library UniswapV3Utils {
         bool zeroForOne
     ) internal pure returns (uint256 amountIn) {
         // Set target price to tick boundary
-        uint160 sqrtPriceTargetX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceTargetX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Delegate to SwapMath.computeSwapStep with negative amount (exact output)
         // Returns: (sqrtRatioNextX96, amountIn, amountOut, feeAmount)
@@ -109,7 +105,7 @@ library UniswapV3Utils {
             sqrtPriceX96,
             sqrtPriceTargetX96,
             liquidity,
-            -int256(amountOut),  // Negative for exact output
+            -int256(amountOut), // Negative for exact output
             feePips
         );
         // Total required input includes the swap amount plus the fee
@@ -124,13 +120,11 @@ library UniswapV3Utils {
     /// @param feePips Fee in pips
     /// @param zeroForOne Swap direction
     /// @return amountIn Required input amount (includes fees)
-    function _quoteExactOutputSingle(
-        uint256 amountOut,
-        int24 tick,
-        uint128 liquidity,
-        uint24 feePips,
-        bool zeroForOne
-    ) internal pure returns (uint256 amountIn) {
+    function _quoteExactOutputSingle(uint256 amountOut, int24 tick, uint128 liquidity, uint24 feePips, bool zeroForOne)
+        internal
+        pure
+        returns (uint256 amountIn)
+    {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         return _quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, feePips, zeroForOne);
     }
@@ -145,10 +139,11 @@ library UniswapV3Utils {
     /// @param reserve0 Reserve of token0
     /// @param reserve1 Reserve of token1
     /// @return sqrtPriceX96 Sqrt price in Q64.96 fixed-point format
-    function _getSqrtPriceFromReserves(
-        uint256 reserve0,
-        uint256 reserve1
-    ) internal pure returns (uint160 sqrtPriceX96) {
+    function _getSqrtPriceFromReserves(uint256 reserve0, uint256 reserve1)
+        internal
+        pure
+        returns (uint160 sqrtPriceX96)
+    {
         require(reserve0 > 0, "Invalid reserve0");
 
         // Calculate sqrt(reserve1/reserve0) * 2^96
@@ -174,12 +169,11 @@ library UniswapV3Utils {
     /// @param liquidity Liquidity amount
     /// @param roundUp Whether to round up (true for amounts to pay, false for amounts to receive)
     /// @return amount0 Token0 amount
-    function _getAmount0Delta(
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
-        uint128 liquidity,
-        bool roundUp
-    ) internal pure returns (uint256 amount0) {
+    function _getAmount0Delta(uint160 sqrtPriceAX96, uint160 sqrtPriceBX96, uint128 liquidity, bool roundUp)
+        internal
+        pure
+        returns (uint256 amount0)
+    {
         return SqrtPriceMath.getAmount0Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity, roundUp);
     }
 
@@ -190,12 +184,11 @@ library UniswapV3Utils {
     /// @param liquidity Liquidity amount
     /// @param roundUp Whether to round up (true for amounts to pay, false for amounts to receive)
     /// @return amount1 Token1 amount
-    function _getAmount1Delta(
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
-        uint128 liquidity,
-        bool roundUp
-    ) internal pure returns (uint256 amount1) {
+    function _getAmount1Delta(uint160 sqrtPriceAX96, uint160 sqrtPriceBX96, uint128 liquidity, bool roundUp)
+        internal
+        pure
+        returns (uint256 amount1)
+    {
         return SqrtPriceMath.getAmount1Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity, roundUp);
     }
 
@@ -211,12 +204,11 @@ library UniswapV3Utils {
     /// @param liquidity Amount of liquidity
     /// @return amount0 Amount of token0 required
     /// @return amount1 Amount of token1 required
-    function _quoteAmountsForLiquidity(
-        uint160 sqrtPriceX96,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount0, uint256 amount1) {
+    function _quoteAmountsForLiquidity(uint160 sqrtPriceX96, int24 tickLower, int24 tickUpper, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount0, uint256 amount1)
+    {
         uint160 sqrtRatioLowerX96 = TickMath.getSqrtRatioAtTick(tickLower);
         uint160 sqrtRatioUpperX96 = TickMath.getSqrtRatioAtTick(tickUpper);
 
@@ -242,12 +234,11 @@ library UniswapV3Utils {
     /// @param liquidity Amount of liquidity
     /// @return amount0 Amount of token0 required
     /// @return amount1 Amount of token1 required
-    function _quoteAmountsForLiquidity(
-        int24 tick,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount0, uint256 amount1) {
+    function _quoteAmountsForLiquidity(int24 tick, int24 tickLower, int24 tickUpper, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount0, uint256 amount1)
+    {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         return _quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
     }
@@ -292,13 +283,11 @@ library UniswapV3Utils {
     /// @param amount0 Amount of token0 available
     /// @param amount1 Amount of token1 available
     /// @return liquidity Maximum liquidity that can be minted
-    function _quoteLiquidityForAmounts(
-        int24 tick,
-        int24 tickLower,
-        int24 tickUpper,
-        uint256 amount0,
-        uint256 amount1
-    ) internal pure returns (uint128 liquidity) {
+    function _quoteLiquidityForAmounts(int24 tick, int24 tickLower, int24 tickUpper, uint256 amount0, uint256 amount1)
+        internal
+        pure
+        returns (uint128 liquidity)
+    {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         return _quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
     }
@@ -313,11 +302,11 @@ library UniswapV3Utils {
     /// @param sqrtRatioBX96 Second sqrt price (Q64.96)
     /// @param liquidity Liquidity amount
     /// @return amount0 Token0 amount
-    function _getAmount0ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount0) {
+    function _getAmount0ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount0)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }
@@ -336,11 +325,11 @@ library UniswapV3Utils {
     /// @param sqrtRatioBX96 Second sqrt price (Q64.96)
     /// @param liquidity Liquidity amount
     /// @return amount1 Token1 amount
-    function _getAmount1ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount1) {
+    function _getAmount1ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount1)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }
@@ -355,11 +344,11 @@ library UniswapV3Utils {
     /// @param sqrtRatioBX96 Upper sqrt price (Q64.96)
     /// @param amount0 Token0 amount
     /// @return liquidity Computed liquidity
-    function _getLiquidityForAmount0(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint256 amount0
-    ) internal pure returns (uint128 liquidity) {
+    function _getLiquidityForAmount0(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint256 amount0)
+        internal
+        pure
+        returns (uint128 liquidity)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }
@@ -375,11 +364,11 @@ library UniswapV3Utils {
     /// @param sqrtRatioBX96 Upper sqrt price (Q64.96)
     /// @param amount1 Token1 amount
     /// @return liquidity Computed liquidity
-    function _getLiquidityForAmount1(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint256 amount1
-    ) internal pure returns (uint128 liquidity) {
+    function _getLiquidityForAmount1(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint256 amount1)
+        internal
+        pure
+        returns (uint128 liquidity)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }

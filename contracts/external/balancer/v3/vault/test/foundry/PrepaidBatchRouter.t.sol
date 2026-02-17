@@ -5,20 +5,23 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { LiquidityManagement, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IRouterCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    LiquidityManagement,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { BatchRouter } from "../../contracts/BatchRouter.sol";
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BatchRouter} from "../../contracts/BatchRouter.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract PrepaidBatchRouterTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -59,13 +62,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         tokens[1] = weth;
 
         // Register the second pool.
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(newPool, vault.buildTokenConfig(tokens), roleAccounts, poolHooksContract, liquidityManagement);
 
         vm.startPrank(lp);
         _initPool(newPool, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
@@ -83,15 +81,10 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create single step path.
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountIn: exactAmountIn,
-            minAmountOut: 0
-        });
+        paths[0] = SwapPathExactAmountIn({tokenIn: usdc, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0});
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
         vm.startPrank(alice);
@@ -101,8 +94,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
         uint256 aliceUsdcBalanceBefore = usdc.balanceOf(alice);
 
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) = prepaidBatchRouter
-            .swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) =
+            prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify results.
@@ -125,14 +118,11 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create single step path.
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountOut: exactAmountOut,
-            maxAmountIn: maxAmountIn
+            tokenIn: usdc, steps: steps, exactAmountOut: exactAmountOut, maxAmountIn: maxAmountIn
         });
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
@@ -143,8 +133,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
         uint256 aliceUsdcBalanceBefore = usdc.balanceOf(alice);
 
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) = prepaidBatchRouter
-            .swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) =
+            prepaidBatchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify results.
@@ -156,11 +146,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         // Verify balances - Alice should receive exactAmountOut DAI and get back unused USDC.
         uint256[] memory poolBalancesAfter = vault.getCurrentLiveBalances(pool);
         assertEq(dai.balanceOf(alice), aliceDaiBalanceBefore + exactAmountOut, "Wrong DAI balance");
-        assertEq(
-            usdc.balanceOf(alice),
-            aliceUsdcBalanceBefore + (maxAmountIn - pathAmountsIn[0]),
-            "Wrong USDC balance"
-        );
+        assertEq(usdc.balanceOf(alice), aliceUsdcBalanceBefore + (maxAmountIn - pathAmountsIn[0]), "Wrong USDC balance");
         assertLt(pathAmountsIn[0], maxAmountIn, "Should use less than max amount in");
         assertEq(poolBalancesAfter[daiIdx], poolBalancesBefore[daiIdx] - exactAmountOut, "Wrong DAI pool balance");
         assertEq(poolBalancesAfter[usdcIdx], poolBalancesBefore[usdcIdx] + pathAmountsIn[0], "Wrong USDC pool balance");
@@ -175,11 +161,11 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create multi-step path: DAI -> USDC -> WETH.
         SwapPathStep[] memory steps = new SwapPathStep[](2);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: usdc, isBuffer: false });
-        steps[1] = SwapPathStep({ pool: secondPool, tokenOut: weth, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: usdc, isBuffer: false});
+        steps[1] = SwapPathStep({pool: secondPool, tokenOut: weth, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: dai, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: dai, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0});
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
         vm.startPrank(alice);
@@ -188,12 +174,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceWethBalanceBefore = weth.balanceOf(alice);
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
 
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, ) = prepaidBatchRouter.swapExactIn(
-            paths,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut,) =
+            prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify results.
@@ -213,15 +195,12 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create multi-step path: DAI -> USDC -> WETH.
         SwapPathStep[] memory steps = new SwapPathStep[](2);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: usdc, isBuffer: false });
-        steps[1] = SwapPathStep({ pool: secondPool, tokenOut: weth, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: usdc, isBuffer: false});
+        steps[1] = SwapPathStep({pool: secondPool, tokenOut: weth, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: dai,
-            steps: steps,
-            exactAmountOut: exactAmountOut,
-            maxAmountIn: maxAmountIn
+            tokenIn: dai, steps: steps, exactAmountOut: exactAmountOut, maxAmountIn: maxAmountIn
         });
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
@@ -231,12 +210,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceWethBalanceBefore = weth.balanceOf(alice);
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
 
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, ) = prepaidBatchRouter.swapExactOut(
-            paths,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn,) =
+            prepaidBatchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify results.
@@ -260,26 +235,16 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Path 1: DAI -> USDC.
         SwapPathStep[] memory steps1 = new SwapPathStep[](1);
-        steps1[0] = SwapPathStep({ pool: pool, tokenOut: usdc, isBuffer: false });
+        steps1[0] = SwapPathStep({pool: pool, tokenOut: usdc, isBuffer: false});
 
         // Path 2: DAI -> USDC -> WETH.
         SwapPathStep[] memory steps2 = new SwapPathStep[](2);
-        steps2[0] = SwapPathStep({ pool: pool, tokenOut: usdc, isBuffer: false });
-        steps2[1] = SwapPathStep({ pool: secondPool, tokenOut: weth, isBuffer: false });
+        steps2[0] = SwapPathStep({pool: pool, tokenOut: usdc, isBuffer: false});
+        steps2[1] = SwapPathStep({pool: secondPool, tokenOut: weth, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](2);
-        paths[0] = SwapPathExactAmountIn({
-            tokenIn: dai,
-            steps: steps1,
-            exactAmountIn: exactAmountIn1,
-            minAmountOut: 0
-        });
-        paths[1] = SwapPathExactAmountIn({
-            tokenIn: dai,
-            steps: steps2,
-            exactAmountIn: exactAmountIn2,
-            minAmountOut: 0
-        });
+        paths[0] = SwapPathExactAmountIn({tokenIn: dai, steps: steps1, exactAmountIn: exactAmountIn1, minAmountOut: 0});
+        paths[1] = SwapPathExactAmountIn({tokenIn: dai, steps: steps2, exactAmountIn: exactAmountIn2, minAmountOut: 0});
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
         vm.startPrank(alice);
@@ -289,12 +254,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceWethBalanceBefore = weth.balanceOf(alice);
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
 
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, ) = prepaidBatchRouter.swapExactIn(
-            paths,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut,) =
+            prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify results.
@@ -326,7 +287,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create single step path.
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
         paths[0] = SwapPathExactAmountIn({
@@ -341,11 +302,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceUsdcBalanceBefore = usdc.balanceOf(alice);
 
         _prankStaticCall();
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, ) = prepaidBatchRouter.querySwapExactIn(
-            paths,
-            alice,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut,) =
+            prepaidBatchRouter.querySwapExactIn(paths, alice, bytes(""));
 
         // Verify user balances are unchanged (no actual token transfers in query).
         assertEq(dai.balanceOf(alice), aliceDaiBalanceBefore, "Alice DAI balance should be unchanged");
@@ -363,7 +321,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create single step path.
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
@@ -378,11 +336,8 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceUsdcBalanceBefore = usdc.balanceOf(alice);
 
         _prankStaticCall();
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, ) = prepaidBatchRouter.querySwapExactOut(
-            paths,
-            alice,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn,) =
+            prepaidBatchRouter.querySwapExactOut(paths, alice, bytes(""));
 
         // Verify user balances are unchanged (no actual token transfers in query).
         assertEq(dai.balanceOf(alice), aliceDaiBalanceBefore, "Alice DAI balance should be unchanged");
@@ -401,15 +356,10 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
     function testSwapExactInDeadline() public {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountIn: MIN_SWAP_AMOUNT,
-            minAmountOut: 0
-        });
+        paths[0] = SwapPathExactAmountIn({tokenIn: usdc, steps: steps, exactAmountIn: MIN_SWAP_AMOUNT, minAmountOut: 0});
 
         vm.startPrank(alice);
         usdc.transfer(address(vault), MIN_SWAP_AMOUNT);
@@ -421,14 +371,11 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
     function testSwapExactOutDeadline() public {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountOut: MIN_SWAP_AMOUNT,
-            maxAmountIn: poolInitAmount
+            tokenIn: usdc, steps: steps, exactAmountOut: MIN_SWAP_AMOUNT, maxAmountIn: poolInitAmount
         });
 
         vm.startPrank(alice);
@@ -443,15 +390,10 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 exactAmountIn = MIN_SWAP_AMOUNT;
 
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountIn: exactAmountIn,
-            minAmountOut: 0
-        });
+        paths[0] = SwapPathExactAmountIn({tokenIn: usdc, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0});
 
         // Don't transfer enough tokens to the Vault.
         vm.startPrank(alice);
@@ -473,9 +415,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create empty PermitBatch struct.
         IAllowanceTransfer.PermitBatch memory permitBatch = IAllowanceTransfer.PermitBatch({
-            details: new IAllowanceTransfer.PermitDetails[](0),
-            spender: address(0),
-            sigDeadline: 0
+            details: new IAllowanceTransfer.PermitDetails[](0), spender: address(0), sigDeadline: 0
         });
 
         vm.expectRevert(IRouterCommon.OperationNotSupported.selector);
@@ -510,10 +450,10 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         swapAmount = bound(swapAmount, MIN_SWAP_AMOUNT, poolBalances[daiIdx] / 2);
 
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: usdc, steps: steps, exactAmountIn: swapAmount, minAmountOut: 0 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: usdc, steps: steps, exactAmountIn: swapAmount, minAmountOut: 0});
 
         vm.startPrank(alice);
         usdc.transfer(address(vault), swapAmount);
@@ -521,7 +461,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 aliceDaiBalanceBefore = dai.balanceOf(alice);
         uint256 aliceUsdcBalanceBefore = usdc.balanceOf(alice);
 
-        (uint256[] memory pathAmountsOut, , ) = prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Verify balances - USDC already transferred, so balance should be unchanged.
@@ -535,22 +475,22 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         swapAmount = bound(swapAmount, MIN_SWAP_AMOUNT, poolBalances[daiIdx] / 2);
 
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: usdc, steps: steps, exactAmountIn: swapAmount, minAmountOut: 0 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: usdc, steps: steps, exactAmountIn: swapAmount, minAmountOut: 0});
 
         uint256 snapshot = vm.snapshotState();
 
         // First query the swap.
         _prankStaticCall();
-        (uint256[] memory queryAmountsOut, , ) = prepaidBatchRouter.querySwapExactIn(paths, alice, bytes(""));
+        (uint256[] memory queryAmountsOut,,) = prepaidBatchRouter.querySwapExactIn(paths, alice, bytes(""));
         vm.revertToState(snapshot);
 
         // Then execute the actual swap.
         vm.startPrank(alice);
         usdc.transfer(address(vault), swapAmount);
-        (uint256[] memory actualAmountsOut, , ) = prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory actualAmountsOut,,) = prepaidBatchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
         vm.stopPrank();
 
         // Query and actual should match.
@@ -574,7 +514,7 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         });
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: dai, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: dai, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: 0});
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
         vm.startPrank(alice);
@@ -593,14 +533,11 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
 
         // Create buffer operation step.
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: address(dai), tokenOut: usdc, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(dai), tokenOut: usdc, isBuffer: true});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: dai,
-            steps: steps,
-            exactAmountOut: exactAmountOut,
-            maxAmountIn: maxAmountIn
+            tokenIn: dai, steps: steps, exactAmountOut: exactAmountOut, maxAmountIn: maxAmountIn
         });
 
         // Transfer tokens to the Vault in advance (aggregator/pre-paid pattern).
@@ -618,14 +555,11 @@ contract PrepaidBatchRouterTest is BaseVaultTest {
         uint256 maxAmountIn = MIN_SWAP_AMOUNT * 2;
 
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: pool, tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: pool, tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: usdc,
-            steps: steps,
-            exactAmountOut: exactAmountOut,
-            maxAmountIn: maxAmountIn
+            tokenIn: usdc, steps: steps, exactAmountOut: exactAmountOut, maxAmountIn: maxAmountIn
         });
 
         // Transfer insufficient tokens to vault (less than maxAmountIn).

@@ -5,12 +5,11 @@ pragma solidity ^0.8.24;
 import "../lib/GradualValueChange.sol";
 
 contract GradualValueChangeMock {
-    function getInterpolatedValue(
-        uint256 startValue,
-        uint256 endValue,
-        uint256 startTime,
-        uint256 endTime
-    ) public view returns (uint256) {
+    function getInterpolatedValue(uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
+        public
+        view
+        returns (uint256)
+    {
         return GradualValueChange.getInterpolatedValue(startValue, endValue, startTime, endTime);
     }
 

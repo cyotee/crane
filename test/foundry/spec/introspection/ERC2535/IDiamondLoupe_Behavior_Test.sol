@@ -42,14 +42,18 @@ contract Behavior_Stub_Diamond is IDiamondLoupe {
         for (uint256 i = 0; i < _addrs.length; i++) {
             address a = _addrs[i];
             bytes4[] memory fs = new bytes4[](_funcs[a].length);
-            for (uint256 j = 0; j < _funcs[a].length; j++) fs[j] = _funcs[a][j];
+            for (uint256 j = 0; j < _funcs[a].length; j++) {
+                fs[j] = _funcs[a][j];
+            }
             out[i] = Facet({facetAddress: a, functionSelectors: fs});
         }
     }
 
     function facetFunctionSelectors(address facet) external view override returns (bytes4[] memory) {
         bytes4[] memory fs = new bytes4[](_funcs[facet].length);
-        for (uint256 i = 0; i < _funcs[facet].length; i++) fs[i] = _funcs[facet][i];
+        for (uint256 i = 0; i < _funcs[facet].length; i++) {
+            fs[i] = _funcs[facet][i];
+        }
         return fs;
     }
 
@@ -88,14 +92,18 @@ contract Behavior_Stub_Diamond_Missing is IDiamondLoupe {
         for (uint256 i = 0; i < _addrs.length; i++) {
             address a = _addrs[i];
             bytes4[] memory fs = new bytes4[](_funcs[a].length);
-            for (uint256 j = 0; j < _funcs[a].length; j++) fs[j] = _funcs[a][j];
+            for (uint256 j = 0; j < _funcs[a].length; j++) {
+                fs[j] = _funcs[a][j];
+            }
             out[i] = Facet({facetAddress: a, functionSelectors: fs});
         }
     }
 
     function facetFunctionSelectors(address facet) external view virtual override returns (bytes4[] memory) {
         bytes4[] memory fs = new bytes4[](_funcs[facet].length);
-        for (uint256 i = 0; i < _funcs[facet].length; i++) fs[i] = _funcs[facet][i];
+        for (uint256 i = 0; i < _funcs[facet].length; i++) {
+            fs[i] = _funcs[facet][i];
+        }
         return fs;
     }
 
@@ -135,19 +143,28 @@ contract Behavior_Stub_Diamond_MissingSelector is IDiamondLoupe {
         for (uint256 i = 0; i < _addrs.length; i++) {
             address a = _addrs[i];
             bytes4[] memory fs = new bytes4[](_funcs[a].length);
-            for (uint256 j = 0; j < _funcs[a].length; j++) fs[j] = _funcs[a][j];
+            for (uint256 j = 0; j < _funcs[a].length; j++) {
+                fs[j] = _funcs[a][j];
+            }
             out[i] = Facet({facetAddress: a, functionSelectors: fs});
         }
     }
 
     function facetFunctionSelectors(address facet) external view override returns (bytes4[] memory) {
         bytes4[] memory fs = new bytes4[](_funcs[facet].length);
-        for (uint256 i = 0; i < _funcs[facet].length; i++) fs[i] = _funcs[facet][i];
+        for (uint256 i = 0; i < _funcs[facet].length; i++) {
+            fs[i] = _funcs[facet][i];
+        }
         return fs;
     }
 
-    function facetAddresses() external view override returns (address[] memory) { return _addrs; }
-    function facetAddress(bytes4 selector) external view override returns (address) { return _funcToAddr[selector]; }
+    function facetAddresses() external view override returns (address[] memory) {
+        return _addrs;
+    }
+
+    function facetAddress(bytes4 selector) external view override returns (address) {
+        return _funcToAddr[selector];
+    }
 }
 
 contract Behavior_Stub_Diamond_ExtraSelector is Behavior_Stub_Diamond {
@@ -175,22 +192,34 @@ contract Behavior_Stub_Diamond_DupAddrs is IDiamondLoupe {
         _funcToAddr[Behavior_Stub_FacetA.a2.selector] = a;
         _funcToAddr[Behavior_Stub_FacetB.b1.selector] = b;
     }
+
     function facets() external view override returns (Facet[] memory out) {
         out = new Facet[](_addrs.length);
         for (uint256 i = 0; i < _addrs.length; i++) {
             address a = _addrs[i];
             bytes4[] memory fs = new bytes4[](_funcs[a].length);
-            for (uint256 j = 0; j < _funcs[a].length; j++) fs[j] = _funcs[a][j];
+            for (uint256 j = 0; j < _funcs[a].length; j++) {
+                fs[j] = _funcs[a][j];
+            }
             out[i] = Facet({facetAddress: a, functionSelectors: fs});
         }
     }
+
     function facetFunctionSelectors(address facet) external view override returns (bytes4[] memory) {
         bytes4[] memory fs = new bytes4[](_funcs[facet].length);
-        for (uint256 i = 0; i < _funcs[facet].length; i++) fs[i] = _funcs[facet][i];
+        for (uint256 i = 0; i < _funcs[facet].length; i++) {
+            fs[i] = _funcs[facet][i];
+        }
         return fs;
     }
-    function facetAddresses() external view override returns (address[] memory) { return _addrs; }
-    function facetAddress(bytes4 selector) external view override returns (address) { return _funcToAddr[selector]; }
+
+    function facetAddresses() external view override returns (address[] memory) {
+        return _addrs;
+    }
+
+    function facetAddress(bytes4 selector) external view override returns (address) {
+        return _funcToAddr[selector];
+    }
 }
 
 contract Behavior_Stub_Diamond_Collision is IDiamondLoupe {
@@ -206,22 +235,34 @@ contract Behavior_Stub_Diamond_Collision is IDiamondLoupe {
         _funcs[b].push(Behavior_Stub_FacetA.a1.selector);
         _funcToAddr[Behavior_Stub_FacetA.a1.selector] = b; // map collision to b
     }
+
     function facets() external view override returns (Facet[] memory out) {
         out = new Facet[](_addrs.length);
         for (uint256 i = 0; i < _addrs.length; i++) {
             address a = _addrs[i];
             bytes4[] memory fs = new bytes4[](_funcs[a].length);
-            for (uint256 j = 0; j < _funcs[a].length; j++) fs[j] = _funcs[a][j];
+            for (uint256 j = 0; j < _funcs[a].length; j++) {
+                fs[j] = _funcs[a][j];
+            }
             out[i] = Facet({facetAddress: a, functionSelectors: fs});
         }
     }
+
     function facetFunctionSelectors(address facet) external view override returns (bytes4[] memory) {
         bytes4[] memory fs = new bytes4[](_funcs[facet].length);
-        for (uint256 i = 0; i < _funcs[facet].length; i++) fs[i] = _funcs[facet][i];
+        for (uint256 i = 0; i < _funcs[facet].length; i++) {
+            fs[i] = _funcs[facet][i];
+        }
         return fs;
     }
-    function facetAddresses() external view override returns (address[] memory) { return _addrs; }
-    function facetAddress(bytes4 selector) external view override returns (address) { return _funcToAddr[selector]; }
+
+    function facetAddresses() external view override returns (address[] memory) {
+        return _addrs;
+    }
+
+    function facetAddress(bytes4 selector) external view override returns (address) {
+        return _funcToAddr[selector];
+    }
 }
 
 contract Behavior_HasValidProxy {
@@ -277,7 +318,9 @@ contract Behavior_IDiamondLoupe_Test is Test {
         aFuncs[1] = Behavior_Stub_FacetA.a2.selector;
 
         assert(
-            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(subject, aFuncs, subject.facetFunctionSelectors(address(fa())))
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(
+                subject, aFuncs, subject.facetFunctionSelectors(address(fa()))
+            )
         );
     }
 
@@ -291,7 +334,11 @@ contract Behavior_IDiamondLoupe_Test is Test {
 
         // check mapping from selector to facet
         bytes4 sel = Behavior_Stub_FacetA.a1.selector;
-        assert(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(subject, sel, address(fa()), subject.facetAddress(sel)));
+        assert(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(
+                subject, sel, address(fa()), subject.facetAddress(sel)
+            )
+        );
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
@@ -366,18 +413,27 @@ contract Behavior_IDiamondLoupe_Test is Test {
 
         bytes4 sel = Behavior_Stub_FacetA.a1.selector;
         // expected facet for sel is fa(), but subject maps it to fb()
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(subject, sel, address(fa()), subject.facetAddress(sel)));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(
+                subject, sel, address(fa()), subject.facetAddress(sel)
+            )
+        );
     }
 
     function test_facet_missing_selectors() public {
-        Behavior_Stub_Diamond_MissingSelector d = new Behavior_Stub_Diamond_MissingSelector(address(fa()), address(fb()));
+        Behavior_Stub_Diamond_MissingSelector d =
+            new Behavior_Stub_Diamond_MissingSelector(address(fa()), address(fb()));
         IDiamondLoupe subject = IDiamondLoupe(address(d));
 
         bytes4[] memory aFuncs = new bytes4[](2);
         aFuncs[0] = Behavior_Stub_FacetA.a1.selector;
         aFuncs[1] = Behavior_Stub_FacetA.a2.selector;
 
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(subject, aFuncs, subject.facetFunctionSelectors(address(fa()))));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(
+                subject, aFuncs, subject.facetFunctionSelectors(address(fa()))
+            )
+        );
     }
 
     function test_facet_has_extra_selectors() public {
@@ -389,7 +445,11 @@ contract Behavior_IDiamondLoupe_Test is Test {
         aFuncs[1] = Behavior_Stub_FacetA.a2.selector;
 
         // actual contains extra selector
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(subject, aFuncs, subject.facetFunctionSelectors(address(fa()))));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(
+                subject, aFuncs, subject.facetFunctionSelectors(address(fa()))
+            )
+        );
     }
 
     function test_duplicate_addresses_in_actual() public {
@@ -400,7 +460,11 @@ contract Behavior_IDiamondLoupe_Test is Test {
         expectedAddrs[0] = address(fa());
         expectedAddrs[1] = address(fb());
 
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddresses(subject, expectedAddrs, subject.facetAddresses()));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddresses(
+                subject, expectedAddrs, subject.facetAddresses()
+            )
+        );
     }
 
     function test_duplicate_addresses_in_expectations_revert() public {
@@ -431,7 +495,11 @@ contract Behavior_IDiamondLoupe_Test is Test {
 
         bytes4 sel = Behavior_Stub_FacetA.a1.selector;
         // expected mapping would be to fa(), actual maps to fb()
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(subject, sel, address(fa()), subject.facetAddress(sel)));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetAddress(
+                subject, sel, address(fa()), subject.facetAddress(sel)
+            )
+        );
     }
 
     function test_unknown_selector_reports_zero() public {
@@ -455,6 +523,10 @@ contract Behavior_IDiamondLoupe_Test is Test {
         expectedFuncs[0] = Behavior_Stub_FacetA.a1.selector;
         expectedFuncs[1] = Behavior_Stub_FacetA.a2.selector;
 
-        assertFalse(Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(subject, expectedFuncs, subject.facetFunctionSelectors(a)));
+        assertFalse(
+            Behavior_IDiamondLoupe.areValid_IDiamondLoupe_facetFunctionSelectors(
+                subject, expectedFuncs, subject.facetFunctionSelectors(a)
+            )
+        );
     }
 }

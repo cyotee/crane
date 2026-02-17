@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "../math/FixedPoint.sol";
-import { InputHelpers } from "./InputHelpers.sol";
+import {FixedPoint} from "../math/FixedPoint.sol";
+import {InputHelpers} from "./InputHelpers.sol";
 
 /**
  * @notice Helper functions to apply/undo token decimal and rate adjustments, rounding in the direction indicated.
@@ -35,11 +35,11 @@ library ScalingHelpers {
      * @param tokenRate The token rate scaling factor
      * @return result The final 18-decimal precision result, rounded down
      */
-    function toScaled18ApplyRateRoundDown(
-        uint256 amount,
-        uint256 scalingFactor,
-        uint256 tokenRate
-    ) internal pure returns (uint256) {
+    function toScaled18ApplyRateRoundDown(uint256 amount, uint256 scalingFactor, uint256 tokenRate)
+        internal
+        pure
+        returns (uint256)
+    {
         return (amount * scalingFactor).mulDown(tokenRate);
     }
 
@@ -53,11 +53,11 @@ library ScalingHelpers {
      * @param tokenRate The token rate scaling factor
      * @return result The final 18-decimal precision result, rounded up
      */
-    function toScaled18ApplyRateRoundUp(
-        uint256 amount,
-        uint256 scalingFactor,
-        uint256 tokenRate
-    ) internal pure returns (uint256) {
+    function toScaled18ApplyRateRoundUp(uint256 amount, uint256 scalingFactor, uint256 tokenRate)
+        internal
+        pure
+        returns (uint256)
+    {
         return (amount * scalingFactor).mulUp(tokenRate);
     }
 
@@ -71,11 +71,11 @@ library ScalingHelpers {
      * @param tokenRate The token rate scaling factor
      * @return result The final native decimal result, rounded down
      */
-    function toRawUndoRateRoundDown(
-        uint256 amount,
-        uint256 scalingFactor,
-        uint256 tokenRate
-    ) internal pure returns (uint256) {
+    function toRawUndoRateRoundDown(uint256 amount, uint256 scalingFactor, uint256 tokenRate)
+        internal
+        pure
+        returns (uint256)
+    {
         // Do division last. Scaling factor is not a FP18, but a FP18 normalized by FP(1).
         // `scalingFactor * tokenRate` is a precise FP18, so there is no rounding direction here.
         return FixedPoint.divDown(amount, scalingFactor * tokenRate);
@@ -91,11 +91,11 @@ library ScalingHelpers {
      * @param tokenRate The token rate scaling factor
      * @return result The final native decimal result, rounded up
      */
-    function toRawUndoRateRoundUp(
-        uint256 amount,
-        uint256 scalingFactor,
-        uint256 tokenRate
-    ) internal pure returns (uint256) {
+    function toRawUndoRateRoundUp(uint256 amount, uint256 scalingFactor, uint256 tokenRate)
+        internal
+        pure
+        returns (uint256)
+    {
         // Do division last. Scaling factor is not a FP18, but a FP18 normalized by FP(1).
         // `scalingFactor * tokenRate` is a precise FP18, so there is no rounding direction here.
         return FixedPoint.divUp(amount, scalingFactor * tokenRate);

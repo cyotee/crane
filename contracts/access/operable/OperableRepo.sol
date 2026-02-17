@@ -40,9 +40,7 @@ library OperableRepo {
         _setOperatorStatus(_layout(), operator, approval);
     }
 
-    function _setFunctionOperatorStatus(Storage storage layout, bytes4 func, address operator, bool approval)
-        internal
-    {
+    function _setFunctionOperatorStatus(Storage storage layout, bytes4 func, address operator, bool approval) internal {
         MultiStepOwnableRepo._onlyOwner();
         layout.isOperatorFor[func][operator] = approval;
         emit IOperable.NewFunctionOperatorStatus(operator, func, approval);
@@ -60,11 +58,7 @@ library OperableRepo {
         return _isOperator(_layout(), operator);
     }
 
-    function _isFunctionOperator(Storage storage layout, bytes4 func, address operator)
-        internal
-        view
-        returns (bool)
-    {
+    function _isFunctionOperator(Storage storage layout, bytes4 func, address operator) internal view returns (bool) {
         return layout.isOperatorFor[func][operator];
     }
 

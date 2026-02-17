@@ -9,11 +9,15 @@ import {
     SwapKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
 import {SurgeHookCommon} from "./SurgeHookCommon.sol";
-import {ISurgeHookCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 import {StableSurgeMedianMath} from "./utils/StableSurgeMedianMath.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -64,14 +68,7 @@ contract StableSurgeHook is SurgeHookCommon {
         uint256 defaultMaxSurgeFeePercentage_,
         uint256 defaultSurgeThresholdPercentage_,
         string memory version_
-    )
-        SurgeHookCommon(
-            vault_,
-            defaultMaxSurgeFeePercentage_,
-            defaultSurgeThresholdPercentage_,
-            version_
-        )
-    {
+    ) SurgeHookCommon(vault_, defaultMaxSurgeFeePercentage_, defaultSurgeThresholdPercentage_, version_) {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -154,11 +151,11 @@ contract StableSurgeHook is SurgeHookCommon {
      * @param staticSwapFeePercentage The pool's static swap fee.
      * @return surgeFeePercentage The calculated surge fee percentage.
      */
-    function getSurgeFeePercentage(
-        PoolSwapParams calldata params,
-        address pool,
-        uint256 staticSwapFeePercentage
-    ) public view returns (uint256 surgeFeePercentage) {
+    function getSurgeFeePercentage(PoolSwapParams calldata params, address pool, uint256 staticSwapFeePercentage)
+        public
+        view
+        returns (uint256 surgeFeePercentage)
+    {
         return computeSwapSurgeFeePercentage(params, pool, staticSwapFeePercentage);
     }
 }

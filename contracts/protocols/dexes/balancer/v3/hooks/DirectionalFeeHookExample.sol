@@ -60,9 +60,7 @@ contract DirectionalFeeHookExample is BaseHooksTarget {
      * @param pool The pool address.
      */
     event DirectionalFeeHookExampleRegistered(
-        address indexed hooksContract,
-        address indexed factory,
-        address indexed pool
+        address indexed hooksContract, address indexed factory, address indexed pool
     );
 
     /* ========================================================================== */
@@ -74,10 +72,7 @@ contract DirectionalFeeHookExample is BaseHooksTarget {
      * @param vault_ The Balancer V3 Vault address.
      * @param allowedStablePoolFactory_ The factory whose pools can register this hook.
      */
-    constructor(
-        IVault vault_,
-        address allowedStablePoolFactory_
-    ) BaseHooksTarget(vault_) {
+    constructor(IVault vault_, address allowedStablePoolFactory_) BaseHooksTarget(vault_) {
         _allowedStablePoolFactory = allowedStablePoolFactory_;
     }
 
@@ -86,17 +81,16 @@ contract DirectionalFeeHookExample is BaseHooksTarget {
     /* ========================================================================== */
 
     /// @inheritdoc BaseHooksTarget
-    function onRegister(
-        address factory,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address factory, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         emit DirectionalFeeHookExampleRegistered(address(this), factory, pool);
 
         // Only allow pools from the designated stable pool factory
-        return factory == _allowedStablePoolFactory &&
-            IBasePoolFactory(factory).isPoolFromFactory(pool);
+        return factory == _allowedStablePoolFactory && IBasePoolFactory(factory).isPoolFromFactory(pool);
     }
 
     /// @inheritdoc BaseHooksTarget
@@ -111,13 +105,10 @@ contract DirectionalFeeHookExample is BaseHooksTarget {
         uint256 staticSwapFeePercentage
     ) public view override onlyVault returns (bool, uint256) {
         // Get current pool balances
-        (, , , uint256[] memory lastBalancesLiveScaled18) = _vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory lastBalancesLiveScaled18) = _vault.getPoolTokenInfo(pool);
 
         uint256 calculatedSwapFeePercentage = _calculateDirectionalFeePercentage(
-            lastBalancesLiveScaled18,
-            params.amountGivenScaled18,
-            params.indexIn,
-            params.indexOut
+            lastBalancesLiveScaled18, params.amountGivenScaled18, params.indexIn, params.indexOut
         );
 
         // Charge the higher of static or calculated fee

@@ -80,8 +80,8 @@ contract Minter is IMinter {
         if (initialized) revert AlreadyInitialized();
         if (msg.sender != team) revert NotTeam();
         if (
-            (params.liquidWallets.length != params.liquidAmounts.length) ||
-            (params.lockedWallets.length != params.lockedAmounts.length)
+            (params.liquidWallets.length != params.liquidAmounts.length)
+                || (params.lockedWallets.length != params.lockedAmounts.length)
         ) revert InvalidParams();
         initialized = true;
 

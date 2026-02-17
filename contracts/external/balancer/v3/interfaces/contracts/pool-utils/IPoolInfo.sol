@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { TokenInfo } from "../vault/VaultTypes.sol";
+import {TokenInfo} from "../vault/VaultTypes.sol";
 
 /**
  * @notice Convenience interface for pools, to get easy access to information stored in the Vault.

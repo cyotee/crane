@@ -5,7 +5,9 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 interface IVaultMainMock {
@@ -77,15 +79,13 @@ interface IVaultMainMock {
 
     function recoveryModeExit(address pool) external view;
 
-    function loadPoolDataUpdatingBalancesAndYieldFees(
-        address pool,
-        Rounding roundingDirection
-    ) external returns (PoolData memory);
+    function loadPoolDataUpdatingBalancesAndYieldFees(address pool, Rounding roundingDirection)
+        external
+        returns (PoolData memory);
 
-    function loadPoolDataUpdatingBalancesAndYieldFeesReentrancy(
-        address pool,
-        Rounding roundingDirection
-    ) external returns (PoolData memory);
+    function loadPoolDataUpdatingBalancesAndYieldFeesReentrancy(address pool, Rounding roundingDirection)
+        external
+        returns (PoolData memory);
 
     function manualWritePoolBalancesToStorage(address pool, PoolData memory poolData) external;
 
@@ -116,17 +116,16 @@ interface IVaultMainMock {
     function buildTokenConfig(IERC20[] memory tokens) external view returns (TokenConfig[] memory tokenConfig);
 
     /// @dev Infers TokenType (STANDARD or WITH_RATE) from the presence or absence of the rate provider.
-    function buildTokenConfig(
-        IERC20[] memory tokens,
-        IRateProvider[] memory rateProviders
-    ) external view returns (TokenConfig[] memory tokenConfig);
+    function buildTokenConfig(IERC20[] memory tokens, IRateProvider[] memory rateProviders)
+        external
+        view
+        returns (TokenConfig[] memory tokenConfig);
 
     /// @dev Infers TokenType (STANDARD or WITH_RATE) from the presence or absence of the rate provider.
-    function buildTokenConfig(
-        IERC20[] memory tokens,
-        IRateProvider[] memory rateProviders,
-        bool[] memory yieldFeeFlags
-    ) external view returns (TokenConfig[] memory tokenConfig);
+    function buildTokenConfig(IERC20[] memory tokens, IRateProvider[] memory rateProviders, bool[] memory yieldFeeFlags)
+        external
+        view
+        returns (TokenConfig[] memory tokenConfig);
 
     function buildTokenConfig(
         IERC20[] memory tokens,
@@ -245,12 +244,8 @@ interface IVaultMainMock {
         uint256[] memory minAmountsOutScaled18
     ) external;
 
-    function manualSettleWrap(
-        IERC20 underlyingToken,
-        IERC20 wrappedToken,
-        uint256 underlyingHint,
-        uint256 wrappedHint
-    ) external;
+    function manualSettleWrap(IERC20 underlyingToken, IERC20 wrappedToken, uint256 underlyingHint, uint256 wrappedHint)
+        external;
 
     function manualSettleUnwrap(
         IERC20 underlyingToken,
@@ -263,9 +258,9 @@ interface IVaultMainMock {
 
     function manualGetPoolConfigBits(address pool) external view returns (PoolConfigBits);
 
-    function manualErc4626BufferWrapOrUnwrapReentrancy(
-        BufferWrapOrUnwrapParams memory params
-    ) external returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
+    function manualErc4626BufferWrapOrUnwrapReentrancy(BufferWrapOrUnwrapParams memory params)
+        external
+        returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw);
 
     function manualSetBufferAsset(IERC4626 wrappedToken, address underlyingToken) external;
 
@@ -301,10 +296,10 @@ interface IVaultMainMock {
         SwapState memory swapState
     ) external pure returns (uint256);
 
-    function manualLoadSwapState(
-        VaultSwapParams memory vaultSwapParams,
-        PoolData memory poolData
-    ) external pure returns (SwapState memory swapState);
+    function manualLoadSwapState(VaultSwapParams memory vaultSwapParams, PoolData memory poolData)
+        external
+        pure
+        returns (SwapState memory swapState);
 
     function previewDeposit(IERC4626 wrapper, uint256 amountInUnderlying) external returns (uint256 amountOutWrapped);
 

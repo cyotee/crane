@@ -24,6 +24,6 @@ interface LinearDecreaseAbstract {
     function rely(address) external;
     function deny(address) external;
     function tau() external view returns (uint256);
-    function file(bytes32,uint256) external;
-    function price(uint256,uint256) external view returns (uint256);
+    function file(bytes32, uint256) external;
+    function price(uint256, uint256) external view returns (uint256);
 }

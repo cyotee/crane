@@ -2,33 +2,36 @@
 
 pragma solidity ^0.8.24;
 
-import { PoolSwapParams, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    PoolSwapParams,
+    Rounding
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 
-import { BasePoolMath } from "../BasePoolMath.sol";
+import {BasePoolMath} from "../BasePoolMath.sol";
 
 abstract contract BasePoolMathMock is IBasePool {
     function computeInvariant(uint256[] memory balances, Rounding) public view virtual returns (uint256);
 
-    function computeBalance(
-        uint256[] memory balances,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external view virtual returns (uint256 newBalance);
+    function computeBalance(uint256[] memory balances, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        view
+        virtual
+        returns (uint256 newBalance);
 
-    function computeProportionalAmountsIn(
-        uint256[] memory balances,
-        uint256 bptTotalSupply,
-        uint256 bptAmountOut
-    ) external pure returns (uint256[] memory) {
+    function computeProportionalAmountsIn(uint256[] memory balances, uint256 bptTotalSupply, uint256 bptAmountOut)
+        external
+        pure
+        returns (uint256[] memory)
+    {
         return BasePoolMath.computeProportionalAmountsIn(balances, bptTotalSupply, bptAmountOut);
     }
 
-    function computeProportionalAmountsOut(
-        uint256[] memory balances,
-        uint256 bptTotalSupply,
-        uint256 bptAmountIn
-    ) external pure returns (uint256[] memory) {
+    function computeProportionalAmountsOut(uint256[] memory balances, uint256 bptTotalSupply, uint256 bptAmountIn)
+        external
+        pure
+        returns (uint256[] memory)
+    {
         return BasePoolMath.computeProportionalAmountsOut(balances, bptTotalSupply, bptAmountIn);
     }
 
@@ -38,13 +41,8 @@ abstract contract BasePoolMathMock is IBasePool {
         uint256 totalSupply,
         uint256 swapFeePercentage
     ) external view returns (uint256 bptAmountOut, uint256[] memory swapFeeAmounts) {
-        return
-            BasePoolMath.computeAddLiquidityUnbalanced(
-                currentBalances,
-                exactAmounts,
-                totalSupply,
-                swapFeePercentage,
-                IBasePool(address(this))
+        return BasePoolMath.computeAddLiquidityUnbalanced(
+                currentBalances, exactAmounts, totalSupply, swapFeePercentage, IBasePool(address(this))
             );
     }
 
@@ -55,8 +53,7 @@ abstract contract BasePoolMathMock is IBasePool {
         uint256 totalSupply,
         uint256 swapFeePercentage
     ) external view returns (uint256 amountInWithFee, uint256[] memory swapFeeAmounts) {
-        return
-            BasePoolMath.computeAddLiquiditySingleTokenExactOut(
+        return BasePoolMath.computeAddLiquiditySingleTokenExactOut(
                 currentBalances,
                 tokenInIndex,
                 exactBptAmountOut,
@@ -73,15 +70,9 @@ abstract contract BasePoolMathMock is IBasePool {
         uint256 totalSupply,
         uint256 swapFeePercentage
     ) external view returns (uint256 bptAmountIn, uint256[] memory swapFeeAmounts) {
-        return
-            BasePoolMath.computeRemoveLiquiditySingleTokenExactOut(
-                currentBalances,
-                tokenOutIndex,
-                exactAmountOut,
-                totalSupply,
-                swapFeePercentage,
-                IBasePool(address(this))
-            );
+        return BasePoolMath.computeRemoveLiquiditySingleTokenExactOut(
+            currentBalances, tokenOutIndex, exactAmountOut, totalSupply, swapFeePercentage, IBasePool(address(this))
+        );
     }
 
     function computeRemoveLiquiditySingleTokenExactIn(
@@ -91,8 +82,7 @@ abstract contract BasePoolMathMock is IBasePool {
         uint256 totalSupply,
         uint256 swapFeePercentage
     ) external view returns (uint256 amountOutWithFee, uint256[] memory swapFeeAmounts) {
-        return
-            BasePoolMath.computeRemoveLiquiditySingleTokenExactIn(
+        return BasePoolMath.computeRemoveLiquiditySingleTokenExactIn(
                 currentBalances,
                 tokenOutIndex,
                 exactBptAmountIn,

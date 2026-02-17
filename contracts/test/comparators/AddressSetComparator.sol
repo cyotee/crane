@@ -19,7 +19,7 @@ struct AddressComparatorRequest {
 }
 
 struct AddressSetComparatorLayout {
-    mapping(address subject => mapping(bytes4 func => AddressSet expected)) recordedExpected;
+    mapping(address subject => mapping(bytes32 func => AddressSet expected)) recordedExpected;
     AddressSet tempExpected;
     AddressSet actual;
 }
@@ -46,15 +46,15 @@ library AddressSetComparatorRepo {
         return _layout((actualHash ^ STORAGE_RANGE_OFFSET));
     }
 
-    function _recExpectedAddrs(address subject, bytes4 func, address expected) internal {
+    function _recExpectedAddrs(address subject, bytes32 func, address expected) internal {
         _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
 
-    function _recExpectedAddrs(address subject, bytes4 func, address[] memory expected) internal {
+    function _recExpectedAddrs(address subject, bytes32 func, address[] memory expected) internal {
         _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
 
-    function _recedExpectedAddrs(address subject, bytes4 func) internal view returns (AddressSet storage) {
+    function _recedExpectedAddrs(address subject, bytes32 func) internal view returns (AddressSet storage) {
         return _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func];
     }
 

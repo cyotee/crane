@@ -17,7 +17,6 @@ import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Ti
  * 4. Known value verification against expected outputs
  */
 contract TickMath_V4_Test is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                            Constants from TickMath                         */
     /* -------------------------------------------------------------------------- */
@@ -60,73 +59,29 @@ contract TickMath_V4_Test is Test {
      */
     function test_getSqrtPriceAtTick_knownValues() public pure {
         // tick 0 -> 2^96 (1:1 price ratio)
-        assertEq(
-            TickMath.getSqrtPriceAtTick(0),
-            SQRT_PRICE_AT_TICK_0,
-            "tick 0 should give sqrtPrice = 2^96"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(0), SQRT_PRICE_AT_TICK_0, "tick 0 should give sqrtPrice = 2^96");
 
         // MIN_TICK -> MIN_SQRT_PRICE
-        assertEq(
-            TickMath.getSqrtPriceAtTick(MIN_TICK),
-            MIN_SQRT_PRICE,
-            "MIN_TICK should give MIN_SQRT_PRICE"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(MIN_TICK), MIN_SQRT_PRICE, "MIN_TICK should give MIN_SQRT_PRICE");
 
         // MAX_TICK -> MAX_SQRT_PRICE
-        assertEq(
-            TickMath.getSqrtPriceAtTick(MAX_TICK),
-            MAX_SQRT_PRICE,
-            "MAX_TICK should give MAX_SQRT_PRICE"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(MAX_TICK), MAX_SQRT_PRICE, "MAX_TICK should give MAX_SQRT_PRICE");
 
         // tick ±1 - exact values
-        assertEq(
-            TickMath.getSqrtPriceAtTick(1),
-            SQRT_PRICE_AT_TICK_1,
-            "tick 1 should give exact sqrtPrice"
-        );
-        assertEq(
-            TickMath.getSqrtPriceAtTick(-1),
-            SQRT_PRICE_AT_TICK_NEG_1,
-            "tick -1 should give exact sqrtPrice"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(1), SQRT_PRICE_AT_TICK_1, "tick 1 should give exact sqrtPrice");
+        assertEq(TickMath.getSqrtPriceAtTick(-1), SQRT_PRICE_AT_TICK_NEG_1, "tick -1 should give exact sqrtPrice");
 
         // tick ±10 - exact values (0.05% pool spacing)
-        assertEq(
-            TickMath.getSqrtPriceAtTick(10),
-            SQRT_PRICE_AT_TICK_10,
-            "tick 10 should give exact sqrtPrice"
-        );
-        assertEq(
-            TickMath.getSqrtPriceAtTick(-10),
-            SQRT_PRICE_AT_TICK_NEG_10,
-            "tick -10 should give exact sqrtPrice"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(10), SQRT_PRICE_AT_TICK_10, "tick 10 should give exact sqrtPrice");
+        assertEq(TickMath.getSqrtPriceAtTick(-10), SQRT_PRICE_AT_TICK_NEG_10, "tick -10 should give exact sqrtPrice");
 
         // tick ±60 - exact values (0.3% pool spacing)
-        assertEq(
-            TickMath.getSqrtPriceAtTick(60),
-            SQRT_PRICE_AT_TICK_60,
-            "tick 60 should give exact sqrtPrice"
-        );
-        assertEq(
-            TickMath.getSqrtPriceAtTick(-60),
-            SQRT_PRICE_AT_TICK_NEG_60,
-            "tick -60 should give exact sqrtPrice"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(60), SQRT_PRICE_AT_TICK_60, "tick 60 should give exact sqrtPrice");
+        assertEq(TickMath.getSqrtPriceAtTick(-60), SQRT_PRICE_AT_TICK_NEG_60, "tick -60 should give exact sqrtPrice");
 
         // tick ±200 - exact values (1% pool spacing)
-        assertEq(
-            TickMath.getSqrtPriceAtTick(200),
-            SQRT_PRICE_AT_TICK_200,
-            "tick 200 should give exact sqrtPrice"
-        );
-        assertEq(
-            TickMath.getSqrtPriceAtTick(-200),
-            SQRT_PRICE_AT_TICK_NEG_200,
-            "tick -200 should give exact sqrtPrice"
-        );
+        assertEq(TickMath.getSqrtPriceAtTick(200), SQRT_PRICE_AT_TICK_200, "tick 200 should give exact sqrtPrice");
+        assertEq(TickMath.getSqrtPriceAtTick(-200), SQRT_PRICE_AT_TICK_NEG_200, "tick -200 should give exact sqrtPrice");
     }
 
     /**
@@ -134,45 +89,25 @@ contract TickMath_V4_Test is Test {
      */
     function test_getTickAtSqrtPrice_knownValues() public pure {
         // 2^96 -> tick 0
-        assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_0),
-            0,
-            "sqrtPrice 2^96 should give tick 0"
-        );
+        assertEq(TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_0), 0, "sqrtPrice 2^96 should give tick 0");
 
         // MIN_SQRT_PRICE -> MIN_TICK
-        assertEq(
-            TickMath.getTickAtSqrtPrice(MIN_SQRT_PRICE),
-            MIN_TICK,
-            "MIN_SQRT_PRICE should give MIN_TICK"
-        );
+        assertEq(TickMath.getTickAtSqrtPrice(MIN_SQRT_PRICE), MIN_TICK, "MIN_SQRT_PRICE should give MIN_TICK");
 
         // MAX_SQRT_PRICE - 1 -> MAX_TICK - 1
         // Note: MAX_SQRT_PRICE itself is invalid input (exclusive upper bound)
         assertEq(
-            TickMath.getTickAtSqrtPrice(MAX_SQRT_PRICE - 1),
-            MAX_TICK - 1,
-            "MAX_SQRT_PRICE - 1 should give MAX_TICK - 1"
+            TickMath.getTickAtSqrtPrice(MAX_SQRT_PRICE - 1), MAX_TICK - 1, "MAX_SQRT_PRICE - 1 should give MAX_TICK - 1"
         );
 
         // sqrtPrice for tick ±1 -> tick ±1
+        assertEq(TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_1), 1, "SQRT_PRICE_AT_TICK_1 should give tick 1");
         assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_1),
-            1,
-            "SQRT_PRICE_AT_TICK_1 should give tick 1"
-        );
-        assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_NEG_1),
-            -1,
-            "SQRT_PRICE_AT_TICK_NEG_1 should give tick -1"
+            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_NEG_1), -1, "SQRT_PRICE_AT_TICK_NEG_1 should give tick -1"
         );
 
         // sqrtPrice for tick ±10 -> tick ±10
-        assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_10),
-            10,
-            "SQRT_PRICE_AT_TICK_10 should give tick 10"
-        );
+        assertEq(TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_10), 10, "SQRT_PRICE_AT_TICK_10 should give tick 10");
         assertEq(
             TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_NEG_10),
             -10,
@@ -180,11 +115,7 @@ contract TickMath_V4_Test is Test {
         );
 
         // sqrtPrice for tick ±60 -> tick ±60
-        assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_60),
-            60,
-            "SQRT_PRICE_AT_TICK_60 should give tick 60"
-        );
+        assertEq(TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_60), 60, "SQRT_PRICE_AT_TICK_60 should give tick 60");
         assertEq(
             TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_NEG_60),
             -60,
@@ -193,9 +124,7 @@ contract TickMath_V4_Test is Test {
 
         // sqrtPrice for tick ±200 -> tick ±200
         assertEq(
-            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_200),
-            200,
-            "SQRT_PRICE_AT_TICK_200 should give tick 200"
+            TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_200), 200, "SQRT_PRICE_AT_TICK_200 should give tick 200"
         );
         assertEq(
             TickMath.getTickAtSqrtPrice(SQRT_PRICE_AT_TICK_NEG_200),
@@ -243,11 +172,11 @@ contract TickMath_V4_Test is Test {
         _testBijectionAtTick(0);
 
         // Common tick spacing boundaries
-        _testBijectionAtTick(60);     // Common for 0.3% pools
+        _testBijectionAtTick(60); // Common for 0.3% pools
         _testBijectionAtTick(-60);
-        _testBijectionAtTick(200);    // Common for 1% pools
+        _testBijectionAtTick(200); // Common for 1% pools
         _testBijectionAtTick(-200);
-        _testBijectionAtTick(10);     // Common for 0.05% pools
+        _testBijectionAtTick(10); // Common for 0.05% pools
         _testBijectionAtTick(-10);
     }
 
@@ -281,20 +210,12 @@ contract TickMath_V4_Test is Test {
         uint160 recoveredSqrtPrice = TickMath.getSqrtPriceAtTick(tick);
 
         // The recovered sqrtPrice should be <= original (floor behavior)
-        assertLe(
-            recoveredSqrtPrice,
-            sqrtPriceX96,
-            "Recovered sqrtPrice exceeds original (floor violation)"
-        );
+        assertLe(recoveredSqrtPrice, sqrtPriceX96, "Recovered sqrtPrice exceeds original (floor violation)");
 
         // The recovered sqrtPrice should be close: the next tick's sqrtPrice should exceed original
         if (tick < MAX_TICK) {
             uint160 nextTickSqrtPrice = TickMath.getSqrtPriceAtTick(tick + 1);
-            assertGt(
-                nextTickSqrtPrice,
-                sqrtPriceX96,
-                "Next tick sqrtPrice should exceed original"
-            );
+            assertGt(nextTickSqrtPrice, sqrtPriceX96, "Next tick sqrtPrice should exceed original");
         }
     }
 
@@ -374,10 +295,10 @@ contract TickMath_V4_Test is Test {
     function test_usableTicks() public pure {
         // Common tick spacings
         int24[] memory spacings = new int24[](4);
-        spacings[0] = 1;    // 0.01% pools
-        spacings[1] = 10;   // 0.05% pools
-        spacings[2] = 60;   // 0.3% pools
-        spacings[3] = 200;  // 1% pools
+        spacings[0] = 1; // 0.01% pools
+        spacings[1] = 10; // 0.05% pools
+        spacings[2] = 60; // 0.3% pools
+        spacings[3] = 200; // 1% pools
 
         for (uint256 i = 0; i < spacings.length; i++) {
             int24 spacing = spacings[i];

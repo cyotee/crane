@@ -22,20 +22,12 @@ library BalancerV3AuthenticationRepo {
         return _layout(STORAGE_SLOT);
     }
 
-    function _initialize(
-        Storage storage layout,
-        bytes32 actionIdDisambiguator
-    ) internal {
+    function _initialize(Storage storage layout, bytes32 actionIdDisambiguator) internal {
         layout.actionIdDisambiguator = actionIdDisambiguator;
     }
 
-    function _initialize(
-        bytes32 actionIdDisambiguator
-    ) internal {
-        _initialize(
-            _layout(),
-            actionIdDisambiguator
-        );
+    function _initialize(bytes32 actionIdDisambiguator) internal {
+        _initialize(_layout(), actionIdDisambiguator);
     }
 
     function _actionIdDisambiguator(Storage storage layout) internal view returns (bytes32) {
@@ -89,5 +81,4 @@ library BalancerV3AuthenticationRepo {
     function _getActionId(bytes4 selector) internal view returns (bytes32) {
         return _getActionId(_layout(), selector);
     }
-
 }

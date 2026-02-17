@@ -209,8 +209,7 @@ contract ERC4626_Rounding_Test is Test {
 
     function test_largeDecimalOffset_handlesCorrectly() public {
         // Deploy vault with large decimal offset (max reasonable: 18)
-        ERC4626TargetStub largeOffsetVault =
-            new ERC4626TargetStub(IERC20Metadata(address(asset)), 8, permit2);
+        ERC4626TargetStub largeOffsetVault = new ERC4626TargetStub(IERC20Metadata(address(asset)), 8, permit2);
 
         vm.startPrank(alice);
         asset.approve(address(largeOffsetVault), 1000e18);
@@ -227,8 +226,7 @@ contract ERC4626_Rounding_Test is Test {
 
     function test_zeroDecimalOffset_worksCorrectly() public {
         // Deploy vault with zero decimal offset
-        ERC4626TargetStub zeroOffsetVault =
-            new ERC4626TargetStub(IERC20Metadata(address(asset)), 0, permit2);
+        ERC4626TargetStub zeroOffsetVault = new ERC4626TargetStub(IERC20Metadata(address(asset)), 0, permit2);
 
         vm.startPrank(alice);
         asset.approve(address(zeroOffsetVault), 1000e18);

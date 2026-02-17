@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { ERC6909Metadata } from "@crane/contracts/external/openzeppelin/token/ERC6909/extensions/ERC6909Metadata.sol";
+import {ERC6909Metadata} from "@crane/contracts/external/openzeppelin/token/ERC6909/extensions/ERC6909Metadata.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
-import { ERC6909 } from "@crane/contracts/external/openzeppelin/token/ERC6909/ERC6909.sol";
+import {ERC6909} from "@crane/contracts/external/openzeppelin/token/ERC6909/ERC6909.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { Multicall } from "@crane/contracts/external/openzeppelin/utils/Multicall.sol";
+import {Multicall} from "@crane/contracts/external/openzeppelin/utils/Multicall.sol";
 
 /**
  * @notice Timelock for WeightedPool BPT created during an LBP migration.

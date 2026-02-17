@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
 import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
-import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
+import {IERC721Errors} from "@crane/contracts/interfaces/IERC721Errors.sol";
 import {ERC721TargetStub} from "@crane/contracts/tokens/ERC721/ERC721TargetStub.sol";
 import {Behavior_IERC721} from "@crane/contracts/tokens/ERC721/Behavior_IERC721.sol";
 
@@ -308,22 +308,15 @@ contract ERC721TargetStub_Test is Test {
         token.mint(alice);
         token.mint(bob);
 
-        assertTrue(
-            Behavior_IERC721.isValid_balanceOf(IERC721(address(token)), alice, 2),
-            "Alice should have 2 tokens"
-        );
-        assertTrue(
-            Behavior_IERC721.isValid_balanceOf(IERC721(address(token)), bob, 1),
-            "Bob should have 1 token"
-        );
+        assertTrue(Behavior_IERC721.isValid_balanceOf(IERC721(address(token)), alice, 2), "Alice should have 2 tokens");
+        assertTrue(Behavior_IERC721.isValid_balanceOf(IERC721(address(token)), bob, 1), "Bob should have 1 token");
     }
 
     function test_behavior_ownerOf() public {
         uint256 tokenId = token.mint(alice);
 
         assertTrue(
-            Behavior_IERC721.isValid_ownerOf(IERC721(address(token)), tokenId, alice),
-            "Alice should own the token"
+            Behavior_IERC721.isValid_ownerOf(IERC721(address(token)), tokenId, alice), "Alice should own the token"
         );
     }
 
@@ -337,12 +330,7 @@ contract ERC721TargetStub_Test is Test {
 
         assertTrue(
             Behavior_IERC721.isValid_transfer(
-                IERC721(address(token)),
-                alice,
-                bob,
-                tokenId,
-                aliceBalBefore,
-                bobBalBefore
+                IERC721(address(token)), alice, bob, tokenId, aliceBalBefore, bobBalBefore
             ),
             "Transfer should be valid"
         );

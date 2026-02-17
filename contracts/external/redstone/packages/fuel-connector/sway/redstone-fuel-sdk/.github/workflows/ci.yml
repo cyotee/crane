@@ -1,0 +1,24 @@
+
+name: Fuel SDK Sway CI
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test-redstone-fuel-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
+      - name: Set Up Rust PATH
+        run: echo "$HOME/.cargo/bin:$PATH" >> $GITHUB_PATH
+      - name: Install fuelup
+        run: curl https://install.fuel.network -o install_script.sh && sh install_script.sh --no-modify-path
+      - name: Set up Fuel PATH
+        run: export PATH="$HOME/.fuelup/bin:$PATH" && echo "$HOME/.cargo/bin:$PATH" >> $GITHUB_PATH
+      - name: Test RedStone Fuel SDK
+        run: forc test

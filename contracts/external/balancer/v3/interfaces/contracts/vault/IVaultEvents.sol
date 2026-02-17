@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IProtocolFeeController } from "./IProtocolFeeController.sol";
-import { IAuthorizer } from "./IAuthorizer.sol";
-import { IHooks } from "./IHooks.sol";
+import {IProtocolFeeController} from "./IProtocolFeeController.sol";
+import {IAuthorizer} from "./IAuthorizer.sol";
+import {IHooks} from "./IHooks.sol";
 import "./VaultTypes.sol";
 
 /// @dev Events are declared inside an interface (namespace) to improve DX with Typechain.
@@ -68,10 +68,7 @@ interface IVaultEvents {
      * @param bufferBalances The final buffer balances, packed in 128-bit words (underlying, wrapped)
      */
     event Wrap(
-        IERC4626 indexed wrappedToken,
-        uint256 depositedUnderlying,
-        uint256 mintedShares,
-        bytes32 bufferBalances
+        IERC4626 indexed wrappedToken, uint256 depositedUnderlying, uint256 mintedShares, bytes32 bufferBalances
     );
 
     /**
@@ -82,10 +79,7 @@ interface IVaultEvents {
      * @param bufferBalances The final buffer balances, packed in 128-bit words (underlying, wrapped)
      */
     event Unwrap(
-        IERC4626 indexed wrappedToken,
-        uint256 burnedShares,
-        uint256 withdrawnUnderlying,
-        bytes32 bufferBalances
+        IERC4626 indexed wrappedToken, uint256 burnedShares, uint256 withdrawnUnderlying, bytes32 bufferBalances
     );
 
     /**
@@ -194,10 +188,7 @@ interface IVaultEvents {
      * @param bufferBalances The final buffer balances, packed in 128-bit words (underlying, wrapped)
      */
     event LiquidityAddedToBuffer(
-        IERC4626 indexed wrappedToken,
-        uint256 amountUnderlying,
-        uint256 amountWrapped,
-        bytes32 bufferBalances
+        IERC4626 indexed wrappedToken, uint256 amountUnderlying, uint256 amountWrapped, bytes32 bufferBalances
     );
 
     /**
@@ -233,10 +224,7 @@ interface IVaultEvents {
      * @param bufferBalances The final buffer balances, packed in 128-bit words (underlying, wrapped)
      */
     event LiquidityRemovedFromBuffer(
-        IERC4626 indexed wrappedToken,
-        uint256 amountUnderlying,
-        uint256 amountWrapped,
-        bytes32 bufferBalances
+        IERC4626 indexed wrappedToken, uint256 amountUnderlying, uint256 amountWrapped, bytes32 bufferBalances
     );
 
     /**

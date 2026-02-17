@@ -39,15 +39,11 @@ library BalancerV38020WeightedPoolMath {
         if (totalSupply == 0) {
             // ─── EMPTY POOL: force initial ratio to match the configured weights ───
             // (this sets clean 80/20 starting prices with no arbitrage opportunity)
-            otherAmount = amountIn.mulUp(
-                normalizedWeights[otherIndex].divDown(normalizedWeights[tokenIndex])
-            );
+            otherAmount = amountIn.mulUp(normalizedWeights[otherIndex].divDown(normalizedWeights[tokenIndex]));
         } else {
             // ─── NORMAL CASE: keep current balance ratio exactly the same (zero price impact) ───
             // Using divUp here is more pool-favourable than the original divDown
-            otherAmount = amountIn.mulUp(
-                balances[otherIndex].divUp(balances[tokenIndex])
-            );
+            otherAmount = amountIn.mulUp(balances[otherIndex].divUp(balances[tokenIndex]));
         }
     }
 
@@ -97,9 +93,7 @@ library BalancerV38020WeightedPoolMath {
             // console.log("Calculating other amount based on weights");
             // console.log("normalizedWeights[otherIndex] = ", normalizedWeights[otherIndex]);
             // console.log("normalizedWeights[tokenIndex] = ", normalizedWeights[tokenIndex]);
-            otherAmount = amountIn.mulUp(
-                normalizedWeights[otherIndex].divDown(normalizedWeights[tokenIndex])
-            );
+            otherAmount = amountIn.mulUp(normalizedWeights[otherIndex].divDown(normalizedWeights[tokenIndex]));
             // console.log("otherAmount = ", otherAmount);
 
             uint256[] memory postDepositBalances = new uint256[](2);
@@ -201,13 +195,9 @@ library BalancerV38020WeightedPoolMath {
     function _calcBptOutGivenProportionalIn(
         uint256[] memory balances,
         uint256[] memory normalizedWeights,
-        uint256 totalSupply, 
+        uint256 totalSupply,
         uint256[] memory amountsIn
-    )
-        internal
-        pure
-        returns (uint256 bptOut)
-    {
+    ) internal pure returns (uint256 bptOut) {
         require(balances.length == 2 && amountsIn.length == 2 && normalizedWeights.length == 2, "80/20 pool only");
         require(normalizedWeights[0] + normalizedWeights[1] == FixedPoint.ONE, "weights must sum to 1e18");
 
@@ -223,9 +213,7 @@ library BalancerV38020WeightedPoolMath {
             uint256 sizeFactor1 = amountsIn[1].divDown(normalizedWeights[1]);
 
             require(
-                sizeFactor0 >= sizeFactor1
-                    ? sizeFactor0 - sizeFactor1 <= DELTA
-                    : sizeFactor1 - sizeFactor0 <= DELTA,
+                sizeFactor0 >= sizeFactor1 ? sizeFactor0 - sizeFactor1 <= DELTA : sizeFactor1 - sizeFactor0 <= DELTA,
                 "Non-proportional amounts (initial)"
             );
 
@@ -249,9 +237,7 @@ library BalancerV38020WeightedPoolMath {
             uint256 ratioOther = amountsIn[1].divDown(balances[1]);
 
             require(
-                ratio >= ratioOther
-                    ? ratio - ratioOther <= DELTA
-                    : ratioOther - ratio <= DELTA,
+                ratio >= ratioOther ? ratio - ratioOther <= DELTA : ratioOther - ratio <= DELTA,
                 "Non-proportional amounts"
             );
 
@@ -352,7 +338,11 @@ library BalancerV38020WeightedPoolMath {
      * @param bptIn Exact BPT burned.
      * @return amountsOut Proportional amounts out for each token (exact match to pool's raw calculation, rounded down).
      */
-    function _calcProportionalAmountsOutGivenBptIn(uint256[] memory balances, uint256 totalSupply, uint256 bptIn)
+    function _calcProportionalAmountsOutGivenBptIn(
+        uint256[] memory balances,
+        uint256 totalSupply,
+        uint256 bptIn
+    )
         internal
         pure
         returns (uint256[] memory amountsOut)

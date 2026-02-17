@@ -6,14 +6,22 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { TokenConfig, PoolConfig, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    TokenConfig,
+    PoolConfig,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract ProtocolFeeExemptionTest is BaseVaultTest {
     uint256 internal GLOBAL_SWAP_FEE = 50e16;
@@ -33,12 +41,10 @@ contract ProtocolFeeExemptionTest is BaseVaultTest {
 
         // Set default protocol fees.
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector),
-            alice
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector), alice
         );
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolYieldFeePercentage.selector),
-            alice
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolYieldFeePercentage.selector), alice
         );
 
         vm.startPrank(alice);
@@ -58,15 +64,8 @@ contract ProtocolFeeExemptionTest is BaseVaultTest {
         tokenConfig[usdcIdx].token = IERC20(usdc);
 
         pool = address(deployPoolMock(IVault(address(vault)), "Non-Exempt Pool", "NOT-EXEMPT"));
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            pool,
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            roleAccounts,
-            address(0)
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(pool, tokenConfig, 0, 365 days, false, roleAccounts, address(0));
 
         PoolConfig memory poolConfigBits = vault.getPoolConfig(pool);
 
@@ -80,15 +79,8 @@ contract ProtocolFeeExemptionTest is BaseVaultTest {
         tokenConfig[usdcIdx].token = IERC20(usdc);
 
         pool = address(deployPoolMock(IVault(address(vault)), "Exempt Pool", "EXEMPT"));
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            pool,
-            tokenConfig,
-            0,
-            365 days,
-            true,
-            roleAccounts,
-            address(0)
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(pool, tokenConfig, 0, 365 days, true, roleAccounts, address(0));
 
         PoolConfig memory poolConfigBits = vault.getPoolConfig(pool);
 

@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { AggregatorV3Interface } from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
 
-import { ILPOracleBase } from "./ILPOracleBase.sol";
-import { IBasePool } from "../vault/IBasePool.sol";
+import {ILPOracleBase} from "./ILPOracleBase.sol";
+import {IBasePool} from "../vault/IBasePool.sol";
 
 /// @notice Factory contract for deploying and managing pool oracles.
 interface ILPOracleFactoryBase {
@@ -20,10 +20,7 @@ interface ILPOracleFactoryBase {
      * @param oracle The oracle that already exists for the pool
      */
     error OracleAlreadyExists(
-        IBasePool pool,
-        bool shouldUseBlockTimeForOldestFeedUpdate,
-        AggregatorV3Interface[] feeds,
-        ILPOracleBase oracle
+        IBasePool pool, bool shouldUseBlockTimeForOldestFeedUpdate, AggregatorV3Interface[] feeds, ILPOracleBase oracle
     );
 
     /// @notice Oracle factory is disabled.
@@ -50,11 +47,9 @@ interface ILPOracleFactoryBase {
      * @param feeds The array of price feeds for the tokens in the pool
      * @return oracle The address of the newly created oracle
      */
-    function create(
-        IBasePool pool,
-        bool shouldUseBlockTimeForOldestFeedUpdate,
-        AggregatorV3Interface[] memory feeds
-    ) external returns (ILPOracleBase oracle);
+    function create(IBasePool pool, bool shouldUseBlockTimeForOldestFeedUpdate, AggregatorV3Interface[] memory feeds)
+        external
+        returns (ILPOracleBase oracle);
 
     /**
      * @notice Gets the oracle for the given pool.
@@ -63,11 +58,10 @@ interface ILPOracleFactoryBase {
      * @param feeds The array of price feeds for the tokens in the pool
      * @return oracle The address of the oracle for the pool
      */
-    function getOracle(
-        IBasePool pool,
-        bool shouldUseBlockTimeForOldestFeedUpdate,
-        AggregatorV3Interface[] memory feeds
-    ) external view returns (ILPOracleBase oracle);
+    function getOracle(IBasePool pool, bool shouldUseBlockTimeForOldestFeedUpdate, AggregatorV3Interface[] memory feeds)
+        external
+        view
+        returns (ILPOracleBase oracle);
 
     /**
      * @notice Checks whether the given oracle was created by this factory.

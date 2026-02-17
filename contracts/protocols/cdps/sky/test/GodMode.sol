@@ -15,17 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 pragma solidity ^0.8.0;
 
-import {
-    WardsAbstract,
-    DSTokenAbstract,
-    DaiAbstract,
-    VatAbstract
-} from "../interfaces/Interfaces.sol";
+import {WardsAbstract, DSTokenAbstract, DaiAbstract, VatAbstract} from "../interfaces/Interfaces.sol";
 import {Vm} from "forge-std/Vm.sol";
 
 library GodMode {
-
-    address constant public VM_ADDR = address(bytes20(uint160(uint256(keccak256('hevm cheat code')))));
+    address public constant VM_ADDR = address(bytes20(uint160(uint256(keccak256("hevm cheat code")))));
 
     function vm() internal pure returns (Vm) {
         return Vm(VM_ADDR);
@@ -35,31 +29,19 @@ library GodMode {
     /// Note this only works for contracts compiled under Solidity. Vyper contracts use a different storage structure for maps.
     /// See https://twitter.com/msolomon44/status/1420137730009300992?t=WO2052xM3AzUCL7o7Pfkow&s=19
     function setWard(address base, address target, uint256 val) internal {
-
         // Edge case - ward is already set
         if (WardsAbstract(base).wards(target) == val) return;
 
-        for (int i = 0; i < 100; i++) {
+        for (int256 i = 0; i < 100; i++) {
             // Scan the storage for the ward storage slot
-            bytes32 prevValue = vm().load(
-                address(base),
-                keccak256(abi.encode(target, uint256(i)))
-            );
-            vm().store(
-                address(base),
-                keccak256(abi.encode(target, uint256(i))),
-                bytes32(uint256(val))
-            );
+            bytes32 prevValue = vm().load(address(base), keccak256(abi.encode(target, uint256(i))));
+            vm().store(address(base), keccak256(abi.encode(target, uint256(i))), bytes32(uint256(val)));
             if (WardsAbstract(base).wards(target) == val) {
                 // Found it
                 return;
             } else {
                 // Keep going after restoring the original value
-                vm().store(
-                    address(base),
-                    keccak256(abi.encode(target, uint256(i))),
-                    prevValue
-                );
+                vm().store(address(base), keccak256(abi.encode(target, uint256(i))), prevValue);
             }
         }
 
@@ -89,50 +71,28 @@ library GodMode {
         for (uint256 i = 0; i < 200; i++) {
             // Scan the storage for the solidity-style balance storage slot
             {
-                bytes32 prevValue = vm().load(
-                    token,
-                    keccak256(abi.encode(who, uint256(i)))
-                );
-                vm().store(
-                    token,
-                    keccak256(abi.encode(who, uint256(i))),
-                    bytes32(amount)
-                );
+                bytes32 prevValue = vm().load(token, keccak256(abi.encode(who, uint256(i))));
+                vm().store(token, keccak256(abi.encode(who, uint256(i))), bytes32(amount));
                 if (DSTokenAbstract(token).balanceOf(who) == amount) {
                     // Found it
                     return;
                 } else {
                     // Keep going after restoring the original value
-                    vm().store(
-                        token,
-                        keccak256(abi.encode(who, uint256(i))),
-                        prevValue
-                    );
+                    vm().store(token, keccak256(abi.encode(who, uint256(i))), prevValue);
                 }
             }
 
             // Vyper-style storage layout for maps
             {
-                bytes32 prevValue = vm().load(
-                    token,
-                    keccak256(abi.encode(uint256(i), who))
-                );
+                bytes32 prevValue = vm().load(token, keccak256(abi.encode(uint256(i), who)));
 
-                vm().store(
-                    token,
-                    keccak256(abi.encode(uint256(i), who)),
-                    bytes32(amount)
-                );
+                vm().store(token, keccak256(abi.encode(uint256(i), who)), bytes32(amount));
                 if (DSTokenAbstract(token).balanceOf(who) == amount) {
                     // Found it
                     return;
                 } else {
                     // Keep going after restoring the original value
-                    vm().store(
-                        token,
-                        keccak256(abi.encode(uint256(i), who)),
-                        prevValue
-                    );
+                    vm().store(token, keccak256(abi.encode(uint256(i), who)), prevValue);
                 }
             }
         }
@@ -150,5 +110,4 @@ library GodMode {
     function setBalance(DaiAbstract token, address who, uint256 amount) internal {
         setBalance(address(token), who, amount);
     }
-
 }

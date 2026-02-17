@@ -28,7 +28,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * 4. BPT minted to sender
  */
 contract RouterInitializeFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -116,9 +115,12 @@ contract RouterInitializeFacet is BalancerV3RouterModifiers, IFacet {
      * @param params Initialization parameters
      * @return bptAmountOut BPT amount minted
      */
-    function initializeHook(
-        InitializeHookParams calldata params
-    ) external nonReentrant onlyVault returns (uint256 bptAmountOut) {
+    function initializeHook(InitializeHookParams calldata params)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256 bptAmountOut)
+    {
         return _initializeHook(params);
     }
 
@@ -130,12 +132,7 @@ contract RouterInitializeFacet is BalancerV3RouterModifiers, IFacet {
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
         bptAmountOut = vault.initialize(
-            params.pool,
-            params.sender,
-            params.tokens,
-            params.exactAmountsIn,
-            params.minBptAmountOut,
-            params.userData
+            params.pool, params.sender, params.tokens, params.exactAmountsIn, params.minBptAmountOut, params.userData
         );
 
         for (uint256 i = 0; i < params.tokens.length; ++i) {

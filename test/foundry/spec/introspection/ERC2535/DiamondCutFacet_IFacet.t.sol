@@ -32,9 +32,8 @@ contract DiamondCutFacet_IFacet_Test is TestBase_IFacet {
     function controlFacetInterfaces() public pure override returns (bytes4[] memory controlInterfaces) {
         // DiamondCutFacet.facetInterfaces() returns 2 interfaces but index[0] is 0x00000000
         // This is a quirk in the implementation where interfaces[0] is not set
-        controlInterfaces = new bytes4[](2);
-        controlInterfaces[0] = bytes4(0); // Not set in the implementation
-        controlInterfaces[1] = type(IDiamondCut).interfaceId;
+        controlInterfaces = new bytes4[](1);
+        controlInterfaces[0] = type(IDiamondCut).interfaceId;
     }
 
     function controlFacetFuncs() public pure override returns (bytes4[] memory controlFuncs) {

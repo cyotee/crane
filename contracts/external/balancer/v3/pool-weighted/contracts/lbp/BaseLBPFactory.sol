@@ -4,18 +4,23 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { LBPCommonParams, MigrationParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    LBPCommonParams,
+    MigrationParams
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
-import { LBPValidation } from "./LBPValidation.sol";
+import {LBPValidation} from "./LBPValidation.sol";
 
 /**
  * @notice Base contract for LBP factories.
@@ -129,15 +134,15 @@ abstract contract BaseLBPFactory is IPoolVersion, BasePoolFactory, ReentrancyGua
     }
 
     // Helper function to create a `TokenConfig` array from the two LBP tokens.
-    function _buildTokenConfig(
-        IERC20 projectToken,
-        IERC20 reserveToken
-    ) internal pure returns (TokenConfig[] memory tokenConfig) {
+    function _buildTokenConfig(IERC20 projectToken, IERC20 reserveToken)
+        internal
+        pure
+        returns (TokenConfig[] memory tokenConfig)
+    {
         tokenConfig = new TokenConfig[](_TWO_TOKENS);
 
-        (tokenConfig[0].token, tokenConfig[1].token) = projectToken < reserveToken
-            ? (projectToken, reserveToken)
-            : (reserveToken, projectToken);
+        (tokenConfig[0].token, tokenConfig[1].token) =
+            projectToken < reserveToken ? (projectToken, reserveToken) : (reserveToken, projectToken);
     }
 
     function _registerLBP(

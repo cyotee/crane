@@ -13,7 +13,9 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
@@ -24,7 +26,9 @@ import {
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                  OpenZeppelin                              */
@@ -52,12 +56,18 @@ import {
     BalancerV3BasePoolFactory
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactory.sol";
 import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {
+    BalancerV3BasePoolFactoryRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3LBPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3LBPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolRepo.sol";
 
 interface IBalancerV3LBPoolDFPkg {
     struct PkgInit {
@@ -98,11 +108,7 @@ interface IBalancerV3LBPoolDFPkg {
     ) external returns (address pool);
 }
 
-contract BalancerV3LBPoolDFPkg is
-    BalancerV3BasePoolFactory,
-    IDiamondFactoryPackage,
-    IBalancerV3LBPoolDFPkg
-{
+contract BalancerV3LBPoolDFPkg is BalancerV3BasePoolFactory, IDiamondFactoryPackage, IBalancerV3LBPoolDFPkg {
     using Address for address[];
     using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
@@ -130,13 +136,8 @@ contract BalancerV3LBPoolDFPkg is
         DEFAULT_POOL_INFO_FACET = pkgInit.defaultPoolInfoFacet;
         BALANCER_V3_AUTHENTICATION_FACET = pkgInit.balancerV3AuthenticationFacet;
         BALANCER_V3_LB_POOL_FACET = pkgInit.balancerV3LBPoolFacet;
-        BalancerV3BasePoolFactoryRepo._initialize(
-            365 days,
-            pkgInit.poolFeeManager
-        );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3BasePoolFactoryRepo._initialize(365 days, pkgInit.poolFeeManager);
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
     }
 
     function _diamondPkgFactory() internal view virtual override returns (IDiamondPackageCallBackFactory) {
@@ -336,36 +337,22 @@ contract BalancerV3LBPoolDFPkg is
         PkgArgs memory decodedArgs = abi.decode(initArgs, (PkgArgs));
 
         // Determine token indices based on sorting
-        (uint256 projectTokenIndex, uint256 reserveTokenIndex) = decodedArgs.projectToken < decodedArgs.reserveToken
-            ? (uint256(0), uint256(1))
-            : (uint256(1), uint256(0));
+        (uint256 projectTokenIndex, uint256 reserveTokenIndex) =
+            decodedArgs.projectToken < decodedArgs.reserveToken ? (uint256(0), uint256(1)) : (uint256(1), uint256(0));
 
         // Build sorted token array for pool name
         address[] memory tokens = new address[](2);
-        tokens[0] = decodedArgs.projectToken < decodedArgs.reserveToken
-            ? decodedArgs.projectToken
-            : decodedArgs.reserveToken;
-        tokens[1] = decodedArgs.projectToken < decodedArgs.reserveToken
-            ? decodedArgs.reserveToken
-            : decodedArgs.projectToken;
+        tokens[0] =
+            decodedArgs.projectToken < decodedArgs.reserveToken ? decodedArgs.projectToken : decodedArgs.reserveToken;
+        tokens[1] =
+            decodedArgs.projectToken < decodedArgs.reserveToken ? decodedArgs.reserveToken : decodedArgs.projectToken;
 
         string memory name = _buildPoolName(tokens);
 
-        ERC20Repo._initialize(
-            name,
-            "LBP-BPT",
-            18
-        );
-        EIP712Repo._initialize(
-            name,
-            "1"
-        );
+        ERC20Repo._initialize(name, "LBP-BPT", 18);
+        EIP712Repo._initialize(name, "1");
         BalancerV3PoolRepo._initialize(
-            _MIN_INVARIANT_RATIO,
-            _MAX_INVARIANT_RATIO,
-            _MIN_SWAP_FEE_PERCENTAGE,
-            _MAX_SWAP_FEE_PERCENTAGE,
-            tokens
+            _MIN_INVARIANT_RATIO, _MAX_INVARIANT_RATIO, _MIN_SWAP_FEE_PERCENTAGE, _MAX_SWAP_FEE_PERCENTAGE, tokens
         );
 
         // Compute scaling factor for reserve token
@@ -383,19 +370,12 @@ contract BalancerV3LBPoolDFPkg is
             virtualBalanceScaled18,
             reserveScalingFactor
         );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
     }
 
     function _buildPoolName(address[] memory tokens) internal view returns (string memory) {
-        return string.concat(
-            "BV3LBP of (",
-            IERC20Metadata(tokens[0]).name(),
-            " / ",
-            IERC20Metadata(tokens[1]).name(),
-            ")"
-        );
+        return
+            string.concat("BV3LBP of (", IERC20Metadata(tokens[0]).name(), " / ", IERC20Metadata(tokens[1]).name(), ")");
     }
 
     function _roleAccounts() internal view returns (PoolRoleAccounts memory roleAccounts) {

@@ -9,7 +9,6 @@ import {ERC721Target} from "@crane/contracts/tokens/ERC721/ERC721Target.sol";
  * @notice Test stub for ERC721 with exposed mint and burn functions
  */
 contract ERC721TargetStub is ERC721Target {
-
     /**
      * @notice Mints a new token to the specified address
      * @param to The address to mint the token to

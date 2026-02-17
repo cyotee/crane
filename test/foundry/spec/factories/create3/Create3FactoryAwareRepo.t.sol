@@ -4,26 +4,26 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {Create3FactoryAwareRepo} from "@crane/contracts/factories/create3/Create3FactoryAwareRepo.sol";
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 
 /**
  * @title Create3FactoryAwareHarness
  * @notice Exposes Create3FactoryAwareRepo library functions for testing.
  */
 contract Create3FactoryAwareHarness {
-    function initialize(ICreate3Factory factory_) external {
+    function initialize(ICreate3FactoryProxy factory_) external {
         Create3FactoryAwareRepo._initialize(factory_);
     }
 
-    function initializeWithSlot(bytes32 slot, ICreate3Factory factory_) external {
+    function initializeWithSlot(bytes32 slot, ICreate3FactoryProxy factory_) external {
         Create3FactoryAwareRepo._initialize(Create3FactoryAwareRepo._layout(slot), factory_);
     }
 
-    function create3Factory() external view returns (ICreate3Factory) {
+    function create3Factory() external view returns (ICreate3FactoryProxy) {
         return Create3FactoryAwareRepo._create3Factory();
     }
 
-    function create3FactoryFromSlot(bytes32 slot) external view returns (ICreate3Factory) {
+    function create3FactoryFromSlot(bytes32 slot) external view returns (ICreate3FactoryProxy) {
         return Create3FactoryAwareRepo._create3Factory(Create3FactoryAwareRepo._layout(slot));
     }
 
@@ -38,11 +38,11 @@ contract Create3FactoryAwareHarness {
  */
 contract Create3FactoryAwareRepo_Test is Test {
     Create3FactoryAwareHarness internal harness;
-    ICreate3Factory internal mockFactory;
+    ICreate3FactoryProxy internal mockFactory;
 
     function setUp() public {
         harness = new Create3FactoryAwareHarness();
-        mockFactory = ICreate3Factory(address(0xC3F4));
+        mockFactory = ICreate3FactoryProxy(address(0xC3F4));
     }
 
     function test_storageSlot_isCorrectHash() public view {
@@ -56,8 +56,8 @@ contract Create3FactoryAwareRepo_Test is Test {
     }
 
     function test_initialize_canOverwrite() public {
-        ICreate3Factory factory1 = ICreate3Factory(address(0x1111));
-        ICreate3Factory factory2 = ICreate3Factory(address(0x2222));
+        ICreate3FactoryProxy factory1 = ICreate3FactoryProxy(address(0x1111));
+        ICreate3FactoryProxy factory2 = ICreate3FactoryProxy(address(0x2222));
 
         harness.initialize(factory1);
         harness.initialize(factory2);
@@ -71,17 +71,15 @@ contract Create3FactoryAwareRepo_Test is Test {
 
         assertEq(address(harness.create3Factory()), address(0), "Default slot should be empty");
         assertEq(
-            address(harness.create3FactoryFromSlot(customSlot)),
-            address(mockFactory),
-            "Custom slot should have factory"
+            address(harness.create3FactoryFromSlot(customSlot)), address(mockFactory), "Custom slot should have factory"
         );
     }
 
     function test_slotIsolation_differentSlotsAreIndependent() public {
         bytes32 slot1 = keccak256("c3.slot1");
         bytes32 slot2 = keccak256("c3.slot2");
-        ICreate3Factory factory1 = ICreate3Factory(address(0x1111));
-        ICreate3Factory factory2 = ICreate3Factory(address(0x2222));
+        ICreate3FactoryProxy factory1 = ICreate3FactoryProxy(address(0x1111));
+        ICreate3FactoryProxy factory2 = ICreate3FactoryProxy(address(0x2222));
 
         harness.initializeWithSlot(slot1, factory1);
         harness.initializeWithSlot(slot2, factory2);
@@ -96,7 +94,7 @@ contract Create3FactoryAwareRepo_Test is Test {
 
     function testFuzz_initialize_anyAddress(address factoryAddr) public {
         vm.assume(factoryAddr != address(0));
-        harness.initialize(ICreate3Factory(factoryAddr));
+        harness.initialize(ICreate3FactoryProxy(factoryAddr));
         assertEq(address(harness.create3Factory()), factoryAddr);
     }
 }

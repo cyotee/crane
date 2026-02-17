@@ -59,10 +59,10 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
 
     /// @dev Standard fee tiers in V4 (in hundredths of a bip)
     /// Fee = feePips / 1e6, so 500 = 0.05%, 3000 = 0.3%, 10000 = 1%
-    uint24 internal constant FEE_LOWEST = 100;    // 0.01%
-    uint24 internal constant FEE_LOW = 500;       // 0.05%
-    uint24 internal constant FEE_MEDIUM = 3000;   // 0.3%
-    uint24 internal constant FEE_HIGH = 10000;    // 1%
+    uint24 internal constant FEE_LOWEST = 100; // 0.01%
+    uint24 internal constant FEE_LOW = 500; // 0.05%
+    uint24 internal constant FEE_MEDIUM = 3000; // 0.3%
+    uint24 internal constant FEE_HIGH = 10000; // 1%
 
     /// @dev Dynamic fee flag (highest bit set indicates pool uses dynamic fees via hooks)
     uint24 internal constant FEE_DYNAMIC = 0x800000;
@@ -72,9 +72,9 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /* -------------------------------------------------------------------------- */
 
     /// @dev Standard tick spacings corresponding to fee tiers
-    int24 internal constant TICK_SPACING_1 = 1;    // For 0.01% fee
-    int24 internal constant TICK_SPACING_10 = 10;   // For 0.05% fee
-    int24 internal constant TICK_SPACING_60 = 60;   // For 0.3% fee
+    int24 internal constant TICK_SPACING_1 = 1; // For 0.01% fee
+    int24 internal constant TICK_SPACING_10 = 10; // For 0.05% fee
+    int24 internal constant TICK_SPACING_60 = 60; // For 0.3% fee
     int24 internal constant TICK_SPACING_200 = 200; // For 1% fee
 
     /* -------------------------------------------------------------------------- */
@@ -95,8 +95,8 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
         require(block.chainid == 1, "V4FORK:NOT_ETHEREUM_MAINNET");
 
         // Set up PoolManager reference
-        // Note: Using the constant from ETHEREUM_MAIN (has typo "UNSWAP" in original)
-        address poolManagerAddr = ETHEREUM_MAIN.UNSWAP_V4_POOL_MNANAGER;
+        // Note: Using the constant from ETHEREUM_MAIN (has typo "UNISWAP" in original)
+        address poolManagerAddr = ETHEREUM_MAIN.UNISWAP_V4_POOL_MANAGER;
         require(poolManagerAddr.code.length > 0, "V4FORK:POOL_MANAGER_NO_CODE_AT_BLOCK");
         poolManager = IPoolManager(poolManagerAddr);
         vm.label(poolManagerAddr, "PoolManager");
@@ -120,12 +120,11 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /// @param fee Fee in hundredths of a bip (e.g., 3000 = 0.3%)
     /// @param tickSpacing Tick spacing for the pool
     /// @return key The constructed PoolKey with currencies sorted
-    function createPoolKey(
-        address tokenA,
-        address tokenB,
-        uint24 fee,
-        int24 tickSpacing
-    ) internal pure returns (PoolKey memory key) {
+    function createPoolKey(address tokenA, address tokenB, uint24 fee, int24 tickSpacing)
+        internal
+        pure
+        returns (PoolKey memory key)
+    {
         return createPoolKey(tokenA, tokenB, fee, tickSpacing, IHooks(address(0)));
     }
 
@@ -137,13 +136,11 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /// @param tickSpacing Tick spacing for the pool
     /// @param hooks Hooks contract address
     /// @return key The constructed PoolKey with currencies sorted
-    function createPoolKey(
-        address tokenA,
-        address tokenB,
-        uint24 fee,
-        int24 tickSpacing,
-        IHooks hooks
-    ) internal pure returns (PoolKey memory key) {
+    function createPoolKey(address tokenA, address tokenB, uint24 fee, int24 tickSpacing, IHooks hooks)
+        internal
+        pure
+        returns (PoolKey memory key)
+    {
         // Sort currencies (currency0 < currency1)
         Currency currency0;
         Currency currency1;
@@ -155,13 +152,7 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
             currency1 = Currency.wrap(tokenA);
         }
 
-        key = PoolKey({
-            currency0: currency0,
-            currency1: currency1,
-            fee: fee,
-            tickSpacing: tickSpacing,
-            hooks: hooks
-        });
+        key = PoolKey({currency0: currency0, currency1: currency1, fee: fee, tickSpacing: tickSpacing, hooks: hooks});
     }
 
     /// @notice Get PoolId from a PoolKey
@@ -204,7 +195,7 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /// @param key The pool key
     /// @return True if pool is initialized
     function isPoolInitialized(PoolKey memory key) internal view returns (bool) {
-        (uint160 sqrtPriceX96, , , ) = getPoolState(key);
+        (uint160 sqrtPriceX96,,,) = getPoolState(key);
         return sqrtPriceX96 != 0;
     }
 
@@ -220,7 +211,7 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
         returns (uint128 liquidityGross, int128 liquidityNet)
     {
         PoolId poolId = key.toId();
-        (liquidityGross, liquidityNet, , ) = poolManager.getTickInfo(poolId, tick);
+        (liquidityGross, liquidityNet,,) = poolManager.getTickInfo(poolId, tick);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -242,11 +233,11 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /// @param tokenIn Input token address
     /// @param tokenOut Output token address
     /// @return zeroForOne True if swapping currency0 for currency1
-    function getSwapDirection(
-        PoolKey memory key,
-        address tokenIn,
-        address tokenOut
-    ) internal pure returns (bool zeroForOne) {
+    function getSwapDirection(PoolKey memory key, address tokenIn, address tokenOut)
+        internal
+        pure
+        returns (bool zeroForOne)
+    {
         address token0 = Currency.unwrap(key.currency0);
         address token1 = Currency.unwrap(key.currency1);
 
@@ -300,12 +291,10 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
     /// @param actual The actual amount
     /// @param toleranceBps Tolerance in basis points (10 = 0.1%)
     /// @param message Error message
-    function assertQuoteAccuracy(
-        uint256 quoted,
-        uint256 actual,
-        uint256 toleranceBps,
-        string memory message
-    ) internal pure {
+    function assertQuoteAccuracy(uint256 quoted, uint256 actual, uint256 toleranceBps, string memory message)
+        internal
+        pure
+    {
         uint256 tolerance = (actual * toleranceBps) / 10000;
         if (tolerance == 0) tolerance = 1; // Minimum 1 wei tolerance
         assertApproxEqAbs(quoted, actual, tolerance, message);

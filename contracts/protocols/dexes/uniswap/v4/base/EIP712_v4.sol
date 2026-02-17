@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {IEIP712_v4} from "../interfaces/IEIP712_v4.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice Generic EIP712 implementation
 /// @dev Maintains cross-chain replay protection in the event of a fork
@@ -10,6 +11,7 @@ import {IEIP712_v4} from "../interfaces/IEIP712_v4.sol";
 /// @dev Reference: https://github.com/Uniswap/permit2/blob/3f17e8db813189a03950dc7fc8382524a095c053/src/EIP712.sol
 /// @dev Reference: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/7bd2b2aaf68c21277097166a9a51eb72ae239b34/contracts/utils/cryptography/EIP712.sol
 contract EIP712_v4 is IEIP712_v4 {
+    using BetterEfficientHashLib for bytes;
     // Cache the domain separator as an immutable value, but also store the chain id that it
     // corresponds to, in order to invalidate the cached domain separator if the chain id changes.
     bytes32 private immutable _CACHED_DOMAIN_SEPARATOR;
@@ -34,7 +36,8 @@ contract EIP712_v4 is IEIP712_v4 {
 
     /// @notice Builds a domain separator using the current chainId and contract address.
     function _buildDomainSeparator() private view returns (bytes32) {
-        return keccak256(abi.encode(_TYPE_HASH, _HASHED_NAME, block.chainid, address(this)));
+        // return keccak256(abi.encode(_TYPE_HASH, _HASHED_NAME, block.chainid, address(this)));
+        return abi.encodePacked(_TYPE_HASH, _HASHED_NAME, block.chainid, address(this))._hash();
     }
 
     /// @notice Creates an EIP-712 typed data hash

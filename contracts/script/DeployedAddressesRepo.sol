@@ -28,7 +28,12 @@ library DeployedAddressesRepo {
         return _layout(STORAGE_SLOT);
     }
 
-    function _registerDeployedAddress(Storage storage layout_, address deployedAddress_, uint256 chainId_, bytes32 instanceId_) internal {
+    function _registerDeployedAddress(
+        Storage storage layout_,
+        address deployedAddress_,
+        uint256 chainId_,
+        bytes32 instanceId_
+    ) internal {
         layout_.deployedAddresses._add(deployedAddress_);
         layout_.deployedAddressOfInstanceId[chainId_][instanceId_] = deployedAddress_;
     }

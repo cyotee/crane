@@ -54,7 +54,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         address tokenA,
         address tokenB,
         uint256 swapPercentage // basis points of reserves (e.g., 100 = 1%)
-    ) internal {
+    )
+        internal
+    {
         (uint256 reserveA, uint256 reserveB,,) = _getPoolReserves(address(pair));
 
         uint256 swapAmountA = (uint256(reserveA) * swapPercentage) / 10000;
@@ -69,29 +71,28 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         routesAB[0] = IRouter.Route({from: tokenA, to: tokenB, stable: false, factory: address(aerodromePoolFactory)});
 
         aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            1,
-            routesAB,
-            address(this),
-            block.timestamp
+            swapAmountA, 1, routesAB, address(this), block.timestamp
         );
 
         uint256 receivedB = IERC20(tokenB).balanceOf(address(this));
         if (receivedB > 0) {
             IERC20(tokenB).approve(address(aerodromeRouter), receivedB);
             IRouter.Route[] memory routesBA = new IRouter.Route[](1);
-            routesBA[0] = IRouter.Route({from: tokenB, to: tokenA, stable: false, factory: address(aerodromePoolFactory)});
+            routesBA[0] =
+                IRouter.Route({from: tokenB, to: tokenA, stable: false, factory: address(aerodromePoolFactory)});
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                receivedB,
-                1,
-                routesBA,
-                address(this),
-                block.timestamp
+                receivedB, 1, routesBA, address(this), block.timestamp
             );
         }
     }
 
-    function _performActualWithdrawSwap(address pool, uint256 lpAmount, address tokenA, address tokenB, uint256 /* feePercent */)
+    function _performActualWithdrawSwap(
+        address pool,
+        uint256 lpAmount,
+        address tokenA,
+        address tokenB,
+        uint256 /* feePercent */
+    )
         internal
         returns (uint256 actualTokenAAmount)
     {
@@ -115,11 +116,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
 
             uint256 beforeA = IERC20(tokenA).balanceOf(address(this));
             r.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                actualB,
-                0,
-                routes,
-                address(this),
-                block.timestamp + 300
+                actualB, 0, routes, address(this), block.timestamp + 300
             );
             uint256 afterA = IERC20(tokenA).balanceOf(address(this));
             uint256 receivedA = afterA - beforeA;
@@ -145,14 +142,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         data.feePercent = aerodromePoolFactory.getFee(address(pair), pair.stable());
 
         data.quote = AerodromeUtils._quoteWithdrawSwapWithFee(
-            data.lpAmount,
-            data.totalLP,
-            data.reserveA,
-            data.reserveB,
-            data.feePercent
+            data.lpAmount, data.totalLP, data.reserveA, data.reserveB, data.feePercent
         );
 
-        data.actualAmount = _performActualWithdrawSwap(address(pair), data.lpAmount, data.tokenA, data.tokenB, data.feePercent);
+        data.actualAmount =
+            _performActualWithdrawSwap(address(pair), data.lpAmount, data.tokenA, data.tokenB, data.feePercent);
 
         assertEq(data.quote, data.actualAmount, "Quote should match actual execution");
     }
@@ -198,7 +192,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = AerodromeUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, aerodromePoolFactory.getFee(address(aeroBalancedPool), aeroBalancedPool.stable())
+            ownedLPAmount,
+            lpTotalSupply,
+            reserveA,
+            reserveB,
+            aerodromePoolFactory.getFee(address(aeroBalancedPool), aeroBalancedPool.stable())
         );
 
         uint256 initialTokenABalance = IERC20(aeroBalancedPool.token0()).balanceOf(address(this));
@@ -212,14 +210,15 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         if (actualAmountB > 0) {
             IERC20(aeroBalancedPool.token1()).approve(address(aerodromeRouter), actualAmountB);
             IRouter.Route[] memory path = new IRouter.Route[](1);
-            path[0] = IRouter.Route({from: aeroBalancedPool.token1(), to: aeroBalancedPool.token0(), stable: false, factory: address(aerodromePoolFactory)});
+            path[0] = IRouter.Route({
+                from: aeroBalancedPool.token1(),
+                to: aeroBalancedPool.token0(),
+                stable: false,
+                factory: address(aerodromePoolFactory)
+            });
 
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                actualAmountB,
-                1,
-                path,
-                address(this),
-                block.timestamp
+                actualAmountB, 1, path, address(this), block.timestamp
             );
         }
 
@@ -239,7 +238,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = AerodromeUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, aerodromePoolFactory.getFee(address(aeroUnbalancedPool), aeroUnbalancedPool.stable())
+            ownedLPAmount,
+            lpTotalSupply,
+            reserveA,
+            reserveB,
+            aerodromePoolFactory.getFee(address(aeroUnbalancedPool), aeroUnbalancedPool.stable())
         );
 
         uint256 initialTokenABalance = IERC20(aeroUnbalancedPool.token0()).balanceOf(address(this));
@@ -253,14 +256,15 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         if (actualAmountB > 0) {
             IERC20(aeroUnbalancedPool.token1()).approve(address(aerodromeRouter), actualAmountB);
             IRouter.Route[] memory path = new IRouter.Route[](1);
-            path[0] = IRouter.Route({from: aeroUnbalancedPool.token1(), to: aeroUnbalancedPool.token0(), stable: false, factory: address(aerodromePoolFactory)});
+            path[0] = IRouter.Route({
+                from: aeroUnbalancedPool.token1(),
+                to: aeroUnbalancedPool.token0(),
+                stable: false,
+                factory: address(aerodromePoolFactory)
+            });
 
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                actualAmountB,
-                1,
-                path,
-                address(this),
-                block.timestamp
+                actualAmountB, 1, path, address(this), block.timestamp
             );
         }
 
@@ -280,7 +284,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = AerodromeUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, aerodromePoolFactory.getFee(address(aeroExtremeUnbalancedPool), aeroExtremeUnbalancedPool.stable())
+            ownedLPAmount,
+            lpTotalSupply,
+            reserveA,
+            reserveB,
+            aerodromePoolFactory.getFee(address(aeroExtremeUnbalancedPool), aeroExtremeUnbalancedPool.stable())
         );
 
         uint256 initialTokenABalance = IERC20(aeroExtremeUnbalancedPool.token0()).balanceOf(address(this));
@@ -294,14 +302,15 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Aerodrome is TestBase_ConstProd
         if (actualAmountB > 0) {
             IERC20(aeroExtremeUnbalancedPool.token1()).approve(address(aerodromeRouter), actualAmountB);
             IRouter.Route[] memory path = new IRouter.Route[](1);
-            path[0] = IRouter.Route({from: aeroExtremeUnbalancedPool.token1(), to: aeroExtremeUnbalancedPool.token0(), stable: false, factory: address(aerodromePoolFactory)});
+            path[0] = IRouter.Route({
+                from: aeroExtremeUnbalancedPool.token1(),
+                to: aeroExtremeUnbalancedPool.token0(),
+                stable: false,
+                factory: address(aerodromePoolFactory)
+            });
 
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                actualAmountB,
-                1,
-                path,
-                address(this),
-                block.timestamp
+                actualAmountB, 1, path, address(this), block.timestamp
             );
         }
 

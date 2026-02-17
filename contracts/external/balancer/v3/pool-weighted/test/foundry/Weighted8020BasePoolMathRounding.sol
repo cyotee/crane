@@ -2,12 +2,14 @@
 
 pragma solidity ^0.8.24;
 
-import { BasePoolMathRoundingTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/BasePoolMathRoundingTest.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BasePoolMathMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasePoolMathMock.sol";
+import {
+    BasePoolMathRoundingTest
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/BasePoolMathRoundingTest.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BasePoolMathMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasePoolMathMock.sol";
 
-import { WeightedBasePoolMathMock } from "../../contracts/test/WeightedBasePoolMathMock.sol";
-import { WeightedPoolContractsDeployer } from "./utils/WeightedPoolContractsDeployer.sol";
+import {WeightedBasePoolMathMock} from "../../contracts/test/WeightedBasePoolMathMock.sol";
+import {WeightedPoolContractsDeployer} from "./utils/WeightedPoolContractsDeployer.sol";
 
 contract Weighted8020BasePoolMathRounding is BasePoolMathRoundingTest, WeightedPoolContractsDeployer {
     using ArrayHelpers for *;

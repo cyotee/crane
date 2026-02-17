@@ -24,8 +24,8 @@ pragma solidity ^0.8.0;
 // New deployments of this contract will need to include custom events (TO DO).
 
 interface VatLike {
-    function move(address,address,uint256) external;
-    function flux(bytes32,address,address,uint256) external;
+    function move(address, address, uint256) external;
+    function flux(bytes32, address, address, uint256) external;
 }
 
 interface CatLike {
@@ -48,47 +48,46 @@ interface CatLike {
 
 contract Flipper {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Flipper/not-authorized");
         _;
     }
 
     // --- Data ---
     struct Bid {
-        uint256 bid;  // dai paid                 [rad]
-        uint256 lot;  // gems in return for bid   [wad]
-        address guy;  // high bidder
-        uint48  tic;  // bid expiry time          [unix epoch time]
-        uint48  end;  // auction expiry time      [unix epoch time]
+        uint256 bid; // dai paid                 [rad]
+        uint256 lot; // gems in return for bid   [wad]
+        address guy; // high bidder
+        uint48 tic; // bid expiry time          [unix epoch time]
+        uint48 end; // auction expiry time      [unix epoch time]
         address usr;
         address gal;
-        uint256 tab;  // total dai wanted         [rad]
+        uint256 tab; // total dai wanted         [rad]
     }
 
-    mapping (uint256 => Bid) public bids;
+    mapping(uint256 => Bid) public bids;
 
-    VatLike public   vat;            // CDP Engine
-    bytes32 public   ilk;            // collateral type
+    VatLike public vat; // CDP Engine
+    bytes32 public ilk; // collateral type
 
-    uint256 constant ONE = 1.00E18;
-    uint256 public   beg = 1.05E18;  // 5% minimum bid increase
-    uint48  public   ttl = 3 hours;  // 3 hours bid duration         [seconds]
-    uint48  public   tau = 2 days;   // 2 days total auction length  [seconds]
+    uint256 constant ONE = 1.0e18;
+    uint256 public beg = 1.05e18; // 5% minimum bid increase
+    uint48 public ttl = 3 hours; // 3 hours bid duration         [seconds]
+    uint48 public tau = 2 days; // 2 days total auction length  [seconds]
     uint256 public kicks = 0;
-    CatLike public   cat;            // cat liquidation module
+    CatLike public cat; // cat liquidation module
 
     // --- Events ---
-    event Kick(
-      uint256 id,
-      uint256 lot,
-      uint256 bid,
-      uint256 tab,
-      address indexed usr,
-      address indexed gal
-    );
+    event Kick(uint256 id, uint256 lot, uint256 bid, uint256 tab, address indexed usr, address indexed gal);
 
     // --- Init ---
     constructor(address vat_, address cat_, bytes32 ilk_) {
@@ -104,6 +103,7 @@ contract Flipper {
             require((z = x + y) >= x);
         }
     }
+
     function _mul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require(y == 0 || (z = x * y) / y == x);
@@ -117,15 +117,14 @@ contract Flipper {
         else if (what == "tau") tau = uint48(data);
         else revert("Flipper/file-unrecognized-param");
     }
+
     function file(bytes32 what, address data) external auth {
         if (what == "cat") cat = CatLike(data);
         else revert("Flipper/file-unrecognized-param");
     }
 
     // --- Auction ---
-    function kick(address usr, address gal, uint256 tab, uint256 lot, uint256 bid)
-        public auth returns (uint256 id)
-    {
+    function kick(address usr, address gal, uint256 tab, uint256 lot, uint256 bid) public auth returns (uint256 id) {
         unchecked {
             require(kicks < type(uint256).max, "Flipper/overflow");
             id = ++kicks;
@@ -133,7 +132,7 @@ contract Flipper {
 
         bids[id].bid = bid;
         bids[id].lot = lot;
-        bids[id].guy = msg.sender;  // configurable??
+        bids[id].guy = msg.sender; // configurable??
         bids[id].end = _add(uint48(block.timestamp), tau);
         bids[id].usr = usr;
         bids[id].gal = gal;
@@ -143,11 +142,13 @@ contract Flipper {
 
         emit Kick(id, lot, bid, tab, usr, gal);
     }
+
     function tick(uint256 id) external {
         require(bids[id].end < block.timestamp, "Flipper/not-finished");
         require(bids[id].tic == 0, "Flipper/bid-already-placed");
         bids[id].end = _add(uint48(block.timestamp), tau);
     }
+
     function tend(uint256 id, uint256 lot, uint256 bid) external {
         require(bids[id].guy != address(0), "Flipper/guy-not-set");
         require(bids[id].tic > block.timestamp || bids[id].tic == 0, "Flipper/already-finished-tic");
@@ -155,7 +156,7 @@ contract Flipper {
 
         require(lot == bids[id].lot, "Flipper/lot-not-matching");
         require(bid <= bids[id].tab, "Flipper/higher-than-tab");
-        require(bid >  bids[id].bid, "Flipper/bid-not-higher");
+        require(bid > bids[id].bid, "Flipper/bid-not-higher");
         require(_mul(bid, ONE) >= _mul(beg, bids[id].bid) || bid == bids[id].tab, "Flipper/insufficient-increase");
 
         if (msg.sender != bids[id].guy) {
@@ -167,6 +168,7 @@ contract Flipper {
         bids[id].bid = bid;
         bids[id].tic = _add(uint48(block.timestamp), ttl);
     }
+
     function dent(uint256 id, uint256 lot, uint256 bid) external {
         require(bids[id].guy != address(0), "Flipper/guy-not-set");
         require(bids[id].tic > block.timestamp || bids[id].tic == 0, "Flipper/already-finished-tic");
@@ -186,8 +188,12 @@ contract Flipper {
         bids[id].lot = lot;
         bids[id].tic = _add(uint48(block.timestamp), ttl);
     }
+
     function deal(uint256 id) external {
-        require(bids[id].tic != 0 && (bids[id].tic < block.timestamp || bids[id].end < block.timestamp), "Flipper/not-finished");
+        require(
+            bids[id].tic != 0 && (bids[id].tic < block.timestamp || bids[id].end < block.timestamp),
+            "Flipper/not-finished"
+        );
         cat.claw(bids[id].tab);
         vat.flux(ilk, address(this), bids[id].guy, bids[id].lot);
         delete bids[id];

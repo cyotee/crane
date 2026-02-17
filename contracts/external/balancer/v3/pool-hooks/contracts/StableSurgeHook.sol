@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { StableSurgeMedianMath } from "./utils/StableSurgeMedianMath.sol";
-import { SurgeHookCommon } from "./SurgeHookCommon.sol";
+import {StableSurgeMedianMath} from "./utils/StableSurgeMedianMath.sol";
+import {SurgeHookCommon} from "./SurgeHookCommon.sol";
 
 /**
  * @notice Hook that charges a fee on trades that push a pool into an imbalanced state beyond a given threshold.
@@ -111,11 +113,11 @@ contract StableSurgeHook is SurgeHookCommon {
      * @param staticSwapFeePercentage The static swap fee percentage
      * @return surgeFeePercentage The surge fee percentage
      */
-    function getSurgeFeePercentage(
-        PoolSwapParams calldata params,
-        address pool,
-        uint256 staticSwapFeePercentage
-    ) public view returns (uint256 surgeFeePercentage) {
+    function getSurgeFeePercentage(PoolSwapParams calldata params, address pool, uint256 staticSwapFeePercentage)
+        public
+        view
+        returns (uint256 surgeFeePercentage)
+    {
         return computeSwapSurgeFeePercentage(params, pool, staticSwapFeePercentage);
     }
 }

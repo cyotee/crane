@@ -1,0 +1,15 @@
+{
+  "extends": ["./tsconfig.json", "../../tsconfig-build-common.json"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "coverage",
+    "analysis",
+    "**/*spec.ts",
+    "jest.config.ts",
+    "scrypto",
+    "deployments",
+    "**/target"
+  ]
+}

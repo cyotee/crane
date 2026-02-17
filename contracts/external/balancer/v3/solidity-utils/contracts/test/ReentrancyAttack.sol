@@ -12,7 +12,7 @@ contract ReentrancyAttack {
     }
 
     function callSender(bytes calldata data) public {
-        (bool success, ) = _msgSender().call(data);
+        (bool success,) = _msgSender().call(data);
         require(success, "ReentrancyAttack: failed call");
     }
 }

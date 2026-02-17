@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {TestBase_BalancerV3_8020WeightedPool} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3_8020WeightedPool.sol";
-import {BalancerV38020WeightedPoolMath} from "@crane/contracts/protocols/dexes/balancer/v3/utils/BalancerV38020WeightedPoolMath.sol";
+import {
+    TestBase_BalancerV3_8020WeightedPool
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3_8020WeightedPool.sol";
+import {
+    BalancerV38020WeightedPoolMath
+} from "@crane/contracts/protocols/dexes/balancer/v3/utils/BalancerV38020WeightedPoolMath.sol";
 
 contract BalancerV38020WeightedPoolMath_Test is TestBase_BalancerV3_8020WeightedPool {
-
     function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
         (newPool, poolArgs) = createDaiUsdc8020WeightedPool();
         return (newPool, poolArgs);
@@ -14,7 +17,7 @@ contract BalancerV38020WeightedPoolMath_Test is TestBase_BalancerV3_8020Weighted
     // function initPool() internal virtual override {
     //     initDaiUsdc8020WeightedPool();
     // }
-    
+
     function test_calcBptOutGivenProportionalIn_Initial_Deposit() public {
         (,, uint256[] memory poolReserves,) = vault.getPoolTokenInfo(address(daiUsdc8020WeightedPool));
         uint256 bptTotalSupply = daiUsdc8020WeightedPool.totalSupply();
@@ -26,8 +29,9 @@ contract BalancerV38020WeightedPoolMath_Test is TestBase_BalancerV3_8020Weighted
 
         uint256[] memory weights = daiUsdc8020WeightedPool.getNormalizedWeights();
 
-        uint256 estimatedBptOut =
-            BalancerV38020WeightedPoolMath._calcBptOutGivenProportionalIn(poolReserves, weights, bptTotalSupply, daiUsdc8020WeightedPoolTokenAmounts);
+        uint256 estimatedBptOut = BalancerV38020WeightedPoolMath._calcBptOutGivenProportionalIn(
+            poolReserves, weights, bptTotalSupply, daiUsdc8020WeightedPoolTokenAmounts
+        );
 
         uint256 initialBptBal = daiUsdc8020WeightedPool.balanceOf(address(lp));
 
@@ -76,8 +80,9 @@ contract BalancerV38020WeightedPoolMath_Test is TestBase_BalancerV3_8020Weighted
 
         uint256[] memory weights = daiUsdc8020WeightedPool.getNormalizedWeights();
 
-        uint256 estimatedBptOut =
-            BalancerV38020WeightedPoolMath._calcBptOutGivenProportionalIn(poolReserves, weights, bptTotalSupply, amountsIn);
+        uint256 estimatedBptOut = BalancerV38020WeightedPoolMath._calcBptOutGivenProportionalIn(
+            poolReserves, weights, bptTotalSupply, amountsIn
+        );
 
         uint256 initialBptBal = daiUsdc8020WeightedPool.balanceOf(address(lp));
 
@@ -482,5 +487,4 @@ contract BalancerV38020WeightedPoolMath_Test is TestBase_BalancerV3_8020Weighted
         // assertApproxEqAbs(actualPrice, targetPrice, TOL, "Actual price should be approx target after adding DAI");
         assertEq(actualPrice, targetPrice, "Actual price should be approx target after adding DAI");
     }
-
 }

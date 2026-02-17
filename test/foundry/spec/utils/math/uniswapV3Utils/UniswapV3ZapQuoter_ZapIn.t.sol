@@ -53,7 +53,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test zap-in with token0 as input
-    function test_quoteZapInSingleCore_token0Input() public {
+    function test_quoteZapInSingleCore_token0Input() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -62,10 +62,10 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,  // Token0 input
+            zeroForOne: true, // Token0 input
             amountIn: ZAP_AMOUNT,
-            sqrtPriceLimitX96: 0,  // Use default
-            maxSwapSteps: 0,       // Unlimited
+            sqrtPriceLimitX96: 0, // Use default
+            maxSwapSteps: 0, // Unlimited
             searchIters: 20
         });
 
@@ -82,7 +82,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test zap-in with token1 as input
-    function test_quoteZapInSingleCore_token1Input() public {
+    function test_quoteZapInSingleCore_token1Input() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -91,7 +91,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: false,  // Token1 input
+            zeroForOne: false, // Token1 input
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -110,7 +110,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test zap-in when price is below target range (only token0 needed)
-    function test_quoteZapInSingleCore_priceBelowRange() public {
+    function test_quoteZapInSingleCore_priceBelowRange() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         // Range above current price (tick ~0)
         int24 tickLower = nearestUsableTick(6000, tickSpacing);
@@ -131,13 +131,15 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
         UniswapV3ZapQuoter.ZapInQuote memory quote = UniswapV3ZapQuoter.quoteZapInSingleCore(params);
 
         // When minting below-range position with token0, we shouldn't need to swap
-        assertTrue(quote.swapAmountIn == 0 || quote.swapAmountIn < ZAP_AMOUNT / 10,
-            "Should swap very little when input is the only needed token");
+        assertTrue(
+            quote.swapAmountIn == 0 || quote.swapAmountIn < ZAP_AMOUNT / 10,
+            "Should swap very little when input is the only needed token"
+        );
         assertTrue(quote.liquidity > 0, "Should mint liquidity");
     }
 
     /// @notice Test zap-in when price is above target range (only token1 needed)
-    function test_quoteZapInSingleCore_priceAboveRange() public {
+    function test_quoteZapInSingleCore_priceAboveRange() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         // Range below current price (tick ~0)
         int24 tickLower = nearestUsableTick(-12000, tickSpacing);
@@ -148,7 +150,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: false,  // Token1 input
+            zeroForOne: false, // Token1 input
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -158,8 +160,10 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
         UniswapV3ZapQuoter.ZapInQuote memory quote = UniswapV3ZapQuoter.quoteZapInSingleCore(params);
 
         // When minting above-range position with token1, we shouldn't need to swap
-        assertTrue(quote.swapAmountIn == 0 || quote.swapAmountIn < ZAP_AMOUNT / 10,
-            "Should swap very little when input is the only needed token");
+        assertTrue(
+            quote.swapAmountIn == 0 || quote.swapAmountIn < ZAP_AMOUNT / 10,
+            "Should swap very little when input is the only needed token"
+        );
         assertTrue(quote.liquidity > 0, "Should mint liquidity");
     }
 
@@ -168,7 +172,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test quoteZapInPool wrapper
-    function test_quoteZapInPool() public {
+    function test_quoteZapInPool() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -195,7 +199,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test quoteZapInPositionManager wrapper
-    function test_quoteZapInPositionManager() public {
+    function test_quoteZapInPositionManager() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -204,7 +208,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: false,  // Token1 input
+            zeroForOne: false, // Token1 input
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -222,7 +226,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test createZapInParams helper
-    function test_createZapInParams() public {
+    function test_createZapInParams() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -231,31 +235,15 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
         address token1 = pool.token1();
 
         // Create params with token0
-        UniswapV3ZapQuoter.ZapInParams memory params0 = UniswapV3ZapQuoter.createZapInParams(
-            pool,
-            tickLower,
-            tickUpper,
-            token0,
-            ZAP_AMOUNT,
-            0,
-            0,
-            20
-        );
+        UniswapV3ZapQuoter.ZapInParams memory params0 =
+            UniswapV3ZapQuoter.createZapInParams(pool, tickLower, tickUpper, token0, ZAP_AMOUNT, 0, 0, 20);
 
         assertTrue(params0.zeroForOne, "token0 should set zeroForOne=true");
         assertEq(params0.amountIn, ZAP_AMOUNT, "amountIn mismatch");
 
         // Create params with token1
-        UniswapV3ZapQuoter.ZapInParams memory params1 = UniswapV3ZapQuoter.createZapInParams(
-            pool,
-            tickLower,
-            tickUpper,
-            token1,
-            ZAP_AMOUNT,
-            0,
-            0,
-            20
-        );
+        UniswapV3ZapQuoter.ZapInParams memory params1 =
+            UniswapV3ZapQuoter.createZapInParams(pool, tickLower, tickUpper, token1, ZAP_AMOUNT, 0, 0, 20);
 
         assertFalse(params1.zeroForOne, "token1 should set zeroForOne=false");
     }
@@ -265,7 +253,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test zap with very small amount
-    function test_quoteZapInSingleCore_smallAmount() public {
+    function test_quoteZapInSingleCore_smallAmount() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -275,7 +263,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             tickLower: tickLower,
             tickUpper: tickUpper,
             zeroForOne: true,
-            amountIn: 1e15,  // Small: 0.001 tokens
+            amountIn: 1e15, // Small: 0.001 tokens
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
             searchIters: 20
@@ -288,7 +276,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test different search iterations
-    function test_quoteZapInSingleCore_differentSearchIters() public {
+    function test_quoteZapInSingleCore_differentSearchIters() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -302,7 +290,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 5  // Few iterations
+            searchIters: 5 // Few iterations
         });
 
         UniswapV3ZapQuoter.ZapInQuote memory quote5 = UniswapV3ZapQuoter.quoteZapInSingleCore(params5);
@@ -316,14 +304,15 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 30  // More iterations
+            searchIters: 30 // More iterations
         });
 
         UniswapV3ZapQuoter.ZapInQuote memory quote30 = UniswapV3ZapQuoter.quoteZapInSingleCore(params30);
 
         // More iterations should give >= liquidity (better optimization)
-        assertTrue(quote30.liquidity >= quote5.liquidity * 99 / 100,
-            "More iterations should give similar or better liquidity");
+        assertTrue(
+            quote30.liquidity >= quote5.liquidity * 99 / 100, "More iterations should give similar or better liquidity"
+        );
     }
 
     /* -------------------------------------------------------------------------- */
@@ -363,7 +352,7 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test liquidity is maximized (compare to non-optimal swap amount)
-    function test_quoteZapInSingleCore_liquidityIsOptimized() public {
+    function test_quoteZapInSingleCore_liquidityIsOptimized() public view {
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(-6000, tickSpacing);
         int24 tickUpper = nearestUsableTick(6000, tickSpacing);
@@ -382,11 +371,13 @@ contract UniswapV3ZapQuoter_ZapIn_Test is TestBase_UniswapV3 {
         UniswapV3ZapQuoter.ZapInQuote memory optimalQuote = UniswapV3ZapQuoter.quoteZapInSingleCore(params);
 
         // Compare to swapping 50% (which is usually not optimal for asymmetric ranges)
-        params.searchIters = 1;  // Force single iteration - will pick midpoint
+        params.searchIters = 1; // Force single iteration - will pick midpoint
         UniswapV3ZapQuoter.ZapInQuote memory midpointQuote = UniswapV3ZapQuoter.quoteZapInSingleCore(params);
 
         // Optimal should be >= midpoint (with tolerance for edge cases)
-        assertTrue(optimalQuote.liquidity >= midpointQuote.liquidity * 95 / 100,
-            "Optimized liquidity should be >= naive midpoint");
+        assertTrue(
+            optimalQuote.liquidity >= midpointQuote.liquidity * 95 / 100,
+            "Optimized liquidity should be >= naive midpoint"
+        );
     }
 }

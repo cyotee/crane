@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
-import { StorageSlotExtension } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
 import {
     TransientStorageHelpers
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
@@ -29,6 +31,7 @@ contract SenderGuardFacet is SenderGuardTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(ISenderGuard).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -40,6 +43,7 @@ contract SenderGuardFacet is SenderGuardTarget, IFacet {
         interfaces[0] = type(ISenderGuard).interfaceId;
         return interfaces;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -51,6 +55,7 @@ contract SenderGuardFacet is SenderGuardTarget, IFacet {
         funcs[0] = ISenderGuard.getSender.selector;
         return funcs;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
@@ -67,5 +72,4 @@ contract SenderGuardFacet is SenderGuardTarget, IFacet {
         functions = facetFuncs();
     }
     // end::facetMetadata()[]
-
 }

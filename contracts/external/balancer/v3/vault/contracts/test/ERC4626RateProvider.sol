@@ -4,9 +4,11 @@ pragma solidity ^0.8.24;
 
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 contract ERC4626RateProvider is IRateProvider {
     IERC4626 private immutable _wrappedToken;

@@ -4,15 +4,18 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { TokenConfig, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    TokenConfig,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { E2eErc4626SwapsTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eErc4626Swaps.t.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {E2eErc4626SwapsTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eErc4626Swaps.t.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
 
 contract E2eErc4626SwapsStableTest is E2eErc4626SwapsTest, StablePoolContractsDeployer {
     string internal constant POOL_VERSION = "Pool v1";
@@ -35,18 +38,19 @@ contract E2eErc4626SwapsStableTest is E2eErc4626SwapsTest, StablePoolContractsDe
         // Allow pools created by `factory` to use poolHooksMock hooks.
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            tokenConfig,
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            DEFAULT_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfig,
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                DEFAULT_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(address(newPool), name);
 
         // Cannot set the pool creator directly on a standard Balancer stable pool factory.
@@ -54,10 +58,7 @@ contract E2eErc4626SwapsStableTest is E2eErc4626SwapsTest, StablePoolContractsDe
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );

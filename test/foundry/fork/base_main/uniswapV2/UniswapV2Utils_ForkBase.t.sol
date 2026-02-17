@@ -9,7 +9,6 @@ import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 /// @notice Fork tests validating ConstProdUtils quote parity with Uniswap V2 on Base mainnet
 /// @dev Tests use real Base mainnet pairs via Infura RPC
 contract UniswapV2Utils_ForkBase is TestBase_UniswapV2ForkBase {
-
     /* -------------------------------------------------------------------------- */
     /*                        US-CRANE-202.2: Quote/Math Parity                   */
     /* -------------------------------------------------------------------------- */
@@ -199,9 +198,7 @@ contract UniswapV2Utils_ForkBase is TestBase_UniswapV2ForkBase {
         uint256 constProdAmountOut = quoteConstProdSale(amountIn, reserveWeth, reserveUsdbC);
 
         assertExactMatch(
-            routerAmountOut,
-            constProdAmountOut,
-            "Bridged USDC: ConstProdUtils._saleQuote should match router"
+            routerAmountOut, constProdAmountOut, "Bridged USDC: ConstProdUtils._saleQuote should match router"
         );
     }
 
@@ -222,9 +219,7 @@ contract UniswapV2Utils_ForkBase is TestBase_UniswapV2ForkBase {
         uint256 constProdAmountOut = quoteConstProdSale(amountIn, reserveUsdc, reserveWeth);
 
         assertExactMatch(
-            routerAmountOut,
-            constProdAmountOut,
-            "Reverse direction: ConstProdUtils._saleQuote should match router"
+            routerAmountOut, constProdAmountOut, "Reverse direction: ConstProdUtils._saleQuote should match router"
         );
     }
 }

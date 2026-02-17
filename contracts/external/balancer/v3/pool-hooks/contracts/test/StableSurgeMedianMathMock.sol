@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { StableSurgeMedianMath } from "../utils/StableSurgeMedianMath.sol";
+import {StableSurgeMedianMath} from "../utils/StableSurgeMedianMath.sol";
 
 contract StableSurgeMedianMathMock {
-    function calculateImbalance(uint256[] memory balancesScaled18) public pure returns (uint) {
+    function calculateImbalance(uint256[] memory balancesScaled18) public pure returns (uint256) {
         return StableSurgeMedianMath.calculateImbalance(balancesScaled18);
     }
 

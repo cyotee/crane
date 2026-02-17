@@ -4,10 +4,14 @@ pragma solidity ^0.8.24;
 
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { ITimelockAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ITimelockAuthorizer.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    ITimelockAuthorizer
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ITimelockAuthorizer.sol";
 
-import { TimelockExecutionHelper } from "./TimelockExecutionHelper.sol";
+import {TimelockExecutionHelper} from "./TimelockExecutionHelper.sol";
 
 // Scheduled executions are time based and are expected to be on the order of days, so any time changes or manipulation
 // on the order of seconds or minutes is irrelevant.
@@ -147,9 +151,12 @@ abstract contract TimelockAuthorizerManagement is ITimelockAuthorizer {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function getScheduledExecution(
-        uint256 scheduledExecutionId
-    ) external view override returns (ITimelockAuthorizer.ScheduledExecution memory) {
+    function getScheduledExecution(uint256 scheduledExecutionId)
+        external
+        view
+        override
+        returns (ITimelockAuthorizer.ScheduledExecution memory)
+    {
         return _scheduledExecutions[scheduledExecutionId];
     }
 
@@ -159,11 +166,12 @@ abstract contract TimelockAuthorizerManagement is ITimelockAuthorizer {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function getScheduledExecutions(
-        uint256 skip,
-        uint256 maxSize,
-        bool reverseOrder
-    ) external view override returns (ITimelockAuthorizer.ScheduledExecution[] memory) {
+    function getScheduledExecutions(uint256 skip, uint256 maxSize, bool reverseOrder)
+        external
+        view
+        override
+        returns (ITimelockAuthorizer.ScheduledExecution[] memory)
+    {
         require(skip < _scheduledExecutions.length, "SKIP_VALUE_TOO_LARGE");
         require(maxSize > 0, "ZERO_MAX_SIZE_VALUE");
 
@@ -195,18 +203,14 @@ abstract contract TimelockAuthorizerManagement is ITimelockAuthorizer {
         require(scheduledExecutionId < _scheduledExecutions.length, "EXECUTION_DOES_NOT_EXIST");
 
         ITimelockAuthorizer.ScheduledExecution storage scheduledExecution = _scheduledExecutions[scheduledExecutionId];
-        return
-            !scheduledExecution.executed &&
-            !scheduledExecution.canceled &&
-            block.timestamp >= scheduledExecution.executableAt;
+        return !scheduledExecution.executed && !scheduledExecution.canceled
+            && block.timestamp >= scheduledExecution.executableAt;
     }
 
     /// @inheritdoc ITimelockAuthorizer
     function isCanceler(uint256 scheduledExecutionId, address account) public view override returns (bool) {
-        return
-            _isCanceler[scheduledExecutionId][account] ||
-            _isCanceler[GLOBAL_CANCELER_SCHEDULED_EXECUTION_ID()][account] ||
-            isRoot(account);
+        return _isCanceler[scheduledExecutionId][account]
+            || _isCanceler[GLOBAL_CANCELER_SCHEDULED_EXECUTION_ID()][account] || isRoot(account);
     }
 
     /// @inheritdoc ITimelockAuthorizer
@@ -391,12 +395,10 @@ abstract contract TimelockAuthorizerManagement is ITimelockAuthorizer {
      * This performs no permission checks on `msg.sender` of any kind. The caller of this function should perform
      * any appropriate checks.
      */
-    function _scheduleWithDelay(
-        address where,
-        bytes memory data,
-        uint256 delay,
-        address[] memory executors
-    ) internal returns (uint256 scheduledExecutionId) {
+    function _scheduleWithDelay(address where, bytes memory data, uint256 delay, address[] memory executors)
+        internal
+        returns (uint256 scheduledExecutionId)
+    {
         scheduledExecutionId = _scheduledExecutions.length;
 
         uint256 executableAt = block.timestamp + delay;

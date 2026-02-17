@@ -11,7 +11,7 @@ import {
     AddressToUintMappingSlot
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BatchRouterCommonTest is BaseVaultTest {
     string private constant DOMAIN = "BatchRouterCommon";

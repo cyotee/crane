@@ -6,11 +6,11 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { MOCK_BATCH_ROUTER_VERSION } from "../../contracts/test/BatchRouterMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {MOCK_BATCH_ROUTER_VERSION} from "../../contracts/test/BatchRouterMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BatchRouterTest is BaseVaultTest {
     uint256 constant MIN_AMOUNT = 1e12;
@@ -100,7 +100,7 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 aliceDaiBefore = dai.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceDaiAfter = dai.balanceOf(alice);
@@ -122,21 +122,18 @@ contract BatchRouterTest is BaseVaultTest {
 
         // Create BPT remove liquidity step: BPT -> DAI (exact out).
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: address(pool), tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: address(pool), tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountOut: exactDaiOut,
-            maxAmountIn: maxBptIn
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountOut: exactDaiOut, maxAmountIn: maxBptIn
         });
 
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
         uint256 aliceDaiBefore = dai.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceDaiAfter = dai.balanceOf(alice);
@@ -148,7 +145,7 @@ contract BatchRouterTest is BaseVaultTest {
     }
 
     /***************************************************************************
-                            BPT Add Liquidity Operations  
+                            BPT Add Liquidity Operations
     ***************************************************************************/
 
     function testBPTAddLiquidityExactIn() public {
@@ -163,13 +160,13 @@ contract BatchRouterTest is BaseVaultTest {
         });
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: dai, steps: steps, exactAmountIn: daiAmountIn, minAmountOut: 1 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: dai, steps: steps, exactAmountIn: daiAmountIn, minAmountOut: 1});
 
         uint256 aliceDaiBefore = dai.balanceOf(alice);
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceDaiAfter = dai.balanceOf(alice);
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
@@ -186,21 +183,17 @@ contract BatchRouterTest is BaseVaultTest {
 
         // Create BPT add liquidity step: DAI -> BPT (exact out).
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: address(pool), tokenOut: IERC20(address(pool)), isBuffer: false });
+        steps[0] = SwapPathStep({pool: address(pool), tokenOut: IERC20(address(pool)), isBuffer: false});
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
-        paths[0] = SwapPathExactAmountOut({
-            tokenIn: dai,
-            steps: steps,
-            exactAmountOut: exactBptOut,
-            maxAmountIn: maxDaiIn
-        });
+        paths[0] =
+            SwapPathExactAmountOut({tokenIn: dai, steps: steps, exactAmountOut: exactBptOut, maxAmountIn: maxDaiIn});
 
         uint256 aliceDaiBefore = dai.balanceOf(alice);
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceDaiAfter = dai.balanceOf(alice);
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
@@ -238,25 +231,18 @@ contract BatchRouterTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountIn: bptAmountIn,
-            minAmountOut: 1
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountIn: bptAmountIn, minAmountOut: 1
         });
 
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
 
         // Should end up with different BPT amount due to fees/slippage.
-        assertEq(
-            aliceBptAfter,
-            aliceBptBefore - bptAmountIn + pathAmountsOut[0],
-            "BPT balance should update correctly"
-        );
+        assertEq(aliceBptAfter, aliceBptBefore - bptAmountIn + pathAmountsOut[0], "BPT balance should update correctly");
     }
 
     function testIntermediateBPTStep() public {
@@ -276,21 +262,17 @@ contract BatchRouterTest is BaseVaultTest {
         });
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
-        paths[0] = SwapPathExactAmountIn({ tokenIn: dai, steps: steps, exactAmountIn: daiAmountIn, minAmountOut: 1 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: dai, steps: steps, exactAmountIn: daiAmountIn, minAmountOut: 1});
 
         uint256 aliceDaiBefore = dai.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceDaiAfter = dai.balanceOf(alice);
 
         // Should end up with different DAI amount due to fees.
-        assertEq(
-            aliceDaiAfter,
-            aliceDaiBefore - daiAmountIn + pathAmountsOut[0],
-            "DAI balance should update correctly"
-        );
+        assertEq(aliceDaiAfter, aliceDaiBefore - daiAmountIn + pathAmountsOut[0], "DAI balance should update correctly");
         assertLt(pathAmountsOut[0], daiAmountIn, "Should get back less DAI due to fees");
     }
 
@@ -321,17 +303,14 @@ contract BatchRouterTest is BaseVaultTest {
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountOut: exactUsdcOut,
-            maxAmountIn: maxBptIn
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountOut: exactUsdcOut, maxAmountIn: maxBptIn
         });
 
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcBefore = usdc.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
@@ -372,7 +351,7 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
@@ -421,7 +400,7 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 aliceUsdcBefore = usdc.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
@@ -468,7 +447,7 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 aliceUsdcBefore = usdc.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
@@ -518,7 +497,7 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 aliceUsdcBefore = usdc.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
@@ -557,17 +536,14 @@ contract BatchRouterTest is BaseVaultTest {
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountOut: exactUsdcOut,
-            maxAmountIn: maxBptIn
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountOut: exactUsdcOut, maxAmountIn: maxBptIn
         });
 
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcBefore = usdc.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceUsdcAfter = usdc.balanceOf(alice);
@@ -612,17 +588,14 @@ contract BatchRouterTest is BaseVaultTest {
 
         SwapPathExactAmountOut[] memory paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountOut: exactDaiOut,
-            maxAmountIn: poolInitAmount / 10
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountOut: exactDaiOut, maxAmountIn: poolInitAmount / 10
         });
 
         uint256 aliceBptBefore = IERC20(pool).balanceOf(alice);
         uint256 aliceDaiBefore = dai.balanceOf(alice);
 
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         uint256 aliceBptAfter = IERC20(pool).balanceOf(alice);
         uint256 aliceDaiAfter = dai.balanceOf(alice);
@@ -642,18 +615,15 @@ contract BatchRouterTest is BaseVaultTest {
         uint256 bptAmountIn = poolInitAmount / 100;
 
         SwapPathStep[] memory steps = new SwapPathStep[](1);
-        steps[0] = SwapPathStep({ pool: address(pool), tokenOut: dai, isBuffer: false });
+        steps[0] = SwapPathStep({pool: address(pool), tokenOut: dai, isBuffer: false});
 
         SwapPathExactAmountIn[] memory paths = new SwapPathExactAmountIn[](1);
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: IERC20(address(pool)),
-            steps: steps,
-            exactAmountIn: bptAmountIn,
-            minAmountOut: 1
+            tokenIn: IERC20(address(pool)), steps: steps, exactAmountIn: bptAmountIn, minAmountOut: 1
         });
 
         _prankStaticCall();
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.querySwapExactIn(paths, alice, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.querySwapExactIn(paths, alice, bytes(""));
 
         assertGt(pathAmountsOut[0], 0, "Query should return positive amount");
     }

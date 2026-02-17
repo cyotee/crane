@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity 0.8.30;
+pragma solidity ^0.8.30;
 
-import "forge-std/Test.sol";
+import 'forge-std/Test.sol';
 
-import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
-import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
-import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
+import {SlipstreamUtils} from '@crane/contracts/utils/math/SlipstreamUtils.sol';
+import {ICLPool} from '@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol';
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from '@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol';
+import {TickMath} from '@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol';
 
 /// @title SlipstreamUtils Edge Case Tests
 /// @notice Tests for edge cases identified in CRANE-011 review:
@@ -26,7 +29,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
     uint256 constant TEST_AMOUNT = 1e18;
     uint256 constant LARGE_AMOUNT = 1e30;
-    uint256 constant DUST_AMOUNT = 1;  // 1 wei
+    uint256 constant DUST_AMOUNT = 1; // 1 wei
     uint128 constant DEFAULT_LIQUIDITY = 1_000_000e18;
 
     /* -------------------------------------------------------------------------- */
@@ -46,10 +49,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     /// @dev At MIN_TICK, swapping oneForZero (price increasing) should work
     function test_edgeTicks_positionAtMinTick() public {
         MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_min"),
-            makeAddr("TokenB_min"),
+            makeAddr('TokenA_min'),
+            makeAddr('TokenB_min'),
             FEE_MEDIUM,
-            TICK_SPACING_LOW  // Use spacing of 1 for exact MIN_TICK
+            TICK_SPACING_LOW // Use spacing of 1 for exact MIN_TICK
         );
 
         // Position from MIN_TICK to MIN_TICK + 10000 (wider range for more liquidity)
@@ -69,22 +72,18 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            false  // oneForZero (price increasing, moving away from MIN_TICK boundary)
+            false // oneForZero (price increasing, moving away from MIN_TICK boundary)
         );
 
-        assertTrue(quotedOut > 0, "Quote at MIN_TICK boundary should produce output");
+        assertTrue(quotedOut > 0, 'Quote at MIN_TICK boundary should produce output');
     }
 
     /// @notice Test position at MAX_TICK boundary
     /// @dev Verifies graceful handling at maximum tick boundary
     /// @dev At MAX_TICK, swapping zeroForOne (price decreasing) should work
     function test_edgeTicks_positionAtMaxTick() public {
-        MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_max"),
-            makeAddr("TokenB_max"),
-            FEE_MEDIUM,
-            TICK_SPACING_LOW
-        );
+        MockCLPool pool =
+            createMockPoolOneToOne(makeAddr('TokenA_max'), makeAddr('TokenB_max'), FEE_MEDIUM, TICK_SPACING_LOW);
 
         // Position from MAX_TICK - 10000 to MAX_TICK (wider range)
         int24 tickLower = TickMath.MAX_TICK - 10000;
@@ -103,21 +102,17 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            true  // zeroForOne (price decreasing, moving away from MAX_TICK boundary)
+            true // zeroForOne (price decreasing, moving away from MAX_TICK boundary)
         );
 
-        assertTrue(quotedOut > 0, "Quote at MAX_TICK boundary should produce output");
+        assertTrue(quotedOut > 0, 'Quote at MAX_TICK boundary should produce output');
     }
 
     /// @notice Test position spanning entire tick range (MIN_TICK to MAX_TICK)
     /// @dev Verifies handling of full-range positions
     function test_edgeTicks_fullRangePosition() public {
-        MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_full"),
-            makeAddr("TokenB_full"),
-            FEE_MEDIUM,
-            TICK_SPACING_LOW
-        );
+        MockCLPool pool =
+            createMockPoolOneToOne(makeAddr('TokenA_full'), makeAddr('TokenB_full'), FEE_MEDIUM, TICK_SPACING_LOW);
 
         // Full range position
         int24 tickLower = TickMath.MIN_TICK;
@@ -126,44 +121,44 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
 
         // Set pool state at center (tick 0)
-        uint160 sqrtPriceX96 = uint160(1) << 96;  // 1:1 price
+        uint160 sqrtPriceX96 = uint160(1) << 96; // 1:1 price
         pool.setState(sqrtPriceX96, 0, DEFAULT_LIQUIDITY);
 
         // Quote should work for both directions
-        uint256 quotedOutZeroForOne = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true
-        );
+        uint256 quotedOutZeroForOne =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
-        uint256 quotedOutOneForZero = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false
-        );
+        uint256 quotedOutOneForZero =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false);
 
-        assertTrue(quotedOutZeroForOne > 0, "Quote zeroForOne should produce output");
-        assertTrue(quotedOutOneForZero > 0, "Quote oneForZero should produce output");
+        assertTrue(quotedOutZeroForOne > 0, 'Quote zeroForOne should produce output');
+        assertTrue(quotedOutOneForZero > 0, 'Quote oneForZero should produce output');
         // At 1:1 price, outputs should be approximately equal
-        assertApproxEqRel(quotedOutZeroForOne, quotedOutOneForZero, 0.01e18, "Outputs should be approximately equal at 1:1 price");
+        assertApproxEqRel(
+            quotedOutZeroForOne, quotedOutOneForZero, 0.01e18, 'Outputs should be approximately equal at 1:1 price'
+        );
     }
 
     /// @notice Test that liquidity amounts compute correctly at tick boundaries
     function test_edgeTicks_liquidityAmountsAtBoundaries() public {
         // Test _quoteAmountsForLiquidity at MIN_TICK
         (uint256 amount0Min, uint256 amount1Min) = SlipstreamUtils._quoteAmountsForLiquidity(
-            TickMath.MIN_TICK + 1,  // Current tick just above MIN
+            TickMath.MIN_TICK + 1, // Current tick just above MIN
             TickMath.MIN_TICK,
             TickMath.MIN_TICK + 1000,
             DEFAULT_LIQUIDITY
         );
         // Should compute without overflow/underflow
-        assertTrue(amount0Min > 0 || amount1Min > 0, "Should compute amounts at MIN_TICK");
+        assertTrue(amount0Min > 0 || amount1Min > 0, 'Should compute amounts at MIN_TICK');
 
         // Test _quoteAmountsForLiquidity at MAX_TICK
         (uint256 amount0Max, uint256 amount1Max) = SlipstreamUtils._quoteAmountsForLiquidity(
-            TickMath.MAX_TICK - 1,  // Current tick just below MAX
+            TickMath.MAX_TICK - 1, // Current tick just below MAX
             TickMath.MAX_TICK - 1000,
             TickMath.MAX_TICK,
             DEFAULT_LIQUIDITY
         );
-        assertTrue(amount0Max > 0 || amount1Max > 0, "Should compute amounts at MAX_TICK");
+        assertTrue(amount0Max > 0 || amount1Max > 0, 'Should compute amounts at MAX_TICK');
     }
 
     /* ========================================================================== */
@@ -174,19 +169,14 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     /// @dev Verifies no overflow with maximum liquidity value
     function test_extremeValues_maxLiquidity() public {
         uint128 maxLiquidity = type(uint128).max;
-        uint160 sqrtPriceX96 = uint160(1) << 96;  // 1:1 price
+        uint160 sqrtPriceX96 = uint160(1) << 96; // 1:1 price
 
         // This should not overflow
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            maxLiquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, maxLiquidity, FEE_MEDIUM, true);
 
-        assertTrue(quotedOut > 0, "Quote with max liquidity should produce output");
-        assertTrue(quotedOut < TEST_AMOUNT, "Output should be less than input due to fees");
+        assertTrue(quotedOut > 0, 'Quote with max liquidity should produce output');
+        assertTrue(quotedOut < TEST_AMOUNT, 'Output should be less than input due to fees');
     }
 
     /// @notice Test with very high liquidity (close to max)
@@ -194,15 +184,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint128 highLiquidity = type(uint128).max / 2;
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            highLiquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, highLiquidity, FEE_MEDIUM, true);
 
-        assertTrue(quotedOut > 0, "Quote with high liquidity should produce output");
+        assertTrue(quotedOut > 0, 'Quote with high liquidity should produce output');
     }
 
     /// @notice Test zero liquidity swap returns zero output (graceful failure)
@@ -211,15 +196,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint128 zeroLiquidity = 0;
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            zeroLiquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, zeroLiquidity, FEE_MEDIUM, true);
 
-        assertEq(quotedOut, 0, "Zero liquidity should give zero output");
+        assertEq(quotedOut, 0, 'Zero liquidity should give zero output');
     }
 
     /// @notice Test with very small amount (1 wei)
@@ -227,7 +207,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
         uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            DUST_AMOUNT,  // 1 wei
+            DUST_AMOUNT, // 1 wei
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
@@ -235,7 +215,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         );
 
         // 1 wei input may result in 0 output due to fee deduction
-        assertTrue(quotedOut <= DUST_AMOUNT, "Output should not exceed 1 wei input");
+        assertTrue(quotedOut <= DUST_AMOUNT, 'Output should not exceed 1 wei input');
     }
 
     /// @notice Test with very small amounts across different values
@@ -245,15 +225,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         for (uint256 i = 0; i < dustAmounts.length; i++) {
             uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-                dustAmounts[i],
-                sqrtPriceX96,
-                DEFAULT_LIQUIDITY,
-                FEE_MEDIUM,
-                true
+                dustAmounts[i], sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true
             );
 
             // Dust amounts should not revert and output <= input
-            assertTrue(quotedOut <= dustAmounts[i], "Output should not exceed dust input");
+            assertTrue(quotedOut <= dustAmounts[i], 'Output should not exceed dust input');
         }
     }
 
@@ -262,15 +238,15 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
         uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            LARGE_AMOUNT,  // 1e30
+            LARGE_AMOUNT, // 1e30
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
             true
         );
 
-        assertTrue(quotedOut > 0, "Large amount should produce output");
-        assertTrue(quotedOut < LARGE_AMOUNT, "Output should be less than input");
+        assertTrue(quotedOut > 0, 'Large amount should produce output');
+        assertTrue(quotedOut < LARGE_AMOUNT, 'Output should be less than input');
     }
 
     /// @notice Test with extreme amounts (approaching uint256 max)
@@ -278,15 +254,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
         uint256 veryLargeAmount = 1e50;
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            veryLargeAmount,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(veryLargeAmount, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
-        assertTrue(quotedOut > 0, "Very large amount should produce output");
+        assertTrue(quotedOut > 0, 'Very large amount should produce output');
     }
 
     /// @notice Test liquidity computation with extreme token amounts
@@ -300,23 +271,18 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             tickLower,
             tickUpper,
-            LARGE_AMOUNT,  // 1e30
+            LARGE_AMOUNT, // 1e30
             LARGE_AMOUNT
         );
 
-        assertTrue(liquidityFromLarge > 0, "Should compute liquidity for large amounts");
+        assertTrue(liquidityFromLarge > 0, 'Should compute liquidity for large amounts');
 
         // Test with dust amounts
-        uint128 liquidityFromDust = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            DUST_AMOUNT,
-            DUST_AMOUNT
-        );
+        uint128 liquidityFromDust =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, DUST_AMOUNT, DUST_AMOUNT);
 
         // Dust amounts should produce less (or equal) liquidity than large amounts
-        assertTrue(liquidityFromDust <= liquidityFromLarge, "Dust liquidity should not exceed large-amount liquidity");
+        assertTrue(liquidityFromDust <= liquidityFromLarge, 'Dust liquidity should not exceed large-amount liquidity');
     }
 
     /* ========================================================================== */
@@ -351,11 +317,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     /// @notice Internal helper to test a specific tick spacing
     function _testTickSpacing(int24 tickSpacing_) internal {
         MockCLPool pool = createMockPool(
-            makeAddr(string(abi.encodePacked("TokenA_ts", vm.toString(uint256(uint24(tickSpacing_)))))),
-            makeAddr(string(abi.encodePacked("TokenB_ts", vm.toString(uint256(uint24(tickSpacing_)))))),
+            makeAddr(string(abi.encodePacked('TokenA_ts', vm.toString(uint256(uint24(tickSpacing_)))))),
+            makeAddr(string(abi.encodePacked('TokenB_ts', vm.toString(uint256(uint24(tickSpacing_)))))),
             FEE_MEDIUM,
             tickSpacing_,
-            uint160(1) << 96  // 1:1 price
+            uint160(1) << 96 // 1:1 price
         );
 
         // Create aligned tick range
@@ -364,32 +330,24 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
 
-        (uint160 sqrtPriceX96, int24 tick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 tick,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Quote should work regardless of tick spacing
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
-        assertTrue(quotedOut > 0, string(abi.encodePacked("Quote should work with tick spacing ", vm.toString(uint256(uint24(tickSpacing_))))));
+        assertTrue(
+            quotedOut > 0,
+            string(abi.encodePacked('Quote should work with tick spacing ', vm.toString(uint256(uint24(tickSpacing_)))))
+        );
 
         // Verify mock swap matches quote
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_RATIO + 1;
-        (, int256 amount1) = pool.swap(
-            address(this),
-            true,
-            int256(TEST_AMOUNT),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (, int256 amount1) = pool.swap(address(this), true, int256(TEST_AMOUNT), sqrtPriceLimitX96, '');
 
         uint256 actualOut = uint256(-amount1);
-        assertApproxEqAbs(quotedOut, actualOut, 1, "Quote should match swap result");
+        assertApproxEqAbs(quotedOut, actualOut, 1, 'Quote should match swap result');
     }
 
     /// @notice Test that tick alignment works correctly for all spacings
@@ -401,13 +359,17 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
             // Test alignment of MIN_TICK
             int24 alignedMin = nearestUsableTick(TickMath.MIN_TICK, spacing);
-            assertTrue(alignedMin % spacing == 0 || alignedMin == TickMath.MIN_TICK, "MIN_TICK should be properly aligned");
-            assertTrue(alignedMin >= TickMath.MIN_TICK, "Aligned MIN should not be below MIN_TICK");
+            assertTrue(
+                alignedMin % spacing == 0 || alignedMin == TickMath.MIN_TICK, 'MIN_TICK should be properly aligned'
+            );
+            assertTrue(alignedMin >= TickMath.MIN_TICK, 'Aligned MIN should not be below MIN_TICK');
 
             // Test alignment of MAX_TICK
             int24 alignedMax = nearestUsableTick(TickMath.MAX_TICK, spacing);
-            assertTrue(alignedMax % spacing == 0 || alignedMax == TickMath.MAX_TICK, "MAX_TICK should be properly aligned");
-            assertTrue(alignedMax <= TickMath.MAX_TICK, "Aligned MAX should not be above MAX_TICK");
+            assertTrue(
+                alignedMax % spacing == 0 || alignedMax == TickMath.MAX_TICK, 'MAX_TICK should be properly aligned'
+            );
+            assertTrue(alignedMax <= TickMath.MAX_TICK, 'Aligned MAX should not be above MAX_TICK');
         }
     }
 
@@ -422,18 +384,14 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     ///      No rounding tolerance is needed because the mock uses a single-tick swap
     ///      and SwapMath assigns the target price directly when the limit is reached.
     function test_priceLimitExactness_zeroForOne() public {
-        MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_limit"),
-            makeAddr("TokenB_limit"),
-            FEE_MEDIUM,
-            TICK_SPACING_MEDIUM
-        );
+        MockCLPool pool =
+            createMockPoolOneToOne(makeAddr('TokenA_limit'), makeAddr('TokenB_limit'), FEE_MEDIUM, TICK_SPACING_MEDIUM);
 
         int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(60000, TICK_SPACING_MEDIUM);
         addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
 
-        (uint160 sqrtPriceX96Start, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96Start,,,,,) = pool.slot0();
 
         // Set a price limit that should be reached mid-swap
         // For zeroForOne, price decreases, so limit should be lower than current
@@ -441,36 +399,30 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTick);
 
         // Execute swap with large amount to ensure we hit the limit
-        (int256 amount0, int256 amount1) = pool.swap(
-            address(this),
-            true,  // zeroForOne
-            int256(LARGE_AMOUNT),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(
+                address(this),
+                true, // zeroForOne
+                int256(LARGE_AMOUNT),
+                sqrtPriceLimitX96,
+                ''
+            );
 
         // Get final price
-        (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96End,,,,,) = pool.slot0();
 
         // Guard: final price should not overshoot limit (zeroForOne: price decreases, so final >= limit)
-        assertTrue(
-            sqrtPriceX96End >= sqrtPriceLimitX96,
-            "Price should not overshoot limit (zeroForOne)"
-        );
+        assertTrue(sqrtPriceX96End >= sqrtPriceLimitX96, 'Price should not overshoot limit (zeroForOne)');
 
         // CRANE-093: Assert end price equals the price limit exactly
-        assertEq(
-            sqrtPriceX96End,
-            sqrtPriceLimitX96,
-            "End price must equal sqrtPriceLimitX96 exactly (zeroForOne)"
-        );
+        assertEq(sqrtPriceX96End, sqrtPriceLimitX96, 'End price must equal sqrtPriceLimitX96 exactly (zeroForOne)');
 
         // CRANE-093: Assert swap consumed enough input to plausibly reach the limit
         // amount0 is positive (tokens in), and must be less than LARGE_AMOUNT to prove
         // the swap was constrained by the price limit, not by running out of input
         uint256 consumed = uint256(amount0);
-        assertTrue(consumed > 0, "Swap must consume some input (zeroForOne)");
-        assertTrue(consumed < LARGE_AMOUNT, "Swap must be limit-constrained, not input-constrained (zeroForOne)");
+        assertTrue(consumed > 0, 'Swap must consume some input (zeroForOne)');
+        assertTrue(consumed < LARGE_AMOUNT, 'Swap must be limit-constrained, not input-constrained (zeroForOne)');
     }
 
     /// @notice Test swap stops exactly at sqrtPriceLimitX96 (oneForZero)
@@ -479,52 +431,43 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     ///      when the amount specified exceeds the amount needed to reach the price limit.
     function test_priceLimitExactness_oneForZero() public {
         MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_limit2"),
-            makeAddr("TokenB_limit2"),
-            FEE_MEDIUM,
-            TICK_SPACING_MEDIUM
+            makeAddr('TokenA_limit2'), makeAddr('TokenB_limit2'), FEE_MEDIUM, TICK_SPACING_MEDIUM
         );
 
         int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(60000, TICK_SPACING_MEDIUM);
         addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
 
-        (uint160 sqrtPriceX96Start, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96Start,,,,,) = pool.slot0();
 
         // For oneForZero, price increases, so limit should be higher than current
         int24 targetTick = 1000;
         uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTick);
 
         // Execute swap with large amount
-        (int256 amount0, int256 amount1) = pool.swap(
-            address(this),
-            false,  // oneForZero
-            int256(LARGE_AMOUNT),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(
+                address(this),
+                false, // oneForZero
+                int256(LARGE_AMOUNT),
+                sqrtPriceLimitX96,
+                ''
+            );
 
         // Get final price
-        (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96End,,,,,) = pool.slot0();
 
         // Guard: final price should not overshoot limit (oneForZero: price increases, so final <= limit)
-        assertTrue(
-            sqrtPriceX96End <= sqrtPriceLimitX96,
-            "Price should not overshoot limit (oneForZero)"
-        );
+        assertTrue(sqrtPriceX96End <= sqrtPriceLimitX96, 'Price should not overshoot limit (oneForZero)');
 
         // CRANE-093: Assert end price equals the price limit exactly
-        assertEq(
-            sqrtPriceX96End,
-            sqrtPriceLimitX96,
-            "End price must equal sqrtPriceLimitX96 exactly (oneForZero)"
-        );
+        assertEq(sqrtPriceX96End, sqrtPriceLimitX96, 'End price must equal sqrtPriceLimitX96 exactly (oneForZero)');
 
         // CRANE-093: Assert swap consumed enough input to plausibly reach the limit
         // amount1 is positive (tokens in), and must be less than LARGE_AMOUNT
         uint256 consumed = uint256(amount1);
-        assertTrue(consumed > 0, "Swap must consume some input (oneForZero)");
-        assertTrue(consumed < LARGE_AMOUNT, "Swap must be limit-constrained, not input-constrained (oneForZero)");
+        assertTrue(consumed > 0, 'Swap must consume some input (oneForZero)');
+        assertTrue(consumed < LARGE_AMOUNT, 'Swap must be limit-constrained, not input-constrained (oneForZero)');
     }
 
     /// @notice Test that quote uses correct price limits internally
@@ -532,18 +475,16 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
         // Quote zeroForOne uses MIN_SQRT_RATIO + 1 as target
-        uint256 quoteZeroForOne = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true
-        );
+        uint256 quoteZeroForOne =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
         // Quote oneForZero uses MAX_SQRT_RATIO - 1 as target
-        uint256 quoteOneForZero = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false
-        );
+        uint256 quoteOneForZero =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false);
 
         // Both should produce valid outputs
-        assertTrue(quoteZeroForOne > 0, "zeroForOne quote should be positive");
-        assertTrue(quoteOneForZero > 0, "oneForZero quote should be positive");
+        assertTrue(quoteZeroForOne > 0, 'zeroForOne quote should be positive');
+        assertTrue(quoteOneForZero > 0, 'oneForZero quote should be positive');
     }
 
     /// @notice Test price-limit exactness across multiple target ticks (zeroForOne)
@@ -554,8 +495,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         for (uint256 i = 0; i < targetTicks.length; i++) {
             // Fresh pool for each target
             MockCLPool pool = createMockPoolOneToOne(
-                makeAddr(string(abi.encodePacked("TokenA_mt_zfo_", vm.toString(i)))),
-                makeAddr(string(abi.encodePacked("TokenB_mt_zfo_", vm.toString(i)))),
+                makeAddr(string(abi.encodePacked('TokenA_mt_zfo_', vm.toString(i)))),
+                makeAddr(string(abi.encodePacked('TokenB_mt_zfo_', vm.toString(i)))),
                 FEE_MEDIUM,
                 TICK_SPACING_MEDIUM
             );
@@ -566,21 +507,18 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
             uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTicks[i]);
 
-            (int256 amount0, ) = pool.swap(
-                address(this), true, int256(LARGE_AMOUNT), sqrtPriceLimitX96, ""
-            );
+            (int256 amount0,) = pool.swap(address(this), true, int256(LARGE_AMOUNT), sqrtPriceLimitX96, '');
 
-            (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+            (uint160 sqrtPriceX96End,,,,,) = pool.slot0();
 
             assertEq(
                 sqrtPriceX96End,
                 sqrtPriceLimitX96,
-                string(abi.encodePacked(
-                    "End price must equal limit at target tick ",
-                    vm.toString(int256(targetTicks[i]))
-                ))
+                string(
+                    abi.encodePacked('End price must equal limit at target tick ', vm.toString(int256(targetTicks[i])))
+                )
             );
-            assertTrue(uint256(amount0) < LARGE_AMOUNT, "Must be limit-constrained");
+            assertTrue(uint256(amount0) < LARGE_AMOUNT, 'Must be limit-constrained');
         }
     }
 
@@ -591,8 +529,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         for (uint256 i = 0; i < targetTicks.length; i++) {
             MockCLPool pool = createMockPoolOneToOne(
-                makeAddr(string(abi.encodePacked("TokenA_mt_ofz_", vm.toString(i)))),
-                makeAddr(string(abi.encodePacked("TokenB_mt_ofz_", vm.toString(i)))),
+                makeAddr(string(abi.encodePacked('TokenA_mt_ofz_', vm.toString(i)))),
+                makeAddr(string(abi.encodePacked('TokenB_mt_ofz_', vm.toString(i)))),
                 FEE_MEDIUM,
                 TICK_SPACING_MEDIUM
             );
@@ -603,21 +541,18 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
             uint160 sqrtPriceLimitX96 = TickMath.getSqrtRatioAtTick(targetTicks[i]);
 
-            ( , int256 amount1) = pool.swap(
-                address(this), false, int256(LARGE_AMOUNT), sqrtPriceLimitX96, ""
-            );
+            (, int256 amount1) = pool.swap(address(this), false, int256(LARGE_AMOUNT), sqrtPriceLimitX96, '');
 
-            (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+            (uint160 sqrtPriceX96End,,,,,) = pool.slot0();
 
             assertEq(
                 sqrtPriceX96End,
                 sqrtPriceLimitX96,
-                string(abi.encodePacked(
-                    "End price must equal limit at target tick ",
-                    vm.toString(int256(targetTicks[i]))
-                ))
+                string(
+                    abi.encodePacked('End price must equal limit at target tick ', vm.toString(int256(targetTicks[i])))
+                )
             );
-            assertTrue(uint256(amount1) < LARGE_AMOUNT, "Must be limit-constrained");
+            assertTrue(uint256(amount1) < LARGE_AMOUNT, 'Must be limit-constrained');
         }
     }
 
@@ -626,10 +561,7 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     ///      the price limit, the swap should stop exactly at the limit price.
     function test_priceLimitExactness_exactOutput_hitsLimit() public {
         MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_eo_limit"),
-            makeAddr("TokenB_eo_limit"),
-            FEE_MEDIUM,
-            TICK_SPACING_MEDIUM
+            makeAddr('TokenA_eo_limit'), makeAddr('TokenB_eo_limit'), FEE_MEDIUM, TICK_SPACING_MEDIUM
         );
 
         int24 tickLower = nearestUsableTick(-60000, TICK_SPACING_MEDIUM);
@@ -642,23 +574,19 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         pool.swap(
             address(this),
-            true,  // zeroForOne
-            -int256(LARGE_AMOUNT),  // negative = exact output
+            true, // zeroForOne
+            -int256(LARGE_AMOUNT), // negative = exact output
             sqrtPriceLimitX96,
-            ""
+            ''
         );
 
-        (uint160 sqrtPriceX96End, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96End,,,,,) = pool.slot0();
 
         // Guard: no overshoot
-        assertTrue(sqrtPriceX96End >= sqrtPriceLimitX96, "No overshoot (exact output, zeroForOne)");
+        assertTrue(sqrtPriceX96End >= sqrtPriceLimitX96, 'No overshoot (exact output, zeroForOne)');
 
         // Exact landing
-        assertEq(
-            sqrtPriceX96End,
-            sqrtPriceLimitX96,
-            "End price must equal limit exactly (exact output, zeroForOne)"
-        );
+        assertEq(sqrtPriceX96End, sqrtPriceLimitX96, 'End price must equal limit exactly (exact output, zeroForOne)');
     }
 
     /// @notice Test no overshoot with exact output quotes
@@ -667,25 +595,15 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint256 desiredOutput = TEST_AMOUNT / 2;
 
         // Get required input for exact output
-        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            desiredOutput,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 requiredInput =
+            SlipstreamUtils._quoteExactOutputSingle(desiredOutput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
         // Now verify: using the required input should give approximately the desired output
-        uint256 actualOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 actualOutput =
+            SlipstreamUtils._quoteExactInputSingle(requiredInput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
         // The round-trip should be close (within rounding tolerance)
-        assertApproxEqRel(actualOutput, desiredOutput, 0.001e18, "Round-trip should be consistent");
+        assertApproxEqRel(actualOutput, desiredOutput, 0.001e18, 'Round-trip should be consistent');
     }
 
     /* ========================================================================== */
@@ -701,29 +619,24 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             TEST_AMOUNT,
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
-            0,  // Zero fee
+            0, // Zero fee
             true
         );
 
         // With zero fee and 1:1 price, output should be very close to input
-        assertApproxEqRel(quotedOut, TEST_AMOUNT, 0.001e18, "Zero fee should give ~input output");
+        assertApproxEqRel(quotedOut, TEST_AMOUNT, 0.001e18, 'Zero fee should give ~input output');
     }
 
     /// @notice Test max fee (1%)
     function test_edgeCases_maxFee() public {
         uint160 sqrtPriceX96 = uint160(1) << 96;
-        uint24 maxFee = 10000;  // 1%
+        uint24 maxFee = 10000; // 1%
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            maxFee,
-            true
-        );
+        uint256 quotedOut =
+            SlipstreamUtils._quoteExactInputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, maxFee, true);
 
-        assertTrue(quotedOut > 0, "Max fee quote should produce output");
-        assertTrue(quotedOut < TEST_AMOUNT, "Output should be less than input with max fee");
+        assertTrue(quotedOut > 0, 'Max fee quote should produce output');
+        assertTrue(quotedOut < TEST_AMOUNT, 'Output should be less than input with max fee');
     }
 
     /// @notice Test sqrtPrice at MIN_SQRT_RATIO boundary
@@ -736,11 +649,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            false  // oneForZero (can still go up from near-min)
+            false // oneForZero (can still go up from near-min)
         );
 
         // oneForZero at near-minimum price should produce non-zero output
-        assertTrue(quotedOut > 0, "Should produce positive output at MIN_SQRT_RATIO boundary");
+        assertTrue(quotedOut > 0, 'Should produce positive output at MIN_SQRT_RATIO boundary');
     }
 
     /// @notice Test sqrtPrice at MAX_SQRT_RATIO boundary
@@ -753,10 +666,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            true  // zeroForOne (can still go down from near-max)
+            true // zeroForOne (can still go down from near-max)
         );
 
-        assertTrue(quotedOut > 0, "Should produce positive output at MAX_SQRT_RATIO boundary");
+        assertTrue(quotedOut > 0, 'Should produce positive output at MAX_SQRT_RATIO boundary');
     }
 
     /// @notice Test getSqrtPriceFromReserves edge cases
@@ -764,15 +677,15 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         // Equal reserves = 1:1 price
         uint160 priceEqual = SlipstreamUtils._getSqrtPriceFromReserves(1e18, 1e18);
         uint160 expectedOneToOne = uint160(1) << 96;
-        assertApproxEqRel(priceEqual, expectedOneToOne, 0.01e18, "Equal reserves should give 1:1 price");
+        assertApproxEqRel(priceEqual, expectedOneToOne, 0.01e18, 'Equal reserves should give 1:1 price');
 
         // Very different reserves
         uint160 priceSkewed = SlipstreamUtils._getSqrtPriceFromReserves(1e6, 1e30);
-        assertTrue(priceSkewed > expectedOneToOne, "Higher reserve1 should give higher price");
+        assertTrue(priceSkewed > expectedOneToOne, 'Higher reserve1 should give higher price');
 
         // Minimum reserves (1, 1)
         uint160 priceMin = SlipstreamUtils._getSqrtPriceFromReserves(1, 1);
-        assertApproxEqRel(priceMin, expectedOneToOne, 0.1e18, "Min reserves should give ~1:1 price");
+        assertApproxEqRel(priceMin, expectedOneToOne, 0.1e18, 'Min reserves should give ~1:1 price');
     }
 
     /* ========================================================================== */
@@ -783,12 +696,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
     /// @notice Test exact output at MIN_TICK boundary
     function test_edgeTicks_exactOutput_positionAtMinTick() public {
-        MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_min_eo"),
-            makeAddr("TokenB_min_eo"),
-            FEE_MEDIUM,
-            TICK_SPACING_LOW
-        );
+        MockCLPool pool =
+            createMockPoolOneToOne(makeAddr('TokenA_min_eo'), makeAddr('TokenB_min_eo'), FEE_MEDIUM, TICK_SPACING_LOW);
 
         int24 tickLower = TickMath.MIN_TICK;
         int24 tickUpper = TickMath.MIN_TICK + 10000;
@@ -799,24 +708,20 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         // Exact output: oneForZero at MIN_TICK boundary
         uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            1e6,  // small output to stay within tick
+            1e6, // small output to stay within tick
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            false  // oneForZero
+            false // oneForZero
         );
 
-        assertTrue(quotedIn > 0, "ExactOutput at MIN_TICK boundary should require positive input");
+        assertTrue(quotedIn > 0, 'ExactOutput at MIN_TICK boundary should require positive input');
     }
 
     /// @notice Test exact output at MAX_TICK boundary
     function test_edgeTicks_exactOutput_positionAtMaxTick() public {
-        MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_max_eo"),
-            makeAddr("TokenB_max_eo"),
-            FEE_MEDIUM,
-            TICK_SPACING_LOW
-        );
+        MockCLPool pool =
+            createMockPoolOneToOne(makeAddr('TokenA_max_eo'), makeAddr('TokenB_max_eo'), FEE_MEDIUM, TICK_SPACING_LOW);
 
         int24 tickLower = TickMath.MAX_TICK - 10000;
         int24 tickUpper = TickMath.MAX_TICK;
@@ -831,19 +736,16 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            true  // zeroForOne
+            true // zeroForOne
         );
 
-        assertTrue(quotedIn > 0, "ExactOutput at MAX_TICK boundary should require positive input");
+        assertTrue(quotedIn > 0, 'ExactOutput at MAX_TICK boundary should require positive input');
     }
 
     /// @notice Test exact output with full-range position
     function test_edgeTicks_exactOutput_fullRangePosition() public {
         MockCLPool pool = createMockPoolOneToOne(
-            makeAddr("TokenA_full_eo"),
-            makeAddr("TokenB_full_eo"),
-            FEE_MEDIUM,
-            TICK_SPACING_LOW
+            makeAddr('TokenA_full_eo'), makeAddr('TokenB_full_eo'), FEE_MEDIUM, TICK_SPACING_LOW
         );
 
         addLiquidity(pool, TickMath.MIN_TICK, TickMath.MAX_TICK, DEFAULT_LIQUIDITY);
@@ -851,17 +753,15 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
         pool.setState(sqrtPriceX96, 0, DEFAULT_LIQUIDITY);
 
-        uint256 quotedIn_zfo = SlipstreamUtils._quoteExactOutputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true
-        );
+        uint256 quotedIn_zfo =
+            SlipstreamUtils._quoteExactOutputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
-        uint256 quotedIn_ofz = SlipstreamUtils._quoteExactOutputSingle(
-            TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false
-        );
+        uint256 quotedIn_ofz =
+            SlipstreamUtils._quoteExactOutputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false);
 
-        assertTrue(quotedIn_zfo > 0, "ExactOutput zeroForOne on full range should work");
-        assertTrue(quotedIn_ofz > 0, "ExactOutput oneForZero on full range should work");
-        assertApproxEqRel(quotedIn_zfo, quotedIn_ofz, 0.01e18, "Full range exact output should be symmetric at 1:1");
+        assertTrue(quotedIn_zfo > 0, 'ExactOutput zeroForOne on full range should work');
+        assertTrue(quotedIn_ofz > 0, 'ExactOutput oneForZero on full range should work');
+        assertApproxEqRel(quotedIn_zfo, quotedIn_ofz, 0.01e18, 'Full range exact output should be symmetric at 1:1');
     }
 
     /* ------ Extreme Values (Exact Output) ------ */
@@ -871,16 +771,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint128 maxLiquidity = type(uint128).max;
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            maxLiquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedIn =
+            SlipstreamUtils._quoteExactOutputSingle(TEST_AMOUNT, sqrtPriceX96, maxLiquidity, FEE_MEDIUM, true);
 
-        assertTrue(quotedIn > 0, "ExactOutput with max liquidity should compute");
-        assertTrue(quotedIn > TEST_AMOUNT, "Input should exceed output due to fees");
+        assertTrue(quotedIn > 0, 'ExactOutput with max liquidity should compute');
+        assertTrue(quotedIn > TEST_AMOUNT, 'Input should exceed output due to fees');
     }
 
     /// @notice Test exact output with zero liquidity
@@ -890,28 +785,23 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
             TEST_AMOUNT,
             sqrtPriceX96,
-            0,  // zero liquidity
+            0, // zero liquidity
             FEE_MEDIUM,
             true
         );
 
-        assertEq(quotedIn, 0, "ExactOutput zero liquidity should give zero input");
+        assertEq(quotedIn, 0, 'ExactOutput zero liquidity should give zero input');
     }
 
     /// @notice Test exact output dust amount (1 wei)
     function test_extremeValues_exactOutput_dustAmount() public {
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            DUST_AMOUNT,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedIn =
+            SlipstreamUtils._quoteExactOutputSingle(DUST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
         // Should compute without reverting; input >= 1 wei to produce 1 wei output
-        assertTrue(quotedIn >= DUST_AMOUNT, "ExactOutput dust: input should be >= output");
+        assertTrue(quotedIn >= DUST_AMOUNT, 'ExactOutput dust: input should be >= output');
     }
 
     /// @notice Test exact output dust amounts across a range
@@ -921,15 +811,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
         for (uint256 i = 0; i < dustAmounts.length; i++) {
             uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-                dustAmounts[i],
-                sqrtPriceX96,
-                DEFAULT_LIQUIDITY,
-                FEE_MEDIUM,
-                true
+                dustAmounts[i], sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true
             );
 
             // Input should be >= output due to fees
-            assertTrue(quotedIn >= dustAmounts[i], "ExactOutput dust: input >= output");
+            assertTrue(quotedIn >= dustAmounts[i], 'ExactOutput dust: input >= output');
         }
     }
 
@@ -937,16 +823,11 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
     function test_extremeValues_exactOutput_largeAmount() public {
         uint160 sqrtPriceX96 = uint160(1) << 96;
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            LARGE_AMOUNT,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedIn =
+            SlipstreamUtils._quoteExactOutputSingle(LARGE_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, true);
 
-        assertTrue(quotedIn > 0, "ExactOutput large amount should produce positive input");
-        assertTrue(quotedIn > LARGE_AMOUNT, "ExactOutput large: input > output due to fees");
+        assertTrue(quotedIn > 0, 'ExactOutput large amount should produce positive input');
+        assertTrue(quotedIn > LARGE_AMOUNT, 'ExactOutput large: input > output due to fees');
     }
 
     /* ------ Tick Spacing Variations (Exact Output) ------ */
@@ -973,8 +854,8 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
 
     function _testExactOutputTickSpacing(int24 tickSpacing_) internal {
         MockCLPool pool = createMockPool(
-            makeAddr(string(abi.encodePacked("TokenA_eo_ts_ec", vm.toString(uint256(uint24(tickSpacing_)))))),
-            makeAddr(string(abi.encodePacked("TokenB_eo_ts_ec", vm.toString(uint256(uint24(tickSpacing_)))))),
+            makeAddr(string(abi.encodePacked('TokenA_eo_ts_ec', vm.toString(uint256(uint24(tickSpacing_)))))),
+            makeAddr(string(abi.encodePacked('TokenB_eo_ts_ec', vm.toString(uint256(uint24(tickSpacing_)))))),
             FEE_MEDIUM,
             tickSpacing_,
             uint160(1) << 96
@@ -984,31 +865,27 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         int24 tickUpper = nearestUsableTick(60000, tickSpacing_);
         addLiquidity(pool, tickLower, tickUpper, DEFAULT_LIQUIDITY);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedIn =
+            SlipstreamUtils._quoteExactOutputSingle(TEST_AMOUNT, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
-        assertTrue(quotedIn > 0, string(abi.encodePacked("ExactOutput should work with tick spacing ", vm.toString(uint256(uint24(tickSpacing_))))));
+        assertTrue(
+            quotedIn > 0,
+            string(
+                abi.encodePacked(
+                    'ExactOutput should work with tick spacing ', vm.toString(uint256(uint24(tickSpacing_)))
+                )
+            )
+        );
 
         // Verify mock swap matches
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_RATIO + 1;
-        (int256 amount0, ) = pool.swap(
-            address(this),
-            true,
-            -int256(TEST_AMOUNT),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0,) = pool.swap(address(this), true, -int256(TEST_AMOUNT), sqrtPriceLimitX96, '');
 
         uint256 actualIn = uint256(amount0);
-        assertApproxEqAbs(quotedIn, actualIn, 1, "ExactOutput quote should match mock swap");
+        assertApproxEqAbs(quotedIn, actualIn, 1, 'ExactOutput quote should match mock swap');
     }
 
     /* ------ Price Limit Exactness (Exact Output) ------ */
@@ -1018,15 +895,15 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = uint160(1) << 96;
         uint256 desiredOutput = TEST_AMOUNT / 2;
 
-        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            desiredOutput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false
-        );
+        uint256 requiredInput =
+            SlipstreamUtils._quoteExactOutputSingle(desiredOutput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false);
 
-        uint256 actualOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false
-        );
+        uint256 actualOutput =
+            SlipstreamUtils._quoteExactInputSingle(requiredInput, sqrtPriceX96, DEFAULT_LIQUIDITY, FEE_MEDIUM, false);
 
-        assertApproxEqRel(actualOutput, desiredOutput, 0.001e18, "ExactOutput round-trip oneForZero should be consistent");
+        assertApproxEqRel(
+            actualOutput, desiredOutput, 0.001e18, 'ExactOutput round-trip oneForZero should be consistent'
+        );
     }
 
     /* ------ Additional Exact-Output Edge Cases ------ */
@@ -1039,28 +916,23 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             TEST_AMOUNT,
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
-            0,  // Zero fee
+            0, // Zero fee
             true
         );
 
         // With zero fee and 1:1 price, input should be very close to output
-        assertApproxEqRel(quotedIn, TEST_AMOUNT, 0.001e18, "ExactOutput zero fee: input ~= output");
+        assertApproxEqRel(quotedIn, TEST_AMOUNT, 0.001e18, 'ExactOutput zero fee: input ~= output');
     }
 
     /// @notice Test exact output with max fee (1%)
     function test_edgeCases_exactOutput_maxFee() public {
         uint160 sqrtPriceX96 = uint160(1) << 96;
-        uint24 maxFee = 10000;  // 1%
+        uint24 maxFee = 10000; // 1%
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            TEST_AMOUNT,
-            sqrtPriceX96,
-            DEFAULT_LIQUIDITY,
-            maxFee,
-            true
-        );
+        uint256 quotedIn =
+            SlipstreamUtils._quoteExactOutputSingle(TEST_AMOUNT, sqrtPriceX96, DEFAULT_LIQUIDITY, maxFee, true);
 
-        assertTrue(quotedIn > TEST_AMOUNT, "ExactOutput max fee: input should exceed output");
+        assertTrue(quotedIn > TEST_AMOUNT, 'ExactOutput max fee: input should exceed output');
     }
 
     /// @notice Test exact output at MIN_SQRT_RATIO boundary
@@ -1072,10 +944,10 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            false  // oneForZero
+            false // oneForZero
         );
 
-        assertTrue(quotedIn > 0, "ExactOutput should produce positive input at MIN_SQRT_RATIO boundary");
+        assertTrue(quotedIn > 0, 'ExactOutput should produce positive input at MIN_SQRT_RATIO boundary');
     }
 
     /// @notice Test exact output at MAX_SQRT_RATIO boundary
@@ -1087,9 +959,9 @@ contract SlipstreamUtils_edgeCases_Test is TestBase_Slipstream {
             sqrtPriceX96,
             DEFAULT_LIQUIDITY,
             FEE_MEDIUM,
-            true  // zeroForOne
+            true // zeroForOne
         );
 
-        assertTrue(quotedIn > 0, "ExactOutput should produce positive input at MAX_SQRT_RATIO boundary");
+        assertTrue(quotedIn > 0, 'ExactOutput should produce positive input at MAX_SQRT_RATIO boundary');
     }
 }

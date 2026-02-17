@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { PoolConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {PoolConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract VaultLiquidityWithFeesTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -26,10 +26,8 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
         BaseVaultTest.setUp();
 
         setSwapFeePercentage(DEFAULT_SWAP_FEE_PERCENTAGE);
-        aggregateSwapFeePercentage = feeController.computeAggregateFeePercentage(
-            DEFAULT_PROTOCOL_SWAP_FEE_PERCENTAGE,
-            poolCreatorFeePercentage
-        );
+        aggregateSwapFeePercentage =
+            feeController.computeAggregateFeePercentage(DEFAULT_PROTOCOL_SWAP_FEE_PERCENTAGE, poolCreatorFeePercentage);
         vault.manualSetAggregateSwapFeePercentage(pool, aggregateSwapFeePercentage);
 
         (daiIdx, usdcIdx) = getSortedIndexes(address(dai), address(usdc));
@@ -99,7 +97,7 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
             bytes("")
         );
 
-        (amountsIn, ) = router.getSingleInputArrayAndTokenIndex(pool, dai, amountIn);
+        (amountsIn,) = router.getSingleInputArrayAndTokenIndex(pool, dai, amountIn);
 
         // Should mint correct amount of BPT tokens.
         assertEq(bptAmountOut, DEFAULT_AMOUNT, "Invalid amount of BPT");
@@ -121,16 +119,10 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
         uint256 swapFeeAmount = DEFAULT_AMOUNT / 100;
         aggregateSwapFees[daiIdx] = swapFeeAmount.mulUp(aggregateSwapFeePercentage);
 
-        uint256 amountOut = router.removeLiquiditySingleTokenExactIn(
-            pool,
-            bptAmountIn,
-            dai,
-            DEFAULT_AMOUNT,
-            false,
-            bytes("")
-        );
+        uint256 amountOut =
+            router.removeLiquiditySingleTokenExactIn(pool, bptAmountIn, dai, DEFAULT_AMOUNT, false, bytes(""));
 
-        (amountsOut, ) = router.getSingleInputArrayAndTokenIndex(pool, dai, amountOut);
+        (amountsOut,) = router.getSingleInputArrayAndTokenIndex(pool, dai, amountOut);
 
         // Ensure `amountsOut` are correct.
         // 2 * amount - (amount * swapFee%).
@@ -154,12 +146,7 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
         aggregateSwapFees[daiIdx] = swapFeeAmount.mulDown(aggregateSwapFeePercentage);
 
         bptAmountIn = router.removeLiquiditySingleTokenExactOut(
-            pool,
-            2 * DEFAULT_AMOUNT,
-            dai,
-            uint256(DEFAULT_AMOUNT),
-            false,
-            bytes("")
+            pool, 2 * DEFAULT_AMOUNT, dai, uint256(DEFAULT_AMOUNT), false, bytes("")
         );
 
         // amount + (amount / ( 100% - swapFee%)) / 2 + 1
@@ -183,14 +170,10 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
 
         // Tokens are transferred from the user to the Vault.
         assertEq(
-            balancesAfter.userTokens[0],
-            balancesBefore.userTokens[0] - amountsIn[0],
-            "Add - User balance: token 0"
+            balancesAfter.userTokens[0], balancesBefore.userTokens[0] - amountsIn[0], "Add - User balance: token 0"
         );
         assertEq(
-            balancesAfter.userTokens[1],
-            balancesBefore.userTokens[1] - amountsIn[1],
-            "Add - User balance: token 1"
+            balancesAfter.userTokens[1], balancesBefore.userTokens[1] - amountsIn[1], "Add - User balance: token 1"
         );
 
         // Tokens are now in the Vault / pool.
@@ -260,14 +243,10 @@ contract VaultLiquidityWithFeesTest is BaseVaultTest {
 
         // Tokens are transferred back to user.
         assertEq(
-            balancesAfter.userTokens[0],
-            balancesBefore.userTokens[0] + amountsOut[0],
-            "Remove - User balance: token 0"
+            balancesAfter.userTokens[0], balancesBefore.userTokens[0] + amountsOut[0], "Remove - User balance: token 0"
         );
         assertEq(
-            balancesAfter.userTokens[1],
-            balancesBefore.userTokens[1] + amountsOut[1],
-            "Remove - User balance: token 1"
+            balancesAfter.userTokens[1], balancesBefore.userTokens[1] + amountsOut[1], "Remove - User balance: token 1"
         );
 
         // Tokens are no longer in the Vault / pool.

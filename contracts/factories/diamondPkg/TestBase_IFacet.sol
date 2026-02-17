@@ -106,11 +106,7 @@ abstract contract TestBase_IFacet is Test {
         bytes4[] memory expected = controlFacetInterfaces();
         bytes4[] memory actual = testFacet.facetInterfaces();
 
-        assertEq(
-            actual.length,
-            expected.length,
-            "Facet interfaces count mismatch - extra or missing declarations"
-        );
+        assertEq(actual.length, expected.length, "Facet interfaces count mismatch - extra or missing declarations");
 
         assertTrue(
             Behavior_IFacet.areValid_IFacet_facetInterfaces(testFacet, expected, actual),
@@ -128,9 +124,7 @@ abstract contract TestBase_IFacet is Test {
         bytes4[] memory actual = testFacet.facetFuncs();
 
         assertEq(
-            actual.length,
-            expected.length,
-            "Facet function selectors count mismatch - extra or missing declarations"
+            actual.length, expected.length, "Facet function selectors count mismatch - extra or missing declarations"
         );
 
         assertTrue(
@@ -162,10 +156,10 @@ abstract contract TestBase_IFacet is Test {
     function test_IFacet_InterfaceId_Computation() public pure {
         // Build array of IFacet function selectors
         bytes4[] memory ifacetSelectors = new bytes4[](4);
-        ifacetSelectors[0] = IFacet.facetName.selector;       // 0x5b6f4d01
+        ifacetSelectors[0] = IFacet.facetName.selector; // 0x5b6f4d01
         ifacetSelectors[1] = IFacet.facetInterfaces.selector; // 0x2ea80826
-        ifacetSelectors[2] = IFacet.facetFuncs.selector;      // 0x574a4cff
-        ifacetSelectors[3] = IFacet.facetMetadata.selector;   // 0xf10d7a75
+        ifacetSelectors[2] = IFacet.facetFuncs.selector; // 0x574a4cff
+        ifacetSelectors[3] = IFacet.facetMetadata.selector; // 0xf10d7a75
 
         // Compute expected interface ID via XOR
         bytes4 computedId = computeInterfaceId(ifacetSelectors);
@@ -173,10 +167,6 @@ abstract contract TestBase_IFacet is Test {
         // Verify against Solidity's built-in interface ID computation
         bytes4 expectedId = type(IFacet).interfaceId;
 
-        assertEq(
-            computedId,
-            expectedId,
-            "Computed IFacet interface ID must match type(IFacet).interfaceId"
-        );
+        assertEq(computedId, expectedId, "Computed IFacet interface ID must match type(IFacet).interfaceId");
     }
 }

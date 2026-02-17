@@ -4,10 +4,12 @@ pragma solidity ^0.8.24;
 import {
     IHyperEVMRateProvider
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IHyperEVMRateProvider.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
-import { HyperSpotPricePrecompile } from "./utils/HyperSpotPricePrecompile.sol";
-import { HyperTokenInfoPrecompile } from "./utils/HyperTokenInfoPrecompile.sol";
+import {HyperSpotPricePrecompile} from "./utils/HyperSpotPricePrecompile.sol";
+import {HyperTokenInfoPrecompile} from "./utils/HyperTokenInfoPrecompile.sol";
 
 /**
  * @notice A rate provider for the HyperEVM.

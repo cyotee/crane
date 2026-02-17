@@ -4,14 +4,14 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import { BasePoolMath } from "../../../contracts/BasePoolMath.sol";
-import { BalancerPoolToken } from "../../../contracts/BalancerPoolToken.sol";
+import {BasePoolMath} from "../../../contracts/BasePoolMath.sol";
+import {BalancerPoolToken} from "../../../contracts/BalancerPoolToken.sol";
 
 import "../utils/BaseMedusaTest.sol";
 
@@ -44,7 +44,7 @@ contract SwapMedusaTest is BaseMedusaTest {
 
         exactAmountIn = boundSwapAmount(exactAmountIn, tokenIndexIn);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         emit Debug("token index in", tokenIndexIn);
         emit Debug("token index out", tokenIndexOut);
@@ -52,14 +52,7 @@ contract SwapMedusaTest is BaseMedusaTest {
 
         medusa.prank(alice);
         router.swapSingleTokenExactIn(
-            address(pool),
-            tokens[tokenIndexIn],
-            tokens[tokenIndexOut],
-            exactAmountIn,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(pool), tokens[tokenIndexIn], tokens[tokenIndexOut], exactAmountIn, 0, MAX_UINT256, false, bytes("")
         );
 
         emit Debug("currentInvariant", computeInvariant());
@@ -70,7 +63,7 @@ contract SwapMedusaTest is BaseMedusaTest {
 
         exactAmountOut = boundSwapAmount(exactAmountOut, tokenIndexOut);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         emit Debug("token index in", tokenIndexIn);
         emit Debug("token index out", tokenIndexOut);
@@ -92,14 +85,15 @@ contract SwapMedusaTest is BaseMedusaTest {
     }
 
     function computeInvariant() internal view returns (int256) {
-        (, , , uint256[] memory lastBalancesLiveScaled18) = vault.getPoolTokenInfo(address(pool));
+        (,,, uint256[] memory lastBalancesLiveScaled18) = vault.getPoolTokenInfo(address(pool));
         return int256(pool.computeInvariant(lastBalancesLiveScaled18, Rounding.ROUND_UP));
     }
 
-    function boundTokenIndexes(
-        uint256 tokenIndexInRaw,
-        uint256 tokenIndexOutRaw
-    ) internal view returns (uint256 tokenIndexIn, uint256 tokenIndexOut) {
+    function boundTokenIndexes(uint256 tokenIndexInRaw, uint256 tokenIndexOutRaw)
+        internal
+        view
+        returns (uint256 tokenIndexIn, uint256 tokenIndexOut)
+    {
         uint256 len = vault.getPoolTokens(address(pool)).length;
 
         tokenIndexIn = bound(tokenIndexInRaw, 0, len - 1);
@@ -110,11 +104,12 @@ contract SwapMedusaTest is BaseMedusaTest {
         }
     }
 
-    function boundSwapAmount(
-        uint256 tokenAmountIn,
-        uint256 tokenIndex
-    ) internal view returns (uint256 boundedAmountIn) {
-        (, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(address(pool));
+    function boundSwapAmount(uint256 tokenAmountIn, uint256 tokenIndex)
+        internal
+        view
+        returns (uint256 boundedAmountIn)
+    {
+        (,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(address(pool));
         boundedAmountIn = bound(tokenAmountIn, MIN_SWAP_AMOUNT, balancesRaw[tokenIndex].mulDown(MAX_IN_RATIO));
     }
 }

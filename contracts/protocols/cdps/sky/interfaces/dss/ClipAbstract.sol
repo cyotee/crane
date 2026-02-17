@@ -20,16 +20,16 @@ interface ClipAbstract {
     function chost() external view returns (uint256);
     function kicks() external view returns (uint256);
     function active(uint256) external view returns (uint256);
-    function sales(uint256) external view returns (uint256,uint256,uint256,address,uint96,uint256);
+    function sales(uint256) external view returns (uint256, uint256, uint256, address, uint96, uint256);
     function stopped() external view returns (uint256);
-    function file(bytes32,uint256) external;
-    function file(bytes32,address) external;
-    function kick(uint256,uint256,address,address) external returns (uint256);
-    function redo(uint256,address) external;
-    function take(uint256,uint256,uint256,address,bytes calldata) external;
+    function file(bytes32, uint256) external;
+    function file(bytes32, address) external;
+    function kick(uint256, uint256, address, address) external returns (uint256);
+    function redo(uint256, address) external;
+    function take(uint256, uint256, uint256, address, bytes calldata) external;
     function count() external view returns (uint256);
     function list() external view returns (uint256[] memory);
-    function getStatus(uint256) external view returns (bool,uint256,uint256,uint256);
+    function getStatus(uint256) external view returns (bool, uint256, uint256, uint256);
     function upchost() external;
     function yank(uint256) external;
 }

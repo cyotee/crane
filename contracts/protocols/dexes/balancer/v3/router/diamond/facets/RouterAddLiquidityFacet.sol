@@ -23,7 +23,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * @dev Implements add liquidity functions from IRouter interface.
  */
 contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -80,10 +79,9 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsIn) {
         bytes memory result = _unlockAndCall(
-            msg.sender, pool, maxAmountsIn, exactBptAmountOut,
-            AddLiquidityKind.PROPORTIONAL, wethIsEth, userData
+            msg.sender, pool, maxAmountsIn, exactBptAmountOut, AddLiquidityKind.PROPORTIONAL, wethIsEth, userData
         );
-        (amountsIn, , ) = abi.decode(result, (uint256[], uint256, bytes));
+        (amountsIn,,) = abi.decode(result, (uint256[], uint256, bytes));
     }
 
     function queryAddLiquidityProportional(
@@ -93,10 +91,9 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsIn) {
         bytes memory result = _quoteAndCall(
-            pool, _maxTokenLimits(pool), exactBptAmountOut,
-            AddLiquidityKind.PROPORTIONAL, userData
+            pool, _maxTokenLimits(pool), exactBptAmountOut, AddLiquidityKind.PROPORTIONAL, userData
         );
-        (amountsIn, , ) = abi.decode(result, (uint256[], uint256, bytes));
+        (amountsIn,,) = abi.decode(result, (uint256[], uint256, bytes));
     }
 
     function addLiquidityUnbalanced(
@@ -107,10 +104,9 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 bptAmountOut) {
         bytes memory result = _unlockAndCall(
-            msg.sender, pool, exactAmountsIn, minBptAmountOut,
-            AddLiquidityKind.UNBALANCED, wethIsEth, userData
+            msg.sender, pool, exactAmountsIn, minBptAmountOut, AddLiquidityKind.UNBALANCED, wethIsEth, userData
         );
-        (, bptAmountOut, ) = abi.decode(result, (uint256[], uint256, bytes));
+        (, bptAmountOut,) = abi.decode(result, (uint256[], uint256, bytes));
     }
 
     function queryAddLiquidityUnbalanced(
@@ -119,11 +115,8 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountOut) {
-        bytes memory result = _quoteAndCall(
-            pool, exactAmountsIn, 0,
-            AddLiquidityKind.UNBALANCED, userData
-        );
-        (, bptAmountOut, ) = abi.decode(result, (uint256[], uint256, bytes));
+        bytes memory result = _quoteAndCall(pool, exactAmountsIn, 0, AddLiquidityKind.UNBALANCED, userData);
+        (, bptAmountOut,) = abi.decode(result, (uint256[], uint256, bytes));
     }
 
     function addLiquiditySingleTokenExactOut(
@@ -134,14 +127,18 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 amountIn) {
-        (uint256[] memory maxAmountsIn, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool, tokenIn, maxAmountIn
-        );
+        (uint256[] memory maxAmountsIn, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, tokenIn, maxAmountIn);
         bytes memory result = _unlockAndCall(
-            msg.sender, pool, maxAmountsIn, exactBptAmountOut,
-            AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT, wethIsEth, userData
+            msg.sender,
+            pool,
+            maxAmountsIn,
+            exactBptAmountOut,
+            AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
+            wethIsEth,
+            userData
         );
-        (uint256[] memory amountsIn, , ) = abi.decode(result, (uint256[], uint256, bytes));
+        (uint256[] memory amountsIn,,) = abi.decode(result, (uint256[], uint256, bytes));
         return amountsIn[tokenIndex];
     }
 
@@ -155,24 +152,18 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         (uint256[] memory maxAmountsIn, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
             pool, tokenIn, BalancerV3RouterStorageRepo.MAX_AMOUNT
         );
-        bytes memory result = _quoteAndCall(
-            pool, maxAmountsIn, exactBptAmountOut,
-            AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT, userData
-        );
-        (uint256[] memory amountsIn, , ) = abi.decode(result, (uint256[], uint256, bytes));
+        bytes memory result =
+            _quoteAndCall(pool, maxAmountsIn, exactBptAmountOut, AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT, userData);
+        (uint256[] memory amountsIn,,) = abi.decode(result, (uint256[], uint256, bytes));
         return amountsIn[tokenIndex];
     }
 
-    function donate(
-        address pool,
-        uint256[] memory amountsIn,
-        bool wethIsEth,
-        bytes memory userData
-    ) external payable saveSender(msg.sender) {
-        _unlockAndCall(
-            msg.sender, pool, amountsIn, 0,
-            AddLiquidityKind.DONATION, wethIsEth, userData
-        );
+    function donate(address pool, uint256[] memory amountsIn, bool wethIsEth, bytes memory userData)
+        external
+        payable
+        saveSender(msg.sender)
+    {
+        _unlockAndCall(msg.sender, pool, amountsIn, 0, AddLiquidityKind.DONATION, wethIsEth, userData);
     }
 
     function addLiquidityCustom(
@@ -188,8 +179,7 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData)
     {
         bytes memory result = _unlockAndCall(
-            msg.sender, pool, maxAmountsIn, minBptAmountOut,
-            AddLiquidityKind.CUSTOM, wethIsEth, userData
+            msg.sender, pool, maxAmountsIn, minBptAmountOut, AddLiquidityKind.CUSTOM, wethIsEth, userData
         );
         return abi.decode(result, (uint256[], uint256, bytes));
     }
@@ -201,10 +191,7 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData) {
-        bytes memory result = _quoteAndCall(
-            pool, maxAmountsIn, minBptAmountOut,
-            AddLiquidityKind.CUSTOM, userData
-        );
+        bytes memory result = _quoteAndCall(pool, maxAmountsIn, minBptAmountOut, AddLiquidityKind.CUSTOM, userData);
         return abi.decode(result, (uint256[], uint256, bytes));
     }
 
@@ -212,9 +199,7 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
     /*                              HOOK FUNCTIONS                                */
     /* ========================================================================== */
 
-    function addLiquidityHook(
-        AddLiquidityHookParams calldata params
-    )
+    function addLiquidityHook(AddLiquidityHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -223,9 +208,11 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         return _addLiquidityHook(params);
     }
 
-    function queryAddLiquidityHook(
-        AddLiquidityHookParams calldata params
-    ) external onlyVault returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData) {
+    function queryAddLiquidityHook(AddLiquidityHookParams calldata params)
+        external
+        onlyVault
+        returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData)
+    {
         return _queryAddLiquidityHook(params);
     }
 
@@ -242,20 +229,21 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         bool wethIsEth,
         bytes memory userData
     ) internal returns (bytes memory) {
-        return BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(
-                this.addLiquidityHook,
-                AddLiquidityHookParams({
-                    sender: sender,
-                    pool: pool,
-                    maxAmountsIn: maxAmountsIn,
-                    minBptAmountOut: minBptAmountOut,
-                    kind: kind,
-                    wethIsEth: wethIsEth,
-                    userData: userData
-                })
-            )
-        );
+        return BalancerV3RouterStorageRepo._vault()
+            .unlock(
+                abi.encodeCall(
+                    this.addLiquidityHook,
+                    AddLiquidityHookParams({
+                        sender: sender,
+                        pool: pool,
+                        maxAmountsIn: maxAmountsIn,
+                        minBptAmountOut: minBptAmountOut,
+                        kind: kind,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            );
     }
 
     function _quoteAndCall(
@@ -265,25 +253,27 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         AddLiquidityKind kind,
         bytes memory userData
     ) internal returns (bytes memory) {
-        return BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(
-                this.queryAddLiquidityHook,
-                AddLiquidityHookParams({
-                    sender: address(this),
-                    pool: pool,
-                    maxAmountsIn: maxAmountsIn,
-                    minBptAmountOut: minBptAmountOut,
-                    kind: kind,
-                    wethIsEth: false,
-                    userData: userData
-                })
-            )
-        );
+        return BalancerV3RouterStorageRepo._vault()
+            .quote(
+                abi.encodeCall(
+                    this.queryAddLiquidityHook,
+                    AddLiquidityHookParams({
+                        sender: address(this),
+                        pool: pool,
+                        maxAmountsIn: maxAmountsIn,
+                        minBptAmountOut: minBptAmountOut,
+                        kind: kind,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            );
     }
 
-    function _addLiquidityHook(
-        AddLiquidityHookParams calldata params
-    ) internal returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData) {
+    function _addLiquidityHook(AddLiquidityHookParams calldata params)
+        internal
+        returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         IWETH weth = BalancerV3RouterStorageRepo._weth();
         bool isPrepaid = BalancerV3RouterStorageRepo._isPrepaid();
@@ -331,18 +321,20 @@ contract RouterAddLiquidityFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _queryAddLiquidityHook(
-        AddLiquidityHookParams calldata params
-    ) internal returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData) {
-        return BalancerV3RouterStorageRepo._vault().addLiquidity(
-            AddLiquidityParams({
-                pool: params.pool,
-                to: params.sender,
-                maxAmountsIn: params.maxAmountsIn,
-                minBptAmountOut: params.minBptAmountOut,
-                kind: params.kind,
-                userData: params.userData
-            })
-        );
+    function _queryAddLiquidityHook(AddLiquidityHookParams calldata params)
+        internal
+        returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData)
+    {
+        return BalancerV3RouterStorageRepo._vault()
+            .addLiquidity(
+                AddLiquidityParams({
+                    pool: params.pool,
+                    to: params.sender,
+                    maxAmountsIn: params.maxAmountsIn,
+                    minBptAmountOut: params.minBptAmountOut,
+                    kind: params.kind,
+                    userData: params.userData
+                })
+            );
     }
 }

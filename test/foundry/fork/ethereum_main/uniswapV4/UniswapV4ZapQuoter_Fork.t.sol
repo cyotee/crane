@@ -55,7 +55,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         // Position around current tick
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
@@ -99,7 +99,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -133,7 +133,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         // Position entirely below current price (only currency1 needed)
         int24 tickLower = nearestUsableTick(tick - 6000, tickSpacing);
@@ -169,7 +169,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -226,7 +226,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -244,8 +244,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
             searchIters: 20
         });
 
-        UniswapV4ZapQuoter.PoolManagerZapInExecution memory execution =
-            UniswapV4ZapQuoter.quoteZapInPoolManager(params);
+        UniswapV4ZapQuoter.PoolManagerZapInExecution memory execution = UniswapV4ZapQuoter.quoteZapInPoolManager(params);
 
         // Verify execution params are filled
         assertEq(Currency.unwrap(execution.key.currency0), Currency.unwrap(key.currency0), "key should match");
@@ -263,7 +262,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -302,7 +301,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -342,7 +341,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -375,7 +374,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         // Position entirely above current price (only currency0 returned)
         int24 tickLower = nearestUsableTick(tick + 3000, tickSpacing);
@@ -415,7 +414,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -453,7 +452,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = hasWethUsdc3000 ? wethUsdcPool_3000 : wethUsdcPool_500;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -494,7 +493,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = wethUsdcPool_3000;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -548,7 +547,7 @@ contract UniswapV4ZapQuoter_EthereumMainnetFork_Test is TestBase_UniswapV4Ethere
         PoolKey memory key = wethUsdcPool_3000;
         int24 tickSpacing = key.tickSpacing;
 
-        (, int24 tick, , ) = getPoolState(key);
+        (, int24 tick,,) = getPoolState(key);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);

@@ -6,11 +6,11 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     PoolRoleAccounts,
@@ -18,20 +18,22 @@ import {
     RemoveLiquidityKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { BasicAuthorizerMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {BasicAuthorizerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BaseTest} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { BatchRouterMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BatchRouterMock.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { RouterMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RouterMock.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {BatchRouterMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BatchRouterMock.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {RouterMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RouterMock.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { NftLiquidityPositionExample } from "../../contracts/NftLiquidityPositionExample.sol";
+import {NftLiquidityPositionExample} from "../../contracts/NftLiquidityPositionExample.sol";
 
 contract NftLiquidityPositionExampleTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -87,10 +89,11 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "NFT Pool";
         string memory symbol = "NFT Pool";
 
@@ -104,13 +107,10 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
         liquidityManagement.disableUnbalancedLiquidity = true;
         liquidityManagement.enableDonation = true;
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -119,13 +119,8 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
         uint256[] memory maxAmountsIn = [dai.balanceOf(bob), usdc.balanceOf(bob)].toMemoryArray();
         vm.prank(bob);
-        uint256[] memory amountsIn = nftRouter.addLiquidityProportional(
-            pool,
-            maxAmountsIn,
-            DEFAULT_BPT_AMOUNT,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsIn =
+            nftRouter.addLiquidityProportional(pool, maxAmountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
         vm.stopPrank();
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
@@ -148,11 +143,7 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
         assertEq(nftRouter.nftPool(expectedTokenId), pool, "pool mapping is wrong");
 
         // Router should receive BPT instead of bob, he gets the NFT
-        assertEq(
-            BalancerPoolToken(pool).balanceOf(address(nftRouter)),
-            DEFAULT_BPT_AMOUNT,
-            "NftRouter should hold BPT"
-        );
+        assertEq(BalancerPoolToken(pool).balanceOf(address(nftRouter)), DEFAULT_BPT_AMOUNT, "NftRouter should hold BPT");
         assertEq(nftRouter.ownerOf(expectedTokenId), bob, "bob should have an NFT");
         assertEq(balancesAfter.bobBpt, 0, "bob should not hold any BPT");
     }
@@ -254,9 +245,7 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
         uint256 amountOut = DEFAULT_BPT_AMOUNT / 2;
         // Bob gets original liquidity with no fee applied because of full decay.
         assertEq(
-            balancesAfter.bobTokens[daiIdx] - balancesBefore.bobTokens[daiIdx],
-            amountOut,
-            "bob's DAI amount is wrong"
+            balancesAfter.bobTokens[daiIdx] - balancesBefore.bobTokens[daiIdx], amountOut, "bob's DAI amount is wrong"
         );
         assertEq(
             balancesAfter.bobTokens[usdcIdx] - balancesBefore.bobTokens[usdcIdx],
@@ -343,13 +332,7 @@ contract NftLiquidityPositionExampleTest is BaseVaultTest {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, admin));
 
         nftRouter.onBeforeAddLiquidity(
-            address(nftRouter),
-            address(0),
-            AddLiquidityKind.PROPORTIONAL,
-            new uint256[](0),
-            0,
-            new uint256[](0),
-            ""
+            address(nftRouter), address(0), AddLiquidityKind.PROPORTIONAL, new uint256[](0), 0, new uint256[](0), ""
         );
     }
 

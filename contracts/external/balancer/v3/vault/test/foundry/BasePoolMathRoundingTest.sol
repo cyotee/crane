@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BasePoolMathMock } from "../../contracts/test/BasePoolMathMock.sol";
+import {BasePoolMathMock} from "../../contracts/test/BasePoolMathMock.sol";
 
 abstract contract BasePoolMathRoundingTest is Test {
     uint256 constant MIN_BALANCE = 1e18;
@@ -29,10 +29,10 @@ abstract contract BasePoolMathRoundingTest is Test {
 
     function createMathMock() internal virtual returns (BasePoolMathMock);
 
-    function testComputeProportionalAmountsIn__Fuzz(
-        uint256[2] calldata rawBalances,
-        uint256 rawBptAmountOut
-    ) external view {
+    function testComputeProportionalAmountsIn__Fuzz(uint256[2] calldata rawBalances, uint256 rawBptAmountOut)
+        external
+        view
+    {
         uint256[] memory balances = new uint256[](rawBalances.length);
         for (uint256 i = 0; i < balances.length; ++i) {
             balances[i] = bound(rawBalances[i], MIN_BALANCE, MAX_AMOUNT);
@@ -45,22 +45,14 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 roundedUpBptAmountOut = bptAmountOut + 1;
         uint256 roundedDownBptAmountOut = bptAmountOut - 1;
 
-        uint256[] memory roundedUpResult = mock.computeProportionalAmountsIn(
-            balances,
-            totalSupply,
-            roundedUpBptAmountOut
-        );
-        uint256[] memory roundedDownResult = mock.computeProportionalAmountsIn(
-            balances,
-            totalSupply,
-            roundedDownBptAmountOut
-        );
+        uint256[] memory roundedUpResult =
+            mock.computeProportionalAmountsIn(balances, totalSupply, roundedUpBptAmountOut);
+        uint256[] memory roundedDownResult =
+            mock.computeProportionalAmountsIn(balances, totalSupply, roundedDownBptAmountOut);
 
         for (uint256 i = 0; i < balances.length; ++i) {
             assertGe(
-                roundedUpResult[i],
-                standardResult[i],
-                "roundedUpResult < standardResult (computeProportionalAmountsIn)"
+                roundedUpResult[i], standardResult[i], "roundedUpResult < standardResult (computeProportionalAmountsIn)"
             );
             assertLe(
                 roundedDownResult[i],
@@ -70,10 +62,10 @@ abstract contract BasePoolMathRoundingTest is Test {
         }
     }
 
-    function testComputeProportionalAmountsOut__Fuzz(
-        uint256[2] calldata rawBalances,
-        uint256 rawBptAmountIn
-    ) external view {
+    function testComputeProportionalAmountsOut__Fuzz(uint256[2] calldata rawBalances, uint256 rawBptAmountIn)
+        external
+        view
+    {
         uint256[] memory balances = new uint256[](rawBalances.length);
         for (uint256 i = 0; i < balances.length; ++i) {
             balances[i] = bound(rawBalances[i], MIN_BALANCE, MAX_AMOUNT);
@@ -86,16 +78,10 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 roundedUpBptAmountIn = bptAmountIn + 1;
         uint256 roundedDownBptAmountIn = bptAmountIn - 1;
 
-        uint256[] memory roundedUpResult = mock.computeProportionalAmountsOut(
-            balances,
-            totalSupply,
-            roundedUpBptAmountIn
-        );
-        uint256[] memory roundedDownResult = mock.computeProportionalAmountsOut(
-            balances,
-            totalSupply,
-            roundedDownBptAmountIn
-        );
+        uint256[] memory roundedUpResult =
+            mock.computeProportionalAmountsOut(balances, totalSupply, roundedUpBptAmountIn);
+        uint256[] memory roundedDownResult =
+            mock.computeProportionalAmountsOut(balances, totalSupply, roundedDownBptAmountIn);
 
         for (uint256 i = 0; i < balances.length; ++i) {
             assertGe(
@@ -128,12 +114,8 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 standardResultBpt;
         uint256[] memory standardResultFees;
 
-        (standardResultBpt, standardResultFees) = mock.computeAddLiquidityUnbalanced(
-            balances,
-            amountsIn,
-            totalSupply,
-            swapFee
-        );
+        (standardResultBpt, standardResultFees) =
+            mock.computeAddLiquidityUnbalanced(balances, amountsIn, totalSupply, swapFee);
 
         uint256[] memory roundedUpAmountsIn = new uint256[](balances.length);
         uint256[] memory roundedDownAmountsIn = new uint256[](balances.length);
@@ -145,27 +127,17 @@ abstract contract BasePoolMathRoundingTest is Test {
 
         uint256 roundedUpBpt;
         uint256[] memory roundedUpFees;
-        (roundedUpBpt, roundedUpFees) = mock.computeAddLiquidityUnbalanced(
-            balances,
-            roundedUpAmountsIn,
-            totalSupply,
-            swapFee
-        );
+        (roundedUpBpt, roundedUpFees) =
+            mock.computeAddLiquidityUnbalanced(balances, roundedUpAmountsIn, totalSupply, swapFee);
 
         uint256 roundedDownBpt;
         uint256[] memory roundedDownFees;
-        (roundedDownBpt, roundedDownFees) = mock.computeAddLiquidityUnbalanced(
-            balances,
-            roundedDownAmountsIn,
-            totalSupply,
-            swapFee
-        );
+        (roundedDownBpt, roundedDownFees) =
+            mock.computeAddLiquidityUnbalanced(balances, roundedDownAmountsIn, totalSupply, swapFee);
 
         assertGe(roundedUpBpt, standardResultBpt, "roundedUpBpt < standardResultBpt (computeAddLiquidityUnbalanced)");
         assertLe(
-            roundedDownBpt,
-            standardResultBpt,
-            "roundedDownBpt > standardResultBpt (computeAddLiquidityUnbalanced)"
+            roundedDownBpt, standardResultBpt, "roundedDownBpt > standardResultBpt (computeAddLiquidityUnbalanced)"
         );
 
         for (uint256 i = 0; i < balances.length; ++i) {
@@ -202,13 +174,8 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 standardResultAmountInWithFee;
         uint256[] memory standardResultFees;
 
-        (standardResultAmountInWithFee, standardResultFees) = mock.computeAddLiquiditySingleTokenExactOut(
-            balances,
-            tokenInIndex,
-            bptAmountOut,
-            totalSupply,
-            swapFee
-        );
+        (standardResultAmountInWithFee, standardResultFees) =
+            mock.computeAddLiquiditySingleTokenExactOut(balances, tokenInIndex, bptAmountOut, totalSupply, swapFee);
 
         uint256 roundedUpBptAmountOut = bptAmountOut + 1;
         uint256 roundedDownBptAmountOut = bptAmountOut - 1;
@@ -216,21 +183,13 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 roundedUpAmountInWithFee;
         uint256[] memory roundedUpFees;
         (roundedUpAmountInWithFee, roundedUpFees) = mock.computeAddLiquiditySingleTokenExactOut(
-            balances,
-            tokenInIndex,
-            roundedUpBptAmountOut,
-            totalSupply,
-            swapFee
+            balances, tokenInIndex, roundedUpBptAmountOut, totalSupply, swapFee
         );
 
         uint256 roundedDownAmountInWithFee;
         uint256[] memory roundedDownFees;
         (roundedDownAmountInWithFee, roundedDownFees) = mock.computeAddLiquiditySingleTokenExactOut(
-            balances,
-            tokenInIndex,
-            roundedDownBptAmountOut,
-            totalSupply,
-            swapFee
+            balances, tokenInIndex, roundedDownBptAmountOut, totalSupply, swapFee
         );
 
         assertGe(
@@ -279,13 +238,8 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 standardResultBptAmountIn;
         uint256[] memory standardResultFees;
 
-        (standardResultBptAmountIn, standardResultFees) = mock.computeRemoveLiquiditySingleTokenExactOut(
-            balances,
-            tokenOutIndex,
-            amountOut,
-            totalSupply,
-            swapFee
-        );
+        (standardResultBptAmountIn, standardResultFees) =
+            mock.computeRemoveLiquiditySingleTokenExactOut(balances, tokenOutIndex, amountOut, totalSupply, swapFee);
 
         uint256 roundedUpAmountOut = amountOut + 1;
         uint256 roundedDownAmountOut = amountOut - 1;
@@ -293,21 +247,13 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 roundedUpBptAmountIn;
         uint256[] memory roundedUpFees;
         (roundedUpBptAmountIn, roundedUpFees) = mock.computeRemoveLiquiditySingleTokenExactOut(
-            balances,
-            tokenOutIndex,
-            roundedUpAmountOut,
-            totalSupply,
-            swapFee
+            balances, tokenOutIndex, roundedUpAmountOut, totalSupply, swapFee
         );
 
         uint256 roundedDownBptAmountIn;
         uint256[] memory roundedDownFees;
         (roundedDownBptAmountIn, roundedDownFees) = mock.computeRemoveLiquiditySingleTokenExactOut(
-            balances,
-            tokenOutIndex,
-            roundedDownAmountOut,
-            totalSupply,
-            swapFee
+            balances, tokenOutIndex, roundedDownAmountOut, totalSupply, swapFee
         );
 
         assertGe(
@@ -343,7 +289,7 @@ abstract contract BasePoolMathRoundingTest is Test {
     ) external view {
         uint256[] memory balances = new uint256[](2);
 
-        uint balance = bound(rawBalance, MIN_BALANCE, MAX_AMOUNT);
+        uint256 balance = bound(rawBalance, MIN_BALANCE, MAX_AMOUNT);
         for (uint256 i = 0; i < balances.length; ++i) {
             balances[i] = balance;
         }
@@ -356,13 +302,8 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 standardResultAmountOutWithFee;
         uint256[] memory standardResultFees;
 
-        (standardResultAmountOutWithFee, standardResultFees) = mock.computeRemoveLiquiditySingleTokenExactIn(
-            balances,
-            tokenOutIndex,
-            bptAmountIn,
-            totalSupply,
-            swapFee
-        );
+        (standardResultAmountOutWithFee, standardResultFees) =
+            mock.computeRemoveLiquiditySingleTokenExactIn(balances, tokenOutIndex, bptAmountIn, totalSupply, swapFee);
 
         uint256 roundedUpBptAmountIn = bptAmountIn + 1;
         uint256 roundedDownBptAmountIn = bptAmountIn - 1;
@@ -370,21 +311,13 @@ abstract contract BasePoolMathRoundingTest is Test {
         uint256 roundedUpAmountOutWithFee;
         uint256[] memory roundedUpFees;
         (roundedUpAmountOutWithFee, roundedUpFees) = mock.computeRemoveLiquiditySingleTokenExactIn(
-            balances,
-            tokenOutIndex,
-            roundedUpBptAmountIn,
-            totalSupply,
-            swapFee
+            balances, tokenOutIndex, roundedUpBptAmountIn, totalSupply, swapFee
         );
 
         uint256 roundedDownAmountOutWithFee;
         uint256[] memory roundedDownFees;
         (roundedDownAmountOutWithFee, roundedDownFees) = mock.computeRemoveLiquiditySingleTokenExactIn(
-            balances,
-            tokenOutIndex,
-            roundedDownBptAmountIn,
-            totalSupply,
-            swapFee
+            balances, tokenOutIndex, roundedDownBptAmountIn, totalSupply, swapFee
         );
 
         assertGe(

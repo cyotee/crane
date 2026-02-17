@@ -5,15 +5,15 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IBufferRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBufferRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { RouterCommon } from "./RouterCommon.sol";
+import {RouterCommon} from "./RouterCommon.sol";
 
 /**
  * @notice Entrypoint for swaps, liquidity operations, and corresponding queries.
@@ -23,12 +23,9 @@ import { RouterCommon } from "./RouterCommon.sol";
 contract BufferRouter is IBufferRouter, RouterCommon {
     using Address for address;
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) RouterCommon(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        RouterCommon(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -43,22 +40,21 @@ contract BufferRouter is IBufferRouter, RouterCommon {
         uint256 exactAmountWrappedIn,
         uint256 minIssuedShares
     ) external returns (uint256 issuedShares) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        BufferRouter.initializeBufferHook,
-                        (
-                            wrappedToken,
-                            exactAmountUnderlyingIn,
-                            exactAmountWrappedIn,
-                            minIssuedShares,
-                            msg.sender // sharesOwner
-                        )
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    BufferRouter.initializeBufferHook,
+                    (
+                        wrappedToken,
+                        exactAmountUnderlyingIn,
+                        exactAmountWrappedIn,
+                        minIssuedShares,
+                        msg.sender // sharesOwner
                     )
-                ),
-                (uint256)
-            );
+                )
+            ),
+            (uint256)
+        );
     }
 
     /**
@@ -81,11 +77,7 @@ contract BufferRouter is IBufferRouter, RouterCommon {
         address sharesOwner
     ) external nonReentrant onlyVault returns (uint256 issuedShares) {
         issuedShares = _vault.initializeBuffer(
-            wrappedToken,
-            exactAmountUnderlyingIn,
-            exactAmountWrappedIn,
-            minIssuedShares,
-            sharesOwner
+            wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, minIssuedShares, sharesOwner
         );
 
         address asset = _vault.getERC4626BufferAsset(wrappedToken);
@@ -100,22 +92,21 @@ contract BufferRouter is IBufferRouter, RouterCommon {
         uint256 maxAmountWrappedIn,
         uint256 exactSharesToIssue
     ) external returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        BufferRouter.addLiquidityToBufferHook,
-                        (
-                            wrappedToken,
-                            maxAmountUnderlyingIn,
-                            maxAmountWrappedIn,
-                            exactSharesToIssue,
-                            msg.sender // sharesOwner
-                        )
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    BufferRouter.addLiquidityToBufferHook,
+                    (
+                        wrappedToken,
+                        maxAmountUnderlyingIn,
+                        maxAmountWrappedIn,
+                        exactSharesToIssue,
+                        msg.sender // sharesOwner
                     )
-                ),
-                (uint256, uint256)
-            );
+                )
+            ),
+            (uint256, uint256)
+        );
     }
 
     /**
@@ -141,11 +132,7 @@ contract BufferRouter is IBufferRouter, RouterCommon {
         address sharesOwner
     ) external nonReentrant onlyVault returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
         (amountUnderlyingIn, amountWrappedIn) = _vault.addLiquidityToBuffer(
-            wrappedToken,
-            maxAmountUnderlyingIn,
-            maxAmountWrappedIn,
-            exactSharesToIssue,
-            sharesOwner
+            wrappedToken, maxAmountUnderlyingIn, maxAmountWrappedIn, exactSharesToIssue, sharesOwner
         );
 
         address asset = _vault.getERC4626BufferAsset(wrappedToken);
@@ -154,21 +141,19 @@ contract BufferRouter is IBufferRouter, RouterCommon {
     }
 
     /// @inheritdoc IBufferRouter
-    function queryInitializeBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactAmountUnderlyingIn,
-        uint256 exactAmountWrappedIn
-    ) external returns (uint256 issuedShares) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        BufferRouter.queryInitializeBufferHook,
-                        (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn)
-                    )
-                ),
-                (uint256)
-            );
+    function queryInitializeBuffer(IERC4626 wrappedToken, uint256 exactAmountUnderlyingIn, uint256 exactAmountWrappedIn)
+        external
+        returns (uint256 issuedShares)
+    {
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    BufferRouter.queryInitializeBufferHook,
+                    (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn)
+                )
+            ),
+            (uint256)
+        );
     }
 
     function queryInitializeBufferHook(
@@ -177,59 +162,53 @@ contract BufferRouter is IBufferRouter, RouterCommon {
         uint256 exactAmountWrappedIn
     ) external nonReentrant onlyVault returns (uint256 issuedShares) {
         issuedShares = _vault.initializeBuffer(
-            wrappedToken,
-            exactAmountUnderlyingIn,
-            exactAmountWrappedIn,
-            0,
-            address(this)
+            wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, 0, address(this)
         );
     }
 
     /// @inheritdoc IBufferRouter
-    function queryAddLiquidityToBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToIssue
-    ) external returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(BufferRouter.queryAddLiquidityToBufferHook, (wrappedToken, exactSharesToIssue))
-                ),
-                (uint256, uint256)
-            );
+    function queryAddLiquidityToBuffer(IERC4626 wrappedToken, uint256 exactSharesToIssue)
+        external
+        returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn)
+    {
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(BufferRouter.queryAddLiquidityToBufferHook, (wrappedToken, exactSharesToIssue))
+            ),
+            (uint256, uint256)
+        );
     }
 
-    function queryAddLiquidityToBufferHook(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToIssue
-    ) external nonReentrant onlyVault returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
+    function queryAddLiquidityToBufferHook(IERC4626 wrappedToken, uint256 exactSharesToIssue)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn)
+    {
         (amountUnderlyingIn, amountWrappedIn) = _vault.addLiquidityToBuffer(
-            wrappedToken,
-            type(uint128).max,
-            type(uint128).max,
-            exactSharesToIssue,
-            address(this)
+            wrappedToken, type(uint128).max, type(uint128).max, exactSharesToIssue, address(this)
         );
     }
 
     /// @inheritdoc IBufferRouter
-    function queryRemoveLiquidityFromBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToRemove
-    ) external returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(BufferRouter.queryRemoveLiquidityFromBufferHook, (wrappedToken, exactSharesToRemove))
-                ),
-                (uint256, uint256)
-            );
+    function queryRemoveLiquidityFromBuffer(IERC4626 wrappedToken, uint256 exactSharesToRemove)
+        external
+        returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut)
+    {
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(BufferRouter.queryRemoveLiquidityFromBufferHook, (wrappedToken, exactSharesToRemove))
+            ),
+            (uint256, uint256)
+        );
     }
 
-    function queryRemoveLiquidityFromBufferHook(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToRemove
-    ) external nonReentrant onlyVault returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut) {
+    function queryRemoveLiquidityFromBufferHook(IERC4626 wrappedToken, uint256 exactSharesToRemove)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut)
+    {
         return _vault.removeLiquidityFromBuffer(wrappedToken, exactSharesToRemove, 0, 0);
     }
 }

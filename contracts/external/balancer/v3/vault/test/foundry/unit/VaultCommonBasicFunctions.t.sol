@@ -9,9 +9,11 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     TokenConfig,
     TokenInfo,
@@ -20,14 +22,16 @@ import {
     MAX_FEE_PERCENTAGE
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { PoolConfigLib, PoolConfigBits } from "../../../contracts/lib/PoolConfigLib.sol";
+import {PoolConfigLib, PoolConfigBits} from "../../../contracts/lib/PoolConfigLib.sol";
 
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
 
 contract VaultCommonBasicFunctionsTest is BaseVaultTest {
     using PoolConfigLib for PoolConfigBits;
@@ -47,9 +51,7 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
 
         // Allow manual pool registration.
         vm.mockCall(
-            pool,
-            abi.encodeWithSelector(ISwapFeePercentageBounds.getMinimumSwapFeePercentage.selector),
-            abi.encode(0)
+            pool, abi.encodeWithSelector(ISwapFeePercentageBounds.getMinimumSwapFeePercentage.selector), abi.encode(0)
         );
         vm.mockCall(
             pool,
@@ -69,9 +71,8 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
     *******************************************************************************/
 
     function testNonEmptyPoolTokenBalance() public {
-        IERC20[] memory tokens = InputHelpers.sortTokens(
-            [address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory tokens =
+            InputHelpers.sortTokens([address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20());
         vault.manualRegisterPool(pool, tokens);
 
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens);
@@ -135,9 +136,8 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
     }
 
     function testNonEmptyPoolConfig() public {
-        IERC20[] memory tokens = InputHelpers.sortTokens(
-            [address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory tokens =
+            InputHelpers.sortTokens([address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20());
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens);
         vault.manualSetPoolTokenInfo(pool, tokenConfig);
 
@@ -154,19 +154,14 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
         tokenDecimalDiffs[0] = 12;
         tokenDecimalDiffs[1] = 10;
         tokenDecimalDiffs[2] = 0;
-        originalPoolConfig = originalPoolConfig.setTokenDecimalDiffs(
-            PoolConfigLib.toTokenDecimalDiffs(tokenDecimalDiffs)
-        );
+        originalPoolConfig =
+            originalPoolConfig.setTokenDecimalDiffs(PoolConfigLib.toTokenDecimalDiffs(tokenDecimalDiffs));
         originalPoolConfig = originalPoolConfig.setPoolRegistered(true);
         vault.manualSetPoolConfigBits(pool, originalPoolConfig);
 
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(pool);
 
-        assertEq(
-            decimalScalingFactors.length,
-            3,
-            "length of decimalScalingFactors should be equal to amount of tokens"
-        );
+        assertEq(decimalScalingFactors.length, 3, "length of decimalScalingFactors should be equal to amount of tokens");
         for (uint256 i = 0; i < decimalScalingFactors.length; ++i) {
             assertEq(
                 decimalScalingFactors[i],
@@ -196,9 +191,8 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
         decimalDiff2 = bound(decimalDiff2, 0, 18).toUint8();
         decimalDiff3 = bound(decimalDiff3, 0, 18).toUint8();
 
-        IERC20[] memory tokens = InputHelpers.sortTokens(
-            [address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory tokens =
+            InputHelpers.sortTokens([address(usdc), address(dai), address(wsteth)].toMemoryArray().asIERC20());
         vault.manualRegisterPool(pool, tokens);
 
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens);

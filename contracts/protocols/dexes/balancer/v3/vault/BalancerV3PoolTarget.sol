@@ -4,8 +4,12 @@ pragma solidity ^0.8.0;
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
 import {IPoolInfo} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/ISwapFeePercentageBounds.sol";
-import {IUnbalancedLiquidityInvariantRatioBounds} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/ISwapFeePercentageBounds.sol";
+import {
+    IUnbalancedLiquidityInvariantRatioBounds
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IUnbalancedLiquidityInvariantRatioBounds.sol";
 import {IAuthentication} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IAuthentication.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
@@ -17,14 +21,29 @@ import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 import {PoolConfig, TokenInfo} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3AuthenticationService} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationService.sol";
-import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3AuthenticationService
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationService.sol";
+import {
+    BalancerV3VaultGuardModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 import {ERC5267Target} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Target.sol";
 
-contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Metadata, IBalancerPoolToken, IPoolInfo, IUnbalancedLiquidityInvariantRatioBounds, IAuthentication {
-
+contract BalancerV3PoolTarget is
+    BalancerV3VaultGuardModifiers,
+    IERC20,
+    IERC20Metadata,
+    IBalancerPoolToken,
+    IPoolInfo,
+    IUnbalancedLiquidityInvariantRatioBounds,
+    IAuthentication
+{
     /* -------------------------------------------------------------------------- */
     /*                                   IERC20                                   */
     /* -------------------------------------------------------------------------- */
@@ -116,12 +135,12 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Me
     /* -------------------------------------------------------------------------- */
 
     /// @dev Emit the Transfer event. This function can only be called by the MultiToken.
-    function emitTransfer(address from, address to, uint256 amount) external onlyBalancerV3Vault() {
+    function emitTransfer(address from, address to, uint256 amount) external onlyBalancerV3Vault {
         emit IERC20Events.Transfer(from, to, amount);
     }
 
     /// @dev Emit the Approval event. This function can only be called by the MultiToken.
-    function emitApproval(address owner, address spender, uint256 amount) external onlyBalancerV3Vault() {
+    function emitApproval(address owner, address spender, uint256 amount) external onlyBalancerV3Vault {
         emit IERC20Events.Approval(owner, spender, amount);
     }
 
@@ -169,6 +188,7 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Me
         aggregateSwapFeePercentage = poolConfig.aggregateSwapFeePercentage;
         aggregateYieldFeePercentage = poolConfig.aggregateYieldFeePercentage;
     }
+
     /* -------------------------------------------------------------------------- */
     /*                          ISwapFeePercentageBounds                          */
     /* -------------------------------------------------------------------------- */
@@ -182,6 +202,7 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Me
     function getMaximumSwapFeePercentage() external view returns (uint256) {
         return BalancerV3PoolRepo._maximumSwapFeePercentage();
     }
+
     /* -------------------------------------------------------------------------- */
     /*                  IUnbalancedLiquidityInvariantRatioBounds                  */
     /* -------------------------------------------------------------------------- */
@@ -195,7 +216,7 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Me
     function getMaximumInvariantRatio() external view returns (uint256) {
         return BalancerV3PoolRepo._maximumInvariantRatio();
     }
-    
+
     /* -------------------------------------------------------------------------- */
     /*                               IAuthentication                              */
     /* -------------------------------------------------------------------------- */
@@ -204,5 +225,4 @@ contract BalancerV3PoolTarget is BalancerV3VaultGuardModifiers, IERC20, IERC20Me
     function getActionId(bytes4 selector) public view returns (bytes32) {
         return BalancerV3AuthenticationRepo._getActionId(selector);
     }
-
 }

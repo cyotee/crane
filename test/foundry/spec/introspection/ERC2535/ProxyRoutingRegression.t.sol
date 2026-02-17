@@ -12,7 +12,7 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IDiamondCut} from "@crane/contracts/interfaces/IDiamondCut.sol";
@@ -23,7 +23,10 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 // Facets and packages
 import {DiamondCutFacet} from "@crane/contracts/introspection/ERC2535/DiamondCutFacet.sol";
-import {DiamondCutFacetDFPkg, IDiamondCutFacetDFPkg} from "@crane/contracts/introspection/ERC2535/DiamondCutFacetDFPkg.sol";
+import {
+    DiamondCutFacetDFPkg,
+    IDiamondCutFacetDFPkg
+} from "@crane/contracts/introspection/ERC2535/DiamondCutFacetDFPkg.sol";
 import {MultiStepOwnableFacet} from "@crane/contracts/access/ERC8023/MultiStepOwnableFacet.sol";
 import {MockFacet} from "@crane/contracts/test/stubs/MockFacet.sol";
 import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
@@ -42,7 +45,7 @@ contract ProxyRoutingRegressionTest is Test {
     using BetterAddress for address;
     using BetterEfficientHashLib for bytes;
 
-    ICreate3Factory internal create3Factory;
+    ICreate3FactoryProxy internal create3Factory;
     IDiamondPackageCallBackFactory internal diamondFactory;
 
     // Facets
@@ -87,8 +90,7 @@ contract ProxyRoutingRegressionTest is Test {
                     type(DiamondCutFacetDFPkg).creationCode,
                     abi.encode(
                         IDiamondCutFacetDFPkg.PkgInit({
-                            diamondCutFacet: diamondCutFacet,
-                            multiStepOwnableFacet: multiStepOwnableFacet
+                            diamondCutFacet: diamondCutFacet, multiStepOwnableFacet: multiStepOwnableFacet
                         })
                     ),
                     abi.encode(type(DiamondCutFacetDFPkg).name)._hash()
@@ -217,9 +219,7 @@ contract ProxyRoutingRegressionTest is Test {
 
         IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
         removeCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacet),
-            action: IDiamond.FacetCutAction.Remove,
-            functionSelectors: singleSelector
+            facetAddress: address(mockFacet), action: IDiamond.FacetCutAction.Remove, functionSelectors: singleSelector
         });
 
         vm.prank(owner);
@@ -259,9 +259,7 @@ contract ProxyRoutingRegressionTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacet),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectors
+            facetAddress: address(mockFacet), action: IDiamond.FacetCutAction.Add, functionSelectors: selectors
         });
 
         vm.prank(owner);
@@ -270,9 +268,7 @@ contract ProxyRoutingRegressionTest is Test {
         // Remove selector
         IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
         removeCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacet),
-            action: IDiamond.FacetCutAction.Remove,
-            functionSelectors: selectors
+            facetAddress: address(mockFacet), action: IDiamond.FacetCutAction.Remove, functionSelectors: selectors
         });
 
         vm.prank(owner);

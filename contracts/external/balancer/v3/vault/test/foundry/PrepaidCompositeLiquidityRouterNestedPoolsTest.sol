@@ -5,10 +5,12 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { ICompositeLiquidityRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
-import { IVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {IVersion} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
 
-import { CompositeLiquidityRouterNestedPoolsTest } from "./CompositeLiquidityRouterNestedPools.t.sol";
+import {CompositeLiquidityRouterNestedPoolsTest} from "./CompositeLiquidityRouterNestedPools.t.sol";
 
 contract PrepaidCompositeLiquidityRouterNestedPoolsTest is CompositeLiquidityRouterNestedPoolsTest {
     // Virtual function
@@ -39,16 +41,9 @@ contract PrepaidCompositeLiquidityRouterNestedPoolsTest is CompositeLiquidityRou
             vm.expectRevert(expectedError);
         }
 
-        return
-            prepaidCompositeLiquidityRouter.addLiquidityUnbalancedNestedPool{ value: ethValue }(
-                pool,
-                tokensIn,
-                exactAmountsIn,
-                tokensToWrap,
-                minBptAmountOut,
-                wethIsEth,
-                userData
-            );
+        return prepaidCompositeLiquidityRouter.addLiquidityUnbalancedNestedPool{value: ethValue}(
+            pool, tokensIn, exactAmountsIn, tokensToWrap, minBptAmountOut, wethIsEth, userData
+        );
     }
 
     function _removeLiquidityProportionalNestedPool(
@@ -67,15 +62,8 @@ contract PrepaidCompositeLiquidityRouterNestedPoolsTest is CompositeLiquidityRou
             vm.expectRevert(expectedError);
         }
 
-        return
-            prepaidCompositeLiquidityRouter.removeLiquidityProportionalNestedPool(
-                pool,
-                exactBptAmountIn,
-                tokensOut,
-                minAmountsOut,
-                tokensToUnwrap,
-                wethIsEth,
-                userData
-            );
+        return prepaidCompositeLiquidityRouter.removeLiquidityProportionalNestedPool(
+            pool, exactBptAmountIn, tokensOut, minAmountsOut, tokensToUnwrap, wethIsEth, userData
+        );
     }
 }

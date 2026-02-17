@@ -6,18 +6,20 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { ReClammPoolImmutableData } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammCommon } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammCommon.sol";
-import { ReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
+import {
+    ReClammPoolImmutableData
+} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammCommon} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammCommon.sol";
+import {ReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
 
 contract ReClammHookTest is BaseReClammTest {
     using ArrayHelpers for *;
@@ -40,8 +42,8 @@ contract ReClammHookTest is BaseReClammTest {
     function testNoHook() public {
         poolHooksContract = address(0);
 
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, bytes(""));
@@ -59,8 +61,8 @@ contract ReClammHookTest is BaseReClammTest {
 
     function testOnBeforeInitializeForwarding() public {
         // OnInitialize should succeed.
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         uint256 snapshotId = vm.snapshotState();
 
@@ -79,8 +81,8 @@ contract ReClammHookTest is BaseReClammTest {
 
     function testOnAfterInitializeForwarding() public {
         // OnInitialize should succeed (forwards to a no-op).
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         uint256 snapshotId = vm.snapshotState();
 
@@ -98,8 +100,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnBeforeAddLiquidityForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, bytes(""));
@@ -126,8 +128,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnAfterAddLiquidityForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         _checkHookFlags(newPool);
 
@@ -156,8 +158,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnBeforeRemoveLiquidityForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, "");
@@ -183,8 +185,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnAfterRemoveLiquidityForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, "");
@@ -210,8 +212,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnBeforeSwapForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, "");
@@ -234,8 +236,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnAfterSwapForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, "");
@@ -258,8 +260,8 @@ contract ReClammHookTest is BaseReClammTest {
     }
 
     function testOnComputeDynamicSwapFeeForwarding() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.prank(bob);
         router.initialize(newPool, tokens, _initialBalances, 0, false, "");

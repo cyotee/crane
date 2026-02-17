@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { LBPParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {LBPParams} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { LBPoolFactory } from "../../../contracts/lbp/LBPoolFactory.sol";
-import { LBPoolContractsDeployer } from "./LBPoolContractsDeployer.sol";
-import { BaseLBPTest } from "./BaseLBPTest.sol";
+import {LBPoolFactory} from "../../../contracts/lbp/LBPoolFactory.sol";
+import {LBPoolContractsDeployer} from "./LBPoolContractsDeployer.sol";
+import {BaseLBPTest} from "./BaseLBPTest.sol";
 
 abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
     uint256 internal constant HIGH_WEIGHT = uint256(70e16);
@@ -44,12 +44,7 @@ abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
 
     function createPoolFactory() internal virtual override returns (address) {
         lbPoolFactory = deployLBPoolFactory(
-            IVault(address(vault)),
-            365 days,
-            factoryVersion,
-            poolVersion,
-            address(router),
-            address(migrationRouter)
+            IVault(address(vault)), 365 days, factoryVersion, poolVersion, address(router), address(migrationRouter)
         );
         vm.label(address(lbPoolFactory), "LB pool factory");
 
@@ -57,42 +52,40 @@ abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
     }
 
     // Implement the virtual functions from BaseLBPTest
-    function _createLBPool(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime,
-        bool blockProjectTokenSwapsIn
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
-        return
-            _createLBPoolWithCustomWeights(
-                poolCreator,
-                startWeights[projectIdx],
-                startWeights[reserveIdx],
-                endWeights[projectIdx],
-                endWeights[reserveIdx],
-                startTime,
-                endTime,
-                blockProjectTokenSwapsIn
-            );
+    function _createLBPool(address poolCreator, uint32 startTime, uint32 endTime, bool blockProjectTokenSwapsIn)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
+        return _createLBPoolWithCustomWeights(
+            poolCreator,
+            startWeights[projectIdx],
+            startWeights[reserveIdx],
+            endWeights[projectIdx],
+            endWeights[reserveIdx],
+            startTime,
+            endTime,
+            blockProjectTokenSwapsIn
+        );
     }
 
-    function _createLBPoolNon18(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime,
-        bool blockProjectTokenSwapsIn
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
-        return
-            _createLBPoolWithCustomWeightsNon18(
-                poolCreator,
-                startWeights[projectIdx],
-                startWeights[reserveIdx],
-                endWeights[projectIdx],
-                endWeights[reserveIdx],
-                startTime,
-                endTime,
-                blockProjectTokenSwapsIn
-            );
+    function _createLBPoolNon18(address poolCreator, uint32 startTime, uint32 endTime, bool blockProjectTokenSwapsIn)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
+        return _createLBPoolWithCustomWeightsNon18(
+            poolCreator,
+            startWeights[projectIdx],
+            startWeights[reserveIdx],
+            endWeights[projectIdx],
+            endWeights[reserveIdx],
+            startTime,
+            endTime,
+            blockProjectTokenSwapsIn
+        );
     }
 
     function _createLBPoolWithMigration(
@@ -134,22 +127,11 @@ abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
         address poolCreator_ = poolCreator;
 
         newPool = lbPoolFactory.createWithMigration(
-            lbpCommonParams,
-            migrationParams,
-            lbpParams,
-            swapFee,
-            bytes32(salt),
-            poolCreator_
+            lbpCommonParams, migrationParams, lbpParams, swapFee, bytes32(salt), poolCreator_
         );
 
         poolArgs = abi.encode(
-            lbpCommonParams,
-            migrationParams,
-            lbpParams,
-            vault,
-            address(router),
-            address(migrationRouter),
-            poolVersion
+            lbpCommonParams, migrationParams, lbpParams, vault, address(router), address(migrationRouter), poolVersion
         );
 
         return (newPool, poolArgs);
@@ -186,11 +168,8 @@ abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
 
         MigrationParams memory migrationParams;
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         // Copy to local variable to free up parameter stack slot.
         address poolCreator_ = poolCreator;
@@ -232,11 +211,8 @@ abstract contract WeightedLBPTest is BaseLBPTest, LBPoolContractsDeployer {
 
         MigrationParams memory migrationParams;
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         // Copy to local variable to free up parameter stack slot.
         address poolCreator_ = poolCreator;

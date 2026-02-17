@@ -1,0 +1,8 @@
+**/target
+
+**/.soroban
+**/.stellar
+
+**/*.custom
+
+**/test_snapshots

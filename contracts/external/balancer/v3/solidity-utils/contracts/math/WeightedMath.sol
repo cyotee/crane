@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "./FixedPoint.sol";
+import {FixedPoint} from "./FixedPoint.sol";
 
 /**
  * @notice Implementation of Balancer Weighted Math, essentially unchanged since v1.
@@ -48,10 +48,11 @@ library WeightedMath {
      * @param balances The pool token balances, sorted in token registration order
      * @return invariant The invariant, rounded down
      */
-    function computeInvariantDown(
-        uint256[] memory normalizedWeights,
-        uint256[] memory balances
-    ) internal pure returns (uint256 invariant) {
+    function computeInvariantDown(uint256[] memory normalizedWeights, uint256[] memory balances)
+        internal
+        pure
+        returns (uint256 invariant)
+    {
         /**********************************************************************************************
         // invariant               _____                                                             //
         // wi = weight index i      | |      wi                                                      //
@@ -79,10 +80,11 @@ library WeightedMath {
      * @param balances The pool token balances, sorted in token registration order
      * @return invariant The invariant, rounded up
      */
-    function computeInvariantUp(
-        uint256[] memory normalizedWeights,
-        uint256[] memory balances
-    ) internal pure returns (uint256 invariant) {
+    function computeInvariantUp(uint256[] memory normalizedWeights, uint256[] memory balances)
+        internal
+        pure
+        returns (uint256 invariant)
+    {
         /**********************************************************************************************
         // invariant               _____                                                             //
         // wi = weight index i      | |      wi                                                      //
@@ -108,11 +110,11 @@ library WeightedMath {
      * @param invariantRatio The invariant ratio (i.e., new/old; will be > 1 for add; < 1 for remove)
      * @return newBalance The adjusted token balance after the operation
      */
-    function computeBalanceOutGivenInvariant(
-        uint256 currentBalance,
-        uint256 weight,
-        uint256 invariantRatio
-    ) internal pure returns (uint256 newBalance) {
+    function computeBalanceOutGivenInvariant(uint256 currentBalance, uint256 weight, uint256 invariantRatio)
+        internal
+        pure
+        returns (uint256 newBalance)
+    {
         /******************************************************************************************
         // calculateBalanceGivenInvariant                                                        //
         // o = balanceOut                                                                        //
@@ -130,9 +132,8 @@ library WeightedMath {
         // - For i > FP(1), we need to round the exponent up, as i^x is monotonically increasing for i > FP(1).
         // - For i < FP(1), we need to round the exponent down, as as i^x is monotonically decreasing for i < FP(1).
 
-        function(uint256, uint256) internal pure returns (uint256) divUpOrDown = invariantRatio > FixedPoint.ONE
-            ? FixedPoint.divUp
-            : FixedPoint.divDown;
+        function(uint256, uint256) internal pure returns (uint256) divUpOrDown =
+            invariantRatio > FixedPoint.ONE ? FixedPoint.divUp : FixedPoint.divDown;
 
         // Calculate by how much the token balance has to increase to match the invariantRatio.
         uint256 balanceRatio = invariantRatio.powUp(divUpOrDown(FixedPoint.ONE, weight));

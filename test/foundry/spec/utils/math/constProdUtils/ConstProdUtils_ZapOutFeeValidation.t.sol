@@ -96,11 +96,7 @@ contract ConstProdUtils_ZapOutFeeValidation_Test is Test {
         uint256 lpNeededFeesOff = ConstProdUtils._quoteZapOutToTargetWithFee(argsFeesOff);
 
         // Both should produce the same result (no protocol fee adjustment)
-        assertEq(
-            lpNeededZeroShare,
-            lpNeededFeesOff,
-            "ownerFeeShare=0 should behave same as feeOn=false"
-        );
+        assertEq(lpNeededZeroShare, lpNeededFeesOff, "ownerFeeShare=0 should behave same as feeOn=false");
     }
 
     /**
@@ -202,12 +198,7 @@ contract ConstProdUtils_ZapOutFeeValidation_Test is Test {
         uint256 kLast = 1e36;
         uint256 ownerFeeShare = 0;
 
-        uint256 protocolFee = ConstProdUtils._calculateProtocolFee(
-            lpTotalSupply,
-            newK,
-            kLast,
-            ownerFeeShare
-        );
+        uint256 protocolFee = ConstProdUtils._calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
 
         assertEq(protocolFee, 0, "_calculateProtocolFee should return 0 when ownerFeeShare is 0");
     }

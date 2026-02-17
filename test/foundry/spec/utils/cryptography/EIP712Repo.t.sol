@@ -46,11 +46,7 @@ contract EIP712RepoHarness {
     function computeDomainSeparator(string memory name, string memory version) external view returns (bytes32) {
         return keccak256(
             abi.encode(
-                EIP712_TYPE_HASH,
-                keccak256(bytes(name)),
-                keccak256(bytes(version)),
-                block.chainid,
-                address(this)
+                EIP712_TYPE_HASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this)
             )
         );
     }
@@ -71,9 +67,8 @@ contract EIP712Repo_Test is Test {
     address internal signer;
 
     // Permit typehash (standard ERC20 permit)
-    bytes32 constant PERMIT_TYPEHASH = keccak256(
-        "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
-    );
+    bytes32 constant PERMIT_TYPEHASH =
+        keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
     function setUp() public {
         harness = new EIP712RepoHarness();
@@ -128,11 +123,7 @@ contract EIP712Repo_Test is Test {
         // Manually compute expected separator
         bytes32 expected = keccak256(
             abi.encode(
-                EIP712_TYPE_HASH,
-                keccak256(bytes(NAME)),
-                keccak256(bytes(VERSION)),
-                block.chainid,
-                address(harness)
+                EIP712_TYPE_HASH, keccak256(bytes(NAME)), keccak256(bytes(VERSION)), block.chainid, address(harness)
             )
         );
 
@@ -260,9 +251,7 @@ contract EIP712Repo_Test is Test {
         bytes32 domainSeparator = harness.domainSeparatorV4();
 
         // Manual computation of EIP-712 hash
-        bytes32 expected = keccak256(
-            abi.encodePacked("\x19\x01", domainSeparator, structHash)
-        );
+        bytes32 expected = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
 
         bytes32 actual = harness.hashTypedDataV4(structHash);
         assertEq(actual, expected, "Should match manual EIP-712 computation");
@@ -280,16 +269,7 @@ contract EIP712Repo_Test is Test {
         uint256 nonce = 0;
         uint256 deadline = block.timestamp + 1 hours;
 
-        bytes32 structHash = keccak256(
-            abi.encode(
-                PERMIT_TYPEHASH,
-                owner,
-                spender,
-                value,
-                nonce,
-                deadline
-            )
-        );
+        bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, nonce, deadline));
 
         bytes32 digest = harness.hashTypedDataV4(structHash);
 

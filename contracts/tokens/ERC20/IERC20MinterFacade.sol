@@ -6,9 +6,5 @@ import {IERC20MintBurn} from "@crane/contracts/interfaces/IERC20MintBurn.sol";
 interface IERC20MinterFacade {
     error MinimumMintInternalNotMet(uint256 lastMintTimestamp, uint256 currentTimestamp, uint256 minMintInterval);
 
-    function mintToken(
-        IERC20MintBurn token,
-        uint256 amount,
-        address recipient
-    ) external returns(bool);
+    function mintToken(IERC20MintBurn token, uint256 amount, address recipient) external returns (bool);
 }

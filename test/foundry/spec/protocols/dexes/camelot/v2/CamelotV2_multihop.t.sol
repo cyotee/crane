@@ -44,11 +44,11 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
 
     // Fee configurations (in basis points, out of 100000)
     // e.g., 300 = 0.3%, 500 = 0.5%, 100 = 0.1%
-    uint16 constant FEE_0_3_PERCENT = 300;  // 0.3%
-    uint16 constant FEE_0_5_PERCENT = 500;  // 0.5%
-    uint16 constant FEE_0_1_PERCENT = 100;  // 0.1%
-    uint16 constant FEE_0_2_PERCENT = 200;  // 0.2%
-    uint16 constant FEE_0_4_PERCENT = 400;  // 0.4%
+    uint16 constant FEE_0_3_PERCENT = 300; // 0.3%
+    uint16 constant FEE_0_5_PERCENT = 500; // 0.5%
+    uint16 constant FEE_0_1_PERCENT = 100; // 0.1%
+    uint16 constant FEE_0_2_PERCENT = 200; // 0.2%
+    uint16 constant FEE_0_4_PERCENT = 400; // 0.4%
     uint16 constant FEE_1_0_PERCENT = 1000; // 1.0%
 
     // Standard liquidity amounts
@@ -205,8 +205,9 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
         // Forward swap: A -> B
         uint256 feeForward = tokenAIsToken0 ? FEE_0_1_PERCENT : FEE_1_0_PERCENT;
         HopData memory hopForward = _getHopData(pairAB, address(tokenA));
-        uint256 expectedForward =
-            ConstProdUtils._saleQuote(amountIn, hopForward.reserveIn, hopForward.reserveOut, feeForward, FEE_DENOMINATOR);
+        uint256 expectedForward = ConstProdUtils._saleQuote(
+            amountIn, hopForward.reserveIn, hopForward.reserveOut, feeForward, FEE_DENOMINATOR
+        );
 
         tokenA.mint(address(this), amountIn);
         tokenA.approve(address(camelotV2Router), amountIn);
@@ -312,9 +313,8 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
 
         // Calculate expected cumulative output
         HopData memory hop1 = _getHopData(pairAB, address(tokenA));
-        uint256 amountAfterHop1 = ConstProdUtils._saleQuote(
-            amountIn, hop1.reserveIn, hop1.reserveOut, FEE_0_3_PERCENT, FEE_DENOMINATOR
-        );
+        uint256 amountAfterHop1 =
+            ConstProdUtils._saleQuote(amountIn, hop1.reserveIn, hop1.reserveOut, FEE_0_3_PERCENT, FEE_DENOMINATOR);
 
         HopData memory hop2 = _getHopData(pairBC, address(tokenB));
         uint256 amountAfterHop2 = ConstProdUtils._saleQuote(
@@ -363,9 +363,8 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
 
         // Get pre-swap data
         HopData memory hop1 = _getHopData(pairAB, address(tokenA));
-        uint256 expectedAmountB = ConstProdUtils._saleQuote(
-            amountIn, hop1.reserveIn, hop1.reserveOut, FEE_0_3_PERCENT, FEE_DENOMINATOR
-        );
+        uint256 expectedAmountB =
+            ConstProdUtils._saleQuote(amountIn, hop1.reserveIn, hop1.reserveOut, FEE_0_3_PERCENT, FEE_DENOMINATOR);
 
         // Execute hop 1
         tokenA.mint(address(this), amountIn);
@@ -386,9 +385,8 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
 
         // Get data for hop 2 (reserves changed after hop 1)
         HopData memory hop2 = _getHopData(pairBC, address(tokenB));
-        uint256 expectedAmountC = ConstProdUtils._saleQuote(
-            actualAmountB, hop2.reserveIn, hop2.reserveOut, FEE_0_5_PERCENT, FEE_DENOMINATOR
-        );
+        uint256 expectedAmountC =
+            ConstProdUtils._saleQuote(actualAmountB, hop2.reserveIn, hop2.reserveOut, FEE_0_5_PERCENT, FEE_DENOMINATOR);
 
         // Execute hop 2
         tokenB.approve(address(camelotV2Router), actualAmountB);
@@ -408,9 +406,8 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
 
         // Get data for hop 3
         HopData memory hop3 = _getHopData(pairCD, address(tokenC));
-        uint256 expectedAmountD = ConstProdUtils._saleQuote(
-            actualAmountC, hop3.reserveIn, hop3.reserveOut, FEE_0_1_PERCENT, FEE_DENOMINATOR
-        );
+        uint256 expectedAmountD =
+            ConstProdUtils._saleQuote(actualAmountC, hop3.reserveIn, hop3.reserveOut, FEE_0_1_PERCENT, FEE_DENOMINATOR);
 
         // Execute hop 3
         tokenC.approve(address(camelotV2Router), actualAmountC);
@@ -551,11 +548,7 @@ contract CamelotV2_multihop is TestBase_CamelotV2 {
     /**
      * @dev Calculate sale quote for a given pair and input token
      */
-    function _calculateSaleQuote(ICamelotPair pair, address tokenIn, uint256 amountIn)
-        internal
-        view
-        returns (uint256)
-    {
+    function _calculateSaleQuote(ICamelotPair pair, address tokenIn, uint256 amountIn) internal view returns (uint256) {
         HopData memory data = _getHopData(pair, tokenIn);
         return ConstProdUtils._saleQuote(amountIn, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR);
     }

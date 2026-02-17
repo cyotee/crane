@@ -2,40 +2,42 @@
 
 pragma solidity ^0.8.24;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
 import {Strings} from "@crane/contracts/utils/Strings.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { HooksConfigLibMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/HooksConfigLibMock.sol";
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
-import { CREATE3 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {HooksConfigLibMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/HooksConfigLibMock.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
-import { CompositeLiquidityRouterMock } from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
-import { VaultFactory } from "../../../contracts/VaultFactory.sol";
-import { VaultExplorer } from "../../../contracts/VaultExplorer.sol";
-import { BaseHooksMock } from "../../../contracts/test/BaseHooksMock.sol";
-import { BasicAuthorizerMock } from "../../../contracts/test/BasicAuthorizerMock.sol";
-import { BatchRouterMock } from "../../../contracts/test/BatchRouterMock.sol";
-import { ERC20MultiTokenMock } from "../../../contracts/test/ERC20MultiTokenMock.sol";
-import { LinearBasePoolMathMock } from "../../../contracts/test/LinearBasePoolMathMock.sol";
-import { ProtocolFeeController } from "../../../contracts/ProtocolFeeController.sol";
-import { VaultExtensionMock } from "../../../contracts/test/VaultExtensionMock.sol";
-import { VaultAdminMock } from "../../../contracts/test/VaultAdminMock.sol";
-import { VaultMock } from "../../../contracts/test/VaultMock.sol";
-import { ProtocolFeeControllerMock } from "../../../contracts/test/ProtocolFeeControllerMock.sol";
-import { PoolFactoryMock } from "../../../contracts/test/PoolFactoryMock.sol";
-import { PoolMock } from "../../../contracts/test/PoolMock.sol";
-import { PoolHooksMock } from "../../../contracts/test/PoolHooksMock.sol";
-import { PoolMockFlexibleInvariantRatio } from "../../../contracts/test/PoolMockFlexibleInvariantRatio.sol";
-import { RateProviderMock } from "../../../contracts/test/RateProviderMock.sol";
-import { RouterCommonMock } from "../../../contracts/test/RouterCommonMock.sol";
-import { RouterMock } from "../../../contracts/test/RouterMock.sol";
-import { BufferRouterMock } from "../../../contracts/test/BufferRouterMock.sol";
+import {CompositeLiquidityRouterMock} from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
+import {VaultFactory} from "../../../contracts/VaultFactory.sol";
+import {VaultExplorer} from "../../../contracts/VaultExplorer.sol";
+import {BaseHooksMock} from "../../../contracts/test/BaseHooksMock.sol";
+import {BasicAuthorizerMock} from "../../../contracts/test/BasicAuthorizerMock.sol";
+import {BatchRouterMock} from "../../../contracts/test/BatchRouterMock.sol";
+import {ERC20MultiTokenMock} from "../../../contracts/test/ERC20MultiTokenMock.sol";
+import {LinearBasePoolMathMock} from "../../../contracts/test/LinearBasePoolMathMock.sol";
+import {ProtocolFeeController} from "../../../contracts/ProtocolFeeController.sol";
+import {VaultExtensionMock} from "../../../contracts/test/VaultExtensionMock.sol";
+import {VaultAdminMock} from "../../../contracts/test/VaultAdminMock.sol";
+import {VaultMock} from "../../../contracts/test/VaultMock.sol";
+import {ProtocolFeeControllerMock} from "../../../contracts/test/ProtocolFeeControllerMock.sol";
+import {PoolFactoryMock} from "../../../contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "../../../contracts/test/PoolMock.sol";
+import {PoolHooksMock} from "../../../contracts/test/PoolHooksMock.sol";
+import {PoolMockFlexibleInvariantRatio} from "../../../contracts/test/PoolMockFlexibleInvariantRatio.sol";
+import {RateProviderMock} from "../../../contracts/test/RateProviderMock.sol";
+import {RouterCommonMock} from "../../../contracts/test/RouterCommonMock.sol";
+import {RouterMock} from "../../../contracts/test/RouterMock.sol";
+import {BufferRouterMock} from "../../../contracts/test/BufferRouterMock.sol";
 
 /**
  * @notice This contract contains functions for deploying mocks and contracts related to the "Vault".
@@ -62,34 +64,32 @@ contract VaultContractsDeployer is BaseContractsDeployer {
         bytes32 vaultExtensionCreationCodeHash
     ) internal returns (VaultFactory) {
         if (reusingArtifacts) {
-            return
-                VaultFactory(
-                    deployCode(
-                        _computeVaultPath(type(VaultFactory).name),
-                        abi.encode(
-                            authorizer,
-                            pauseWindowDuration,
-                            bufferPeriodDuration,
-                            minTradeAmount,
-                            minWrapAmount,
-                            vaultCreationCodeHash,
-                            vaultAdminCreationCodeHash,
-                            vaultExtensionCreationCodeHash
-                        )
+            return VaultFactory(
+                deployCode(
+                    _computeVaultPath(type(VaultFactory).name),
+                    abi.encode(
+                        authorizer,
+                        pauseWindowDuration,
+                        bufferPeriodDuration,
+                        minTradeAmount,
+                        minWrapAmount,
+                        vaultCreationCodeHash,
+                        vaultAdminCreationCodeHash,
+                        vaultExtensionCreationCodeHash
                     )
-                );
+                )
+            );
         } else {
-            return
-                new VaultFactory(
-                    authorizer,
-                    pauseWindowDuration,
-                    bufferPeriodDuration,
-                    minTradeAmount,
-                    minWrapAmount,
-                    vaultCreationCodeHash,
-                    vaultAdminCreationCodeHash,
-                    vaultExtensionCreationCodeHash
-                );
+            return new VaultFactory(
+                authorizer,
+                pauseWindowDuration,
+                bufferPeriodDuration,
+                minTradeAmount,
+                minWrapAmount,
+                vaultCreationCodeHash,
+                vaultAdminCreationCodeHash,
+                vaultExtensionCreationCodeHash
+            );
         }
     }
 
@@ -119,32 +119,24 @@ contract VaultContractsDeployer is BaseContractsDeployer {
 
     function deployBatchRouterMock(IVault vault, IWETH weth, IPermit2 permit2) internal returns (BatchRouterMock) {
         if (reusingArtifacts) {
-            return
-                BatchRouterMock(
-                    payable(
-                        deployCode(_computeVaultTestPath(type(BatchRouterMock).name), abi.encode(vault, weth, permit2))
-                    )
-                );
+            return BatchRouterMock(
+                payable(deployCode(_computeVaultTestPath(type(BatchRouterMock).name), abi.encode(vault, weth, permit2)))
+            );
         } else {
             return new BatchRouterMock(vault, weth, permit2);
         }
     }
 
-    function deployCompositeLiquidityRouterMock(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2
-    ) internal returns (CompositeLiquidityRouterMock) {
+    function deployCompositeLiquidityRouterMock(IVault vault, IWETH weth, IPermit2 permit2)
+        internal
+        returns (CompositeLiquidityRouterMock)
+    {
         if (reusingArtifacts) {
-            return
-                CompositeLiquidityRouterMock(
-                    payable(
-                        deployCode(
-                            _computeVaultTestPath(type(CompositeLiquidityRouterMock).name),
-                            abi.encode(vault, weth, permit2)
-                        )
-                    )
-                );
+            return CompositeLiquidityRouterMock(
+                payable(deployCode(
+                        _computeVaultTestPath(type(CompositeLiquidityRouterMock).name), abi.encode(vault, weth, permit2)
+                    ))
+            );
         } else {
             return new CompositeLiquidityRouterMock(vault, weth, permit2);
         }
@@ -196,12 +188,10 @@ contract VaultContractsDeployer is BaseContractsDeployer {
         if (reusingArtifacts) {
             vaultMockBytecode = vm.getCode(_computeVaultTestPath(type(VaultMock).name));
             vaultAdmin = VaultAdminMock(
-                payable(
-                    deployCode(
+                payable(deployCode(
                         _computeVaultTestPath(type(VaultAdminMock).name),
                         abi.encode(vault, 90 days, 30 days, minTradeAmount, minWrapAmount)
-                    )
-                )
+                    ))
             );
             vaultExtension = VaultExtensionMock(
                 payable(deployCode(_computeVaultTestPath(type(VaultExtensionMock).name), abi.encode(vault, vaultAdmin)))
@@ -217,9 +207,7 @@ contract VaultContractsDeployer is BaseContractsDeployer {
             vaultAdmin = new VaultAdminMock(IVault(payable(vault)), 90 days, 30 days, minTradeAmount, minWrapAmount);
             vaultExtension = new VaultExtensionMock(IVault(payable(vault)), vaultAdmin);
             protocolFeeController = new ProtocolFeeControllerMock(
-                IVaultMock(address(vault)),
-                protocolSwapFeePercentage,
-                protocolYieldFeePercentage
+                IVaultMock(address(vault)), protocolSwapFeePercentage, protocolYieldFeePercentage
             );
         }
 
@@ -229,13 +217,9 @@ contract VaultContractsDeployer is BaseContractsDeployer {
 
     function deployPoolFactoryMock(IVault vault, uint32 pauseWindowDuration) internal returns (PoolFactoryMock) {
         if (reusingArtifacts) {
-            return
-                PoolFactoryMock(
-                    deployCode(
-                        _computeVaultTestPath(type(PoolFactoryMock).name),
-                        abi.encode(vault, pauseWindowDuration)
-                    )
-                );
+            return PoolFactoryMock(
+                deployCode(_computeVaultTestPath(type(PoolFactoryMock).name), abi.encode(vault, pauseWindowDuration))
+            );
         } else {
             return new PoolFactoryMock(vault, pauseWindowDuration);
         }
@@ -257,19 +241,16 @@ contract VaultContractsDeployer is BaseContractsDeployer {
         }
     }
 
-    function deployPoolMockFlexibleInvariantRatio(
-        IVault vault,
-        string memory name,
-        string memory symbol
-    ) internal returns (PoolMockFlexibleInvariantRatio) {
+    function deployPoolMockFlexibleInvariantRatio(IVault vault, string memory name, string memory symbol)
+        internal
+        returns (PoolMockFlexibleInvariantRatio)
+    {
         if (reusingArtifacts) {
-            return
-                PoolMockFlexibleInvariantRatio(
-                    deployCode(
-                        _computeVaultTestPath(type(PoolMockFlexibleInvariantRatio).name),
-                        abi.encode(vault, name, symbol)
-                    )
-                );
+            return PoolMockFlexibleInvariantRatio(
+                deployCode(
+                    _computeVaultTestPath(type(PoolMockFlexibleInvariantRatio).name), abi.encode(vault, name, symbol)
+                )
+            );
         } else {
             return new PoolMockFlexibleInvariantRatio(vault, name, symbol);
         }
@@ -285,12 +266,11 @@ contract VaultContractsDeployer is BaseContractsDeployer {
 
     function deployRouterCommonMock(IVault vault, IWETH weth, IPermit2 permit2) internal returns (RouterCommonMock) {
         if (reusingArtifacts) {
-            return
-                RouterCommonMock(
-                    payable(
-                        deployCode(_computeVaultTestPath(type(RouterCommonMock).name), abi.encode(vault, weth, permit2))
-                    )
-                );
+            return RouterCommonMock(
+                payable(deployCode(
+                        _computeVaultTestPath(type(RouterCommonMock).name), abi.encode(vault, weth, permit2)
+                    ))
+            );
         } else {
             return new RouterCommonMock(vault, weth, permit2);
         }
@@ -298,10 +278,9 @@ contract VaultContractsDeployer is BaseContractsDeployer {
 
     function deployRouterMock(IVault vault, IWETH weth, IPermit2 permit2) internal returns (RouterMock) {
         if (reusingArtifacts) {
-            return
-                RouterMock(
-                    payable(deployCode(_computeVaultTestPath(type(RouterMock).name), abi.encode(vault, weth, permit2)))
-                );
+            return RouterMock(
+                payable(deployCode(_computeVaultTestPath(type(RouterMock).name), abi.encode(vault, weth, permit2)))
+            );
         } else {
             return new RouterMock(vault, weth, permit2);
         }
@@ -309,12 +288,11 @@ contract VaultContractsDeployer is BaseContractsDeployer {
 
     function deployBufferRouterMock(IVault vault, IWETH weth, IPermit2 permit2) internal returns (BufferRouterMock) {
         if (reusingArtifacts) {
-            return
-                BufferRouterMock(
-                    payable(
-                        deployCode(_computeVaultTestPath(type(BufferRouterMock).name), abi.encode(vault, weth, permit2))
-                    )
-                );
+            return BufferRouterMock(
+                payable(deployCode(
+                        _computeVaultTestPath(type(BufferRouterMock).name), abi.encode(vault, weth, permit2)
+                    ))
+            );
         } else {
             return new BufferRouterMock(vault, weth, permit2);
         }

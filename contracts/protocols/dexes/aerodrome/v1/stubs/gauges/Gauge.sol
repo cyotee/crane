@@ -110,9 +110,8 @@ contract Gauge is IGauge, ERC2771Context, ReentrancyGuard {
             return rewardPerTokenStored;
         }
         return
-            rewardPerTokenStored +
-            ((lastTimeRewardApplicable() - lastUpdateTime) * rewardRate * PRECISION) /
-            totalSupply;
+            rewardPerTokenStored + ((lastTimeRewardApplicable() - lastUpdateTime) * rewardRate * PRECISION)
+                / totalSupply;
     }
 
     /// @inheritdoc IGauge
@@ -138,9 +137,8 @@ contract Gauge is IGauge, ERC2771Context, ReentrancyGuard {
     /// @inheritdoc IGauge
     function earned(address _account) public view returns (uint256) {
         return
-            (balanceOf[_account] * (rewardPerToken() - userRewardPerTokenPaid[_account])) /
-            PRECISION +
-            rewards[_account];
+            (balanceOf[_account] * (rewardPerToken() - userRewardPerTokenPaid[_account])) / PRECISION
+                + rewards[_account];
     }
 
     /// @inheritdoc IGauge

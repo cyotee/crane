@@ -6,12 +6,14 @@ import "forge-std/Test.sol";
 
 import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
-import { EVMCallModeHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 
-import { ERC20MultiTokenMock } from "../../../contracts/test/ERC20MultiTokenMock.sol";
-import { ERC20MultiToken } from "../../../contracts/token/ERC20MultiToken.sol";
-import { BalancerPoolToken } from "../../../contracts/BalancerPoolToken.sol";
-import { VaultContractsDeployer } from "../utils/VaultContractsDeployer.sol";
+import {ERC20MultiTokenMock} from "../../../contracts/test/ERC20MultiTokenMock.sol";
+import {ERC20MultiToken} from "../../../contracts/token/ERC20MultiToken.sol";
+import {BalancerPoolToken} from "../../../contracts/BalancerPoolToken.sol";
+import {VaultContractsDeployer} from "../utils/VaultContractsDeployer.sol";
 
 contract ERC20MultiTokenTest is Test, IERC20Errors, ERC20MultiToken, VaultContractsDeployer {
     address internal constant ZERO_ADDRESS = address(0x00);
@@ -73,9 +75,7 @@ contract ERC20MultiTokenTest is Test, IERC20Errors, ERC20MultiToken, VaultContra
         vm.expectEmit();
         emit ERC20MultiToken.Approval(POOL, OWNER, SPENDER, remainingAllowance);
         vm.mockCall(
-            POOL,
-            abi.encodeCall(BalancerPoolToken.emitApproval, (OWNER, SPENDER, remainingAllowance)),
-            bytes("")
+            POOL, abi.encodeCall(BalancerPoolToken.emitApproval, (OWNER, SPENDER, remainingAllowance)), bytes("")
         );
         token.manualSpendAllowance(POOL, OWNER, SPENDER, spendAmount);
 
@@ -233,9 +233,7 @@ contract ERC20MultiTokenTest is Test, IERC20Errors, ERC20MultiToken, VaultContra
         _mintWithBPTEmitTransferMock(POOL, OWNER, POOL_MINIMUM_TOTAL_SUPPLY);
 
         vm.mockCall(
-            POOL,
-            abi.encodeCall(BalancerPoolToken.emitTransfer, (OWNER, OWNER2, POOL_MINIMUM_TOTAL_SUPPLY)),
-            bytes("")
+            POOL, abi.encodeCall(BalancerPoolToken.emitTransfer, (OWNER, OWNER2, POOL_MINIMUM_TOTAL_SUPPLY)), bytes("")
         );
         vm.expectEmit();
         emit ERC20MultiToken.Transfer(POOL, OWNER, OWNER2, POOL_MINIMUM_TOTAL_SUPPLY);

@@ -6,26 +6,40 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { TokenInfo, TokenType, PoolConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {
+    TokenInfo,
+    TokenType,
+    PoolConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
-import { VaultMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
-import { VaultAdminMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultAdminMock.sol";
-import { VaultExtensionMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultExtensionMock.sol";
-import { ProtocolFeeControllerMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/ProtocolFeeControllerMock.sol";
-import { BasicAuthorizerMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
-import { VaultContractsDeployer } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BaseTest} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
+import {VaultMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
+import {VaultAdminMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultAdminMock.sol";
+import {VaultExtensionMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultExtensionMock.sol";
+import {
+    ProtocolFeeControllerMock
+} from "@crane/contracts/external/balancer/v3/vault/contracts/test/ProtocolFeeControllerMock.sol";
+import {BasicAuthorizerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
+import {
+    VaultContractsDeployer
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/VaultContractsDeployer.sol";
 
-import { PoolInfo } from "../../contracts/PoolInfo.sol";
+import {PoolInfo} from "../../contracts/PoolInfo.sol";
 
 contract PoolInfoTest is BaseTest, VaultContractsDeployer {
     using CastingHelpers for address[];
@@ -65,22 +79,14 @@ contract PoolInfoTest is BaseTest, VaultContractsDeployer {
         uint256[] memory expectedRawBalances = [uint256(1), uint256(2)].toMemoryArray();
         uint256[] memory expectedLastLiveBalances = [uint256(3), uint256(4)].toMemoryArray();
         vault.manualSetPoolTokensAndBalances(
-            address(poolInfo),
-            poolTokens,
-            expectedRawBalances,
-            expectedLastLiveBalances
+            address(poolInfo), poolTokens, expectedRawBalances, expectedLastLiveBalances
         );
 
         TokenInfo[] memory expectedTokenInfo = new TokenInfo[](2);
-        expectedTokenInfo[0] = TokenInfo({
-            tokenType: TokenType.STANDARD,
-            rateProvider: IRateProvider(address(123)),
-            paysYieldFees: true
-        });
+        expectedTokenInfo[0] =
+            TokenInfo({tokenType: TokenType.STANDARD, rateProvider: IRateProvider(address(123)), paysYieldFees: true});
         expectedTokenInfo[1] = TokenInfo({
-            tokenType: TokenType.WITH_RATE,
-            rateProvider: IRateProvider(address(4321)),
-            paysYieldFees: false
+            tokenType: TokenType.WITH_RATE, rateProvider: IRateProvider(address(4321)), paysYieldFees: false
         });
         vault.manualSetPoolTokenInfo(address(poolInfo), poolTokens, expectedTokenInfo);
 
@@ -99,35 +105,23 @@ contract PoolInfoTest is BaseTest, VaultContractsDeployer {
         // Token info
         assertEq(tokenInfo.length, 2, "Incorrect tokenInfo length");
         assertEq(
-            uint256(tokenInfo[0].tokenType),
-            uint256(expectedTokenInfo[0].tokenType),
-            "Incorrect tokenInfo[0].tokenType"
+            uint256(tokenInfo[0].tokenType), uint256(expectedTokenInfo[0].tokenType), "Incorrect tokenInfo[0].tokenType"
         );
         assertEq(
             address(tokenInfo[0].rateProvider),
             address(expectedTokenInfo[0].rateProvider),
             "Incorrect tokenInfo[0].rateProvider"
         );
+        assertEq(tokenInfo[0].paysYieldFees, expectedTokenInfo[0].paysYieldFees, "Incorrect tokenInfo[0].paysYieldFees");
         assertEq(
-            tokenInfo[0].paysYieldFees,
-            expectedTokenInfo[0].paysYieldFees,
-            "Incorrect tokenInfo[0].paysYieldFees"
-        );
-        assertEq(
-            uint256(tokenInfo[1].tokenType),
-            uint256(expectedTokenInfo[1].tokenType),
-            "Incorrect tokenInfo[1].tokenType"
+            uint256(tokenInfo[1].tokenType), uint256(expectedTokenInfo[1].tokenType), "Incorrect tokenInfo[1].tokenType"
         );
         assertEq(
             address(tokenInfo[1].rateProvider),
             address(expectedTokenInfo[1].rateProvider),
             "Incorrect tokenInfo[1].rateProvider"
         );
-        assertEq(
-            tokenInfo[1].paysYieldFees,
-            expectedTokenInfo[1].paysYieldFees,
-            "Incorrect tokenInfo[1].paysYieldFees"
-        );
+        assertEq(tokenInfo[1].paysYieldFees, expectedTokenInfo[1].paysYieldFees, "Incorrect tokenInfo[1].paysYieldFees");
 
         // Balances
         assertEq(balancesRaw.length, 2, "Incorrect balancesRaw length");
@@ -142,10 +136,7 @@ contract PoolInfoTest is BaseTest, VaultContractsDeployer {
         uint256[] memory expectedRawBalances = [uint256(12), uint256(34)].toMemoryArray();
         uint256[] memory expectedLastLiveBalances = [uint256(56), uint256(478)].toMemoryArray();
         vault.manualSetPoolTokensAndBalances(
-            address(poolInfo),
-            poolTokens,
-            expectedRawBalances,
-            expectedLastLiveBalances
+            address(poolInfo), poolTokens, expectedRawBalances, expectedLastLiveBalances
         );
 
         PoolConfig memory config;
@@ -175,8 +166,8 @@ contract PoolInfoTest is BaseTest, VaultContractsDeployer {
         vault.manualSetAggregateSwapFeePercentage(address(poolInfo), expectedSwapFeePercentage);
         vault.manualSetAggregateYieldFeePercentage(address(poolInfo), expectedYieldFeePercentage);
 
-        (uint256 actualAggregateSwapFeePercentage, uint256 actualAggregateYieldFeePercentage) = poolInfo
-            .getAggregateFeePercentages();
+        (uint256 actualAggregateSwapFeePercentage, uint256 actualAggregateYieldFeePercentage) =
+            poolInfo.getAggregateFeePercentages();
 
         assertEq(actualAggregateSwapFeePercentage, expectedSwapFeePercentage, "Incorrect swap fee percentage");
         assertEq(actualAggregateYieldFeePercentage, expectedYieldFeePercentage, "Incorrect yield fee percentage");

@@ -8,35 +8,43 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { HookFlags, FEE_SCALING_FACTOR, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    HookFlags,
+    FEE_SCALING_FACTOR,
+    Rounding
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BaseTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BaseTest} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { CompositeLiquidityRouterMock } from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
-import { BasicAuthorizerMock } from "../../../contracts/test/BasicAuthorizerMock.sol";
-import { MinTokenBalanceLib } from "../../../contracts/lib/MinTokenBalanceLib.sol";
-import { RateProviderMock } from "../../../contracts/test/RateProviderMock.sol";
-import { BufferRouterMock } from "../../../contracts/test/BufferRouterMock.sol";
-import { BatchRouterMock } from "../../../contracts/test/BatchRouterMock.sol";
-import { PoolFactoryMock } from "../../../contracts/test/PoolFactoryMock.sol";
-import { PoolHooksMock } from "../../../contracts/test/PoolHooksMock.sol";
-import { RouterMock } from "../../../contracts/test/RouterMock.sol";
-import { VaultStorage } from "../../../contracts/VaultStorage.sol";
-import { PoolMock } from "../../../contracts/test/PoolMock.sol";
+import {CompositeLiquidityRouterMock} from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
+import {BasicAuthorizerMock} from "../../../contracts/test/BasicAuthorizerMock.sol";
+import {MinTokenBalanceLib} from "../../../contracts/lib/MinTokenBalanceLib.sol";
+import {RateProviderMock} from "../../../contracts/test/RateProviderMock.sol";
+import {BufferRouterMock} from "../../../contracts/test/BufferRouterMock.sol";
+import {BatchRouterMock} from "../../../contracts/test/BatchRouterMock.sol";
+import {PoolFactoryMock} from "../../../contracts/test/PoolFactoryMock.sol";
+import {PoolHooksMock} from "../../../contracts/test/PoolHooksMock.sol";
+import {RouterMock} from "../../../contracts/test/RouterMock.sol";
+import {VaultStorage} from "../../../contracts/VaultStorage.sol";
+import {PoolMock} from "../../../contracts/test/PoolMock.sol";
 
-import { VaultContractsDeployer } from "./VaultContractsDeployer.sol";
-import { Permit2Helpers } from "./Permit2Helpers.sol";
+import {VaultContractsDeployer} from "./VaultContractsDeployer.sol";
+import {Permit2Helpers} from "./Permit2Helpers.sol";
 
 abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTest, Permit2Helpers {
     using CastingHelpers for address[];
@@ -198,11 +206,8 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
         vm.label(address(prepaidBatchRouter), "prepaid batch router");
         compositeLiquidityRouter = deployCompositeLiquidityRouterMock(IVault(address(vault)), weth, permit2);
         vm.label(address(compositeLiquidityRouter), "composite liquidity router");
-        prepaidCompositeLiquidityRouter = deployCompositeLiquidityRouterMock(
-            IVault(address(vault)),
-            weth,
-            IPermit2(address(0))
-        );
+        prepaidCompositeLiquidityRouter =
+            deployCompositeLiquidityRouterMock(IVault(address(vault)), weth, IPermit2(address(0)));
         bufferRouter = deployBufferRouterMock(IVault(address(vault)), weth, permit2);
         vm.label(address(bufferRouter), "buffer router");
         feeController = vault.getProtocolFeeController();
@@ -233,10 +238,7 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
             permit2.approve(address(oddDecimalTokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
             permit2.approve(address(oddDecimalTokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
             permit2.approve(
-                address(oddDecimalTokens[i]),
-                address(compositeLiquidityRouter),
-                type(uint160).max,
-                type(uint48).max
+                address(oddDecimalTokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max
             );
         }
 
@@ -246,10 +248,7 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
             permit2.approve(address(erc4626Tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
             permit2.approve(address(erc4626Tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
             permit2.approve(
-                address(erc4626Tokens[i]),
-                address(compositeLiquidityRouter),
-                type(uint160).max,
-                type(uint48).max
+                address(erc4626Tokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max
             );
 
             // Approve deposits from sender.
@@ -283,12 +282,12 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
         vm.stopPrank();
     }
 
-    function _initPool(
-        address poolToInit,
-        uint256[] memory amountsIn,
-        uint256 minBptOut
-    ) internal virtual returns (uint256 bptOut) {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(poolToInit);
+    function _initPool(address poolToInit, uint256[] memory amountsIn, uint256 minBptOut)
+        internal
+        virtual
+        returns (uint256 bptOut)
+    {
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(poolToInit);
 
         return router.initialize(poolToInit, tokens, amountsIn, minBptOut, false, bytes(""));
     }
@@ -304,22 +303,19 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
         return _createPool([address(dai), address(usdc)].toMemoryArray(), "pool");
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
         newPool = PoolFactoryMock(poolFactory).createPool(name, symbol);
         vm.label(newPool, label);
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens.asIERC20()), poolHooksContract, lp);
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -362,8 +358,8 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
 
         balances.poolSupply = IERC20(pool).totalSupply();
 
-        (IERC20[] memory tokens, , uint256[] memory poolBalances, uint256[] memory lastBalancesLiveScaled18) = vault
-            .getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory poolBalances, uint256[] memory lastBalancesLiveScaled18) =
+            vault.getPoolTokenInfo(pool);
         balances.poolTokens = poolBalances;
         uint256 numTokens = tokens.length;
 
@@ -424,34 +420,34 @@ abstract contract BaseVaultTest is VaultContractsDeployer, VaultStorage, BaseTes
         return bytes32(uint256(uint160(addr)));
     }
 
-    function _vaultPreviewDeposit(
-        IERC4626 wrapper,
-        uint256 amountInUnderlying
-    ) internal returns (uint256 amountOutWrapped) {
+    function _vaultPreviewDeposit(IERC4626 wrapper, uint256 amountInUnderlying)
+        internal
+        returns (uint256 amountOutWrapped)
+    {
         _prankStaticCall();
         return vault.previewDeposit(wrapper, amountInUnderlying);
     }
 
-    function _vaultPreviewMint(
-        IERC4626 wrapper,
-        uint256 amountOutWrapped
-    ) internal returns (uint256 amountInUnderlying) {
+    function _vaultPreviewMint(IERC4626 wrapper, uint256 amountOutWrapped)
+        internal
+        returns (uint256 amountInUnderlying)
+    {
         _prankStaticCall();
         return vault.previewMint(wrapper, amountOutWrapped);
     }
 
-    function _vaultPreviewRedeem(
-        IERC4626 wrapper,
-        uint256 amountInWrapped
-    ) internal returns (uint256 amountOutUnderlying) {
+    function _vaultPreviewRedeem(IERC4626 wrapper, uint256 amountInWrapped)
+        internal
+        returns (uint256 amountOutUnderlying)
+    {
         _prankStaticCall();
         return vault.previewRedeem(wrapper, amountInWrapped);
     }
 
-    function _vaultPreviewWithdraw(
-        IERC4626 wrapper,
-        uint256 amountOutUnderlying
-    ) internal returns (uint256 amountInWrapped) {
+    function _vaultPreviewWithdraw(IERC4626 wrapper, uint256 amountOutUnderlying)
+        internal
+        returns (uint256 amountInWrapped)
+    {
         _prankStaticCall();
         return vault.previewWithdraw(wrapper, amountOutUnderlying);
     }

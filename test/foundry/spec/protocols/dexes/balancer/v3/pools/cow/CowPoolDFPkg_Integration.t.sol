@@ -15,9 +15,16 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 
@@ -34,9 +41,15 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
 import {CowPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolFacet.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -64,12 +77,29 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
-    function allowance(address owner, address spender) external view override returns (uint256) { return _allowances[owner][spender]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
+    function allowance(address owner, address spender) external view override returns (uint256) {
+        return _allowances[owner][spender];
+    }
 
     function transfer(address to, uint256 amount) external override returns (bool) {
         _balances[msg.sender] -= amount;
@@ -230,12 +260,7 @@ contract CowPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
         uint256[] memory weights = _create5050Weights();
 
-        bytes memory pkgArgs = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory pkgArgs = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
         vm.label(proxy, "CowPoolProxy");
@@ -249,25 +274,21 @@ contract CowPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
         uint256[] memory weights = _create5050Weights();
 
-        bytes memory pkgArgs = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory pkgArgs = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
-        bool ok = IHooks(proxy).onRegister(
-            address(pkg),
-            proxy,
-            configs,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: true,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: true
-            })
-        );
+        bool ok = IHooks(proxy)
+            .onRegister(
+                address(pkg),
+                proxy,
+                configs,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: true,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: true
+                })
+            );
         assertTrue(ok, "onRegister should accept DFPkg factory");
     }
 
@@ -275,12 +296,7 @@ contract CowPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
         uint256[] memory weights = _create5050Weights();
 
-        bytes memory pkgArgs = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory pkgArgs = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
         IDiamondLoupe loupe = IDiamondLoupe(proxy);
@@ -305,12 +321,11 @@ contract CowPoolDFPkg_Integration_Test is CraneTest {
         weights[1] = 0.5e18;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

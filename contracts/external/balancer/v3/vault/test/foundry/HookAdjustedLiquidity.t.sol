@@ -4,22 +4,24 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BalancerPoolToken } from "../../contracts/BalancerPoolToken.sol";
-import { PoolHooksMock } from "../../contracts/test/PoolHooksMock.sol";
-import { BasePoolMath } from "../../contracts/BasePoolMath.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {BalancerPoolToken} from "../../contracts/BalancerPoolToken.sol";
+import {PoolHooksMock} from "../../contracts/test/PoolHooksMock.sol";
+import {BasePoolMath} from "../../contracts/BasePoolMath.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract HookAdjustedLiquidityTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -54,10 +56,11 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -70,13 +73,10 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         LiquidityManagement memory liquidityManagement;
         liquidityManagement.disableUnbalancedLiquidity = true;
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -106,15 +106,13 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         }
 
         uint256[] memory actualAmountsIn = BasePoolMath.computeProportionalAmountsIn(
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            BalancerPoolToken(pool).totalSupply(),
-            expectedBptOut
+            [poolInitAmount, poolInitAmount].toMemoryArray(), BalancerPoolToken(pool).totalSupply(), expectedBptOut
         );
         uint256 actualAmountIn = actualAmountsIn[0];
         uint256 hookFee = actualAmountIn.mulDown(hookFeePercentage);
 
-        uint256[] memory expectedBalances = [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
@@ -148,16 +146,11 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         PoolHooksMock(poolHooksContract).setAddLiquidityHookDiscountPercentage(hookDiscountPercentage);
 
         // Make sure bob has enough to pay for the transaction.
-        expectedBptOut = bound(
-            expectedBptOut,
-            POOL_MINIMUM_TOTAL_SUPPLY * PRODUCTION_MIN_TRADE_AMOUNT,
-            dai.balanceOf(bob)
-        );
+        expectedBptOut =
+            bound(expectedBptOut, POOL_MINIMUM_TOTAL_SUPPLY * PRODUCTION_MIN_TRADE_AMOUNT, dai.balanceOf(bob));
 
         uint256[] memory actualAmountsIn = BasePoolMath.computeProportionalAmountsIn(
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            BalancerPoolToken(pool).totalSupply(),
-            expectedBptOut
+            [poolInitAmount, poolInitAmount].toMemoryArray(), BalancerPoolToken(pool).totalSupply(), expectedBptOut
         );
         uint256 actualAmountIn = actualAmountsIn[0];
         uint256 hookDiscount = actualAmountIn.mulDown(hookDiscountPercentage);
@@ -166,8 +159,8 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         dai.mint(poolHooksContract, hookDiscount);
         usdc.mint(poolHooksContract, hookDiscount);
 
-        uint256[] memory expectedBalances = [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [poolInitAmount + actualAmountIn, poolInitAmount + actualAmountIn].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
@@ -201,9 +194,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         uint256 expectedBptOut = poolInitAmount / 100;
 
         uint256[] memory actualAmountsIn = BasePoolMath.computeProportionalAmountsIn(
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            BalancerPoolToken(pool).totalSupply(),
-            expectedBptOut
+            [poolInitAmount, poolInitAmount].toMemoryArray(), BalancerPoolToken(pool).totalSupply(), expectedBptOut
         );
         uint256 actualAmountIn = actualAmountsIn[0];
         uint256 hookFee = actualAmountIn.mulDown(hookFeePercentage);
@@ -231,9 +222,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         uint256 expectedBptOut = poolInitAmount / 100;
 
         uint256[] memory actualAmountsIn = BasePoolMath.computeProportionalAmountsIn(
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            BalancerPoolToken(pool).totalSupply(),
-            expectedBptOut
+            [poolInitAmount, poolInitAmount].toMemoryArray(), BalancerPoolToken(pool).totalSupply(), expectedBptOut
         );
 
         vm.prank(bob);
@@ -246,11 +235,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         // Add liquidity so Bob has BPT to remove liquidity.
         vm.prank(bob);
         router.addLiquidityProportional(
-            pool,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            2 * poolInitAmount,
-            false,
-            bytes("")
+            pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 2 * poolInitAmount, false, bytes("")
         );
 
         // Add fee between 0 and 100%.
@@ -273,8 +258,8 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         uint256 actualAmountOut = actualAmountsOut[0];
         uint256 hookFee = actualAmountOut.mulDown(hookFeePercentage);
 
-        uint256[] memory expectedBalances = [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
@@ -306,11 +291,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         // Add liquidity so Bob has BPT to remove liquidity.
         vm.prank(bob);
         router.addLiquidityProportional(
-            pool,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            2 * poolInitAmount,
-            false,
-            bytes("")
+            pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 2 * poolInitAmount, false, bytes("")
         );
 
         // Add discount between 0 and 100%.
@@ -337,8 +318,8 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         dai.mint(poolHooksContract, hookDiscount);
         usdc.mint(poolHooksContract, hookDiscount);
 
-        uint256[] memory expectedBalances = [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut]
-            .toMemoryArray();
+        uint256[] memory expectedBalances =
+            [2 * poolInitAmount - actualAmountOut, 2 * poolInitAmount - actualAmountOut].toMemoryArray();
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
@@ -369,11 +350,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         // Add liquidity so Bob has BPT to remove liquidity.
         vm.prank(bob);
         router.addLiquidityProportional(
-            pool,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            2 * poolInitAmount,
-            false,
-            bytes("")
+            pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 2 * poolInitAmount, false, bytes("")
         );
 
         uint256 hookFeePercentage = MAX_HOOK_FEE_PERCENTAGE;
@@ -411,11 +388,7 @@ contract HookAdjustedLiquidityTest is BaseVaultTest {
         // Add liquidity so Bob has BPT to remove liquidity.
         vm.prank(bob);
         router.addLiquidityProportional(
-            pool,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            2 * poolInitAmount,
-            false,
-            bytes("")
+            pool, [poolInitAmount, poolInitAmount].toMemoryArray(), 2 * poolInitAmount, false, bytes("")
         );
 
         uint256 hookFeePercentage = MAX_HOOK_FEE_PERCENTAGE;

@@ -20,10 +20,10 @@
 pragma solidity ^0.8.0;
 
 interface VatLike {
-    function move(address,address,uint256) external;
-    function flux(bytes32,address,address,uint256) external;
+    function move(address, address, uint256) external;
+    function flux(bytes32, address, address, uint256) external;
     function ilks(bytes32) external returns (uint256, uint256, uint256, uint256, uint256);
-    function suck(address,address,uint256) external;
+    function suck(address, address, uint256) external;
 }
 
 interface PipLike {
@@ -50,40 +50,48 @@ interface AbacusLike {
 
 contract Clipper {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; emit Rely(usr); }
-    function deny(address usr) external auth { wards[usr] = 0; emit Deny(usr); }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+        emit Rely(usr);
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+        emit Deny(usr);
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Clipper/not-authorized");
         _;
     }
 
     // --- Data ---
-    bytes32  immutable public ilk;   // Collateral type of this Clipper
-    VatLike  immutable public vat;   // Core CDP Engine
+    bytes32 public immutable ilk; // Collateral type of this Clipper
+    VatLike public immutable vat; // Core CDP Engine
 
-    DogLike     public dog;      // Liquidation module
-    address     public vow;      // Recipient of dai raised in auctions
-    SpotterLike public spotter;  // Collateral price module
-    AbacusLike  public calc;     // Current price calculator
+    DogLike public dog; // Liquidation module
+    address public vow; // Recipient of dai raised in auctions
+    SpotterLike public spotter; // Collateral price module
+    AbacusLike public calc; // Current price calculator
 
-    uint256 public buf;    // Multiplicative factor to increase starting price                  [ray]
-    uint256 public tail;   // Time elapsed before auction reset                                 [seconds]
-    uint256 public cusp;   // Percentage drop before auction reset                              [ray]
-    uint64  public chip;   // Percentage of tab to suck from vow to incentivize keepers         [wad]
-    uint192 public tip;    // Flat fee to suck from vow to incentivize keepers                  [rad]
-    uint256 public chost;  // Cache the ilk dust times the ilk chop to prevent excessive SLOADs [rad]
+    uint256 public buf; // Multiplicative factor to increase starting price                  [ray]
+    uint256 public tail; // Time elapsed before auction reset                                 [seconds]
+    uint256 public cusp; // Percentage drop before auction reset                              [ray]
+    uint64 public chip; // Percentage of tab to suck from vow to incentivize keepers         [wad]
+    uint192 public tip; // Flat fee to suck from vow to incentivize keepers                  [rad]
+    uint256 public chost; // Cache the ilk dust times the ilk chop to prevent excessive SLOADs [rad]
 
-    uint256   public kicks;   // Total auctions
-    uint256[] public active;  // Array of active auction ids
+    uint256 public kicks; // Total auctions
+    uint256[] public active; // Array of active auction ids
 
     struct Sale {
-        uint256 pos;  // Index in active array
-        uint256 tab;  // Dai to raise       [rad]
-        uint256 lot;  // collateral to sell [wad]
-        address usr;  // Liquidated CDP
-        uint96  tic;  // Auction start time
-        uint256 top;  // Starting price     [ray]
+        uint256 pos; // Index in active array
+        uint256 tab; // Dai to raise       [rad]
+        uint256 lot; // collateral to sell [wad]
+        address usr; // Liquidated CDP
+        uint96 tic; // Auction start time
+        uint256 top; // Starting price     [ray]
     }
     mapping(uint256 => Sale) public sales;
 
@@ -113,13 +121,7 @@ contract Clipper {
         uint256 coin
     );
     event Take(
-        uint256 indexed id,
-        uint256 max,
-        uint256 price,
-        uint256 owe,
-        uint256 tab,
-        uint256 lot,
-        address indexed usr
+        uint256 indexed id, uint256 max, uint256 price, uint256 owe, uint256 tab, uint256 lot, address indexed usr
     );
     event Redo(
         uint256 indexed id,
@@ -135,17 +137,17 @@ contract Clipper {
 
     // --- Init ---
     constructor(address vat_, address spotter_, address dog_, bytes32 ilk_) {
-        vat     = VatLike(vat_);
+        vat = VatLike(vat_);
         spotter = SpotterLike(spotter_);
-        dog     = DogLike(dog_);
-        ilk     = ilk_;
-        buf     = RAY;
+        dog = DogLike(dog_);
+        ilk = ilk_;
+        buf = RAY;
         wards[msg.sender] = 1;
         emit Rely(msg.sender);
     }
 
     // --- Synchronization ---
-    modifier lock {
+    modifier lock() {
         require(locked == 0, "Clipper/system-locked");
         locked = 1;
         _;
@@ -159,53 +161,60 @@ contract Clipper {
 
     // --- Administration ---
     function file(bytes32 what, uint256 data) external auth lock {
-        if      (what == "buf")         buf = data;
-        else if (what == "tail")       tail = data;           // Time elapsed before auction reset
-        else if (what == "cusp")       cusp = data;           // Percentage drop before auction reset
-        else if (what == "chip")       chip = uint64(data);   // Percentage of tab to incentivize (max: 2^64 - 1 => 18.xxx WAD = 18xx%)
-        else if (what == "tip")         tip = uint192(data);  // Flat fee to incentivize keepers (max: 2^192 - 1 => 6.277T RAD)
-        else if (what == "stopped") stopped = data;           // Set breaker (0, 1, 2, or 3)
+        if (what == "buf") buf = data;
+        else if (what == "tail") tail = data; // Time elapsed before auction reset
+        else if (what == "cusp") cusp = data; // Percentage drop before auction reset
+        else if (what == "chip") chip = uint64(data); // Percentage of tab to incentivize (max: 2^64 - 1 => 18.xxx WAD = 18xx%)
+        else if (what == "tip") tip = uint192(data); // Flat fee to incentivize keepers (max: 2^192 - 1 => 6.277T RAD)
+        else if (what == "stopped") stopped = data; // Set breaker (0, 1, 2, or 3)
         else revert("Clipper/file-unrecognized-param");
         emit File(what, data);
     }
+
     function file(bytes32 what, address data) external auth lock {
         if (what == "spotter") spotter = SpotterLike(data);
-        else if (what == "dog")    dog = DogLike(data);
-        else if (what == "vow")    vow = data;
-        else if (what == "calc")  calc = AbacusLike(data);
+        else if (what == "dog") dog = DogLike(data);
+        else if (what == "vow") vow = data;
+        else if (what == "calc") calc = AbacusLike(data);
         else revert("Clipper/file-unrecognized-param");
         emit File(what, data);
     }
 
     // --- Math ---
-    uint256 constant BLN = 10 **  9;
+    uint256 constant BLN = 10 ** 9;
     uint256 constant WAD = 10 ** 18;
     uint256 constant RAY = 10 ** 27;
 
     function _min(uint256 x, uint256 y) internal pure returns (uint256 z) {
         z = x <= y ? x : y;
     }
+
     function _add(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x + y) >= x);
         }
     }
+
     function _sub(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x - y) <= x);
         }
     }
+
     function _mul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require(y == 0 || (z = x * y) / y == x);
         }
     }
+
     function _wmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         z = _mul(x, y) / WAD;
     }
+
     function _rmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         z = _mul(x, y) / RAY;
     }
+
     function _rdiv(uint256 x, uint256 y) internal pure returns (uint256 z) {
         z = _mul(x, RAY) / y;
     }
@@ -217,7 +226,7 @@ contract Clipper {
     // if mat has changed since the last poke, the resulting value will be
     // incorrect.
     function getFeedPrice() internal returns (uint256 feedPrice) {
-        (PipLike pip, ) = spotter.ilks(ilk);
+        (PipLike pip,) = spotter.ilks(ilk);
         (bytes32 val, bool has) = pip.peek();
         require(has, "Clipper/invalid-price");
         feedPrice = _rdiv(_mul(uint256(val), BLN), spotter.par());
@@ -233,17 +242,23 @@ contract Clipper {
     // multiplicative factor to increase the starting price, and `par` is a
     // reference per DAI.
     function kick(
-        uint256 tab,  // Debt                   [rad]
-        uint256 lot,  // Collateral             [wad]
-        address usr,  // Address that will receive any leftover collateral
-        address kpr   // Address that will receive incentives
-    ) external auth lock isStopped(1) returns (uint256 id) {
+        uint256 tab, // Debt                   [rad]
+        uint256 lot, // Collateral             [wad]
+        address usr, // Address that will receive any leftover collateral
+        address kpr // Address that will receive incentives
+    )
+        external
+        auth
+        lock
+        isStopped(1)
+        returns (uint256 id)
+    {
         // Input validation
-        require(tab  >          0, "Clipper/zero-tab");
-        require(lot  >          0, "Clipper/zero-lot");
+        require(tab > 0, "Clipper/zero-tab");
+        require(lot > 0, "Clipper/zero-lot");
         require(usr != address(0), "Clipper/zero-usr");
         id = ++kicks;
-        require(id   >          0, "Clipper/overflow");
+        require(id > 0, "Clipper/overflow");
 
         active.push(id);
 
@@ -260,7 +275,7 @@ contract Clipper {
         sales[id].top = top;
 
         // incentive to kick auction
-        uint256 _tip  = tip;
+        uint256 _tip = tip;
         uint256 _chip = chip;
         uint256 coin;
         if (_tip > 0 || _chip > 0) {
@@ -274,12 +289,16 @@ contract Clipper {
     // Reset an auction
     // See `kick` above for an explanation of the computation of `top`.
     function redo(
-        uint256 id,  // id of the auction to reset
-        address kpr  // Address that will receive incentives
-    ) external lock isStopped(2) {
+        uint256 id, // id of the auction to reset
+        address kpr // Address that will receive incentives
+    )
+        external
+        lock
+        isStopped(2)
+    {
         // Read auction data
         address usr = sales[id].usr;
-        uint96  tic = sales[id].tic;
+        uint96 tic = sales[id].tic;
         uint256 top = sales[id].top;
 
         require(usr != address(0), "Clipper/not-running-auction");
@@ -289,8 +308,8 @@ contract Clipper {
         (bool done,) = status(tic, top);
         require(done, "Clipper/cannot-reset");
 
-        uint256 tab   = sales[id].tab;
-        uint256 lot   = sales[id].lot;
+        uint256 tab = sales[id].tab;
+        uint256 lot = sales[id].lot;
         sales[id].tic = uint96(block.timestamp);
 
         uint256 feedPrice = getFeedPrice();
@@ -299,7 +318,7 @@ contract Clipper {
         sales[id].top = top;
 
         // incentive to redo auction
-        uint256 _tip  = tip;
+        uint256 _tip = tip;
         uint256 _chip = chip;
         uint256 coin;
         if (_tip > 0 || _chip > 0) {
@@ -331,15 +350,18 @@ contract Clipper {
     // If `tab <= chost`, partial purchases are no longer possible; that is, the remaining
     // collateral can only be purchased entirely, or not at all.
     function take(
-        uint256 id,           // Auction id
-        uint256 amt,          // Upper limit on amount of collateral to buy  [wad]
-        uint256 max,          // Maximum acceptable price (DAI / collateral) [ray]
-        address who,          // Receiver of collateral and external call address
-        bytes calldata data   // Data to pass in external call; if length 0, no call is done
-    ) external lock isStopped(3) {
-
+        uint256 id, // Auction id
+        uint256 amt, // Upper limit on amount of collateral to buy  [wad]
+        uint256 max, // Maximum acceptable price (DAI / collateral) [ray]
+        address who, // Receiver of collateral and external call address
+        bytes calldata data // Data to pass in external call; if length 0, no call is done
+    )
+        external
+        lock
+        isStopped(3)
+    {
         address usr = sales[id].usr;
-        uint96  tic = sales[id].tic;
+        uint96 tic = sales[id].tic;
 
         require(usr != address(0), "Clipper/not-running-auction");
 
@@ -361,7 +383,7 @@ contract Clipper {
 
         {
             // Purchase as much as possible, up to amt
-            uint256 slice = _min(lot, amt);  // slice <= lot
+            uint256 slice = _min(lot, amt); // slice <= lot
 
             // DAI needed to buy a slice of this sale
             owe = _mul(slice, price);
@@ -369,24 +391,25 @@ contract Clipper {
             // Don't collect more than tab of DAI
             if (owe > tab) {
                 // Total debt will be paid
-                owe = tab;                  // owe' <= owe
+                owe = tab; // owe' <= owe
                 // Adjust slice
-                slice = owe / price;        // slice' = owe' / price <= owe / price == slice <= lot
+                slice = owe / price; // slice' = owe' / price <= owe / price == slice <= lot
             } else if (owe < tab && slice < lot) {
                 // If slice == lot => auction completed => dust doesn't matter
                 uint256 _chost = chost;
-                if (tab - owe < _chost) {    // safe as owe < tab
+                if (tab - owe < _chost) {
+                    // safe as owe < tab
                     // If tab <= chost, buyers have to take the entire lot.
                     require(tab > _chost, "Clipper/no-partial-purchase");
                     // Adjust amount to pay
-                    owe = tab - _chost;      // owe' <= owe
+                    owe = tab - _chost; // owe' <= owe
                     // Adjust slice
-                    slice = owe / price;     // slice' = owe' / price < owe / price == slice < lot
+                    slice = owe / price; // slice' = owe' / price < owe / price == slice < lot
                 }
             }
 
             // Calculate remaining tab after operation
-            tab = tab - owe;  // safe since owe <= tab
+            tab = tab - owe; // safe since owe <= tab
             // Calculate remaining lot after operation
             lot = lot - slice;
 
@@ -422,10 +445,10 @@ contract Clipper {
     }
 
     function _remove(uint256 id) internal {
-        uint256 _move    = active[active.length - 1];
+        uint256 _move = active[active.length - 1];
         if (id != _move) {
-            uint256 _index   = sales[id].pos;
-            active[_index]   = _move;
+            uint256 _index = sales[id].pos;
+            active[_index] = _move;
             sales[_move].pos = _index;
         }
         active.pop();
@@ -446,7 +469,7 @@ contract Clipper {
     function getStatus(uint256 id) external view returns (bool needsRedo, uint256 price, uint256 lot, uint256 tab) {
         // Read auction data
         address usr = sales[id].usr;
-        uint96  tic = sales[id].tic;
+        uint96 tic = sales[id].tic;
 
         bool done;
         (done, price) = status(tic, sales[id].top);
@@ -459,7 +482,7 @@ contract Clipper {
     // Internally returns boolean for if an auction needs a redo
     function status(uint96 tic, uint256 top) internal view returns (bool done, uint256 price) {
         price = calc.price(top, _sub(block.timestamp, tic));
-        done  = (_sub(block.timestamp, tic) > tail || _rdiv(price, top) < cusp);
+        done = (_sub(block.timestamp, tic) > tail || _rdiv(price, top) < cusp);
     }
 
     // Public function to update the cached dust*chop value.

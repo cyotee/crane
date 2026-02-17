@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { SwapKind } from "../vault/VaultTypes.sol";
+import {SwapKind} from "../vault/VaultTypes.sol";
 
 interface ICowRouter {
     /**

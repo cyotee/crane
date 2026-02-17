@@ -6,22 +6,24 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     LiquidityManagement,
     PoolRoleAccounts,
     SwapKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { LotteryHookExample } from "../../contracts/LotteryHookExample.sol";
+import {LotteryHookExample} from "../../contracts/LotteryHookExample.sol";
 
 contract LotteryHookExampleTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -51,10 +53,11 @@ contract LotteryHookExampleTest is BaseVaultTest {
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Lottery Pool";
         string memory symbol = "LOTTERY-POOL";
 
@@ -70,13 +73,10 @@ contract LotteryHookExampleTest is BaseVaultTest {
         vm.expectEmit();
         emit LotteryHookExample.LotteryHookExampleRegistered(poolHooksContract, address(newPool));
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -224,9 +224,7 @@ contract LotteryHookExampleTest is BaseVaultTest {
         BOTH
     }
 
-    function _executeLotterySwap(
-        SwapKindLottery kind
-    )
+    function _executeLotterySwap(SwapKindLottery kind)
         private
         returns (
             BaseVaultTest.Balances memory balancesBefore,
@@ -263,7 +261,7 @@ contract LotteryHookExampleTest is BaseVaultTest {
 
             uint256 amountGiven = swapAmount;
             uint256 amountCalculated = routerMethod == IRouter.swapSingleTokenExactIn.selector
-                ? swapAmount - hookFee // If EXACT_IN, amount calculated is amount out; user receives less
+                ? swapAmount - hookFee  // If EXACT_IN, amount calculated is amount out; user receives less
                 : swapAmount + hookFee; // If EXACT_IN, amount calculated is amount in; user pays more
 
             if (randomNumber == LotteryHookExample(poolHooksContract).LUCKY_NUMBER()) {
@@ -292,19 +290,20 @@ contract LotteryHookExampleTest is BaseVaultTest {
             // Bob is the paying user, Alice is the user who will win the lottery (so we can measure the
             // amount of fee tokens sent).
             vm.prank(randomNumber == LotteryHookExample(poolHooksContract).LUCKY_NUMBER() ? alice : bob);
-            (bool success, ) = address(router).call(
-                abi.encodeWithSelector(
-                    routerMethod,
-                    address(pool),
-                    dai,
-                    usdc,
-                    amountGiven,
-                    amountCalculated,
-                    MAX_UINT256,
-                    false,
-                    bytes("")
-                )
-            );
+            (bool success,) = address(router)
+                .call(
+                    abi.encodeWithSelector(
+                        routerMethod,
+                        address(pool),
+                        dai,
+                        usdc,
+                        amountGiven,
+                        amountCalculated,
+                        MAX_UINT256,
+                        false,
+                        bytes("")
+                    )
+                );
 
             assertTrue(success, "Swap has failed");
 

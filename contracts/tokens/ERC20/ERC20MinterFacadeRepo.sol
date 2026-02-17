@@ -20,9 +20,7 @@ library ERC20MinterFacadeRepo {
         return _layout(DEFAULT_SLOT);
     }
 
-    function _initialize(Storage storage layout, uint256 maxMintAmount_, uint256 minMintInterval_)
-        internal
-    {
+    function _initialize(Storage storage layout, uint256 maxMintAmount_, uint256 minMintInterval_) internal {
         _setMaxMintAmount(layout, maxMintAmount_);
         _setMinMintInterval(layout, minMintInterval_);
     }

@@ -5,12 +5,14 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IVaultAdminMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultAdminMock.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdminMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultAdminMock.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import { VaultAdmin } from "../VaultAdmin.sol";
+import {VaultAdmin} from "../VaultAdmin.sol";
 
 contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
     using PackedTokenBalance for bytes32;
@@ -58,13 +60,8 @@ contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
         uint256 minIssuedShares,
         address sharesOwner
     ) external nonReentrant {
-        IVault(address(this)).initializeBuffer(
-            wrappedToken,
-            amountUnderlying,
-            amountWrapped,
-            minIssuedShares,
-            sharesOwner
-        );
+        IVault(address(this))
+            .initializeBuffer(wrappedToken, amountUnderlying, amountWrapped, minIssuedShares, sharesOwner);
     }
 
     /// @dev Adds liquidity to buffer unbalanced, so it can unbalance the buffer.
@@ -91,8 +88,7 @@ contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
         }
 
         bufferBalances = PackedTokenBalance.toPackedBalance(
-            bufferBalances.getBalanceRaw() + underlyingAmount,
-            bufferBalances.getBalanceDerived() + wrappedAmount
+            bufferBalances.getBalanceRaw() + underlyingAmount, bufferBalances.getBalanceDerived() + wrappedAmount
         );
         _bufferTokenBalances[wrappedToken] = bufferBalances;
     }
@@ -104,13 +100,10 @@ contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
         uint256 exactSharesToIssue,
         address sharesOwner
     ) external nonReentrant {
-        IVault(address(this)).addLiquidityToBuffer(
-            wrappedToken,
-            maxAmountUnderlyingInRaw,
-            maxAmountWrappedInRaw,
-            exactSharesToIssue,
-            sharesOwner
-        );
+        IVault(address(this))
+            .addLiquidityToBuffer(
+                wrappedToken, maxAmountUnderlyingInRaw, maxAmountWrappedInRaw, exactSharesToIssue, sharesOwner
+            );
     }
 
     function manualReentrancyRemoveLiquidityFromBufferHook(
@@ -121,11 +114,7 @@ contract VaultAdminMock is IVaultAdminMock, VaultAdmin {
         address sharesOwner
     ) external nonReentrant {
         this.removeLiquidityFromBufferHook(
-            wrappedToken,
-            sharesToRemove,
-            minAmountUnderlyingOut,
-            minAmountWrappedOut,
-            sharesOwner
+            wrappedToken, sharesToRemove, minAmountUnderlyingOut, minAmountWrappedOut, sharesOwner
         );
     }
 

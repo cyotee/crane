@@ -4,18 +4,22 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { E2eBatchSwapTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eBatchSwap.t.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {E2eBatchSwapTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eBatchSwap.t.sol";
 
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract E2eBatchSwapStableTest is E2eBatchSwapTest, StablePoolContractsDeployer {
+    using BetterEfficientHashLib for bytes;
     using CastingHelpers for address[];
 
     string internal constant POOL_VERSION = "Pool v1";
@@ -45,28 +49,31 @@ contract E2eBatchSwapStableTest is E2eBatchSwapTest, StablePoolContractsDeployer
     }
 
     /// @notice Overrides BaseVaultTest _createPool(). This pool is used by E2eBatchSwapTest tests.
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool";
         string memory symbol = "STABLE";
 
         PoolRoleAccounts memory roleAccounts;
 
-        bytes32 salt = keccak256(abi.encode(label));
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_STABLE,
-            address(0),
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            salt
-        );
+        // bytes32 salt = keccak256(abi.encode(label));
+        bytes32 salt = abi.encode(label)._hash();
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                DEFAULT_SWAP_FEE_STABLE,
+                address(0),
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                salt
+            );
         vm.label(address(newPool), label);
 
         // Cannot set pool creator directly with stable pool factory.
@@ -74,10 +81,7 @@ contract E2eBatchSwapStableTest is E2eBatchSwapTest, StablePoolContractsDeployer
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );

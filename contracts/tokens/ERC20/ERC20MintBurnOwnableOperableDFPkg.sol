@@ -45,13 +45,9 @@ interface IERC20MintBurnOwnableOperableDFPkg {
         bytes32 optionalSalt;
     }
 
-    function deployToken(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        address owner,
-        bytes32 optionalSalt
-    ) external returns (address tokenAddress);
+    function deployToken(string memory name, string memory symbol, uint8 decimals, address owner, bytes32 optionalSalt)
+        external
+        returns (address tokenAddress);
 }
 
 contract ERC20MintBurnOwnableOperableDFPkg is
@@ -80,25 +76,15 @@ contract ERC20MintBurnOwnableOperableDFPkg is
         DIAMOND_FACTORY = pkgInit.diamondFactory;
     }
 
-
-    function deployToken(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        address owner,
-        bytes32 optionalSalt
-    ) external returns (address tokenAddress) {
+    function deployToken(string memory name, string memory symbol, uint8 decimals, address owner, bytes32 optionalSalt)
+        external
+        returns (address tokenAddress)
+    {
         return address(
             DIAMOND_FACTORY.deploy(
                 this,
                 abi.encode(
-                    PkgArgs({
-                        name: name,
-                        symbol: symbol,
-                        decimals: decimals,
-                        owner: owner,
-                        optionalSalt: optionalSalt
-                    })
+                    PkgArgs({name: name, symbol: symbol, decimals: decimals, owner: owner, optionalSalt: optionalSalt})
                 )
             )
         );

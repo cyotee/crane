@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 
 // https://github.com/makerdao/mip21-toolkit/blob/master/src/jars/RwaJar.sol
 interface RwaJarAbstract {
-    function daiJoin() external view returns(address);
-    function dai() external view returns(address);
-    function chainlog() external view returns(address);
+    function daiJoin() external view returns (address);
+    function dai() external view returns (address);
+    function chainlog() external view returns (address);
     function void() external;
     function toss(uint256) external;
 }

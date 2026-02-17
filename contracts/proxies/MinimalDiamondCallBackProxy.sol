@@ -17,8 +17,11 @@ import {IFactoryCallBack} from "@crane/contracts/interfaces/IFactoryCallBack.sol
 
 import {FactoryCallBackAdaptor} from "@crane/contracts/factories/diamondPkg/utils/FactoryCallBackAdaptor.sol";
 import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";
+import {
+    MinimalDiamondCallBackProxyResolution
+} from "@crane/contracts/proxies/MinimalDiamondCallBackProxyResolution.sol";
 
-contract MinimalDiamondCallBackProxy is Proxy {
+contract MinimalDiamondCallBackProxy is MinimalDiamondCallBackProxyResolution {
     using FactoryCallBackAdaptor for IFactoryCallBack;
 
     constructor() {
@@ -28,9 +31,5 @@ contract MinimalDiamondCallBackProxy is Proxy {
         // ORIGIN = msg.sender;
         // INITCODE_HASH = initcodeHash;
         // SALT = salt;
-    }
-
-    function _getTarget() internal virtual override returns (address target_) {
-        return ERC2535Repo._facetAddress(msg.sig);
     }
 }

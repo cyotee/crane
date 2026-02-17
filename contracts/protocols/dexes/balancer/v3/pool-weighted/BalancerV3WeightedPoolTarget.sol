@@ -5,7 +5,11 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
@@ -15,8 +19,12 @@ import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils
 /* -------------------------------------------------------------------------- */
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
-import {BalancerV3WeightedPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    BalancerV3WeightedPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
 
 /**
  * @title Balancer V3 Weighted Pool Target
@@ -68,9 +76,7 @@ contract BalancerV3WeightedPoolTarget is IBalancerV3Pool, IBalancerV3WeightedPoo
         uint256[] memory weights = BalancerV3WeightedPoolRepo._getNormalizedWeights();
 
         newBalance = WeightedMath.computeBalanceOutGivenInvariant(
-            balancesLiveScaled18[tokenInIndex],
-            weights[tokenInIndex],
-            invariantRatio
+            balancesLiveScaled18[tokenInIndex], weights[tokenInIndex], invariantRatio
         );
     }
 
@@ -96,19 +102,11 @@ contract BalancerV3WeightedPoolTarget is IBalancerV3Pool, IBalancerV3WeightedPoo
 
         if (params.kind == SwapKind.EXACT_IN) {
             amountCalculatedScaled18 = WeightedMath.computeOutGivenExactIn(
-                balanceIn,
-                weightIn,
-                balanceOut,
-                weightOut,
-                params.amountGivenScaled18
+                balanceIn, weightIn, balanceOut, weightOut, params.amountGivenScaled18
             );
         } else {
             amountCalculatedScaled18 = WeightedMath.computeInGivenExactOut(
-                balanceIn,
-                weightIn,
-                balanceOut,
-                weightOut,
-                params.amountGivenScaled18
+                balanceIn, weightIn, balanceOut, weightOut, params.amountGivenScaled18
             );
         }
     }
@@ -118,7 +116,13 @@ contract BalancerV3WeightedPoolTarget is IBalancerV3Pool, IBalancerV3WeightedPoo
      * @dev Weights are stored in BalancerV3WeightedPoolRepo.
      * @return weights Array of normalized weights (sum to 1e18).
      */
-    function getNormalizedWeights() public view virtual override(IBalancerV3WeightedPool) returns (uint256[] memory weights) {
+    function getNormalizedWeights()
+        public
+        view
+        virtual
+        override(IBalancerV3WeightedPool)
+        returns (uint256[] memory weights)
+    {
         return BalancerV3WeightedPoolRepo._getNormalizedWeights();
     }
 }

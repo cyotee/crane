@@ -43,9 +43,10 @@ interface IECLPSurgeHook {
      * @return imbalanceSlopeBelowPeak The imbalance slope below peak for the pool
      * @return imbalanceSlopeAbovePeak The imbalance slope above peak for the pool
      */
-    function getImbalanceSlopes(
-        address pool
-    ) external view returns (uint256 imbalanceSlopeBelowPeak, uint256 imbalanceSlopeAbovePeak);
+    function getImbalanceSlopes(address pool)
+        external
+        view
+        returns (uint256 imbalanceSlopeBelowPeak, uint256 imbalanceSlopeAbovePeak);
 
     /**
      * @notice Sets the imbalance slope below peak for a pool.

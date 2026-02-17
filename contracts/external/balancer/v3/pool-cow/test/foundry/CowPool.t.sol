@@ -6,15 +6,17 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { ICowPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CowPoolFactory } from "../../contracts/CowPoolFactory.sol";
-import { CowPool } from "../../contracts/CowPool.sol";
-import { BaseCowTest } from "./utils/BaseCowTest.sol";
+import {CowPoolFactory} from "../../contracts/CowPoolFactory.sol";
+import {CowPool} from "../../contracts/CowPool.sol";
+import {BaseCowTest} from "./utils/BaseCowTest.sol";
 
 contract CowPoolTest is BaseCowTest {
     address private _otherCowRouter;
@@ -29,9 +31,7 @@ contract CowPoolTest is BaseCowTest {
     ********************************************************/
     function testRefreshTrustedCowRouter() public {
         assertEq(
-            CowPool(pool).getTrustedCowRouter(),
-            address(cowRouter),
-            "Wrong initial address for trusted cow router"
+            CowPool(pool).getTrustedCowRouter(), address(cowRouter), "Wrong initial address for trusted cow router"
         );
 
         vm.prank(admin);
@@ -41,9 +41,7 @@ contract CowPoolTest is BaseCowTest {
         emit ICowPool.CowTrustedRouterChanged(address(_otherCowRouter));
         CowPool(pool).refreshTrustedCowRouter();
         assertEq(
-            CowPool(pool).getTrustedCowRouter(),
-            address(_otherCowRouter),
-            "Trusted cow router was not set properly"
+            CowPool(pool).getTrustedCowRouter(), address(_otherCowRouter), "Trusted cow router was not set properly"
         );
     }
 
@@ -79,7 +77,7 @@ contract CowPoolTest is BaseCowTest {
 
     function testGetCowPoolImmutableData() public view {
         ICowPool.CoWPoolImmutableData memory data = ICowPool(pool).getCowPoolImmutableData();
-        (uint256[] memory scalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory scalingFactors,) = vault.getPoolTokenRates(pool);
         IERC20[] memory tokens = IPoolInfo(pool).getTokens();
 
         for (uint256 i = 0; i < tokens.length; ++i) {
@@ -183,18 +181,19 @@ contract CowPoolTest is BaseCowTest {
         address wrongCowRouter = address(1);
 
         assertFalse(
-            IHooks(pool).onBeforeSwap(
-                PoolSwapParams({
-                    kind: SwapKind.EXACT_IN,
-                    amountGivenScaled18: 1e18,
-                    balancesScaled18: new uint256[](2),
-                    indexIn: 0,
-                    indexOut: 1,
-                    router: wrongCowRouter,
-                    userData: bytes("")
-                }),
-                pool
-            ),
+            IHooks(pool)
+                .onBeforeSwap(
+                    PoolSwapParams({
+                        kind: SwapKind.EXACT_IN,
+                        amountGivenScaled18: 1e18,
+                        balancesScaled18: new uint256[](2),
+                        indexIn: 0,
+                        indexOut: 1,
+                        router: wrongCowRouter,
+                        userData: bytes("")
+                    }),
+                    pool
+                ),
             "onBeforeSwap succeeded with wrong cow router"
         );
     }
@@ -202,18 +201,19 @@ contract CowPoolTest is BaseCowTest {
     function testOnBeforeSwap() public {
         // CoW Pool's onBeforeSwap ignores the numeric inputs, so any number works.
         assertTrue(
-            IHooks(pool).onBeforeSwap(
-                PoolSwapParams({
-                    kind: SwapKind.EXACT_IN,
-                    amountGivenScaled18: 1e18,
-                    balancesScaled18: new uint256[](2),
-                    indexIn: 0,
-                    indexOut: 1,
-                    router: address(cowRouter),
-                    userData: bytes("")
-                }),
-                pool
-            ),
+            IHooks(pool)
+                .onBeforeSwap(
+                    PoolSwapParams({
+                        kind: SwapKind.EXACT_IN,
+                        amountGivenScaled18: 1e18,
+                        balancesScaled18: new uint256[](2),
+                        indexIn: 0,
+                        indexOut: 1,
+                        router: address(cowRouter),
+                        userData: bytes("")
+                    }),
+                    pool
+                ),
             "onBeforeSwap failed with trusted cow router"
         );
     }
@@ -222,15 +222,10 @@ contract CowPoolTest is BaseCowTest {
         // CoW Pool's onBeforeAddLiquidity ignores the numeric inputs, so any number works.
         address wrongCowRouter = address(1);
         assertFalse(
-            IHooks(pool).onBeforeAddLiquidity(
-                wrongCowRouter,
-                pool,
-                AddLiquidityKind.DONATION,
-                new uint256[](2),
-                0,
-                new uint256[](2),
-                bytes("")
-            ),
+            IHooks(pool)
+                .onBeforeAddLiquidity(
+                    wrongCowRouter, pool, AddLiquidityKind.DONATION, new uint256[](2), 0, new uint256[](2), bytes("")
+                ),
             "onBeforeAddLiquidity succeeded with Donation and wrong router"
         );
     }
@@ -239,15 +234,16 @@ contract CowPoolTest is BaseCowTest {
         // CoW Pool's onBeforeAddLiquidity ignores the numeric inputs, so any number works.
         address wrongCowRouter = address(1);
         assertTrue(
-            IHooks(pool).onBeforeAddLiquidity(
-                wrongCowRouter,
-                pool,
-                AddLiquidityKind.PROPORTIONAL,
-                new uint256[](2),
-                0,
-                new uint256[](2),
-                bytes("")
-            ),
+            IHooks(pool)
+                .onBeforeAddLiquidity(
+                    wrongCowRouter,
+                    pool,
+                    AddLiquidityKind.PROPORTIONAL,
+                    new uint256[](2),
+                    0,
+                    new uint256[](2),
+                    bytes("")
+                ),
             "onBeforeAddLiquidity failed with Proportional add and wrong router"
         );
     }
@@ -255,15 +251,16 @@ contract CowPoolTest is BaseCowTest {
     function testOnBeforeAddLiquidity() public {
         // CoW Pool's onBeforeAddLiquidity ignores the numeric inputs, so any number works.
         assertTrue(
-            IHooks(pool).onBeforeAddLiquidity(
-                address(cowRouter),
-                pool,
-                AddLiquidityKind.DONATION,
-                new uint256[](2),
-                0,
-                new uint256[](2),
-                bytes("")
-            ),
+            IHooks(pool)
+                .onBeforeAddLiquidity(
+                    address(cowRouter),
+                    pool,
+                    AddLiquidityKind.DONATION,
+                    new uint256[](2),
+                    0,
+                    new uint256[](2),
+                    bytes("")
+                ),
             "onBeforeAddLiquidity failed with Donation and trusted cow router"
         );
     }

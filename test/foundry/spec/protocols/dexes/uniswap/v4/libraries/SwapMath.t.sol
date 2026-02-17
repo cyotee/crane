@@ -20,7 +20,6 @@ import {SqrtPriceMath} from "@crane/contracts/protocols/dexes/uniswap/v4/librari
  * 5. Edge cases: zero amounts, max fees, boundary prices
  */
 contract SwapMath_V4_Test is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                            Constants                                       */
     /* -------------------------------------------------------------------------- */
@@ -119,12 +118,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e18; // Exact input of 1e18
         uint24 feePips = 3000; // 0.3%
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Verify outputs are reasonable
         assertLe(sqrtPriceNext, sqrtPriceCurrent, "Price should decrease for zeroForOne");
@@ -147,12 +142,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e15; // Small exact input
         uint24 feePips = 3000; // 0.3%
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Should not reach target due to small input
         assertGt(sqrtPriceNext, sqrtPriceTarget, "Should not reach target with small input");
@@ -171,12 +162,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e18; // Exact input of 1e18
         uint24 feePips = 3000; // 0.3%
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Verify outputs are reasonable for oneForZero
         assertGe(sqrtPriceNext, sqrtPriceCurrent, "Price should increase for oneForZero");
@@ -200,12 +187,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 1e18; // Exact output of 1e18
         uint24 feePips = 3000; // 0.3%
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Verify outputs
         assertGe(sqrtPriceNext, sqrtPriceTarget, "Price should not go below target");
@@ -224,12 +207,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 1e12; // Small exact output
         uint24 feePips = 3000;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Output should equal requested since we have plenty of range
         assertEq(amountOut, uint256(amountRemaining), "Output should equal requested amount");
@@ -250,12 +229,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e18;
         uint24 feePips = 0; // No fee
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         assertEq(feeAmount, 0, "Fee should be zero with zero feePips");
         assertGt(amountIn, 0, "amountIn should still be positive");
@@ -275,12 +250,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e18;
         uint24 feePips = uint24(MAX_SWAP_FEE); // 100% fee
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // With 100% fee:
         // - amountRemainingLessFee = mulDiv(1e18, 0, 1e6) = 0
@@ -307,12 +278,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1e18;
         uint24 feePips = 3000; // 0.3%
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            ,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn,, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Only when we don't reach target (exhaust input), fee + input = total
         if (sqrtPriceNext != sqrtPriceTarget) {
@@ -345,12 +312,8 @@ contract SwapMath_V4_Test is Test {
         uint128 liquidity = LIQUIDITY_1E18;
         int256 amountRemaining = 0; // Zero amount
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, 3000);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, 3000);
 
         // amountRemaining = 0, exactIn = false (since 0 is not < 0)
         // So this is exact output mode with 0 requested output
@@ -371,12 +334,8 @@ contract SwapMath_V4_Test is Test {
         uint128 liquidity = LIQUIDITY_1E18;
         int256 amountRemaining = -1e18;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPrice, sqrtPrice, liquidity, amountRemaining, 3000);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPrice, sqrtPrice, liquidity, amountRemaining, 3000);
 
         // No price movement expected
         assertEq(sqrtPriceNext, sqrtPrice, "Price should not change when current equals target");
@@ -415,12 +374,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1 ether;
         uint24 feePips = 600;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
         assertEq(amountIn, 9975124224178055, "Golden: amountIn mismatch");
@@ -454,12 +409,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = -1 ether;
         uint24 feePips = 600;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Input is exhausted, so sqrtPriceNext does not reach target
         assertGt(sqrtPriceTarget, sqrtPriceNext, "Golden: should not reach target (input exhausted)");
@@ -496,12 +447,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 1 ether;
         uint24 feePips = 600;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
         assertEq(amountIn, 9975124224178055, "Golden: amountIn mismatch");
@@ -534,12 +481,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 1 ether;
         uint24 feePips = 600;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Did not reach target since output was satisfied first
         assertLt(sqrtPriceNext, sqrtPriceTarget, "Golden: should not reach target (output satisfied)");
@@ -575,12 +518,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 1;
         uint24 feePips = 1;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         assertEq(sqrtPriceNext, 417332158212080721273783715441581, "Golden: sqrtPriceNext mismatch");
         assertEq(amountIn, 1, "Golden: amountIn mismatch");
@@ -615,12 +554,8 @@ contract SwapMath_V4_Test is Test {
         int256 amountRemaining = 263000;
         uint24 feePips = 3000;
 
-        (
-            uint160 sqrtPriceNext,
-            uint256 amountIn,
-            uint256 amountOut,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
+        (uint160 sqrtPriceNext, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         assertEq(sqrtPriceNext, sqrtPriceTarget, "Golden: sqrtPriceNext should reach target");
         assertEq(amountIn, 1, "Golden: amountIn mismatch");
@@ -657,9 +592,7 @@ contract SwapMath_V4_Test is Test {
 
         // Avoid same price (no movement case)
         if (sqrtPriceCurrent == sqrtPriceTarget) {
-            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE
-                ? sqrtPriceCurrent - 1
-                : sqrtPriceCurrent + 1;
+            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE ? sqrtPriceCurrent - 1 : sqrtPriceCurrent + 1;
         }
 
         // Use exact input with reasonable amounts
@@ -668,13 +601,8 @@ contract SwapMath_V4_Test is Test {
 
         bool zeroForOne = sqrtPriceCurrent >= sqrtPriceTarget;
 
-        (uint160 sqrtPriceNext,,,) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (uint160 sqrtPriceNext,,,) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Price should move in the correct direction
         if (zeroForOne) {
@@ -705,25 +633,13 @@ contract SwapMath_V4_Test is Test {
 
         // Ensure different prices
         if (sqrtPriceCurrent == sqrtPriceTarget) {
-            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE
-                ? sqrtPriceCurrent - 1
-                : sqrtPriceCurrent + 1;
+            sqrtPriceTarget = sqrtPriceCurrent > MIN_SQRT_PRICE ? sqrtPriceCurrent - 1 : sqrtPriceCurrent + 1;
         }
 
         int256 amountRemaining = -int256(inputAmount);
 
-        (
-            ,
-            uint256 amountIn,
-            ,
-            uint256 feeAmount
-        ) = SwapMath.computeSwapStep(
-            sqrtPriceCurrent,
-            sqrtPriceTarget,
-            liquidity,
-            amountRemaining,
-            feePips
-        );
+        (, uint256 amountIn,, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips);
 
         // Fee + input should never exceed the provided amount
         assertLe(amountIn + feeAmount, inputAmount, "Fee + input should not exceed provided amount");

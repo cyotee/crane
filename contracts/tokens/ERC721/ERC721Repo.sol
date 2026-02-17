@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
 /* -------------------------------------------------------------------------- */
 
 import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";
-import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
+import {IERC721Errors} from "@crane/contracts/tokens/ERC721/IERC721Errors.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -56,13 +56,9 @@ library ERC721Repo {
         return _ownerOf(_layout(), tokenId);
     }
 
-    function _safeTransferFrom(
-        Storage storage layout_,
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory data
-    ) internal {
+    function _safeTransferFrom(Storage storage layout_, address from, address to, uint256 tokenId, bytes memory data)
+        internal
+    {
         if (to.code.length > 0) {
             try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, data) returns (bytes4 response) {
                 if (response != IERC721Receiver.onERC721Received.selector) {
@@ -154,11 +150,7 @@ library ERC721Repo {
         return _getApproved(_layout(), tokenId);
     }
 
-    function _isApprovedForAll(Storage storage layout_, address owner, address operator)
-        internal
-        view
-        returns (bool)
-    {
+    function _isApprovedForAll(Storage storage layout_, address owner, address operator) internal view returns (bool) {
         return layout_.operatorApprovals[owner][operator];
     }
 

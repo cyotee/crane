@@ -36,12 +36,7 @@ interface IBalancerV3LBPool {
     function getGradualWeightUpdateParams()
         external
         view
-        returns (
-            uint256 startTime,
-            uint256 endTime,
-            uint256[] memory startWeights,
-            uint256[] memory endWeights
-        );
+        returns (uint256 startTime, uint256 endTime, uint256[] memory startWeights, uint256[] memory endWeights);
 
     /**
      * @notice Check if swaps are currently enabled.

@@ -60,11 +60,10 @@ contract ConstProdUtils_InvariantPreservation_Test is Test {
      * @notice Verifies k preservation with the standard Uniswap V2 fee (0.3%).
      * @dev Uses the exact fee parameters from Uniswap V2.
      */
-    function testFuzz_saleQuote_invariant_uniswapV2Fee(
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 amountIn
-    ) public pure {
+    function testFuzz_saleQuote_invariant_uniswapV2Fee(uint256 reserveIn, uint256 reserveOut, uint256 amountIn)
+        public
+        pure
+    {
         reserveIn = bound(reserveIn, 1e18, 1e27);
         reserveOut = bound(reserveOut, 1e18, 1e27);
         amountIn = bound(amountIn, 1e15, reserveIn / 100);
@@ -213,12 +212,11 @@ contract ConstProdUtils_InvariantPreservation_Test is Test {
     }
 
     // External wrapper to catch reverts
-    function externalSaleQuote(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 fee
-    ) external pure returns (uint256) {
+    function externalSaleQuote(uint256 amountIn, uint256 reserveIn, uint256 reserveOut, uint256 fee)
+        external
+        pure
+        returns (uint256)
+    {
         return ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, fee);
     }
 
@@ -240,13 +238,11 @@ contract ConstProdUtils_InvariantPreservation_Test is Test {
     }
 
     // External wrapper for deposit quote
-    function externalDepositQuote(
-        uint256 amountA,
-        uint256 amountB,
-        uint256 supply,
-        uint256 reserveA,
-        uint256 reserveB
-    ) external pure returns (uint256) {
+    function externalDepositQuote(uint256 amountA, uint256 amountB, uint256 supply, uint256 reserveA, uint256 reserveB)
+        external
+        pure
+        returns (uint256)
+    {
         return ConstProdUtils._depositQuote(amountA, amountB, supply, reserveA, reserveB);
     }
 
@@ -293,10 +289,7 @@ contract ConstProdUtils_InvariantPreservation_Test is Test {
      * @notice Verifies that first deposit always locks MINIMUM_LIQUIDITY.
      * @dev This prevents first-depositor attacks.
      */
-    function testFuzz_depositQuote_firstDeposit_locksMinimumLiquidity(
-        uint256 amountA,
-        uint256 amountB
-    ) public pure {
+    function testFuzz_depositQuote_firstDeposit_locksMinimumLiquidity(uint256 amountA, uint256 amountB) public pure {
         // Bound to ensure sqrt result > MINIMUM_LIQUIDITY
         amountA = bound(amountA, 1e6, 1e30);
         amountB = bound(amountB, 1e6, 1e30);
@@ -373,29 +366,17 @@ contract ConstProdUtils_InvariantPreservation_Test is Test {
         reserveA = bound(reserveA, 1e18, 1e27);
         reserveB = bound(reserveB, 1e18, 1e27);
 
-        (uint256 amountA, uint256 amountB) = ConstProdUtils._withdrawQuote(
-            ownedLP, totalSupply, reserveA, reserveB
-        );
+        (uint256 amountA, uint256 amountB) = ConstProdUtils._withdrawQuote(ownedLP, totalSupply, reserveA, reserveB);
 
         // Verify pro-rata: amountA / reserveA ≈ ownedLP / totalSupply
         // Using cross-multiplication to avoid division precision loss:
         // amountA * totalSupply <= ownedLP * reserveA (due to floor division)
-        assertLe(
-            amountA * totalSupply,
-            ownedLP * reserveA,
-            "Withdrawal should not exceed pro-rata share of reserve A"
-        );
-        assertLe(
-            amountB * totalSupply,
-            ownedLP * reserveB,
-            "Withdrawal should not exceed pro-rata share of reserve B"
-        );
+        assertLe(amountA * totalSupply, ownedLP * reserveA, "Withdrawal should not exceed pro-rata share of reserve A");
+        assertLe(amountB * totalSupply, ownedLP * reserveB, "Withdrawal should not exceed pro-rata share of reserve B");
 
         // Also verify it's close (within 1 unit difference from floor)
         assertGe(
-            amountA * totalSupply + totalSupply,
-            ownedLP * reserveA,
-            "Withdrawal should be within rounding of pro-rata"
+            amountA * totalSupply + totalSupply, ownedLP * reserveA, "Withdrawal should be within rounding of pro-rata"
         );
     }
 }

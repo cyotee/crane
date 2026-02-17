@@ -7,17 +7,21 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { TokenConfig, TokenType } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { PoolMock } from "../../../contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "../../../contracts/test/PoolFactoryMock.sol";
-import { BaseVaultTest } from "./BaseVaultTest.sol";
+import {PoolMock} from "../../../contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "../../../contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "./BaseVaultTest.sol";
 
 abstract contract BaseERC4626BufferTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -94,7 +98,7 @@ abstract contract BaseERC4626BufferTest is BaseVaultTest {
             "Wrong yield-bearing pool BPT amount"
         );
 
-        (IERC20[] memory tokens, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(pool);
         // The yield-bearing pool should have `erc4626PoolInitialAmount` of both tokens.
         assertEq(address(tokens[waDaiIdx]), address(waDAI), "Wrong yield-bearing pool token (waDAI)");
         assertEq(address(tokens[waWethIdx]), address(waWETH), "Wrong yield-bearing pool token (waWETH)");
@@ -110,30 +114,26 @@ abstract contract BaseERC4626BufferTest is BaseVaultTest {
         );
 
         // LP should have correct amount of shares from buffer (invested amount in underlying minus burned "BPTs").
-        uint256 waDAIInvariantDelta = bufferInitialAmount +
-            waDAI.previewRedeem(waDAI.previewDeposit(bufferInitialAmount));
+        uint256 waDAIInvariantDelta =
+            bufferInitialAmount + waDAI.previewRedeem(waDAI.previewDeposit(bufferInitialAmount));
         assertEq(
             vault.getBufferOwnerShares(IERC4626(waDAI), lp),
             waDAIInvariantDelta - BUFFER_MINIMUM_TOTAL_SUPPLY,
             "Wrong share of waDAI buffer belonging to LP"
         );
         assertEq(
-            vault.getBufferTotalShares(IERC4626(waDAI)),
-            waDAIInvariantDelta,
-            "Wrong issued shares of waDAI buffer"
+            vault.getBufferTotalShares(IERC4626(waDAI)), waDAIInvariantDelta, "Wrong issued shares of waDAI buffer"
         );
 
-        uint256 waWETHInvariantDelta = bufferInitialAmount +
-            waWETH.previewRedeem(waWETH.previewDeposit(bufferInitialAmount));
+        uint256 waWETHInvariantDelta =
+            bufferInitialAmount + waWETH.previewRedeem(waWETH.previewDeposit(bufferInitialAmount));
         assertEq(
             vault.getBufferOwnerShares(IERC4626(waWETH), lp),
             waWETHInvariantDelta - BUFFER_MINIMUM_TOTAL_SUPPLY,
             "Wrong share of waWETH buffer belonging to LP"
         );
         assertEq(
-            vault.getBufferTotalShares(IERC4626(waWETH)),
-            waWETHInvariantDelta,
-            "Wrong issued shares of waWETH buffer"
+            vault.getBufferTotalShares(IERC4626(waWETH)), waWETHInvariantDelta, "Wrong issued shares of waWETH buffer"
         );
 
         uint256 baseBalance;
@@ -143,17 +143,13 @@ abstract contract BaseERC4626BufferTest is BaseVaultTest {
         (baseBalance, wrappedBalance) = vault.getBufferBalance(IERC4626(waDAI));
         assertEq(baseBalance, bufferInitialAmount, "Wrong waDAI buffer balance for base token");
         assertEq(
-            wrappedBalance,
-            waDAI.previewDeposit(bufferInitialAmount),
-            "Wrong waDAI buffer balance for wrapped token"
+            wrappedBalance, waDAI.previewDeposit(bufferInitialAmount), "Wrong waDAI buffer balance for wrapped token"
         );
 
         (baseBalance, wrappedBalance) = vault.getBufferBalance(IERC4626(waWETH));
         assertEq(baseBalance, bufferInitialAmount, "Wrong waWETH buffer balance for base token");
         assertEq(
-            wrappedBalance,
-            waWETH.previewDeposit(bufferInitialAmount),
-            "Wrong waWETH buffer balance for wrapped token"
+            wrappedBalance, waWETH.previewDeposit(bufferInitialAmount), "Wrong waWETH buffer balance for wrapped token"
         );
     }
 

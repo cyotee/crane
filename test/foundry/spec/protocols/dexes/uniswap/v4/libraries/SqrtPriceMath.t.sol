@@ -20,7 +20,6 @@ import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/v4/librarie
  * 5. Edge cases and revert conditions
  */
 contract SqrtPriceMath_V4_Test is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                            Constants                                       */
     /* -------------------------------------------------------------------------- */
@@ -473,11 +472,10 @@ contract SqrtPriceMath_V4_Test is Test {
      * @notice Fuzz test: verifies rounding consistency
      * @dev Round up should always be >= round down
      */
-    function testFuzz_roundingConsistency_amount0(
-        uint160 sqrtPriceA,
-        uint160 sqrtPriceB,
-        uint128 liquidity
-    ) public pure {
+    function testFuzz_roundingConsistency_amount0(uint160 sqrtPriceA, uint160 sqrtPriceB, uint128 liquidity)
+        public
+        pure
+    {
         // Bound inputs
         sqrtPriceA = uint160(bound(sqrtPriceA, MIN_SQRT_PRICE, MAX_SQRT_PRICE - 1));
         sqrtPriceB = uint160(bound(sqrtPriceB, MIN_SQRT_PRICE, MAX_SQRT_PRICE - 1));
@@ -500,11 +498,10 @@ contract SqrtPriceMath_V4_Test is Test {
     /**
      * @notice Fuzz test: verifies rounding consistency for amount1
      */
-    function testFuzz_roundingConsistency_amount1(
-        uint160 sqrtPriceA,
-        uint160 sqrtPriceB,
-        uint128 liquidity
-    ) public pure {
+    function testFuzz_roundingConsistency_amount1(uint160 sqrtPriceA, uint160 sqrtPriceB, uint128 liquidity)
+        public
+        pure
+    {
         // Bound inputs
         sqrtPriceA = uint160(bound(sqrtPriceA, MIN_SQRT_PRICE, MAX_SQRT_PRICE - 1));
         sqrtPriceB = uint160(bound(sqrtPriceB, MIN_SQRT_PRICE, MAX_SQRT_PRICE - 1));
@@ -520,11 +517,7 @@ contract SqrtPriceMath_V4_Test is Test {
      * @notice Fuzz test: input/output roundtrip consistency
      * @dev Adding then removing amount should get back close to original price
      */
-    function testFuzz_inputOutputRoundtrip(
-        uint160 sqrtPriceX96,
-        uint128 liquidity,
-        uint256 amountIn
-    ) public pure {
+    function testFuzz_inputOutputRoundtrip(uint160 sqrtPriceX96, uint128 liquidity, uint256 amountIn) public pure {
         // Use bounded price around 2^96 (1:1 ratio) for more predictable behavior
         uint160 midPrice = SQRT_PRICE_1_1;
         sqrtPriceX96 = uint160(bound(sqrtPriceX96, midPrice / 10, midPrice * 10));
@@ -565,12 +558,11 @@ contract SqrtPriceMath_V4_Test is Test {
     /*                       External Wrappers for Revert Tests                   */
     /* -------------------------------------------------------------------------- */
 
-    function external_getNextSqrtPriceFromInput(
-        uint160 sqrtPX96,
-        uint128 liquidity,
-        uint256 amountIn,
-        bool zeroForOne
-    ) external pure returns (uint160) {
+    function external_getNextSqrtPriceFromInput(uint160 sqrtPX96, uint128 liquidity, uint256 amountIn, bool zeroForOne)
+        external
+        pure
+        returns (uint160)
+    {
         return SqrtPriceMath.getNextSqrtPriceFromInput(sqrtPX96, liquidity, amountIn, zeroForOne);
     }
 
@@ -583,12 +575,11 @@ contract SqrtPriceMath_V4_Test is Test {
         return SqrtPriceMath.getNextSqrtPriceFromOutput(sqrtPX96, liquidity, amountOut, zeroForOne);
     }
 
-    function external_getAmount0Delta(
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
-        uint128 liquidity,
-        bool roundUp
-    ) external pure returns (uint256) {
+    function external_getAmount0Delta(uint160 sqrtPriceAX96, uint160 sqrtPriceBX96, uint128 liquidity, bool roundUp)
+        external
+        pure
+        returns (uint256)
+    {
         return SqrtPriceMath.getAmount0Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity, roundUp);
     }
 }

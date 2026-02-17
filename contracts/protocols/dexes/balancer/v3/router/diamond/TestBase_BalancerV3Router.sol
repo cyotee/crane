@@ -25,7 +25,9 @@ import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contract
 import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
 import {IBatchRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
 import {IBufferRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";
-import {ICompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -53,24 +55,29 @@ import {
 } from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/BalancerV3RouterDFPkg.sol";
 
 // Facets
-import {RouterSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterSwapFacet.sol";
-import {RouterAddLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterAddLiquidityFacet.sol";
-import {RouterRemoveLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterRemoveLiquidityFacet.sol";
-import {RouterInitializeFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterInitializeFacet.sol";
-import {RouterCommonFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterCommonFacet.sol";
-import {BatchSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BatchSwapFacet.sol";
-import {BufferRouterFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BufferRouterFacet.sol";
-import {CompositeLiquidityERC4626Facet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityERC4626Facet.sol";
-import {CompositeLiquidityNestedFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityNestedFacet.sol";
+import {RouterSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterSwapFacet.sol";
+import {
+    RouterAddLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterAddLiquidityFacet.sol";
+import {
+    RouterRemoveLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterRemoveLiquidityFacet.sol";
+import {
+    RouterInitializeFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterInitializeFacet.sol";
+import {
+    RouterCommonFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/RouterCommonFacet.sol";
+import {BatchSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BatchSwapFacet.sol";
+import {
+    BufferRouterFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/BufferRouterFacet.sol";
+import {
+    CompositeLiquidityERC4626Facet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityERC4626Facet.sol";
+import {
+    CompositeLiquidityNestedFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/facets/CompositeLiquidityNestedFacet.sol";
 
 import {Behavior_IRouter} from "./Behavior_IRouter.sol";
 
@@ -95,7 +102,7 @@ contract MockVaultForRouter {
         return result;
     }
 
-    function quote(bytes calldata data) external returns (bytes memory) {
+    function quote(bytes calldata data) external view returns (bytes memory) {
         // Simulate quote (static call behavior)
         (bool success, bytes memory result) = msg.sender.staticcall(data);
         if (!success) {
@@ -119,10 +126,22 @@ contract MockVaultForRouter {
 contract MockWETHForRouter {
     function deposit() external payable {}
     function withdraw(uint256) external {}
-    function transfer(address, uint256) external returns (bool) { return true; }
-    function transferFrom(address, address, uint256) external returns (bool) { return true; }
-    function approve(address, uint256) external returns (bool) { return true; }
-    function balanceOf(address) external pure returns (uint256) { return 0; }
+
+    function transfer(address, uint256) external pure returns (bool) {
+        return true;
+    }
+
+    function transferFrom(address, address, uint256) external pure returns (bool) {
+        return true;
+    }
+
+    function approve(address, uint256) external pure returns (bool) {
+        return true;
+    }
+
+    function balanceOf(address) external pure returns (uint256) {
+        return 0;
+    }
 }
 
 /// @notice Mock Permit2 for testing
@@ -303,10 +322,7 @@ abstract contract TestBase_BalancerV3Router is Test {
      */
     function _deployRouter() internal returns (address router) {
         return _deployRouter(
-            IVault(address(mockVault)),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            DEFAULT_ROUTER_VERSION
+            IVault(address(mockVault)), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), DEFAULT_ROUTER_VERSION
         );
     }
 
@@ -318,12 +334,10 @@ abstract contract TestBase_BalancerV3Router is Test {
      * @param version_ The version string
      * @return router The deployed router address
      */
-    function _deployRouter(
-        IVault vault_,
-        IWETH weth_,
-        IPermit2 permit2_,
-        string memory version_
-    ) internal returns (address router) {
+    function _deployRouter(IVault vault_, IWETH weth_, IPermit2 permit2_, string memory version_)
+        internal
+        returns (address router)
+    {
         router = routerPkg.deployRouter(vault_, weth_, permit2_, version_);
         vm.label(router, "RouterDiamond");
     }
@@ -336,19 +350,13 @@ abstract contract TestBase_BalancerV3Router is Test {
      * @param version_ The version string
      * @return expectedAddress The expected router address
      */
-    function _calcRouterAddress(
-        IVault vault_,
-        IWETH weth_,
-        IPermit2 permit2_,
-        string memory version_
-    ) internal view returns (address expectedAddress) {
+    function _calcRouterAddress(IVault vault_, IWETH weth_, IPermit2 permit2_, string memory version_)
+        internal
+        view
+        returns (address expectedAddress)
+    {
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3RouterDFPkg.PkgArgs({
-                vault: vault_,
-                weth: weth_,
-                permit2: permit2_,
-                routerVersion: version_
-            })
+            IBalancerV3RouterDFPkg.PkgArgs({vault: vault_, weth: weth_, permit2: permit2_, routerVersion: version_})
         );
         return factory.calcAddress(routerPkg, pkgArgs);
     }
@@ -440,11 +448,7 @@ abstract contract TestBase_BalancerV3Router is Test {
         assertEq(actual.length, expected.length, "Interface count mismatch");
 
         assertTrue(
-            Behavior_IRouter.areValid_IRouter_interfaces(
-                "BalancerV3RouterDFPkg",
-                expected,
-                actual
-            ),
+            Behavior_IRouter.areValid_IRouter_interfaces("BalancerV3RouterDFPkg", expected, actual),
             "Router interfaces validation failed"
         );
     }
@@ -471,10 +475,7 @@ abstract contract TestBase_BalancerV3Router is Test {
      */
     function test_deployRouter_isDeterministic() public virtual {
         address expectedRouter = _calcRouterAddress(
-            IVault(address(mockVault)),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            DEFAULT_ROUTER_VERSION
+            IVault(address(mockVault)), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), DEFAULT_ROUTER_VERSION
         );
 
         address router = _deployRouter();

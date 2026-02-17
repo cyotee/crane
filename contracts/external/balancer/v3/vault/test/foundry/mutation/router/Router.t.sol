@@ -7,7 +7,7 @@ import "forge-std/Test.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {
     AddLiquidityKind,
     RemoveLiquidityKind,
@@ -16,16 +16,16 @@ import {
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { PoolHooksMock } from "../../../../contracts/test/PoolHooksMock.sol";
-import { BasePoolMath } from "../../../../contracts/BasePoolMath.sol";
-import { BaseVaultTest } from "../../utils/BaseVaultTest.sol";
-import { Router } from "../../../../contracts/Router.sol";
+import {PoolHooksMock} from "../../../../contracts/test/PoolHooksMock.sol";
+import {BasePoolMath} from "../../../../contracts/BasePoolMath.sol";
+import {BaseVaultTest} from "../../utils/BaseVaultTest.sol";
+import {Router} from "../../../../contracts/Router.sol";
 
 contract RouterMutationTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -38,15 +38,8 @@ contract RouterMutationTest is BaseVaultTest {
     }
 
     function testInitializeHookWhenNotVault() public {
-        InitializeHookParams memory hookParams = InitializeHookParams(
-            msg.sender,
-            pool,
-            tokens,
-            amountsIn,
-            0,
-            false,
-            bytes("")
-        );
+        InitializeHookParams memory hookParams =
+            InitializeHookParams(msg.sender, pool, tokens, amountsIn, 0, false, bytes(""));
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
         router.initializeHook(hookParams);
@@ -58,15 +51,8 @@ contract RouterMutationTest is BaseVaultTest {
     }
 
     function testAddLiquidityHookWhenNotVault() public {
-        AddLiquidityHookParams memory hookParams = AddLiquidityHookParams(
-            msg.sender,
-            pool,
-            amountsIn,
-            0,
-            AddLiquidityKind.PROPORTIONAL,
-            false,
-            bytes("")
-        );
+        AddLiquidityHookParams memory hookParams =
+            AddLiquidityHookParams(msg.sender, pool, amountsIn, 0, AddLiquidityKind.PROPORTIONAL, false, bytes(""));
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
         router.addLiquidityHook(hookParams);
@@ -174,15 +160,8 @@ contract RouterMutationTest is BaseVaultTest {
     }
 
     function testQueryAddLiquidityHookWhenNotVault() public {
-        AddLiquidityHookParams memory hookParams = AddLiquidityHookParams(
-            msg.sender,
-            pool,
-            amountsIn,
-            0,
-            AddLiquidityKind.PROPORTIONAL,
-            false,
-            bytes("")
-        );
+        AddLiquidityHookParams memory hookParams =
+            AddLiquidityHookParams(msg.sender, pool, amountsIn, 0, AddLiquidityKind.PROPORTIONAL, false, bytes(""));
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
         router.queryAddLiquidityHook(hookParams);
@@ -190,13 +169,7 @@ contract RouterMutationTest is BaseVaultTest {
 
     function testQueryRemoveLiquidityHookWhenNotVault() public {
         RemoveLiquidityHookParams memory params = RemoveLiquidityHookParams(
-            msg.sender,
-            pool,
-            amountsIn,
-            0,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN,
-            false,
-            bytes("")
+            msg.sender, pool, amountsIn, 0, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, false, bytes("")
         );
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));

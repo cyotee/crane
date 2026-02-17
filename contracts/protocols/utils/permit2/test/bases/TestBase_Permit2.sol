@@ -14,9 +14,8 @@ contract TestBase_Permit2 is BetterTest {
 
     function setUp() public virtual override(BetterTest) {
         BetterTest.setUp();
-        if(address(permit2) == address(0)) {
+        if (address(permit2) == address(0)) {
             permit2 = IPermit2(address(new BetterPermit2()));
         }
     }
-
 }

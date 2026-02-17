@@ -12,7 +12,9 @@ import {Test} from "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IERC8109Introspection} from "@crane/contracts/introspection/ERC8109/IERC8109Introspection.sol";
-import {Behavior_IERC8109Introspection} from "@crane/contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol";
+import {
+    Behavior_IERC8109Introspection
+} from "@crane/contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Stub Facets                                */
@@ -194,18 +196,12 @@ contract Behavior_IERC8109Introspection_Test is Test {
 
     function _expectedPairs() internal view returns (IERC8109Introspection.FunctionFacetPair[] memory pairs) {
         pairs = new IERC8109Introspection.FunctionFacetPair[](3);
-        pairs[0] = IERC8109Introspection.FunctionFacetPair({
-            selector: Stub_FacetA.funcA1.selector,
-            facet: address(facetA)
-        });
-        pairs[1] = IERC8109Introspection.FunctionFacetPair({
-            selector: Stub_FacetA.funcA2.selector,
-            facet: address(facetA)
-        });
-        pairs[2] = IERC8109Introspection.FunctionFacetPair({
-            selector: Stub_FacetB.funcB1.selector,
-            facet: address(facetB)
-        });
+        pairs[0] =
+            IERC8109Introspection.FunctionFacetPair({selector: Stub_FacetA.funcA1.selector, facet: address(facetA)});
+        pairs[1] =
+            IERC8109Introspection.FunctionFacetPair({selector: Stub_FacetA.funcA2.selector, facet: address(facetA)});
+        pairs[2] =
+            IERC8109Introspection.FunctionFacetPair({selector: Stub_FacetB.funcB1.selector, facet: address(facetB)});
     }
 
     /* -------------------------------------------------------------------------- */
@@ -217,8 +213,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "ValidSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_facetAddress(
@@ -233,8 +228,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "ValidSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_functionFacetPairs(
@@ -249,13 +243,11 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "ValidSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
-        bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection(
-            IERC8109Introspection(address(subject))
-        );
+        bool isValid =
+            Behavior_IERC8109Introspection.hasValid_IERC8109Introspection(IERC8109Introspection(address(subject)));
 
         assertTrue(isValid, "Valid implementation should pass full validation");
     }
@@ -279,9 +271,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "ValidSubject");
 
         bool isValid = Behavior_IERC8109Introspection.areValid_IERC8109Introspection_functionFacetPairs(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs(),
-            subject.functionFacetPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs(), subject.functionFacetPairs()
         );
 
         assertTrue(isValid, "areValid should return true for matching functionFacetPairs");
@@ -296,8 +286,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "MissingPairSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_functionFacetPairs(
@@ -312,8 +301,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "WrongFacetSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_facetAddress(
@@ -328,8 +316,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "ExtraPairSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_functionFacetPairs(
@@ -344,8 +331,7 @@ contract Behavior_IERC8109Introspection_Test is Test {
         vm.label(address(subject), "InconsistentSubject");
 
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            _expectedPairs()
+            IERC8109Introspection(address(subject)), _expectedPairs()
         );
 
         // facetAddress should pass (it returns correct values)
@@ -384,17 +370,12 @@ contract Behavior_IERC8109Introspection_Test is Test {
         Stub_ERC8109_Empty subject = new Stub_ERC8109_Empty();
         vm.label(address(subject), "EmptySubject");
 
-        IERC8109Introspection.FunctionFacetPair[] memory emptyPairs =
-            new IERC8109Introspection.FunctionFacetPair[](0);
+        IERC8109Introspection.FunctionFacetPair[] memory emptyPairs = new IERC8109Introspection.FunctionFacetPair[](0);
 
-        Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            emptyPairs
-        );
+        Behavior_IERC8109Introspection.expect_IERC8109Introspection(IERC8109Introspection(address(subject)), emptyPairs);
 
-        bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection(
-            IERC8109Introspection(address(subject))
-        );
+        bool isValid =
+            Behavior_IERC8109Introspection.hasValid_IERC8109Introspection(IERC8109Introspection(address(subject)));
 
         assertTrue(isValid, "Empty implementation should pass with empty expectations");
     }
@@ -411,21 +392,15 @@ contract Behavior_IERC8109Introspection_Test is Test {
 
     function test_Behavior_IERC8109Introspection_singlePair() public {
         // Test with just one function-facet pair
-        IERC8109Introspection.FunctionFacetPair[] memory singlePair =
-            new IERC8109Introspection.FunctionFacetPair[](1);
-        singlePair[0] = IERC8109Introspection.FunctionFacetPair({
-            selector: Stub_FacetA.funcA1.selector,
-            facet: address(facetA)
-        });
+        IERC8109Introspection.FunctionFacetPair[] memory singlePair = new IERC8109Introspection.FunctionFacetPair[](1);
+        singlePair[0] =
+            IERC8109Introspection.FunctionFacetPair({selector: Stub_FacetA.funcA1.selector, facet: address(facetA)});
 
         Stub_ERC8109_Valid subject = new Stub_ERC8109_Valid(address(facetA), address(facetB));
         vm.label(address(subject), "ValidSubject");
 
         // This should fail because we expect only 1 pair but actual has 3
-        Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            IERC8109Introspection(address(subject)),
-            singlePair
-        );
+        Behavior_IERC8109Introspection.expect_IERC8109Introspection(IERC8109Introspection(address(subject)), singlePair);
 
         bool isValid = Behavior_IERC8109Introspection.hasValid_IERC8109Introspection_functionFacetPairs(
             IERC8109Introspection(address(subject))

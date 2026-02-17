@@ -3,8 +3,16 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IGyroECLPPool, GyroECLPPoolImmutableData, GyroECLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IGyroECLPPool,
+    GyroECLPPoolImmutableData,
+    GyroECLPPoolDynamicData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
@@ -210,10 +218,10 @@ contract BalancerV3GyroECLP_Fork is TestBase_BalancerV3GyroFork {
 
         uint256[] memory tradeSizes = new uint256[](5);
         tradeSizes[0] = balances[0] / 100000; // 0.001%
-        tradeSizes[1] = balances[0] / 10000;  // 0.01%
-        tradeSizes[2] = balances[0] / 1000;   // 0.1%
-        tradeSizes[3] = balances[0] / 100;    // 1%
-        tradeSizes[4] = balances[0] / 10;     // 10%
+        tradeSizes[1] = balances[0] / 10000; // 0.01%
+        tradeSizes[2] = balances[0] / 1000; // 0.1%
+        tradeSizes[3] = balances[0] / 100; // 1%
+        tradeSizes[4] = balances[0] / 10; // 10%
 
         for (uint256 i = 0; i < tradeSizes.length; i++) {
             uint256 amountIn = tradeSizes[i];
@@ -284,11 +292,9 @@ contract BalancerV3GyroECLP_Fork is TestBase_BalancerV3GyroFork {
         int256 newBalanceInt;
 
         if (tokenIndex == 0) {
-            (newBalanceInt,,) =
-                GyroECLPMath.calcXGivenY(balances[1].toInt256(), eclpParams, derivedParams, invariant);
+            (newBalanceInt,,) = GyroECLPMath.calcXGivenY(balances[1].toInt256(), eclpParams, derivedParams, invariant);
         } else {
-            (newBalanceInt,,) =
-                GyroECLPMath.calcYGivenX(balances[0].toInt256(), eclpParams, derivedParams, invariant);
+            (newBalanceInt,,) = GyroECLPMath.calcYGivenX(balances[0].toInt256(), eclpParams, derivedParams, invariant);
         }
 
         newBalance = newBalanceInt.toUint256();

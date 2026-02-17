@@ -174,7 +174,7 @@ abstract contract TestBase_OpenGSNFork is Test {
                 req.nonce,
                 keccak256(req.data),
                 req.validUntilTime,
-                bytes("")  // empty suffix data
+                bytes("") // empty suffix data
             )
         );
 
@@ -204,7 +204,7 @@ abstract contract TestBase_OpenGSNFork is Test {
                 req.nonce,
                 keccak256(req.data),
                 req.validUntilTime,
-                bytes("")  // empty suffix data
+                bytes("") // empty suffix data
             )
         );
 
@@ -221,13 +221,11 @@ abstract contract TestBase_OpenGSNFork is Test {
     /**
      * @notice Build a ported ForwardRequest for testing
      */
-    function _buildPortedRequest(
-        address from,
-        address to,
-        uint256 value,
-        uint256 gas,
-        bytes memory data
-    ) internal view returns (IForwarder.ForwardRequest memory) {
+    function _buildPortedRequest(address from, address to, uint256 value, uint256 gas, bytes memory data)
+        internal
+        view
+        returns (IForwarder.ForwardRequest memory)
+    {
         return IForwarder.ForwardRequest({
             from: from,
             to: to,
@@ -242,13 +240,11 @@ abstract contract TestBase_OpenGSNFork is Test {
     /**
      * @notice Build an upstream ForwardRequest for testing
      */
-    function _buildUpstreamRequest(
-        address from,
-        address to,
-        uint256 value,
-        uint256 gas,
-        bytes memory data
-    ) internal view returns (IUpstreamForwarder.ForwardRequest memory) {
+    function _buildUpstreamRequest(address from, address to, uint256 value, uint256 gas, bytes memory data)
+        internal
+        view
+        returns (IUpstreamForwarder.ForwardRequest memory)
+    {
         return IUpstreamForwarder.ForwardRequest({
             from: from,
             to: to,

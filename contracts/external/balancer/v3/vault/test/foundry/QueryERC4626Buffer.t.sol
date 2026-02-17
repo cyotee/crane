@@ -6,10 +6,12 @@ import "forge-std/Test.sol";
 
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseERC4626BufferTest } from "./utils/BaseERC4626BufferTest.sol";
+import {BaseERC4626BufferTest} from "./utils/BaseERC4626BufferTest.sol";
 
 contract QueryERC4626BufferTest is BaseERC4626BufferTest {
     using FixedPoint for uint256;
@@ -52,19 +54,16 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         _prankStaticCall();
         // Not using staticCall because it does not allow changes in the transient storage, and reverts with
         // a StateChangeDuringStaticCall error.
-        (
-            uint256[] memory queryPathAmountsOut,
-            address[] memory queryTokensOut,
-            uint256[] memory queryAmountsOut
-        ) = batchRouter.querySwapExactIn(paths, address(this), bytes(""));
+        (uint256[] memory queryPathAmountsOut, address[] memory queryTokensOut, uint256[] memory queryAmountsOut) =
+            batchRouter.querySwapExactIn(paths, address(this), bytes(""));
 
         // Restores the network state to snapshot.
         vm.revertToState(snapshotId);
 
         // Executes the actual operation.
         vm.prank(alice);
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) = batchRouter
-            .swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) =
+            batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         // Check if results of query and actual operations are equal
         assertApproxEqRel(pathAmountsOut[0], queryPathAmountsOut[0], errorTolerance, "pathAmountsOut's do not match");
@@ -81,19 +80,16 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         _prankStaticCall();
         // Not using staticCall because it does not allow changes in the transient storage, and reverts with
         // a StateChangeDuringStaticCall error.
-        (
-            uint256[] memory queryPathAmountsIn,
-            address[] memory queryTokensIn,
-            uint256[] memory queryAmountsIn
-        ) = batchRouter.querySwapExactOut(paths, address(this), bytes(""));
+        (uint256[] memory queryPathAmountsIn, address[] memory queryTokensIn, uint256[] memory queryAmountsIn) =
+            batchRouter.querySwapExactOut(paths, address(this), bytes(""));
 
         // Restores the network state to snapshot.
         vm.revertToState(snapshotId);
 
         // Executes the actual operation.
         vm.prank(alice);
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) = batchRouter
-            .swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) =
+            batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         // Check if results of query and actual operations are equal.
         assertApproxEqRel(pathAmountsIn[0], queryPathAmountsIn[0], errorTolerance, "pathAmountsIn's do not match");
@@ -109,9 +105,9 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         // Pre-swap through DAI buffer to get waDAI, then main swap waDAI for waWETH in the yield-bearing pool,
         // and finally post-swap the waWETH through the WETH buffer to calculate the WETH amount out.
         // The only token transfers are DAI in (given) and WETH out (calculated).
-        steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: waDAI, isBuffer: true });
-        steps[1] = SwapPathStep({ pool: pool, tokenOut: waWETH, isBuffer: false });
-        steps[2] = SwapPathStep({ pool: address(waWETH), tokenOut: weth, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
+        steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
+        steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});
 
         // For ExactIn, the steps are computed in order (Wrap -> Swap -> Unwrap).
         // Compute Wrap. The exact amount is `swapAmount`. The token in is DAI, so the wrap occurs in the waDAI buffer.
@@ -128,10 +124,7 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         uint256 wethAmountOutRaw = _vaultPreviewRedeem(waWETH, waWethAmountOutRaw);
 
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: dai,
-            steps: steps,
-            exactAmountIn: amountIn,
-            minAmountOut: wethAmountOutRaw
+            tokenIn: dai, steps: steps, exactAmountIn: amountIn, minAmountOut: wethAmountOutRaw
         });
     }
 
@@ -143,9 +136,9 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         // Pre-swap through the WETH buffer to get waWETH, then main swap waWETH for waDAI in the yield-bearing pool,
         // and finally post-swap the waDAI for DAI through the DAI buffer to calculate the DAI amount in.
         // The only token transfers are DAI in (calculated) and WETH out (given).
-        steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: waDAI, isBuffer: true });
-        steps[1] = SwapPathStep({ pool: pool, tokenOut: waWETH, isBuffer: false });
-        steps[2] = SwapPathStep({ pool: address(waWETH), tokenOut: weth, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
+        steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
+        steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});
 
         // For ExactOut, the last step is computed first (Unwrap -> Swap -> Wrap).
         // Compute Unwrap. The exact amount out in WETH is `swapAmount` and the token out is WETH, so the unwrap
@@ -163,10 +156,7 @@ contract QueryERC4626BufferTest is BaseERC4626BufferTest {
         uint256 daiAmountInRaw = _vaultPreviewMint(waDAI, waDaiAmountInRaw);
 
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: dai,
-            steps: steps,
-            maxAmountIn: daiAmountInRaw,
-            exactAmountOut: amountOut
+            tokenIn: dai, steps: steps, maxAmountIn: daiAmountInRaw, exactAmountOut: amountOut
         });
     }
 

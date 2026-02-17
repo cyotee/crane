@@ -52,8 +52,7 @@ library SafeTransferLib {
     uint256 internal constant GAS_STIPEND_NO_GRIEF = 100000;
 
     /// @dev The unique EIP-712 domain separator for the DAI token contract.
-    bytes32 internal constant DAI_DOMAIN_SEPARATOR =
-        0xdbb8cf42e1ecb028be3f3dbc922e1d878b963f411dc388ced501601c60f7c6f7;
+    bytes32 internal constant DAI_DOMAIN_SEPARATOR = 0xdbb8cf42e1ecb028be3f3dbc922e1d878b963f411dc388ced501601c60f7c6f7;
 
     /// @dev The address for the WETH9 contract on Ethereum mainnet.
     address internal constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
@@ -93,8 +92,7 @@ library SafeTransferLib {
 
     /// @dev Sends `amount` (in wei) ETH to `to`.
     function safeTransferETH(address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             if iszero(call(gas(), to, amount, codesize(), 0x00, codesize(), 0x00)) {
                 mstore(0x00, 0xb12d13eb) // `ETHTransferFailed()`.
                 revert(0x1c, 0x04)
@@ -104,8 +102,7 @@ library SafeTransferLib {
 
     /// @dev Sends all the ETH in the current contract to `to`.
     function safeTransferAllETH(address to) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             // Transfer all the ETH and check if it succeeded or not.
             if iszero(call(gas(), to, selfbalance(), codesize(), 0x00, codesize(), 0x00)) {
                 mstore(0x00, 0xb12d13eb) // `ETHTransferFailed()`.
@@ -116,8 +113,7 @@ library SafeTransferLib {
 
     /// @dev Force sends `amount` (in wei) ETH to `to`, with a `gasStipend`.
     function forceSafeTransferETH(address to, uint256 amount, uint256 gasStipend) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             if lt(selfbalance(), amount) {
                 mstore(0x00, 0xb12d13eb) // `ETHTransferFailed()`.
                 revert(0x1c, 0x04)
@@ -133,8 +129,7 @@ library SafeTransferLib {
 
     /// @dev Force sends all the ETH in the current contract to `to`, with a `gasStipend`.
     function forceSafeTransferAllETH(address to, uint256 gasStipend) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             if iszero(call(gasStipend, to, selfbalance(), codesize(), 0x00, codesize(), 0x00)) {
                 mstore(0x00, to) // Store the address in scratch space.
                 mstore8(0x0b, 0x73) // Opcode `PUSH20`.
@@ -148,8 +143,7 @@ library SafeTransferLib {
 
     /// @dev Force sends `amount` (in wei) ETH to `to`, with `GAS_STIPEND_NO_GRIEF`.
     function forceSafeTransferETH(address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             if lt(selfbalance(), amount) {
                 mstore(0x00, 0xb12d13eb) // `ETHTransferFailed()`.
                 revert(0x1c, 0x04)
@@ -165,8 +159,7 @@ library SafeTransferLib {
 
     /// @dev Force sends all the ETH in the current contract to `to`, with `GAS_STIPEND_NO_GRIEF`.
     function forceSafeTransferAllETH(address to) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
 
             // forgefmt: disable-next-item
             if iszero(call(GAS_STIPEND_NO_GRIEF, to, selfbalance(), codesize(), 0x00, codesize(), 0x00)) {
@@ -179,20 +172,15 @@ library SafeTransferLib {
     }
 
     /// @dev Sends `amount` (in wei) ETH to `to`, with a `gasStipend`.
-    function trySafeTransferETH(address to, uint256 amount, uint256 gasStipend)
-        internal
-        returns (bool success)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function trySafeTransferETH(address to, uint256 amount, uint256 gasStipend) internal returns (bool success) {
+        assembly ('memory-safe'){
             success := call(gasStipend, to, amount, codesize(), 0x00, codesize(), 0x00)
         }
     }
 
     /// @dev Sends all the ETH in the current contract to `to`, with a `gasStipend`.
     function trySafeTransferAllETH(address to, uint256 gasStipend) internal returns (bool success) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             success := call(gasStipend, to, selfbalance(), codesize(), 0x00, codesize(), 0x00)
         }
     }
@@ -201,8 +189,7 @@ library SafeTransferLib {
     /// This method attempts to use a separate contract to send via `SELFDESTRUCT`,
     /// and upon failure, deploys a minimal vault to accrue the ETH.
     function safeMoveETH(address to, uint256 amount) internal returns (address vault) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             to := shr(96, shl(96, to)) // Clean upper 96 bits.
             for { let mover := ETH_MOVER } iszero(eq(to, address())) {} {
                 let selfBalanceBefore := selfbalance()
@@ -252,8 +239,7 @@ library SafeTransferLib {
     /// The `from` account must have at least `amount` approved for
     /// the current contract to manage.
     function safeTransferFrom(address token, address from, address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, amount) // Store the `amount` argument.
             mstore(0x40, to) // Store the `to` argument.
@@ -278,8 +264,7 @@ library SafeTransferLib {
         internal
         returns (bool success)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, amount) // Store the `amount` argument.
             mstore(0x40, to) // Store the `to` argument.
@@ -298,12 +283,8 @@ library SafeTransferLib {
     /// Reverts upon failure.
     ///
     /// The `from` account must have their entire balance approved for the current contract to manage.
-    function safeTransferAllFrom(address token, address from, address to)
-        internal
-        returns (uint256 amount)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function safeTransferAllFrom(address token, address from, address to) internal returns (uint256 amount) {
+        assembly ('memory-safe'){
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x40, to) // Store the `to` argument.
             mstore(0x2c, shl(96, from)) // Store the `from` argument.
@@ -336,8 +317,7 @@ library SafeTransferLib {
     /// @dev Sends `amount` of ERC20 `token` from the current contract to `to`.
     /// Reverts upon failure.
     function safeTransfer(address token, address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x14, to) // Store the `to` argument.
             mstore(0x34, amount) // Store the `amount` argument.
             mstore(0x00, 0xa9059cbb000000000000000000000000) // `transfer(address,uint256)`.
@@ -356,8 +336,7 @@ library SafeTransferLib {
     /// @dev Sends all of ERC20 `token` from the current contract to `to`.
     /// Reverts upon failure.
     function safeTransferAll(address token, address to) internal returns (uint256 amount) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x00, 0x70a08231) // Store the function selector of `balanceOf(address)`.
             mstore(0x20, address()) // Store the address of the current contract.
             // Read the balance, reverting upon failure.
@@ -388,8 +367,7 @@ library SafeTransferLib {
     /// @dev Sets `amount` of ERC20 `token` for `to` to manage on behalf of the current contract.
     /// Reverts upon failure.
     function safeApprove(address token, address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x14, to) // Store the `to` argument.
             mstore(0x34, amount) // Store the `amount` argument.
             mstore(0x00, 0x095ea7b3000000000000000000000000) // `approve(address,uint256)`.
@@ -409,8 +387,7 @@ library SafeTransferLib {
     /// then retries the approval again (some tokens, e.g. USDT, requires this).
     /// Reverts upon failure.
     function safeApproveWithRetry(address token, address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x14, to) // Store the `to` argument.
             mstore(0x34, amount) // Store the `amount` argument.
             mstore(0x00, 0x095ea7b3000000000000000000000000) // `approve(address,uint256)`.
@@ -440,8 +417,7 @@ library SafeTransferLib {
     /// @dev Returns the amount of ERC20 `token` owned by `account`.
     /// Returns zero if the `token` does not exist.
     function balanceOf(address token, address account) internal view returns (uint256 amount) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x14, account) // Store the `account` argument.
             mstore(0x00, 0x70a08231000000000000000000000000) // `balanceOf(address)`.
             amount := mul( // The arguments of `mul` are evaluated from right to left.
@@ -457,13 +433,8 @@ library SafeTransferLib {
     /// @dev Performs a `token.balanceOf(account)` check.
     /// `implemented` denotes whether the `token` does not implement `balanceOf`.
     /// `amount` is zero if the `token` does not implement `balanceOf`.
-    function checkBalanceOf(address token, address account)
-        internal
-        view
-        returns (bool implemented, uint256 amount)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function checkBalanceOf(address token, address account) internal view returns (bool implemented, uint256 amount) {
+        assembly ('memory-safe'){
             mstore(0x14, account) // Store the `account` argument.
             mstore(0x00, 0x70a08231000000000000000000000000) // `balanceOf(address)`.
             implemented := and( // The arguments of `and` are evaluated from right to left.
@@ -477,12 +448,9 @@ library SafeTransferLib {
     /// @dev Returns the total supply of the `token`.
     /// Reverts if the token does not exist or does not implement `totalSupply()`.
     function totalSupply(address token) internal view returns (uint256 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             mstore(0x00, 0x18160ddd) // `totalSupply()`.
-            if iszero(
-                and(gt(returndatasize(), 0x1f), staticcall(gas(), token, 0x1c, 0x04, 0x00, 0x20))
-            ) {
+            if iszero(and(gt(returndatasize(), 0x1f), staticcall(gas(), token, 0x1c, 0x04, 0x00, 0x20))) {
                 mstore(0x00, 0x54cd9435) // `TotalSupplyQueryFailed()`.
                 revert(0x1c, 0x04)
             }
@@ -504,8 +472,7 @@ library SafeTransferLib {
     /// @dev Sends `amount` of ERC20 `token` from `from` to `to` via Permit2.
     /// Reverts upon failure.
     function permit2TransferFrom(address token, address from, address to, uint256 amount) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let m := mload(0x40)
             mstore(add(m, 0x74), shr(96, shl(96, token)))
             mstore(add(m, 0x54), amount)
@@ -542,8 +509,7 @@ library SafeTransferLib {
         bytes32 s
     ) internal {
         bool success;
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             for {} shl(96, xor(token, WETH9)) {} {
                 mstore(0x00, 0x3644e515) // `DOMAIN_SEPARATOR()`.
                 if iszero(
@@ -562,10 +528,7 @@ library SafeTransferLib {
                 if eq(mload(0x00), DAI_DOMAIN_SEPARATOR) {
                     mstore(0x14, owner)
                     mstore(0x00, 0x7ecebe00000000000000000000000000) // `nonces(address)`.
-                    mstore(
-                        add(m, 0x94),
-                        lt(iszero(amount), staticcall(gas(), token, 0x10, 0x24, add(m, 0x54), 0x20))
-                    )
+                    mstore(add(m, 0x94), lt(iszero(amount), staticcall(gas(), token, 0x10, 0x24, add(m, 0x54), 0x20)))
                     mstore(m, 0x8fcbaf0c000000000000000000000000) // `IDAIPermit.permit`.
                     // `nonces` is already at `add(m, 0x54)`.
                     // `amount != 0` is already stored at `add(m, 0x94)`.
@@ -598,8 +561,7 @@ library SafeTransferLib {
         bytes32 r,
         bytes32 s
     ) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let m := mload(0x40)
             mstore(m, 0x927da105) // `allowance(address,address,address)`.
             {
@@ -642,11 +604,8 @@ library SafeTransferLib {
     }
 
     /// @dev Approves `spender` to spend `amount` of `token` for `address(this)`.
-    function permit2Approve(address token, address spender, uint160 amount, uint48 expiration)
-        internal
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function permit2Approve(address token, address spender, uint160 amount, uint48 expiration) internal {
+        assembly ('memory-safe'){
             let addressMask := shr(96, not(0))
             let m := mload(0x40)
             mstore(m, 0x87517c45) // `approve(address,address,uint160,uint48)`.
@@ -663,8 +622,7 @@ library SafeTransferLib {
 
     /// @dev Revokes an approval for `token` and `spender` for `address(this)`.
     function permit2Lockdown(address token, address spender) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             let m := mload(0x40)
             mstore(m, 0xcc53287f) // `Permit2.lockdown`.
             mstore(add(m, 0x20), 0x20) // Offset of the `approvals`.

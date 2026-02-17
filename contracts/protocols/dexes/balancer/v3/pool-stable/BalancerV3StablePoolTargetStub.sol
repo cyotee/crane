@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BalancerV3StablePoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTarget.sol";
-import {BalancerV3StablePoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
+import {
+    BalancerV3StablePoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTarget.sol";
+import {
+    BalancerV3StablePoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
 
 /**
  * @title BalancerV3StablePoolTargetStub
@@ -49,12 +53,7 @@ contract BalancerV3StablePoolTargetStub is BalancerV3StablePoolTarget {
     function getRawAmplificationState()
         external
         view
-        returns (
-            uint64 startValue,
-            uint64 endValue,
-            uint32 startTime,
-            uint32 endTime
-        )
+        returns (uint64 startValue, uint64 endValue, uint32 startTime, uint32 endTime)
     {
         BalancerV3StablePoolRepo.Storage storage layout = BalancerV3StablePoolRepo._layout();
         startValue = layout.startValue;

@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 
 contract BasicAuthorizerMock is IAuthorizer {
     // Simple, to avoid bringing in EnumerableSet, etc.
     mapping(bytes32 actionId => mapping(address account => bool hasRole)) private _roles;
 
     // Could generalize better, but wanted to make minimal changes.
-    mapping(bytes32 actionId => mapping(address account => mapping(address whereAddress => bool hasRole)))
-        private _specificRoles;
+    mapping(bytes32 actionId => mapping(address account => mapping(address whereAddress => bool hasRole))) private
+        _specificRoles;
 
     /// @inheritdoc IAuthorizer
     function canPerform(bytes32 role, address account, address where) external view returns (bool) {

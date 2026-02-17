@@ -8,35 +8,45 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 import {Create2} from "@crane/contracts/utils/Create2.sol";
 
-import { ContractType } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IWeightedPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
+import {
+    ContractType
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IWeightedPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IFixedPriceLBPool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BalancerContractRegistry } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    BalancerContractRegistry
+} from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { FixedPriceLBPoolContractsDeployer } from "./utils/FixedPriceLBPoolContractsDeployer.sol";
-import { FixedPriceLBPoolFactory } from "../../contracts/lbp/FixedPriceLBPoolFactory.sol";
-import { LBPMigrationRouter } from "../../contracts/lbp/LBPMigrationRouter.sol";
-import { GradualValueChange } from "../../contracts/lib/GradualValueChange.sol";
-import { FixedPriceLBPool } from "../../contracts/lbp/FixedPriceLBPool.sol";
-import { BaseLBPFactory } from "../../contracts/lbp/BaseLBPFactory.sol";
-import { LBPValidation } from "../../contracts/lbp/LBPValidation.sol";
-import { LBPCommon } from "../../contracts/lbp/LBPCommon.sol";
-import { BaseLBPTest } from "./utils/BaseLBPTest.sol";
+import {FixedPriceLBPoolContractsDeployer} from "./utils/FixedPriceLBPoolContractsDeployer.sol";
+import {FixedPriceLBPoolFactory} from "../../contracts/lbp/FixedPriceLBPoolFactory.sol";
+import {LBPMigrationRouter} from "../../contracts/lbp/LBPMigrationRouter.sol";
+import {GradualValueChange} from "../../contracts/lib/GradualValueChange.sol";
+import {FixedPriceLBPool} from "../../contracts/lbp/FixedPriceLBPool.sol";
+import {BaseLBPFactory} from "../../contracts/lbp/BaseLBPFactory.sol";
+import {LBPValidation} from "../../contracts/lbp/LBPValidation.sol";
+import {LBPCommon} from "../../contracts/lbp/LBPCommon.sol";
+import {BaseLBPTest} from "./utils/BaseLBPTest.sol";
 
 contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer {
     using ArrayHelpers for *;
@@ -60,11 +70,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
     function createPoolFactory() internal virtual override returns (address) {
         lbPoolFactory = deployFixedPriceLBPoolFactory(
-            IVault(address(vault)),
-            365 days,
-            factoryVersion,
-            poolVersion,
-            address(router)
+            IVault(address(vault)), 365 days, factoryVersion, poolVersion, address(router)
         );
         vm.label(address(lbPoolFactory), "Fixed Price LB pool factory");
 
@@ -72,11 +78,9 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
     }
 
     function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
-        return
-            _createFixedPriceLBPool(
-                uint32(block.timestamp + DEFAULT_START_OFFSET),
-                uint32(block.timestamp + DEFAULT_END_OFFSET)
-            );
+        return _createFixedPriceLBPool(
+            uint32(block.timestamp + DEFAULT_START_OFFSET), uint32(block.timestamp + DEFAULT_END_OFFSET)
+        );
     }
 
     function initPool() internal virtual override {
@@ -118,7 +122,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         uint256 preCreateSnapshotId = vm.snapshotState();
 
-        (address newPool, ) = _createFixedPriceLBPool(pastStartTime, endTime);
+        (address newPool,) = _createFixedPriceLBPool(pastStartTime, endTime);
 
         vm.revertToState(preCreateSnapshotId);
 
@@ -135,7 +139,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         uint256 preCreateSnapshotId = vm.snapshotState();
 
-        (address newPool, ) = _createFixedPriceLBPool(startTime, endTime);
+        (address newPool,) = _createFixedPriceLBPool(startTime, endTime);
 
         vm.revertToState(preCreateSnapshotId);
 
@@ -167,11 +171,8 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
             blockProjectTokenSwapsIn: false
         });
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         vm.expectRevert(IFixedPriceLBPool.InvalidProjectTokenRate.selector);
         new FixedPriceLBPool(lbpCommonParams, factoryParams, 0);
@@ -192,11 +193,8 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
             blockProjectTokenSwapsIn: false
         });
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         vm.expectRevert(IFixedPriceLBPool.TokenSwapsInUnsupported.selector);
         new FixedPriceLBPool(lbpCommonParams, factoryParams, DEFAULT_RATE);
@@ -235,9 +233,8 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
     }
 
     function testGetProjectIndices() public view {
-        (uint256 expectedProjectTokenIndex, uint256 expectedReserveTokenIndex) = projectToken < reserveToken
-            ? (0, 1)
-            : (1, 0);
+        (uint256 expectedProjectTokenIndex, uint256 expectedReserveTokenIndex) =
+            projectToken < reserveToken ? (0, 1) : (1, 0);
 
         (uint256 projectTokenIndex, uint256 reserveTokenIndex) = ILBPCommon(pool).getTokenIndices();
 
@@ -259,14 +256,12 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
     }
 
     function testIsProjectTokenSwapInBlocked() public {
-        (address newPoolSwapEnabled, ) = _createFixedPriceLBPool(
-            uint32(block.timestamp + DEFAULT_START_OFFSET),
-            uint32(block.timestamp + DEFAULT_END_OFFSET)
+        (address newPoolSwapEnabled,) = _createFixedPriceLBPool(
+            uint32(block.timestamp + DEFAULT_START_OFFSET), uint32(block.timestamp + DEFAULT_END_OFFSET)
         );
 
         assertTrue(
-            ILBPCommon(newPoolSwapEnabled).isProjectTokenSwapInBlocked(),
-            "Swap of Project Token in is not blocked"
+            ILBPCommon(newPoolSwapEnabled).isProjectTokenSwapInBlocked(), "Swap of Project Token in is not blocked"
         );
     }
 
@@ -287,9 +282,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         );
 
         assertEq(
-            data.staticSwapFeePercentage,
-            vault.getStaticSwapFeePercentage(pool),
-            "staticSwapFeePercentage mismatch"
+            data.staticSwapFeePercentage, vault.getStaticSwapFeePercentage(pool), "staticSwapFeePercentage mismatch"
         );
         assertEq(data.totalSupply, IERC20(pool).totalSupply(), "TotalSupply mismatch");
 
@@ -313,21 +306,15 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         assertEq(data.reserveTokenIndex, reserveIdx, "Reserve token index mismatch");
 
         // Check decimal scaling factors
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(pool);
         assertEq(
-            data.decimalScalingFactors.length,
-            decimalScalingFactors.length,
-            "decimalScalingFactors length mismatch"
+            data.decimalScalingFactors.length, decimalScalingFactors.length, "decimalScalingFactors length mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[projectIdx],
-            decimalScalingFactors[projectIdx],
-            "Project scaling factor mismatch"
+            data.decimalScalingFactors[projectIdx], decimalScalingFactors[projectIdx], "Project scaling factor mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[reserveIdx],
-            decimalScalingFactors[reserveIdx],
-            "Reserve scaling factor mismatch"
+            data.decimalScalingFactors[reserveIdx], decimalScalingFactors[reserveIdx], "Reserve scaling factor mismatch"
         );
 
         // Check start and end times
@@ -434,7 +421,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         // Use non-unitary rate
         uint256 rate = 2.5e18;
 
-        (address newPool, ) = _createFixedPriceLBPool(address(0), startTime, endTime, rate);
+        (address newPool,) = _createFixedPriceLBPool(address(0), startTime, endTime, rate);
 
         // Warp to when swaps are enabled
         vm.warp(block.timestamp + DEFAULT_START_OFFSET + 1);
@@ -474,7 +461,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         rate = bound(rate, 1e16, 100e18);
         amountOut = bound(amountOut, 1e18, poolInitAmount / 3);
 
-        (address newPool, ) = _createFixedPriceLBPool(address(0), startTime, endTime, rate);
+        (address newPool,) = _createFixedPriceLBPool(address(0), startTime, endTime, rate);
         vault.manualSetStaticSwapFeePercentage(newPool, 0);
 
         vm.startPrank(bob); // Bob is the owner of the pool
@@ -489,27 +476,13 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         vm.startPrank(alice);
         uint256 calculatedProjectTokenOut = router.swapSingleTokenExactIn(
-            address(newPool),
-            reserveToken,
-            projectToken,
-            swapAmount,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(newPool), reserveToken, projectToken, swapAmount, 0, MAX_UINT256, false, bytes("")
         );
 
         assertEq(calculatedProjectTokenOut, expectedAmountOut, "ExactIn swap output mismatch");
 
         uint256 calculatedReserveTokenIn = router.swapSingleTokenExactOut(
-            address(newPool),
-            reserveToken,
-            projectToken,
-            expectedAmountOut,
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(newPool), reserveToken, projectToken, expectedAmountOut, MAX_UINT256, MAX_UINT256, false, bytes("")
         );
         vm.stopPrank();
 
@@ -527,14 +500,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         vm.prank(alice);
         uint256 swapAmountOut = router.swapSingleTokenExactIn(
-            address(pool),
-            reserveToken,
-            projectToken,
-            swapAmount,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
+            address(pool), reserveToken, projectToken, swapAmount, 0, MAX_UINT256, false, bytes("")
         );
 
         // Verify amount calculated is the same as the amount given.
@@ -552,11 +518,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         vm.prank(bob);
         uint256[] memory amountsOut = router.removeLiquidityProportional(
-            address(pool),
-            bptAmountIn,
-            [uint256(0), uint256(0)].toMemoryArray(),
-            false,
-            bytes("")
+            address(pool), bptAmountIn, [uint256(0), uint256(0)].toMemoryArray(), false, bytes("")
         );
 
         // Pool state after swap.
@@ -580,90 +542,90 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
     function testOnRegisterMoreThanTwoTokens() public {
         // Create token config array with 3 tokens
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc), address(wsteth)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister
         vm.prank(address(vault));
         vm.expectRevert(InputHelpers.InputLengthMismatch.selector);
-        IHooks(pool).onRegister(
-            poolFactory,
-            pool,
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        IHooks(pool)
+            .onRegister(
+                poolFactory,
+                pool,
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
     }
 
     function testOnRegisterNonStandardToken() public {
         // Create token config array with one STANDARD and one WITH_RATE token
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
         tokenConfig[1].tokenType = TokenType.WITH_RATE;
 
         // Mock vault call to onRegister
         vm.prank(address(vault));
         vm.expectRevert(IVaultErrors.InvalidTokenConfiguration.selector);
-        IHooks(pool).onRegister(
-            poolFactory,
-            pool,
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        IHooks(pool)
+            .onRegister(
+                poolFactory,
+                pool,
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
     }
 
     function testOnRegisterWrongPool() public {
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister with wrong pool address
         vm.prank(address(vault));
-        bool success = IHooks(pool).onRegister(
-            poolFactory,
-            address(1), // Wrong pool address
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        bool success = IHooks(pool)
+            .onRegister(
+                poolFactory,
+                address(1), // Wrong pool address
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
 
         assertFalse(success, "onRegister should return false when pool address doesn't match");
     }
 
     function testOnRegisterSuccess() public {
         // Create token config array with 2 standard tokens
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister with correct parameters
         vm.prank(address(vault));
-        bool success = IHooks(pool).onRegister(
-            poolFactory, // Correct factory address
-            pool, // Correct pool address
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        bool success = IHooks(pool)
+            .onRegister(
+                poolFactory, // Correct factory address
+                pool, // Correct pool address
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
 
         assertTrue(success, "onRegister should return true when parameters are valid");
     }
@@ -727,15 +689,16 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         // Try to remove liquidity before end time.
         vm.prank(address(vault));
         vm.expectRevert(LBPCommon.RemovingLiquidityNotAllowed.selector);
-        IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
     }
 
     function testOnBeforeRemoveLiquidityBeforeStartTime() public {
@@ -743,15 +706,16 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         vm.warp(block.timestamp + DEFAULT_START_OFFSET - 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
@@ -761,15 +725,16 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
@@ -811,15 +776,16 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            address(router),
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                address(router),
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
@@ -833,7 +799,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         uint32 startTime = uint32(block.timestamp + DEFAULT_START_OFFSET);
         uint32 endTime = uint32(block.timestamp + DEFAULT_END_OFFSET);
 
-        (address newPool, ) = _createFixedPriceLBPool(startTime, endTime);
+        (address newPool,) = _createFixedPriceLBPool(startTime, endTime);
 
         uint256[] memory initAmounts = new uint256[](2);
 
@@ -868,11 +834,8 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
             blockProjectTokenSwapsIn: true // all fixed price LBPs are "buy-only"
         });
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableInvalidOwner.selector, address(0)));
         new FixedPriceLBPool(lbpCommonParams, factoryParams, DEFAULT_RATE);
@@ -896,9 +859,7 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                GradualValueChange.InvalidStartTime.selector,
-                lbpCommonParams.startTime,
-                lbpCommonParams.endTime
+                GradualValueChange.InvalidStartTime.selector, lbpCommonParams.startTime, lbpCommonParams.endTime
             )
         );
         new FixedPriceLBPool(lbpCommonParams, factoryParams, DEFAULT_RATE);
@@ -918,19 +879,17 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
         initAmounts[projectIdx] = poolInitAmount;
     }
 
-    function _createFixedPriceLBPool(
-        uint32 startTime,
-        uint32 endTime
-    ) internal returns (address newPool, bytes memory poolArgs) {
+    function _createFixedPriceLBPool(uint32 startTime, uint32 endTime)
+        internal
+        returns (address newPool, bytes memory poolArgs)
+    {
         return _createFixedPriceLBPool(address(0), startTime, endTime, DEFAULT_RATE);
     }
 
-    function _createFixedPriceLBPool(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime,
-        uint256 projectTokenRate
-    ) internal returns (address newPool, bytes memory poolArgs) {
+    function _createFixedPriceLBPool(address poolCreator, uint32 startTime, uint32 endTime, uint256 projectTokenRate)
+        internal
+        returns (address newPool, bytes memory poolArgs)
+    {
         LBPCommonParams memory lbpCommonParams = LBPCommonParams({
             name: "FixedPriceLBPool",
             symbol: "FLBP",
@@ -942,11 +901,8 @@ contract FixedPriceLBPoolTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer 
             blockProjectTokenSwapsIn: true // all fixed price LBPs are "buy-only"
         });
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         uint256 salt = _saltCounter++;
         address poolCreator_ = poolCreator;

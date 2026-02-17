@@ -9,12 +9,20 @@ import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import {IUnbalancedLiquidityInvariantRatioBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    IUnbalancedLiquidityInvariantRatioBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -24,10 +32,18 @@ import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3Vaul
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
 
 // Real facet imports
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3ConstantProductPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3ConstantProductPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
 
 import {
     BalancerV3ConstantProductPoolDFPkg,
@@ -177,8 +193,7 @@ contract BalancerV3ConstantProductPoolDFPkg_RealFacets_Test is Test {
         for (uint256 i = 0; i < cuts.length; i++) {
             totalSelectors += cuts[i].functionSelectors.length;
             emit log_named_uint(
-                string.concat("Facet ", vm.toString(i), " selector count"),
-                cuts[i].functionSelectors.length
+                string.concat("Facet ", vm.toString(i), " selector count"), cuts[i].functionSelectors.length
             );
         }
 
@@ -197,15 +212,11 @@ contract BalancerV3ConstantProductPoolDFPkg_RealFacets_Test is Test {
         IDiamond.FacetCut[] memory cuts = pkg.facetCuts();
 
         for (uint256 i = 0; i < cuts.length; i++) {
-            emit log_named_address(
-                string.concat("Facet ", vm.toString(i)),
-                cuts[i].facetAddress
-            );
+            emit log_named_address(string.concat("Facet ", vm.toString(i)), cuts[i].facetAddress);
 
             for (uint256 j = 0; j < cuts[i].functionSelectors.length; j++) {
                 emit log_named_bytes32(
-                    string.concat("  Selector ", vm.toString(j)),
-                    bytes32(cuts[i].functionSelectors[j])
+                    string.concat("  Selector ", vm.toString(j)), bytes32(cuts[i].functionSelectors[j])
                 );
             }
         }
@@ -365,9 +376,7 @@ contract BalancerV3ConstantProductPoolDFPkg_RealFacets_Test is Test {
         // Verify all cuts have Add action
         for (uint256 i = 0; i < config.facetCuts.length; i++) {
             assertEq(
-                uint8(config.facetCuts[i].action),
-                uint8(IDiamond.FacetCutAction.Add),
-                "All cuts should be Add action"
+                uint8(config.facetCuts[i].action), uint8(IDiamond.FacetCutAction.Add), "All cuts should be Add action"
             );
         }
     }

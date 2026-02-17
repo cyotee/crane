@@ -8,19 +8,19 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
-import { ReClammPoolMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammMath } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {ReClammMathMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
+import {ReClammPoolMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammMath} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
 
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
-import { ReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
+import {ReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
 
 contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
     using FixedPoint for *;
@@ -45,20 +45,15 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
             uint256[] memory theoreticalVirtualBalances,
             uint256 theoreticalPriceRatio
         ) = mathMock.computeTheoreticalPriceRatioAndBalances(
-                _DEFAULT_MIN_PRICE,
-                _DEFAULT_MAX_PRICE,
-                _DEFAULT_TARGET_PRICE
-            );
+            _DEFAULT_MIN_PRICE, _DEFAULT_MAX_PRICE, _DEFAULT_TARGET_PRICE
+        );
 
         uint256 theoreticalFourthRootPriceRatio = ReClammMath.fourthRootScaled18(theoreticalPriceRatio);
         uint256 balanceRatio = _initialBalances[0].divDown(theoreticalBalances[0]);
 
         // Error tolerance of 1 million wei (price ratio is computed using the pool balances and may have a small error).
         assertApproxEqAbs(
-            _initialFourthRootPriceRatio,
-            theoreticalFourthRootPriceRatio,
-            1e6,
-            "Invalid fourthRootPriceRatio"
+            _initialFourthRootPriceRatio, theoreticalFourthRootPriceRatio, 1e6, "Invalid fourthRootPriceRatio"
         );
 
         // Don't need to check balances of token[0], since the balance ratio was calculated based on it.
@@ -83,11 +78,9 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
         );
     }
 
-    function testInitializationWithPrices__Fuzz(
-        uint256 newMinPrice,
-        uint256 newMaxPrice,
-        uint256 newTargetPrice
-    ) public {
+    function testInitializationWithPrices__Fuzz(uint256 newMinPrice, uint256 newMaxPrice, uint256 newTargetPrice)
+        public
+    {
         newMinPrice = bound(newMinPrice, _MIN_PRICE, _MAX_PRICE.divDown(_MIN_PRICE_RATIO));
         newMaxPrice = bound(newMaxPrice, newMinPrice.mulUp(_MIN_PRICE_RATIO), _MAX_PRICE);
         newTargetPrice = bound(
@@ -102,32 +95,25 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
         setInitializationPrices(newMinPrice, newMaxPrice, newTargetPrice);
         _createNewPool();
 
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
-        (uint256[] memory virtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalances,) = _computeCurrentVirtualBalances(pool);
 
         uint256 currentPrice = (balances[b] + virtualBalances[b]).divDown(balances[a] + virtualBalances[a]);
 
         assertApproxEqRel(currentPrice, newTargetPrice, _INITIAL_PARAMS_ERROR, "Current price does not match");
 
         uint256 balanceTokenAEdge = (virtualBalances[b] - virtualBalances[a].mulDown(newMinPrice)).divDown(newMinPrice);
-        uint256 invariantTokenAEdge = IBasePool(pool).computeInvariant(
-            [balanceTokenAEdge, 0].toMemoryArray(),
-            Rounding.ROUND_DOWN
-        );
+        uint256 invariantTokenAEdge =
+            IBasePool(pool).computeInvariant([balanceTokenAEdge, 0].toMemoryArray(), Rounding.ROUND_DOWN);
 
         uint256 balanceTokenBEdge = virtualBalances[a].mulDown(newMaxPrice) - virtualBalances[b];
-        uint256 invariantTokenBEdge = IBasePool(pool).computeInvariant(
-            [0, balanceTokenBEdge].toMemoryArray(),
-            Rounding.ROUND_DOWN
-        );
+        uint256 invariantTokenBEdge =
+            IBasePool(pool).computeInvariant([0, balanceTokenBEdge].toMemoryArray(), Rounding.ROUND_DOWN);
 
         uint256 newInvariant = _getCurrentInvariant();
 
         assertApproxEqRel(
-            invariantTokenAEdge,
-            invariantTokenBEdge,
-            _INITIAL_PARAMS_ERROR,
-            "Invariant at the edges should be equal"
+            invariantTokenAEdge, invariantTokenBEdge, _INITIAL_PARAMS_ERROR, "Invariant at the edges should be equal"
         );
         assertApproxEqRel(invariantTokenAEdge, newInvariant, _INITIAL_PARAMS_ERROR, "Invariant should be equal");
     }
@@ -140,7 +126,7 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
 
         uint32 duration = 5 days;
 
-        (uint256[] memory poolVirtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory poolVirtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
 
         uint32 currentTimestamp = uint32(block.timestamp);
 
@@ -151,7 +137,7 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
         ReClammPool(payable(pool)).startPriceRatioUpdate(endPriceRatio, currentTimestamp, currentTimestamp + duration);
         skip(duration);
 
-        (uint256[] memory poolVirtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory poolVirtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
 
         if (endFourthRootPriceRatio > initialFourthRootPriceRatio) {
             assertLt(
@@ -189,12 +175,10 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
         uint256 invariantAfter = _getCurrentInvariant();
         assertLe(invariantBefore, invariantAfter, "Invariant should not decrease");
 
-        (uint256[] memory currentVirtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory currentVirtualBalances,) = _computeCurrentVirtualBalances(pool);
         assertEq(currentVirtualBalances[daiIdx], _initialVirtualBalances[daiIdx], "DAI Virtual balances do not match");
         assertEq(
-            currentVirtualBalances[usdcIdx],
-            _initialVirtualBalances[usdcIdx],
-            "USDC Virtual balances do not match"
+            currentVirtualBalances[usdcIdx], _initialVirtualBalances[usdcIdx], "USDC Virtual balances do not match"
         );
     }
 
@@ -209,12 +193,10 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
         uint256 invariantAfter = _getCurrentInvariant();
         assertLe(invariantBefore, invariantAfter, "Invariant should not decrease");
 
-        (uint256[] memory currentVirtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory currentVirtualBalances,) = _computeCurrentVirtualBalances(pool);
         assertEq(currentVirtualBalances[daiIdx], _initialVirtualBalances[daiIdx], "DAI Virtual balances do not match");
         assertEq(
-            currentVirtualBalances[usdcIdx],
-            _initialVirtualBalances[usdcIdx],
-            "USDC Virtual balances do not match"
+            currentVirtualBalances[usdcIdx], _initialVirtualBalances[usdcIdx], "USDC Virtual balances do not match"
         );
     }
 
@@ -227,16 +209,12 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
 
         vm.prank(alice);
         router.addLiquidityProportional(
-            pool,
-            [MAX_UINT128, MAX_UINT128].toMemoryArray(),
-            exactBptAmountOut,
-            false,
-            new bytes(0)
+            pool, [MAX_UINT128, MAX_UINT128].toMemoryArray(), exactBptAmountOut, false, new bytes(0)
         );
 
         uint256 invariantAfter = _getCurrentInvariant();
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
-        (uint256[] memory virtualBalancesAfter, ) = _computeCurrentVirtualBalances(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory virtualBalancesAfter,) = _computeCurrentVirtualBalances(pool);
 
         assertGt(invariantAfter, invariantBefore, "Invariant should increase");
 
@@ -274,26 +252,22 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
 
         uint256[] memory virtualBalances = new uint256[](2);
         {
-            (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = IReClammPool(pool)
-                .computeCurrentVirtualBalances();
+            (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+                IReClammPool(pool).computeCurrentVirtualBalances();
             virtualBalances[daiIdx] = daiIdx < usdcIdx ? currentVirtualBalanceA : currentVirtualBalanceB;
             virtualBalances[usdcIdx] = daiIdx < usdcIdx ? currentVirtualBalanceB : currentVirtualBalanceA;
         }
 
         uint256 invariantBefore = _getCurrentInvariant();
-        (, , uint256[] memory balancesBefore, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesBefore,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(lp);
         router.removeLiquidityProportional(
-            pool,
-            exactBptAmountIn,
-            [uint256(0), uint256(0)].toMemoryArray(),
-            false,
-            new bytes(0)
+            pool, exactBptAmountIn, [uint256(0), uint256(0)].toMemoryArray(), false, new bytes(0)
         );
 
         uint256 invariantAfter = _getCurrentInvariant();
-        (, , uint256[] memory balancesAfter, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesAfter,) = vault.getPoolTokenInfo(pool);
 
         uint256[] memory lastVirtualBalances = new uint256[](2);
         {
@@ -324,7 +298,7 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
     }
 
     function _getCurrentInvariant() internal view returns (uint256) {
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
         return IBasePool(pool).computeInvariant(balances, Rounding.ROUND_DOWN);
     }
 
@@ -335,10 +309,10 @@ contract ReClammPoolVirtualBalancesTest is BaseReClammTest {
     }
 
     function _assumePoolInRange(uint256 newMinPrice, uint256 newMaxPrice, uint256 newTargetPrice) internal pure {
-        (uint256[] memory balances, uint256 virtualBalanceA, uint256 virtualBalanceB, ) = ReClammMath
-            .computeTheoreticalPriceRatioAndBalances(newMinPrice, newMaxPrice, newTargetPrice);
+        (uint256[] memory balances, uint256 virtualBalanceA, uint256 virtualBalanceB,) =
+            ReClammMath.computeTheoreticalPriceRatioAndBalances(newMinPrice, newMaxPrice, newTargetPrice);
 
-        (uint256 centeredness, ) = ReClammMath.computeCenteredness(balances, virtualBalanceA, virtualBalanceB);
+        (uint256 centeredness,) = ReClammMath.computeCenteredness(balances, virtualBalanceA, virtualBalanceB);
         vm.assume(centeredness > _DEFAULT_CENTEREDNESS_MARGIN);
     }
 }

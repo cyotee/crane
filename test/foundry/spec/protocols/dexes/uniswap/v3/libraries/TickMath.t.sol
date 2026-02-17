@@ -16,7 +16,6 @@ import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/Ti
  * 3. Edge cases at MIN_TICK, MAX_TICK, MIN_SQRT_RATIO, MAX_SQRT_RATIO boundaries
  */
 contract TickMath_Bijection_Test is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                            Constants from TickMath                         */
     /* -------------------------------------------------------------------------- */
@@ -102,20 +101,12 @@ contract TickMath_Bijection_Test is Test {
         uint160 recoveredSqrtPrice = TickMath.getSqrtRatioAtTick(tick);
 
         // The recovered sqrtPrice should be <= original (floor behavior)
-        assertLe(
-            recoveredSqrtPrice,
-            sqrtPriceX96,
-            "Recovered sqrtPrice exceeds original (floor violation)"
-        );
+        assertLe(recoveredSqrtPrice, sqrtPriceX96, "Recovered sqrtPrice exceeds original (floor violation)");
 
         // The recovered sqrtPrice should be close: the next tick's sqrtPrice should exceed original
         if (tick < MAX_TICK) {
             uint160 nextTickSqrtPrice = TickMath.getSqrtRatioAtTick(tick + 1);
-            assertGt(
-                nextTickSqrtPrice,
-                sqrtPriceX96,
-                "Next tick sqrtPrice should exceed original"
-            );
+            assertGt(nextTickSqrtPrice, sqrtPriceX96, "Next tick sqrtPrice should exceed original");
         }
     }
 

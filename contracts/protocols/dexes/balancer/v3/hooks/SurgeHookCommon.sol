@@ -3,7 +3,9 @@ pragma solidity ^0.8.30;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import {ISurgeHookCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
@@ -14,7 +16,9 @@ import {
     PoolSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {SingletonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
@@ -40,12 +44,7 @@ import {BaseHooksTarget} from "./BaseHooksTarget.sol";
  *
  * @custom:security-contact security@example.com
  */
-abstract contract SurgeHookCommon is
-    ISurgeHookCommon,
-    BaseHooksTarget,
-    SingletonAuthentication,
-    Version
-{
+abstract contract SurgeHookCommon is ISurgeHookCommon, BaseHooksTarget, SingletonAuthentication, Version {
     using FixedPoint for uint256;
     using SafeCast for *;
 
@@ -87,11 +86,7 @@ abstract contract SurgeHookCommon is
         uint256 defaultMaxSurgeFeePercentage_,
         uint256 defaultSurgeThresholdPercentage_,
         string memory version_
-    )
-        BaseHooksTarget(vault_)
-        SingletonAuthentication(vault_)
-        Version(version_)
-    {
+    ) BaseHooksTarget(vault_) SingletonAuthentication(vault_) Version(version_) {
         _ensureValidPercentage(defaultMaxSurgeFeePercentage_);
         _ensureValidPercentage(defaultSurgeThresholdPercentage_);
 
@@ -146,12 +141,13 @@ abstract contract SurgeHookCommon is
     }
 
     /// @inheritdoc BaseHooksTarget
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public virtual override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        virtual
+        override
+        onlyVault
+        returns (bool)
+    {
         // Set default surge parameters for new pools
         _setMaxSurgeFeePercentage(pool, _defaultMaxSurgeFeePercentage);
         _setSurgeThresholdPercentage(pool, _defaultSurgeThresholdPercentage);
@@ -236,21 +232,16 @@ abstract contract SurgeHookCommon is
     ) public view returns (uint256 surgeFeePercentage) {
         SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
 
-        (bool isSurging, uint256 newTotalImbalance) = _isSurgingSwap(
-            params,
-            pool,
-            staticSwapFeePercentage,
-            surgeFeeData
-        );
+        (bool isSurging, uint256 newTotalImbalance) =
+            _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
 
         if (isSurging) {
             // surgeFee = staticFee + (maxFee - staticFee) * (imbalance - threshold) / (1 - threshold)
-            surgeFeePercentage =
-                staticSwapFeePercentage +
-                (surgeFeeData.maxSurgeFeePercentage - staticSwapFeePercentage).mulDown(
-                    (newTotalImbalance - surgeFeeData.thresholdPercentage).divDown(
-                        uint256(surgeFeeData.thresholdPercentage).complement()
-                    )
+            surgeFeePercentage = staticSwapFeePercentage
+                + (surgeFeeData.maxSurgeFeePercentage - staticSwapFeePercentage)
+                .mulDown(
+                    (newTotalImbalance - surgeFeeData.thresholdPercentage)
+                    .divDown(uint256(surgeFeeData.thresholdPercentage).complement())
                 );
         } else {
             surgeFeePercentage = staticSwapFeePercentage;
@@ -258,13 +249,13 @@ abstract contract SurgeHookCommon is
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function isSurgingSwap(
-        PoolSwapParams calldata params,
-        address pool,
-        uint256 staticSwapFeePercentage
-    ) external view returns (bool isSurging) {
+    function isSurgingSwap(PoolSwapParams calldata params, address pool, uint256 staticSwapFeePercentage)
+        external
+        view
+        returns (bool isSurging)
+    {
         SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
-        (isSurging, ) = _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
+        (isSurging,) = _isSurgingSwap(params, pool, staticSwapFeePercentage, surgeFeeData);
     }
 
     /* ========================================================================== */
@@ -292,18 +283,20 @@ abstract contract SurgeHookCommon is
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function setMaxSurgeFeePercentage(
-        address pool,
-        uint256 newMaxSurgeSurgeFeePercentage
-    ) external withValidPercentage(newMaxSurgeSurgeFeePercentage) onlySwapFeeManagerOrGovernance(pool) {
+    function setMaxSurgeFeePercentage(address pool, uint256 newMaxSurgeSurgeFeePercentage)
+        external
+        withValidPercentage(newMaxSurgeSurgeFeePercentage)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setMaxSurgeFeePercentage(pool, newMaxSurgeSurgeFeePercentage);
     }
 
     /// @inheritdoc ISurgeHookCommon
-    function setSurgeThresholdPercentage(
-        address pool,
-        uint256 newSurgeThresholdPercentage
-    ) external withValidPercentage(newSurgeThresholdPercentage) onlySwapFeeManagerOrGovernance(pool) {
+    function setSurgeThresholdPercentage(address pool, uint256 newSurgeThresholdPercentage)
+        external
+        withValidPercentage(newSurgeThresholdPercentage)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setSurgeThresholdPercentage(pool, newSurgeThresholdPercentage);
     }
 
@@ -318,11 +311,12 @@ abstract contract SurgeHookCommon is
      * @param newTotalImbalance Imbalance after operation.
      * @return isSurging True if surging conditions are met.
      */
-    function _isSurging(
-        uint64 thresholdPercentage,
-        uint256 oldTotalImbalance,
-        uint256 newTotalImbalance
-    ) internal pure virtual returns (bool isSurging) {
+    function _isSurging(uint64 thresholdPercentage, uint256 oldTotalImbalance, uint256 newTotalImbalance)
+        internal
+        pure
+        virtual
+        returns (bool isSurging)
+    {
         // Perfectly balanced = no surge
         if (newTotalImbalance == 0) {
             return false;

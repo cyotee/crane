@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.0;
+
+uint256 constant CONTRACT_INIT_SIZE_LIMIT = 49_152;
+uint256 constant CONTRACT_SIZE_LIMIT = 24_576;
 
 bytes32 constant EMPTY_STRING_HASH = keccak256(abi.encode(""));
 

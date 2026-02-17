@@ -15,12 +15,7 @@ contract ERC8109IntrospectionFacet is ERC8109IntrospectionTarget, IFacet {
         interfaces[0] = type(IERC8109Introspection).interfaceId;
     }
 
-    function facetFuncs()
-        public
-        pure
-        virtual
-        returns (bytes4[] memory funcs)
-    {
+    function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
         funcs = new bytes4[](2);
         funcs[0] = IERC8109Introspection.facetAddress.selector;
         funcs[1] = IERC8109Introspection.functionFacetPairs.selector;

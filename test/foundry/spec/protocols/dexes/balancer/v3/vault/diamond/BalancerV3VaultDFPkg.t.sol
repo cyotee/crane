@@ -19,7 +19,9 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
@@ -51,28 +53,30 @@ import {
     BalancerV3VaultDFPkg,
     IBalancerV3VaultDFPkg
 } from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultDFPkg.sol";
-import {BalancerV3VaultStorageRepo} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultStorageRepo.sol";
+import {
+    BalancerV3VaultStorageRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultStorageRepo.sol";
 
 // Facets
-import {VaultTransientFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
-import {VaultSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
-import {VaultLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
-import {VaultBufferFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
-import {VaultPoolTokenFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
-import {VaultQueryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
-import {VaultRegistrationFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
-import {VaultAdminFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
-import {VaultRecoveryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
+import {
+    VaultTransientFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
+import {VaultSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
+import {
+    VaultLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
+import {VaultBufferFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
+import {
+    VaultPoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
+import {VaultQueryFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
+import {
+    VaultRegistrationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
+import {VaultAdminFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
+import {
+    VaultRecoveryFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Mock Contracts                             */
@@ -337,7 +341,7 @@ contract BalancerV3VaultDFPkgTest is Test {
         );
 
         address vault2 = vaultPkg.deployVault(
-            MINIMUM_TRADE_AMOUNT * 2,  // Different param
+            MINIMUM_TRADE_AMOUNT * 2, // Different param
             MINIMUM_WRAP_AMOUNT,
             PAUSE_WINDOW_DURATION,
             BUFFER_PERIOD_DURATION,
@@ -408,10 +412,14 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultMain.swap.selector, "swap");
         _assertSelectorResolvesOnVault(vault, IVaultMain.addLiquidity.selector, "addLiquidity");
         _assertSelectorResolvesOnVault(vault, IVaultMain.removeLiquidity.selector, "removeLiquidity");
-        _assertSelectorResolvesOnVault(vault, IVaultMain.getPoolTokenCountAndIndexOfToken.selector, "getPoolTokenCountAndIndexOfToken");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultMain.getPoolTokenCountAndIndexOfToken.selector, "getPoolTokenCountAndIndexOfToken"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultMain.transfer.selector, "transfer");
         _assertSelectorResolvesOnVault(vault, IVaultMain.transferFrom.selector, "transferFrom");
-        _assertSelectorResolvesOnVault(vault, IVaultMain.erc4626BufferWrapOrUnwrap.selector, "erc4626BufferWrapOrUnwrap");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultMain.erc4626BufferWrapOrUnwrap.selector, "erc4626BufferWrapOrUnwrap"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultMain.getVaultExtension.selector, "getVaultExtension");
     }
 
@@ -423,7 +431,9 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getNonzeroDeltaCount.selector, "getNonzeroDeltaCount");
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getTokenDelta.selector, "getTokenDelta");
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getReservesOf.selector, "getReservesOf");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.getAddLiquidityCalledFlag.selector, "getAddLiquidityCalledFlag");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.getAddLiquidityCalledFlag.selector, "getAddLiquidityCalledFlag"
+        );
 
         // IVaultExtension selectors - Pool Registration
         _assertSelectorResolvesOnVault(vault, IVaultExtension.registerPool.selector, "registerPool");
@@ -452,26 +462,42 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getPoolPausedState.selector, "getPoolPausedState");
 
         // IVaultExtension selectors - ERC4626 Buffers
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.isERC4626BufferInitialized.selector, "isERC4626BufferInitialized");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.isERC4626BufferInitialized.selector, "isERC4626BufferInitialized"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getERC4626BufferAsset.selector, "getERC4626BufferAsset");
 
         // IVaultExtension selectors - Fees
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.getAggregateSwapFeeAmount.selector, "getAggregateSwapFeeAmount");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.getAggregateYieldFeeAmount.selector, "getAggregateYieldFeeAmount");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.getStaticSwapFeePercentage.selector, "getStaticSwapFeePercentage");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.getAggregateSwapFeeAmount.selector, "getAggregateSwapFeeAmount"
+        );
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.getAggregateYieldFeeAmount.selector, "getAggregateYieldFeeAmount"
+        );
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.getStaticSwapFeePercentage.selector, "getStaticSwapFeePercentage"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultExtension.getPoolRoleAccounts.selector, "getPoolRoleAccounts");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.computeDynamicSwapFeePercentage.selector, "computeDynamicSwapFeePercentage");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.getProtocolFeeController.selector, "getProtocolFeeController");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.computeDynamicSwapFeePercentage.selector, "computeDynamicSwapFeePercentage"
+        );
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.getProtocolFeeController.selector, "getProtocolFeeController"
+        );
 
         // IVaultExtension selectors - Recovery Mode
         _assertSelectorResolvesOnVault(vault, IVaultExtension.isPoolInRecoveryMode.selector, "isPoolInRecoveryMode");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.removeLiquidityRecovery.selector, "removeLiquidityRecovery");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.removeLiquidityRecovery.selector, "removeLiquidityRecovery"
+        );
 
         // IVaultExtension selectors - Queries
         _assertSelectorResolvesOnVault(vault, IVaultExtension.quote.selector, "quote");
         _assertSelectorResolvesOnVault(vault, IVaultExtension.quoteAndRevert.selector, "quoteAndRevert");
         _assertSelectorResolvesOnVault(vault, IVaultExtension.isQueryDisabled.selector, "isQueryDisabled");
-        _assertSelectorResolvesOnVault(vault, IVaultExtension.isQueryDisabledPermanently.selector, "isQueryDisabledPermanently");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultExtension.isQueryDisabledPermanently.selector, "isQueryDisabledPermanently"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultExtension.emitAuxiliaryEvent.selector, "emitAuxiliaryEvent");
 
         // IVaultExtension selectors - Authentication
@@ -487,8 +513,12 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getBufferPeriodEndTime.selector, "getBufferPeriodEndTime");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getMinimumPoolTokens.selector, "getMinimumPoolTokens");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getMaximumPoolTokens.selector, "getMaximumPoolTokens");
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.getPoolMinimumTotalSupply.selector, "getPoolMinimumTotalSupply");
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.getBufferMinimumTotalSupply.selector, "getBufferMinimumTotalSupply");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.getPoolMinimumTotalSupply.selector, "getPoolMinimumTotalSupply"
+        );
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.getBufferMinimumTotalSupply.selector, "getBufferMinimumTotalSupply"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getMinimumTradeAmount.selector, "getMinimumTradeAmount");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getMinimumWrapAmount.selector, "getMinimumWrapAmount");
 
@@ -503,10 +533,16 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.unpausePool.selector, "unpausePool");
 
         // IVaultAdmin selectors - Fees
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.setStaticSwapFeePercentage.selector, "setStaticSwapFeePercentage");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.setStaticSwapFeePercentage.selector, "setStaticSwapFeePercentage"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.collectAggregateFees.selector, "collectAggregateFees");
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.updateAggregateSwapFeePercentage.selector, "updateAggregateSwapFeePercentage");
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.updateAggregateYieldFeePercentage.selector, "updateAggregateYieldFeePercentage");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.updateAggregateSwapFeePercentage.selector, "updateAggregateSwapFeePercentage"
+        );
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.updateAggregateYieldFeePercentage.selector, "updateAggregateYieldFeePercentage"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.setProtocolFeeController.selector, "setProtocolFeeController");
 
         // IVaultAdmin selectors - Recovery Mode
@@ -524,7 +560,9 @@ contract BalancerV3VaultDFPkgTest is Test {
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.unpauseVaultBuffers.selector, "unpauseVaultBuffers");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.initializeBuffer.selector, "initializeBuffer");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.addLiquidityToBuffer.selector, "addLiquidityToBuffer");
-        _assertSelectorResolvesOnVault(vault, IVaultAdmin.removeLiquidityFromBuffer.selector, "removeLiquidityFromBuffer");
+        _assertSelectorResolvesOnVault(
+            vault, IVaultAdmin.removeLiquidityFromBuffer.selector, "removeLiquidityFromBuffer"
+        );
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getBufferAsset.selector, "getBufferAsset");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getBufferOwnerShares.selector, "getBufferOwnerShares");
         _assertSelectorResolvesOnVault(vault, IVaultAdmin.getBufferTotalShares.selector, "getBufferTotalShares");
@@ -601,8 +639,7 @@ contract BalancerV3VaultDFPkgTest is Test {
         IDiamondLoupe loupe = IDiamondLoupe(vault);
         address facetAddress = loupe.facetAddress(selector);
         assertTrue(
-            facetAddress != address(0),
-            string.concat("Selector for ", functionName, " should resolve to a facet")
+            facetAddress != address(0), string.concat("Selector for ", functionName, " should resolve to a facet")
         );
     }
 }

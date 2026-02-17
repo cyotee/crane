@@ -8,7 +8,9 @@ pragma solidity ^0.8.0;
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 import {IBalancerV3StablePool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3StablePool.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {BalancerV3StablePoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTarget.sol";
+import {
+    BalancerV3StablePoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTarget.sol";
 
 /**
  * @title Balancer V3 Stable Pool Facet

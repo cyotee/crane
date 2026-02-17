@@ -83,39 +83,27 @@ interface ITimelockAuthorizer {
 
     /// @notice Emitted when a revoke permission is scheduled.
     event RevokePermissionScheduled(
-        bytes32 indexed actionId,
-        address indexed account,
-        address indexed where,
-        uint256 scheduledExecutionId
+        bytes32 indexed actionId, address indexed account, address indexed where, uint256 scheduledExecutionId
     );
 
     /// @notice Emitted when a grant permission is scheduled.
     event GrantPermissionScheduled(
-        bytes32 indexed actionId,
-        address indexed account,
-        address indexed where,
-        uint256 scheduledExecutionId
+        bytes32 indexed actionId, address indexed account, address indexed where, uint256 scheduledExecutionId
     );
 
     /// @notice Emitted when a revoke delay change is scheduled.
     event RevokeDelayChangeScheduled(
-        bytes32 indexed actionId,
-        uint256 indexed newDelay,
-        uint256 indexed scheduledExecutionId
+        bytes32 indexed actionId, uint256 indexed newDelay, uint256 indexed scheduledExecutionId
     );
 
     /// @notice Emitted when a grant delay change is scheduled.
     event GrantDelayChangeScheduled(
-        bytes32 indexed actionId,
-        uint256 indexed newDelay,
-        uint256 indexed scheduledExecutionId
+        bytes32 indexed actionId, uint256 indexed newDelay, uint256 indexed scheduledExecutionId
     );
 
     /// @notice Emitted when a delay change is scheduled.
     event DelayChangeScheduled(
-        bytes32 indexed actionId,
-        uint256 indexed newDelay,
-        uint256 indexed scheduledExecutionId
+        bytes32 indexed actionId, uint256 indexed newDelay, uint256 indexed scheduledExecutionId
     );
 
     /// @notice Emitted when a new `delay` is set in order to perform action `actionId`.
@@ -214,11 +202,10 @@ interface ITimelockAuthorizer {
      *  - { skip: 5, reverseOrder: true } : returns up to `maxSize` of the newest entries, skipping the 5 newest
      *    entries, with the globally sixth newest at index 0
      */
-    function getScheduledExecutions(
-        uint256 skip,
-        uint256 maxSize,
-        bool reverseOrder
-    ) external view returns (ITimelockAuthorizer.ScheduledExecution[] memory items);
+    function getScheduledExecutions(uint256 skip, uint256 maxSize, bool reverseOrder)
+        external
+        view
+        returns (ITimelockAuthorizer.ScheduledExecution[] memory items);
 
     /// @notice Returns true if `account` is an executor for `scheduledExecutionId`.
     function isExecutor(uint256 scheduledExecutionId, address account) external view returns (bool);
@@ -419,11 +406,9 @@ interface ITimelockAuthorizer {
      * Only root can call this function, but other accounts may be granted permission to cancel the scheduled execution
      * (including global cancelers).
      */
-    function scheduleDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external returns (uint256);
+    function scheduleDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        returns (uint256);
 
     /**
      * @notice Schedules an execution to set the delay for granting permission over `actionId` to `newDelay`. This makes
@@ -447,11 +432,9 @@ interface ITimelockAuthorizer {
      * Only root can call this function, but other accounts may be granted permission to cancel the scheduled execution
      * (including global cancelers).
      */
-    function scheduleGrantDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external returns (uint256);
+    function scheduleGrantDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        returns (uint256);
 
     /**
      * @notice Schedules an execution to set the delay for revoking permission over `actionId` to `newDelay`. This makes
@@ -476,11 +459,9 @@ interface ITimelockAuthorizer {
      * Only root can call this function, but other accounts may be granted permission to cancel the scheduled execution
      * (including global cancelers).
      */
-    function scheduleRevokeDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external returns (uint256);
+    function scheduleRevokeDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        returns (uint256);
 
     /**
      * @notice Schedules an arbitrary execution of `data` in target `where`. Returns a scheduledExecutionId that can be
@@ -513,12 +494,9 @@ interface ITimelockAuthorizer {
      * @notice Schedules a grant permission to `account` for action `actionId` in target `where`.
      * @dev See `schedule` comments.
      */
-    function scheduleGrantPermission(
-        bytes32 actionId,
-        address account,
-        address where,
-        address[] memory executors
-    ) external returns (uint256);
+    function scheduleGrantPermission(bytes32 actionId, address account, address where, address[] memory executors)
+        external
+        returns (uint256);
 
     /**
      * @notice Revokes a permission from a single `account` at `where` address.
@@ -531,12 +509,9 @@ interface ITimelockAuthorizer {
      * @notice Schedules a revoke permission from `account` for action `actionId` in target `where`.
      * @dev See `schedule` comments.
      */
-    function scheduleRevokePermission(
-        bytes32 actionId,
-        address account,
-        address where,
-        address[] memory executors
-    ) external returns (uint256);
+    function scheduleRevokePermission(bytes32 actionId, address account, address where, address[] memory executors)
+        external
+        returns (uint256);
 
     /**
      * @notice Revokes a permission from the caller for `actionId` at `where` address

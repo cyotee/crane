@@ -62,7 +62,9 @@ contract ERC165Repo_Test is Test {
         stub.registerInterface(TEST_INTERFACE_1);
 
         // Verify interface is now registered
-        assertTrue(stub.supportsInterface(TEST_INTERFACE_1), "Interface should be registered after _registerInterface(bytes4)");
+        assertTrue(
+            stub.supportsInterface(TEST_INTERFACE_1), "Interface should be registered after _registerInterface(bytes4)"
+        );
     }
 
     function test_registerInterface_storage_overload() public {
@@ -73,7 +75,10 @@ contract ERC165Repo_Test is Test {
         stub.registerInterfaceWithStorage(TEST_INTERFACE_2);
 
         // Verify interface is now registered
-        assertTrue(stub.supportsInterface(TEST_INTERFACE_2), "Interface should be registered after _registerInterface(Storage, bytes4)");
+        assertTrue(
+            stub.supportsInterface(TEST_INTERFACE_2),
+            "Interface should be registered after _registerInterface(Storage, bytes4)"
+        );
     }
 
     function test_registerInterface_both_overloads_equivalent() public {
@@ -223,10 +228,7 @@ contract ERC165Repo_Test is Test {
      */
     function test_registerInterface_0xffffffff_allowed_by_repo() public {
         // Initially not registered
-        assertFalse(
-            stub.supportsInterface(INVALID_INTERFACE_ID),
-            "0xffffffff should not be registered initially"
-        );
+        assertFalse(stub.supportsInterface(INVALID_INTERFACE_ID), "0xffffffff should not be registered initially");
 
         // Repo allows registration (it's a generic mapping)
         stub.registerInterface(INVALID_INTERFACE_ID);

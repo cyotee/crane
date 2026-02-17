@@ -4,18 +4,20 @@ pragma solidity ^0.8.24;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IECLPSurgeHook } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IECLPSurgeHook} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { SignedFixedPoint } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/SignedFixedPoint.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { GyroECLPMath } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {SignedFixedPoint} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/SignedFixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 
-import { SurgeHookCommon } from "./SurgeHookCommon.sol";
+import {SurgeHookCommon} from "./SurgeHookCommon.sol";
 
 /**
  * @notice Hook that charges a fee on trades that push a pool into an imbalanced state beyond a given threshold.
@@ -62,7 +64,7 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         TokenConfig[] memory tokenConfig,
         LiquidityManagement calldata liquidityManagement
     ) public override onlyVault returns (bool success) {
-        (IGyroECLPPool.EclpParams memory eclpParams, ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams,) = IGyroECLPPool(pool).getECLPParams();
 
         // The surge hook only works for pools with a rotation angle between 30 and 60 degrees. Outside of this range,
         // the computation of the peak price cannot be approximated by sine/cosine. Notice that sin(30deg) = 0.5, and
@@ -91,18 +93,18 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
     }
 
     /// @inheritdoc IECLPSurgeHook
-    function setImbalanceSlopeBelowPeak(
-        address pool,
-        uint256 newImbalanceSlopeBelowPeak
-    ) external onlySwapFeeManagerOrGovernance(pool) {
+    function setImbalanceSlopeBelowPeak(address pool, uint256 newImbalanceSlopeBelowPeak)
+        external
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setImbalanceSlopeBelowPeak(pool, newImbalanceSlopeBelowPeak);
     }
 
     /// @inheritdoc IECLPSurgeHook
-    function setImbalanceSlopeAbovePeak(
-        address pool,
-        uint256 newImbalanceSlopeAbovePeak
-    ) external onlySwapFeeManagerOrGovernance(pool) {
+    function setImbalanceSlopeAbovePeak(address pool, uint256 newImbalanceSlopeAbovePeak)
+        external
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setImbalanceSlopeAbovePeak(pool, newImbalanceSlopeAbovePeak);
     }
 
@@ -122,10 +124,8 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
             return (false, 0);
         }
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedECLPParams
-        ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedECLPParams) =
+            IGyroECLPPool(pool).getECLPParams();
 
         (uint256 amountCalculatedScaled18, int256 a, int256 b) = _computeSwap(params, eclpParams, derivedECLPParams);
 
@@ -156,19 +156,14 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
         ImbalanceSlopeData memory imbalanceSlopeData = _imbalanceSlopePoolData[pool];
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedECLPParams
-        ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedECLPParams) =
+            IGyroECLPPool(pool).getECLPParams();
 
         uint256 oldTotalImbalance;
         uint256 newTotalImbalance;
 
-        (int256 a, int256 b) = GyroECLPMath.computeOffsetFromBalances(
-            oldBalancesScaled18,
-            eclpParams,
-            derivedECLPParams
-        );
+        (int256 a, int256 b) =
+            GyroECLPMath.computeOffsetFromBalances(oldBalancesScaled18, eclpParams, derivedECLPParams);
         oldTotalImbalance = _computeImbalance(oldBalancesScaled18, eclpParams, a, b, imbalanceSlopeData);
 
         // Since the invariant is not the same after the liquidity change, we need to recompute the offset.
@@ -192,11 +187,8 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
 
         IGyroECLPPool.Vector2 memory invariant;
 
-        (int256 currentInvariant, int256 invErr) = GyroECLPMath.calculateInvariantWithError(
-            request.balancesScaled18,
-            eclpParams,
-            derivedECLPParams
-        );
+        (int256 currentInvariant, int256 invErr) =
+            GyroECLPMath.calculateInvariantWithError(request.balancesScaled18, eclpParams, derivedECLPParams);
         // invariant = overestimate in x-component, underestimate in y-component
         // No overflow in `+` due to constraints to the different values enforced in GyroECLPMath.
         invariant = IGyroECLPPool.Vector2(currentInvariant + 2 * invErr, currentInvariant);
@@ -250,13 +242,11 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
             // If the currentPrice equals the peak price, the pool is perfectly balanced.
             return 0;
         } else if (currentPrice < peakPrice) {
-            imbalance =
-                ((peakPrice - currentPrice) * imbalanceSlopeData.imbalanceSlopeBelowPeak) /
-                (peakPrice - eclpParams.alpha.toUint256());
+            imbalance = ((peakPrice - currentPrice) * imbalanceSlopeData.imbalanceSlopeBelowPeak)
+                / (peakPrice - eclpParams.alpha.toUint256());
         } else {
-            imbalance =
-                ((currentPrice - peakPrice) * imbalanceSlopeData.imbalanceSlopeAbovePeak) /
-                (eclpParams.beta.toUint256() - peakPrice);
+            imbalance = ((currentPrice - peakPrice) * imbalanceSlopeData.imbalanceSlopeAbovePeak)
+                / (eclpParams.beta.toUint256() - peakPrice);
         }
 
         return imbalance > FixedPoint.ONE ? FixedPoint.ONE : imbalance;

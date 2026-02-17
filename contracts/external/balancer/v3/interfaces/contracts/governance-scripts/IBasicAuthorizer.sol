@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IAuthorizer } from "../vault/IAuthorizer.sol";
+import {IAuthorizer} from "../vault/IAuthorizer.sol";
 
 interface IBasicAuthorizer is IAuthorizer {
     // solhint-disable-next-line func-name-mixedcase

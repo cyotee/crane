@@ -121,8 +121,7 @@ library SafeERC20 {
      * @dev Helper to check if an address has no code (used for non-standard token handling).
      */
     function _hasNoCode(address account) private view returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe'){
             result := iszero(extcodesize(account))
         }
     }

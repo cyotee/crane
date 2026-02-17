@@ -208,6 +208,18 @@ contract Pool is IPool, ERC20Permit, ReentrancyGuard {
         }
     }
 
+    /**
+     * @dev OpenZeppelin v5 ERC20 no longer calls `_beforeTokenTransfer`.
+     *      The Aerodrome fee-index accounting relies on tracking LP balance
+     *      changes, so we hook into `_update` instead.
+     */
+    function _update(address from, address to, uint256 value) internal override {
+        // Snapshot fee indices for both sides before the balance change.
+        _updateFor(from);
+        _updateFor(to);
+        super._update(from, to, value);
+    }
+
     /// @inheritdoc IPool
     function getReserves() public view returns (uint256 _reserve0, uint256 _reserve1, uint256 _blockTimestampLast) {
         _reserve0 = reserve0;
@@ -272,12 +284,11 @@ contract Pool is IPool, ERC20Permit, ReentrancyGuard {
     }
 
     /// @inheritdoc IPool
-    function sample(
-        address tokenIn,
-        uint256 amountIn,
-        uint256 points,
-        uint256 window
-    ) public view returns (uint256[] memory) {
+    function sample(address tokenIn, uint256 amountIn, uint256 points, uint256 window)
+        public
+        view
+        returns (uint256[] memory)
+    {
         uint256[] memory _prices = new uint256[](points);
 
         uint256 length = observations.length - 1;
@@ -288,10 +299,10 @@ contract Pool is IPool, ERC20Permit, ReentrancyGuard {
         for (; i < length; i += window) {
             nextIndex = i + window;
             uint256 timeElapsed = observations[nextIndex].timestamp - observations[i].timestamp;
-            uint256 _reserve0 = (observations[nextIndex].reserve0Cumulative - observations[i].reserve0Cumulative) /
-                timeElapsed;
-            uint256 _reserve1 = (observations[nextIndex].reserve1Cumulative - observations[i].reserve1Cumulative) /
-                timeElapsed;
+            uint256 _reserve0 =
+                (observations[nextIndex].reserve0Cumulative - observations[i].reserve0Cumulative) / timeElapsed;
+            uint256 _reserve1 =
+                (observations[nextIndex].reserve1Cumulative - observations[i].reserve1Cumulative) / timeElapsed;
             _prices[index] = _getAmountOut(amountIn, tokenIn, _reserve0, _reserve1);
             // index < length; length cannot overflow
             unchecked {
@@ -457,12 +468,11 @@ contract Pool is IPool, ERC20Permit, ReentrancyGuard {
         return _getAmountOut(amountIn, tokenIn, _reserve0, _reserve1);
     }
 
-    function _getAmountOut(
-        uint256 amountIn,
-        address tokenIn,
-        uint256 _reserve0,
-        uint256 _reserve1
-    ) internal view returns (uint256) {
+    function _getAmountOut(uint256 amountIn, address tokenIn, uint256 _reserve0, uint256 _reserve1)
+        internal
+        view
+        returns (uint256)
+    {
         if (stable) {
             uint256 xy = _k(_reserve0, _reserve1);
             _reserve0 = (_reserve0 * 1e18) / decimals0;
@@ -502,8 +512,5 @@ contract Pool is IPool, ERC20Permit, ReentrancyGuard {
         return _symbol;
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256) internal {
-        _updateFor(from);
-        _updateFor(to);
-    }
+    // NOTE: `_beforeTokenTransfer` is intentionally not used with OZ v5.
 }

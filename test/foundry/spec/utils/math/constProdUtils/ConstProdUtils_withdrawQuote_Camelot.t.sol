@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol";
-import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
+import {
+    TestBase_ConstProdUtils_Camelot
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 
 contract ConstProdUtils_withdrawQuote_Camelot_Test is TestBase_ConstProdUtils_Camelot {
     function setUp() public override {
@@ -109,10 +111,13 @@ contract ConstProdUtils_withdrawQuote_Camelot_Test is TestBase_ConstProdUtils_Ca
         uint256 initialBalanceA = camelotExtremeTokenA.balanceOf(address(this));
         uint256 initialBalanceB = camelotExtremeTokenB.balanceOf(address(this));
 
-        (uint256 amount0, uint256 amount1) = CamelotV2Service._withdrawDirect(camelotExtremeUnbalancedPair, lpTokensToWithdraw);
+        (uint256 amount0, uint256 amount1) =
+            CamelotV2Service._withdrawDirect(camelotExtremeUnbalancedPair, lpTokensToWithdraw);
 
-        uint256 actualAmountA = address(camelotExtremeTokenA) == camelotExtremeUnbalancedPair.token0() ? amount0 : amount1;
-        uint256 actualAmountB = address(camelotExtremeTokenA) == camelotExtremeUnbalancedPair.token0() ? amount1 : amount0;
+        uint256 actualAmountA =
+            address(camelotExtremeTokenA) == camelotExtremeUnbalancedPair.token0() ? amount0 : amount1;
+        uint256 actualAmountB =
+            address(camelotExtremeTokenA) == camelotExtremeUnbalancedPair.token0() ? amount1 : amount0;
 
         assertEq(actualAmountA, expectedAmountA, "TokenA amounts should match");
         assertEq(actualAmountB, expectedAmountB, "TokenB amounts should match");

@@ -11,7 +11,6 @@ import {ERC721Facet} from "@crane/contracts/tokens/ERC721/ERC721Facet.sol";
  * @notice Tests ERC721Facet IFacet interface compliance
  */
 contract ERC721Facet_IFacet_Test is TestBase_IFacet {
-
     bytes4 private constant _SAFE_TRANSFER_FROM_WITH_DATA_SELECTOR =
         bytes4(keccak256("safeTransferFrom(address,address,uint256,bytes)"));
     bytes4 private constant _SAFE_TRANSFER_FROM_SELECTOR =

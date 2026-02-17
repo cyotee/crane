@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
 import {
     AddressToUintMappingSlot
@@ -14,16 +14,14 @@ import {
     TransientEnumerableSet
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
 
-import { BatchRouter } from "../BatchRouter.sol";
+import {BatchRouter} from "../BatchRouter.sol";
 
 string constant MOCK_BATCH_ROUTER_VERSION = "Mock BatchRouter v1";
 
 contract BatchRouterMock is BatchRouter {
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2
-    ) BatchRouter(vault, weth, permit2, MOCK_BATCH_ROUTER_VERSION) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2)
+        BatchRouter(vault, weth, permit2, MOCK_BATCH_ROUTER_VERSION)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 

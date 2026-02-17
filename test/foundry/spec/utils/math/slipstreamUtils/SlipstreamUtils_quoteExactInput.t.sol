@@ -5,7 +5,10 @@ import "forge-std/Test.sol";
 
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
 /// @title Test SlipstreamUtils._quoteExactInputSingle
@@ -45,7 +48,7 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
         uint256 amountIn = TEST_AMOUNT;
 
         // Get current pool state
-        (uint160 sqrtPriceX96, int24 tick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 tick,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Get quote from SlipstreamUtils
@@ -54,18 +57,12 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true  // token0 -> token1
+            true // token0 -> token1
         );
 
         // Execute mock swap
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_RATIO + 1;
-        (, int256 amount1) = pool.swap(
-            address(this),
-            true,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (, int256 amount1) = pool.swap(address(this), true, int256(amountIn), sqrtPriceLimitX96, "");
 
         uint256 actualOut = uint256(-amount1);
 
@@ -78,7 +75,7 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
         uint256 amountIn = TEST_AMOUNT;
 
         // Get current pool state
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Get quote from SlipstreamUtils
@@ -87,18 +84,12 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false  // token1 -> token0
+            false // token1 -> token0
         );
 
         // Execute mock swap
         uint160 sqrtPriceLimitX96 = TickMath.MAX_SQRT_RATIO - 1;
-        (int256 amount0, ) = pool.swap(
-            address(this),
-            false,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0,) = pool.swap(address(this), false, int256(amountIn), sqrtPriceLimitX96, "");
 
         uint256 actualOut = uint256(-amount0);
 
@@ -114,26 +105,15 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
     function test_quoteExactInput_tickOverload_matchesSqrtPriceVersion() public {
         uint256 amountIn = TEST_AMOUNT;
 
-        (uint160 sqrtPriceX96, int24 tick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 tick,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
         // Quote using tick
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            tick,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedWithTick = SlipstreamUtils._quoteExactInputSingle(amountIn, tick, liquidity, FEE_MEDIUM, true);
 
         // Should be equal (tick is derived from same sqrtPrice)
         assertEq(quotedWithSqrtPrice, quotedWithTick, "Tick overload mismatch");
@@ -149,12 +129,7 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
         uint24 fee = FEE_LOW;
         int24 tickSpacing = getTickSpacing(fee);
 
-        MockCLPool testPool = createMockPoolOneToOne(
-            makeAddr("TokenA_low"),
-            makeAddr("TokenB_low"),
-            fee,
-            tickSpacing
-        );
+        MockCLPool testPool = createMockPoolOneToOne(makeAddr("TokenA_low"), makeAddr("TokenB_low"), fee, tickSpacing);
 
         addLiquidity(
             testPool,
@@ -163,12 +138,10 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
             uint128(INITIAL_LIQUIDITY)
         );
 
-        (uint160 sqrtPriceX96, , , , , ) = testPool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = testPool.slot0();
         uint128 liq = testPool.liquidity();
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liq, fee, true
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liq, fee, true);
 
         assertTrue(quotedOut > 0, "Quote should be positive");
     }
@@ -179,12 +152,7 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
         uint24 fee = FEE_HIGH;
         int24 tickSpacing = getTickSpacing(fee);
 
-        MockCLPool testPool = createMockPoolOneToOne(
-            makeAddr("TokenA_high"),
-            makeAddr("TokenB_high"),
-            fee,
-            tickSpacing
-        );
+        MockCLPool testPool = createMockPoolOneToOne(makeAddr("TokenA_high"), makeAddr("TokenB_high"), fee, tickSpacing);
 
         addLiquidity(
             testPool,
@@ -193,12 +161,10 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
             uint128(INITIAL_LIQUIDITY)
         );
 
-        (uint160 sqrtPriceX96, , , , , ) = testPool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = testPool.slot0();
         uint128 liq = testPool.liquidity();
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liq, fee, true
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liq, fee, true);
 
         assertTrue(quotedOut > 0, "Quote should be positive");
     }
@@ -226,18 +192,12 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
 
     /// @notice Test quote with dust amount (1 wei)
     function test_quoteExactInput_dustAmount() public {
-        uint256 amountIn = 1;  // 1 wei
+        uint256 amountIn = 1; // 1 wei
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
         // For such a small amount, output might be 0 due to fees
         assertTrue(quotedOut <= amountIn, "Output should not exceed input for 1 wei");
@@ -245,16 +205,10 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
 
     /// @notice Test quote with zero amount returns zero
     function test_quoteExactInput_zeroAmount() public {
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            0,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(0, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
         assertEq(quotedOut, 0, "Zero input should give zero output");
     }
@@ -279,15 +233,10 @@ contract SlipstreamUtils_quoteExactInput_Test is TestBase_Slipstream {
                 liquidityLevels[i]
             );
 
-            (uint160 sqrtPriceX96, , , , , ) = testPool.slot0();
+            (uint160 sqrtPriceX96,,,,,) = testPool.slot0();
 
-            uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-                amountIn,
-                sqrtPriceX96,
-                liquidityLevels[i],
-                FEE_MEDIUM,
-                true
-            );
+            uint256 quotedOut =
+                SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidityLevels[i], FEE_MEDIUM, true);
 
             assertTrue(quotedOut > 0, "Quote should be positive");
             assertTrue(quotedOut < amountIn, "Output should be less than input due to fees");

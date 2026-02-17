@@ -37,7 +37,6 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
     uint256 constant UNBALANCED_RATIO_C = 100e18; // 100 tokens (100:1 ratio)
 
     function setUp() public virtual override {
-
         TestBase_Aerodrome.setUp();
         _createAerodromeTokens();
         _createAerodromePools();
@@ -64,17 +63,33 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
     }
 
     function _createAerodromePools() internal {
-        address poolAddr1 = aerodromePoolFactory.createPool(address(aeroBalancedTokenA), address(aeroBalancedTokenB), false);
+        address poolAddr1 =
+            aerodromePoolFactory.createPool(address(aeroBalancedTokenA), address(aeroBalancedTokenB), false);
         aeroBalancedPool = Pool(poolAddr1);
-        vm.label(poolAddr1, string.concat("AerodromeBalancedPool - ", aeroBalancedTokenA.symbol(), " / ", aeroBalancedTokenB.symbol()));
+        vm.label(
+            poolAddr1,
+            string.concat("AerodromeBalancedPool - ", aeroBalancedTokenA.symbol(), " / ", aeroBalancedTokenB.symbol())
+        );
 
-        address poolAddr2 = aerodromePoolFactory.createPool(address(aeroUnbalancedTokenA), address(aeroUnbalancedTokenB), false);
+        address poolAddr2 =
+            aerodromePoolFactory.createPool(address(aeroUnbalancedTokenA), address(aeroUnbalancedTokenB), false);
         aeroUnbalancedPool = Pool(poolAddr2);
-        vm.label(poolAddr2, string.concat("AerodromeUnbalancedPool - ", aeroUnbalancedTokenA.symbol(), " / ", aeroUnbalancedTokenB.symbol()));
+        vm.label(
+            poolAddr2,
+            string.concat(
+                "AerodromeUnbalancedPool - ", aeroUnbalancedTokenA.symbol(), " / ", aeroUnbalancedTokenB.symbol()
+            )
+        );
 
-        address poolAddr3 = aerodromePoolFactory.createPool(address(aeroExtremeTokenA), address(aeroExtremeTokenB), false);
+        address poolAddr3 =
+            aerodromePoolFactory.createPool(address(aeroExtremeTokenA), address(aeroExtremeTokenB), false);
         aeroExtremeUnbalancedPool = Pool(poolAddr3);
-        vm.label(poolAddr3, string.concat("AerodromeExtremeUnbalancedPool - ", aeroExtremeTokenA.symbol(), " / ", aeroExtremeTokenB.symbol()));
+        vm.label(
+            poolAddr3,
+            string.concat(
+                "AerodromeExtremeUnbalancedPool - ", aeroExtremeTokenA.symbol(), " / ", aeroExtremeTokenB.symbol()
+            )
+        );
     }
 
     function _initializeAerodromeBalancedPools() internal {
@@ -83,7 +98,17 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
         aeroBalancedTokenB.mint(address(this), INITIAL_LIQUIDITY);
         aeroBalancedTokenB.approve(address(aerodromeRouter), INITIAL_LIQUIDITY);
 
-        aerodromeRouter.addLiquidity(address(aeroBalancedTokenA), address(aeroBalancedTokenB), false, INITIAL_LIQUIDITY, INITIAL_LIQUIDITY, 1, 1, address(this), block.timestamp);
+        aerodromeRouter.addLiquidity(
+            address(aeroBalancedTokenA),
+            address(aeroBalancedTokenB),
+            false,
+            INITIAL_LIQUIDITY,
+            INITIAL_LIQUIDITY,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
     function _initializeAerodromeUnbalancedPools() internal {
@@ -92,7 +117,17 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
         aeroUnbalancedTokenB.mint(address(this), UNBALANCED_RATIO_B);
         aeroUnbalancedTokenB.approve(address(aerodromeRouter), UNBALANCED_RATIO_B);
 
-        aerodromeRouter.addLiquidity(address(aeroUnbalancedTokenA), address(aeroUnbalancedTokenB), false, UNBALANCED_RATIO_A, UNBALANCED_RATIO_B, 1, 1, address(this), block.timestamp);
+        aerodromeRouter.addLiquidity(
+            address(aeroUnbalancedTokenA),
+            address(aeroUnbalancedTokenB),
+            false,
+            UNBALANCED_RATIO_A,
+            UNBALANCED_RATIO_B,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
     function _initializeAerodromeExtremeUnbalancedPools() internal {
@@ -101,36 +136,44 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
         aeroExtremeTokenB.mint(address(this), UNBALANCED_RATIO_C);
         aeroExtremeTokenB.approve(address(aerodromeRouter), UNBALANCED_RATIO_C);
 
-        aerodromeRouter.addLiquidity(address(aeroExtremeTokenA), address(aeroExtremeTokenB), false, UNBALANCED_RATIO_A, UNBALANCED_RATIO_C, 1, 1, address(this), block.timestamp);
+        aerodromeRouter.addLiquidity(
+            address(aeroExtremeTokenA),
+            address(aeroExtremeTokenB),
+            false,
+            UNBALANCED_RATIO_A,
+            UNBALANCED_RATIO_C,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
-    function _executeAerodromeTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB) internal {
+    function _executeAerodromeTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB)
+        internal
+    {
         uint256 swapAmountA = 100e18;
         tokenA.mint(address(this), swapAmountA);
         tokenA.approve(address(aerodromeRouter), swapAmountA);
 
         IRouter.Route[] memory routes = new IRouter.Route[](1);
-        routes[0] = IRouter.Route({from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)});
+        routes[0] = IRouter.Route({
+            from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)
+        });
 
         aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            0,
-            routes,
-            address(this),
-            block.timestamp + 300
+            swapAmountA, 0, routes, address(this), block.timestamp + 300
         );
 
         uint256 balanceB = tokenB.balanceOf(address(this));
         if (balanceB > 0) {
             tokenB.approve(address(aerodromeRouter), balanceB);
             IRouter.Route[] memory routesRev = new IRouter.Route[](1);
-            routesRev[0] = IRouter.Route({from: address(tokenB), to: address(tokenA), stable: false, factory: address(aerodromePoolFactory)});
+            routesRev[0] = IRouter.Route({
+                from: address(tokenB), to: address(tokenA), stable: false, factory: address(aerodromePoolFactory)
+            });
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceB,
-                0,
-                routesRev,
-                address(this),
-                block.timestamp + 300
+                balanceB, 0, routesRev, address(this), block.timestamp + 300
             );
         }
 
@@ -138,13 +181,8 @@ contract TestBase_ConstProdUtils_Aerodrome is TestBase_Aerodrome {
         if (balanceA > 0) {
             tokenA.approve(address(aerodromeRouter), balanceA);
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceA,
-                0,
-                routes,
-                address(this),
-                block.timestamp + 300
+                balanceA, 0, routes, address(this), block.timestamp + 300
             );
         }
     }
-
 }

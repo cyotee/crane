@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 library DiamondPackageFactoryAwareRepo {
-
     bytes32 internal constant STORAGE_SLOT = keccak256("crane.contracts.factories.diamondPkg.aware");
 
     struct Storage {
@@ -36,5 +35,4 @@ library DiamondPackageFactoryAwareRepo {
     function _diamondPackageFactory() internal view returns (IDiamondPackageCallBackFactory) {
         return _diamondPackageFactory(_layout());
     }
-
 }

@@ -112,12 +112,12 @@ contract ExitFeeHookExample is BaseHooksTarget, Ownable {
     /* ========================================================================== */
 
     /// @inheritdoc BaseHooksTarget
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata liquidityManagement
-    ) public override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata liquidityManagement)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         // NOTE: In production hooks, verify the factory and pool origin.
         // This example allows any pool that supports donation.
 

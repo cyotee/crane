@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { StablePoolFactory } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {StablePoolFactory} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { BaseExtremeAmountsTest } from "./utils/BaseExtremeAmountsTest.sol";
+import {BaseExtremeAmountsTest} from "./utils/BaseExtremeAmountsTest.sol";
 
 contract StablePoolExtremeAmountsTest is BaseExtremeAmountsTest {
     using CastingHelpers for *;
@@ -26,35 +28,34 @@ contract StablePoolExtremeAmountsTest is BaseExtremeAmountsTest {
         return address(new StablePoolFactory(IVault(address(vault)), 365 days, "Factory v1", POOL_VERSION));
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool";
         string memory symbol = "STABLE";
 
         PoolRoleAccounts memory roleAccounts;
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            BASE_MIN_SWAP_FEE, // Set min swap fee
-            address(0),
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                BASE_MIN_SWAP_FEE, // Set min swap fee
+                address(0),
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(address(newPool), label);
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );

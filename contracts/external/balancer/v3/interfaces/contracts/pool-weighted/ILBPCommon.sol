@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "../vault/IBasePool.sol";
-import { IVault } from "../vault/IVault.sol";
+import {IBasePool} from "../vault/IBasePool.sol";
+import {IVault} from "../vault/IVault.sol";
 
 /**
  * @notice Parameters common to all LBP types.

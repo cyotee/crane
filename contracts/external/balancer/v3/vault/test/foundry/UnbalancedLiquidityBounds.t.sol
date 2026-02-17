@@ -6,16 +6,18 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { PoolMockFlexibleInvariantRatio } from "../../contracts/test/PoolMockFlexibleInvariantRatio.sol";
-import { BasePoolMath } from "../../contracts/BasePoolMath.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {PoolMockFlexibleInvariantRatio} from "../../contracts/test/PoolMockFlexibleInvariantRatio.sol";
+import {BasePoolMath} from "../../contracts/BasePoolMath.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract UnbalancedLiquidityBounds is BaseVaultTest {
     using FixedPoint for uint256;
@@ -27,19 +29,16 @@ contract UnbalancedLiquidityBounds is BaseVaultTest {
     }
 
     // Create a pool with flexible invariant ratio bounds.
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         newPool = address(deployPoolMockFlexibleInvariantRatio(IVault(address(vault)), "", ""));
         vm.label(newPool, label);
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens.asIERC20()), poolHooksContract, lp);
 
         poolArgs = abi.encode(vault, "", "");
     }
@@ -82,9 +81,7 @@ contract UnbalancedLiquidityBounds is BaseVaultTest {
         // New invariant ratio has rounding errors favoring the vault.
         vm.expectRevert(
             abi.encodeWithSelector(
-                BasePoolMath.InvariantRatioAboveMax.selector,
-                10 * FixedPoint.ONE - 1,
-                maxInvariantRatio
+                BasePoolMath.InvariantRatioAboveMax.selector, 10 * FixedPoint.ONE - 1, maxInvariantRatio
             )
         );
         vm.prank(alice);

@@ -6,25 +6,29 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IStablePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IStablePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { RateProviderMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BasePoolMath } from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {RateProviderMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
 
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
-import { BasePoolTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {BasePoolTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
 
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
 
 contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer, BasePoolTest {
     using CastingHelpers for address[];
@@ -53,9 +57,8 @@ contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer
         string memory symbol = "ERC20POOL";
 
         TokenConfig[] memory tokenConfigs = new TokenConfig[](2);
-        IERC20[] memory sortedTokens = InputHelpers.sortTokens(
-            [address(usdc), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory sortedTokens =
+            InputHelpers.sortTokens([address(usdc), address(wsteth)].toMemoryArray().asIERC20());
         for (uint256 i = 0; i < sortedTokens.length; i++) {
             poolTokens.push(sortedTokens[i]);
             tokenConfigs[i].token = sortedTokens[i];
@@ -72,28 +75,24 @@ contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer
         // Allow pools created by `factory` to use poolHooksMock hooks
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            tokenConfigs,
-            // DEFAULT_AMP_FACTOR,
-            2000,
-            roleAccounts,
-            BASE_MIN_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfigs,
+                // DEFAULT_AMP_FACTOR,
+                2000,
+                roleAccounts,
+                BASE_MIN_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
-            StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: 2000,
-                version: POOL_VERSION
-            }),
+            StablePool.NewPoolParams({name: name, symbol: symbol, amplificationParameter: 2000, version: POOL_VERSION}),
             vault
         );
     }
@@ -101,12 +100,7 @@ contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer
     function initPool() internal override {
         vm.prank(lp);
         bptAmountOut = router.initialize(
-            pool,
-            poolTokens,
-            tokenAmounts,
-            expectedAddLiquidityBptAmountOut - BasePoolTest.DELTA,
-            false,
-            bytes("")
+            pool, poolTokens, tokenAmounts, expectedAddLiquidityBptAmountOut - BasePoolTest.DELTA, false, bytes("")
         );
     }
 
@@ -124,10 +118,7 @@ contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer
         tokens[0] = IERC20(usdc);
         tokens[1] = IERC20(wsteth);
         vault.manualSetPoolTokensAndBalances(
-            pool,
-            tokens,
-            [tokenAmount, dustAmount].toMemoryArray(),
-            [tokenAmount, dustAmount].toMemoryArray()
+            pool, tokens, [tokenAmount, dustAmount].toMemoryArray(), [tokenAmount, dustAmount].toMemoryArray()
         );
         rateProviderWstEth.mockRate(1.001e18);
 
@@ -153,10 +144,7 @@ contract RoundingDirectionStablePoolEdgeCasesTest is StablePoolContractsDeployer
         tokens[0] = IERC20(usdc);
         tokens[1] = IERC20(wsteth);
         vault.manualSetPoolTokensAndBalances(
-            pool,
-            tokens,
-            [tokenAmount, dustAmount].toMemoryArray(),
-            [tokenAmount, dustAmount].toMemoryArray()
+            pool, tokens, [tokenAmount, dustAmount].toMemoryArray(), [tokenAmount, dustAmount].toMemoryArray()
         );
         rateProviderWstEth.mockRate(1.5e18);
         uint256[] memory exactAmountsIn = [tokenAmount * 2, dustAmount * 2].toMemoryArray();

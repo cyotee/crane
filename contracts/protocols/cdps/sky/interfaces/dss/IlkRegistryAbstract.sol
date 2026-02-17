@@ -10,11 +10,12 @@ interface IlkRegistryAbstract {
     function dog() external view returns (address);
     function cat() external view returns (address);
     function spot() external view returns (address);
-    function ilkData(bytes32) external view returns (
-        uint96, address, address, uint8, uint96, address, address, string memory, string memory
-    );
+    function ilkData(bytes32)
+        external
+        view
+        returns (uint96, address, address, uint8, uint96, address, address, string memory, string memory);
     function ilks() external view returns (bytes32[] memory);
-    function ilks(uint) external view returns (bytes32);
+    function ilks(uint256) external view returns (bytes32);
     function add(address) external;
     function remove(bytes32) external;
     function update(bytes32) external;
@@ -27,9 +28,10 @@ interface IlkRegistryAbstract {
     function list() external view returns (bytes32[] memory);
     function list(uint256, uint256) external view returns (bytes32[] memory);
     function get(uint256) external view returns (bytes32);
-    function info(bytes32) external view returns (
-        string memory, string memory, uint256, uint256, address, address, address, address
-    );
+    function info(bytes32)
+        external
+        view
+        returns (string memory, string memory, uint256, uint256, address, address, address, address);
     function pos(bytes32) external view returns (uint256);
     function class(bytes32) external view returns (uint256);
     function gem(bytes32) external view returns (address);
@@ -39,5 +41,6 @@ interface IlkRegistryAbstract {
     function dec(bytes32) external view returns (uint256);
     function symbol(bytes32) external view returns (string memory);
     function name(bytes32) external view returns (string memory);
-    function put(bytes32, address, address, uint256, uint256, address, address, string calldata, string calldata) external;
+    function put(bytes32, address, address, uint256, uint256, address, address, string calldata, string calldata)
+        external;
 }

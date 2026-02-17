@@ -7,12 +7,14 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import { ERC4626TestToken } from "../../../contracts/test/ERC4626TestToken.sol";
-import { ERC20TestToken } from "../../../contracts/test/ERC20TestToken.sol";
-import { WETHTestToken } from "../../../contracts/test/WETHTestToken.sol";
+import {ERC4626TestToken} from "../../../contracts/test/ERC4626TestToken.sol";
+import {ERC20TestToken} from "../../../contracts/test/ERC20TestToken.sol";
+import {WETHTestToken} from "../../../contracts/test/WETHTestToken.sol";
 
 abstract contract BaseTest is Test {
     using CastingHelpers for *;
@@ -187,10 +189,11 @@ abstract contract BaseTest is Test {
         waUSDC.inflateUnderlyingOrWrapped(23 * defaultAccountBalance(), 0);
     }
 
-    function getSortedIndexes(
-        address tokenA,
-        address tokenB
-    ) internal pure returns (uint256 idxTokenA, uint256 idxTokenB) {
+    function getSortedIndexes(address tokenA, address tokenB)
+        internal
+        pure
+        returns (uint256 idxTokenA, uint256 idxTokenB)
+    {
         idxTokenA = tokenA > tokenB ? 1 : 0;
         idxTokenB = idxTokenA == 0 ? 1 : 0;
     }
@@ -223,12 +226,10 @@ abstract contract BaseTest is Test {
     }
 
     /// @dev Creates an ERC4626 test token and labels its address.
-    function createERC4626(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        IERC20 underlying
-    ) internal returns (ERC4626TestToken token) {
+    function createERC4626(string memory name, string memory symbol, uint8 decimals, IERC20 underlying)
+        internal
+        returns (ERC4626TestToken token)
+    {
         token = new ERC4626TestToken(underlying, name, symbol, decimals);
         vm.label(address(token), symbol);
     }
@@ -253,7 +254,7 @@ abstract contract BaseTest is Test {
                 vm.deal(user, user.balance + defaultAccountBalance());
 
                 vm.prank(user);
-                weth.deposit{ value: defaultAccountBalance() }();
+                weth.deposit{value: defaultAccountBalance()}();
             } else {
                 ERC20TestToken(erc4626Tokens[i].asset()).mint(user, defaultAccountBalance());
             }

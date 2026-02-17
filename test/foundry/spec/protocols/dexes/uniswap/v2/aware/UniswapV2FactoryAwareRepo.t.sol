@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {UniswapV2FactoryAwareRepo} from "@crane/contracts/protocols/dexes/uniswap/v2/aware/UniswapV2FactoryAwareRepo.sol";
+import {
+    UniswapV2FactoryAwareRepo
+} from "@crane/contracts/protocols/dexes/uniswap/v2/aware/UniswapV2FactoryAwareRepo.sol";
 import {IUniswapV2Factory} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 
 /**

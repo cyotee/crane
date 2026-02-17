@@ -10,7 +10,9 @@ import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPer
 import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
 import {BasicAuthorizerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
 import {PoolHooksMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolHooksMock.sol";
-import {ProtocolFeeControllerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ProtocolFeeControllerMock.sol";
+import {
+    ProtocolFeeControllerMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ProtocolFeeControllerMock.sol";
 import {VaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultAdminMock.sol";
 import {VaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultExtensionMock.sol";
 import {VaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultMock.sol";
@@ -18,7 +20,9 @@ import {VaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks
 import {RouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RouterMock.sol";
 import {BatchRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BatchRouterMock.sol";
 import {BufferRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BufferRouterMock.sol";
-import {CompositeLiquidityRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
+import {
+    CompositeLiquidityRouterMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
 
 import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
@@ -36,12 +40,11 @@ contract VaultContractsDeployer {
         // Deterministic deploy to match upstream behavior (salt=0, deployer=this).
         VaultMock vault = VaultMock(payable(CREATE3.getDeployed(bytes32(0))));
 
-        VaultAdminMock vaultAdmin = new VaultAdminMock(IVault(payable(vault)), 90 days, 30 days, minTradeAmount, minWrapAmount);
+        VaultAdminMock vaultAdmin =
+            new VaultAdminMock(IVault(payable(vault)), 90 days, 30 days, minTradeAmount, minWrapAmount);
         VaultExtensionMock vaultExtension = new VaultExtensionMock(IVault(payable(vault)), vaultAdmin);
         ProtocolFeeControllerMock protocolFeeController = new ProtocolFeeControllerMock(
-            IVaultMock(address(vault)),
-            protocolSwapFeePercentage,
-            protocolYieldFeePercentage
+            IVaultMock(address(vault)), protocolSwapFeePercentage, protocolYieldFeePercentage
         );
 
         bytes memory creationCode = type(VaultMock).creationCode;
@@ -61,11 +64,10 @@ contract VaultContractsDeployer {
         return new BatchRouterMock(vault, weth, permit2);
     }
 
-    function deployCompositeLiquidityRouterMock(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2
-    ) internal returns (CompositeLiquidityRouterMock) {
+    function deployCompositeLiquidityRouterMock(IVault vault, IWETH weth, IPermit2 permit2)
+        internal
+        returns (CompositeLiquidityRouterMock)
+    {
         return new CompositeLiquidityRouterMock(vault, weth, permit2);
     }
 

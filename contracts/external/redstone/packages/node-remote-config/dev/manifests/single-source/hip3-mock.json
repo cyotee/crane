@@ -1,0 +1,113 @@
+{
+  "interval": 1000,
+  "priceAggregator": "median",
+  "defaultSource": ["mock"],
+  "sourceTimeout": 1000,
+  "minValidSourcesPercentage": 30,
+  "deviationCheck": {
+    "deviationWithRecentValues": {
+      "maxPercent": 1000000000,
+      "maxDelayMilliseconds": 1000
+    }
+  },
+  "tokens": {
+    "TSLA": {
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IS_NY_STOCKS_MARKET_OPEN": {
+      "denomination": "other",
+      "rateFeed": false
+    },
+    "MARK_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_BUY_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_BUY_flxn:TSLA_EMA_1H": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_BUY_flxn:TSLA_EMA_8H": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_SELL_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_SELL_flxn:TSLA_EMA_1H": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "IMPACT_SELL_flxn:TSLA_EMA_8H": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ORACLE_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ORACLE_flxn:TSLA_EMA_150S": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MID_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MID_flxn:TSLA_EMA_150S": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "flxn:TSLA_MARK_0": {
+      "source": ["hyperliquid-hip3-felix-testnet-fetcher"],
+      "broadcasters": ["hyperliquid-hip3"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "flxn:TSLA_MARK_1": {
+      "source": ["hyperliquid-hip3-felix-testnet-fetcher"],
+      "broadcasters": ["hyperliquid-hip3"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "flxn:TSLA_EXT": {
+      "source": ["hyperliquid-hip3-felix-testnet-fetcher"],
+      "broadcasters": ["hyperliquid-hip3"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "flxn:TSLA": {
+      "source": ["hyperliquid-hip3-felix-testnet-fetcher"],
+      "broadcasters": ["hyperliquid-hip3"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "OPEN_INTEREST_flxn:TSLA": {
+      "broadcasters": [],
+      "denomination": "USD",
+      "rateFeed": false,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 1000000000,
+          "maxDelayMilliseconds": 1000
+        }
+      }
+    }
+  }
+}

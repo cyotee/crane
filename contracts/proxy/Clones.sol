@@ -44,21 +44,22 @@ library Clones {
     /**
      * @dev Computes the address of a clone deployed using {Clones-cloneDeterministic}.
      */
-    function predictDeterministicAddress(
-        address implementation,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddress(address implementation, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         return LibClone.predictDeterministicAddress(implementation, salt, deployer);
     }
 
     /**
      * @dev Computes the address of a clone deployed using {Clones-cloneDeterministic}.
      */
-    function predictDeterministicAddress(
-        address implementation,
-        bytes32 salt
-    ) internal view returns (address predicted) {
+    function predictDeterministicAddress(address implementation, bytes32 salt)
+        internal
+        view
+        returns (address predicted)
+    {
         return predictDeterministicAddress(implementation, salt, address(this));
     }
 }

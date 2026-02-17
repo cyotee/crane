@@ -2,14 +2,14 @@
 
 pragma solidity ^0.8.24;
 
-import { LBPParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {LBPParams} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { BaseLBPFactory } from "./BaseLBPFactory.sol";
-import { LBPValidation } from "./LBPValidation.sol";
-import { LBPoolLib } from "../lib/LBPoolLib.sol";
-import { LBPool } from "./LBPool.sol";
+import {BaseLBPFactory} from "./BaseLBPFactory.sol";
+import {LBPValidation} from "./LBPValidation.sol";
+import {LBPoolLib} from "../lib/LBPoolLib.sol";
+import {LBPool} from "./LBPool.sol";
 
 /**
  * @notice Factory for Weighted LBPools.
@@ -30,11 +30,7 @@ contract LBPoolFactory is BaseLBPFactory {
      * @param isSeedless True if this is a seedless LBP (i.e., no reserve token supplied on initialization)
      */
     event WeightedLBPoolCreated(
-        address indexed pool,
-        address indexed owner,
-        bool blockProjectTokenSwapsIn,
-        bool hasMigration,
-        bool isSeedless
+        address indexed pool, address indexed owner, bool blockProjectTokenSwapsIn, bool hasMigration, bool isSeedless
     );
 
     constructor(
@@ -121,11 +117,8 @@ contract LBPoolFactory is BaseLBPFactory {
         bool hasMigration = LBPValidation.validateMigrationParams(migrationParams, _migrationRouter);
         bool isSeedless = lbpParams.reserveTokenVirtualBalance > 0;
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: getVault(),
-            trustedRouter: _trustedRouter,
-            poolVersion: _poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: getVault(), trustedRouter: _trustedRouter, poolVersion: _poolVersion});
 
         pool = _create(abi.encode(lbpCommonParams, migrationParams, lbpParams, factoryParams), salt);
 
@@ -133,20 +126,12 @@ contract LBPoolFactory is BaseLBPFactory {
 
         // Emit type-specific event first.
         emit WeightedLBPoolCreated(
-            pool,
-            lbpCommonParams.owner,
-            lbpCommonParams.blockProjectTokenSwapsIn,
-            hasMigration,
-            isSeedless
+            pool, lbpCommonParams.owner, lbpCommonParams.blockProjectTokenSwapsIn, hasMigration, isSeedless
         );
 
         // Emit common events via base contract helper.
         _emitPoolCreatedEvents(
-            pool,
-            lbpCommonParams.projectToken,
-            lbpCommonParams.reserveToken,
-            migrationParams,
-            hasMigration
+            pool, lbpCommonParams.projectToken, lbpCommonParams.reserveToken, migrationParams, hasMigration
         );
     }
 }

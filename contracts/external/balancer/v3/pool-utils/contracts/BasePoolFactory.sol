@@ -2,17 +2,24 @@
 
 pragma solidity ^0.8.24;
 
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseSplitCodeFactory } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
-import { FactoryWidePauseWindow } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    BaseSplitCodeFactory
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
+import {
+    FactoryWidePauseWindow
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @notice Base contract for Pool factories.
@@ -50,6 +57,8 @@ abstract contract BasePoolFactory is
     SingletonAuthentication,
     FactoryWidePauseWindow
 {
+    using BetterEfficientHashLib for bytes;
+
     mapping(address pool => bool isFromFactory) private _isPoolFromFactory;
     address[] private _pools;
 
@@ -58,11 +67,11 @@ abstract contract BasePoolFactory is
     /// @notice A pool creator was specified for a pool type that doesn't support it.
     error StandardPoolWithCreator();
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        bytes memory creationCode
-    ) BaseSplitCodeFactory(creationCode) SingletonAuthentication(vault) FactoryWidePauseWindow(pauseWindowDuration) {
+    constructor(IVault vault, uint32 pauseWindowDuration, bytes memory creationCode)
+        BaseSplitCodeFactory(creationCode)
+        SingletonAuthentication(vault)
+        FactoryWidePauseWindow(pauseWindowDuration)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -142,7 +151,8 @@ abstract contract BasePoolFactory is
      * so contracts will generally not have the same address on different L2s.
      */
     function _computeFinalSalt(bytes32 salt) internal view virtual returns (bytes32) {
-        return keccak256(abi.encode(msg.sender, block.chainid, salt));
+        // return keccak256(abi.encode(msg.sender, block.chainid, salt));
+        return abi.encode(msg.sender, block.chainid, salt)._hash();
     }
 
     function _create(bytes memory constructorArgs, bytes32 salt) internal returns (address pool) {
@@ -161,16 +171,17 @@ abstract contract BasePoolFactory is
         address poolHooksContract,
         LiquidityManagement memory liquidityManagement
     ) internal {
-        getVault().registerPool(
-            pool,
-            tokens,
-            swapFeePercentage,
-            getNewPoolPauseWindowEndTime(),
-            protocolFeeExempt,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        getVault()
+            .registerPool(
+                pool,
+                tokens,
+                swapFeePercentage,
+                getNewPoolPauseWindowEndTime(),
+                protocolFeeExempt,
+                roleAccounts,
+                poolHooksContract,
+                liquidityManagement
+            );
     }
 
     /// @notice A common place to retrieve a default hooks contract. Currently set to address(0) (i.e. no hooks).

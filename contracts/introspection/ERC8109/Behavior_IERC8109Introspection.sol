@@ -80,10 +80,11 @@ library Behavior_IERC8109IntrospectionRepo {
 
     /* ------ Expected selectors ------ */
 
-    function _expected_selectors(
-        Behavior_IERC8109IntrospectionLayout storage layout,
-        IERC8109Introspection subject
-    ) internal view returns (Bytes4Set storage) {
+    function _expected_selectors(Behavior_IERC8109IntrospectionLayout storage layout, IERC8109Introspection subject)
+        internal
+        view
+        returns (Bytes4Set storage)
+    {
         return layout.expected_selectors[subject];
     }
 
@@ -135,11 +136,7 @@ library Behavior_IERC8109Introspection {
 
     /// @notice Returns the error prefix for a function.
     /// forge-lint: disable-next-line(mixed-case-function)
-    function _errPrefix(string memory testedFuncSig, string memory subjectLabel)
-        internal
-        pure
-        returns (string memory)
-    {
+    function _errPrefix(string memory testedFuncSig, string memory subjectLabel) internal pure returns (string memory) {
         return BehaviorUtils._errPrefix(_Behavior_IERC8109IntrospectionName(), testedFuncSig, subjectLabel);
     }
 
@@ -206,9 +203,7 @@ library Behavior_IERC8109Introspection {
         address expected,
         address actual
     ) internal view returns (bool isValid) {
-        console.logBehaviorEntry(
-            _Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_facetAddress"
-        );
+        console.logBehaviorEntry(_Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_facetAddress");
 
         isValid = expected == actual;
 
@@ -234,9 +229,7 @@ library Behavior_IERC8109Introspection {
             isValid
         );
 
-        console.logBehaviorExit(
-            _Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_facetAddress"
-        );
+        console.logBehaviorExit(_Behavior_IERC8109IntrospectionName(), "areValid_IERC8109Introspection_facetAddress");
     }
 
     /// @notice Validates that facetAddress returns the expected value for a selector (using subject address).
@@ -318,9 +311,7 @@ library Behavior_IERC8109Introspection {
         );
 
         for (uint256 i = 0; i < expectedPairs.length; i++) {
-            expect_IERC8109Introspection_facetAddress(
-                subject, expectedPairs[i].selector, expectedPairs[i].facet
-            );
+            expect_IERC8109Introspection_facetAddress(subject, expectedPairs[i].selector, expectedPairs[i].facet);
         }
 
         console.logBehaviorExpectation(
@@ -397,7 +388,7 @@ library Behavior_IERC8109Introspection {
     }
 
     /// @dev Helper to log pair count mismatch
-    function _logPairCountMismatch(ValidationContext memory ctx) private view {
+    function _logPairCountMismatch(ValidationContext memory ctx) private pure {
         console.logBehaviorError(
             _Behavior_IERC8109IntrospectionName(),
             "areValid_IERC8109Introspection_functionFacetPairs",
@@ -424,7 +415,7 @@ library Behavior_IERC8109Introspection {
     }
 
     /// @dev Helper to log missing selector
-    function _logMissingSelector(string memory subjectLabel, bytes4 selector) private view {
+    function _logMissingSelector(string memory subjectLabel, bytes4 selector) private pure {
         console.logBehaviorError(
             _Behavior_IERC8109IntrospectionName(),
             "areValid_IERC8109Introspection_functionFacetPairs",
@@ -498,7 +489,7 @@ library Behavior_IERC8109Introspection {
     }
 
     /// @dev Helper to log pair count mismatch for hasValid
-    function _logPairCountMismatchHasValid(ValidationContext memory ctx) private view {
+    function _logPairCountMismatchHasValid(ValidationContext memory ctx) private pure {
         console.logBehaviorError(
             _Behavior_IERC8109IntrospectionName(),
             "hasValid_IERC8109Introspection_functionFacetPairs",
@@ -509,7 +500,7 @@ library Behavior_IERC8109Introspection {
     }
 
     /// @dev Helper to log facet mismatch for hasValid
-    function _logFacetMismatchHasValid(string memory subjectLabel, PairValidationContext memory pCtx) private view {
+    function _logFacetMismatchHasValid(string memory subjectLabel, PairValidationContext memory pCtx) private pure {
         console.logBehaviorError(
             _Behavior_IERC8109IntrospectionName(),
             "hasValid_IERC8109Introspection_functionFacetPairs",
@@ -519,7 +510,7 @@ library Behavior_IERC8109Introspection {
     }
 
     /// @dev Helper to log missing selector for hasValid
-    function _logMissingSelectorHasValid(string memory subjectLabel, bytes4 selector) private view {
+    function _logMissingSelectorHasValid(string memory subjectLabel, bytes4 selector) private pure {
         console.logBehaviorError(
             _Behavior_IERC8109IntrospectionName(),
             "hasValid_IERC8109Introspection_functionFacetPairs",

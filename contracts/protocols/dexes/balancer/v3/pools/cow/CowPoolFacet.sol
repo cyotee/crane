@@ -13,7 +13,9 @@ import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 /* -------------------------------------------------------------------------- */
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {CowPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolTarget.sol";
 
@@ -88,7 +90,6 @@ contract CowPoolFacet is CowPoolTarget, IFacet {
 
         // IBalancerV3WeightedPool functions
         funcs[18] = IBalancerV3WeightedPool.getNormalizedWeights.selector;
-
     }
 
     /**

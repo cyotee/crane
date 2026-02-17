@@ -3,12 +3,12 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { ERC721 } from "@crane/contracts/external/openzeppelin/token/ERC721/ERC721.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {ERC721} from "@crane/contracts/external/openzeppelin/token/ERC721/ERC721.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     LiquidityManagement,
@@ -18,10 +18,10 @@ import {
     AddLiquidityParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
-import { MinimalRouter } from "./MinimalRouter.sol";
+import {MinimalRouter} from "./MinimalRouter.sol";
 
 /// @notice Mint an NFT to pool depositors, and charge a decaying exit fee upon withdrawal.
 contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
@@ -111,12 +111,10 @@ contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
         _;
     }
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory hookVersion
-    ) MinimalRouter(vault, weth, permit2, hookVersion) ERC721("BalancerLiquidityProvider", "BAL_LP") {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory hookVersion)
+        MinimalRouter(vault, weth, permit2, hookVersion)
+        ERC721("BalancerLiquidityProvider", "BAL_LP")
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -133,13 +131,7 @@ contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsIn) {
         // Do addLiquidity operation - BPT is minted to this contract.
         amountsIn = _addLiquidityProportional(
-            pool,
-            msg.sender,
-            address(this),
-            maxAmountsIn,
-            exactBptAmountOut,
-            wethIsEth,
-            userData
+            pool, msg.sender, address(this), maxAmountsIn, exactBptAmountOut, wethIsEth, userData
         );
 
         uint256 tokenId = _nextTokenId++;
@@ -155,11 +147,12 @@ contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
         emit LiquidityPositionNftMinted(msg.sender, pool, tokenId);
     }
 
-    function removeLiquidityProportional(
-        uint256 tokenId,
-        uint256[] memory minAmountsOut,
-        bool wethIsEth
-    ) external payable saveSender(msg.sender) returns (uint256[] memory amountsOut) {
+    function removeLiquidityProportional(uint256 tokenId, uint256[] memory minAmountsOut, bool wethIsEth)
+        external
+        payable
+        saveSender(msg.sender)
+        returns (uint256[] memory amountsOut)
+    {
         // Ensure the user owns the NFT.
         address nftOwner = ownerOf(tokenId);
 
@@ -195,12 +188,12 @@ contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
     ***************************************************************************/
 
     /// @inheritdoc BaseHooks
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata liquidityManagement
-    ) public override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata liquidityManagement)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         // This hook requires donation support to work (see above).
         if (liquidityManagement.enableDonation == false) {
             revert PoolDoesNotSupportDonation();
@@ -281,12 +274,10 @@ contract NftLiquidityPositionExample is MinimalRouter, ERC721, BaseHooks {
 
     // Internal Functions
 
-    function _takeFee(
-        address nftHolder,
-        address pool,
-        uint256[] memory amountsOutRaw,
-        uint256 currentFee
-    ) private returns (uint256[] memory hookAdjustedAmountsOutRaw) {
+    function _takeFee(address nftHolder, address pool, uint256[] memory amountsOutRaw, uint256 currentFee)
+        private
+        returns (uint256[] memory hookAdjustedAmountsOutRaw)
+    {
         hookAdjustedAmountsOutRaw = amountsOutRaw;
         IERC20[] memory tokens = _vault.getPoolTokens(pool);
         uint256[] memory accruedFees = new uint256[](tokens.length);

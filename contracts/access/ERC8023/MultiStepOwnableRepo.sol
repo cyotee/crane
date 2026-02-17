@@ -22,6 +22,7 @@ library MultiStepOwnableRepo {
      * @dev Standardized storage slot for EIP-8023 Multi-Step Ownable data.
      */
     bytes32 internal constant STORAGE_SLOT = keccak256("eip.erc.8023");
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -67,9 +68,7 @@ library MultiStepOwnableRepo {
      * @param initialOwner First owner of the contract.
      * @param ownershipBufferPeriod Period new ownership transfers must wait before confirmation.
      */
-    function _initialize(Storage storage layout, address initialOwner, uint256 ownershipBufferPeriod)
-        internal
-    {
+    function _initialize(Storage storage layout, address initialOwner, uint256 ownershipBufferPeriod) internal {
         layout.owner = initialOwner;
         layout.ownershipBufferPeriod = ownershipBufferPeriod;
     }
@@ -84,6 +83,7 @@ library MultiStepOwnableRepo {
     function _initialize(address initialOwner, uint256 ownershipBufferPeriod) internal {
         _initialize(_layout(), initialOwner, ownershipBufferPeriod);
     }
+    // end::_initialize(address-uint256)[]
 
     // tag::_onlyOwner(Storage)[]
     /**
@@ -298,6 +298,7 @@ library MultiStepOwnableRepo {
     function _preConfirmedOwner() internal view returns (address) {
         return _preConfirmedOwner(_layout());
     }
+
     // end::_preConfirmedOwner()[]
 
     // tag::_ownershipBufferPeriod(Storage)[]

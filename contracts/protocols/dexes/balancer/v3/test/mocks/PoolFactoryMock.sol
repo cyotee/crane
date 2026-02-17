@@ -6,11 +6,19 @@ import {Create2} from "@crane/contracts/utils/Create2.sol";
 
 import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {LiquidityManagement, PoolRoleAccounts, TokenConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    LiquidityManagement,
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {FactoryWidePauseWindow} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
+import {
+    FactoryWidePauseWindow
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
 
-import {SingletonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 
 import {PoolMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolMock.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
@@ -26,10 +34,10 @@ contract PoolFactoryMock is IBasePoolFactory, SingletonAuthentication, FactoryWi
     mapping(address pool => bool isFromFactory) private _isPoolFromFactory;
     bool private _disabled;
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration
-    ) SingletonAuthentication(vault) FactoryWidePauseWindow(pauseWindowDuration) {
+    constructor(IVault vault, uint32 pauseWindowDuration)
+        SingletonAuthentication(vault)
+        FactoryWidePauseWindow(pauseWindowDuration)
+    {
         _vault = vault;
     }
 
@@ -161,14 +169,7 @@ contract PoolFactoryMock is IBasePoolFactory, SingletonAuthentication, FactoryWi
         LiquidityManagement calldata liquidityManagement
     ) external {
         _vault.registerPool(
-            pool,
-            tokenConfig,
-            DEFAULT_SWAP_FEE,
-            timestamp,
-            false,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
+            pool, tokenConfig, DEFAULT_SWAP_FEE, timestamp, false, roleAccounts, poolHooksContract, liquidityManagement
         );
     }
 
@@ -206,10 +207,11 @@ contract PoolFactoryMock is IBasePoolFactory, SingletonAuthentication, FactoryWi
     }
 
     /// @inheritdoc IBasePoolFactory
-    function getDeploymentAddress(
-        bytes memory constructorArgs,
-        bytes32 salt
-    ) public view returns (address deployAddress) {
+    function getDeploymentAddress(bytes memory constructorArgs, bytes32 salt)
+        public
+        view
+        returns (address deployAddress)
+    {
         bytes memory creationCode = abi.encodePacked(type(PoolMock).creationCode, constructorArgs);
         bytes32 creationCodeHash = creationCode._hash();
         bytes32 finalSalt = _computeFinalSalt(salt);

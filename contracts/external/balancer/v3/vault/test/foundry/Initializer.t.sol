@@ -6,19 +6,21 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { AddLiquidityKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { HooksConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {AddLiquidityKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {HooksConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { PoolHooksMock } from "../../contracts/test/PoolHooksMock.sol";
+import {PoolHooksMock} from "../../contracts/test/PoolHooksMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract InitializerTest is BaseVaultTest {
     using CastingHelpers for *;
@@ -50,12 +52,7 @@ contract InitializerTest is BaseVaultTest {
 
         vm.prank(bob);
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -66,12 +63,7 @@ contract InitializerTest is BaseVaultTest {
             abi.encodeCall(IHooks.onBeforeInitialize, ([DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), bytes("0xff")))
         );
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -80,12 +72,7 @@ contract InitializerTest is BaseVaultTest {
         vm.prank(bob);
         vm.expectRevert(IVaultErrors.BeforeInitializeHookFailed.selector);
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -103,12 +90,7 @@ contract InitializerTest is BaseVaultTest {
             )
         );
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -117,12 +99,7 @@ contract InitializerTest is BaseVaultTest {
         vm.prank(bob);
         vm.expectRevert(IVaultErrors.AfterInitializeHookFailed.selector);
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -139,12 +116,7 @@ contract InitializerTest is BaseVaultTest {
 
         vm.prank(bob);
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT * 2].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT * 2].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 
@@ -154,12 +126,7 @@ contract InitializerTest is BaseVaultTest {
 
         vm.prank(bob);
         router.initialize(
-            pool,
-            standardPoolTokens,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            0,
-            false,
-            bytes("0xff")
+            pool, standardPoolTokens, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), 0, false, bytes("0xff")
         );
     }
 }

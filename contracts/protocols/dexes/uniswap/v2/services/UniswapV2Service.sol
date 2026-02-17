@@ -194,14 +194,24 @@ library UniswapV2Service {
         path[0] = address(tokenIn);
         path[1] = address(tokenOut);
 
+        address swapRecipient = recipient;
+        if (recipient == address(tokenIn) || recipient == address(tokenOut)) {
+            swapRecipient = address(this);
+        }
+
         tokenIn.safeApprove(address(router), amountIn);
 
         uint256[] memory amounts =
-            router.swapExactTokensForTokens(amountIn, minAmountOut, path, recipient, block.timestamp + 1);
+            router.swapExactTokensForTokens(amountIn, minAmountOut, path, swapRecipient, block.timestamp + 1);
 
         tokenIn.safeApprove(address(router), 0);
 
-        return amounts[amounts.length - 1];
+        amountOut = amounts[amounts.length - 1];
+        if (swapRecipient != recipient) {
+            tokenOut.safeTransfer(recipient, amountOut);
+        }
+
+        return amountOut;
     }
 
     function _swapTokensForExactTokens(
@@ -216,6 +226,11 @@ library UniswapV2Service {
         path[0] = address(tokenIn);
         path[1] = address(tokenOut);
 
+        address swapRecipient = recipient;
+        if (recipient == address(tokenIn) || recipient == address(tokenOut)) {
+            swapRecipient = address(this);
+        }
+
         tokenIn.safeApprove(address(router), amountInMax);
 
         uint256[] memory amounts = router.swapTokensForExactTokens(
@@ -226,12 +241,16 @@ library UniswapV2Service {
             // address[] calldata path,
             path,
             // address to,
-            recipient,
+            swapRecipient,
             // uint deadline
             block.timestamp + 1
         );
 
         tokenIn.safeApprove(address(router), 0);
+
+        if (swapRecipient != recipient) {
+            tokenOut.safeTransfer(recipient, amountOut);
+        }
 
         // return amounts[amounts.length - 1];
         return amounts[0];

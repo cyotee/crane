@@ -9,12 +9,19 @@ import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -114,9 +121,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
      * @return amountIn The final amount of tokenIn
      * @return amountOut The final amount of tokenOut
      */
-    function swap(
-        VaultSwapParams memory vaultSwapParams
-    )
+    function swap(VaultSwapParams memory vaultSwapParams)
         external
         onlyWhenUnlocked
         withInitializedPool(vaultSwapParams.pool)
@@ -128,7 +133,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
             revert AmountGivenZero();
         }
 
-        if (vaultSwapParams.tokenIn == vaultSwapParams.tokenOut) {
+        if (address(vaultSwapParams.tokenIn) == address(vaultSwapParams.tokenOut)) {
             revert CannotSwapSameToken();
         }
 
@@ -141,9 +146,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
 
         if (poolData.poolConfigBits.shouldCallBeforeSwap()) {
             HooksConfigLib.callBeforeSwapHook(
-                poolSwapParams,
-                vaultSwapParams.pool,
-                layout.hooksContracts[vaultSwapParams.pool]
+                poolSwapParams, vaultSwapParams.pool, layout.hooksContracts[vaultSwapParams.pool]
             );
 
             // Reload after hook may have altered balances/rates
@@ -163,25 +166,22 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
 
         // Execute the core swap (non-reentrant, updates accounting).
         uint256 amountCalculatedScaled18;
-        (amountCalculated, amountCalculatedScaled18, amountIn, amountOut) = _swap(
-            vaultSwapParams,
-            swapState,
-            poolData,
-            poolSwapParams
-        );
+        (amountCalculated, amountCalculatedScaled18, amountIn, amountOut) =
+            _swap(vaultSwapParams, swapState, poolData, poolSwapParams);
 
         if (poolData.poolConfigBits.shouldCallAfterSwap()) {
             IHooks hooksContract = layout.hooksContracts[vaultSwapParams.pool];
 
-            amountCalculated = poolData.poolConfigBits.callAfterSwapHook(
-                amountCalculatedScaled18,
-                amountCalculated,
-                msg.sender,
-                vaultSwapParams,
-                swapState,
-                poolData,
-                hooksContract
-            );
+            amountCalculated = poolData.poolConfigBits
+                .callAfterSwapHook(
+                    amountCalculatedScaled18,
+                    amountCalculated,
+                    msg.sender,
+                    vaultSwapParams,
+                    swapState,
+                    poolData,
+                    hooksContract
+                );
         }
 
         if (vaultSwapParams.kind == SwapKind.EXACT_IN) {
@@ -202,10 +202,12 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
      * @return tokenCount Total number of tokens in the pool
      * @return index Index of the specified token
      */
-    function getPoolTokenCountAndIndexOfToken(
-        address pool,
-        IERC20 token
-    ) external view withRegisteredPool(pool) returns (uint256, uint256) {
+    function getPoolTokenCountAndIndexOfToken(address pool, IERC20 token)
+        external
+        view
+        withRegisteredPool(pool)
+        returns (uint256, uint256)
+    {
         IERC20[] storage poolTokens = BalancerV3VaultStorageRepo._poolTokens(pool);
 
         IERC20[] memory tokens = poolTokens;
@@ -218,10 +220,11 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
     /*                            INTERNAL FUNCTIONS                              */
     /* ========================================================================== */
 
-    function _loadSwapState(
-        VaultSwapParams memory vaultSwapParams,
-        PoolData memory poolData
-    ) internal pure returns (SwapState memory swapState) {
+    function _loadSwapState(VaultSwapParams memory vaultSwapParams, PoolData memory poolData)
+        internal
+        pure
+        returns (SwapState memory swapState)
+    {
         swapState.indexIn = _findTokenIndex(poolData.tokens, vaultSwapParams.tokenIn);
         swapState.indexOut = _findTokenIndex(poolData.tokens, vaultSwapParams.tokenOut);
         swapState.amountGivenScaled18 = _computeAmountGivenScaled18(vaultSwapParams, poolData, swapState);
@@ -249,13 +252,13 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
         PoolData memory poolData,
         SwapState memory swapState
     ) internal pure returns (uint256) {
-        return
-            vaultSwapParams.kind == SwapKind.EXACT_IN
-                ? vaultSwapParams.amountGivenRaw.toScaled18ApplyRateRoundDown(
-                    poolData.decimalScalingFactors[swapState.indexIn],
-                    poolData.tokenRates[swapState.indexIn]
+        return vaultSwapParams.kind == SwapKind.EXACT_IN
+            ? vaultSwapParams.amountGivenRaw
+                .toScaled18ApplyRateRoundDown(
+                    poolData.decimalScalingFactors[swapState.indexIn], poolData.tokenRates[swapState.indexIn]
                 )
-                : vaultSwapParams.amountGivenRaw.toScaled18ApplyRateRoundUp(
+            : vaultSwapParams.amountGivenRaw
+                .toScaled18ApplyRateRoundUp(
                     poolData.decimalScalingFactors[swapState.indexOut],
                     poolData.tokenRates[swapState.indexOut].computeRateRoundUp()
                 );
@@ -306,15 +309,13 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
             }
         } else {
             locals.totalSwapFeeAmountScaled18 = amountCalculatedScaled18.mulDivUp(
-                swapState.swapFeePercentage,
-                swapState.swapFeePercentage.complement()
+                swapState.swapFeePercentage, swapState.swapFeePercentage.complement()
             );
 
             amountCalculatedScaled18 += locals.totalSwapFeeAmountScaled18;
 
             amountCalculatedRaw = amountCalculatedScaled18.toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[swapState.indexIn],
-                poolData.tokenRates[swapState.indexIn]
+                poolData.decimalScalingFactors[swapState.indexIn], poolData.tokenRates[swapState.indexIn]
             );
 
             (amountInRaw, amountOutRaw) = (amountCalculatedRaw, vaultSwapParams.amountGivenRaw);
@@ -344,21 +345,17 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
             Rounding.ROUND_DOWN
         );
         poolData.updateRawAndLiveBalance(
-            swapState.indexOut,
-            poolData.balancesRaw[swapState.indexOut] - amountOutRaw,
-            Rounding.ROUND_DOWN
+            swapState.indexOut, poolData.balancesRaw[swapState.indexOut] - amountOutRaw, Rounding.ROUND_DOWN
         );
 
         // 6) Store pool balances
         mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolBalances =
             BalancerV3VaultStorageRepo._poolTokenBalances(vaultSwapParams.pool);
         poolBalances[swapState.indexIn] = PackedTokenBalance.toPackedBalance(
-            poolData.balancesRaw[swapState.indexIn],
-            poolData.balancesLiveScaled18[swapState.indexIn]
+            poolData.balancesRaw[swapState.indexIn], poolData.balancesLiveScaled18[swapState.indexIn]
         );
         poolBalances[swapState.indexOut] = PackedTokenBalance.toPackedBalance(
-            poolData.balancesRaw[swapState.indexOut],
-            poolData.balancesLiveScaled18[swapState.indexOut]
+            poolData.balancesRaw[swapState.indexOut], poolData.balancesLiveScaled18[swapState.indexOut]
         );
 
         // 7) Event
@@ -385,8 +382,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
     ) internal returns (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) {
         if (totalSwapFeeAmountScaled18 > 0) {
             totalSwapFeeAmountRaw = totalSwapFeeAmountScaled18.toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[index],
-                poolData.tokenRates[index]
+                poolData.decimalScalingFactors[index], poolData.tokenRates[index]
             );
 
             if (poolData.poolConfigBits.isPoolInRecoveryMode() == false) {
@@ -402,9 +398,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
                 BalancerV3VaultStorageRepo._setAggregateFeeAmount(
                     pool,
                     token,
-                    currentPackedBalance.setBalanceRaw(
-                        currentPackedBalance.getBalanceRaw() + aggregateSwapFeeAmountRaw
-                    )
+                    currentPackedBalance.setBalanceRaw(currentPackedBalance.getBalanceRaw() + aggregateSwapFeeAmountRaw)
                 );
             }
         }

@@ -6,18 +6,20 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { RemoveLiquidityKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {RemoveLiquidityKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BalancerPoolToken } from "../../contracts/BalancerPoolToken.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BalancerPoolToken} from "../../contracts/BalancerPoolToken.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract RecoveryModeTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -28,7 +30,7 @@ contract RecoveryModeTest is BaseVaultTest {
     function setUp() public virtual override {
         BaseVaultTest.setUp();
 
-        (daiIdx, ) = getSortedIndexes(address(dai), address(usdc));
+        (daiIdx,) = getSortedIndexes(address(dai), address(usdc));
     }
 
     function testRecoveryModeAmountsOutBelowMin() public {
@@ -38,7 +40,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory amountsIn = [uint256(DEFAULT_AMOUNT), uint256(DEFAULT_AMOUNT)].toMemoryArray();
 
         vm.prank(alice);
-        (, uint256 bptAmountOut, ) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
+        (, uint256 bptAmountOut,) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
 
         // Put pool in recovery mode.
         vault.manualEnableRecoveryMode(pool);
@@ -76,7 +78,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory amountsIn = [uint256(DEFAULT_AMOUNT), uint256(DEFAULT_AMOUNT)].toMemoryArray();
 
         vm.prank(alice);
-        (, uint256 bptAmountOut, ) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
+        (, uint256 bptAmountOut,) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
 
         // Put pool in recovery mode.
         vault.manualEnableRecoveryMode(pool);
@@ -123,7 +125,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory amountsIn = [uint256(DEFAULT_AMOUNT), uint256(DEFAULT_AMOUNT)].toMemoryArray();
 
         vm.prank(alice);
-        (, uint256 bptAmountOut, ) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
+        (, uint256 bptAmountOut,) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
 
         // Put pool in recovery mode.
         vault.manualEnableRecoveryMode(pool);
@@ -146,7 +148,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256 daiBalanceBefore = dai.balanceOf(alice);
         uint256 usdcBalanceBefore = usdc.balanceOf(alice);
 
-        (, , uint256[] memory poolBalancesBefore, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesBefore,) = IPoolInfo(pool).getTokenInfo();
 
         // Do a recovery withdrawal.
         vm.prank(alice);
@@ -162,7 +164,7 @@ contract RecoveryModeTest is BaseVaultTest {
         assertEq(daiBalanceAfter - daiBalanceBefore, DEFAULT_AMOUNT / 2, "Ending DAI balance wrong (alice)");
         assertEq(usdcBalanceAfter - usdcBalanceBefore, DEFAULT_AMOUNT / 2, "Ending USDC balance wrong (alice)");
 
-        (, , uint256[] memory poolBalancesAfter, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesAfter,) = IPoolInfo(pool).getTokenInfo();
         assertEq(poolBalancesBefore[0] - poolBalancesAfter[0], DEFAULT_AMOUNT / 2, "Ending balance[0] wrong (pool)");
         assertEq(poolBalancesBefore[1] - poolBalancesAfter[1], DEFAULT_AMOUNT / 2, "Ending balance[1] wrong (pool)");
     }
@@ -172,7 +174,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory amountsIn = [uint256(DEFAULT_AMOUNT), uint256(DEFAULT_AMOUNT)].toMemoryArray();
 
         vm.prank(alice);
-        (, uint256 bptAmountOut, ) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
+        (, uint256 bptAmountOut,) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
 
         // Put pool in recovery mode.
         vault.manualEnableRecoveryMode(pool);
@@ -180,14 +182,12 @@ contract RecoveryModeTest is BaseVaultTest {
         vault.manualSetStaticSwapFeePercentage(pool, BASE_MAX_SWAP_FEE);
         // Will still be set from the add operation above.
         assertTrue(
-            vault.manualGetAddLiquidityCalledFlagBySession(pool, 0),
-            "Transient AddLiquidity flag not set (session 0)"
+            vault.manualGetAddLiquidityCalledFlagBySession(pool, 0), "Transient AddLiquidity flag not set (session 0)"
         );
 
         vault.manualSetAddLiquidityCalledFlag(pool, true);
         assertTrue(
-            vault.manualGetAddLiquidityCalledFlagBySession(pool, 1),
-            "Transient AddLiquidity flag not set (session 1)"
+            vault.manualGetAddLiquidityCalledFlagBySession(pool, 1), "Transient AddLiquidity flag not set (session 1)"
         );
 
         uint256 initialSupply = IERC20(pool).totalSupply();
@@ -209,7 +209,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256 daiBalanceBefore = dai.balanceOf(alice);
         uint256 usdcBalanceBefore = usdc.balanceOf(alice);
 
-        (, , uint256[] memory poolBalancesBefore, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesBefore,) = IPoolInfo(pool).getTokenInfo();
 
         // Do a recovery withdrawal.
         vm.prank(alice);
@@ -225,7 +225,7 @@ contract RecoveryModeTest is BaseVaultTest {
         assertEq(daiBalanceAfter - daiBalanceBefore, amountOutAfterFee, "Ending DAI balance wrong");
         assertEq(usdcBalanceAfter - usdcBalanceBefore, amountOutAfterFee, "Ending USDC balance wrong");
 
-        (, , uint256[] memory poolBalancesAfter, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesAfter,) = IPoolInfo(pool).getTokenInfo();
         assertEq(poolBalancesBefore[0] - poolBalancesAfter[0], amountOutAfterFee, "Ending balance[0] wrong (pool)");
         assertEq(poolBalancesBefore[1] - poolBalancesAfter[1], amountOutAfterFee, "Ending balance[1] wrong (pool)");
     }
@@ -235,7 +235,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory amountsIn = [uint256(DEFAULT_AMOUNT), uint256(DEFAULT_AMOUNT)].toMemoryArray();
 
         vm.prank(alice);
-        (, uint256 bptAmountOut, ) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
+        (, uint256 bptAmountOut,) = router.addLiquidityCustom(pool, amountsIn, DEFAULT_BPT_AMOUNT, false, bytes(""));
 
         // Raw and live should be in sync.
         assertRawAndLiveBalanceRelationship(true);
@@ -248,7 +248,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256 daiBalanceBefore = dai.balanceOf(alice);
         uint256 usdcBalanceBefore = usdc.balanceOf(alice);
 
-        (, , uint256[] memory poolBalancesBefore, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesBefore,) = IPoolInfo(pool).getTokenInfo();
 
         // Do a recovery withdrawal.
         vm.prank(alice);
@@ -264,7 +264,7 @@ contract RecoveryModeTest is BaseVaultTest {
         assertEq(daiBalanceAfter - daiBalanceBefore, DEFAULT_AMOUNT / 2, "Ending DAI balance wrong (alice)");
         assertEq(usdcBalanceAfter - usdcBalanceBefore, DEFAULT_AMOUNT / 2, "Ending USDC balance wrong (alice)");
 
-        (, , uint256[] memory poolBalancesAfter, ) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory poolBalancesAfter,) = IPoolInfo(pool).getTokenInfo();
         assertEq(poolBalancesBefore[0] - poolBalancesAfter[0], DEFAULT_AMOUNT / 2, "Ending balance[0] wrong (pool)");
         assertEq(poolBalancesBefore[1] - poolBalancesAfter[1], DEFAULT_AMOUNT / 2, "Ending balance[1] wrong (pool)");
 
@@ -280,9 +280,7 @@ contract RecoveryModeTest is BaseVaultTest {
     function testRecoveryModeEmitTransferFail() public {
         // We only want a partial match of the call, triggered when BPT are burned.
         vm.mockCallRevert(
-            pool,
-            abi.encodeWithSelector(BalancerPoolToken.emitTransfer.selector, alice, address(0)),
-            bytes("")
+            pool, abi.encodeWithSelector(BalancerPoolToken.emitTransfer.selector, alice, address(0)), bytes("")
         );
         testRecoveryModeBalances();
     }
@@ -294,9 +292,7 @@ contract RecoveryModeTest is BaseVaultTest {
 
         // We only want a partial match of the call, triggered when BPT are burned.
         vm.mockCallRevert(
-            pool,
-            abi.encodeWithSelector(BalancerPoolToken.emitApproval.selector, alice, router),
-            bytes("")
+            pool, abi.encodeWithSelector(BalancerPoolToken.emitApproval.selector, alice, router), bytes("")
         );
         testRecoveryModeBalances();
     }
@@ -307,9 +303,7 @@ contract RecoveryModeTest is BaseVaultTest {
         uint256[] memory lastBalancesLiveScaled18 = vault.getLastLiveBalances(pool);
 
         assertEq(
-            currentLiveBalances.length,
-            lastBalancesLiveScaled18.length,
-            "current/last live balance length mismatch"
+            currentLiveBalances.length, lastBalancesLiveScaled18.length, "current/last live balance length mismatch"
         );
 
         for (uint256 i = 0; i < currentLiveBalances.length; ++i) {
@@ -408,7 +402,7 @@ contract RecoveryModeTest is BaseVaultTest {
         assertFalse(vault.isPoolInRecoveryMode(pool), "Pool should not be in Recovery Mode after pausing");
 
         // Ensure we are in the permissionless period of the Pool.
-        (, , uint32 bufferPeriodEndTime, ) = vault.getPoolPausedState(pool);
+        (,, uint32 bufferPeriodEndTime,) = vault.getPoolPausedState(pool);
 
         vm.warp(bufferPeriodEndTime + 1);
 

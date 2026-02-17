@@ -13,13 +13,17 @@ import {
     SwapKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {SignedFixedPoint} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/SignedFixedPoint.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/GyroECLPMath.sol";
 
 import {SurgeHookCommon} from "./SurgeHookCommon.sol";
-import {ISurgeHookCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              ECLPSurgeHook                                 */
@@ -89,14 +93,7 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         uint256 defaultMaxSurgeFeePercentage_,
         uint256 defaultSurgeThresholdPercentage_,
         string memory version_
-    )
-        SurgeHookCommon(
-            vault_,
-            defaultMaxSurgeFeePercentage_,
-            defaultSurgeThresholdPercentage_,
-            version_
-        )
-    {
+    ) SurgeHookCommon(vault_, defaultMaxSurgeFeePercentage_, defaultSurgeThresholdPercentage_, version_) {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -111,7 +108,7 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         TokenConfig[] memory tokenConfig,
         LiquidityManagement calldata liquidityManagement
     ) public override onlyVault returns (bool success) {
-        (IGyroECLPPool.EclpParams memory eclpParams, ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams,) = IGyroECLPPool(pool).getECLPParams();
 
         // Validate rotation angle is between 30 and 60 degrees
         // sin(30°) = 0.5, cos(60°) = 0.5
@@ -138,18 +135,18 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
     }
 
     /// @inheritdoc IECLPSurgeHook
-    function setImbalanceSlopeBelowPeak(
-        address pool,
-        uint256 newImbalanceSlopeBelowPeak
-    ) external onlySwapFeeManagerOrGovernance(pool) {
+    function setImbalanceSlopeBelowPeak(address pool, uint256 newImbalanceSlopeBelowPeak)
+        external
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setImbalanceSlopeBelowPeak(pool, newImbalanceSlopeBelowPeak);
     }
 
     /// @inheritdoc IECLPSurgeHook
-    function setImbalanceSlopeAbovePeak(
-        address pool,
-        uint256 newImbalanceSlopeAbovePeak
-    ) external onlySwapFeeManagerOrGovernance(pool) {
+    function setImbalanceSlopeAbovePeak(address pool, uint256 newImbalanceSlopeAbovePeak)
+        external
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setImbalanceSlopeAbovePeak(pool, newImbalanceSlopeAbovePeak);
     }
 
@@ -168,16 +165,10 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
             return (false, 0);
         }
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedECLPParams
-        ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedECLPParams) =
+            IGyroECLPPool(pool).getECLPParams();
 
-        (uint256 amountCalculatedScaled18, int256 a, int256 b) = _computeSwap(
-            params,
-            eclpParams,
-            derivedECLPParams
-        );
+        (uint256 amountCalculatedScaled18, int256 a, int256 b) = _computeSwap(params, eclpParams, derivedECLPParams);
 
         uint256[] memory newBalances = new uint256[](params.balancesScaled18.length);
         ScalingHelpers.copyToArray(params.balancesScaled18, newBalances);
@@ -192,13 +183,7 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
 
         ImbalanceSlopeData memory imbalanceSlopeData = _imbalanceSlopePoolData[pool];
 
-        uint256 oldTotalImbalance = _computeImbalance(
-            params.balancesScaled18,
-            eclpParams,
-            a,
-            b,
-            imbalanceSlopeData
-        );
+        uint256 oldTotalImbalance = _computeImbalance(params.balancesScaled18, eclpParams, a, b, imbalanceSlopeData);
 
         newTotalImbalance = _computeImbalance(newBalances, eclpParams, a, b, imbalanceSlopeData);
         isSurging = _isSurging(surgeFeeData.thresholdPercentage, oldTotalImbalance, newTotalImbalance);
@@ -213,33 +198,16 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         ISurgeHookCommon.SurgeFeeData memory surgeFeeData = _surgeFeePoolData[pool];
         ImbalanceSlopeData memory imbalanceSlopeData = _imbalanceSlopePoolData[pool];
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedECLPParams
-        ) = IGyroECLPPool(pool).getECLPParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedECLPParams) =
+            IGyroECLPPool(pool).getECLPParams();
 
-        (int256 a, int256 b) = GyroECLPMath.computeOffsetFromBalances(
-            oldBalancesScaled18,
-            eclpParams,
-            derivedECLPParams
-        );
-        uint256 oldTotalImbalance = _computeImbalance(
-            oldBalancesScaled18,
-            eclpParams,
-            a,
-            b,
-            imbalanceSlopeData
-        );
+        (int256 a, int256 b) =
+            GyroECLPMath.computeOffsetFromBalances(oldBalancesScaled18, eclpParams, derivedECLPParams);
+        uint256 oldTotalImbalance = _computeImbalance(oldBalancesScaled18, eclpParams, a, b, imbalanceSlopeData);
 
         // Recompute offset for new balances (invariant changed)
         (a, b) = GyroECLPMath.computeOffsetFromBalances(balancesScaled18, eclpParams, derivedECLPParams);
-        uint256 newTotalImbalance = _computeImbalance(
-            balancesScaled18,
-            eclpParams,
-            a,
-            b,
-            imbalanceSlopeData
-        );
+        uint256 newTotalImbalance = _computeImbalance(balancesScaled18, eclpParams, a, b, imbalanceSlopeData);
 
         isSurging = _isSurging(surgeFeeData.thresholdPercentage, oldTotalImbalance, newTotalImbalance);
     }
@@ -259,16 +227,10 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
     ) internal pure returns (uint256 amountCalculated, int256 a, int256 b) {
         bool tokenInIsToken0 = request.indexIn == 0;
 
-        (int256 currentInvariant, int256 invErr) = GyroECLPMath.calculateInvariantWithError(
-            request.balancesScaled18,
-            eclpParams,
-            derivedECLPParams
-        );
+        (int256 currentInvariant, int256 invErr) =
+            GyroECLPMath.calculateInvariantWithError(request.balancesScaled18, eclpParams, derivedECLPParams);
 
-        IGyroECLPPool.Vector2 memory invariant = IGyroECLPPool.Vector2(
-            currentInvariant + 2 * invErr,
-            currentInvariant
-        );
+        IGyroECLPPool.Vector2 memory invariant = IGyroECLPPool.Vector2(currentInvariant + 2 * invErr, currentInvariant);
 
         if (request.kind == SwapKind.EXACT_IN) {
             (amountCalculated, a, b) = GyroECLPMath.calcOutGivenIn(
@@ -315,13 +277,11 @@ contract ECLPSurgeHook is IECLPSurgeHook, SurgeHookCommon {
         if (currentPrice == peakPrice) {
             return 0;
         } else if (currentPrice < peakPrice) {
-            imbalance =
-                ((peakPrice - currentPrice) * imbalanceSlopeData.imbalanceSlopeBelowPeak) /
-                (peakPrice - eclpParams.alpha.toUint256());
+            imbalance = ((peakPrice - currentPrice) * imbalanceSlopeData.imbalanceSlopeBelowPeak)
+                / (peakPrice - eclpParams.alpha.toUint256());
         } else {
-            imbalance =
-                ((currentPrice - peakPrice) * imbalanceSlopeData.imbalanceSlopeAbovePeak) /
-                (eclpParams.beta.toUint256() - peakPrice);
+            imbalance = ((currentPrice - peakPrice) * imbalanceSlopeData.imbalanceSlopeAbovePeak)
+                / (eclpParams.beta.toUint256() - peakPrice);
         }
 
         return imbalance > FixedPoint.ONE ? FixedPoint.ONE : imbalance;

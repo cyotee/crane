@@ -1,0 +1,3807 @@
+{
+  "interval": 10000,
+  "priceAggregator": "median",
+  "defaultSource": [],
+  "sourceTimeout": 7000,
+  "minValidSourcesPercentage": 1,
+  "deviationCheck": {
+    "deviationWithRecentValues": {
+      "maxPercent": 30,
+      "maxDelayMilliseconds": 120000
+    }
+  },
+  "tokens": {
+    "USDC": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bitstamp-usd",
+        "bybit-usdt",
+        "curve-ethereum-dai",
+        "curve-ethereum-usdt",
+        "gate-usdt",
+        "gemini-usd",
+        "htx-usdt",
+        "kraken-usd",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-dai-100",
+        "uniswap-v4-ethereum-usdt-1",
+        "uniswap-v4-arbitrumone-usdt-8"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDT": {
+      "source": ["bitstamp-usd", "coinbase-usd", "gemini-usd", "kraken-usd", "okx-usd"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDC_V2": {
+      "source": [
+        "bitstamp-usd",
+        "gemini-usd",
+        "kraken-usd",
+        "bitstamp_stables_ratio-usd",
+        "coinbase_stables_ratio-usd",
+        "gemini_stables_ratio-usd",
+        "kraken_stables_ratio-usd",
+        "okx_stables_ratio-usd"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDT_V2": {
+      "source": [
+        "bitstamp-usd",
+        "coinbase-usd",
+        "gemini-usd",
+        "kraken-usd",
+        "okx-usd",
+        "bitstamp_stables_ratio-usd",
+        "gemini_stables_ratio-usd",
+        "kraken_stables_ratio-usd"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDC/USDT": {
+      "source": [
+        "binance-usdt-no-quoting",
+        "bitget-usdt-no-quoting",
+        "bitmart-usdt-no-quoting",
+        "bitrue-usdt-no-quoting",
+        "curve-ethereum-usdt-no-quoting",
+        "kraken-usdt-no-quoting",
+        "kucoin-usdt-no-quoting",
+        "lbank-usdt-no-quoting",
+        "okx-usdt-no-quoting"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USDT",
+      "rateFeed": false
+    },
+    "BNB": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bingx-usdc",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BTC": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bingx-usdt",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdc",
+        "bitrue-usdt",
+        "bitstamp-usd",
+        "bybit-usdc",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "htx-usdt",
+        "kraken-usd",
+        "kraken-usdc",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usd",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "DAI": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "curve-ethereum-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kraken-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "FXS": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "htx-usdt",
+        "kraken-usd",
+        "mexc-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "FRAX": {
+      "source": [
+        "curve-ethereum-3crv",
+        "curve-ethereum-sdai",
+        "curve-ethereum-usdc",
+        "curve-ethereum-usde",
+        "fraxswap-ethereum-fxs",
+        "fraxswap-ethereum-weth",
+        "uniswap-v3-ethereum-usdc-500",
+        "uniswap-v3-ethereum-usdc-3000"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETH": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bingx-usdt",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bitstamp-usd",
+        "bybit-usdc",
+        "coinbase-usd",
+        "gate-usdt",
+        "htx-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kraken-usdc",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usd",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "stETH": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bybit-usdt",
+        "okx-usdt",
+        "curve-ethereum-eth",
+        "curve-ethereum-eth-2",
+        "curve-ethereum-weth",
+        "okx-eth",
+        "uniswap-v2-ethereum-weth"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "stETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "wstETH": {
+      "source": [
+        "camelot-v3-arbitrumone-weth",
+        "curve-ethereum-crvusd",
+        "uniswap-v3-arbitrumone-weth-100",
+        "uniswap-v3-ethereum-weth-100",
+        "velodrome-cl-optimism-weth",
+        "aerodrome-cl-base-weth"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "wstETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "wstETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-lido"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "wstETH/stETH": {
+      "source": ["ethereum-evm-fetcher-lido"],
+      "denomination": "stETH",
+      "rateFeed": true
+    },
+    "crvFRAX": {
+      "source": ["ethereum-evm-fetcher-curve"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "3Crv": {
+      "source": ["ethereum-evm-fetcher-curve"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "LUSD": {
+      "source": ["curve-ethereum-3crv", "uniswap-v3-ethereum-usdc-500", "velodrome-optimism-usdc"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "GHO": {
+      "source": [
+        "bitget-usdt",
+        "curve-ethereum-crvusd",
+        "curve-ethereum-usde",
+        "curve-ethereum-weth",
+        "curve-ethereum-cbbtc",
+        "gate-usdt",
+        "fluid-ethereum-usdc"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "AAVE": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "coinbase-usd",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-weth-3000",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "C3M": {
+      "source": ["financialmodelingprep", "twelve-data"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDC.USDT": {
+      "source": ["non-usd-based"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USDT",
+      "rateFeed": false
+    },
+    "USDC.DAI": {
+      "source": ["non-usd-based"],
+      "decimals": 14,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "DAI",
+      "rateFeed": false
+    },
+    "TRX": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PREMIA": {
+      "source": ["camelot-v3-arbitrumone-weth", "sushiswap-ethereum-weth"],
+      "denomination": "USD",
+      "localCacheTTL": "60m",
+      "rateFeed": false
+    },
+    "PREMIA-TWAP-60": {
+      "source": ["twap-local"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MNT": {
+      "source": [
+        "bingx-usdt",
+        "bitmart-usdt",
+        "bybit-btc",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETHx": {
+      "source": ["curve-ethereum-eth", "uniswap-v3-ethereum-wsteth-100"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETHx/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "TIA": {
+      "source": [
+        "binance-usdt",
+        "bitget-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "weETH": {
+      "source": [
+        "aerodrome-cl-base-weth",
+        "blackhole-avalanche-weth.e-400",
+        "bitget-usdt",
+        "camelot-v3-arbitrumone-weth",
+        "curve-ethereum-weth",
+        "fluid-ethereum-eth",
+        "uniswap-v3-arbitrumone-weth-3000"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "weETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "weETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-etherfi-liquidity-pool"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "rETH": {
+      "source": [
+        "curve-ethereum-weth",
+        "curve-ethereum-wsteth",
+        "curve-ethereum-wsteth-2",
+        "uniswap-v3-ethereum-weth-100",
+        "uniswap-v3-ethereum-weth-500",
+        "uniswap-v4-ethereum-eth-200"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "rETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "osETH": {
+      "priceAggregator": "depth",
+      "source": ["curve-ethereum-reth"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "osETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "pxETH": {
+      "source": [
+        "curve-ethereum-steth-multi-block",
+        "curve-ethereum-weth",
+        "pancake-swap-ethereum-weth-100",
+        "uniswap-v3-ethereum-weth-100-multi-block"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "pxETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "apxETH": {
+      "source": ["ethereum-evm-fetcher-redacted"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "apxETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "eBTC/WBTC": {
+      "source": ["ethereum-evm-fetcher-etherfi-rate-provider"],
+      "denomination": "WBTC",
+      "rateFeed": true
+    },
+    "ARB": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "uniswap-v3-arbitrumone-weth-3000",
+        "uniswap-v3-arbitrumone-weth-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "OP": {
+      "source": [
+        "binance-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt",
+        "uniswap-v3-optimism-usdc-3000",
+        "uniswap-v3-optimism-weth-3000",
+        "velodrome-cl-optimism-weth",
+        "velodrome-optimism-weth",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CELO": {
+      "source": [
+        "binance-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BRL": {
+      "source": [
+        "binance-usdt-reversed",
+        "bitso-usdt-reversed",
+        "binance-btc-reversed",
+        "mercado-btc-reversed",
+        "bitget-usdt-reversed",
+        "okx-usdt-reversed",
+        "bitget-btc-reversed",
+        "bybit-usdt-reversed",
+        "kucoin-usdt-reversed"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CELO/EUR": {
+      "source": ["non-usd-based"],
+      "denomination": "EUR",
+      "rateFeed": false
+    },
+    "CELO/BRL": {
+      "source": ["non-usd-based"],
+      "denomination": "BRL",
+      "rateFeed": false
+    },
+    "USDC/EUR": {
+      "source": ["non-usd-based"],
+      "denomination": "EUR",
+      "rateFeed": false
+    },
+    "USDC/BRL": {
+      "source": ["non-usd-based"],
+      "denomination": "BRL",
+      "rateFeed": false
+    },
+    "EUROC": {
+      "source": [
+        "aerodrome-cl-base-usdc",
+        "aerodrome-cl-base-usdc-2",
+        "aerodrome-cl-base-weth",
+        "coinbase-usdc",
+        "kraken-usd",
+        "trader-joe-v2-avalanche-usdc",
+        "uniswap-v3-ethereum-usdc-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "EUROC/EUR": {
+      "source": ["non-usd-based"],
+      "denomination": "EUR",
+      "rateFeed": false,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "USDC/EUROC": {
+      "source": ["non-usd-based"],
+      "denomination": "EUROC",
+      "rateFeed": false
+    },
+    "AVAX": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitstamp-usd",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ALUSD": {
+      "source": ["curve-ethereum-3crv", "curve-ethereum-crvfrax", "velodrome-optimism-usdc"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETH/USDC": {
+      "source": ["non-usd-based"],
+      "denomination": "USDC",
+      "rateFeed": false
+    },
+    "ATOM": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "XRP": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bingx-usdt",
+        "bitget-eur",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bitstamp-eur",
+        "bitstamp-usd",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kraken-usdc",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdc",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usd",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "SOL": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bingx-usdt",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitstamp-usd",
+        "bybit-usdc",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "htx-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kraken-usdc",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdc",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usd",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDC.e": {
+      "source": [
+        "camelot-v3-arbitrumone-usdc",
+        "curve-arbitrumone-usdt",
+        "uniswap-v3-arbitrumone-arb-500",
+        "uniswap-v3-arbitrumone-dai-500",
+        "uniswap-v3-arbitrumone-usdc-100",
+        "uniswap-v3-arbitrumone-usdt-100",
+        "uniswap-v3-arbitrumone-weth-3000",
+        "uniswap-v3-arbitrumone-weth-500"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "agEUR": {
+      "source": ["curve-ethereum-euroc"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "XVS": {
+      "source": ["binance-usdt", "bingx-usdt", "bitrue-usdt", "gate-usdt", "lbank-usdt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "WBTC": {
+      "source": [
+        "binance-btc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitrue-btc",
+        "bybit-btc",
+        "curve-arbitrumone-weth",
+        "kraken-btc",
+        "kraken-usd",
+        "kucoin-btc",
+        "uniswap-v3-arbitrumone-weth-500",
+        "uniswap-v3-ethereum-weth-3000",
+        "uniswap-v3-ethereum-weth-500",
+        "uniswap-v4-ethereum-usdt-3000"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "UNI": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitstamp-usd",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-weth-3000",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "LINK": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitstamp-usd",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-weth-3000",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CRV": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "APE": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CVX": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "curve-ethereum-weth"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MANTA": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "lbank-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "STONE": {
+      "source": ["ethereum-evm-fetcher-stake-stone"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "STONE/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "frxETH": {
+      "source": [
+        "curve-ethereum-cvx",
+        "curve-ethereum-eth",
+        "curve-ethereum-steth",
+        "curve-ethereum-weth",
+        "uniswap-v3-ethereum-frax-10000"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "eUSD": {
+      "source": [
+        "aerodrome-base-usdc",
+        "aerodrome-cl-base-usdc",
+        "curve-ethereum-crvfrax",
+        "curve-ethereum-rsr",
+        "curve-ethereum-usdc-2"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "RSR": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETH+": {
+      "source": [
+        "curve-ethereum-eusd",
+        "curve-ethereum-rsr",
+        "curve-ethereum-weth",
+        "curve-ethereum-weth-2",
+        "uniswap-v3-ethereum-weth-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETH+/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "sDAI": {
+      "source": ["ethereum-evm-fetcher-savings-dai"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "TON": {
+      "source": [
+        "binance-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "XTZ": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "EUR": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bitstamp-usd",
+        "kraken-usd",
+        "mexc-usdt",
+        "coinbase-btc-reversed",
+        "bitstamp-btc-reversed",
+        "kraken-usdt-reversed",
+        "bitget-usdt-reversed",
+        "okx-btc-reversed"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "GBP": {
+      "source": [
+        "bitstamp-usd",
+        "financialmodelingprep",
+        "kraken-usd",
+        "coinbase-btc-reversed",
+        "bitstamp-btc-reversed",
+        "kraken-usdt-reversed",
+        "bitfinex-btc-reversed"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sfrxETH": {
+      "source": ["ethereum-evm-fetcher-frax"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sfrxETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "rsETH": {
+      "source": [
+        "camelot-v3-arbitrumone-weth",
+        "curve-ethereum-sfrxeth",
+        "uniswap-v3-ethereum-wsteth-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "rsETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "ezETH": {
+      "source": [
+        "aerodrome-cl-base-weth",
+        "curve-fraxtal-frxeth",
+        "fluid-ethereum-eth",
+        "thruster-v3-blast-weth-3000",
+        "thruster-v3-blast-weth-500",
+        "uniswap-v4-arbitrumone-eth-500"
+      ],
+      "localCacheTTL": "60m",
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ezETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "ezETH-TWAP-60": {
+      "source": ["twap-local"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "crvUSD": {
+      "source": [
+        "curve-arbitrumone-wbtc",
+        "curve-arbitrumone-weth",
+        "curve-ethereum-cbbtc",
+        "curve-ethereum-crv",
+        "curve-ethereum-frax",
+        "curve-ethereum-pyusd",
+        "curve-ethereum-susde",
+        "curve-ethereum-usdc",
+        "curve-ethereum-usde",
+        "curve-ethereum-usdt",
+        "curve-ethereum-weth"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDe": {
+      "priceAggregator": "depth",
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bitget-usdc",
+        "bitmart-usdt",
+        "bybit-usdc",
+        "bybit-usdt",
+        "gate-usdt",
+        "htx-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "curve-ethereum-dai",
+        "curve-ethereum-usdt",
+        "uniswap-v3-ethereum-usdc-100",
+        "uniswap-v4-ethereum-usdt-45",
+        "xt"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sUSDe": {
+      "source": ["ethereum-evm-fetcher-ethena"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDe_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-ethena"],
+      "denomination": "USDe",
+      "rateFeed": true
+    },
+    "USDB": {
+      "source": [
+        "ambient-blast-eth",
+        "ringswap-blast-fwweth",
+        "thruster-v3-blast-susde-500",
+        "thruster-v3-blast-usde-500",
+        "thruster-v3-blast-weth-500"
+      ],
+      "localCacheTTL": "30m",
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDB-TWAP-30": {
+      "source": ["twap-local"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sUSDe_RATE_PROVIDER": {
+      "source": ["ethereum-evm-fetcher-balancer-rate-provider"],
+      "denomination": "USDe",
+      "rateFeed": true
+    },
+    "pufETH": {
+      "source": [
+        "curve-ethereum-wsteth",
+        "curve-ethereum-wsteth-2",
+        "uniswap-v3-ethereum-weth-3000"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "pufETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "LDO": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MODE": {
+      "source": ["bybit-usdt", "gate-usdt", "mexc-usdt", "xt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "rsETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-kelp"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "rswETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-swell"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "pufETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-puffer"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "ezETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-renzo"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "uniETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-bedrock"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "MERL": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "KES": {
+      "source": ["alphavantage-usd", "financialmodelingprep", "twelve-data", "metal-price-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "COP": {
+      "source": [
+        "alphavantage-usd-reversed",
+        "financialmodelingprep",
+        "twelve-data",
+        "metal-price-api"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "bsdETH": {
+      "source": ["aerodrome-base-weth", "aerodrome-cl-base-weth", "uniswap-v3-base-weth-100"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "bsdETH/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "ZK": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitmart-usdt",
+        "bybit-usdc",
+        "bybit-usdt",
+        "gate-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USD+": {
+      "source": [
+        "pancake-swap-base-usdc-100",
+        "uniswap-v3-arbitrumone-usdc-100",
+        "uniswap-v3-base-usdc-100",
+        "uniswap-v3-base-weth-500"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "AR": {
+      "source": [
+        "binance-btc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETH_CLE": {
+      "source": ["beaconchain-api", "rated-network"],
+      "denomination": "ETH",
+      "rateFeed": false,
+      "minValidSourcesPercentage": 100,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "ETH_ELE": {
+      "source": ["beaconchain-api", "flashbots-data-api"],
+      "denomination": "ETH",
+      "rateFeed": false,
+      "minValidSourcesPercentage": 100,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 50,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "SEI": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "mETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-mantle-lsp-staking"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "cmETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-mantle-cmeth"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "pzETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-renzo"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "USD3": {
+      "source": [
+        "curve-ethereum-susde",
+        "curve-ethereum-scrvusd_fundamental/usd",
+        "curve-ethereum-susds_fundamental/usd"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sdeUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-elixir"],
+      "denomination": "deUSD",
+      "rateFeed": true
+    },
+    "sfastUSD_FUNDAMENTAL": {
+      "source": ["sei-evm-fetcher-fast"],
+      "denomination": "deUSD",
+      "rateFeed": true
+    },
+    "CESR": {
+      "source": ["coindesk-cesr"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "SolvBTC": {
+      "source": ["pancake-swap-bnb-btcb-500", "uniswap-v3-ethereum-wbtc-500", "thena-v3-bnb-btcb"],
+      "denomination": "USD",
+      "rateFeed": false,
+      "valueCapConfig": {
+        "upper": {
+          "token": "BTC",
+          "multiplier": 1.01
+        }
+      }
+    },
+    "SolvBTC/BTC": {
+      "source": ["non-usd-based"],
+      "denomination": "BTC",
+      "rateFeed": false,
+      "valueCapConfig": {
+        "upper": {
+          "value": 1.01
+        }
+      }
+    },
+    "SolvBTC_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-solv-rate-provider"],
+      "denomination": "BTC",
+      "rateFeed": true
+    },
+    "SolvBTC.BBN_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-curve-rate-provider"],
+      "denomination": "SolvBTC",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "pumpBTC_FUNDAMENTAL": {
+      "source": ["pump-btc"],
+      "denomination": "BTC",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "pumpBTC": {
+      "source": ["curve-ethereum-wbtc"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "pumpBTC/BTC": {
+      "source": ["non-usd-based"],
+      "denomination": "BTC",
+      "rateFeed": false
+    },
+    "SUSDz_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-anzen"],
+      "denomination": "USDz",
+      "rateFeed": true
+    },
+    "cbBTC": {
+      "source": [
+        "aerodrome-base-usdc",
+        "aerodrome-base-weth",
+        "aerodrome-cl-base-aero",
+        "aerodrome-cl-base-usdc",
+        "aerodrome-cl-base-usdc-2",
+        "aerodrome-cl-base-weth",
+        "curve-ethereum-wbtc",
+        "pancake-swap-base-usdc-100",
+        "pancake-swap-base-weth-100",
+        "uniswap-v3-base-weth-500",
+        "uniswap-v3-base-weth-3000",
+        "uniswap-v3-ethereum-wbtc-100",
+        "uniswap-v3-base-usdc-500",
+        "uniswap-v4-base-usdc-3000",
+        "curve-ethereum-weth"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "cbETH": {
+      "source": [
+        "coinbase-usd",
+        "uniswap-v3-ethereum-weth-500",
+        "uniswap-v3-base-weth-500",
+        "curve-ethereum-weth",
+        "aerodrome-cl-base-weth"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "FDUSD": {
+      "source": [
+        "binance-bnb-reversed",
+        "binance-btc-reversed",
+        "binance-eth-reversed",
+        "binance-sol-reversed",
+        "binance-usdc",
+        "binance-usdt",
+        "binance-xrp-reversed",
+        "bingx-usdt",
+        "gate-usdt",
+        "mexc-usdt",
+        "pancake-swap-bnb-usdt-100",
+        "uniswap-v3-ethereum-usdt-100"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ETHFI": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "fxUSD": {
+      "source": ["curve-ethereum-eusd", "curve-ethereum-gho", "curve-ethereum-usdc"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PUFFER": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "aUSD": {
+      "source": [
+        "blackhole-avalanche-usdc-75",
+        "bullish-btc-reversed",
+        "pharaoh-avalanche-usdc-50",
+        "trader-joe-v2-avalanche-wavax",
+        "trader-joe-v2-avalanche-usdc",
+        "trader-joe-v2-avalanche-usdt",
+        "uniswap-v4-ethereum-usdc-100"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "GOAT": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kucoin-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "LBTC": {
+      "source": [
+        "aerodrome-cl-base-cbbtc",
+        "curve-ethereum-wbtc",
+        "curve-ethereum-wbtc-2",
+        "uniswap-v3-ethereum-wbtc-500",
+        "uniswap-v3-ethereum-wbtc-100"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "LBTC/BTC": {
+      "source": ["non-usd-based"],
+      "denomination": "BTC",
+      "rateFeed": false
+    },
+    "ssETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-nucleus-rate-provider"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "XRD": {
+      "source": ["gate-eth", "gate-usdt", "kucoin-usdt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "AERO": {
+      "source": [
+        "aerodrome-base-usdc",
+        "aerodrome-base-weth",
+        "aerodrome-cl-base-weth",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "uniswap-v3-base-weth-3000",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "RIF": {
+      "source": [
+        "binance-btc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "lbank-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDe/USDC": {
+      "source": ["non-usd-based"],
+      "denomination": "USDC",
+      "rateFeed": false
+    },
+    "LSK": {
+      "source": [
+        "binance-btc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "swETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-swell"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "HYPE": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "hyperliquid-api-fetcher",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "stTON_FUNDAMENTAL": {
+      "source": ["ton-staked"],
+      "denomination": "TON",
+      "rateFeed": true
+    },
+    "tsTON_FUNDAMENTAL": {
+      "source": ["ton-staked"],
+      "denomination": "TON",
+      "rateFeed": true
+    },
+    "tsUSDe_FUNDAMENTAL": {
+      "source": ["ton-staked"],
+      "denomination": "USDe",
+      "rateFeed": true
+    },
+    "bmTON_FUNDAMENTAL": {
+      "source": ["ton-staked"],
+      "denomination": "TON",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "stS_FUNDAMENTAL": {
+      "source": ["sonic-evm-fetcher-beets"],
+      "denomination": "S",
+      "rateFeed": true
+    },
+    "sUSDX_ARB_FUNDAMENTAL": {
+      "source": ["arbitrum-evm-fetcher-stables-labs"],
+      "denomination": "USDX",
+      "rateFeed": true
+    },
+    "sUSDX_BNB_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-stables-labs"],
+      "denomination": "USDX",
+      "rateFeed": true
+    },
+    "sUSDX_ETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-stables-labs"],
+      "denomination": "USDX",
+      "rateFeed": true
+    },
+    "SWELL": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "SWELL/ETH": {
+      "source": ["non-usd-based"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "beraSTONE_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-stake-stone-bera"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "beraETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-stake-stone-bera"],
+      "denomination": "ETH",
+      "rateFeed": true,
+      "comment": "This is beraSTONE price, need to keep it because Gearbox is using old data feed name"
+    },
+    "ENA": {
+      "source": [
+        "binance-btc",
+        "binance-fdusd",
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "kraken-usd",
+        "lbank-usdt",
+        "mexc-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "THE": {
+      "source": ["binance-usdt", "bitget-usdt", "gate-usdt", "lbank-usdt", "xt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BIO": {
+      "source": [
+        "binance-fdusd",
+        "binance-usdt",
+        "bitmart-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BUIDL_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_DAILY_INTEREST_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_I_ETHEREUM_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_I_ETHEREUM_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_ARBITRUM_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_ARBITRUM_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_OPTIMISM_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_OPTIMISM_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_AVALANCHE_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_AVALANCHE_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_POLYGON_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_POLYGON_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "BUIDL_SOLANA_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BUIDL_SOLANA_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": false
+    },
+    "ACRED_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "ACRED_SOLANA_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "HLScope_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "HLScope_PLUME_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "EXOD_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "BCAP_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "VBILL_ETHEREUM_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "VBILL_AVALANCHE_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "VBILL_BNB_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "VBILL_SOLANA_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "VBILL_ETHEREUM_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": true
+    },
+    "VBILL_AVALANCHE_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": true
+    },
+    "VBILL_BNB_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": true
+    },
+    "VBILL_SOLANA_DAILY_ACCRUAL": {
+      "source": ["securitize-api"],
+      "denomination": "percentage",
+      "rateFeed": true
+    },
+    "MI4_MANTLE_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "STAC_FUNDAMENTAL": {
+      "source": ["securitize-api"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "scUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-veda"],
+      "denomination": "USDC",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "scETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-veda"],
+      "denomination": "ETH",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "zkETH_FUNDAMENTAL": {
+      "source": ["zksync-evm-fetcher-dinero-branded-eth"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "FARTCOIN": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "TRUMP": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "S": {
+      "source": [
+        "binance-bnb",
+        "binance-btc",
+        "binance-eur",
+        "binance-fdusd",
+        "binance-usdc",
+        "binance-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "lbank-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "weETH/ETH_AVS": {
+      "source": ["alias"],
+      "denomination": "ETH",
+      "rateFeed": false
+    },
+    "scrvUSD_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-curve-savings"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "BERA": {
+      "source": [
+        "binance-bnb",
+        "binance-btc",
+        "binance-fdusd",
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "egETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-eigenpie"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "USR": {
+      "source": [
+        "aerodrome-base-usdc",
+        "curve-ethereum-usdc",
+        "uniswap-v3-ethereum-usdc-500",
+        "curve-ethereum-gho"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "HONEY": {
+      "source": [
+        "beraswap-berachain-wbera",
+        "kodiak-berachain-susde-500",
+        "kodiak-berachain-usdc.e-500",
+        "kodiak-berachain-usde-500",
+        "kodiak-berachain-wbera-3000",
+        "kodiak-berachain-wbtc-3000",
+        "kodiak-berachain-weth-3000"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "beraETH_FUNDAMENTAL/USD": {
+      "source": ["berachain-evm-fetcher-dinero-branded-eth"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "bfBTC_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-bit-fi"],
+      "denomination": "BTC",
+      "rateFeed": true
+    },
+    "IP": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "vIP_FUNDAMENTAL": {
+      "source": ["story-evm-fetcher-verio"],
+      "denomination": "IP",
+      "rateFeed": true
+    },
+    "USUAL": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "mexc-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "LBTC_FUNDAMENTAL": {
+      "source": ["lombard-lbtc"],
+      "denomination": "BTC",
+      "localCacheTTL": "1d",
+      "rateFeed": true
+    },
+    "BTC.b_FUNDAMENTAL": {
+      "source": ["evm-fetcher-lombard-btcb"],
+      "denomination": "BTC",
+      "rateFeed": true
+    },
+    "HybridBTC.pendle_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-hybrid-bitcoin-pendle"],
+      "denomination": "WBTC",
+      "rateFeed": true
+    },
+    "KAITO": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "KING_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-king-protocol"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "COMP": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sUSDS_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-savings-usds"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDS_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-savings-usds"],
+      "denomination": "USDS",
+      "rateFeed": true
+    },
+    "frxUSD": {
+      "source": [
+        "curve-ethereum-susds_fundamental/usd",
+        "curve-ethereum-frax",
+        "curve-fraxtal-usdt",
+        "curve-fraxtal-susde",
+        "fraxswap-fraxtal-wfrax",
+        "curve-ethereum-crvusd"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sfrxUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-staked-frxusd"],
+      "denomination": "frxUSD",
+      "rateFeed": true
+    },
+    "ylstETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-cian"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "iBERA": {
+      "source": ["kodiak-berachain-wbera-500", "kodiak-berachain-ibgt-3000"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "iBGT": {
+      "source": ["kodiak-berachain-wbera-3000", "bulla-berachain-wbera"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "iBGT/BERA": {
+      "source": ["non-usd-based"],
+      "denomination": "BERA",
+      "localCacheTTL": "60m",
+      "valueCapConfig": {
+        "lower": {
+          "value": 1
+        }
+      },
+      "rateFeed": false
+    },
+    "iBGT/BERA-TWAP-60": {
+      "source": ["twap-local"],
+      "denomination": "BERA",
+      "valueCapConfig": {
+        "lower": {
+          "value": 1
+        }
+      },
+      "rateFeed": false
+    },
+    "PROMPT": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-usdc-3000",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "EIGEN": {
+      "source": [
+        "binance-usdt",
+        "binance-usdc",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "lbank-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BABY": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "tacETH_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-turtle-tac"],
+      "denomination": "ETH",
+      "rateFeed": true,
+      "isHidden": true
+    },
+    "tacUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-turtle-tac"],
+      "denomination": "USDC",
+      "rateFeed": true,
+      "isHidden": true
+    },
+    "tacBTC_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-turtle-tac"],
+      "denomination": "BTC",
+      "rateFeed": true,
+      "isHidden": true
+    },
+    "UBTC": {
+      "source": [
+        "hyperliquid-api-fetcher",
+        "hyperswap-hyperevm-whype-3000",
+        "kittenswap-hyperevm-whype",
+        "project-x-hyperevm-whype-3000"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USD1": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "pancake-swap-bnb-usdt-100",
+        "pancake-swap-bnb-wbnb-500",
+        "uniswap-v3-ethereum-usdc-100",
+        "uniswap-v3-ethereum-usdt-100",
+        "uniswap-v3-bnb-usdt-100"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "mHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperpie"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "FUEL": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "wstHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-staked-hype"],
+      "denomination": "stHYPE",
+      "rateFeed": true
+    },
+    "stHYPE": {
+      "source": [
+        "hyperswap-hyperevm-whype-100",
+        "kittenswap-hyperevm-whype",
+        "valantis-hyperevm-whype"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "stHYPE/HYPE": {
+      "source": ["non-usd-based"],
+      "denomination": "HYPE",
+      "rateFeed": false,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "AO": {
+      "source": ["bybit-usdt", "mexc-usdt", "gate-usdt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "DOGE": {
+      "source": [
+        "binance-fdusd",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitstamp-usd",
+        "bybit-usdc",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "htx-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kraken-usdc",
+        "kraken-usdt",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdc",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ADA": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kraken-usdc",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "SPK": {
+      "source": [
+        "binance-usdt",
+        "binance-usdc",
+        "bingx-usdt",
+        "mexc-usdt",
+        "gate-usdt",
+        "bitget-usdt",
+        "lbank-usdt",
+        "kucoin-usdt",
+        "bybit-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "SUI": {
+      "source": [
+        "binance-btc",
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdc",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bingx-usdt",
+        "bybit-usdc",
+        "bybit-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "kraken-usd",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdc",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PYUSD": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bullish-usdc",
+        "bullish-btc-reversed",
+        "bybit-usdt",
+        "curve-ethereum-usdc",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "okx-usdt",
+        "uniswap-v3-ethereum-usdt-100"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "hwHLP_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperwave"],
+      "denomination": "USDC",
+      "rateFeed": true
+    },
+    "SHIB": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PEPE": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "WIF": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BONK": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bybit-usdt",
+        "okx-usdt",
+        "bitget-usdt",
+        "mexc-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "bingx-usdt",
+        "kraken-usd",
+        "bitmart-usdt",
+        "lbank-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "FLOKI": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MEW": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MOG": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "uniswap-v2-ethereum-weth",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PENGU": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "XAUt": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USR_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-reserve"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "RLP_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-resolv-price-provider"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "wstUSR_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-resolv"],
+      "denomination": "USR",
+      "rateFeed": true
+    },
+    "SUSHI": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "hbUSDT_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "hbUSDC_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "hbHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "hbBTC_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat"],
+      "denomination": "BTC",
+      "rateFeed": true
+    },
+    "kHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-kinetiq"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "kHYPE_FUNDAMENTAL/USD": {
+      "source": ["hyperevm-evm-fetcher-kinetiq"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "TAC": {
+      "source": [
+        "bitget-usdt",
+        "bybit-usdt",
+        "kraken-usd",
+        "mexc-usdt",
+        "pancake-swap-bnb-usd1-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "URANIUM": {
+      "source": [
+        "tezos-uranium-price-api-deferred",
+        "commodity-price-api",
+        "metals-api",
+        "metal-price-api"
+      ],
+      "priceAggregator": "primarySource",
+      "primarySourceAggregatorConfig": {
+        "primarySource": "tezos-uranium-price-api-deferred"
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "lstHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "kHYPE": {
+      "source": [
+        "hyperswap-hyperevm-whype-100",
+        "project-x-hyperevm-whype-100",
+        "project-x-hyperevm-ubtc-3000",
+        "project-x-hyperevm-usdt0-3000",
+        "project-x-hyperevm-usdt0-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "kHYPE/HYPE": {
+      "source": ["non-usd-based"],
+      "denomination": "HYPE",
+      "rateFeed": false
+    },
+    "beHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "thBILL_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-theo"],
+      "denomination": "USDC",
+      "rateFeed": true
+    },
+    "thBILL_FUNDAMENTAL/USD": {
+      "source": ["usd-based"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "cUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-cap"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "stHYPE_LP_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-valantis-lp"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "wVLP_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "USDT",
+      "rateFeed": true
+    },
+    "dnHYPE_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "USDT0": {
+      "source": [
+        "camelot-v3-arbitrumone-usdc",
+        "project-x-hyperevm-whype-500",
+        "hyperswap-hyperevm-whype-500",
+        "uniswap-v3-arbitrumone-wbtc-500",
+        "uniswap-v3-arbitrumone-weth-500",
+        "uniswap-v3-arbitrumone-usdc-100",
+        "hyperliquid-api-fetcher",
+        "uniswap-v4-unichain-eth-500",
+        "uniswap-v4-unichain-wbtc-500"
+      ],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "WLFI": {
+      "source": [
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "beHYPE_MAIN_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-behype"],
+      "denomination": "HYPE",
+      "rateFeed": true
+    },
+    "dnPUMP_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-oracle"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "UTY_FUNDAMENTAL": {
+      "source": ["accountable-uty"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "UTY_PEGGED_FUNDAMENTAL": {
+      "source": ["accountable-uty-pegged"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "YUSD_FUNDAMENTAL": {
+      "source": ["accountable-yusd"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "SKY": {
+      "source": [
+        "bitget-usdt",
+        "bitrue-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "kraken-usd",
+        "kucoin-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "mF-ONE_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-mf-one"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "HEMI": {
+      "source": [
+        "gate-usdt",
+        "mexc-usdt",
+        "pancake-swap-bnb-usdt-100",
+        "sushiswap-v3-hemi-usdt-500"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDH": {
+      "source": ["hyperliquid-api-fetcher", "nest-hyperevm-whype", "project-x-hyperevm-whype-3000"],
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      },
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "0G": {
+      "source": [
+        "binance-usdt",
+        "binance-usdc",
+        "bybit-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "mexc-usdt",
+        "kucoin-usdt",
+        "bingx-usdt",
+        "kraken-usd",
+        "pancake-swap-bnb-usdt-100",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ANKR": {
+      "source": [
+        "binance-usdt",
+        "mexc-usdt",
+        "coinbase-usd",
+        "bybit-usdt",
+        "bitmart-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "bingx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "PT_sUSDe_27NOV2025_ETH": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "sUSDe",
+      "localCacheTTL": "1d",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_sUSDe_27NOV2025_ETH-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "sUSDe",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_sUSDe_5FEB2026_ETH": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "sUSDe",
+      "localCacheTTL": "1d",
+      "rateFeed": true
+    },
+    "PT_sUSDe_5FEB2026_ETH-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "sUSDe",
+      "rateFeed": true
+    },
+    "PT_srUSDe_15JAN2026_ETH": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "srUSDe",
+      "localCacheTTL": "1d",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_srUSDe_15JAN2026_ETH-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "srUSDe",
+      "rateFeed": true
+    },
+    "PT_cUSD_29JAN2026_ETH": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "cUSD",
+      "localCacheTTL": "1d",
+      "rateFeed": true
+    },
+    "PT_cUSD_29JAN2026_ETH-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "cUSD",
+      "rateFeed": true
+    },
+    "PT_sUSDe_15JAN2026_PLSM": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "sUSDe",
+      "localCacheTTL": "1d",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_sUSDe_15JAN2026_PLSM-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "sUSDe",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_kHYPE_13NOV2025_HL": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "kHYPE",
+      "localCacheTTL": "1d",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_kHYPE_13NOV2025_HL-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "kHYPE",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_iBGT_25DEC2025_BERA": {
+      "source": ["evm-fetcher-pendle"],
+      "denomination": "iBGT",
+      "localCacheTTL": "1d",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "PT_iBGT_25DEC2025_BERA-TWAP": {
+      "source": ["twap-local"],
+      "denomination": "iBGT",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "SPKCC_NAV": {
+      "source": ["spiko"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "eurSPKCC_NAV": {
+      "source": ["spiko"],
+      "denomination": "EUR",
+      "rateFeed": false
+    },
+    "XPL": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "binance-usdt",
+        "bybit-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "gate-usdt",
+        "binance-usdc"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "sYUSD_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-aegis"],
+      "denomination": "YUSD",
+      "rateFeed": true
+    },
+    "wNLP_FUNDAMENTAL": {
+      "source": ["hyperevm-evm-fetcher-hyperbeat-wnlp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "OPEN": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "pancake-swap-bnb-usdt-100"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "syzUSD_FUNDAMENTAL": {
+      "source": ["plasma-evm-fetcher-yuzu-money"],
+      "denomination": "yzUSD_FUNDAMENTAL",
+      "rateFeed": true
+    },
+    "syzUSD_FUNDAMENTAL/USD": {
+      "source": ["usd-based"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "iBENJI_ETHEREUM_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-franklin-templeton"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "iBENJI_BNB_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-franklin-templeton"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "BENJI_ETHEREUM_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-franklin-templeton"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "yzUSD_FUNDAMENTAL": {
+      "source": ["accountable-yzusd"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "SIERRA_FUNDAMENTAL": {
+      "source": ["avalanche-evm-fetcher-sierra"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "muBOND_FUNDAMENTAL": {
+      "source": ["accountable-mubond"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "aprMON_FUNDAMENTAL": {
+      "source": ["monad-evm-fetcher-aprmon"],
+      "denomination": "MON",
+      "rateFeed": true
+    },
+    "AZND_FUNDAMENTAL": {
+      "source": ["accountable-aznd"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "earnAUSD_FUNDAMENTAL": {
+      "source": ["monad-evm-fetcher-earnausd"],
+      "denomination": "AUSD",
+      "rateFeed": true
+    },
+    "shMON_FUNDAMENTAL": {
+      "source": ["monad-evm-fetcher-shmon"],
+      "denomination": "MON",
+      "rateFeed": true
+    },
+    "sMON_FUNDAMENTAL": {
+      "source": ["monad-evm-fetcher-smon"],
+      "denomination": "MON",
+      "rateFeed": true
+    },
+    "APR": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "coinbase-usd",
+        "kraken-usd",
+        "kucoin-usdt",
+        "lbank-usdt",
+        "mexc-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MON": {
+      "source": [
+        "bitget-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "gMON_FUNDAMENTAL": {
+      "source": ["monad-evm-fetcher-gmon"],
+      "denomination": "MON",
+      "rateFeed": true
+    },
+    "LTC": {
+      "source": [
+        "binance-btc",
+        "binance-usdt",
+        "bitget-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-eur",
+        "kraken-usd",
+        "kucoin-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "XLM": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "BCH": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "okx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "HBAR": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "bybit-usdt",
+        "coinbase-usd",
+        "gate-usdt",
+        "kucoin-usdt",
+        "kraken-usd",
+        "lbank-usdt",
+        "mexc-usdt",
+        "okx-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "ZEC": {
+      "source": [
+        "binance-usdc",
+        "binance-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "coinbase-usd",
+        "kucoin-usdt",
+        "okx-usdt",
+        "mexc-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CMC20_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-reserve"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+
+    "stMNT_FUNDAMENTAL": {
+      "source": ["ethereum-evm-fetcher-mantle-liq"],
+      "denomination": "MNT",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "stMNT_FUNDAMENTAL/USD": {
+      "source": ["usd-based"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "MSUSD_FUNDAMENTAL": {
+      "source": ["accountable-msusd"],
+      "denomination": "USD",
+      "rateFeed": true,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "MSY_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-main-st"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "HYPE/USDC": {
+      "source": ["non-usd-based"],
+      "denomination": "USDC",
+      "rateFeed": false
+    },
+    "gTAC_FUNDAMENTAL": {
+      "source": ["tac-evm-fetcher-gtac"],
+      "denomination": "TAC",
+      "rateFeed": true
+    },
+    "IR": {
+      "source": [
+        "bingx-usdt",
+        "bitget-usdt",
+        "bitmart-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CAKE": {
+      "source": [
+        "pancake-swap-bnb-wbnb-500",
+        "pancake-swap-bnb-wbnb-2500",
+        "pancake-swap-bnb-usdt-2500",
+        "uniswap-v3-bnb-usdt-3000",
+        "binance-usdt",
+        "binance-usdc",
+        "coinbase-usd",
+        "bybit-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "bingx-usdt",
+        "bitmart-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "lbank-usdt",
+        "htx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "FIL": {
+      "source": [
+        "binance-usdt",
+        "binance-usdc",
+        "coinbase-usd",
+        "okx-usdt",
+        "bybit-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "kraken-usd",
+        "bingx-usdt",
+        "bitmart-usdt",
+        "lbank-usdt",
+        "htx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "DOT": {
+      "source": [
+        "binance-usdt",
+        "binance-usdc",
+        "coinbase-usd",
+        "okx-usdt",
+        "bybit-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "kraken-usd",
+        "kraken-eur",
+        "bingx-usdt",
+        "bitmart-usdt",
+        "lbank-usdt",
+        "htx-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "TWT": {
+      "source": [
+        "pancake-swap-bnb-wbnb-2500",
+        "pancake-swap-bnb-usdt-2500",
+        "binance-usdt",
+        "binance-usdc",
+        "bybit-usdt",
+        "bitget-usdt",
+        "gate-usdt",
+        "kucoin-usdt",
+        "mexc-usdt",
+        "bingx-usdt",
+        "bitmart-usdt",
+        "lbank-usdt",
+        "xt"
+      ],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USDm": {
+      "source": ["kumbaya-megaeth-cusd-100", "kumbaya-megaeth-usdt0-100"],
+      "denomination": "USD",
+      "rateFeed": false,
+      "deviationCheck": {
+        "deviationWithRecentValues": {
+          "maxPercent": 5,
+          "maxDelayMilliseconds": 120000
+        }
+      }
+    },
+    "slisBNB_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-venus-slis"],
+      "denomination": "BNB",
+      "rateFeed": true
+    },
+    "asBNB_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-venus-as"],
+      "denomination": "slisBNB",
+      "rateFeed": true
+    },
+    "wBETH_FUNDAMENTAL": {
+      "source": ["bnb-evm-fetcher-venus-wb"],
+      "denomination": "ETH",
+      "rateFeed": true
+    },
+    "BUCK_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-buck"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "USDp_FUNDAMENTAL/USD": {
+      "source": ["evm-fetcher-parallel-usdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDp_AVAX_FUNDAMENTAL/USD": {
+      "source": ["avalanche-evm-fetcher-parallel-susdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDp_BASE_FUNDAMENTAL/USD": {
+      "source": ["base-evm-fetcher-parallel-susdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDp_ETH_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-parallel-susdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDp_HYPEREVM_FUNDAMENTAL/USD": {
+      "source": ["hyperevm-evm-fetcher-parallel-susdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "sUSDp_SONIC_FUNDAMENTAL/USD": {
+      "source": ["sonic-evm-fetcher-parallel-susdp"],
+      "denomination": "USD",
+      "rateFeed": true
+    },
+    "GUSD_FUNDAMENTAL/USD": {
+      "source": ["ethereum-evm-fetcher-generic-gusd"],
+      "rateFeed": true,
+      "denomination": "USD"
+    },
+    "JITOSOL": {
+      "source": ["lbank-usdt", "okx-usdt", "bullish-usdc", "coinbase-usd", "kraken-usd", "xt"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CETES": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "KTB": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "USTRY": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "TESOURO": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "EUROB": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "GILTS": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "MXNe": {
+      "source": ["etherfuse-api"],
+      "denomination": "USD",
+      "rateFeed": false
+    },
+    "CC": {
+      "source": [
+        "bybit-usdc",
+        "bybit-usdt",
+        "gate-usdt",
+        "kraken-usd",
+        "kucoin-usdt",
+        "mexc-usdc",
+        "xt"
+      ],
+      "rateFeed": false,
+      "denomination": "USD"
+    },
+    "DLF_FUNDAMENTAL": {
+      "source": ["accountable-dlf"],
+      "denomination": "TRY",
+      "rateFeed": true
+    }
+  },
+  "multiPointPackages": {
+    "___FAST___": ["USDC", "USDT", "DAI", "BNB", "BTC", "ETH", "SOL", "MON"],
+    "__FRAXTAL__": ["BTC", "CRV", "ETH", "FRAX", "FXS"]
+  }
+}

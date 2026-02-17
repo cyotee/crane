@@ -28,13 +28,7 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 contract ERC20PermitIntegrationStub is ERC20PermitTarget {
     using BetterEfficientHashLib for bytes;
 
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        uint8 decimals_,
-        address recipient,
-        uint256 initialAmount
-    ) {
+    constructor(string memory name_, string memory symbol_, uint8 decimals_, address recipient, uint256 initialAmount) {
         // Initialize ERC20
         ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
         ERC20Repo._initialize(erc20, name_, symbol_, decimals_);
@@ -73,29 +67,19 @@ contract ERC20Permit_Integration_Test is Test {
 
     function setUp() public {
         owner = vm.addr(ownerPrivateKey);
-        token = new ERC20PermitIntegrationStub(
-            TOKEN_NAME,
-            "TPT",
-            18,
-            owner,
-            1_000_000e18
-        );
+        token = new ERC20PermitIntegrationStub(TOKEN_NAME, "TPT", 18, owner, 1_000_000e18);
     }
 
     /* -------------------------------------------------------------------------- */
     /*                            Helper Functions                                */
     /* -------------------------------------------------------------------------- */
 
-    function _computeDigest(
-        address owner_,
-        address spender_,
-        uint256 value,
-        uint256 nonce,
-        uint256 deadline
-    ) internal view returns (bytes32) {
-        bytes32 structHash = keccak256(
-            abi.encode(PERMIT_TYPEHASH, owner_, spender_, value, nonce, deadline)
-        );
+    function _computeDigest(address owner_, address spender_, uint256 value, uint256 nonce, uint256 deadline)
+        internal
+        view
+        returns (bytes32)
+    {
+        bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner_, spender_, value, nonce, deadline));
         bytes32 domainSeparator = IERC20Permit(address(token)).DOMAIN_SEPARATOR();
         return keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
     }
@@ -121,9 +105,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         assertEq(token.allowance(owner, spender), 0, "Allowance should start at 0");
 
@@ -137,9 +119,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         token.permit(owner, spender, value, deadline, v, r, s);
 
@@ -148,11 +128,7 @@ contract ERC20Permit_Integration_Test is Test {
         vm.prank(spender);
         token.transferFrom(owner, recipient, value);
 
-        assertEq(
-            token.balanceOf(recipient),
-            recipientBalanceBefore + value,
-            "Transfer should succeed after permit"
-        );
+        assertEq(token.balanceOf(recipient), recipientBalanceBefore + value, "Transfer should succeed after permit");
     }
 
     function test_permit_expiredSignature_reverts() public {
@@ -160,9 +136,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp - 1; // Already expired
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         vm.expectRevert(abi.encodeWithSelector(IERC2612.ERC2612ExpiredSignature.selector, deadline));
         token.permit(owner, spender, value, deadline, v, r, s);
@@ -177,9 +151,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 wrongPrivateKey = 0xBAD;
         address wrongSigner = vm.addr(wrongPrivateKey);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            wrongPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(wrongPrivateKey, owner, spender, value, nonce, deadline);
 
         vm.expectRevert(abi.encodeWithSelector(IERC2612.ERC2612InvalidSigner.selector, wrongSigner, owner));
         token.permit(owner, spender, value, deadline, v, r, s);
@@ -200,9 +172,7 @@ contract ERC20Permit_Integration_Test is Test {
 
         assertEq(token.nonces(owner), 0, "Nonce should start at 0");
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, 0, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, 0, deadline);
 
         token.permit(owner, spender, value, deadline, v, r, s);
 
@@ -214,18 +184,13 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         // First permit succeeds
         token.permit(owner, spender, value, deadline, v, r, s);
 
         // Same signature fails (nonce already used)
-        address recoveredSigner = ECDSA.recover(
-            _computeDigest(owner, spender, value, nonce, deadline),
-            v, r, s
-        );
+        address recoveredSigner = ECDSA.recover(_computeDigest(owner, spender, value, nonce, deadline), v, r, s);
         // The recovered signer from the old digest won't match owner because nonce changed
         vm.expectRevert();
         token.permit(owner, spender, value, deadline, v, r, s);
@@ -236,9 +201,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         // Use the permit
         token.permit(owner, spender, value, deadline, v, r, s);
@@ -263,11 +226,7 @@ contract ERC20Permit_Integration_Test is Test {
             )
         );
 
-        assertEq(
-            token.DOMAIN_SEPARATOR(),
-            expected,
-            "Domain separator should match expected computation"
-        );
+        assertEq(token.DOMAIN_SEPARATOR(), expected, "Domain separator should match expected computation");
     }
 
     function test_DOMAIN_SEPARATOR_differentOnDifferentChain() public {
@@ -277,10 +236,7 @@ contract ERC20Permit_Integration_Test is Test {
 
         bytes32 separatorAfter = token.DOMAIN_SEPARATOR();
 
-        assertTrue(
-            separatorBefore != separatorAfter,
-            "Domain separator should change with chain ID"
-        );
+        assertTrue(separatorBefore != separatorAfter, "Domain separator should change with chain ID");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -293,9 +249,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 nonce = token.nonces(owner);
 
         // Sign on current chain
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         // Change chain ID
         vm.chainId(42161);
@@ -314,9 +268,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 nonce = token.nonces(owner);
 
         // Sign on original chain
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         // Change chain ID
         vm.chainId(42161);
@@ -343,9 +295,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         token.permit(owner, spender, value, deadline, v, r, s);
 
@@ -357,9 +307,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         token.permit(owner, spender, value, deadline, v, r, s);
 
@@ -371,17 +319,13 @@ contract ERC20Permit_Integration_Test is Test {
 
         // First permit
         uint256 value1 = 100e18;
-        (uint8 v1, bytes32 r1, bytes32 s1) = _signPermit(
-            ownerPrivateKey, owner, spender, value1, 0, deadline
-        );
+        (uint8 v1, bytes32 r1, bytes32 s1) = _signPermit(ownerPrivateKey, owner, spender, value1, 0, deadline);
         token.permit(owner, spender, value1, deadline, v1, r1, s1);
         assertEq(token.allowance(owner, spender), value1);
 
         // Second permit with different value
         uint256 value2 = 50e18;
-        (uint8 v2, bytes32 r2, bytes32 s2) = _signPermit(
-            ownerPrivateKey, owner, spender, value2, 1, deadline
-        );
+        (uint8 v2, bytes32 r2, bytes32 s2) = _signPermit(ownerPrivateKey, owner, spender, value2, 1, deadline);
         token.permit(owner, spender, value2, deadline, v2, r2, s2);
         assertEq(token.allowance(owner, spender), value2, "Allowance should be overwritten");
     }
@@ -392,15 +336,11 @@ contract ERC20Permit_Integration_Test is Test {
         address spender2 = address(0xDEAD);
 
         // Permit to spender 1
-        (uint8 v1, bytes32 r1, bytes32 s1) = _signPermit(
-            ownerPrivateKey, owner, spender, 100e18, 0, deadline
-        );
+        (uint8 v1, bytes32 r1, bytes32 s1) = _signPermit(ownerPrivateKey, owner, spender, 100e18, 0, deadline);
         token.permit(owner, spender, 100e18, deadline, v1, r1, s1);
 
         // Permit to spender 2 uses next nonce (1), not 0
-        (uint8 v2, bytes32 r2, bytes32 s2) = _signPermit(
-            ownerPrivateKey, owner, spender2, 200e18, 1, deadline
-        );
+        (uint8 v2, bytes32 r2, bytes32 s2) = _signPermit(ownerPrivateKey, owner, spender2, 200e18, 1, deadline);
         token.permit(owner, spender2, 200e18, deadline, v2, r2, s2);
 
         assertEq(token.allowance(owner, spender), 100e18);
@@ -412,17 +352,12 @@ contract ERC20Permit_Integration_Test is Test {
     /*                               Fuzz Tests                                   */
     /* -------------------------------------------------------------------------- */
 
-    function testFuzz_permit_anyValidSignature_updatesAllowance(
-        uint256 value,
-        uint256 deadlineOffset
-    ) public {
+    function testFuzz_permit_anyValidSignature_updatesAllowance(uint256 value, uint256 deadlineOffset) public {
         vm.assume(deadlineOffset > 0 && deadlineOffset < 365 days);
         uint256 deadline = block.timestamp + deadlineOffset;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         token.permit(owner, spender, value, deadline, v, r, s);
 
@@ -436,9 +371,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 deadline = block.timestamp + 1 hours;
         uint256 nonce = token.nonces(owner);
 
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, fuzzSpender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, fuzzSpender, value, nonce, deadline);
 
         token.permit(owner, fuzzSpender, value, deadline, v, r, s);
 
@@ -454,9 +387,7 @@ contract ERC20Permit_Integration_Test is Test {
         uint256 nonce = token.nonces(owner);
 
         // Sign on current chain
-        (uint8 v, bytes32 r, bytes32 s) = _signPermit(
-            ownerPrivateKey, owner, spender, value, nonce, deadline
-        );
+        (uint8 v, bytes32 r, bytes32 s) = _signPermit(ownerPrivateKey, owner, spender, value, nonce, deadline);
 
         // Change chain ID
         vm.chainId(newChainId);

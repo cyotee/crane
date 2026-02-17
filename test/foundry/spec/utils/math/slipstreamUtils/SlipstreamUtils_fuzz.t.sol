@@ -17,7 +17,10 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
 /// @title Fuzz Tests for SlipstreamUtils Quote Functions
@@ -55,11 +58,7 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
 
     /// @notice Fuzz test: exact input quote matches mock swap (zeroForOne)
     /// @dev Single-tick operation guaranteed by high liquidity relative to swap amount
-    function testFuzz_quoteExactInput_zeroForOne_matchesSwap(
-        uint256 amountIn,
-        int24 tick,
-        uint128 liquidity
-    ) public {
+    function testFuzz_quoteExactInput_zeroForOne_matchesSwap(uint256 amountIn, int24 tick, uint128 liquidity) public {
         // Bound inputs
         amountIn = bound(amountIn, MIN_AMOUNT, MAX_AMOUNT);
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
@@ -75,18 +74,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true  // zeroForOne
+            true // zeroForOne
         );
 
         // Execute mock swap
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_RATIO + 1;
-        (, int256 amount1) = pool.swap(
-            address(this),
-            true,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (, int256 amount1) = pool.swap(address(this), true, int256(amountIn), sqrtPriceLimitX96, "");
 
         // Single-tick guard: verify swap didn't cross ticks
         _assertSingleTickSwap(pool, tick, "quoteExactInput zeroForOne");
@@ -98,11 +91,7 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     }
 
     /// @notice Fuzz test: exact input quote matches mock swap (oneForZero)
-    function testFuzz_quoteExactInput_oneForZero_matchesSwap(
-        uint256 amountIn,
-        int24 tick,
-        uint128 liquidity
-    ) public {
+    function testFuzz_quoteExactInput_oneForZero_matchesSwap(uint256 amountIn, int24 tick, uint128 liquidity) public {
         // Bound inputs
         amountIn = bound(amountIn, MIN_AMOUNT, MAX_AMOUNT);
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
@@ -118,18 +107,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false  // oneForZero
+            false // oneForZero
         );
 
         // Execute mock swap
         uint160 sqrtPriceLimitX96 = TickMath.MAX_SQRT_RATIO - 1;
-        (int256 amount0, ) = pool.swap(
-            address(this),
-            false,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0,) = pool.swap(address(this), false, int256(amountIn), sqrtPriceLimitX96, "");
 
         // Single-tick guard: verify swap didn't cross ticks
         _assertSingleTickSwap(pool, tick, "quoteExactInput oneForZero");
@@ -155,22 +138,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // Quote using tick
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            tick,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 quotedWithTick =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, tick, liquidity, FEE_MEDIUM, zeroForOne);
 
         // Both versions should produce identical results
         assertEq(quotedWithSqrtPrice, quotedWithTick, "Tick overload should match sqrtPrice version");
@@ -198,27 +171,15 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     }
 
     /// @notice Internal helper to test fee tier - reduces stack depth
-    function _testFeeTier(
-        uint256 amountIn,
-        int24 tick,
-        uint128 liquidity,
-        uint24 fee,
-        bool zeroForOne
-    ) internal {
+    function _testFeeTier(uint256 amountIn, int24 tick, uint128 liquidity, uint24 fee, bool zeroForOne) internal {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
         MockCLPool pool = _createPoolWithState(sqrtPriceX96, tick, liquidity, fee);
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liquidity, fee, zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
-        (int256 amount0, int256 amount1) = pool.swap(
-            address(this), zeroForOne, int256(amountIn), sqrtPriceLimitX96, ""
-        );
+        (int256 amount0, int256 amount1) = pool.swap(address(this), zeroForOne, int256(amountIn), sqrtPriceLimitX96, "");
 
         // Single-tick guard: verify swap didn't cross ticks
         _assertSingleTickSwap(pool, tick, "quoteExactInput allFeeTiers");
@@ -233,11 +194,7 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
 
     /// @notice Fuzz test: exact output quote matches mock swap (zeroForOne)
     /// @dev Uses smaller amounts to ensure single-tick operation
-    function testFuzz_quoteExactOutput_zeroForOne_matchesSwap(
-        uint256 amountOut,
-        int24 tick,
-        uint128 liquidity
-    ) public {
+    function testFuzz_quoteExactOutput_zeroForOne_matchesSwap(uint256 amountOut, int24 tick, uint128 liquidity) public {
         // Bound inputs - keep amounts small relative to liquidity
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
         liquidity = uint128(bound(liquidity, MIN_LIQUIDITY, MAX_LIQUIDITY));
@@ -257,18 +214,19 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true  // zeroForOne
+            true // zeroForOne
         );
 
         // Execute mock swap with exact output
         uint160 sqrtPriceLimitX96 = TickMath.MIN_SQRT_RATIO + 1;
-        (int256 amount0, int256 amount1) = pool.swap(
-            address(this),
-            true,
-            -int256(amountOut),  // Negative for exact output
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(
+                address(this),
+                true,
+                -int256(amountOut), // Negative for exact output
+                sqrtPriceLimitX96,
+                ""
+            );
 
         // Single-tick guard: verify swap didn't cross ticks
         _assertSingleTickSwap(pool, tick, "quoteExactOutput zeroForOne");
@@ -283,11 +241,7 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     }
 
     /// @notice Fuzz test: exact output quote matches mock swap (oneForZero)
-    function testFuzz_quoteExactOutput_oneForZero_matchesSwap(
-        uint256 amountOut,
-        int24 tick,
-        uint128 liquidity
-    ) public {
+    function testFuzz_quoteExactOutput_oneForZero_matchesSwap(uint256 amountOut, int24 tick, uint128 liquidity) public {
         // Bound inputs
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
         liquidity = uint128(bound(liquidity, MIN_LIQUIDITY, MAX_LIQUIDITY));
@@ -306,18 +260,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false  // oneForZero
+            false // oneForZero
         );
 
         // Execute mock swap with exact output
         uint160 sqrtPriceLimitX96 = TickMath.MAX_SQRT_RATIO - 1;
-        (int256 amount0, int256 amount1) = pool.swap(
-            address(this),
-            false,
-            -int256(amountOut),
-            sqrtPriceLimitX96,
-            ""
-        );
+        (int256 amount0, int256 amount1) = pool.swap(address(this), false, -int256(amountOut), sqrtPriceLimitX96, "");
 
         // Single-tick guard: verify swap didn't cross ticks
         _assertSingleTickSwap(pool, tick, "quoteExactOutput oneForZero");
@@ -345,22 +293,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // Quote using tick
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            tick,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 quotedWithTick =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, tick, liquidity, FEE_MEDIUM, zeroForOne);
 
         // Both versions should produce identical results
         assertEq(quotedWithSqrtPrice, quotedWithTick, "Tick overload should match sqrtPrice version");
@@ -387,45 +325,32 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Step 1: Get input required for desired output
-        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 requiredInput =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // Step 2: Quote output for the required input
-        uint256 resultingOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            zeroForOne
-        );
+        uint256 resultingOutput =
+            SlipstreamUtils._quoteExactInputSingle(requiredInput, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // The resulting output should be >= the original amountOut (due to fee rounding in our favor)
         assertTrue(
-            resultingOutput >= amountOut - 1,  // Allow 1 wei tolerance
+            resultingOutput >= amountOut - 1, // Allow 1 wei tolerance
             "Roundtrip: output should be >= original amountOut"
         );
 
         // The resulting output should not be significantly more than requested
         // Due to double fee application, allow up to ~1% tolerance
-        uint256 tolerance = (amountOut * 20) / 1000 + 2;  // 2% + 2 wei
+        uint256 tolerance = (amountOut * 20) / 1000 + 2; // 2% + 2 wei
         assertTrue(
-            resultingOutput <= amountOut + tolerance,
-            "Roundtrip: output should not significantly exceed requested"
+            resultingOutput <= amountOut + tolerance, "Roundtrip: output should not significantly exceed requested"
         );
     }
 
     /// @notice Fuzz test: Higher fees always require more input for same output
-    function testFuzz_higherFee_requiresMoreInput(
-        uint256 amountOut,
-        int24 tick,
-        uint128 liquidity,
-        bool zeroForOne
-    ) public pure {
+    function testFuzz_higherFee_requiresMoreInput(uint256 amountOut, int24 tick, uint128 liquidity, bool zeroForOne)
+        public
+        pure
+    {
         // Bound inputs - use moderate amounts
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
         liquidity = uint128(bound(liquidity, MIN_LIQUIDITY, MAX_LIQUIDITY));
@@ -434,37 +359,22 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Quote with low fee
-        uint256 inputLowFee = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            FEE_LOW,
-            zeroForOne
-        );
+        uint256 inputLowFee =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_LOW, zeroForOne);
 
         // Quote with high fee
-        uint256 inputHighFee = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            FEE_HIGH,
-            zeroForOne
-        );
+        uint256 inputHighFee =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_HIGH, zeroForOne);
 
         // Higher fee should require more input (or equal for very small amounts due to rounding)
-        assertTrue(
-            inputHighFee >= inputLowFee,
-            "Higher fee should require at least as much input"
-        );
+        assertTrue(inputHighFee >= inputLowFee, "Higher fee should require at least as much input");
     }
 
     /// @notice Fuzz test: Higher fees always give less output for same input
-    function testFuzz_higherFee_givesLessOutput(
-        uint256 amountIn,
-        int24 tick,
-        uint128 liquidity,
-        bool zeroForOne
-    ) public pure {
+    function testFuzz_higherFee_givesLessOutput(uint256 amountIn, int24 tick, uint128 liquidity, bool zeroForOne)
+        public
+        pure
+    {
         // Bound inputs
         amountIn = bound(amountIn, MIN_AMOUNT, MAX_AMOUNT);
         tick = int24(bound(int256(tick), SAFE_TICK_MIN, SAFE_TICK_MAX));
@@ -473,28 +383,15 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Quote with low fee
-        uint256 outputLowFee = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            FEE_LOW,
-            zeroForOne
-        );
+        uint256 outputLowFee =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_LOW, zeroForOne);
 
         // Quote with high fee
-        uint256 outputHighFee = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            FEE_HIGH,
-            zeroForOne
-        );
+        uint256 outputHighFee =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_HIGH, zeroForOne);
 
         // Higher fee should give less output (or equal for very small amounts)
-        assertTrue(
-            outputLowFee >= outputHighFee,
-            "Lower fee should give at least as much output"
-        );
+        assertTrue(outputLowFee >= outputHighFee, "Lower fee should give at least as much output");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -521,21 +418,12 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Step 1: Get liquidity for the given amounts
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            amount0,
-            amount1
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
 
         // Step 2: Get amounts for that liquidity
-        (uint256 resultAmount0, uint256 resultAmount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 resultAmount0, uint256 resultAmount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
 
         // Result amounts should be <= original amounts (liquidity is limited by smaller contribution)
         assertTrue(resultAmount0 <= amount0, "Result amount0 should not exceed original");
@@ -547,21 +435,18 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Create a mock pool with specified state
-    function _createPoolWithState(
-        uint160 sqrtPriceX96,
-        int24 tick,
-        uint128 liquidity
-    ) internal returns (MockCLPool pool) {
+    function _createPoolWithState(uint160 sqrtPriceX96, int24 tick, uint128 liquidity)
+        internal
+        returns (MockCLPool pool)
+    {
         return _createPoolWithState(sqrtPriceX96, tick, liquidity, FEE_MEDIUM);
     }
 
     /// @notice Create a mock pool with specified state and fee
-    function _createPoolWithState(
-        uint160 sqrtPriceX96,
-        int24 tick,
-        uint128 liquidity,
-        uint24 fee
-    ) internal returns (MockCLPool pool) {
+    function _createPoolWithState(uint160 sqrtPriceX96, int24 tick, uint128 liquidity, uint24 fee)
+        internal
+        returns (MockCLPool pool)
+    {
         address tokenA = makeAddr(string(abi.encodePacked("TokenA_", vm.toString(block.timestamp))));
         address tokenB = makeAddr(string(abi.encodePacked("TokenB_", vm.toString(block.timestamp))));
 
@@ -587,33 +472,29 @@ contract SlipstreamUtils_fuzz_Test is TestBase_Slipstream {
     /// @param pool The pool to check
     /// @param tickBefore The tick before the swap
     /// @param context Description of which test/swap this is for error messages
-    function _assertSingleTickSwap(
-        MockCLPool pool,
-        int24 tickBefore,
-        string memory context
-    ) internal view {
+    function _assertSingleTickSwap(MockCLPool pool, int24 tickBefore, string memory context) internal view {
         (, int24 tickAfter,,,,) = pool.slot0();
 
-        int24 tickDelta = tickAfter > tickBefore
-            ? tickAfter - tickBefore
-            : tickBefore - tickAfter;
+        int24 tickDelta = tickAfter > tickBefore ? tickAfter - tickBefore : tickBefore - tickAfter;
 
         assertTrue(
             tickDelta <= MAX_TICK_MOVEMENT,
-            string(abi.encodePacked(
-                "Single-tick invariant violated: ",
-                context,
-                " - tick moved by ",
-                vm.toString(int256(tickDelta)),
-                " (from ",
-                vm.toString(tickBefore),
-                " to ",
-                vm.toString(tickAfter),
-                "). Max allowed: ",
-                vm.toString(int256(MAX_TICK_MOVEMENT)),
-                ". Quote accuracy depends on near single-tick operation. ",
-                "Consider increasing MIN_LIQUIDITY or reducing MAX_AMOUNT."
-            ))
+            string(
+                abi.encodePacked(
+                    "Single-tick invariant violated: ",
+                    context,
+                    " - tick moved by ",
+                    vm.toString(int256(tickDelta)),
+                    " (from ",
+                    vm.toString(tickBefore),
+                    " to ",
+                    vm.toString(tickAfter),
+                    "). Max allowed: ",
+                    vm.toString(int256(MAX_TICK_MOVEMENT)),
+                    ". Quote accuracy depends on near single-tick operation. ",
+                    "Consider increasing MIN_LIQUIDITY or reducing MAX_AMOUNT."
+                )
+            )
         );
     }
 }

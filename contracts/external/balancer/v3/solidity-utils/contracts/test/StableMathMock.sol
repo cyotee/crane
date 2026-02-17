@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.24;
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { StableMath } from "../math/StableMath.sol";
-import { FixedPoint } from "../math/FixedPoint.sol";
-import { RoundingMock } from "./RoundingMock.sol";
+import {StableMath} from "../math/StableMath.sol";
+import {FixedPoint} from "../math/FixedPoint.sol";
+import {RoundingMock} from "./RoundingMock.sol";
 
 /**
  * @dev This contract mocks the `StableMath` library for testing purposes. Its mock functions are meant to be
@@ -17,11 +17,11 @@ contract StableMathMock {
     using FixedPoint for uint256;
     using RoundingMock for uint256;
 
-    function computeInvariant(
-        uint256 amplificationParameter,
-        uint256[] memory balances,
-        Rounding rounding
-    ) external pure returns (uint256 invariant) {
+    function computeInvariant(uint256 amplificationParameter, uint256[] memory balances, Rounding rounding)
+        external
+        pure
+        returns (uint256 invariant)
+    {
         invariant = StableMath.computeInvariant(amplificationParameter, balances);
         if (invariant > 0) {
             invariant = rounding == Rounding.ROUND_DOWN ? invariant : invariant + 1;
@@ -36,15 +36,9 @@ contract StableMathMock {
         uint256 tokenAmountIn,
         uint256 invariant
     ) external pure returns (uint256) {
-        return
-            StableMath.computeOutGivenExactIn(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountIn,
-                invariant
-            );
+        return StableMath.computeOutGivenExactIn(
+            amplificationParameter, balances, tokenIndexIn, tokenIndexOut, tokenAmountIn, invariant
+        );
     }
 
     function computeInGivenExactOut(
@@ -55,15 +49,9 @@ contract StableMathMock {
         uint256 tokenAmountOut,
         uint256 invariant
     ) external pure returns (uint256) {
-        return
-            StableMath.computeInGivenExactOut(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountOut,
-                invariant
-            );
+        return StableMath.computeInGivenExactOut(
+            amplificationParameter, balances, tokenIndexIn, tokenIndexOut, tokenAmountOut, invariant
+        );
     }
 
     function computeBalance(
@@ -85,16 +73,15 @@ contract StableMathMock {
     ) external pure returns (uint256) {
         bool[3] memory roundingPermutationBase = [true, true, true];
 
-        return
-            _mockComputeOutGivenExactIn(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountIn,
-                invariant,
-                roundingPermutationBase
-            );
+        return _mockComputeOutGivenExactIn(
+            amplificationParameter,
+            balances,
+            tokenIndexIn,
+            tokenIndexOut,
+            tokenAmountIn,
+            invariant,
+            roundingPermutationBase
+        );
     }
 
     function mockComputeOutGivenExactIn(
@@ -106,16 +93,9 @@ contract StableMathMock {
         uint256 invariant,
         bool[3] memory roundingPermutation
     ) external pure returns (uint256) {
-        return
-            _mockComputeOutGivenExactIn(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountIn,
-                invariant,
-                roundingPermutation
-            );
+        return _mockComputeOutGivenExactIn(
+            amplificationParameter, balances, tokenIndexIn, tokenIndexOut, tokenAmountIn, invariant, roundingPermutation
+        );
     }
 
     function mockComputeInGivenExactOut(
@@ -128,16 +108,15 @@ contract StableMathMock {
     ) external pure returns (uint256) {
         bool[3] memory roundingPermutationBase = [true, true, true];
 
-        return
-            _mockComputeInGivenExactOut(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountOut,
-                invariant,
-                roundingPermutationBase
-            );
+        return _mockComputeInGivenExactOut(
+            amplificationParameter,
+            balances,
+            tokenIndexIn,
+            tokenIndexOut,
+            tokenAmountOut,
+            invariant,
+            roundingPermutationBase
+        );
     }
 
     function mockComputeInGivenExactOut(
@@ -149,16 +128,15 @@ contract StableMathMock {
         uint256 invariant,
         bool[3] memory roundingPermutation
     ) external pure returns (uint256) {
-        return
-            _mockComputeInGivenExactOut(
-                amplificationParameter,
-                balances,
-                tokenIndexIn,
-                tokenIndexOut,
-                tokenAmountOut,
-                invariant,
-                roundingPermutation
-            );
+        return _mockComputeInGivenExactOut(
+            amplificationParameter,
+            balances,
+            tokenIndexIn,
+            tokenIndexOut,
+            tokenAmountOut,
+            invariant,
+            roundingPermutation
+        );
     }
 
     function mockComputeBalance(
@@ -198,13 +176,8 @@ contract StableMathMock {
     ) internal pure returns (uint256) {
         balances[tokenIndexIn] += tokenAmountIn;
 
-        uint256 finalBalanceOut = _mockComputeBalance(
-            amplificationParameter,
-            balances,
-            invariant,
-            tokenIndexOut,
-            roundingPermutation
-        );
+        uint256 finalBalanceOut =
+            _mockComputeBalance(amplificationParameter, balances, invariant, tokenIndexOut, roundingPermutation);
 
         balances[tokenIndexIn] -= tokenAmountIn;
 
@@ -222,13 +195,8 @@ contract StableMathMock {
     ) internal pure returns (uint256) {
         balances[tokenIndexOut] -= tokenAmountOut;
 
-        uint256 finalBalanceIn = _mockComputeBalance(
-            amplificationParameter,
-            balances,
-            invariant,
-            tokenIndexIn,
-            roundingPermutation
-        );
+        uint256 finalBalanceIn =
+            _mockComputeBalance(amplificationParameter, balances, invariant, tokenIndexIn, roundingPermutation);
 
         balances[tokenIndexOut] += tokenAmountOut;
 
@@ -253,8 +221,8 @@ contract StableMathMock {
         sum = sum - balances[tokenIndex];
 
         uint256 inv2 = invariant * invariant;
-        uint256 c = (inv2 * StableMath.AMP_PRECISION).mockDivRaw(ampTimesTotal * P_D, roundingPermutation[0]) *
-            balances[tokenIndex];
+        uint256 c = (inv2 * StableMath.AMP_PRECISION).mockDivRaw(ampTimesTotal * P_D, roundingPermutation[0])
+            * balances[tokenIndex];
         uint256 b = sum + ((invariant * StableMath.AMP_PRECISION) / ampTimesTotal);
         uint256 prevTokenBalance = 0;
         uint256 tokenBalance = (inv2 + c).mockDivRaw(invariant + b, roundingPermutation[1]);
@@ -262,10 +230,8 @@ contract StableMathMock {
         for (uint256 i = 0; i < 255; ++i) {
             prevTokenBalance = tokenBalance;
 
-            tokenBalance = ((tokenBalance * tokenBalance) + c).mockDivRaw(
-                (tokenBalance * 2) + b - invariant,
-                roundingPermutation[2]
-            );
+            tokenBalance = ((tokenBalance * tokenBalance) + c)
+            .mockDivRaw((tokenBalance * 2) + b - invariant, roundingPermutation[2]);
 
             if (tokenBalance > prevTokenBalance) {
                 if (tokenBalance - prevTokenBalance <= 1) {
