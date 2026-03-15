@@ -95,8 +95,8 @@ abstract contract TestBase_UniswapV4EthereumMainnetFork is Test {
         require(block.chainid == 1, "V4FORK:NOT_ETHEREUM_MAINNET");
 
         // Set up PoolManager reference
-        // Note: Using the constant from ETHEREUM_MAIN (has typo "UNSWAP" in original)
-        address poolManagerAddr = ETHEREUM_MAIN.UNSWAP_V4_POOL_MNANAGER;
+        // Note: Using the constant from ETHEREUM_MAIN (has typo "UNISWAP" in original)
+        address poolManagerAddr = ETHEREUM_MAIN.UNISWAP_V4_POOL_MANAGER;
         require(poolManagerAddr.code.length > 0, "V4FORK:POOL_MANAGER_NO_CODE_AT_BLOCK");
         poolManager = IPoolManager(poolManagerAddr);
         vm.label(poolManagerAddr, "PoolManager");

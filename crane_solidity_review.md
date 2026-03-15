@@ -177,7 +177,7 @@
 
 ## contracts/constants/networks/ETHEREUM_SEPOLIA.sol — Grade: B-
 - Mirrors the mainnet registry with Sepolia endpoints so scripts/tests can flip networks without editing addresses, and keeps sections consistent (WETH, Uniswap V2, Balancer V2/V3, Permit2).
-- Several entries still carry TODOs or obvious typos (e.g., `BLANACER` typo, missing Uniswap fee-to) and there is no validation harness confirming these addresses resolve, so drift will only be caught on-chain.
+- Several entries still carry TODOs or obvious typos (e.g., `BALANCER` typo, missing Uniswap fee-to) and there is no validation harness confirming these addresses resolve, so drift will only be caught on-chain.
 - Consider adding comments on which deployments are canonical testnets vs. mocks, and add smoke tests hashing deployed bytecode for the routers/factories to catch miscopied constants.
 
 ## contracts/constants/networks/LOCAL.sol — Grade: B

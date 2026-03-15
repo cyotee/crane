@@ -56,7 +56,7 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
 
     // Gyro ECLP pool from network constants
     // NOTE: typo in constant name is intentional to match ETHEREUM_MAIN
-    address internal constant GYRO_ECLP_POOL = ETHEREUM_MAIN.BLANACER_V3_MOCK_GYRO_ECLP_POOL;
+    address internal constant GYRO_ECLP_POOL = ETHEREUM_MAIN.BALANCER_V3_MOCK_GYRO_ECLP_POOL;
 
     /* -------------------------------------------------------------------------- */
     /*                                   Setup                                    */
