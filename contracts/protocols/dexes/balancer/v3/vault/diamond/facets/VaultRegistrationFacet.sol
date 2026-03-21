@@ -399,7 +399,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
     }
 
     function _mintMinimumSupplyReserve(address pool) internal {
-        BalancerV3MultiTokenRepo._mint(pool, address(0), _POOL_MINIMUM_TOTAL_SUPPLY);
+        BalancerV3MultiTokenRepo._mintMinimumSupplyReserve(pool);
     }
 
     function _getTokenDecimals(IERC20 token) internal view returns (uint8) {
