@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import '../../interfaces/IUniswapV3Pool.sol';
+import "../../interfaces/IUniswapV3Pool.sol";
 
-import '../interfaces/ITickLens.sol';
+import "../interfaces/ITickLens.sol";
 
 /// @title Tick Lens contract
 contract TickLens is ITickLens {
@@ -29,12 +29,9 @@ contract TickLens is ITickLens {
         for (uint256 i = 0; i < 256; i++) {
             if (bitmap & (1 << i) > 0) {
                 int24 populatedTick = ((int24(tickBitmapIndex) << 8) + int24(int256(i))) * tickSpacing;
-                (uint128 liquidityGross, int128 liquidityNet, , , , , , ) = IUniswapV3Pool(pool).ticks(populatedTick);
-                populatedTicks[--numberOfPopulatedTicks] = PopulatedTick({
-                    tick: populatedTick,
-                    liquidityNet: liquidityNet,
-                    liquidityGross: liquidityGross
-                });
+                (uint128 liquidityGross, int128 liquidityNet,,,,,,) = IUniswapV3Pool(pool).ticks(populatedTick);
+                populatedTicks[--numberOfPopulatedTicks] =
+                    PopulatedTick({tick: populatedTick, liquidityNet: liquidityNet, liquidityGross: liquidityGross});
             }
         }
     }

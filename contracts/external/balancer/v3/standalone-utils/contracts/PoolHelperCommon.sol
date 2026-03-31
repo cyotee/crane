@@ -4,11 +4,13 @@ pragma solidity ^0.8.24;
 
 import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
 
-import { IPoolHelperCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolHelperCommon.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolHelperCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolHelperCommon.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { OwnableAuthentication } from "./OwnableAuthentication.sol";
+import {OwnableAuthentication} from "./OwnableAuthentication.sol";
 
 /// @notice Common code for helper functions that operate on a subset of pools.
 abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
@@ -55,17 +57,22 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     ***************************************************************************/
 
     /// @inheritdoc IPoolHelperCommon
-    function createPoolSet(
-        address initialManager
-    ) external authenticate withValidManager(initialManager) returns (uint256) {
+    function createPoolSet(address initialManager)
+        external
+        authenticate
+        withValidManager(initialManager)
+        returns (uint256)
+    {
         return _createPoolSet(initialManager);
     }
 
     /// @inheritdoc IPoolHelperCommon
-    function createPoolSet(
-        address initialManager,
-        address[] memory newPools
-    ) external authenticate withValidManager(initialManager) returns (uint256 poolSetId) {
+    function createPoolSet(address initialManager, address[] memory newPools)
+        external
+        authenticate
+        withValidManager(initialManager)
+        returns (uint256 poolSetId)
+    {
         poolSetId = _createPoolSet(initialManager);
 
         if (newPools.length > 0) {
@@ -131,10 +138,11 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     ***************************************************************************/
 
     /// @inheritdoc IPoolHelperCommon
-    function addPoolsToSet(
-        uint256 poolSetId,
-        address[] memory newPools
-    ) public authenticate withValidPoolSet(poolSetId) {
+    function addPoolsToSet(uint256 poolSetId, address[] memory newPools)
+        public
+        authenticate
+        withValidPoolSet(poolSetId)
+    {
         uint256 numPools = newPools.length;
 
         for (uint256 i = 0; i < numPools; i++) {
@@ -157,10 +165,11 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     }
 
     /// @inheritdoc IPoolHelperCommon
-    function removePoolsFromSet(
-        uint256 poolSetId,
-        address[] memory pools
-    ) public authenticate withValidPoolSet(poolSetId) {
+    function removePoolsFromSet(uint256 poolSetId, address[] memory pools)
+        public
+        authenticate
+        withValidPoolSet(poolSetId)
+    {
         uint256 numPools = pools.length;
 
         for (uint256 i = 0; i < numPools; i++) {
@@ -175,7 +184,7 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     }
 
     /***************************************************************************
-                                    Getters                                
+                                    Getters
     ***************************************************************************/
 
     /// @inheritdoc IPoolHelperCommon
@@ -204,18 +213,22 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     }
 
     /// @inheritdoc IPoolHelperCommon
-    function getAllPoolsInSet(
-        uint256 poolSetId
-    ) external view withValidPoolSet(poolSetId) returns (address[] memory pools) {
+    function getAllPoolsInSet(uint256 poolSetId)
+        external
+        view
+        withValidPoolSet(poolSetId)
+        returns (address[] memory pools)
+    {
         return _poolSets[poolSetId].values();
     }
 
     /// @inheritdoc IPoolHelperCommon
-    function getPoolsInSet(
-        uint256 poolSetId,
-        uint256 from,
-        uint256 to
-    ) public view withValidPoolSet(poolSetId) returns (address[] memory pools) {
+    function getPoolsInSet(uint256 poolSetId, uint256 from, uint256 to)
+        public
+        view
+        withValidPoolSet(poolSetId)
+        returns (address[] memory pools)
+    {
         uint256 spanLength = _poolSets[poolSetId].length();
 
         if (from > to || to > spanLength || from >= spanLength) {
@@ -239,7 +252,7 @@ abstract contract PoolHelperCommon is IPoolHelperCommon, OwnableAuthentication {
     }
 
     /***************************************************************************
-                                Internal functions                                
+                                Internal functions
     ***************************************************************************/
 
     // Find and validate the poolSetId for the caller.

@@ -1,0 +1,14 @@
+module Input where
+
+adapterId = "RedStoneAdapter-0.4.5"
+
+data Input = Input with
+  owner: Party
+  updater: Party
+  viewer: Party
+  client : Party
+  beneficiary : Party
+  dso : Party
+  feedIds: [[Int]]
+  payload: Text
+      deriving (Eq, Show)

@@ -20,12 +20,11 @@ library TickBitmap {
         assembly ("memory-safe") {
             tick := signextend(2, tick)
             tickSpacing := signextend(2, tickSpacing)
-            compressed :=
-                sub(
-                    sdiv(tick, tickSpacing),
-                    // if (tick < 0 && tick % tickSpacing != 0) then tick % tickSpacing < 0, vice versa
-                    slt(smod(tick, tickSpacing), 0)
-                )
+            compressed := sub(
+                sdiv(tick, tickSpacing),
+                // if (tick < 0 && tick % tickSpacing != 0) then tick % tickSpacing < 0, vice versa
+                slt(smod(tick, tickSpacing), 0)
+            )
         }
     }
 

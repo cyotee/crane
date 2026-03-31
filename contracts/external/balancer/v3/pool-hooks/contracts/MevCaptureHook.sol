@@ -7,10 +7,12 @@ import {Math} from "@crane/contracts/utils/Math.sol";
 import {
     IBalancerContractRegistry
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IMevCaptureHook } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IMevCaptureHook.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {
+    IMevCaptureHook
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IMevCaptureHook.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     HooksConfig,
@@ -22,9 +24,11 @@ import {
     MAX_FEE_PERCENTAGE
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
 contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevCaptureHook {
     // Max Fee is 99.9999% (Max supported fee by the vault).
@@ -87,12 +91,12 @@ contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevC
     }
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         _poolMevTaxMultipliers[pool] = _defaultMevTaxMultiplier;
         _poolMevTaxThresholds[pool] = _defaultMevTaxThreshold;
 
@@ -131,9 +135,7 @@ contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevC
         return (
             true,
             _calculateSwapFeePercentage(
-                staticSwapFeePercentage,
-                _poolMevTaxMultipliers[pool],
-                _poolMevTaxThresholds[pool]
+                staticSwapFeePercentage, _poolMevTaxMultipliers[pool], _poolMevTaxThresholds[pool]
             )
         );
     }
@@ -241,10 +243,11 @@ contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevC
     }
 
     /// @inheritdoc IMevCaptureHook
-    function setPoolMevTaxMultiplier(
-        address pool,
-        uint256 newPoolMevTaxMultiplier
-    ) external withMevTaxEnabledPool(pool) onlySwapFeeManagerOrGovernance(pool) {
+    function setPoolMevTaxMultiplier(address pool, uint256 newPoolMevTaxMultiplier)
+        external
+        withMevTaxEnabledPool(pool)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setPoolMevTaxMultiplier(pool, newPoolMevTaxMultiplier);
     }
 
@@ -276,10 +279,11 @@ contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevC
     }
 
     /// @inheritdoc IMevCaptureHook
-    function setPoolMevTaxThreshold(
-        address pool,
-        uint256 newPoolMevTaxThreshold
-    ) external withMevTaxEnabledPool(pool) onlySwapFeeManagerOrGovernance(pool) {
+    function setPoolMevTaxThreshold(address pool, uint256 newPoolMevTaxThreshold)
+        external
+        withMevTaxEnabledPool(pool)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _setPoolMevTaxThreshold(pool, newPoolMevTaxThreshold);
     }
 
@@ -308,11 +312,11 @@ contract MevCaptureHook is BaseHooks, SingletonAuthentication, VaultGuard, IMevC
                         Helper functions
     *******************************************************/
 
-    function _calculateSwapFeePercentage(
-        uint256 staticSwapFeePercentage,
-        uint256 multiplier,
-        uint256 threshold
-    ) internal view returns (uint256) {
+    function _calculateSwapFeePercentage(uint256 staticSwapFeePercentage, uint256 multiplier, uint256 threshold)
+        internal
+        view
+        returns (uint256)
+    {
         // If gasprice is lower than basefee, the transaction is invalid and won't be processed. Gasprice is set
         // by the transaction sender, is always bigger than basefee, and the difference between gasprice and basefee
         // defines the priority gas price (the part of the gas cost that will be paid to the validator).

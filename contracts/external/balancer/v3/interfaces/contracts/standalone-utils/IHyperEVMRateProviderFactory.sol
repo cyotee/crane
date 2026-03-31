@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IHyperEVMRateProvider } from "./IHyperEVMRateProvider.sol";
+import {IHyperEVMRateProvider} from "./IHyperEVMRateProvider.sol";
 
 interface IHyperEVMRateProviderFactory {
     /**
@@ -55,10 +55,10 @@ interface IHyperEVMRateProviderFactory {
      * @param pairIndex The index of the pair to fetch the spot price, according to the Hyperliquid public API
      * @return rateProvider The address of the rate provider for the given token and pair
      */
-    function getRateProvider(
-        uint32 tokenIndex,
-        uint32 pairIndex
-    ) external view returns (IHyperEVMRateProvider rateProvider);
+    function getRateProvider(uint32 tokenIndex, uint32 pairIndex)
+        external
+        view
+        returns (IHyperEVMRateProvider rateProvider);
 
     /**
      * @notice Checks whether the given rate provider was created by this factory.

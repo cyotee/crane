@@ -7,16 +7,23 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
 import {
     TransientStorageHelpers,
     UintToAddressToBooleanMappingSlot
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
 import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 
 import {BalancerV3VaultStorageRepo} from "../BalancerV3VaultStorageRepo.sol";
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
@@ -117,7 +124,8 @@ contract VaultRecoveryFacet is BalancerV3VaultModifiers, IFacet {
         returns (uint256[] memory amountsOutRaw)
     {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolTokenBalances = layout.poolTokenBalances[pool];
+        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolTokenBalances =
+            layout.poolTokenBalances[pool];
 
         RecoveryLocals memory locals;
 
@@ -132,9 +140,7 @@ contract VaultRecoveryFacet is BalancerV3VaultModifiers, IFacet {
 
         // Compute proportional amounts out
         amountsOutRaw = BasePoolMath.computeProportionalAmountsOut(
-            locals.balancesRaw,
-            BalancerV3MultiTokenRepo._totalSupply(pool),
-            exactBptAmountIn
+            locals.balancesRaw, BalancerV3MultiTokenRepo._totalSupply(pool), exactBptAmountIn
         );
 
         // Check for roundtrip attack (add + remove in same tx)

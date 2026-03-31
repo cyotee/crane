@@ -109,19 +109,13 @@ contract CamelotV2_invariant is TestBase_CamelotV2 {
     /// @dev Swaps preserve or increase K due to fee accumulation.
     ///      This invariant does NOT apply to burns (K decreases proportionally on burn).
     function invariant_K_never_decreases_after_swap() public view {
-        assertTrue(
-            handler.kNeverDecreasedAfterSwap(),
-            "K decreased after swap operation"
-        );
+        assertTrue(handler.kNeverDecreasedAfterSwap(), "K decreased after swap operation");
     }
 
     /// @notice INVARIANT: K_new > K_old after every mint
     /// @dev Adding liquidity increases both reserves, so K always increases.
     function invariant_K_never_decreases_after_mint() public view {
-        assertTrue(
-            handler.kIncreasedAfterMint(),
-            "K decreased after mint operation"
-        );
+        assertTrue(handler.kIncreasedAfterMint(), "K decreased after mint operation");
     }
 
     /// @notice INVARIANT: Reserves are always non-zero after initial liquidity
@@ -236,27 +230,18 @@ contract CamelotV2_invariant is TestBase_CamelotV2 {
     /// @notice INVARIANT: Burns never violate proportional K scaling
     /// @dev After burn, K_after/K_before ~= (lpSupplyAfter/lpSupplyBefore)^2
     function invariant_burn_proportional_K() public view {
-        assertTrue(
-            handler.burnProportionalKHeld(),
-            "Burn violated proportional K invariant"
-        );
+        assertTrue(handler.burnProportionalKHeld(), "Burn violated proportional K invariant");
     }
 
     /// @notice INVARIANT: Burns never change the reserve ratio
     /// @dev reserve0/reserve1 should remain constant after burn
     function invariant_burn_reserve_ratio_constant() public view {
-        assertTrue(
-            handler.burnReserveRatioHeld(),
-            "Burn changed the reserve ratio"
-        );
+        assertTrue(handler.burnReserveRatioHeld(), "Burn changed the reserve ratio");
     }
 
     /// @notice INVARIANT: Handler LP balance decreases by exact burn amount
     function invariant_burn_lp_balance_exact() public view {
-        assertTrue(
-            handler.burnLpBalanceExactHeld(),
-            "Handler LP balance did not decrease by exact burn amount"
-        );
+        assertTrue(handler.burnLpBalanceExactHeld(), "Handler LP balance did not decrease by exact burn amount");
     }
 
     /// @notice Test burn reduces K proportionally to reserve changes
@@ -321,7 +306,9 @@ contract CamelotV2_invariant is TestBase_CamelotV2 {
 
         uint256 handlerLpAfter = testPair.balanceOf(address(handler));
 
-        assertEq(handlerLpBefore - handlerLpAfter, expectedBurn, "Handler LP balance did not reduce by exact burn amount");
+        assertEq(
+            handlerLpBefore - handlerLpAfter, expectedBurn, "Handler LP balance did not reduce by exact burn amount"
+        );
     }
 
     /// @notice Test burn proportionality holds for multiple sequential burns
@@ -449,18 +436,12 @@ contract CamelotV2_invariant_stable is TestBase_CamelotV2 {
 
     /// @notice INVARIANT: K never decreases after SWAP for stable pools
     function invariant_stable_K_never_decreases_after_swap() public view {
-        assertTrue(
-            handler.kNeverDecreasedAfterSwap(),
-            "Stable K decreased after swap operation"
-        );
+        assertTrue(handler.kNeverDecreasedAfterSwap(), "Stable K decreased after swap operation");
     }
 
     /// @notice INVARIANT: K never decreases after MINT for stable pools
     function invariant_stable_K_never_decreases_after_mint() public view {
-        assertTrue(
-            handler.kIncreasedAfterMint(),
-            "Stable K decreased after mint operation"
-        );
+        assertTrue(handler.kIncreasedAfterMint(), "Stable K decreased after mint operation");
     }
 
     /// @notice INVARIANT: Stable pool is actually in stable mode

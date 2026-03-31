@@ -16,7 +16,6 @@ import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 contract ERC721Facet is IFacet, IERC721 {
-
     bytes4 private constant _SAFE_TRANSFER_FROM_WITH_DATA_SELECTOR =
         bytes4(keccak256("safeTransferFrom(address,address,uint256,bytes)"));
     bytes4 private constant _SAFE_TRANSFER_FROM_SELECTOR =
@@ -31,6 +30,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function facetName() public pure returns (string memory name) {
         return type(ERC721Facet).name;
     }
+
     // end::facetName[]
 
     // tag::facetInterfaces()[]
@@ -41,6 +41,7 @@ contract ERC721Facet is IFacet, IERC721 {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IERC721).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -59,6 +60,7 @@ contract ERC721Facet is IFacet, IERC721 {
         funcs[7] = IERC721.getApproved.selector;
         funcs[8] = IERC721.isApprovedForAll.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

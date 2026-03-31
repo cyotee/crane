@@ -7,18 +7,27 @@ import "forge-std/Test.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 
-import { ReClammPoolParams, ReClammPriceParams } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammPoolFactoryMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
-import { ReClammPoolFactory } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.sol";
-import { ReClammMath, a, b } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {
+    ReClammPoolParams,
+    ReClammPriceParams
+} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolFactoryMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
+import {ReClammPoolFactory} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolFactory.sol";
+import {ReClammMath, a, b} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "ReClamm Pool". These
@@ -63,15 +72,12 @@ contract ReClammPoolContractsDeployer is BaseContractsDeployer {
             poolVersion: "ReClamm Pool v1",
             factoryVersion: "ReClamm Pool Factory v1"
         });
-
     }
 
-    function createReClammPool(
-        address[] memory tokens,
-        string memory label,
-        IVaultMock vault,
-        address poolCreator
-    ) internal returns (address newPool, bytes memory poolArgs) {
+    function createReClammPool(address[] memory tokens, string memory label, IVaultMock vault, address poolCreator)
+        internal
+        returns (address newPool, bytes memory poolArgs)
+    {
         IRateProvider[] memory rateProviders = new IRateProvider[](0);
         return createReClammPool(tokens, rateProviders, label, vault, poolCreator);
     }
@@ -106,20 +112,21 @@ contract ReClammPoolContractsDeployer is BaseContractsDeployer {
             tokenBPriceIncludesRate: defaultParams.defaultTokenBPriceIncludesRate
         });
 
-        newPool = ReClammPoolFactory(address(poolFactory)).create(
-            defaultParams.name,
-            defaultParams.symbol,
-            _rateProviders.length == 0
-                ? _vault.buildTokenConfig(_tokens)
-                : _vault.buildTokenConfig(_tokens, _rateProviders),
-            roleAccounts,
-            0.001e16, // minimum swap fee
-            address(0), // no hook contract
-            priceParams,
-            defaultParams.defaultDailyPriceShiftExponent,
-            defaultParams.defaultCenterednessMargin.toUint64(),
-            bytes32(_saltIndex++)
-        );
+        newPool = ReClammPoolFactory(address(poolFactory))
+            .create(
+                defaultParams.name,
+                defaultParams.symbol,
+                _rateProviders.length == 0
+                    ? _vault.buildTokenConfig(_tokens)
+                    : _vault.buildTokenConfig(_tokens, _rateProviders),
+                roleAccounts,
+                0.001e16, // minimum swap fee
+                address(0), // no hook contract
+                priceParams,
+                defaultParams.defaultDailyPriceShiftExponent,
+                defaultParams.defaultCenterednessMargin.toUint64(),
+                bytes32(_saltIndex++)
+            );
         vm.label(newPool, _label);
 
         // Force the swap fee percentage, even if it's outside the allowed limits.
@@ -160,13 +167,12 @@ contract ReClammPoolContractsDeployer is BaseContractsDeployer {
         string memory poolVersion
     ) internal returns (ReClammPoolFactory) {
         if (reusingArtifacts) {
-            return
-                ReClammPoolFactory(
-                    deployCode(
-                        _computeReClammPath(type(ReClammPoolFactory).name),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
-                    )
-                );
+            return ReClammPoolFactory(
+                deployCode(
+                    _computeReClammPath(type(ReClammPoolFactory).name),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
+                )
+            );
         } else {
             return new ReClammPoolFactory(vault, pauseWindowDuration, factoryVersion, poolVersion);
         }
@@ -179,13 +185,12 @@ contract ReClammPoolContractsDeployer is BaseContractsDeployer {
         string memory poolVersion
     ) internal returns (ReClammPoolFactoryMock) {
         if (reusingArtifacts) {
-            return
-                ReClammPoolFactoryMock(
-                    deployCode(
-                        _computeReClammTestPath(type(ReClammPoolFactoryMock).name),
-                        abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
-                    )
-                );
+            return ReClammPoolFactoryMock(
+                deployCode(
+                    _computeReClammTestPath(type(ReClammPoolFactoryMock).name),
+                    abi.encode(vault, pauseWindowDuration, factoryVersion, poolVersion)
+                )
+            );
         } else {
             return new ReClammPoolFactoryMock(vault, pauseWindowDuration, factoryVersion, poolVersion);
         }

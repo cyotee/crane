@@ -5,7 +5,9 @@ import "forge-std/Test.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {BalancerV3ConstantProductPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
+import {
+    BalancerV3ConstantProductPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
 
 /**
  * @title BalancerV3ConstantProductPoolFacet_IFacet_Test

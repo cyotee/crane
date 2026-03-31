@@ -21,4 +21,5 @@ import {ReentrancyGuard as SoladyReentrancyGuard} from "@crane/contracts/solady/
 abstract contract ReentrancyGuard is SoladyReentrancyGuard {
     // Inherits all functionality from Solady's ReentrancyGuard
     // The nonReentrant modifier is available through inheritance
-}
+
+    }

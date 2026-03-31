@@ -4,20 +4,29 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { PoolRoleAccounts, TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FactoryWidePauseWindow } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    FactoryWidePauseWindow
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/FactoryWidePauseWindow.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract PoolPauseTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -32,9 +41,8 @@ contract PoolPauseTest is BaseVaultTest {
     function setUp() public virtual override {
         BaseVaultTest.setUp();
 
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         PoolRoleAccounts memory defaultRoleAccounts;
         PoolRoleAccounts memory adminRoleAccounts;
@@ -42,52 +50,30 @@ contract PoolPauseTest is BaseVaultTest {
 
         pool = address(deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL"));
 
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            pool,
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            adminRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(pool, tokenConfig, 0, 365 days, false, adminRoleAccounts, poolHooksContract);
 
         // Pass zero for the pause manager.
         unmanagedPool = deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL");
 
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            address(unmanagedPool),
-            tokenConfig,
-            0,
-            365 days,
-            false,
-            defaultRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(
+                address(unmanagedPool), tokenConfig, 0, 365 days, false, defaultRoleAccounts, poolHooksContract
+            );
 
         permissionlessPool = deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL");
 
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            address(permissionlessPool),
-            tokenConfig,
-            0,
-            0,
-            false,
-            defaultRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(
+                address(permissionlessPool), tokenConfig, 0, 0, false, defaultRoleAccounts, poolHooksContract
+            );
 
         infinityPool = deployPoolMock(IVault(address(vault)), "ERC20 Pool", "ERC20POOL");
 
-        PoolFactoryMock(poolFactory).registerGeneralTestPool(
-            address(infinityPool),
-            tokenConfig,
-            0,
-            10000 days,
-            false,
-            defaultRoleAccounts,
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerGeneralTestPool(
+                address(infinityPool), tokenConfig, 0, 10000 days, false, defaultRoleAccounts, poolHooksContract
+            );
 
         factory = deployPoolFactoryMock(IVault(address(vault)), 365 days);
     }
@@ -116,10 +102,10 @@ contract PoolPauseTest is BaseVaultTest {
     }
 
     function testHasPauseManager() public view {
-        (, , , address pauseManager) = vault.getPoolPausedState(pool);
+        (,,, address pauseManager) = vault.getPoolPausedState(pool);
         assertEq(pauseManager, admin, "Pause manager is not admin");
 
-        (, , , pauseManager) = vault.getPoolPausedState(address(unmanagedPool));
+        (,,, pauseManager) = vault.getPoolPausedState(address(unmanagedPool));
         assertEq(pauseManager, address(0), "Pause manager non-zero");
     }
 
@@ -178,7 +164,7 @@ contract PoolPauseTest is BaseVaultTest {
     }
 
     function testInfinitePausePool() public {
-        (, , , address pauseManager) = vault.getPoolPausedState(address(infinityPool));
+        (,,, address pauseManager) = vault.getPoolPausedState(address(infinityPool));
         require(pauseManager == address(0), "Pause manager non-zero");
 
         // Authorize Alice.

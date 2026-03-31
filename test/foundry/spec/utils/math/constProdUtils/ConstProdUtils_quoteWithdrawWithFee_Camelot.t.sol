@@ -14,21 +14,18 @@ contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_
         super.setUp();
     }
 
-    function _quotedWithdrawForPair(ICamelotPair pair, address tokenA) internal view returns (uint256 quotedA, uint256 quotedB) {
+    function _quotedWithdrawForPair(ICamelotPair pair, address tokenA)
+        internal
+        view
+        returns (uint256 quotedA, uint256 quotedB)
+    {
         uint256 lpReceived = pair.balanceOf(address(this));
         if (lpReceived == 0) return (0, 0);
         (uint112 r0, uint112 r1, uint16 f0, uint16 f1) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
-        (uint256 reserveA, , uint256 reserveB, ) = ConstProdUtils._sortReserves(
-            tokenA,
-            pair.token0(),
-            r0,
-            f0,
-            r1,
-            f1
-        );
+        (uint256 reserveA,, uint256 reserveB,) = ConstProdUtils._sortReserves(tokenA, pair.token0(), r0, f0, r1, f1);
         uint256 kLast = pair.kLast();
-        (uint256 ownerFeeShare, ) = camelotV2Factory.feeInfo();
+        (uint256 ownerFeeShare,) = camelotV2Factory.feeInfo();
         // Compute Camelot's minted liquidity (mirror of CamelotPair._mintFee)
         // so we can adjust `totalSupply` to the post-mint value and avoid
         // double-simulating the mint when calling `ConstProdUtils`.
@@ -50,7 +47,9 @@ contract ConstProdUtils_quoteWithdrawWithFee_Camelot is TestBase_ConstProdUtils_
             }
         }
         uint256 adjustedSupply = totalSupply + minted;
-        return ConstProdUtils._quoteWithdrawWithFee(lpReceived, adjustedSupply, reserveA, reserveB, kLast, ownerFeeShare, false);
+        return ConstProdUtils._quoteWithdrawWithFee(
+            lpReceived, adjustedSupply, reserveA, reserveB, kLast, ownerFeeShare, false
+        );
     }
 
     function test_quoteWithdrawWithFee_Camelot_balanced_simple() public {

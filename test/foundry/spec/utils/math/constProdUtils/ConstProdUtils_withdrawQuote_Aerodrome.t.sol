@@ -16,12 +16,11 @@ contract ConstProdUtils_withdrawQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
 
     function test_withdrawQuote_Aerodrome_balancedPool() public {
         Pool pair = aeroBalancedPool;
-        (uint256 reserve0, uint256 reserve1, ) = pair.getReserves();
+        (uint256 reserve0, uint256 reserve1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
 
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(aeroBalancedTokenA), pair.token0(), reserve0, reserve1
-        );
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroBalancedTokenA), pair.token0(), reserve0, reserve1);
 
         uint256 lpBalance = pair.balanceOf(address(this));
         uint256 lpTokensToWithdraw = lpBalance / 2;
@@ -55,12 +54,11 @@ contract ConstProdUtils_withdrawQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
 
     function test_withdrawQuote_Aerodrome_unbalancedPool() public {
         Pool pair = aeroUnbalancedPool;
-        (uint256 reserve0, uint256 reserve1, ) = pair.getReserves();
+        (uint256 reserve0, uint256 reserve1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
 
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(aeroUnbalancedTokenA), pair.token0(), reserve0, reserve1
-        );
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroUnbalancedTokenA), pair.token0(), reserve0, reserve1);
 
         uint256 lpBalance = pair.balanceOf(address(this));
         uint256 lpTokensToWithdraw = lpBalance / 2;
@@ -94,12 +92,11 @@ contract ConstProdUtils_withdrawQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
 
     function test_withdrawQuote_Aerodrome_extremePool() public {
         Pool pair = aeroExtremeUnbalancedPool;
-        (uint256 reserve0, uint256 reserve1, ) = pair.getReserves();
+        (uint256 reserve0, uint256 reserve1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
 
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(aeroExtremeTokenA), pair.token0(), reserve0, reserve1
-        );
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroExtremeTokenA), pair.token0(), reserve0, reserve1);
 
         uint256 lpBalance = pair.balanceOf(address(this));
         uint256 lpTokensToWithdraw = lpBalance / 2;

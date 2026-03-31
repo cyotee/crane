@@ -50,7 +50,13 @@ abstract contract VetoGovernorVotes is VetoGovernor {
         uint256 tokenId,
         uint256 timepoint,
         bytes memory /*params*/
-    ) internal view virtual override returns (uint256) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return token.getPastVotes(account, tokenId, timepoint);
     }
 }

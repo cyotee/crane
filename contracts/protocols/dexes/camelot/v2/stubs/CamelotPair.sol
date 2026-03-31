@@ -375,12 +375,12 @@ contract CamelotPair is
     function _get_y(uint256 x0, uint256 xy, uint256 y) internal pure returns (uint256) {
         for (uint256 i = 0; i < 255; i++) {
             uint256 y_prev = y;
-            uint256 k = _f(x0, y);
-            if (k < xy) {
-                uint256 dy = (xy - k) * 1e18 / _d(x0, y);
+            uint256 k_ = _f(x0, y);
+            if (k_ < xy) {
+                uint256 dy = (xy - k_) * 1e18 / _d(x0, y);
                 y = y + dy;
             } else {
-                uint256 dy = (k - xy) * 1e18 / _d(x0, y);
+                uint256 dy = (k_ - xy) * 1e18 / _d(x0, y);
                 y = y - dy;
             }
             if (y > y_prev) {

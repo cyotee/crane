@@ -114,11 +114,7 @@ library LibString {
     }
 
     /// @dev Helper to cast `$` to a `BytesStorage`.
-    function bytesStorage(StringStorage storage $)
-        internal
-        pure
-        returns (LibBytes.BytesStorage storage casted)
-    {
+    function bytesStorage(StringStorage storage $) internal pure returns (LibBytes.BytesStorage storage casted) {
         /// @solidity memory-safe-assembly
         assembly {
             casted.slot := $.slot
@@ -185,11 +181,7 @@ library LibString {
     /// The output is prefixed with "0x" encoded using 2 hexadecimal digits per byte,
     /// giving a total length of `byteCount * 2 + 2` bytes.
     /// Reverts if `byteCount` is too small for the output to contain all the digits.
-    function toHexString(uint256 value, uint256 byteCount)
-        internal
-        pure
-        returns (string memory result)
-    {
+    function toHexString(uint256 value, uint256 byteCount) internal pure returns (string memory result) {
         result = toHexStringNoPrefix(value, byteCount);
         /// @solidity memory-safe-assembly
         assembly {
@@ -205,11 +197,7 @@ library LibString {
     /// The output is not prefixed with "0x" and is encoded using 2 hexadecimal digits per byte,
     /// giving a total length of `byteCount * 2` bytes.
     /// Reverts if `byteCount` is too small for the output to contain all the digits.
-    function toHexStringNoPrefix(uint256 value, uint256 byteCount)
-        internal
-        pure
-        returns (string memory result)
-    {
+    function toHexStringNoPrefix(uint256 value, uint256 byteCount) internal pure returns (string memory result) {
         /// @solidity memory-safe-assembly
         assembly {
             // We need 0x20 bytes for the trailing zeros padding, `byteCount * 2` bytes
@@ -280,11 +268,7 @@ library LibString {
     /// @dev Returns the hexadecimal representation of `value`.
     /// The output excludes leading "0" from the `toHexStringNoPrefix` output.
     /// `0x00: "0", 0x01: "1", 0x12: "12", 0x123: "123"`.
-    function toMinimalHexStringNoPrefix(uint256 value)
-        internal
-        pure
-        returns (string memory result)
-    {
+    function toMinimalHexStringNoPrefix(uint256 value) internal pure returns (string memory result) {
         result = toHexStringNoPrefix(value);
         /// @solidity memory-safe-assembly
         assembly {
@@ -539,11 +523,7 @@ library LibString {
     /// @dev Returns the byte index of the first location of `needle` in `subject`,
     /// needleing from left to right, starting from `from`.
     /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `needle` is not found.
-    function indexOf(string memory subject, string memory needle, uint256 from)
-        internal
-        pure
-        returns (uint256)
-    {
+    function indexOf(string memory subject, string memory needle, uint256 from) internal pure returns (uint256) {
         return LibBytes.indexOf(bytes(subject), bytes(needle), from);
     }
 
@@ -557,22 +537,14 @@ library LibString {
     /// @dev Returns the byte index of the first location of `needle` in `subject`,
     /// needleing from right to left, starting from `from`.
     /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `needle` is not found.
-    function lastIndexOf(string memory subject, string memory needle, uint256 from)
-        internal
-        pure
-        returns (uint256)
-    {
+    function lastIndexOf(string memory subject, string memory needle, uint256 from) internal pure returns (uint256) {
         return LibBytes.lastIndexOf(bytes(subject), bytes(needle), from);
     }
 
     /// @dev Returns the byte index of the first location of `needle` in `subject`,
     /// needleing from right to left.
     /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `needle` is not found.
-    function lastIndexOf(string memory subject, string memory needle)
-        internal
-        pure
-        returns (uint256)
-    {
+    function lastIndexOf(string memory subject, string memory needle) internal pure returns (uint256) {
         return LibBytes.lastIndexOf(bytes(subject), bytes(needle), type(uint256).max);
     }
 
@@ -598,11 +570,7 @@ library LibString {
 
     /// @dev Returns a copy of `subject` sliced from `start` to `end` (exclusive).
     /// `start` and `end` are byte offsets.
-    function slice(string memory subject, uint256 start, uint256 end)
-        internal
-        pure
-        returns (string memory)
-    {
+    function slice(string memory subject, uint256 start, uint256 end) internal pure returns (string memory) {
         return string(LibBytes.slice(bytes(subject), start, end));
     }
 
@@ -614,20 +582,12 @@ library LibString {
 
     /// @dev Returns all the indices of `needle` in `subject`.
     /// The indices are byte offsets.
-    function indicesOf(string memory subject, string memory needle)
-        internal
-        pure
-        returns (uint256[] memory)
-    {
+    function indicesOf(string memory subject, string memory needle) internal pure returns (uint256[] memory) {
         return LibBytes.indicesOf(bytes(subject), bytes(needle));
     }
 
     /// @dev Returns an arrays of strings based on the `delimiter` inside of the `subject` string.
-    function split(string memory subject, string memory delimiter)
-        internal
-        pure
-        returns (string[] memory result)
-    {
+    function split(string memory subject, string memory delimiter) internal pure returns (string[] memory result) {
         bytes[] memory a = LibBytes.split(bytes(subject), bytes(delimiter));
         /// @solidity memory-safe-assembly
         assembly {
@@ -643,11 +603,7 @@ library LibString {
 
     /// @dev Returns a copy of the string in either lowercase or UPPERCASE.
     /// WARNING! This function is only compatible with 7-bit ASCII strings.
-    function toCase(string memory subject, bool toUpper)
-        internal
-        pure
-        returns (string memory result)
-    {
+    function toCase(string memory subject, bool toUpper) internal pure returns (string memory result) {
         /// @solidity memory-safe-assembly
         assembly {
             let n := mload(subject)
@@ -757,11 +713,7 @@ library LibString {
 
     /// @dev Escapes the string to be used within double-quotes in a JSON.
     /// If `addDoubleQuotes` is true, the result will be enclosed in double-quotes.
-    function escapeJSON(string memory s, bool addDoubleQuotes)
-        internal
-        pure
-        returns (string memory result)
-    {
+    function escapeJSON(string memory s, bool addDoubleQuotes) internal pure returns (string memory result) {
         /// @solidity memory-safe-assembly
         assembly {
             result := mload(0x40)
@@ -938,11 +890,7 @@ library LibString {
     /// @dev Unpacks strings packed using {packTwo}.
     /// Returns the empty strings if `packed` is `bytes32(0)`.
     /// If `packed` is not an output of {packTwo}, the output behavior is undefined.
-    function unpackTwo(bytes32 packed)
-        internal
-        pure
-        returns (string memory resultA, string memory resultB)
-    {
+    function unpackTwo(bytes32 packed) internal pure returns (string memory resultA, string memory resultB) {
         /// @solidity memory-safe-assembly
         assembly {
             resultA := mload(0x40) // Grab the free memory pointer.

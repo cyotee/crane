@@ -350,7 +350,7 @@ library IntrospectionFacetFactoryService {
 
     // Deploy a facet - salt derived from type name
     function deployERC165Facet(
-        ICreate3Factory create3Factory
+        ICreate3FactoryProxy create3Factory
     ) internal returns (IFacet erc165Facet) {
         erc165Facet = create3Factory.deployFacet(
             type(ERC165Facet).creationCode,
@@ -361,7 +361,7 @@ library IntrospectionFacetFactoryService {
 
     // Deploy a package - includes constructor args
     function deployDiamondCutDFPkg(
-        ICreate3Factory create3Factory,
+        ICreate3FactoryProxy create3Factory,
         IFacet multiStepOwnableFacet,
         IFacet diamondCutFacet
     ) internal returns (IDiamondCutFacetDFPkg diamondCutDFPkg) {
@@ -426,7 +426,7 @@ Create3Factory                    # Deploys facets, packages, and any contract
 
 **Step 1: Initialize factories** (typically in test `setUp()` or deployment script)
 ```solidity
-(ICreate3Factory factory, IDiamondPackageCallBackFactory diamondFactory) =
+(ICreate3FactoryProxy factory, IDiamondPackageCallBackFactory diamondFactory) =
     InitDevService.initEnv(address(this));
 ```
 

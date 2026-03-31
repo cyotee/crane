@@ -15,9 +15,16 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -32,10 +39,18 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3StablePoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3StablePoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   DFPkg                                    */
@@ -65,11 +80,25 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
 
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
@@ -229,9 +258,7 @@ contract BalancerV3StablePoolDFPkg_Integration_Test is CraneTest {
 
         bytes memory pkgArgs = abi.encode(
             IBalancerV3StablePoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                amplificationParameter: 100,
-                hooksContract: address(0)
+                tokenConfigs: configs, amplificationParameter: 100, hooksContract: address(0)
             })
         );
 
@@ -246,9 +273,7 @@ contract BalancerV3StablePoolDFPkg_Integration_Test is CraneTest {
 
         bytes memory pkgArgs = abi.encode(
             IBalancerV3StablePoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                amplificationParameter: 100,
-                hooksContract: address(0)
+                tokenConfigs: configs, amplificationParameter: 100, hooksContract: address(0)
             })
         );
 
@@ -269,12 +294,11 @@ contract BalancerV3StablePoolDFPkg_Integration_Test is CraneTest {
         return configs;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

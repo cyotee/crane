@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity >=0.6.2 <0.9.0;
 
-import {VM_ADDRESS, CONSOLE, CONSOLE2_ADDRESS, INT256_MIN_ABS, SECP256K1_ORDER, UINT256_MAX} from "@crane/contracts/constants/FoundryConstants.sol";
+import {
+    VM_ADDRESS,
+    CONSOLE,
+    CONSOLE2_ADDRESS,
+    INT256_MIN_ABS,
+    SECP256K1_ORDER,
+    UINT256_MAX
+} from "@crane/contracts/constants/FoundryConstants.sol";
 import {Vm} from "forge-std/Vm.sol";
 
 library BetterVM {
-
     // creates a labeled address and the corresponding private key
     function makeAddrAndKey(Vm vm, string memory name) internal returns (address addr, uint256 privateKey) {
         privateKey = uint256(keccak256(abi.encodePacked(name)));
@@ -118,5 +124,4 @@ library BetterVM {
             fnOut := fnIn
         }
     }
-
 }

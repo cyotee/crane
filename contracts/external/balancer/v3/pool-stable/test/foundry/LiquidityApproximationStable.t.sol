@@ -4,22 +4,30 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
-import { LiquidityApproximationTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/LiquidityApproximation.t.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    LiquidityApproximationTest
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/LiquidityApproximation.t.sol";
 
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract LiquidityApproximationStableTest is LiquidityApproximationTest, StablePoolContractsDeployer {
+    using BetterEfficientHashLib for bytes;
     using CastingHelpers for address[];
 
     string private constant POOL_VERSION = "Pool V1";
@@ -32,12 +40,10 @@ contract LiquidityApproximationStableTest is LiquidityApproximationTest, StableP
 
         // Grants access to admin to change the amplification parameter of the pool.
         authorizer.grantRole(
-            IAuthentication(liquidityPool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-            admin
+            IAuthentication(liquidityPool).getActionId(StablePool.startAmplificationParameterUpdate.selector), admin
         );
         authorizer.grantRole(
-            IAuthentication(swapPool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-            admin
+            IAuthentication(swapPool).getActionId(StablePool.startAmplificationParameterUpdate.selector), admin
         );
 
         minSwapFeePercentage = IBasePool(swapPool).getMinimumSwapFeePercentage();
@@ -48,10 +54,11 @@ contract LiquidityApproximationStableTest is LiquidityApproximationTest, StableP
         return address(deployStablePoolFactory(IVault(address(vault)), 365 days, "Factory v1", POOL_VERSION));
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool";
         string memory symbol = "STABLE";
 
@@ -60,27 +67,26 @@ contract LiquidityApproximationStableTest is LiquidityApproximationTest, StableP
         // Allow pools created by `factory` to use PoolHooksMock hooks.
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        bytes32 salt = keccak256(abi.encodePacked(poolCreationNonce++));
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            0.01e16, // Initial swap fee: 0.01%
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            salt
-        );
+        // bytes32 salt = keccak256(abi.encodePacked(poolCreationNonce++));
+        bytes32 salt = abi.encodePacked(poolCreationNonce++)._hash();
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                0.01e16, // Initial swap fee: 0.01%
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                salt
+            );
         vm.label(newPool, label);
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );

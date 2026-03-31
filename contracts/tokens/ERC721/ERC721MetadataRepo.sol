@@ -21,9 +21,7 @@ library ERC721MetadataRepo {
         return _layout(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout_, string memory name_, string memory symbol_)
-        internal
-    {
+    function _initialize(Storage storage layout_, string memory name_, string memory symbol_) internal {
         layout_.name = name_;
         layout_.symbol = symbol_;
     }
@@ -32,12 +30,9 @@ library ERC721MetadataRepo {
         _initialize(_layout(), name_, symbol_);
     }
 
-    function _initialize(
-        Storage storage layout_,
-        string memory name_,
-        string memory symbol_,
-        string memory baseURI_
-    ) internal {
+    function _initialize(Storage storage layout_, string memory name_, string memory symbol_, string memory baseURI_)
+        internal
+    {
         _initialize(layout_, name_, symbol_);
         layout_.baseURI = baseURI_;
     }

@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IUnbalancedLiquidityInvariantRatioBounds } from "./IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { ISwapFeePercentageBounds } from "./ISwapFeePercentageBounds.sol";
-import { PoolSwapParams, Rounding, SwapKind } from "./VaultTypes.sol";
+import {IUnbalancedLiquidityInvariantRatioBounds} from "./IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {ISwapFeePercentageBounds} from "./ISwapFeePercentageBounds.sol";
+import {PoolSwapParams, Rounding, SwapKind} from "./VaultTypes.sol";
 
 /**
  * @notice Base interface for a Balancer Pool.
@@ -46,10 +46,10 @@ interface IBasePool is ISwapFeePercentageBounds, IUnbalancedLiquidityInvariantRa
      * @param rounding Rounding direction to consider when computing the invariant
      * @return invariant The calculated invariant of the pool, represented as a uint256
      */
-    function computeInvariant(
-        uint256[] memory balancesLiveScaled18,
-        Rounding rounding
-    ) external view returns (uint256 invariant);
+    function computeInvariant(uint256[] memory balancesLiveScaled18, Rounding rounding)
+        external
+        view
+        returns (uint256 invariant);
 
     /**
      * @notice Computes a new token balance, given the invariant growth ratio and all other balances.
@@ -61,11 +61,10 @@ interface IBasePool is ISwapFeePercentageBounds, IUnbalancedLiquidityInvariantRa
      * @param invariantRatio The ratio of the new invariant (after an operation) to the old
      * @return newBalance The new balance of the selected token, after the operation
      */
-    function computeBalance(
-        uint256[] memory balancesLiveScaled18,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external view returns (uint256 newBalance);
+    function computeBalance(uint256[] memory balancesLiveScaled18, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        view
+        returns (uint256 newBalance);
 
     /***************************************************************************
                                        Swaps

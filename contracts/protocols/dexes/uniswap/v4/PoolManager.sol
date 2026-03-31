@@ -70,9 +70,7 @@ contract PoolManager is IPoolManager, ProtocolFees, NoDelegateCall, ERC6909Claim
         if (key.tickSpacing > MAX_TICK_SPACING) revert TickSpacingTooLarge(key.tickSpacing);
         if (key.tickSpacing < MIN_TICK_SPACING) revert TickSpacingTooSmall(key.tickSpacing);
         if (key.currency0 >= key.currency1) {
-            revert CurrenciesOutOfOrderOrEqual(
-                Currency.unwrap(key.currency0), Currency.unwrap(key.currency1)
-            );
+            revert CurrenciesOutOfOrderOrEqual(Currency.unwrap(key.currency0), Currency.unwrap(key.currency1));
         }
         if (!key.hooks.isValidHookAddress(key.fee)) revert Hooks.HookAddressNotValid(address(key.hooks));
 

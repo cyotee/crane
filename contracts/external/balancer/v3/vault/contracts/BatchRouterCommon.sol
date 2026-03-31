@@ -3,10 +3,10 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {
     TransientEnumerableSet
@@ -16,7 +16,7 @@ import {
     AddressToUintMappingSlot
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { RouterCommon } from "./RouterCommon.sol";
+import {RouterCommon} from "./RouterCommon.sol";
 
 /// @notice Transient storage for Batch and Composite Liquidity Router operations.
 abstract contract BatchRouterCommon is RouterCommon {
@@ -40,12 +40,9 @@ abstract contract BatchRouterCommon is RouterCommon {
     // solhint-enable var-name-mixedcase
     // solhint-disable no-inline-assembly
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) RouterCommon(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        RouterCommon(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 

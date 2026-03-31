@@ -17,7 +17,7 @@ abstract contract Owned {
 
     address public owner;
 
-    modifier onlyOwner() virtual {
+    modifier onlyOwner() {
         require(msg.sender == owner, "UNAUTHORIZED");
 
         _;

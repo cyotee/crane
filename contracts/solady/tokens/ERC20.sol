@@ -105,17 +105,14 @@ abstract contract ERC20 {
     uint256 private constant _NONCES_SLOT_SEED_WITH_SIGNATURE_PREFIX = 0x383775081901;
 
     /// @dev `keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)")`.
-    bytes32 private constant _DOMAIN_TYPEHASH =
-        0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
+    bytes32 private constant _DOMAIN_TYPEHASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
 
     /// @dev `keccak256("1")`.
     /// If you need to use a different version, override `_versionHash`.
-    bytes32 private constant _DEFAULT_VERSION_HASH =
-        0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6;
+    bytes32 private constant _DEFAULT_VERSION_HASH = 0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6;
 
     /// @dev `keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)")`.
-    bytes32 private constant _PERMIT_TYPEHASH =
-        0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+    bytes32 private constant _PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
 
     /// @dev The canonical Permit2 address.
     /// For signature-based allowance granting for single transaction ERC20 `transferFrom`.
@@ -145,16 +142,14 @@ abstract contract ERC20 {
 
     /// @dev Returns the amount of tokens in existence.
     function totalSupply() public view virtual returns (uint256 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             result := sload(_TOTAL_SUPPLY_SLOT)
         }
     }
 
     /// @dev Returns the amount of tokens owned by `owner`.
     function balanceOf(address owner) public view virtual returns (uint256 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, owner)
             result := sload(keccak256(0x0c, 0x20))
@@ -162,17 +157,11 @@ abstract contract ERC20 {
     }
 
     /// @dev Returns the amount of tokens that `spender` can spend on behalf of `owner`.
-    function allowance(address owner, address spender)
-        public
-        view
-        virtual
-        returns (uint256 result)
-    {
+    function allowance(address owner, address spender) public view virtual returns (uint256 result) {
         if (_givePermit2InfiniteAllowance()) {
             if (spender == _PERMIT2) return type(uint256).max;
         }
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
             mstore(0x00, owner)
@@ -185,8 +174,7 @@ abstract contract ERC20 {
     /// Emits a {Approval} event.
     function approve(address spender, uint256 amount) public virtual returns (bool) {
         if (_givePermit2InfiniteAllowance()) {
-            /// @solidity memory-safe-assembly
-            assembly {
+            assembly ('memory-safe') {
                 // If `spender == _PERMIT2 && amount != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(amount)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -194,8 +182,7 @@ abstract contract ERC20 {
                 }
             }
         }
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Compute the allowance slot and store the amount.
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
@@ -216,8 +203,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function transfer(address to, uint256 amount) public virtual returns (bool) {
         _beforeTokenTransfer(msg.sender, to, amount);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Compute the balance slot and load its value.
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, caller())
@@ -258,8 +244,7 @@ abstract contract ERC20 {
         _beforeTokenTransfer(from, to, amount);
         // Code duplication is for zero-cost abstraction if possible.
         if (_givePermit2InfiniteAllowance()) {
-            /// @solidity memory-safe-assembly
-            assembly {
+            assembly ('memory-safe') {
                 let from_ := shl(96, from)
                 if iszero(eq(caller(), _PERMIT2)) {
                     // Compute the allowance slot and load its value.
@@ -301,8 +286,7 @@ abstract contract ERC20 {
                 log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, shr(96, from_), shr(96, mload(0x0c)))
             }
         } else {
-            /// @solidity memory-safe-assembly
-            assembly {
+            assembly ('memory-safe') {
                 let from_ := shl(96, from)
                 // Compute the allowance slot and load its value.
                 mstore(0x20, caller())
@@ -361,8 +345,7 @@ abstract contract ERC20 {
 
     /// @dev For inheriting contracts to increment the nonce.
     function _incrementNonce(address owner) internal virtual {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             mstore(0x0c, _NONCES_SLOT_SEED)
             mstore(0x00, owner)
             let nonceSlot := keccak256(0x0c, 0x20)
@@ -373,8 +356,7 @@ abstract contract ERC20 {
     /// @dev Returns the current nonce for `owner`.
     /// This value is used to compute the signature for EIP-2612 permit.
     function nonces(address owner) public view virtual returns (uint256 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Compute the nonce slot and load its value.
             mstore(0x0c, _NONCES_SLOT_SEED)
             mstore(0x00, owner)
@@ -386,18 +368,12 @@ abstract contract ERC20 {
     /// authorized by a signed approval by `owner`.
     ///
     /// Emits a {Approval} event.
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public virtual {
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        public
+        virtual
+    {
         if (_givePermit2InfiniteAllowance()) {
-            /// @solidity memory-safe-assembly
-            assembly {
+            assembly ('memory-safe') {
                 // If `spender == _PERMIT2 && value != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(value)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -409,8 +385,7 @@ abstract contract ERC20 {
         //  We simply calculate it on-the-fly to allow for cases where the `name` may change.
         if (nameHash == bytes32(0)) nameHash = keccak256(bytes(name()));
         bytes32 versionHash = _versionHash();
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Revert if the block timestamp is greater than `deadline`.
             if gt(timestamp(), deadline) {
                 mstore(0x00, 0x1a15a3cc) // `PermitExpired()`.
@@ -474,8 +449,7 @@ abstract contract ERC20 {
         //  We simply calculate it on-the-fly to allow for cases where the `name` may change.
         if (nameHash == bytes32(0)) nameHash = keccak256(bytes(name()));
         bytes32 versionHash = _versionHash();
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             let m := mload(0x40) // Grab the free memory pointer.
             mstore(m, _DOMAIN_TYPEHASH)
             mstore(add(m, 0x20), nameHash)
@@ -495,8 +469,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function _mint(address to, uint256 amount) internal virtual {
         _beforeTokenTransfer(address(0), to, amount);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             let totalSupplyBefore := sload(_TOTAL_SUPPLY_SLOT)
             let totalSupplyAfter := add(totalSupplyBefore, amount)
             // Revert if the total supply overflows.
@@ -528,8 +501,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function _burn(address from, uint256 amount) internal virtual {
         _beforeTokenTransfer(from, address(0), amount);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Compute the balance slot and load its value.
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, from)
@@ -558,8 +530,7 @@ abstract contract ERC20 {
     /// @dev Moves `amount` of tokens from `from` to `to`.
     function _transfer(address from, address to, uint256 amount) internal virtual {
         _beforeTokenTransfer(from, to, amount);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             let from_ := shl(96, from)
             // Compute the balance slot and load its value.
             mstore(0x0c, or(from_, _BALANCE_SLOT_SEED))
@@ -595,8 +566,7 @@ abstract contract ERC20 {
         if (_givePermit2InfiniteAllowance()) {
             if (spender == _PERMIT2) return; // Do nothing, as allowance is infinite.
         }
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             // Compute the allowance slot and load its value.
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
@@ -621,8 +591,7 @@ abstract contract ERC20 {
     /// Emits a {Approval} event.
     function _approve(address owner, address spender, uint256 amount) internal virtual {
         if (_givePermit2InfiniteAllowance()) {
-            /// @solidity memory-safe-assembly
-            assembly {
+            assembly ('memory-safe') {
                 // If `spender == _PERMIT2 && amount != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(amount)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -630,8 +599,7 @@ abstract contract ERC20 {
                 }
             }
         }
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             let owner_ := shl(96, owner)
             // Compute the allowance slot and store the amount.
             mstore(0x20, spender)

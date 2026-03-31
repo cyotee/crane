@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { WordCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
 
 // @notice Custom type to store the Vault configuration.
 type VaultStateBits is bytes32;

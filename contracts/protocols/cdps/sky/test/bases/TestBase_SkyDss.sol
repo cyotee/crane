@@ -3,18 +3,18 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import { Vat } from "../../core/Vat.sol";
-import { Dai } from "../../core/Dai.sol";
-import { GemJoin, DaiJoin } from "../../core/Join.sol";
-import { Jug } from "../../core/Jug.sol";
-import { Pot } from "../../core/Pot.sol";
-import { Spotter } from "../../core/Spot.sol";
-import { Vow } from "../../core/Vow.sol";
-import { Dog } from "../../core/Dog.sol";
-import { End } from "../../core/End.sol";
+import {Vat} from "../../core/Vat.sol";
+import {Dai} from "../../core/Dai.sol";
+import {GemJoin, DaiJoin} from "../../core/Join.sol";
+import {Jug} from "../../core/Jug.sol";
+import {Pot} from "../../core/Pot.sol";
+import {Spotter} from "../../core/Spot.sol";
+import {Vow} from "../../core/Vow.sol";
+import {Dog} from "../../core/Dog.sol";
+import {End} from "../../core/End.sol";
 
-import { SkyDssFactoryService } from "../../services/SkyDssFactoryService.sol";
-import { MockChainlog } from "../mocks/MockChainlog.sol";
+import {SkyDssFactoryService} from "../../services/SkyDssFactoryService.sol";
+import {MockChainlog} from "../mocks/MockChainlog.sol";
 
 /// @title DSValue
 /// @notice Simple price feed mock for testing
@@ -191,14 +191,7 @@ abstract contract TestBase_SkyDss is Test {
         vm.stopPrank();
 
         // Frob: lock collateral and draw debt
-        vat.frob(
-            DEFAULT_ILK,
-            usr,
-            usr,
-            usr,
-            int256(collateral),
-            int256(daiAmount)
-        );
+        vat.frob(DEFAULT_ILK, usr, usr, usr, int256(collateral), int256(daiAmount));
 
         // Exit DAI
         vm.startPrank(usr);

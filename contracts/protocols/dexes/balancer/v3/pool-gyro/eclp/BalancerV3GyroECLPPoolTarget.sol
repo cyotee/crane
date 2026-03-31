@@ -7,7 +7,11 @@ pragma solidity ^0.8.0;
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
@@ -18,8 +22,12 @@ import {GyroECLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/cont
 /* -------------------------------------------------------------------------- */
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3GyroECLPPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
-import {BalancerV3GyroECLPPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolRepo.sol";
+import {
+    IBalancerV3GyroECLPPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
+import {
+    BalancerV3GyroECLPPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolRepo.sol";
 
 /**
  * @title Balancer V3 Gyro ECLP Pool Target
@@ -149,11 +157,21 @@ contract BalancerV3GyroECLPPoolTarget is IBalancerV3Pool, IBalancerV3GyroECLPPoo
 
         if (params.kind == SwapKind.EXACT_IN) {
             (amountCalculatedScaled18,,) = GyroECLPMath.calcOutGivenIn(
-                params.balancesScaled18, params.amountGivenScaled18, tokenInIsToken0, eclpParams, derivedECLPParams, invariant
+                params.balancesScaled18,
+                params.amountGivenScaled18,
+                tokenInIsToken0,
+                eclpParams,
+                derivedECLPParams,
+                invariant
             );
         } else {
             (amountCalculatedScaled18,,) = GyroECLPMath.calcInGivenOut(
-                params.balancesScaled18, params.amountGivenScaled18, tokenInIsToken0, eclpParams, derivedECLPParams, invariant
+                params.balancesScaled18,
+                params.amountGivenScaled18,
+                tokenInIsToken0,
+                eclpParams,
+                derivedECLPParams,
+                invariant
             );
         }
     }

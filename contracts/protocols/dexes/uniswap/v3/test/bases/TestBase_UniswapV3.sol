@@ -12,8 +12,12 @@ import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/v3/librarie
 import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 import {IERC20PermitProxy} from "@crane/contracts/interfaces/proxies/IERC20PermitProxy.sol";
 import {TestBase_Weth9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/TestBase_Weth9.sol";
-import {IUniswapV3MintCallback} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/callback/IUniswapV3MintCallback.sol";
-import {IUniswapV3SwapCallback} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/callback/IUniswapV3SwapCallback.sol";
+import {
+    IUniswapV3MintCallback
+} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/callback/IUniswapV3MintCallback.sol";
+import {
+    IUniswapV3SwapCallback
+} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/callback/IUniswapV3SwapCallback.sol";
 
 abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, IUniswapV3SwapCallback {
     /* -------------------------------------------------------------------------- */
@@ -23,10 +27,10 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     IUniswapV3Factory internal uniswapV3Factory;
 
     // Standard fee tiers (in pips: 1 pip = 0.0001%)
-    uint24 internal constant FEE_LOWEST = 100;   // 0.01%
-    uint24 internal constant FEE_LOW = 500;      // 0.05%
-    uint24 internal constant FEE_MEDIUM = 3000;  // 0.3%
-    uint24 internal constant FEE_HIGH = 10000;   // 1%
+    uint24 internal constant FEE_LOWEST = 100; // 0.01%
+    uint24 internal constant FEE_LOW = 500; // 0.05%
+    uint24 internal constant FEE_MEDIUM = 3000; // 0.3%
+    uint24 internal constant FEE_HIGH = 10000; // 1%
 
     // Standard tick spacings for each fee tier
     int24 internal constant TICK_SPACING_LOWEST = 1;
@@ -57,12 +61,11 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param fee Fee tier (500, 3000, or 10000)
     /// @param sqrtPriceX96 Initial sqrt price in Q64.96 format
     /// @return pool The created pool
-    function createPool(
-        address tokenA,
-        address tokenB,
-        uint24 fee,
-        uint160 sqrtPriceX96
-    ) internal virtual returns (IUniswapV3Pool pool) {
+    function createPool(address tokenA, address tokenB, uint24 fee, uint160 sqrtPriceX96)
+        internal
+        virtual
+        returns (IUniswapV3Pool pool)
+    {
         // Ensure tokens are ordered (token0 < token1)
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
 
@@ -80,11 +83,11 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param tokenB Second token
     /// @param fee Fee tier
     /// @return pool The created pool
-    function createPoolOneToOne(
-        address tokenA,
-        address tokenB,
-        uint24 fee
-    ) internal virtual returns (IUniswapV3Pool pool) {
+    function createPoolOneToOne(address tokenA, address tokenB, uint24 fee)
+        internal
+        virtual
+        returns (IUniswapV3Pool pool)
+    {
         // 1:1 price = sqrt(1) * 2^96
         uint160 sqrtPriceX96 = uint160(uint256(1) << 96);
         return createPool(tokenA, tokenB, fee, sqrtPriceX96);
@@ -103,13 +106,11 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param amount Liquidity amount to mint
     /// @return amount0 Amount of token0 used
     /// @return amount1 Amount of token1 used
-    function mintPosition(
-        IUniswapV3Pool pool,
-        address recipient,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 amount
-    ) internal virtual returns (uint256 amount0, uint256 amount1) {
+    function mintPosition(IUniswapV3Pool pool, address recipient, int24 tickLower, int24 tickUpper, uint128 amount)
+        internal
+        virtual
+        returns (uint256 amount0, uint256 amount1)
+    {
         address token0 = pool.token0();
         address token1 = pool.token1();
 
@@ -131,11 +132,7 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param reserve0 Reserve of token0
     /// @param reserve1 Reserve of token1
     /// @return sqrtPriceX96 The sqrt price in Q64.96 format
-    function encodePriceSqrt(uint256 reserve0, uint256 reserve1)
-        internal
-        pure
-        returns (uint160 sqrtPriceX96)
-    {
+    function encodePriceSqrt(uint256 reserve0, uint256 reserve1) internal pure returns (uint160 sqrtPriceX96) {
         require(reserve0 > 0, "reserve0 must be > 0");
 
         // Calculate: sqrt(reserve1/reserve0) * 2^96
@@ -151,11 +148,11 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /* -------------------------------------------------------------------------- */
 
     /// @notice Get amount0 for given liquidity between two sqrt prices
-    function _getAmount0ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount0) {
+    function _getAmount0ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount0)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }
@@ -167,11 +164,11 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     }
 
     /// @notice Get amount1 for given liquidity between two sqrt prices
-    function _getAmount1ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) internal pure returns (uint256 amount1) {
+    function _getAmount1ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        internal
+        pure
+        returns (uint256 amount1)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) {
             (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
         }
@@ -189,30 +186,22 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param amountIn Amount to swap in
     /// @param recipient Recipient of output tokens
     /// @return amountOut Amount of tokens received
-    function swapExactInput(
-        IUniswapV3Pool pool,
-        bool zeroForOne,
-        uint256 amountIn,
-        address recipient
-    ) internal virtual returns (uint256 amountOut) {
+    function swapExactInput(IUniswapV3Pool pool, bool zeroForOne, uint256 amountIn, address recipient)
+        internal
+        virtual
+        returns (uint256 amountOut)
+    {
         address tokenIn = zeroForOne ? pool.token0() : pool.token1();
 
         // Ensure payer has tokens, then pay via the Uniswap V3 swap callback.
         _mintOrDeal(tokenIn, address(this), amountIn);
 
         // Set price limit to allow full swap
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Execute swap
-        (int256 amount0, int256 amount1) = pool.swap(
-            recipient,
-            zeroForOne,
-            int256(amountIn),
-            sqrtPriceLimitX96,
-            abi.encode(address(this))
-        );
+        (int256 amount0, int256 amount1) =
+            pool.swap(recipient, zeroForOne, int256(amountIn), sqrtPriceLimitX96, abi.encode(address(this)));
 
         // Return output amount (negative because it's being sent out)
         amountOut = uint256(-(zeroForOne ? amount1 : amount0));
@@ -243,7 +232,7 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     function _mintOrDeal(address token, address to, uint256 amount) internal {
         if (amount == 0) return;
 
-        (bool ok, ) = token.call(abi.encodeWithSignature("mint(address,uint256)", to, amount));
+        (bool ok,) = token.call(abi.encodeWithSignature("mint(address,uint256)", to, amount));
         if (ok) return;
 
         deal(token, to, amount, true);
@@ -257,11 +246,7 @@ abstract contract TestBase_UniswapV3 is TestBase_Weth9, IUniswapV3MintCallback, 
     /// @param tick The tick to align
     /// @param tickSpacing The tick spacing
     /// @return Aligned tick
-    function nearestUsableTick(int24 tick, int24 tickSpacing)
-        internal
-        pure
-        returns (int24)
-    {
+    function nearestUsableTick(int24 tick, int24 tickSpacing) internal pure returns (int24) {
         // Round down to nearest multiple of tickSpacing
         int24 rounded = (tick / tickSpacing) * tickSpacing;
 

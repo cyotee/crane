@@ -5,10 +5,12 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 
-import { IProtocolFeeBurner } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
+import {
+    IProtocolFeeBurner
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeBurner.sol";
 
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 contract ProtocolFeeBurnerMock is IProtocolFeeBurner {
     using FixedPoint for uint256;

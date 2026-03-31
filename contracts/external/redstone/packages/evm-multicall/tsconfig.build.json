@@ -1,0 +1,11 @@
+{
+  "extends": ["./tsconfig.json", "../../tsconfig-build-common.json"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "scripts",
+    "hardhat.config.ts",
+    "artifacts/build-info"
+  ]
+}

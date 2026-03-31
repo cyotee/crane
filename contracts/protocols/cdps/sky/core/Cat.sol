@@ -24,23 +24,28 @@ pragma solidity ^0.8.0;
 // New deployments of this contract will need to include custom events (TO DO).
 
 interface Kicker {
-    function kick(address urn, address gal, uint256 tab, uint256 lot, uint256 bid)
-        external returns (uint256);
+    function kick(address urn, address gal, uint256 tab, uint256 lot, uint256 bid) external returns (uint256);
 }
 
 interface VatLike {
-    function ilks(bytes32) external view returns (
-        uint256 Art,  // [wad]
-        uint256 rate, // [ray]
-        uint256 spot, // [ray]
-        uint256 line, // [rad]
-        uint256 dust  // [rad]
-    );
-    function urns(bytes32,address) external view returns (
-        uint256 ink,  // [wad]
-        uint256 art   // [wad]
-    );
-    function grab(bytes32,address,address,address,int256,int256) external;
+    function ilks(bytes32)
+        external
+        view
+        returns (
+            uint256 Art, // [wad]
+            uint256 rate, // [ray]
+            uint256 spot, // [ray]
+            uint256 line, // [rad]
+            uint256 dust // [rad]
+        );
+    function urns(bytes32, address)
+        external
+        view
+        returns (
+            uint256 ink, // [wad]
+            uint256 art // [wad]
+        );
+    function grab(bytes32, address, address, address, int256, int256) external;
     function hope(address) external;
     function nope(address) external;
 }
@@ -51,38 +56,38 @@ interface VowLike {
 
 contract Cat {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Cat/not-authorized");
         _;
     }
 
     // --- Data ---
     struct Ilk {
-        address flip;  // Liquidator
-        uint256 chop;  // Liquidation Penalty  [wad]
-        uint256 dunk;  // Liquidation Quantity [rad]
+        address flip; // Liquidator
+        uint256 chop; // Liquidation Penalty  [wad]
+        uint256 dunk; // Liquidation Quantity [rad]
     }
 
-    mapping (bytes32 => Ilk) public ilks;
+    mapping(bytes32 => Ilk) public ilks;
 
-    uint256 public live;   // Active Flag
-    VatLike public vat;    // CDP Engine
-    VowLike public vow;    // Debt Engine
-    uint256 public box;    // Max Dai out for liquidation        [rad]
+    uint256 public live; // Active Flag
+    VatLike public vat; // CDP Engine
+    VowLike public vow; // Debt Engine
+    uint256 public box; // Max Dai out for liquidation        [rad]
     uint256 public litter; // Balance of Dai out for liquidation [rad]
 
     // --- Events ---
     event Bite(
-      bytes32 indexed ilk,
-      address indexed urn,
-      uint256 ink,
-      uint256 art,
-      uint256 tab,
-      address flip,
-      uint256 id
+        bytes32 indexed ilk, address indexed urn, uint256 ink, uint256 art, uint256 tab, address flip, uint256 id
     );
 
     // --- Init ---
@@ -96,18 +101,22 @@ contract Cat {
     uint256 constant WAD = 10 ** 18;
 
     function _min(uint256 x, uint256 y) internal pure returns (uint256 z) {
-        if (x > y) { z = y; } else { z = x; }
+        if (x > y) z = y;
+        else z = x;
     }
+
     function _add(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x + y) >= x);
         }
     }
+
     function _sub(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x - y) <= x);
         }
     }
+
     function _mul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require(y == 0 || (z = x * y) / y == x);
@@ -119,27 +128,31 @@ contract Cat {
         if (what == "vow") vow = VowLike(data);
         else revert("Cat/file-unrecognized-param");
     }
+
     function file(bytes32 what, uint256 data) external auth {
         if (what == "box") box = data;
         else revert("Cat/file-unrecognized-param");
     }
+
     function file(bytes32 ilk, bytes32 what, uint256 data) external auth {
         if (what == "chop") ilks[ilk].chop = data;
         else if (what == "dunk") ilks[ilk].dunk = data;
         else revert("Cat/file-unrecognized-param");
     }
+
     function file(bytes32 ilk, bytes32 what, address flip) external auth {
         if (what == "flip") {
             vat.nope(ilks[ilk].flip);
             ilks[ilk].flip = flip;
             vat.hope(flip);
+        } else {
+            revert("Cat/file-unrecognized-param");
         }
-        else revert("Cat/file-unrecognized-param");
     }
 
     // --- CDP Liquidation ---
     function bite(bytes32 ilk, address urn) external returns (uint256 id) {
-        (,uint256 rate,uint256 spot,,uint256 dust) = vat.ilks(ilk);
+        (, uint256 rate, uint256 spot,, uint256 dust) = vat.ilks(ilk);
         (uint256 ink, uint256 art) = vat.urns(ilk, urn);
 
         require(live == 1, "Cat/not-live");
@@ -158,13 +171,11 @@ contract Cat {
 
         uint256 dink = _min(ink, _mul(ink, dart) / art);
 
-        require(dart >  0      && dink >  0     , "Cat/null-auction");
-        require(dart <= 2**255 && dink <= 2**255, "Cat/overflow"    );
+        require(dart > 0 && dink > 0, "Cat/null-auction");
+        require(dart <= 2 ** 255 && dink <= 2 ** 255, "Cat/overflow");
 
         // This may leave the CDP in a dusty state
-        vat.grab(
-            ilk, urn, address(this), address(vow), -int256(dink), -int256(dart)
-        );
+        vat.grab(ilk, urn, address(this), address(vow), -int256(dink), -int256(dart));
         vow.fess(_mul(dart, rate));
 
         { // Avoid stack too deep
@@ -173,13 +184,7 @@ contract Cat {
             uint256 tab = _mul(_mul(dart, rate), milk.chop) / WAD;
             litter = _add(litter, tab);
 
-            id = Kicker(milk.flip).kick({
-                urn: urn,
-                gal: address(vow),
-                tab: tab,
-                lot: dink,
-                bid: 0
-            });
+            id = Kicker(milk.flip).kick({urn: urn, gal: address(vow), tab: tab, lot: dink, bid: 0});
         }
 
         emit Bite(ilk, urn, dink, dart, _mul(dart, rate), milk.flip, id);

@@ -83,6 +83,10 @@ library Bytes4SetComparatorRepo {
         _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
 
+    function _recExpectedBytes4(address subject, bytes4 func, bytes4 expected) internal {
+        _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
+    }
+
     /**
      * @notice Retrieves recorded expected bytes4 values
      * @dev Used in hasValid_* pattern to retrieve stored expectations

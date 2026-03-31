@@ -9,13 +9,15 @@ import {
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultExtensionMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultExtensionMock.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IVaultExtensionMock
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultExtensionMock.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
-import { PoolConfigLib, PoolConfigBits } from "../lib/PoolConfigLib.sol";
-import { VaultExtension } from "../VaultExtension.sol";
+import {PoolConfigLib, PoolConfigBits} from "../lib/PoolConfigLib.sol";
+import {VaultExtension} from "../VaultExtension.sol";
 
 contract VaultExtensionMock is IVaultExtensionMock, VaultExtension {
     using BetterEfficientHashLib for bytes;
@@ -37,16 +39,17 @@ contract VaultExtensionMock is IVaultExtensionMock, VaultExtension {
         address poolHooksContract,
         LiquidityManagement calldata liquidityManagement
     ) external nonReentrant {
-        IVault(address(this)).registerPool(
-            pool,
-            tokenConfig,
-            swapFeePercentage,
-            pauseWindowEndTime,
-            protocolFeeExempt,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        IVault(address(this))
+            .registerPool(
+                pool,
+                tokenConfig,
+                swapFeePercentage,
+                pauseWindowEndTime,
+                protocolFeeExempt,
+                roleAccounts,
+                poolHooksContract,
+                liquidityManagement
+            );
     }
 
     function manualInitializePoolReentrancy(

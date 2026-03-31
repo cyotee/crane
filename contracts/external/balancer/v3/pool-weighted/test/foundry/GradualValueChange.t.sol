@@ -181,7 +181,8 @@ contract GradualValueChangeTest is Test {
                 assertApproxEqRel(actualValue, expectedValue, 1, "Should be close for large numbers");
             } catch Error(string memory reason) {
                 revert(string(abi.encodePacked("getInterpolatedValue reverted: ", reason)));
-            } catch (bytes memory /*lowLevelData*/) {
+            } catch (bytes memory) {
+                /*lowLevelData*/
                 revert("getInterpolatedValue reverted unexpectedly");
             }
 

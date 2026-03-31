@@ -4,19 +4,27 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { TokenInfo, SwapKind, PoolSwapParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    TokenInfo,
+    SwapKind,
+    PoolSwapParams
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract VaultSwapWithRatesTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -45,12 +53,13 @@ contract VaultSwapWithRatesTest is BaseVaultTest {
 
         newPool = address(deployPoolMock(IVault(address(vault)), name, symbol));
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig([address(wsteth), address(dai)].toMemoryArray().asIERC20(), rateProviders),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(
+                newPool,
+                vault.buildTokenConfig([address(wsteth), address(dai)].toMemoryArray().asIERC20(), rateProviders),
+                poolHooksContract,
+                lp
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -65,7 +74,7 @@ contract VaultSwapWithRatesTest is BaseVaultTest {
     }
 
     function testInitialRateProviderState() public view {
-        (, TokenInfo[] memory tokenInfo, , ) = vault.getPoolTokenInfo(pool);
+        (, TokenInfo[] memory tokenInfo,,) = vault.getPoolTokenInfo(pool);
 
         assertEq(address(tokenInfo[wstethIdx].rateProvider), address(rateProvider), "Wrong rate provider");
         assertEq(address(tokenInfo[daiIdx].rateProvider), address(0), "Rate provider should be 0");
@@ -97,14 +106,7 @@ contract VaultSwapWithRatesTest is BaseVaultTest {
 
         vm.prank(bob);
         router.swapSingleTokenExactIn(
-            pool,
-            dai,
-            wsteth,
-            DEFAULT_AMOUNT,
-            rateAdjustedLimit,
-            MAX_UINT256,
-            false,
-            bytes("")
+            pool, dai, wsteth, DEFAULT_AMOUNT, rateAdjustedLimit, MAX_UINT256, false, bytes("")
         );
     }
 
@@ -134,14 +136,7 @@ contract VaultSwapWithRatesTest is BaseVaultTest {
 
         vm.prank(bob);
         router.swapSingleTokenExactOut(
-            pool,
-            dai,
-            wsteth,
-            rateAdjustedAmountGiven,
-            DEFAULT_AMOUNT,
-            MAX_UINT256,
-            false,
-            bytes("")
+            pool, dai, wsteth, rateAdjustedAmountGiven, DEFAULT_AMOUNT, MAX_UINT256, false, bytes("")
         );
     }
 }

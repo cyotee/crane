@@ -14,7 +14,9 @@ import {
     TokenConfig
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
@@ -22,8 +24,7 @@ import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/fo
 import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import {MinimalRouter} from
-    "@crane/contracts/protocols/dexes/balancer/v3/hooks/MinimalRouter.sol";
+import {MinimalRouter} from "@crane/contracts/protocols/dexes/balancer/v3/hooks/MinimalRouter.sol";
 
 /**
  * @title MinimalRouterTest
@@ -54,10 +55,7 @@ contract MinimalRouterTest is BaseVaultTest {
 
         // Deploy the minimal router
         minimalRouter = new MinimalRouter(
-            IVault(address(vault)),
-            IWETH(address(weth)),
-            IPermit2(address(permit2)),
-            "MinimalRouter v1"
+            IVault(address(vault)), IWETH(address(weth)), IPermit2(address(permit2)), "MinimalRouter v1"
         );
         vm.label(address(minimalRouter), "Minimal Router");
 
@@ -118,13 +116,8 @@ contract MinimalRouterTest is BaseVaultTest {
         uint256[] memory maxAmountsIn = [poolInitAmount, poolInitAmount].toMemoryArray();
 
         vm.prank(lp);
-        uint256[] memory amountsIn = minimalRouter.addLiquidityProportional(
-            pool,
-            maxAmountsIn,
-            bptAmount,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsIn =
+            minimalRouter.addLiquidityProportional(pool, maxAmountsIn, bptAmount, false, bytes(""));
 
         // All returned amounts should be non-zero
         assertTrue(amountsIn[daiIdx] > 0, "DAI amount should be non-zero");
@@ -184,13 +177,8 @@ contract MinimalRouterTest is BaseVaultTest {
         IERC20(pool).approve(address(minimalRouter), type(uint256).max);
         IERC20(pool).approve(address(vault), type(uint256).max);
 
-        uint256[] memory amountsOut = minimalRouter.removeLiquidityProportional(
-            pool,
-            bptToRemove,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsOut =
+            minimalRouter.removeLiquidityProportional(pool, bptToRemove, minAmountsOut, false, bytes(""));
         vm.stopPrank();
 
         // All returned amounts should be non-zero
@@ -213,26 +201,16 @@ contract MinimalRouterTest is BaseVaultTest {
         uint256[] memory maxAmountsIn = [poolInitAmount, poolInitAmount].toMemoryArray();
 
         vm.startPrank(lp);
-        uint256[] memory amountsIn = minimalRouter.addLiquidityProportional(
-            pool,
-            maxAmountsIn,
-            bptAmount,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsIn =
+            minimalRouter.addLiquidityProportional(pool, maxAmountsIn, bptAmount, false, bytes(""));
 
         // Approve and remove liquidity
         IERC20(pool).approve(address(minimalRouter), type(uint256).max);
         IERC20(pool).approve(address(vault), type(uint256).max);
 
         uint256[] memory minAmountsOut = [uint256(0), uint256(0)].toMemoryArray();
-        uint256[] memory amountsOut = minimalRouter.removeLiquidityProportional(
-            pool,
-            bptAmount,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsOut =
+            minimalRouter.removeLiquidityProportional(pool, bptAmount, minAmountsOut, false, bytes(""));
         vm.stopPrank();
 
         uint256 lpDaiFinal = dai.balanceOf(lp);

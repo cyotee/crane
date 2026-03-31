@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {TokenConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 library MinTokenBalanceLib {
     // Matches the POOL_MINIMUM_TOTAL_SUPPLY Vault constant in `ERC20MultiToken`.
@@ -35,9 +35,11 @@ library MinTokenBalanceLib {
      * @param tokens The pool tokens (as a TokenConfig array, for convenience)
      * @return minTokenBalances The validated minimum balances
      */
-    function computeMinTokenBalances(
-        TokenConfig[] memory tokens
-    ) internal view returns (uint256[] memory minTokenBalances) {
+    function computeMinTokenBalances(TokenConfig[] memory tokens)
+        internal
+        view
+        returns (uint256[] memory minTokenBalances)
+    {
         uint256 numTokens = tokens.length;
 
         minTokenBalances = new uint256[](numTokens);

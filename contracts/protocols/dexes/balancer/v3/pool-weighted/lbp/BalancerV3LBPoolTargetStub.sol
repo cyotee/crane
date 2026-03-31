@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BalancerV3LBPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTarget.sol";
-import {BalancerV3LBPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolRepo.sol";
+import {
+    BalancerV3LBPoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolTarget.sol";
+import {
+    BalancerV3LBPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolRepo.sol";
 
 /**
  * @title BalancerV3LBPoolTargetStub
@@ -38,7 +42,7 @@ contract BalancerV3LBPoolTargetStub is BalancerV3LBPoolTarget {
             endTime_,
             blockProjectTokenSwapsIn_,
             0, // no virtual balance
-            0  // no scaling factor needed
+            0 // no scaling factor needed
         );
     }
 

@@ -212,8 +212,10 @@ library Pool {
                 // right, when we'll need _more_ currency0 (it's becoming more valuable) so user must provide it
                 delta = toBalanceDelta(
                     SqrtPriceMath.getAmount0Delta(
-                        TickMath.getSqrtPriceAtTick(tickLower), TickMath.getSqrtPriceAtTick(tickUpper), liquidityDelta
-                    ).toInt128(),
+                            TickMath.getSqrtPriceAtTick(tickLower),
+                            TickMath.getSqrtPriceAtTick(tickUpper),
+                            liquidityDelta
+                        ).toInt128(),
                     0
                 );
             } else if (tick < tickUpper) {
@@ -231,8 +233,10 @@ library Pool {
                 delta = toBalanceDelta(
                     0,
                     SqrtPriceMath.getAmount1Delta(
-                        TickMath.getSqrtPriceAtTick(tickLower), TickMath.getSqrtPriceAtTick(tickUpper), liquidityDelta
-                    ).toInt128()
+                            TickMath.getSqrtPriceAtTick(tickLower),
+                            TickMath.getSqrtPriceAtTick(tickUpper),
+                            liquidityDelta
+                        ).toInt128()
                 );
             }
         }
@@ -390,7 +394,7 @@ library Pool {
                     // cannot overflow due to limits on the size of protocolFee and params.amountSpecified
                     // this rounds down to favor LPs over the protocol
                     uint256 delta = (swapFee == protocolFee)
-                        ? step.feeAmount // lp fee is 0, so the entire fee is owed to the protocol instead
+                        ? step.feeAmount  // lp fee is 0, so the entire fee is owed to the protocol instead
                         : (step.amountIn + step.feeAmount) * protocolFee / ProtocolFeeLibrary.PIPS_DENOMINATOR;
                     // subtract it from the total fee and add it to the protocol fee
                     step.feeAmount -= delta;
@@ -402,8 +406,9 @@ library Pool {
             if (result.liquidity > 0) {
                 unchecked {
                     // FullMath.mulDiv isn't needed as the numerator can't overflow uint256 since tokens have a max supply of type(uint128).max
-                    step.feeGrowthGlobalX128 +=
-                        UnsafeMath.simpleMulDiv(step.feeAmount, FixedPoint128.Q128, result.liquidity);
+                    step.feeGrowthGlobalX128 += UnsafeMath.simpleMulDiv(
+                        step.feeAmount, FixedPoint128.Q128, result.liquidity
+                    );
                 }
             }
 

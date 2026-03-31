@@ -6,14 +6,14 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import { BasePoolMath } from "../../../contracts/BasePoolMath.sol";
-import { BalancerPoolToken } from "../../../contracts/BalancerPoolToken.sol";
+import {BasePoolMath} from "../../../contracts/BasePoolMath.sol";
+import {BalancerPoolToken} from "../../../contracts/BalancerPoolToken.sol";
 
 import "../utils/BaseMedusaTest.sol";
 
@@ -60,28 +60,18 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
         tokenIndex = boundTokenIndex(tokenIndex);
         exactBptAmountOut = boundBptMint(exactBptAmountOut);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         // deposit tokenAmountIn to mint exactly exactBptAmountOut
         medusa.prank(lp);
         uint256 tokenAmountIn = router.addLiquiditySingleTokenExactOut(
-            address(pool),
-            tokens[tokenIndex],
-            type(uint128).max,
-            exactBptAmountOut,
-            false,
-            bytes("")
+            address(pool), tokens[tokenIndex], type(uint128).max, exactBptAmountOut, false, bytes("")
         );
 
         // withdraw exactly tokenAmountIn to burn bptAmountIn
         medusa.prank(lp);
         uint256 bptAmountIn = router.removeLiquiditySingleTokenExactOut(
-            address(pool),
-            type(uint128).max,
-            tokens[tokenIndex],
-            tokenAmountIn,
-            false,
-            bytes("")
+            address(pool), type(uint128).max, tokens[tokenIndex], tokenAmountIn, false, bytes("")
         );
 
         emit Debug("BPT minted while adding liquidity:", exactBptAmountOut);
@@ -93,17 +83,12 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
         tokenIndex = boundTokenIndex(tokenIndex);
         tokenAmountOut = boundTokenAmountOut(tokenAmountOut, tokenIndex);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         // withdraw exactly tokenAmountOut to burn bptBurnAmt
         medusa.prank(lp);
         uint256 bptAmountIn = router.removeLiquiditySingleTokenExactOut(
-            address(pool),
-            type(uint128).max,
-            tokens[tokenIndex],
-            tokenAmountOut,
-            false,
-            bytes("")
+            address(pool), type(uint128).max, tokens[tokenIndex], tokenAmountOut, false, bytes("")
         );
 
         // deposit exactly tokenAmountOut to mint bptAmountOut.
@@ -119,7 +104,7 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
     }
 
     function computeAddAndRemoveLiquidityMultiToken(uint256 exactBptAmountOut) public {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         exactBptAmountOut = boundBptMint(exactBptAmountOut);
 
@@ -127,13 +112,8 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
 
         // mint exactly bptAmountOut to deposit tokenAmountIn
         medusa.prank(lp);
-        uint256[] memory tokenAmountsIn = router.addLiquidityProportional(
-            address(pool),
-            maxAmountsIn,
-            exactBptAmountOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory tokenAmountsIn =
+            router.addLiquidityProportional(address(pool), maxAmountsIn, exactBptAmountOut, false, bytes(""));
 
         // Withdraw exactly tokenAmountsIn to burn bptAmountIn. The function `removeLiquidityUnbalanced` does not
         // exist, so we need to go one token at a time to accomplish this.
@@ -141,12 +121,7 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
         for (uint256 i = 0; i < tokenAmountsIn.length; i++) {
             medusa.prank(lp);
             bptAmountIn += router.removeLiquiditySingleTokenExactOut(
-                address(pool),
-                type(uint128).max,
-                tokens[i],
-                tokenAmountsIn[i],
-                false,
-                bytes("")
+                address(pool), type(uint128).max, tokens[i], tokenAmountsIn[i], false, bytes("")
             );
         }
 
@@ -162,13 +137,8 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
 
         // Burn exactly exactBptAmountIn to withdraw tokenAmountsOut.
         medusa.prank(lp);
-        uint256[] memory tokenAmountsOut = router.removeLiquidityProportional(
-            address(pool),
-            exactBptAmountIn,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory tokenAmountsOut =
+            router.removeLiquidityProportional(address(pool), exactBptAmountIn, minAmountsOut, false, bytes(""));
 
         // Deposit exactly tokenAmountsOut to mint bptAmountOut.
         medusa.prank(lp);
@@ -221,70 +191,55 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
         updateRateDecrease();
     }
 
-    function computeAddLiquiditySingleTokenExactOut(
-        uint256 tokenInIndex,
-        uint256 exactBptAmountOut
-    ) public returns (uint256 amountIn) {
+    function computeAddLiquiditySingleTokenExactOut(uint256 tokenInIndex, uint256 exactBptAmountOut)
+        public
+        returns (uint256 amountIn)
+    {
         assumeValidTradeAmount(exactBptAmountOut);
         tokenInIndex = boundTokenIndex(tokenInIndex);
         exactBptAmountOut = boundBptMint(exactBptAmountOut);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         medusa.prank(lp);
         amountIn = router.addLiquiditySingleTokenExactOut(
-            address(pool),
-            tokens[tokenInIndex],
-            type(uint128).max,
-            exactBptAmountOut,
-            false,
-            bytes("")
+            address(pool), tokens[tokenInIndex], type(uint128).max, exactBptAmountOut, false, bytes("")
         );
 
         updateRateDecrease();
     }
 
-    function computeRemoveLiquiditySingleTokenExactOut(
-        uint256 tokenOutIndex,
-        uint256 exactAmountOut
-    ) public returns (uint256 bptAmountIn) {
+    function computeRemoveLiquiditySingleTokenExactOut(uint256 tokenOutIndex, uint256 exactAmountOut)
+        public
+        returns (uint256 bptAmountIn)
+    {
         assumeValidTradeAmount(exactAmountOut);
         tokenOutIndex = boundTokenIndex(tokenOutIndex);
         exactAmountOut = boundTokenAmountOut(exactAmountOut, tokenOutIndex);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         medusa.prank(lp);
         bptAmountIn = router.removeLiquiditySingleTokenExactOut(
-            address(pool),
-            type(uint128).max,
-            tokens[tokenOutIndex],
-            exactAmountOut,
-            false,
-            bytes("")
+            address(pool), type(uint128).max, tokens[tokenOutIndex], exactAmountOut, false, bytes("")
         );
 
         updateRateDecrease();
     }
 
-    function computeRemoveLiquiditySingleTokenExactIn(
-        uint256 tokenOutIndex,
-        uint256 exactBptAmountIn
-    ) public returns (uint256 amountOut) {
+    function computeRemoveLiquiditySingleTokenExactIn(uint256 tokenOutIndex, uint256 exactBptAmountIn)
+        public
+        returns (uint256 amountOut)
+    {
         assumeValidTradeAmount(exactBptAmountIn);
         tokenOutIndex = boundTokenIndex(tokenOutIndex);
         exactBptAmountIn = boundBptBurn(exactBptAmountIn);
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
 
         medusa.prank(lp);
         amountOut = router.removeLiquiditySingleTokenExactIn(
-            address(pool),
-            exactBptAmountIn,
-            tokens[tokenOutIndex],
-            0,
-            false,
-            bytes("")
+            address(pool), exactBptAmountIn, tokens[tokenOutIndex], 0, false, bytes("")
         );
 
         updateRateDecrease();
@@ -320,19 +275,21 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
         boundedIndex = bound(tokenIndex, 0, len - 1);
     }
 
-    function boundTokenDeposit(
-        uint256 tokenAmountIn,
-        uint256 tokenIndex
-    ) internal view returns (uint256 boundedAmountIn) {
-        (, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(address(pool));
+    function boundTokenDeposit(uint256 tokenAmountIn, uint256 tokenIndex)
+        internal
+        view
+        returns (uint256 boundedAmountIn)
+    {
+        (,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(address(pool));
         boundedAmountIn = bound(tokenAmountIn, 0, _MAX_BALANCE - balancesRaw[tokenIndex]);
     }
 
-    function boundTokenAmountOut(
-        uint256 tokenAmountOut,
-        uint256 tokenIndex
-    ) internal view returns (uint256 boundedAmountOut) {
-        (, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(address(pool));
+    function boundTokenAmountOut(uint256 tokenAmountOut, uint256 tokenIndex)
+        internal
+        view
+        returns (uint256 boundedAmountOut)
+    {
+        (,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(address(pool));
         boundedAmountOut = bound(tokenAmountOut, 0, balancesRaw[tokenIndex]);
     }
 
@@ -347,7 +304,7 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
     }
 
     function boundBalanceLength(uint256[] memory balances) internal view returns (uint256[] memory) {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(address(pool));
         uint256 length = tokens.length;
         assembly {
             mstore(balances, length)
@@ -362,7 +319,7 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
     }
 
     function getMinAmountsOut() internal view returns (uint256[] memory minAmountsOut) {
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         minAmountsOut = new uint256[](balances.length);
 
@@ -372,7 +329,7 @@ contract AddAndRemoveLiquidityMedusaTest is BaseMedusaTest {
     }
 
     function getMaxAmountsIn() internal view returns (uint256[] memory maxAmountsIn) {
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         maxAmountsIn = new uint256[](balances.length);
 

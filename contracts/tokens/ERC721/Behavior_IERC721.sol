@@ -9,49 +9,39 @@ import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
  * @dev Provides assertion helpers for verifying ERC721 behavior
  */
 library Behavior_IERC721 {
-
     /**
      * @notice Verify balanceOf returns expected value
      */
-    function isValid_balanceOf(
-        IERC721 token,
-        address owner,
-        uint256 expectedBalance
-    ) internal view returns (bool) {
+    function isValid_balanceOf(IERC721 token, address owner, uint256 expectedBalance) internal view returns (bool) {
         return token.balanceOf(owner) == expectedBalance;
     }
 
     /**
      * @notice Verify ownerOf returns expected value
      */
-    function isValid_ownerOf(
-        IERC721 token,
-        uint256 tokenId,
-        address expectedOwner
-    ) internal view returns (bool) {
+    function isValid_ownerOf(IERC721 token, uint256 tokenId, address expectedOwner) internal view returns (bool) {
         return token.ownerOf(tokenId) == expectedOwner;
     }
 
     /**
      * @notice Verify getApproved returns expected value
      */
-    function isValid_getApproved(
-        IERC721 token,
-        uint256 tokenId,
-        address expectedApproved
-    ) internal view returns (bool) {
+    function isValid_getApproved(IERC721 token, uint256 tokenId, address expectedApproved)
+        internal
+        view
+        returns (bool)
+    {
         return token.getApproved(tokenId) == expectedApproved;
     }
 
     /**
      * @notice Verify isApprovedForAll returns expected value
      */
-    function isValid_isApprovedForAll(
-        IERC721 token,
-        address owner,
-        address operator,
-        bool expectedApproval
-    ) internal view returns (bool) {
+    function isValid_isApprovedForAll(IERC721 token, address owner, address operator, bool expectedApproval)
+        internal
+        view
+        returns (bool)
+    {
         return token.isApprovedForAll(owner, operator) == expectedApproval;
     }
 
@@ -86,23 +76,18 @@ library Behavior_IERC721 {
     /**
      * @notice Verify approval was set correctly
      */
-    function isValid_approve(
-        IERC721 token,
-        uint256 tokenId,
-        address expectedApproved
-    ) internal view returns (bool) {
+    function isValid_approve(IERC721 token, uint256 tokenId, address expectedApproved) internal view returns (bool) {
         return token.getApproved(tokenId) == expectedApproved;
     }
 
     /**
      * @notice Verify setApprovalForAll was set correctly
      */
-    function isValid_setApprovalForAll(
-        IERC721 token,
-        address owner,
-        address operator,
-        bool expectedApproval
-    ) internal view returns (bool) {
+    function isValid_setApprovalForAll(IERC721 token, address owner, address operator, bool expectedApproval)
+        internal
+        view
+        returns (bool)
+    {
         return token.isApprovedForAll(owner, operator) == expectedApproval;
     }
 }

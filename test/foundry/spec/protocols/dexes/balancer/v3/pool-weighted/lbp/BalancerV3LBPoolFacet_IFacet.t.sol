@@ -6,7 +6,9 @@ import "forge-std/Test.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 import {IBalancerV3LBPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3LBPool.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {BalancerV3LBPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolFacet.sol";
+import {
+    BalancerV3LBPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/lbp/BalancerV3LBPoolFacet.sol";
 
 /**
  * @title BalancerV3LBPoolFacet_IFacet_Test
@@ -181,11 +183,7 @@ contract BalancerV3LBPoolFacet_IFacet_Test is Test {
     /* ---------------------------------------------------------------------- */
 
     function test_facetMetadata_returnsConsistentData() public view {
-        (
-            string memory name,
-            bytes4[] memory interfaces,
-            bytes4[] memory functions
-        ) = facet.facetMetadata();
+        (string memory name, bytes4[] memory interfaces, bytes4[] memory functions) = facet.facetMetadata();
 
         assertEq(name, facet.facetName(), "Name should match facetName()");
         assertEq(interfaces.length, facet.facetInterfaces().length, "Interfaces length should match");

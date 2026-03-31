@@ -136,8 +136,8 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
         escrowType[_mTokenId] = EscrowType.MANAGED;
 
         (address _lockedManagedReward, address _freeManagedReward) = IManagedRewardsFactory(
-            IFactoryRegistry(factoryRegistry).managedRewardsFactory()
-        ).createRewards(forwarder, voter);
+                IFactoryRegistry(factoryRegistry).managedRewardsFactory()
+            ).createRewards(forwarder, voter);
         managedToLocked[_mTokenId] = _lockedManagedReward;
         managedToFree[_mTokenId] = _freeManagedReward;
 
@@ -210,9 +210,9 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
         // adjust managed nft
         LockedBalance memory newLockedManaged = _locked[_mTokenId];
         // do not expect _total > locked.amount / permanentLockBalance but just in case
-        newLockedManaged.amount -= (
-            _total.toInt128() < newLockedManaged.amount ? _total.toInt128() : newLockedManaged.amount
-        );
+        newLockedManaged.amount -= (_total.toInt128() < newLockedManaged.amount
+                    ? _total.toInt128()
+                    : newLockedManaged.amount);
         permanentLockBalance -= (_total < permanentLockBalance ? _total : permanentLockBalance);
         _checkpointDelegatee(_delegates[_mTokenId], _total, false);
         _checkpoint(_mTokenId, _locked[_mTokenId], newLockedManaged);
@@ -240,8 +240,9 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
 
     /// @inheritdoc IVotingEscrow
     function setManagedState(uint256 _mTokenId, bool _state) external {
-        if (_msgSender() != IVoter(voter).emergencyCouncil() && _msgSender() != IVoter(voter).governor())
+        if (_msgSender() != IVoter(voter).emergencyCouncil() && _msgSender() != IVoter(voter).governor()) {
             revert NotEmergencyCouncilOrGovernor();
+        }
         if (escrowType[_mTokenId] != EscrowType.MANAGED) revert NotManagedNFT();
         if (deactivated[_mTokenId] == _state) revert SameState();
         deactivated[_mTokenId] = _state;
@@ -629,13 +630,8 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
             }
         }
 
-        GlobalPoint memory lastPoint = GlobalPoint({
-            bias: 0,
-            slope: 0,
-            ts: block.timestamp,
-            blk: block.number,
-            permanentLockBalance: 0
-        });
+        GlobalPoint memory lastPoint =
+            GlobalPoint({bias: 0, slope: 0, ts: block.timestamp, blk: block.number, permanentLockBalance: 0});
         if (_epoch > 0) {
             lastPoint = _pointHistory[_epoch];
         }
@@ -777,11 +773,8 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
 
         // Set newLocked to _oldLocked without mangling memory
         LockedBalance memory newLocked;
-        (newLocked.amount, newLocked.end, newLocked.isPermanent) = (
-            _oldLocked.amount,
-            _oldLocked.end,
-            _oldLocked.isPermanent
-        );
+        (newLocked.amount, newLocked.end, newLocked.isPermanent) =
+        (_oldLocked.amount, _oldLocked.end, _oldLocked.isPermanent);
 
         // Adding to existing lock, or if a lock is expired - creating a new one
         newLocked.amount += _value.toInt128();
@@ -971,10 +964,11 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
     }
 
     /// @inheritdoc IVotingEscrow
-    function split(
-        uint256 _from,
-        uint256 _amount
-    ) external nonReentrant returns (uint256 _tokenId1, uint256 _tokenId2) {
+    function split(uint256 _from, uint256 _amount)
+        external
+        nonReentrant
+        returns (uint256 _tokenId1, uint256 _tokenId2)
+    {
         address sender = _msgSender();
         address owner = _ownerOf(_from);
         if (owner == address(0)) revert SplitNoOwner();
@@ -1171,13 +1165,7 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
 
     function _checkpointDelegator(uint256 _delegator, uint256 _delegatee, address _owner) internal {
         DelegationLogicLibrary.checkpointDelegator(
-            _locked,
-            numCheckpoints,
-            _checkpoints,
-            _delegates,
-            _delegator,
-            _delegatee,
-            _owner
+            _locked, numCheckpoints, _checkpoints, _delegates, _delegator, _delegatee, _owner
         );
     }
 
@@ -1228,11 +1216,15 @@ contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, Reentranc
         // with 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 - s1 and flip v from 27 to 28 or
         // vice versa. If your library also generates signatures with 0/1 for v instead 27/28, add 27 to v to accept
         // these malleable signatures as well.
-        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) revert InvalidSignatureS();
+        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
+            revert InvalidSignatureS();
+        }
         // bytes32 domainSeparator = keccak256(
         //     abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this))
         // );
-        bytes32 domainSeparator = abi.encode(DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this))._hash();
+        bytes32 domainSeparator = abi.encode(
+                DOMAIN_TYPEHASH, keccak256(bytes(name)), keccak256(bytes(version)), block.chainid, address(this)
+            )._hash();
         // bytes32 structHash = keccak256(abi.encode(DELEGATION_TYPEHASH, delegator, delegatee, nonce, expiry));
         bytes32 structHash = abi.encode(DELEGATION_TYPEHASH, delegator, delegatee, nonce, expiry)._hash();
         // bytes32 digest = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));

@@ -9,7 +9,6 @@ import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 /// @notice Fork tests validating ConstProdUtils quote parity with Uniswap V2 on Ethereum mainnet
 /// @dev Tests use real mainnet pairs via Infura RPC
 contract UniswapV2Utils_Fork is TestBase_UniswapV2Fork {
-
     /* -------------------------------------------------------------------------- */
     /*                        US-CRANE-202.2: Quote/Math Parity                   */
     /* -------------------------------------------------------------------------- */
@@ -190,9 +189,7 @@ contract UniswapV2Utils_Fork is TestBase_UniswapV2Fork {
         uint256 constProdAmountOut = quoteConstProdSale(amountIn, reserveWeth, reserveDai);
 
         assertExactMatch(
-            routerAmountOut,
-            constProdAmountOut,
-            "18/18 decimals: ConstProdUtils._saleQuote should match router"
+            routerAmountOut, constProdAmountOut, "18/18 decimals: ConstProdUtils._saleQuote should match router"
         );
     }
 
@@ -209,9 +206,7 @@ contract UniswapV2Utils_Fork is TestBase_UniswapV2Fork {
         uint256 constProdAmountOut = quoteConstProdSale(amountIn, reserveWeth, reserveUsdt);
 
         assertExactMatch(
-            routerAmountOut,
-            constProdAmountOut,
-            "18/6 decimals: ConstProdUtils._saleQuote should match router"
+            routerAmountOut, constProdAmountOut, "18/6 decimals: ConstProdUtils._saleQuote should match router"
         );
     }
 
@@ -230,9 +225,7 @@ contract UniswapV2Utils_Fork is TestBase_UniswapV2Fork {
         uint256 constProdAmountOut = quoteConstProdSale(amountIn, reserveUsdc, reserveWeth);
 
         assertExactMatch(
-            routerAmountOut,
-            constProdAmountOut,
-            "Reverse direction: ConstProdUtils._saleQuote should match router"
+            routerAmountOut, constProdAmountOut, "Reverse direction: ConstProdUtils._saleQuote should match router"
         );
     }
 }

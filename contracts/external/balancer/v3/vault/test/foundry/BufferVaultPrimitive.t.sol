@@ -7,16 +7,18 @@ import {SafeCastLib} from "@crane/contracts/utils/SafeCastLib.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BufferVaultPrimitiveTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -138,12 +140,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _wrapExactInPath(_wrapAmount, 0, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(balancesBefore, _wrapAmount, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -159,12 +161,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _wrapExactInPath(_wrapAmount, 0, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(balancesBefore, _wrapAmount, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -180,12 +182,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _wrapExactInPath(_wrapAmount, 0, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(balancesBefore, _wrapAmount, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -200,12 +202,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _wrapExactInPath(_wrapAmount, 0, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(balancesBefore, _wrapAmount, pathAmountsOut[0], bufferBalanceBefore, true);
     }
@@ -252,25 +254,18 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), _wrapAmount / 10, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _wrapExactOutPath(
-            2 * _wrapAmount,
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _wrapExactOutPath(2 * _wrapAmount, _vaultPreviewDeposit(waDAI, _wrapAmount), IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(
-            balancesBefore,
-            pathAmountsIn[0],
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            bufferBalanceBefore,
-            false
+            balancesBefore, pathAmountsIn[0], _vaultPreviewDeposit(waDAI, _wrapAmount), bufferBalanceBefore, false
         );
     }
 
@@ -283,25 +278,18 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), (totalUnderlyingInBuffer) / 3, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _wrapExactOutPath(
-            2 * _wrapAmount,
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _wrapExactOutPath(2 * _wrapAmount, _vaultPreviewDeposit(waDAI, _wrapAmount), IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(
-            balancesBefore,
-            pathAmountsIn[0],
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            bufferBalanceBefore,
-            false
+            balancesBefore, pathAmountsIn[0], _vaultPreviewDeposit(waDAI, _wrapAmount), bufferBalanceBefore, false
         );
     }
 
@@ -314,25 +302,18 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), (2 * totalUnderlyingInBuffer) / 3, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _wrapExactOutPath(
-            2 * _wrapAmount,
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _wrapExactOutPath(2 * _wrapAmount, _vaultPreviewDeposit(waDAI, _wrapAmount), IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(
-            balancesBefore,
-            pathAmountsIn[0],
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            bufferBalanceBefore,
-            false
+            balancesBefore, pathAmountsIn[0], _vaultPreviewDeposit(waDAI, _wrapAmount), bufferBalanceBefore, false
         );
     }
 
@@ -344,25 +325,18 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), 2 * _wrapAmount, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _wrapExactOutPath(
-            2 * _wrapAmount,
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _wrapExactOutPath(2 * _wrapAmount, _vaultPreviewDeposit(waDAI, _wrapAmount), IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkWrapResults(
-            balancesBefore,
-            pathAmountsIn[0],
-            _vaultPreviewDeposit(waDAI, _wrapAmount),
-            bufferBalanceBefore,
-            true
+            balancesBefore, pathAmountsIn[0], _vaultPreviewDeposit(waDAI, _wrapAmount), bufferBalanceBefore, true
         );
     }
 
@@ -411,12 +385,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _unwrapExactInPath(wrappedAmountIn, 0, wDai);
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, wrappedAmountIn, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -435,12 +409,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _unwrapExactInPath(wrappedAmountIn, 0, wDai);
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, wrappedAmountIn, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -459,12 +433,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _unwrapExactInPath(wrappedAmountIn, 0, wDai);
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, wrappedAmountIn, pathAmountsOut[0], bufferBalanceBefore, false);
     }
@@ -482,12 +456,12 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         SwapPathExactAmountIn[] memory paths = _unwrapExactInPath(wrappedAmountIn, 0, wDai);
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, wrappedAmountIn, pathAmountsOut[0], bufferBalanceBefore, true);
     }
@@ -504,18 +478,15 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), _wrapAmount / 10, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _unwrapExactOutPath(
-            2 * _vaultPreviewDeposit(waDAI, _wrapAmount),
-            _wrapAmount,
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _unwrapExactOutPath(2 * _vaultPreviewDeposit(waDAI, _wrapAmount), _wrapAmount, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, pathAmountsIn[0], _wrapAmount, bufferBalanceBefore, false);
     }
@@ -529,18 +500,15 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), (totalUnderlyingInBuffer) / 3, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _unwrapExactOutPath(
-            2 * _vaultPreviewDeposit(waDAI, _wrapAmount),
-            _wrapAmount,
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _unwrapExactOutPath(2 * _vaultPreviewDeposit(waDAI, _wrapAmount), _wrapAmount, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, pathAmountsIn[0], _wrapAmount, bufferBalanceBefore, false);
     }
@@ -554,18 +522,15 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), (2 * totalUnderlyingInBuffer) / 3, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _unwrapExactOutPath(
-            _vaultPreviewWithdraw(waDAI, _wrapAmount),
-            _wrapAmount,
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _unwrapExactOutPath(_vaultPreviewWithdraw(waDAI, _wrapAmount), _wrapAmount, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, pathAmountsIn[0], _wrapAmount, bufferBalanceBefore, false);
     }
@@ -578,18 +543,15 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vm.prank(lp);
         bufferRouter.initializeBuffer(IERC4626(address(waDAI)), 2 * _wrapAmount, wrappedAmount, 0);
 
-        SwapPathExactAmountOut[] memory paths = _unwrapExactOutPath(
-            2 * _vaultPreviewDeposit(waDAI, _wrapAmount),
-            _wrapAmount,
-            IERC20(address(waDAI))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _unwrapExactOutPath(2 * _vaultPreviewDeposit(waDAI, _wrapAmount), _wrapAmount, IERC20(address(waDAI)));
 
-        (, , IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
+        (,, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaDaiBuffer();
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
         BufferBalance memory bufferBalanceBefore = _getBufferBalance();
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(paths, MAX_UINT256, false, bytes(""));
 
         _checkUnwrapResults(balancesBefore, pathAmountsIn[0], _wrapAmount, bufferBalanceBefore, true);
     }
@@ -688,9 +650,7 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         );
 
         assertEq(
-            afterBalances.vault.dai,
-            beforeBalances.vault.dai + expectedUnderlyingAmountIn,
-            "Vault DAI balance is wrong"
+            afterBalances.vault.dai, beforeBalances.vault.dai + expectedUnderlyingAmountIn, "Vault DAI balance is wrong"
         );
         assertEq(
             afterBalances.vault.waDai,
@@ -710,11 +670,7 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         );
 
         assertEq(afterBalances.lp.dai, beforeBalances.lp.dai - expectedUnderlyingAmountIn, "LP DAI balance is wrong");
-        assertEq(
-            afterBalances.lp.waDai,
-            beforeBalances.lp.waDai - expectedWrappedAmountIn,
-            "LP waDAI balance is wrong"
-        );
+        assertEq(afterBalances.lp.waDai, beforeBalances.lp.waDai - expectedWrappedAmountIn, "LP waDAI balance is wrong");
 
         assertEq(
             lpSharesBeforeAdd + lpSharesToAdd,
@@ -760,12 +716,8 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
             uint256 expectedSecondAddWrapped = bufferWrappedBalance.mulDivUp(secondAddShares, totalShares);
 
             vm.prank(lp);
-            (secondAddUnderlying, secondAddWrapped) = bufferRouter.addLiquidityToBuffer(
-                waDAI,
-                MAX_UINT128,
-                MAX_UINT128,
-                secondAddShares
-            );
+            (secondAddUnderlying, secondAddWrapped) =
+                bufferRouter.addLiquidityToBuffer(waDAI, MAX_UINT128, MAX_UINT128, secondAddShares);
             assertEq(secondAddUnderlying, expectedSecondAddUnderlying, "Wrong second underlying added");
             assertEq(secondAddWrapped, expectedSecondAddWrapped, "Wrong second wrapped added");
         }
@@ -778,12 +730,8 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         // Will get 1333.333/3333.333 = 40% of value:
         // [0.4 * 3000, 0.4 * 1000] = [1200 underlying, 400 wrapped] - worth 2000 = amount in.
         vm.prank(lp);
-        (uint256 removedUnderlying, uint256 removedWrapped) = vault.removeLiquidityFromBuffer(
-            waDAI,
-            secondAddShares,
-            0,
-            0
-        );
+        (uint256 removedUnderlying, uint256 removedWrapped) =
+            vault.removeLiquidityFromBuffer(waDAI, secondAddShares, 0, 0);
 
         assertApproxEqAbs(removedUnderlying, expectedUnderlyingOut, 1e6, "Wrong underlying amount removed");
         assertApproxEqAbs(removedWrapped, expectedWrappedOut, 1e6, "Wrong wrapped amount removed");
@@ -899,23 +847,13 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         BufferAndLPBalances memory afterBalances = _measureBuffer();
 
+        assertEq(afterBalances.buffer.dai, beforeBalances.buffer.dai - underlyingRemoved, "Buffer DAI balance is wrong");
         assertEq(
-            afterBalances.buffer.dai,
-            beforeBalances.buffer.dai - underlyingRemoved,
-            "Buffer DAI balance is wrong"
-        );
-        assertEq(
-            afterBalances.buffer.waDai,
-            beforeBalances.buffer.waDai - wrappedRemoved,
-            "Buffer waDAI balance is wrong"
+            afterBalances.buffer.waDai, beforeBalances.buffer.waDai - wrappedRemoved, "Buffer waDAI balance is wrong"
         );
 
         assertEq(afterBalances.vault.dai, beforeBalances.vault.dai - underlyingRemoved, "Vault DAI balance is wrong");
-        assertEq(
-            afterBalances.vault.waDai,
-            beforeBalances.vault.waDai - wrappedRemoved,
-            "Vault waDAI balance is wrong"
-        );
+        assertEq(afterBalances.vault.waDai, beforeBalances.vault.waDai - wrappedRemoved, "Vault waDAI balance is wrong");
 
         assertEq(
             afterBalances.vaultReserves.dai,
@@ -957,12 +895,8 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn{ value: _wrapAmount + 1 ether }(
-            paths,
-            MAX_UINT256,
-            true,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsOut,,) =
+            batchRouter.swapExactIn{value: _wrapAmount + 1 ether}(paths, MAX_UINT256, true, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(lp, tokens);
 
@@ -988,21 +922,14 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
 
         (, uint256 waWethIdx, IERC20[] memory tokens) = _getTokenArrayAndIndexesOfWaWethBuffer();
 
-        SwapPathExactAmountOut[] memory paths = _wrapExactOutPath(
-            2 * _wrapAmount,
-            _vaultPreviewDeposit(waWETH, _wrapAmount),
-            IERC20(address(waWETH))
-        );
+        SwapPathExactAmountOut[] memory paths =
+            _wrapExactOutPath(2 * _wrapAmount, _vaultPreviewDeposit(waWETH, _wrapAmount), IERC20(address(waWETH)));
 
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp, tokens);
 
         vm.prank(lp);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut{ value: _wrapAmount * 2 + 1 ether }(
-            paths,
-            MAX_UINT256,
-            true,
-            bytes("")
-        );
+        (uint256[] memory pathAmountsIn,,) =
+            batchRouter.swapExactOut{value: _wrapAmount * 2 + 1 ether}(paths, MAX_UINT256, true, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(lp, tokens);
 
@@ -1043,87 +970,75 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
         vars.vaultReserves.waDai = vault.getReservesOf(IERC20(address(waDAI)));
     }
 
-    function _wrapExactInPath(
-        uint256 exactAmountIn,
-        uint256 minAmountOut,
-        IERC20 wrappedToken
-    ) private view returns (SwapPathExactAmountIn[] memory paths) {
+    function _wrapExactInPath(uint256 exactAmountIn, uint256 minAmountOut, IERC20 wrappedToken)
+        private
+        view
+        returns (SwapPathExactAmountIn[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
         paths = new SwapPathExactAmountIn[](1);
 
         IERC20 tokenIn = IERC20(IERC4626(address(wrappedToken)).asset());
         IERC20 tokenOut = wrappedToken;
 
-        steps[0] = SwapPathStep({ pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true});
 
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: tokenIn,
-            steps: steps,
-            exactAmountIn: exactAmountIn,
-            minAmountOut: minAmountOut
+            tokenIn: tokenIn, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: minAmountOut
         });
     }
 
-    function _unwrapExactInPath(
-        uint256 exactAmountIn,
-        uint256 minAmountOut,
-        IERC20 wrappedToken
-    ) private view returns (SwapPathExactAmountIn[] memory paths) {
+    function _unwrapExactInPath(uint256 exactAmountIn, uint256 minAmountOut, IERC20 wrappedToken)
+        private
+        view
+        returns (SwapPathExactAmountIn[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
         paths = new SwapPathExactAmountIn[](1);
 
         IERC20 tokenIn = wrappedToken;
         IERC20 tokenOut = IERC20(IERC4626(address(wrappedToken)).asset());
 
-        steps[0] = SwapPathStep({ pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true});
 
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: tokenIn,
-            steps: steps,
-            exactAmountIn: exactAmountIn,
-            minAmountOut: minAmountOut
+            tokenIn: tokenIn, steps: steps, exactAmountIn: exactAmountIn, minAmountOut: minAmountOut
         });
     }
 
-    function _wrapExactOutPath(
-        uint256 maxAmountIn,
-        uint256 exactAmountOut,
-        IERC20 wrappedToken
-    ) private view returns (SwapPathExactAmountOut[] memory paths) {
+    function _wrapExactOutPath(uint256 maxAmountIn, uint256 exactAmountOut, IERC20 wrappedToken)
+        private
+        view
+        returns (SwapPathExactAmountOut[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
         paths = new SwapPathExactAmountOut[](1);
 
         IERC20 tokenIn = IERC20(IERC4626(address(wrappedToken)).asset());
         IERC20 tokenOut = wrappedToken;
 
-        steps[0] = SwapPathStep({ pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true});
 
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: tokenIn,
-            steps: steps,
-            maxAmountIn: maxAmountIn,
-            exactAmountOut: exactAmountOut
+            tokenIn: tokenIn, steps: steps, maxAmountIn: maxAmountIn, exactAmountOut: exactAmountOut
         });
     }
 
-    function _unwrapExactOutPath(
-        uint256 maxAmountIn,
-        uint256 exactAmountOut,
-        IERC20 wrappedToken
-    ) private view returns (SwapPathExactAmountOut[] memory paths) {
+    function _unwrapExactOutPath(uint256 maxAmountIn, uint256 exactAmountOut, IERC20 wrappedToken)
+        private
+        view
+        returns (SwapPathExactAmountOut[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](1);
         paths = new SwapPathExactAmountOut[](1);
 
         IERC20 tokenIn = wrappedToken;
         IERC20 tokenOut = IERC20(IERC4626(address(wrappedToken)).asset());
 
-        steps[0] = SwapPathStep({ pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true });
+        steps[0] = SwapPathStep({pool: address(wrappedToken), tokenOut: tokenOut, isBuffer: true});
 
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: tokenIn,
-            steps: steps,
-            maxAmountIn: maxAmountIn,
-            exactAmountOut: exactAmountOut
+            tokenIn: tokenIn, steps: steps, maxAmountIn: maxAmountIn, exactAmountOut: exactAmountOut
         });
     }
 
@@ -1162,8 +1077,8 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
                 "Buffer is not balanced"
             );
         }
-        int256 bufferUnderlyingImbalance = int256(bufferBalanceAfter.underlying) -
-            int256(bufferBalanceBefore.underlying);
+        int256 bufferUnderlyingImbalance =
+            int256(bufferBalanceAfter.underlying) - int256(bufferBalanceBefore.underlying);
         int256 bufferWrappedImbalance = int256(bufferBalanceAfter.wrapped) - int256(bufferBalanceBefore.wrapped);
 
         if (withBufferLiquidity) {
@@ -1323,9 +1238,8 @@ contract BufferVaultPrimitiveTest is BaseVaultTest {
     }
 
     function _getBufferBalance() private view returns (BufferBalance memory bufferBalance) {
-        (uint256 bufferUnderlyingBalance, uint256 bufferWrappedBalance) = vault.getBufferBalance(
-            IERC4626(address(waDAI))
-        );
+        (uint256 bufferUnderlyingBalance, uint256 bufferWrappedBalance) =
+            vault.getBufferBalance(IERC4626(address(waDAI)));
         bufferBalance.underlying = bufferUnderlyingBalance;
         bufferBalance.wrapped = bufferWrappedBalance;
     }

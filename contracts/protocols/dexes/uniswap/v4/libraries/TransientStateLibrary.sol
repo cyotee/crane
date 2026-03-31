@@ -12,7 +12,6 @@ import {Lock} from "./Lock.sol";
 library TransientStateLibrary {
     /// @notice returns the reserves for the synced currency
     /// @param manager The pool manager contract.
-
     /// @return uint256 The reserves of the currency.
     /// @dev returns 0 if the reserves are not synced or value is 0.
     /// Checks the synced currency to only return valid reserve values (after a sync and before a settle).

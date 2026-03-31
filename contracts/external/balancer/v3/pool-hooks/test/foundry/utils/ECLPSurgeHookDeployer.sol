@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { ECLPSurgeHook } from "../../../contracts/ECLPSurgeHook.sol";
-import { ECLPSurgeHookMock } from "../../../contracts/test/ECLPSurgeHookMock.sol";
-import { ECLPSurgePoolFactory } from "../../../contracts/ECLPSurgePoolFactory.sol";
+import {ECLPSurgeHook} from "../../../contracts/ECLPSurgeHook.sol";
+import {ECLPSurgeHookMock} from "../../../contracts/test/ECLPSurgeHookMock.sol";
+import {ECLPSurgePoolFactory} from "../../../contracts/ECLPSurgePoolFactory.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "ECLPSurgeHook".
@@ -36,13 +38,12 @@ contract ECLPSurgeHookDeployer is BaseContractsDeployer {
         string memory version
     ) internal returns (ECLPSurgeHook) {
         if (reusingArtifacts) {
-            return
-                ECLPSurgeHook(
-                    deployCode(
-                        "artifacts/contracts/ECLPSurgeHook.sol/ECLPSurgeHook.json",
-                        abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
-                    )
-                );
+            return ECLPSurgeHook(
+                deployCode(
+                    "artifacts/contracts/ECLPSurgeHook.sol/ECLPSurgeHook.json",
+                    abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
+                )
+            );
         } else {
             return new ECLPSurgeHook(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version);
         }
@@ -55,13 +56,12 @@ contract ECLPSurgeHookDeployer is BaseContractsDeployer {
         string memory version
     ) internal returns (ECLPSurgeHookMock) {
         if (reusingArtifacts) {
-            return
-                ECLPSurgeHookMock(
-                    deployCode(
-                        "artifacts/contracts/test/ECLPSurgeHookMock.sol/ECLPSurgeHookMock.json",
-                        abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
-                    )
-                );
+            return ECLPSurgeHookMock(
+                deployCode(
+                    "artifacts/contracts/test/ECLPSurgeHookMock.sol/ECLPSurgeHookMock.json",
+                    abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
+                )
+            );
         } else {
             return new ECLPSurgeHookMock(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version);
         }

@@ -4,26 +4,30 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 import {SafeCastLib} from "@crane/contracts/utils/SafeCastLib.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
 
-import { IRouterCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { StorageSlotExtension } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import { ReentrancyAttack } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ReentrancyAttack.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    ReentrancyAttack
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ReentrancyAttack.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
-import { RouterCommonMock } from "../../contracts/test/RouterCommonMock.sol";
-import { RouterWethLib } from "../../contracts/lib/RouterWethLib.sol";
-import { RouterCommon } from "../../contracts/RouterCommon.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
+import {RouterCommonMock} from "../../contracts/test/RouterCommonMock.sol";
+import {RouterWethLib} from "../../contracts/lib/RouterWethLib.sol";
+import {RouterCommon} from "../../contracts/RouterCommon.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract RouterCommonTest is BaseVaultTest {
     using Address for address payable;
@@ -54,8 +58,8 @@ contract RouterCommonTest is BaseVaultTest {
     function testSenderSlot() external view {
         assertEq(
             StorageSlotExtension.AddressSlotType.unwrap(routerMock.manualGetSenderSlot()),
-            keccak256(abi.encode(uint256(keccak256("balancer-labs.v3.storage.SenderGuard.sender")) - 1)) &
-                ~bytes32(uint256(0xff))
+            keccak256(abi.encode(uint256(keccak256("balancer-labs.v3.storage.SenderGuard.sender")) - 1))
+                & ~bytes32(uint256(0xff))
         );
     }
 
@@ -127,7 +131,7 @@ contract RouterCommonTest is BaseVaultTest {
 
         vm.startPrank(lp);
         uint256 wethDeposit = lp.balance / 10;
-        weth.deposit{ value: wethDeposit }();
+        weth.deposit{value: wethDeposit}();
         weth.transfer(address(vault), wethDeposit);
         vault.settle(weth, wethDeposit);
         vm.stopPrank();
@@ -170,7 +174,7 @@ contract RouterCommonTest is BaseVaultTest {
     function testSaveSenderAndManageEthModifierWithSingleFunction() public {
         uint256 balanceBefore = alice.balance;
         vm.prank(alice);
-        routerMock.multicall{ value: 1 ether }(new bytes[](0));
+        routerMock.multicall{value: 1 ether}(new bytes[](0));
         uint256 balanceAfter = alice.balance;
 
         assertEq(balanceAfter, balanceBefore, "Value wasn't returned");
@@ -189,7 +193,7 @@ contract RouterCommonTest is BaseVaultTest {
         calls[2] = abi.encodeWithSelector(RouterCommonMock.assertETHBalance.selector, balanceBefore - extraAmount);
 
         vm.prank(alice);
-        routerMock.multicall{ value: 1 ether }(calls);
+        routerMock.multicall{value: 1 ether}(calls);
         uint256 balanceAfter = alice.balance;
 
         assertEq(balanceAfter, balanceBefore, "Value wasn't returned");

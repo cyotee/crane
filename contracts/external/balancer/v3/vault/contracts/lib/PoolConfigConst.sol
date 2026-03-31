@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FEE_BITLENGTH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FEE_BITLENGTH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 /**
  * @notice Helper functions to read and write the packed configuration flags stored in `_poolConfigBits`.

@@ -5,7 +5,9 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol";
 
@@ -292,10 +294,7 @@ contract TokenConfigUtils_Test is Test {
         TokenConfig[] memory sorted = configs._sort();
 
         // First token should have lower address
-        assertTrue(
-            address(sorted[0].token) < address(sorted[1].token),
-            "Tokens should be sorted by address"
-        );
+        assertTrue(address(sorted[0].token) < address(sorted[1].token), "Tokens should be sorted by address");
     }
 
     function testFuzz_sort_threeTokens_alwaysSorted(address tokenA, address tokenB, address tokenC) public pure {
@@ -314,12 +313,10 @@ contract TokenConfigUtils_Test is Test {
         assertTrue(address(sorted[1].token) < address(sorted[2].token), "1 < 2");
     }
 
-    function testFuzz_sort_fourTokens_alwaysSorted(
-        address tokenA,
-        address tokenB,
-        address tokenC,
-        address tokenD
-    ) public pure {
+    function testFuzz_sort_fourTokens_alwaysSorted(address tokenA, address tokenB, address tokenC, address tokenD)
+        public
+        pure
+    {
         vm.assume(tokenA != address(0) && tokenB != address(0));
         vm.assume(tokenC != address(0) && tokenD != address(0));
         vm.assume(tokenA != tokenB && tokenA != tokenC && tokenA != tokenD);
@@ -364,10 +361,7 @@ contract TokenConfigUtils_Test is Test {
      *      then asserts that after sorting, each token still maps to its original metadata.
      *      This directly guards against regressions of the "swap only token address" bug class.
      */
-    function testFuzz_sort_preservesFieldAlignment_twoTokens(
-        address tokenA,
-        address tokenB
-    ) public pure {
+    function testFuzz_sort_preservesFieldAlignment_twoTokens(address tokenA, address tokenB) public pure {
         vm.assume(tokenA != address(0) && tokenB != address(0));
         vm.assume(tokenA != tokenB);
 
@@ -387,11 +381,10 @@ contract TokenConfigUtils_Test is Test {
     /**
      * @notice Fuzz test for 3-token field alignment preservation.
      */
-    function testFuzz_sort_preservesFieldAlignment_threeTokens(
-        address tokenA,
-        address tokenB,
-        address tokenC
-    ) public pure {
+    function testFuzz_sort_preservesFieldAlignment_threeTokens(address tokenA, address tokenB, address tokenC)
+        public
+        pure
+    {
         vm.assume(tokenA != address(0) && tokenB != address(0) && tokenC != address(0));
         vm.assume(tokenA != tokenB && tokenB != tokenC && tokenA != tokenC);
 
@@ -481,8 +474,7 @@ contract TokenConfigUtils_Test is Test {
             string.concat("rateProvider mismatch for token ", vm.toString(token))
         );
         assertTrue(
-            config.tokenType == expectedTokenType,
-            string.concat("tokenType mismatch for token ", vm.toString(token))
+            config.tokenType == expectedTokenType, string.concat("tokenType mismatch for token ", vm.toString(token))
         );
         assertEq(
             config.paysYieldFees,
@@ -491,12 +483,11 @@ contract TokenConfigUtils_Test is Test {
         );
     }
 
-    function _createConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

@@ -4,8 +4,7 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {SlipstreamRewardUtils} from
-    "@crane/contracts/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.sol";
+import {SlipstreamRewardUtils} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.sol";
 
 /// @title SlipstreamRewardUtils Tests
 /// @notice Unit tests for SlipstreamRewardUtils library
@@ -188,7 +187,8 @@ contract SlipstreamRewardUtilsTest is Test {
         uint128 liquidity = 50e18;
         uint256 positionLastGrowth = 5 * Q128;
 
-        uint256 pending = SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, liquidity, positionLastGrowth);
+        uint256 pending =
+            SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, liquidity, positionLastGrowth);
 
         // Growth delta = 10 * Q128 - 5 * Q128 = 5 * Q128
         // Pending = (5 * Q128 * 50e18) / Q128 = 5 * 50e18 = 250e18
@@ -215,7 +215,8 @@ contract SlipstreamRewardUtilsTest is Test {
             positionRewardGrowthInsideLastX128: 20 * Q128
         });
 
-        SlipstreamRewardUtils.RewardEstimateResult memory result = SlipstreamRewardUtils._estimatePendingRewardDetailed(params);
+        SlipstreamRewardUtils.RewardEstimateResult memory result =
+            SlipstreamRewardUtils._estimatePendingRewardDetailed(params);
 
         // Growth delta = 50 * Q128 - 20 * Q128 = 30 * Q128
         // Pending = (30 * Q128 * 25e18) / Q128 = 750e18
@@ -294,7 +295,8 @@ contract SlipstreamRewardUtilsTest is Test {
         uint128 liquidity = 50e18;
         uint256 duration = 1 days;
 
-        uint256 estimated = SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, duration);
+        uint256 estimated =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, duration);
 
         // Rate per liquidity = 1e18 * Q128 / 100e18
         // Estimated = ratePerLiq * duration * liquidity / Q128
@@ -316,7 +318,8 @@ contract SlipstreamRewardUtilsTest is Test {
         uint128 liquidity = 50e18;
         uint256 requestedDuration = 7 days; // More than remaining
 
-        uint256 estimated = SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, requestedDuration);
+        uint256 estimated =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, requestedDuration);
 
         // Should be capped at 1 day (allow 1 wei rounding)
         uint256 expectedForOneDay = 43200e18;
@@ -337,7 +340,8 @@ contract SlipstreamRewardUtilsTest is Test {
         uint128 liquidity = 100e18;
         uint256 liquidityValue = 1000e18; // Value in reward tokens
 
-        uint256 aprBps = SlipstreamRewardUtils._calculateRewardAPR(pool, tickLower, tickUpper, liquidity, liquidityValue);
+        uint256 aprBps =
+            SlipstreamRewardUtils._calculateRewardAPR(pool, tickLower, tickUpper, liquidity, liquidityValue);
 
         // Yearly rewards = 1e18/s * 365 days * (100e18/100e18) = ~31.5M tokens
         // APR = (31536000e18 / 1000e18) * 10000 = 315360000 bps = 31536x
@@ -385,10 +389,7 @@ contract SlipstreamRewardUtilsTest is Test {
     /*                              Fuzz Tests                                    */
     /* -------------------------------------------------------------------------- */
 
-    function testFuzz_estimatePendingReward(
-        uint128 posLiquidity,
-        uint256 rewardGrowthDelta
-    ) public {
+    function testFuzz_estimatePendingReward(uint128 posLiquidity, uint256 rewardGrowthDelta) public {
         // Warp to reasonable timestamp
         vm.warp(1_000_000);
 
@@ -486,8 +487,8 @@ contract MockRewardPool is ICLPool {
         _rewardGrowthGlobalX128 = growth;
     }
 
-    function setStakedLiquidity(uint128 liquidity) external {
-        _stakedLiquidity = liquidity;
+    function setStakedLiquidity(uint128 liquidity_) external {
+        _stakedLiquidity = liquidity_;
     }
 
     function setCurrentTick(int24 tick) external {
@@ -599,18 +600,7 @@ contract MockRewardPool is ICLPool {
         external
         pure
         override
-        returns (
-            uint128,
-            int128,
-            int128,
-            uint256,
-            uint256,
-            uint256,
-            int56,
-            uint160,
-            uint32,
-            bool
-        )
+        returns (uint128, int128, int128, uint256, uint256, uint256, int56, uint160, uint32, bool)
     {
         return (0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
@@ -627,12 +617,7 @@ contract MockRewardPool is ICLPool {
         return (0, 0, 0, false);
     }
 
-    function getRewardGrowthInside(int24 tickLower, int24 tickUpper, uint256)
-        external
-        view
-        override
-        returns (uint256)
-    {
+    function getRewardGrowthInside(int24 tickLower, int24 tickUpper, uint256) external view override returns (uint256) {
         bytes32 key = keccak256(abi.encode(tickLower, tickUpper));
         return _rewardGrowthInside[key];
     }
@@ -655,7 +640,12 @@ contract MockRewardPool is ICLPool {
         return (0, 0);
     }
 
-    function collect(address, int24, int24, uint128, uint128, address) external pure override returns (uint128, uint128) {
+    function collect(address, int24, int24, uint128, uint128, address)
+        external
+        pure
+        override
+        returns (uint128, uint128)
+    {
         return (0, 0);
     }
 

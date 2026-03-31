@@ -12,7 +12,9 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
@@ -38,24 +40,25 @@ import {
 } from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/BalancerV3VaultDFPkg.sol";
 
 // Vault Facets
-import {VaultTransientFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
-import {VaultSwapFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
-import {VaultLiquidityFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
-import {VaultBufferFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
-import {VaultPoolTokenFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
-import {VaultQueryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
-import {VaultRegistrationFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
-import {VaultAdminFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
-import {VaultRecoveryFacet} from
-    "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
+import {
+    VaultTransientFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultTransientFacet.sol";
+import {VaultSwapFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultSwapFacet.sol";
+import {
+    VaultLiquidityFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultLiquidityFacet.sol";
+import {VaultBufferFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultBufferFacet.sol";
+import {
+    VaultPoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultPoolTokenFacet.sol";
+import {VaultQueryFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultQueryFacet.sol";
+import {
+    VaultRegistrationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRegistrationFacet.sol";
+import {VaultAdminFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultAdminFacet.sol";
+import {
+    VaultRecoveryFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/diamond/facets/VaultRecoveryFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              TestBase & Behavior                           */
@@ -212,7 +215,6 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
             IAuthorizer(address(vaultAuthorizer)),
             IProtocolFeeController(address(vaultProtocolFeeController))
         );
-
     }
 
     function setUp() public override {
@@ -239,10 +241,7 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
      */
     function _deployIntegrationRouter() internal returns (address router) {
         router = _deployRouter(
-            IVault(realVault),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            DEFAULT_ROUTER_VERSION
+            IVault(realVault), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), DEFAULT_ROUTER_VERSION
         );
     }
 
@@ -257,11 +256,7 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
         address router = _deployIntegrationRouter();
         IRouterCommon routerCommon = IRouterCommon(router);
 
-        assertEq(
-            address(routerCommon.getVault()),
-            realVault,
-            "Router should point to real Vault Diamond"
-        );
+        assertEq(address(routerCommon.getVault()), realVault, "Router should point to real Vault Diamond");
     }
 
     /**
@@ -295,26 +290,13 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
 
         IERC165 vaultErc165 = IERC165(vaultAddr);
 
+        assertTrue(vaultErc165.supportsInterface(type(IERC165).interfaceId), "Vault should support IERC165");
+        assertTrue(vaultErc165.supportsInterface(type(IDiamondLoupe).interfaceId), "Vault should support IDiamondLoupe");
+        assertTrue(vaultErc165.supportsInterface(type(IVaultMain).interfaceId), "Vault should support IVaultMain");
         assertTrue(
-            vaultErc165.supportsInterface(type(IERC165).interfaceId),
-            "Vault should support IERC165"
+            vaultErc165.supportsInterface(type(IVaultExtension).interfaceId), "Vault should support IVaultExtension"
         );
-        assertTrue(
-            vaultErc165.supportsInterface(type(IDiamondLoupe).interfaceId),
-            "Vault should support IDiamondLoupe"
-        );
-        assertTrue(
-            vaultErc165.supportsInterface(type(IVaultMain).interfaceId),
-            "Vault should support IVaultMain"
-        );
-        assertTrue(
-            vaultErc165.supportsInterface(type(IVaultExtension).interfaceId),
-            "Vault should support IVaultExtension"
-        );
-        assertTrue(
-            vaultErc165.supportsInterface(type(IVaultAdmin).interfaceId),
-            "Vault should support IVaultAdmin"
-        );
+        assertTrue(vaultErc165.supportsInterface(type(IVaultAdmin).interfaceId), "Vault should support IVaultAdmin");
     }
 
     /**
@@ -327,13 +309,9 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
         IDiamondLoupe loupe = IDiamondLoupe(vaultAddr);
 
         // Verify key selectors from each Vault interface resolve to facets
+        assertTrue(loupe.facetAddress(IVaultMain.swap.selector) != address(0), "swap selector should resolve");
         assertTrue(
-            loupe.facetAddress(IVaultMain.swap.selector) != address(0),
-            "swap selector should resolve"
-        );
-        assertTrue(
-            loupe.facetAddress(IVaultMain.addLiquidity.selector) != address(0),
-            "addLiquidity selector should resolve"
+            loupe.facetAddress(IVaultMain.addLiquidity.selector) != address(0), "addLiquidity selector should resolve"
         );
         assertTrue(
             loupe.facetAddress(IVaultMain.removeLiquidity.selector) != address(0),
@@ -360,16 +338,8 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
         IVaultAdmin vaultAdmin_ = IVaultAdmin(vaultAddr);
 
         // Verify vault configuration was initialized
-        assertEq(
-            vaultAdmin_.getMinimumTradeAmount(),
-            MINIMUM_TRADE_AMOUNT,
-            "Minimum trade amount should match"
-        );
-        assertEq(
-            vaultAdmin_.getMinimumWrapAmount(),
-            MINIMUM_WRAP_AMOUNT,
-            "Minimum wrap amount should match"
-        );
+        assertEq(vaultAdmin_.getMinimumTradeAmount(), MINIMUM_TRADE_AMOUNT, "Minimum trade amount should match");
+        assertEq(vaultAdmin_.getMinimumWrapAmount(), MINIMUM_WRAP_AMOUNT, "Minimum wrap amount should match");
 
         // Verify vault is not paused
         assertFalse(vaultAdmin_.isVaultPaused(), "Vault should not be paused initially");
@@ -380,10 +350,7 @@ contract BalancerV3RouterVaultIntegrationTest is TestBase_BalancerV3Router {
      */
     function test_integration_routerDeploymentIsDeterministic() public {
         address expectedRouter = _calcRouterAddress(
-            IVault(realVault),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            DEFAULT_ROUTER_VERSION
+            IVault(realVault), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), DEFAULT_ROUTER_VERSION
         );
 
         address router = _deployIntegrationRouter();

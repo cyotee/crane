@@ -5,8 +5,12 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IPool} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPool.sol";
 import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRouter.sol";
 import {IPoolFactory} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPoolFactory.sol";
-import {AerodromeServiceVolatile} from "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceVolatile.sol";
-import {TestBase_Aerodrome_Pools} from "@crane/contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome_Pools.sol";
+import {
+    AerodromeServiceVolatile
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceVolatile.sol";
+import {
+    TestBase_Aerodrome_Pools
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/test/bases/TestBase_Aerodrome_Pools.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
@@ -135,17 +139,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroBalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory params = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroBalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            amountIn: depositAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory params =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroBalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                amountIn: depositAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceVolatile._swapDepositVolatile(params);
 
@@ -166,17 +171,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroUnbalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory params = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroUnbalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroUnbalancedTokenA)),
-            opposingToken: IERC20(address(aeroUnbalancedTokenB)),
-            amountIn: depositAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory params =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroUnbalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroUnbalancedTokenA)),
+                opposingToken: IERC20(address(aeroUnbalancedTokenB)),
+                amountIn: depositAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceVolatile._swapDepositVolatile(params);
 
@@ -197,17 +203,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroBalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory params = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroBalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroBalancedTokenB)),
-            opposingToken: IERC20(address(aeroBalancedTokenA)),
-            amountIn: depositAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory params =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroBalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroBalancedTokenB)),
+                opposingToken: IERC20(address(aeroBalancedTokenA)),
+                amountIn: depositAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceVolatile._swapDepositVolatile(params);
 
@@ -232,16 +239,17 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
 
         uint256 balanceBBefore = aeroBalancedTokenB.balanceOf(address(this));
 
-        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory params = AerodromeServiceVolatile.WithdrawSwapVolatileParams({
-            aerodromeRouter: IRouter(address(aerodromeRouter)),
-            pool: IPool(address(aeroBalancedPool)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            tokenOut: IERC20(address(aeroBalancedTokenB)),
-            opposingToken: IERC20(address(aeroBalancedTokenA)),
-            lpBurnAmt: lpBalance,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory params =
+            AerodromeServiceVolatile.WithdrawSwapVolatileParams({
+                aerodromeRouter: IRouter(address(aerodromeRouter)),
+                pool: IPool(address(aeroBalancedPool)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                tokenOut: IERC20(address(aeroBalancedTokenB)),
+                opposingToken: IERC20(address(aeroBalancedTokenA)),
+                lpBurnAmt: lpBalance,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 amountOut = AerodromeServiceVolatile._withdrawSwapVolatile(params);
 
@@ -262,16 +270,17 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
 
         uint256 balanceABefore = aeroBalancedTokenA.balanceOf(address(this));
 
-        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory params = AerodromeServiceVolatile.WithdrawSwapVolatileParams({
-            aerodromeRouter: IRouter(address(aerodromeRouter)),
-            pool: IPool(address(aeroBalancedPool)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            tokenOut: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            lpBurnAmt: withdrawAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory params =
+            AerodromeServiceVolatile.WithdrawSwapVolatileParams({
+                aerodromeRouter: IRouter(address(aerodromeRouter)),
+                pool: IPool(address(aeroBalancedPool)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                tokenOut: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                lpBurnAmt: withdrawAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 amountOut = AerodromeServiceVolatile._withdrawSwapVolatile(params);
 
@@ -292,17 +301,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroBalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory params = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroBalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            amountIn: 1000e18,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory params =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroBalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                amountIn: 1000e18,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 saleAmt = AerodromeServiceVolatile._quoteSwapDepositSaleAmtVolatile(params);
 
@@ -349,17 +359,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroBalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory params = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroBalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            amountIn: depositAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory params =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroBalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                amountIn: depositAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceVolatile._swapDepositVolatile(params);
 
@@ -380,17 +391,18 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         address token0 = aeroBalancedPool.token0();
         IERC20 token0Ierc20 = IERC20(token0);
 
-        AerodromeServiceVolatile.SwapDepositVolatileParams memory depositParams = AerodromeServiceVolatile.SwapDepositVolatileParams({
-            router: IRouter(address(aerodromeRouter)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            pool: IPool(address(aeroBalancedPool)),
-            token0: token0Ierc20,
-            tokenIn: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            amountIn: initialAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.SwapDepositVolatileParams memory depositParams =
+            AerodromeServiceVolatile.SwapDepositVolatileParams({
+                router: IRouter(address(aerodromeRouter)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                pool: IPool(address(aeroBalancedPool)),
+                token0: token0Ierc20,
+                tokenIn: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                amountIn: initialAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 lpAmount = AerodromeServiceVolatile._swapDepositVolatile(depositParams);
         assertGt(lpAmount, 0, "Should have LP tokens after deposit");
@@ -398,16 +410,17 @@ contract AerodromeServiceVolatile_Test is TestBase_Aerodrome_Pools {
         // Step 2: Withdraw swap to get back tokenA
         aeroBalancedPool.approve(address(aerodromeRouter), lpAmount);
 
-        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory withdrawParams = AerodromeServiceVolatile.WithdrawSwapVolatileParams({
-            aerodromeRouter: IRouter(address(aerodromeRouter)),
-            pool: IPool(address(aeroBalancedPool)),
-            factory: IPoolFactory(address(aerodromePoolFactory)),
-            tokenOut: IERC20(address(aeroBalancedTokenA)),
-            opposingToken: IERC20(address(aeroBalancedTokenB)),
-            lpBurnAmt: lpAmount,
-            recipient: address(this),
-            deadline: block.timestamp + 300
-        });
+        AerodromeServiceVolatile.WithdrawSwapVolatileParams memory withdrawParams =
+            AerodromeServiceVolatile.WithdrawSwapVolatileParams({
+                aerodromeRouter: IRouter(address(aerodromeRouter)),
+                pool: IPool(address(aeroBalancedPool)),
+                factory: IPoolFactory(address(aerodromePoolFactory)),
+                tokenOut: IERC20(address(aeroBalancedTokenA)),
+                opposingToken: IERC20(address(aeroBalancedTokenB)),
+                lpBurnAmt: lpAmount,
+                recipient: address(this),
+                deadline: block.timestamp + 300
+            });
 
         uint256 amountBack = AerodromeServiceVolatile._withdrawSwapVolatile(withdrawParams);
 

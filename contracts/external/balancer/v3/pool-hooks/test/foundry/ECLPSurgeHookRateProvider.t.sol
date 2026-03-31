@@ -4,12 +4,12 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { GyroECLPPool } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {GyroECLPPool} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
 
-import { ECLPSurgeHookBaseTest } from "./ECLPSurgeHookBase.t.sol";
+import {ECLPSurgeHookBaseTest} from "./ECLPSurgeHookBase.t.sol";
 
 contract ECLPSurgeHookRateProviderTest is ECLPSurgeHookBaseTest {
     using FixedPoint for uint256;
@@ -26,23 +26,17 @@ contract ECLPSurgeHookRateProviderTest is ECLPSurgeHookBaseTest {
         // Price interval from [3100, 4400], but since the rate is 3758, alpha and beta are [3100/3758, 4400/3758].
         // With rate provider, peak price is 1, so s/c = 1 and s^2 + c^2 = 1. Lambda was chosen arbitrarily.
         eclpParams = IGyroECLPPool.EclpParams({
-            alpha: 0.8249e18,
-            beta: 1.1708e18,
-            c: 0.707106781186547524e18,
-            s: 0.707106781186547524e18,
-            lambda: 1e18
+            alpha: 0.8249e18, beta: 1.1708e18, c: 0.707106781186547524e18, s: 0.707106781186547524e18, lambda: 1e18
         });
 
         // Derived params calculated offchain based on the params above, using the jupyter notebook file on
         // "pkg/pool-hooks/jupyter/SurgeECLP.ipynb".
         derivedECLPParams = IGyroECLPPool.DerivedEclpParams({
             tauAlpha: IGyroECLPPool.Vector2({
-                x: -9551180604048044820490078158141259776,
-                y: 99542829722028973980238505524940767232
+                x: -9551180604048044820490078158141259776, y: 99542829722028973980238505524940767232
             }),
             tauBeta: IGyroECLPPool.Vector2({
-                x: 7843825351503711405832602479428108288,
-                y: 99691897383163033790581971173395922944
+                x: 7843825351503711405832602479428108288, y: 99691897383163033790581971173395922944
             }),
             u: 8697502977775877522865529960079032320,
             v: 99617363552596003885410238349168345088,
@@ -72,11 +66,8 @@ contract ECLPSurgeHookRateProviderTest is ECLPSurgeHookBaseTest {
 
         vault.manualSetPoolBalances(pool, initialBalancesRaw, initialBalancesScaled18);
 
-        uint256 imbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            initialBalancesScaled18,
-            _DEFAULT_SLOPE
-        );
+        uint256 imbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, initialBalancesScaled18, _DEFAULT_SLOPE);
         assertLt(imbalance, 4e12, "Imbalance should be less than 0.0004%");
     }
 }

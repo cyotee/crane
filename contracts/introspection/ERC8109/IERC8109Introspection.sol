@@ -2,13 +2,13 @@
 pragma solidity ^0.8.0;
 
 interface IERC8109Introspection {
-
     struct FunctionFacetPair {
         bytes4 selector;
         address facet;
     }
 
-    /** @notice Gets the facet that handles the given selector.
+    /**
+     * @notice Gets the facet that handles the given selector.
      *
      *  @dev If facet is not found return address(0).
      *  @param _functionSelector The function selector.
@@ -17,7 +17,7 @@ interface IERC8109Introspection {
     function facetAddress(bytes4 _functionSelector) external view returns (address);
 
     /**
-     * @notice Returns an array of all function selectors and their 
+     * @notice Returns an array of all function selectors and their
      *         corresponding facet addresses.
      *
      * @dev    Iterates through the diamond's stored selectors and pairs
@@ -25,6 +25,5 @@ interface IERC8109Introspection {
      * @return pairs An array of `FunctionFacetPair` structs, each containing
      *         a selector and its facet address.
      */
-    function functionFacetPairs() external view returns(FunctionFacetPair[] memory pairs);
-
+    function functionFacetPairs() external view returns (FunctionFacetPair[] memory pairs);
 }

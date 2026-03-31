@@ -3,46 +3,57 @@ pragma solidity ^0.8.0;
 
 import {BasicAuthorizerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
 import {BatchRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BatchRouterMock.sol";
-import {CompositeLiquidityRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
+import {
+    CompositeLiquidityRouterMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/CompositeLiquidityRouterMock.sol";
 import {RouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RouterMock.sol";
 import {BufferRouterMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BufferRouterMock.sol";
 import {RateProviderMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/RateProviderMock.sol";
 import {PoolFactoryMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolFactoryMock.sol";
 import {PoolHooksMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/PoolHooksMock.sol";
 // import { HookFlags, FEE_SCALING_FACTOR, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
 import {IVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     HookFlags,
-
     FEE_SCALING_FACTOR,
     Rounding,
     TokenConfig,
     TokenType
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
-import {IERC4626RateProviderFacetDFPkg, ERC4626RateProviderFacetDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
+import {
+    IERC4626RateProviderFacetDFPkg,
+    ERC4626RateProviderFacetDFPkg
+} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFacetDFPkg.sol";
 import {BaseTest} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/BaseTest.sol";
 import {TestBase_BalancerV3} from "@crane/contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3.sol";
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
-import {ERC4626RateProviderFactoryService} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
+import {
+    ERC4626RateProviderFactoryService
+} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderFactoryService.sol";
 import {TestBase_Permit2} from "@crane/contracts/protocols/utils/permit2/test/bases/TestBase_Permit2.sol";
 import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
-import {VaultContractsDeployer} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/VaultContractsDeployer.sol";
+import {
+    VaultContractsDeployer
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/VaultContractsDeployer.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 contract TestBase_BalancerV3Vault is
     TestBase_BalancerV3,
@@ -111,7 +122,7 @@ contract TestBase_BalancerV3Vault is
     // // Default protocol swap fee percentage.
     // uint64 internal constant DEFAULT_PROTOCOL_SWAP_FEE_PERCENTAGE = 50e16; // 50%
 
-    // ICreate3Factory create3Factory;
+    // ICreate3FactoryProxy create3Factory;
     // IDiamondPackageCallBackFactory diamondPackageFactory;
 
     // Main contract mocks.
@@ -157,20 +168,14 @@ contract TestBase_BalancerV3Vault is
     uint256 vaultMockInitialProtocolSwapFeePercentage = 0;
     uint256 vaultMockInitialProtocolYieldFeePercentage = 0;
 
-
     IERC4626RateProviderFacetDFPkg erc4626RateProviderDFPkg;
     IRateProvider waDAIRateProvider;
     IRateProvider waWETHRateProvider;
     IRateProvider waUSDRateProvider;
 
-    function setUp() public virtual
-    override(
-        CraneTest,
-        TestBase_Permit2,
-        TestBase_BalancerV3
-    ) {
+    function setUp() public virtual override(CraneTest, TestBase_Permit2, TestBase_BalancerV3) {
         TestBase_BalancerV3.setUp();
-        TestBase_Permit2.setUp();  // Initialize permit2 before deploying contracts
+        TestBase_Permit2.setUp(); // Initialize permit2 before deploying contracts
         _deployMainContracts();
         onAfterDeployMainContracts();
         _approveForAllUsers();
@@ -210,11 +215,8 @@ contract TestBase_BalancerV3Vault is
         vm.label(address(prepaidBatchRouter), "prepaid batch router");
         compositeLiquidityRouter = deployCompositeLiquidityRouterMock(IVault(address(vault)), weth, permit2);
         vm.label(address(compositeLiquidityRouter), "composite liquidity router");
-        prepaidCompositeLiquidityRouter = deployCompositeLiquidityRouterMock(
-            IVault(address(vault)),
-            weth,
-            IPermit2(address(0))
-        );
+        prepaidCompositeLiquidityRouter =
+            deployCompositeLiquidityRouterMock(IVault(address(vault)), weth, IPermit2(address(0)));
         bufferRouter = deployBufferRouterMock(IVault(address(vault)), weth, permit2);
         vm.label(address(bufferRouter), "buffer router");
         feeController = vault.getProtocolFeeController();
@@ -245,10 +247,7 @@ contract TestBase_BalancerV3Vault is
             permit2.approve(address(oddDecimalTokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
             permit2.approve(address(oddDecimalTokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
             permit2.approve(
-                address(oddDecimalTokens[i]),
-                address(compositeLiquidityRouter),
-                type(uint160).max,
-                type(uint48).max
+                address(oddDecimalTokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max
             );
         }
 
@@ -258,10 +257,7 @@ contract TestBase_BalancerV3Vault is
             permit2.approve(address(erc4626Tokens[i]), address(bufferRouter), type(uint160).max, type(uint48).max);
             permit2.approve(address(erc4626Tokens[i]), address(batchRouter), type(uint160).max, type(uint48).max);
             permit2.approve(
-                address(erc4626Tokens[i]),
-                address(compositeLiquidityRouter),
-                type(uint160).max,
-                type(uint48).max
+                address(erc4626Tokens[i]), address(compositeLiquidityRouter), type(uint160).max, type(uint48).max
             );
 
             // Approve deposits from sender.
@@ -295,12 +291,12 @@ contract TestBase_BalancerV3Vault is
         vm.stopPrank();
     }
 
-    function _initPool(
-        address poolToInit,
-        uint256[] memory amountsIn,
-        uint256 minBptOut
-    ) internal virtual returns (uint256 bptOut) {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(poolToInit);
+    function _initPool(address poolToInit, uint256[] memory amountsIn, uint256 minBptOut)
+        internal
+        virtual
+        returns (uint256 bptOut)
+    {
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(poolToInit);
 
         return router.initialize(poolToInit, tokens, amountsIn, minBptOut, false, bytes(""));
     }
@@ -309,22 +305,19 @@ contract TestBase_BalancerV3Vault is
         return _createPool([address(dai), address(usdc)].toMemoryArray(), "pool");
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
         newPool = PoolFactoryMock(poolFactory).createPool(name, symbol);
         vm.label(newPool, label);
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens.asIERC20()), poolHooksContract, lp);
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -361,14 +354,15 @@ contract TestBase_BalancerV3Vault is
 
     function standardTokenConfig(IERC20 token) public virtual returns (TokenConfig memory) {
         return TokenConfig({
-            token: token,
-            tokenType: TokenType.STANDARD,
-            rateProvider: IRateProvider(address(0)),
-            paysYieldFees: false
+            token: token, tokenType: TokenType.STANDARD, rateProvider: IRateProvider(address(0)), paysYieldFees: false
         });
     }
 
-    function erc4626TokenConfig(IERC4626 token, IRateProvider rateProvider_, bool paysYieldFees) public virtual returns (TokenConfig memory) {
+    function erc4626TokenConfig(IERC4626 token, IRateProvider rateProvider_, bool paysYieldFees)
+        public
+        virtual
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(address(token)),
             tokenType: TokenType.WITH_RATE,
@@ -563,5 +557,4 @@ contract TestBase_BalancerV3Vault is
         //     )
         // );
     }
-
 }

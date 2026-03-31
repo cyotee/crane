@@ -3,10 +3,10 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { WrappingDirection } from "../vault/VaultTypes.sol";
+import {WrappingDirection} from "../vault/VaultTypes.sol";
 
-import { SwapPathStep } from "../vault/BatchRouterTypes.sol";
-import { IProtocolFeeBurner } from "./IProtocolFeeBurner.sol";
+import {SwapPathStep} from "../vault/BatchRouterTypes.sol";
+import {IProtocolFeeBurner} from "./IProtocolFeeBurner.sol";
 
 interface IBalancerFeeBurner is IProtocolFeeBurner {
     /**

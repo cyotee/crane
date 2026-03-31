@@ -10,8 +10,8 @@ import {
     IWrappedBalancerPoolTokenFactory
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IWrappedBalancerPoolTokenFactory.sol";
 
-import { WrappedBalancerPoolTokenFactory } from "../../contracts/WrappedBalancerPoolTokenFactory.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {WrappedBalancerPoolTokenFactory} from "../../contracts/WrappedBalancerPoolTokenFactory.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract WrappedBalancerPoolTokenFactoryTest is BaseVaultTest {
     WrappedBalancerPoolTokenFactory factory;

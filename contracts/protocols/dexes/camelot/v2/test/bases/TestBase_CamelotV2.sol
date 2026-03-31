@@ -10,7 +10,6 @@ import {CamelotRouter} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/C
 import {TestBase_Weth9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/TestBase_Weth9.sol";
 
 abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
-
     address camelotV2FeeToSetter;
 
     ICamelotFactory internal camelotV2Factory;
@@ -24,10 +23,7 @@ abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
         }
 
         if (address(camelotV2Router) == address(0)) {
-            camelotV2Router = new CamelotRouter(
-                address(camelotV2Factory),
-                address(weth)
-            );
+            camelotV2Router = new CamelotRouter(address(camelotV2Factory), address(weth));
         }
     }
 }

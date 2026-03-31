@@ -3,8 +3,16 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
-import {IGyroECLPPool, GyroECLPPoolImmutableData, GyroECLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {
+    IGyro2CLPPool,
+    Gyro2CLPPoolImmutableData,
+    Gyro2CLPPoolDynamicData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
+import {
+    IGyroECLPPool,
+    GyroECLPPoolImmutableData,
+    GyroECLPPoolDynamicData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
@@ -98,20 +106,12 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
     }
 
     /// @notice Get 2-CLP pool immutable data
-    function get2CLPPoolImmutableData(IGyro2CLPPool pool)
-        internal
-        view
-        returns (Gyro2CLPPoolImmutableData memory)
-    {
+    function get2CLPPoolImmutableData(IGyro2CLPPool pool) internal view returns (Gyro2CLPPoolImmutableData memory) {
         return pool.getGyro2CLPPoolImmutableData();
     }
 
     /// @notice Get 2-CLP pool dynamic data
-    function get2CLPPoolDynamicData(IGyro2CLPPool pool)
-        internal
-        view
-        returns (Gyro2CLPPoolDynamicData memory)
-    {
+    function get2CLPPoolDynamicData(IGyro2CLPPool pool) internal view returns (Gyro2CLPPoolDynamicData memory) {
         return pool.getGyro2CLPPoolDynamicData();
     }
 
@@ -135,20 +135,12 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
     }
 
     /// @notice Get ECLP pool immutable data
-    function getECLPPoolImmutableData(IGyroECLPPool pool)
-        internal
-        view
-        returns (GyroECLPPoolImmutableData memory)
-    {
+    function getECLPPoolImmutableData(IGyroECLPPool pool) internal view returns (GyroECLPPoolImmutableData memory) {
         return pool.getGyroECLPPoolImmutableData();
     }
 
     /// @notice Get ECLP pool dynamic data
-    function getECLPPoolDynamicData(IGyroECLPPool pool)
-        internal
-        view
-        returns (GyroECLPPoolDynamicData memory)
-    {
+    function getECLPPoolDynamicData(IGyroECLPPool pool) internal view returns (GyroECLPPoolDynamicData memory) {
         return pool.getGyroECLPPoolDynamicData();
     }
 
@@ -168,8 +160,9 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
         IGyroECLPPool.DerivedEclpParams memory derivedParams,
         Rounding rounding
     ) internal pure returns (uint256) {
-        (int256 currentInvariant, int256 invErr) =
-            GyroECLPMath.calculateInvariantWithError(balancesLiveScaled18, eclpParams, derivedParams);
+        (int256 currentInvariant, int256 invErr) = GyroECLPMath.calculateInvariantWithError(
+            balancesLiveScaled18, eclpParams, derivedParams
+        );
 
         if (rounding == Rounding.ROUND_DOWN) {
             return uint256(currentInvariant - invErr);
@@ -191,17 +184,13 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
 
         // Try to get dynamic data from the pool (works for both 2-CLP and ECLP)
         try IGyro2CLPPool(poolAddress).getGyro2CLPPoolDynamicData() returns (Gyro2CLPPoolDynamicData memory data) {
-            exists = data.balancesLiveScaled18.length >= 2
-                && data.balancesLiveScaled18[0] > 0
-                && data.balancesLiveScaled18[1] > 0
-                && data.isPoolInitialized;
+            exists = data.balancesLiveScaled18.length >= 2 && data.balancesLiveScaled18[0] > 0
+                && data.balancesLiveScaled18[1] > 0 && data.isPoolInitialized;
         } catch {
             // Try ECLP interface
             try IGyroECLPPool(poolAddress).getGyroECLPPoolDynamicData() returns (GyroECLPPoolDynamicData memory data) {
-                exists = data.balancesLiveScaled18.length >= 2
-                    && data.balancesLiveScaled18[0] > 0
-                    && data.balancesLiveScaled18[1] > 0
-                    && data.isPoolInitialized;
+                exists = data.balancesLiveScaled18.length >= 2 && data.balancesLiveScaled18[0] > 0
+                    && data.balancesLiveScaled18[1] > 0 && data.isPoolInitialized;
             } catch {
                 exists = false;
             }
@@ -227,12 +216,10 @@ abstract contract TestBase_BalancerV3GyroFork is Test {
     /// @param expected The expected invariant from mainnet pool
     /// @param toleranceBps Tolerance in basis points (10 = 0.1%)
     /// @param message Error message
-    function assertInvariantParity(
-        uint256 computed,
-        uint256 expected,
-        uint256 toleranceBps,
-        string memory message
-    ) internal pure {
+    function assertInvariantParity(uint256 computed, uint256 expected, uint256 toleranceBps, string memory message)
+        internal
+        pure
+    {
         uint256 tolerance = (expected * toleranceBps) / 10000;
         if (tolerance == 0) tolerance = 1; // Minimum 1 wei tolerance
         assertApproxEqAbs(computed, expected, tolerance, message);

@@ -8,7 +8,9 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
@@ -19,7 +21,9 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {
     BalancerV3WeightedPoolDFPkg,
     IBalancerV3WeightedPoolDFPkg
@@ -40,11 +44,26 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
@@ -89,9 +108,18 @@ contract MockFacet is IFacet {
         _interfaces = interfaces_;
     }
 
-    function facetName() external view override returns (string memory) { return _name; }
-    function facetInterfaces() external view override returns (bytes4[] memory) { return _interfaces; }
-    function facetFuncs() external view override returns (bytes4[] memory) { return _funcs; }
+    function facetName() external view override returns (string memory) {
+        return _name;
+    }
+
+    function facetInterfaces() external view override returns (bytes4[] memory) {
+        return _interfaces;
+    }
+
+    function facetFuncs() external view override returns (bytes4[] memory) {
+        return _funcs;
+    }
+
     function facetMetadata() external view override returns (string memory, bytes4[] memory, bytes4[] memory) {
         return (_name, _interfaces, _funcs);
     }
@@ -248,10 +276,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
             for (uint256 j = i + 1; j < allSelectors.length; j++) {
                 assertTrue(
                     allSelectors[i] != allSelectors[j],
-                    string.concat(
-                        "Selector collision detected: ",
-                        vm.toString(bytes32(allSelectors[i]))
-                    )
+                    string.concat("Selector collision detected: ", vm.toString(bytes32(allSelectors[i])))
                 );
             }
         }
@@ -291,9 +316,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -345,17 +368,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args1 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1,
-                hooksContract: address(0)
+                tokenConfigs: configs1, normalizedWeights: weights1, hooksContract: address(0)
             })
         );
 
         bytes memory args2 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2,
-                hooksContract: address(0)
+                tokenConfigs: configs2, normalizedWeights: weights2, hooksContract: address(0)
             })
         );
 
@@ -394,15 +413,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         // Weights: 10%, 30%, 60% - sum to 100%
         uint256[] memory weights = new uint256[](3);
-        weights[0] = 0.1e18;  // for highest addr
-        weights[1] = 0.3e18;  // for middle addr
-        weights[2] = 0.6e18;  // for lowest addr
+        weights[0] = 0.1e18; // for highest addr
+        weights[1] = 0.3e18; // for middle addr
+        weights[2] = 0.6e18; // for lowest addr
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -413,12 +430,10 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         // Verify tokens are sorted (ascending by address)
         assertTrue(
-            address(decodedArgs.tokenConfigs[0].token) < address(decodedArgs.tokenConfigs[1].token),
-            "Token 0 < Token 1"
+            address(decodedArgs.tokenConfigs[0].token) < address(decodedArgs.tokenConfigs[1].token), "Token 0 < Token 1"
         );
         assertTrue(
-            address(decodedArgs.tokenConfigs[1].token) < address(decodedArgs.tokenConfigs[2].token),
-            "Token 1 < Token 2"
+            address(decodedArgs.tokenConfigs[1].token) < address(decodedArgs.tokenConfigs[2].token), "Token 1 < Token 2"
         );
 
         // After sorting: lowest addr first (with 60%), middle addr second (with 30%), highest addr third (with 10%)
@@ -442,9 +457,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -453,7 +466,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
                 BalancerV3WeightedPoolDFPkg.InvalidTokensLength.selector,
                 8, // max
                 2, // min
-                1  // provided
+                1 // provided
             )
         );
         pkg.calcSalt(args);
@@ -475,9 +488,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -486,7 +497,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
                 BalancerV3WeightedPoolDFPkg.InvalidTokensLength.selector,
                 8, // max
                 2, // min
-                9  // provided
+                9 // provided
             )
         );
         pkg.calcSalt(args);
@@ -508,9 +519,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -532,9 +541,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -542,7 +549,7 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
             abi.encodeWithSelector(
                 BalancerV3WeightedPoolDFPkg.WeightsTokensMismatch.selector,
                 2, // tokens
-                1  // weights
+                1 // weights
             )
         );
         pkg.calcSalt(args);
@@ -560,17 +567,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args1 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
         bytes memory args2 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights, hooksContract: address(0)
             })
         );
 
@@ -593,17 +596,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args1 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1,
-                hooksContract: address(0)
+                tokenConfigs: configs1, normalizedWeights: weights1, hooksContract: address(0)
             })
         );
 
         bytes memory args2 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2,
-                hooksContract: address(0)
+                tokenConfigs: configs2, normalizedWeights: weights2, hooksContract: address(0)
             })
         );
 
@@ -623,17 +622,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args1 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights1,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights1, hooksContract: address(0)
             })
         );
 
         bytes memory args2 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights2,
-                hooksContract: address(0)
+                tokenConfigs: configs, normalizedWeights: weights2, hooksContract: address(0)
             })
         );
 
@@ -676,17 +671,13 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
 
         bytes memory args1 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1,
-                hooksContract: address(0)
+                tokenConfigs: configs1, normalizedWeights: weights1, hooksContract: address(0)
             })
         );
 
         bytes memory args2 = abi.encode(
             IBalancerV3WeightedPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2,
-                hooksContract: address(0)
+                tokenConfigs: configs2, normalizedWeights: weights2, hooksContract: address(0)
             })
         );
 
@@ -738,12 +729,11 @@ contract BalancerV3WeightedPoolDFPkg_Test is Test {
         return weights;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

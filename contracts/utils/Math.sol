@@ -182,11 +182,7 @@ library Math {
     /**
      * @dev Calculates x * y / denominator with full precision, following the selected rounding direction.
      */
-    function mulDiv(uint256 x, uint256 y, uint256 denominator, Rounding rounding)
-        internal
-        pure
-        returns (uint256)
-    {
+    function mulDiv(uint256 x, uint256 y, uint256 denominator, Rounding rounding) internal pure returns (uint256) {
         uint256 result = mulDiv(x, y, denominator);
         if (unsignedRoundsUp(rounding) && mulmod(x, y, denominator) > 0) {
             result += 1;
@@ -423,11 +419,11 @@ library Math {
     /**
      * @dev Variant of {tryModExp} that supports inputs of arbitrary length.
      */
-    function tryModExp(
-        bytes memory b,
-        bytes memory e,
-        bytes memory m
-    ) internal view returns (bool success, bytes memory result) {
+    function tryModExp(bytes memory b, bytes memory e, bytes memory m)
+        internal
+        view
+        returns (bool success, bytes memory result)
+    {
         if (_zeroBytes(m)) return (false, new bytes(0));
 
         uint256 mLen = m.length;

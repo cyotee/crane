@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CommonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
+import {CommonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
 
 /// @dev Base contract for performing access control on external functions within pools.
 abstract contract BasePoolAuthentication is CommonAuthentication {

@@ -51,18 +51,16 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
 
     function _createMultihopPairs() internal {
         // Pair B-C uses the balanced TokenB
-        camelotPairBC = ICamelotPair(
-            camelotV2Factory.createPair(address(camelotBalancedTokenB), address(camelotMultihopTokenC))
-        );
+        camelotPairBC =
+            ICamelotPair(camelotV2Factory.createPair(address(camelotBalancedTokenB), address(camelotMultihopTokenC)));
         vm.label(
             address(camelotPairBC),
             string.concat("CamelotPairBC - ", camelotBalancedTokenB.symbol(), " / ", camelotMultihopTokenC.symbol())
         );
 
         // Pair C-D
-        camelotPairCD = ICamelotPair(
-            camelotV2Factory.createPair(address(camelotMultihopTokenC), address(camelotMultihopTokenD))
-        );
+        camelotPairCD =
+            ICamelotPair(camelotV2Factory.createPair(address(camelotMultihopTokenC), address(camelotMultihopTokenD)));
         vm.label(
             address(camelotPairCD),
             string.concat("CamelotPairCD - ", camelotMultihopTokenC.symbol(), " / ", camelotMultihopTokenD.symbol())
@@ -141,8 +139,7 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
         uint256 desiredAmountC = SWAP_AMOUNT / 2; // Want 50e18 of token C
 
         // Calculate required input through 2 hops using ConstProdUtils (working backwards)
-        uint256 requiredAmountB =
-            _calculatePurchaseQuote(camelotPairBC, address(camelotMultihopTokenC), desiredAmountC);
+        uint256 requiredAmountB = _calculatePurchaseQuote(camelotPairBC, address(camelotMultihopTokenC), desiredAmountC);
         uint256 requiredAmountA =
             _calculatePurchaseQuote(camelotBalancedPair, address(camelotBalancedTokenB), requiredAmountB);
 
@@ -259,8 +256,7 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
         uint256 desiredAmountD = SWAP_AMOUNT / 4; // Want 25e18 of token D
 
         // Calculate required input through 3 hops using ConstProdUtils (working backwards)
-        uint256 requiredAmountC =
-            _calculatePurchaseQuote(camelotPairCD, address(camelotMultihopTokenD), desiredAmountD);
+        uint256 requiredAmountC = _calculatePurchaseQuote(camelotPairCD, address(camelotMultihopTokenD), desiredAmountD);
         uint256 requiredAmountB =
             _calculatePurchaseQuote(camelotPairBC, address(camelotMultihopTokenC), requiredAmountC);
         uint256 requiredAmountA =
@@ -447,18 +443,13 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
         amountIn = bound(amountIn, 1e15, maxInput > 1e15 ? maxInput : 1e16);
 
         // Create new tokens for this test
-        ERC20PermitMintableStub fuzzTokenA =
-            new ERC20PermitMintableStub("CamelotFuzzA", "CAMFZA", 18, address(this), 0);
-        ERC20PermitMintableStub fuzzTokenB =
-            new ERC20PermitMintableStub("CamelotFuzzB", "CAMFZB", 18, address(this), 0);
-        ERC20PermitMintableStub fuzzTokenC =
-            new ERC20PermitMintableStub("CamelotFuzzC", "CAMFZC", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenA = new ERC20PermitMintableStub("CamelotFuzzA", "CAMFZA", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenB = new ERC20PermitMintableStub("CamelotFuzzB", "CAMFZB", 18, address(this), 0);
+        ERC20PermitMintableStub fuzzTokenC = new ERC20PermitMintableStub("CamelotFuzzC", "CAMFZC", 18, address(this), 0);
 
         // Create pairs with fuzzed reserves
-        ICamelotPair fuzzPairAB =
-            ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenA), address(fuzzTokenB)));
-        ICamelotPair fuzzPairBC =
-            ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenB), address(fuzzTokenC)));
+        ICamelotPair fuzzPairAB = ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenA), address(fuzzTokenB)));
+        ICamelotPair fuzzPairBC = ICamelotPair(camelotV2Factory.createPair(address(fuzzTokenB), address(fuzzTokenC)));
 
         // Initialize pair AB
         fuzzTokenA.mint(address(this), reserveAB_A);
@@ -514,11 +505,7 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
     /**
      * @dev Calculate sale quote for a given pair and input token
      */
-    function _calculateSaleQuote(ICamelotPair pair, address tokenIn, uint256 amountIn)
-        internal
-        view
-        returns (uint256)
-    {
+    function _calculateSaleQuote(ICamelotPair pair, address tokenIn, uint256 amountIn) internal view returns (uint256) {
         HopData memory data = _getHopData(pair, tokenIn);
         return ConstProdUtils._saleQuote(amountIn, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR);
     }
@@ -535,8 +522,7 @@ contract ConstProdUtils_multihop_Camelot is TestBase_ConstProdUtils_Camelot {
         // tokenOut is what we want, so the "in" token is the other token
         address tokenIn = pair.token0() == tokenOut ? pair.token1() : pair.token0();
         HopData memory data = _getHopData(pair, tokenIn);
-        return ConstProdUtils._purchaseQuote(
-            amountOut, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR
-        );
+        return
+            ConstProdUtils._purchaseQuote(amountOut, data.reserveIn, data.reserveOut, data.feePercent, FEE_DENOMINATOR);
     }
 }

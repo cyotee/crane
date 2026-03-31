@@ -15,7 +15,7 @@ interface IOperable {
     /**
      * @notice Emitted when a global operator approval status changes.
      * @param operator The operator whose approval status has changed.
-     * @param status The operatpr's new approval status.
+     * @param status The operator's new approval status.
      */
     event NewGlobalOperatorStatus(address operator, bool status);
     // end::NewGlobalOperatorStatus(address-bool)[]
@@ -25,7 +25,7 @@ interface IOperable {
      * @notice Emitted when function level operator approval status changes.
      * @param operator The operator whose approval status has changed.
      * @param func The function for which the operator's approval status has changed.
-     * @param status The operatpr's new approval status.
+     * @param status The operator's new approval status.
      */
     event NewFunctionOperatorStatus(address operator, bytes4 func, bool status);
     // end::NewFunctionOperatorStatus(address-bytes4-bool)[]
@@ -51,7 +51,6 @@ interface IOperable {
      * @custom:func-sig isOperator(address)
      * @custom:func-sig-hash 6d70f7ae
      * @custom:selector 0x6d70f7ae
-     *
      */
     function isOperator(address query) external view returns (bool);
 

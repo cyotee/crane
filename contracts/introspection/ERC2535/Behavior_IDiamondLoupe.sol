@@ -19,7 +19,10 @@ import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {Bytes4} from "@crane/contracts/utils/Bytes4.sol";
 import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
-import {AddressSetComparatorRepo, AddressSetComparator} from "@crane/contracts/test/comparators/AddressSetComparator.sol";
+import {
+    AddressSetComparatorRepo,
+    AddressSetComparator
+} from "@crane/contracts/test/comparators/AddressSetComparator.sol";
 import {Bytes4SetComparatorRepo, Bytes4SetComparator} from "@crane/contracts/test/comparators/Bytes4SetComparator.sol";
 import {FacetsComparatorRepo, FacetsComparator} from "@crane/contracts/test/comparators/ERC2535/FacetsComparator.sol";
 
@@ -131,6 +134,19 @@ library Behavior_IDiamondLoupe {
             );
         }
 
+        console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe");
+    }
+
+    function expect_IDiamondLoupe(IDiamondLoupe subject, IDiamondLoupe.Facet memory expected) internal {
+        console.logBehaviorEntry(_Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe");
+
+        console.logBehaviorExpectation(
+            _Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe", "facet", vm.getLabel(expected.facetAddress)
+        );
+
+        FacetsComparatorRepo._recFacet(subject, expected.facetAddress, expected.functionSelectors);
+
+        expect_IDiamondLoupe_facetAddress(subject, expected.functionSelectors, expected.facetAddress);
         console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe");
     }
 
@@ -319,7 +335,7 @@ library Behavior_IDiamondLoupe {
         return "facetFunctionSelectors(address)";
     }
 
-    /// forge-lint: disable-next-line(mixed-case-function)
+    /// forge-lint: disable-next-line(mixed-case-function)/lsp
     function areValid_IDiamondLoupe_facetFunctionSelectors(
         string memory subjectLabel,
         bytes4[] memory expected,
@@ -346,13 +362,15 @@ library Behavior_IDiamondLoupe {
     // TODO Fix to map facet functions to subject because different proxies may use different parts of a facet.
     /// forge-lint: disable-next-line(mixed-case-function)
     function expect_IDiamondLoupe_facetFunctionSelectors(
-        IDiamondLoupe, // subject,
+        IDiamondLoupe subject,
         address facet,
         bytes4[] memory expectedFuncs_
     ) internal {
         // declareAddr(address(subject));
         Bytes4SetComparatorRepo._recExpectedBytes4(
-            address(facet), IDiamondLoupe.facetFunctionSelectors.selector, expectedFuncs_
+            address(uint160(address(subject)) ^ uint160(address(facet))),
+            IDiamondLoupe.facetFunctionSelectors.selector,
+            expectedFuncs_
         );
     }
 
@@ -365,8 +383,10 @@ library Behavior_IDiamondLoupe {
             // address subject,
             subject,
             // bytes4[] memory expected,
-            Bytes4SetComparatorRepo._recedExpectedBytes4(facet, IDiamondLoupe.facetFunctionSelectors.selector)
-                ._values(),
+            Bytes4SetComparatorRepo._recedExpectedBytes4(
+                    address(uint160(address(subject)) ^ uint160(address(facet))),
+                    IDiamondLoupe.facetFunctionSelectors.selector
+                )._values(),
             // bytes4[] memory actual
             subject.facetFunctionSelectors(facet)
         );

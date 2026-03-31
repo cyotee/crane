@@ -4,33 +4,35 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
-import { DeployPermit2 } from "@crane/contracts/protocols/utils/permit2/test/utils/DeployPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {DeployPermit2} from "@crane/contracts/protocols/utils/permit2/test/utils/DeployPermit2.sol";
 
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IStdMedusaCheats } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IStdMedusaCheats.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IStdMedusaCheats} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IStdMedusaCheats.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { CREATE3 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
 
-import { VaultExtensionMock } from "../../../contracts/test/VaultExtensionMock.sol";
-import { VaultAdminMock } from "../../../contracts/test/VaultAdminMock.sol";
-import { VaultMock } from "../../../contracts/test/VaultMock.sol";
-import { ProtocolFeeController } from "../../../contracts/ProtocolFeeController.sol";
-import { BasicAuthorizerMock } from "../../../contracts/test/BasicAuthorizerMock.sol";
-import { RouterMock } from "../../../contracts/test/RouterMock.sol";
-import { BatchRouterMock } from "../../../contracts/test/BatchRouterMock.sol";
-import { CompositeLiquidityRouterMock } from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
-import { ProtocolFeeControllerMock } from "../../../contracts/test/ProtocolFeeControllerMock.sol";
-import { PoolFactoryMock } from "../../../contracts/test/PoolFactoryMock.sol";
+import {VaultExtensionMock} from "../../../contracts/test/VaultExtensionMock.sol";
+import {VaultAdminMock} from "../../../contracts/test/VaultAdminMock.sol";
+import {VaultMock} from "../../../contracts/test/VaultMock.sol";
+import {ProtocolFeeController} from "../../../contracts/ProtocolFeeController.sol";
+import {BasicAuthorizerMock} from "../../../contracts/test/BasicAuthorizerMock.sol";
+import {RouterMock} from "../../../contracts/test/RouterMock.sol";
+import {BatchRouterMock} from "../../../contracts/test/BatchRouterMock.sol";
+import {CompositeLiquidityRouterMock} from "../../../contracts/test/CompositeLiquidityRouterMock.sol";
+import {ProtocolFeeControllerMock} from "../../../contracts/test/ProtocolFeeControllerMock.sol";
+import {PoolFactoryMock} from "../../../contracts/test/PoolFactoryMock.sol";
 
 contract BaseMedusaTest is Test {
     // Forge has vm commands, which allow us to prank callers, deal ETH and ERC20 tokens to users, etc. Medusa is not
@@ -90,11 +92,8 @@ contract BaseMedusaTest is Test {
 
         router = new RouterMock(IVault(address(vault)), IWETH(address(weth)), permit2);
         batchRouter = new BatchRouterMock(IVault(address(vault)), IWETH(address(weth)), permit2);
-        compositeLiquidityRouter = new CompositeLiquidityRouterMock(
-            IVault(address(vault)),
-            IWETH(address(weth)),
-            permit2
-        );
+        compositeLiquidityRouter =
+            new CompositeLiquidityRouterMock(IVault(address(vault)), IWETH(address(weth)), permit2);
 
         _setPermissionsForUsersAndTokens();
 
@@ -134,11 +133,10 @@ contract BaseMedusaTest is Test {
         initialBalances[2] = DEFAULT_INITIAL_POOL_BALANCE;
     }
 
-    function _createERC20TestToken(
-        string memory name,
-        string memory symbol,
-        uint8 decimals
-    ) private returns (ERC20TestToken token) {
+    function _createERC20TestToken(string memory name, string memory symbol, uint8 decimals)
+        private
+        returns (ERC20TestToken token)
+    {
         token = new ERC20TestToken(name, symbol, decimals);
         _mintTokenToUsers(token);
     }
@@ -155,13 +153,8 @@ contract BaseMedusaTest is Test {
         VaultMock newVault = VaultMock(payable(CREATE3.getDeployed(salt)));
 
         bytes memory vaultMockBytecode = type(VaultMock).creationCode;
-        vaultAdmin = new VaultAdminMock(
-            IVault(payable(address(newVault))),
-            90 days,
-            30 days,
-            minTradeAmount,
-            minWrapAmount
-        );
+        vaultAdmin =
+            new VaultAdminMock(IVault(payable(address(newVault))), 90 days, 30 days, minTradeAmount, minWrapAmount);
         vaultExtension = new VaultExtensionMock(IVault(payable(address(newVault))), vaultAdmin);
         feeController = new ProtocolFeeControllerMock(IVaultMock(payable(address(newVault))), 0, 0);
 

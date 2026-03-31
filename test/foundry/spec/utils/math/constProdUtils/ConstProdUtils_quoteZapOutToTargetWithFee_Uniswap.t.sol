@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
+import {
+    TestBase_ConstProdUtils_Uniswap
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 import {IUniswapV2Pair} from "contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {UniV2Factory} from "contracts/protocols/dexes/uniswap/v2/stubs/UniV2Factory.sol";
@@ -25,19 +27,27 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
     }
 
     function test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesDisabled_targetTokenA_1pct() public {
-        _testZapOutToTargetWithFeePercentage(uniswapBalancedPair, uniswapBalancedTokenA, uniswapBalancedTokenB, false, PERCENTAGE_1_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            uniswapBalancedPair, uniswapBalancedTokenA, uniswapBalancedTokenB, false, PERCENTAGE_1_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesEnabled_targetTokenA_5pct() public {
-        _testZapOutToTargetWithFeePercentage(uniswapBalancedPair, uniswapBalancedTokenA, uniswapBalancedTokenB, true, PERCENTAGE_5_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            uniswapBalancedPair, uniswapBalancedTokenA, uniswapBalancedTokenB, true, PERCENTAGE_5_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesDisabled_targetTokenB_10pct() public {
-        _testZapOutToTargetWithFeePercentage(uniswapBalancedPair, uniswapBalancedTokenB, uniswapBalancedTokenA, false, PERCENTAGE_10_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            uniswapBalancedPair, uniswapBalancedTokenB, uniswapBalancedTokenA, false, PERCENTAGE_10_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_feesEnabled_targetTokenB_25pct() public {
-        _testZapOutToTargetWithFeePercentage(uniswapBalancedPair, uniswapBalancedTokenB, uniswapBalancedTokenA, true, PERCENTAGE_25_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            uniswapBalancedPair, uniswapBalancedTokenB, uniswapBalancedTokenA, true, PERCENTAGE_25_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Uniswap_balancedPool_impossible_scenarios() public {
@@ -92,7 +102,9 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
         d.kLast = pair.kLast();
         (d.reserveTarget, d.reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), d.r0, d.r1);
 
-        d.maxPossibleOutput = _calculateMaxPossibleOutput(d.totalSupply, d.reserveTarget, d.reserveSale, UNISWAP_FEE_PERCENT, UNISWAP_FEE_DENOMINATOR);
+        d.maxPossibleOutput = _calculateMaxPossibleOutput(
+            d.totalSupply, d.reserveTarget, d.reserveSale, UNISWAP_FEE_PERCENT, UNISWAP_FEE_DENOMINATOR
+        );
 
         d.desiredOut = (d.reserveTarget * percentage) / 10000;
         if (d.desiredOut > d.maxPossibleOutput) d.desiredOut = d.maxPossibleOutput;
@@ -131,7 +143,8 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
         (uint112 reserve0, uint112 reserve1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
         uint256 kLast = pair.kLast();
-        (uint256 reserveTarget, uint256 reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), reserve0, reserve1);
+        (uint256 reserveTarget, uint256 reserveSale) =
+            ConstProdUtils._sortReserves(address(targetToken), pair.token0(), reserve0, reserve1);
 
         ConstProdUtils.ZapOutToTargetWithFeeArgs memory args1 = ConstProdUtils.ZapOutToTargetWithFeeArgs({
             desiredOut: reserveTarget + 1,
@@ -163,7 +176,9 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
         uint256 quoted2 = ConstProdUtils._quoteZapOutToTargetWithFee(args2);
         assertEq(quoted2, 0, "Should return 0 when desired output is 0");
 
-        uint256 maxPossibleOutput = _calculateMaxPossibleOutput(totalSupply, reserveTarget, reserveSale, UNISWAP_FEE_PERCENT, UNISWAP_FEE_DENOMINATOR);
+        uint256 maxPossibleOutput = _calculateMaxPossibleOutput(
+            totalSupply, reserveTarget, reserveSale, UNISWAP_FEE_PERCENT, UNISWAP_FEE_DENOMINATOR
+        );
         if (maxPossibleOutput > 0) {
             ConstProdUtils.ZapOutToTargetWithFeeArgs memory args3 = ConstProdUtils.ZapOutToTargetWithFeeArgs({
                 desiredOut: maxPossibleOutput + 1,
@@ -220,9 +235,11 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
             (uint112 r0, uint112 r1,) = pair.getReserves();
             (uint256 soldReserve, uint256 procReserve) = address(saleToken) == token0 ? (r0, r1) : (r1, r0);
             uint256 feeMultiplier = UNISWAP_FEE_DENOMINATOR - UNISWAP_FEE_PERCENT;
-            exec.proceeds = (exec.saleAmount * feeMultiplier * procReserve) / (soldReserve * UNISWAP_FEE_DENOMINATOR + exec.saleAmount * feeMultiplier);
+            exec.proceeds = (exec.saleAmount * feeMultiplier * procReserve)
+                / (soldReserve * UNISWAP_FEE_DENOMINATOR + exec.saleAmount * feeMultiplier);
             saleToken.transfer(address(pair), exec.saleAmount);
-            (uint256 out0, uint256 out1) = address(saleToken) == token0 ? (uint256(0), exec.proceeds) : (exec.proceeds, uint256(0));
+            (uint256 out0, uint256 out1) =
+                address(saleToken) == token0 ? (uint256(0), exec.proceeds) : (exec.proceeds, uint256(0));
             pair.swap(out0, out1, address(this), new bytes(0));
             exec.targetAmount += exec.proceeds;
         }
@@ -249,15 +266,27 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
 
     error AssertGeApproxEqRelFailed(string message, uint256 expected, uint256 actual, uint256 maxDelta, uint256 delta);
 
-    function assertGeApproxEqRel(uint256 actual, uint256 expected, uint256 maxPercentDelta, string memory err) internal pure {
+    function assertGeApproxEqRel(uint256 actual, uint256 expected, uint256 maxPercentDelta, string memory err)
+        internal
+        pure
+    {
         if (expected == 0) {
-            if (actual != 0) revert AssertGeApproxEqRelFailed(string(abi.encodePacked(err, ": expected is zero")), expected, actual, 0, 0);
+            if (actual != 0) {
+                revert AssertGeApproxEqRelFailed(
+                    string(abi.encodePacked(err, ": expected is zero")), expected, actual, 0, 0
+                );
+            }
             return;
         }
-        if (actual < expected) revert AssertGeApproxEqRelFailed(string(abi.encodePacked(err, ": actual < expected")), expected, actual, 0, 0);
+        if (actual < expected) {
+            revert AssertGeApproxEqRelFailed(
+                string(abi.encodePacked(err, ": actual < expected")), expected, actual, 0, 0
+            );
+        }
         uint256 maximumDelta = (expected * maxPercentDelta) / 1e18;
         uint256 delta = actual - expected;
-        if (delta > maximumDelta) revert AssertGeApproxEqRelFailed("overage too large", expected, actual, maximumDelta, delta);
+        if (delta > maximumDelta) {
+            revert AssertGeApproxEqRelFailed("overage too large", expected, actual, maximumDelta, delta);
+        }
     }
-
 }

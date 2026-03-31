@@ -2,12 +2,14 @@
 
 pragma solidity ^0.8.24;
 
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
-import { CommonAuthenticationMock } from "../../../contracts/test/CommonAuthenticationMock.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
+import {CommonAuthenticationMock} from "../../../contracts/test/CommonAuthenticationMock.sol";
 
 contract CommonAuthenticationTest is BaseVaultTest {
     CommonAuthenticationMock private commonAuth;
@@ -41,9 +43,8 @@ contract CommonAuthenticationTest is BaseVaultTest {
 
         // Pass when sender is authorized by governance and there's no manager.
         authorizer.grantRole(
-            IAuthentication(address(commonAuth)).getActionId(
-                CommonAuthenticationMock.ensureAuthenticatedByExclusiveRole.selector
-            ),
+            IAuthentication(address(commonAuth))
+                .getActionId(CommonAuthenticationMock.ensureAuthenticatedByExclusiveRole.selector),
             admin
         );
 
@@ -66,9 +67,8 @@ contract CommonAuthenticationTest is BaseVaultTest {
         address where = address(1234);
 
         authorizer.grantRole(
-            IAuthentication(address(commonAuth)).getActionId(
-                CommonAuthenticationMock.ensureAuthenticatedByExclusiveRole.selector
-            ),
+            IAuthentication(address(commonAuth))
+                .getActionId(CommonAuthenticationMock.ensureAuthenticatedByExclusiveRole.selector),
             admin
         );
 
@@ -108,9 +108,8 @@ contract CommonAuthenticationTest is BaseVaultTest {
 
         // Pass when sender is authorized by governance and there's no manager.
         authorizer.grantRole(
-            IAuthentication(address(commonAuth)).getActionId(
-                CommonAuthenticationMock.ensureAuthenticatedByRole.selector
-            ),
+            IAuthentication(address(commonAuth))
+                .getActionId(CommonAuthenticationMock.ensureAuthenticatedByRole.selector),
             admin
         );
 
@@ -129,9 +128,8 @@ contract CommonAuthenticationTest is BaseVaultTest {
         address where = address(1234);
 
         authorizer.grantRole(
-            IAuthentication(address(commonAuth)).getActionId(
-                CommonAuthenticationMock.ensureAuthenticatedByRole.selector
-            ),
+            IAuthentication(address(commonAuth))
+                .getActionId(CommonAuthenticationMock.ensureAuthenticatedByRole.selector),
             admin
         );
 

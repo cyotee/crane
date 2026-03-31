@@ -6,21 +6,23 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IFixedPriceLBPool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { FixedPriceLBPoolContractsDeployer } from "./utils/FixedPriceLBPoolContractsDeployer.sol";
-import { FixedPriceLBPoolFactory } from "../../contracts/lbp/FixedPriceLBPoolFactory.sol";
-import { FixedPriceLBPool } from "../../contracts/lbp/FixedPriceLBPool.sol";
-import { BaseLBPFactory } from "../../contracts/lbp/BaseLBPFactory.sol";
-import { LBPValidation } from "../../contracts/lbp/LBPValidation.sol";
-import { BaseLBPTest } from "./utils/BaseLBPTest.sol";
+import {FixedPriceLBPoolContractsDeployer} from "./utils/FixedPriceLBPoolContractsDeployer.sol";
+import {FixedPriceLBPoolFactory} from "../../contracts/lbp/FixedPriceLBPoolFactory.sol";
+import {FixedPriceLBPool} from "../../contracts/lbp/FixedPriceLBPool.sol";
+import {BaseLBPFactory} from "../../contracts/lbp/BaseLBPFactory.sol";
+import {LBPValidation} from "../../contracts/lbp/LBPValidation.sol";
+import {BaseLBPTest} from "./utils/BaseLBPTest.sol";
 
 contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDeployer {
     using ArrayHelpers for *;
@@ -38,11 +40,7 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
 
     function createPoolFactory() internal virtual override returns (address) {
         lbPoolFactory = deployFixedPriceLBPoolFactory(
-            IVault(address(vault)),
-            365 days,
-            factoryVersion,
-            poolVersion,
-            address(router)
+            IVault(address(vault)), 365 days, factoryVersion, poolVersion, address(router)
         );
         vm.label(address(lbPoolFactory), "Fixed Price LB pool factory");
 
@@ -75,7 +73,7 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
     }
 
     function testPoolInitialization() public view {
-        (IERC20[] memory tokens, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(pool);
 
         assertEq(address(tokens[projectIdx]), address(projectToken), "Project token mismatch");
         assertEq(address(tokens[reserveIdx]), address(reserveToken), "Reserve token mismatch");
@@ -129,7 +127,7 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
     }
 
     function testCreatePool() public {
-        (pool, ) = _createFixedPriceLBPool(bob, uint32(block.timestamp + 100), uint32(block.timestamp + 200));
+        (pool,) = _createFixedPriceLBPool(bob, uint32(block.timestamp + 100), uint32(block.timestamp + 200));
         initPool();
 
         // Verify pool was created and initialized correctly
@@ -138,8 +136,8 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
 
         FixedPriceLBPoolImmutableData memory data = IFixedPriceLBPool(pool).getFixedPriceLBPoolImmutableData();
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(address(pool));
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(address(pool));
 
         for (uint256 i = 0; i < tokens.length; ++i) {
             assertEq(address(data.tokens[i]), address(tokens[i]), "Token address mismatch");
@@ -156,7 +154,7 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
     }
 
     function testAddLiquidityPermission() public {
-        (pool, ) = _createFixedPriceLBPool(uint32(block.timestamp + 100), uint32(block.timestamp + 200));
+        (pool,) = _createFixedPriceLBPool(uint32(block.timestamp + 100), uint32(block.timestamp + 200));
         initPool();
 
         // Try to add to the pool without permission.
@@ -169,7 +167,7 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
     }
 
     function testDonationNotAllowed() public {
-        (pool, ) = _createFixedPriceLBPool(uint32(block.timestamp + 100), uint32(block.timestamp + 200));
+        (pool,) = _createFixedPriceLBPool(uint32(block.timestamp + 100), uint32(block.timestamp + 200));
         initPool();
 
         // Try to donate to the pool
@@ -231,18 +229,17 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
         lbPoolFactory.create(lbpCommonParams, DEFAULT_RATE, swapFee, bytes32(salt), address(0));
     }
 
-    function _createFixedPriceLBPool(
-        uint32 startTime,
-        uint32 endTime
-    ) internal returns (address newPool, bytes memory poolArgs) {
+    function _createFixedPriceLBPool(uint32 startTime, uint32 endTime)
+        internal
+        returns (address newPool, bytes memory poolArgs)
+    {
         return _createFixedPriceLBPool(address(0), startTime, endTime);
     }
 
-    function _createFixedPriceLBPool(
-        address poolCreator,
-        uint32 startTime,
-        uint32 endTime
-    ) internal returns (address newPool, bytes memory poolArgs) {
+    function _createFixedPriceLBPool(address poolCreator, uint32 startTime, uint32 endTime)
+        internal
+        returns (address newPool, bytes memory poolArgs)
+    {
         LBPCommonParams memory lbpCommonParams = LBPCommonParams({
             name: "FixedPriceLBPool",
             symbol: "FLBP",
@@ -254,11 +251,8 @@ contract FixedPriceLBPoolFactoryTest is BaseLBPTest, FixedPriceLBPoolContractsDe
             blockProjectTokenSwapsIn: true // Fixed price LBPs are always "buy-only"
         });
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: vault,
-            trustedRouter: address(router),
-            poolVersion: poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: vault, trustedRouter: address(router), poolVersion: poolVersion});
 
         uint256 salt = _saltCounter++;
 

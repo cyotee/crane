@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 import {IVoter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IVoter.sol";
-import {IFactoryRegistry} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
+import {
+    IFactoryRegistry
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
 
 /// @title The interface for the CL Factory
 /// @notice The CL Factory facilitates creation of CL pools and control over the protocol fees

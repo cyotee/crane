@@ -13,7 +13,6 @@ contract ConstProdUtils_swapDepositSaleAmt_Camelot is TestBase_ConstProdUtils_Ca
         super.setUp();
     }
 
-
     function test_swapDepositSaleAmt_Camelot_balancedPool() public {
         _initializeCamelotBalancedPools();
         uint256 reserveA;
@@ -41,7 +40,9 @@ contract ConstProdUtils_swapDepositSaleAmt_Camelot is TestBase_ConstProdUtils_Ca
             path[1] = address(camelotBalancedTokenB);
             console.log("Camelot balanced swap path0", uint256(uint160(path[0])));
             console.log("Camelot balanced swap path1", uint256(uint160(path[1])));
-            console.log("Camelot balanced factory pair", uint256(uint160(address(camelotV2Factory.getPair(path[0], path[1])))));
+            console.log(
+                "Camelot balanced factory pair", uint256(uint160(address(camelotV2Factory.getPair(path[0], path[1]))))
+            );
             uint256 tokenBBeforeSwap = camelotBalancedTokenB.balanceOf(address(this));
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
                 saleAmt, 0, path, address(this), address(0), block.timestamp + 300
@@ -165,7 +166,9 @@ contract ConstProdUtils_swapDepositSaleAmt_Camelot is TestBase_ConstProdUtils_Ca
             path[1] = address(camelotExtremeTokenB);
             console.log("Camelot extreme swap path0", uint256(uint160(path[0])));
             console.log("Camelot extreme swap path1", uint256(uint160(path[1])));
-            console.log("Camelot extreme factory pair", uint256(uint160(address(camelotV2Factory.getPair(path[0], path[1])))));
+            console.log(
+                "Camelot extreme factory pair", uint256(uint160(address(camelotV2Factory.getPair(path[0], path[1]))))
+            );
             uint256 tokenBBeforeSwap = camelotExtremeTokenB.balanceOf(address(this));
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
                 saleAmt, 0, path, address(this), address(0), block.timestamp + 300
@@ -202,5 +205,4 @@ contract ConstProdUtils_swapDepositSaleAmt_Camelot is TestBase_ConstProdUtils_Ca
         // Validate exact equality
         assertEq(actualLPTokens, expectedLPTokens, "Actual LP tokens should equal expected LP tokens exactly");
     }
-
 }

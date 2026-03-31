@@ -23,7 +23,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         // Get pool state
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Log pool state for debugging
@@ -40,13 +40,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         // Quote using SlipstreamUtils
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         console.log("  amountIn (USDC):", amountIn);
         console.log("  quotedOut (WETH):", quotedOut);
@@ -64,7 +58,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactInputSingle_WETH_USDC_500_sellWETH() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Small WETH swap to stay in single tick
@@ -72,13 +66,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualOut = swapExactInputTokens(pool, WETH, USDC, amountIn, address(this));
 
@@ -94,7 +82,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutputSingle_WETH_USDC_500_buyWETH() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Want 0.01 WETH
@@ -102,13 +90,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
@@ -124,7 +106,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutputSingle_WETH_USDC_500_buyUSDC() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Want 100 USDC
@@ -132,13 +114,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, WETH, USDC);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, WETH, USDC, amountOut, address(this));
 
@@ -162,7 +138,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         ICLPool pool = getPool(cbBTC_WETH_CL);
 
         // Get pool state
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Log pool state for debugging
@@ -179,13 +155,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
 
         // Quote using SlipstreamUtils
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         console.log("  amountIn (WETH):", amountIn);
         console.log("  quotedOut (cbBTC):", quotedOut);
@@ -206,7 +176,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         ICLPool pool = getPool(cbBTC_WETH_CL);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Small cbBTC swap to stay in single tick (0.001 cbBTC = ~$100 worth)
@@ -214,13 +184,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, cbBTC, WETH);
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualOut = swapExactInputTokens(pool, cbBTC, WETH, amountIn, address(this));
 
@@ -239,7 +203,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         ICLPool pool = getPool(cbBTC_WETH_CL);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Want 0.001 cbBTC (~$100)
@@ -247,13 +211,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, WETH, cbBTC, amountOut, address(this));
 
@@ -272,7 +230,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         ICLPool pool = getPool(cbBTC_WETH_CL);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Want 0.1 WETH
@@ -280,13 +238,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, cbBTC, WETH);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, cbBTC, WETH, amountOut, address(this));
 
@@ -315,22 +267,11 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         // Quote using tick
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            tick,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedWithTick = SlipstreamUtils._quoteExactInputSingle(amountIn, tick, liquidity, fee, zeroForOne);
 
         console.log("Tick overload comparison:");
         console.log("  quotedWithSqrtPrice:", quotedWithSqrtPrice);
@@ -359,22 +300,11 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         // Quote using tick
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            tick,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(amountOut, tick, liquidity, fee, zeroForOne);
 
         console.log("ExactOutput tick overload comparison:");
         console.log("  quotedWithSqrtPrice:", quotedWithSqrtPrice);
@@ -396,7 +326,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactInputSingle_smallAmount() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Very small swap (1 USDC)
@@ -404,13 +334,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualOut = swapExactInputTokens(pool, USDC, WETH, amountIn, address(this));
 
@@ -427,18 +351,12 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactInputSingle_zeroAmount() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            0,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(0, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         assertEq(quotedOut, 0, "zero input should give zero output");
     }
@@ -451,18 +369,12 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutputSingle_zeroAmount_fork() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            0,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(0, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         assertEq(quotedIn, 0, "Zero output should require zero input on real pool");
     }
@@ -471,19 +383,13 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutputSingle_dustAmount_fork() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         // 1 wei WETH output
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            1,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(1, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         console.log("Dust exactOutput (1 wei WETH):");
         console.log("  quotedIn (USDC):", quotedIn);
@@ -496,20 +402,14 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutputSingle_smallAmount_fork() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         uint256 amountOut = 0.001 ether; // 0.001 WETH
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
@@ -532,13 +432,10 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 quotedWithSqrtPrice = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut, sqrtPriceX96, liquidity, fee, zeroForOne
-        );
+        uint256 quotedWithSqrtPrice =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
-        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut, tick, liquidity, fee, zeroForOne
-        );
+        uint256 quotedWithTick = SlipstreamUtils._quoteExactOutputSingle(amountOut, tick, liquidity, fee, zeroForOne);
 
         uint256 actualIn = swapExactOutputTokens(pool, USDC, WETH, amountOut, address(this));
 
@@ -559,7 +456,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         ICLPool pool = getPool(cbBTC_WETH_CL);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // 1 satoshi of cbBTC (smallest unit = 1e-8 BTC)
@@ -567,13 +464,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
 
         bool zeroForOne = zeroForOneForTokens(pool, WETH, cbBTC);
 
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         console.log("cbBTC/WETH dust exactOutput (1 sat):");
         console.log("  quotedIn (WETH):", quotedIn);
@@ -586,20 +477,18 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteExactOutput_roundTrip_fork() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         uint256 desiredOutput = 0.01 ether; // 0.01 WETH
 
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
-        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            desiredOutput, sqrtPriceX96, liquidity, fee, zeroForOne
-        );
+        uint256 requiredInput =
+            SlipstreamUtils._quoteExactOutputSingle(desiredOutput, sqrtPriceX96, liquidity, fee, zeroForOne);
 
-        uint256 actualOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput, sqrtPriceX96, liquidity, fee, zeroForOne
-        );
+        uint256 actualOutput =
+            SlipstreamUtils._quoteExactInputSingle(requiredInput, sqrtPriceX96, liquidity, fee, zeroForOne);
 
         console.log("Round-trip test on real pool:");
         console.log("  desiredOutput:", desiredOutput);
@@ -617,7 +506,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteAmountsForLiquidity() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, int24 tick, ) = getPoolState(pool);
+        (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = pool.tickSpacing();
 
         // Create a position range around current tick
@@ -627,12 +516,8 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         uint128 liquidity = 1e12; // Sample liquidity amount
 
         // Quote amounts needed
-        (uint256 quotedAmount0, uint256 quotedAmount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 quotedAmount0, uint256 quotedAmount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
 
         console.log("quoteAmountsForLiquidity:");
         console.log("  tickLower:", tickLower);
@@ -651,7 +536,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     function test_quoteLiquidityForAmounts() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, int24 tick, ) = getPoolState(pool);
+        (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = pool.tickSpacing();
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
@@ -662,13 +547,8 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         uint256 amount1 = token0 == WETH ? 1000e6 : 1 ether;
 
         // Quote max liquidity
-        uint128 quotedLiquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            amount0,
-            amount1
-        );
+        uint128 quotedLiquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
 
         console.log("quoteLiquidityForAmounts:");
         console.log("  amount0:", amount0);
@@ -676,12 +556,8 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
         console.log("  quotedLiquidity:", quotedLiquidity);
 
         // Verify: minting this liquidity should require <= provided amounts
-        (uint256 requiredAmount0, uint256 requiredAmount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            quotedLiquidity
-        );
+        (uint256 requiredAmount0, uint256 requiredAmount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, quotedLiquidity);
 
         console.log("  requiredAmount0:", requiredAmount0);
         console.log("  requiredAmount1:", requiredAmount1);

@@ -41,9 +41,7 @@ interface IPoolHelperCommon {
      * @param newManager Address of the new manager
      */
     event PoolSetOwnershipTransferred(
-        uint256 indexed poolSetId,
-        address indexed oldManager,
-        address indexed newManager
+        uint256 indexed poolSetId, address indexed oldManager, address indexed newManager
     );
 
     /**
@@ -158,7 +156,7 @@ interface IPoolHelperCommon {
     function removePoolsFromSet(uint256 poolSetId, address[] memory pools) external;
 
     /***************************************************************************
-                                    Getters                                
+                                    Getters
     ***************************************************************************/
 
     /**

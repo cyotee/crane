@@ -7,16 +7,16 @@ import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { LBPValidation } from "./LBPValidation.sol";
+import {LBPValidation} from "./LBPValidation.sol";
 
 abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
     using FixedPoint for uint256;
@@ -105,9 +105,8 @@ abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
 
         _blockProjectTokenSwapsIn = lbpCommonParams.blockProjectTokenSwapsIn;
 
-        (_projectTokenIndex, _reserveTokenIndex) = lbpCommonParams.projectToken < lbpCommonParams.reserveToken
-            ? (0, 1)
-            : (1, 0);
+        (_projectTokenIndex, _reserveTokenIndex) =
+            lbpCommonParams.projectToken < lbpCommonParams.reserveToken ? (0, 1) : (1, 0);
 
         _lockDurationAfterMigration = migrationParams.lockDurationAfterMigration;
         _bptPercentageToMigrate = migrationParams.bptPercentageToMigrate;
@@ -147,14 +146,13 @@ abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
 
     /// @inheritdoc ILBPCommon
     function getMigrationParameters() external view returns (MigrationParams memory) {
-        return
-            MigrationParams({
-                migrationRouter: _migrationRouter,
-                lockDurationAfterMigration: _lockDurationAfterMigration,
-                bptPercentageToMigrate: _bptPercentageToMigrate,
-                migrationWeightProjectToken: _migrationWeightProjectToken,
-                migrationWeightReserveToken: _migrationWeightReserveToken
-            });
+        return MigrationParams({
+            migrationRouter: _migrationRouter,
+            lockDurationAfterMigration: _lockDurationAfterMigration,
+            bptPercentageToMigrate: _bptPercentageToMigrate,
+            migrationWeightProjectToken: _migrationWeightProjectToken,
+            migrationWeightReserveToken: _migrationWeightReserveToken
+        });
     }
 
     /// @inheritdoc ILBPCommon
@@ -173,12 +171,13 @@ abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
      * @param tokenConfig The token configuration of the pool being registered (e.g., type)
      * @return success True if the hook allowed the registration, false otherwise
      */
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory tokenConfig,
-        LiquidityManagement calldata
-    ) public view virtual override returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory tokenConfig, LiquidityManagement calldata)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
         // These preconditions are guaranteed by the standard LBPoolFactory, but check anyway.
         InputHelpers.ensureInputLengthMatch(_TWO_TOKENS, tokenConfig.length);
 
@@ -215,10 +214,14 @@ abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
      *
      * @return success Always true: allow the initialization to proceed if the time condition has been met
      */
-    function onBeforeInitialize(
-        uint256[] memory,
-        bytes memory
-    ) public view virtual override onlyBeforeSale returns (bool) {
+    function onBeforeInitialize(uint256[] memory, bytes memory)
+        public
+        view
+        virtual
+        override
+        onlyBeforeSale
+        returns (bool)
+    {
         return ISenderGuard(_trustedRouter).getSender() == owner();
     }
 

@@ -15,6 +15,7 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
  */
 library MessageHashUtils {
     using BetterEfficientHashLib for bytes;
+
     /**
      * @dev Returns the keccak256 digest of an ERC-191 signed data with version
      * `0x45` (`personal_sign` messages).
@@ -48,8 +49,7 @@ library MessageHashUtils {
      * See {ECDSA-recover}.
      */
     function toEthSignedMessageHash(bytes memory message) internal pure returns (bytes32) {
-        return
-            bytes.concat("\x19Ethereum Signed Message:\n", bytes(Strings.toString(message.length)), message)._hash();
+        return bytes.concat("\x19Ethereum Signed Message:\n", bytes(Strings.toString(message.length)), message)._hash();
     }
 
     /**
@@ -62,18 +62,19 @@ library MessageHashUtils {
      * See {ECDSA-recover}.
      */
     function toDataWithIntendedValidatorHash(address validator, bytes memory data) internal pure returns (bytes32) {
-        return abi.encodePacked(hex"19_00", validator, data)._hash();
+        return abi.encodePacked(hex"1900", validator, data)._hash();
     }
 
     /**
      * @dev Variant of {toDataWithIntendedValidatorHash-address-bytes} optimized for cases where `data` is a bytes32.
      */
-    function toDataWithIntendedValidatorHash(
-        address validator,
-        bytes32 messageHash
-    ) internal pure returns (bytes32 digest) {
+    function toDataWithIntendedValidatorHash(address validator, bytes32 messageHash)
+        internal
+        pure
+        returns (bytes32 digest)
+    {
         assembly ("memory-safe") {
-            mstore(0x00, hex"19_00")
+            mstore(0x00, hex"1900")
             mstore(0x02, shl(96, validator))
             mstore(0x16, messageHash)
             digest := keccak256(0x00, 0x36)
@@ -92,7 +93,7 @@ library MessageHashUtils {
     function toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32 digest) {
         assembly ("memory-safe") {
             let ptr := mload(0x40)
-            mstore(ptr, hex"19_01")
+            mstore(ptr, hex"1901")
             mstore(add(ptr, 0x02), domainSeparator)
             mstore(add(ptr, 0x22), structHash)
             digest := keccak256(ptr, 0x42)

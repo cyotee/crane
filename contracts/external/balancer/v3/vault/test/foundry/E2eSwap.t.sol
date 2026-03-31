@@ -8,18 +8,24 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { PoolConfigLib } from "../../contracts/lib/PoolConfigLib.sol";
-import { ProtocolFeeControllerMock } from "../../contracts/test/ProtocolFeeControllerMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolConfigLib} from "../../contracts/lib/PoolConfigLib.sol";
+import {ProtocolFeeControllerMock} from "../../contracts/test/ProtocolFeeControllerMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 struct SwapLimits {
     uint256 minTokenA;
@@ -77,8 +83,7 @@ contract E2eSwapTest is BaseVaultTest {
         IAuthentication feeControllerAuth = IAuthentication(address(feeController));
 
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector),
-            admin
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector), admin
         );
 
         vm.prank($.poolCreator);
@@ -172,16 +177,14 @@ contract E2eSwapTest is BaseVaultTest {
         // Use the larger of the two values above to calculate the minSwapAmount. Also, multiply by 10 to account for
         // swap fees and compensate for rate rounding issues.
         uint256 feeFactor = 10;
-        swapLimits.minTokenA = (
-            tokenAMinTradeAmount > tokenACalculatedNotZero
+        swapLimits.minTokenA =
+        (tokenAMinTradeAmount > tokenACalculatedNotZero
                 ? feeFactor * tokenAMinTradeAmount
-                : feeFactor * tokenACalculatedNotZero
-        );
-        swapLimits.minTokenB = (
-            tokenBMinTradeAmount > tokenBCalculatedNotZero
+                : feeFactor * tokenACalculatedNotZero);
+        swapLimits.minTokenB =
+        (tokenBMinTradeAmount > tokenBCalculatedNotZero
                 ? feeFactor * tokenBMinTradeAmount
-                : feeFactor * tokenBCalculatedNotZero
-        );
+                : feeFactor * tokenBCalculatedNotZero);
 
         // 99% of pool init amount, to avoid rounding issues near the full liquidity of the pool.
         swapLimits.maxTokenA = poolInitAmountTokenA.mulDown(99e16);
@@ -202,10 +205,11 @@ contract E2eSwapTest is BaseVaultTest {
      * that are expected to be used in the pool, and return `true` to signal that these values shall be used as
      * limits whenever needed.
      */
-    function fuzzPoolState(
-        uint256[POOL_SPECIFIC_PARAMS_SIZE] memory,
-        E2eTestState memory state
-    ) internal virtual returns (E2eTestState memory) {
+    function fuzzPoolState(uint256[POOL_SPECIFIC_PARAMS_SIZE] memory, E2eTestState memory state)
+        internal
+        virtual
+        returns (E2eTestState memory)
+    {
         return state;
     }
 
@@ -474,29 +478,14 @@ contract E2eSwapTest is BaseVaultTest {
 
         vm.startPrank($.sender);
         uint256 snapshotId = vm.snapshotState();
-        uint256 exactAmountOut = router.swapSingleTokenExactIn(
-            pool,
-            tokenA,
-            tokenB,
-            exactAmountIn,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
+        uint256 exactAmountOut =
+            router.swapSingleTokenExactIn(pool, tokenA, tokenB, exactAmountIn, 0, MAX_UINT128, false, bytes(""));
 
         vm.assume(exactAmountOut > 0);
 
         vm.revertToState(snapshotId);
         uint256 exactAmountInSwap = router.swapSingleTokenExactOut(
-            pool,
-            tokenA,
-            tokenB,
-            exactAmountOut,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            pool, tokenA, tokenB, exactAmountOut, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
         vm.stopPrank();
 
@@ -504,10 +493,7 @@ contract E2eSwapTest is BaseVaultTest {
         // specializations override this value to). This error is caused by differences in the computeInGivenOut and
         // computeOutGivenIn functions of the pool math (for small amounts the error can be a bit above 0.0001%).
         assertApproxEqRel(
-            exactAmountIn,
-            exactAmountInSwap,
-            $.amountInExactInOutError,
-            "ExactOut and ExactIn amountsIn should match"
+            exactAmountIn, exactAmountInSwap, $.amountInExactInOutError, "ExactOut and ExactIn amountsIn should match"
         );
     }
 
@@ -534,22 +520,13 @@ contract E2eSwapTest is BaseVaultTest {
         }
 
         if (testLocals.shouldTestLiquidity) {
-            testLocals.liquidityTokenA = bound(
-                testLocals.liquidityTokenA,
-                poolInitAmountTokenA / 10,
-                10 * poolInitAmountTokenA
-            );
-            testLocals.liquidityTokenB = bound(
-                testLocals.liquidityTokenB,
-                poolInitAmountTokenB / 10,
-                10 * poolInitAmountTokenB
-            );
+            testLocals.liquidityTokenA =
+                bound(testLocals.liquidityTokenA, poolInitAmountTokenA / 10, 10 * poolInitAmountTokenA);
+            testLocals.liquidityTokenB =
+                bound(testLocals.liquidityTokenB, poolInitAmountTokenB / 10, 10 * poolInitAmountTokenB);
 
-            $.swapLimits = _setPoolBalancesAndGetAmountIn(
-                testLocals.liquidityTokenA,
-                testLocals.liquidityTokenB,
-                $.swapLimits
-            );
+            $.swapLimits =
+                _setPoolBalancesAndGetAmountIn(testLocals.liquidityTokenA, testLocals.liquidityTokenB, $.swapLimits);
         }
 
         if (testLocals.shouldFuzzPoolState) {
@@ -565,11 +542,8 @@ contract E2eSwapTest is BaseVaultTest {
         }
 
         if (testLocals.shouldTestFee) {
-            testLocals.poolSwapFeePercentage = bound(
-                testLocals.poolSwapFeePercentage,
-                $.minPoolSwapFeePercentage,
-                $.maxPoolSwapFeePercentage
-            );
+            testLocals.poolSwapFeePercentage =
+                bound(testLocals.poolSwapFeePercentage, $.minPoolSwapFeePercentage, $.maxPoolSwapFeePercentage);
         } else {
             testLocals.poolSwapFeePercentage = $.minPoolSwapFeePercentage;
         }
@@ -579,25 +553,16 @@ contract E2eSwapTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesBefore = getBalances($.sender, Rounding.ROUND_DOWN);
 
         vm.startPrank($.sender);
-        uint256 exactAmountOutDo = router.swapSingleTokenExactIn(
-            pool,
-            tokenA,
-            tokenB,
-            exactAmountIn,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
+        uint256 exactAmountOutDo =
+            router.swapSingleTokenExactIn(pool, tokenA, tokenB, exactAmountIn, 0, MAX_UINT128, false, bytes(""));
 
         {
             // If the amount given is below the guardrail, don't continue.
             uint256 rateTokenB = getRate(tokenB);
             uint256 decimalScalingFactorTokenB = 10 ** (18 - decimalsTokenB);
             vm.assume(
-                exactAmountOutDo.toScaled18ApplyRateRoundDown(decimalScalingFactorTokenB, rateTokenB).mulDown(
-                    testLocals.poolSwapFeePercentage.complement()
-                ) > vaultMockMinTradeAmount
+                exactAmountOutDo.toScaled18ApplyRateRoundDown(decimalScalingFactorTokenB, rateTokenB)
+                    .mulDown(testLocals.poolSwapFeePercentage.complement()) > vaultMockMinTradeAmount
             );
         }
 
@@ -605,16 +570,8 @@ contract E2eSwapTest is BaseVaultTest {
         // there were no fees, trading `exactAmountOutDo + feesTokenB` would get exactAmountIn. Therefore, a swap
         // with exact_in `exactAmountOutDo + feesTokenB` is comparable to `exactAmountIn`, given that the fees are
         // known.
-        uint256 exactAmountOutUndo = router.swapSingleTokenExactIn(
-            pool,
-            tokenB,
-            tokenA,
-            exactAmountOutDo,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
+        uint256 exactAmountOutUndo =
+            router.swapSingleTokenExactIn(pool, tokenB, tokenA, exactAmountOutDo, 0, MAX_UINT128, false, bytes(""));
 
         vm.assume(exactAmountOutUndo > 0);
 
@@ -652,22 +609,13 @@ contract E2eSwapTest is BaseVaultTest {
         }
 
         if (testLocals.shouldTestLiquidity) {
-            testLocals.liquidityTokenA = bound(
-                testLocals.liquidityTokenA,
-                poolInitAmountTokenA / 10,
-                10 * poolInitAmountTokenA
-            );
-            testLocals.liquidityTokenB = bound(
-                testLocals.liquidityTokenB,
-                poolInitAmountTokenB / 10,
-                10 * poolInitAmountTokenB
-            );
+            testLocals.liquidityTokenA =
+                bound(testLocals.liquidityTokenA, poolInitAmountTokenA / 10, 10 * poolInitAmountTokenA);
+            testLocals.liquidityTokenB =
+                bound(testLocals.liquidityTokenB, poolInitAmountTokenB / 10, 10 * poolInitAmountTokenB);
 
-            $.swapLimits = _setPoolBalancesAndGetAmountOut(
-                testLocals.liquidityTokenA,
-                testLocals.liquidityTokenB,
-                $.swapLimits
-            );
+            $.swapLimits =
+                _setPoolBalancesAndGetAmountOut(testLocals.liquidityTokenA, testLocals.liquidityTokenB, $.swapLimits);
         }
 
         if (testLocals.shouldFuzzPoolState) {
@@ -683,11 +631,8 @@ contract E2eSwapTest is BaseVaultTest {
         }
 
         if (testLocals.shouldTestFee) {
-            testLocals.poolSwapFeePercentage = bound(
-                testLocals.poolSwapFeePercentage,
-                $.minPoolSwapFeePercentage,
-                $.maxPoolSwapFeePercentage
-            );
+            testLocals.poolSwapFeePercentage =
+                bound(testLocals.poolSwapFeePercentage, $.minPoolSwapFeePercentage, $.maxPoolSwapFeePercentage);
         } else {
             testLocals.poolSwapFeePercentage = $.minPoolSwapFeePercentage;
         }
@@ -698,14 +643,7 @@ contract E2eSwapTest is BaseVaultTest {
 
         vm.startPrank($.sender);
         uint256 exactAmountInDo = router.swapSingleTokenExactOut(
-            pool,
-            tokenA,
-            tokenB,
-            exactAmountOut,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            pool, tokenA, tokenB, exactAmountOut, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
 
         {
@@ -713,9 +651,8 @@ contract E2eSwapTest is BaseVaultTest {
             uint256 rateTokenB = getRate(tokenB);
             uint256 decimalScalingFactorTokenB = 10 ** (18 - decimalsTokenB);
             vm.assume(
-                exactAmountInDo.toScaled18ApplyRateRoundDown(decimalScalingFactorTokenB, rateTokenB).mulDown(
-                    testLocals.poolSwapFeePercentage.complement()
-                ) > vaultMockMinTradeAmount
+                exactAmountInDo.toScaled18ApplyRateRoundDown(decimalScalingFactorTokenB, rateTokenB)
+                    .mulDown(testLocals.poolSwapFeePercentage.complement()) > vaultMockMinTradeAmount
             );
         }
 
@@ -731,14 +668,7 @@ contract E2eSwapTest is BaseVaultTest {
         // with exact_out `exactAmountInDo - feesTokenA` is comparable to `exactAmountOut`, given that the fees are
         // known.
         uint256 exactAmountInUndo = router.swapSingleTokenExactOut(
-            pool,
-            tokenB,
-            tokenA,
-            exactAmountInDo,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            pool, tokenB, tokenA, exactAmountInDo, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
 
         vm.assume(exactAmountInUndo > 0);
@@ -783,27 +713,19 @@ contract E2eSwapTest is BaseVaultTest {
         // The user balance of each token cannot be greater than before because the swap and the reversed swap were
         // executed. Also, fees were paid to the protocol and pool creator, so make sure the user paid for them.
         assertLe(
-            balancesAfter.userTokens[tokenAIdx],
-            balancesBefore.userTokens[tokenAIdx],
-            "Wrong sender tokenA balance"
+            balancesAfter.userTokens[tokenAIdx], balancesBefore.userTokens[tokenAIdx], "Wrong sender tokenA balance"
         );
         assertLe(
-            balancesAfter.userTokens[tokenBIdx],
-            balancesBefore.userTokens[tokenBIdx],
-            "Wrong sender tokenB balance"
+            balancesAfter.userTokens[tokenBIdx], balancesBefore.userTokens[tokenBIdx], "Wrong sender tokenB balance"
         );
 
         // The vault balance of each token cannot be smaller than before because the swap and the reversed swap were
         // executed.
         assertGe(
-            balancesAfter.vaultTokens[tokenAIdx],
-            balancesBefore.vaultTokens[tokenAIdx],
-            "Wrong vault tokenA balance"
+            balancesAfter.vaultTokens[tokenAIdx], balancesBefore.vaultTokens[tokenAIdx], "Wrong vault tokenA balance"
         );
         assertGe(
-            balancesAfter.vaultTokens[tokenBIdx],
-            balancesBefore.vaultTokens[tokenBIdx],
-            "Wrong vault tokenB balance"
+            balancesAfter.vaultTokens[tokenBIdx], balancesBefore.vaultTokens[tokenBIdx], "Wrong vault tokenB balance"
         );
     }
 
@@ -819,13 +741,12 @@ contract E2eSwapTest is BaseVaultTest {
         uint256 rateTokenB = getRate(tokenB);
 
         // Since tokens can have different decimals and amountIn is in relation to tokenA, normalize tokenB liquidity.
-        uint256 normalizedLiquidityTokenB = (liquidityTokenB * (rateTokenB * 10 ** decimalsTokenA)) /
-            (rateTokenA * 10 ** decimalsTokenB);
+        uint256 normalizedLiquidityTokenB =
+            (liquidityTokenB * (rateTokenB * 10 ** decimalsTokenA)) / (rateTokenA * 10 ** decimalsTokenB);
 
         // 20% of tokenA or tokenB liquidity, the lowest value, to make sure the swap is executed.
-        uint256 maxAmountIn = (
-            liquidityTokenA > normalizedLiquidityTokenB ? normalizedLiquidityTokenB : liquidityTokenA
-        ).mulDown(20e16);
+        uint256 maxAmountIn =
+            (liquidityTokenA > normalizedLiquidityTokenB ? normalizedLiquidityTokenB : liquidityTokenA).mulDown(20e16);
 
         swapLimits.maxTokenA = maxAmountIn;
         swapLimits.minTokenA = Math.min(swapLimits.minTokenA, maxAmountIn);
@@ -845,13 +766,12 @@ contract E2eSwapTest is BaseVaultTest {
         uint256 rateTokenB = getRate(tokenB);
 
         // Since tokens can have different decimals and amountOut is in relation to tokenB, normalize tokenA liquidity.
-        uint256 normalizedLiquidityTokenA = (liquidityTokenA * (rateTokenA * 10 ** decimalsTokenB)) /
-            (rateTokenB * 10 ** decimalsTokenA);
+        uint256 normalizedLiquidityTokenA =
+            (liquidityTokenA * (rateTokenA * 10 ** decimalsTokenB)) / (rateTokenB * 10 ** decimalsTokenA);
 
         // 20% of tokenA or tokenB liquidity, the lowest value, to make sure the swap is executed.
-        uint256 maxAmountOut = (
-            normalizedLiquidityTokenA > liquidityTokenB ? liquidityTokenB : normalizedLiquidityTokenA
-        ).mulDown(20e16);
+        uint256 maxAmountOut =
+            (normalizedLiquidityTokenA > liquidityTokenB ? liquidityTokenB : normalizedLiquidityTokenA).mulDown(20e16);
 
         swapLimits.maxTokenB = maxAmountOut;
         swapLimits.minTokenB = Math.min(swapLimits.minTokenB, maxAmountOut);
@@ -860,7 +780,7 @@ contract E2eSwapTest is BaseVaultTest {
     }
 
     function setPoolBalances(uint256 liquidityTokenA, uint256 liquidityTokenB) internal {
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
 
         uint256[] memory newPoolBalance = new uint256[](2);
         newPoolBalance[tokenAIdx] = liquidityTokenA;
@@ -870,14 +790,10 @@ contract E2eSwapTest is BaseVaultTest {
         uint256 rateTokenB = getRate(tokenB);
 
         uint256[] memory newPoolBalanceLiveScaled18 = new uint256[](2);
-        newPoolBalanceLiveScaled18[tokenAIdx] = liquidityTokenA.toScaled18ApplyRateRoundDown(
-            10 ** (18 - decimalsTokenA),
-            rateTokenA
-        );
-        newPoolBalanceLiveScaled18[tokenBIdx] = liquidityTokenB.toScaled18ApplyRateRoundDown(
-            10 ** (18 - decimalsTokenB),
-            rateTokenB
-        );
+        newPoolBalanceLiveScaled18[tokenAIdx] =
+            liquidityTokenA.toScaled18ApplyRateRoundDown(10 ** (18 - decimalsTokenA), rateTokenA);
+        newPoolBalanceLiveScaled18[tokenBIdx] =
+            liquidityTokenB.toScaled18ApplyRateRoundDown(10 ** (18 - decimalsTokenB), rateTokenB);
 
         vault.manualSetPoolTokensAndBalances(pool, tokens, newPoolBalance, newPoolBalanceLiveScaled18);
     }

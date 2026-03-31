@@ -22,24 +22,18 @@ import {DssInstance} from "./MCD.sol";
 
 /// @dev A user which can perform actions in MCD
 contract MCDUser {
-
     using GodMode for *;
 
     DssInstance dss;
 
-    constructor(
-        DssInstance memory _dss
-    ) {
+    constructor(DssInstance memory _dss) {
         dss = _dss;
     }
 
     /// @dev Create an auction on the provided ilk
     /// @param join The gem join adapter to use
     /// @param amount The amount of gems to use as collateral
-    function createAuction(
-        GemJoinAbstract join,
-        uint256 amount
-    ) public {
+    function createAuction(GemJoinAbstract join, uint256 amount) public {
         DSTokenAbstract token = DSTokenAbstract(join.gem());
         bytes32 ilk = join.ilk();
 
@@ -50,7 +44,7 @@ contract MCDUser {
         join.join(address(this), amount);
         token.setBalance(address(this), prevBalance);
         token.approve(address(join), prevAllowance);
-        (,uint256 rate, uint256 spot,,) = dss.vat.ilks(ilk);
+        (, uint256 rate, uint256 spot,,) = dss.vat.ilks(ilk);
         uint256 art = spot * amount / rate;
         uint256 ink = amount * (10 ** (18 - token.decimals()));
         dss.vat.frob(ilk, address(this), address(this), address(this), int256(ink), int256(art));
@@ -63,5 +57,4 @@ contract MCDUser {
         dss.vat.file(ilk, "spot", spot);
         dss.vat.setWard(address(this), prevWard);
     }
-
 }

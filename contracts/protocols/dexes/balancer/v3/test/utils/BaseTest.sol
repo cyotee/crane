@@ -7,7 +7,9 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
 import {ERC4626TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC4626TestToken.sol";
@@ -31,10 +33,8 @@ abstract contract BaseTest is Test {
     // txGasPrice has a limit of 2^64 - 1.
     uint256 internal constant MAX_UINT64 = type(uint64).max;
 
-    bytes32 internal constant ZERO_BYTES32 =
-        0x0000000000000000000000000000000000000000000000000000000000000000;
-    bytes32 internal constant ONE_BYTES32 =
-        0x0000000000000000000000000000000000000000000000000000000000000001;
+    bytes32 internal constant ZERO_BYTES32 = 0x0000000000000000000000000000000000000000000000000000000000000000;
+    bytes32 internal constant ONE_BYTES32 = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
     address internal constant ZERO_ADDRESS = address(0);
 
@@ -192,10 +192,11 @@ abstract contract BaseTest is Test {
         waUSDC.inflateUnderlyingOrWrapped(23 * defaultAccountBalance(), 0);
     }
 
-    function getSortedIndexes(
-        address tokenA,
-        address tokenB
-    ) internal pure returns (uint256 idxTokenA, uint256 idxTokenB) {
+    function getSortedIndexes(address tokenA, address tokenB)
+        internal
+        pure
+        returns (uint256 idxTokenA, uint256 idxTokenB)
+    {
         idxTokenA = tokenA > tokenB ? 1 : 0;
         idxTokenB = idxTokenA == 0 ? 1 : 0;
     }
@@ -228,12 +229,10 @@ abstract contract BaseTest is Test {
     }
 
     /// @dev Creates an ERC4626 test token and labels its address.
-    function createERC4626(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        IERC20 underlying
-    ) internal returns (ERC4626TestToken token) {
+    function createERC4626(string memory name, string memory symbol, uint8 decimals, IERC20 underlying)
+        internal
+        returns (ERC4626TestToken token)
+    {
         token = new ERC4626TestToken(underlying, name, symbol, decimals);
         vm.label(address(token), symbol);
     }

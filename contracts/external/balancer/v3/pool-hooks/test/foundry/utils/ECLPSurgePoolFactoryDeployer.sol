@@ -2,13 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { ECLPSurgePoolFactory } from "../../../contracts/ECLPSurgePoolFactory.sol";
+import {ECLPSurgePoolFactory} from "../../../contracts/ECLPSurgePoolFactory.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "ECLPPool". These functions
@@ -48,13 +50,12 @@ contract ECLPSurgePoolFactoryDeployer is BaseContractsDeployer {
         string memory poolVersion
     ) internal returns (ECLPSurgePoolFactory) {
         if (reusingArtifacts) {
-            return
-                ECLPSurgePoolFactory(
-                    deployCode(
-                        "artifacts/contracts/ECLPSurgePoolFactory.sol/ECLPSurgePoolFactory.json",
-                        abi.encode(eclpSurgeHook, pauseWindowDuration, factoryVersion, poolVersion)
-                    )
-                );
+            return ECLPSurgePoolFactory(
+                deployCode(
+                    "artifacts/contracts/ECLPSurgePoolFactory.sol/ECLPSurgePoolFactory.json",
+                    abi.encode(eclpSurgeHook, pauseWindowDuration, factoryVersion, poolVersion)
+                )
+            );
         } else {
             return new ECLPSurgePoolFactory(eclpSurgeHook, pauseWindowDuration, factoryVersion, poolVersion);
         }
@@ -67,15 +68,11 @@ contract ECLPSurgePoolFactoryDeployer is BaseContractsDeployer {
     {
         return (
             IGyroECLPPool.EclpParams({
-                alpha: _paramsAlpha,
-                beta: _paramsBeta,
-                c: _paramsC,
-                s: _paramsS,
-                lambda: _paramsLambda
+                alpha: _paramsAlpha, beta: _paramsBeta, c: _paramsC, s: _paramsS, lambda: _paramsLambda
             }),
             IGyroECLPPool.DerivedEclpParams({
-                tauAlpha: IGyroECLPPool.Vector2({ x: _tauAlphaX, y: _tauAlphaY }),
-                tauBeta: IGyroECLPPool.Vector2({ x: _tauBetaX, y: _tauBetaY }),
+                tauAlpha: IGyroECLPPool.Vector2({x: _tauAlphaX, y: _tauAlphaY}),
+                tauBeta: IGyroECLPPool.Vector2({x: _tauBetaX, y: _tauBetaY}),
                 u: _u,
                 v: _v,
                 w: _w,

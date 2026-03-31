@@ -16,8 +16,8 @@ interface IMultiStepOwnable {
     /**
      * @notice Emitted when an ownership transfer is initiated.
      * @param prevOwner The address initiating the transfer. Will only be current owner.
-     * @param newOwner The address to whcih ownership is being transfered.
-    * @custom:topiczero 0xb150023a879fd806e3599b6ca8ee3b60f0e360ab3846d128d67ebce1a391639a
+     * @param newOwner The address to which ownership is being transferred.
+     * @custom:topiczero 0xb150023a879fd806e3599b6ca8ee3b60f0e360ab3846d128d67ebce1a391639a
      */
     event OwnershipTransferInitiated(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferInitiated(address-address)[]
@@ -25,10 +25,10 @@ interface IMultiStepOwnable {
     // tag::OwnershipTransferConfirmed(address-address)[]
     /**
      * @notice Emitted when an ownership transfer is confirmed after the buffer period.
-     * @notice Ownership 
+     * @notice Ownership
      * @param prevOwner The address that initiated the ownership transfer. Is still the current owner.
      * @param newOwner The address to which ownership transfer has been confirmed.
-    * @custom:topiczero 0x646fe5eeb20d96ea45a9caafcb508854a2fb5660885ced7772e12a633c974571
+     * @custom:topiczero 0x646fe5eeb20d96ea45a9caafcb508854a2fb5660885ced7772e12a633c974571
      */
     event OwnershipTransferConfirmed(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferConfirmed(address-address)[]
@@ -38,7 +38,7 @@ interface IMultiStepOwnable {
      * @notice Emitted when a pending ownership transfer is completed.
      * @param prevOwner The address that initiated the ownership transfer.
      * @param newOwner The address to which ownership transfer has been completed. Is the current owner.
-    * @custom:topiczero 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
+     * @custom:topiczero 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
      */
     event OwnershipTransferred(address indexed prevOwner, address indexed newOwner);
     // end::OwnershipTransferred(address-address)[]
@@ -69,7 +69,7 @@ interface IMultiStepOwnable {
     /**
      * @notice Thrown when the owner tries to confirm a pending owner before the ownership transfer buffer period has elapsed.
      * @param currentTime The current block.timestamp when ownership transfer confirmation was attempted.
-     * @param bufferEndTime The timestamp when the ownership transfer buffer period has ellapsed.
+     * @param bufferEndTime The timestamp when the ownership transfer buffer period has elapsed.
      * @custom:selector 0xd64ede73
      */
     error BufferPeriodNotElapsed(uint256 currentTime, uint256 bufferEndTime);
@@ -82,7 +82,7 @@ interface IMultiStepOwnable {
     // tag::initiateOwnershipTransfer(address)[]
     /**
      * @notice Initiates a ownership transfer by storing `newOwner` as the pending owner.
-     * @param newOwner The address to which to intiate a ownership transfer.
+     * @param newOwner The address to which to initiate a ownership transfer.
      * @custom:selector 0xc0b6f561
      * @custom:signature initiateOwnershipTransfer(address)
      * @custom:emits OwnershipTransferInitiated(address,address)
@@ -128,7 +128,7 @@ interface IMultiStepOwnable {
 
     // tag::owner()[]
     /**
-     * @return The curent owner of the contract.
+     * @return The current owner of the contract.
      * @custom:selector 0x8da5cb5b
      * @custom:signature owner()
      */

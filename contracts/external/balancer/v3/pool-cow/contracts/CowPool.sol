@@ -2,26 +2,24 @@
 
 pragma solidity ^0.8.24;
 
-import { ICowPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { WeightedPool } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
+import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
 
-import { BaseHooks } from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
+import {BaseHooks} from "@crane/contracts/external/balancer/v3/vault/contracts/BaseHooks.sol";
 
-import { CowPoolFactory } from "./CowPoolFactory.sol";
+import {CowPoolFactory} from "./CowPoolFactory.sol";
 
 contract CowPool is ICowPool, BaseHooks, WeightedPool {
     address internal _trustedCowRouter;
     CowPoolFactory internal _cowPoolFactory;
 
-    constructor(
-        WeightedPool.NewPoolParams memory params,
-        IVault vault,
-        address trustedCowRouter
-    ) WeightedPool(params, vault) {
+    constructor(WeightedPool.NewPoolParams memory params, IVault vault, address trustedCowRouter)
+        WeightedPool(params, vault)
+    {
         _cowPoolFactory = CowPoolFactory(msg.sender);
         _setTrustedCowRouter(trustedCowRouter);
     }
@@ -61,7 +59,7 @@ contract CowPool is ICowPool, BaseHooks, WeightedPool {
     /// @inheritdoc ICowPool
     function getCowPoolImmutableData() external view returns (CoWPoolImmutableData memory data) {
         data.tokens = _vault.getPoolTokens(address(this));
-        (data.decimalScalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _vault.getPoolTokenRates(address(this));
         data.normalizedWeights = _getNormalizedWeights();
     }
 
@@ -76,11 +74,8 @@ contract CowPool is ICowPool, BaseHooks, WeightedPool {
         TokenConfig[] memory,
         LiquidityManagement calldata liquidityManagement
     ) public view override returns (bool) {
-        return
-            pool == address(this) &&
-            factory == address(_cowPoolFactory) &&
-            liquidityManagement.enableDonation == true &&
-            liquidityManagement.disableUnbalancedLiquidity == true;
+        return pool == address(this) && factory == address(_cowPoolFactory)
+            && liquidityManagement.enableDonation == true && liquidityManagement.disableUnbalancedLiquidity == true;
     }
 
     /// @inheritdoc IHooks

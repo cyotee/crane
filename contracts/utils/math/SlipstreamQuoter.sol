@@ -65,12 +65,12 @@ library SlipstreamQuoter {
 
         if (p.amount == 0) {
             r.fullyFilled = true;
-            (r.sqrtPriceAfterX96, r.tickAfter, , , , ) = pool.slot0();
+            (r.sqrtPriceAfterX96, r.tickAfter,,,,) = pool.slot0();
             r.liquidityAfter = pool.liquidity();
             return r;
         }
 
-        (uint160 sqrtPriceX96, int24 tick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 tick,,,,) = pool.slot0();
         require(sqrtPriceX96 != 0, "SL:UNINIT");
 
         _requireValidSqrtPriceLimit(p.zeroForOne, p.sqrtPriceLimitX96, sqrtPriceX96);
@@ -101,12 +101,8 @@ library SlipstreamQuoter {
             _StepComputations memory step;
             step.sqrtPriceStartX96 = state.sqrtPriceX96;
 
-            (step.tickNext, step.initialized) = _nextInitializedTickWithinOneWordView(
-                pool,
-                state.tick,
-                tickSpacing,
-                p.zeroForOne
-            );
+            (step.tickNext, step.initialized) =
+                _nextInitializedTickWithinOneWordView(pool, state.tick, tickSpacing, p.zeroForOne);
 
             if (step.tickNext < TickMath.MIN_TICK) {
                 step.tickNext = TickMath.MIN_TICK;
@@ -118,17 +114,15 @@ library SlipstreamQuoter {
 
             uint160 sqrtPriceTargetX96;
             if (p.zeroForOne) {
-                sqrtPriceTargetX96 = step.sqrtPriceNextX96 < p.sqrtPriceLimitX96 ? p.sqrtPriceLimitX96 : step.sqrtPriceNextX96;
+                sqrtPriceTargetX96 =
+                    step.sqrtPriceNextX96 < p.sqrtPriceLimitX96 ? p.sqrtPriceLimitX96 : step.sqrtPriceNextX96;
             } else {
-                sqrtPriceTargetX96 = step.sqrtPriceNextX96 > p.sqrtPriceLimitX96 ? p.sqrtPriceLimitX96 : step.sqrtPriceNextX96;
+                sqrtPriceTargetX96 =
+                    step.sqrtPriceNextX96 > p.sqrtPriceLimitX96 ? p.sqrtPriceLimitX96 : step.sqrtPriceNextX96;
             }
 
             (sqrtPriceX96, step.amountIn, step.amountOut, step.feeAmount) = SwapMath.computeSwapStep(
-                state.sqrtPriceX96,
-                sqrtPriceTargetX96,
-                state.liquidity,
-                state.amountSpecifiedRemaining,
-                fee
+                state.sqrtPriceX96, sqrtPriceTargetX96, state.liquidity, state.amountSpecifiedRemaining, fee
             );
 
             state.sqrtPriceX96 = sqrtPriceX96;
@@ -148,7 +142,7 @@ library SlipstreamQuoter {
                 if (step.initialized) {
                     // Slipstream ticks() returns different struct than Uniswap V3
                     // We only need liquidityNet for swap calculations
-                    (, int128 liquidityNet, , , , , , , , ) = pool.ticks(step.tickNext);
+                    (, int128 liquidityNet,,,,,,,,) = pool.ticks(step.tickNext);
                     if (p.zeroForOne) liquidityNet = -liquidityNet;
                     state.liquidity = LiquidityMath.addDelta(state.liquidity, liquidityNet);
                 }
@@ -176,11 +170,10 @@ library SlipstreamQuoter {
         }
     }
 
-    function _requireValidSqrtPriceLimit(
-        bool zeroForOne,
-        uint160 sqrtPriceLimitX96,
-        uint160 sqrtPriceX96
-    ) private pure {
+    function _requireValidSqrtPriceLimit(bool zeroForOne, uint160 sqrtPriceLimitX96, uint160 sqrtPriceX96)
+        private
+        pure
+    {
         require(
             zeroForOne
                 ? sqrtPriceLimitX96 < sqrtPriceX96 && sqrtPriceLimitX96 > TickMath.MIN_SQRT_RATIO
@@ -189,12 +182,11 @@ library SlipstreamQuoter {
         );
     }
 
-    function _nextInitializedTickWithinOneWordView(
-        ICLPool pool,
-        int24 tick,
-        int24 tickSpacing,
-        bool lte
-    ) private view returns (int24 next, bool initialized) {
+    function _nextInitializedTickWithinOneWordView(ICLPool pool, int24 tick, int24 tickSpacing, bool lte)
+        private
+        view
+        returns (int24 next, bool initialized)
+    {
         int24 compressed = tick / tickSpacing;
         if (tick < 0 && tick % tickSpacing != 0) compressed--; // round towards negative infinity
 

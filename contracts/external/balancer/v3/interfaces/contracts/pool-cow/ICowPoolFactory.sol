@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { PoolRoleAccounts, TokenConfig } from "../vault/VaultTypes.sol";
+import {PoolRoleAccounts, TokenConfig} from "../vault/VaultTypes.sol";
 
 interface ICowPoolFactory {
     /**

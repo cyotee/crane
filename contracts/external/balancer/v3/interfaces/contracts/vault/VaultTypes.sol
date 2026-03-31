@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IRateProvider } from "../solidity-utils/helpers/IRateProvider.sol";
+import {IRateProvider} from "../solidity-utils/helpers/IRateProvider.sol";
 
 /**
  * @notice Represents a pool's liquidity management configuration.

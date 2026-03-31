@@ -34,10 +34,10 @@ import {
 /*                              TestBase & Behavior                           */
 /* -------------------------------------------------------------------------- */
 
-import {TestBase_BalancerV3Router} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/TestBase_BalancerV3Router.sol";
-import {Behavior_IRouter} from
-    "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/Behavior_IRouter.sol";
+import {
+    TestBase_BalancerV3Router
+} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/TestBase_BalancerV3Router.sol";
+import {Behavior_IRouter} from "@crane/contracts/protocols/dexes/balancer/v3/router/diamond/Behavior_IRouter.sol";
 
 /**
  * @title BalancerV3RouterDFPkgTest
@@ -64,8 +64,7 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
 
             assertTrue(
                 Behavior_IRouter.isValid_facetCut_hasSelectors(
-                    vm.getLabel(cuts[i].facetAddress),
-                    cuts[i].functionSelectors.length
+                    vm.getLabel(cuts[i].facetAddress), cuts[i].functionSelectors.length
                 ),
                 "Each facet should have selectors"
             );
@@ -85,24 +84,17 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
         address router2 = _deployRouter();
 
         assertTrue(
-            Behavior_IRouter.isValid_deployRouter_idempotent(router1, router2),
-            "Should return same router on redeploy"
+            Behavior_IRouter.isValid_deployRouter_idempotent(router1, router2), "Should return same router on redeploy"
         );
     }
 
     function test_deployRouter_differentParamsGetDifferentAddresses() public {
         address router1 = _deployRouter(
-            IVault(address(mockVault)),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            "Version 1"
+            IVault(address(mockVault)), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), "Version 1"
         );
 
         address router2 = _deployRouter(
-            IVault(address(mockVault)),
-            IWETH(address(mockWeth)),
-            IPermit2(address(mockPermit2)),
-            "Version 2"
+            IVault(address(mockVault)), IWETH(address(mockWeth)), IPermit2(address(mockPermit2)), "Version 2"
         );
 
         assertTrue(
@@ -120,10 +112,7 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
 
         // Validate vault configuration using Behavior library
         assertTrue(
-            Behavior_IRouter.isValid_IRouterCommon_getVault(
-                IRouterCommon(router),
-                address(mockVault)
-            ),
+            Behavior_IRouter.isValid_IRouterCommon_getVault(IRouterCommon(router), address(mockVault)),
             "getVault() should return correct vault"
         );
     }
@@ -149,8 +138,7 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
 
     function test_facetSizes_individualValidation() public view {
         assertTrue(
-            Behavior_IRouter.isValid_facetSize("RouterSwapFacet", address(swapFacet)),
-            "SwapFacet should be under 24KB"
+            Behavior_IRouter.isValid_facetSize("RouterSwapFacet", address(swapFacet)), "SwapFacet should be under 24KB"
         );
         assertTrue(
             Behavior_IRouter.isValid_facetSize("RouterAddLiquidityFacet", address(addLiquidityFacet)),
@@ -177,7 +165,9 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
             "BufferRouterFacet should be under 24KB"
         );
         assertTrue(
-            Behavior_IRouter.isValid_facetSize("CompositeLiquidityERC4626Facet", address(compositeLiquidityERC4626Facet)),
+            Behavior_IRouter.isValid_facetSize(
+                "CompositeLiquidityERC4626Facet", address(compositeLiquidityERC4626Facet)
+            ),
             "CompositeLiquidityERC4626Facet should be under 24KB"
         );
         assertTrue(
@@ -188,10 +178,7 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
 
     function test_facetSizes_allFacetsValidation() public view {
         address[] memory facets = routerPkg.facetAddresses();
-        assertTrue(
-            Behavior_IRouter.areValid_facetSizes(facets),
-            "All facets should be under 24KB"
-        );
+        assertTrue(Behavior_IRouter.areValid_facetSizes(facets), "All facets should be under 24KB");
     }
 
     /* ========================================================================== */
@@ -219,8 +206,13 @@ contract BalancerV3RouterDFPkgTest is TestBase_BalancerV3Router {
         assertTrue(commonFacet.facetFuncs().length > 0, "CommonFacet should have selectors");
         assertTrue(batchSwapFacet.facetFuncs().length > 0, "BatchSwapFacet should have selectors");
         assertTrue(bufferRouterFacet.facetFuncs().length > 0, "BufferRouterFacet should have selectors");
-        assertTrue(compositeLiquidityERC4626Facet.facetFuncs().length > 0, "CompositeLiquidityERC4626Facet should have selectors");
-        assertTrue(compositeLiquidityNestedFacet.facetFuncs().length > 0, "CompositeLiquidityNestedFacet should have selectors");
+        assertTrue(
+            compositeLiquidityERC4626Facet.facetFuncs().length > 0,
+            "CompositeLiquidityERC4626Facet should have selectors"
+        );
+        assertTrue(
+            compositeLiquidityNestedFacet.facetFuncs().length > 0, "CompositeLiquidityNestedFacet should have selectors"
+        );
     }
 
     /* ========================================================================== */

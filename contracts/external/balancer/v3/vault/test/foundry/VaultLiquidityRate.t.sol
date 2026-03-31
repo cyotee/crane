@@ -6,20 +6,24 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { PoolData, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IPoolLiquidity } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {PoolData, Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract VaultLiquidityWithRatesTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -60,18 +64,14 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         tokens[daiIdx] = dai;
         tokens[wstethIdx] = wsteth;
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens, rateProviders),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens, rateProviders), poolHooksContract, lp);
         poolArgs = abi.encode(vault, name, symbol);
     }
 
     function testLastLiveBalanceInitialization() public {
         // Need to set the rate before initialization for this test.
-        (pool, ) = createPool();
+        (pool,) = createPool();
         rateProvider.mockRate(DEFAULT_MOCK_RATE);
         initPool();
 
@@ -131,11 +131,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         );
 
         router.addLiquidityCustom(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_AMOUNT,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_AMOUNT, false, bytes("")
         );
     }
 
@@ -143,11 +139,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         vm.startPrank(alice);
 
         router.addLiquidityUnbalanced(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_BPT_AMOUNT_ROUND_DOWN,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_BPT_AMOUNT_ROUND_DOWN, false, bytes("")
         );
 
         // TODO: Find a way to test rates inside the Vault.
@@ -166,11 +158,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         vm.startPrank(alice);
 
         router.addLiquidityUnbalanced(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_BPT_AMOUNT_ROUND_DOWN,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_BPT_AMOUNT_ROUND_DOWN, false, bytes("")
         );
 
         PoolData memory balances = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
@@ -188,12 +176,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         );
 
         router.removeLiquiditySingleTokenExactIn(
-            pool,
-            DEFAULT_BPT_AMOUNT_ROUND_DOWN,
-            wsteth,
-            DEFAULT_AMOUNT_ROUND_DOWN,
-            false,
-            bytes("")
+            pool, DEFAULT_BPT_AMOUNT_ROUND_DOWN, wsteth, DEFAULT_AMOUNT_ROUND_DOWN, false, bytes("")
         );
     }
 
@@ -201,11 +184,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         vm.startPrank(alice);
 
         router.addLiquidityUnbalanced(
-            pool,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            DEFAULT_AMOUNT,
-            false,
-            bytes("")
+            pool, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), DEFAULT_AMOUNT, false, bytes("")
         );
 
         PoolData memory balances = vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
@@ -229,11 +208,7 @@ contract VaultLiquidityWithRatesTest is BaseVaultTest {
         );
 
         router.removeLiquidityCustom(
-            pool,
-            DEFAULT_AMOUNT,
-            [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(),
-            false,
-            bytes("")
+            pool, DEFAULT_AMOUNT, [DEFAULT_AMOUNT, DEFAULT_AMOUNT].toMemoryArray(), false, bytes("")
         );
     }
 

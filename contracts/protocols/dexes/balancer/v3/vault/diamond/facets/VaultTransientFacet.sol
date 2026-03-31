@@ -8,8 +8,12 @@ import {Address} from "@crane/contracts/utils/Address.sol";
 import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultMain.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import {TransientStorageHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    TransientStorageHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
 import {BalancerV3VaultStorageRepo} from "../BalancerV3VaultStorageRepo.sol";
 import {BalancerV3VaultModifiers} from "../BalancerV3VaultModifiers.sol";
@@ -152,10 +156,7 @@ contract VaultTransientFacet is BalancerV3VaultModifiers, IFacet {
      * @param amountHint The expected amount deposited (used to cap credit)
      * @return credit The actual credit amount recorded
      */
-    function settle(
-        IERC20 token,
-        uint256 amountHint
-    ) external nonReentrant onlyWhenUnlocked returns (uint256 credit) {
+    function settle(IERC20 token, uint256 amountHint) external nonReentrant onlyWhenUnlocked returns (uint256 credit) {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
 
         uint256 reservesBefore = layout.reservesOf[token];
@@ -180,11 +181,7 @@ contract VaultTransientFacet is BalancerV3VaultModifiers, IFacet {
      * @param to The recipient address
      * @param amount The amount to send
      */
-    function sendTo(
-        IERC20 token,
-        address to,
-        uint256 amount
-    ) external nonReentrant onlyWhenUnlocked {
+    function sendTo(IERC20 token, address to, uint256 amount) external nonReentrant onlyWhenUnlocked {
         BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
 
         _takeDebt(token, amount);

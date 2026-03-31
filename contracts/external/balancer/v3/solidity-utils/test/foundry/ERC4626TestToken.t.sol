@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { BaseTest } from "./utils/BaseTest.sol";
-import { ERC4626TestToken } from "../../contracts/test/ERC4626TestToken.sol";
+import {BaseTest} from "./utils/BaseTest.sol";
+import {ERC4626TestToken} from "../../contracts/test/ERC4626TestToken.sol";
 
 contract ERC4626TestTokenTest is BaseTest {
     ERC4626TestToken internal wToken;

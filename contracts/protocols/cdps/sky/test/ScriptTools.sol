@@ -15,17 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 pragma solidity ^0.8.0;
 
-import { VmSafe } from "forge-std/Vm.sol";
-import { stdJson } from "forge-std/StdJson.sol";
+import {VmSafe} from "forge-std/Vm.sol";
+import {stdJson} from "forge-std/StdJson.sol";
 
-import { WardsAbstract } from "../interfaces/Interfaces.sol";
+import {WardsAbstract} from "../interfaces/Interfaces.sol";
 
 /**
  * @title Script Tools
  * @dev Contains opinionated tools used in scripts.
  */
 library ScriptTools {
-
     VmSafe private constant vm = VmSafe(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     string internal constant DEFAULT_DELIMITER = ",";
@@ -48,13 +47,16 @@ library ScriptTools {
 
     function readOutput(string memory name, uint256 timestamp) internal view returns (string memory) {
         string memory root = vm.projectRoot();
-        string memory chainOutputFolder = string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
-        return vm.readFile(string(abi.encodePacked(root, chainOutputFolder, name, "-", vm.toString(timestamp), ".json")));
+        string memory chainOutputFolder =
+            string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
+        return
+            vm.readFile(string(abi.encodePacked(root, chainOutputFolder, name, "-", vm.toString(timestamp), ".json")));
     }
 
     function readOutput(string memory name) internal view returns (string memory) {
         string memory root = vm.projectRoot();
-        string memory chainOutputFolder = string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
+        string memory chainOutputFolder =
+            string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
         return vm.readFile(string(abi.encodePacked(root, chainOutputFolder, name, "-latest.json")));
     }
 
@@ -213,8 +215,11 @@ library ScriptTools {
      */
     function _doExport(string memory name, string memory json) internal {
         string memory root = vm.projectRoot();
-        string memory chainOutputFolder = string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
-        vm.writeJson(json, string(abi.encodePacked(root, chainOutputFolder, name, "-", vm.toString(block.timestamp), ".json")));
+        string memory chainOutputFolder =
+            string(abi.encodePacked("/script/output/", vm.toString(getRootChainId()), "/"));
+        vm.writeJson(
+            json, string(abi.encodePacked(root, chainOutputFolder, name, "-", vm.toString(block.timestamp), ".json"))
+        );
         if (vm.envOr("FOUNDRY_EXPORTS_OVERWRITE_LATEST", false)) {
             vm.writeJson(json, string(abi.encodePacked(root, chainOutputFolder, name, "-latest.json")));
         }
@@ -269,7 +274,11 @@ library ScriptTools {
         return vm.envOr(envKey, stdJson.readUint(json, key));
     }
 
-    function readUintArray(string memory json, string memory key, string memory envKey) internal view returns (uint256[] memory) {
+    function readUintArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (uint256[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readUintArray(json, key));
     }
 
@@ -277,7 +286,11 @@ library ScriptTools {
         return vm.envOr(envKey, stdJson.readInt(json, key));
     }
 
-    function readIntArray(string memory json, string memory key, string memory envKey) internal view returns (int256[] memory) {
+    function readIntArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (int256[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readIntArray(json, key));
     }
 
@@ -285,15 +298,27 @@ library ScriptTools {
         return vm.envOr(envKey, stdJson.readBytes32(json, key));
     }
 
-    function readBytes32Array(string memory json, string memory key, string memory envKey) internal view returns (bytes32[] memory) {
+    function readBytes32Array(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (bytes32[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readBytes32Array(json, key));
     }
 
-    function readString(string memory json, string memory key, string memory envKey) internal view returns (string memory) {
+    function readString(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (string memory)
+    {
         return vm.envOr(envKey, stdJson.readString(json, key));
     }
 
-    function readStringArray(string memory json, string memory key, string memory envKey) internal view returns (string[] memory) {
+    function readStringArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (string[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readStringArray(json, key));
     }
 
@@ -301,7 +326,11 @@ library ScriptTools {
         return vm.envOr(envKey, stdJson.readAddress(json, key));
     }
 
-    function readAddressArray(string memory json, string memory key, string memory envKey) internal view returns (address[] memory) {
+    function readAddressArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (address[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readAddressArray(json, key));
     }
 
@@ -309,16 +338,27 @@ library ScriptTools {
         return vm.envOr(envKey, stdJson.readBool(json, key));
     }
 
-    function readBoolArray(string memory json, string memory key, string memory envKey) internal view returns (bool[] memory) {
+    function readBoolArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (bool[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readBoolArray(json, key));
     }
 
-    function readBytes(string memory json, string memory key, string memory envKey) internal view returns (bytes memory) {
+    function readBytes(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (bytes memory)
+    {
         return vm.envOr(envKey, stdJson.readBytes(json, key));
     }
 
-    function readBytesArray(string memory json, string memory key, string memory envKey) internal view returns (bytes[] memory) {
+    function readBytesArray(string memory json, string memory key, string memory envKey)
+        internal
+        view
+        returns (bytes[] memory)
+    {
         return vm.envOr(envKey, vm.envOr(DELIMITER_OVERRIDE, DEFAULT_DELIMITER), stdJson.readBytesArray(json, key));
     }
-
 }

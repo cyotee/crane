@@ -2,8 +2,12 @@
 pragma solidity ^0.8.0;
 
 import {IPoolInfo} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/ISwapFeePercentageBounds.sol";
-import {IUnbalancedLiquidityInvariantRatioBounds} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/ISwapFeePercentageBounds.sol";
+import {
+    IUnbalancedLiquidityInvariantRatioBounds
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IUnbalancedLiquidityInvariantRatioBounds.sol";
 import {IAuthentication} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IAuthentication.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
@@ -15,7 +19,6 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {BalancerV3PoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolTarget.sol";
 
 contract BalancerV3PoolFacet is BalancerV3PoolTarget, IFacet {
-
     function facetName() public pure returns (string memory) {
         return type(BalancerV3PoolFacet).name;
     }
@@ -64,7 +67,11 @@ contract BalancerV3PoolFacet is BalancerV3PoolTarget, IFacet {
         funcs[21] = IAuthentication.getActionId.selector;
     }
 
-    function facetMetadata() public pure returns (string memory name_, bytes4[] memory interfaceIds, bytes4[] memory functions) {
+    function facetMetadata()
+        public
+        pure
+        returns (string memory name_, bytes4[] memory interfaceIds, bytes4[] memory functions)
+    {
         name_ = facetName();
         interfaceIds = facetInterfaces();
         functions = facetFuncs();

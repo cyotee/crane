@@ -6,8 +6,8 @@ import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ICowRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowRouter.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ICowRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     AddLiquidityKind,
     AddLiquidityParams,
@@ -15,9 +15,11 @@ import {
     VaultSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
 
 contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
     using FixedPoint for uint256;
@@ -33,11 +35,10 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
     // Store the total amount of fees collected in each token.
     mapping(IERC20 token => uint256 feeAmount) internal _collectedProtocolFees;
 
-    constructor(
-        IVault vault,
-        uint256 protocolFeePercentage,
-        address feeSweeper
-    ) VaultGuard(vault) SingletonAuthentication(vault) {
+    constructor(IVault vault, uint256 protocolFeePercentage, address feeSweeper)
+        VaultGuard(vault)
+        SingletonAuthentication(vault)
+    {
         _setProtocolFeePercentage(protocolFeePercentage);
         _setFeeSweeper(feeSweeper);
     }
@@ -145,7 +146,7 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
         uint256[] memory transferAmountHints,
         bytes memory userData
     ) external authenticate returns (uint256 exactAmountIn) {
-        (exactAmountIn, ) = abi.decode(
+        (exactAmountIn,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     CowRouter.swapAndDonateSurplusHook,
@@ -173,12 +174,7 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
         _vault.unlock(
             abi.encodeCall(
                 CowRouter.donateHook,
-                DonateHookParams({
-                    pool: pool,
-                    sender: msg.sender,
-                    donationAmounts: donationAmounts,
-                    userData: userData
-                })
+                DonateHookParams({pool: pool, sender: msg.sender, donationAmounts: donationAmounts, userData: userData})
             )
         );
     }
@@ -208,10 +204,12 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
      * @return swapAmountIn Exact amount of tokenIn of the swap
      * @return swapAmountOut Exact amount of tokenOut of the swap
      */
-    function swapAndDonateSurplusHook(
-        ICowRouter.SwapAndDonateHookParams memory swapAndDonateParams
-    ) external onlyVault returns (uint256 swapAmountIn, uint256 swapAmountOut) {
-        (IERC20[] memory tokens, , , ) = _vault.getPoolTokenInfo(swapAndDonateParams.pool);
+    function swapAndDonateSurplusHook(ICowRouter.SwapAndDonateHookParams memory swapAndDonateParams)
+        external
+        onlyVault
+        returns (uint256 swapAmountIn, uint256 swapAmountOut)
+    {
+        (IERC20[] memory tokens,,,) = _vault.getPoolTokenInfo(swapAndDonateParams.pool);
 
         // The deadline is timestamp-based: it should not be relied upon for sub-minute accuracy.
         // solhint-disable-next-line not-rely-on-time
@@ -221,7 +219,7 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
 
         if (swapAndDonateParams.swapKind == SwapKind.EXACT_IN) {
             swapAmountIn = swapAndDonateParams.swapAmountGiven;
-            (, , swapAmountOut) = _vault.swap(
+            (,, swapAmountOut) = _vault.swap(
                 VaultSwapParams({
                     kind: SwapKind.EXACT_IN,
                     pool: swapAndDonateParams.pool,
@@ -234,7 +232,7 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
             );
         } else {
             swapAmountOut = swapAndDonateParams.swapAmountGiven;
-            (, swapAmountIn, ) = _vault.swap(
+            (, swapAmountIn,) = _vault.swap(
                 VaultSwapParams({
                     kind: SwapKind.EXACT_OUT,
                     pool: swapAndDonateParams.pool,
@@ -248,10 +246,7 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
         }
 
         (uint256[] memory donatedAmounts, uint256[] memory protocolFeeAmounts) = _donateToPool(
-            swapAndDonateParams.pool,
-            tokens,
-            swapAndDonateParams.donationAmounts,
-            swapAndDonateParams.userData
+            swapAndDonateParams.pool, tokens, swapAndDonateParams.donationAmounts, swapAndDonateParams.userData
         );
 
         // The pool amount must be deposited in the vault, and protocol fees must be deposited in the router.
@@ -285,14 +280,10 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
      * @param params Donate params (see ICowRouter for struct definition)
      */
     function donateHook(ICowRouter.DonateHookParams memory params) external onlyVault {
-        (IERC20[] memory tokens, , , ) = _vault.getPoolTokenInfo(params.pool);
+        (IERC20[] memory tokens,,,) = _vault.getPoolTokenInfo(params.pool);
 
-        (uint256[] memory donatedAmounts, uint256[] memory protocolFeeAmounts) = _donateToPool(
-            params.pool,
-            tokens,
-            params.donationAmounts,
-            params.userData
-        );
+        (uint256[] memory donatedAmounts, uint256[] memory protocolFeeAmounts) =
+            _donateToPool(params.pool, tokens, params.donationAmounts, params.userData);
         // This hook assumes that the sender transferred an exact amount of tokens corresponding to
         // `transferAmountHints`, such that `donationAmounts` == `transferAmountHints` and
         // `senderCredits` == 0.

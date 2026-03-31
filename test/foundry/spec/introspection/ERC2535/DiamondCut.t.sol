@@ -320,9 +320,7 @@ contract DiamondCutTest is Test {
         // Verify new facet has the selectors
         bytes4[] memory newFacetSelectors = diamond.facetFunctionSelectors(address(mockFacetV2));
         assertEq(
-            newFacetSelectors.length,
-            mockFacetV2.facetFuncs().length,
-            "new facet should have all replaced selectors"
+            newFacetSelectors.length, mockFacetV2.facetFuncs().length, "new facet should have all replaced selectors"
         );
     }
 
@@ -334,9 +332,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -496,9 +492,7 @@ contract DiamondCutTest is Test {
         // CRITICAL: ALL removed selectors must return address(0)
         for (uint256 i = 0; i < selectorsToRemove.length; i++) {
             assertEq(
-                diamond.facetAddress(selectorsToRemove[i]),
-                address(0),
-                "each removed selector must return address(0)"
+                diamond.facetAddress(selectorsToRemove[i]), address(0), "each removed selector must return address(0)"
             );
         }
     }
@@ -519,7 +513,7 @@ contract DiamondCutTest is Test {
         diamond.diamondCut(cuts, address(0), "");
     }
 
-/// @notice CRANE-057: Verify remove reverts when selector belongs to different facet
+    /// @notice CRANE-057: Verify remove reverts when selector belongs to different facet
     function test_diamondCut_removeFacet_revertsOnSelectorFacetMismatch() public {
         // Add two different facets
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](2);
@@ -723,9 +717,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -750,11 +742,7 @@ contract DiamondCutTest is Test {
         diamond.diamondCut(removeCuts, address(0), "");
 
         // Verify removed selector returns address(0)
-        assertEq(
-            diamond.facetAddress(selectorsA[0]),
-            address(0),
-            "removed selector must return address(0)"
-        );
+        assertEq(diamond.facetAddress(selectorsA[0]), address(0), "removed selector must return address(0)");
 
         // Verify remaining selectors still point to facet
         for (uint256 i = 1; i < selectorsA.length; i++) {
@@ -819,7 +807,9 @@ contract DiamondCutTest is Test {
         // Verify facet is removed from facetAddresses
         address[] memory facetsAfter = diamond.facetAddresses();
         for (uint256 i = 0; i < facetsAfter.length; i++) {
-            assertTrue(facetsAfter[i] != address(mockFacetA), "facet must be removed from facetAddresses after full removal");
+            assertTrue(
+                facetsAfter[i] != address(mockFacetA), "facet must be removed from facetAddresses after full removal"
+            );
         }
 
         // Verify facet has no selectors
@@ -835,9 +825,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -889,9 +877,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -1068,9 +1054,7 @@ contract DiamondCutTest is Test {
         diamond.diamondCut(cuts, address(0), "");
 
         assertEq(
-            diamond.facetAddress(MockFacet.mockFunctionA.selector),
-            address(mockFacetA),
-            "Owner should be able to cut"
+            diamond.facetAddress(MockFacet.mockFunctionA.selector), address(mockFacetA), "Owner should be able to cut"
         );
     }
 
@@ -1092,9 +1076,7 @@ contract DiamondCutTest is Test {
         selectors[0] = bytes4(0xdeadbeef);
 
         cuts[0] = IDiamond.FacetCut({
-            facetAddress: address(0),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectors
+            facetAddress: address(0), action: IDiamond.FacetCutAction.Add, functionSelectors: selectors
         });
 
         vm.prank(owner);
@@ -1148,8 +1130,7 @@ contract DiamondCutTest is Test {
 
             // 6. Every facet must have at least one selector (no empty facets in the set)
             assertTrue(
-                allFacets[i].functionSelectors.length > 0,
-                string.concat(context, ": facet in set with zero selectors")
+                allFacets[i].functionSelectors.length > 0, string.concat(context, ": facet in set with zero selectors")
             );
         }
     }
@@ -1162,9 +1143,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -1190,11 +1169,7 @@ contract DiamondCutTest is Test {
         _assertLoupeConsistency("after partial removal");
 
         // Removed selector must not appear in any loupe view
-        assertEq(
-            diamond.facetAddress(selectorsA[0]),
-            address(0),
-            "removed selector must return address(0)"
-        );
+        assertEq(diamond.facetAddress(selectorsA[0]), address(0), "removed selector must return address(0)");
     }
 
     /// @notice CRANE-117: Verify loupe consistency through full add-partial-remove-full-remove lifecycle
@@ -1204,9 +1179,7 @@ contract DiamondCutTest is Test {
         // Step 1: Add two facets
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](2);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
         addCuts[1] = IDiamond.FacetCut({
             facetAddress: address(mockFacetC),
@@ -1276,9 +1249,7 @@ contract DiamondCutTest is Test {
         // Add facet
         IDiamond.FacetCut[] memory addCuts = new IDiamond.FacetCut[](1);
         addCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectorsA
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectorsA
         });
 
         vm.prank(owner);
@@ -1290,9 +1261,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory removeCuts = new IDiamond.FacetCut[](1);
         removeCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Remove,
-            functionSelectors: removeSel
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Remove, functionSelectors: removeSel
         });
 
         vm.prank(owner);
@@ -1307,9 +1276,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory replaceCuts = new IDiamond.FacetCut[](1);
         replaceCuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetV2),
-            action: IDiamond.FacetCutAction.Replace,
-            functionSelectors: remainingSel
+            facetAddress: address(mockFacetV2), action: IDiamond.FacetCutAction.Replace, functionSelectors: remainingSel
         });
 
         vm.prank(owner);
@@ -1335,9 +1302,7 @@ contract DiamondCutTest is Test {
 
         IDiamond.FacetCut[] memory cuts = new IDiamond.FacetCut[](1);
         cuts[0] = IDiamond.FacetCut({
-            facetAddress: address(mockFacetA),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: selectors
+            facetAddress: address(mockFacetA), action: IDiamond.FacetCutAction.Add, functionSelectors: selectors
         });
 
         vm.prank(owner);

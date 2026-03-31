@@ -66,10 +66,7 @@ library ShortStrings {
     /**
      * @dev Encode a string into a `ShortString`, or write it to storage if it is too long.
      */
-    function toShortStringWithFallback(string memory value, string storage store)
-        internal
-        returns (ShortString)
-    {
+    function toShortStringWithFallback(string memory value, string storage store) internal returns (ShortString) {
         if (bytes(value).length < 32) {
             return toShortString(value);
         } else {
@@ -93,11 +90,7 @@ library ShortStrings {
      * @dev Decode a string that was encoded to `ShortString` or written to storage using
      * {setWithFallback}.
      */
-    function toStringWithFallback(ShortString value, string storage store)
-        internal
-        view
-        returns (string memory)
-    {
+    function toStringWithFallback(ShortString value, string storage store) internal pure returns (string memory) {
         if (ShortString.unwrap(value) != FALLBACK_SENTINEL) {
             return toString(value);
         } else {
@@ -109,11 +102,7 @@ library ShortStrings {
      * @dev Return the length of a string that was encoded to `ShortString` or written to storage
      * using {setWithFallback}.
      */
-    function byteLengthWithFallback(ShortString value, string storage store)
-        internal
-        view
-        returns (uint256)
-    {
+    function byteLengthWithFallback(ShortString value, string storage store) internal view returns (uint256) {
         if (ShortString.unwrap(value) != FALLBACK_SENTINEL) {
             return byteLength(value);
         } else {

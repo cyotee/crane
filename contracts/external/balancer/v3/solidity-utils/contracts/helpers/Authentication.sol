@@ -2,13 +2,18 @@
 
 pragma solidity ^0.8.24;
 
-import {IAuthentication} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @notice Building block for performing access control on external functions.
  * @dev Vendored from Balancer V3 Solidity Utils.
  */
 abstract contract Authentication is IAuthentication {
+    using BetterEfficientHashLib for bytes;
+
     bytes32 private immutable _actionIdDisambiguator;
 
     constructor(bytes32 actionIdDisambiguator) {
@@ -28,7 +33,8 @@ abstract contract Authentication is IAuthentication {
     }
 
     function getActionId(bytes4 selector) public view override returns (bytes32) {
-        return keccak256(abi.encodePacked(_actionIdDisambiguator, selector));
+        // return keccak256(abi.encodePacked(_actionIdDisambiguator, selector));
+        return abi.encodePacked(_actionIdDisambiguator, selector)._hash();
     }
 
     function _canPerform(bytes32 actionId, address user) internal view virtual returns (bool);

@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 library ETHEREUM_SEPOLIA {
     uint256 constant CHAIN_ID = 11155111;
 
+    uint256 constant DEFAULT_FORK_BLOCK = 10_400_000;
+
     /* ---------------------------------------------------------------------- */
     /*                                  WETH9                                 */
     /* ---------------------------------------------------------------------- */
@@ -17,8 +19,6 @@ library ETHEREUM_SEPOLIA {
     /* ---------------------------------------------------------------------- */
     /*                               Uniswap V2                               */
     /* ---------------------------------------------------------------------- */
-
-    // TODO Get FeeTo from UniswapV2Factory
 
     address constant UNISWAP_V2_FACTORY = 0xF62c03E08ada871A0bEb309762E260a7a6a880E6;
     address constant UNISWAP_V2_ROUTER = 0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3;
@@ -44,6 +44,9 @@ library ETHEREUM_SEPOLIA {
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
 
     /* ---------------------------------------------------------------------- */
+    address constant BASE_L1_CROSS_DOMAIN_MESSENGER = 0xC34855F4De64F1840e5686e64278da901e261f20;
+    address constant BASE_L1_STANDARD_BRIDGE = 0xfd0Bf71F60660E2f608ed56e1659C450eB113120;
+    address constant BASE_OPTIMISM_MINTABLE_ERC20_FACTORY = 0xb1efB9650aD6d0CC1ed3Ac4a0B7f1D5732696D37;
     /*                               Balancer V2                              */
     /* ---------------------------------------------------------------------- */
 

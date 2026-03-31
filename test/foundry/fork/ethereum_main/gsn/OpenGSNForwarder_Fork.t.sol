@@ -86,9 +86,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
 
         // Execute on both
         portedForwarder.execute(portedReq, portedDomainSeparator, portedRequestTypeHash, "", portedSig);
-        upstreamForwarder.execute(
-            upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig
-        );
+        upstreamForwarder.execute(upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig);
 
         // Both should have incremented nonce
         uint256 portedNonce = portedForwarder.getNonce(signer);
@@ -119,9 +117,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
 
         // Both should pass verification without reverting
         portedForwarder.verify(portedReq, portedDomainSeparator, portedRequestTypeHash, "", portedSig);
-        upstreamForwarder.verify(
-            upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig
-        );
+        upstreamForwarder.verify(upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig);
     }
 
     /**
@@ -143,9 +139,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
         portedForwarder.verify(portedReq, portedDomainSeparator, portedRequestTypeHash, "", badSig);
 
         vm.expectRevert("FWD: signature mismatch");
-        upstreamForwarder.verify(
-            upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamBadSig
-        );
+        upstreamForwarder.verify(upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamBadSig);
     }
 
     /**
@@ -182,9 +176,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
         portedForwarder.verify(portedReq, portedDomainSeparator, portedRequestTypeHash, "", portedSig);
 
         vm.expectRevert("FWD: nonce mismatch");
-        upstreamForwarder.verify(
-            upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig
-        );
+        upstreamForwarder.verify(upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig);
     }
 
     /**
@@ -268,8 +260,9 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
             _buildPortedRequest(signer, address(recipient), 0.1 ether, 100_000, callData);
         bytes memory portedSig = _signPortedRequest(portedReq, SIGNER_PK);
 
-        (bool success, bytes memory ret) =
-            portedForwarder.execute{value: 0.1 ether}(portedReq, portedDomainSeparator, portedRequestTypeHash, "", portedSig);
+        (bool success, bytes memory ret) = portedForwarder.execute{value: 0.1 ether}(
+            portedReq, portedDomainSeparator, portedRequestTypeHash, "", portedSig
+        );
 
         assertTrue(success, "Execute with value should succeed");
         uint256 receivedValue = abi.decode(ret, (uint256));
@@ -328,9 +321,8 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
             _buildUpstreamRequest(signer, address(upstreamRecipient), 0, 200_000, callData);
         bytes memory upstreamSig = _signUpstreamRequest(upstreamReq, SIGNER_PK);
 
-        (bool upstreamSuccess, bytes memory upstreamRet) = upstreamForwarder.execute(
-            upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig
-        );
+        (bool upstreamSuccess, bytes memory upstreamRet) =
+            upstreamForwarder.execute(upstreamReq, upstreamDomainSeparator, upstreamRequestTypeHash, "", upstreamSig);
 
         // Both should succeed
         assertTrue(portedSuccess, "Ported execute should succeed");
@@ -356,9 +348,7 @@ contract OpenGSNForwarder_Fork is TestBase_OpenGSNFork {
      */
     function test_supportsInterface() public view {
         // Ported version supports ERC165 and IForwarder
-        assertTrue(
-            portedForwarder.supportsInterface(type(IForwarder).interfaceId), "Should support IForwarder"
-        );
+        assertTrue(portedForwarder.supportsInterface(type(IForwarder).interfaceId), "Should support IForwarder");
         assertTrue(
             portedForwarder.supportsInterface(0x01ffc9a7), // ERC165 interface ID
             "Should support ERC165"

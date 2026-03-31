@@ -14,7 +14,6 @@ import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
  * @dev Delegates all operations to ERC721Repo
  */
 contract ERC721Target is IERC721 {
-
     /* -------------------------------------------------------------------------- */
     /*                              IERC721 Functions                              */
     /* -------------------------------------------------------------------------- */

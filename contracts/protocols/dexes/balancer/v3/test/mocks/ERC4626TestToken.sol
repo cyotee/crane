@@ -6,7 +6,9 @@ import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {ERC4626} from "@crane/contracts/tokens/ERC20/extensions/ERC4626.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import {ERC20TestToken} from "./ERC20TestToken.sol";
@@ -22,12 +24,9 @@ contract ERC4626TestToken is ERC4626, IRateProvider {
 
     bool private _maliciousWrapper;
 
-    constructor(
-        IERC20 underlyingToken,
-        string memory tokenName,
-        string memory tokenSymbol,
-        uint8 tokenDecimals
-    ) ERC4626(underlyingToken, tokenName, tokenSymbol) {
+    constructor(IERC20 underlyingToken, string memory tokenName, string memory tokenSymbol, uint8 tokenDecimals)
+        ERC4626(underlyingToken, tokenName, tokenSymbol)
+    {
         _wrappedTokenDecimals = tokenDecimals;
         _overrideAsset = underlyingToken;
     }
@@ -135,13 +134,10 @@ contract ERC4626TestToken is ERC4626, IRateProvider {
         _mint(receiver, shares);
     }
 
-    function _withdraw(
-        address caller,
-        address receiver,
-        address owner,
-        uint256 assets,
-        uint256 shares
-    ) internal override {
+    function _withdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares)
+        internal
+        override
+    {
         if (caller != owner) {
             _spendAllowance(owner, caller, shares);
         }

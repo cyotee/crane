@@ -97,10 +97,11 @@ contract RewardsDistributor is IRewardsDistributor {
         return toDistribute;
     }
 
-    function _claimable(
-        uint256 _tokenId,
-        uint256 _lastTokenTime
-    ) internal view returns (uint256 toDistribute, uint256 weekCursorStart, uint256 weekCursor) {
+    function _claimable(uint256 _tokenId, uint256 _lastTokenTime)
+        internal
+        view
+        returns (uint256 toDistribute, uint256 weekCursorStart, uint256 weekCursor)
+    {
         uint256 _startTime = startTime;
         weekCursor = timeCursorOf[_tokenId];
         weekCursorStart = weekCursor;
@@ -132,7 +133,7 @@ contract RewardsDistributor is IRewardsDistributor {
     /// @inheritdoc IRewardsDistributor
     function claimable(uint256 _tokenId) external view returns (uint256 claimable_) {
         uint256 _lastTokenTime = (lastTokenTime / WEEK) * WEEK;
-        (claimable_, , ) = _claimable(_tokenId, _lastTokenTime);
+        (claimable_,,) = _claimable(_tokenId, _lastTokenTime);
     }
 
     /// @inheritdoc IRewardsDistributor

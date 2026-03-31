@@ -4,19 +4,25 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract YieldFeesTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -55,23 +61,22 @@ contract YieldFeesTest is BaseVaultTest {
 
         newPool = address(deployPoolMock(IVault(address(vault)), name, symbol));
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(
-                [address(wsteth), address(dai)].toMemoryArray().asIERC20(),
-                rateProviders,
-                yieldFeeFlags
-            ),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(
+                newPool,
+                vault.buildTokenConfig(
+                    [address(wsteth), address(dai)].toMemoryArray().asIERC20(), rateProviders, yieldFeeFlags
+                ),
+                poolHooksContract,
+                lp
+            );
 
         vm.label(newPool, "pool");
         poolArgs = abi.encode(vault, name, symbol);
     }
 
     function testPoolDataAfterInitialization__Fuzz(bool roundUp) public {
-        (pool, ) = createPool();
+        (pool,) = createPool();
         initPool();
 
         verifyLiveBalances(FixedPoint.ONE, FixedPoint.ONE, roundUp);
@@ -81,7 +86,7 @@ contract YieldFeesTest is BaseVaultTest {
         wstethRate = bound(wstethRate, 1e18, 1.5e18);
         daiRate = bound(daiRate, 1e18, 1.5e18);
 
-        (pool, ) = createPool();
+        (pool,) = createPool();
         wstETHRateProvider.mockRate(wstethRate);
         daiRateProvider.mockRate(daiRate);
 
@@ -108,7 +113,7 @@ contract YieldFeesTest is BaseVaultTest {
         // Prevent PrecisionTooHigh error.
         aggregateYieldFeePercentage = (aggregateYieldFeePercentage / FEE_SCALING_FACTOR) * FEE_SCALING_FACTOR;
 
-        (pool, ) = createPool();
+        (pool,) = createPool();
         wstETHRateProvider.mockRate(wstethRate);
         daiRateProvider.mockRate(daiRate);
 
@@ -148,10 +153,8 @@ contract YieldFeesTest is BaseVaultTest {
         // Tricky, because the diff already has the fee subtracted. Need to add it back in.
         YieldTestLocals memory vars;
         uint256[] memory scalingFactors = PoolMock(pool).getDecimalScalingFactors();
-        vars.liveBalanceAfterRaw = liveBalanceDeltas[wstethIdx].toRawUndoRateRoundDown(
-            scalingFactors[wstethIdx],
-            wstethRate
-        );
+        vars.liveBalanceAfterRaw =
+            liveBalanceDeltas[wstethIdx].toRawUndoRateRoundDown(scalingFactors[wstethIdx], wstethRate);
         vars.liveBalanceBeforeRaw = vars.liveBalanceAfterRaw + actualProtocolFee;
         vars.expectedProtocolFee = vars.liveBalanceBeforeRaw.mulDown(aggregateYieldFeePercentage);
 
@@ -219,11 +222,9 @@ contract YieldFeesTest is BaseVaultTest {
         }
     }
 
-    function testYieldFeesOnSwap__Fuzz(
-        uint256 wstethRate,
-        uint256 daiRate,
-        uint256 aggregateYieldFeePercentage
-    ) public {
+    function testYieldFeesOnSwap__Fuzz(uint256 wstethRate, uint256 daiRate, uint256 aggregateYieldFeePercentage)
+        public
+    {
         aggregateYieldFeePercentage = bound(aggregateYieldFeePercentage, 1e12, 10e16);
         // Prevent PrecisionTooHigh error.
         aggregateYieldFeePercentage = (aggregateYieldFeePercentage / FEE_SCALING_FACTOR) * FEE_SCALING_FACTOR;
@@ -239,10 +240,8 @@ contract YieldFeesTest is BaseVaultTest {
         uint256 protocolYieldFeePercentage = 20e16;
         uint256 poolCreatorFeePercentage = 99e16;
 
-        uint256 aggregateYieldFeePercentage = feeController.computeAggregateFeePercentage(
-            protocolYieldFeePercentage,
-            poolCreatorFeePercentage
-        );
+        uint256 aggregateYieldFeePercentage =
+            feeController.computeAggregateFeePercentage(protocolYieldFeePercentage, poolCreatorFeePercentage);
 
         uint256 wstethRate = 1.3e18;
         uint256 daiRate = 1.3e18;
@@ -251,7 +250,7 @@ contract YieldFeesTest is BaseVaultTest {
     }
 
     function _testYieldFeesOnSwap(uint256 wstethRate, uint256 daiRate, uint256 aggregateYieldFeePercentage) private {
-        (pool, ) = createPool();
+        (pool,) = createPool();
         wstETHRateProvider.mockRate(wstethRate);
         daiRateProvider.mockRate(daiRate);
 
@@ -284,14 +283,12 @@ contract YieldFeesTest is BaseVaultTest {
         assertEq(vault.manualGetAggregateYieldFeeAmount(pool, dai), 0, "Yield fees for exempt dai are not 0");
     }
 
-    function verifyLiveBalances(
-        uint256 wstethRate,
-        uint256 daiRate,
-        bool roundUp
-    ) internal returns (uint256[] memory liveBalances) {
+    function verifyLiveBalances(uint256 wstethRate, uint256 daiRate, bool roundUp)
+        internal
+        returns (uint256[] memory liveBalances)
+    {
         PoolData memory data = vault.loadPoolDataUpdatingBalancesAndYieldFees(
-            pool,
-            roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN
+            pool, roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN
         );
 
         uint256[] memory expectedScalingFactors = PoolMock(pool).getDecimalScalingFactors();
@@ -305,15 +302,11 @@ contract YieldFeesTest is BaseVaultTest {
 
         for (uint256 i = 0; i < expectedRawBalances.length; ++i) {
             if (roundUp) {
-                expectedLiveBalance = FixedPoint.mulUp(
-                    expectedRawBalances[i] * expectedScalingFactors[i],
-                    expectedRates[i]
-                );
+                expectedLiveBalance =
+                    FixedPoint.mulUp(expectedRawBalances[i] * expectedScalingFactors[i], expectedRates[i]);
             } else {
-                expectedLiveBalance = FixedPoint.mulDown(
-                    expectedRawBalances[i] * expectedScalingFactors[i],
-                    expectedRates[i]
-                );
+                expectedLiveBalance =
+                    FixedPoint.mulDown(expectedRawBalances[i] * expectedScalingFactors[i], expectedRates[i]);
             }
 
             // Tolerate being off by 1 wei.
@@ -323,11 +316,11 @@ contract YieldFeesTest is BaseVaultTest {
         return data.balancesLiveScaled18;
     }
 
-    function _simplePoolData(
-        uint256 balanceRaw,
-        uint256 decimalScalingFactor,
-        uint256 tokenRate
-    ) internal pure returns (PoolData memory poolData) {
+    function _simplePoolData(uint256 balanceRaw, uint256 decimalScalingFactor, uint256 tokenRate)
+        internal
+        pure
+        returns (PoolData memory poolData)
+    {
         poolData.balancesLiveScaled18 = new uint256[](1);
         poolData.balancesRaw = new uint256[](1);
         poolData.decimalScalingFactors = new uint256[](1);
@@ -340,10 +333,11 @@ contract YieldFeesTest is BaseVaultTest {
         poolData.balancesLiveScaled18[0] = liveBalance;
     }
 
-    function _initializeFees(
-        uint256 protocolFeePercentage,
-        uint256 creatorFeePercentage
-    ) private pure returns (uint256 finalProtocolFeePercentage, uint256 finalCreatorFeePercentage) {
+    function _initializeFees(uint256 protocolFeePercentage, uint256 creatorFeePercentage)
+        private
+        pure
+        returns (uint256 finalProtocolFeePercentage, uint256 finalCreatorFeePercentage)
+    {
         // Fees are stored as a 24 bits variable (from 0 to (2^24)-1, or 0% to ~167%) in vaultConfig and poolConfigBits
         // Multiplying by FEE_SCALING_FACTOR (1e11) makes it 18 decimals scaled again.
 

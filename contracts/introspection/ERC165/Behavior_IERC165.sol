@@ -8,15 +8,10 @@ pragma solidity ^0.8.0;
 import {Vm} from "forge-std/Vm.sol";
 
 /* -------------------------------------------------------------------------- */
-/*                                Open Zeppelin                               */
-/* -------------------------------------------------------------------------- */
-
-import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
-
-/* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {VM_ADDRESS} from "@crane/contracts/constants/FoundryConstants.sol";
 import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/Bytes4SetRepo.sol";
@@ -155,13 +150,28 @@ library Behavior_IERC165 {
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
+    function expect_IERC165_supportsInterface(IERC165 subject, bytes4 expectedInterface_) public {
+        console.logBehaviorEntry(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
+
+        console.logBehaviorExpectation(
+            _Behavior_IERC165Name(), "expect_IERC165_supportsInterface", "interfaces ", string.concat("count: ", "1")
+        );
+
+        Bytes4SetComparatorRepo._recExpectedBytes4(
+            address(subject), IERC165.supportsInterface.selector, expectedInterface_
+        );
+
+        console.logBehaviorExit(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
+    }
+
+    /// forge-lint: disable-next-line(mixed-case-function)
     function expect_IERC165_supportsInterface(IERC165 subject, bytes4[] memory expectedInterfaces_) public {
         console.logBehaviorEntry(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
 
         console.logBehaviorExpectation(
             _Behavior_IERC165Name(),
             "expect_IERC165_supportsInterface",
-            "interfaces",
+            "interfaces ",
             string.concat("count: ", expectedInterfaces_.length._toString())
         );
 

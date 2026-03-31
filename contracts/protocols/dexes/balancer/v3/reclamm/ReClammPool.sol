@@ -8,31 +8,39 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Proxy} from "@crane/contracts/proxy/Proxy.sol";
 
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 // wake-disable-next-line unused-import
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BasePoolAuthentication } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolAuthentication.sol";
-import { GradualValueChange } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/lib/GradualValueChange.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { PoolInfo } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
+import {
+    BasePoolAuthentication
+} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolAuthentication.sol";
+import {
+    GradualValueChange
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/lib/GradualValueChange.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {PoolInfo} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
 
-import { ReClammPoolParams, ReClammPriceParams } from "./interfaces/IReClammPool.sol";
-import { IReClammPoolExtension } from "./interfaces/IReClammPoolExtension.sol";
-import { PriceRatioState, ReClammMath, a, b } from "./lib/ReClammMath.sol";
-import { IReClammPoolMain } from "./interfaces/IReClammPoolMain.sol";
-import { IReClammEvents } from "./interfaces/IReClammEvents.sol";
-import { IReClammErrors } from "./interfaces/IReClammErrors.sol";
-import { ReClammPoolLib } from "./lib/ReClammPoolLib.sol";
-import { ReClammCommon } from "./ReClammCommon.sol";
+import {ReClammPoolParams, ReClammPriceParams} from "./interfaces/IReClammPool.sol";
+import {IReClammPoolExtension} from "./interfaces/IReClammPoolExtension.sol";
+import {PriceRatioState, ReClammMath, a, b} from "./lib/ReClammMath.sol";
+import {IReClammPoolMain} from "./interfaces/IReClammPoolMain.sol";
+import {IReClammEvents} from "./interfaces/IReClammEvents.sol";
+import {IReClammErrors} from "./interfaces/IReClammErrors.sol";
+import {ReClammPoolLib} from "./lib/ReClammPoolLib.sol";
+import {ReClammCommon} from "./ReClammCommon.sol";
 
 /**
  * @notice The main ReClammPool contract implements the critical path, and uses the Proxy pattern to delegate the rest.
@@ -130,17 +138,16 @@ contract ReClammPool is
 
     /// @inheritdoc IBasePool
     function computeInvariant(uint256[] memory balancesScaled18, Rounding rounding) public view returns (uint256) {
-        return
-            ReClammMath.computeInvariant(
-                balancesScaled18,
-                _lastVirtualBalanceA,
-                _lastVirtualBalanceB,
-                _dailyPriceShiftBase,
-                _lastTimestamp,
-                _centerednessMargin,
-                _priceRatioState,
-                rounding
-            );
+        return ReClammMath.computeInvariant(
+            balancesScaled18,
+            _lastVirtualBalanceA,
+            _lastVirtualBalanceB,
+            _dailyPriceShiftBase,
+            _lastTimestamp,
+            _centerednessMargin,
+            _priceRatioState,
+            rounding
+        );
     }
 
     /// @inheritdoc IBasePool
@@ -151,9 +158,8 @@ contract ReClammPool is
 
     /// @inheritdoc IBasePool
     function onSwap(PoolSwapParams memory request) public virtual onlyVault returns (uint256 amountCalculatedScaled18) {
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) = _computeCurrentVirtualBalances(
-            request.balancesScaled18
-        );
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) =
+            _computeCurrentVirtualBalances(request.balancesScaled18);
 
         if (changed) {
             _setLastVirtualBalances(currentVirtualBalanceA, currentVirtualBalanceB);
@@ -266,10 +272,8 @@ contract ReClammPool is
         TokenConfig[] memory tokenConfig,
         LiquidityManagement calldata liquidityManagement
     ) public onlyVault returns (bool success) {
-        success =
-            tokenConfig.length == 2 &&
-            liquidityManagement.disableUnbalancedLiquidity &&
-            liquidityManagement.enableDonation == false;
+        success = tokenConfig.length == 2 && liquidityManagement.disableUnbalancedLiquidity
+            && liquidityManagement.enableDonation == false;
 
         if (success && _HOOK_CONTRACT != address(0)) {
             // Note that the caller of `onRegister` here will be the Pool, not the Vault. So the modifier on the hook's
@@ -300,29 +304,26 @@ contract ReClammPool is
      * @param userData Optional, arbitrary data sent with the encoded request
      * @return success True if the pool wishes to proceed with initialization
      */
-    function onBeforeInitialize(
-        uint256[] memory exactAmountsInScaled18,
-        bytes memory userData
-    ) public onlyVault returns (bool) {
+    function onBeforeInitialize(uint256[] memory exactAmountsInScaled18, bytes memory userData)
+        public
+        onlyVault
+        returns (bool)
+    {
         InitializeLocals memory locals;
         (locals.rateA, locals.rateB) = _getTokenRates();
 
-        (
-            locals.minPriceScaled18,
-            locals.maxPriceScaled18,
-            locals.targetPriceScaled18
-        ) = _getPriceSettingsAdjustedByRates(locals.rateA, locals.rateB);
+        (locals.minPriceScaled18, locals.maxPriceScaled18, locals.targetPriceScaled18) =
+            _getPriceSettingsAdjustedByRates(locals.rateA, locals.rateB);
 
         (
             locals.theoreticalBalances,
             locals.theoreticalVirtualBalanceA,
             locals.theoreticalVirtualBalanceB,
             locals.priceRatio
-        ) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
-            locals.minPriceScaled18,
-            locals.maxPriceScaled18,
-            locals.targetPriceScaled18
-        );
+        ) =
+            ReClammMath.computeTheoreticalPriceRatioAndBalances(
+                locals.minPriceScaled18, locals.maxPriceScaled18, locals.targetPriceScaled18
+            );
 
         _checkInitializationBalanceRatio(exactAmountsInScaled18, locals.theoreticalBalances);
 
@@ -350,10 +351,9 @@ contract ReClammPool is
         _updateTimestamp();
 
         // Forward to the secondary hook, if present.
-        return
-            _HOOK_CONTRACT == address(0)
-                ? true
-                : IHooks(_HOOK_CONTRACT).onBeforeInitialize(exactAmountsInScaled18, userData);
+        return _HOOK_CONTRACT == address(0)
+            ? true
+            : IHooks(_HOOK_CONTRACT).onBeforeInitialize(exactAmountsInScaled18, userData);
     }
 
     /**
@@ -385,9 +385,8 @@ contract ReClammPool is
         uint256 poolTotalSupply = _vault.totalSupply(pool);
         uint256 newPoolTotalSupply = exactBptAmountOut + poolTotalSupply;
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = _computeCurrentVirtualBalances(
-            balancesScaled18
-        );
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            _computeCurrentVirtualBalances(balancesScaled18);
         // When adding/removing liquidity, round down the virtual balances. This favors the vault in swap operations.
         // The virtual balances are not used in proportional add/remove calculations.
         currentVirtualBalanceA = (currentVirtualBalanceA * newPoolTotalSupply) / poolTotalSupply;
@@ -396,17 +395,11 @@ contract ReClammPool is
         _updateTimestamp();
 
         // Forward to the secondary hook, if present.
-        return
-            _HOOK_CONTRACT == address(0)
-                ? true
-                : IHooks(_HOOK_CONTRACT).onBeforeAddLiquidity(
-                    router,
-                    pool,
-                    kind,
-                    maxAmountsInScaled18,
-                    exactBptAmountOut,
-                    balancesScaled18,
-                    userData
+        return _HOOK_CONTRACT == address(0)
+            ? true
+            : IHooks(_HOOK_CONTRACT)
+                .onBeforeAddLiquidity(
+                    router, pool, kind, maxAmountsInScaled18, exactBptAmountOut, balancesScaled18, userData
                 );
     }
 
@@ -439,9 +432,8 @@ contract ReClammPool is
         uint256 poolTotalSupply = _vault.totalSupply(pool);
         uint256 bptDelta = poolTotalSupply - exactBptAmountIn;
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = _computeCurrentVirtualBalances(
-            balancesScaled18
-        );
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            _computeCurrentVirtualBalances(balancesScaled18);
 
         // When adding/removing liquidity, round down the virtual balances. This favors the vault in swap operations.
         // The virtual balances are not used in proportional add/remove calculations.
@@ -452,17 +444,11 @@ contract ReClammPool is
         _updateTimestamp();
 
         // Forward to the secondary hook, if present.
-        return
-            _HOOK_CONTRACT == address(0)
-                ? true
-                : IHooks(_HOOK_CONTRACT).onBeforeRemoveLiquidity(
-                    router,
-                    pool,
-                    kind,
-                    exactBptAmountIn,
-                    minAmountsOutScaled18,
-                    balancesScaled18,
-                    userData
+        return _HOOK_CONTRACT == address(0)
+            ? true
+            : IHooks(_HOOK_CONTRACT)
+                .onBeforeRemoveLiquidity(
+                    router, pool, kind, exactBptAmountIn, minAmountsOutScaled18, balancesScaled18, userData
                 );
     }
 
@@ -480,9 +466,7 @@ contract ReClammPool is
     *******************************************************************************/
 
     /// @inheritdoc IReClammPoolMain
-    function setDailyPriceShiftExponent(
-        uint256 newDailyPriceShiftExponent
-    )
+    function setDailyPriceShiftExponent(uint256 newDailyPriceShiftExponent)
         external
         onlyWhenInitialized
         onlyWhenVaultIsLocked
@@ -494,9 +478,7 @@ contract ReClammPool is
     }
 
     /// @inheritdoc IReClammPoolMain
-    function setCenterednessMargin(
-        uint256 newCenterednessMargin
-    )
+    function setCenterednessMargin(uint256 newCenterednessMargin)
         external
         onlyWhenInitialized
         onlyWhenVaultIsLocked
@@ -517,10 +499,8 @@ contract ReClammPool is
         onlySwapFeeManagerOrGovernance(address(this))
         returns (uint256 actualPriceRatioUpdateStartTime)
     {
-        actualPriceRatioUpdateStartTime = GradualValueChange.resolveStartTime(
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        actualPriceRatioUpdateStartTime =
+            GradualValueChange.resolveStartTime(priceRatioUpdateStartTime, priceRatioUpdateEndTime);
 
         uint256 updateDuration = priceRatioUpdateEndTime - actualPriceRatioUpdateStartTime;
 
@@ -531,17 +511,13 @@ contract ReClammPool is
 
         _updateVirtualBalances();
 
-        uint256 startPriceRatio = _startPriceRatioUpdate(
-            endPriceRatio,
-            actualPriceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        uint256 startPriceRatio =
+            _startPriceRatioUpdate(endPriceRatio, actualPriceRatioUpdateStartTime, priceRatioUpdateEndTime);
 
         uint256 priceRatioDelta;
         unchecked {
-            priceRatioDelta = endPriceRatio >= startPriceRatio
-                ? endPriceRatio - startPriceRatio
-                : startPriceRatio - endPriceRatio;
+            priceRatioDelta =
+                endPriceRatio >= startPriceRatio ? endPriceRatio - startPriceRatio : startPriceRatio - endPriceRatio;
         }
 
         if (priceRatioDelta < _MIN_PRICE_RATIO_DELTA) {
@@ -589,30 +565,29 @@ contract ReClammPool is
     // dependencies require adding to `ReClammCommon`, and it increases bytecode.
 
     /// @inheritdoc IReClammPoolMain
-    function computeInitialBalancesRaw(
-        IERC20 referenceToken,
-        uint256 referenceAmountInRaw
-    ) external view returns (uint256[] memory initialBalancesRaw) {
+    function computeInitialBalancesRaw(IERC20 referenceToken, uint256 referenceAmountInRaw)
+        external
+        view
+        returns (uint256[] memory initialBalancesRaw)
+    {
         IERC20[] memory tokens = _vault.getPoolTokens(address(this));
 
-        (uint256 referenceTokenIdx, uint256 otherTokenIdx) = tokens[a] == referenceToken ? (a, b) : (b, a);
+        (uint256 referenceTokenIdx, uint256 otherTokenIdx) = address(tokens[a]) == address(referenceToken) ? (a, b) : (b, a);
 
-        if (referenceTokenIdx == b && referenceToken != tokens[b]) {
+        if (referenceTokenIdx == b && address(referenceToken) != address(tokens[b])) {
             revert IVaultErrors.InvalidToken();
         }
 
         (uint256 rateA, uint256 rateB) = _getTokenRates();
         uint256 balanceRatioScaled18 = _computeInitialBalanceRatioScaled18(rateA, rateB);
-        (uint256 rateReferenceToken, uint256 rateOtherToken) = tokens[a] == referenceToken
-            ? (rateA, rateB)
-            : (rateB, rateA);
+        (uint256 rateReferenceToken, uint256 rateOtherToken) =
+            address(tokens[a]) == address(referenceToken) ? (rateA, rateB) : (rateB, rateA);
 
         uint8 decimalsReferenceToken = IERC20Metadata(address(tokens[referenceTokenIdx])).decimals();
         uint8 decimalsOtherToken = IERC20Metadata(address(tokens[otherTokenIdx])).decimals();
 
         uint256 referenceAmountInScaled18 = referenceAmountInRaw.toScaled18ApplyRateRoundDown(
-            10 ** (_MAX_TOKEN_DECIMALS - decimalsReferenceToken),
-            rateReferenceToken
+            10 ** (_MAX_TOKEN_DECIMALS - decimalsReferenceToken), rateReferenceToken
         );
 
         // Since the ratio is defined as b/a, multiply if we're given a, and divide if we're given b.
@@ -621,9 +596,8 @@ contract ReClammPool is
         initialBalancesRaw = new uint256[](2);
         initialBalancesRaw[referenceTokenIdx] = referenceAmountInRaw;
 
-        function(uint256, uint256) pure returns (uint256) _mulOrDiv = referenceTokenIdx == a
-            ? FixedPoint.mulDown
-            : FixedPoint.divDown;
+        function(uint256, uint256) pure returns (uint256) _mulOrDiv =
+            referenceTokenIdx == a ? FixedPoint.mulDown : FixedPoint.divDown;
         initialBalancesRaw[otherTokenIdx] = _mulOrDiv(referenceAmountInScaled18, balanceRatioScaled18)
             .toRawUndoRateRoundDown(10 ** (_MAX_TOKEN_DECIMALS - decimalsOtherToken), rateOtherToken);
     }
@@ -634,15 +608,11 @@ contract ReClammPool is
 
     /// @dev This function relies on the pool balance, which can be manipulated if the vault is unlocked.
     function _isPoolWithinTargetRange() internal view returns (bool) {
-        (, , , uint256[] memory balancesScaled18) = _vault.getPoolTokenInfo(address(this));
+        (,,, uint256[] memory balancesScaled18) = _vault.getPoolTokenInfo(address(this));
 
-        return
-            ReClammMath.isPoolWithinTargetRange(
-                balancesScaled18,
-                _lastVirtualBalanceA,
-                _lastVirtualBalanceB,
-                _centerednessMargin
-            );
+        return ReClammMath.isPoolWithinTargetRange(
+            balancesScaled18, _lastVirtualBalanceA, _lastVirtualBalanceB, _centerednessMargin
+        );
     }
 
     function _setLastVirtualBalances(uint256 virtualBalanceA, uint256 virtualBalanceB) internal {
@@ -684,28 +654,23 @@ contract ReClammPool is
         _priceRatioState = priceRatioState;
 
         emit PriceRatioStateUpdated(
-            startFourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
+            startFourthRootPriceRatio, endFourthRootPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime
         );
 
         _vault.emitAuxiliaryEvent(
             "PriceRatioStateUpdated",
             abi.encode(
-                startFourthRootPriceRatio,
-                endFourthRootPriceRatio,
-                priceRatioUpdateStartTime,
-                priceRatioUpdateEndTime
+                startFourthRootPriceRatio, endFourthRootPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime
             )
         );
     }
 
     /// Using the pool balances to update the virtual balances is dangerous with an unlocked vault, since the balances
     /// are manipulable.
-    function _setDailyPriceShiftExponentAndUpdateVirtualBalances(
-        uint256 dailyPriceShiftExponent
-    ) internal returns (uint256) {
+    function _setDailyPriceShiftExponentAndUpdateVirtualBalances(uint256 dailyPriceShiftExponent)
+        internal
+        returns (uint256)
+    {
         // Update virtual balances with current daily price shift exponent.
         _updateVirtualBalances();
 
@@ -728,8 +693,7 @@ contract ReClammPool is
         emit DailyPriceShiftExponentUpdated(dailyPriceShiftExponent, dailyPriceShiftBase);
 
         _vault.emitAuxiliaryEvent(
-            "DailyPriceShiftExponentUpdated",
-            abi.encode(dailyPriceShiftExponent, dailyPriceShiftBase)
+            "DailyPriceShiftExponentUpdated", abi.encode(dailyPriceShiftExponent, dailyPriceShiftBase)
         );
 
         return dailyPriceShiftExponent;
@@ -764,10 +728,9 @@ contract ReClammPool is
     }
 
     function _updateVirtualBalances() internal {
-        (, , , uint256[] memory balancesScaled18) = _vault.getPoolTokenInfo(address(this));
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) = _computeCurrentVirtualBalances(
-            balancesScaled18
-        );
+        (,,, uint256[] memory balancesScaled18) = _vault.getPoolTokenInfo(address(this));
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) =
+            _computeCurrentVirtualBalances(balancesScaled18);
         if (changed) {
             _setLastVirtualBalances(currentVirtualBalanceA, currentVirtualBalanceB);
         }
@@ -786,10 +749,10 @@ contract ReClammPool is
     }
 
     /// @dev Checks that the current balance ratio is within the initialization balance ratio tolerance.
-    function _checkInitializationBalanceRatio(
-        uint256[] memory balancesScaled18,
-        uint256[] memory theoreticalBalances
-    ) internal pure {
+    function _checkInitializationBalanceRatio(uint256[] memory balancesScaled18, uint256[] memory theoreticalBalances)
+        internal
+        pure
+    {
         uint256 realBalanceRatio = balancesScaled18[b].divDown(balancesScaled18[a]);
         uint256 theoreticalBalanceRatio = theoreticalBalances[b].divDown(theoreticalBalances[a]);
 
@@ -818,12 +781,8 @@ contract ReClammPool is
         uint256 spotPrice = (balancesScaled18[b] + virtualBalanceB).divDown(balancesScaled18[a] + virtualBalanceA);
         _comparePrice(spotPrice, targetPrice);
 
-        uint256 currentInvariant = ReClammMath.computeInvariant(
-            balancesScaled18,
-            virtualBalanceA,
-            virtualBalanceB,
-            Rounding.ROUND_DOWN
-        );
+        uint256 currentInvariant =
+            ReClammMath.computeInvariant(balancesScaled18, virtualBalanceA, virtualBalanceB, Rounding.ROUND_DOWN);
 
         // Compare current min price with initialization min price.
         uint256 currentMinPrice = (virtualBalanceB * virtualBalanceB) / currentInvariant;
@@ -848,25 +807,20 @@ contract ReClammPool is
     }
 
     function _computeInitialBalanceRatioScaled18(uint256 rateA, uint256 rateB) internal view returns (uint256) {
-        (
-            uint256 minPriceScaled18,
-            uint256 maxPriceScaled18,
-            uint256 targetPriceScaled18
-        ) = _getPriceSettingsAdjustedByRates(rateA, rateB);
+        (uint256 minPriceScaled18, uint256 maxPriceScaled18, uint256 targetPriceScaled18) =
+            _getPriceSettingsAdjustedByRates(rateA, rateB);
 
-        (uint256[] memory theoreticalBalancesScaled18, , , ) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
-            minPriceScaled18,
-            maxPriceScaled18,
-            targetPriceScaled18
-        );
+        (uint256[] memory theoreticalBalancesScaled18,,,) =
+            ReClammMath.computeTheoreticalPriceRatioAndBalances(minPriceScaled18, maxPriceScaled18, targetPriceScaled18);
 
         return theoreticalBalancesScaled18[b].divDown(theoreticalBalancesScaled18[a]);
     }
 
-    function _getPriceSettingsAdjustedByRates(
-        uint256 rateA,
-        uint256 rateB
-    ) internal view returns (uint256 minPrice, uint256 maxPrice, uint256 targetPrice) {
+    function _getPriceSettingsAdjustedByRates(uint256 rateA, uint256 rateB)
+        internal
+        view
+        returns (uint256 minPrice, uint256 maxPrice, uint256 targetPrice)
+    {
         rateA = _TOKEN_A_PRICE_INCLUDES_RATE ? FixedPoint.ONE : rateA;
         rateB = _TOKEN_B_PRICE_INCLUDES_RATE ? FixedPoint.ONE : rateB;
 
@@ -884,7 +838,7 @@ contract ReClammPool is
     }
 
     function _getTokenRates() internal view returns (uint256 rateA, uint256 rateB) {
-        (, TokenInfo[] memory tokenInfo, , ) = _vault.getPoolTokenInfo(address(this));
+        (, TokenInfo[] memory tokenInfo,,) = _vault.getPoolTokenInfo(address(this));
 
         rateA = _getTokenRate(tokenInfo[a]);
         rateB = _getTokenRate(tokenInfo[b]);

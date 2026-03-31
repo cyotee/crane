@@ -10,34 +10,60 @@ import {Test} from "forge-std/Test.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {TokenConfig, VaultState} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {WeightedPool8020Factory} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
+import {
+    WeightedPool8020Factory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool8020Factory.sol";
 import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                              Upstream (Balancer)                            */
 /* -------------------------------------------------------------------------- */
 
-import {ERC20TestToken as UpstreamERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import {IVaultMock as UpstreamIVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import {BasicAuthorizerMock as UpstreamBasicAuthorizerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
-import {ProtocolFeeControllerMock as UpstreamProtocolFeeControllerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/ProtocolFeeControllerMock.sol";
-import {VaultAdminMock as UpstreamVaultAdminMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultAdminMock.sol";
-import {VaultExtensionMock as UpstreamVaultExtensionMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultExtensionMock.sol";
+import {
+    ERC20TestToken as UpstreamERC20TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {
+    IVaultMock as UpstreamIVaultMock
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {
+    BasicAuthorizerMock as UpstreamBasicAuthorizerMock
+} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
+import {
+    ProtocolFeeControllerMock as UpstreamProtocolFeeControllerMock
+} from "@crane/contracts/external/balancer/v3/vault/contracts/test/ProtocolFeeControllerMock.sol";
+import {
+    VaultAdminMock as UpstreamVaultAdminMock
+} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultAdminMock.sol";
+import {
+    VaultExtensionMock as UpstreamVaultExtensionMock
+} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultExtensionMock.sol";
 import {VaultMock as UpstreamVaultMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/VaultMock.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   Crane                                    */
 /* -------------------------------------------------------------------------- */
 
-import {ERC20TestToken as CraneERC20TestToken} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC20TestToken.sol";
+import {
+    ERC20TestToken as CraneERC20TestToken
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ERC20TestToken.sol";
 import {IVaultMock as CraneIVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/IVaultMock.sol";
-import {BasicAuthorizerMock as CraneBasicAuthorizerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
-import {ProtocolFeeControllerMock as CraneProtocolFeeControllerMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ProtocolFeeControllerMock.sol";
-import {VaultAdminMock as CraneVaultAdminMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultAdminMock.sol";
-import {VaultExtensionMock as CraneVaultExtensionMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultExtensionMock.sol";
+import {
+    BasicAuthorizerMock as CraneBasicAuthorizerMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/BasicAuthorizerMock.sol";
+import {
+    ProtocolFeeControllerMock as CraneProtocolFeeControllerMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/ProtocolFeeControllerMock.sol";
+import {
+    VaultAdminMock as CraneVaultAdminMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultAdminMock.sol";
+import {
+    VaultExtensionMock as CraneVaultExtensionMock
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultExtensionMock.sol";
 import {VaultMock as CraneVaultMock} from "@crane/contracts/protocols/dexes/balancer/v3/test/mocks/VaultMock.sol";
 
-import {WeightedPoolContractsDeployer} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/WeightedPoolContractsDeployer.sol";
+import {
+    WeightedPoolContractsDeployer
+} from "@crane/contracts/protocols/dexes/balancer/v3/test/utils/WeightedPoolContractsDeployer.sol";
 
 contract BalancerV3TestMock_Parity is Test, WeightedPoolContractsDeployer {
     uint256 internal constant FORK_BLOCK = 21_700_000;
@@ -156,25 +182,17 @@ contract BalancerV3TestMock_Parity is Test, WeightedPoolContractsDeployer {
     /* -------------------------------------------------------------------------- */
 
     function test_WeightedPool8020Factory_deploy_Parity() public {
-        (CraneVaultMock craneVault, ) = _deployVaultMocks();
+        (CraneVaultMock craneVault,) = _deployVaultMocks();
         IVault vault = IVault(address(craneVault));
 
         uint32 pauseWindowDuration = 365 days;
         string memory factoryVersion = "Factory v1";
         string memory poolVersion = "8020Pool v1";
 
-        WeightedPool8020Factory craneFactory = deployWeightedPool8020Factory(
-            vault,
-            pauseWindowDuration,
-            factoryVersion,
-            poolVersion
-        );
-        WeightedPool8020Factory upstreamFactory = new WeightedPool8020Factory(
-            vault,
-            pauseWindowDuration,
-            factoryVersion,
-            poolVersion
-        );
+        WeightedPool8020Factory craneFactory =
+            deployWeightedPool8020Factory(vault, pauseWindowDuration, factoryVersion, poolVersion);
+        WeightedPool8020Factory upstreamFactory =
+            new WeightedPool8020Factory(vault, pauseWindowDuration, factoryVersion, poolVersion);
 
         assertEq(craneFactory.getPoolVersion(), upstreamFactory.getPoolVersion(), "pool version parity");
         assertEq(craneFactory.version(), upstreamFactory.version(), "factory version parity");
@@ -194,23 +212,16 @@ contract BalancerV3TestMock_Parity is Test, WeightedPoolContractsDeployer {
         address predicted = CREATE3.getDeployed(salt, address(this));
 
         CraneBasicAuthorizerMock authorizer = new CraneBasicAuthorizerMock();
-        CraneVaultAdminMock vaultAdmin = new CraneVaultAdminMock(
-            IVault(payable(predicted)),
-            90 days,
-            30 days,
-            0,
-            0
-        );
+        CraneVaultAdminMock vaultAdmin = new CraneVaultAdminMock(IVault(payable(predicted)), 90 days, 30 days, 0, 0);
         CraneVaultExtensionMock vaultExtension = new CraneVaultExtensionMock(IVault(payable(predicted)), vaultAdmin);
-        CraneProtocolFeeControllerMock protocolFeeController = new CraneProtocolFeeControllerMock(
-            CraneIVaultMock(predicted),
-            0,
-            0
-        );
+        CraneProtocolFeeControllerMock protocolFeeController =
+            new CraneProtocolFeeControllerMock(CraneIVaultMock(predicted), 0, 0);
 
         CREATE3.deploy(
             salt,
-            bytes.concat(type(CraneVaultMock).creationCode, abi.encode(vaultExtension, authorizer, protocolFeeController)),
+            bytes.concat(
+                type(CraneVaultMock).creationCode, abi.encode(vaultExtension, authorizer, protocolFeeController)
+            ),
             0
         );
 
@@ -222,25 +233,17 @@ contract BalancerV3TestMock_Parity is Test, WeightedPoolContractsDeployer {
         address predicted = CREATE3.getDeployed(salt, address(this));
 
         UpstreamBasicAuthorizerMock authorizer = new UpstreamBasicAuthorizerMock();
-        UpstreamVaultAdminMock vaultAdmin = new UpstreamVaultAdminMock(
-            IVault(payable(predicted)),
-            90 days,
-            30 days,
-            0,
-            0
-        );
-        UpstreamVaultExtensionMock vaultExtension = new UpstreamVaultExtensionMock(IVault(payable(predicted)), vaultAdmin);
-        UpstreamProtocolFeeControllerMock protocolFeeController = new UpstreamProtocolFeeControllerMock(
-            UpstreamIVaultMock(predicted),
-            0,
-            0
-        );
+        UpstreamVaultAdminMock vaultAdmin =
+            new UpstreamVaultAdminMock(IVault(payable(predicted)), 90 days, 30 days, 0, 0);
+        UpstreamVaultExtensionMock vaultExtension =
+            new UpstreamVaultExtensionMock(IVault(payable(predicted)), vaultAdmin);
+        UpstreamProtocolFeeControllerMock protocolFeeController =
+            new UpstreamProtocolFeeControllerMock(UpstreamIVaultMock(predicted), 0, 0);
 
         CREATE3.deploy(
             salt,
             bytes.concat(
-                type(UpstreamVaultMock).creationCode,
-                abi.encode(vaultExtension, authorizer, protocolFeeController)
+                type(UpstreamVaultMock).creationCode, abi.encode(vaultExtension, authorizer, protocolFeeController)
             ),
             0
         );
@@ -249,11 +252,11 @@ contract BalancerV3TestMock_Parity is Test, WeightedPoolContractsDeployer {
         vm.label(address(vault), "UpstreamVaultMock");
     }
 
-    function _unsortedTokens(
-        CraneERC20TestToken tokenA,
-        CraneERC20TestToken tokenB,
-        CraneERC20TestToken tokenC
-    ) internal pure returns (IERC20[] memory tokens) {
+    function _unsortedTokens(CraneERC20TestToken tokenA, CraneERC20TestToken tokenB, CraneERC20TestToken tokenC)
+        internal
+        pure
+        returns (IERC20[] memory tokens)
+    {
         IERC20[] memory t = new IERC20[](3);
         t[0] = IERC20(address(tokenB));
         t[1] = IERC20(address(tokenA));

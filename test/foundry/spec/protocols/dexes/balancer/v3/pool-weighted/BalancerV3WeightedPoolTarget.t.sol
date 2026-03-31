@@ -3,11 +3,17 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
-import {BalancerV3WeightedPoolTargetStub} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolTargetStub.sol";
+import {
+    BalancerV3WeightedPoolTargetStub
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolTargetStub.sol";
 
 /**
  * @title BalancerV3WeightedPoolTarget_Test
@@ -130,7 +136,10 @@ contract BalancerV3WeightedPoolTarget_Test is Test {
         assertGt(newBalance, 800e18, "New balance should be greater than original");
     }
 
-    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio) public view {
+    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio)
+        public
+        view
+    {
         bal0 = bound(bal0, 1e12, 1e27);
         bal1 = bound(bal1, 1e12, 1e27);
         ratio = bound(ratio, 0.5e18, 2e18);
@@ -169,9 +178,7 @@ contract BalancerV3WeightedPoolTarget_Test is Test {
 
         // Calculate expected using WeightedMath
         uint256[] memory weights = pool.getNormalizedWeights();
-        uint256 expected = WeightedMath.computeOutGivenExactIn(
-            balances[0], weights[0], balances[1], weights[1], 100e18
-        );
+        uint256 expected = WeightedMath.computeOutGivenExactIn(balances[0], weights[0], balances[1], weights[1], 100e18);
 
         assertEq(amountOut, expected, "EXACT_IN should return correct output amount");
         assertTrue(amountOut > 0, "Output should be positive");
@@ -198,9 +205,7 @@ contract BalancerV3WeightedPoolTarget_Test is Test {
 
         // Calculate expected using WeightedMath
         uint256[] memory weights = pool.getNormalizedWeights();
-        uint256 expected = WeightedMath.computeInGivenExactOut(
-            balances[0], weights[0], balances[1], weights[1], 50e18
-        );
+        uint256 expected = WeightedMath.computeInGivenExactOut(balances[0], weights[0], balances[1], weights[1], 50e18);
 
         assertEq(amountIn, expected, "EXACT_OUT should return correct input amount");
         assertTrue(amountIn > 0, "Input should be positive");
@@ -225,9 +230,7 @@ contract BalancerV3WeightedPoolTarget_Test is Test {
         uint256 amountOut = pool.onSwap(params);
 
         uint256[] memory weights = pool.getNormalizedWeights();
-        uint256 expected = WeightedMath.computeOutGivenExactIn(
-            balances[1], weights[1], balances[0], weights[0], 50e18
-        );
+        uint256 expected = WeightedMath.computeOutGivenExactIn(balances[1], weights[1], balances[0], weights[0], 50e18);
 
         assertEq(amountOut, expected, "Reverse direction EXACT_IN should work correctly");
     }

@@ -144,7 +144,9 @@ contract Forwarder is IForwarder, ERC165 {
         // bytes32 digest = keccak256(
         //     abi.encodePacked("\x19\x01", domainSeparator, keccak256(_getEncoded(req, requestTypeHash, suffixData)))
         // );
-        bytes32 digest = abi.encodePacked("\x19\x01", domainSeparator, keccak256(_getEncoded(req, requestTypeHash, suffixData)))._hash();
+        bytes32 digest = abi.encodePacked(
+                "\x19\x01", domainSeparator, keccak256(_getEncoded(req, requestTypeHash, suffixData))
+            )._hash();
         // solhint-disable-next-line avoid-tx-origin
         require(tx.origin == DRY_RUN_ADDRESS || digest.recover(sig) == req.from, "FWD: signature mismatch");
     }

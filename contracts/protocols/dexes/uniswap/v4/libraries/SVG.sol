@@ -5,6 +5,7 @@ import {IHooks} from "../interfaces/IHooks.sol";
 import {BitMath} from "./BitMath.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 import {Base64} from "@crane/contracts/utils/Base64.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title SVG
 /// @notice Provides a function for generating an SVG associated with a Uniswap NFT
@@ -12,6 +13,7 @@ import {Base64} from "@crane/contracts/utils/Base64.sol";
 /// @dev Reference: https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTSVG.sol
 /// @dev Refactored to avoid stack-too-deep errors without requiring viaIR
 library SVG {
+    using BetterEfficientHashLib for bytes;
     using Strings for uint256;
 
     // SVG path commands for the curve that represent the steepness of the position
@@ -77,7 +79,8 @@ library SVG {
         string memory part2 = generateSVGBorderText(
             params.quoteCurrency, params.baseCurrency, params.quoteCurrencySymbol, params.baseCurrencySymbol
         );
-        string memory part3 = generateSVGCardMantle(params.quoteCurrencySymbol, params.baseCurrencySymbol, params.feeTier);
+        string memory part3 =
+            generateSVGCardMantle(params.quoteCurrencySymbol, params.baseCurrencySymbol, params.feeTier);
         string memory part4 = generageSvgCurve(params.tickLower, params.tickUpper, params.tickSpacing, params.overRange);
         string memory part5 = generateSVGPositionDataAndLocationCurve(
             params.tokenId.toString(), params.hooks, params.tickLower, params.tickUpper
@@ -104,53 +107,73 @@ library SVG {
     }
 
     function _generateSVGHeader() private pure returns (string memory) {
-        return string(abi.encodePacked(
-            '<svg width="290" height="500" viewBox="0 0 290 500" xmlns="http://www.w3.org/2000/svg"',
-            " xmlns:xlink='http://www.w3.org/1999/xlink'>",
-            "<defs>",
-            '<filter id="f1"><feImage result="p0" xlink:href="data:image/svg+xml;base64,'
-        ));
+        return string(
+            abi.encodePacked(
+                '<svg width="290" height="500" viewBox="0 0 290 500" xmlns="http://www.w3.org/2000/svg"',
+                " xmlns:xlink='http://www.w3.org/1999/xlink'>",
+                "<defs>",
+                '<filter id="f1"><feImage result="p0" xlink:href="data:image/svg+xml;base64,'
+            )
+        );
     }
 
-    function _generateFilterImages(ColorParams memory colors, CoordParams memory coords) private pure returns (string memory) {
+    function _generateFilterImages(ColorParams memory colors, CoordParams memory coords)
+        private
+        pure
+        returns (string memory)
+    {
         string memory p0 = _generateP0Image(colors.color0);
         string memory p1 = _generateCircleImage(coords.x1, coords.y1, colors.color1, "120");
         string memory p2 = _generateCircleImage(coords.x2, coords.y2, colors.color2, "120");
         string memory p3 = _generateCircleImage(coords.x3, coords.y3, colors.color3, "100");
 
-        return string(abi.encodePacked(
-            p0,
-            '"/><feImage result="p1" xlink:href="data:image/svg+xml;base64,',
-            p1,
-            '"/><feImage result="p2" xlink:href="data:image/svg+xml;base64,',
-            p2,
-            '" />',
-            '<feImage result="p3" xlink:href="data:image/svg+xml;base64,',
-            p3,
-            '" />'
-        ));
+        return string(
+            abi.encodePacked(
+                p0,
+                '"/><feImage result="p1" xlink:href="data:image/svg+xml;base64,',
+                p1,
+                '"/><feImage result="p2" xlink:href="data:image/svg+xml;base64,',
+                p2,
+                '" />',
+                '<feImage result="p3" xlink:href="data:image/svg+xml;base64,',
+                p3,
+                '" />'
+            )
+        );
     }
 
     function _generateP0Image(string memory color) private pure returns (string memory) {
-        return Base64.encode(bytes(abi.encodePacked(
-            "<svg width='290' height='500' viewBox='0 0 290 500' xmlns='http://www.w3.org/2000/svg'><rect width='290px' height='500px' fill='#",
-            color,
-            "'/></svg>"
-        )));
+        return Base64.encode(
+            bytes(
+                abi.encodePacked(
+                    "<svg width='290' height='500' viewBox='0 0 290 500' xmlns='http://www.w3.org/2000/svg'><rect width='290px' height='500px' fill='#",
+                    color,
+                    "'/></svg>"
+                )
+            )
+        );
     }
 
-    function _generateCircleImage(string memory x, string memory y, string memory color, string memory radius) private pure returns (string memory) {
-        return Base64.encode(bytes(abi.encodePacked(
-            "<svg width='290' height='500' viewBox='0 0 290 500' xmlns='http://www.w3.org/2000/svg'><circle cx='",
-            x,
-            "' cy='",
-            y,
-            "' r='",
-            radius,
-            "px' fill='#",
-            color,
-            "'/></svg>"
-        )));
+    function _generateCircleImage(string memory x, string memory y, string memory color, string memory radius)
+        private
+        pure
+        returns (string memory)
+    {
+        return Base64.encode(
+            bytes(
+                abi.encodePacked(
+                    "<svg width='290' height='500' viewBox='0 0 290 500' xmlns='http://www.w3.org/2000/svg'><circle cx='",
+                    x,
+                    "' cy='",
+                    y,
+                    "' r='",
+                    radius,
+                    "px' fill='#",
+                    color,
+                    "'/></svg>"
+                )
+            )
+        );
     }
 
     function _generateFilterEnd() private pure returns (string memory) {
@@ -158,35 +181,41 @@ library SVG {
     }
 
     function _generateGradients() private pure returns (string memory) {
-        return string(abi.encodePacked(
-            '<linearGradient id="grad-up" x1="1" x2="0" y1="1" y2="0"><stop offset="0.0" stop-color="white" stop-opacity="1" />',
-            '<stop offset=".9" stop-color="white" stop-opacity="0" /></linearGradient>',
-            '<linearGradient id="grad-down" x1="0" x2="1" y1="0" y2="1"><stop offset="0.0" stop-color="white" stop-opacity="1" /><stop offset="0.9" stop-color="white" stop-opacity="0" /></linearGradient>',
-            '<linearGradient id="grad-symbol"><stop offset="0.7" stop-color="white" stop-opacity="1" /><stop offset=".95" stop-color="white" stop-opacity="0" /></linearGradient>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<linearGradient id="grad-up" x1="1" x2="0" y1="1" y2="0"><stop offset="0.0" stop-color="white" stop-opacity="1" />',
+                '<stop offset=".9" stop-color="white" stop-opacity="0" /></linearGradient>',
+                '<linearGradient id="grad-down" x1="0" x2="1" y1="0" y2="1"><stop offset="0.0" stop-color="white" stop-opacity="1" /><stop offset="0.9" stop-color="white" stop-opacity="0" /></linearGradient>',
+                '<linearGradient id="grad-symbol"><stop offset="0.7" stop-color="white" stop-opacity="1" /><stop offset=".95" stop-color="white" stop-opacity="0" /></linearGradient>'
+            )
+        );
     }
 
     function _generateMasks() private pure returns (string memory) {
-        return string(abi.encodePacked(
-            '<mask id="fade-up" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#grad-up)" /></mask>',
-            '<mask id="fade-down" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#grad-down)" /></mask>',
-            '<mask id="none" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="white" /></mask>',
-            '<mask id="fade-symbol" maskContentUnits="userSpaceOnUse"><rect width="290px" height="200px" fill="url(#grad-symbol)" /></mask></defs>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<mask id="fade-up" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#grad-up)" /></mask>',
+                '<mask id="fade-down" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#grad-down)" /></mask>',
+                '<mask id="none" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="white" /></mask>',
+                '<mask id="fade-symbol" maskContentUnits="userSpaceOnUse"><rect width="290px" height="200px" fill="url(#grad-symbol)" /></mask></defs>'
+            )
+        );
     }
 
     function _generateBackground(string memory color0) private pure returns (string memory) {
-        return string(abi.encodePacked(
-            '<g clip-path="url(#corners)">',
-            '<rect fill="',
-            color0,
-            '" x="0px" y="0px" width="290px" height="500px" />',
-            '<rect style="filter: url(#f1)" x="0px" y="0px" width="290px" height="500px" />',
-            ' <g style="filter:url(#top-region-blur); transform:scale(1.5); transform-origin:center top;">',
-            '<rect fill="none" x="0px" y="0px" width="290px" height="500px" />',
-            '<ellipse cx="50%" cy="0px" rx="180px" ry="120px" fill="#000" opacity="0.85" /></g>',
-            '<rect x="0" y="0" width="290" height="500" rx="42" ry="42" fill="rgba(0,0,0,0)" stroke="rgba(255,255,255,0.2)" /></g>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<g clip-path="url(#corners)">',
+                '<rect fill="',
+                color0,
+                '" x="0px" y="0px" width="290px" height="500px" />',
+                '<rect style="filter: url(#f1)" x="0px" y="0px" width="290px" height="500px" />',
+                ' <g style="filter:url(#top-region-blur); transform:scale(1.5); transform-origin:center top;">',
+                '<rect fill="none" x="0px" y="0px" width="290px" height="500px" />',
+                '<ellipse cx="50%" cy="0px" rx="180px" ry="120px" fill="#000" opacity="0.85" /></g>',
+                '<rect x="0" y="0" width="290" height="500" rx="42" ry="42" fill="rgba(0,0,0,0)" stroke="rgba(255,255,255,0.2)" /></g>'
+            )
+        );
     }
 
     /// @notice Generate the SVG for the moving border text displaying the quote and base currency addresses with their symbols
@@ -198,31 +227,43 @@ library SVG {
     ) private pure returns (string memory svg) {
         string memory basePart = _generateBorderTextBase(baseCurrency, baseCurrencySymbol);
         string memory quotePart = _generateBorderTextQuote(quoteCurrency, quoteCurrencySymbol);
-        return string(abi.encodePacked('<text text-rendering="optimizeSpeed">', basePart, quotePart, '</text>'));
+        return string(abi.encodePacked('<text text-rendering="optimizeSpeed">', basePart, quotePart, "</text>"));
     }
 
-    function _generateBorderTextBase(string memory baseCurrency, string memory baseCurrencySymbol) private pure returns (string memory) {
+    function _generateBorderTextBase(string memory baseCurrency, string memory baseCurrencySymbol)
+        private
+        pure
+        returns (string memory)
+    {
         string memory baseText = string(abi.encodePacked(baseCurrency, unicode" • ", baseCurrencySymbol));
-        return string(abi.encodePacked(
-            '<textPath startOffset="-100%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-            baseText,
-            ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />',
-            '</textPath> <textPath startOffset="0%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-            baseText,
-            ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /> </textPath>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<textPath startOffset="-100%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
+                baseText,
+                ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />',
+                '</textPath> <textPath startOffset="0%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
+                baseText,
+                ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /> </textPath>'
+            )
+        );
     }
 
-    function _generateBorderTextQuote(string memory quoteCurrency, string memory quoteCurrencySymbol) private pure returns (string memory) {
+    function _generateBorderTextQuote(string memory quoteCurrency, string memory quoteCurrencySymbol)
+        private
+        pure
+        returns (string memory)
+    {
         string memory quoteText = string(abi.encodePacked(quoteCurrency, unicode" • ", quoteCurrencySymbol));
-        return string(abi.encodePacked(
-            '<textPath startOffset="50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-            quoteText,
-            ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s"',
-            ' repeatCount="indefinite" /></textPath><textPath startOffset="-50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-            quoteText,
-            ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /></textPath>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<textPath startOffset="50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
+                quoteText,
+                ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s"',
+                ' repeatCount="indefinite" /></textPath><textPath startOffset="-50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
+                quoteText,
+                ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /></textPath>'
+            )
+        );
     }
 
     /// @notice Generate the SVG for the card mantle
@@ -254,27 +295,31 @@ library SVG {
         string memory fade = overRange == 1 ? "#fade-up" : overRange == -1 ? "#fade-down" : "#none";
         string memory curve = getCurve(tickLower, tickUpper, tickSpacing);
 
-        string memory curvePart1 = string(abi.encodePacked(
-            '<g mask="url(',
-            fade,
-            ')"',
-            ' style="transform:translate(72px,189px)">'
-            '<rect x="-16px" y="-16px" width="180px" height="180px" fill="none" />' '<path d="',
-            curve,
-            '" stroke="rgba(0,0,0,0.3)" stroke-width="32px" fill="none" stroke-linecap="round" />',
-            '</g>'
-        ));
+        string memory curvePart1 = string(
+            abi.encodePacked(
+                '<g mask="url(',
+                fade,
+                ')"',
+                ' style="transform:translate(72px,189px)">'
+                '<rect x="-16px" y="-16px" width="180px" height="180px" fill="none" />' '<path d="',
+                curve,
+                '" stroke="rgba(0,0,0,0.3)" stroke-width="32px" fill="none" stroke-linecap="round" />',
+                "</g>"
+            )
+        );
 
-        string memory curvePart2 = string(abi.encodePacked(
-            '<g mask="url(',
-            fade,
-            ')"',
-            ' style="transform:translate(72px,189px)">',
-            '<rect x="-16px" y="-16px" width="180px" height="180px" fill="none" />',
-            '<path d="',
-            curve,
-            '" stroke="rgba(255,255,255,1)" fill="none" stroke-linecap="round" /></g>'
-        ));
+        string memory curvePart2 = string(
+            abi.encodePacked(
+                '<g mask="url(',
+                fade,
+                ')"',
+                ' style="transform:translate(72px,189px)">',
+                '<rect x="-16px" y="-16px" width="180px" height="180px" fill="none" />',
+                '<path d="',
+                curve,
+                '" stroke="rgba(255,255,255,1)" fill="none" stroke-linecap="round" /></g>'
+            )
+        );
 
         svg = string(abi.encodePacked(curvePart1, curvePart2, generateSVGCurveCircle(overRange)));
     }
@@ -311,15 +356,34 @@ library SVG {
         if (overRange == 1 || overRange == -1) {
             string memory cx = overRange == -1 ? curvex1 : curvex2;
             string memory cy = overRange == -1 ? curvey1 : curvey2;
-            svg = string(abi.encodePacked(
-                '<circle cx="', cx, 'px" cy="', cy, 'px" r="4px" fill="white" /><circle cx="',
-                cx, 'px" cy="', cy, 'px" r="24px" fill="none" stroke="white" />'
-            ));
+            svg = string(
+                abi.encodePacked(
+                    '<circle cx="',
+                    cx,
+                    'px" cy="',
+                    cy,
+                    'px" r="4px" fill="white" /><circle cx="',
+                    cx,
+                    'px" cy="',
+                    cy,
+                    'px" r="24px" fill="none" stroke="white" />'
+                )
+            );
         } else {
-            svg = string(abi.encodePacked(
-                '<circle cx="', curvex1, 'px" cy="', curvey1, 'px" r="4px" fill="white" />',
-                '<circle cx="', curvex2, 'px" cy="', curvey2, 'px" r="4px" fill="white" />'
-            ));
+            svg = string(
+                abi.encodePacked(
+                    '<circle cx="',
+                    curvex1,
+                    'px" cy="',
+                    curvey1,
+                    'px" r="4px" fill="white" />',
+                    '<circle cx="',
+                    curvex2,
+                    'px" cy="',
+                    curvey2,
+                    'px" r="4px" fill="white" />'
+                )
+            );
         }
     }
 
@@ -348,56 +412,82 @@ library SVG {
         return string(abi.encodePacked(part1, part2, part3, part4));
     }
 
-    function _generatePositionDataRow(string memory value, string memory label, uint256 length) private pure returns (string memory) {
-        return string(abi.encodePacked(
-            ' <g style="transform:translate(29px, 354px)">',
-            '<rect width="', uint256(7 * (length + 4)).toString(), 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-            '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">', label, '</tspan>',
-            value,
-            "</text></g>"
-        ));
+    function _generatePositionDataRow(string memory value, string memory label, uint256 length)
+        private
+        pure
+        returns (string memory)
+    {
+        return string(
+            abi.encodePacked(
+                ' <g style="transform:translate(29px, 354px)">',
+                '<rect width="',
+                uint256(7 * (length + 4)).toString(),
+                'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
+                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">',
+                label,
+                "</tspan>",
+                value,
+                "</text></g>"
+            )
+        );
     }
 
     function _generatePositionDataRow2(string memory hookSlice) private pure returns (string memory) {
         uint256 str2length = bytes(hookSlice).length + 5;
-        return string(abi.encodePacked(
-            ' <g style="transform:translate(29px, 384px)">',
-            '<rect width="', uint256(7 * (str2length + 4)).toString(), 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-            '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Hook: </tspan>',
-            hookSlice,
-            "</text></g>"
-        ));
+        return string(
+            abi.encodePacked(
+                ' <g style="transform:translate(29px, 384px)">',
+                '<rect width="',
+                uint256(7 * (str2length + 4)).toString(),
+                'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
+                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Hook: </tspan>',
+                hookSlice,
+                "</text></g>"
+            )
+        );
     }
 
-    function _generateTickRows(string memory tickLowerStr, string memory tickUpperStr) private pure returns (string memory) {
+    function _generateTickRows(string memory tickLowerStr, string memory tickUpperStr)
+        private
+        pure
+        returns (string memory)
+    {
         uint256 str3length = bytes(tickLowerStr).length + 10;
         uint256 str4length = bytes(tickUpperStr).length + 10;
 
-        return string(abi.encodePacked(
-            ' <g style="transform:translate(29px, 414px)">',
-            '<rect width="', uint256(7 * (str3length + 4)).toString(), 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-            '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Min Tick: </tspan>',
-            tickLowerStr,
-            "</text></g>",
-            ' <g style="transform:translate(29px, 444px)">',
-            '<rect width="', uint256(7 * (str4length + 4)).toString(), 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-            '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Max Tick: </tspan>',
-            tickUpperStr,
-            "</text></g>"
-        ));
+        return string(
+            abi.encodePacked(
+                ' <g style="transform:translate(29px, 414px)">',
+                '<rect width="',
+                uint256(7 * (str3length + 4)).toString(),
+                'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
+                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Min Tick: </tspan>',
+                tickLowerStr,
+                "</text></g>",
+                ' <g style="transform:translate(29px, 444px)">',
+                '<rect width="',
+                uint256(7 * (str4length + 4)).toString(),
+                'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
+                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="11px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Max Tick: </tspan>',
+                tickUpperStr,
+                "</text></g>"
+            )
+        );
     }
 
     function _generateLocationCurve(string memory xCoord, string memory yCoord) private pure returns (string memory) {
-        return string(abi.encodePacked(
-            '<g style="transform:translate(226px, 433px)">',
-            '<rect width="36px" height="36px" rx="8px" ry="8px" fill="none" stroke="rgba(255,255,255,0.2)" />',
-            '<path stroke-linecap="round" d="M8 9C8.00004 22.9494 16.2099 28 27 28" fill="none" stroke="white" />',
-            '<circle style="transform:translate3d(',
-            xCoord,
-            "px, ",
-            yCoord,
-            'px, 0px)" cx="0px" cy="0px" r="4px" fill="white"/></g>'
-        ));
+        return string(
+            abi.encodePacked(
+                '<g style="transform:translate(226px, 433px)">',
+                '<rect width="36px" height="36px" rx="8px" ry="8px" fill="none" stroke="rgba(255,255,255,0.2)" />',
+                '<path stroke-linecap="round" d="M8 9C8.00004 22.9494 16.2099 28 27 28" fill="none" stroke="white" />',
+                '<circle style="transform:translate3d(',
+                xCoord,
+                "px, ",
+                yCoord,
+                'px, 0px)" cx="0px" cy="0px" r="4px" fill="white"/></g>'
+            )
+        );
     }
 
     function substring(string memory str, uint256 startIndex, uint256 endIndex) internal pure returns (string memory) {
@@ -447,13 +537,15 @@ library SVG {
     /// @notice Generates the SVG for a rare sparkle if the NFT is rare
     function generateSVGRareSparkle(uint256 tokenId, address hooks) private pure returns (string memory svg) {
         if (isRare(tokenId, hooks)) {
-            svg = string(abi.encodePacked(
-                '<g style="transform:translate(226px, 392px)"><rect width="36px" height="36px" rx="8px" ry="8px" fill="none" stroke="rgba(255,255,255,0.2)" />',
-                '<g><path style="transform:translate(6px,6px)" d="M12 0L12.6522 9.56587L18 1.6077L13.7819 10.2181L22.3923 6L14.4341 ',
-                "11.3478L24 12L14.4341 12.6522L22.3923 18L13.7819 13.7819L18 22.3923L12.6522 14.4341L12 24L11.3478 14.4341L6 22.39",
-                '23L10.2181 13.7819L1.6077 18L9.56587 12.6522L0 12L9.56587 11.3478L1.6077 6L10.2181 10.2181L6 1.6077L11.3478 9.56587L12 0Z" fill="white" />',
-                '<animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="10s" repeatCount="indefinite"/></g></g>'
-            ));
+            svg = string(
+                abi.encodePacked(
+                    '<g style="transform:translate(226px, 392px)"><rect width="36px" height="36px" rx="8px" ry="8px" fill="none" stroke="rgba(255,255,255,0.2)" />',
+                    '<g><path style="transform:translate(6px,6px)" d="M12 0L12.6522 9.56587L18 1.6077L13.7819 10.2181L22.3923 6L14.4341 ',
+                    "11.3478L24 12L14.4341 12.6522L22.3923 18L13.7819 13.7819L18 22.3923L12.6522 14.4341L12 24L11.3478 14.4341L6 22.39",
+                    '23L10.2181 13.7819L1.6077 18L9.56587 12.6522L0 12L9.56587 11.3478L1.6077 6L10.2181 10.2181L6 1.6077L11.3478 9.56587L12 0Z" fill="white" />',
+                    '<animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="10s" repeatCount="indefinite"/></g></g>'
+                )
+            );
         } else {
             svg = "";
         }
@@ -461,7 +553,8 @@ library SVG {
 
     /// @notice Determines if an NFT is rare based on the token ID and hooks address
     function isRare(uint256 tokenId, address hooks) internal pure returns (bool) {
-        bytes32 h = keccak256(abi.encodePacked(tokenId, hooks));
+        // bytes32 h = keccak256(abi.encodePacked(tokenId, hooks));
+        bytes32 h = abi.encodePacked(tokenId, hooks)._hash();
         return uint256(h) < type(uint256).max / (1 + BitMath.mostSignificantBit(tokenId) * 2);
     }
 }

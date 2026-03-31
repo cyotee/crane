@@ -25,18 +25,25 @@ interface Abacus {
 }
 
 contract LinearDecrease is Abacus {
-
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; emit Rely(usr); }
-    function deny(address usr) external auth { wards[usr] = 0; emit Deny(usr); }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+        emit Rely(usr);
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+        emit Deny(usr);
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "LinearDecrease/not-authorized");
         _;
     }
 
     // --- Data ---
-    uint256 public tau;  // Seconds after auction start when the price reaches zero [seconds]
+    uint256 public tau; // Seconds after auction start when the price reaches zero [seconds]
 
     // --- Events ---
     event Rely(address indexed usr);
@@ -52,23 +59,26 @@ contract LinearDecrease is Abacus {
 
     // --- Administration ---
     function file(bytes32 what, uint256 data) external auth {
-        if (what ==  "tau") tau = data;
+        if (what == "tau") tau = data;
         else revert("LinearDecrease/file-unrecognized-param");
         emit File(what, data);
     }
 
     // --- Math ---
     uint256 constant RAY = 10 ** 27;
+
     function _add(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x + y) >= x);
         }
     }
+
     function _mul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require(y == 0 || (z = x * y) / y == x);
         }
     }
+
     function _rmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             z = x * y;
@@ -86,26 +96,33 @@ contract LinearDecrease is Abacus {
     //
     // Note the internal call to mul multiples by RAY, thereby ensuring that the rmul calculation
     // which utilizes top and tau (RAY values) is also a RAY value.
-    function price(uint256 top, uint256 dur) override external view returns (uint256) {
+    function price(uint256 top, uint256 dur) external view override returns (uint256) {
         if (dur >= tau) return 0;
         return _rmul(top, _mul(tau - dur, RAY) / tau);
     }
 }
 
 contract StairstepExponentialDecrease is Abacus {
-
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; emit Rely(usr); }
-    function deny(address usr) external auth { wards[usr] = 0; emit Deny(usr); }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+        emit Rely(usr);
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+        emit Deny(usr);
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "StairstepExponentialDecrease/not-authorized");
         _;
     }
 
     // --- Data ---
     uint256 public step; // Length of time between price drops [seconds]
-    uint256 public cut;  // Per-step multiplicative factor     [ray]
+    uint256 public cut; // Per-step multiplicative factor     [ray]
 
     // --- Events ---
     event Rely(address indexed usr);
@@ -123,7 +140,7 @@ contract StairstepExponentialDecrease is Abacus {
 
     // --- Administration ---
     function file(bytes32 what, uint256 data) external auth {
-        if      (what ==  "cut") require((cut = data) <= RAY, "StairstepExponentialDecrease/cut-gt-RAY");
+        if (what == "cut") require((cut = data) <= RAY, "StairstepExponentialDecrease/cut-gt-RAY");
         else if (what == "step") step = data;
         else revert("StairstepExponentialDecrease/file-unrecognized-param");
         emit File(what, data);
@@ -131,6 +148,7 @@ contract StairstepExponentialDecrease is Abacus {
 
     // --- Math ---
     uint256 constant RAY = 10 ** 27;
+
     function _rmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             z = x * y;
@@ -138,26 +156,31 @@ contract StairstepExponentialDecrease is Abacus {
             z = z / RAY;
         }
     }
+
     // optimized version from dss PR #78
     function _rpow(uint256 x, uint256 n, uint256 b) internal pure returns (uint256 z) {
         assembly {
-            switch n case 0 { z := b }
+            switch n
+            case 0 { z := b }
             default {
-                switch x case 0 { z := 0 }
+                switch x
+                case 0 { z := 0 }
                 default {
-                    switch mod(n, 2) case 0 { z := b } default { z := x }
-                    let half := div(b, 2)  // for rounding.
-                    for { n := div(n, 2) } n { n := div(n,2) } {
+                    switch mod(n, 2)
+                    case 0 { z := b }
+                    default { z := x }
+                    let half := div(b, 2) // for rounding.
+                    for { n := div(n, 2) } n { n := div(n, 2) } {
                         let xx := mul(x, x)
-                        if shr(128, x) { revert(0,0) }
+                        if shr(128, x) { revert(0, 0) }
                         let xxRound := add(xx, half)
-                        if lt(xxRound, xx) { revert(0,0) }
+                        if lt(xxRound, xx) { revert(0, 0) }
                         x := div(xxRound, b)
-                        if mod(n,2) {
+                        if mod(n, 2) {
                             let zx := mul(z, x)
-                            if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0,0) }
+                            if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0, 0) }
                             let zxRound := add(zx, half)
-                            if lt(zxRound, zx) { revert(0,0) }
+                            if lt(zxRound, zx) { revert(0, 0) }
                             z := div(zxRound, b)
                         }
                     }
@@ -176,7 +199,7 @@ contract StairstepExponentialDecrease is Abacus {
     // returns: top * (cut ^ dur)
     //
     //
-    function price(uint256 top, uint256 dur) override external view returns (uint256) {
+    function price(uint256 top, uint256 dur) external view override returns (uint256) {
         return _rmul(top, _rpow(cut, dur / step, RAY));
     }
 }
@@ -185,18 +208,25 @@ contract StairstepExponentialDecrease is Abacus {
 // this continous (i.e. per-second) exponential decrease has be implemented as it is more gas-efficient
 // than using the stairstep version with step = 1 (primarily due to 1 fewer SLOAD per price calculation).
 contract ExponentialDecrease is Abacus {
-
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; emit Rely(usr); }
-    function deny(address usr) external auth { wards[usr] = 0; emit Deny(usr); }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+        emit Rely(usr);
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+        emit Deny(usr);
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "ExponentialDecrease/not-authorized");
         _;
     }
 
     // --- Data ---
-    uint256 public cut;  // Per-second multiplicative factor [ray]
+    uint256 public cut; // Per-second multiplicative factor [ray]
 
     // --- Events ---
     event Rely(address indexed usr);
@@ -214,13 +244,14 @@ contract ExponentialDecrease is Abacus {
 
     // --- Administration ---
     function file(bytes32 what, uint256 data) external auth {
-        if      (what ==  "cut") require((cut = data) <= RAY, "ExponentialDecrease/cut-gt-RAY");
+        if (what == "cut") require((cut = data) <= RAY, "ExponentialDecrease/cut-gt-RAY");
         else revert("ExponentialDecrease/file-unrecognized-param");
         emit File(what, data);
     }
 
     // --- Math ---
     uint256 constant RAY = 10 ** 27;
+
     function _rmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             z = x * y;
@@ -228,26 +259,31 @@ contract ExponentialDecrease is Abacus {
             z = z / RAY;
         }
     }
+
     // optimized version from dss PR #78
     function _rpow(uint256 x, uint256 n, uint256 b) internal pure returns (uint256 z) {
         assembly {
-            switch n case 0 { z := b }
+            switch n
+            case 0 { z := b }
             default {
-                switch x case 0 { z := 0 }
+                switch x
+                case 0 { z := 0 }
                 default {
-                    switch mod(n, 2) case 0 { z := b } default { z := x }
-                    let half := div(b, 2)  // for rounding.
-                    for { n := div(n, 2) } n { n := div(n,2) } {
+                    switch mod(n, 2)
+                    case 0 { z := b }
+                    default { z := x }
+                    let half := div(b, 2) // for rounding.
+                    for { n := div(n, 2) } n { n := div(n, 2) } {
                         let xx := mul(x, x)
-                        if shr(128, x) { revert(0,0) }
+                        if shr(128, x) { revert(0, 0) }
                         let xxRound := add(xx, half)
-                        if lt(xxRound, xx) { revert(0,0) }
+                        if lt(xxRound, xx) { revert(0, 0) }
                         x := div(xxRound, b)
-                        if mod(n,2) {
+                        if mod(n, 2) {
                             let zx := mul(z, x)
-                            if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0,0) }
+                            if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0, 0) }
                             let zxRound := add(zx, half)
-                            if lt(zxRound, zx) { revert(0,0) }
+                            if lt(zxRound, zx) { revert(0, 0) }
                             z := div(zxRound, b)
                         }
                     }
@@ -264,7 +300,7 @@ contract ExponentialDecrease is Abacus {
     //
     // returns: top * (cut ^ dur)
     //
-    function price(uint256 top, uint256 dur) override external view returns (uint256) {
+    function price(uint256 top, uint256 dur) external view override returns (uint256) {
         return _rmul(top, _rpow(cut, dur, RAY));
     }
 }

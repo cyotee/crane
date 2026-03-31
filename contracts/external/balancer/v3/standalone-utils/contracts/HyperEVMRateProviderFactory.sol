@@ -8,26 +8,30 @@ import {
 import {
     IHyperEVMRateProvider
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IHyperEVMRateProvider.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 
-import { HyperEVMRateProvider } from "./HyperEVMRateProvider.sol";
+import {HyperEVMRateProvider} from "./HyperEVMRateProvider.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice Factory for deploying and managing HyperEVM rate providers.
 contract HyperEVMRateProviderFactory is IHyperEVMRateProviderFactory, SingletonAuthentication, Version {
+    using BetterEfficientHashLib for bytes;
+
     uint256 internal immutable _rateProviderVersion;
     bool internal _isDisabled;
 
     mapping(bytes32 rateProviderId => IHyperEVMRateProvider rateProvider) internal _rateProviders;
     mapping(IHyperEVMRateProvider rateProvider => bool creationFlag) internal _isRateProviderFromFactory;
 
-    constructor(
-        IVault vault,
-        string memory factoryVersion,
-        uint256 rateProviderVersion
-    ) SingletonAuthentication(vault) Version(factoryVersion) {
+    constructor(IVault vault, string memory factoryVersion, uint256 rateProviderVersion)
+        SingletonAuthentication(vault)
+        Version(factoryVersion)
+    {
         _rateProviderVersion = rateProviderVersion;
     }
 
@@ -56,10 +60,11 @@ contract HyperEVMRateProviderFactory is IHyperEVMRateProviderFactory, SingletonA
     }
 
     /// @inheritdoc IHyperEVMRateProviderFactory
-    function getRateProvider(
-        uint32 tokenIndex,
-        uint32 pairIndex
-    ) external view returns (IHyperEVMRateProvider rateProvider) {
+    function getRateProvider(uint32 tokenIndex, uint32 pairIndex)
+        external
+        view
+        returns (IHyperEVMRateProvider rateProvider)
+    {
         bytes32 rateProviderId = _computeRateProviderId(tokenIndex, pairIndex);
         rateProvider = _rateProviders[rateProviderId];
         if (address(rateProvider) == address(0)) {
@@ -82,7 +87,8 @@ contract HyperEVMRateProviderFactory is IHyperEVMRateProviderFactory, SingletonA
     }
 
     function _computeRateProviderId(uint32 tokenIndex, uint32 pairIndex) internal pure returns (bytes32) {
-        return keccak256(abi.encode(tokenIndex, pairIndex));
+        // return keccak256(abi.encode(tokenIndex, pairIndex));
+        return abi.encode(tokenIndex, pairIndex)._hash();
     }
 
     function _ensureEnabled() internal view {

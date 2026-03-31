@@ -71,7 +71,11 @@ library ECDSA {
     /**
      * @dev Overload of {ECDSA-tryRecover} that receives the `v`, `r` and `s` signature fields separately.
      */
-    function tryRecover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal view returns (address signer, bool valid) {
+    function tryRecover(bytes32 hash, uint8 v, bytes32 r, bytes32 s)
+        internal
+        view
+        returns (address signer, bool valid)
+    {
         signer = SoladyECDSA.tryRecover(hash, v, r, s);
         valid = signer != address(0);
     }
@@ -117,7 +121,7 @@ library ECDSA {
         /// @solidity memory-safe-assembly
         assembly {
             let ptr := mload(0x40)
-            mstore(ptr, hex"19_01")
+            mstore(ptr, hex"1901")
             mstore(add(ptr, 0x02), domainSeparator)
             mstore(add(ptr, 0x22), structHash)
             digest := keccak256(ptr, 0x42)

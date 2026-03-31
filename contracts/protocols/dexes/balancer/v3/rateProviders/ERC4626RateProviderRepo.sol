@@ -4,7 +4,8 @@ pragma solidity ^0.8.0;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
 library ERC4626RateProviderRepo {
-    bytes32 internal constant STORAGE_SLOT = keccak256("crane.contracts.protocols.dexes.balancer.v3.rateProviders.erc4626");
+    bytes32 internal constant STORAGE_SLOT =
+        keccak256("crane.contracts.protocols.dexes.balancer.v3.rateProviders.erc4626");
 
     struct Storage {
         IERC4626 erc4626Vault;

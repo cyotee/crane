@@ -6,16 +6,20 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
-import { VaultContractsDeployer } from "./utils/VaultContractsDeployer.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
+import {VaultContractsDeployer} from "./utils/VaultContractsDeployer.sol";
 
-import { E2eSwapTest, E2eTestState, SwapLimits } from "./E2eSwap.t.sol";
+import {E2eSwapTest, E2eTestState, SwapLimits} from "./E2eSwap.t.sol";
 
 contract E2eSwapRateProviderTest is VaultContractsDeployer, E2eSwapTest {
     using CastingHelpers for address[];
@@ -34,10 +38,12 @@ contract E2eSwapRateProviderTest is VaultContractsDeployer, E2eSwapTest {
         return super.createPool();
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -48,12 +54,8 @@ contract E2eSwapRateProviderTest is VaultContractsDeployer, E2eSwapTest {
         rateProviders[tokenAIdx] = IRateProvider(address(rateProviderTokenA));
         rateProviders[tokenBIdx] = IRateProvider(address(rateProviderTokenB));
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20(), rateProviders),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(newPool, vault.buildTokenConfig(tokens.asIERC20(), rateProviders), poolHooksContract, lp);
 
         poolArgs = abi.encode(vault, name, symbol);
     }

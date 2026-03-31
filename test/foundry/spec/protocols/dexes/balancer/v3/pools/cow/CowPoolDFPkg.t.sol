@@ -8,7 +8,9 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
@@ -21,11 +23,10 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {
-    CowPoolDFPkg,
-    ICowPoolDFPkg
-} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolDFPkg.sol";
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {CowPoolDFPkg, ICowPoolDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolDFPkg.sol";
 
 // Mock ERC20 for testing
 contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
@@ -42,11 +43,26 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
@@ -91,9 +107,18 @@ contract MockFacet is IFacet {
         _interfaces = interfaces_;
     }
 
-    function facetName() external view override returns (string memory) { return _name; }
-    function facetInterfaces() external view override returns (bytes4[] memory) { return _interfaces; }
-    function facetFuncs() external view override returns (bytes4[] memory) { return _funcs; }
+    function facetName() external view override returns (string memory) {
+        return _name;
+    }
+
+    function facetInterfaces() external view override returns (bytes4[] memory) {
+        return _interfaces;
+    }
+
+    function facetFuncs() external view override returns (bytes4[] memory) {
+        return _funcs;
+    }
+
     function facetMetadata() external view override returns (string memory, bytes4[] memory, bytes4[] memory) {
         return (_name, _interfaces, _funcs);
     }
@@ -277,10 +302,7 @@ contract CowPoolDFPkg_Test is Test {
             for (uint256 j = i + 1; j < allSelectors.length; j++) {
                 assertTrue(
                     allSelectors[i] != allSelectors[j],
-                    string.concat(
-                        "Selector collision detected: ",
-                        vm.toString(bytes32(allSelectors[i]))
-                    )
+                    string.concat("Selector collision detected: ", vm.toString(bytes32(allSelectors[i])))
                 );
             }
         }
@@ -337,17 +359,11 @@ contract CowPoolDFPkg_Test is Test {
         weights[0] = WEIGHT_20; // For first (higher addr)
         weights[1] = WEIGHT_80; // For second (lower addr)
 
-        bytes memory args = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         bytes memory processed = pkg.processArgs(args);
 
-        ICowPoolDFPkg.PkgArgs memory decodedArgs =
-            abi.decode(processed, (ICowPoolDFPkg.PkgArgs));
+        ICowPoolDFPkg.PkgArgs memory decodedArgs = abi.decode(processed, (ICowPoolDFPkg.PkgArgs));
 
         // Verify tokens are sorted
         assertTrue(
@@ -387,19 +403,9 @@ contract CowPoolDFPkg_Test is Test {
         weights2[0] = WEIGHT_20;
         weights2[1] = WEIGHT_80;
 
-        bytes memory args1 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1
-            })
-        );
+        bytes memory args1 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs1, normalizedWeights: weights1}));
 
-        bytes memory args2 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2
-            })
-        );
+        bytes memory args2 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs2, normalizedWeights: weights2}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -420,19 +426,14 @@ contract CowPoolDFPkg_Test is Test {
         uint256[] memory weights = new uint256[](1);
         weights[0] = FixedPoint.ONE;
 
-        bytes memory args = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         vm.expectRevert(
             abi.encodeWithSelector(
                 CowPoolDFPkg.InvalidTokensLength.selector,
                 8, // max
                 2, // min
-                1  // provided
+                1 // provided
             )
         );
         pkg.calcSalt(args);
@@ -450,19 +451,14 @@ contract CowPoolDFPkg_Test is Test {
         }
         weights[8] = FixedPoint.ONE - (FixedPoint.ONE / 9 * 8);
 
-        bytes memory args = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         vm.expectRevert(
             abi.encodeWithSelector(
                 CowPoolDFPkg.InvalidTokensLength.selector,
                 8, // max
                 2, // min
-                9  // provided
+                9 // provided
             )
         );
         pkg.calcSalt(args);
@@ -480,12 +476,7 @@ contract CowPoolDFPkg_Test is Test {
         }
         weights[7] = FixedPoint.ONE - (FixedPoint.ONE / 8 * 7);
 
-        bytes memory args = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         bytes32 salt = pkg.calcSalt(args);
         assertTrue(salt != bytes32(0), "Salt should not be zero for valid 8-token config");
@@ -501,18 +492,13 @@ contract CowPoolDFPkg_Test is Test {
         uint256[] memory weights = new uint256[](1);
         weights[0] = FixedPoint.ONE;
 
-        bytes memory args = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         vm.expectRevert(
             abi.encodeWithSelector(
                 CowPoolDFPkg.WeightsTokensMismatch.selector,
                 2, // tokens
-                1  // weights
+                1 // weights
             )
         );
         pkg.calcSalt(args);
@@ -528,19 +514,9 @@ contract CowPoolDFPkg_Test is Test {
         TokenConfig[] memory configs = _createTwoTokenConfig();
         uint256[] memory weights = _create8020Weights();
 
-        bytes memory args1 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args1 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
-        bytes memory args2 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights
-            })
-        );
+        bytes memory args2 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -559,19 +535,9 @@ contract CowPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(address(tokenD), TokenType.STANDARD, address(0), false);
         uint256[] memory weights2 = _create8020Weights();
 
-        bytes memory args1 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1
-            })
-        );
+        bytes memory args1 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs1, normalizedWeights: weights1}));
 
-        bytes memory args2 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2
-            })
-        );
+        bytes memory args2 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs2, normalizedWeights: weights2}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -587,19 +553,9 @@ contract CowPoolDFPkg_Test is Test {
         uint256[] memory weights1 = _create8020Weights();
         uint256[] memory weights2 = _create5050Weights();
 
-        bytes memory args1 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights1
-            })
-        );
+        bytes memory args1 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights1}));
 
-        bytes memory args2 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs,
-                normalizedWeights: weights2
-            })
-        );
+        bytes memory args2 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs, normalizedWeights: weights2}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -636,19 +592,9 @@ contract CowPoolDFPkg_Test is Test {
         weights2[0] = WEIGHT_20;
         weights2[1] = WEIGHT_80;
 
-        bytes memory args1 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs1,
-                normalizedWeights: weights1
-            })
-        );
+        bytes memory args1 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs1, normalizedWeights: weights1}));
 
-        bytes memory args2 = abi.encode(
-            ICowPoolDFPkg.PkgArgs({
-                tokenConfigs: configs2,
-                normalizedWeights: weights2
-            })
-        );
+        bytes memory args2 = abi.encode(ICowPoolDFPkg.PkgArgs({tokenConfigs: configs2, normalizedWeights: weights2}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -697,12 +643,11 @@ contract CowPoolDFPkg_Test is Test {
         return weights;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

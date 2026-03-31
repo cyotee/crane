@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { ICompositeLiquidityRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import { CompositeLiquidityRouterHooks } from "./CompositeLiquidityRouterHooks.sol";
+import {CompositeLiquidityRouterHooks} from "./CompositeLiquidityRouterHooks.sol";
 
 /**
  * @notice Entrypoint for add/remove liquidity operations on ERC4626 and nested pools.
@@ -19,12 +21,9 @@ import { CompositeLiquidityRouterHooks } from "./CompositeLiquidityRouterHooks.s
  * the operation with the Vault.
  */
 contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidityRouterHooks {
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) CompositeLiquidityRouterHooks(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        CompositeLiquidityRouterHooks(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -72,18 +71,13 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountOut) {
         AddLiquidityHookParams memory params = _buildQueryAddLiquidityParams(
-            pool,
-            exactAmountsIn,
-            0,
-            AddLiquidityKind.UNBALANCED,
-            userData
+            pool, exactAmountsIn, 0, AddLiquidityKind.UNBALANCED, userData
         );
 
         bptAmountOut = abi.decode(
             _vault.quote(
                 abi.encodeCall(
-                    CompositeLiquidityRouterHooks.addLiquidityERC4626PoolUnbalancedHook,
-                    (params, wrapUnderlying)
+                    CompositeLiquidityRouterHooks.addLiquidityERC4626PoolUnbalancedHook, (params, wrapUnderlying)
                 )
             ),
             (uint256)
@@ -99,27 +93,26 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.addLiquidityERC4626PoolProportionalHook,
-                        (
-                            AddLiquidityHookParams({
-                                sender: msg.sender,
-                                pool: pool,
-                                maxAmountsIn: maxAmountsIn,
-                                minBptAmountOut: exactBptAmountOut,
-                                kind: AddLiquidityKind.PROPORTIONAL,
-                                wethIsEth: wethIsEth,
-                                userData: userData
-                            }),
-                            wrapUnderlying
-                        )
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.addLiquidityERC4626PoolProportionalHook,
+                    (
+                        AddLiquidityHookParams({
+                            sender: msg.sender,
+                            pool: pool,
+                            maxAmountsIn: maxAmountsIn,
+                            minBptAmountOut: exactBptAmountOut,
+                            kind: AddLiquidityKind.PROPORTIONAL,
+                            wethIsEth: wethIsEth,
+                            userData: userData
+                        }),
+                        wrapUnderlying
                     )
-                ),
-                (uint256[])
-            );
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /// @inheritdoc ICompositeLiquidityRouter
@@ -131,23 +124,17 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory) {
         AddLiquidityHookParams memory params = _buildQueryAddLiquidityParams(
-            pool,
-            new uint256[](0),
-            exactBptAmountOut,
-            AddLiquidityKind.PROPORTIONAL,
-            userData
+            pool, new uint256[](0), exactBptAmountOut, AddLiquidityKind.PROPORTIONAL, userData
         );
 
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.addLiquidityERC4626PoolProportionalHook,
-                        (params, wrapUnderlying)
-                    )
-                ),
-                (uint256[])
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.addLiquidityERC4626PoolProportionalHook, (params, wrapUnderlying)
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /// @inheritdoc ICompositeLiquidityRouter
@@ -159,27 +146,26 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.removeLiquidityERC4626PoolProportionalHook,
-                        (
-                            RemoveLiquidityHookParams({
-                                sender: msg.sender,
-                                pool: pool,
-                                minAmountsOut: minAmountsOut,
-                                maxBptAmountIn: exactBptAmountIn,
-                                kind: RemoveLiquidityKind.PROPORTIONAL,
-                                wethIsEth: wethIsEth,
-                                userData: userData
-                            }),
-                            unwrapWrapped
-                        )
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.removeLiquidityERC4626PoolProportionalHook,
+                    (
+                        RemoveLiquidityHookParams({
+                            sender: msg.sender,
+                            pool: pool,
+                            minAmountsOut: minAmountsOut,
+                            maxBptAmountIn: exactBptAmountIn,
+                            kind: RemoveLiquidityKind.PROPORTIONAL,
+                            wethIsEth: wethIsEth,
+                            userData: userData
+                        }),
+                        unwrapWrapped
                     )
-                ),
-                (uint256[])
-            );
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /// @inheritdoc ICompositeLiquidityRouter
@@ -191,23 +177,17 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory) {
         IERC20[] memory erc4626PoolTokens = _vault.getPoolTokens(pool);
-        RemoveLiquidityHookParams memory params = _buildQueryRemoveLiquidityProportionalParams(
-            pool,
-            exactBptAmountIn,
-            erc4626PoolTokens.length,
-            userData
-        );
+        RemoveLiquidityHookParams memory params =
+            _buildQueryRemoveLiquidityProportionalParams(pool, exactBptAmountIn, erc4626PoolTokens.length, userData);
 
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.removeLiquidityERC4626PoolProportionalHook,
-                        (params, unwrapWrapped)
-                    )
-                ),
-                (uint256[])
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.removeLiquidityERC4626PoolProportionalHook, (params, unwrapWrapped)
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /***************************************************************************
@@ -224,28 +204,27 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.addLiquidityUnbalancedNestedPoolHook,
-                        (
-                            AddLiquidityHookParams({
-                                pool: parentPool,
-                                sender: msg.sender,
-                                maxAmountsIn: exactAmountsIn,
-                                minBptAmountOut: minBptAmountOut,
-                                kind: AddLiquidityKind.UNBALANCED,
-                                wethIsEth: wethIsEth,
-                                userData: userData
-                            }),
-                            tokensIn,
-                            tokensToWrap
-                        )
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.addLiquidityUnbalancedNestedPoolHook,
+                    (
+                        AddLiquidityHookParams({
+                            pool: parentPool,
+                            sender: msg.sender,
+                            maxAmountsIn: exactAmountsIn,
+                            minBptAmountOut: minBptAmountOut,
+                            kind: AddLiquidityKind.UNBALANCED,
+                            wethIsEth: wethIsEth,
+                            userData: userData
+                        }),
+                        tokensIn,
+                        tokensToWrap
                     )
-                ),
-                (uint256)
-            );
+                )
+            ),
+            (uint256)
+        );
     }
 
     /// @inheritdoc ICompositeLiquidityRouter
@@ -258,23 +237,17 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bytes memory userData
     ) external saveSender(sender) returns (uint256) {
         AddLiquidityHookParams memory params = _buildQueryAddLiquidityParams(
-            parentPool,
-            exactAmountsIn,
-            0,
-            AddLiquidityKind.UNBALANCED,
-            userData
+            parentPool, exactAmountsIn, 0, AddLiquidityKind.UNBALANCED, userData
         );
 
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        CompositeLiquidityRouterHooks.addLiquidityUnbalancedNestedPoolHook,
-                        (params, tokensIn, tokensToWrap)
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    CompositeLiquidityRouterHooks.addLiquidityUnbalancedNestedPoolHook, (params, tokensIn, tokensToWrap)
+                )
+            ),
+            (uint256)
+        );
     }
 
     /// @inheritdoc ICompositeLiquidityRouter
@@ -320,10 +293,7 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsOut) {
         RemoveLiquidityHookParams memory params = _buildQueryRemoveLiquidityProportionalParams(
-            parentPool,
-            exactBptAmountIn,
-            tokensOut.length,
-            userData
+            parentPool, exactBptAmountIn, tokensOut.length, userData
         );
 
         amountsOut = abi.decode(
@@ -363,16 +333,15 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
             revert IVaultErrors.InvalidAddLiquidityKind();
         }
 
-        return
-            AddLiquidityHookParams({
-                sender: address(this), // Always use router address for queries
-                pool: pool,
-                maxAmountsIn: resolvedMaxAmounts,
-                minBptAmountOut: resolvedBptAmount,
-                kind: kind,
-                wethIsEth: false, // Always false for queries
-                userData: userData
-            });
+        return AddLiquidityHookParams({
+            sender: address(this), // Always use router address for queries
+            pool: pool,
+            maxAmountsIn: resolvedMaxAmounts,
+            minBptAmountOut: resolvedBptAmount,
+            kind: kind,
+            wethIsEth: false, // Always false for queries
+            userData: userData
+        });
     }
 
     // Construct a set of remove liquidity hook params, adding in the invariant parameters.
@@ -382,15 +351,14 @@ contract CompositeLiquidityRouter is ICompositeLiquidityRouter, CompositeLiquidi
         uint256 numTokens,
         bytes memory userData
     ) private view returns (RemoveLiquidityHookParams memory) {
-        return
-            RemoveLiquidityHookParams({
-                sender: address(this), // Always use router address for queries
-                pool: pool,
-                minAmountsOut: new uint256[](numTokens), // Always zero for supported use cases
-                maxBptAmountIn: exactBptAmountIn,
-                kind: RemoveLiquidityKind.PROPORTIONAL, // Always proportional for supported use cases
-                wethIsEth: false, // Always false for queries
-                userData: userData
-            });
+        return RemoveLiquidityHookParams({
+            sender: address(this), // Always use router address for queries
+            pool: pool,
+            minAmountsOut: new uint256[](numTokens), // Always zero for supported use cases
+            maxBptAmountIn: exactBptAmountIn,
+            kind: RemoveLiquidityKind.PROPORTIONAL, // Always proportional for supported use cases
+            wethIsEth: false, // Always false for queries
+            userData: userData
+        });
     }
 }

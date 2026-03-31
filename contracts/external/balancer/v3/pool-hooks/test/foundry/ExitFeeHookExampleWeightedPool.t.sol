@@ -6,22 +6,29 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { PoolRoleAccounts, TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { WeightedPoolFactory } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    WeightedPoolFactory
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPoolFactory.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {
     WeightedPoolContractsDeployer
 } from "@crane/contracts/external/balancer/v3/pool-weighted/test/foundry/utils/WeightedPoolContractsDeployer.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { WeightedPool } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {WeightedPool} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/WeightedPool.sol";
 
-import { ExitFeeHookExample } from "../../contracts/ExitFeeHookExample.sol";
-import { ExitFeeHookExampleTest } from "./ExitFeeHookExample.t.sol";
+import {ExitFeeHookExample} from "../../contracts/ExitFeeHookExample.sol";
+import {ExitFeeHookExampleTest} from "./ExitFeeHookExample.t.sol";
 
 contract ExitFeeHookExampleWeightedPoolTest is WeightedPoolContractsDeployer, ExitFeeHookExampleTest {
     using CastingHelpers for address[];
@@ -40,10 +47,11 @@ contract ExitFeeHookExampleWeightedPoolTest is WeightedPoolContractsDeployer, Ex
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity and enables donation).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Weighted Pool Test";
         string memory symbol = "WEIGHTED-TEST";
 
@@ -53,18 +61,19 @@ contract ExitFeeHookExampleWeightedPoolTest is WeightedPoolContractsDeployer, Ex
 
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens.asIERC20());
 
-        newPool = WeightedPoolFactory(poolFactory).create(
-            name,
-            symbol,
-            tokenConfig,
-            weights,
-            roleAccounts,
-            MIN_WEIGHTED_SWAP_FEE,
-            poolHooksContract,
-            true, // supports donation
-            true, // does not support unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = WeightedPoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfig,
+                weights,
+                roleAccounts,
+                MIN_WEIGHTED_SWAP_FEE,
+                poolHooksContract,
+                true, // supports donation
+                true, // does not support unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(newPool, label);
 
         uint256[] memory minTokenBalances = MinTokenBalanceLib.computeMinTokenBalances(tokenConfig);
@@ -107,13 +116,8 @@ contract ExitFeeHookExampleWeightedPoolTest is WeightedPoolContractsDeployer, Ex
         emit ExitFeeHookExample.ExitFeeCharged(pool, IERC20(usdc), expectedHookFee);
 
         vm.prank(lp);
-        uint256[] memory amountsOut = router.removeLiquidityProportional(
-            pool,
-            bptAmountIn,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsOut =
+            router.removeLiquidityProportional(pool, bptAmountIn, minAmountsOut, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(lp);
 

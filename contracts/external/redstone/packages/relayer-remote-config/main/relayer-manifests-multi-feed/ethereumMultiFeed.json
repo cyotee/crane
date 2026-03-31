@@ -1,0 +1,418 @@
+{
+  "chain": {
+    "name": "mainnet",
+    "id": 1
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.5,
+    "timeSinceLastUpdateInMilliseconds": 86400000
+  },
+  "adapterContract": "0xd72a6BA4a87DDB33e801b3f1c7750b2d0911fC6C",
+  "adapterContractType": "multi-feed",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "LBTC_FUNDAMENTAL": {
+      "priceFeedAddress": "0xb415eAA355D8440ac7eCB602D3fb67ccC1f0bc81",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "pzETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x0d7697a15bce933cE8671Ba3D60ab062dA216C60"
+    },
+    "USD3": {
+      "priceFeedAddress": "0xB39339B82DdCF89d12d987d1D4Db33aFdd40B6AA"
+    },
+    "eBTC/WBTC": {
+      "priceFeedAddress": "0xe5867B1d421f0b52697F16e2ac437e87d66D5fbF"
+    },
+    "CESR": {
+      "priceFeedAddress": "0x2C787Db499BD7BF1f592D8DDd79ead9a72420763",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.000001,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SolvBTC": {
+      "priceFeedAddress": "0x24c8964338Deb5204B096039147B8e8C3AEa42Cc",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "pumpBTC/BTC": {
+      "priceFeedAddress": "0x13433B1949d9141Be52Ae13Ad7e7E4911228414e",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "pumpBTC_FUNDAMENTAL": {
+      "priceFeedAddress": "0x85C4F855Bc0609D2584405819EdAEa3aDAbfE97D"
+    },
+    "fxUSD": {
+      "priceFeedAddress": "0x4BAD96DD1C7D541270a0C92e1D4e5f12EEEA7a57",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SolvBTC/BTC": {
+      "priceFeedAddress": "0x3fd49f2146FE0e10c4AE7E3fE04b3d5126385Ac4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "PUFFER": {
+      "priceFeedAddress": "0x197225B3B017eb9b72Ac356D6B3c267d0c04c57c",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "C3M": {
+      "priceFeedAddress": "0x6E27A25999B3C665E44D903B2139F5a4Be2B6C26",
+      "updateTriggersOverrides": {
+        "cron": ["00 12 * * *"]
+      }
+    },
+    "ETHx/ETH": {
+      "priceFeedAddress": "0xc799194cAa24E2874Efa89b4Bf5c92a530B047FF"
+    },
+    "eUSD": {
+      "priceFeedAddress": "0xb347d2e3524D0F9e2321D84A2E9b2e60CbC4A836",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "osETH/ETH": {
+      "priceFeedAddress": "0x66ac817f997Efd114EDFcccdce99F3268557B32C"
+    },
+    "sfrxETH/ETH": {
+      "priceFeedAddress": "0xdd60c54115C19e0c6360AD4762B88BB8076D50a8",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "sUSDe": {
+      "priceFeedAddress": "0xb99D174ED06c83588Af997c8859F93E83dD4733f",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USDe": {
+      "priceFeedAddress": "0xbC5FBcf58CeAEa19D523aBc76515b9AEFb5cfd58",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "sUSDX_ETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x5708d924Fc996EDee46962CdB6815f90639974e1"
+    },
+    "beraSTONE_FUNDAMENTAL": {
+      "priceFeedAddress": "0x4f67Fd74cff274Ef2942223c0f3166b856410AdD"
+    },
+    "SWELL/ETH": {
+      "priceFeedAddress": "0xf2d31a29c7BCc992a62D297489dBBfff5F39BE15",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "ETHx": {
+      "priceFeedAddress": "0xFaBEb1474C2Ab34838081BFdDcE4132f640E7D2d",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "XVS": {
+      "priceFeedAddress": "0xa2a8507DEb233ceE4F5594044C259DD0582339CC",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "ETH": {
+      "priceFeedAddress": "0x67F6838e58859d612E4ddF04dA396d6DABB66Dc4"
+    },
+    "BTC": {
+      "priceFeedAddress": "0xAB7f623fb2F6fea6601D4350FA0E2290663C28Fc"
+    },
+    "BIO": {
+      "priceFeedAddress": "0xeC7C6AdcC867E1C22713D14797339750E36538E4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "BUIDL_FUNDAMENTAL": {
+      "priceFeedAddress": "0xb9BD795BB71012c0F3cd1D9c9A4c686F2d3524A4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "egETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x4914B59AB7f030d605c336CDc3f7470a2e16A53b"
+    },
+    "USR": {
+      "priceFeedAddress": "0x107Dd3391A6357248f2093698014e7c6130779Ee",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "bfBTC_FUNDAMENTAL": {
+      "priceFeedAddress": "0xe0d290eBA865A6CA14c1C9bFD9CD839FA8d54543"
+    },
+    "HLScope_FUNDAMENTAL": {
+      "priceFeedAddress": "0x1f14a50bA904A28CF6088e71B6a15561074398d7",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "ACRED_FUNDAMENTAL": {
+      "priceFeedAddress": "0xD6BcbbC87bFb6c8964dDc73DC3EaE6d08865d51C",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USUAL": {
+      "priceFeedAddress": "0x2240AE461B34CC56D654ba5FA5830A243Ca54840"
+    },
+    "PROMPT": {
+      "priceFeedAddress": "0x25a23C034fbC1eea341F6c92C6D8e6baFCF5DA40",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "EIGEN": {
+      "priceFeedAddress": "0x2ee5Ce6556599E16c226579BA14F94926d8Cb86d",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "tacETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x9D0aB80d6B68144a6BBb5c7447Eb84EdaaC18519"
+    },
+    "tacUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0xa90E0136cB598E1cEf28dc54932C17033B54538C"
+    },
+    "tacBTC_FUNDAMENTAL": {
+      "priceFeedAddress": "0x0A6FD5820f797e517297fEFf90AaEcD8e2Dc77b3"
+    },
+    "swETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x061bB36F8b67bB922937C102092498dcF4619F86",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "BUIDL_DAILY_INTEREST_ACCRUAL": {
+      "priceFeedAddress": "0x9c303927dC4939692CC60641D6ceABa9185d687a",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "BUIDL_I_ETHEREUM_FUNDAMENTAL": {
+      "priceFeedAddress": "0xf2db7b3455077Fb177215d45D62d441DF3C17bf3",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "BUIDL_I_ETHEREUM_DAILY_ACCRUAL": {
+      "priceFeedAddress": "0xd6156F8177aA1a6E0c5278CE437A9BDB32F203ef",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "VBILL_ETHEREUM_FUNDAMENTAL": {
+      "priceFeedAddress": "0xA569E68B5D110F2A255482c2997DFDBe1b2ab912",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SPK": {
+      "priceFeedAddress": "0xF2448DC04B1d3f1767D6f7C03da8a3933bdDD697",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "hwHLP_FUNDAMENTAL": {
+      "priceFeedAddress": "0x03138081aeD44E2E0Eb10361Ee41D84EDD22a05f",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USDC_V2": {
+      "priceFeedAddress": "0xeeF31c7d9F2E82e8A497b140cc60cc082Be4b94e",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USDT_V2": {
+      "priceFeedAddress": "0x02E1F8d15762047b7a87BA0E5d94B9a0c5b54Ed2",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "PYUSD": {
+      "priceFeedAddress": "0xcE18A2Bf89Fa3c56aF5Bde8A41efF967a6d63d26",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "cUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0x9A5a3c3Ed0361505cC1D4e824B3854De5724434A",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "thBILL_FUNDAMENTAL": {
+      "priceFeedAddress": "0x80B0735616b27b647233D3Ab67078C95BA5A2c93",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "VBILL_ETHEREUM_DAILY_ACCRUAL": {
+      "priceFeedAddress": "0x5cC480aeCAd8F52ebd25b9B427737e401E47e8B0",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "WLFI": {
+      "priceFeedAddress": "0x131141E6c88a3389A4Ab2368D3bbC65df1BF4a7E",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "wstETH": {
+      "priceFeedAddress": "0xe4aE88743c3834d0c492eAbC47384c84BcADC6a6",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "wstETH/stETH": {
+      "priceFeedAddress": "0xa7B0247d2dA6B11FF2740491cB433a1520d5DA98",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "YUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0x2e65b1a44FDC30976d7e2397D16c425A8A7Aa4F6",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "rswETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0x3A236F67Fce401D87D7215695235e201966576E4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "sYUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0xab6982a14e811DF558F49C79923723281D0DD16A",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "STAC_FUNDAMENTAL": {
+      "priceFeedAddress": "0xEdC6287D3D41b322AF600317628D7E226DD3add4",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.01,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "iBENJI_ETHEREUM_FUNDAMENTAL": {
+      "priceFeedAddress": "0x009119Cd7eB8912863c30362CfdCe0B2F8a52D6C",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "SIERRA_FUNDAMENTAL": {
+      "priceFeedAddress": "0x9269127F104C040AB526575573c23F3e67401aD9",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "APR": {
+      "priceFeedAddress": "0xE5c1A89887C572c3C345EFE2BBBe797AC5B22461"
+    },
+    "PT_srUSDe_15JAN2026_ETH-TWAP": {
+      "priceFeedAddress": "0x1102D8C7A6021e45cCddEC4912dc998Bc5ebD8e5"
+    },
+    "MSUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0xdC3FE501c1842953b85f5208dA69dc84Ff71A311",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "MSY_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xcB62f468B5724B7748293fc78E42C3DA840a8338",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "syzUSD_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0x354D1E7D9CF90841DFA252547881DB96af2AaE3e",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "BUCK_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0x6e7407fcd5021e3FE5f75959575b20C85231562d",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.5,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "STRC": {
+      "priceFeedAddress": "0x04Ef0593aEFBC9D6fA28fd386A8bE0E5eb34F70b",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "DLF_FUNDAMENTAL": {
+      "priceFeedAddress": "0xFFD1339908E0deBE2416E03df0843B896b8944Fe",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.15,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    }
+  }
+}

@@ -6,26 +6,33 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IECLPSurgeHook } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IECLPSurgeHook} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IECLPSurgeHook.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PoolSwapParams, SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { GyroECLPPoolFactory } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPoolFactory.sol";
-import { CommonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { RateProviderMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { GyroECLPPool } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
+import {
+    PoolSwapParams,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {GyroECLPPoolFactory} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPoolFactory.sol";
+import {CommonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/CommonAuthentication.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {RateProviderMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RateProviderMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {GyroECLPPool} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
 
-import { ECLPSurgeHookMock } from "../../contracts/test/ECLPSurgeHookMock.sol";
-import { ECLPSurgeHookDeployer } from "./utils/ECLPSurgeHookDeployer.sol";
-import { ECLPSurgeHook } from "../../contracts/ECLPSurgeHook.sol";
+import {ECLPSurgeHookMock} from "../../contracts/test/ECLPSurgeHookMock.sol";
+import {ECLPSurgeHookDeployer} from "./utils/ECLPSurgeHookDeployer.sol";
+import {ECLPSurgeHook} from "../../contracts/ECLPSurgeHook.sol";
 
 abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer {
     using ArrayHelpers for *;
@@ -45,11 +52,9 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
     IRateProvider[] private rateProviders;
 
     uint128 private constant _DEFAULT_IMBALANCE_SLOPE = 1e18;
-    ECLPSurgeHook.ImbalanceSlopeData internal _DEFAULT_SLOPE =
-        ECLPSurgeHook.ImbalanceSlopeData({
-            imbalanceSlopeBelowPeak: _DEFAULT_IMBALANCE_SLOPE,
-            imbalanceSlopeAbovePeak: _DEFAULT_IMBALANCE_SLOPE
-        });
+    ECLPSurgeHook.ImbalanceSlopeData internal _DEFAULT_SLOPE = ECLPSurgeHook.ImbalanceSlopeData({
+        imbalanceSlopeBelowPeak: _DEFAULT_IMBALANCE_SLOPE, imbalanceSlopeAbovePeak: _DEFAULT_IMBALANCE_SLOPE
+    });
 
     function setUp() public override {
         (eclpParams, derivedECLPParams) = _setupEclpParams();
@@ -81,19 +86,17 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
     function createHook() internal override returns (address) {
         vm.prank(poolFactory);
         eclpSurgeHookMock = deployECLPSurgeHookMock(
-            vault,
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            "Test"
+            vault, DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, "Test"
         );
         vm.label(address(eclpSurgeHookMock), "ECLPSurgeHook");
         return address(eclpSurgeHookMock);
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         tokens = [address(weth), address(usdc)].toMemoryArray();
 
         PoolRoleAccounts memory roleAccounts;
@@ -106,19 +109,20 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         rateProviders = new IRateProvider[](2);
         rateProviders[wethIdx] = IRateProvider(address(wethRateProvider));
 
-        newPool = GyroECLPPoolFactory(poolFactory).create(
-            "Gyro E-CLP Pool",
-            "ECLP-POOL",
-            vault.buildTokenConfig(tokens.asIERC20(), rateProviders),
-            eclpParams,
-            derivedECLPParams,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE,
-            poolHooksContract,
-            false,
-            false,
-            ZERO_BYTES32
-        );
+        newPool = GyroECLPPoolFactory(poolFactory)
+            .create(
+                "Gyro E-CLP Pool",
+                "ECLP-POOL",
+                vault.buildTokenConfig(tokens.asIERC20(), rateProviders),
+                eclpParams,
+                derivedECLPParams,
+                roleAccounts,
+                DEFAULT_SWAP_FEE_PERCENTAGE,
+                poolHooksContract,
+                false,
+                false,
+                ZERO_BYTES32
+            );
         vm.label(address(newPool), label);
 
         return (
@@ -139,10 +143,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
     function testValidVault() public {
         vm.expectRevert(CommonAuthentication.VaultNotSet.selector);
         deployECLPSurgeHook(
-            IVault(address(0)),
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            ""
+            IVault(address(0)), DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, ""
         );
     }
 
@@ -170,16 +171,10 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         ECLPSurgeHook.SurgeFeeData memory surgeFeeData = eclpSurgeHookMock.getSurgeFeeData(pool);
 
         // Add USDC --> more unbalanced.
-        uint256 oldTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            initialBalancesScaled18,
-            _DEFAULT_SLOPE
-        );
-        uint256 newTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            expectedBalancesAfterAddScaled18,
-            _DEFAULT_SLOPE
-        );
+        uint256 oldTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, initialBalancesScaled18, _DEFAULT_SLOPE);
+        uint256 newTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, expectedBalancesAfterAddScaled18, _DEFAULT_SLOPE);
 
         assertTrue(
             eclpSurgeHookMock.isSurging(surgeFeeData.thresholdPercentage, oldTotalImbalance, newTotalImbalance),
@@ -210,16 +205,10 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
 
         ECLPSurgeHook.SurgeFeeData memory surgeFeeData = eclpSurgeHookMock.getSurgeFeeData(pool);
 
-        uint256 oldTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            initialBalancesScaled18,
-            _DEFAULT_SLOPE
-        );
-        uint256 newTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            expectedBalancesAfterAddScaled18,
-            _DEFAULT_SLOPE
-        );
+        uint256 oldTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, initialBalancesScaled18, _DEFAULT_SLOPE);
+        uint256 newTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, expectedBalancesAfterAddScaled18, _DEFAULT_SLOPE);
 
         assertFalse(
             eclpSurgeHookMock.isSurging(surgeFeeData.thresholdPercentage, oldTotalImbalance, newTotalImbalance),
@@ -250,16 +239,10 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         uint256 oldTotalImbalance;
         uint256 newTotalImbalance;
 
-        oldTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            initialBalancesScaled18,
-            _DEFAULT_SLOPE
-        );
-        newTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            expectedBalancesAfterRemoveScaled18,
-            _DEFAULT_SLOPE
-        );
+        oldTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, initialBalancesScaled18, _DEFAULT_SLOPE);
+        newTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, expectedBalancesAfterRemoveScaled18, _DEFAULT_SLOPE);
 
         // Pool needs to be surging after remove, so the unbalanced liquidity operation reverts.
         assertTrue(
@@ -272,12 +255,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         vm.expectRevert(IVaultErrors.AfterRemoveLiquidityHookFailed.selector);
         vm.prank(lp);
         router.removeLiquiditySingleTokenExactOut(
-            address(pool),
-            bptBalance,
-            usdc,
-            amountsOutRaw[usdcIdx],
-            false,
-            bytes("")
+            address(pool), bptBalance, usdc, amountsOutRaw[usdcIdx], false, bytes("")
         );
 
         uint256[] memory minAmountsOut = new uint256[](2);
@@ -302,16 +280,10 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         ECLPSurgeHook.SurgeFeeData memory surgeFeeData = eclpSurgeHookMock.getSurgeFeeData(pool);
 
         // Should not surge, close to balance.
-        uint256 oldTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            initialBalancesScaled18,
-            _DEFAULT_SLOPE
-        );
-        uint256 newTotalImbalance = eclpSurgeHookMock.computeImbalanceFromBalances(
-            pool,
-            expectedBalancesAfterRemoveScaled18,
-            _DEFAULT_SLOPE
-        );
+        uint256 oldTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, initialBalancesScaled18, _DEFAULT_SLOPE);
+        uint256 newTotalImbalance =
+            eclpSurgeHookMock.computeImbalanceFromBalances(pool, expectedBalancesAfterRemoveScaled18, _DEFAULT_SLOPE);
 
         assertFalse(
             eclpSurgeHookMock.isSurging(surgeFeeData.thresholdPercentage, oldTotalImbalance, newTotalImbalance),
@@ -322,12 +294,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         // Does not revert.
         vm.prank(lp);
         router.removeLiquiditySingleTokenExactOut(
-            address(pool),
-            bptBalance,
-            usdc,
-            amountsOutRaw[usdcIdx],
-            false,
-            bytes("")
+            address(pool), bptBalance, usdc, amountsOutRaw[usdcIdx], false, bytes("")
         );
     }
 
@@ -344,17 +311,15 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
 
         vault.manualUnsafeSetStaticSwapFeePercentage(pool, bound(swapFeePercentageRaw, 0, 1e16));
 
-        (uint256 actualAmountInRaw, uint256 actualAmountOutRaw, uint256 actualFeeAmountScaled18) = _computeSwapAndFee(
-            amountGivenScaled18,
-            kind
-        );
+        (uint256 actualAmountInRaw, uint256 actualAmountOutRaw, uint256 actualFeeAmountScaled18) =
+            _computeSwapAndFee(amountGivenScaled18, kind);
 
         uint256 expectedAmountInScaled18;
         uint256 expectedAmountOutScaled18;
         if (kind == SwapKind.EXACT_IN) {
             expectedAmountInScaled18 = amountGivenScaled18;
 
-            (uint256 amountCalculatedScaled18, , ) = eclpSurgeHookMock.computeSwap(
+            (uint256 amountCalculatedScaled18,,) = eclpSurgeHookMock.computeSwap(
                 PoolSwapParams({
                     kind: kind,
                     indexIn: usdcIdx,
@@ -371,7 +336,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
             expectedAmountOutScaled18 = amountCalculatedScaled18;
         } else {
             expectedAmountOutScaled18 = amountGivenScaled18;
-            (uint256 amountCalculatedScaled18, , ) = eclpSurgeHookMock.computeSwap(
+            (uint256 amountCalculatedScaled18,,) = eclpSurgeHookMock.computeSwap(
                 PoolSwapParams({
                     kind: kind,
                     indexIn: usdcIdx,
@@ -401,10 +366,10 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         );
     }
 
-    function _computeSwapAndFee(
-        uint256 amountGivenScaled18,
-        SwapKind kind
-    ) private returns (uint256 actualAmountInRaw, uint256 actualAmountOutRaw, uint256 actualFeeAmountScaled18) {
+    function _computeSwapAndFee(uint256 amountGivenScaled18, SwapKind kind)
+        private
+        returns (uint256 actualAmountInRaw, uint256 actualAmountOutRaw, uint256 actualFeeAmountScaled18)
+    {
         BaseVaultTest.Balances memory balancesBefore = getBalances(alice);
 
         uint256 snapshotId = vm.snapshotState();
@@ -428,8 +393,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
             vm.revertToState(snapshotId);
 
             actualFeeAmountScaled18 =
-                balancesAfterNoFees.aliceTokens[usdcIdx] -
-                balancesAfterWithFees.aliceTokens[usdcIdx];
+                balancesAfterNoFees.aliceTokens[usdcIdx] - balancesAfterWithFees.aliceTokens[usdcIdx];
         } else {
             // To compute the EXACT_IN fee, charged in token in, we need to execute an EXACT_OUT swap with the amount
             // out computed by the EXACT IN swap with fees. Since fees are not charged now, the amount in will be
@@ -438,8 +402,8 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
             BaseVaultTest.Balances memory balancesAfterNoFees = getBalances(alice);
             vm.revertToState(snapshotId);
 
-            uint256 amountInNoFeesScaled18 = balancesBefore.aliceTokens[usdcIdx] -
-                balancesAfterNoFees.aliceTokens[usdcIdx];
+            uint256 amountInNoFeesScaled18 =
+                balancesBefore.aliceTokens[usdcIdx] - balancesAfterNoFees.aliceTokens[usdcIdx];
             if (amountInNoFeesScaled18 > amountGivenScaled18) {
                 // EXACT_OUT swaps round amount in up, so if the fee is very low, the amount in without fees may be a
                 // bit bigger than the amount in with fees.
@@ -457,14 +421,7 @@ abstract contract ECLPSurgeHookBaseTest is BaseVaultTest, ECLPSurgeHookDeployer 
         } else {
             vm.prank(alice);
             router.swapSingleTokenExactOut(
-                pool,
-                usdc,
-                weth,
-                amountGivenScaled18.divDown(wethRate),
-                MAX_UINT256,
-                MAX_UINT256,
-                false,
-                bytes("")
+                pool, usdc, weth, amountGivenScaled18.divDown(wethRate), MAX_UINT256, MAX_UINT256, false, bytes("")
             );
         }
     }

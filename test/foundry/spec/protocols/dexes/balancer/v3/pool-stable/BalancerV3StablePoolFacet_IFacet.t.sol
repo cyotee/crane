@@ -6,7 +6,9 @@ import "forge-std/Test.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 import {IBalancerV3StablePool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3StablePool.sol";
-import {BalancerV3StablePoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolFacet.sol";
+import {
+    BalancerV3StablePoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolFacet.sol";
 
 /**
  * @title BalancerV3StablePoolFacet_IFacet_Test
@@ -41,7 +43,9 @@ contract BalancerV3StablePoolFacet_IFacet_Test is Test {
     function test_facetInterfaces_containsIBalancerV3StablePool() public view {
         bytes4[] memory interfaces = facet.facetInterfaces();
 
-        assertEq(interfaces[1], type(IBalancerV3StablePool).interfaceId, "Should include IBalancerV3StablePool interface");
+        assertEq(
+            interfaces[1], type(IBalancerV3StablePool).interfaceId, "Should include IBalancerV3StablePool interface"
+        );
     }
 
     function test_facetInterfaces_returnsCorrectLength() public view {
@@ -75,13 +79,21 @@ contract BalancerV3StablePoolFacet_IFacet_Test is Test {
     function test_facetFuncs_containsGetAmplificationParameter() public view {
         bytes4[] memory funcs = facet.facetFuncs();
 
-        assertEq(funcs[3], IBalancerV3StablePool.getAmplificationParameter.selector, "Should include getAmplificationParameter selector");
+        assertEq(
+            funcs[3],
+            IBalancerV3StablePool.getAmplificationParameter.selector,
+            "Should include getAmplificationParameter selector"
+        );
     }
 
     function test_facetFuncs_containsGetAmplificationState() public view {
         bytes4[] memory funcs = facet.facetFuncs();
 
-        assertEq(funcs[4], IBalancerV3StablePool.getAmplificationState.selector, "Should include getAmplificationState selector");
+        assertEq(
+            funcs[4],
+            IBalancerV3StablePool.getAmplificationState.selector,
+            "Should include getAmplificationState selector"
+        );
     }
 
     function test_facetFuncs_returnsCorrectLength() public view {

@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ICamelotPair} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol";
-import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
+import {
+    TestBase_ConstProdUtils_Camelot
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {CamelotPair} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol";
@@ -64,7 +66,13 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         asymmetricTokenB.mint(address(this), ASYMMETRIC_INITIAL_LIQUIDITY);
         asymmetricTokenB.approve(address(camelotV2Router), ASYMMETRIC_INITIAL_LIQUIDITY);
 
-        CamelotV2Service._deposit(camelotV2Router, asymmetricTokenA, asymmetricTokenB, ASYMMETRIC_INITIAL_LIQUIDITY, ASYMMETRIC_INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router,
+            asymmetricTokenA,
+            asymmetricTokenB,
+            ASYMMETRIC_INITIAL_LIQUIDITY,
+            ASYMMETRIC_INITIAL_LIQUIDITY
+        );
     }
 
     function _setAsymmetricFees(uint16 token0Fee, uint16 token1Fee) internal {
@@ -88,7 +96,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         _setAsymmetricFees(newToken0Fee, newToken1Fee);
 
-        (, , uint16 actualToken0Fee, uint16 actualToken1Fee) = asymmetricPair.getReserves();
+        (,, uint16 actualToken0Fee, uint16 actualToken1Fee) = asymmetricPair.getReserves();
 
         assertEq(actualToken0Fee, newToken0Fee, "Token0 fee should be updated");
         assertEq(actualToken1Fee, newToken1Fee, "Token1 fee should be updated");
@@ -106,7 +114,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         asymmetricTokenA.mint(address(this), swapAmount);
         asymmetricTokenA.approve(address(camelotV2Router), swapAmount);
 
-        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = asymmetricPair.getReserves();
 
         // Determine which token is token0 (tokenA or tokenB)
         address token0 = asymmetricPair.token0();
@@ -123,12 +131,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         // Execute swap
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
         );
 
         uint256 balanceAfter = asymmetricTokenB.balanceOf(address(this));
@@ -150,7 +153,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         asymmetricTokenB.mint(address(this), swapAmount);
         asymmetricTokenB.approve(address(camelotV2Router), swapAmount);
 
-        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = asymmetricPair.getReserves();
 
         // Determine which token is token0 (tokenA or tokenB)
         address token0 = asymmetricPair.token0();
@@ -167,12 +170,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         // Execute swap
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenB,
-            asymmetricTokenA,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenB, asymmetricTokenA, address(0)
         );
 
         uint256 balanceAfter = asymmetricTokenA.balanceOf(address(this));
@@ -193,7 +191,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         uint256 swapAmount = 100e18;
 
         // Get reserves
-        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = asymmetricPair.getReserves();
 
         // Calculate outputs for both directions (using the same reserves for fair comparison)
         // When swapping X -> Y, we use X's fee
@@ -224,7 +222,8 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         bool tokenAIsToken0 = (address(asymmetricTokenA) == token0);
 
         // Test with tokenA as input
-        CamelotV2Service.ReserveInfo memory reservesA = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
+        CamelotV2Service.ReserveInfo memory reservesA =
+            CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
 
         if (tokenAIsToken0) {
             assertEq(reservesA.feePercent, token0Fee, "TokenA (token0) should have token0Fee");
@@ -235,7 +234,8 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         }
 
         // Test with tokenB as input
-        CamelotV2Service.ReserveInfo memory reservesB = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
+        CamelotV2Service.ReserveInfo memory reservesB =
+            CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
 
         if (!tokenAIsToken0) {
             assertEq(reservesB.feePercent, token0Fee, "TokenB (token0) should have token0Fee");
@@ -251,11 +251,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
     /* ---------------------------------------------------------------------- */
 
     /// @notice Fuzz test for asymmetric fees with varying fee values
-    function testFuzz_asymmetricFees_swapDirection(
-        uint16 token0Fee,
-        uint16 token1Fee,
-        uint256 swapAmount
-    ) public {
+    function testFuzz_asymmetricFees_swapDirection(uint16 token0Fee, uint16 token1Fee, uint256 swapAmount) public {
         // Bound fees to valid Camelot range (1 to 2000 = 0.001% to 2%)
         token0Fee = uint16(bound(uint256(token0Fee), 1, MAX_FEE_PERCENT));
         token1Fee = uint16(bound(uint256(token1Fee), 1, MAX_FEE_PERCENT));
@@ -290,12 +286,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         uint256 expectedOut = ConstProdUtils._saleQuote(swapAmount, reserveIn, reserveOut, expectedFee);
 
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
         );
 
         assertEq(amountOut, expectedOut, "Output should match expected with fuzzed fees");
@@ -304,11 +295,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
     /// @notice Fuzz test verifying both swap directions with output validation against expected quote
     /// @dev Uses snapshot/restore to validate each direction independently against known reserves
-    function testFuzz_asymmetricFees_bothDirections(
-        uint16 token0Fee,
-        uint16 token1Fee,
-        uint256 swapAmount
-    ) public {
+    function testFuzz_asymmetricFees_bothDirections(uint16 token0Fee, uint16 token1Fee, uint256 swapAmount) public {
         // Bound fees to valid Camelot range
         token0Fee = uint16(bound(uint256(token0Fee), 100, MAX_FEE_PERCENT)); // Min 0.1% for measurable difference
         token1Fee = uint16(bound(uint256(token1Fee), 100, MAX_FEE_PERCENT));
@@ -334,7 +321,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
         bool tokenAIsToken0 = (address(asymmetricTokenA) == token0);
 
         // Get reserves for quote calculation (same for both directions at this point)
-        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = asymmetricPair.getReserves();
 
         // Take snapshot after pool setup - both directions will use same initial state
         uint256 snapshotId = vm.snapshotState();
@@ -345,16 +332,12 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
             uint256 expectedFeeAToB = tokenAIsToken0 ? token0Fee : token1Fee;
             uint256 reserveInAToB = tokenAIsToken0 ? reserve0 : reserve1;
             uint256 reserveOutAToB = tokenAIsToken0 ? reserve1 : reserve0;
-            uint256 expectedOutAToB = ConstProdUtils._saleQuote(swapAmount, reserveInAToB, reserveOutAToB, expectedFeeAToB);
+            uint256 expectedOutAToB =
+                ConstProdUtils._saleQuote(swapAmount, reserveInAToB, reserveOutAToB, expectedFeeAToB);
 
             // Execute swap A -> B
             uint256 outputAToB = CamelotV2Service._swap(
-                camelotV2Router,
-                asymmetricPair,
-                swapAmount,
-                asymmetricTokenA,
-                asymmetricTokenB,
-                address(0)
+                camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
             );
 
             // Validate output matches expected quote
@@ -362,7 +345,8 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
             assertGt(outputAToB, 0, "A->B swap should produce output");
 
             // Verify fee selection is correct
-            CamelotV2Service.ReserveInfo memory resA = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
+            CamelotV2Service.ReserveInfo memory resA =
+                CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenA);
             assertEq(resA.feePercent, expectedFeeAToB, "A->B should use correct directional fee");
         }
 
@@ -375,16 +359,12 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
             uint256 expectedFeeBToA = tokenAIsToken0 ? token1Fee : token0Fee;
             uint256 reserveInBToA = tokenAIsToken0 ? reserve1 : reserve0;
             uint256 reserveOutBToA = tokenAIsToken0 ? reserve0 : reserve1;
-            uint256 expectedOutBToA = ConstProdUtils._saleQuote(swapAmount, reserveInBToA, reserveOutBToA, expectedFeeBToA);
+            uint256 expectedOutBToA =
+                ConstProdUtils._saleQuote(swapAmount, reserveInBToA, reserveOutBToA, expectedFeeBToA);
 
             // Execute swap B -> A
             uint256 outputBToA = CamelotV2Service._swap(
-                camelotV2Router,
-                asymmetricPair,
-                swapAmount,
-                asymmetricTokenB,
-                asymmetricTokenA,
-                address(0)
+                camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenB, asymmetricTokenA, address(0)
             );
 
             // Validate output matches expected quote
@@ -392,7 +372,8 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
             assertGt(outputBToA, 0, "B->A swap should produce output");
 
             // Verify fee selection is correct
-            CamelotV2Service.ReserveInfo memory resB = CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
+            CamelotV2Service.ReserveInfo memory resB =
+                CamelotV2Service._sortReservesStruct(asymmetricPair, asymmetricTokenB);
             assertEq(resB.feePercent, expectedFeeBToA, "B->A should use correct directional fee");
         }
     }
@@ -413,18 +394,13 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         // Swap should work without reverting
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
         );
 
         assertGt(amountOut, 0, "Extreme asymmetry swap should produce output");
 
         // Verify reserves are still valid
-        (uint112 r0, uint112 r1, , ) = asymmetricPair.getReserves();
+        (uint112 r0, uint112 r1,,) = asymmetricPair.getReserves();
         assertGt(r0, 0, "Reserve0 should be positive after swap");
         assertGt(r1, 0, "Reserve1 should be positive after swap");
     }
@@ -470,7 +446,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         uint256 swapAmount = 100e18;
 
-        (uint112 reserve0, uint112 reserve1, , ) = asymmetricPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = asymmetricPair.getReserves();
 
         // With equal reserves and equal fees, outputs should be equal
         uint256 output0To1 = ConstProdUtils._saleQuote(swapAmount, reserve0, reserve1, equalFee);
@@ -493,12 +469,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         // Should not revert
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
         );
 
         assertGt(amountOut, 0, "Minimum fee swap should produce output");
@@ -518,12 +489,7 @@ contract CamelotV2_asymmetricFees_Test is TestBase_ConstProdUtils_Camelot {
 
         // Should not revert
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            asymmetricPair,
-            swapAmount,
-            asymmetricTokenA,
-            asymmetricTokenB,
-            address(0)
+            camelotV2Router, asymmetricPair, swapAmount, asymmetricTokenA, asymmetricTokenB, address(0)
         );
 
         assertGt(amountOut, 0, "Maximum fee swap should produce output");

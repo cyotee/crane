@@ -28,6 +28,7 @@ contract ERC4626Invariant_Test is TestBase_ERC4626 {
             new ERC20PermitStub("Test Reserve", "TRES", 18, address(handler_), INITIAL_ASSET_SUPPLY);
 
         // Deploy vault
-        vault_ = IERC4626(address(new ERC4626TargetStub(IERC20Metadata(address(reserveAsset)), DECIMAL_OFFSET, permit2)));
+        vault_ =
+            IERC4626(address(new ERC4626TargetStub(IERC20Metadata(address(reserveAsset)), DECIMAL_OFFSET, permit2)));
     }
 }

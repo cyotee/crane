@@ -94,12 +94,10 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @param sqrtPriceX96 Initial sqrt price
     /// @return mainnetPool The pool from mainnet factory
     /// @return localPool The pool from local factory
-    function createMatchingPools(
-        address token0,
-        address token1,
-        uint24 fee,
-        uint160 sqrtPriceX96
-    ) internal returns (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) {
+    function createMatchingPools(address token0, address token1, uint24 fee, uint160 sqrtPriceX96)
+        internal
+        returns (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool)
+    {
         require(token0 < token1, "token0 must be < token1");
 
         // Create pool on mainnet factory
@@ -164,20 +162,15 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @dev Compares swap outputs between mainnet and local V3 pools
     function test_swapParity_feeTier500_zeroForOne() public {
         // Sort tokens for proper ordering
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         // Create matching pools
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_LOW,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_LOW, INITIAL_SQRT_PRICE_X96);
 
         // Get tick for liquidity range
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_LOW);
         int24 tickLower = nearestUsableTick(tick - 1000, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1000, tickSpacing);
@@ -187,30 +180,26 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
         // Test small swap
         uint256 amountIn = 1e15; // 0.001 token (small to stay in tick)
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true, // zeroForOne
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) =
+            executeMatchingSwaps(
+                mainnetPool,
+                localPool,
+                true, // zeroForOne
+                amountIn
+            );
 
         assertEq(localOut, mainnetOut, "500 fee zeroForOne: outputs must match exactly");
     }
 
     /// @notice Test swap parity for 0.05% fee tier (reverse direction)
     function test_swapParity_feeTier500_oneForZero() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_LOW,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_LOW, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_LOW);
         int24 tickLower = nearestUsableTick(tick - 1000, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1000, tickSpacing);
@@ -218,30 +207,26 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e15;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            false, // oneForZero
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) =
+            executeMatchingSwaps(
+                mainnetPool,
+                localPool,
+                false, // oneForZero
+                amountIn
+            );
 
         assertEq(localOut, mainnetOut, "500 fee oneForZero: outputs must match exactly");
     }
 
     /// @notice Test swap parity for 0.3% fee tier (tick spacing 60)
     function test_swapParity_feeTier3000_zeroForOne() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -250,9 +235,9 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
         // Test multiple trade sizes
         uint256[] memory amounts = new uint256[](3);
-        amounts[0] = 1e14;  // 0.0001 token (tiny)
-        amounts[1] = 1e15;  // 0.001 token (small)
-        amounts[2] = 1e16;  // 0.01 token (medium)
+        amounts[0] = 1e14; // 0.0001 token (tiny)
+        amounts[1] = 1e15; // 0.001 token (small)
+        amounts[2] = 1e16; // 0.01 token (medium)
 
         for (uint256 i = 0; i < amounts.length; i++) {
             // Need to re-sync pool states after each swap
@@ -261,30 +246,20 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
         // Test single swap for deterministic comparison
         uint256 amountIn = 1e15;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "3000 fee zeroForOne: outputs must match exactly");
     }
 
     /// @notice Test swap parity for 0.3% fee tier (reverse direction)
     function test_swapParity_feeTier3000_oneForZero() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -292,30 +267,20 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e15;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            false,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, false, amountIn);
 
         assertEq(localOut, mainnetOut, "3000 fee oneForZero: outputs must match exactly");
     }
 
     /// @notice Test swap parity for 1% fee tier (tick spacing 200)
     function test_swapParity_feeTier10000_zeroForOne() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_HIGH,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_HIGH, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_HIGH);
         int24 tickLower = nearestUsableTick(tick - 2000, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 2000, tickSpacing);
@@ -323,30 +288,20 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e15;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "10000 fee zeroForOne: outputs must match exactly");
     }
 
     /// @notice Test swap parity for 1% fee tier (reverse direction)
     function test_swapParity_feeTier10000_oneForZero() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_HIGH,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_HIGH, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_HIGH);
         int24 tickLower = nearestUsableTick(tick - 2000, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 2000, tickSpacing);
@@ -354,12 +309,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e15;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            false,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, false, amountIn);
 
         assertEq(localOut, mainnetOut, "10000 fee oneForZero: outputs must match exactly");
     }
@@ -370,18 +320,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Test parity across multiple trade sizes for 0.3% pool (tiny)
     function test_swapParity_size_tiny_zeroForOne() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -389,30 +334,20 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e13; // Very tiny
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "Tiny trade zeroForOne: outputs must match");
     }
 
     /// @notice Test parity for small trade size
     function test_swapParity_size_small_zeroForOne() public {
-        (address token0, address token1) = address(tokenC) < address(tokenD)
-            ? (address(tokenC), address(tokenD))
-            : (address(tokenD), address(tokenC));
+        (address token0, address token1) =
+            address(tokenC) < address(tokenD) ? (address(tokenC), address(tokenD)) : (address(tokenD), address(tokenC));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -420,12 +355,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e14; // Small
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "Small trade zeroForOne: outputs must match");
     }
@@ -433,18 +363,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @notice Test parity for medium trade size
     function test_swapParity_size_medium_zeroForOne() public {
         // Use tokenA/tokenD pair (different from other tests)
-        (address token0, address token1) = address(tokenA) < address(tokenD)
-            ? (address(tokenA), address(tokenD))
-            : (address(tokenD), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenD) ? (address(tokenA), address(tokenD)) : (address(tokenD), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -452,12 +377,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e16; // Medium
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "Medium trade zeroForOne: outputs must match");
     }
@@ -465,18 +385,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @notice Test parity across multiple trade sizes (reverse direction, tiny)
     function test_swapParity_size_tiny_oneForZero() public {
         // Use tokenB/tokenC pair
-        (address token0, address token1) = address(tokenB) < address(tokenC)
-            ? (address(tokenB), address(tokenC))
-            : (address(tokenC), address(tokenB));
+        (address token0, address token1) =
+            address(tokenB) < address(tokenC) ? (address(tokenB), address(tokenC)) : (address(tokenC), address(tokenB));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -484,12 +399,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e13;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            false,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, false, amountIn);
 
         assertEq(localOut, mainnetOut, "Tiny trade oneForZero: outputs must match");
     }
@@ -497,18 +407,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @notice Test parity for medium trade size (reverse direction)
     function test_swapParity_size_medium_oneForZero() public {
         // Use tokenB/tokenD pair
-        (address token0, address token1) = address(tokenB) < address(tokenD)
-            ? (address(tokenB), address(tokenD))
-            : (address(tokenD), address(tokenB));
+        (address token0, address token1) =
+            address(tokenB) < address(tokenD) ? (address(tokenB), address(tokenD)) : (address(tokenD), address(tokenB));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -516,12 +421,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         addMatchingLiquidity(mainnetPool, localPool, tickLower, tickUpper, TEST_LIQUIDITY);
 
         uint256 amountIn = 1e16;
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            false,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, false, amountIn);
 
         assertEq(localOut, mainnetOut, "Medium trade oneForZero: outputs must match");
     }
@@ -533,18 +433,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
     /// @notice Test parity with multiple liquidity positions
     /// @dev Ensures tick crossing behavior matches
     function test_swapParity_multiplePositions() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         // Add multiple overlapping positions
@@ -565,12 +460,7 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
         // Execute swap that should cross multiple tick boundaries
         uint256 amountIn = 1e16; // Larger swap to potentially cross ticks
-        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(
-            mainnetPool,
-            localPool,
-            true,
-            amountIn
-        );
+        (uint256 mainnetOut, uint256 localOut) = executeMatchingSwaps(mainnetPool, localPool, true, amountIn);
 
         assertEq(localOut, mainnetOut, "Multi-position swap: outputs must match exactly");
     }
@@ -581,18 +471,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Test exact output swap parity
     function test_swapParity_exactOutput_zeroForOne() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -609,18 +494,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Test exact output swap parity (reverse direction)
     function test_swapParity_exactOutput_oneForZero() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -640,20 +520,15 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Verify pool state matches after initialization
     function test_poolStateMatch_afterInitialization() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
         // Verify slot0 matches
-        (uint160 mainnetSqrtPrice, int24 mainnetTick, , , , , ) = mainnetPool.slot0();
-        (uint160 localSqrtPrice, int24 localTick, , , , , ) = localPool.slot0();
+        (uint160 mainnetSqrtPrice, int24 mainnetTick,,,,,) = mainnetPool.slot0();
+        (uint160 localSqrtPrice, int24 localTick,,,,,) = localPool.slot0();
 
         assertEq(localSqrtPrice, mainnetSqrtPrice, "sqrtPriceX96 must match");
         assertEq(localTick, mainnetTick, "tick must match");
@@ -668,18 +543,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Verify pool state matches after adding liquidity
     function test_poolStateMatch_afterLiquidity() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -690,26 +560,8 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         assertEq(localPool.liquidity(), mainnetPool.liquidity(), "liquidity must match");
 
         // Verify tick state matches
-        (
-            uint128 mainnetLiqGross,
-            int128 mainnetLiqNet,
-            ,
-            ,
-            ,
-            ,
-            ,
-
-        ) = mainnetPool.ticks(tickLower);
-        (
-            uint128 localLiqGross,
-            int128 localLiqNet,
-            ,
-            ,
-            ,
-            ,
-            ,
-
-        ) = localPool.ticks(tickLower);
+        (uint128 mainnetLiqGross, int128 mainnetLiqNet,,,,,,) = mainnetPool.ticks(tickLower);
+        (uint128 localLiqGross, int128 localLiqNet,,,,,,) = localPool.ticks(tickLower);
 
         assertEq(localLiqGross, mainnetLiqGross, "tickLower liquidityGross must match");
         assertEq(localLiqNet, mainnetLiqNet, "tickLower liquidityNet must match");
@@ -717,18 +569,13 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
 
     /// @notice Verify pool state matches after swap
     function test_poolStateMatch_afterSwap() public {
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
-        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) = createMatchingPools(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            INITIAL_SQRT_PRICE_X96
-        );
+        (IUniswapV3Pool mainnetPool, IUniswapV3Pool localPool) =
+            createMatchingPools(token0, token1, FEE_MEDIUM, INITIAL_SQRT_PRICE_X96);
 
-        (, int24 tick, ) = getPoolState(mainnetPool);
+        (, int24 tick,) = getPoolState(mainnetPool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 1200, tickSpacing);
@@ -739,8 +586,8 @@ contract UniswapV3PortedSwapParity_Fork_Test is TestBase_UniswapV3Fork {
         executeMatchingSwaps(mainnetPool, localPool, true, 1e15);
 
         // Verify state matches after swap
-        (uint160 mainnetSqrtPrice, int24 mainnetTick, , , , , ) = mainnetPool.slot0();
-        (uint160 localSqrtPrice, int24 localTick, , , , , ) = localPool.slot0();
+        (uint160 mainnetSqrtPrice, int24 mainnetTick,,,,,) = mainnetPool.slot0();
+        (uint160 localSqrtPrice, int24 localTick,,,,,) = localPool.slot0();
 
         assertEq(localSqrtPrice, mainnetSqrtPrice, "sqrtPriceX96 must match after swap");
         assertEq(localTick, mainnetTick, "tick must match after swap");

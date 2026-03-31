@@ -31,32 +31,38 @@ interface PipLike {
 
 contract Spotter {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address guy) external auth { wards[guy] = 1;  }
-    function deny(address guy) external auth { wards[guy] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address guy) external auth {
+        wards[guy] = 1;
+    }
+
+    function deny(address guy) external auth {
+        wards[guy] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Spotter/not-authorized");
         _;
     }
 
     // --- Data ---
     struct Ilk {
-        PipLike pip;  // Price Feed
-        uint256 mat;  // Liquidation ratio [ray]
+        PipLike pip; // Price Feed
+        uint256 mat; // Liquidation ratio [ray]
     }
 
-    mapping (bytes32 => Ilk) public ilks;
+    mapping(bytes32 => Ilk) public ilks;
 
-    VatLike public vat;  // CDP Engine
-    uint256 public par;  // ref per dai [ray]
+    VatLike public vat; // CDP Engine
+    uint256 public par; // ref per dai [ray]
 
     uint256 public live;
 
     // --- Events ---
     event Poke(
-      bytes32 ilk,
-      bytes32 val,  // [wad]
-      uint256 spot  // [ray]
+        bytes32 ilk,
+        bytes32 val, // [wad]
+        uint256 spot // [ray]
     );
 
     // --- Init ---
@@ -75,6 +81,7 @@ contract Spotter {
             require(y == 0 || (z = x * y) / y == x);
         }
     }
+
     function _rdiv(uint256 x, uint256 y) internal pure returns (uint256 z) {
         z = _mul(x, ONE) / y;
     }
@@ -85,11 +92,13 @@ contract Spotter {
         if (what == "pip") ilks[ilk].pip = PipLike(pip_);
         else revert("Spotter/file-unrecognized-param");
     }
+
     function file(bytes32 what, uint256 data) external auth {
         require(live == 1, "Spotter/not-live");
         if (what == "par") par = data;
         else revert("Spotter/file-unrecognized-param");
     }
+
     function file(bytes32 ilk, bytes32 what, uint256 data) external auth {
         require(live == 1, "Spotter/not-live");
         if (what == "mat") ilks[ilk].mat = data;

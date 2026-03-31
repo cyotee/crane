@@ -11,16 +11,29 @@ import {IVaultMain} from "@crane/contracts/external/balancer/v3/interfaces/contr
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {TransientStorageHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    TransientStorageHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
 
 import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
 import {BasePoolMath} from "@crane/contracts/external/balancer/v3/vault/contracts/BasePoolMath.sol";
 
@@ -117,9 +130,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
      * @return bptAmountOut Amount of BPT minted
      * @return returnData Custom return data from pool (for CUSTOM kind)
      */
-    function addLiquidity(
-        AddLiquidityParams memory params
-    )
+    function addLiquidity(AddLiquidityParams memory params)
         external
         onlyWhenUnlocked
         withInitializedPool(params.pool)
@@ -135,46 +146,29 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
         PoolData memory poolData = _loadPoolDataUpdatingBalancesAndYieldFees(params.pool, Rounding.ROUND_UP);
         InputHelpers.ensureInputLengthMatch(poolData.tokens.length, params.maxAmountsIn.length);
 
-        uint256[] memory maxAmountsInScaled18 = params.maxAmountsIn.copyToScaled18ApplyRateRoundDownArray(
-            poolData.decimalScalingFactors,
-            poolData.tokenRates
-        );
+        uint256[] memory maxAmountsInScaled18 = params.maxAmountsIn
+            .copyToScaled18ApplyRateRoundDownArray(poolData.decimalScalingFactors, poolData.tokenRates);
 
         if (poolData.poolConfigBits.shouldCallBeforeAddLiquidity()) {
             HooksConfigLib.callBeforeAddLiquidityHook(
-                msg.sender,
-                maxAmountsInScaled18,
-                params,
-                poolData,
-                layout.hooksContracts[params.pool]
+                msg.sender, maxAmountsInScaled18, params, poolData, layout.hooksContracts[params.pool]
             );
 
             poolData.reloadBalancesAndRates(layout.poolTokenBalances[params.pool], Rounding.ROUND_UP);
-            maxAmountsInScaled18 = params.maxAmountsIn.copyToScaled18ApplyRateRoundDownArray(
-                poolData.decimalScalingFactors,
-                poolData.tokenRates
-            );
+            maxAmountsInScaled18 = params.maxAmountsIn
+                .copyToScaled18ApplyRateRoundDownArray(poolData.decimalScalingFactors, poolData.tokenRates);
         }
 
         uint256[] memory amountsInScaled18;
-        (amountsIn, amountsInScaled18, bptAmountOut, returnData) = _addLiquidity(
-            poolData,
-            params,
-            maxAmountsInScaled18
-        );
+        (amountsIn, amountsInScaled18, bptAmountOut, returnData) = _addLiquidity(poolData, params, maxAmountsInScaled18);
 
         if (poolData.poolConfigBits.shouldCallAfterAddLiquidity()) {
             IHooks hooksContract = layout.hooksContracts[params.pool];
 
-            amountsIn = poolData.poolConfigBits.callAfterAddLiquidityHook(
-                msg.sender,
-                amountsInScaled18,
-                amountsIn,
-                bptAmountOut,
-                params,
-                poolData,
-                hooksContract
-            );
+            amountsIn = poolData.poolConfigBits
+                .callAfterAddLiquidityHook(
+                    msg.sender, amountsInScaled18, amountsIn, bptAmountOut, params, poolData, hooksContract
+                );
         }
     }
 
@@ -185,9 +179,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
      * @return amountsOut Actual amounts of each token received
      * @return returnData Custom return data from pool (for CUSTOM kind)
      */
-    function removeLiquidity(
-        RemoveLiquidityParams memory params
-    )
+    function removeLiquidity(RemoveLiquidityParams memory params)
         external
         onlyWhenUnlocked
         withInitializedPool(params.pool)
@@ -200,46 +192,30 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
         PoolData memory poolData = _loadPoolDataUpdatingBalancesAndYieldFees(params.pool, Rounding.ROUND_DOWN);
         InputHelpers.ensureInputLengthMatch(poolData.tokens.length, params.minAmountsOut.length);
 
-        uint256[] memory minAmountsOutScaled18 = params.minAmountsOut.copyToScaled18ApplyRateRoundUpArray(
-            poolData.decimalScalingFactors,
-            poolData.tokenRates
-        );
+        uint256[] memory minAmountsOutScaled18 = params.minAmountsOut
+        .copyToScaled18ApplyRateRoundUpArray(poolData.decimalScalingFactors, poolData.tokenRates);
 
         if (poolData.poolConfigBits.shouldCallBeforeRemoveLiquidity()) {
             HooksConfigLib.callBeforeRemoveLiquidityHook(
-                minAmountsOutScaled18,
-                msg.sender,
-                params,
-                poolData,
-                layout.hooksContracts[params.pool]
+                minAmountsOutScaled18, msg.sender, params, poolData, layout.hooksContracts[params.pool]
             );
 
             poolData.reloadBalancesAndRates(layout.poolTokenBalances[params.pool], Rounding.ROUND_DOWN);
-            minAmountsOutScaled18 = params.minAmountsOut.copyToScaled18ApplyRateRoundUpArray(
-                poolData.decimalScalingFactors,
-                poolData.tokenRates
-            );
+            minAmountsOutScaled18 = params.minAmountsOut
+                .copyToScaled18ApplyRateRoundUpArray(poolData.decimalScalingFactors, poolData.tokenRates);
         }
 
         uint256[] memory amountsOutScaled18;
-        (bptAmountIn, amountsOut, amountsOutScaled18, returnData) = _removeLiquidity(
-            poolData,
-            params,
-            minAmountsOutScaled18
-        );
+        (bptAmountIn, amountsOut, amountsOutScaled18, returnData) =
+            _removeLiquidity(poolData, params, minAmountsOutScaled18);
 
         if (poolData.poolConfigBits.shouldCallAfterRemoveLiquidity()) {
             IHooks hooksContract = layout.hooksContracts[params.pool];
 
-            amountsOut = poolData.poolConfigBits.callAfterRemoveLiquidityHook(
-                msg.sender,
-                amountsOutScaled18,
-                amountsOut,
-                bptAmountIn,
-                params,
-                poolData,
-                hooksContract
-            );
+            amountsOut = poolData.poolConfigBits
+                .callAfterRemoveLiquidityHook(
+                    msg.sender, amountsOutScaled18, amountsOut, bptAmountIn, params, poolData, hooksContract
+                );
         }
     }
 
@@ -271,9 +247,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
             swapFeeAmounts = new uint256[](locals.numTokens);
 
             amountsInScaled18 = BasePoolMath.computeProportionalAmountsIn(
-                poolData.balancesLiveScaled18,
-                BalancerV3MultiTokenRepo._totalSupply(params.pool),
-                bptAmountOut
+                poolData.balancesLiveScaled18, BalancerV3MultiTokenRepo._totalSupply(params.pool), bptAmountOut
             );
         } else if (params.kind == AddLiquidityKind.DONATION) {
             poolData.poolConfigBits.requireDonationEnabled();
@@ -301,15 +275,14 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
             locals.tokenIndex = InputHelpers.getSingleInputIndex(maxAmountsInScaled18);
 
             amountsInScaled18 = maxAmountsInScaled18;
-            (amountsInScaled18[locals.tokenIndex], swapFeeAmounts) = BasePoolMath
-                .computeAddLiquiditySingleTokenExactOut(
-                    poolData.balancesLiveScaled18,
-                    locals.tokenIndex,
-                    bptAmountOut,
-                    BalancerV3MultiTokenRepo._totalSupply(params.pool),
-                    poolData.poolConfigBits.getStaticSwapFeePercentage(),
-                    IBasePool(params.pool)
-                );
+            (amountsInScaled18[locals.tokenIndex], swapFeeAmounts) = BasePoolMath.computeAddLiquiditySingleTokenExactOut(
+                poolData.balancesLiveScaled18,
+                locals.tokenIndex,
+                bptAmountOut,
+                BalancerV3MultiTokenRepo._totalSupply(params.pool),
+                poolData.poolConfigBits.getStaticSwapFeePercentage(),
+                IBasePool(params.pool)
+            );
         } else if (params.kind == AddLiquidityKind.CUSTOM) {
             poolData.poolConfigBits.requireAddLiquidityCustomEnabled();
 
@@ -340,8 +313,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
                 if (amountsInRaw[i] == 0) {
                     amountInRaw = amountInScaled18.toRawUndoRateRoundUp(
-                        poolData.decimalScalingFactors[i],
-                        poolData.tokenRates[i]
+                        poolData.decimalScalingFactors[i], poolData.tokenRates[i]
                     );
                     amountsInRaw[i] = amountInRaw;
                 } else {
@@ -357,18 +329,11 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
             _takeDebt(token, amountInRaw);
 
-            (swapFeeAmounts[i], locals.aggregateSwapFeeAmountRaw) = _computeAndChargeAggregateSwapFees(
-                poolData,
-                swapFeeAmounts[i],
-                params.pool,
-                token,
-                i
-            );
+            (swapFeeAmounts[i], locals.aggregateSwapFeeAmountRaw) =
+                _computeAndChargeAggregateSwapFees(poolData, swapFeeAmounts[i], params.pool, token, i);
 
             poolData.updateRawAndLiveBalance(
-                i,
-                poolData.balancesRaw[i] + amountInRaw - locals.aggregateSwapFeeAmountRaw,
-                Rounding.ROUND_DOWN
+                i, poolData.balancesRaw[i] + amountInRaw - locals.aggregateSwapFeeAmountRaw, Rounding.ROUND_DOWN
             );
         }
 
@@ -408,9 +373,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
             bptAmountIn = params.maxBptAmountIn;
             swapFeeAmounts = new uint256[](locals.numTokens);
             amountsOutScaled18 = BasePoolMath.computeProportionalAmountsOut(
-                poolData.balancesLiveScaled18,
-                BalancerV3MultiTokenRepo._totalSupply(params.pool),
-                bptAmountIn
+                poolData.balancesLiveScaled18, BalancerV3MultiTokenRepo._totalSupply(params.pool), bptAmountIn
             );
 
             // Round-trip fee if add liquidity was called in this session
@@ -427,8 +390,8 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
             amountsOutScaled18 = minAmountsOutScaled18;
             locals.tokenIndex = InputHelpers.getSingleInputIndex(params.minAmountsOut);
 
-            (amountsOutScaled18[locals.tokenIndex], swapFeeAmounts) = BasePoolMath
-                .computeRemoveLiquiditySingleTokenExactIn(
+            (amountsOutScaled18[locals.tokenIndex], swapFeeAmounts) =
+                BasePoolMath.computeRemoveLiquiditySingleTokenExactIn(
                     poolData.balancesLiveScaled18,
                     locals.tokenIndex,
                     bptAmountIn,
@@ -479,8 +442,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
                 if (amountsOutRaw[i] == 0) {
                     amountOutRaw = amountOutScaled18.toRawUndoRateRoundDown(
-                        poolData.decimalScalingFactors[i],
-                        poolData.tokenRates[i]
+                        poolData.decimalScalingFactors[i], poolData.tokenRates[i]
                     );
                     amountsOutRaw[i] = amountOutRaw;
                 } else {
@@ -495,18 +457,11 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
             _supplyCredit(token, amountOutRaw);
 
-            (swapFeeAmounts[i], locals.aggregateSwapFeeAmountRaw) = _computeAndChargeAggregateSwapFees(
-                poolData,
-                swapFeeAmounts[i],
-                params.pool,
-                token,
-                i
-            );
+            (swapFeeAmounts[i], locals.aggregateSwapFeeAmountRaw) =
+                _computeAndChargeAggregateSwapFees(poolData, swapFeeAmounts[i], params.pool, token, i);
 
             poolData.updateRawAndLiveBalance(
-                i,
-                poolData.balancesRaw[i] - (amountOutRaw + locals.aggregateSwapFeeAmountRaw),
-                Rounding.ROUND_DOWN
+                i, poolData.balancesRaw[i] - (amountOutRaw + locals.aggregateSwapFeeAmountRaw), Rounding.ROUND_DOWN
             );
         }
 
@@ -539,8 +494,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
     ) internal returns (uint256 totalSwapFeeAmountRaw, uint256 aggregateSwapFeeAmountRaw) {
         if (totalSwapFeeAmountScaled18 > 0) {
             totalSwapFeeAmountRaw = totalSwapFeeAmountScaled18.toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[index],
-                poolData.tokenRates[index]
+                poolData.decimalScalingFactors[index], poolData.tokenRates[index]
             );
 
             if (poolData.poolConfigBits.isPoolInRecoveryMode() == false) {
@@ -555,9 +509,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
                 BalancerV3VaultStorageRepo._setAggregateFeeAmount(
                     pool,
                     token,
-                    currentPackedBalance.setBalanceRaw(
-                        currentPackedBalance.getBalanceRaw() + aggregateSwapFeeAmountRaw
-                    )
+                    currentPackedBalance.setBalanceRaw(currentPackedBalance.getBalanceRaw() + aggregateSwapFeeAmountRaw)
                 );
             }
         }

@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { StorageSlotExtension } from "../openzeppelin/StorageSlotExtension.sol";
-import { SlotDerivation } from "../openzeppelin/SlotDerivation.sol";
+import {StorageSlotExtension} from "../openzeppelin/StorageSlotExtension.sol";
+import {SlotDerivation} from "../openzeppelin/SlotDerivation.sol";
 
 type TokenDeltaMappingSlotType is bytes32;
 type AddressToUintMappingSlot is bytes32;
@@ -29,10 +29,9 @@ library TransientStorageHelpers {
 
     // Calculate the slot for a transient storage variable.
     function calculateSlot(string memory domain, string memory varName) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encode(uint256(keccak256(abi.encodePacked("balancer-labs.v3.storage.", domain, ".", varName))) - 1)
-            ) & ~bytes32(uint256(0xff));
+        return keccak256(
+            abi.encode(uint256(keccak256(abi.encodePacked("balancer-labs.v3.storage.", domain, ".", varName))) - 1)
+        ) & ~bytes32(uint256(0xff));
     }
 
     /***************************************************************************
@@ -55,26 +54,17 @@ library TransientStorageHelpers {
         AddressToUintMappingSlot.unwrap(slot).deriveMapping(key).asUint256().tstore(value);
     }
 
-    function tGet(
-        UintToAddressToBooleanMappingSlot slot,
-        uint256 uintKey,
-        address addressKey
-    ) internal view returns (bool) {
-        return
-            UintToAddressToBooleanMappingSlot
-                .unwrap(slot)
-                .deriveMapping(uintKey)
-                .deriveMapping(addressKey)
-                .asBoolean()
-                .tload();
+    function tGet(UintToAddressToBooleanMappingSlot slot, uint256 uintKey, address addressKey)
+        internal
+        view
+        returns (bool)
+    {
+        return UintToAddressToBooleanMappingSlot.unwrap(slot).deriveMapping(uintKey).deriveMapping(addressKey)
+            .asBoolean().tload();
     }
 
     function tSet(UintToAddressToBooleanMappingSlot slot, uint256 uintKey, address addressKey, bool value) internal {
-        UintToAddressToBooleanMappingSlot
-            .unwrap(slot)
-            .deriveMapping(uintKey)
-            .deriveMapping(addressKey)
-            .asBoolean()
+        UintToAddressToBooleanMappingSlot.unwrap(slot).deriveMapping(uintKey).deriveMapping(addressKey).asBoolean()
             .tstore(value);
     }
 
@@ -132,11 +122,8 @@ library TransientStorageHelpers {
         uint256 lastElementIndex = AddressArraySlotType.unwrap(slot).asUint256().tload() - 1;
         // Update length to last element. When the index is 0, the slot that holds the length is cleared out.
         AddressArraySlotType.unwrap(slot).asUint256().tstore(lastElementIndex);
-        StorageSlotExtension.AddressSlotType lastElementSlot = AddressArraySlotType
-            .unwrap(slot)
-            .deriveArray()
-            .offset(lastElementIndex)
-            .asAddress();
+        StorageSlotExtension.AddressSlotType lastElementSlot =
+            AddressArraySlotType.unwrap(slot).deriveArray().offset(lastElementIndex).asAddress();
         // Return last element.
         value = lastElementSlot.tload();
         // Clear value in temporary storage.

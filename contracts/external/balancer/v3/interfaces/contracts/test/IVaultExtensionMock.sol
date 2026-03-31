@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { TokenConfig, PoolRoleAccounts, LiquidityManagement } from "../../contracts/vault/VaultTypes.sol";
+import {TokenConfig, PoolRoleAccounts, LiquidityManagement} from "../../contracts/vault/VaultTypes.sol";
 
 interface IVaultExtensionMock {
     function manualRegisterPoolReentrancy(

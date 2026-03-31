@@ -1,0 +1,34 @@
+import { toBase64 } from "@mysten/bcs";
+import { Ed25519PublicKey } from "@mysten/sui/keypairs/ed25519";
+import { MultiSigPublicKey } from "@mysten/sui/multisig";
+import { hexlify } from "ethers/lib/utils";
+import { MULTI_SIG_PK_HEXES, THRESHOLD_FACTOR } from "./const";
+
+export function getMultiSigPublicKey(pkHexes: string[]) {
+  const pks = pkHexes.map((pkHex) => toBase64(Buffer.from(pkHex.replace("0x", ""), "hex")));
+
+  return MultiSigPublicKey.fromPublicKeys({
+    threshold: Math.ceil(pkHexes.length * THRESHOLD_FACTOR),
+    publicKeys: pks.map((pk) => ({
+      publicKey: new Ed25519PublicKey(pk),
+      weight: 1,
+    })),
+  });
+}
+
+function getMultiSigAddress(pkHexes: string[]) {
+  const multiSigPublicKey = getMultiSigPublicKey(pkHexes);
+  const multiSigAddress = multiSigPublicKey.toSuiAddress();
+  const multiSigPublicKeyHex = hexlify(multiSigPublicKey.toRawBytes());
+
+  console.log({
+    multiSigAddress,
+    multiSigPublicKeyHex,
+  });
+}
+
+function main() {
+  getMultiSigAddress(MULTI_SIG_PK_HEXES);
+}
+
+void main();

@@ -26,6 +26,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function facetName() public pure returns (string memory name) {
         return type(ERC721EnumeratedFacet).name;
     }
+
     // end::facetName[]
 
     // tag::facetInterfaces()[]
@@ -36,6 +37,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
         facetInterfaces_ = new bytes4[](1);
         facetInterfaces_[0] = type(IERC721Enumerated).interfaceId;
     }
+
     // end::facetInterfaces[]
 
     // tag::facetFuncs()[]
@@ -51,6 +53,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
         facetFuncs_[5] = _SAFE_TRANSFER_FROM_SELECTOR;
         facetFuncs_[6] = IERC721.transferFrom.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

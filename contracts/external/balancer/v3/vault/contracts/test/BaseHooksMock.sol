@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseHooks } from "../BaseHooks.sol";
+import {BaseHooks} from "../BaseHooks.sol";
 
 contract BaseHooksMock is BaseHooks {
     /// @inheritdoc IHooks
@@ -30,11 +30,11 @@ contract BaseHooksMock is BaseHooks {
     }
 
     /// @inheritdoc IHooks
-    function onAfterInitialize(
-        uint256[] memory exactAmountsIn,
-        uint256 bptAmountOut,
-        bytes memory userData
-    ) public override returns (bool) {
+    function onAfterInitialize(uint256[] memory exactAmountsIn, uint256 bptAmountOut, bytes memory userData)
+        public
+        override
+        returns (bool)
+    {
         return super.onAfterInitialize(exactAmountsIn, bptAmountOut, userData);
     }
 
@@ -48,16 +48,9 @@ contract BaseHooksMock is BaseHooks {
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public override returns (bool) {
-        return
-            super.onBeforeAddLiquidity(
-                router,
-                pool,
-                kind,
-                maxAmountsInScaled18,
-                minBptAmountOut,
-                balancesScaled18,
-                userData
-            );
+        return super.onBeforeAddLiquidity(
+            router, pool, kind, maxAmountsInScaled18, minBptAmountOut, balancesScaled18, userData
+        );
     }
 
     /// @inheritdoc IHooks
@@ -71,17 +64,9 @@ contract BaseHooksMock is BaseHooks {
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public override returns (bool, uint256[] memory) {
-        return
-            super.onAfterAddLiquidity(
-                router,
-                pool,
-                kind,
-                amountsInScaled18,
-                amountsInRaw,
-                bptAmountOut,
-                balancesScaled18,
-                userData
-            );
+        return super.onAfterAddLiquidity(
+            router, pool, kind, amountsInScaled18, amountsInRaw, bptAmountOut, balancesScaled18, userData
+        );
     }
 
     /// @inheritdoc IHooks
@@ -94,16 +79,9 @@ contract BaseHooksMock is BaseHooks {
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public override returns (bool) {
-        return
-            super.onBeforeRemoveLiquidity(
-                router,
-                pool,
-                kind,
-                maxBptAmountIn,
-                minAmountsOutScaled18,
-                balancesScaled18,
-                userData
-            );
+        return super.onBeforeRemoveLiquidity(
+            router, pool, kind, maxBptAmountIn, minAmountsOutScaled18, balancesScaled18, userData
+        );
     }
 
     /// @inheritdoc IHooks
@@ -117,17 +95,9 @@ contract BaseHooksMock is BaseHooks {
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public override returns (bool, uint256[] memory) {
-        return
-            super.onAfterRemoveLiquidity(
-                router,
-                pool,
-                kind,
-                bptAmountIn,
-                amountsOutScaled18,
-                amountsOutRaw,
-                balancesScaled18,
-                userData
-            );
+        return super.onAfterRemoveLiquidity(
+            router, pool, kind, bptAmountIn, amountsOutScaled18, amountsOutRaw, balancesScaled18, userData
+        );
     }
 
     /// @inheritdoc IHooks

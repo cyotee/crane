@@ -4,9 +4,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { Gyro2CLPPool } from "../Gyro2CLPPool.sol";
+import {Gyro2CLPPool} from "../Gyro2CLPPool.sol";
 
 contract Gyro2CLPPoolMock is Gyro2CLPPool {
     uint256 private _overrideSqrtAlpha;

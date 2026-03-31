@@ -8,11 +8,17 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import {IUnbalancedLiquidityInvariantRatioBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    IUnbalancedLiquidityInvariantRatioBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
@@ -40,11 +46,26 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
@@ -89,9 +110,18 @@ contract MockFacet is IFacet {
         _interfaces = interfaces_;
     }
 
-    function facetName() external view override returns (string memory) { return _name; }
-    function facetInterfaces() external view override returns (bytes4[] memory) { return _interfaces; }
-    function facetFuncs() external view override returns (bytes4[] memory) { return _funcs; }
+    function facetName() external view override returns (string memory) {
+        return _name;
+    }
+
+    function facetInterfaces() external view override returns (bytes4[] memory) {
+        return _interfaces;
+    }
+
+    function facetFuncs() external view override returns (bytes4[] memory) {
+        return _funcs;
+    }
+
     function facetMetadata() external view override returns (string memory, bytes4[] memory, bytes4[] memory) {
         return (_name, _interfaces, _funcs);
     }
@@ -258,9 +288,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
 
         for (uint256 i = 0; i < cuts.length; i++) {
             assertGt(
-                cuts[i].functionSelectors.length,
-                0,
-                string.concat("Cut ", vm.toString(i), " should have functions")
+                cuts[i].functionSelectors.length, 0, string.concat("Cut ", vm.toString(i), " should have functions")
             );
         }
     }
@@ -289,10 +317,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
             for (uint256 j = i + 1; j < allSelectors.length; j++) {
                 assertTrue(
                     allSelectors[i] != allSelectors[j],
-                    string.concat(
-                        "Selector collision detected: ",
-                        vm.toString(bytes32(allSelectors[i]))
-                    )
+                    string.concat("Selector collision detected: ", vm.toString(bytes32(allSelectors[i])))
                 );
             }
         }
@@ -317,17 +342,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bytes32 salt1 = pkg.calcSalt(args1);
@@ -346,17 +365,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(address(tokenD), TokenType.STANDARD, address(0), false);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         bytes32 salt1 = pkg.calcSalt(args1);
@@ -378,17 +391,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         bytes32 salt1 = pkg.calcSalt(args1);
@@ -413,20 +420,16 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configsBA[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, address(0x1111), true);
 
         bytes memory argsAB = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsAB,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsAB, hooksContract: address(0)})
         );
 
         bytes memory argsBA = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsBA,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsBA, hooksContract: address(0)})
         );
 
-        assertEq(pkg.calcSalt(argsAB), pkg.calcSalt(argsBA), "Salt should be order-independent even with distinct fields");
+        assertEq(
+            pkg.calcSalt(argsAB), pkg.calcSalt(argsBA), "Salt should be order-independent even with distinct fields"
+        );
     }
 
     function test_calcSalt_revertsForWrongTokenCount() public {
@@ -439,10 +442,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[2] = _createTokenConfig(address(tokenC), TokenType.STANDARD, address(0), false);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         vm.expectRevert(
@@ -450,7 +450,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
                 BalancerV3ConstantProductPoolDFPkg.InvalidTokensLength.selector,
                 2, // max
                 2, // min
-                3  // provided
+                3 // provided
             )
         );
         pkg.calcSalt(args);
@@ -463,10 +463,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[0] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         vm.expectRevert(
@@ -474,7 +471,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
                 BalancerV3ConstantProductPoolDFPkg.InvalidTokensLength.selector,
                 2, // max
                 2, // min
-                1  // provided
+                1 // provided
             )
         );
         pkg.calcSalt(args);
@@ -493,10 +490,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[1] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bytes memory processed = pkg.processArgs(args);
@@ -519,16 +513,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, address(0xCAFE), true);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
-        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decodedArgs = abi.decode(
-            pkg.processArgs(args),
-            (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs)
-        );
+        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decodedArgs =
+            abi.decode(pkg.processArgs(args), (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs));
 
         // After sorting, whichever token address comes first must keep *its* original fields.
         address first = address(decodedArgs.tokenConfigs[0].token);
@@ -568,10 +557,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
 
         TokenConfig[] memory configs = _createTwoTokenConfig();
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bool result = pkg.updatePkg(makeAddr("proxy"), args);
@@ -597,10 +583,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[1] = _createTokenConfig(token2, TokenType.STANDARD, address(0), false);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bytes32 salt = pkg.calcSalt(args);
@@ -625,17 +608,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(token1, TokenType.STANDARD, address(0), false);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         bytes32 salt1 = pkg.calcSalt(args1);
@@ -673,17 +650,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configsBA[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderA, true);
 
         bytes memory argsAB = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsAB,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsAB, hooksContract: address(0)})
         );
 
         bytes memory argsBA = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsBA,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsBA, hooksContract: address(0)})
         );
 
         bytes32 saltAB = pkg.calcSalt(argsAB);
@@ -714,17 +685,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(address(tokenA), TokenType.WITH_RATE, rateProviderHigh, true);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         assertEq(pkg.calcSalt(args1), pkg.calcSalt(args2), "Salt must match with max diversity configs");
@@ -747,22 +712,15 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(address(tokenB), TokenType.STANDARD, address(0), false);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         assertTrue(
-            pkg.calcSalt(args1) != pkg.calcSalt(args2),
-            "Different tokenType configs should produce different salts"
+            pkg.calcSalt(args1) != pkg.calcSalt(args2), "Different tokenType configs should produce different salts"
         );
     }
 
@@ -803,17 +761,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs2[1] = _createTokenConfig(token1, type1, rateProvider1, paysYieldFees1);
 
         bytes memory args1 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs1,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs1, hooksContract: address(0)})
         );
 
         bytes memory args2 = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs2,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs2, hooksContract: address(0)})
         );
 
         assertEq(
@@ -860,16 +812,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         }
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
-        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded = abi.decode(
-            pkg.processArgs(args),
-            (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs)
-        );
+        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded =
+            abi.decode(pkg.processArgs(args), (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs));
 
         // Verify tokens are sorted
         assertEq(address(decoded.tokenConfigs[0].token), expectedFirst, "First token incorrect");
@@ -927,21 +874,15 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[1] = _createTokenConfig(token2, type2, rateProvider2, paysYieldFees2);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
-        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded = abi.decode(
-            pkg.processArgs(args),
-            (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs)
-        );
+        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs memory decoded =
+            abi.decode(pkg.processArgs(args), (IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs));
 
         // Verify sorted order
         assertTrue(
-            address(decoded.tokenConfigs[0].token) < address(decoded.tokenConfigs[1].token),
-            "Tokens must be sorted"
+            address(decoded.tokenConfigs[0].token) < address(decoded.tokenConfigs[1].token), "Tokens must be sorted"
         );
 
         // Verify alignment: find which original config corresponds to each position
@@ -989,10 +930,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         configs[1] = _createTokenConfig(token2, TokenType.STANDARD, address(0), false);
 
         bytes memory args = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         bytes32 saltBefore = pkg.calcSalt(args);
@@ -1031,12 +969,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Test is Test {
         return configs;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

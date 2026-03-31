@@ -15,7 +15,9 @@ import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -28,16 +30,22 @@ import {IERC20Permit, IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 // import {BetterERC20Permit} from "contracts/crane/token/ERC20/extensions/BetterERC20Permit.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
 // import {BetterBalancerV3PoolTokenStorage} from "./vault/utils/BetterBalancerV3PoolTokenStorage.sol";
-import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
+import {
+    BalancerV3VaultGuardModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 // import {Create3AwareContract} from "contracts/crane/factories/create2/aware/Create3AwareContract.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {ERC2612Repo} from "@crane/contracts/tokens/ERC2612/ERC2612Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
-import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
+import {
+    BalancerV3VaultGuardModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 import {EIP712Layout, EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 
 contract BalancerV3PoolTokenFacet is
@@ -99,6 +107,7 @@ contract BalancerV3PoolTokenFacet is
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     /* -------------------------------------------------------------------------- */
     /*                          IERC20Metadata Functions                          */
     /* -------------------------------------------------------------------------- */
@@ -120,7 +129,7 @@ contract BalancerV3PoolTokenFacet is
     /**
      * @inheritdoc IERC20Metadata
      */
-    function decimals() external view returns (uint8) {
+    function decimals() external pure returns (uint8) {
         return 18;
     }
 
@@ -139,15 +148,11 @@ contract BalancerV3PoolTokenFacet is
     }
 
     // tag::transfer[]
-    function transfer(address recipient, uint256 amount)
-        public
-        virtual
-        override(IERC20)
-        returns (bool result)
-    {
+    function transfer(address recipient, uint256 amount) public virtual override(IERC20) returns (bool result) {
         BalancerV3VaultAwareRepo._balancerV3Vault().transfer(msg.sender, recipient, amount);
         return true;
     }
+
     // end::transfer[]
 
     /**
@@ -172,6 +177,7 @@ contract BalancerV3PoolTokenFacet is
         BalancerV3VaultAwareRepo._balancerV3Vault().transferFrom(msg.sender, sender, recipient, amount);
         return true;
     }
+
     // end::transferFrom[]
 
     /// @dev Emit the Transfer event. This function can only be called by the MultiToken.

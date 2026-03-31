@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ILBPCommon } from "./ILBPCommon.sol";
+import {ILBPCommon} from "./ILBPCommon.sol";
 
 /**
  * @notice Structure containing LBP-specific parameters.

@@ -6,27 +6,31 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { IPoolLiquidity } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BaseTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BaseTest} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseTest.sol";
 
-import { VaultContractsDeployer } from "../../../test/foundry/utils/VaultContractsDeployer.sol";
-import { PoolFactoryMock } from "../../../contracts/test/PoolFactoryMock.sol";
-import { BalancerPoolToken } from "../../../contracts/BalancerPoolToken.sol";
-import { VaultStateBits } from "../../../contracts/lib/VaultStateLib.sol";
-import { PoolConfigLib } from "../../../contracts/lib/PoolConfigLib.sol";
-import { BasePoolMath } from "../../../contracts/BasePoolMath.sol";
+import {VaultContractsDeployer} from "../../../test/foundry/utils/VaultContractsDeployer.sol";
+import {PoolFactoryMock} from "../../../contracts/test/PoolFactoryMock.sol";
+import {BalancerPoolToken} from "../../../contracts/BalancerPoolToken.sol";
+import {VaultStateBits} from "../../../contracts/lib/VaultStateLib.sol";
+import {PoolConfigLib} from "../../../contracts/lib/PoolConfigLib.sol";
+import {BasePoolMath} from "../../../contracts/BasePoolMath.sol";
 
 contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
     using PoolConfigLib for PoolConfigBits;
@@ -97,20 +101,15 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
     // AddLiquidity tests.
     function testAddLiquidityProportional() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.PROPORTIONAL,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.PROPORTIONAL, 1e18);
 
         _testAddLiquidity(
             poolData,
             TestAddLiquidityParams({
                 addLiquidityParams: params,
                 expectedAmountsInScaled18: BasePoolMath.computeProportionalAmountsIn(
-                    poolData.balancesLiveScaled18,
-                    vault.totalSupply(params.pool),
-                    params.minBptAmountOut
+                    poolData.balancesLiveScaled18, vault.totalSupply(params.pool), params.minBptAmountOut
                 ),
                 maxAmountsInScaled18: maxAmountsInScaled18,
                 expectedSwapFeeAmountsScaled18: new uint256[](tokens.length),
@@ -122,11 +121,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testAddLiquidityUnbalanced() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.UNBALANCED,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.UNBALANCED, 1e18);
 
         // mock invariants
         (uint256 currentInvariant, uint256 newInvariantAndInvariantWithFeesApplied) = (1e16, 1e18);
@@ -158,8 +154,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256[] memory swapFeeAmountsRaw = new uint256[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             swapFeeAmountsRaw[i] = swapFeeAmountsScaled18[i].toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -178,19 +173,15 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testAddLiquiditySingleTokenExactOut() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, ) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
-            1e18
-        );
+        (AddLiquidityParams memory params,) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT, 1e18);
 
         uint256 tokenInIndex = 0;
         uint256[] memory expectedAmountsInScaled18 = new uint256[](tokens.length);
         uint256[] memory maxAmountsInScaled18 = new uint256[](tokens.length);
         maxAmountsInScaled18[tokenInIndex] = 1e18;
         params.maxAmountsIn[tokenInIndex] = maxAmountsInScaled18[tokenInIndex].toRawUndoRateRoundUp(
-            poolData.decimalScalingFactors[tokenInIndex],
-            poolData.tokenRates[tokenInIndex]
+            poolData.decimalScalingFactors[tokenInIndex], poolData.tokenRates[tokenInIndex]
         );
 
         uint256 totalSupply = vault.totalSupply(params.pool);
@@ -198,8 +189,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         vm.mockCall(
             params.pool,
             abi.encodeCall(
-                IBasePool.computeBalance,
-                (poolData.balancesLiveScaled18, tokenInIndex, newSupply.divUp(totalSupply))
+                IBasePool.computeBalance, (poolData.balancesLiveScaled18, tokenInIndex, newSupply.divUp(totalSupply))
             ),
             abi.encode(newSupply)
         );
@@ -217,8 +207,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256[] memory swapFeeAmountsRaw = new uint256[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             swapFeeAmountsRaw[i] = swapFeeAmountsScaled18[i].toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -239,11 +228,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256 bptAmountOut = 1e18;
 
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.CUSTOM,
-            bptAmountOut
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.CUSTOM, bptAmountOut);
 
         poolData.poolConfigBits = poolData.poolConfigBits.setAddLiquidityCustom(true);
 
@@ -254,8 +240,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             expectedAmountsInScaled18[i] = 1e18;
             expectedSwapFeeAmountsScaled18[i] = 1e16;
             expectedSwapFeeAmountsRaw[i] = expectedSwapFeeAmountsScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -289,11 +274,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertIfBptAmountOutBelowMin() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.CUSTOM,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.CUSTOM, 1e18);
 
         poolData.poolConfigBits = poolData.poolConfigBits.setAddLiquidityCustom(true);
 
@@ -321,11 +303,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertIfAmountInAboveMax() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.CUSTOM,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.CUSTOM, 1e18);
 
         poolData.poolConfigBits = poolData.poolConfigBits.setAddLiquidityCustom(true);
 
@@ -351,10 +330,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.AmountInAboveMax.selector,
-                tokens[0],
-                expectedAmountsInScaled18[0],
-                maxAmountsInScaled18[0]
+                IVaultErrors.AmountInAboveMax.selector, tokens[0], expectedAmountsInScaled18[0], maxAmountsInScaled18[0]
             )
         );
         vault.manualAddLiquidity(poolData, params, maxAmountsInScaled18);
@@ -362,11 +338,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertAddLiquidityUnbalancedIfUnbalancedLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.UNBALANCED,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.UNBALANCED, 1e18);
 
         poolData.poolConfigBits = poolData.poolConfigBits.setDisableUnbalancedLiquidity(true);
 
@@ -376,11 +349,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertAddLiquiditySingleTokenExactOutIfUnbalancedLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.SINGLE_TOKEN_EXACT_OUT, 1e18);
 
         poolData.poolConfigBits = poolData.poolConfigBits.setDisableUnbalancedLiquidity(true);
 
@@ -390,11 +360,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertAddLiquidityCustomExactOutIfCustomLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) = _makeAddLiquidityParams(
-            poolData,
-            AddLiquidityKind.CUSTOM,
-            1e18
-        );
+        (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) =
+            _makeAddLiquidityParams(poolData, AddLiquidityKind.CUSTOM, 1e18);
 
         vm.expectRevert(IVaultErrors.DoesNotSupportAddLiquidityCustom.selector);
         vault.manualAddLiquidity(poolData, params, maxAmountsInScaled18);
@@ -403,21 +370,15 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
     // RemoveLiquidity tests.
     function testRemoveLiquidityProportional() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.PROPORTIONAL,
-            1e18,
-            1
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.PROPORTIONAL, 1e18, 1);
 
         _testRemoveLiquidity(
             poolData,
             TestRemoveLiquidityParams({
                 removeLiquidityParams: params,
                 expectedAmountsOutScaled18: BasePoolMath.computeProportionalAmountsOut(
-                    poolData.balancesLiveScaled18,
-                    vault.totalSupply(params.pool),
-                    params.maxBptAmountIn
+                    poolData.balancesLiveScaled18, vault.totalSupply(params.pool), params.maxBptAmountIn
                 ),
                 minAmountsOutScaled18: minAmountsOutScaled18,
                 expectedSwapFeeAmountsScaled18: new uint256[](tokens.length),
@@ -429,20 +390,15 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRemoveLiquiditySingleTokenExactIn() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN,
-            1e18,
-            0
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, 1e18, 0);
 
         uint256 tokenIndex = 0;
         uint256 expectBPTAmountIn = params.maxBptAmountIn;
 
         params.minAmountsOut[tokenIndex] = 1e18;
         minAmountsOutScaled18[tokenIndex] = params.minAmountsOut[tokenIndex].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
+            poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]
         );
 
         uint256[] memory expectedAmountsOutScaled18 = new uint256[](tokens.length);
@@ -452,14 +408,13 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         vm.mockCall(
             params.pool,
             abi.encodeCall(
-                IBasePool.computeBalance,
-                (poolData.balancesLiveScaled18, tokenIndex, newSupply.divUp(totalSupply))
+                IBasePool.computeBalance, (poolData.balancesLiveScaled18, tokenIndex, newSupply.divUp(totalSupply))
             ),
             abi.encode(newSupply)
         );
 
-        (expectedAmountsOutScaled18[tokenIndex], swapFeeAmountsScaled18) = BasePoolMath
-            .computeRemoveLiquiditySingleTokenExactIn(
+        (expectedAmountsOutScaled18[tokenIndex], swapFeeAmountsScaled18) =
+            BasePoolMath.computeRemoveLiquiditySingleTokenExactIn(
                 poolData.balancesLiveScaled18,
                 tokenIndex,
                 expectBPTAmountIn,
@@ -471,8 +426,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256[] memory swapFeeAmountsRaw = new uint256[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             swapFeeAmountsRaw[i] = swapFeeAmountsScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -491,18 +445,13 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRemoveLiquiditySingleTokenExactOut() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
-            type(uint256).max,
-            0
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT, type(uint256).max, 0);
 
         uint256 tokenIndex = 0;
         params.minAmountsOut[tokenIndex] = 2e18;
         minAmountsOutScaled18[tokenIndex] = params.minAmountsOut[tokenIndex].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[tokenIndex],
-            poolData.tokenRates[tokenIndex]
+            poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]
         );
 
         // mock invariants.
@@ -526,9 +475,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
                 abi.encode(invariantAndInvariantWithFeesApplied)
             );
 
-            uint256 taxableAmount = invariantAndInvariantWithFeesApplied.divUp(currentInvariant).mulUp(
-                poolData.balancesLiveScaled18[tokenIndex]
-            ) - newBalances[tokenIndex];
+            uint256 taxableAmount = invariantAndInvariantWithFeesApplied.divUp(currentInvariant)
+                .mulUp(poolData.balancesLiveScaled18[tokenIndex]) - newBalances[tokenIndex];
 
             uint256 fee = taxableAmount.divUp(swapFeePercentage.complement()) - taxableAmount;
             newBalances[tokenIndex] -= fee;
@@ -541,21 +489,19 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             );
         }
 
-        (uint256 expectBPTAmountIn, uint256[] memory swapFeeAmountsScaled18) = BasePoolMath
-            .computeRemoveLiquiditySingleTokenExactOut(
-                poolData.balancesLiveScaled18,
-                tokenIndex,
-                minAmountsOutScaled18[tokenIndex],
-                vault.totalSupply(params.pool),
-                swapFeePercentage,
-                IBasePool(params.pool)
-            );
+        (uint256 expectBPTAmountIn, uint256[] memory swapFeeAmountsScaled18) = BasePoolMath.computeRemoveLiquiditySingleTokenExactOut(
+            poolData.balancesLiveScaled18,
+            tokenIndex,
+            minAmountsOutScaled18[tokenIndex],
+            vault.totalSupply(params.pool),
+            swapFeePercentage,
+            IBasePool(params.pool)
+        );
 
         uint256[] memory swapFeeAmountsRaw = new uint256[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             swapFeeAmountsRaw[i] = swapFeeAmountsScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -576,12 +522,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         PoolData memory poolData = _makeDefaultParams();
         poolData.poolConfigBits = poolData.poolConfigBits.setRemoveLiquidityCustom(true);
 
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.CUSTOM,
-            type(uint256).max,
-            1
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.CUSTOM, type(uint256).max, 1);
 
         uint256 expectBPTAmountIn = 1e18;
 
@@ -592,8 +534,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             expectedAmountsOutScaled18[i] = 1e18;
             expectedSwapFeeAmountsScaled18[i] = 1e16;
             expectedSwapFeeAmountsRaw[i] = expectedSwapFeeAmountsScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -627,12 +568,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertIfBptAmountInAboveMax() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.CUSTOM,
-            1e18,
-            0
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.CUSTOM, 1e18, 0);
         poolData.poolConfigBits = poolData.poolConfigBits.setRemoveLiquidityCustom(true);
 
         uint256 bptAmountIn = params.maxBptAmountIn + 1;
@@ -661,12 +598,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
     function testRevertIfAmountOutBelowMin() public {
         PoolData memory poolData = _makeDefaultParams();
         uint256 defaultMinAmountOut = 1e18;
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.CUSTOM,
-            type(uint256).max,
-            defaultMinAmountOut
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.CUSTOM, type(uint256).max, defaultMinAmountOut);
         poolData.poolConfigBits = poolData.poolConfigBits.setRemoveLiquidityCustom(true);
 
         uint256 bptAmountIn = 1e18;
@@ -691,10 +624,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         );
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.AmountOutBelowMin.selector,
-                tokens[0],
-                amountsOutScaled18[0],
-                params.minAmountsOut[0]
+                IVaultErrors.AmountOutBelowMin.selector, tokens[0], amountsOutScaled18[0], params.minAmountsOut[0]
             )
         );
 
@@ -703,12 +633,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertRemoveLiquidityUnbalancedIfUnbalancedLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN,
-            type(uint256).max,
-            1
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_IN, type(uint256).max, 1);
         poolData.poolConfigBits = poolData.poolConfigBits.setDisableUnbalancedLiquidity(true);
 
         vm.expectRevert(IVaultErrors.DoesNotSupportUnbalancedLiquidity.selector);
@@ -717,12 +643,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertRemoveLiquiditySingleTokenExactOutIfUnbalancedLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT,
-            type(uint256).max,
-            1
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.SINGLE_TOKEN_EXACT_OUT, type(uint256).max, 1);
         poolData.poolConfigBits = poolData.poolConfigBits.setDisableUnbalancedLiquidity(true);
 
         vm.expectRevert(IVaultErrors.DoesNotSupportUnbalancedLiquidity.selector);
@@ -731,12 +653,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     function testRevertRemoveLiquidityCustomExactOutIfCustomLiquidityIsDisabled() public {
         PoolData memory poolData = _makeDefaultParams();
-        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) = _makeRemoveLiquidityParams(
-            poolData,
-            RemoveLiquidityKind.CUSTOM,
-            type(uint256).max,
-            1
-        );
+        (RemoveLiquidityParams memory params, uint256[] memory minAmountsOutScaled18) =
+            _makeRemoveLiquidityParams(poolData, RemoveLiquidityKind.CUSTOM, type(uint256).max, 1);
 
         vm.expectRevert(IVaultErrors.DoesNotSupportRemoveLiquidityCustom.selector);
         vault.manualRemoveLiquidity(poolData, params, minAmountsOutScaled18);
@@ -744,11 +662,11 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
     // Helpers
 
-    function _makeAddLiquidityParams(
-        PoolData memory poolData,
-        AddLiquidityKind kind,
-        uint256 minBptAmountOut
-    ) internal view returns (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18) {
+    function _makeAddLiquidityParams(PoolData memory poolData, AddLiquidityKind kind, uint256 minBptAmountOut)
+        internal
+        view
+        returns (AddLiquidityParams memory params, uint256[] memory maxAmountsInScaled18)
+    {
         params = AddLiquidityParams({
             pool: pool,
             to: alice,
@@ -761,10 +679,8 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         maxAmountsInScaled18 = new uint256[](tokens.length);
         for (uint256 i = 0; i < tokens.length; i++) {
             maxAmountsInScaled18[i] = 1e18;
-            params.maxAmountsIn[i] = maxAmountsInScaled18[i].toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
-            );
+            params.maxAmountsIn[i] =
+                maxAmountsInScaled18[i].toRawUndoRateRoundUp(poolData.decimalScalingFactors[i], poolData.tokenRates[i]);
         }
     }
 
@@ -787,8 +703,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         for (uint256 i = 0; i < tokens.length; i++) {
             minAmountsOutScaled18[i] = defaultMinAmountOut;
             params.minAmountsOut[i] = minAmountsOutScaled18[i].toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
     }
@@ -810,8 +725,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
 
             poolData.balancesLiveScaled18[i] = 1000e18;
             poolData.balancesRaw[i] = poolData.balancesLiveScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
     }
@@ -826,8 +740,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256[] memory expectedAmountsInRaw = new uint256[](params.expectedAmountsInScaled18.length);
         for (uint256 i = 0; i < expectedAmountsInRaw.length; i++) {
             expectedAmountsInRaw[i] = params.expectedAmountsInScaled18[i].toRawUndoRateRoundUp(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -848,7 +761,6 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             uint256[] memory amountsInRaw,
             uint256[] memory amountsInScaled18,
             uint256 bptAmountOut,
-
         ) = vault.manualAddLiquidity(poolData, params.addLiquidityParams, params.maxAmountsInScaled18);
 
         assertEq(bptAmountOut, params.expectedBPTAmountOut, "Unexpected BPT amount out");
@@ -902,8 +814,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256[] memory expectedAmountsOutRaw = new uint256[](params.expectedAmountsOutScaled18.length);
         for (uint256 i = 0; i < expectedAmountsOutRaw.length; i++) {
             expectedAmountsOutRaw[i] = params.expectedAmountsOutScaled18[i].toRawUndoRateRoundDown(
-                poolData.decimalScalingFactors[i],
-                poolData.tokenRates[i]
+                poolData.decimalScalingFactors[i], poolData.tokenRates[i]
             );
         }
 
@@ -925,7 +836,6 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             uint256 bptAmountIn,
             uint256[] memory amountsOutRaw,
             uint256[] memory amountsOutScaled18,
-
         ) = vault.manualRemoveLiquidity(poolData, params.removeLiquidityParams, params.minAmountsOutScaled18);
 
         assertEq(bptAmountIn, params.expectedBPTAmountIn, "Unexpected BPT amount in");
@@ -966,9 +876,7 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
                 "Unexpected balancesRaw balance"
             );
             assertEq(
-                amountsOutScaled18[i],
-                params_.expectedAmountsOutScaled18[i],
-                "Unexpected amountsOutScaled18 amount"
+                amountsOutScaled18[i], params_.expectedAmountsOutScaled18[i], "Unexpected amountsOutScaled18 amount"
             );
             assertEq(amountsOutRaw[i], expectedAmountsOutRaw[i], "Unexpected tokenOut amount");
 
@@ -991,9 +899,9 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
         uint256 protocolSwapFeePercentage,
         uint256 expectSwapFeeAmountScaled18
     ) internal view returns (uint256 protocolSwapFeeAmountRaw) {
-        protocolSwapFeeAmountRaw = expectSwapFeeAmountScaled18
-            .toRawUndoRateRoundUp(poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex])
-            .mulDown(protocolSwapFeePercentage);
+        protocolSwapFeeAmountRaw = expectSwapFeeAmountScaled18.toRawUndoRateRoundUp(
+                poolData.decimalScalingFactors[tokenIndex], poolData.tokenRates[tokenIndex]
+            ).mulDown(protocolSwapFeePercentage);
 
         assertEq(
             vault.getAggregateSwapFeeAmount(pool_, poolData.tokens[tokenIndex]),
@@ -1012,16 +920,13 @@ contract VaultUnitLiquidityTest is BaseTest, VaultContractsDeployer {
             assertEq(storagePoolBalances[i], updatedPoolData.balancesRaw[i], "Unexpected pool balance");
 
             assertEq(
-                storageLastLiveBalances[i],
-                updatedPoolData.balancesLiveScaled18[i],
-                "Unexpected last live balance"
+                storageLastLiveBalances[i], updatedPoolData.balancesLiveScaled18[i], "Unexpected last live balance"
             );
 
             assertEq(
                 updatedPoolData.balancesLiveScaled18[i],
                 storagePoolBalances[i].toScaled18ApplyRateRoundDown(
-                    poolData.decimalScalingFactors[i],
-                    poolData.tokenRates[i]
+                    poolData.decimalScalingFactors[i], poolData.tokenRates[i]
                 ),
                 "Unexpected balancesLiveScaled18 balance"
             );

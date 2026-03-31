@@ -2,17 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
 
-import { ReClammMath, PriceRatioState, a, b } from "./lib/ReClammMath.sol";
-import { ReClammPoolParams } from "./interfaces/IReClammPool.sol";
-import { ReClammCommon } from "./ReClammCommon.sol";
+import {ReClammMath, PriceRatioState, a, b} from "./lib/ReClammMath.sol";
+import {ReClammPoolParams} from "./interfaces/IReClammPool.sol";
+import {ReClammCommon} from "./ReClammCommon.sol";
 import "./interfaces/IReClammPoolExtension.sol";
 
 contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuard {
@@ -41,12 +41,9 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
         _;
     }
 
-    constructor(
-        IReClammPoolMain reclammPool,
-        IVault vault,
-        ReClammPoolParams memory params,
-        address hookContract
-    ) VaultGuard(vault) {
+    constructor(IReClammPoolMain reclammPool, IVault vault, ReClammPoolParams memory params, address hookContract)
+        VaultGuard(vault)
+    {
         _POOL = reclammPool;
         _VAULT = vault;
 
@@ -148,7 +145,7 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
     {
         // Base Pool
         data.tokens = _VAULT.getPoolTokens(address(this));
-        (data.decimalScalingFactors, ) = _VAULT.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _VAULT.getPoolTokenRates(address(this));
         data.tokenAPriceIncludesRate = _TOKEN_A_PRICE_INCLUDES_RATE;
         data.tokenBPriceIncludesRate = _TOKEN_B_PRICE_INCLUDES_RATE;
         data.minSwapFeePercentage = _MIN_SWAP_FEE_PERCENTAGE;
@@ -193,8 +190,8 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
         returns (uint256 minPrice, uint256 maxPrice)
     {
         if (_VAULT.isPoolInitialized(address(this))) {
-            (, , , uint256[] memory balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
-            (uint256 virtualBalanceA, uint256 virtualBalanceB, ) = _computeCurrentVirtualBalances(balancesScaled18);
+            (,,, uint256[] memory balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
+            (uint256 virtualBalanceA, uint256 virtualBalanceB,) = _computeCurrentVirtualBalances(balancesScaled18);
 
             (minPrice, maxPrice) = ReClammMath.computePriceRange(balancesScaled18, virtualBalanceA, virtualBalanceB);
         } else {
@@ -205,7 +202,7 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
 
     /// @inheritdoc IReClammPoolExtension
     function computeCurrentPoolCenteredness() external view onlyPoolDelegateCall returns (uint256, bool) {
-        (, , , uint256[] memory currentBalancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
+        (,,, uint256[] memory currentBalancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
         return ReClammMath.computeCenteredness(currentBalancesScaled18, _lastVirtualBalanceA, _lastVirtualBalanceB);
     }
 
@@ -221,12 +218,8 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
 
     /// @inheritdoc IReClammPoolExtension
     function computeCurrentSpotPrice() external view onlyPoolDelegateCall returns (uint256) {
-        (
-            uint256[] memory balancesScaled18,
-            uint256 currentVirtualBalanceA,
-            uint256 currentVirtualBalanceB,
-
-        ) = _getRealAndVirtualBalances();
+        (uint256[] memory balancesScaled18, uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            _getRealAndVirtualBalances();
 
         return (balancesScaled18[b] + currentVirtualBalanceB).divDown(balancesScaled18[a] + currentVirtualBalanceA);
     }
@@ -238,19 +231,15 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
         onlyPoolDelegateCall
         returns (bool isWithinTargetRange, bool virtualBalancesChanged)
     {
-        (, , , uint256[] memory balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
+        (,,, uint256[] memory balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
         uint256 currentVirtualBalanceA;
         uint256 currentVirtualBalanceB;
 
-        (currentVirtualBalanceA, currentVirtualBalanceB, virtualBalancesChanged) = _computeCurrentVirtualBalances(
-            balancesScaled18
-        );
+        (currentVirtualBalanceA, currentVirtualBalanceB, virtualBalancesChanged) =
+            _computeCurrentVirtualBalances(balancesScaled18);
 
         isWithinTargetRange = ReClammMath.isPoolWithinTargetRange(
-            balancesScaled18,
-            currentVirtualBalanceA,
-            currentVirtualBalanceB,
-            _centerednessMargin
+            balancesScaled18, currentVirtualBalanceA, currentVirtualBalanceB, _centerednessMargin
         );
     }
 
@@ -269,11 +258,12 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
      * @param userData Optional, arbitrary data sent with the encoded request
      * @return success True if the pool accepts the initialization results
      */
-    function onAfterInitialize(
-        uint256[] memory exactAmountsIn,
-        uint256 bptAmountOut,
-        bytes memory userData
-    ) external onlyWithHookContract onlyVault returns (bool) {
+    function onAfterInitialize(uint256[] memory exactAmountsIn, uint256 bptAmountOut, bytes memory userData)
+        external
+        onlyWithHookContract
+        onlyVault
+        returns (bool)
+    {
         return IHooks(_HOOK_CONTRACT).onAfterInitialize(exactAmountsIn, bptAmountOut, userData);
     }
 
@@ -305,16 +295,9 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public onlyWithHookContract onlyVault returns (bool, uint256[] memory) {
-        return
-            IHooks(_HOOK_CONTRACT).onAfterAddLiquidity(
-                router,
-                pool_,
-                kind,
-                amountsInScaled18,
-                amountsInRaw,
-                bptAmountOut,
-                balancesScaled18,
-                userData
+        return IHooks(_HOOK_CONTRACT)
+            .onAfterAddLiquidity(
+                router, pool_, kind, amountsInScaled18, amountsInRaw, bptAmountOut, balancesScaled18, userData
             );
     }
 
@@ -346,16 +329,9 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
         uint256[] memory balancesScaled18,
         bytes memory userData
     ) public onlyWithHookContract onlyVault returns (bool, uint256[] memory) {
-        return
-            IHooks(_HOOK_CONTRACT).onAfterRemoveLiquidity(
-                router,
-                pool_,
-                kind,
-                bptAmountIn,
-                amountsOutScaled18,
-                amountsOutRaw,
-                balancesScaled18,
-                userData
+        return IHooks(_HOOK_CONTRACT)
+            .onAfterRemoveLiquidity(
+                router, pool_, kind, bptAmountIn, amountsOutScaled18, amountsOutRaw, balancesScaled18, userData
             );
     }
 
@@ -369,10 +345,12 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
      * @param pool_ Pool address, used to get pool information from the Vault (poolData, token config, etc.)
      * @return success True if the pool wishes to proceed with settlement
      */
-    function onBeforeSwap(
-        PoolSwapParams calldata params,
-        address pool_
-    ) public onlyWithHookContract onlyVault returns (bool) {
+    function onBeforeSwap(PoolSwapParams calldata params, address pool_)
+        public
+        onlyWithHookContract
+        onlyVault
+        returns (bool)
+    {
         return IHooks(_HOOK_CONTRACT).onBeforeSwap(params, pool_);
     }
 
@@ -387,9 +365,12 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
      * @return success True if the pool wishes to proceed with settlement
      * @return hookAdjustedAmountCalculatedRaw New amount calculated, potentially modified by the hook
      */
-    function onAfterSwap(
-        AfterSwapParams calldata params
-    ) public onlyWithHookContract onlyVault returns (bool, uint256) {
+    function onAfterSwap(AfterSwapParams calldata params)
+        public
+        onlyWithHookContract
+        onlyVault
+        returns (bool, uint256)
+    {
         return IHooks(_HOOK_CONTRACT).onAfterSwap(params);
     }
 
@@ -434,7 +415,7 @@ contract ReClammPoolExtension is IReClammPoolExtension, ReClammCommon, VaultGuar
             bool changed
         )
     {
-        (, , , balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
+        (,,, balancesScaled18) = _VAULT.getPoolTokenInfo(address(this));
         (currentVirtualBalanceA, currentVirtualBalanceB, changed) = _computeCurrentVirtualBalances(balancesScaled18);
     }
 

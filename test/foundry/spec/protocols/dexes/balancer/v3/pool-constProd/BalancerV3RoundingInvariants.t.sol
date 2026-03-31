@@ -3,10 +3,16 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import {BalancerV3ConstantProductPoolTarget} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol";
+import {
+    BalancerV3ConstantProductPoolTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolTarget.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 
 /**
@@ -167,10 +173,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
         assertTrue(invariantUp > 0, "Invariant should be positive");
     }
 
-    function testFuzz_computeInvariant_roundDownAlwaysLessOrEqual(
-        uint256 bal0,
-        uint256 bal1
-    ) public view {
+    function testFuzz_computeInvariant_roundDownAlwaysLessOrEqual(uint256 bal0, uint256 bal1) public view {
         bal0 = bound(bal0, 1e18, 1e30);
         bal1 = bound(bal1, 1e18, 1e30);
 
@@ -225,11 +228,10 @@ contract BalancerV3RoundingInvariants_Test is Test {
         assertTrue(newBalance >= balances[0], "Dust ratio change should be handled");
     }
 
-    function testFuzz_computeBalance_positiveRatio_positiveBalance(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 ratio
-    ) public view {
+    function testFuzz_computeBalance_positiveRatio_positiveBalance(uint256 bal0, uint256 bal1, uint256 ratio)
+        public
+        view
+    {
         bal0 = bound(bal0, 1e15, 1e27);
         bal1 = bound(bal1, 1e15, 1e27);
         ratio = bound(ratio, 0.5e18, 2e18);
@@ -277,9 +279,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
         // EXACT_IN rounds DOWN amountOut - user receives less, so pool gains value.
         // No tolerance needed: pool-favorable rounding guarantees invariant never decreases.
         assertGe(
-            invariantAfter,
-            invariantBefore,
-            "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
+            invariantAfter, invariantBefore, "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
         );
     }
 
@@ -319,11 +319,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
         );
     }
 
-    function testFuzz_swap_invariantPreserved_exactIn(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountIn
-    ) public view {
+    function testFuzz_swap_invariantPreserved_exactIn(uint256 bal0, uint256 bal1, uint256 amountIn) public view {
         // Bound to reasonable values
         bal0 = bound(bal0, 1e18, 1e27);
         bal1 = bound(bal1, 1e18, 1e27);
@@ -357,9 +353,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
         // EXACT_IN rounds DOWN amountOut - user receives less, so pool gains value.
         // No tolerance needed: pool-favorable rounding guarantees this property.
         assertGe(
-            invariantAfter,
-            invariantBefore,
-            "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
+            invariantAfter, invariantBefore, "Invariant must not decrease after EXACT_IN swap (pool-favorable rounding)"
         );
     }
 
@@ -545,11 +539,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
      * @notice Property: Product of balances should increase or stay same after swap
      * @dev This is the fundamental AMM property: k = x * y should not decrease
      */
-    function testFuzz_productNeverDecreases(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountIn
-    ) public view {
+    function testFuzz_productNeverDecreases(uint256 bal0, uint256 bal1, uint256 amountIn) public view {
         bal0 = bound(bal0, 1e18, 1e24);
         bal1 = bound(bal1, 1e18, 1e24);
         amountIn = bound(amountIn, 1e15, bal0 / 10);
@@ -619,11 +609,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
     /**
      * @notice Fuzz test that EXACT_OUT always rounds UP or equals raw division
      */
-    function testFuzz_onSwap_exactOut_roundsUp(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountOut
-    ) public view {
+    function testFuzz_onSwap_exactOut_roundsUp(uint256 bal0, uint256 bal1, uint256 amountOut) public view {
         bal0 = bound(bal0, 1e18, 1e27);
         bal1 = bound(bal1, 1e18, 1e27);
         // Ensure amountOut is much smaller than bal1 to avoid issues
@@ -656,11 +642,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
      * @notice Verify that EXACT_OUT rounding protects the pool by ensuring
      *         invariant increases after the swap
      */
-    function testFuzz_onSwap_exactOut_invariantIncreases(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountOut
-    ) public view {
+    function testFuzz_onSwap_exactOut_invariantIncreases(uint256 bal0, uint256 bal1, uint256 amountOut) public view {
         bal0 = bound(bal0, 1e18, 1e25);
         bal1 = bound(bal1, 1e18, 1e25);
         amountOut = bound(amountOut, 1e15, bal1 / 100);
@@ -724,11 +706,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
     /**
      * @notice Fuzz test that computeBalance always rounds UP or equals raw division
      */
-    function testFuzz_computeBalance_roundsUp(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 ratio
-    ) public view {
+    function testFuzz_computeBalance_roundsUp(uint256 bal0, uint256 bal1, uint256 ratio) public view {
         bal0 = bound(bal0, 1e15, 1e27);
         bal1 = bound(bal1, 1e15, 1e27);
         ratio = bound(ratio, 0.5e18, 2e18);
@@ -784,11 +762,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
                 uint256 floorResult = (balances[0] * amountOut) / (balances[1] - amountOut);
 
                 // Pool must return >= floor result (ceiling division)
-                assertGe(
-                    amountIn,
-                    floorResult,
-                    "EXACT_OUT must not under-charge: divUpRaw required"
-                );
+                assertGe(amountIn, floorResult, "EXACT_OUT must not under-charge: divUpRaw required");
             }
         }
     }
@@ -871,11 +845,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
      * @notice Fuzz test: EXACT_OUT invariant (k) must never decrease.
      * @dev Strict assertion - no tolerance allowed.
      */
-    function testFuzz_swap_invariantPreserved_exactOut(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountOut
-    ) public view {
+    function testFuzz_swap_invariantPreserved_exactOut(uint256 bal0, uint256 bal1, uint256 amountOut) public view {
         bal0 = bound(bal0, 1e18, 1e27);
         bal1 = bound(bal1, 1e18, 1e27);
         // Ensure amountOut is reasonable (max 10% of bal1 to avoid edge cases)
@@ -908,11 +878,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
         // Strict assertion: invariant must never decrease.
         // EXACT_OUT rounds UP amountIn - user pays more, so pool gains value.
         // No tolerance allowed: pool-favorable rounding guarantees this property.
-        assertGe(
-            invariantAfter,
-            invariantBefore,
-            "EXACT_OUT invariant must not decrease (pool-favorable rounding)"
-        );
+        assertGe(invariantAfter, invariantBefore, "EXACT_OUT invariant must not decrease (pool-favorable rounding)");
     }
 
     /**
@@ -921,8 +887,8 @@ contract BalancerV3RoundingInvariants_Test is Test {
      */
     function test_exactOut_extremeImbalance_invariantPreserved() public view {
         uint256[] memory balances = new uint256[](2);
-        balances[0] = 1e18;       // Very small X
-        balances[1] = 1000e18;    // Large Y (1000:1 ratio)
+        balances[0] = 1e18; // Very small X
+        balances[1] = 1000e18; // Large Y (1000:1 ratio)
 
         uint256 invariantBefore = pool.computeInvariant(balances, Rounding.ROUND_DOWN);
 
@@ -990,11 +956,10 @@ contract BalancerV3RoundingInvariants_Test is Test {
      * @dev For x*y=k: if user wants dy out, they must provide dx such that (x+dx)*(y-dy) >= x*y
      *      This means dx >= (x*dy) / (y-dy), with ceil rounding to ensure >=.
      */
-    function testFuzz_exactOut_chargesEnoughForKPreservation(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountOut
-    ) public view {
+    function testFuzz_exactOut_chargesEnoughForKPreservation(uint256 bal0, uint256 bal1, uint256 amountOut)
+        public
+        view
+    {
         bal0 = bound(bal0, 1e18, 1e24);
         bal1 = bound(bal1, 1e18, 1e24);
         amountOut = bound(amountOut, 1e15, bal1 / 10);
@@ -1257,11 +1222,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
      * @notice Fuzz test with large balances to confirm mulDiv prevents overflow.
      * @dev Explores the range 1e30..1e45 which would overflow raw multiplication.
      */
-    function testFuzz_onSwap_exactIn_largeBalances(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountIn
-    ) public view {
+    function testFuzz_onSwap_exactIn_largeBalances(uint256 bal0, uint256 bal1, uint256 amountIn) public view {
         bal0 = bound(bal0, 1e30, 1e45);
         bal1 = bound(bal1, 1e30, 1e45);
         amountIn = bound(amountIn, 1e28, bal0 / 10);
@@ -1289,11 +1250,7 @@ contract BalancerV3RoundingInvariants_Test is Test {
     /**
      * @notice Fuzz test EXACT_OUT with large balances for overflow protection.
      */
-    function testFuzz_onSwap_exactOut_largeBalances(
-        uint256 bal0,
-        uint256 bal1,
-        uint256 amountOut
-    ) public view {
+    function testFuzz_onSwap_exactOut_largeBalances(uint256 bal0, uint256 bal1, uint256 amountOut) public view {
         bal0 = bound(bal0, 1e30, 1e45);
         bal1 = bound(bal1, 1e30, 1e45);
         amountOut = bound(amountOut, 1e28, bal1 / 100);

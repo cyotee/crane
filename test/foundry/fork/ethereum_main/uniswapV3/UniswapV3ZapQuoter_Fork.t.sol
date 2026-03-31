@@ -25,7 +25,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_WETH_USDC_3000_token0() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         // Position range around current tick
@@ -69,13 +69,8 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
             assertQuoteAccuracy(quote.swap.amountOut, actualSwapOut, 50, "swap quote mismatch"); // 0.5% tolerance
 
             // 2. Mint with the resulting amounts
-            (uint256 mintedAmount0, uint256 mintedAmount1) = mintPosition(
-                pool,
-                address(this),
-                tickLower,
-                tickUpper,
-                quote.liquidity
-            );
+            (uint256 mintedAmount0, uint256 mintedAmount1) =
+                mintPosition(pool, address(this), tickLower, tickUpper, quote.liquidity);
 
             // The minted amounts should be close to quoted
             assertQuoteAccuracy(quote.amount0, mintedAmount0, 100, "mint amount0 mismatch");
@@ -87,7 +82,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_WETH_USDC_3000_token1() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         int24 tickLower = nearestUsableTick(tick - 1200, tickSpacing);
@@ -119,7 +114,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_USDC_USDT_500() public {
         IUniswapV3Pool pool = getPool(USDC_USDT_500);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_LOW);
 
         // Tight range for stablecoin
@@ -153,7 +148,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_WETH_USDC_10000() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_10000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_HIGH);
 
         int24 tickLower = nearestUsableTick(tick - 2000, tickSpacing);
@@ -183,7 +178,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_createZapInParams() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -209,7 +204,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapInPool() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -238,7 +233,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapInPositionManager() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -255,7 +250,8 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
             searchIters: 20
         });
 
-        UniswapV3ZapQuoter.PositionManagerZapInExecution memory exec = UniswapV3ZapQuoter.quoteZapInPositionManager(params);
+        UniswapV3ZapQuoter.PositionManagerZapInExecution memory exec =
+            UniswapV3ZapQuoter.quoteZapInPositionManager(params);
 
         assertTrue(exec.amount0Desired > 0 || exec.amount1Desired > 0, "should have desired amounts");
         assertEq(exec.tickLower, tickLower, "tickLower should match");
@@ -270,7 +266,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapOut_WETH_USDC_3000_wantToken0() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
@@ -301,10 +297,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         // The burn returns both tokens; we swap the *unwanted* token fully into the wanted token.
         if (wantToken0) {
-            if (quote.burnAmount1 > 0) assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            if (quote.burnAmount1 > 0) {
+                assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            }
             assertEq(quote.amountOut, quote.burnAmount0 + quote.swap.amountOut, "output accounting");
         } else {
-            if (quote.burnAmount0 > 0) assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            if (quote.burnAmount0 > 0) {
+                assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            }
             assertEq(quote.amountOut, quote.burnAmount1 + quote.swap.amountOut, "output accounting");
         }
     }
@@ -313,7 +313,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapOut_WETH_USDC_3000_wantToken1() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
@@ -340,10 +340,14 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
 
         // The burn returns both tokens; we swap the *unwanted* token fully into the wanted token.
         if (wantToken0) {
-            if (quote.burnAmount1 > 0) assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            if (quote.burnAmount1 > 0) {
+                assertEq(quote.swapAmountIn, quote.burnAmount1, "should swap all unwanted token1");
+            }
             assertEq(quote.amountOut, quote.burnAmount0 + quote.swap.amountOut, "output accounting");
         } else {
-            if (quote.burnAmount0 > 0) assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            if (quote.burnAmount0 > 0) {
+                assertEq(quote.swapAmountIn, quote.burnAmount0, "should swap all unwanted token0");
+            }
             assertEq(quote.amountOut, quote.burnAmount1 + quote.swap.amountOut, "output accounting");
         }
     }
@@ -352,7 +356,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapOut_singleSidedPosition() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         // Create a position entirely above current tick (only token0)
@@ -387,7 +391,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_createZapOutParams() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -413,7 +417,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapOutPool() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -444,7 +448,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapOutPositionManager() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -464,7 +468,8 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
             maxSwapSteps: 0
         });
 
-        UniswapV3ZapQuoter.PositionManagerZapOutExecution memory exec = UniswapV3ZapQuoter.quoteZapOutPositionManager(params);
+        UniswapV3ZapQuoter.PositionManagerZapOutExecution memory exec =
+            UniswapV3ZapQuoter.quoteZapOutPositionManager(params);
 
         assertEq(exec.liquidity, liquidity, "liquidity should match");
         assertEq(exec.tickLower, tickLower, "tickLower should match");
@@ -479,7 +484,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_smallAmount() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
         int24 tickLower = nearestUsableTick(tick - 600, tickSpacing);
         int24 tickUpper = nearestUsableTick(tick + 600, tickSpacing);
@@ -510,7 +515,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_narrowRange() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         // Very narrow range
@@ -542,7 +547,7 @@ contract UniswapV3ZapQuoter_Fork_Test is TestBase_UniswapV3Fork {
     function test_quoteZapIn_wideRange() public {
         IUniswapV3Pool pool = getPool(WETH_USDC_3000);
 
-        (, int24 tick, ) = getPoolState(pool);
+        (, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = getTickSpacing(FEE_MEDIUM);
 
         // Wide range

@@ -39,19 +39,27 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
     }
 
     function test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesDisabled_targetTokenA_1pct() public {
-        _testZapOutToTargetWithFeePercentage(camelotBalancedPair, camelotBalancedTokenA, camelotBalancedTokenB, false, PERCENTAGE_1_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            camelotBalancedPair, camelotBalancedTokenA, camelotBalancedTokenB, false, PERCENTAGE_1_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesEnabled_targetTokenA_5pct() public {
-        _testZapOutToTargetWithFeePercentage(camelotBalancedPair, camelotBalancedTokenA, camelotBalancedTokenB, true, PERCENTAGE_5_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            camelotBalancedPair, camelotBalancedTokenA, camelotBalancedTokenB, true, PERCENTAGE_5_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesDisabled_targetTokenB_10pct() public {
-        _testZapOutToTargetWithFeePercentage(camelotBalancedPair, camelotBalancedTokenB, camelotBalancedTokenA, false, PERCENTAGE_10_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            camelotBalancedPair, camelotBalancedTokenB, camelotBalancedTokenA, false, PERCENTAGE_10_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Camelot_balancedPool_feesEnabled_targetTokenB_25pct() public {
-        _testZapOutToTargetWithFeePercentage(camelotBalancedPair, camelotBalancedTokenB, camelotBalancedTokenA, true, PERCENTAGE_25_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            camelotBalancedPair, camelotBalancedTokenB, camelotBalancedTokenA, true, PERCENTAGE_25_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Camelot_balancedPool_impossible_scenarios() public {
@@ -80,12 +88,13 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
         (poolState.r0, poolState.r1, f0, f1) = pair.getReserves();
         poolState.totalSupply = pair.totalSupply();
         poolState.kLast = pair.kLast();
-        (poolState.reserveTarget, poolState.reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
+        (poolState.reserveTarget, poolState.reserveSale) =
+            ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
 
         poolState.desiredOut = (poolState.reserveTarget * percentage) / 10000;
         if (poolState.desiredOut > poolState.reserveTarget) poolState.desiredOut = poolState.reserveTarget;
 
-        (poolState.ownerFeeShare, ) = camelotV2Factory.feeInfo();
+        (poolState.ownerFeeShare,) = camelotV2Factory.feeInfo();
 
         poolState.feePercent = pair.token0() == address(targetToken) ? uint256(f0) : uint256(f1);
 
@@ -118,7 +127,12 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
         if (state.saleAmount > 0) {
             saleToken.approve(address(camelotV2Router), state.saleAmount);
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                state.saleAmount, 1, _buildPath(address(saleToken), address(targetToken)), address(this), address(0), block.timestamp
+                state.saleAmount,
+                1,
+                _buildPath(address(saleToken), address(targetToken)),
+                address(this),
+                address(0),
+                block.timestamp
             );
         }
         state.balAfter = targetToken.balanceOf(address(this));
@@ -134,12 +148,13 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
     ) internal {
         _initializeCamelotBalancedPools();
 
-        (uint112 r0, uint112 r1, , ) = pair.getReserves();
+        (uint112 r0, uint112 r1,,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
         uint256 kLast = pair.kLast();
-        (uint256 reserveTarget, uint256 reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
+        (uint256 reserveTarget, uint256 reserveSale) =
+            ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
 
-        (uint256 ownerFeeShare, ) = camelotV2Factory.feeInfo();
+        (uint256 ownerFeeShare,) = camelotV2Factory.feeInfo();
 
         ConstProdUtils.ZapOutToTargetWithFeeArgs memory args1 = ConstProdUtils.ZapOutToTargetWithFeeArgs({
             desiredOut: reserveTarget + 1,

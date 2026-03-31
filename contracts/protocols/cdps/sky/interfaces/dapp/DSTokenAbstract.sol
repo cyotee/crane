@@ -17,9 +17,9 @@ interface DSTokenAbstract {
     function pull(address, uint256) external;
     function move(address, address, uint256) external;
     function mint(uint256) external;
-    function mint(address,uint) external;
+    function mint(address, uint256) external;
     function burn(uint256) external;
-    function burn(address,uint) external;
+    function burn(address, uint256) external;
     function setName(bytes32) external;
     function authority() external view returns (address);
     function owner() external view returns (address);

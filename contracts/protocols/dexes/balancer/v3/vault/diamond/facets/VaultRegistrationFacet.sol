@@ -8,15 +8,26 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import {IERC20MultiTokenErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IERC20MultiTokenErrors
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
-import {ScalingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
 import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
@@ -164,13 +175,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         uint256[] memory exactAmountsIn,
         uint256 minBptAmountOut,
         bytes memory userData
-    )
-        external
-        onlyWhenUnlocked
-        withRegisteredPool(pool)
-        nonReentrant
-        returns (uint256 bptAmountOut)
-    {
+    ) external onlyWhenUnlocked withRegisteredPool(pool) nonReentrant returns (uint256 bptAmountOut) {
         _ensureUnpaused(pool);
 
         PoolData memory poolData = _loadPoolData(pool, Rounding.ROUND_DOWN);
@@ -183,10 +188,8 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         InputHelpers.ensureInputLengthMatch(numTokens, exactAmountsIn.length);
 
         // Scale amounts for pool math (round down)
-        uint256[] memory exactAmountsInScaled18 = exactAmountsIn.copyToScaled18ApplyRateRoundDownArray(
-            poolData.decimalScalingFactors,
-            poolData.tokenRates
-        );
+        uint256[] memory exactAmountsInScaled18 =
+            exactAmountsIn.copyToScaled18ApplyRateRoundDownArray(poolData.decimalScalingFactors, poolData.tokenRates);
 
         // Call beforeInitialize hook if configured
         if (poolData.poolConfigBits.shouldCallBeforeInitialize()) {
@@ -195,13 +198,11 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
 
             // Reload data after hook (rates may have changed)
             poolData.reloadBalancesAndRates(
-                BalancerV3VaultStorageRepo._layout().poolTokenBalances[pool],
-                Rounding.ROUND_DOWN
+                BalancerV3VaultStorageRepo._layout().poolTokenBalances[pool], Rounding.ROUND_DOWN
             );
 
             exactAmountsInScaled18 = exactAmountsIn.copyToScaled18ApplyRateRoundDownArray(
-                poolData.decimalScalingFactors,
-                poolData.tokenRates
+                poolData.decimalScalingFactors, poolData.tokenRates
             );
         }
 
@@ -249,10 +250,10 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
             }
 
             // Tokens must be sorted in ascending order
-            if (token < previousToken) {
+            if (address(token) < address(previousToken)) {
                 revert InputHelpers.TokensNotSorted();
             }
-            if (token == previousToken) {
+            if (address(token) == address(previousToken)) {
                 revert TokenAlreadyRegistered(token);
             }
 
@@ -292,15 +293,10 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         poolConfigBits = poolConfigBits.setPauseWindowEndTime(params.pauseWindowEndTime);
 
         // Set liquidity management flags
-        poolConfigBits = poolConfigBits.setDisableUnbalancedLiquidity(
-            params.liquidityManagement.disableUnbalancedLiquidity
-        );
-        poolConfigBits = poolConfigBits.setAddLiquidityCustom(
-            params.liquidityManagement.enableAddLiquidityCustom
-        );
-        poolConfigBits = poolConfigBits.setRemoveLiquidityCustom(
-            params.liquidityManagement.enableRemoveLiquidityCustom
-        );
+        poolConfigBits =
+            poolConfigBits.setDisableUnbalancedLiquidity(params.liquidityManagement.disableUnbalancedLiquidity);
+        poolConfigBits = poolConfigBits.setAddLiquidityCustom(params.liquidityManagement.enableAddLiquidityCustom);
+        poolConfigBits = poolConfigBits.setRemoveLiquidityCustom(params.liquidityManagement.enableRemoveLiquidityCustom);
         poolConfigBits = poolConfigBits.setDonation(params.liquidityManagement.enableDonation);
 
         // Configure hooks if provided
@@ -313,12 +309,14 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
             poolConfigBits = poolConfigBits.setHookAdjustedAmounts(hookFlags.enableHookAdjustedAmounts);
             poolConfigBits = poolConfigBits.setShouldCallBeforeInitialize(hookFlags.shouldCallBeforeInitialize);
             poolConfigBits = poolConfigBits.setShouldCallAfterInitialize(hookFlags.shouldCallAfterInitialize);
-            poolConfigBits = poolConfigBits.setShouldCallComputeDynamicSwapFee(hookFlags.shouldCallComputeDynamicSwapFee);
+            poolConfigBits =
+                poolConfigBits.setShouldCallComputeDynamicSwapFee(hookFlags.shouldCallComputeDynamicSwapFee);
             poolConfigBits = poolConfigBits.setShouldCallBeforeSwap(hookFlags.shouldCallBeforeSwap);
             poolConfigBits = poolConfigBits.setShouldCallAfterSwap(hookFlags.shouldCallAfterSwap);
             poolConfigBits = poolConfigBits.setShouldCallBeforeAddLiquidity(hookFlags.shouldCallBeforeAddLiquidity);
             poolConfigBits = poolConfigBits.setShouldCallAfterAddLiquidity(hookFlags.shouldCallAfterAddLiquidity);
-            poolConfigBits = poolConfigBits.setShouldCallBeforeRemoveLiquidity(hookFlags.shouldCallBeforeRemoveLiquidity);
+            poolConfigBits =
+                poolConfigBits.setShouldCallBeforeRemoveLiquidity(hookFlags.shouldCallBeforeRemoveLiquidity);
             poolConfigBits = poolConfigBits.setShouldCallAfterRemoveLiquidity(hookFlags.shouldCallAfterRemoveLiquidity);
         }
 
@@ -357,7 +355,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
             IERC20 actualToken = poolData.tokens[i];
 
             // Verify tokens match registration order
-            if (actualToken != tokens[i]) {
+            if (address(actualToken) != address(tokens[i])) {
                 revert TokensMismatch(pool, address(tokens[i]), address(actualToken));
             }
 
@@ -404,9 +402,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
 
     function _getTokenDecimals(IERC20 token) internal view returns (uint8) {
         // Try to get decimals, default to 18 if call fails
-        (bool success, bytes memory data) = address(token).staticcall(
-            abi.encodeWithSignature("decimals()")
-        );
+        (bool success, bytes memory data) = address(token).staticcall(abi.encodeWithSignature("decimals()"));
         if (success && data.length >= 32) {
             return abi.decode(data, (uint8));
         }

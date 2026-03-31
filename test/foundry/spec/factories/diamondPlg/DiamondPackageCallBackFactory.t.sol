@@ -4,7 +4,10 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
 // Core factory and proxy
-import {DiamondPackageCallBackFactory, IDiamondPackageCallBackFactoryInit} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
+import {
+    DiamondPackageCallBackFactory,
+    IDiamondPackageCallBackFactoryInit
+} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
 import {MinimalDiamondCallBackProxy} from "@crane/contracts/proxies/MinimalDiamondCallBackProxy.sol";
 
 // Interfaces
@@ -23,7 +26,9 @@ import {ERC8109IntrospectionFacet} from "@crane/contracts/introspection/ERC8109/
 import {PostDeployAccountHookFacet} from "@crane/contracts/factories/diamondPkg/PostDeployAccountHookFacet.sol";
 
 // Test stubs
-import {GreeterFacetDiamondFactoryPackage} from "@crane/contracts/test/stubs/greeter/GreeterFacetDiamondFactoryPackage.sol";
+import {
+    GreeterFacetDiamondFactoryPackage
+} from "@crane/contracts/test/stubs/greeter/GreeterFacetDiamondFactoryPackage.sol";
 import {IGreeter} from "@crane/contracts/test/stubs/greeter/IGreeter.sol";
 
 /* ========================================================================== */
@@ -36,16 +41,16 @@ import {IGreeter} from "@crane/contracts/test/stubs/greeter/IGreeter.sol";
  * @dev Used to test base facet installation without additional package facets.
  */
 contract MinimalTestPackage is IDiamondFactoryPackage {
-    function packageName() external pure returns (string memory) {
+    function packageName() public pure returns (string memory) {
         return "MinimalTestPackage";
     }
 
     function packageMetadata()
         external
-        view
+        pure
         returns (string memory name_, bytes4[] memory interfaces, address[] memory facets)
     {
-        name_ = "MinimalTestPackage";
+        name_ = packageName();
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
@@ -63,10 +68,8 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     }
 
     function diamondConfig() public pure returns (IDiamondFactoryPackage.DiamondConfig memory) {
-        return IDiamondFactoryPackage.DiamondConfig({
-            facetCuts: new IDiamond.FacetCut[](0),
-            interfaces: new bytes4[](0)
-        });
+        return
+            IDiamondFactoryPackage.DiamondConfig({facetCuts: new IDiamond.FacetCut[](0), interfaces: new bytes4[](0)});
     }
 
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
@@ -140,17 +143,12 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function facetCuts() public view returns (IDiamond.FacetCut[] memory cuts) {
         cuts = new IDiamond.FacetCut[](1);
         cuts[0] = IDiamond.FacetCut({
-            facetAddress: address(SELF),
-            action: IDiamond.FacetCutAction.Add,
-            functionSelectors: facetFuncs()
+            facetAddress: address(SELF), action: IDiamond.FacetCutAction.Add, functionSelectors: facetFuncs()
         });
     }
 
     function diamondConfig() public view returns (IDiamondFactoryPackage.DiamondConfig memory) {
-        return IDiamondFactoryPackage.DiamondConfig({
-            facetCuts: facetCuts(),
-            interfaces: facetInterfaces()
-        });
+        return IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
 
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
@@ -302,16 +300,10 @@ contract DiamondPackageCallBackFactory_Test is Test {
         bytes memory pkgArgs = abi.encode("calc address test");
 
         // Calculate expected address before deployment
-        address expectedAddress = factory.calcAddress(
-            IDiamondFactoryPackage(address(minimalPackage)),
-            pkgArgs
-        );
+        address expectedAddress = factory.calcAddress(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs);
 
         // Deploy
-        address actualAddress = factory.deploy(
-            IDiamondFactoryPackage(address(minimalPackage)),
-            pkgArgs
-        );
+        address actualAddress = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs);
 
         assertEq(expectedAddress, actualAddress, "calcAddress should match deployed address");
     }
@@ -347,14 +339,8 @@ contract DiamondPackageCallBackFactory_Test is Test {
     function testFuzz_calcAddress_alwaysMatchesDeployed(bytes memory randomArgs) public {
         vm.assume(randomArgs.length > 0 && randomArgs.length < 1000);
 
-        address expected = factory.calcAddress(
-            IDiamondFactoryPackage(address(minimalPackage)),
-            randomArgs
-        );
-        address actual = factory.deploy(
-            IDiamondFactoryPackage(address(minimalPackage)),
-            randomArgs
-        );
+        address expected = factory.calcAddress(IDiamondFactoryPackage(address(minimalPackage)), randomArgs);
+        address actual = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), randomArgs);
 
         assertEq(expected, actual, "calcAddress must always match deployed address");
     }
@@ -409,21 +395,14 @@ contract DiamondPackageCallBackFactory_Test is Test {
         IERC165 erc165 = IERC165(proxy);
 
         // Should support IERC165
-        assertTrue(
-            erc165.supportsInterface(type(IERC165).interfaceId),
-            "Should support IERC165"
-        );
+        assertTrue(erc165.supportsInterface(type(IERC165).interfaceId), "Should support IERC165");
 
         // Should support IDiamondLoupe
-        assertTrue(
-            erc165.supportsInterface(type(IDiamondLoupe).interfaceId),
-            "Should support IDiamondLoupe"
-        );
+        assertTrue(erc165.supportsInterface(type(IDiamondLoupe).interfaceId), "Should support IDiamondLoupe");
 
         // Should support IERC8109Introspection
         assertTrue(
-            erc165.supportsInterface(type(IERC8109Introspection).interfaceId),
-            "Should support IERC8109Introspection"
+            erc165.supportsInterface(type(IERC8109Introspection).interfaceId), "Should support IERC8109Introspection"
         );
     }
 
@@ -464,10 +443,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
 
         // Verify proxy supports IGreeter interface
         IERC165 erc165 = IERC165(proxy);
-        assertTrue(
-            erc165.supportsInterface(type(IGreeter).interfaceId),
-            "Should support IGreeter interface"
-        );
+        assertTrue(erc165.supportsInterface(type(IGreeter).interfaceId), "Should support IGreeter interface");
 
         // Verify we can call greeter functions
         IGreeter greeter = IGreeter(proxy);
@@ -596,9 +572,8 @@ contract DiamondPackageCallBackFactory_Test is Test {
         address proxy = factory.deploy(IDiamondFactoryPackage(address(storageCheckPackage)), pkgArgs);
 
         // Call getStorageData on proxy via staticcall to read storage
-        (bool success, bytes memory data) = proxy.staticcall(
-            abi.encodeWithSelector(StorageCheckPackage.getStorageData.selector)
-        );
+        (bool success, bytes memory data) =
+            proxy.staticcall(abi.encodeWithSelector(StorageCheckPackage.getStorageData.selector));
 
         assertTrue(success, "getStorageData call should succeed");
 
@@ -632,14 +607,8 @@ contract DiamondPackageCallBackFactory_Test is Test {
         string memory message1 = "Proxy 1 message";
         string memory message2 = "Proxy 2 message";
 
-        address proxy1 = factory.deploy(
-            IDiamondFactoryPackage(address(greeterPackage)),
-            abi.encode(message1)
-        );
-        address proxy2 = factory.deploy(
-            IDiamondFactoryPackage(address(greeterPackage)),
-            abi.encode(message2)
-        );
+        address proxy1 = factory.deploy(IDiamondFactoryPackage(address(greeterPackage)), abi.encode(message1));
+        address proxy2 = factory.deploy(IDiamondFactoryPackage(address(greeterPackage)), abi.encode(message2));
 
         // Proxies should have different addresses
         assertTrue(proxy1 != proxy2, "Proxies should have different addresses");

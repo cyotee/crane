@@ -2,16 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
 
-import { FeeBurnerAuthentication } from "../FeeBurnerAuthentication.sol";
+import {FeeBurnerAuthentication} from "../FeeBurnerAuthentication.sol";
 
 contract FeeBurnerAuthenticationMock is FeeBurnerAuthentication {
-    constructor(
-        IProtocolFeeSweeper protocolFeeSweeper,
-        address initialOwner
-    ) FeeBurnerAuthentication(protocolFeeSweeper, initialOwner) {
+    constructor(IProtocolFeeSweeper protocolFeeSweeper, address initialOwner)
+        FeeBurnerAuthentication(protocolFeeSweeper, initialOwner)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 

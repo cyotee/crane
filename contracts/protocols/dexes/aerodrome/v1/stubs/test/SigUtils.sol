@@ -33,8 +33,7 @@ contract SigUtils {
         //             _delegation.deadline
         //         )
         //     );
-        return
-            abi.encode(
+        return abi.encode(
                 DELEGATION_TYPEHASH,
                 _delegation.delegator,
                 _delegation.delegatee,

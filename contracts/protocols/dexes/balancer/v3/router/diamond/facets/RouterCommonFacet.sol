@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
@@ -36,7 +36,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * - multicall for batched delegatecalls
  */
 contract RouterCommonFacet is IRouterCommon, BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -132,9 +131,13 @@ contract RouterCommonFacet is IRouterCommon, BalancerV3RouterModifiers, IFacet {
     }
 
     /// @inheritdoc IRouterCommon
-    function multicall(
-        bytes[] calldata data
-    ) public payable virtual saveSenderAndManageEth returns (bytes[] memory results) {
+    function multicall(bytes[] calldata data)
+        public
+        payable
+        virtual
+        saveSenderAndManageEth
+        returns (bytes[] memory results)
+    {
         // Though theoretically these calls could be batched, the normal use case for multicall
         // involves some combination of operation and token transfers (either permit2 or direct to Vault),
         // which cannot be done with multicall alone.
@@ -174,8 +177,8 @@ contract RouterCommonFacet is IRouterCommon, BalancerV3RouterModifiers, IFacet {
             SignatureParts memory signatureParts = _getSignatureParts(signature);
             PermitApproval memory permitApproval = permitBatch[i];
 
-            try
-                IERC20Permit(permitApproval.token).permit(
+            try IERC20Permit(permitApproval.token)
+                .permit(
                     permitApproval.owner,
                     address(this),
                     permitApproval.amount,
@@ -183,10 +186,10 @@ contract RouterCommonFacet is IRouterCommon, BalancerV3RouterModifiers, IFacet {
                     signatureParts.v,
                     signatureParts.r,
                     signatureParts.s
-                )
-            {
-                // OK; carry on.
-            } catch (bytes memory returnData) {
+                ) {
+            // OK; carry on.
+            }
+            catch (bytes memory returnData) {
                 // Did it fail because the permit was executed (possible DoS attack),
                 // or was it something else (e.g., deadline, invalid signature)?
                 if (

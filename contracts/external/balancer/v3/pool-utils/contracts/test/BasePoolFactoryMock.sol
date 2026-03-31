@@ -2,21 +2,19 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BasePoolFactory } from "../BasePoolFactory.sol";
+import {BasePoolFactory} from "../BasePoolFactory.sol";
 
 contract BasePoolFactoryMock is BasePoolFactory {
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        bytes memory creationCode
-    ) BasePoolFactory(vault, pauseWindowDuration, creationCode) {
+    constructor(IVault vault, uint32 pauseWindowDuration, bytes memory creationCode)
+        BasePoolFactory(vault, pauseWindowDuration, creationCode)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -38,13 +36,7 @@ contract BasePoolFactoryMock is BasePoolFactory {
         LiquidityManagement memory liquidityManagement
     ) external {
         _registerPoolWithVault(
-            pool,
-            tokens,
-            swapFeePercentage,
-            protocolFeeExempt,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
+            pool, tokens, swapFeePercentage, protocolFeeExempt, roleAccounts, poolHooksContract, liquidityManagement
         );
     }
 

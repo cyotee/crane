@@ -3,14 +3,14 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import { RouterHooks } from "./RouterHooks.sol";
+import {RouterHooks} from "./RouterHooks.sol";
 
 /**
  * @notice Entrypoint for swaps, liquidity operations, and corresponding queries.
@@ -18,12 +18,9 @@ import { RouterHooks } from "./RouterHooks.sol";
  * These interact with the Vault, transfer tokens, settle accounting, and handle wrapping and unwrapping ETH.
  */
 contract Router is IRouter, RouterHooks {
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) RouterHooks(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        RouterHooks(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -40,24 +37,23 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 bptAmountOut) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        RouterHooks.initializeHook,
-                        InitializeHookParams({
-                            sender: msg.sender,
-                            pool: pool,
-                            tokens: tokens,
-                            exactAmountsIn: exactAmountsIn,
-                            minBptAmountOut: minBptAmountOut,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    RouterHooks.initializeHook,
+                    InitializeHookParams({
+                        sender: msg.sender,
+                        pool: pool,
+                        tokens: tokens,
+                        exactAmountsIn: exactAmountsIn,
+                        minBptAmountOut: minBptAmountOut,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256)
+        );
     }
 
     /***************************************************************************
@@ -72,7 +68,7 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsIn) {
-        (amountsIn, , ) = abi.decode(
+        (amountsIn,,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.addLiquidityHook,
@@ -98,7 +94,7 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsIn) {
-        (amountsIn, , ) = abi.decode(
+        (amountsIn,,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryAddLiquidityHook,
@@ -127,7 +123,7 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 bptAmountOut) {
-        (, bptAmountOut, ) = abi.decode(
+        (, bptAmountOut,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.addLiquidityHook,
@@ -153,7 +149,7 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountOut) {
-        (, bptAmountOut, ) = abi.decode(
+        (, bptAmountOut,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryAddLiquidityHook,
@@ -183,13 +179,10 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 amountIn) {
-        (uint256[] memory maxAmountsIn, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool,
-            tokenIn,
-            maxAmountIn
-        );
+        (uint256[] memory maxAmountsIn, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, tokenIn, maxAmountIn);
 
-        (uint256[] memory amountsIn, , ) = abi.decode(
+        (uint256[] memory amountsIn,,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.addLiquidityHook,
@@ -218,13 +211,10 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 amountIn) {
-        (uint256[] memory maxAmountsIn, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool,
-            tokenIn,
-            _MAX_AMOUNT
-        );
+        (uint256[] memory maxAmountsIn, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, tokenIn, _MAX_AMOUNT);
 
-        (uint256[] memory amountsIn, , ) = abi.decode(
+        (uint256[] memory amountsIn,,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryAddLiquidityHook,
@@ -248,12 +238,11 @@ contract Router is IRouter, RouterHooks {
     }
 
     /// @inheritdoc IRouter
-    function donate(
-        address pool,
-        uint256[] memory amountsIn,
-        bool wethIsEth,
-        bytes memory userData
-    ) external payable saveSender(msg.sender) {
+    function donate(address pool, uint256[] memory amountsIn, bool wethIsEth, bytes memory userData)
+        external
+        payable
+        saveSender(msg.sender)
+    {
         _vault.unlock(
             abi.encodeCall(
                 RouterHooks.addLiquidityHook,
@@ -283,24 +272,23 @@ contract Router is IRouter, RouterHooks {
         saveSender(msg.sender)
         returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData)
     {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        RouterHooks.addLiquidityHook,
-                        AddLiquidityHookParams({
-                            sender: msg.sender,
-                            pool: pool,
-                            maxAmountsIn: maxAmountsIn,
-                            minBptAmountOut: minBptAmountOut,
-                            kind: AddLiquidityKind.CUSTOM,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], uint256, bytes)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    RouterHooks.addLiquidityHook,
+                    AddLiquidityHookParams({
+                        sender: msg.sender,
+                        pool: pool,
+                        maxAmountsIn: maxAmountsIn,
+                        minBptAmountOut: minBptAmountOut,
+                        kind: AddLiquidityKind.CUSTOM,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256[], uint256, bytes)
+        );
     }
 
     /// @inheritdoc IRouter
@@ -311,26 +299,25 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsIn, uint256 bptAmountOut, bytes memory returnData) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        RouterHooks.queryAddLiquidityHook,
-                        AddLiquidityHookParams({
-                            // We use the Router as a sender to simplify basic query functions,
-                            // but it is possible to add liquidity to any recipient.
-                            sender: address(this),
-                            pool: pool,
-                            maxAmountsIn: maxAmountsIn,
-                            minBptAmountOut: minBptAmountOut,
-                            kind: AddLiquidityKind.CUSTOM,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], uint256, bytes)
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    RouterHooks.queryAddLiquidityHook,
+                    AddLiquidityHookParams({
+                        // We use the Router as a sender to simplify basic query functions,
+                        // but it is possible to add liquidity to any recipient.
+                        sender: address(this),
+                        pool: pool,
+                        maxAmountsIn: maxAmountsIn,
+                        minBptAmountOut: minBptAmountOut,
+                        kind: AddLiquidityKind.CUSTOM,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256[], uint256, bytes)
+        );
     }
 
     /***************************************************************************
@@ -345,7 +332,7 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsOut) {
-        (, amountsOut, ) = abi.decode(
+        (, amountsOut,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.removeLiquidityHook,
@@ -372,7 +359,7 @@ contract Router is IRouter, RouterHooks {
         bytes memory userData
     ) external saveSender(sender) returns (uint256[] memory amountsOut) {
         uint256[] memory minAmountsOut = new uint256[](_vault.getPoolTokens(pool).length);
-        (, amountsOut, ) = abi.decode(
+        (, amountsOut,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryRemoveLiquidityHook,
@@ -402,13 +389,10 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 amountOut) {
-        (uint256[] memory minAmountsOut, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool,
-            tokenOut,
-            minAmountOut
-        );
+        (uint256[] memory minAmountsOut, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, tokenOut, minAmountOut);
 
-        (, uint256[] memory amountsOut, ) = abi.decode(
+        (, uint256[] memory amountsOut,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.removeLiquidityHook,
@@ -440,7 +424,7 @@ contract Router is IRouter, RouterHooks {
         // We cannot use 0 as min amount out, as this value is used to figure out the token index.
         (uint256[] memory minAmountsOut, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, 1);
 
-        (, uint256[] memory amountsOut, ) = abi.decode(
+        (, uint256[] memory amountsOut,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryRemoveLiquidityHook,
@@ -472,9 +456,9 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes memory userData
     ) external payable saveSender(msg.sender) returns (uint256 bptAmountIn) {
-        (uint256[] memory minAmountsOut, ) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
+        (uint256[] memory minAmountsOut,) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
 
-        (bptAmountIn, , ) = abi.decode(
+        (bptAmountIn,,) = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
                     RouterHooks.removeLiquidityHook,
@@ -503,9 +487,9 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountIn) {
-        (uint256[] memory minAmountsOut, ) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
+        (uint256[] memory minAmountsOut,) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, exactAmountOut);
 
-        (bptAmountIn, , ) = abi.decode(
+        (bptAmountIn,,) = abi.decode(
             _vault.quote(
                 abi.encodeCall(
                     RouterHooks.queryRemoveLiquidityHook,
@@ -541,24 +525,23 @@ contract Router is IRouter, RouterHooks {
         saveSender(msg.sender)
         returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData)
     {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        RouterHooks.removeLiquidityHook,
-                        RemoveLiquidityHookParams({
-                            sender: msg.sender,
-                            pool: pool,
-                            minAmountsOut: minAmountsOut,
-                            maxBptAmountIn: maxBptAmountIn,
-                            kind: RemoveLiquidityKind.CUSTOM,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256, uint256[], bytes)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    RouterHooks.removeLiquidityHook,
+                    RemoveLiquidityHookParams({
+                        sender: msg.sender,
+                        pool: pool,
+                        minAmountsOut: minAmountsOut,
+                        maxBptAmountIn: maxBptAmountIn,
+                        kind: RemoveLiquidityKind.CUSTOM,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256, uint256[], bytes)
+        );
     }
 
     /// @inheritdoc IRouter
@@ -569,39 +552,37 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 bptAmountIn, uint256[] memory amountsOut, bytes memory returnData) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        RouterHooks.queryRemoveLiquidityHook,
-                        RemoveLiquidityHookParams({
-                            // We use the Router as a sender to simplify basic query functions,
-                            // but it is possible to remove liquidity from any sender.
-                            sender: address(this),
-                            pool: pool,
-                            minAmountsOut: minAmountsOut,
-                            maxBptAmountIn: maxBptAmountIn,
-                            kind: RemoveLiquidityKind.CUSTOM,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256, uint256[], bytes)
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    RouterHooks.queryRemoveLiquidityHook,
+                    RemoveLiquidityHookParams({
+                        // We use the Router as a sender to simplify basic query functions,
+                        // but it is possible to remove liquidity from any sender.
+                        sender: address(this),
+                        pool: pool,
+                        minAmountsOut: minAmountsOut,
+                        maxBptAmountIn: maxBptAmountIn,
+                        kind: RemoveLiquidityKind.CUSTOM,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256, uint256[], bytes)
+        );
     }
 
     /// @inheritdoc IRouter
-    function removeLiquidityRecovery(
-        address pool,
-        uint256 exactBptAmountIn,
-        uint256[] memory minAmountsOut
-    ) external payable returns (uint256[] memory amountsOut) {
+    function removeLiquidityRecovery(address pool, uint256 exactBptAmountIn, uint256[] memory minAmountsOut)
+        external
+        payable
+        returns (uint256[] memory amountsOut)
+    {
         amountsOut = abi.decode(
             _vault.unlock(
                 abi.encodeCall(
-                    RouterHooks.removeLiquidityRecoveryHook,
-                    (pool, msg.sender, exactBptAmountIn, minAmountsOut)
+                    RouterHooks.removeLiquidityRecoveryHook, (pool, msg.sender, exactBptAmountIn, minAmountsOut)
                 )
             ),
             (uint256[])
@@ -609,20 +590,16 @@ contract Router is IRouter, RouterHooks {
     }
 
     /// @inheritdoc IRouter
-    function queryRemoveLiquidityRecovery(
-        address pool,
-        uint256 exactBptAmountIn
-    ) external returns (uint256[] memory amountsOut) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        RouterHooks.queryRemoveLiquidityRecoveryHook,
-                        (pool, address(this), exactBptAmountIn)
-                    )
-                ),
-                (uint256[])
-            );
+    function queryRemoveLiquidityRecovery(address pool, uint256 exactBptAmountIn)
+        external
+        returns (uint256[] memory amountsOut)
+    {
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(RouterHooks.queryRemoveLiquidityRecoveryHook, (pool, address(this), exactBptAmountIn))
+            ),
+            (uint256[])
+        );
     }
 
     /***************************************************************************
@@ -640,27 +617,26 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes calldata userData
     ) external payable saveSender(msg.sender) returns (uint256) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        RouterHooks.swapSingleTokenHook,
-                        SwapSingleTokenHookParams({
-                            sender: msg.sender,
-                            kind: SwapKind.EXACT_IN,
-                            pool: pool,
-                            tokenIn: tokenIn,
-                            tokenOut: tokenOut,
-                            amountGiven: exactAmountIn,
-                            limit: minAmountOut,
-                            deadline: deadline,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    RouterHooks.swapSingleTokenHook,
+                    SwapSingleTokenHookParams({
+                        sender: msg.sender,
+                        kind: SwapKind.EXACT_IN,
+                        pool: pool,
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        amountGiven: exactAmountIn,
+                        limit: minAmountOut,
+                        deadline: deadline,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256)
+        );
     }
 
     /// @inheritdoc IRouter
@@ -672,27 +648,26 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 amountCalculated) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        RouterHooks.querySwapHook,
-                        SwapSingleTokenHookParams({
-                            sender: msg.sender,
-                            kind: SwapKind.EXACT_IN,
-                            pool: pool,
-                            tokenIn: tokenIn,
-                            tokenOut: tokenOut,
-                            amountGiven: exactAmountIn,
-                            limit: 0,
-                            deadline: _MAX_AMOUNT,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    RouterHooks.querySwapHook,
+                    SwapSingleTokenHookParams({
+                        sender: msg.sender,
+                        kind: SwapKind.EXACT_IN,
+                        pool: pool,
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        amountGiven: exactAmountIn,
+                        limit: 0,
+                        deadline: _MAX_AMOUNT,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256)
+        );
     }
 
     /// @inheritdoc IRouter
@@ -706,27 +681,26 @@ contract Router is IRouter, RouterHooks {
         bool wethIsEth,
         bytes calldata userData
     ) external payable saveSender(msg.sender) returns (uint256) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        RouterHooks.swapSingleTokenHook,
-                        SwapSingleTokenHookParams({
-                            sender: msg.sender,
-                            kind: SwapKind.EXACT_OUT,
-                            pool: pool,
-                            tokenIn: tokenIn,
-                            tokenOut: tokenOut,
-                            amountGiven: exactAmountOut,
-                            limit: maxAmountIn,
-                            deadline: deadline,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    RouterHooks.swapSingleTokenHook,
+                    SwapSingleTokenHookParams({
+                        sender: msg.sender,
+                        kind: SwapKind.EXACT_OUT,
+                        pool: pool,
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        amountGiven: exactAmountOut,
+                        limit: maxAmountIn,
+                        deadline: deadline,
+                        wethIsEth: wethIsEth,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256)
+        );
     }
 
     /// @inheritdoc IRouter
@@ -738,26 +712,25 @@ contract Router is IRouter, RouterHooks {
         address sender,
         bytes memory userData
     ) external saveSender(sender) returns (uint256 amountCalculated) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        RouterHooks.querySwapHook,
-                        SwapSingleTokenHookParams({
-                            sender: msg.sender,
-                            kind: SwapKind.EXACT_OUT,
-                            pool: pool,
-                            tokenIn: tokenIn,
-                            tokenOut: tokenOut,
-                            amountGiven: exactAmountOut,
-                            limit: _MAX_AMOUNT,
-                            deadline: type(uint256).max,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256)
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    RouterHooks.querySwapHook,
+                    SwapSingleTokenHookParams({
+                        sender: msg.sender,
+                        kind: SwapKind.EXACT_OUT,
+                        pool: pool,
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        amountGiven: exactAmountOut,
+                        limit: _MAX_AMOUNT,
+                        deadline: type(uint256).max,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256)
+        );
     }
 }

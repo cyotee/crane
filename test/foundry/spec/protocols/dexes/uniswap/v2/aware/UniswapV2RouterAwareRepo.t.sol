@@ -71,9 +71,7 @@ contract UniswapV2RouterAwareRepo_Test is Test {
 
         assertEq(address(harness.uniswapV2Router()), address(0), "Default slot should be empty");
         assertEq(
-            address(harness.uniswapV2RouterFromSlot(customSlot)),
-            address(mockRouter),
-            "Custom slot should have router"
+            address(harness.uniswapV2RouterFromSlot(customSlot)), address(mockRouter), "Custom slot should have router"
         );
     }
 

@@ -11,13 +11,15 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
 import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
 import {IBatchRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
-import {ICompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
 import {IBufferRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBufferRouter.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -85,12 +87,9 @@ interface IBalancerV3RouterDFPkg {
      * @param routerVersion Version string
      * @return router The deployed router address
      */
-    function deployRouter(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string calldata routerVersion
-    ) external returns (address router);
+    function deployRouter(IVault vault, IWETH weth, IPermit2 permit2, string calldata routerVersion)
+        external
+        returns (address router);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -174,22 +173,12 @@ contract BalancerV3RouterDFPkg is IDiamondFactoryPackage, IBalancerV3RouterDFPkg
     /**
      * @inheritdoc IBalancerV3RouterDFPkg
      */
-    function deployRouter(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string calldata routerVersion
-    ) public returns (address router) {
+    function deployRouter(IVault vault, IWETH weth, IPermit2 permit2, string calldata routerVersion)
+        public
+        returns (address router)
+    {
         router = DIAMOND_PACKAGE_FACTORY.deploy(
-            this,
-            abi.encode(
-                PkgArgs({
-                    vault: vault,
-                    weth: weth,
-                    permit2: permit2,
-                    routerVersion: routerVersion
-                })
-            )
+            this, abi.encode(PkgArgs({vault: vault, weth: weth, permit2: permit2, routerVersion: routerVersion}))
         );
     }
 
@@ -313,10 +302,7 @@ contract BalancerV3RouterDFPkg is IDiamondFactoryPackage, IBalancerV3RouterDFPkg
      * @notice Returns the diamond configuration.
      */
     function diamondConfig() public view returns (DiamondConfig memory config) {
-        config = IDiamondFactoryPackage.DiamondConfig({
-            facetCuts: facetCuts(),
-            interfaces: facetInterfaces()
-        });
+        config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
 
     /**
@@ -341,7 +327,11 @@ contract BalancerV3RouterDFPkg is IDiamondFactoryPackage, IBalancerV3RouterDFPkg
     function updatePkg(
         address, // expectedProxy
         bytes memory // pkgArgs
-    ) public virtual returns (bool) {
+    )
+        public
+        virtual
+        returns (bool)
+    {
         // Router doesn't support updates after deployment
         return false;
     }
@@ -354,10 +344,7 @@ contract BalancerV3RouterDFPkg is IDiamondFactoryPackage, IBalancerV3RouterDFPkg
         PkgArgs memory decodedArgs = abi.decode(initArgs, (PkgArgs));
 
         BalancerV3RouterStorageRepo._initialize(
-            decodedArgs.vault,
-            decodedArgs.weth,
-            decodedArgs.permit2,
-            decodedArgs.routerVersion
+            decodedArgs.vault, decodedArgs.weth, decodedArgs.permit2, decodedArgs.routerVersion
         );
     }
 

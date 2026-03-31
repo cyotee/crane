@@ -2,11 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import { IProtocolFeeHelper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeHelper.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeHelper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeHelper.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PoolHelperCommon } from "./PoolHelperCommon.sol";
+import {PoolHelperCommon} from "./PoolHelperCommon.sol";
 
 contract ProtocolFeeHelper is IProtocolFeeHelper, PoolHelperCommon {
     constructor(IVault vault, address initialOwner) PoolHelperCommon(vault, initialOwner) {
@@ -18,23 +22,23 @@ contract ProtocolFeeHelper is IProtocolFeeHelper, PoolHelperCommon {
     ***************************************************************************/
 
     /// @inheritdoc IProtocolFeeHelper
-    function setProtocolSwapFeePercentage(
-        address pool,
-        uint256 newProtocolSwapFeePercentage
-    ) external withValidPoolForSender(pool) {
+    function setProtocolSwapFeePercentage(address pool, uint256 newProtocolSwapFeePercentage)
+        external
+        withValidPoolForSender(pool)
+    {
         _getProtocolFeeController().setProtocolSwapFeePercentage(pool, newProtocolSwapFeePercentage);
     }
 
     /// @inheritdoc IProtocolFeeHelper
-    function setProtocolYieldFeePercentage(
-        address pool,
-        uint256 newProtocolYieldFeePercentage
-    ) external withValidPoolForSender(pool) {
+    function setProtocolYieldFeePercentage(address pool, uint256 newProtocolYieldFeePercentage)
+        external
+        withValidPoolForSender(pool)
+    {
         _getProtocolFeeController().setProtocolYieldFeePercentage(pool, newProtocolYieldFeePercentage);
     }
 
     /***************************************************************************
-                                Internal functions                                
+                                Internal functions
     ***************************************************************************/
 
     // The protocol fee controller is upgradeable in the Vault, so we must fetch it every time.

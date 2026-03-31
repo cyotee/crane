@@ -9,12 +9,18 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     TokenInfo,
@@ -29,20 +35,26 @@ import {
     PoolSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { PoolConfigLib, PoolConfigBits } from "../../contracts/lib/PoolConfigLib.sol";
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { VaultExplorer } from "../../contracts/VaultExplorer.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {PoolConfigLib, PoolConfigBits} from "../../contracts/lib/PoolConfigLib.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {VaultExplorer} from "../../contracts/VaultExplorer.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract VaultExplorerTest is BaseVaultTest {
     using PoolConfigLib for PoolConfigBits;
@@ -235,11 +247,7 @@ contract VaultExplorerTest is BaseVaultTest {
     function testGetPoolTokenRates() public view {
         (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates) = explorer.getPoolTokenRates(pool);
 
-        assertEq(
-            decimalScalingFactors.length,
-            2,
-            "length of decimalScalingFactors should be equal to amount of tokens"
-        );
+        assertEq(decimalScalingFactors.length, 2, "length of decimalScalingFactors should be equal to amount of tokens");
 
         assertEq(rateProviders[daiIdx].getRate(), DAI_MOCK_RATE, "DAI rate is wrong");
         assertEq(rateProviders[usdcIdx].getRate(), USDC_MOCK_RATE, "USDC rate is wrong");
@@ -273,12 +281,10 @@ contract VaultExplorerTest is BaseVaultTest {
         assertEq(poolData.balancesRaw[usdcIdx], USDC_RAW_BALANCE, "USDC raw balance wrong");
 
         uint256 daiLiveBalance = poolData.balancesRaw[daiIdx].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[daiIdx],
-            poolData.tokenRates[daiIdx]
+            poolData.decimalScalingFactors[daiIdx], poolData.tokenRates[daiIdx]
         );
         uint256 usdcLiveBalance = poolData.balancesRaw[usdcIdx].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[usdcIdx],
-            poolData.tokenRates[usdcIdx]
+            poolData.decimalScalingFactors[usdcIdx], poolData.tokenRates[usdcIdx]
         );
 
         assertEq(poolData.balancesLiveScaled18[daiIdx], daiLiveBalance, "DAI live balance wrong");
@@ -324,9 +330,7 @@ contract VaultExplorerTest is BaseVaultTest {
 
         assertEq(address(tokenInfo[daiIdx].rateProvider), address(rateProviders[daiIdx]), "DAI rate provider mismatch");
         assertEq(
-            address(tokenInfo[usdcIdx].rateProvider),
-            address(rateProviders[usdcIdx]),
-            "USDC rate provider mismatch"
+            address(tokenInfo[usdcIdx].rateProvider), address(rateProviders[usdcIdx]), "USDC rate provider mismatch"
         );
 
         assertEq(balancesRaw[daiIdx], DAI_RAW_BALANCE, "DAI raw balance wrong");
@@ -357,12 +361,10 @@ contract VaultExplorerTest is BaseVaultTest {
         PoolData memory poolData = vault.getPoolData(pool);
 
         uint256 daiLiveBalance = poolData.balancesRaw[daiIdx].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[daiIdx],
-            poolData.tokenRates[daiIdx]
+            poolData.decimalScalingFactors[daiIdx], poolData.tokenRates[daiIdx]
         );
         uint256 usdcLiveBalance = poolData.balancesRaw[usdcIdx].toScaled18ApplyRateRoundDown(
-            poolData.decimalScalingFactors[usdcIdx],
-            poolData.tokenRates[usdcIdx]
+            poolData.decimalScalingFactors[usdcIdx], poolData.tokenRates[usdcIdx]
         );
 
         uint256[] memory vaultBalancesLiveScaled18 = vault.getCurrentLiveBalances(pool);
@@ -444,9 +446,7 @@ contract VaultExplorerTest is BaseVaultTest {
         assertEq(daiBobAllowance, 0, "Wrong DAI Bob allowance");
 
         assertEq(
-            explorer.allowance(address(dai), lp, address(vault)),
-            daiVaultAllowance,
-            "DAI Vault allowance mismatch"
+            explorer.allowance(address(dai), lp, address(vault)), daiVaultAllowance, "DAI Vault allowance mismatch"
         );
         assertEq(explorer.allowance(address(dai), alice, bob), daiBobAllowance, "DAI Bob allowance mismatch");
     }
@@ -461,8 +461,8 @@ contract VaultExplorerTest is BaseVaultTest {
     }
 
     function testGetPoolPausedState() public {
-        (bool paused, uint256 poolPauseWindowEndTime, uint256 poolBufferPeriodEndTime, address pauseManager) = explorer
-            .getPoolPausedState(pool);
+        (bool paused, uint256 poolPauseWindowEndTime, uint256 poolBufferPeriodEndTime, address pauseManager) =
+            explorer.getPoolPausedState(pool);
 
         assertFalse(paused, "Pool is initially paused");
         assertEq(poolPauseWindowEndTime, 0, "Non-zero initial end time");
@@ -475,7 +475,7 @@ contract VaultExplorerTest is BaseVaultTest {
         vault.manualSetPoolPauseWindowEndTime(pool, newEndTime);
         vault.manualPausePool(pool);
 
-        (paused, poolPauseWindowEndTime, poolBufferPeriodEndTime, ) = explorer.getPoolPausedState(pool);
+        (paused, poolPauseWindowEndTime, poolBufferPeriodEndTime,) = explorer.getPoolPausedState(pool);
 
         assertTrue(paused, "Pool is not paused");
         assertEq(poolPauseWindowEndTime, newEndTime, "Non-zero initial end time");
@@ -688,15 +688,15 @@ contract VaultExplorerTest is BaseVaultTest {
     }
 
     function testGetVaultPausedState() public {
-        (bool vaultIsPaused, uint32 vaultPauseWindowEndTime, uint32 vaultBufferPeriodEndTime) = vault
-            .getVaultPausedState();
+        (bool vaultIsPaused, uint32 vaultPauseWindowEndTime, uint32 vaultBufferPeriodEndTime) =
+            vault.getVaultPausedState();
 
         assertFalse(vaultIsPaused, "Vault is paused");
         assertGt(vaultPauseWindowEndTime, 0, "Zero pause window end time");
         assertGt(vaultBufferPeriodEndTime, 0, "Zero buffer period end time");
 
-        (bool explorerIsPaused, uint32 explorerPauseWindowEndTime, uint32 explorerBufferPeriodEndTime) = explorer
-            .getVaultPausedState();
+        (bool explorerIsPaused, uint32 explorerPauseWindowEndTime, uint32 explorerBufferPeriodEndTime) =
+            explorer.getVaultPausedState();
 
         assertFalse(explorerIsPaused, "Explorer says Vault is paused");
         assertEq(vaultPauseWindowEndTime, explorerPauseWindowEndTime, "Pause window end time mismatch");
@@ -704,7 +704,7 @@ contract VaultExplorerTest is BaseVaultTest {
 
         vault.manualPauseVault();
 
-        (explorerIsPaused, , ) = explorer.getVaultPausedState();
+        (explorerIsPaused,,) = explorer.getVaultPausedState();
 
         assertTrue(explorerIsPaused, "Explorer says Vault is not paused");
     }
@@ -712,9 +712,8 @@ contract VaultExplorerTest is BaseVaultTest {
     function testGetAggregateFeePercentages() public {
         _setProtocolFees();
 
-        (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage) = explorer.getAggregateFeePercentages(
-            pool
-        );
+        (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage) =
+            explorer.getAggregateFeePercentages(pool);
 
         assertEq(aggregateSwapFeePercentage, PROTOCOL_SWAP_FEE, "Wrong aggregate swap fee");
         assertEq(aggregateYieldFeePercentage, PROTOCOL_YIELD_FEE, "Wrong aggregate yield fee");
@@ -749,12 +748,10 @@ contract VaultExplorerTest is BaseVaultTest {
 
     function _setProtocolFees() private {
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector),
-            admin
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector), admin
         );
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolYieldFeePercentage.selector),
-            admin
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolYieldFeePercentage.selector), admin
         );
 
         vm.startPrank(admin);
@@ -850,10 +847,9 @@ contract VaultExplorerTest is BaseVaultTest {
         vault.manualSetPoolTokensAndBalances(pool, tokens, rawBalances, rawBalances);
 
         PoolConfigBits originalPoolConfig;
-        originalPoolConfig = originalPoolConfig
-            .setTokenDecimalDiffs(PoolConfigLib.toTokenDecimalDiffs(tokenDecimalDiffs))
-            .setPoolRegistered(true)
-            .setPoolInitialized(true);
+        originalPoolConfig = originalPoolConfig.setTokenDecimalDiffs(
+                PoolConfigLib.toTokenDecimalDiffs(tokenDecimalDiffs)
+            ).setPoolRegistered(true).setPoolInitialized(true);
 
         vault.manualSetPoolConfigBits(pool, originalPoolConfig);
     }

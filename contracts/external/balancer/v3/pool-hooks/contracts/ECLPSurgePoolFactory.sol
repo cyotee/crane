@@ -2,15 +2,19 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SingletonAuthentication } from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { GyroECLPPool } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {GyroECLPPool} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
 
 /// @notice ECLP Pool factory that deploys a standard ECLPPool with a ECLPSurgeHook.
 contract ECLPSurgePoolFactory is IPoolVersion, BasePoolFactory, Version {
@@ -27,9 +31,7 @@ contract ECLPSurgePoolFactory is IPoolVersion, BasePoolFactory, Version {
         string memory poolVersion
     )
         BasePoolFactory(
-            SingletonAuthentication(eclpSurgeHook).getVault(),
-            pauseWindowDuration,
-            type(GyroECLPPool).creationCode
+            SingletonAuthentication(eclpSurgeHook).getVault(), pauseWindowDuration, type(GyroECLPPool).creationCode
         )
         Version(factoryVersion)
     {

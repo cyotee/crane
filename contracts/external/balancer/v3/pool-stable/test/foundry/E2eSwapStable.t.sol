@@ -4,20 +4,28 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
-import { E2eSwapTest, E2eTestState, SwapLimits } from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eSwap.t.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    E2eSwapTest,
+    E2eTestState,
+    SwapLimits
+} from "@crane/contracts/external/balancer/v3/vault/test/foundry/E2eSwap.t.sol";
 
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
 
 contract E2eSwapStableTest is E2eSwapTest, StablePoolContractsDeployer {
     using CastingHelpers for address[];
@@ -69,16 +77,14 @@ contract E2eSwapStableTest is E2eSwapTest, StablePoolContractsDeployer {
         // Use the larger of the two values above to calculate the minSwapAmount. Also, multiply by 10 to account for
         // swap fees and compensate for rate rounding issues.
         uint256 mathFactor = 10;
-        swapLimits.minTokenA = (
-            tokenAMinTradeAmount > tokenACalculatedNotZero
+        swapLimits.minTokenA =
+        (tokenAMinTradeAmount > tokenACalculatedNotZero
                 ? mathFactor * tokenAMinTradeAmount
-                : mathFactor * tokenACalculatedNotZero
-        );
-        swapLimits.minTokenB = (
-            tokenBMinTradeAmount > tokenBCalculatedNotZero
+                : mathFactor * tokenACalculatedNotZero);
+        swapLimits.minTokenB =
+        (tokenBMinTradeAmount > tokenBCalculatedNotZero
                 ? mathFactor * tokenBMinTradeAmount
-                : mathFactor * tokenBCalculatedNotZero
-        );
+                : mathFactor * tokenBCalculatedNotZero);
 
         // 50% of pool init amount to make sure LP has enough tokens to pay for the swap in case of EXACT_OUT.
         swapLimits.maxTokenA = poolInitAmountTokenA.mulDown(50e16);
@@ -90,10 +96,11 @@ contract E2eSwapStableTest is E2eSwapTest, StablePoolContractsDeployer {
     }
 
     /// @notice Overrides BaseVaultTest _createPool(). This pool is used by E2eSwapTest tests.
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool";
         string memory symbol = "STABLE";
 
@@ -102,18 +109,19 @@ contract E2eSwapStableTest is E2eSwapTest, StablePoolContractsDeployer {
         // Allow pools created by `factory` to use poolHooksMock hooks.
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            DEFAULT_SWAP_FEE, // 1% swap fee, but test will override it
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                DEFAULT_SWAP_FEE, // 1% swap fee, but test will override it
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(address(newPool), label);
 
         // Cannot set the pool creator directly on a standard Balancer stable pool factory.
@@ -121,25 +129,22 @@ contract E2eSwapStableTest is E2eSwapTest, StablePoolContractsDeployer {
 
         // Grants access to admin to change the amplification parameter of the pool.
         authorizer.grantRole(
-            IAuthentication(address(newPool)).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-            admin
+            IAuthentication(address(newPool)).getActionId(StablePool.startAmplificationParameterUpdate.selector), admin
         );
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );
     }
 
-    function fuzzPoolState(
-        uint256[POOL_SPECIFIC_PARAMS_SIZE] memory params,
-        E2eTestState memory state
-    ) internal override returns (E2eTestState memory) {
+    function fuzzPoolState(uint256[POOL_SPECIFIC_PARAMS_SIZE] memory params, E2eTestState memory state)
+        internal
+        override
+        returns (E2eTestState memory)
+    {
         // Vary amplification parameter from 1 to 5000.
         uint256 newAmplificationParameter = bound(params[0], StableMath.MIN_AMP, StableMath.MAX_AMP);
 

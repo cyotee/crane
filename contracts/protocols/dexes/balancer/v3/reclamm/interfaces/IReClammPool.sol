@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { IReClammPoolExtension } from "./IReClammPoolExtension.sol";
-import { IReClammPoolMain } from "./IReClammPoolMain.sol";
+import {IReClammPoolExtension} from "./IReClammPoolExtension.sol";
+import {IReClammPoolMain} from "./IReClammPoolMain.sol";
 
 /**
  * @notice Struct with data for deploying a new ReClammPool.
@@ -57,4 +57,5 @@ struct ReClammPriceParams {
 // wake-disable-next-line unused-contract
 interface IReClammPool is IReClammPoolMain, IReClammPoolExtension {
     // solhint-disable-previous-line no-empty-blocks
-}
+
+    }

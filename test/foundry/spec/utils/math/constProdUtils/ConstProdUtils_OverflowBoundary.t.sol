@@ -52,7 +52,6 @@ import {FEE_DENOMINATOR} from "@crane/contracts/constants/Constants.sol";
  *        so it does not overflow even with extreme ownedLP * reserveA values.
  */
 contract ConstProdUtils_OverflowBoundary_Test is Test {
-
     /* ========================================================================== */
     /*                    _swapDepositSaleAmt Overflow Tests                       */
     /* ========================================================================== */
@@ -125,9 +124,7 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
      * @notice Fuzz test proving overflow reverts for extreme saleReserve values.
      * @dev Values above 1e38 should consistently trigger overflow.
      */
-    function testFuzz_swapDepositSaleAmt_extremeReserve_reverts(
-        uint256 saleReserve
-    ) public {
+    function testFuzz_swapDepositSaleAmt_extremeReserve_reverts(uint256 saleReserve) public {
         // Bound to overflow-triggering range
         saleReserve = bound(saleReserve, 1e38, type(uint256).max / 1e10);
 
@@ -207,9 +204,7 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // Should revert due to overflow in initialA * initialB * reserveA
         vm.expectRevert();
-        this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
     }
 
     /**
@@ -228,19 +223,16 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // Should revert due to overflow in initialA * initialB * reserveB
         vm.expectRevert();
-        this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
     }
 
     /**
      * @notice Fuzz test proving overflow reverts for extreme initial values.
      * @dev Values where initialA * initialB * max(reserveA, reserveB) > uint256.max
      */
-    function testFuzz_calculateFeePortionForPosition_extremeInitials_reverts(
-        uint256 initialA,
-        uint256 initialB
-    ) public {
+    function testFuzz_calculateFeePortionForPosition_extremeInitials_reverts(uint256 initialA, uint256 initialB)
+        public
+    {
         // Bound to overflow-triggering range
         initialA = bound(initialA, 1e26, 1e30);
         initialB = bound(initialB, 1e26, 1e30);
@@ -252,9 +244,7 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // Expect revert for all values in this range
         vm.expectRevert();
-        this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
     }
 
     /**
@@ -279,9 +269,8 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // This should succeed without reverting
         // Product = 1e24 * 1e24 * 1e24 = 1e72 < uint256.max ≈ 1.16e77
-        (uint256 feeA, uint256 feeB) = this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        (uint256 feeA, uint256 feeB) =
+            this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
 
         // Calculate claimable amounts to establish upper bounds
         // claimableA = ownedLP * reserveA / totalSupply = 1e20 * 1e24 / 1e21 = 1e23
@@ -310,9 +299,7 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // Product = 1e40 * 1e20 * 1e20 = 1e80 > uint256.max
         vm.expectRevert();
-        this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
     }
 
     /* ========================================================================== */
@@ -346,9 +333,8 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
 
         // This SUCCEEDS because _mulDiv safely handles ownedLP * reserveA / totalSupply
         // without intermediate overflow (it uses 512-bit intermediate precision)
-        (uint256 feeA, uint256 feeB) = this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        (uint256 feeA, uint256 feeB) =
+            this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
 
         // Verify claimable bounds - fees cannot exceed what's claimable
         // claimableA ≈ 1e49, claimableB ≈ 1e17
@@ -500,9 +486,8 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
         uint256 reserveA = 1100e18;
         uint256 reserveB = 1100e18;
 
-        (uint256 feeA, uint256 feeB) = this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        (uint256 feeA, uint256 feeB) =
+            this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
 
         // Calculate expected claimable
         // claimable = ownedLP * reserve / totalSupply = 100e18 * 1100e18 / 1000e18 = 110e18
@@ -537,9 +522,8 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
         uint256 reserveA = 900e18;
         uint256 reserveB = 1100e18;
 
-        (uint256 feeA, uint256 feeB) = this.externalCalculateFeePortionForPosition(
-            ownedLP, initialA, initialB, reserveA, reserveB, totalSupply
-        );
+        (uint256 feeA, uint256 feeB) =
+            this.externalCalculateFeePortionForPosition(ownedLP, initialA, initialB, reserveA, reserveB, totalSupply);
 
         // Calculate claimable amounts
         uint256 claimableA = (ownedLP * reserveA) / totalSupply;
@@ -588,24 +572,22 @@ contract ConstProdUtils_OverflowBoundary_Test is Test {
     /**
      * @notice External wrapper for _saleQuote.
      */
-    function externalSaleQuote(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 feePercent
-    ) external pure returns (uint256) {
+    function externalSaleQuote(uint256 amountIn, uint256 reserveIn, uint256 reserveOut, uint256 feePercent)
+        external
+        pure
+        returns (uint256)
+    {
         return ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, feePercent);
     }
 
     /**
      * @notice External wrapper for _purchaseQuote.
      */
-    function externalPurchaseQuote(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 feePercent
-    ) external pure returns (uint256) {
+    function externalPurchaseQuote(uint256 amountOut, uint256 reserveIn, uint256 reserveOut, uint256 feePercent)
+        external
+        pure
+        returns (uint256)
+    {
         return ConstProdUtils._purchaseQuote(amountOut, reserveIn, reserveOut, feePercent);
     }
 }

@@ -25,9 +25,8 @@ abstract contract ReentrancyGuard {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Guards a function from reentrancy.
-    modifier nonReentrant() virtual {
-        /// @solidity memory-safe-assembly
-        assembly {
+    modifier nonReentrant() {
+        assembly ('memory-safe') {
             if eq(sload(_REENTRANCY_GUARD_SLOT), address()) {
                 mstore(0x00, 0xab143c06) // `Reentrancy()`.
                 revert(0x1c, 0x04)
@@ -35,16 +34,14 @@ abstract contract ReentrancyGuard {
             sstore(_REENTRANCY_GUARD_SLOT, address())
         }
         _;
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ('memory-safe') {
             sstore(_REENTRANCY_GUARD_SLOT, codesize())
         }
     }
 
     /// @dev Guards a view function from read-only reentrancy.
-    modifier nonReadReentrant() virtual {
-        /// @solidity memory-safe-assembly
-        assembly {
+    modifier nonReadReentrant() {
+        assembly ('memory-safe') {
             if eq(sload(_REENTRANCY_GUARD_SLOT), address()) {
                 mstore(0x00, 0xab143c06) // `Reentrancy()`.
                 revert(0x1c, 0x04)

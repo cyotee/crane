@@ -29,13 +29,7 @@ import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC
  * @notice A mock ERC20 asset with permit support for testing vault deposits.
  */
 contract MockAssetWithPermit is ERC20PermitTarget {
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        uint8 decimals_,
-        address recipient,
-        uint256 initialAmount
-    ) {
+    constructor(string memory name_, string memory symbol_, uint8 decimals_, address recipient, uint256 initialAmount) {
         ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
         ERC20Repo._initialize(erc20, name_, symbol_, decimals_);
         ERC20Repo._mint(erc20, recipient, initialAmount);
@@ -137,15 +131,8 @@ contract ERC4626Permit_Integration_Test is Test {
     }
 
     function _executePermit(PermitParams memory params, Signature memory sig) internal {
-        IERC2612(params.token).permit(
-            params.owner,
-            params.permitSpender,
-            params.value,
-            params.deadline,
-            sig.v,
-            sig.r,
-            sig.s
-        );
+        IERC2612(params.token)
+            .permit(params.owner, params.permitSpender, params.value, params.deadline, sig.v, sig.r, sig.s);
     }
 
     /* -------------------------------------------------------------------------- */

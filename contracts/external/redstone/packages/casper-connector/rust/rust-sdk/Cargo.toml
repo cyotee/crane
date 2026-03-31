@@ -1,0 +1,59 @@
+[package]
+name = "redstone"
+version = "1.2.0"
+edition = "2021"
+authors = ["RedStone <https://redstone.finance>"]
+description = "A Rust implementation of deserializing&decrypting RedStone payload"
+
+[features]
+default = ["pure"]
+
+# Pure Rust, no specific network extension
+pure = ["primitive-types"]
+
+# An extension for Casper network
+network_casper = ["casper-contract/wee_alloc", "casper-types"]
+
+# An extension for Radix network
+network_radix = ["radix-common", "scrypto"]
+
+# An extension for debug-printing of messages in the Casper extension. Not supported by Casper Contracts deployed to the network.
+casper_debug = ["print_debug", "casper-contract/test-support"]
+
+# An extension for debug-printing of messages.
+print_debug = []
+
+# A variant of decrypting the message-signers using secp256k1 library. Cheaper in runtime.
+crypto_secp256k1 = ["secp256k1/recovery", "secp256k1/lowmemory", "secp256k1/alloc"]
+
+# A variant of decrypting the message-signers using k256 library. Cheaper during contract deployment.
+crypto_k256 = ["k256/alloc", "k256/sha256", "k256/ecdsa"]
+
+# A variant of decrypting the message-signers using Radix library.
+crypto_radix = ["scrypto", "radix-common"]
+
+# A set of helpers for testing & offline usage.
+helpers = ["hex/serde", "hex/alloc"]
+
+[dependencies]
+casper-contract = { version = "^4.0.0", default-features = false, features = [], optional = true }
+casper-types = { version = "^4.0.2", default-features = false, features = [], optional = true }
+radix-common = { version = "^1.3.0", default-features = false, features = [], optional = true }
+scrypto = { version = "^1.3.0", optional = true }
+sha3 = { version = "^0.10.8", default-features = false, features = ["asm"] }
+k256 = { version = "^0.13.4", default-features = false, features = [], optional = true }
+secp256k1 = { version = "^0.29.1", default-features = false, features = [], optional = true }
+hex = { version = "^0.4.3", default-features = false, features = [], optional = true }
+primitive-types = { version = "^0.13.1", optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "^0.2.15", default-features = false, features = ["js"] }
+
+[dev-dependencies]
+itertools = { version = "^0.13.0" }
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = { version = "^0.3.45" }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

@@ -2,14 +2,19 @@
 
 pragma solidity ^0.8.24;
 
-import { PoolRoleAccounts, LiquidityManagement } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IFixedPriceLBPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IFixedPriceLBPool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IFixedPriceLBPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IFixedPriceLBPool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { FixedPriceLBPool } from "./FixedPriceLBPool.sol";
-import { BaseLBPFactory } from "./BaseLBPFactory.sol";
-import { LBPValidation } from "./LBPValidation.sol";
+import {FixedPriceLBPool} from "./FixedPriceLBPool.sol";
+import {BaseLBPFactory} from "./BaseLBPFactory.sol";
+import {LBPValidation} from "./LBPValidation.sol";
 
 /**
  * @notice Factory for Fixed Price LBPools.
@@ -29,11 +34,7 @@ contract FixedPriceLBPoolFactory is BaseLBPFactory {
      * @param projectTokenRate The project token price in terms of the reserve token
      */
     event FixedPriceLBPoolCreated(
-        address indexed pool,
-        address indexed owner,
-        uint256 startTime,
-        uint256 endTime,
-        uint256 projectTokenRate
+        address indexed pool, address indexed owner, uint256 startTime, uint256 endTime, uint256 projectTokenRate
     );
 
     constructor(
@@ -52,6 +53,7 @@ contract FixedPriceLBPoolFactory is BaseLBPFactory {
             address(0),
             type(FixedPriceLBPool).creationCode
         ) // no migration router
+
     {
         // solhint-disable-previous-line no-empty-blocks
     }
@@ -96,21 +98,14 @@ contract FixedPriceLBPoolFactory is BaseLBPFactory {
         // as create2 would otherwise mask the underlying revert reason.
         lbpCommonParams.startTime = LBPValidation.validateCommonParams(lbpCommonParams);
 
-        FactoryParams memory factoryParams = FactoryParams({
-            vault: getVault(),
-            trustedRouter: _trustedRouter,
-            poolVersion: _poolVersion
-        });
+        FactoryParams memory factoryParams =
+            FactoryParams({vault: getVault(), trustedRouter: _trustedRouter, poolVersion: _poolVersion});
 
         pool = _create(abi.encode(lbpCommonParams, factoryParams, projectTokenRate), salt);
 
         // Emit type-specific event first
         emit FixedPriceLBPoolCreated(
-            pool,
-            lbpCommonParams.owner,
-            lbpCommonParams.startTime,
-            lbpCommonParams.endTime,
-            projectTokenRate
+            pool, lbpCommonParams.owner, lbpCommonParams.startTime, lbpCommonParams.endTime, projectTokenRate
         );
 
         // Only needed for the event.

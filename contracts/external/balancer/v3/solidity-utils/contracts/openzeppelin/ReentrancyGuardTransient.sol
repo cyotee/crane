@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { StorageSlotExtension } from "./StorageSlotExtension.sol";
+import {StorageSlotExtension} from "./StorageSlotExtension.sol";
 
 /**
  * @notice Variant of {ReentrancyGuard} that uses transient storage.

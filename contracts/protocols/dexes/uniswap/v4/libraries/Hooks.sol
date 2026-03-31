@@ -95,7 +95,8 @@ library Hooks {
                 || permissions.afterDonate != self.hasPermission(AFTER_DONATE_FLAG)
                 || permissions.beforeSwapReturnDelta != self.hasPermission(BEFORE_SWAP_RETURNS_DELTA_FLAG)
                 || permissions.afterSwapReturnDelta != self.hasPermission(AFTER_SWAP_RETURNS_DELTA_FLAG)
-                || permissions.afterAddLiquidityReturnDelta != self.hasPermission(AFTER_ADD_LIQUIDITY_RETURNS_DELTA_FLAG)
+                || permissions.afterAddLiquidityReturnDelta
+                    != self.hasPermission(AFTER_ADD_LIQUIDITY_RETURNS_DELTA_FLAG)
                 || permissions.afterRemoveLiquidityReturnDelta
                     != self.hasPermission(AFTER_REMOVE_LIQUIDITY_RETURNS_DELTA_FLAG)
         ) {
@@ -291,16 +292,18 @@ library Hooks {
         bytes calldata hookData,
         BeforeSwapDelta beforeSwapHookReturn
     ) internal returns (BalanceDelta, BalanceDelta) {
-        if (msg.sender == address(self)) return (swapDelta, BalanceDeltaLibrary.ZERO_DELTA);
+        if (msg.sender == address(self)) {
+            return (swapDelta, BalanceDeltaLibrary.ZERO_DELTA);
+        }
 
         int128 hookDeltaSpecified = beforeSwapHookReturn.getSpecifiedDelta();
         int128 hookDeltaUnspecified = beforeSwapHookReturn.getUnspecifiedDelta();
 
         if (self.hasPermission(AFTER_SWAP_FLAG)) {
             hookDeltaUnspecified += self.callHookWithReturnDelta(
-                abi.encodeCall(IHooks.afterSwap, (msg.sender, key, params, swapDelta, hookData)),
-                self.hasPermission(AFTER_SWAP_RETURNS_DELTA_FLAG)
-            ).toInt128();
+                    abi.encodeCall(IHooks.afterSwap, (msg.sender, key, params, swapDelta, hookData)),
+                    self.hasPermission(AFTER_SWAP_RETURNS_DELTA_FLAG)
+                ).toInt128();
         }
 
         BalanceDelta hookDelta;

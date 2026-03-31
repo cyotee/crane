@@ -4,37 +4,50 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IERC20Metadata } from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { ReClammPoolDynamicData, ReClammPoolImmutableData } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
-import { IReClammPool, ReClammPoolParams, ReClammPriceParams } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { IReClammPoolExtension } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
-import { PriceRatioState, ReClammMath, a, b } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
-import { ReClammPoolFactoryMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
-import { IReClammPoolMain } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolMain.sol";
-import { ReClammPoolExtension } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolExtension.sol";
-import { IReClammEvents } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammEvents.sol";
-import { IReClammErrors } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammErrors.sol";
-import { ReClammPoolMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
-import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
-import { ReClammCommon } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammCommon.sol";
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
-import { ReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
+import {
+    ReClammPoolDynamicData,
+    ReClammPoolImmutableData
+} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
+import {
+    IReClammPool,
+    ReClammPoolParams,
+    ReClammPriceParams
+} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {
+    IReClammPoolExtension
+} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolExtension.sol";
+import {PriceRatioState, ReClammMath, a, b} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {ReClammPoolFactoryMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolFactoryMock.sol";
+import {IReClammPoolMain} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPoolMain.sol";
+import {ReClammPoolExtension} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPoolExtension.sol";
+import {IReClammEvents} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammEvents.sol";
+import {IReClammErrors} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammErrors.sol";
+import {ReClammPoolMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
+import {ReClammMathMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
+import {ReClammCommon} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammCommon.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
+import {ReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/ReClammPool.sol";
 
 contract ReClammPoolTest is BaseReClammTest {
     using FixedPoint for *;
@@ -80,58 +93,63 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
         IHooks(pool).onAfterInitialize(new uint256[](2), 0, bytes(""));
     }
+
     function testOnBeforeAddLiquidityOnlyVault() public {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
-        IHooks(pool).onBeforeAddLiquidity(
-            address(this),
-            address(this),
-            AddLiquidityKind.PROPORTIONAL,
-            new uint256[](2),
-            0,
-            new uint256[](2),
-            bytes("")
-        );
+        IHooks(pool)
+            .onBeforeAddLiquidity(
+                address(this),
+                address(this),
+                AddLiquidityKind.PROPORTIONAL,
+                new uint256[](2),
+                0,
+                new uint256[](2),
+                bytes("")
+            );
     }
 
     function testOnAfterAddLiquidityOnlyVault() public {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
-        IHooks(pool).onAfterAddLiquidity(
-            address(this),
-            address(this),
-            AddLiquidityKind.PROPORTIONAL,
-            new uint256[](2),
-            new uint256[](2),
-            0,
-            new uint256[](2),
-            bytes("")
-        );
+        IHooks(pool)
+            .onAfterAddLiquidity(
+                address(this),
+                address(this),
+                AddLiquidityKind.PROPORTIONAL,
+                new uint256[](2),
+                new uint256[](2),
+                0,
+                new uint256[](2),
+                bytes("")
+            );
     }
 
     function testOnBeforeRemoveLiquidityOnlyVault() public {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
-        IHooks(pool).onBeforeRemoveLiquidity(
-            address(this),
-            address(this),
-            RemoveLiquidityKind.PROPORTIONAL,
-            1,
-            new uint256[](2),
-            new uint256[](2),
-            bytes("")
-        );
+        IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                address(this),
+                address(this),
+                RemoveLiquidityKind.PROPORTIONAL,
+                1,
+                new uint256[](2),
+                new uint256[](2),
+                bytes("")
+            );
     }
 
     function testOnAfterRemoveLiquidityOnlyVault() public {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.SenderIsNotVault.selector, address(this)));
-        IHooks(pool).onAfterRemoveLiquidity(
-            address(this),
-            address(this),
-            RemoveLiquidityKind.PROPORTIONAL,
-            1,
-            new uint256[](2),
-            new uint256[](2),
-            new uint256[](2),
-            bytes("")
-        );
+        IHooks(pool)
+            .onAfterRemoveLiquidity(
+                address(this),
+                address(this),
+                RemoveLiquidityKind.PROPORTIONAL,
+                1,
+                new uint256[](2),
+                new uint256[](2),
+                new uint256[](2),
+                bytes("")
+            );
     }
 
     function testOnBeforeSwapOnlyVault() public {
@@ -201,9 +219,8 @@ contract ReClammPoolTest is BaseReClammTest {
     function testGetDailyPriceShiftExponentToBase() public {
         uint256 dailyPriceRateExponent = 30e16;
         vm.prank(admin);
-        uint256 actualDailyPriceShiftExponentReturned = ReClammPool(payable(pool)).setDailyPriceShiftExponent(
-            dailyPriceRateExponent
-        );
+        uint256 actualDailyPriceShiftExponentReturned =
+            ReClammPool(payable(pool)).setDailyPriceShiftExponent(dailyPriceRateExponent);
 
         uint256 actualDailyPriceShiftBase = IReClammPool(pool).getDailyPriceShiftBase();
         uint256 actualDailyPriceShiftExponent = IReClammPool(pool).getDailyPriceShiftExponent();
@@ -213,12 +230,7 @@ contract ReClammPoolTest is BaseReClammTest {
             "Invalid dailyPriceShiftBase"
         );
 
-        assertApproxEqRel(
-            actualDailyPriceShiftExponent,
-            dailyPriceRateExponent,
-            1e16,
-            "Invalid dailyPriceRateExponent"
-        );
+        assertApproxEqRel(actualDailyPriceShiftExponent, dailyPriceRateExponent, 1e16, "Invalid dailyPriceRateExponent");
 
         assertEq(
             actualDailyPriceShiftExponentReturned,
@@ -243,9 +255,7 @@ contract ReClammPoolTest is BaseReClammTest {
             "Invalid default endFourthRootPriceRatio"
         );
         assertEq(
-            priceRatioState.priceRatioUpdateStartTime,
-            block.timestamp,
-            "Invalid default priceRatioUpdateStartTime"
+            priceRatioState.priceRatioUpdateStartTime, block.timestamp, "Invalid default priceRatioUpdateStartTime"
         );
         assertEq(priceRatioState.priceRatioUpdateEndTime, block.timestamp, "Invalid default priceRatioUpdateEndTime");
 
@@ -256,23 +266,15 @@ contract ReClammPoolTest is BaseReClammTest {
         uint256 newPriceRatioUpdateEndTime = block.timestamp + 1 days;
 
         vm.prank(admin);
-        ReClammPool(payable(pool)).startPriceRatioUpdate(
-            newPriceRatio,
-            newPriceRatioUpdateStartTime,
-            newPriceRatioUpdateEndTime
-        );
+        ReClammPool(payable(pool))
+            .startPriceRatioUpdate(newPriceRatio, newPriceRatioUpdateStartTime, newPriceRatioUpdateEndTime);
 
         priceRatioState = IReClammPool(pool).getPriceRatioState();
         assertEq(
-            priceRatioState.startFourthRootPriceRatio,
-            oldFourthRootPriceRatio,
-            "Invalid new startFourthRootPriceRatio"
+            priceRatioState.startFourthRootPriceRatio, oldFourthRootPriceRatio, "Invalid new startFourthRootPriceRatio"
         );
         assertApproxEqRel(
-            priceRatioState.endFourthRootPriceRatio,
-            newFourthRootPriceRatio,
-            1,
-            "Invalid new endFourthRootPriceRatio"
+            priceRatioState.endFourthRootPriceRatio, newFourthRootPriceRatio, 1, "Invalid new endFourthRootPriceRatio"
         );
         assertEq(
             priceRatioState.priceRatioUpdateStartTime,
@@ -280,9 +282,7 @@ contract ReClammPoolTest is BaseReClammTest {
             "Invalid new priceRatioUpdateStartTime"
         );
         assertEq(
-            priceRatioState.priceRatioUpdateEndTime,
-            newPriceRatioUpdateEndTime,
-            "Invalid new priceRatioUpdateEndTime"
+            priceRatioState.priceRatioUpdateEndTime, newPriceRatioUpdateEndTime, "Invalid new priceRatioUpdateEndTime"
         );
     }
 
@@ -300,14 +300,11 @@ contract ReClammPoolTest is BaseReClammTest {
             priceRatioUpdateEndTime: (block.timestamp + 3 days).toUint32()
         });
 
-        (uint256[] memory currentVirtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory currentVirtualBalances,) = _computeCurrentVirtualBalances(pool);
 
         vm.startPrank(admin);
-        ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            state.priceRatioUpdateStartTime,
-            state.priceRatioUpdateEndTime
-        );
+        ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, state.priceRatioUpdateStartTime, state.priceRatioUpdateEndTime);
         ReClammPool(payable(pool)).setDailyPriceShiftExponent(newDailyPriceShiftExponent);
         ReClammPool(payable(pool)).setCenterednessMargin(_NEW_CENTEREDNESS_MARGIN);
         vault.setStaticSwapFeePercentage(pool, newStaticSwapFeePercentage);
@@ -323,7 +320,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         // Check balances.
         assertEq(data.balancesLiveScaled18.length, 2, "Invalid number of balances");
-        (, , , uint256[] memory balancesLiveScaled18) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory balancesLiveScaled18) = vault.getPoolTokenInfo(pool);
         assertEq(data.balancesLiveScaled18[daiIdx], balancesLiveScaled18[daiIdx], "Invalid DAI balance");
         assertEq(data.balancesLiveScaled18[usdcIdx], balancesLiveScaled18[usdcIdx], "Invalid USDC balance");
 
@@ -340,14 +337,10 @@ contract ReClammPoolTest is BaseReClammTest {
         assertEq(data.lastTimestamp, block.timestamp - 6 hours, "Invalid last timestamp");
         assertEq(data.currentPriceRatio, currentPriceRatio, "Invalid current price ratio");
         assertEq(
-            data.currentFourthRootPriceRatio,
-            currentFourthRootPriceRatio,
-            "Invalid current fourth root price ratio"
+            data.currentFourthRootPriceRatio, currentFourthRootPriceRatio, "Invalid current fourth root price ratio"
         );
         assertEq(
-            data.startFourthRootPriceRatio,
-            state.startFourthRootPriceRatio,
-            "Invalid start fourth root price ratio"
+            data.startFourthRootPriceRatio, state.startFourthRootPriceRatio, "Invalid start fourth root price ratio"
         );
         assertEq(data.endFourthRootPriceRatio, state.endFourthRootPriceRatio, "Invalid end fourth root price ratio");
         assertEq(data.priceRatioUpdateStartTime, state.priceRatioUpdateStartTime, "Invalid start time");
@@ -367,9 +360,7 @@ contract ReClammPoolTest is BaseReClammTest {
         assertEq(data.lastVirtualBalances.length, 2, "Invalid number of last virtual balances");
         assertEq(data.lastVirtualBalances[daiIdx], currentVirtualBalances[daiIdx], "Invalid DAI last virtual balance");
         assertEq(
-            data.lastVirtualBalances[usdcIdx],
-            currentVirtualBalances[usdcIdx],
-            "Invalid USDC last virtual balance"
+            data.lastVirtualBalances[usdcIdx], currentVirtualBalances[usdcIdx], "Invalid USDC last virtual balance"
         );
 
         assertEq(data.isPoolInitialized, true, "Pool should remain initialized");
@@ -413,9 +404,7 @@ contract ReClammPoolTest is BaseReClammTest {
         // Ensure that the max centeredness margin parameter fits in uint64.
         assertEq(data.maxCenterednessMargin, uint64(data.maxCenterednessMargin), "Max centeredness margin not uint64");
         assertEq(
-            data.maxDailyPriceShiftExponent,
-            _MAX_DAILY_PRICE_SHIFT_EXPONENT,
-            "Invalid max daily price shift exponent"
+            data.maxDailyPriceShiftExponent, _MAX_DAILY_PRICE_SHIFT_EXPONENT, "Invalid max daily price shift exponent"
         );
         uint256 maxUpdateRate = FixedPoint.powUp(2e18, _MAX_DAILY_PRICE_SHIFT_EXPONENT);
 
@@ -456,11 +445,8 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectRevert(IReClammErrors.PriceRatioUpdateDurationTooShort.selector);
         vm.prank(admin);
-        ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
     }
 
     function testSetFourthRootPriceRatioSmallDelta() public {
@@ -473,11 +459,8 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectRevert(abi.encodeWithSelector(IReClammErrors.PriceRatioDeltaBelowMin.selector, delta));
         vm.prank(admin);
-        ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
     }
 
     function testSetFourthRootPriceRatioTooFast() public {
@@ -491,11 +474,8 @@ contract ReClammPoolTest is BaseReClammTest {
         // do is set a large update that would be too fast, and show that the error is triggered.
         vm.expectRevert(IReClammErrors.PriceRatioUpdateTooFast.selector);
         vm.prank(admin);
-        ReClammPool(payable(pool)).startPriceRatioUpdate(
-            newPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        ReClammPool(payable(pool))
+            .startPriceRatioUpdate(newPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
     }
 
     function testSetFourthRootPriceRatio() public {
@@ -516,10 +496,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit();
         emit IReClammEvents.PriceRatioStateUpdated(
-            startFourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            block.timestamp,
-            priceRatioUpdateEndTime
+            startFourthRootPriceRatio, endFourthRootPriceRatio, block.timestamp, priceRatioUpdateEndTime
         );
 
         vm.expectEmit();
@@ -530,11 +507,8 @@ contract ReClammPoolTest is BaseReClammTest {
         );
 
         vm.prank(admin);
-        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
         assertEq(actualPriceRatioUpdateStartTime, block.timestamp, "Invalid updated actual price ratio start time");
 
         skip(duration / 2);
@@ -550,10 +524,7 @@ contract ReClammPoolTest is BaseReClammTest {
         // Allows a 5 wei error, since the current fourth root price ratio of the pool is computed using the pool
         // current balances and virtual balances.
         assertApproxEqAbs(
-            fourthRootPriceRatio,
-            mathFourthRootPriceRatio,
-            5,
-            "FourthRootPriceRatio not updated correctly"
+            fourthRootPriceRatio, mathFourthRootPriceRatio, 5, "FourthRootPriceRatio not updated correctly"
         );
 
         skip(duration / 2 + 1);
@@ -561,10 +532,7 @@ contract ReClammPoolTest is BaseReClammTest {
         // Allows a 5 wei error, since the current fourth root price ratio of the pool is computed using the pool
         // current balances and virtual balances.
         assertApproxEqAbs(
-            fourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            5,
-            "FourthRootPriceRatio does not match new value"
+            fourthRootPriceRatio, endFourthRootPriceRatio, 5, "FourthRootPriceRatio does not match new value"
         );
     }
 
@@ -591,10 +559,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit();
         emit IReClammEvents.PriceRatioStateUpdated(
-            startFourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            block.timestamp,
-            priceRatioUpdateEndTime
+            startFourthRootPriceRatio, endFourthRootPriceRatio, block.timestamp, priceRatioUpdateEndTime
         );
 
         vm.expectEmit();
@@ -605,11 +570,8 @@ contract ReClammPoolTest is BaseReClammTest {
         );
 
         vm.prank(admin);
-        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
         assertEq(actualPriceRatioUpdateStartTime, block.timestamp, "Invalid updated actual price ratio start time");
 
         skip(duration / 2);
@@ -625,10 +587,7 @@ contract ReClammPoolTest is BaseReClammTest {
         // Allows a 5 wei error, since the current fourth root price ratio of the pool is computed using the pool
         // current balances and virtual balances, and the mathFourthRootPriceRatio is an interpolation.
         assertApproxEqAbs(
-            fourthRootPriceRatio,
-            mathFourthRootPriceRatio,
-            5,
-            "FourthRootPriceRatio not updated correctly"
+            fourthRootPriceRatio, mathFourthRootPriceRatio, 5, "FourthRootPriceRatio not updated correctly"
         );
 
         // While the update is ongoing, we'll trigger a second one.
@@ -642,8 +601,8 @@ contract ReClammPoolTest is BaseReClammTest {
 
         startFourthRootPriceRatio = IReClammPool(pool).computeCurrentFourthRootPriceRatio().toUint96();
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
 
         // Events:
         // - Virtual balances update
@@ -654,9 +613,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit(address(vault));
         emit IVaultEvents.VaultAuxiliary(
-            pool,
-            "VirtualBalancesUpdated",
-            abi.encode(currentVirtualBalanceA, currentVirtualBalanceB)
+            pool, "VirtualBalancesUpdated", abi.encode(currentVirtualBalanceA, currentVirtualBalanceB)
         );
 
         vm.expectEmit();
@@ -667,10 +624,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit();
         emit IReClammEvents.PriceRatioStateUpdated(
-            startFourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            block.timestamp,
-            priceRatioUpdateEndTime
+            startFourthRootPriceRatio, endFourthRootPriceRatio, block.timestamp, priceRatioUpdateEndTime
         );
 
         vm.expectEmit();
@@ -681,21 +635,15 @@ contract ReClammPoolTest is BaseReClammTest {
         );
 
         vm.prank(admin);
-        actualPriceRatioUpdateStartTime = ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        actualPriceRatioUpdateStartTime = ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
 
         vm.warp(priceRatioUpdateEndTime + 1);
         fourthRootPriceRatio = IReClammPool(pool).computeCurrentFourthRootPriceRatio().toUint96();
         // Allows a 15 wei error, since the current fourth root price ratio of the pool is computed using the pool
         // current balances and virtual balances.
         assertApproxEqAbs(
-            fourthRootPriceRatio,
-            endFourthRootPriceRatio,
-            15,
-            "FourthRootPriceRatio does not match new value"
+            fourthRootPriceRatio, endFourthRootPriceRatio, 15, "FourthRootPriceRatio does not match new value"
         );
     }
 
@@ -731,11 +679,8 @@ contract ReClammPoolTest is BaseReClammTest {
         uint96 startFourthRootPriceRatio = IReClammPool(pool).computeCurrentFourthRootPriceRatio().toUint96();
 
         vm.prank(admin);
-        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool)).startPriceRatioUpdate(
-            endPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        uint256 actualPriceRatioUpdateStartTime = ReClammPool(payable(pool))
+            .startPriceRatioUpdate(endPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime);
 
         skip(duration / 2);
         uint96 fourthRootPriceRatio = IReClammPool(pool).computeCurrentFourthRootPriceRatio().toUint96();
@@ -750,14 +695,11 @@ contract ReClammPoolTest is BaseReClammTest {
         // Allows a 5 wei error, since the current fourth root price ratio of the pool is computed using the pool
         // current balances and virtual balances, and the mathFourthRootPriceRatio is an interpolation.
         assertApproxEqAbs(
-            fourthRootPriceRatio,
-            mathFourthRootPriceRatio,
-            5,
-            "FourthRootPriceRatio not updated correctly"
+            fourthRootPriceRatio, mathFourthRootPriceRatio, 5, "FourthRootPriceRatio not updated correctly"
         );
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
 
         // Events:
         // - Virtual balances update
@@ -768,9 +710,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit(address(vault));
         emit IVaultEvents.VaultAuxiliary(
-            pool,
-            "VirtualBalancesUpdated",
-            abi.encode(currentVirtualBalanceA, currentVirtualBalanceB)
+            pool, "VirtualBalancesUpdated", abi.encode(currentVirtualBalanceA, currentVirtualBalanceB)
         );
 
         vm.expectEmit();
@@ -782,10 +722,7 @@ contract ReClammPoolTest is BaseReClammTest {
         // Price ratio update event with current value and timestamp.
         vm.expectEmit();
         emit IReClammEvents.PriceRatioStateUpdated(
-            fourthRootPriceRatio,
-            fourthRootPriceRatio,
-            block.timestamp,
-            block.timestamp
+            fourthRootPriceRatio, fourthRootPriceRatio, block.timestamp, block.timestamp
         );
 
         vm.expectEmit();
@@ -806,9 +743,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         uint96 fourthRootPriceRatioAfterWarp = IReClammPool(pool).computeCurrentFourthRootPriceRatio().toUint96();
         assertEq(
-            fourthRootPriceRatio,
-            fourthRootPriceRatioAfterWarp,
-            "FourthRootPriceRatio changed after stop and warp"
+            fourthRootPriceRatio, fourthRootPriceRatioAfterWarp, "FourthRootPriceRatio changed after stop and warp"
         );
     }
 
@@ -857,9 +792,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit();
         emit IVaultEvents.VaultAuxiliary(
-            pool,
-            "DailyPriceShiftExponentUpdated",
-            abi.encode(actualNewDailyPriceShiftExponent, dailyPriceShiftBase)
+            pool, "DailyPriceShiftExponentUpdated", abi.encode(actualNewDailyPriceShiftExponent, dailyPriceShiftBase)
         );
 
         vm.prank(admin);
@@ -881,13 +814,11 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.warp(block.timestamp + 6 hours);
 
         // Check if the last virtual balances stored in the pool are different from the current virtual balances.
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
         uint256[] memory lastVirtualBalancesBeforeSet = _getLastVirtualBalances(pool);
 
         assertNotEq(
-            virtualBalancesBefore[daiIdx],
-            lastVirtualBalancesBeforeSet[daiIdx],
-            "DAI virtual balance remains unchanged"
+            virtualBalancesBefore[daiIdx], lastVirtualBalancesBeforeSet[daiIdx], "DAI virtual balance remains unchanged"
         );
         assertNotEq(
             virtualBalancesBefore[usdcIdx],
@@ -910,9 +841,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit(address(vault));
         emit IVaultEvents.VaultAuxiliary(
-            pool,
-            "DailyPriceShiftExponentUpdated",
-            abi.encode(actualNewDailyPriceShiftExponent, dailyPriceShiftBase)
+            pool, "DailyPriceShiftExponentUpdated", abi.encode(actualNewDailyPriceShiftExponent, dailyPriceShiftBase)
         );
 
         vm.prank(admin);
@@ -988,12 +917,12 @@ contract ReClammPoolTest is BaseReClammTest {
 
     function testOutOfRangeAfterSetCenterednessMargin() public {
         // Move the pool close to the current margin.
-        (uint256[] memory virtualBalances, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory virtualBalances,) = _computeCurrentVirtualBalances(pool);
         uint256 newBalanceB = 100e18;
 
         // Pool Centeredness = Ra * Vb / (Rb * Va). Make centeredness = margin, and you have the equation below.
-        uint256 newBalanceA = (_DEFAULT_CENTEREDNESS_MARGIN * newBalanceB).mulDown(virtualBalances[a]) /
-            virtualBalances[b];
+        uint256 newBalanceA =
+            (_DEFAULT_CENTEREDNESS_MARGIN * newBalanceB).mulDown(virtualBalances[a]) / virtualBalances[b];
 
         (uint256 newDaiBalance, uint256 newUsdcBalance) = _balanceABtoDaiUsdcBalances(newBalanceA, newBalanceB);
         _setPoolBalances(newDaiBalance, newUsdcBalance);
@@ -1001,13 +930,10 @@ contract ReClammPoolTest is BaseReClammTest {
 
         // Exactly at boundary is still in range.
         assertTrue(IReClammPool(pool).isPoolWithinTargetRange(), "Pool is out of range");
-        (uint256 centeredness, ) = IReClammPool(pool).computeCurrentPoolCenteredness();
+        (uint256 centeredness,) = IReClammPool(pool).computeCurrentPoolCenteredness();
 
         assertApproxEqRel(
-            centeredness,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            1e16,
-            "Pool centeredness is not close from margin"
+            centeredness, _DEFAULT_CENTEREDNESS_MARGIN, 1e16, "Pool centeredness is not close from margin"
         );
 
         // Margin will make the pool be out of range (since the current centeredness is near the default margin).
@@ -1017,21 +943,17 @@ contract ReClammPoolTest is BaseReClammTest {
     }
 
     function testIsPoolInTargetRange() public {
-        (, , , uint256[] memory balancesScaled18) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory balancesScaled18) = vault.getPoolTokenInfo(pool);
         (uint256 lastVirtualBalanceA, uint256 lastVirtualBalanceB) = IReClammPool(pool).getLastVirtualBalances();
-        (uint256 virtualBalanceA, uint256 virtualBalanceB, ) = IReClammPool(pool).computeCurrentVirtualBalances();
+        (uint256 virtualBalanceA, uint256 virtualBalanceB,) = IReClammPool(pool).computeCurrentVirtualBalances();
         uint256 centerednessMargin = IReClammPool(pool).getCenterednessMargin();
 
         // Last should equal current.
         assertEq(lastVirtualBalanceA, virtualBalanceA, "last != current (A)");
         assertEq(lastVirtualBalanceB, virtualBalanceB, "last != current (B)");
 
-        bool resultWithCurrentBalances = ReClammMath.isPoolWithinTargetRange(
-            balancesScaled18,
-            virtualBalanceA,
-            virtualBalanceB,
-            centerednessMargin
-        );
+        bool resultWithCurrentBalances =
+            ReClammMath.isPoolWithinTargetRange(balancesScaled18, virtualBalanceA, virtualBalanceB, centerednessMargin);
         assertTrue(resultWithCurrentBalances, "Expected value not in range");
 
         assertTrue(IReClammPool(pool).isPoolWithinTargetRange(), "Actual value not in range");
@@ -1041,10 +963,7 @@ contract ReClammPoolTest is BaseReClammTest {
         newLastVirtualBalances[b] = lastVirtualBalanceB;
 
         bool resultWithLastBalances = ReClammMath.isPoolWithinTargetRange(
-            balancesScaled18,
-            newLastVirtualBalances[a],
-            newLastVirtualBalances[b],
-            centerednessMargin
+            balancesScaled18, newLastVirtualBalances[a], newLastVirtualBalances[b], centerednessMargin
         );
 
         assertFalse(resultWithLastBalances, "Expected value still in range");
@@ -1059,8 +978,8 @@ contract ReClammPoolTest is BaseReClammTest {
         // Since it is using the current price ratio, it should return false and the virtual balances should be
         // updated.
         vm.warp(block.timestamp + 100);
-        (bool resultWithAlternateGetter, bool virtualBalancesChanged) = IReClammPool(pool)
-            .isPoolWithinTargetRangeUsingCurrentVirtualBalances();
+        (bool resultWithAlternateGetter, bool virtualBalancesChanged) =
+            IReClammPool(pool).isPoolWithinTargetRangeUsingCurrentVirtualBalances();
 
         assertFalse(resultWithAlternateGetter, "Actual value still in range with alternate getter");
         assertTrue(virtualBalancesChanged, "Last != current virtual balances");
@@ -1074,13 +993,11 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.warp(block.timestamp + 6 hours);
 
         // Check if the last virtual balances stored in the pool are different from the current virtual balances.
-        (uint256[] memory virtualBalancesBefore, ) = _computeCurrentVirtualBalances(pool);
+        (uint256[] memory virtualBalancesBefore,) = _computeCurrentVirtualBalances(pool);
         uint256[] memory lastVirtualBalancesBeforeSet = _getLastVirtualBalances(pool);
 
         assertNotEq(
-            virtualBalancesBefore[daiIdx],
-            lastVirtualBalancesBeforeSet[daiIdx],
-            "DAI virtual balance remains unchanged"
+            virtualBalancesBefore[daiIdx], lastVirtualBalancesBeforeSet[daiIdx], "DAI virtual balance remains unchanged"
         );
         assertNotEq(
             virtualBalancesBefore[usdcIdx],
@@ -1114,10 +1031,8 @@ contract ReClammPoolTest is BaseReClammTest {
     function testDynamicGetterBeforeInitialized() public {
         IERC20[] memory sortedTokens = InputHelpers.sortTokens(tokens);
 
-        (address pool, ) = _createPool(
-            [address(sortedTokens[a]), address(sortedTokens[b])].toMemoryArray(),
-            "BeforeInitTest"
-        );
+        (address pool,) =
+            _createPool([address(sortedTokens[a]), address(sortedTokens[b])].toMemoryArray(), "BeforeInitTest");
 
         // Should not revert.
         IReClammPool(pool).getReClammPoolDynamicData();
@@ -1126,10 +1041,8 @@ contract ReClammPoolTest is BaseReClammTest {
     function testComputePriceRangeBeforeInitialized() public {
         IERC20[] memory sortedTokens = InputHelpers.sortTokens(tokens);
 
-        (address pool, ) = _createPool(
-            [address(sortedTokens[a]), address(sortedTokens[b])].toMemoryArray(),
-            "BeforeInitTest"
-        );
+        (address pool,) =
+            _createPool([address(sortedTokens[a]), address(sortedTokens[b])].toMemoryArray(), "BeforeInitTest");
 
         assertFalse(vault.isPoolInitialized(pool), "Pool is initialized");
 
@@ -1239,30 +1152,23 @@ contract ReClammPoolTest is BaseReClammTest {
     }
 
     function testOnBeforeInitializeEvents() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         ReClammPoolImmutableData memory data = IReClammPool(newPool).getReClammPoolImmutableData();
 
-        (, , , uint256 priceRatio) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
-            data.initialMinPrice,
-            data.initialMaxPrice,
-            data.initialTargetPrice
+        (,,, uint256 priceRatio) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
+            data.initialMinPrice, data.initialMaxPrice, data.initialTargetPrice
         );
 
         uint256 fourthRootPriceRatio = ReClammMath.fourthRootScaled18(priceRatio);
 
-        uint128 dailyPriceShiftBase = ReClammMath
-            .toDailyPriceShiftBase(data.initialDailyPriceShiftExponent)
-            .toUint128();
+        uint128 dailyPriceShiftBase = ReClammMath.toDailyPriceShiftBase(data.initialDailyPriceShiftExponent).toUint128();
         uint256 actualDailyPriceShiftExponent = ReClammMath.toDailyPriceShiftExponent(dailyPriceShiftBase);
 
         vm.expectEmit(newPool);
         emit IReClammEvents.PriceRatioStateUpdated(
-            fourthRootPriceRatio,
-            fourthRootPriceRatio,
-            block.timestamp,
-            block.timestamp
+            fourthRootPriceRatio, fourthRootPriceRatio, block.timestamp, block.timestamp
         );
 
         vm.expectEmit(address(vault));
@@ -1277,9 +1183,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit(address(vault));
         emit IVaultEvents.VaultAuxiliary(
-            newPool,
-            "DailyPriceShiftExponentUpdated",
-            abi.encode(actualDailyPriceShiftExponent, dailyPriceShiftBase)
+            newPool, "DailyPriceShiftExponentUpdated", abi.encode(actualDailyPriceShiftExponent, dailyPriceShiftBase)
         );
 
         vm.expectEmit(newPool);
@@ -1287,9 +1191,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.expectEmit(address(vault));
         emit IVaultEvents.VaultAuxiliary(
-            newPool,
-            "CenterednessMarginUpdated",
-            abi.encode(data.initialCenterednessMargin)
+            newPool, "CenterednessMarginUpdated", abi.encode(data.initialCenterednessMargin)
         );
 
         vm.expectEmit(newPool);
@@ -1341,8 +1243,8 @@ contract ReClammPoolTest is BaseReClammTest {
     }
 
     function testInitializeRangeErrors() public {
-        (address newPool, ) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (address newPool,) = _createPool([address(usdc), address(dai)].toMemoryArray(), "New Test Pool");
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         uint256[] memory highRatioAmounts = _initialBalances;
         highRatioAmounts[a] = 1e18;
@@ -1383,18 +1285,19 @@ contract ReClammPoolTest is BaseReClammTest {
         });
 
         vm.expectRevert(IVaultErrors.InvalidTokenType.selector);
-        ReClammPoolFactoryMock(poolFactory).create(
-            name,
-            symbol,
-            tokenConfig,
-            roleAccounts,
-            _DEFAULT_SWAP_FEE,
-            address(0), // hook contract
-            priceParams,
-            _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            bytes32(saltNumber++)
-        );
+        ReClammPoolFactoryMock(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfig,
+                roleAccounts,
+                _DEFAULT_SWAP_FEE,
+                address(0), // hook contract
+                priceParams,
+                _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
+                _DEFAULT_CENTEREDNESS_MARGIN,
+                bytes32(saltNumber++)
+            );
 
         // Repeat for the other one.
         priceParams = ReClammPriceParams({
@@ -1406,18 +1309,19 @@ contract ReClammPoolTest is BaseReClammTest {
         });
 
         vm.expectRevert(IVaultErrors.InvalidTokenType.selector);
-        ReClammPoolFactoryMock(poolFactory).create(
-            name,
-            symbol,
-            tokenConfig,
-            roleAccounts,
-            _DEFAULT_SWAP_FEE,
-            address(0), // hook contract
-            priceParams,
-            _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            bytes32(saltNumber++)
-        );
+        ReClammPoolFactoryMock(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfig,
+                roleAccounts,
+                _DEFAULT_SWAP_FEE,
+                address(0), // hook contract
+                priceParams,
+                _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
+                _DEFAULT_CENTEREDNESS_MARGIN,
+                bytes32(saltNumber++)
+            );
     }
 
     function testInvalidStartTime() public {
@@ -1428,11 +1332,10 @@ contract ReClammPoolTest is BaseReClammTest {
 
         // Fail `priceRatioUpdateStartTime > priceRatioUpdateEndTime`.
         vm.expectRevert(IReClammErrors.InvalidStartTime.selector);
-        ReClammPoolMock(payable(pool)).manualStartPriceRatioUpdate(
-            data.endFourthRootPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        ReClammPoolMock(payable(pool))
+            .manualStartPriceRatioUpdate(
+                data.endFourthRootPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime
+            );
 
         priceRatioUpdateEndTime = block.timestamp + 100; // valid
 
@@ -1440,11 +1343,10 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.warp(priceRatioUpdateStartTime + 1);
 
         vm.expectRevert(IReClammErrors.InvalidStartTime.selector);
-        ReClammPoolMock(payable(pool)).manualStartPriceRatioUpdate(
-            data.endFourthRootPriceRatio,
-            priceRatioUpdateStartTime,
-            priceRatioUpdateEndTime
-        );
+        ReClammPoolMock(payable(pool))
+            .manualStartPriceRatioUpdate(
+                data.endFourthRootPriceRatio, priceRatioUpdateStartTime, priceRatioUpdateEndTime
+            );
     }
 
     function testDailyPriceShiftExponentHighPrice__Fuzz(uint256 exponent) public {
@@ -1456,18 +1358,11 @@ contract ReClammPoolTest is BaseReClammTest {
         ReClammPool(payable(pool)).setDailyPriceShiftExponent(exponent);
 
         // 3. Swap all of token B for token A using the router, with amountOut = current balance of A
-        (IERC20[] memory tokens, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(alice);
         router.swapSingleTokenExactOut(
-            pool,
-            tokens[b],
-            tokens[a],
-            balances[a],
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
+            pool, tokens[b], tokens[a], balances[a], MAX_UINT256, MAX_UINT256, false, bytes("")
         );
 
         // Skip 1 second, so the virtual balances are updated in the pool.
@@ -1498,18 +1393,11 @@ contract ReClammPoolTest is BaseReClammTest {
         ReClammPool(payable(pool)).setDailyPriceShiftExponent(exponent);
 
         // 3. Swap all of token B for token A using the router, with amountOut = current balance of A
-        (IERC20[] memory tokens, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(alice);
         router.swapSingleTokenExactOut(
-            pool,
-            tokens[a],
-            tokens[b],
-            balances[b],
-            MAX_UINT256,
-            MAX_UINT256,
-            false,
-            bytes("")
+            pool, tokens[a], tokens[b], balances[b], MAX_UINT256, MAX_UINT256, false, bytes("")
         );
 
         // Skip 1 second, so the virtual balances are updated in the pool.
@@ -1547,7 +1435,7 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.stopPrank();
 
         // Swap all of token B for token A using the router, getting almost all of the balance of B.
-        (IERC20[] memory tokens, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(alice);
         router.swapSingleTokenExactOut(
@@ -1561,24 +1449,21 @@ contract ReClammPoolTest is BaseReClammTest {
             bytes("")
         );
 
-        (, , , uint256[] memory balancesScaled18AfterSwap) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory balancesScaled18AfterSwap) = vault.getPoolTokenInfo(pool);
 
-        (uint256 poolCenterednessAfterSwap, ) = IReClammPool(pool).computeCurrentPoolCenteredness();
+        (uint256 poolCenterednessAfterSwap,) = IReClammPool(pool).computeCurrentPoolCenteredness();
         assertApproxEqAbs(poolCenterednessAfterSwap, 0, 0.5e16, "Pool centeredness after swap is not close to 0%");
         assertFalse(IReClammPool(pool).isPoolWithinTargetRange(), "Pool is still within target range after swap");
 
         // Wait some time, verify that the price is moving.
         skip(SHORT_DELAY);
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
 
         assertTrue(changed, "Virtual balances did not change after short delay");
-        (uint256 centerednessAfterShortDelay, bool isPoolAboveCenter) = ReClammMath.computeCenteredness(
-            balancesScaled18AfterSwap,
-            currentVirtualBalanceA,
-            currentVirtualBalanceB
-        );
+        (uint256 centerednessAfterShortDelay, bool isPoolAboveCenter) =
+            ReClammMath.computeCenteredness(balancesScaled18AfterSwap, currentVirtualBalanceA, currentVirtualBalanceB);
         assertGt(
             centerednessAfterShortDelay,
             poolCenterednessAfterSwap,
@@ -1594,15 +1479,10 @@ contract ReClammPoolTest is BaseReClammTest {
         (currentVirtualBalanceA, currentVirtualBalanceB, changed) = IReClammPool(pool).computeCurrentVirtualBalances();
         assertTrue(changed, "Virtual balances did not change after long delay");
         uint256 centerednessAfterLongDelay;
-        (centerednessAfterLongDelay, isPoolAboveCenter) = ReClammMath.computeCenteredness(
-            balancesScaled18AfterSwap,
-            currentVirtualBalanceA,
-            currentVirtualBalanceB
-        );
+        (centerednessAfterLongDelay, isPoolAboveCenter) =
+            ReClammMath.computeCenteredness(balancesScaled18AfterSwap, currentVirtualBalanceA, currentVirtualBalanceB);
         assertGt(
-            centerednessAfterLongDelay,
-            centerednessAfterShortDelay,
-            "Centeredness did not increase after long delay"
+            centerednessAfterLongDelay, centerednessAfterShortDelay, "Centeredness did not increase after long delay"
         );
 
         assertTrue(isPoolAboveCenter, "Pool is not above the center (changed sides)");
@@ -1610,8 +1490,8 @@ contract ReClammPoolTest is BaseReClammTest {
 
         // Wait even more; the virtual balances should not change anymore.
         skip(10 days);
-        (uint256 finalVirtualBalanceA, uint256 finalVirtualBalanceB, ) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 finalVirtualBalanceA, uint256 finalVirtualBalanceB,) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
         assertEq(finalVirtualBalanceA, currentVirtualBalanceA, "Final virtual balance A changed");
         assertEq(finalVirtualBalanceB, currentVirtualBalanceB, "Final virtual balance B changed");
     }
@@ -1625,7 +1505,7 @@ contract ReClammPoolTest is BaseReClammTest {
         vm.stopPrank();
 
         // Swap all of token B for token A using the router, getting almost all of the balance of B.
-        (IERC20[] memory tokens, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
 
         vm.prank(alice);
         router.swapSingleTokenExactOut(
@@ -1639,31 +1519,28 @@ contract ReClammPoolTest is BaseReClammTest {
             bytes("")
         );
 
-        (, , , uint256[] memory balancesScaled18AfterSwap) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory balancesScaled18AfterSwap) = vault.getPoolTokenInfo(pool);
 
-        (uint256 poolCenterednessAfterSwap, ) = IReClammPool(pool).computeCurrentPoolCenteredness();
+        (uint256 poolCenterednessAfterSwap,) = IReClammPool(pool).computeCurrentPoolCenteredness();
         assertApproxEqAbs(poolCenterednessAfterSwap, 0, 0.5e16, "Pool centeredness after swap is not close to 0%");
         assertFalse(IReClammPool(pool).isPoolWithinTargetRange(), "Pool is still within target range after swap");
 
         // We're way past the margin right now, but we should not go past 100%.
         skip(30 days);
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, bool changed) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
         assertTrue(changed, "Virtual balances did not change after long delay");
-        (uint256 centerednessAfterLongDelay, bool isPoolAboveCenter) = ReClammMath.computeCenteredness(
-            balancesScaled18AfterSwap,
-            currentVirtualBalanceA,
-            currentVirtualBalanceB
-        );
+        (uint256 centerednessAfterLongDelay, bool isPoolAboveCenter) =
+            ReClammMath.computeCenteredness(balancesScaled18AfterSwap, currentVirtualBalanceA, currentVirtualBalanceB);
         assertApproxEqAbs(centerednessAfterLongDelay, 100e16, 0.0000001e16, "Centeredness did not stop at 100%");
         assertTrue(isPoolAboveCenter, "Pool is not above the center (changed sides)");
         assertLt(centerednessAfterLongDelay, 100e16, "Centeredness did not stay below 100%");
 
         // Wait even more; the virtual balances should not change anymore.
         skip(30 days);
-        (uint256 finalVirtualBalanceA, uint256 finalVirtualBalanceB, ) = IReClammPool(pool)
-            .computeCurrentVirtualBalances();
+        (uint256 finalVirtualBalanceA, uint256 finalVirtualBalanceB,) =
+            IReClammPool(pool).computeCurrentVirtualBalances();
         assertEq(finalVirtualBalanceA, currentVirtualBalanceA, "Final virtual balance A changed");
         assertEq(finalVirtualBalanceB, currentVirtualBalanceB, "Final virtual balance B changed");
     }
@@ -1697,9 +1574,7 @@ contract ReClammPoolTest is BaseReClammTest {
     function testProxyWiring() public view {
         address extension = IReClammPool(pool).getReClammPoolExtension();
         assertEq(
-            address(IReClammPoolExtension(extension).pool()),
-            pool,
-            "Pool and extension do not point to each other"
+            address(IReClammPoolExtension(extension).pool()), pool, "Pool and extension do not point to each other"
         );
     }
 
@@ -1719,7 +1594,7 @@ contract ReClammPoolTest is BaseReClammTest {
 
     function testEthFallbackPool() public {
         vm.prank(alice);
-        (bool success, bytes memory data) = pool.call{ value: 1 }(hex"deadbeef");
+        (bool success, bytes memory data) = pool.call{value: 1}(hex"deadbeef");
 
         assertFalse(success);
         assertEq(bytes4(data), IVaultErrors.CannotReceiveEth.selector);
@@ -1729,7 +1604,7 @@ contract ReClammPoolTest is BaseReClammTest {
         address extension = IReClammPool(pool).getReClammPoolExtension();
 
         vm.prank(alice);
-        (bool success, bytes memory data) = extension.call{ value: 1 }(hex"deadbeef");
+        (bool success, bytes memory data) = extension.call{value: 1}(hex"deadbeef");
 
         assertFalse(success);
         assertEq(bytes4(data), IVaultErrors.CannotReceiveEth.selector);
@@ -1898,18 +1773,19 @@ contract ReClammPoolTest is BaseReClammTest {
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(sortedTokens);
 
         vm.expectRevert(IReClammErrors.InvalidInitialPrice.selector);
-        ReClammPoolFactoryMock(poolFactory).create(
-            name,
-            symbol,
-            tokenConfig,
-            roleAccounts,
-            _DEFAULT_SWAP_FEE,
-            address(0), // hook contract
-            priceParams,
-            _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            bytes32(saltNumber++)
-        );
+        ReClammPoolFactoryMock(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfig,
+                roleAccounts,
+                _DEFAULT_SWAP_FEE,
+                address(0), // hook contract
+                priceParams,
+                _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
+                _DEFAULT_CENTEREDNESS_MARGIN,
+                bytes32(saltNumber++)
+            );
     }
 
     function _createStandardPool(string memory label) internal returns (address newPool) {
@@ -1928,18 +1804,19 @@ contract ReClammPoolTest is BaseReClammTest {
             tokenBPriceIncludesRate: false
         });
 
-        newPool = ReClammPoolFactoryMock(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(sortedTokens),
-            roleAccounts,
-            _DEFAULT_SWAP_FEE,
-            address(0), // hook contract
-            priceParams,
-            _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
-            _DEFAULT_CENTEREDNESS_MARGIN,
-            bytes32(saltNumber++)
-        );
+        newPool = ReClammPoolFactoryMock(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(sortedTokens),
+                roleAccounts,
+                _DEFAULT_SWAP_FEE,
+                address(0), // hook contract
+                priceParams,
+                _DEFAULT_DAILY_PRICE_SHIFT_EXPONENT,
+                _DEFAULT_CENTEREDNESS_MARGIN,
+                bytes32(saltNumber++)
+            );
         vm.label(newPool, label);
     }
 }

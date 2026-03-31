@@ -4,14 +4,18 @@ pragma solidity ^0.8.24;
 
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { ITimelockAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ITimelockAuthorizer.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    ITimelockAuthorizer
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ITimelockAuthorizer.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { TimelockAuthorizerManagement } from "./TimelockAuthorizerManagement.sol";
-import { TimelockExecutionHelper } from "./TimelockExecutionHelper.sol";
+import {TimelockAuthorizerManagement} from "./TimelockAuthorizerManagement.sol";
+import {TimelockExecutionHelper} from "./TimelockExecutionHelper.sol";
 
 /// @notice See ITimelockAuthorizer.
 contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
@@ -34,12 +38,9 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     // actionId -> delay (in seconds)
     mapping(bytes32 => uint256) private _delaysPerActionId;
 
-    constructor(
-        address initialRoot,
-        address nextRoot,
-        IVault vault,
-        uint256 rootTransferDelay
-    ) TimelockAuthorizerManagement(initialRoot, nextRoot, vault, rootTransferDelay) {
+    constructor(address initialRoot, address nextRoot, IVault vault, uint256 rootTransferDelay)
+        TimelockAuthorizerManagement(initialRoot, nextRoot, vault, rootTransferDelay)
+    {
         _setAuthorizerActionId = IAuthentication(vault).getActionId(IVaultAdmin.setAuthorizer.selector);
     }
 
@@ -69,11 +70,12 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function isPermissionGrantedOnTarget(
-        bytes32 actionId,
-        address account,
-        address where
-    ) external view override returns (bool) {
+    function isPermissionGrantedOnTarget(bytes32 actionId, address account, address where)
+        external
+        view
+        override
+        returns (bool)
+    {
         return _isPermissionGranted[actionId][account][where];
     }
 
@@ -88,10 +90,9 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
         // However, actions with a non-zero delay cannot be performed by permissioned accounts: they can only be made by
         // the TimelockAuthorizerExecutionHelper, which works alongside the TimelockAuthorizer itself to ensure that
         // executions have been properly scheduled in advance by an authorized party via the `schedule` function.
-        return
-            _delaysPerActionId[actionId] == 0
-                ? hasPermission(actionId, account, where)
-                : account == getTimelockExecutionHelper();
+        return _delaysPerActionId[actionId] == 0
+            ? hasPermission(actionId, account, where)
+            : account == getTimelockExecutionHelper();
     }
 
     /// @inheritdoc ITimelockAuthorizer
@@ -123,11 +124,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function scheduleDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function scheduleDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         require(isRoot(msg.sender), "SENDER_IS_NOT_ROOT");
         require(newDelay <= MAX_DELAY(), "DELAY_TOO_LARGE");
 
@@ -144,11 +145,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function scheduleGrantDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function scheduleGrantDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         require(isRoot(msg.sender), "SENDER_IS_NOT_ROOT");
         require(newDelay <= MAX_DELAY(), "DELAY_TOO_LARGE");
 
@@ -164,11 +165,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function scheduleRevokeDelayChange(
-        bytes32 actionId,
-        uint256 newDelay,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function scheduleRevokeDelayChange(bytes32 actionId, uint256 newDelay, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         require(isRoot(msg.sender), "SENDER_IS_NOT_ROOT");
         require(newDelay <= MAX_DELAY(), "DELAY_TOO_LARGE");
 
@@ -184,11 +185,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function schedule(
-        address where,
-        bytes memory data,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function schedule(address where, bytes memory data, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         // Allowing scheduling arbitrary calls into the TimelockAuthorizer is dangerous.
         //
         // It is expected that only the `root` account can initiate a root transfer as this condition is enforced
@@ -257,12 +258,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function scheduleGrantPermission(
-        bytes32 actionId,
-        address account,
-        address where,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function scheduleGrantPermission(bytes32 actionId, address account, address where, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         require(isGranter(actionId, msg.sender, where), "SENDER_IS_NOT_GRANTER");
 
         uint256 delay = _grantDelays[actionId];
@@ -295,12 +295,11 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
     }
 
     /// @inheritdoc ITimelockAuthorizer
-    function scheduleRevokePermission(
-        bytes32 actionId,
-        address account,
-        address where,
-        address[] memory executors
-    ) external override returns (uint256) {
+    function scheduleRevokePermission(bytes32 actionId, address account, address where, address[] memory executors)
+        external
+        override
+        returns (uint256)
+    {
         require(isRevoker(msg.sender, where), "SENDER_IS_NOT_REVOKER");
 
         uint256 delay = _revokeDelays[actionId];
@@ -368,10 +367,9 @@ contract TimelockAuthorizer is IAuthorizer, TimelockAuthorizerManagement {
         // changes are subject to a minimum execution delay, to allow for proper scrutiny of these potentially
         // dangerous actions.
 
-        return
-            newDelay < currentDelay
-                ? Math.max(currentDelay - newDelay, MINIMUM_CHANGE_DELAY_EXECUTION_DELAY())
-                : MINIMUM_CHANGE_DELAY_EXECUTION_DELAY();
+        return newDelay < currentDelay
+            ? Math.max(currentDelay - newDelay, MINIMUM_CHANGE_DELAY_EXECUTION_DELAY())
+            : MINIMUM_CHANGE_DELAY_EXECUTION_DELAY();
     }
 
     /**

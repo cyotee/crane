@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import "./GyroPoolMath.sol";
 
@@ -21,12 +21,11 @@ library Gyro2CLPMath {
     // It is also used to collect protocol swap fees by comparing its value between two times.
     // We can always round in the same direction. It is also used to initialize the BPT amount and,
     // because there is a minimum BPT, we round the invariant down.
-    function calculateInvariant(
-        uint256[] memory balances,
-        uint256 sqrtAlpha,
-        uint256 sqrtBeta,
-        Rounding rounding
-    ) internal pure returns (uint256) {
+    function calculateInvariant(uint256[] memory balances, uint256 sqrtAlpha, uint256 sqrtBeta, Rounding rounding)
+        internal
+        pure
+        returns (uint256)
+    {
         /**********************************************************************************************
         // Calculate with quadratic formula
         // 0 = (1-sqrt(alpha/beta)*L^2 - (y/sqrt(beta)+x*sqrt(alpha))*L - x*y)
@@ -38,12 +37,8 @@ library Gyro2CLPMath {
         //                                          2 * a                               //
         //                                                                              //
         **********************************************************************************************/
-        (uint256 a, uint256 mb, uint256 bSquare, uint256 mc) = calculateQuadraticTerms(
-            balances,
-            sqrtAlpha,
-            sqrtBeta,
-            rounding
-        );
+        (uint256 a, uint256 mb, uint256 bSquare, uint256 mc) =
+            calculateQuadraticTerms(balances, sqrtAlpha, sqrtBeta, rounding);
 
         return calculateQuadratic(a, mb, bSquare, mc, rounding);
     }
@@ -62,23 +57,19 @@ library Gyro2CLPMath {
      * @return bSquare Bhaskara's `b^2` term. The calculation is optimized to be more precise than just b*b
      * @return mc Bhaskara's `c` term, negative (stands for minus c)
      */
-    function calculateQuadraticTerms(
-        uint256[] memory balances,
-        uint256 sqrtAlpha,
-        uint256 sqrtBeta,
-        Rounding rounding
-    ) internal pure returns (uint256 a, uint256 mb, uint256 bSquare, uint256 mc) {
-        function(uint256, uint256) pure returns (uint256) _divUpOrDown = rounding == Rounding.ROUND_DOWN
-            ? FixedPoint.divDown
-            : FixedPoint.divUp;
-        function(uint256, uint256) pure returns (uint256) _mulUpOrDown = rounding == Rounding.ROUND_DOWN
-            ? FixedPoint.mulDown
-            : FixedPoint.mulUp;
+    function calculateQuadraticTerms(uint256[] memory balances, uint256 sqrtAlpha, uint256 sqrtBeta, Rounding rounding)
+        internal
+        pure
+        returns (uint256 a, uint256 mb, uint256 bSquare, uint256 mc)
+    {
+        function(uint256, uint256) pure returns (uint256) _divUpOrDown =
+            rounding == Rounding.ROUND_DOWN ? FixedPoint.divDown : FixedPoint.divUp;
+        function(uint256, uint256) pure returns (uint256) _mulUpOrDown =
+            rounding == Rounding.ROUND_DOWN ? FixedPoint.mulDown : FixedPoint.mulUp;
 
         // This is the inverse of mulUpAndDown, used to round denominator terms.
-        function(uint256, uint256) pure returns (uint256) _mulDownOrUp = rounding == Rounding.ROUND_DOWN
-            ? FixedPoint.mulUp
-            : FixedPoint.mulDown;
+        function(uint256, uint256) pure returns (uint256) _mulDownOrUp =
+            rounding == Rounding.ROUND_DOWN ? FixedPoint.mulUp : FixedPoint.mulDown;
 
         {
             // `a` follows the opposite rounding than `b` and `c`, since the most significant term is in the
@@ -118,14 +109,16 @@ library Gyro2CLPMath {
         uint256 bSquare, // b^2 can be calculated separately with more precision
         uint256 mc,
         Rounding rounding
-    ) internal pure returns (uint256 invariant) {
-        function(uint256, uint256) pure returns (uint256) _mulUpOrDown = rounding == Rounding.ROUND_DOWN
-            ? FixedPoint.mulDown
-            : FixedPoint.mulUp;
+    )
+        internal
+        pure
+        returns (uint256 invariant)
+    {
+        function(uint256, uint256) pure returns (uint256) _mulUpOrDown =
+            rounding == Rounding.ROUND_DOWN ? FixedPoint.mulDown : FixedPoint.mulUp;
 
-        function(uint256, uint256) pure returns (uint256) _divUpOrDown = rounding == Rounding.ROUND_DOWN
-            ? FixedPoint.divDown
-            : FixedPoint.divUp;
+        function(uint256, uint256) pure returns (uint256) _divUpOrDown =
+            rounding == Rounding.ROUND_DOWN ? FixedPoint.divDown : FixedPoint.divUp;
 
         uint256 denominator = 2 * a;
         // Order multiplications for fixed point precision.
@@ -162,19 +155,19 @@ library Gyro2CLPMath {
         uint256 virtualOffsetOut
     ) internal pure returns (uint256 amountOut) {
         /**********************************************************************************************
-      // Described for X = `in' asset and Y = `out' asset, but equivalent for the other case       //
-      // dX = incrX  = amountIn  > 0                                                               //
-      // dY = incrY = amountOut < 0                                                                //
-      // x = balanceIn             x' = x +  virtualParamX                                         //
-      // y = balanceOut            y' = y +  virtualParamY                                         //
-      // L  = inv.Liq                   /            x' * y'          \          y' * dX           //
-      //                   |dy| = y' - |   --------------------------  |   = --------------  -     //
-      //  x' = virtIn                   \          ( x' + dX)         /          x' + dX           //
-      //  y' = virtOut                                                                             //
-      // Note that -dy > 0 is what the trader receives.                                            //
-      // We exploit the fact that this formula is symmetric up to virtualOffset{X,Y}.               //
-      // We do not use L^2, but rather x' * y', to prevent a potential accumulation of errors.      //
-      **********************************************************************************************/
+        // Described for X = `in' asset and Y = `out' asset, but equivalent for the other case       //
+        // dX = incrX  = amountIn  > 0                                                               //
+        // dY = incrY = amountOut < 0                                                                //
+        // x = balanceIn             x' = x +  virtualParamX                                         //
+        // y = balanceOut            y' = y +  virtualParamY                                         //
+        // L  = inv.Liq                   /            x' * y'          \          y' * dX           //
+        //                   |dy| = y' - |   --------------------------  |   = --------------  -     //
+        //  x' = virtIn                   \          ( x' + dX)         /          x' + dX           //
+        //  y' = virtOut                                                                             //
+        // Note that -dy > 0 is what the trader receives.                                            //
+        // We exploit the fact that this formula is symmetric up to virtualOffset{X,Y}.               //
+        // We do not use L^2, but rather x' * y', to prevent a potential accumulation of errors.      //
+        **********************************************************************************************/
 
         {
             uint256 virtInOver = balanceIn + virtualOffsetIn;
@@ -201,19 +194,19 @@ library Gyro2CLPMath {
         uint256 virtualOffsetOut
     ) internal pure returns (uint256 amountIn) {
         /**********************************************************************************************
-      // dX = incrX  = amountIn  > 0                                                                 //
-      // dY = incrY  = amountOut < 0                                                                 //
-      // x = balanceIn             x' = x +  virtualParamX                                           //
-      // y = balanceOut            y' = y +  virtualParamY                                           //
-      // x = balanceIn                                                                               //
-      // L  = inv.Liq               /            x' * y'          \                x' * dy           //
-      //                     dx =  |   --------------------------  |  -  x'  = - -----------         //
-      // x' = virtIn               \             y' + dy          /                y' + dy           //
-      // y' = virtOut                                                                                //
-      // Note that dy < 0 < dx.                                                                      //
-      // We exploit the fact that this formula is symmetric up to virtualOffset{X,Y}.                //
-      // We do not use L^2, but rather x' * y', to prevent a potential accumulation of errors.       //
-      **********************************************************************************************/
+        // dX = incrX  = amountIn  > 0                                                                 //
+        // dY = incrY  = amountOut < 0                                                                 //
+        // x = balanceIn             x' = x +  virtualParamX                                           //
+        // y = balanceOut            y' = y +  virtualParamY                                           //
+        // x = balanceIn                                                                               //
+        // L  = inv.Liq               /            x' * y'          \                x' * dy           //
+        //                     dx =  |   --------------------------  |  -  x'  = - -----------         //
+        // x' = virtIn               \             y' + dy          /                y' + dy           //
+        // y' = virtOut                                                                                //
+        // Note that dy < 0 < dx.                                                                      //
+        // We exploit the fact that this formula is symmetric up to virtualOffset{X,Y}.                //
+        // We do not use L^2, but rather x' * y', to prevent a potential accumulation of errors.       //
+        **********************************************************************************************/
         if (!(amountOut <= balanceOut)) {
             revert AssetBoundsExceeded();
         }
@@ -227,20 +220,20 @@ library Gyro2CLPMath {
     }
 
     /// @dev Calculate the virtual offset `a` for reserves `x`, as in (x+a)*(y+b)=L^2.
-    function calculateVirtualParameter0(
-        uint256 invariant,
-        uint256 _sqrtBeta,
-        Rounding rounding
-    ) internal pure returns (uint256) {
+    function calculateVirtualParameter0(uint256 invariant, uint256 _sqrtBeta, Rounding rounding)
+        internal
+        pure
+        returns (uint256)
+    {
         return rounding == Rounding.ROUND_DOWN ? invariant.divDown(_sqrtBeta) : invariant.divUp(_sqrtBeta);
     }
 
     /// @dev Calculate the virtual offset `b` for reserves `y`, as in (x+a)*(y+b)=L^2.
-    function calculateVirtualParameter1(
-        uint256 invariant,
-        uint256 _sqrtAlpha,
-        Rounding rounding
-    ) internal pure returns (uint256) {
+    function calculateVirtualParameter1(uint256 invariant, uint256 _sqrtAlpha, Rounding rounding)
+        internal
+        pure
+        returns (uint256)
+    {
         return rounding == Rounding.ROUND_DOWN ? invariant.mulDown(_sqrtAlpha) : invariant.mulUp(_sqrtAlpha);
     }
 
@@ -250,12 +243,11 @@ library Gyro2CLPMath {
      * The spot price is bounded by pool parameters due to virtual reserves. Aside from being instantaneously
      * manipulable within a transaction, it may also not be accurate if the true price is outside of these bounds.
      */
-    function calcSpotPriceAinB(
-        uint256 balanceA,
-        uint256 virtualParameterA,
-        uint256 balanceB,
-        uint256 virtualParameterB
-    ) internal pure returns (uint256) {
+    function calcSpotPriceAinB(uint256 balanceA, uint256 virtualParameterA, uint256 balanceB, uint256 virtualParameterB)
+        internal
+        pure
+        returns (uint256)
+    {
         return (balanceB + virtualParameterB).divUp((balanceA + virtualParameterA));
     }
 }

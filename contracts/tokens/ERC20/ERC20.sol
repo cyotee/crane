@@ -70,7 +70,13 @@ abstract contract ERC20 is SoladyERC20, IERC20 {
     /**
      * @dev See {IERC20-allowance}.
      */
-    function allowance(address owner, address spender) public view virtual override(SoladyERC20, IERC20) returns (uint256) {
+    function allowance(address owner, address spender)
+        public
+        view
+        virtual
+        override(SoladyERC20, IERC20)
+        returns (uint256)
+    {
         return SoladyERC20.allowance(owner, spender);
     }
 
@@ -84,7 +90,12 @@ abstract contract ERC20 is SoladyERC20, IERC20 {
     /**
      * @dev See {IERC20-transferFrom}.
      */
-    function transferFrom(address from, address to, uint256 value) public virtual override(SoladyERC20, IERC20) returns (bool) {
+    function transferFrom(address from, address to, uint256 value)
+        public
+        virtual
+        override(SoladyERC20, IERC20)
+        returns (bool)
+    {
         return SoladyERC20.transferFrom(from, to, value);
     }
 

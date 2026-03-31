@@ -4,10 +4,13 @@ pragma solidity ^0.8.0;
 import {PoolId} from "../types/PoolId.sol";
 import {IPoolManager} from "../interfaces/IPoolManager.sol";
 import {Position} from "./Position.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice A helper library to provide state getters that use extsload
 /// @dev Ported from Uniswap V4 for compatibility with Solidity 0.8.30
 library StateLibrary {
+    using BetterEfficientHashLib for bytes;
+
     /// @notice index of pools mapping in the PoolManager
     bytes32 public constant POOLS_SLOT = bytes32(uint256(6));
 
@@ -199,11 +202,7 @@ library StateLibrary {
      * @param tick The tick to retrieve the bitmap for.
      * @return tickBitmap The bitmap of the tick.
      */
-    function getTickBitmap(IPoolManager manager, PoolId poolId, int16 tick)
-        internal
-        view
-        returns (uint256 tickBitmap)
-    {
+    function getTickBitmap(IPoolManager manager, PoolId poolId, int16 tick) internal view returns (uint256 tickBitmap) {
         // slot key of Pool.State value: `pools[poolId]`
         bytes32 stateSlot = _getPoolStateSlot(poolId);
 
@@ -211,7 +210,8 @@ library StateLibrary {
         bytes32 tickBitmapMapping = bytes32(uint256(stateSlot) + TICK_BITMAP_OFFSET);
 
         // slot id of the mapping key: `pools[poolId].tickBitmap[tick]
-        bytes32 slot = keccak256(abi.encodePacked(int256(tick), tickBitmapMapping));
+        // bytes32 slot = keccak256(abi.encodePacked(int256(tick), tickBitmapMapping));
+        bytes32 slot = abi.encodePacked(int256(tick), tickBitmapMapping)._hash();
 
         tickBitmap = uint256(manager.extsload(slot));
     }
@@ -323,7 +323,8 @@ library StateLibrary {
     }
 
     function _getPoolStateSlot(PoolId poolId) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(PoolId.unwrap(poolId), POOLS_SLOT));
+        // return keccak256(abi.encodePacked(PoolId.unwrap(poolId), POOLS_SLOT));
+        return abi.encodePacked(PoolId.unwrap(poolId), POOLS_SLOT)._hash();
     }
 
     function _getTickInfoSlot(PoolId poolId, int24 tick) internal pure returns (bytes32) {
@@ -334,7 +335,8 @@ library StateLibrary {
         bytes32 ticksMappingSlot = bytes32(uint256(stateSlot) + TICKS_OFFSET);
 
         // slot key of the tick key: `pools[poolId].ticks[tick]
-        return keccak256(abi.encodePacked(int256(tick), ticksMappingSlot));
+        // return keccak256(abi.encodePacked(int256(tick), ticksMappingSlot));
+        return abi.encodePacked(int256(tick), ticksMappingSlot)._hash();
     }
 
     function _getPositionInfoSlot(PoolId poolId, bytes32 positionId) internal pure returns (bytes32) {
@@ -345,6 +347,7 @@ library StateLibrary {
         bytes32 positionMapping = bytes32(uint256(stateSlot) + POSITIONS_OFFSET);
 
         // slot of the mapping key: `pools[poolId].positions[positionId]
-        return keccak256(abi.encodePacked(positionId, positionMapping));
+        // return keccak256(abi.encodePacked(positionId, positionMapping));
+        return abi.encodePacked(positionId, positionMapping)._hash();
     }
 }

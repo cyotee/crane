@@ -8,7 +8,9 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {ICowPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPool.sol";
-import {IWeightedPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
+import {
+    IWeightedPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 import {
     HookFlags,
     PoolSwapParams,
@@ -79,7 +81,9 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
 
         // Verify the expected configuration
         assertTrue(expectedFlags.shouldCallBeforeSwap, "BeforeSwap should be enabled for router gating");
-        assertTrue(expectedFlags.shouldCallBeforeAddLiquidity, "BeforeAddLiquidity should be enabled for donation control");
+        assertTrue(
+            expectedFlags.shouldCallBeforeAddLiquidity, "BeforeAddLiquidity should be enabled for donation control"
+        );
 
         // Verify other flags are disabled
         assertFalse(expectedFlags.enableHookAdjustedAmounts, "HookAdjustedAmounts should be disabled");
@@ -104,7 +108,7 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         weights[1] = WEIGHT_20;
 
         uint256[] memory balances = new uint256[](2);
-        balances[0] = BALANCE_LARGE;  // 1000 tokens at 80% weight
+        balances[0] = BALANCE_LARGE; // 1000 tokens at 80% weight
         balances[1] = BALANCE_MEDIUM; // 100 tokens at 20% weight
 
         // Calculate invariant using WeightedMath (the canonical source)
@@ -147,19 +151,13 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         weights[0] = WEIGHT_80;
         weights[1] = WEIGHT_20;
 
-        uint256 balanceIn = BALANCE_LARGE;   // 1000 tokens
+        uint256 balanceIn = BALANCE_LARGE; // 1000 tokens
         uint256 balanceOut = BALANCE_MEDIUM; // 100 tokens
         uint256 weightIn = WEIGHT_80;
         uint256 weightOut = WEIGHT_20;
         uint256 amountIn = 10e18; // Swap 10 tokens
 
-        uint256 amountOut = WeightedMath.computeOutGivenExactIn(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountIn
-        );
+        uint256 amountOut = WeightedMath.computeOutGivenExactIn(balanceIn, weightIn, balanceOut, weightOut, amountIn);
 
         // Verify output is reasonable
         assertTrue(amountOut > 0, "Amount out should be positive");
@@ -172,19 +170,13 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
 
     /// @notice Verify computeInGivenExactOut for swap math parity
     function test_computeSwap_exactOut_matchesWeightedMath() public pure {
-        uint256 balanceIn = BALANCE_LARGE;   // 1000 tokens
+        uint256 balanceIn = BALANCE_LARGE; // 1000 tokens
         uint256 balanceOut = BALANCE_MEDIUM; // 100 tokens
         uint256 weightIn = WEIGHT_80;
         uint256 weightOut = WEIGHT_20;
         uint256 amountOut = 5e18; // Want 5 tokens out
 
-        uint256 amountIn = WeightedMath.computeInGivenExactOut(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountOut
-        );
+        uint256 amountIn = WeightedMath.computeInGivenExactOut(balanceIn, weightIn, balanceOut, weightOut, amountOut);
 
         // Verify input is reasonable
         assertTrue(amountIn > 0, "Amount in should be positive");
@@ -199,11 +191,7 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         uint256 weight = WEIGHT_50;
         uint256 invariantRatio = 1.1e18; // 10% increase in invariant
 
-        uint256 newBalance = WeightedMath.computeBalanceOutGivenInvariant(
-            balance,
-            weight,
-            invariantRatio
-        );
+        uint256 newBalance = WeightedMath.computeBalanceOutGivenInvariant(balance, weight, invariantRatio);
 
         // New balance should be higher for increased invariant
         assertTrue(newBalance > balance, "New balance should be higher for increased invariant");
@@ -280,13 +268,8 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
 
         // Simulate a swap: exact in 10 tokens of token0
         uint256 amountIn = 10e18;
-        uint256 amountOut = WeightedMath.computeOutGivenExactIn(
-            balancesBefore[0],
-            weights[0],
-            balancesBefore[1],
-            weights[1],
-            amountIn
-        );
+        uint256 amountOut =
+            WeightedMath.computeOutGivenExactIn(balancesBefore[0], weights[0], balancesBefore[1], weights[1], amountIn);
 
         uint256[] memory balancesAfter = new uint256[](2);
         balancesAfter[0] = balancesBefore[0] + amountIn;
@@ -309,7 +292,7 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         weights[1] = WEIGHT_50;
 
         uint256[] memory balances = new uint256[](2);
-        balances[0] = 1e6;  // 0.000000000001 tokens (very small)
+        balances[0] = 1e6; // 0.000000000001 tokens (very small)
         balances[1] = 1e6;
 
         uint256 invariant = WeightedMath.computeInvariantDown(weights, balances);
@@ -323,7 +306,7 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         weights[1] = WEIGHT_50;
 
         uint256[] memory balances = new uint256[](2);
-        balances[0] = 1e30;  // Very large balance
+        balances[0] = 1e30; // Very large balance
         balances[1] = 1e30;
 
         uint256 invariant = WeightedMath.computeInvariantDown(weights, balances);
@@ -337,17 +320,11 @@ contract BalancerV3CowPool_Fork_Test is TestBase_BalancerV3CowFork {
         weights[1] = WEIGHT_20;
 
         // Very asymmetric balances
-        uint256 balanceIn = 10000e18;  // Large balance
-        uint256 balanceOut = 100e18;    // Small balance
-        uint256 amountIn = 100e18;      // 1% of balanceIn
+        uint256 balanceIn = 10000e18; // Large balance
+        uint256 balanceOut = 100e18; // Small balance
+        uint256 amountIn = 100e18; // 1% of balanceIn
 
-        uint256 amountOut = WeightedMath.computeOutGivenExactIn(
-            balanceIn,
-            weights[0],
-            balanceOut,
-            weights[1],
-            amountIn
-        );
+        uint256 amountOut = WeightedMath.computeOutGivenExactIn(balanceIn, weights[0], balanceOut, weights[1], amountIn);
 
         assertTrue(amountOut > 0, "Should produce output even with asymmetric balances");
         assertTrue(amountOut < balanceOut, "Output must not exceed available balance");

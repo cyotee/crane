@@ -4,10 +4,10 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { VaultState } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {VaultState} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
 
 contract PoolAndVaultPausedTest is BaseVaultTest {
     // A number that is much smaller than the Vault pause buffer end time, so we can play with

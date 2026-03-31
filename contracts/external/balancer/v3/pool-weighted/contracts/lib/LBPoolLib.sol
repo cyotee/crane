@@ -2,9 +2,11 @@
 
 pragma solidity ^0.8.24;
 
-import { IWeightedPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
+import {
+    IWeightedPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 library LBPoolLib {
     // Matches Weighted Pool min weight.
@@ -17,17 +19,15 @@ library LBPoolLib {
         uint256 reserveEndWeight
     ) internal pure {
         if (
-            projectStartWeight < _MIN_WEIGHT ||
-            reserveStartWeight < _MIN_WEIGHT ||
-            projectEndWeight < _MIN_WEIGHT ||
-            reserveEndWeight < _MIN_WEIGHT
+            projectStartWeight < _MIN_WEIGHT || reserveStartWeight < _MIN_WEIGHT || projectEndWeight < _MIN_WEIGHT
+                || reserveEndWeight < _MIN_WEIGHT
         ) {
             revert IWeightedPool.MinWeight();
         }
 
         if (
-            projectStartWeight + reserveStartWeight != FixedPoint.ONE ||
-            projectEndWeight + reserveEndWeight != FixedPoint.ONE
+            projectStartWeight + reserveStartWeight != FixedPoint.ONE
+                || projectEndWeight + reserveEndWeight != FixedPoint.ONE
         ) {
             revert IWeightedPool.NormalizedWeightInvariant();
         }

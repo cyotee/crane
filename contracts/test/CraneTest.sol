@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
 import {BetterTest} from "@crane/contracts/test/BetterTest.sol";
 
 abstract contract CraneTest is BetterTest {
-
-    ICreate3Factory create3Factory;
+    ICreate3FactoryProxy create3Factory;
 
     IDiamondPackageCallBackFactory diamondFactory;
     IDiamondPackageCallBackFactory diamondPackageFactory;
@@ -20,5 +19,4 @@ abstract contract CraneTest is BetterTest {
             diamondFactory = diamondPackageFactory;
         }
     }
-
 }

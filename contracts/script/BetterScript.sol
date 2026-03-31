@@ -3,6 +3,4 @@ pragma solidity ^0.8.0;
 
 import {Script} from "forge-std/Script.sol";
 
-abstract contract BetterScript is Script {
-
-}
+abstract contract BetterScript is Script {}

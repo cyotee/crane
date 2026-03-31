@@ -5,8 +5,12 @@ import "forge-std/Test.sol";
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3GyroECLPPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
-import {BalancerV3GyroECLPPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
+import {
+    IBalancerV3GyroECLPPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
+import {
+    BalancerV3GyroECLPPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
 
 /**
  * @title BalancerV3GyroECLPPoolFacet_IFacet_Test
@@ -33,7 +37,11 @@ contract BalancerV3GyroECLPPoolFacet_IFacet_Test is Test {
 
         assertEq(interfaces.length, 2, "Should have 2 interfaces");
         assertEq(interfaces[0], type(IBalancerV3Pool).interfaceId, "First interface should be IBalancerV3Pool");
-        assertEq(interfaces[1], type(IBalancerV3GyroECLPPool).interfaceId, "Second interface should be IBalancerV3GyroECLPPool");
+        assertEq(
+            interfaces[1],
+            type(IBalancerV3GyroECLPPool).interfaceId,
+            "Second interface should be IBalancerV3GyroECLPPool"
+        );
     }
 
     function test_facetFuncs() public view {
@@ -48,10 +56,26 @@ contract BalancerV3GyroECLPPoolFacet_IFacet_Test is Test {
 
         // IBalancerV3GyroECLPPool functions
         assertEq(funcs[3], IBalancerV3GyroECLPPool.getECLPParams.selector, "Fourth func should be getECLPParams");
-        assertEq(funcs[4], IBalancerV3GyroECLPPool.getMinimumSwapFeePercentage.selector, "Fifth func should be getMinimumSwapFeePercentage");
-        assertEq(funcs[5], IBalancerV3GyroECLPPool.getMaximumSwapFeePercentage.selector, "Sixth func should be getMaximumSwapFeePercentage");
-        assertEq(funcs[6], IBalancerV3GyroECLPPool.getMinimumInvariantRatio.selector, "Seventh func should be getMinimumInvariantRatio");
-        assertEq(funcs[7], IBalancerV3GyroECLPPool.getMaximumInvariantRatio.selector, "Eighth func should be getMaximumInvariantRatio");
+        assertEq(
+            funcs[4],
+            IBalancerV3GyroECLPPool.getMinimumSwapFeePercentage.selector,
+            "Fifth func should be getMinimumSwapFeePercentage"
+        );
+        assertEq(
+            funcs[5],
+            IBalancerV3GyroECLPPool.getMaximumSwapFeePercentage.selector,
+            "Sixth func should be getMaximumSwapFeePercentage"
+        );
+        assertEq(
+            funcs[6],
+            IBalancerV3GyroECLPPool.getMinimumInvariantRatio.selector,
+            "Seventh func should be getMinimumInvariantRatio"
+        );
+        assertEq(
+            funcs[7],
+            IBalancerV3GyroECLPPool.getMaximumInvariantRatio.selector,
+            "Eighth func should be getMaximumInvariantRatio"
+        );
     }
 
     function test_facetMetadata() public view {
@@ -66,7 +90,9 @@ contract BalancerV3GyroECLPPoolFacet_IFacet_Test is Test {
         (string memory name, bytes4[] memory interfaces, bytes4[] memory funcs) = facet.facetMetadata();
 
         assertEq(name, facet.facetName(), "Name should match facetName()");
-        assertEq(keccak256(abi.encode(interfaces)), keccak256(abi.encode(facet.facetInterfaces())), "Interfaces should match");
+        assertEq(
+            keccak256(abi.encode(interfaces)), keccak256(abi.encode(facet.facetInterfaces())), "Interfaces should match"
+        );
         assertEq(keccak256(abi.encode(funcs)), keccak256(abi.encode(facet.facetFuncs())), "Functions should match");
     }
 }

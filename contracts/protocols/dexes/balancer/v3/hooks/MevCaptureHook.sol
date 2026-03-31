@@ -19,7 +19,9 @@ import {
     MAX_FEE_PERCENTAGE
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {SingletonAuthentication} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
+import {
+    SingletonAuthentication
+} from "@crane/contracts/external/balancer/v3/vault/contracts/SingletonAuthentication.sol";
 
 import {BaseHooksTarget} from "./BaseHooksTarget.sol";
 
@@ -166,12 +168,12 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
     /* ========================================================================== */
 
     /// @inheritdoc BaseHooksTarget
-    function onRegister(
-        address,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         _poolMevTaxMultipliers[pool] = _defaultMevTaxMultiplier;
         _poolMevTaxThresholds[pool] = _defaultMevTaxThreshold;
         return true;
@@ -205,9 +207,7 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
         return (
             true,
             _calculateSwapFeePercentage(
-                staticSwapFeePercentage,
-                _poolMevTaxMultipliers[pool],
-                _poolMevTaxThresholds[pool]
+                staticSwapFeePercentage, _poolMevTaxMultipliers[pool], _poolMevTaxThresholds[pool]
             )
         );
     }
@@ -229,8 +229,7 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
         uint256 priorityGasPrice = _getPriorityGasPrice();
 
         // Allow proportional or low-priority operations
-        return kind == AddLiquidityKind.PROPORTIONAL ||
-            priorityGasPrice <= _poolMevTaxThresholds[pool];
+        return kind == AddLiquidityKind.PROPORTIONAL || priorityGasPrice <= _poolMevTaxThresholds[pool];
     }
 
     /// @inheritdoc BaseHooksTarget
@@ -250,8 +249,7 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
         uint256 priorityGasPrice = _getPriorityGasPrice();
 
         // Allow proportional or low-priority operations
-        return kind == RemoveLiquidityKind.PROPORTIONAL ||
-            priorityGasPrice <= _poolMevTaxThresholds[pool];
+        return kind == RemoveLiquidityKind.PROPORTIONAL || priorityGasPrice <= _poolMevTaxThresholds[pool];
     }
 
     /* ========================================================================== */
@@ -303,10 +301,11 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
     }
 
     /// @inheritdoc IMevCaptureHook
-    function setPoolMevTaxMultiplier(
-        address pool,
-        uint256 newPoolMevTaxMultiplier
-    ) external withMevTaxEnabledPool(pool) onlySwapFeeManagerOrGovernance(pool) {
+    function setPoolMevTaxMultiplier(address pool, uint256 newPoolMevTaxMultiplier)
+        external
+        withMevTaxEnabledPool(pool)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _poolMevTaxMultipliers[pool] = newPoolMevTaxMultiplier;
         emit PoolMevTaxMultiplierSet(pool, newPoolMevTaxMultiplier);
     }
@@ -327,10 +326,11 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
     }
 
     /// @inheritdoc IMevCaptureHook
-    function setPoolMevTaxThreshold(
-        address pool,
-        uint256 newPoolMevTaxThreshold
-    ) external withMevTaxEnabledPool(pool) onlySwapFeeManagerOrGovernance(pool) {
+    function setPoolMevTaxThreshold(address pool, uint256 newPoolMevTaxThreshold)
+        external
+        withMevTaxEnabledPool(pool)
+        onlySwapFeeManagerOrGovernance(pool)
+    {
         _poolMevTaxThresholds[pool] = newPoolMevTaxThreshold;
         emit PoolMevTaxThresholdSet(pool, newPoolMevTaxThreshold);
     }
@@ -358,11 +358,11 @@ contract MevCaptureHook is BaseHooksTarget, SingletonAuthentication, IMevCapture
     /*                              INTERNAL FUNCTIONS                            */
     /* ========================================================================== */
 
-    function _calculateSwapFeePercentage(
-        uint256 staticSwapFeePercentage,
-        uint256 multiplier,
-        uint256 threshold
-    ) internal view returns (uint256) {
+    function _calculateSwapFeePercentage(uint256 staticSwapFeePercentage, uint256 multiplier, uint256 threshold)
+        internal
+        view
+        returns (uint256)
+    {
         uint256 priorityGasPrice = _getPriorityGasPrice();
         uint256 maxMevSwapFeePercentage = _maxMevSwapFeePercentage;
 

@@ -6,17 +6,19 @@ import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 import {Create2} from "@crane/contracts/utils/Create2.sol";
 
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { CREATE3 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
+import {CREATE3} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/solmate/CREATE3.sol";
 
-import { VaultExtension } from "./VaultExtension.sol";
-import { VaultAdmin } from "./VaultAdmin.sol";
+import {VaultExtension} from "./VaultExtension.sol";
+import {VaultAdmin} from "./VaultAdmin.sol";
 
 /// @notice One-off factory to deploy the Vault at a specific address.
 contract VaultFactory is ReentrancyGuardTransient, Ownable2Step {
@@ -119,8 +121,7 @@ contract VaultFactory is ReentrancyGuardTransient, Ownable2Step {
         }
 
         VaultAdmin vaultAdmin = VaultAdmin(
-            payable(
-                Create2.deploy(
+            payable(Create2.deploy(
                     0, // ETH value
                     salt,
                     abi.encodePacked(
@@ -133,26 +134,21 @@ contract VaultFactory is ReentrancyGuardTransient, Ownable2Step {
                             _minWrapAmount
                         )
                     )
-                )
-            )
+                ))
         );
         deployedVaultAdmins[targetAddress] = vaultAdmin;
 
         VaultExtension vaultExtension = VaultExtension(
-            payable(
-                Create2.deploy(
+            payable(Create2.deploy(
                     0, // ETH value
                     salt,
                     abi.encodePacked(vaultExtensionCreationCode, abi.encode(targetAddress, vaultAdmin))
-                )
-            )
+                ))
         );
         deployedVaultExtensions[targetAddress] = vaultExtension;
 
         address deployedAddress = CREATE3.deploy(
-            salt,
-            abi.encodePacked(vaultCreationCode, abi.encode(vaultExtension, _authorizer, protocolFeeController)),
-            0
+            salt, abi.encodePacked(vaultCreationCode, abi.encode(vaultExtension, _authorizer, protocolFeeController)), 0
         );
 
         // This should always be the case, but we enforce the end state to match the expected outcome anyway.

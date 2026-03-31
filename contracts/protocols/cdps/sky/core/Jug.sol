@@ -24,33 +24,41 @@ pragma solidity ^0.8.0;
 // New deployments of this contract will need to include custom events (TO DO).
 
 interface VatLike {
-    function ilks(bytes32) external returns (
-        uint256 Art,   // [wad]
-        uint256 rate   // [ray]
-    );
-    function fold(bytes32,address,int256) external;
+    function ilks(bytes32)
+        external
+        returns (
+            uint256 Art, // [wad]
+            uint256 rate // [ray]
+        );
+    function fold(bytes32, address, int256) external;
 }
 
 contract Jug {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Jug/not-authorized");
         _;
     }
 
     // --- Data ---
     struct Ilk {
-        uint256 duty;  // Collateral-specific, per-second stability fee contribution [ray]
-        uint256  rho;  // Time of last drip [unix epoch time]
+        uint256 duty; // Collateral-specific, per-second stability fee contribution [ray]
+        uint256 rho; // Time of last drip [unix epoch time]
     }
 
-    mapping (bytes32 => Ilk) public ilks;
-    VatLike                  public vat;   // CDP Engine
-    address                  public vow;   // Debt Engine
-    uint256                  public base;  // Global, per-second stability fee contribution [ray]
+    mapping(bytes32 => Ilk) public ilks;
+    VatLike public vat; // CDP Engine
+    address public vow; // Debt Engine
+    uint256 public base; // Global, per-second stability fee contribution [ray]
 
     // --- Init ---
     constructor(address vat_) {
@@ -60,41 +68,51 @@ contract Jug {
 
     // --- Math ---
     function _rpow(uint256 x, uint256 n, uint256 b) internal pure returns (uint256 z) {
-      assembly {
-        switch x case 0 {switch n case 0 {z := b} default {z := 0}}
-        default {
-          switch mod(n, 2) case 0 { z := b } default { z := x }
-          let half := div(b, 2)  // for rounding.
-          for { n := div(n, 2) } n { n := div(n,2) } {
-            let xx := mul(x, x)
-            if iszero(eq(div(xx, x), x)) { revert(0,0) }
-            let xxRound := add(xx, half)
-            if lt(xxRound, xx) { revert(0,0) }
-            x := div(xxRound, b)
-            if mod(n,2) {
-              let zx := mul(z, x)
-              if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0,0) }
-              let zxRound := add(zx, half)
-              if lt(zxRound, zx) { revert(0,0) }
-              z := div(zxRound, b)
+        assembly {
+            switch x
+            case 0 {
+                switch n
+                case 0 { z := b }
+                default { z := 0 }
             }
-          }
+            default {
+                switch mod(n, 2)
+                case 0 { z := b }
+                default { z := x }
+                let half := div(b, 2) // for rounding.
+                for { n := div(n, 2) } n { n := div(n, 2) } {
+                    let xx := mul(x, x)
+                    if iszero(eq(div(xx, x), x)) { revert(0, 0) }
+                    let xxRound := add(xx, half)
+                    if lt(xxRound, xx) { revert(0, 0) }
+                    x := div(xxRound, b)
+                    if mod(n, 2) {
+                        let zx := mul(z, x)
+                        if and(iszero(iszero(x)), iszero(eq(div(zx, x), z))) { revert(0, 0) }
+                        let zxRound := add(zx, half)
+                        if lt(zxRound, zx) { revert(0, 0) }
+                        z := div(zxRound, b)
+                    }
+                }
+            }
         }
-      }
     }
     uint256 constant ONE = 10 ** 27;
+
     function _add(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             z = x + y;
             require(z >= x);
         }
     }
+
     function _diff(uint256 x, uint256 y) internal pure returns (int256 z) {
         unchecked {
             z = int256(x) - int256(y);
             require(int256(x) >= 0 && int256(y) >= 0);
         }
     }
+
     function _rmul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             z = x * y;
@@ -108,17 +126,20 @@ contract Jug {
         Ilk storage i = ilks[ilk];
         require(i.duty == 0, "Jug/ilk-already-init");
         i.duty = ONE;
-        i.rho  = block.timestamp;
+        i.rho = block.timestamp;
     }
+
     function file(bytes32 ilk, bytes32 what, uint256 data) external auth {
         require(block.timestamp == ilks[ilk].rho, "Jug/rho-not-updated");
         if (what == "duty") ilks[ilk].duty = data;
         else revert("Jug/file-unrecognized-param");
     }
+
     function file(bytes32 what, uint256 data) external auth {
         if (what == "base") base = data;
         else revert("Jug/file-unrecognized-param");
     }
+
     function file(bytes32 what, address data) external auth {
         if (what == "vow") vow = data;
         else revert("Jug/file-unrecognized-param");

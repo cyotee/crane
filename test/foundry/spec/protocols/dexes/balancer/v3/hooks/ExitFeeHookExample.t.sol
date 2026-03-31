@@ -14,7 +14,9 @@ import {
     TokenConfig
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
@@ -22,8 +24,7 @@ import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/fo
 import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import {ExitFeeHookExample} from
-    "@crane/contracts/protocols/dexes/balancer/v3/hooks/ExitFeeHookExample.sol";
+import {ExitFeeHookExample} from "@crane/contracts/protocols/dexes/balancer/v3/hooks/ExitFeeHookExample.sol";
 
 /**
  * @title ExitFeeHookExampleTest
@@ -58,10 +59,12 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         return exitFeeHook;
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal virtual override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        virtual
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -78,13 +81,10 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         vm.expectEmit();
         emit ExitFeeHookExample.ExitFeeHookExampleRegistered(poolHooksContract, newPool);
 
-        PoolFactoryMock(poolFactory).registerPool(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPool(
+                newPool, vault.buildTokenConfig(tokens.asIERC20()), roleAccounts, poolHooksContract, liquidityManagement
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -95,18 +95,16 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
 
     function testRegistryWithWrongDonationFlag() public {
         address exitFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
         vm.expectRevert(ExitFeeHookExample.PoolDoesNotSupportDonation.selector);
         _registerPoolWithHook(exitFeePool, tokenConfig, false);
     }
 
     function testSuccessfulRegistry() public {
         address exitFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         _registerPoolWithHook(exitFeePool, tokenConfig, true);
 
@@ -114,10 +112,7 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         HooksConfig memory hooksConfig = vault.getHooksConfig(exitFeePool);
 
         assertTrue(poolConfig.liquidityManagement.enableDonation, "enableDonation is false");
-        assertTrue(
-            poolConfig.liquidityManagement.disableUnbalancedLiquidity,
-            "disableUnbalancedLiquidity is false"
-        );
+        assertTrue(poolConfig.liquidityManagement.disableUnbalancedLiquidity, "disableUnbalancedLiquidity is false");
         assertTrue(hooksConfig.enableHookAdjustedAmounts, "enableHookAdjustedAmounts is false");
         assertEq(hooksConfig.hooksContract, poolHooksContract, "hooksContract is wrong");
     }
@@ -209,11 +204,7 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         uint64 highFee = uint64(FixedPoint.ONE);
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                ExitFeeHookExample.ExitFeeAboveLimit.selector,
-                highFee,
-                EXIT_FEE_PERCENTAGE
-            )
+            abi.encodeWithSelector(ExitFeeHookExample.ExitFeeAboveLimit.selector, highFee, EXIT_FEE_PERCENTAGE)
         );
         vm.prank(lp);
         ExitFeeHookExample(poolHooksContract).setExitFeePercentage(highFee);
@@ -234,23 +225,13 @@ contract ExitFeeHookExampleTest is BaseVaultTest {
         vm.label(newPool, "Exit Fee Pool");
     }
 
-    function _registerPoolWithHook(
-        address exitFeePool,
-        TokenConfig[] memory tokenConfig,
-        bool enableDonation
-    ) private {
+    function _registerPoolWithHook(address exitFeePool, TokenConfig[] memory tokenConfig, bool enableDonation) private {
         PoolRoleAccounts memory roleAccounts;
 
         LiquidityManagement memory liquidityManagement;
         liquidityManagement.disableUnbalancedLiquidity = true;
         liquidityManagement.enableDonation = enableDonation;
 
-        poolFactoryMock.registerPool(
-            exitFeePool,
-            tokenConfig,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        poolFactoryMock.registerPool(exitFeePool, tokenConfig, roleAccounts, poolHooksContract, liquidityManagement);
     }
 }

@@ -6,19 +6,23 @@ import "forge-std/Test.sol";
 
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { VaultAdmin } from "../../../../contracts/VaultAdmin.sol";
-import { BaseVaultTest } from "../../utils/BaseVaultTest.sol";
+import {VaultAdmin} from "../../../../contracts/VaultAdmin.sol";
+import {BaseVaultTest} from "../../utils/BaseVaultTest.sol";
 
 contract VaultAdminMutationTest is BaseVaultTest {
     function setUp() public virtual override {
@@ -391,13 +395,8 @@ contract VaultAdminMutationTest is BaseVaultTest {
 
     function testRemoveLiquidityFromBufferHookWhenNotVaultDelegateCall() public {
         vm.expectRevert(IVaultErrors.NotVaultDelegateCall.selector);
-        VaultAdmin(payable(address(vaultAdmin))).removeLiquidityFromBufferHook(
-            IERC4626(address(0)),
-            0,
-            0,
-            0,
-            address(0)
-        );
+        VaultAdmin(payable(address(vaultAdmin)))
+            .removeLiquidityFromBufferHook(IERC4626(address(0)), 0, 0, 0, address(0));
     }
 
     function testRemoveLiquidityFromBufferHookWhenVaultIsNotSender() public {

@@ -6,20 +6,26 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { PoolData, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {PoolData, Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import { PoolDataLib } from "../../contracts/lib/PoolDataLib.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
+import {PoolDataLib} from "../../contracts/lib/PoolDataLib.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract PoolDataTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -51,12 +57,13 @@ contract PoolDataTest is BaseVaultTest {
 
         newPool = address(deployPoolMock(IVault(address(vault)), name, symbol));
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig([address(dai), address(wsteth)].toMemoryArray().asIERC20(), rateProviders),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(
+                newPool,
+                vault.buildTokenConfig([address(dai), address(wsteth)].toMemoryArray().asIERC20(), rateProviders),
+                poolHooksContract,
+                lp
+            );
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -70,10 +77,8 @@ contract PoolDataTest is BaseVaultTest {
 
         // `loadPoolDataUpdatingBalancesAndYieldFees` and `getRawBalances` are functions in VaultMock.
 
-        PoolData memory data = vault.loadPoolDataUpdatingBalancesAndYieldFees(
-            pool,
-            roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN
-        );
+        PoolData memory data =
+            vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN);
 
         // Compute decimal scaling factors from the tokens, in the mock.
         uint256[] memory expectedScalingFactors = PoolMock(pool).getDecimalScalingFactors();
@@ -90,15 +95,11 @@ contract PoolDataTest is BaseVaultTest {
             assertEq(data.tokenRates[i], expectedRates[i], "Wrong rate");
 
             if (roundUp) {
-                expectedLiveBalance = FixedPoint.mulUp(
-                    expectedRawBalances[i] * expectedScalingFactors[i],
-                    expectedRates[i]
-                );
+                expectedLiveBalance =
+                    FixedPoint.mulUp(expectedRawBalances[i] * expectedScalingFactors[i], expectedRates[i]);
             } else {
-                expectedLiveBalance = FixedPoint.mulDown(
-                    expectedRawBalances[i] * expectedScalingFactors[i],
-                    expectedRates[i]
-                );
+                expectedLiveBalance =
+                    FixedPoint.mulDown(expectedRawBalances[i] * expectedScalingFactors[i], expectedRates[i]);
             }
 
             assertEq(data.balancesLiveScaled18[i], expectedLiveBalance, "Wrong live balance");

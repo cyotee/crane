@@ -4,18 +4,18 @@ pragma solidity ^0.8.24;
 
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseHooks } from "../BaseHooks.sol";
+import {BaseHooks} from "../BaseHooks.sol";
 
 /// @dev Simple hook contract that does nothing but return true on every call.
 contract MinimalHooksPoolMock is BaseHooks {
     HookFlags private _hookFlags;
 
-    function onRegister(
-        address,
-        address,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public pure override returns (bool) {
+    function onRegister(address, address, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        pure
+        override
+        returns (bool)
+    {
         return true;
     }
 
@@ -35,11 +35,12 @@ contract MinimalHooksPoolMock is BaseHooks {
         return true;
     }
 
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata,
-        address,
-        uint256
-    ) public pure override returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata, address, uint256)
+        public
+        pure
+        override
+        returns (bool, uint256)
+    {
         return (true, 0);
     }
 

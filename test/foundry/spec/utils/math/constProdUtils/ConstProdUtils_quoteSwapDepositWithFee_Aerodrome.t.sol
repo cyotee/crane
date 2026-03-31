@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import "forge-std/console.sol";
-import {TestBase_ConstProdUtils_Aerodrome} from "test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
+import {
+    TestBase_ConstProdUtils_Aerodrome
+} from "test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {Pool} from "contracts/protocols/dexes/aerodrome/v1/stubs/Pool.sol";
 import {IRouter} from "contracts/protocols/dexes/aerodrome/v1/interfaces/IRouter.sol";
@@ -61,14 +63,12 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
             // Approve and swap via aerodromeRouter
             tokenA.approve(address(aerodromeRouter), swapAmount);
             IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)});
+            routes[0] = IRouter.Route({
+                from: address(tokenA), to: address(tokenB), stable: false, factory: address(aerodromePoolFactory)
+            });
 
             aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                swapAmount,
-                1,
-                routes,
-                address(this),
-                block.timestamp
+                swapAmount, 1, routes, address(this), block.timestamp
             );
         }
 
@@ -80,7 +80,17 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
         tokenA.approve(address(aerodromeRouter), remainingAmountA);
         tokenB.approve(address(aerodromeRouter), opTokenAmtIn);
 
-        ( , , uint256 liquidity) = aerodromeRouter.addLiquidity(address(tokenA), address(tokenB), false, remainingAmountA, opTokenAmtIn, 1, 1, address(this), block.timestamp);
+        (,, uint256 liquidity) = aerodromeRouter.addLiquidity(
+            address(tokenA),
+            address(tokenB),
+            false,
+            remainingAmountA,
+            opTokenAmtIn,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         uint256 lpBalanceAfter = pair.balanceOf(address(this));
         actualLpAmt = lpBalanceAfter - lpBalanceBefore;
@@ -88,32 +98,27 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
         console.log("[DIAG] aerodromeRouter returned liquidity", liquidity);
         console.log("[DIAG] actualLpAmt", actualLpAmt);
         console.log("[DIAG] pair.totalSupply", pair.totalSupply());
-        (uint256 r0After, uint256 r1After, ) = pair.getReserves();
+        (uint256 r0After, uint256 r1After,) = pair.getReserves();
         console.log("[DIAG] reserves post-mint", r0After, r1After);
         return actualLpAmt;
     }
 
-    function _testSwapDepositWithFeeAerodrome(
-        Pool pair,
-        ERC20PermitMintableStub tokenA,
-        ERC20PermitMintableStub tokenB
-    ) internal {
+    function _testSwapDepositWithFeeAerodrome(Pool pair, ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB)
+        internal
+    {
         (uint256 r0, uint256 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
 
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(tokenA),
-            pair.token0(),
-            r0,
-            r1
-        );
+        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(tokenA), pair.token0(), r0, r1);
 
         uint256 inputTokenFee = aerodromePoolFactory.getFee(address(pair), false);
 
         // Compute expected LP locally using integer intermediates that mirror on-chain mint math
-        uint256 quotedLpAmt = AerodromeUtils._quoteSwapDepositWithFee(TEST_AMOUNT_IN, totalSupply, reserveA, reserveB, inputTokenFee);
+        uint256 quotedLpAmt =
+            AerodromeUtils._quoteSwapDepositWithFee(TEST_AMOUNT_IN, totalSupply, reserveA, reserveB, inputTokenFee);
 
-        uint256 actualLpAmt = _executeAerodromeZapInAndValidate(pair, tokenA, tokenB, TEST_AMOUNT_IN, reserveA, reserveB);
+        uint256 actualLpAmt =
+            _executeAerodromeZapInAndValidate(pair, tokenA, tokenB, TEST_AMOUNT_IN, reserveA, reserveB);
 
         assertTrue(quotedLpAmt > 0, "quoted > 0");
         assertTrue(actualLpAmt > 0, "actual > 0");

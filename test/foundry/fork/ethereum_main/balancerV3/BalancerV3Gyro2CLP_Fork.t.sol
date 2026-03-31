@@ -3,8 +3,16 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {IGyro2CLPPool, Gyro2CLPPoolImmutableData, Gyro2CLPPoolDynamicData} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IGyro2CLPPool,
+    Gyro2CLPPoolImmutableData,
+    Gyro2CLPPoolDynamicData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {Gyro2CLPMath} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/lib/Gyro2CLPMath.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
@@ -90,10 +98,7 @@ contract BalancerV3Gyro2CLP_Fork is TestBase_BalancerV3GyroFork {
         uint256[] memory balances = _getSyntheticBalances();
 
         uint256 invariant = Gyro2CLPMath.calculateInvariant(
-            balances,
-            immutableData.sqrtAlpha,
-            immutableData.sqrtBeta,
-            Rounding.ROUND_DOWN
+            balances, immutableData.sqrtAlpha, immutableData.sqrtBeta, Rounding.ROUND_DOWN
         );
 
         console.log("Invariant (ROUND_DOWN):", invariant);
@@ -105,17 +110,11 @@ contract BalancerV3Gyro2CLP_Fork is TestBase_BalancerV3GyroFork {
         uint256[] memory balances = _getSyntheticBalances();
 
         uint256 invariantDown = Gyro2CLPMath.calculateInvariant(
-            balances,
-            immutableData.sqrtAlpha,
-            immutableData.sqrtBeta,
-            Rounding.ROUND_DOWN
+            balances, immutableData.sqrtAlpha, immutableData.sqrtBeta, Rounding.ROUND_DOWN
         );
 
         uint256 invariantUp = Gyro2CLPMath.calculateInvariant(
-            balances,
-            immutableData.sqrtAlpha,
-            immutableData.sqrtBeta,
-            Rounding.ROUND_UP
+            balances, immutableData.sqrtAlpha, immutableData.sqrtBeta, Rounding.ROUND_UP
         );
 
         console.log("Invariant (ROUND_DOWN):", invariantDown);
@@ -223,10 +222,10 @@ contract BalancerV3Gyro2CLP_Fork is TestBase_BalancerV3GyroFork {
 
         uint256[] memory tradeSizes = new uint256[](5);
         tradeSizes[0] = balances[0] / 100000; // 0.001%
-        tradeSizes[1] = balances[0] / 10000;  // 0.01%
-        tradeSizes[2] = balances[0] / 1000;   // 0.1%
-        tradeSizes[3] = balances[0] / 100;    // 1%
-        tradeSizes[4] = balances[0] / 10;     // 10%
+        tradeSizes[1] = balances[0] / 10000; // 0.01%
+        tradeSizes[2] = balances[0] / 1000; // 0.1%
+        tradeSizes[3] = balances[0] / 100; // 1%
+        tradeSizes[4] = balances[0] / 10; // 10%
 
         for (uint256 i = 0; i < tradeSizes.length; i++) {
             uint256 amountIn = tradeSizes[i];
@@ -334,8 +333,9 @@ contract BalancerV3Gyro2CLP_Fork is TestBase_BalancerV3GyroFork {
         view
         returns (uint256 virtualParamIn, uint256 virtualParamOut)
     {
-        uint256 currentInvariant =
-            Gyro2CLPMath.calculateInvariant(balances, immutableData.sqrtAlpha, immutableData.sqrtBeta, Rounding.ROUND_DOWN);
+        uint256 currentInvariant = Gyro2CLPMath.calculateInvariant(
+            balances, immutableData.sqrtAlpha, immutableData.sqrtBeta, Rounding.ROUND_DOWN
+        );
 
         if (tokenInIsToken0) {
             virtualParamIn =

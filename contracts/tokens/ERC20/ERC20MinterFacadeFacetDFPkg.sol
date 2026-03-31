@@ -34,7 +34,12 @@ contract ERC20MinterFacadeFacetDFPkg is ERC20MinterFacadeFacet, IERC20MinterFaca
         facetAddresses_[0] = address(SELF);
     }
 
-    function facetInterfaces() public pure virtual override(ERC20MinterFacadeFacet, IDiamondFactoryPackage) returns (bytes4[] memory interfaces)
+    function facetInterfaces()
+        public
+        pure
+        virtual
+        override(ERC20MinterFacadeFacet, IDiamondFactoryPackage)
+        returns (bytes4[] memory interfaces)
     {
         interfaces = new bytes4[](1);
 

@@ -6,17 +6,21 @@ import "forge-std/Test.sol";
 
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BasicAuthorizerMock } from "../../contracts/test/BasicAuthorizerMock.sol";
-import { ProtocolFeeController } from "../../contracts/ProtocolFeeController.sol";
-import { VaultContractsDeployer } from "./utils/VaultContractsDeployer.sol";
-import { VaultExtension } from "../../contracts/VaultExtension.sol";
-import { VaultFactory } from "../../contracts/VaultFactory.sol";
-import { VaultAdmin } from "../../contracts/VaultAdmin.sol";
-import { Vault } from "../../contracts/Vault.sol";
+import {BasicAuthorizerMock} from "../../contracts/test/BasicAuthorizerMock.sol";
+import {ProtocolFeeController} from "../../contracts/ProtocolFeeController.sol";
+import {VaultContractsDeployer} from "./utils/VaultContractsDeployer.sol";
+import {VaultExtension} from "../../contracts/VaultExtension.sol";
+import {VaultFactory} from "../../contracts/VaultFactory.sol";
+import {VaultAdmin} from "../../contracts/VaultAdmin.sol";
+import {Vault} from "../../contracts/Vault.sol";
 
 contract VaultFactoryTest is Test, VaultContractsDeployer {
     // Should match the "PRODUCTION" limits in BaseVaultTest.
@@ -129,9 +133,7 @@ contract VaultFactoryTest is Test, VaultContractsDeployer {
             "Vault extension not set for vault address"
         );
         assertNotEq(
-            address(factory.deployedVaultAdmins(vaultAddress)),
-            address(0),
-            "Vault admin not set for vault address"
+            address(factory.deployedVaultAdmins(vaultAddress)), address(0), "Vault admin not set for vault address"
         );
 
         // We cannot compare the deployed bytecode of the created vault against a second deployment of the Vault
@@ -242,12 +244,7 @@ contract VaultFactoryTest is Test, VaultContractsDeployer {
         vm.prank(deployer);
         vm.expectRevert(abi.encodeWithSelector(VaultFactory.InvalidBytecode.selector, "VaultAdmin"));
         factory.create(
-            salt,
-            vaultAddress,
-            feeController,
-            type(Vault).creationCode,
-            type(VaultExtension).creationCode,
-            new bytes(0)
+            salt, vaultAddress, feeController, type(Vault).creationCode, type(VaultExtension).creationCode, new bytes(0)
         );
     }
 
@@ -258,12 +255,7 @@ contract VaultFactoryTest is Test, VaultContractsDeployer {
         vm.prank(deployer);
         vm.expectRevert(abi.encodeWithSelector(VaultFactory.InvalidBytecode.selector, "VaultExtension"));
         factory.create(
-            salt,
-            vaultAddress,
-            feeController,
-            type(Vault).creationCode,
-            new bytes(0),
-            type(VaultAdmin).creationCode
+            salt, vaultAddress, feeController, type(Vault).creationCode, new bytes(0), type(VaultAdmin).creationCode
         );
     }
 }

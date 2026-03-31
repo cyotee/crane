@@ -5,10 +5,12 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { ICompositeLiquidityRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
-import { IVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {IVersion} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
 
-import { CompositeLiquidityRouterERC4626PoolTest } from "./CompositeLiquidityRouterERC4626Pool.t.sol";
+import {CompositeLiquidityRouterERC4626PoolTest} from "./CompositeLiquidityRouterERC4626Pool.t.sol";
 
 contract PrepaidCompositeLiquidityRouterERC4626PoolTest is CompositeLiquidityRouterERC4626PoolTest {
     function initQueryClrRouter() internal view override returns (ICompositeLiquidityRouter) {
@@ -41,15 +43,9 @@ contract PrepaidCompositeLiquidityRouterERC4626PoolTest is CompositeLiquidityRou
             vm.expectRevert(expectedError);
         }
 
-        return
-            prepaidCompositeLiquidityRouter.addLiquidityUnbalancedToERC4626Pool{ value: ethValue }(
-                pool,
-                wrapUnderlying,
-                exactAmountsIn,
-                minBptAmountOut,
-                wethIsEth,
-                userData
-            );
+        return prepaidCompositeLiquidityRouter.addLiquidityUnbalancedToERC4626Pool{value: ethValue}(
+            pool, wrapUnderlying, exactAmountsIn, minBptAmountOut, wethIsEth, userData
+        );
     }
 
     function _addLiquidityProportionalToERC4626Pool(
@@ -68,15 +64,9 @@ contract PrepaidCompositeLiquidityRouterERC4626PoolTest is CompositeLiquidityRou
             vm.expectRevert(expectedError);
         }
 
-        return
-            prepaidCompositeLiquidityRouter.addLiquidityProportionalToERC4626Pool{ value: ethValue }(
-                pool,
-                wrapUnderlying,
-                maxAmountsIn,
-                exactBptAmountOut,
-                wethIsEth,
-                userData
-            );
+        return prepaidCompositeLiquidityRouter.addLiquidityProportionalToERC4626Pool{value: ethValue}(
+            pool, wrapUnderlying, maxAmountsIn, exactBptAmountOut, wethIsEth, userData
+        );
     }
 
     function _removeLiquidityProportionalFromERC4626Pool(
@@ -94,23 +84,14 @@ contract PrepaidCompositeLiquidityRouterERC4626PoolTest is CompositeLiquidityRou
             vm.expectRevert(expectedError);
         }
 
-        return
-            prepaidCompositeLiquidityRouter.removeLiquidityProportionalFromERC4626Pool(
-                pool,
-                unwrapWrapped,
-                exactBptAmountIn,
-                minAmountsOut,
-                wethIsEth,
-                userData
-            );
+        return prepaidCompositeLiquidityRouter.removeLiquidityProportionalFromERC4626Pool(
+            pool, unwrapWrapped, exactBptAmountIn, minAmountsOut, wethIsEth, userData
+        );
     }
 
-    function _sendTokensToVault(
-        address pool,
-        bool[] memory wrapUnderlying,
-        uint256[] memory amountsIn,
-        bool wethIsEth
-    ) private {
+    function _sendTokensToVault(address pool, bool[] memory wrapUnderlying, uint256[] memory amountsIn, bool wethIsEth)
+        private
+    {
         IERC20[] memory poolTokens = vault.getPoolTokens(pool);
 
         for (uint256 i = 0; i < poolTokens.length; i++) {

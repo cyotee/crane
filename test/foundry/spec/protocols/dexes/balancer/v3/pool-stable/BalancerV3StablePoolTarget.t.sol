@@ -3,12 +3,20 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import {BalancerV3StablePoolTargetStub} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTargetStub.sol";
-import {BalancerV3StablePoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
+import {
+    BalancerV3StablePoolTargetStub
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolTargetStub.sol";
+import {
+    BalancerV3StablePoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
 
 /**
  * @title BalancerV3StablePoolTarget_Test
@@ -46,13 +54,8 @@ contract BalancerV3StablePoolTarget_Test is Test {
     }
 
     function test_getAmplificationState_returnsCorrectState() public view {
-        (
-            uint256 startValue,
-            uint256 endValue,
-            uint256 startTime,
-            uint256 endTime,
-            uint256 precision
-        ) = pool.getAmplificationState();
+        (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime, uint256 precision) =
+            pool.getAmplificationState();
 
         assertEq(startValue, AMP_DEFAULT * StableMath.AMP_PRECISION, "Start value incorrect");
         assertEq(endValue, AMP_DEFAULT * StableMath.AMP_PRECISION, "End value incorrect");
@@ -203,7 +206,10 @@ contract BalancerV3StablePoolTarget_Test is Test {
         assertGt(newBalance, 1000e18, "New balance should be greater than original");
     }
 
-    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio) public view {
+    function testFuzz_computeBalance_positiveRatio_returnsPositive(uint256 bal0, uint256 bal1, uint256 ratio)
+        public
+        view
+    {
         // Keep balances within StableMath convergence range
         bal0 = bound(bal0, 1e18, 1e25);
         bal1 = bound(bal1, 1e18, 1e25);
@@ -247,9 +253,7 @@ contract BalancerV3StablePoolTarget_Test is Test {
         // Calculate expected using StableMath
         (uint256 amp,,) = pool.getAmplificationParameter();
         uint256 invariant = StableMath.computeInvariant(amp, balances);
-        uint256 expected = StableMath.computeOutGivenExactIn(
-            amp, balances, 0, 1, 100e18, invariant
-        );
+        uint256 expected = StableMath.computeOutGivenExactIn(amp, balances, 0, 1, 100e18, invariant);
 
         assertEq(amountOut, expected, "EXACT_IN should return correct output amount");
         assertTrue(amountOut > 0, "Output should be positive");
@@ -275,9 +279,7 @@ contract BalancerV3StablePoolTarget_Test is Test {
         // Calculate expected using StableMath
         (uint256 amp,,) = pool.getAmplificationParameter();
         uint256 invariant = StableMath.computeInvariant(amp, balances);
-        uint256 expected = StableMath.computeInGivenExactOut(
-            amp, balances, 0, 1, 50e18, invariant
-        );
+        uint256 expected = StableMath.computeInGivenExactOut(amp, balances, 0, 1, 50e18, invariant);
 
         assertEq(amountIn, expected, "EXACT_OUT should return correct input amount");
         assertTrue(amountIn > 0, "Input should be positive");
@@ -327,9 +329,7 @@ contract BalancerV3StablePoolTarget_Test is Test {
 
         (uint256 amp,,) = pool.getAmplificationParameter();
         uint256 invariant = StableMath.computeInvariant(amp, balances);
-        uint256 expected = StableMath.computeOutGivenExactIn(
-            amp, balances, 1, 0, 50e18, invariant
-        );
+        uint256 expected = StableMath.computeOutGivenExactIn(amp, balances, 1, 0, 50e18, invariant);
 
         assertEq(amountOut, expected, "Reverse direction EXACT_IN should work correctly");
     }

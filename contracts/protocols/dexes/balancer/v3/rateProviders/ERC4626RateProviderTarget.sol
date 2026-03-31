@@ -5,7 +5,9 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -18,12 +20,12 @@ import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IERC4626RateProvider} from "@crane/contracts/interfaces/IERC4626RateProvider.sol";
-import {ERC4626RateProviderRepo} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
+import {
+    ERC4626RateProviderRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/rateProviders/ERC4626RateProviderRepo.sol";
 import {BetterSafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
-contract ERC4626RateProviderTarget is
-    IERC4626RateProvider
-{
+contract ERC4626RateProviderTarget is IERC4626RateProvider {
     /* ---------------------------------------------------------------------- */
     /*                              IRateProvider                             */
     /* ---------------------------------------------------------------------- */

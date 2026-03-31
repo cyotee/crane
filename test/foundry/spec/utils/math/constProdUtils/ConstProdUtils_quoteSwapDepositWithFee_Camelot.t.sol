@@ -44,7 +44,8 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
         ERC20PermitMintableStub tokenB,
         uint256 amountIn,
         uint256 reserveA,
-        uint256 /*reserveB*/,
+        uint256,
+        /*reserveB*/
         uint256 /*ownerFeeShare*/
     ) internal returns (uint256 actualLpAmt) {
         ZapInData memory z;
@@ -64,9 +65,10 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
             address[] memory path = new address[](2);
             path[0] = address(tokenA);
             path[1] = address(tokenB);
-            ICamelotV2Router(camelotV2Router).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                z.swapAmount, 1, path, address(this), address(0), block.timestamp + 300
-            );
+            ICamelotV2Router(camelotV2Router)
+                .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                    z.swapAmount, 1, path, address(this), address(0), block.timestamp + 300
+                );
         }
 
         z.opTokenAmtIn = tokenB.balanceOf(address(this));
@@ -75,16 +77,17 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
         tokenA.approve(address(camelotV2Router), z.remainingAmountA);
         tokenB.approve(address(camelotV2Router), z.opTokenAmtIn);
 
-        (, , actualLpAmt) = ICamelotV2Router(camelotV2Router).addLiquidity(
-            address(tokenA),
-            address(tokenB),
-            z.remainingAmountA,
-            z.opTokenAmtIn,
-            1,
-            1,
-            address(this),
-            block.timestamp + 300
-        );
+        (,, actualLpAmt) = ICamelotV2Router(camelotV2Router)
+            .addLiquidity(
+                address(tokenA),
+                address(tokenB),
+                z.remainingAmountA,
+                z.opTokenAmtIn,
+                1,
+                1,
+                address(this),
+                block.timestamp + 300
+            );
 
         z.lpBalanceAfter = pair.balanceOf(address(this));
         actualLpAmt = z.lpBalanceAfter - z.lpBalanceBefore;
@@ -103,12 +106,7 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
             data.kLast = pair.kLast();
 
             (data.reserveA,, data.reserveB,) = ConstProdUtils._sortReserves(
-                address(tokenA),
-                pair.token0(),
-                uint256(r0),
-                token0Fee,
-                uint256(r1),
-                token1Fee
+                address(tokenA), pair.token0(), uint256(r0), token0Fee, uint256(r1), token1Fee
             );
 
             data.inputTokenFee = (address(tokenA) == pair.token0()) ? token0Fee : token1Fee;
@@ -126,7 +124,9 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Camelot is TestBase_ConstProdUti
             feesEnabled
         );
 
-        data.actualLpAmt = _executeCamelotZapInAndValidate(pair, tokenA, tokenB, TEST_AMOUNT_IN, data.reserveA, data.reserveB, data.ownerFeeShare);
+        data.actualLpAmt = _executeCamelotZapInAndValidate(
+            pair, tokenA, tokenB, TEST_AMOUNT_IN, data.reserveA, data.reserveB, data.ownerFeeShare
+        );
 
         assertTrue(data.quotedLpAmt > 0, "quoted > 0");
         assertTrue(data.actualLpAmt > 0, "actual > 0");

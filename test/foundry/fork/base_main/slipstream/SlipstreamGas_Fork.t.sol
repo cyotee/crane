@@ -22,7 +22,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactInputSingle_small() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Small swap (100 USDC) - stays within single tick
@@ -30,13 +30,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactInputSingle (100 USDC - single tick):");
@@ -51,7 +45,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactInputSingle_medium() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Medium swap (1000 USDC)
@@ -59,13 +53,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactInputSingle (1000 USDC - medium):");
@@ -79,7 +67,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactInputSingle_large() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Large swap (10,000 USDC) - may cross multiple ticks
@@ -87,13 +75,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedOut = SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactInputSingle (10000 USDC - large):");
@@ -111,7 +93,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactOutputSingle_small() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Small output (0.01 WETH)
@@ -119,13 +101,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactOutputSingle (0.01 WETH - small):");
@@ -139,7 +115,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactOutputSingle_medium() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Medium output (0.1 WETH)
@@ -147,13 +123,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactOutputSingle (0.1 WETH - medium):");
@@ -167,7 +137,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteExactOutputSingle_large() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, , uint128 liquidity) = getPoolState(pool);
+        (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
         uint24 fee = getPoolFee(pool);
 
         // Large output (1 WETH)
@@ -175,13 +145,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         bool zeroForOne = zeroForOneForTokens(pool, USDC, WETH);
 
         uint256 gasBefore = gasleft();
-        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        uint256 quotedIn = SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteExactOutputSingle (1 WETH - large):");
@@ -207,24 +171,12 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
 
         // Measure gas with sqrtPriceX96
         uint256 gasBefore = gasleft();
-        SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            sqrtPriceX96,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, fee, zeroForOne);
         uint256 gasSqrtPrice = gasBefore - gasleft();
 
         // Measure gas with tick (requires TickMath.getSqrtRatioAtTick conversion)
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            tick,
-            liquidity,
-            fee,
-            zeroForOne
-        );
+        SlipstreamUtils._quoteExactInputSingle(amountIn, tick, liquidity, fee, zeroForOne);
         uint256 gasTick = gasBefore - gasleft();
 
         console.log("Tick overload gas comparison:");
@@ -241,7 +193,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteAmountsForLiquidity() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, int24 tick, ) = getPoolState(pool);
+        (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = pool.tickSpacing();
 
         int24 tickLower = nearestUsableTick(tick - 1000, tickSpacing);
@@ -249,12 +201,8 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         uint128 liquidity = 1e18;
 
         uint256 gasBefore = gasleft();
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteAmountsForLiquidity:");
@@ -267,7 +215,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     function test_gas_quoteLiquidityForAmounts() public {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
-        (uint160 sqrtPriceX96, int24 tick, ) = getPoolState(pool);
+        (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
         int24 tickSpacing = pool.tickSpacing();
 
         int24 tickLower = nearestUsableTick(tick - 1000, tickSpacing);
@@ -278,13 +226,8 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         uint256 amount1 = token0 == WETH ? 1000e6 : 1 ether;
 
         uint256 gasBefore = gasleft();
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            amount0,
-            amount1
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
         uint256 gasUsed = gasBefore - gasleft();
 
         console.log("quoteLiquidityForAmounts:");
@@ -355,7 +298,9 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         console.log("  1000 USDC:", gasUsed);
 
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactInputSingle(10_000e6, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne);
+        SlipstreamUtils._quoteExactInputSingle(
+            10_000e6, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne
+        );
         gasUsed = gasBefore - gasleft();
         console.log("  10000 USDC:", gasUsed);
         console.log("");
@@ -367,22 +312,30 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
         uint256 gasUsed;
 
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactOutputSingle(0.001 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne);
+        SlipstreamUtils._quoteExactOutputSingle(
+            0.001 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne
+        );
         gasUsed = gasBefore - gasleft();
         console.log("  0.001 WETH:", gasUsed);
 
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactOutputSingle(0.01 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne);
+        SlipstreamUtils._quoteExactOutputSingle(
+            0.01 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne
+        );
         gasUsed = gasBefore - gasleft();
         console.log("  0.01 WETH:", gasUsed);
 
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactOutputSingle(0.1 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne);
+        SlipstreamUtils._quoteExactOutputSingle(
+            0.1 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne
+        );
         gasUsed = gasBefore - gasleft();
         console.log("  0.1 WETH:", gasUsed);
 
         gasBefore = gasleft();
-        SlipstreamUtils._quoteExactOutputSingle(1 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne);
+        SlipstreamUtils._quoteExactOutputSingle(
+            1 ether, state.sqrtPriceX96, state.liquidity, state.fee, state.zeroForOne
+        );
         gasUsed = gasBefore - gasleft();
         console.log("  1 WETH:", gasUsed);
         console.log("");

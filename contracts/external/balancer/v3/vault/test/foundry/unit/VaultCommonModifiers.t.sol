@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
 
 contract VaultCommonModifiersTest is BaseVaultTest {
     function setUp() public virtual override {

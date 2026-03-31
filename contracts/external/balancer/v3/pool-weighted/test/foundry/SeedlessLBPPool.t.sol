@@ -6,19 +6,26 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ILBPool, LBPoolImmutableData } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
-import { PoolConfig, Rounding, TokenInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { LBPParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    ILBPool,
+    LBPoolImmutableData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
+import {
+    PoolConfig,
+    Rounding,
+    TokenInfo
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {LBPParams} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { WeightedLBPTest } from "./utils/WeightedLBPTest.sol";
-import { LBPCommon } from "../../contracts/lbp/LBPCommon.sol";
-import { LBPool } from "../../contracts/lbp/LBPool.sol";
+import {WeightedLBPTest} from "./utils/WeightedLBPTest.sol";
+import {LBPCommon} from "../../contracts/lbp/LBPCommon.sol";
+import {LBPool} from "../../contracts/lbp/LBPool.sol";
 
 contract SeedlessLBPTest is WeightedLBPTest {
     using FixedPoint for uint256;
@@ -31,13 +38,12 @@ contract SeedlessLBPTest is WeightedLBPTest {
     }
 
     function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
-        return
-            _createLBPool(
-                address(0), // Pool creator
-                uint32(block.timestamp + DEFAULT_START_OFFSET),
-                uint32(block.timestamp + DEFAULT_END_OFFSET),
-                DEFAULT_PROJECT_TOKENS_SWAP_IN
-            );
+        return _createLBPool(
+            address(0), // Pool creator
+            uint32(block.timestamp + DEFAULT_START_OFFSET),
+            uint32(block.timestamp + DEFAULT_END_OFFSET),
+            DEFAULT_PROJECT_TOKENS_SWAP_IN
+        );
     }
 
     function initPool() internal virtual override {
@@ -79,7 +85,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         assertGt(poolInitAmount, 0, "Sanity check");
 
         // Create a new seedless pool
-        (address newPool, ) = _createLBPool(
+        (address newPool,) = _createLBPool(
             address(0),
             uint32(block.timestamp + DEFAULT_START_OFFSET),
             uint32(block.timestamp + DEFAULT_END_OFFSET),
@@ -91,7 +97,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         initAmounts[projectIdx] = poolInitAmount;
         initAmounts[reserveIdx] = poolInitAmount;
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(newPool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(newPool);
 
         vm.expectRevert(ILBPool.SeedlessLBPInitializationWithNonZeroReserve.selector);
         vm.prank(bob);
@@ -141,7 +147,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
     function testSwapSellProjectTokenWithReserve() public {
         // Deploy pool with bidirectional swaps enabled
-        (pool, ) = _createLBPoolWithCustomWeights(
+        (pool,) = _createLBPoolWithCustomWeights(
             address(0),
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -162,28 +168,14 @@ contract SeedlessLBPTest is WeightedLBPTest {
         // First, user buys project tokens to build real reserve
         vm.prank(bob);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            buyAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
         );
 
         uint256 reserveBalanceBefore = reserveToken.balanceOf(alice);
 
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            projectToken,
-            reserveToken,
-            sellAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, projectToken, reserveToken, sellAmount, 0, type(uint256).max, false, bytes("")
         );
 
         uint256 reserveReceived = reserveToken.balanceOf(alice) - reserveBalanceBefore;
@@ -193,7 +185,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
     function testSwapSellProjectTokenExceedsReserves() public {
         // Deploy pool with bidirectional swaps enabled
-        (pool, ) = _createLBPoolWithCustomWeights(
+        (pool,) = _createLBPoolWithCustomWeights(
             address(0),
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -214,14 +206,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         // First, user buys project tokens to build real reserve
         vm.prank(bob);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            buyAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
         );
 
         uint256 snapshotId = vm.snapshotState();
@@ -242,21 +227,12 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                ILBPool.InsufficientRealReserveBalance.selector,
-                expectedAmountOut,
-                balances[reserveIdx]
+                ILBPool.InsufficientRealReserveBalance.selector, expectedAmountOut, balances[reserveIdx]
             )
         );
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            projectToken,
-            reserveToken,
-            sellAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, projectToken, reserveToken, sellAmount, 0, type(uint256).max, false, bytes("")
         );
     }
 
@@ -276,9 +252,8 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         // Price of project in reserve terms should use effective reserve
         // spot price = (reserveBalance / reserveWeight) / (projectBalance / projectWeight)
-        uint256 expectedSpotPrice = effectiveReserve.divDown(startWeights[reserveIdx]).divDown(
-            realBalances[projectIdx].divDown(startWeights[projectIdx])
-        );
+        uint256 expectedSpotPrice = effectiveReserve.divDown(startWeights[reserveIdx])
+            .divDown(realBalances[projectIdx].divDown(startWeights[projectIdx]));
 
         // Calculate expected output using the same math as the pool
         uint256 expectedProjectOut = WeightedMath.computeOutGivenExactIn(
@@ -293,14 +268,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            swapAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, swapAmount, 0, type(uint256).max, false, bytes("")
         );
 
         uint256 projectReceived = projectToken.balanceOf(alice) - projectBefore;
@@ -327,28 +295,20 @@ contract SeedlessLBPTest is WeightedLBPTest {
         assertEq(data.reserveTokenIndex, reserveIdx, "Reserve token index mismatch");
 
         // Check decimal scaling factors
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(pool);
         assertEq(
-            data.decimalScalingFactors.length,
-            decimalScalingFactors.length,
-            "decimalScalingFactors length mismatch"
+            data.decimalScalingFactors.length, decimalScalingFactors.length, "decimalScalingFactors length mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[projectIdx],
-            decimalScalingFactors[projectIdx],
-            "Project scaling factor mismatch"
+            data.decimalScalingFactors[projectIdx], decimalScalingFactors[projectIdx], "Project scaling factor mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[reserveIdx],
-            decimalScalingFactors[reserveIdx],
-            "Reserve scaling factor mismatch"
+            data.decimalScalingFactors[reserveIdx], decimalScalingFactors[reserveIdx], "Reserve scaling factor mismatch"
         );
 
         // Check project token swap in setting
         assertEq(
-            data.isProjectTokenSwapInBlocked,
-            DEFAULT_PROJECT_TOKENS_SWAP_IN,
-            "Project token swap in setting mismatch"
+            data.isProjectTokenSwapInBlocked, DEFAULT_PROJECT_TOKENS_SWAP_IN, "Project token swap in setting mismatch"
         );
 
         // Check start and end times
@@ -366,9 +326,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         assertEq(data.endWeights[reserveIdx], endWeights[reserveIdx], "Reserve end weight mismatch");
 
         assertEq(
-            data.reserveTokenVirtualBalance,
-            reserveTokenVirtualBalance,
-            "Wrong reserve token balance (immutable data)"
+            data.reserveTokenVirtualBalance, reserveTokenVirtualBalance, "Wrong reserve token balance (immutable data)"
         );
     }
 
@@ -410,14 +368,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         uint256 buyAmount = 100e18;
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            buyAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
         );
 
         // Warp to after sale
@@ -489,14 +440,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            buyAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
         );
 
         // Warp to after sale
@@ -522,14 +466,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         vm.prank(alice);
         router.swapSingleTokenExactIn(
-            pool,
-            reserveToken,
-            projectToken,
-            buyAmount,
-            0,
-            type(uint256).max,
-            false,
-            bytes("")
+            pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
         );
 
         // Warp to after sale
@@ -584,14 +521,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
             vm.prank(alice);
             router.swapSingleTokenExactIn(
-                pool,
-                reserveToken,
-                projectToken,
-                buyAmount,
-                0,
-                type(uint256).max,
-                false,
-                bytes("")
+                pool, reserveToken, projectToken, buyAmount, 0, type(uint256).max, false, bytes("")
             );
 
             totalBought += buyAmount;
@@ -632,7 +562,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         // Create seedless pool (virtual reserves, no real reserves)
         {
-            (seedlessPool, ) = _createLBPool(
+            (seedlessPool,) = _createLBPool(
                 address(0),
                 uint32(block.timestamp + DEFAULT_START_OFFSET),
                 uint32(block.timestamp + DEFAULT_END_OFFSET),
@@ -653,7 +583,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256 savedVirtual = reserveTokenVirtualBalance;
             reserveTokenVirtualBalance = 0;
 
-            (seededPool, ) = _createLBPool(
+            (seededPool,) = _createLBPool(
                 address(0),
                 uint32(block.timestamp + DEFAULT_START_OFFSET),
                 uint32(block.timestamp + DEFAULT_END_OFFSET),
@@ -686,9 +616,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
             assertEq(seedlessBalances[projectIdx], seededBalances[projectIdx], "Project balances should match");
             assertEq(
-                seedlessBalances[reserveIdx],
-                seededBalances[reserveIdx],
-                "Effective reserve balances should match"
+                seedlessBalances[reserveIdx], seededBalances[reserveIdx], "Effective reserve balances should match"
             );
         }
 
@@ -714,14 +642,10 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256[] memory seedlessLiveBalancesScaled18 = vault.getCurrentLiveBalances(seedlessPool);
             uint256[] memory seededLiveBalancesScaled18 = vault.getCurrentLiveBalances(seededPool);
 
-            uint256 seedlessInvariant = IBasePool(seedlessPool).computeInvariant(
-                seedlessLiveBalancesScaled18,
-                Rounding.ROUND_DOWN
-            );
-            uint256 seededInvariant = IBasePool(seededPool).computeInvariant(
-                seededLiveBalancesScaled18,
-                Rounding.ROUND_DOWN
-            );
+            uint256 seedlessInvariant =
+                IBasePool(seedlessPool).computeInvariant(seedlessLiveBalancesScaled18, Rounding.ROUND_DOWN);
+            uint256 seededInvariant =
+                IBasePool(seededPool).computeInvariant(seededLiveBalancesScaled18, Rounding.ROUND_DOWN);
 
             assertEq(seedlessInvariant, seededInvariant, "computeInvariant (round down): values should be identical");
         }
@@ -730,14 +654,10 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256[] memory seedlessLiveBalancesScaled18 = vault.getCurrentLiveBalances(seedlessPool);
             uint256[] memory seededLiveBalancesScaled18 = vault.getCurrentLiveBalances(seededPool);
 
-            uint256 seedlessInvariant = IBasePool(seedlessPool).computeInvariant(
-                seedlessLiveBalancesScaled18,
-                Rounding.ROUND_UP
-            );
-            uint256 seededInvariant = IBasePool(seededPool).computeInvariant(
-                seededLiveBalancesScaled18,
-                Rounding.ROUND_UP
-            );
+            uint256 seedlessInvariant =
+                IBasePool(seedlessPool).computeInvariant(seedlessLiveBalancesScaled18, Rounding.ROUND_UP);
+            uint256 seededInvariant =
+                IBasePool(seededPool).computeInvariant(seededLiveBalancesScaled18, Rounding.ROUND_UP);
 
             assertEq(seedlessInvariant, seededInvariant, "computeInvariant (round up): values should be identical");
         }
@@ -755,7 +675,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
 
         // Create seedless pool (virtual reserves, no real reserves)
         {
-            (seedlessPool, ) = _createLBPoolNon18(
+            (seedlessPool,) = _createLBPoolNon18(
                 address(0),
                 uint32(block.timestamp + DEFAULT_START_OFFSET),
                 uint32(block.timestamp + DEFAULT_END_OFFSET),
@@ -776,7 +696,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256 savedVirtual = reserveTokenVirtualBalanceNon18;
             reserveTokenVirtualBalanceNon18 = 0;
 
-            (seededPool, ) = _createLBPoolNon18(
+            (seededPool,) = _createLBPoolNon18(
                 address(0),
                 uint32(block.timestamp + DEFAULT_START_OFFSET),
                 uint32(block.timestamp + DEFAULT_END_OFFSET),
@@ -809,9 +729,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256[] memory seededBalances = IPoolInfo(seededPool).getCurrentLiveBalances();
 
             assertEq(
-                seedlessBalances[projectIdxNon18],
-                seededBalances[projectIdxNon18],
-                "Project balances should match"
+                seedlessBalances[projectIdxNon18], seededBalances[projectIdxNon18], "Project balances should match"
             );
             assertEq(
                 seedlessBalances[reserveIdxNon18],
@@ -842,14 +760,10 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256[] memory seedlessLiveBalancesScaled18 = vault.getCurrentLiveBalances(seedlessPool);
             uint256[] memory seededLiveBalancesScaled18 = vault.getCurrentLiveBalances(seededPool);
 
-            uint256 seedlessInvariant = IBasePool(seedlessPool).computeInvariant(
-                seedlessLiveBalancesScaled18,
-                Rounding.ROUND_DOWN
-            );
-            uint256 seededInvariant = IBasePool(seededPool).computeInvariant(
-                seededLiveBalancesScaled18,
-                Rounding.ROUND_DOWN
-            );
+            uint256 seedlessInvariant =
+                IBasePool(seedlessPool).computeInvariant(seedlessLiveBalancesScaled18, Rounding.ROUND_DOWN);
+            uint256 seededInvariant =
+                IBasePool(seededPool).computeInvariant(seededLiveBalancesScaled18, Rounding.ROUND_DOWN);
 
             assertEq(seedlessInvariant, seededInvariant, "computeInvariant (round down): values should be identical");
         }
@@ -858,25 +772,19 @@ contract SeedlessLBPTest is WeightedLBPTest {
             uint256[] memory seedlessLiveBalancesScaled18 = vault.getCurrentLiveBalances(seedlessPool);
             uint256[] memory seededLiveBalancesScaled18 = vault.getCurrentLiveBalances(seededPool);
 
-            uint256 seedlessInvariant = IBasePool(seedlessPool).computeInvariant(
-                seedlessLiveBalancesScaled18,
-                Rounding.ROUND_UP
-            );
-            uint256 seededInvariant = IBasePool(seededPool).computeInvariant(
-                seededLiveBalancesScaled18,
-                Rounding.ROUND_UP
-            );
+            uint256 seedlessInvariant =
+                IBasePool(seedlessPool).computeInvariant(seedlessLiveBalancesScaled18, Rounding.ROUND_UP);
+            uint256 seededInvariant =
+                IBasePool(seededPool).computeInvariant(seededLiveBalancesScaled18, Rounding.ROUND_UP);
 
             assertEq(seedlessInvariant, seededInvariant, "computeInvariant (round up): values should be identical");
         }
     }
 
-    function _swapExactIn(
-        address targetPool,
-        IERC20 tokenIn,
-        IERC20 tokenOut,
-        uint256 amountIn
-    ) internal returns (uint256 amountOut) {
+    function _swapExactIn(address targetPool, IERC20 tokenIn, IERC20 tokenOut, uint256 amountIn)
+        internal
+        returns (uint256 amountOut)
+    {
         uint256 balanceBefore = tokenOut.balanceOf(alice);
 
         vm.prank(alice);
@@ -885,24 +793,15 @@ contract SeedlessLBPTest is WeightedLBPTest {
         amountOut = tokenOut.balanceOf(alice) - balanceBefore;
     }
 
-    function _swapExactOut(
-        address targetPool,
-        IERC20 tokenIn,
-        IERC20 tokenOut,
-        uint256 amountOut
-    ) internal returns (uint256 amountIn) {
+    function _swapExactOut(address targetPool, IERC20 tokenIn, IERC20 tokenOut, uint256 amountOut)
+        internal
+        returns (uint256 amountIn)
+    {
         uint256 balanceBefore = tokenIn.balanceOf(alice);
 
         vm.prank(alice);
         router.swapSingleTokenExactOut(
-            targetPool,
-            tokenIn,
-            tokenOut,
-            amountOut,
-            type(uint256).max,
-            type(uint256).max,
-            false,
-            bytes("")
+            targetPool, tokenIn, tokenOut, amountOut, type(uint256).max, type(uint256).max, false, bytes("")
         );
 
         amountIn = balanceBefore - tokenIn.balanceOf(alice);
@@ -943,11 +842,10 @@ contract SeedlessLBPTest is WeightedLBPTest {
     }
 
     function testGetTokenInfoIncludesVirtual() public view {
-        (, , uint256[] memory balancesRaw, uint256[] memory lastBalancesLiveScaled18) = IPoolInfo(pool).getTokenInfo();
+        (,, uint256[] memory balancesRaw, uint256[] memory lastBalancesLiveScaled18) = IPoolInfo(pool).getTokenInfo();
 
-        (, , uint256[] memory realBalancesRaw, uint256[] memory realLastBalancesLiveScaled18) = vault.getPoolTokenInfo(
-            pool
-        );
+        (,, uint256[] memory realBalancesRaw, uint256[] memory realLastBalancesLiveScaled18) =
+            vault.getPoolTokenInfo(pool);
 
         (uint256 virtualBalanceRaw, uint256 virtualBalanceScaled18) = ILBPool(pool).getReserveTokenVirtualBalance();
 
@@ -973,15 +871,13 @@ contract SeedlessLBPTest is WeightedLBPTest {
     function testGetTokenInfoIncludesVirtualNon18() public {
         _deployAndInitPoolNon18();
 
-        (, , uint256[] memory balancesRaw, uint256[] memory lastBalancesLiveScaled18) = IPoolInfo(poolNon18)
-            .getTokenInfo();
+        (,, uint256[] memory balancesRaw, uint256[] memory lastBalancesLiveScaled18) =
+            IPoolInfo(poolNon18).getTokenInfo();
 
-        (, , uint256[] memory realBalancesRaw, uint256[] memory realLastBalancesLiveScaled18) = vault.getPoolTokenInfo(
-            poolNon18
-        );
+        (,, uint256[] memory realBalancesRaw, uint256[] memory realLastBalancesLiveScaled18) =
+            vault.getPoolTokenInfo(poolNon18);
 
-        (uint256 virtualBalanceRaw, uint256 virtualBalanceScaled18) = ILBPool(poolNon18)
-            .getReserveTokenVirtualBalance();
+        (uint256 virtualBalanceRaw, uint256 virtualBalanceScaled18) = ILBPool(poolNon18).getReserveTokenVirtualBalance();
 
         assertEq(balancesRaw[projectIdxNon18], realBalancesRaw[projectIdxNon18], "Project raw balance mismatch");
         assertEq(
@@ -1014,8 +910,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
     function testGetReserveTokenVirtualBalanceNon18() public {
         _deployAndInitPoolNon18();
 
-        (uint256 virtualBalanceRaw, uint256 virtualBalanceScaled18) = ILBPool(poolNon18)
-            .getReserveTokenVirtualBalance();
+        (uint256 virtualBalanceRaw, uint256 virtualBalanceScaled18) = ILBPool(poolNon18).getReserveTokenVirtualBalance();
 
         // For 6-decimal token: raw = 1e9, scaled18 = 1e21
         assertEq(virtualBalanceRaw, reserveTokenVirtualBalanceNon18, "Raw virtual balance mismatch");
@@ -1027,7 +922,7 @@ contract SeedlessLBPTest is WeightedLBPTest {
         // Create a non-seedless pool
         reserveTokenVirtualBalance = 0;
 
-        (address nonSeedlessPool, ) = _createLBPool(
+        (address nonSeedlessPool,) = _createLBPool(
             address(0),
             uint32(block.timestamp + DEFAULT_START_OFFSET),
             uint32(block.timestamp + DEFAULT_END_OFFSET),

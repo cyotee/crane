@@ -12,7 +12,9 @@ import {Test} from "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {IERC8109Introspection} from "@crane/contracts/introspection/ERC8109/IERC8109Introspection.sol";
-import {Behavior_IERC8109Introspection} from "@crane/contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol";
+import {
+    Behavior_IERC8109Introspection
+} from "@crane/contracts/introspection/ERC8109/Behavior_IERC8109Introspection.sol";
 
 /**
  * @title TestBase_IERC8109Introspection
@@ -27,8 +29,7 @@ abstract contract TestBase_IERC8109Introspection is Test {
     function setUp() public virtual {
         erc8109TestSubject = erc8109_subject();
         Behavior_IERC8109Introspection.expect_IERC8109Introspection(
-            erc8109TestSubject,
-            expected_IERC8109Introspection_pairs()
+            erc8109TestSubject, expected_IERC8109Introspection_pairs()
         );
     }
 

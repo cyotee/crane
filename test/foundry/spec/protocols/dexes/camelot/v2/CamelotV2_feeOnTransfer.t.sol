@@ -94,24 +94,19 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     }
 
     function _createPairs() internal {
-        standardVsFotPair5 = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(fotToken5Percent))
-        );
+        standardVsFotPair5 =
+            ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(fotToken5Percent)));
         vm.label(address(standardVsFotPair5), "StandardVsFoT5Pair");
 
-        standardVsFotPair1 = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(fotToken1Percent))
-        );
+        standardVsFotPair1 =
+            ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(fotToken1Percent)));
         vm.label(address(standardVsFotPair1), "StandardVsFoT1Pair");
 
-        standardVsFotPair10 = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(fotToken10Percent))
-        );
+        standardVsFotPair10 =
+            ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(fotToken10Percent)));
         vm.label(address(standardVsFotPair10), "StandardVsFoT10Pair");
 
-        fotVsFotPair = ICamelotPair(
-            camelotV2Factory.createPair(address(fotToken1Percent), address(fotToken5Percent))
-        );
+        fotVsFotPair = ICamelotPair(camelotV2Factory.createPair(address(fotToken1Percent), address(fotToken5Percent)));
         vm.label(address(fotVsFotPair), "FoTVsFoTPair");
     }
 
@@ -123,11 +118,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         _initializeFotVsFotPool();
     }
 
-    function _initializePool(
-        ERC20PermitMintableStub tokenA,
-        FeeOnTransferToken tokenB,
-        ICamelotPair pair
-    ) internal {
+    function _initializePool(ERC20PermitMintableStub tokenA, FeeOnTransferToken tokenB, ICamelotPair pair) internal {
         // For FoT tokens, we need to account for the tax when adding liquidity
         // The pair will receive less than we send due to transfer tax
         uint256 fotTax = tokenB.transferTax();
@@ -176,30 +167,15 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
      * Expected: Quote > Actual received (overestimation by tax %)
      */
     function test_saleQuote_overestimatesForFoT_5percent() public {
-        _testSaleQuoteOverestimation(
-            standardToken,
-            fotToken5Percent,
-            standardVsFotPair5,
-            TAX_5_PERCENT
-        );
+        _testSaleQuoteOverestimation(standardToken, fotToken5Percent, standardVsFotPair5, TAX_5_PERCENT);
     }
 
     function test_saleQuote_overestimatesForFoT_1percent() public {
-        _testSaleQuoteOverestimation(
-            standardToken,
-            fotToken1Percent,
-            standardVsFotPair1,
-            TAX_1_PERCENT
-        );
+        _testSaleQuoteOverestimation(standardToken, fotToken1Percent, standardVsFotPair1, TAX_1_PERCENT);
     }
 
     function test_saleQuote_overestimatesForFoT_10percent() public {
-        _testSaleQuoteOverestimation(
-            standardToken,
-            fotToken10Percent,
-            standardVsFotPair10,
-            TAX_10_PERCENT
-        );
+        _testSaleQuoteOverestimation(standardToken, fotToken10Percent, standardVsFotPair10, TAX_10_PERCENT);
     }
 
     /// @dev Struct to avoid stack too deep in sale quote tests
@@ -254,14 +230,19 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         emit log_named_uint("Deviation (bps)", p.deviationBps);
     }
 
-    function _getReservesForSaleQuote(ICamelotPair pair, address tokenIn) internal view returns (uint256, uint256, uint256) {
+    function _getReservesForSaleQuote(ICamelotPair pair, address tokenIn)
+        internal
+        view
+        returns (uint256, uint256, uint256)
+    {
         (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = pair.getReserves();
         bool tokenInIsToken0 = tokenIn == pair.token0();
-        return (
-            tokenInIsToken0 ? reserve0 : reserve1,
-            tokenInIsToken0 ? reserve1 : reserve0,
-            tokenInIsToken0 ? fee0 : fee1
-        );
+        return
+            (
+                tokenInIsToken0 ? reserve0 : reserve1,
+                tokenInIsToken0 ? reserve1 : reserve0,
+                tokenInIsToken0 ? fee0 : fee1
+            );
     }
 
     function _executeSwapForSale(address tokenIn, address tokenOut, uint256 amountIn) internal {
@@ -285,30 +266,15 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
      * Expected: Quoted input < Required input (underestimation by tax %)
      */
     function test_purchaseQuote_underestimatesForFoT_5percent() public {
-        _testPurchaseQuoteUnderestimation(
-            fotToken5Percent,
-            standardToken,
-            standardVsFotPair5,
-            TAX_5_PERCENT
-        );
+        _testPurchaseQuoteUnderestimation(fotToken5Percent, standardToken, standardVsFotPair5, TAX_5_PERCENT);
     }
 
     function test_purchaseQuote_underestimatesForFoT_1percent() public {
-        _testPurchaseQuoteUnderestimation(
-            fotToken1Percent,
-            standardToken,
-            standardVsFotPair1,
-            TAX_1_PERCENT
-        );
+        _testPurchaseQuoteUnderestimation(fotToken1Percent, standardToken, standardVsFotPair1, TAX_1_PERCENT);
     }
 
     function test_purchaseQuote_underestimatesForFoT_10percent() public {
-        _testPurchaseQuoteUnderestimation(
-            fotToken10Percent,
-            standardToken,
-            standardVsFotPair10,
-            TAX_10_PERCENT
-        );
+        _testPurchaseQuoteUnderestimation(fotToken10Percent, standardToken, standardVsFotPair10, TAX_10_PERCENT);
     }
 
     /// @dev Struct to avoid stack too deep in purchase quote tests
@@ -373,14 +339,19 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         emit log_named_uint("Shortfall (bps)", p.shortfallBps);
     }
 
-    function _getReservesForTokenInput(ICamelotPair pair, address tokenIn) internal view returns (uint256, uint256, uint256) {
+    function _getReservesForTokenInput(ICamelotPair pair, address tokenIn)
+        internal
+        view
+        returns (uint256, uint256, uint256)
+    {
         (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = pair.getReserves();
         bool tokenInIsToken0 = tokenIn == pair.token0();
-        return (
-            tokenInIsToken0 ? reserve0 : reserve1,
-            tokenInIsToken0 ? reserve1 : reserve0,
-            tokenInIsToken0 ? fee0 : fee1
-        );
+        return
+            (
+                tokenInIsToken0 ? reserve0 : reserve1,
+                tokenInIsToken0 ? reserve1 : reserve0,
+                tokenInIsToken0 ? fee0 : fee1
+            );
     }
 
     function _executeSwapForPurchase(address tokenIn, address tokenOut, uint256 amountIn) internal {
@@ -414,12 +385,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // This should not revert
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            1,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            swapAmount, 1, path, address(this), address(0), block.timestamp + 300
         );
 
         uint256 balanceAfter = fotToken5Percent.balanceOf(address(this));
@@ -442,12 +408,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // This should not revert
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            1,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            swapAmount, 1, path, address(this), address(0), block.timestamp + 300
         );
 
         uint256 balanceAfter = standardToken.balanceOf(address(this));
@@ -470,12 +431,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // This should not revert even with both tokens being FoT
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            1,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            swapAmount, 1, path, address(this), address(0), block.timestamp + 300
         );
 
         uint256 balanceAfter = fotToken5Percent.balanceOf(address(this));
@@ -596,9 +552,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     function _createFuzzPair(uint256 taxBps) internal returns (FeeOnTransferToken, ICamelotPair) {
         require(taxBps <= MAX_INVERSE_TAX_BPS, "Tax too high for inverse computation");
         FeeOnTransferToken fuzzFotToken = new FeeOnTransferToken("FuzzFoT", "FFOT", 18, taxBps, 0);
-        ICamelotPair fuzzPair = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(fuzzFotToken))
-        );
+        ICamelotPair fuzzPair = ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(fuzzFotToken)));
 
         uint256 fotAmountToSend = (INITIAL_LIQUIDITY * 10000) / (10000 - taxBps);
         standardToken.mint(address(this), INITIAL_LIQUIDITY);
@@ -613,11 +567,12 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     function _getReservesForStandardIn(ICamelotPair pair) internal view returns (uint256, uint256, uint256) {
         (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = pair.getReserves();
         bool tokenInIsToken0 = address(standardToken) == pair.token0();
-        return (
-            tokenInIsToken0 ? reserve0 : reserve1,
-            tokenInIsToken0 ? reserve1 : reserve0,
-            tokenInIsToken0 ? fee0 : fee1
-        );
+        return
+            (
+                tokenInIsToken0 ? reserve0 : reserve1,
+                tokenInIsToken0 ? reserve1 : reserve0,
+                tokenInIsToken0 ? fee0 : fee1
+            );
     }
 
     function _executeSwap(address tokenIn, address tokenOut, uint256 amountIn) internal {
@@ -662,11 +617,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     function _getReservesForFotIn(ICamelotPair pair) internal view returns (uint256, uint256, uint256) {
         (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = pair.getReserves();
         bool fotIsToken0 = address(fotToken5Percent) == pair.token0();
-        return (
-            fotIsToken0 ? reserve0 : reserve1,
-            fotIsToken0 ? reserve1 : reserve0,
-            fotIsToken0 ? fee0 : fee1
-        );
+        return (fotIsToken0 ? reserve0 : reserve1, fotIsToken0 ? reserve1 : reserve0, fotIsToken0 ? fee0 : fee1);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -685,30 +636,15 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
      *   5. Assert actualOutput >= desiredOutput (within rounding tolerance)
      */
     function test_fixUpInput_achievesDesiredOutput_5percent() public {
-        _testFixUpInputAchievesDesiredOutput(
-            fotToken5Percent,
-            standardToken,
-            standardVsFotPair5,
-            TAX_5_PERCENT
-        );
+        _testFixUpInputAchievesDesiredOutput(fotToken5Percent, standardToken, standardVsFotPair5, TAX_5_PERCENT);
     }
 
     function test_fixUpInput_achievesDesiredOutput_1percent() public {
-        _testFixUpInputAchievesDesiredOutput(
-            fotToken1Percent,
-            standardToken,
-            standardVsFotPair1,
-            TAX_1_PERCENT
-        );
+        _testFixUpInputAchievesDesiredOutput(fotToken1Percent, standardToken, standardVsFotPair1, TAX_1_PERCENT);
     }
 
     function test_fixUpInput_achievesDesiredOutput_10percent() public {
-        _testFixUpInputAchievesDesiredOutput(
-            fotToken10Percent,
-            standardToken,
-            standardVsFotPair10,
-            TAX_10_PERCENT
-        );
+        _testFixUpInputAchievesDesiredOutput(fotToken10Percent, standardToken, standardVsFotPair10, TAX_10_PERCENT);
     }
 
     /// @dev Struct to avoid stack too deep in fix-up verification tests
@@ -759,9 +695,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         // Step 4: Assert actual output meets or exceeds desired output
         // Allow 1 wei tolerance for integer rounding in the AMM math
         assertGe(
-            p.actualOutput + 1,
-            p.desiredOutput,
-            "Fix-up input should achieve desired output (within 1 wei rounding)"
+            p.actualOutput + 1, p.desiredOutput, "Fix-up input should achieve desired output (within 1 wei rounding)"
         );
 
         emit log_named_uint("Tax Rate (bps)", taxBps);
@@ -806,11 +740,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         uint256 actualOutput = standardToken.balanceOf(address(this)) - outputBalanceBefore;
 
         // Assert: fix-up input achieves the desired output (within 1 wei rounding)
-        assertGe(
-            actualOutput + 1,
-            desiredOutput,
-            "Fuzz: fix-up input should achieve desired output"
-        );
+        assertGe(actualOutput + 1, desiredOutput, "Fuzz: fix-up input should achieve desired output");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -855,9 +785,8 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
     function _createZeroTaxPair() internal returns (FeeOnTransferToken, ICamelotPair) {
         FeeOnTransferToken zeroTaxToken = new FeeOnTransferToken("ZeroTax", "ZT", 18, 0, 0);
-        ICamelotPair zeroTaxPair = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(zeroTaxToken))
-        );
+        ICamelotPair zeroTaxPair =
+            ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(zeroTaxToken)));
 
         standardToken.mint(address(this), INITIAL_LIQUIDITY);
         zeroTaxToken.mint(address(this), INITIAL_LIQUIDITY);
@@ -868,14 +797,19 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
         return (zeroTaxToken, zeroTaxPair);
     }
 
-    function _getReservesForToken(ICamelotPair pair, address tokenIn) internal view returns (uint256, uint256, uint256) {
+    function _getReservesForToken(ICamelotPair pair, address tokenIn)
+        internal
+        view
+        returns (uint256, uint256, uint256)
+    {
         (uint112 reserve0, uint112 reserve1, uint16 fee0, uint16 fee1) = pair.getReserves();
         bool tokenInIsToken0 = tokenIn == pair.token0();
-        return (
-            tokenInIsToken0 ? reserve0 : reserve1,
-            tokenInIsToken0 ? reserve1 : reserve0,
-            tokenInIsToken0 ? fee0 : fee1
-        );
+        return
+            (
+                tokenInIsToken0 ? reserve0 : reserve1,
+                tokenInIsToken0 ? reserve1 : reserve0,
+                tokenInIsToken0 ? fee0 : fee1
+            );
     }
 
     /**
@@ -958,9 +892,8 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     function test_extremeTax_99percent_poolInitializes() public {
         uint256 taxBps = 9900; // 99%
         FeeOnTransferToken extremeToken = new FeeOnTransferToken("Extreme99", "EX99", 18, taxBps, 0);
-        ICamelotPair extremePair = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(extremeToken))
-        );
+        ICamelotPair extremePair =
+            ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(extremeToken)));
 
         // Gross amount = INITIAL_LIQUIDITY * 10000 / (10000 - 9900) = INITIAL_LIQUIDITY * 100
         uint256 expectedGross = (INITIAL_LIQUIDITY * 10000) / (10000 - taxBps);
@@ -971,9 +904,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // Verify pool received approximately INITIAL_LIQUIDITY of the extreme token
         (uint112 r0, uint112 r1,,) = extremePair.getReserves();
-        uint256 extremeReserve = address(extremeToken) == extremePair.token0()
-            ? uint256(r0)
-            : uint256(r1);
+        uint256 extremeReserve = address(extremeToken) == extremePair.token0() ? uint256(r0) : uint256(r1);
         assertApproxEqRel(extremeReserve, INITIAL_LIQUIDITY, 0.01e18, "Reserve should be ~INITIAL_LIQUIDITY");
     }
 
@@ -986,9 +917,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
     function test_extremeTax_9999bps_isMaxValid() public {
         uint256 taxBps = 9999; // 99.99%
         FeeOnTransferToken maxToken = new FeeOnTransferToken("Max9999", "MX99", 18, taxBps, 0);
-        ICamelotPair maxPair = ICamelotPair(
-            camelotV2Factory.createPair(address(standardToken), address(maxToken))
-        );
+        ICamelotPair maxPair = ICamelotPair(camelotV2Factory.createPair(address(standardToken), address(maxToken)));
 
         // Gross amount = INITIAL_LIQUIDITY * 10000 / 1 = INITIAL_LIQUIDITY * 10000
         uint256 expectedGross = (INITIAL_LIQUIDITY * 10000) / (10000 - taxBps);
@@ -999,9 +928,7 @@ contract CamelotV2_feeOnTransfer_Test is TestBase_CamelotV2 {
 
         // Verify reserves
         (uint112 r0, uint112 r1,,) = maxPair.getReserves();
-        uint256 maxReserve = address(maxToken) == maxPair.token0()
-            ? uint256(r0)
-            : uint256(r1);
+        uint256 maxReserve = address(maxToken) == maxPair.token0() ? uint256(r0) : uint256(r1);
         assertApproxEqRel(maxReserve, INITIAL_LIQUIDITY, 0.01e18, "Reserve should be ~INITIAL_LIQUIDITY");
     }
 

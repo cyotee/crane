@@ -575,18 +575,22 @@ library BetterArrays {
     }
 
     /// @dev Cast address comparator to uint256 comparator
-    function _castToUint256Comp(
-        function(address, address) pure returns (bool) input
-    ) private pure returns (function(uint256, uint256) pure returns (bool) output) {
+    function _castToUint256Comp(function(address, address) pure returns (bool) input)
+        private
+        pure
+        returns (function(uint256, uint256) pure returns (bool) output)
+    {
         assembly {
             output := input
         }
     }
 
     /// @dev Cast bytes32 comparator to uint256 comparator
-    function _castToUint256Comp(
-        function(bytes32, bytes32) pure returns (bool) input
-    ) private pure returns (function(uint256, uint256) pure returns (bool) output) {
+    function _castToUint256Comp(function(bytes32, bytes32) pure returns (bool) input)
+        private
+        pure
+        returns (function(uint256, uint256) pure returns (bool) output)
+    {
         assembly {
             output := input
         }

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { ICowConditionalOrder } from "./ICowConditionalOrder.sol";
+import {ICowConditionalOrder} from "./ICowConditionalOrder.sol";
 
 /// @notice Utility contract used to validate orders in the `CowSwapFeeBurner`.
 interface IComposableCow {

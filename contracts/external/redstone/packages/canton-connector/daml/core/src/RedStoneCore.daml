@@ -1,0 +1,19 @@
+module RedStoneCore where
+
+import RedStone.Config
+import RedStone.GetPrices as G
+import IRedStoneCore
+
+template RedStoneCore
+  with
+    coreId: Text
+    owner : Party
+    viewers : [Party]
+  where
+    signatory owner
+    observer viewers
+
+    interface instance IRedStoneCore for RedStoneCore where
+      view = RedStoneCoreView with viewers, coreId
+
+      getPrices feedIds currentTime = G.getPricesNumeric $ redstonePrimaryProdDefaultConfig feedIds currentTime

@@ -5,18 +5,20 @@ pragma solidity ^0.8.24;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { Vault } from "@crane/contracts/external/balancer/v3/vault/contracts/Vault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Vault} from "@crane/contracts/external/balancer/v3/vault/contracts/Vault.sol";
 
-import { InputHelpersMock } from "../../../contracts/test/InputHelpersMock.sol";
+import {InputHelpersMock} from "../../../contracts/test/InputHelpersMock.sol";
 
-import { BaseVaultTest } from "./BaseVaultTest.sol";
+import {BaseVaultTest} from "./BaseVaultTest.sol";
 
 abstract contract BasePoolTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -72,7 +74,7 @@ abstract contract BasePoolTest is BaseVaultTest {
     }
 
     function testInitialize() public view virtual {
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         for (uint256 i = 0; i < poolTokens.length; ++i) {
             // Tokens are transferred from lp.
@@ -90,11 +92,7 @@ abstract contract BasePoolTest is BaseVaultTest {
             );
 
             // Tokens are deposited to the pool.
-            assertEq(
-                balances[i],
-                tokenAmounts[i],
-                string.concat("Pool: Wrong token balance for ", Strings.toString(i))
-            );
+            assertEq(balances[i], tokenAmounts[i], string.concat("Pool: Wrong token balance for ", Strings.toString(i)));
         }
 
         // Should mint the correct amount of BPT poolTokens, within a maximum error of DELTA due to precision loss.
@@ -106,7 +104,7 @@ abstract contract BasePoolTest is BaseVaultTest {
         vm.prank(bob);
         bptAmountOut = router.addLiquidityUnbalanced(pool, tokenAmounts, tokenAmountIn - DELTA, false, bytes(""));
 
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         for (uint256 i = 0; i < poolTokens.length; ++i) {
             // Tokens are transferred from Bob.
@@ -124,9 +122,7 @@ abstract contract BasePoolTest is BaseVaultTest {
             );
 
             assertEq(
-                balances[i],
-                tokenAmounts[i] * 2,
-                string.concat("Pool: Wrong token balance for ", Strings.toString(i))
+                balances[i], tokenAmounts[i] * 2, string.concat("Pool: Wrong token balance for ", Strings.toString(i))
             );
         }
 
@@ -149,17 +145,12 @@ abstract contract BasePoolTest is BaseVaultTest {
             minAmountsOut[i] = _less(tokenAmounts[i], 1e4);
         }
 
-        uint256[] memory amountsOut = router.removeLiquidityProportional(
-            pool,
-            bptAmountIn,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsOut =
+            router.removeLiquidityProportional(pool, bptAmountIn, minAmountsOut, false, bytes(""));
 
         vm.stopPrank();
 
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(address(pool));
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(address(pool));
 
         for (uint256 i = 0; i < poolTokens.length; ++i) {
             // Tokens are transferred to Bob.
@@ -188,10 +179,7 @@ abstract contract BasePoolTest is BaseVaultTest {
 
             // `amountsOut` are correct.
             assertApproxEqAbs(
-                amountsOut[i],
-                tokenAmounts[i],
-                DELTA,
-                string.concat("Wrong token amountOut for ", Strings.toString(i))
+                amountsOut[i], tokenAmounts[i], DELTA, string.concat("Wrong token amountOut for ", Strings.toString(i))
             );
         }
 
@@ -210,14 +198,7 @@ abstract contract BasePoolTest is BaseVaultTest {
 
         vm.prank(bob);
         uint256 amountCalculated = router.swapSingleTokenExactIn(
-            pool,
-            tokenIn,
-            tokenOut,
-            tokenAmountIn,
-            _less(tokenAmountOut, 1e3),
-            MAX_UINT256,
-            false,
-            bytes("")
+            pool, tokenIn, tokenOut, tokenAmountIn, _less(tokenAmountOut, 1e3), MAX_UINT256, false, bytes("")
         );
 
         // Tokens are transferred from Bob.
@@ -236,13 +217,11 @@ abstract contract BasePoolTest is BaseVaultTest {
             "Vault: Wrong tokenIn balance"
         );
 
-        (, , uint256[] memory balances, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balances,) = vault.getPoolTokenInfo(pool);
 
         assertEq(balances[tokenIndexIn], tokenAmounts[tokenIndexIn] + tokenAmountIn, "Pool: Wrong tokenIn balance");
         assertEq(
-            balances[tokenIndexOut],
-            tokenAmounts[tokenIndexOut] - amountCalculated,
-            "Pool: Wrong tokenOut balance"
+            balances[tokenIndexOut], tokenAmounts[tokenIndexOut] - amountCalculated, "Pool: Wrong tokenOut balance"
         );
     }
 

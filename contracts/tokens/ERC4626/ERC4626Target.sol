@@ -99,20 +99,14 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
         ERC4626Repo.Storage storage Storage = ERC4626Repo._layout();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(Storage);
         uint256 totalSupply_ = ERC20Repo._totalSupply();
-        return
-            BetterMath._convertToSharesDown(
-                assets, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage)
-            );
+        return BetterMath._convertToSharesDown(assets, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage));
     }
 
     function convertToAssets(uint256 shares) public view returns (uint256 assets) {
         ERC4626Repo.Storage storage Storage = ERC4626Repo._layout();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(Storage);
         uint256 totalSupply_ = ERC20Repo._totalSupply();
-        return
-            BetterMath._convertToAssetsDown(
-                shares, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage)
-            );
+        return BetterMath._convertToAssetsDown(shares, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage));
     }
 
     function maxDeposit(address) public pure returns (uint256 maxDeposit_) {

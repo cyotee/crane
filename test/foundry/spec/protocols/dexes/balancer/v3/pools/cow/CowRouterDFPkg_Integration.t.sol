@@ -23,15 +23,22 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
 import {CowRouterFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   DFPkg                                    */
 /* -------------------------------------------------------------------------- */
 
-import {CowRouterDFPkg, ICowRouterDFPkg} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterDFPkg.sol";
+import {
+    CowRouterDFPkg,
+    ICowRouterDFPkg
+} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterDFPkg.sol";
 
 contract MockBalancerV3Vault {
     function getAuthorizer() external pure returns (address) {
@@ -86,12 +93,8 @@ contract CowRouterDFPkg_Integration_Test is CraneTest {
     }
 
     function test_deployProxy_viaRealFactory_andSelectorsResolve() public {
-        bytes memory pkgArgs = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: 10e16,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory pkgArgs =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: 10e16, feeSweeper: feeSweeper}));
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
         vm.label(proxy, "CowRouterProxy");

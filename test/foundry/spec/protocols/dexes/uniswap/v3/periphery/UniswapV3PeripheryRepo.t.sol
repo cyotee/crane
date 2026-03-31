@@ -2,10 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {TestBase_UniswapV3Periphery} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/test/bases/TestBase_UniswapV3Periphery.sol";
+import {
+    TestBase_UniswapV3Periphery
+} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/test/bases/TestBase_UniswapV3Periphery.sol";
 import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/IUniswapV3Pool.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
-import {INonfungiblePositionManager} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/interfaces/INonfungiblePositionManager.sol";
+import {
+    INonfungiblePositionManager
+} from "@crane/contracts/protocols/dexes/uniswap/v3/periphery/interfaces/INonfungiblePositionManager.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 
 /// @title Uniswap V3 Periphery Repository Tests
@@ -25,9 +29,8 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
         vm.label(address(tokenB), "tokenB");
 
         // Order tokens for pool creation
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         // Create and initialize pool at 1:1 price
         pool = createPoolOneToOne(token0, token1, FEE_MEDIUM);
@@ -74,21 +77,14 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
         _addLiquidityToPool();
 
         // Order tokens
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         uint256 amountIn = 1 ether;
         uint256 balanceBefore = MockERC20(token1).balanceOf(address(this));
 
         // Swap token0 for token1
-        uint256 amountOut = swapExactInputSingle(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            amountIn,
-            address(this)
-        );
+        uint256 amountOut = swapExactInputSingle(token0, token1, FEE_MEDIUM, amountIn, address(this));
 
         uint256 balanceAfter = MockERC20(token1).balanceOf(address(this));
 
@@ -101,9 +97,8 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
         _addLiquidityToPool();
 
         // Order tokens
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         uint256 amountOut = 0.5 ether;
         uint256 amountInMaximum = 2 ether;
@@ -111,14 +106,7 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
         uint256 balanceBefore = MockERC20(token1).balanceOf(address(this));
 
         // Swap for exact amount of token1
-        uint256 amountIn = swapExactOutputSingle(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            amountOut,
-            amountInMaximum,
-            address(this)
-        );
+        uint256 amountIn = swapExactOutputSingle(token0, token1, FEE_MEDIUM, amountOut, amountInMaximum, address(this));
 
         uint256 balanceAfter = MockERC20(token1).balanceOf(address(this));
 
@@ -133,24 +121,15 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
 
     function test_PositionManager_Mint() public {
         // Order tokens
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         int24 tickSpacing = pool.tickSpacing();
         int24 tickLower = -tickSpacing * 10;
         int24 tickUpper = tickSpacing * 10;
 
-        (uint256 tokenId, uint128 liquidity) = mintPosition(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            tickLower,
-            tickUpper,
-            10 ether,
-            10 ether,
-            address(this)
-        );
+        (uint256 tokenId, uint128 liquidity) =
+            mintPosition(token0, token1, FEE_MEDIUM, tickLower, tickUpper, 10 ether, 10 ether, address(this));
 
         assertGt(tokenId, 0, "Should receive NFT");
         assertGt(liquidity, 0, "Should have liquidity");
@@ -159,25 +138,16 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
 
     function test_PositionManager_IncreaseLiquidity() public {
         // Order tokens
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         int24 tickSpacing = pool.tickSpacing();
         int24 tickLower = -tickSpacing * 10;
         int24 tickUpper = tickSpacing * 10;
 
         // First mint a position
-        (uint256 tokenId, uint128 initialLiquidity) = mintPosition(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            tickLower,
-            tickUpper,
-            10 ether,
-            10 ether,
-            address(this)
-        );
+        (uint256 tokenId, uint128 initialLiquidity) =
+            mintPosition(token0, token1, FEE_MEDIUM, tickLower, tickUpper, 10 ether, 10 ether, address(this));
 
         // Prepare more tokens
         _mintOrDeal(token0, address(this), 5 ether);
@@ -186,7 +156,7 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
         _approveToken(token1, address(positionManager), 5 ether);
 
         // Increase liquidity
-        (uint128 addedLiquidity, , ) = positionManager.increaseLiquidity(
+        (uint128 addedLiquidity,,) = positionManager.increaseLiquidity(
             INonfungiblePositionManager.IncreaseLiquidityParams({
                 tokenId: tokenId,
                 amount0Desired: 5 ether,
@@ -226,25 +196,15 @@ contract UniswapV3PeripheryRepoTest is TestBase_UniswapV3Periphery {
 
     function _addLiquidityToPool() internal {
         // Order tokens
-        (address token0, address token1) = address(tokenA) < address(tokenB)
-            ? (address(tokenA), address(tokenB))
-            : (address(tokenB), address(tokenA));
+        (address token0, address token1) =
+            address(tokenA) < address(tokenB) ? (address(tokenA), address(tokenB)) : (address(tokenB), address(tokenA));
 
         int24 tickSpacing = pool.tickSpacing();
         int24 tickLower = -tickSpacing * 100;
         int24 tickUpper = tickSpacing * 100;
 
         // Mint position with substantial liquidity
-        mintPosition(
-            token0,
-            token1,
-            FEE_MEDIUM,
-            tickLower,
-            tickUpper,
-            1000 ether,
-            1000 ether,
-            address(this)
-        );
+        mintPosition(token0, token1, FEE_MEDIUM, tickLower, tickUpper, 1000 ether, 1000 ether, address(this));
     }
 
     // Required interface for position NFT receiver

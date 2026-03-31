@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { VaultContractsDeployer } from "./utils/VaultContractsDeployer.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {VaultContractsDeployer} from "./utils/VaultContractsDeployer.sol";
 
 contract RateProviderTest is VaultContractsDeployer {
     RateProviderMock rateProvider;

@@ -12,7 +12,9 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {Nonces} from "@crane/contracts/utils/Nonces.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {VaultGuard} from "./VaultGuard.sol";
@@ -21,7 +23,17 @@ import {VaultGuard} from "./VaultGuard.sol";
  * @notice `BalancerPoolToken` is a fully ERC20-compatible token to be used as the base contract for Balancer Pools.
  * @dev Vendored from Balancer V3 Vault.
  */
-contract BalancerPoolToken is IERC20, IERC20Events, IERC20Metadata, IERC20Permit, IRateProvider, EIP712, Nonces, ERC165, VaultGuard {
+contract BalancerPoolToken is
+    IERC20,
+    IERC20Events,
+    IERC20Metadata,
+    IERC20Permit,
+    IRateProvider,
+    EIP712,
+    Nonces,
+    ERC165,
+    VaultGuard
+{
     using BetterEfficientHashLib for bytes;
     bytes32 public constant PERMIT_TYPEHASH =
         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
@@ -92,15 +104,10 @@ contract BalancerPoolToken is IERC20, IERC20Events, IERC20Metadata, IERC20Permit
         emit Approval(owner, spender, amount);
     }
 
-    function permit(
-        address owner,
-        address spender,
-        uint256 amount,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public virtual {
+    function permit(address owner, address spender, uint256 amount, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        public
+        virtual
+    {
         // solhint-disable-next-line not-rely-on-time
         if (block.timestamp > deadline) {
             revert ERC2612ExpiredSignature(deadline);

@@ -6,20 +6,30 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { PoolConfig, PoolRoleAccounts, TokenConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { ICowPoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPoolFactory.sol";
+import {
+    PoolConfig,
+    PoolRoleAccounts,
+    TokenConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {ICowPoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-cow/ICowPoolFactory.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
 
-import { CowPoolFactory } from "../../contracts/CowPoolFactory.sol";
-import { CowRouter } from "../../contracts/CowRouter.sol";
-import { CowPool } from "../../contracts/CowPool.sol";
-import { BaseCowTest } from "./utils/BaseCowTest.sol";
+import {CowPoolFactory} from "../../contracts/CowPoolFactory.sol";
+import {CowRouter} from "../../contracts/CowRouter.sol";
+import {CowPool} from "../../contracts/CowPool.sol";
+import {BaseCowTest} from "./utils/BaseCowTest.sol";
 
 contract CowPoolFactoryTest is BaseCowTest {
     using ArrayHelpers for *;
@@ -93,13 +103,7 @@ contract CowPoolFactoryTest is BaseCowTest {
         PoolRoleAccounts memory roleAccounts;
 
         address newPool = cowFactory.create(
-            "test",
-            "test",
-            tokenConfig,
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE,
-            bytes32("")
+            "test", "test", tokenConfig, weights, roleAccounts, DEFAULT_SWAP_FEE_PERCENTAGE, bytes32("")
         );
 
         PoolConfig memory poolConfig = vault.getPoolConfig(newPool);
@@ -123,13 +127,7 @@ contract CowPoolFactoryTest is BaseCowTest {
         PoolRoleAccounts memory roleAccounts;
 
         address newPool = cowFactory.create(
-            "test",
-            "test",
-            tokenConfig,
-            weights,
-            roleAccounts,
-            DEFAULT_SWAP_FEE_PERCENTAGE,
-            bytes32("")
+            "test", "test", tokenConfig, weights, roleAccounts, DEFAULT_SWAP_FEE_PERCENTAGE, bytes32("")
         );
 
         assertEq(CowPool(newPool).getTrustedCowRouter(), _otherCowRouter, "Wrong trusted CoW Router");

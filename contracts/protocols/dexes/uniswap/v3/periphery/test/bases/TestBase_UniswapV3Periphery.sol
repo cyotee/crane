@@ -44,11 +44,7 @@ abstract contract TestBase_UniswapV3Periphery is TestBase_UniswapV3 {
         vm.label(address(swapRouter), "swapRouter");
 
         // Deploy NonfungiblePositionManager
-        positionManager = new NonfungiblePositionManager(
-            address(uniswapV3Factory),
-            address(weth),
-            mockTokenDescriptor
-        );
+        positionManager = new NonfungiblePositionManager(address(uniswapV3Factory), address(weth), mockTokenDescriptor);
         vm.label(address(positionManager), "positionManager");
 
         // Deploy Quoter
@@ -75,13 +71,10 @@ abstract contract TestBase_UniswapV3Periphery is TestBase_UniswapV3 {
     /// @param amountIn Amount of input tokens
     /// @param recipient Recipient of output tokens
     /// @return amountOut Amount of output tokens received
-    function swapExactInputSingle(
-        address tokenIn,
-        address tokenOut,
-        uint24 fee,
-        uint256 amountIn,
-        address recipient
-    ) internal returns (uint256 amountOut) {
+    function swapExactInputSingle(address tokenIn, address tokenOut, uint24 fee, uint256 amountIn, address recipient)
+        internal
+        returns (uint256 amountOut)
+    {
         // Ensure we have tokens and approve router
         _mintOrDeal(tokenIn, address(this), amountIn);
         _approveToken(tokenIn, address(swapRouter), amountIn);
@@ -185,7 +178,7 @@ abstract contract TestBase_UniswapV3Periphery is TestBase_UniswapV3 {
             deadline: block.timestamp + 1 hours
         });
 
-        (tokenId, liquidity, , ) = positionManager.mint(params);
+        (tokenId, liquidity,,) = positionManager.mint(params);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -193,7 +186,7 @@ abstract contract TestBase_UniswapV3Periphery is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     function _approveToken(address token, address spender, uint256 amount) internal {
-        (bool success, ) = token.call(abi.encodeWithSignature("approve(address,uint256)", spender, amount));
+        (bool success,) = token.call(abi.encodeWithSignature("approve(address,uint256)", spender, amount));
         require(success, "Token approval failed");
     }
 }

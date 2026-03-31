@@ -6,23 +6,25 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolRoleAccounts} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 import {
     StablePoolContractsDeployer
 } from "@crane/contracts/external/balancer/v3/pool-stable/test/foundry/utils/StablePoolContractsDeployer.sol";
-import { StablePoolFactory } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {StablePoolFactory} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 
-import { ExitFeeHookExample } from "../../contracts/ExitFeeHookExample.sol";
-import { ExitFeeHookExampleTest } from "./ExitFeeHookExample.t.sol";
+import {ExitFeeHookExample} from "../../contracts/ExitFeeHookExample.sol";
+import {ExitFeeHookExampleTest} from "./ExitFeeHookExample.t.sol";
 
 contract ExitFeeHookExampleStablePoolTest is StablePoolContractsDeployer, ExitFeeHookExampleTest {
     using CastingHelpers for address[];
@@ -41,36 +43,35 @@ contract ExitFeeHookExampleStablePoolTest is StablePoolContractsDeployer, ExitFe
     }
 
     // Overrides pool creation to set liquidityManagement (disables unbalanced liquidity and enables donation).
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool Test";
         string memory symbol = "STABLE-TEST";
 
         PoolRoleAccounts memory roleAccounts;
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            MIN_STABLE_SWAP_FEE,
-            poolHooksContract,
-            true, // supports donation
-            true, // does not support unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                vault.buildTokenConfig(tokens.asIERC20()),
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                MIN_STABLE_SWAP_FEE,
+                poolHooksContract,
+                true, // supports donation
+                true, // does not support unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
         vm.label(newPool, label);
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );
@@ -99,13 +100,8 @@ contract ExitFeeHookExampleStablePoolTest is StablePoolContractsDeployer, ExitFe
         emit ExitFeeHookExample.ExitFeeCharged(pool, IERC20(usdc), expectedHookFee);
 
         vm.prank(lp);
-        uint256[] memory amountsOut = router.removeLiquidityProportional(
-            pool,
-            bptAmountIn,
-            minAmountsOut,
-            false,
-            bytes("")
-        );
+        uint256[] memory amountsOut =
+            router.removeLiquidityProportional(pool, bptAmountIn, minAmountsOut, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(lp);
 

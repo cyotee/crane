@@ -2,14 +2,16 @@
 
 pragma solidity ^0.8.24;
 
-import { IGyro2CLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
-import { IPoolVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IGyro2CLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyro2CLPPool.sol";
+import {
+    IPoolVersion
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IPoolVersion.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
 
-import { Gyro2CLPPool } from "./Gyro2CLPPool.sol";
+import {Gyro2CLPPool} from "./Gyro2CLPPool.sol";
 
 /**
  * @notice Gyro 2-CLP Pool factory.
@@ -23,12 +25,10 @@ contract Gyro2CLPPoolFactory is IPoolVersion, BasePoolFactory, Version {
 
     string private _poolVersion;
 
-    constructor(
-        IVault vault,
-        uint32 pauseWindowDuration,
-        string memory factoryVersion,
-        string memory poolVersion
-    ) BasePoolFactory(vault, pauseWindowDuration, type(Gyro2CLPPool).creationCode) Version(factoryVersion) {
+    constructor(IVault vault, uint32 pauseWindowDuration, string memory factoryVersion, string memory poolVersion)
+        BasePoolFactory(vault, pauseWindowDuration, type(Gyro2CLPPool).creationCode)
+        Version(factoryVersion)
+    {
         _poolVersion = poolVersion;
     }
 
@@ -75,11 +75,7 @@ contract Gyro2CLPPoolFactory is IPoolVersion, BasePoolFactory, Version {
         pool = _create(
             abi.encode(
                 IGyro2CLPPool.GyroParams({
-                    name: name,
-                    symbol: symbol,
-                    sqrtAlpha: sqrtAlpha,
-                    sqrtBeta: sqrtBeta,
-                    version: _poolVersion
+                    name: name, symbol: symbol, sqrtAlpha: sqrtAlpha, sqrtBeta: sqrtBeta, version: _poolVersion
                 }),
                 getVault()
             ),

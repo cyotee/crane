@@ -17,12 +17,11 @@ import {CamelotFactory} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/
  * @notice Exposes internal _calculateProtocolFee for testing
  */
 contract ConstProdUtilsProtocolFeeHarness {
-    function calculateProtocolFee(
-        uint256 lpTotalSupply,
-        uint256 newK,
-        uint256 kLast,
-        uint256 ownerFeeShare
-    ) external pure returns (uint256 lpOfYield) {
+    function calculateProtocolFee(uint256 lpTotalSupply, uint256 newK, uint256 kLast, uint256 ownerFeeShare)
+        external
+        pure
+        returns (uint256 lpOfYield)
+    {
         return ConstProdUtils._calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
     }
 }
@@ -274,12 +273,8 @@ contract CamelotV2_protocolFeeParity_Test is TestBase_CamelotV2 {
         uint256 totalSupplyBefore = pair.totalSupply();
 
         // Calculate expected fee using _calculateProtocolFee
-        uint256 expectedFee = harness.calculateProtocolFee(
-            totalSupplyBefore,
-            newK,
-            kLastAfterFirstDeposit,
-            ownerFeeShare
-        );
+        uint256 expectedFee =
+            harness.calculateProtocolFee(totalSupplyBefore, newK, kLastAfterFirstDeposit, ownerFeeShare);
 
         // Record feeTo balance before
         uint256 feeToBalanceBefore = pair.balanceOf(feeTo);
@@ -533,12 +528,7 @@ contract CamelotV2_protocolFeeParity_Test is TestBase_CamelotV2 {
             path[1] = address(tokenB);
 
             camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                swapAmount,
-                0,
-                path,
-                address(this),
-                address(0),
-                block.timestamp + 300
+                swapAmount, 0, path, address(this), address(0), block.timestamp + 300
             );
 
             // Swap back
@@ -549,12 +539,7 @@ contract CamelotV2_protocolFeeParity_Test is TestBase_CamelotV2 {
                 pathRev[0] = address(tokenB);
                 pathRev[1] = address(tokenA);
                 camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                    balanceB,
-                    0,
-                    pathRev,
-                    address(this),
-                    address(0),
-                    block.timestamp + 300
+                    balanceB, 0, pathRev, address(this), address(0), block.timestamp + 300
                 );
             }
         }

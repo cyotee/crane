@@ -4,12 +4,15 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { PoolConfigBits, HooksConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {
+    PoolConfigBits,
+    HooksConfig
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { PoolConfigConst } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
-import { HooksConfigLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
-import { WordCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
+import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
+import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
 
 contract HooksConfigLibTest is Test {
     using WordCodec for bytes32;
@@ -22,23 +25,17 @@ contract HooksConfigLibTest is Test {
         assertEq(config.shouldCallBeforeInitialize(), false, "shouldCallBeforeInitialize mismatch (zero config)");
         assertEq(config.shouldCallAfterInitialize(), false, "shouldCallAfterInitialize mismatch (zero config)");
         assertEq(
-            config.shouldCallComputeDynamicSwapFee(),
-            false,
-            "shouldCallComputeDynamicSwapFee mismatch (zero config)"
+            config.shouldCallComputeDynamicSwapFee(), false, "shouldCallComputeDynamicSwapFee mismatch (zero config)"
         );
         assertEq(config.shouldCallBeforeSwap(), false, "shouldCallBeforeSwap mismatch (zero config)");
         assertEq(config.shouldCallAfterSwap(), false, "shouldCallAfterSwap mismatch (zero config)");
         assertEq(config.shouldCallBeforeAddLiquidity(), false, "shouldCallBeforeAddLiquidity mismatch (zero config)");
         assertEq(config.shouldCallAfterAddLiquidity(), false, "shouldCallAfterAddLiquidity mismatch (zero config)");
         assertEq(
-            config.shouldCallBeforeRemoveLiquidity(),
-            false,
-            "shouldCallBeforeRemoveLiquidity mismatch (zero config)"
+            config.shouldCallBeforeRemoveLiquidity(), false, "shouldCallBeforeRemoveLiquidity mismatch (zero config)"
         );
         assertEq(
-            config.shouldCallAfterRemoveLiquidity(),
-            false,
-            "shouldCallAfterRemoveLiquidity mismatch (zero config)"
+            config.shouldCallAfterRemoveLiquidity(), false, "shouldCallAfterRemoveLiquidity mismatch (zero config)"
         );
     }
 
@@ -90,9 +87,7 @@ contract HooksConfigLibTest is Test {
             PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.DYNAMIC_SWAP_FEE_OFFSET)
         );
         assertEq(
-            config.shouldCallComputeDynamicSwapFee(),
-            true,
-            "shouldCallComputeDynamicSwapFee should be true (getter)"
+            config.shouldCallComputeDynamicSwapFee(), true, "shouldCallComputeDynamicSwapFee should be true (getter)"
         );
     }
 
@@ -100,17 +95,13 @@ contract HooksConfigLibTest is Test {
         PoolConfigBits config;
         config = config.setShouldCallComputeDynamicSwapFee(true);
         assertEq(
-            config.shouldCallComputeDynamicSwapFee(),
-            true,
-            "shouldCallComputeDynamicSwapFee should be true (setter)"
+            config.shouldCallComputeDynamicSwapFee(), true, "shouldCallComputeDynamicSwapFee should be true (setter)"
         );
     }
 
     function testShouldCallBeforeSwap() public pure {
         PoolConfigBits config;
-        config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.BEFORE_SWAP_OFFSET)
-        );
+        config = PoolConfigBits.wrap(PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.BEFORE_SWAP_OFFSET));
         assertEq(config.shouldCallBeforeSwap(), true, "shouldCallBeforeSwap should be true (getter)");
     }
 
@@ -166,9 +157,7 @@ contract HooksConfigLibTest is Test {
             PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.BEFORE_REMOVE_LIQUIDITY_OFFSET)
         );
         assertEq(
-            config.shouldCallBeforeRemoveLiquidity(),
-            true,
-            "shouldCallBeforeRemoveLiquidity should be true (getter)"
+            config.shouldCallBeforeRemoveLiquidity(), true, "shouldCallBeforeRemoveLiquidity should be true (getter)"
         );
     }
 
@@ -176,9 +165,7 @@ contract HooksConfigLibTest is Test {
         PoolConfigBits config;
         config = config.setShouldCallBeforeRemoveLiquidity(true);
         assertEq(
-            config.shouldCallBeforeRemoveLiquidity(),
-            true,
-            "shouldCallBeforeRemoveLiquidity should be true (setter)"
+            config.shouldCallBeforeRemoveLiquidity(), true, "shouldCallBeforeRemoveLiquidity should be true (setter)"
         );
     }
 
@@ -188,9 +175,7 @@ contract HooksConfigLibTest is Test {
             PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.AFTER_REMOVE_LIQUIDITY_OFFSET)
         );
         assertEq(
-            config.shouldCallAfterRemoveLiquidity(),
-            true,
-            "shouldCallAfterRemoveLiquidity should be true (getter)"
+            config.shouldCallAfterRemoveLiquidity(), true, "shouldCallAfterRemoveLiquidity should be true (getter)"
         );
     }
 
@@ -198,9 +183,7 @@ contract HooksConfigLibTest is Test {
         PoolConfigBits config;
         config = config.setShouldCallAfterRemoveLiquidity(true);
         assertEq(
-            config.shouldCallAfterRemoveLiquidity(),
-            true,
-            "shouldCallAfterRemoveLiquidity should be true (setter)"
+            config.shouldCallAfterRemoveLiquidity(), true, "shouldCallAfterRemoveLiquidity should be true (setter)"
         );
     }
 

@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {BetterMath as Math} from "@crane/contracts/utils/math/BetterMath.sol";
-import {TestBase_ConstProdUtils_Aerodrome} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
+import {
+    TestBase_ConstProdUtils_Aerodrome
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Aerodrome.sol";
 import {IRouter} from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/IRouter.sol";
 import "forge-std/console.sol";
 import {ERC20PermitMintableStub} from "contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
@@ -44,7 +46,11 @@ contract ConstProdUtils_calculateFeePortionForPosition_Aerodrome is TestBase_Con
         uint256 finalReserveB = aeroBalancedPool.reserve1();
         uint256 finalTotalSupply = aeroBalancedPool.totalSupply();
 
-        assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
+        assertGt(
+            uint256(finalReserveA) * uint256(finalReserveB),
+            initialK,
+            "Pool K should have grown due to fee accumulation"
+        );
 
         Calc memory c;
         c.claimableA = (ownedLP * finalReserveA) / finalTotalSupply;
@@ -92,7 +98,11 @@ contract ConstProdUtils_calculateFeePortionForPosition_Aerodrome is TestBase_Con
         uint256 finalReserveB = aeroUnbalancedPool.reserve1();
         uint256 finalTotalSupply = aeroUnbalancedPool.totalSupply();
 
-        assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
+        assertGt(
+            uint256(finalReserveA) * uint256(finalReserveB),
+            initialK,
+            "Pool K should have grown due to fee accumulation"
+        );
 
         Calc memory c;
         c.claimableA = (ownedLP * finalReserveA) / finalTotalSupply;
@@ -133,7 +143,11 @@ contract ConstProdUtils_calculateFeePortionForPosition_Aerodrome is TestBase_Con
         uint256 finalReserveB = aeroExtremeUnbalancedPool.reserve1();
         uint256 finalTotalSupply = aeroExtremeUnbalancedPool.totalSupply();
 
-        assertGt(uint256(finalReserveA) * uint256(finalReserveB), initialK, "Pool K should have grown due to fee accumulation");
+        assertGt(
+            uint256(finalReserveA) * uint256(finalReserveB),
+            initialK,
+            "Pool K should have grown due to fee accumulation"
+        );
 
         Calc memory c;
         c.claimableA = (ownedLP * finalReserveA) / finalTotalSupply;

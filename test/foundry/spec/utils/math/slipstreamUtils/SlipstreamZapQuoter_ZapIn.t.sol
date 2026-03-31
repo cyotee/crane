@@ -6,7 +6,10 @@ import "forge-std/Test.sol";
 import {SlipstreamZapQuoter} from "@crane/contracts/utils/math/SlipstreamZapQuoter.sol";
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
 /// @title Test SlipstreamZapQuoter Zap-In functionality
@@ -51,9 +54,9 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             pool: ICLPool(address(pool)),
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: true,  // Input is token0
+            zeroForOne: true, // Input is token0
             amountIn: ZAP_AMOUNT,
-            sqrtPriceLimitX96: 0,  // Use default
+            sqrtPriceLimitX96: 0, // Use default
             maxSwapSteps: 0,
             searchIters: 20,
             includeUnstakedFee: false
@@ -73,7 +76,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             pool: ICLPool(address(pool)),
             tickLower: tickLower,
             tickUpper: tickUpper,
-            zeroForOne: false,  // Input is token1
+            zeroForOne: false, // Input is token1
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
@@ -101,7 +104,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             amountIn: ZAP_AMOUNT,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0,
-            searchIters: 24,  // More iterations for better optimization
+            searchIters: 24, // More iterations for better optimization
             includeUnstakedFee: false
         });
 
@@ -109,7 +112,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
         // Total dust should be small relative to input
         uint256 totalDust = quote.dust0 + quote.dust1;
-        uint256 maxAcceptableDust = ZAP_AMOUNT / 100;  // 1% of input
+        uint256 maxAcceptableDust = ZAP_AMOUNT / 100; // 1% of input
 
         assertTrue(totalDust < maxAcceptableDust, "Dust should be minimal");
     }
@@ -154,7 +157,8 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             includeUnstakedFee: false
         });
 
-        SlipstreamZapQuoter.PositionManagerZapInExecution memory exec = SlipstreamZapQuoter.quoteZapInPositionManager(params);
+        SlipstreamZapQuoter.PositionManagerZapInExecution memory exec =
+            SlipstreamZapQuoter.quoteZapInPositionManager(params);
 
         assertEq(exec.zeroForOne, true, "Direction should match");
         assertEq(exec.tickLower, tickLower, "tickLower should match");
@@ -176,7 +180,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             ICLPool(address(pool)),
             tickLower,
             tickUpper,
-            token0,  // Input token
+            token0, // Input token
             ZAP_AMOUNT,
             0,
             0,
@@ -190,7 +194,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             ICLPool(address(pool)),
             tickLower,
             tickUpper,
-            token1,  // Input token
+            token1, // Input token
             ZAP_AMOUNT,
             0,
             0,
@@ -208,8 +212,9 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
         // Use try-catch by wrapping in an external call
         bool reverted = false;
         try this.helperCreateZapInParams(invalidToken) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for invalid token");
@@ -218,14 +223,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
     /// @notice External helper for testing revert
     function helperCreateZapInParams(address tokenIn) external view {
         SlipstreamZapQuoter.createZapInParams(
-            ICLPool(address(pool)),
-            tickLower,
-            tickUpper,
-            tokenIn,
-            ZAP_AMOUNT,
-            0,
-            0,
-            20
+            ICLPool(address(pool)), tickLower, tickUpper, tokenIn, ZAP_AMOUNT, 0, 0, 20
         );
     }
 
@@ -249,8 +247,9 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
         bool reverted = false;
         try this.helperQuoteZapIn(params) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for zero amount");
@@ -260,7 +259,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
     function test_zapIn_invalidRange_reverts() public {
         SlipstreamZapQuoter.ZapInParams memory params = SlipstreamZapQuoter.ZapInParams({
             pool: ICLPool(address(pool)),
-            tickLower: tickUpper,  // Wrong order
+            tickLower: tickUpper, // Wrong order
             tickUpper: tickLower,
             zeroForOne: true,
             amountIn: ZAP_AMOUNT,
@@ -272,8 +271,9 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
         bool reverted = false;
         try this.helperQuoteZapIn(params) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for invalid range");
@@ -286,7 +286,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
     /// @notice Test zap-in with small amount
     function test_zapIn_smallAmount() public {
-        uint256 smallAmount = 1000;  // Small amount
+        uint256 smallAmount = 1000; // Small amount
 
         SlipstreamZapQuoter.ZapInParams memory params = SlipstreamZapQuoter.ZapInParams({
             pool: ICLPool(address(pool)),
@@ -383,7 +383,9 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
         assertTrue(baseQuote.liquidity > 0, "Baseline should produce liquidity");
         assertTrue(feeQuote.liquidity > 0, "Fee quote should produce liquidity");
-        assertTrue(feeQuote.liquidity <= baseQuote.liquidity, "Unstaked fee should not increase liquidity for token1 input");
+        assertTrue(
+            feeQuote.liquidity <= baseQuote.liquidity, "Unstaked fee should not increase liquidity for token1 input"
+        );
     }
 
     /// @notice Test that includeUnstakedFee=true produces distinct swap amounts
@@ -419,8 +421,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
 
         // The swap output should differ because the effective fee changed
         assertTrue(
-            baseQuote.swap.amountOut != feeQuote.swap.amountOut
-            || baseQuote.swapAmountIn != feeQuote.swapAmountIn,
+            baseQuote.swap.amountOut != feeQuote.swap.amountOut || baseQuote.swapAmountIn != feeQuote.swapAmountIn,
             "Swap amounts should differ when unstaked fee is included"
         );
     }
@@ -448,7 +449,7 @@ contract SlipstreamZapQuoter_ZapIn_Test is TestBase_Slipstream {
             // More iterations should generally produce equal or better results
             if (i > 0) {
                 assertTrue(
-                    quote.liquidity >= prevLiquidity - 1,  // Allow small variance
+                    quote.liquidity >= prevLiquidity - 1, // Allow small variance
                     "More iterations should not significantly reduce liquidity"
                 );
             }

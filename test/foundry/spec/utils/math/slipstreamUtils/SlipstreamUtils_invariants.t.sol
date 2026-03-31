@@ -5,7 +5,10 @@ import "forge-std/Test.sol";
 import "forge-std/StdInvariant.sol";
 
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SwapMath.sol";
 import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FullMath.sol";
@@ -44,9 +47,9 @@ contract SlipstreamUtilsHandler is Test {
     int24 constant SAFE_TICK_MAX = 100000;
 
     /// @dev Standard fee tiers (in pips)
-    uint24 constant FEE_LOW = 500;      // 0.05%
-    uint24 constant FEE_MEDIUM = 3000;  // 0.3%
-    uint24 constant FEE_HIGH = 10000;   // 1%
+    uint24 constant FEE_LOW = 500; // 0.05%
+    uint24 constant FEE_MEDIUM = 3000; // 0.3%
+    uint24 constant FEE_HIGH = 10000; // 1%
 
     /* -------------------------------------------------------------------------- */
     /*                                   State                                    */
@@ -86,7 +89,7 @@ contract SlipstreamUtilsHandler is Test {
 
     constructor() {
         // Initialize with a reasonable pool state
-        currentTick = 0;  // 1:1 price ratio
+        currentTick = 0; // 1:1 price ratio
         currentSqrtPriceX96 = TickMath.getSqrtRatioAtTick(currentTick);
         currentLiquidity = MIN_LIQUIDITY;
         currentFee = FEE_MEDIUM;
@@ -141,20 +144,12 @@ contract SlipstreamUtilsHandler is Test {
 
         // Step 1: Quote input required for desired output
         uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            amountOut, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         // Step 2: Quote output for the required input
         uint256 resultingOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            requiredInput, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         // Track for invariant checking
@@ -187,11 +182,7 @@ contract SlipstreamUtilsHandler is Test {
 
         // Step 1: Quote output for given input
         uint256 outputForInput = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            amountIn, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         // Skip if output is too small (avoids division by zero issues)
@@ -199,11 +190,7 @@ contract SlipstreamUtilsHandler is Test {
 
         // Step 2: Quote input required to get that output
         uint256 requiredInputForOutput = SlipstreamUtils._quoteExactOutputSingle(
-            outputForInput,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            outputForInput, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         // Track for invariant checking
@@ -228,31 +215,19 @@ contract SlipstreamUtilsHandler is Test {
 
     /// @notice Test that larger input yields larger or equal output
     /// @dev amountIn1 > amountIn2 implies amountOut1 >= amountOut2
-    function testMonotonicity_ExactInput(
-        uint256 smallAmountSeed,
-        uint256 largeAmountSeed,
-        bool zeroForOne
-    ) external {
+    function testMonotonicity_ExactInput(uint256 smallAmountSeed, uint256 largeAmountSeed, bool zeroForOne) external {
         // Ensure distinct amounts
         uint256 smallAmount = bound(smallAmountSeed, MIN_AMOUNT, MAX_AMOUNT / 2);
         uint256 largeAmount = bound(largeAmountSeed, smallAmount + 1, MAX_AMOUNT);
 
         // Quote for small amount
         uint256 smallOutput = SlipstreamUtils._quoteExactInputSingle(
-            smallAmount,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            smallAmount, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         // Quote for large amount
         uint256 largeOutput = SlipstreamUtils._quoteExactInputSingle(
-            largeAmount,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            currentFee,
-            zeroForOne
+            largeAmount, currentSqrtPriceX96, currentLiquidity, currentFee, zeroForOne
         );
 
         operationCount++;
@@ -275,29 +250,17 @@ contract SlipstreamUtilsHandler is Test {
 
         // Quote with low fee
         uint256 outputLowFee = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            FEE_LOW,
-            zeroForOne
+            amountIn, currentSqrtPriceX96, currentLiquidity, FEE_LOW, zeroForOne
         );
 
         // Quote with medium fee
         uint256 outputMedFee = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            FEE_MEDIUM,
-            zeroForOne
+            amountIn, currentSqrtPriceX96, currentLiquidity, FEE_MEDIUM, zeroForOne
         );
 
         // Quote with high fee
         uint256 outputHighFee = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            currentLiquidity,
-            FEE_HIGH,
-            zeroForOne
+            amountIn, currentSqrtPriceX96, currentLiquidity, FEE_HIGH, zeroForOne
         );
 
         operationCount++;
@@ -323,21 +286,12 @@ contract SlipstreamUtilsHandler is Test {
         uint128 highLiquidity = uint128(bound(highLiquiditySeed, lowLiquidity * 2, MAX_LIQUIDITY));
 
         // Quote with low liquidity
-        uint256 outputLowLiq = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            lowLiquidity,
-            currentFee,
-            zeroForOne
-        );
+        uint256 outputLowLiq =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, currentSqrtPriceX96, lowLiquidity, currentFee, zeroForOne);
 
         // Quote with high liquidity
         uint256 outputHighLiq = SlipstreamUtils._quoteExactInputSingle(
-            amountIn,
-            currentSqrtPriceX96,
-            highLiquidity,
-            currentFee,
-            zeroForOne
+            amountIn, currentSqrtPriceX96, highLiquidity, currentFee, zeroForOne
         );
 
         operationCount++;
@@ -364,18 +318,11 @@ contract SlipstreamUtilsHandler is Test {
         uint24 fee = fees[bound(feeIndex, 0, 2)];
 
         // Set target price to tick boundary for computation
-        uint160 sqrtPriceTargetX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceTargetX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Use SwapMath to get the fee amount directly
-        (uint160 sqrtRatioNextX96, uint256 actualAmountIn, uint256 amountOut, uint256 feeAmount) = SwapMath.computeSwapStep(
-            currentSqrtPriceX96,
-            sqrtPriceTargetX96,
-            currentLiquidity,
-            int256(amountIn),
-            fee
-        );
+        (uint160 sqrtRatioNextX96, uint256 actualAmountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(currentSqrtPriceX96, sqrtPriceTargetX96, currentLiquidity, int256(amountIn), fee);
 
         // Understanding SwapMath fee calculation:
         // - sqrtRatioNextX96 == sqrtPriceTargetX96: swap REACHED the target, fee = mulDivRoundingUp formula
@@ -414,17 +361,11 @@ contract SlipstreamUtilsHandler is Test {
     function testFeeAccuracy(uint256 amountInSeed, bool zeroForOne) external {
         uint256 amountIn = bound(amountInSeed, MIN_AMOUNT, MAX_AMOUNT);
 
-        uint160 sqrtPriceTargetX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceTargetX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Get fee amount for medium fee tier
         (uint160 sqrtRatioNextX96, uint256 actualAmountIn,, uint256 feeAmount) = SwapMath.computeSwapStep(
-            currentSqrtPriceX96,
-            sqrtPriceTargetX96,
-            currentLiquidity,
-            int256(amountIn),
-            FEE_MEDIUM
+            currentSqrtPriceX96, sqrtPriceTargetX96, currentLiquidity, int256(amountIn), FEE_MEDIUM
         );
 
         operationCount++;
@@ -582,10 +523,7 @@ contract SlipstreamUtils_invariants_Test is StdInvariant, TestBase_Slipstream {
             );
 
             // Fee should never exceed input amount
-            assertTrue(
-                feeAmount <= amountIn,
-                string(abi.encodePacked("Fee exceeds input at record ", vm.toString(i)))
-            );
+            assertTrue(feeAmount <= amountIn, string(abi.encodePacked("Fee exceeds input at record ", vm.toString(i))));
         }
     }
 
@@ -646,26 +584,18 @@ contract SlipstreamUtils_properties_Test is TestBase_Slipstream {
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
         // Roundtrip
-        uint256 requiredInput = SlipstreamUtils._quoteExactOutputSingle(
-            amountOut, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne
-        );
+        uint256 requiredInput =
+            SlipstreamUtils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
-        uint256 resultingOutput = SlipstreamUtils._quoteExactInputSingle(
-            requiredInput, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne
-        );
+        uint256 resultingOutput =
+            SlipstreamUtils._quoteExactInputSingle(requiredInput, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // INVARIANT: Output >= original - 1 wei
-        assertTrue(
-            resultingOutput >= amountOut - 1,
-            "Reversibility: output should be >= original"
-        );
+        assertTrue(resultingOutput >= amountOut - 1, "Reversibility: output should be >= original");
 
         // INVARIANT: Output <= original + 2% + 2 wei
         uint256 tolerance = (amountOut * 20) / 1000 + 2;
-        assertTrue(
-            resultingOutput <= amountOut + tolerance,
-            "Reversibility: output should not exceed 2% over original"
-        );
+        assertTrue(resultingOutput <= amountOut + tolerance, "Reversibility: output should not exceed 2% over original");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -689,19 +619,14 @@ contract SlipstreamUtils_properties_Test is TestBase_Slipstream {
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
-        uint256 smallOutput = SlipstreamUtils._quoteExactInputSingle(
-            smallAmount, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne
-        );
+        uint256 smallOutput =
+            SlipstreamUtils._quoteExactInputSingle(smallAmount, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
-        uint256 largeOutput = SlipstreamUtils._quoteExactInputSingle(
-            largeAmount, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne
-        );
+        uint256 largeOutput =
+            SlipstreamUtils._quoteExactInputSingle(largeAmount, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
         // INVARIANT: Larger input -> larger or equal output
-        assertTrue(
-            largeOutput >= smallOutput,
-            "Monotonicity: larger input should give larger output"
-        );
+        assertTrue(largeOutput >= smallOutput, "Monotonicity: larger input should give larger output");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -722,17 +647,14 @@ contract SlipstreamUtils_properties_Test is TestBase_Slipstream {
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
 
-        uint256 outputLow = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liquidity, FEE_LOW, zeroForOne
-        );
+        uint256 outputLow =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_LOW, zeroForOne);
 
-        uint256 outputMed = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne
-        );
+        uint256 outputMed =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_MEDIUM, zeroForOne);
 
-        uint256 outputHigh = SlipstreamUtils._quoteExactInputSingle(
-            amountIn, sqrtPriceX96, liquidity, FEE_HIGH, zeroForOne
-        );
+        uint256 outputHigh =
+            SlipstreamUtils._quoteExactInputSingle(amountIn, sqrtPriceX96, liquidity, FEE_HIGH, zeroForOne);
 
         // INVARIANT: Lower fee -> more output
         assertTrue(outputLow >= outputMed, "Low fee should give >= medium fee output");
@@ -762,32 +684,19 @@ contract SlipstreamUtils_properties_Test is TestBase_Slipstream {
         uint24 fee = fees[bound(feeIndex, 0, 2)];
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
-        uint160 sqrtPriceTargetX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceTargetX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Get fee from swap math
-        (,,, uint256 feeAmount) = SwapMath.computeSwapStep(
-            sqrtPriceX96,
-            sqrtPriceTargetX96,
-            liquidity,
-            int256(amountIn),
-            fee
-        );
+        (,,, uint256 feeAmount) =
+            SwapMath.computeSwapStep(sqrtPriceX96, sqrtPriceTargetX96, liquidity, int256(amountIn), fee);
 
         // INVARIANT: fee <= amountIn * feePips / (1e6 - feePips) with rounding up
         // This is the exact formula from SwapMath.computeSwapStep line 95
         uint256 maxFee = FullMath.mulDivRoundingUp(amountIn, fee, 1e6 - fee);
-        assertTrue(
-            feeAmount <= maxFee,
-            "Fee should be bounded by Uniswap V3 formula"
-        );
+        assertTrue(feeAmount <= maxFee, "Fee should be bounded by Uniswap V3 formula");
 
         // INVARIANT: fee never exceeds input
-        assertTrue(
-            feeAmount <= amountIn,
-            "Fee should never exceed input amount"
-        );
+        assertTrue(feeAmount <= amountIn, "Fee should never exceed input amount");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -807,26 +716,16 @@ contract SlipstreamUtils_properties_Test is TestBase_Slipstream {
         uint256 amountIn = bound(amountInSeed, MIN_AMOUNT, MAX_AMOUNT);
 
         uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick);
-        uint160 sqrtPriceTargetX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceTargetX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Get output from swap math
-        (,, uint256 amountOut,) = SwapMath.computeSwapStep(
-            sqrtPriceX96,
-            sqrtPriceTargetX96,
-            liquidity,
-            int256(amountIn),
-            FEE_MEDIUM
-        );
+        (,, uint256 amountOut,) =
+            SwapMath.computeSwapStep(sqrtPriceX96, sqrtPriceTargetX96, liquidity, int256(amountIn), FEE_MEDIUM);
 
         // INVARIANT: At 1:1 price, output should be less than input due to fees
         // This property holds specifically when price is 1:1
         if (tick == 0) {
-            assertTrue(
-                amountOut < amountIn,
-                "At 1:1 price, output should be less than input due to fees"
-            );
+            assertTrue(amountOut < amountIn, "At 1:1 price, output should be less than input due to fees");
         }
     }
 }

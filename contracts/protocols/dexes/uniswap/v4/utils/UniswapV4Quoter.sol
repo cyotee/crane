@@ -107,7 +107,7 @@ library UniswapV4Quoter {
 
         if (p.amount == 0) {
             r.fullyFilled = true;
-            (r.sqrtPriceAfterX96, r.tickAfter, , ) = p.manager.getSlot0(poolId);
+            (r.sqrtPriceAfterX96, r.tickAfter,,) = p.manager.getSlot0(poolId);
             r.liquidityAfter = p.manager.getLiquidity(poolId);
             return r;
         }
@@ -116,7 +116,7 @@ library UniswapV4Quoter {
         _QuoteContext memory ctx;
         _SwapState memory state;
         {
-            (uint160 sqrtPriceX96, int24 tick, , uint24 lpFee) = p.manager.getSlot0(poolId);
+            (uint160 sqrtPriceX96, int24 tick,, uint24 lpFee) = p.manager.getSlot0(poolId);
             require(sqrtPriceX96 != 0, "UNIV4:UNINIT");
 
             _requireValidSqrtPriceLimit(p.zeroForOne, p.sqrtPriceLimitX96, sqrtPriceX96);
@@ -175,11 +175,7 @@ library UniswapV4Quoter {
         bool initialized;
         {
             (tickNext, initialized) = _nextInitializedTickWithinOneWordView(
-                ctx.manager,
-                ctx.poolId,
-                state.tick,
-                ctx.tickSpacing,
-                ctx.zeroForOne
+                ctx.manager, ctx.poolId, state.tick, ctx.tickSpacing, ctx.zeroForOne
             );
 
             if (tickNext < TickMath.MIN_TICK) {
@@ -191,11 +187,8 @@ library UniswapV4Quoter {
 
         // Compute swap step
         uint160 sqrtPriceNextX96 = TickMath.getSqrtPriceAtTick(tickNext);
-        uint160 sqrtPriceTargetX96 = SwapMath.getSqrtPriceTarget(
-            ctx.zeroForOne,
-            sqrtPriceNextX96,
-            ctx.sqrtPriceLimitX96
-        );
+        uint160 sqrtPriceTargetX96 =
+            SwapMath.getSqrtPriceTarget(ctx.zeroForOne, sqrtPriceNextX96, ctx.sqrtPriceLimitX96);
 
         uint256 amountIn;
         uint256 amountOut;
@@ -203,11 +196,7 @@ library UniswapV4Quoter {
         {
             uint160 newSqrtPriceX96;
             (newSqrtPriceX96, amountIn, amountOut, feeAmount) = SwapMath.computeSwapStep(
-                state.sqrtPriceX96,
-                sqrtPriceTargetX96,
-                state.liquidity,
-                state.amountSpecifiedRemaining,
-                ctx.lpFee
+                state.sqrtPriceX96, sqrtPriceTargetX96, state.liquidity, state.amountSpecifiedRemaining, ctx.lpFee
             );
             state.sqrtPriceX96 = newSqrtPriceX96;
         }
@@ -229,7 +218,7 @@ library UniswapV4Quoter {
         // Update tick if we reached next price
         if (state.sqrtPriceX96 == sqrtPriceNextX96) {
             if (initialized) {
-                (, int128 liquidityNet, , ) = ctx.manager.getTickInfo(ctx.poolId, tickNext);
+                (, int128 liquidityNet,,) = ctx.manager.getTickInfo(ctx.poolId, tickNext);
                 if (ctx.zeroForOne) liquidityNet = -liquidityNet;
                 state.liquidity = LiquidityMath.addDelta(state.liquidity, liquidityNet);
             }
@@ -243,11 +232,10 @@ library UniswapV4Quoter {
     /*                              Helper Functions                              */
     /* -------------------------------------------------------------------------- */
 
-    function _requireValidSqrtPriceLimit(
-        bool zeroForOne,
-        uint160 sqrtPriceLimitX96,
-        uint160 sqrtPriceX96
-    ) private pure {
+    function _requireValidSqrtPriceLimit(bool zeroForOne, uint160 sqrtPriceLimitX96, uint160 sqrtPriceX96)
+        private
+        pure
+    {
         require(
             zeroForOne
                 ? sqrtPriceLimitX96 < sqrtPriceX96 && sqrtPriceLimitX96 > TickMath.MIN_SQRT_PRICE

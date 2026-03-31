@@ -1,0 +1,32 @@
+services:
+  operator-attester:
+    image: public.ecr.aws/y7v2w8b2/avs-othentic-client:45e26119
+    platform: linux/amd64
+    command: [
+        "node",
+        "attester",
+        "/ip4/54.73.119.25/tcp/3000/p2p/12D3KooWBNFG1QjuF3UKAKvqhdXcxh9iBmj88cM5eU2EK5Pa91KB",
+        "--avs-webapi",
+        "http://operator-validation-api",
+        "--avs-webapi-port",
+        "4002",
+        "--p2p.port",
+        "3000",
+        "--l1-chain",
+        "holesky",
+        "--l2-chain",
+        "base-sepolia",
+        "--p2p.datadir",
+        ".othentic/data/p2p",
+        # "--announced-addresses",
+        # "${ANNOUNCED_ADDRESSES}",
+      ]
+    env_file:
+      - .env
+    volumes:
+      - .othentic:/app/.othentic
+    ports:
+      - "3000:3000"
+  operator-validation-api:
+    image: public.ecr.aws/y7v2w8b2/avs-validation-api:4fe497a6
+    platform: linux/amd64

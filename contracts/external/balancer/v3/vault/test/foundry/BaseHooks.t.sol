@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BaseHooksMock } from "../../contracts/test/BaseHooksMock.sol";
+import {BaseHooksMock} from "../../contracts/test/BaseHooksMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BaseHooksTest is BaseVaultTest {
     BaseHooksMock internal testHook;
@@ -27,8 +27,7 @@ contract BaseHooksTest is BaseVaultTest {
         LiquidityManagement memory liquidityManagement;
 
         assertFalse(
-            testHook.onRegister(address(0), address(0), tokenConfig, liquidityManagement),
-            "onRegister should be false"
+            testHook.onRegister(address(0), address(0), tokenConfig, liquidityManagement), "onRegister should be false"
         );
     }
 
@@ -43,8 +42,7 @@ contract BaseHooksTest is BaseVaultTest {
         uint256 bptAmountOut;
 
         assertFalse(
-            testHook.onAfterInitialize(exactAmountsIn, bptAmountOut, bytes("")),
-            "onAfterInitialize should be false"
+            testHook.onAfterInitialize(exactAmountsIn, bptAmountOut, bytes("")), "onAfterInitialize should be false"
         );
     }
 
@@ -150,11 +148,8 @@ contract BaseHooksTest is BaseVaultTest {
         PoolSwapParams memory params;
         uint256 staticSwapFeePercentage;
 
-        (bool success, uint256 newFeePercentage) = testHook.onComputeDynamicSwapFeePercentage(
-            params,
-            address(0),
-            staticSwapFeePercentage
-        );
+        (bool success, uint256 newFeePercentage) =
+            testHook.onComputeDynamicSwapFeePercentage(params, address(0), staticSwapFeePercentage);
 
         assertFalse(success, "onComputeDynamicSwapFeePercentage should be false");
         // `newFeePercentage` should not be used in case result is false, so make sure it's zero.

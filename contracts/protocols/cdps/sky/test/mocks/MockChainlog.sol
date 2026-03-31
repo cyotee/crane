@@ -18,7 +18,7 @@ contract MockChainlog {
         emit Deny(usr);
     }
 
-    modifier auth {
+    modifier auth() {
         require(wards[msg.sender] == 1, "MockChainlog/not-authorized");
         _;
     }

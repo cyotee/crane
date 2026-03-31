@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IBatchRouterQueries } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouterQueries.sol";
-import { IBatchRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IBatchRouterQueries
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouterQueries.sol";
+import {IBatchRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBatchRouter.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { BatchRouterHooks } from "./BatchRouterHooks.sol";
+import {BatchRouterHooks} from "./BatchRouterHooks.sol";
 
 /**
  * @notice Entrypoint for batch swaps, and batch swap queries.
@@ -19,12 +21,9 @@ import { BatchRouterHooks } from "./BatchRouterHooks.sol";
  * settle with the Vault, and handle wrapping and unwrapping ETH.
  */
 contract BatchRouter is IBatchRouter, BatchRouterHooks {
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) BatchRouterHooks(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        BatchRouterHooks(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -44,22 +43,17 @@ contract BatchRouter is IBatchRouter, BatchRouterHooks {
         saveSender(msg.sender)
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
     {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        BatchRouterHooks.swapExactInHook,
-                        SwapExactInHookParams({
-                            sender: msg.sender,
-                            paths: paths,
-                            deadline: deadline,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], address[], uint256[])
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    BatchRouterHooks.swapExactInHook,
+                    SwapExactInHookParams({
+                        sender: msg.sender, paths: paths, deadline: deadline, wethIsEth: wethIsEth, userData: userData
+                    })
+                )
+            ),
+            (uint256[], address[], uint256[])
+        );
     }
 
     /// @inheritdoc IBatchRouter
@@ -74,22 +68,17 @@ contract BatchRouter is IBatchRouter, BatchRouterHooks {
         saveSender(msg.sender)
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
     {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        BatchRouterHooks.swapExactOutHook,
-                        SwapExactOutHookParams({
-                            sender: msg.sender,
-                            paths: paths,
-                            deadline: deadline,
-                            wethIsEth: wethIsEth,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], address[], uint256[])
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    BatchRouterHooks.swapExactOutHook,
+                    SwapExactOutHookParams({
+                        sender: msg.sender, paths: paths, deadline: deadline, wethIsEth: wethIsEth, userData: userData
+                    })
+                )
+            ),
+            (uint256[], address[], uint256[])
+        );
     }
 
     /***************************************************************************
@@ -97,11 +86,7 @@ contract BatchRouter is IBatchRouter, BatchRouterHooks {
     ***************************************************************************/
 
     /// @inheritdoc IBatchRouterQueries
-    function querySwapExactIn(
-        SwapPathExactAmountIn[] memory paths,
-        address sender,
-        bytes calldata userData
-    )
+    function querySwapExactIn(SwapPathExactAmountIn[] memory paths, address sender, bytes calldata userData)
         external
         saveSender(sender)
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -110,30 +95,25 @@ contract BatchRouter is IBatchRouter, BatchRouterHooks {
             paths[i].minAmountOut = 0;
         }
 
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        BatchRouterHooks.querySwapExactInHook,
-                        SwapExactInHookParams({
-                            sender: address(this),
-                            paths: paths,
-                            deadline: type(uint256).max,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], address[], uint256[])
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    BatchRouterHooks.querySwapExactInHook,
+                    SwapExactInHookParams({
+                        sender: address(this),
+                        paths: paths,
+                        deadline: type(uint256).max,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256[], address[], uint256[])
+        );
     }
 
     /// @inheritdoc IBatchRouterQueries
-    function querySwapExactOut(
-        SwapPathExactAmountOut[] memory paths,
-        address sender,
-        bytes calldata userData
-    )
+    function querySwapExactOut(SwapPathExactAmountOut[] memory paths, address sender, bytes calldata userData)
         external
         saveSender(sender)
         returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
@@ -142,21 +122,20 @@ contract BatchRouter is IBatchRouter, BatchRouterHooks {
             paths[i].maxAmountIn = _MAX_AMOUNT;
         }
 
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        BatchRouterHooks.querySwapExactOutHook,
-                        SwapExactOutHookParams({
-                            sender: address(this),
-                            paths: paths,
-                            deadline: type(uint256).max,
-                            wethIsEth: false,
-                            userData: userData
-                        })
-                    )
-                ),
-                (uint256[], address[], uint256[])
-            );
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    BatchRouterHooks.querySwapExactOutHook,
+                    SwapExactOutHookParams({
+                        sender: address(this),
+                        paths: paths,
+                        deadline: type(uint256).max,
+                        wethIsEth: false,
+                        userData: userData
+                    })
+                )
+            ),
+            (uint256[], address[], uint256[])
+        );
     }
 }

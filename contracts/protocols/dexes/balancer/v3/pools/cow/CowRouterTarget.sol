@@ -26,9 +26,15 @@ import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/c
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3AuthenticationModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationModifiers.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3VaultGuardModifiers} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
+import {
+    BalancerV3AuthenticationModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationModifiers.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3VaultGuardModifiers
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultGuardModifiers.sol";
 import {CowRouterRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowRouterRepo.sol";
 
 /**
@@ -75,10 +81,7 @@ contract CowRouterTarget is ICowRouter, BalancerV3AuthenticationModifiers, Balan
     }
 
     /// @inheritdoc ICowRouter
-    function setProtocolFeePercentage(uint256 newProtocolFeePercentage)
-        external
-        authenticate(address(this))
-    {
+    function setProtocolFeePercentage(uint256 newProtocolFeePercentage) external authenticate(address(this)) {
         CowRouterRepo._setProtocolFeePercentage(newProtocolFeePercentage);
     }
 
@@ -249,8 +252,9 @@ contract CowRouterTarget is ICowRouter, BalancerV3AuthenticationModifiers, Balan
         }
 
         // Process donation
-        (uint256[] memory donatedAmounts, uint256[] memory protocolFeeAmounts) =
-            _donateToPool(vault, swapAndDonateParams.pool, tokens, swapAndDonateParams.donationAmounts, swapAndDonateParams.userData);
+        (uint256[] memory donatedAmounts, uint256[] memory protocolFeeAmounts) = _donateToPool(
+            vault, swapAndDonateParams.pool, tokens, swapAndDonateParams.donationAmounts, swapAndDonateParams.userData
+        );
 
         // Settle
         _settleSwapAndDonation(
@@ -378,9 +382,9 @@ contract CowRouterTarget is ICowRouter, BalancerV3AuthenticationModifiers, Balan
             uint256 rawSenderCredits = transferAmountHints[i];
             uint256 rawSenderDebts = donatedAmounts[i] + feeAmounts[i];
 
-            if (tokens[i] == swapTokenIn) {
+            if (address(tokens[i]) == address(swapTokenIn)) {
                 rawSenderDebts += swapAmountIn;
-            } else if (tokens[i] == swapTokenOut) {
+            } else if (address(tokens[i]) == address(swapTokenOut)) {
                 rawSenderCredits += swapAmountOut;
             }
 

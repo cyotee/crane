@@ -7,16 +7,18 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableMap.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { SwapKind } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { BaseVaultTest } from "./BaseVaultTest.sol";
+import {BaseVaultTest} from "./BaseVaultTest.sol";
 
 contract BaseBatchRouterE2ETest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -109,7 +111,7 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
     }
 
     function _createPoolAndSet(address tokenA, address tokenB, string memory poolName) private returns (address pool) {
-        (pool, ) = _createPool([tokenA, tokenB].toMemoryArray(), poolName);
+        (pool,) = _createPool([tokenA, tokenB].toMemoryArray(), poolName);
         _pools[tokenA][tokenB] = pool;
         _pools[tokenB][tokenA] = pool;
 
@@ -194,9 +196,11 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         }
     }
 
-    function _toSwapPathExactAmountIn(
-        UniversalSwapPath[] memory paths
-    ) private pure returns (SwapPathExactAmountIn[] memory pathsExactIn) {
+    function _toSwapPathExactAmountIn(UniversalSwapPath[] memory paths)
+        private
+        pure
+        returns (SwapPathExactAmountIn[] memory pathsExactIn)
+    {
         pathsExactIn = new SwapPathExactAmountIn[](paths.length);
         for (uint256 i = 0; i < paths.length; i++) {
             pathsExactIn[i] = SwapPathExactAmountIn({
@@ -208,9 +212,11 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         }
     }
 
-    function _toSwapPathExactAmountOut(
-        UniversalSwapPath[] memory paths
-    ) private pure returns (SwapPathExactAmountOut[] memory pathsExactOut) {
+    function _toSwapPathExactAmountOut(UniversalSwapPath[] memory paths)
+        private
+        pure
+        returns (SwapPathExactAmountOut[] memory pathsExactOut)
+    {
         pathsExactOut = new SwapPathExactAmountOut[](paths.length);
         for (uint256 i = 0; i < paths.length; i++) {
             pathsExactOut[i] = SwapPathExactAmountOut({
@@ -226,9 +232,7 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
                                 Virtual functions
     ***************************************************************************/
 
-    function querySwapExactIn(
-        SwapPathExactAmountIn[] memory pathsExactIn
-    )
+    function querySwapExactIn(SwapPathExactAmountIn[] memory pathsExactIn)
         internal
         virtual
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -241,17 +245,13 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         vm.revertToState(snapshot);
     }
 
-    function swapExactIn(
-        SwapPathExactAmountIn[] memory pathsExactIn,
-        bool wethIsEth,
-        uint256 ethAmount
-    )
+    function swapExactIn(SwapPathExactAmountIn[] memory pathsExactIn, bool wethIsEth, uint256 ethAmount)
         internal
         virtual
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
     {
         vm.prank(alice);
-        return batchRouter.swapExactIn{ value: ethAmount }(pathsExactIn, MAX_UINT256, wethIsEth, bytes(""));
+        return batchRouter.swapExactIn{value: ethAmount}(pathsExactIn, MAX_UINT256, wethIsEth, bytes(""));
     }
 
     function expectRevertSwapExactIn(
@@ -263,12 +263,14 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
     ) internal virtual {
         vm.expectRevert(error);
         vm.prank(alice);
-        batchRouter.swapExactIn{ value: ethAmount }(pathsExactIn, deadline, wethIsEth, bytes(""));
+        batchRouter.swapExactIn{value: ethAmount}(pathsExactIn, deadline, wethIsEth, bytes(""));
     }
 
-    function querySwapExactOut(
-        SwapPathExactAmountOut[] memory pathsExactOut
-    ) internal virtual returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) {
+    function querySwapExactOut(SwapPathExactAmountOut[] memory pathsExactOut)
+        internal
+        virtual
+        returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
+    {
         uint256 snapshot = vm.snapshotState();
 
         _prankStaticCall();
@@ -277,13 +279,13 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         vm.revertToState(snapshot);
     }
 
-    function swapExactOut(
-        SwapPathExactAmountOut[] memory pathsExactOut,
-        bool wethIsEth,
-        uint256 ethAmount
-    ) internal virtual returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) {
+    function swapExactOut(SwapPathExactAmountOut[] memory pathsExactOut, bool wethIsEth, uint256 ethAmount)
+        internal
+        virtual
+        returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
+    {
         vm.prank(alice);
-        return batchRouter.swapExactOut{ value: ethAmount }(pathsExactOut, MAX_UINT256, wethIsEth, bytes(""));
+        return batchRouter.swapExactOut{value: ethAmount}(pathsExactOut, MAX_UINT256, wethIsEth, bytes(""));
     }
 
     function expectRevertSwapExactOut(
@@ -295,7 +297,7 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
     ) internal virtual {
         vm.expectRevert(error);
         vm.prank(alice);
-        batchRouter.swapExactOut{ value: ethAmount }(pathsExactOut, deadline, wethIsEth, bytes(""));
+        batchRouter.swapExactOut{value: ethAmount}(pathsExactOut, deadline, wethIsEth, bytes(""));
     }
 
     /***************************************************************************
@@ -389,13 +391,9 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         return pool;
     }
 
-    function testSwap(
-        UniversalSwapPath[] memory paths,
-        SwapKind kind,
-        bool wethIsEth,
-        uint256 ethAmount,
-        uint256 delta
-    ) internal {
+    function testSwap(UniversalSwapPath[] memory paths, SwapKind kind, bool wethIsEth, uint256 ethAmount, uint256 delta)
+        internal
+    {
         if (kind == SwapKind.EXACT_IN) {
             testSwapExactIn(_toSwapPathExactAmountIn(paths), wethIsEth, ethAmount, delta);
         } else {
@@ -415,11 +413,8 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         // Get swap results and revert state
         uint256 snapshot = vm.snapshotState();
 
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) = swapExactIn(
-            pathsExactIn,
-            wethIsEth,
-            ethAmount
-        );
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) =
+            swapExactIn(pathsExactIn, wethIsEth, ethAmount);
 
         Balances memory balancesAfter = getBalances(alice, _tokens);
         vm.revertToState(snapshot);
@@ -435,10 +430,7 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
 
         // Compare actual, expected and query results
         _assertApproxEqAbsArrays(
-            pathAmountsOut,
-            _expectedPathAmounts,
-            delta,
-            "Expected path amounts out different than actual"
+            pathAmountsOut, _expectedPathAmounts, delta, "Expected path amounts out different than actual"
         );
         _assertEqArrays(queryCalculatedPathAmountsOut, pathAmountsOut, "Query path amounts out different than actual");
 
@@ -467,11 +459,8 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         // Get swap results and revert state
         uint256 snapshot = vm.snapshotState();
 
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) = swapExactOut(
-            pathsExactOut,
-            wethIsEth,
-            ethAmount
-        );
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) =
+            swapExactOut(pathsExactOut, wethIsEth, ethAmount);
 
         Balances memory balancesAfter = getBalances(alice, _tokens);
         vm.revertToState(snapshot);
@@ -479,18 +468,12 @@ contract BaseBatchRouterE2ETest is BaseVaultTest {
         _checkBalances(balancesBefore, balancesAfter, wethIsEth, delta);
 
         // Get query swap results
-        (
-            uint256[] memory queryPathAmountsIn,
-            address[] memory queryTokensIn,
-            uint256[] memory queryAmountsIn
-        ) = querySwapExactOut(pathsExactOut);
+        (uint256[] memory queryPathAmountsIn, address[] memory queryTokensIn, uint256[] memory queryAmountsIn) =
+            querySwapExactOut(pathsExactOut);
 
         // Compare actual, expected and query results
         _assertApproxEqAbsArrays(
-            pathAmountsIn,
-            _expectedPathAmounts,
-            delta,
-            "Expected path amounts in different than actual"
+            pathAmountsIn, _expectedPathAmounts, delta, "Expected path amounts in different than actual"
         );
         _assertEqArrays(queryPathAmountsIn, pathAmountsIn, "Query path amounts in different than actual");
 

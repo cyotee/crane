@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { AddLiquidityKind, RemoveLiquidityKind, SwapKind } from "./VaultTypes.sol";
+import {AddLiquidityKind, RemoveLiquidityKind, SwapKind} from "./VaultTypes.sol";
 
 /// @notice User-friendly interface for Buffer liquidity operations with the Vault.
 interface IBufferRouter {
@@ -64,11 +64,9 @@ interface IBufferRouter {
      * @param exactAmountWrappedIn Amount of wrapped tokens that the sender wishes to deposit into the buffer
      * @return issuedShares The amount of shares that would be minted, in underlying token decimals
      */
-    function queryInitializeBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactAmountUnderlyingIn,
-        uint256 exactAmountWrappedIn
-    ) external returns (uint256 issuedShares);
+    function queryInitializeBuffer(IERC4626 wrappedToken, uint256 exactAmountUnderlyingIn, uint256 exactAmountWrappedIn)
+        external
+        returns (uint256 issuedShares);
 
     /**
      * @notice Queries an `addLiquidityToBuffer` operation without actually executing it.
@@ -77,10 +75,9 @@ interface IBufferRouter {
      * @return amountUnderlyingIn Amount of underlying tokens that would be deposited into the buffer
      * @return amountWrappedIn Amount of wrapped tokens that would be deposited into the buffer
      */
-    function queryAddLiquidityToBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToIssue
-    ) external returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn);
+    function queryAddLiquidityToBuffer(IERC4626 wrappedToken, uint256 exactSharesToIssue)
+        external
+        returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn);
 
     /**
      * @notice Queries an `removeLiquidityFromBuffer` operation without actually executing it.
@@ -89,8 +86,7 @@ interface IBufferRouter {
      * @return removedUnderlyingBalanceOut Amount of underlying tokens that would be removed from the buffer
      * @return removedWrappedBalanceOut Amount of wrapped tokens that would be removed from the buffer
      */
-    function queryRemoveLiquidityFromBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToRemove
-    ) external returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut);
+    function queryRemoveLiquidityFromBuffer(IERC4626 wrappedToken, uint256 exactSharesToRemove)
+        external
+        returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut);
 }

@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { PoolSwapParams } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {PoolSwapParams} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { StableSurgeHook } from "./../StableSurgeHook.sol";
+import {StableSurgeHook} from "./../StableSurgeHook.sol";
 
 contract StableSurgeHookMock is StableSurgeHook {
     constructor(
@@ -17,11 +17,11 @@ contract StableSurgeHookMock is StableSurgeHook {
         // solhint-disable-previous-line no-empty-blocks
     }
 
-    function isSurging(
-        uint64 thresholdPercentage,
-        uint256 oldTotalImbalance,
-        uint256 newTotalImbalance
-    ) external pure returns (bool) {
+    function isSurging(uint64 thresholdPercentage, uint256 oldTotalImbalance, uint256 newTotalImbalance)
+        external
+        pure
+        returns (bool)
+    {
         return _isSurging(thresholdPercentage, oldTotalImbalance, newTotalImbalance);
     }
 

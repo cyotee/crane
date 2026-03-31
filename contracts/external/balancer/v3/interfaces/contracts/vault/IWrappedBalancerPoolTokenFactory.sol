@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "./IVault.sol";
+import {IVault} from "./IVault.sol";
 
 /// @notice Factory contract interface for creating wrapped Balancer pool tokens.
 interface IWrappedBalancerPoolTokenFactory {

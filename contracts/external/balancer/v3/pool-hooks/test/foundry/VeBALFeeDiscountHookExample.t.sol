@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {
     HooksConfig,
     LiquidityManagement,
@@ -14,16 +14,18 @@ import {
     TokenConfig
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { RouterMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/RouterMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {RouterMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/RouterMock.sol";
 
-import { VeBALFeeDiscountHookExample } from "../../contracts/VeBALFeeDiscountHookExample.sol";
+import {VeBALFeeDiscountHookExample} from "../../contracts/VeBALFeeDiscountHookExample.sol";
 
 contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -61,9 +63,8 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
 
     function testRegistryWithWrongFactory() public {
         address veBalFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         uint32 pauseWindowEndTime = IVaultAdmin(address(vault)).getPauseWindowEndTime();
         uint32 bufferPeriodDuration = IVaultAdmin(address(vault)).getBufferPeriodDuration();
@@ -72,10 +73,7 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.HookRegistrationFailed.selector,
-                poolHooksContract,
-                veBalFeePool,
-                unauthorizedFactory
+                IVaultErrors.HookRegistrationFailed.selector, poolHooksContract, veBalFeePool, unauthorizedFactory
             )
         );
         _registerPoolWithHook(veBalFeePool, tokenConfig, unauthorizedFactory);
@@ -83,16 +81,12 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
 
     function testCreationWithWrongFactory() public {
         address veBalFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.HookRegistrationFailed.selector,
-                poolHooksContract,
-                veBalFeePool,
-                poolFactory
+                IVaultErrors.HookRegistrationFailed.selector, poolHooksContract, veBalFeePool, poolFactory
             )
         );
         _registerPoolWithHook(veBalFeePool, tokenConfig, poolFactory);
@@ -101,15 +95,12 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
     function testSuccessfulRegistry() public {
         // Register with the allowed factory.
         address veBalFeePool = PoolFactoryMock(poolFactory).createPool("Test Pool", "TEST");
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         vm.expectEmit();
         emit VeBALFeeDiscountHookExample.VeBALFeeDiscountHookExampleRegistered(
-            poolHooksContract,
-            poolFactory,
-            veBalFeePool
+            poolHooksContract, poolFactory, veBalFeePool
         );
 
         _registerPoolWithHook(veBalFeePool, tokenConfig, poolFactory);
@@ -218,16 +209,8 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
         BaseVaultTest.Balances memory balancesBefore = getBalances(bob);
 
         vm.prank(bob);
-        RouterMock(routerToUse).swapSingleTokenExactIn(
-            pool,
-            dai,
-            usdc,
-            exactAmountIn,
-            expectedAmountOut,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        RouterMock(routerToUse)
+            .swapSingleTokenExactIn(pool, dai, usdc, exactAmountIn, expectedAmountOut, MAX_UINT256, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(bob);
 
@@ -280,12 +263,7 @@ contract VeBALFeeDiscountHookExampleTest is BaseVaultTest {
         PoolRoleAccounts memory roleAccounts;
         LiquidityManagement memory liquidityManagement;
 
-        PoolFactoryMock(factory).registerPool(
-            exitFeePool,
-            tokenConfig,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
-        );
+        PoolFactoryMock(factory)
+            .registerPool(exitFeePool, tokenConfig, roleAccounts, poolHooksContract, liquidityManagement);
     }
 }

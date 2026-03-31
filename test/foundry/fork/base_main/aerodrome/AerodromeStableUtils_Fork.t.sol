@@ -5,8 +5,9 @@ import "forge-std/Test.sol";
 
 import {IPool} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPool.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {AerodromeServiceStable} from
-    "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceStable.sol";
+import {
+    AerodromeServiceStable
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/services/AerodromeServiceStable.sol";
 import {TestBase_AerodromeFork} from "./TestBase_AerodromeFork.sol";
 
 /// @title AerodromeStableUtils Fork Tests
@@ -174,14 +175,8 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
 
         IPool pool = getPool(USDC_USDbC_STABLE);
 
-        (
-            uint256 decimals0,
-            uint256 decimals1,
-            uint256 reserve0,
-            uint256 reserve1,
-            ,
-            address token0,
-        ) = getPoolMetadata(pool);
+        (uint256 decimals0, uint256 decimals1, uint256 reserve0, uint256 reserve1,, address token0,) =
+            getPoolMetadata(pool);
 
         uint256 fee = getPoolFee(pool);
 
@@ -198,14 +193,8 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
         uint256 decimalsIn = usdcIsToken0 ? decimals0 : decimals1;
         uint256 decimalsOut = usdcIsToken0 ? decimals1 : decimals0;
 
-        uint256 serviceQuote = AerodromeServiceStable._getAmountOutStable(
-            amountIn,
-            reserveIn,
-            reserveOut,
-            decimalsIn,
-            decimalsOut,
-            fee
-        );
+        uint256 serviceQuote =
+            AerodromeServiceStable._getAmountOutStable(amountIn, reserveIn, reserveOut, decimalsIn, decimalsOut, fee);
 
         console.log("AerodromeServiceStable parity test:");
         console.log("  amountIn (USDC):", amountIn);
@@ -218,12 +207,7 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
         console.log("  fee:", fee);
 
         // Allow 1 wei tolerance for rounding differences in Newton-Raphson
-        assertApproxEqAbs(
-            serviceQuote,
-            poolQuote,
-            1,
-            "Service quote should match pool quote (1 wei tolerance)"
-        );
+        assertApproxEqAbs(serviceQuote, poolQuote, 1, "Service quote should match pool quote (1 wei tolerance)");
     }
 
     /// @notice Test AerodromeServiceStable parity with reverse direction
@@ -232,14 +216,8 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
 
         IPool pool = getPool(USDC_USDbC_STABLE);
 
-        (
-            uint256 decimals0,
-            uint256 decimals1,
-            uint256 reserve0,
-            uint256 reserve1,
-            ,
-            address token0,
-        ) = getPoolMetadata(pool);
+        (uint256 decimals0, uint256 decimals1, uint256 reserve0, uint256 reserve1,, address token0,) =
+            getPoolMetadata(pool);
 
         uint256 fee = getPoolFee(pool);
 
@@ -256,26 +234,15 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
         uint256 decimalsIn = usdbcIsToken0 ? decimals0 : decimals1;
         uint256 decimalsOut = usdbcIsToken0 ? decimals1 : decimals0;
 
-        uint256 serviceQuote = AerodromeServiceStable._getAmountOutStable(
-            amountIn,
-            reserveIn,
-            reserveOut,
-            decimalsIn,
-            decimalsOut,
-            fee
-        );
+        uint256 serviceQuote =
+            AerodromeServiceStable._getAmountOutStable(amountIn, reserveIn, reserveOut, decimalsIn, decimalsOut, fee);
 
         console.log("AerodromeServiceStable parity test (reverse):");
         console.log("  amountIn (USDbC):", amountIn);
         console.log("  poolQuote:", poolQuote);
         console.log("  serviceQuote:", serviceQuote);
 
-        assertApproxEqAbs(
-            serviceQuote,
-            poolQuote,
-            1,
-            "Service quote should match pool quote (reverse)"
-        );
+        assertApproxEqAbs(serviceQuote, poolQuote, 1, "Service quote should match pool quote (reverse)");
     }
 
     /// @notice Test service parity across multiple trade sizes
@@ -284,14 +251,8 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
 
         IPool pool = getPool(USDC_USDbC_STABLE);
 
-        (
-            uint256 decimals0,
-            uint256 decimals1,
-            uint256 reserve0,
-            uint256 reserve1,
-            ,
-            address token0,
-        ) = getPoolMetadata(pool);
+        (uint256 decimals0, uint256 decimals1, uint256 reserve0, uint256 reserve1,, address token0,) =
+            getPoolMetadata(pool);
 
         uint256 fee = getPoolFee(pool);
 
@@ -303,23 +264,18 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
 
         // Test multiple trade sizes
         uint256[] memory amounts = new uint256[](5);
-        amounts[0] = 10e6;      // 10 USDC
-        amounts[1] = 100e6;     // 100 USDC
-        amounts[2] = 1000e6;    // 1,000 USDC
-        amounts[3] = 10_000e6;  // 10,000 USDC
-        amounts[4] = 50_000e6;  // 50,000 USDC
+        amounts[0] = 10e6; // 10 USDC
+        amounts[1] = 100e6; // 100 USDC
+        amounts[2] = 1000e6; // 1,000 USDC
+        amounts[3] = 10_000e6; // 10,000 USDC
+        amounts[4] = 50_000e6; // 50,000 USDC
 
         console.log("Multi-amount parity test:");
 
         for (uint256 i = 0; i < amounts.length; i++) {
             uint256 poolQuote = pool.getAmountOut(amounts[i], USDC);
             uint256 serviceQuote = AerodromeServiceStable._getAmountOutStable(
-                amounts[i],
-                reserveIn,
-                reserveOut,
-                decimalsIn,
-                decimalsOut,
-                fee
+                amounts[i], reserveIn, reserveOut, decimalsIn, decimalsOut, fee
             );
 
             console.log("  amount:", amounts[i]);
@@ -327,10 +283,7 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
             console.log("    serviceQuote:", serviceQuote);
 
             assertApproxEqAbs(
-                serviceQuote,
-                poolQuote,
-                1,
-                string.concat("Parity failed at amount index ", vm.toString(i))
+                serviceQuote, poolQuote, 1, string.concat("Parity failed at amount index ", vm.toString(i))
             );
         }
     }
@@ -384,10 +337,7 @@ contract AerodromeStableUtils_Fork_Test is TestBase_AerodromeFork {
 
             // Only assert if reserves are reasonably balanced (within 10%)
             if (ratio > 0.9e18 && ratio < 1.1e18) {
-                assertTrue(
-                    stableOut >= volatileOut,
-                    "Stable curve should give better output for balanced reserves"
-                );
+                assertTrue(stableOut >= volatileOut, "Stable curve should give better output for balanced reserves");
             }
         }
     }

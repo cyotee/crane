@@ -98,7 +98,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         UniswapV2Service.ReserveInfo memory reserves = UniswapV2Service._sortReserves(balancedPair, tokenA);
 
         // Calculate expected output using ConstProdUtils
-        uint256 expectedOut = ConstProdUtils._saleQuote(swapAmount, reserves.knownReserve, reserves.opposingReserve, reserves.feePercent);
+        uint256 expectedOut =
+            ConstProdUtils._saleQuote(swapAmount, reserves.knownReserve, reserves.opposingReserve, reserves.feePercent);
 
         uint256 balanceBefore = tokenB.balanceOf(address(this));
 
@@ -131,13 +132,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         uint256 balanceBefore = tokenB.balanceOf(address(this));
 
         // Execute swap using the pool overload
-        uint256 amountOut = UniswapV2Service._swap(
-            uniswapV2Router,
-            balancedPair,
-            swapAmount,
-            tokenA,
-            tokenB
-        );
+        uint256 amountOut = UniswapV2Service._swap(uniswapV2Router, balancedPair, swapAmount, tokenA, tokenB);
 
         uint256 balanceAfter = tokenB.balanceOf(address(this));
         uint256 actualReceived = balanceAfter - balanceBefore;
@@ -156,15 +151,10 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         // Use _sortReserves to get reserves in the correct order for tokenC
         UniswapV2Service.ReserveInfo memory reserves = UniswapV2Service._sortReserves(unbalancedPair, tokenC);
 
-        uint256 expectedOut = ConstProdUtils._saleQuote(swapAmount, reserves.knownReserve, reserves.opposingReserve, reserves.feePercent);
+        uint256 expectedOut =
+            ConstProdUtils._saleQuote(swapAmount, reserves.knownReserve, reserves.opposingReserve, reserves.feePercent);
 
-        uint256 amountOut = UniswapV2Service._swap(
-            uniswapV2Router,
-            unbalancedPair,
-            swapAmount,
-            tokenC,
-            tokenD
-        );
+        uint256 amountOut = UniswapV2Service._swap(uniswapV2Router, unbalancedPair, swapAmount, tokenC, tokenD);
 
         assertEq(amountOut, expectedOut, "Output should match calculated quote");
         assertGt(amountOut, 0, "Swap should produce output");
@@ -179,13 +169,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 balanceBefore = tokenA.balanceOf(address(this));
 
-        uint256 amountOut = UniswapV2Service._swap(
-            uniswapV2Router,
-            balancedPair,
-            swapAmount,
-            tokenB,
-            tokenA
-        );
+        uint256 amountOut = UniswapV2Service._swap(uniswapV2Router, balancedPair, swapAmount, tokenB, tokenA);
 
         uint256 balanceAfter = tokenA.balanceOf(address(this));
         uint256 actualReceived = balanceAfter - balanceBefore;
@@ -231,14 +215,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         tokenA.mint(address(this), swapAmount);
         tokenA.approve(address(uniswapV2Router), swapAmount);
 
-        uint256 amountOut = UniswapV2Service._swapExactTokensForTokens(
-            uniswapV2Router,
-            tokenA,
-            swapAmount,
-            tokenB,
-            1,
-            recipient
-        );
+        uint256 amountOut =
+            UniswapV2Service._swapExactTokensForTokens(uniswapV2Router, tokenA, swapAmount, tokenB, 1, recipient);
 
         assertEq(tokenB.balanceOf(recipient), amountOut, "Recipient should receive tokens");
     }
@@ -258,14 +236,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         uint256 balanceABefore = tokenA.balanceOf(address(this));
         uint256 balanceBBefore = tokenB.balanceOf(address(this));
 
-        uint256 amountIn = UniswapV2Service._swapTokensForExactTokens(
-            uniswapV2Router,
-            tokenA,
-            maxIn,
-            tokenB,
-            exactOut,
-            address(this)
-        );
+        uint256 amountIn =
+            UniswapV2Service._swapTokensForExactTokens(uniswapV2Router, tokenA, maxIn, tokenB, exactOut, address(this));
 
         uint256 balanceAAfter = tokenA.balanceOf(address(this));
         uint256 balanceBAfter = tokenB.balanceOf(address(this));
@@ -289,13 +261,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 lpBefore = balancedPair.balanceOf(address(this));
 
-        uint256 lpAmount = UniswapV2Service._swapDeposit(
-            uniswapV2Router,
-            balancedPair,
-            tokenA,
-            depositAmount,
-            tokenB
-        );
+        uint256 lpAmount = UniswapV2Service._swapDeposit(uniswapV2Router, balancedPair, tokenA, depositAmount, tokenB);
 
         uint256 lpAfter = balancedPair.balanceOf(address(this));
 
@@ -312,13 +278,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 lpBefore = unbalancedPair.balanceOf(address(this));
 
-        uint256 lpAmount = UniswapV2Service._swapDeposit(
-            uniswapV2Router,
-            unbalancedPair,
-            tokenC,
-            depositAmount,
-            tokenD
-        );
+        uint256 lpAmount = UniswapV2Service._swapDeposit(uniswapV2Router, unbalancedPair, tokenC, depositAmount, tokenD);
 
         uint256 lpAfter = unbalancedPair.balanceOf(address(this));
 
@@ -335,13 +295,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 lpBefore = balancedPair.balanceOf(address(this));
 
-        uint256 lpAmount = UniswapV2Service._swapDeposit(
-            uniswapV2Router,
-            balancedPair,
-            tokenB,
-            depositAmount,
-            tokenA
-        );
+        uint256 lpAmount = UniswapV2Service._swapDeposit(uniswapV2Router, balancedPair, tokenB, depositAmount, tokenA);
 
         uint256 lpAfter = balancedPair.balanceOf(address(this));
 
@@ -366,13 +320,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 lpBefore = balancedPair.balanceOf(address(this));
 
-        uint256 liquidity = UniswapV2Service._deposit(
-            uniswapV2Router,
-            tokenA,
-            tokenB,
-            amountA,
-            amountB
-        );
+        uint256 liquidity = UniswapV2Service._deposit(uniswapV2Router, tokenA, tokenB, amountA, amountB);
 
         uint256 lpAfter = balancedPair.balanceOf(address(this));
 
@@ -385,7 +333,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         ERC20PermitMintableStub freshTokenA = new ERC20PermitMintableStub("FreshA", "FA", 18, address(this), 0);
         ERC20PermitMintableStub freshTokenB = new ERC20PermitMintableStub("FreshB", "FB", 18, address(this), 0);
 
-        IUniswapV2Pair freshPair = IUniswapV2Pair(uniswapV2Factory.createPair(address(freshTokenA), address(freshTokenB)));
+        IUniswapV2Pair freshPair =
+            IUniswapV2Pair(uniswapV2Factory.createPair(address(freshTokenA), address(freshTokenB)));
 
         uint256 amountA = 1000e18;
         uint256 amountB = 1000e18;
@@ -396,11 +345,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         freshTokenB.approve(address(uniswapV2Router), amountB);
 
         uint256 liquidity = UniswapV2Service._deposit(
-            uniswapV2Router,
-            IERC20(address(freshTokenA)),
-            IERC20(address(freshTokenB)),
-            amountA,
-            amountB
+            uniswapV2Router, IERC20(address(freshTokenA)), IERC20(address(freshTokenB)), amountA, amountB
         );
 
         assertGt(liquidity, 0, "Should mint initial LP tokens");
@@ -440,7 +385,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         uint256 withdrawAmount = lpBalance / 4; // Withdraw 25%
 
         (uint256 amount0Full, uint256 amount1Full) = _calculateWithdrawAmounts(balancedPair, lpBalance);
-        (uint256 amount0Partial, uint256 amount1Partial) = UniswapV2Service._withdrawDirect(balancedPair, withdrawAmount);
+        (uint256 amount0Partial, uint256 amount1Partial) =
+            UniswapV2Service._withdrawDirect(balancedPair, withdrawAmount);
 
         // Partial withdrawal should be approximately 25% of full withdrawal
         assertApproxEqRel(amount0Partial * 4, amount0Full, 0.01e18, "Token0 should be ~25% of full");
@@ -457,13 +403,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         uint256 lpBalance = balancedPair.balanceOf(address(this));
         uint256 balanceBBefore = tokenB.balanceOf(address(this));
 
-        uint256 amountOut = UniswapV2Service._withdrawSwapDirect(
-            balancedPair,
-            uniswapV2Router,
-            lpBalance,
-            tokenB,
-            tokenA
-        );
+        uint256 amountOut =
+            UniswapV2Service._withdrawSwapDirect(balancedPair, uniswapV2Router, lpBalance, tokenB, tokenA);
 
         uint256 balanceBAfter = tokenB.balanceOf(address(this));
 
@@ -480,13 +421,8 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
 
         uint256 balanceABefore = tokenA.balanceOf(address(this));
 
-        uint256 amountOut = UniswapV2Service._withdrawSwapDirect(
-            balancedPair,
-            uniswapV2Router,
-            withdrawAmount,
-            tokenA,
-            tokenB
-        );
+        uint256 amountOut =
+            UniswapV2Service._withdrawSwapDirect(balancedPair, uniswapV2Router, withdrawAmount, tokenA, tokenB);
 
         uint256 balanceAAfter = tokenA.balanceOf(address(this));
 
@@ -542,13 +478,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         tokenA.mint(address(this), swapAmount);
         tokenA.approve(address(uniswapV2Router), swapAmount);
 
-        uint256 amountOut = UniswapV2Service._swap(
-            uniswapV2Router,
-            balancedPair,
-            swapAmount,
-            tokenA,
-            tokenB
-        );
+        uint256 amountOut = UniswapV2Service._swap(uniswapV2Router, balancedPair, swapAmount, tokenA, tokenB);
 
         assertGt(amountOut, 0, "Any reasonable swap should produce output");
     }
@@ -562,13 +492,7 @@ contract UniswapV2Service_Test is TestBase_UniswapV2 {
         tokenA.mint(address(this), depositAmount);
         tokenA.approve(address(uniswapV2Router), depositAmount);
 
-        uint256 lpAmount = UniswapV2Service._swapDeposit(
-            uniswapV2Router,
-            balancedPair,
-            tokenA,
-            depositAmount,
-            tokenB
-        );
+        uint256 lpAmount = UniswapV2Service._swapDeposit(uniswapV2Router, balancedPair, tokenA, depositAmount, tokenB);
 
         assertGt(lpAmount, 0, "Any reasonable deposit should produce LP tokens");
     }

@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import { IProtocolFeeController } from "./IProtocolFeeController.sol";
-import { IAuthorizer } from "./IAuthorizer.sol";
-import { IVault } from "./IVault.sol";
+import {IProtocolFeeController} from "./IProtocolFeeController.sol";
+import {IAuthorizer} from "./IAuthorizer.sol";
+import {IVault} from "./IVault.sol";
 
 /**
  * @notice Interface for functions defined on the `VaultAdmin` contract.
@@ -188,9 +188,9 @@ interface IVaultAdmin {
      * @return swapFeeAmounts An array with the total swap fees collected, sorted in token registration order
      * @return yieldFeeAmounts An array with the total yield fees collected, sorted in token registration order
      */
-    function collectAggregateFees(
-        address pool
-    ) external returns (uint256[] memory swapFeeAmounts, uint256[] memory yieldFeeAmounts);
+    function collectAggregateFees(address pool)
+        external
+        returns (uint256[] memory swapFeeAmounts, uint256[] memory yieldFeeAmounts);
 
     /**
      * @notice Update an aggregate swap fee percentage.
@@ -402,10 +402,10 @@ interface IVaultAdmin {
      * @param liquidityOwner Address of the user that owns liquidity in the wrapped token's buffer
      * @return ownerShares Amount of shares allocated to the liquidity owner, in native underlying token decimals
      */
-    function getBufferOwnerShares(
-        IERC4626 wrappedToken,
-        address liquidityOwner
-    ) external view returns (uint256 ownerShares);
+    function getBufferOwnerShares(IERC4626 wrappedToken, address liquidityOwner)
+        external
+        view
+        returns (uint256 ownerShares);
 
     /**
      * @notice Returns the supply shares (internal buffer BPT) of the ERC4626 buffer.
@@ -421,9 +421,10 @@ interface IVaultAdmin {
      * @return underlyingBalanceRaw Amount of underlying tokens deposited into the buffer, in native token decimals
      * @return wrappedBalanceRaw Amount of wrapped tokens deposited into the buffer, in native token decimals
      */
-    function getBufferBalance(
-        IERC4626 wrappedToken
-    ) external view returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw);
+    function getBufferBalance(IERC4626 wrappedToken)
+        external
+        view
+        returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw);
 
     /*******************************************************************************
                                 Authentication

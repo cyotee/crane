@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {
     AddLiquidityKind,
     HookFlags,
@@ -21,12 +21,11 @@ import {
  */
 abstract contract BaseHooks is IHooks {
     /// @inheritdoc IHooks
-    function onRegister(
-        address,
-        address,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public virtual returns (bool) {
+    function onRegister(address, address, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        virtual
+        returns (bool)
+    {
         // By default, deny all factories. This method must be overwritten by the hook contract.
         return false;
     }
@@ -112,11 +111,12 @@ abstract contract BaseHooks is IHooks {
     }
 
     /// @inheritdoc IHooks
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata,
-        address,
-        uint256
-    ) public view virtual returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata, address, uint256)
+        public
+        view
+        virtual
+        returns (bool, uint256)
+    {
         return (false, 0);
     }
 }

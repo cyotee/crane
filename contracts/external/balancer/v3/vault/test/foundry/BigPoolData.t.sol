@@ -7,17 +7,23 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
-import { TokenInfo, PoolData, Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    TokenInfo,
+    PoolData,
+    Rounding
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { RateProviderMock } from "../../contracts/test/RateProviderMock.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {RateProviderMock} from "../../contracts/test/RateProviderMock.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { PoolFactoryMock, BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {PoolFactoryMock, BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BigPoolDataTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -51,16 +57,14 @@ contract BigPoolDataTest is BaseVaultTest {
 
         _approveForNewPool(IERC20(newPool));
 
-        PoolFactoryMock(poolFactory).registerTestPool(
-            newPool,
-            vault.buildTokenConfig(bigPoolTokens, bigPoolRateProviders),
-            poolHooksContract,
-            lp
-        );
+        PoolFactoryMock(poolFactory)
+            .registerTestPool(
+                newPool, vault.buildTokenConfig(bigPoolTokens, bigPoolRateProviders), poolHooksContract, lp
+            );
 
         // Get the sorted list of tokens and rate providers.
         TokenInfo[] memory tokenInfo = new TokenInfo[](numTokens);
-        (bigPoolTokens, tokenInfo, , ) = vault.getPoolTokenInfo(newPool);
+        (bigPoolTokens, tokenInfo,,) = vault.getPoolTokenInfo(newPool);
 
         for (uint8 i = 0; i < numTokens; ++i) {
             bigPoolRateProviders[i] = tokenInfo[i].rateProvider;
@@ -109,10 +113,8 @@ contract BigPoolDataTest is BaseVaultTest {
 
         // `loadPoolDataUpdatingBalancesAndYieldFees` and `getRawBalances` are functions in VaultMock.
 
-        PoolData memory data = vault.loadPoolDataUpdatingBalancesAndYieldFees(
-            pool,
-            roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN
-        );
+        PoolData memory data =
+            vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, roundUp ? Rounding.ROUND_UP : Rounding.ROUND_DOWN);
 
         // Compute decimal scaling factors from the tokens, in the mock.
         uint256[] memory expectedScalingFactors = PoolMock(pool).getDecimalScalingFactors();

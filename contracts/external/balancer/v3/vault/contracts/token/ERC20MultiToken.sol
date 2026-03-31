@@ -4,11 +4,15 @@ pragma solidity ^0.8.24;
 
 import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
-import { IERC20MultiTokenErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
+import {
+    IERC20MultiTokenErrors
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
 
-import { EVMCallModeHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 
-import { BalancerPoolToken } from "../BalancerPoolToken.sol";
+import {BalancerPoolToken} from "../BalancerPoolToken.sol";
 
 /**
  * @notice Store Token data and handle accounting for pool tokens in the Vault.
@@ -41,8 +45,8 @@ abstract contract ERC20MultiToken is IERC20Errors, IERC20MultiTokenErrors {
     mapping(address token => mapping(address owner => uint256 balance)) private _balances;
 
     // Users' pool token (BPT) allowances.
-    mapping(address token => mapping(address owner => mapping(address spender => uint256 allowance)))
-        private _allowances;
+    mapping(address token => mapping(address owner => mapping(address spender => uint256 allowance))) private
+        _allowances;
 
     // Total supply of all pool tokens (BPT). These are tokens minted and burned by the Vault.
     // The Vault balances of regular pool tokens are stored in `_reservesOf`.
@@ -141,7 +145,8 @@ abstract contract ERC20MultiToken is IERC20Errors, IERC20MultiTokenErrors {
         // We also emit the "transfer" event on the pool token to ensure full compliance with the ERC20 standard.
         // If this function fails we keep going, as this is used in recovery mode.
         // Well-behaved pools will just emit an event here, so they should never fail.
-        try BalancerPoolToken(pool).emitTransfer(from, address(0), amount) {} catch {
+        try BalancerPoolToken(pool).emitTransfer(from, address(0), amount) {}
+            catch {
             // solhint-disable-previous-line no-empty-blocks
         }
 
@@ -190,7 +195,8 @@ abstract contract ERC20MultiToken is IERC20Errors, IERC20MultiTokenErrors {
         // We also emit the "approve" event on the pool token to ensure full compliance with the ERC20 standard.
         // If this function fails we keep going, as this is used in recovery mode.
         // Well-behaved pools will just emit an event here, so they should never fail.
-        try BalancerPoolToken(pool).emitApproval(owner, spender, amount) {} catch {
+        try BalancerPoolToken(pool).emitApproval(owner, spender, amount) {}
+            catch {
             // solhint-disable-previous-line no-empty-blocks
         }
 

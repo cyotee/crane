@@ -30,7 +30,12 @@ contract CamelotV2Handler is Test {
     uint256 public kAfter;
 
     // Last operation type for context-aware invariants
-    enum OpType { NONE, SWAP, MINT, BURN }
+    enum OpType {
+        NONE,
+        SWAP,
+        MINT,
+        BURN
+    }
     OpType public lastOpType;
 
     // Operation counters for debugging
@@ -315,8 +320,7 @@ contract CamelotV2Handler is Test {
 
         // Check 2: Reserve ratio remains constant (cross-multiply to avoid division)
         // r0_before * r1_after == r1_before * r0_after (within tolerance)
-        if (burnReserve0Before > 0 && burnReserve1Before > 0 &&
-            burnReserve0After > 0 && burnReserve1After > 0) {
+        if (burnReserve0Before > 0 && burnReserve1Before > 0 && burnReserve0After > 0 && burnReserve1After > 0) {
             uint256 crossA = burnReserve0Before * burnReserve1After;
             uint256 crossB = burnReserve1Before * burnReserve0After;
             // Allow 0.1% tolerance for rounding

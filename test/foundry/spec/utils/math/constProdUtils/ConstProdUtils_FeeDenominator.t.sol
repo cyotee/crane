@@ -138,20 +138,17 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
     function test_explicitFeeDenom_modernFees_various() public pure {
         // Test 0.01% = 10/100000
         uint256 lpAmt_001pct = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            10, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 10, FEE_DENOMINATOR, 0, 0, false
         );
 
         // Test 0.05% = 50/100000
         uint256 lpAmt_005pct = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            50, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 50, FEE_DENOMINATOR, 0, 0, false
         );
 
         // Test 0.1% = 100/100000
         uint256 lpAmt_01pct = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            100, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 100, FEE_DENOMINATOR, 0, 0, false
         );
 
         // Lower fees should result in more LP tokens
@@ -178,8 +175,7 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
 
         // Compare with explicit overload (should match)
         uint256 lpAmtExplicit = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            10, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 10, FEE_DENOMINATOR, 0, 0, false
         );
 
         assertEq(lpAmtStruct, lpAmtExplicit, "Struct version should match explicit overload");
@@ -219,8 +215,7 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
      */
     function test_explicitFeeDenom_zeroFee() public pure {
         uint256 lpAmt = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            0, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 0, FEE_DENOMINATOR, 0, 0, false
         );
 
         assertGt(lpAmt, 0, "Zero fee should work with explicit denominator");
@@ -232,8 +227,7 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
     function test_explicitFeeDenom_minimumFee() public pure {
         // 1/100000 = 0.001% fee
         uint256 lpAmt = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            1, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 1, FEE_DENOMINATOR, 0, 0, false
         );
 
         assertGt(lpAmt, 0, "Minimum fee (0.001%) should work");
@@ -246,8 +240,7 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
         // Aerodrome uses denominator 10000
         // 30/10000 = 0.3% fee
         uint256 lpAmt = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            30, 10000, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, 30, 10000, 0, 0, false
         );
 
         assertGt(lpAmt, 0, "Custom denominator (Aerodrome) should work");
@@ -277,8 +270,7 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
         feePercent = bound(feePercent, 0, feeDenom - 1); // Fee must be < 100%
 
         uint256 lpAmt = ConstProdUtils._quoteSwapDepositWithFee(
-            amountIn, lpSupply, reserveIn, reserveOut,
-            feePercent, feeDenom, 0, 0, false
+            amountIn, lpSupply, reserveIn, reserveOut, feePercent, feeDenom, 0, 0, false
         );
 
         // Result should be reasonable (positive but not larger than LP supply)
@@ -294,13 +286,11 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
         feeHigh = bound(feeHigh, feeLow + 1, 5000);
 
         uint256 lpAmtLowFee = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            feeLow, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, feeLow, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 lpAmtHighFee = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            feeHigh, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, feeHigh, FEE_DENOMINATOR, 0, 0, false
         );
 
         assertGe(lpAmtLowFee, lpAmtHighFee, "Lower fee should yield >= LP tokens");
@@ -318,13 +308,11 @@ contract ConstProdUtils_FeeDenominator_Test is Test {
         feePercent = bound(feePercent, 11, 9999);
 
         uint256 lpAmtExplicit = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            feePercent, FEE_DENOMINATOR, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, feePercent, FEE_DENOMINATOR, 0, 0, false
         );
 
         uint256 lpAmtHeuristic = ConstProdUtils._quoteSwapDepositWithFee(
-            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT,
-            feePercent, 0, 0, false
+            AMOUNT_IN, LP_SUPPLY, RESERVE_IN, RESERVE_OUT, feePercent, 0, 0, false
         );
 
         assertEq(lpAmtExplicit, lpAmtHeuristic, "Should match for feePercent > 10");

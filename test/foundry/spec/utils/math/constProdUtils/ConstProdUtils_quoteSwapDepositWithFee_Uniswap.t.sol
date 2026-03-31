@@ -39,11 +39,7 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Uniswap is TestBase_ConstProdUti
         pathAB[1] = address(tokenB);
 
         uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            1,
-            pathAB,
-            address(this),
-            block.timestamp
+            swapAmountA, 1, pathAB, address(this), block.timestamp
         );
 
         uint256 receivedB = tokenB.balanceOf(address(this));
@@ -53,11 +49,7 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Uniswap is TestBase_ConstProdUti
         pathBA[1] = address(tokenA);
 
         uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            receivedB,
-            1,
-            pathBA,
-            address(this),
-            block.timestamp
+            receivedB, 1, pathBA, address(this), block.timestamp
         );
     }
 
@@ -91,13 +83,8 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Uniswap is TestBase_ConstProdUti
             path[0] = address(tokenA);
             path[1] = address(tokenB);
 
-            IUniswapV2Router(address(uniswapV2Router)).swapExactTokensForTokens(
-                swapAmount,
-                1,
-                path,
-                address(this),
-                block.timestamp
-            );
+            IUniswapV2Router(address(uniswapV2Router))
+                .swapExactTokensForTokens(swapAmount, 1, path, address(this), block.timestamp);
         }
 
         uint256 opTokenAmtIn = swapAmount._saleQuote(reserveA, reserveB, UNISWAP_FEE_PERCENT);
@@ -106,16 +93,10 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Uniswap is TestBase_ConstProdUti
         tokenA.approve(address(uniswapV2Router), remainingAmountA);
         tokenB.approve(address(uniswapV2Router), opTokenAmtIn);
 
-        IUniswapV2Router(address(uniswapV2Router)).addLiquidity(
-            address(tokenA),
-            address(tokenB),
-            remainingAmountA,
-            opTokenAmtIn,
-            1,
-            1,
-            address(this),
-            block.timestamp
-        );
+        IUniswapV2Router(address(uniswapV2Router))
+            .addLiquidity(
+                address(tokenA), address(tokenB), remainingAmountA, opTokenAmtIn, 1, 1, address(this), block.timestamp
+            );
 
         uint256 lpBalanceAfter = pair.balanceOf(address(this));
         actualLpAmt = lpBalanceAfter - lpBalanceBefore;
@@ -142,12 +123,7 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Uniswap is TestBase_ConstProdUti
         }
 
         (uint256 reserveA,, uint256 reserveB,) = ConstProdUtils._sortReserves(
-            address(tokenA),
-            pair.token0(),
-            uint256(r0),
-            UNISWAP_FEE_PERCENT,
-            uint256(r1),
-            UNISWAP_FEE_PERCENT
+            address(tokenA), pair.token0(), uint256(r0), UNISWAP_FEE_PERCENT, uint256(r1), UNISWAP_FEE_PERCENT
         );
 
         uint256 quotedLpAmt = ConstProdUtils._quoteSwapDepositWithFee(

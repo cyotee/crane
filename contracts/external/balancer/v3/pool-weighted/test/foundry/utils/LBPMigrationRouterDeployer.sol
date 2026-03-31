@@ -4,10 +4,14 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { BalancerContractRegistry } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BalancerContractRegistry
+} from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { LBPMigrationRouterMock } from "../../../contracts/test/LBPMigrationRouterMock.sol";
+import {LBPMigrationRouterMock} from "../../../contracts/test/LBPMigrationRouterMock.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "MigrationRouter".
@@ -23,18 +27,16 @@ contract LBPMigrationRouterDeployer is BaseContractsDeployer {
         }
     }
 
-    function deployLBPMigrationRouterMock(
-        BalancerContractRegistry contractRegistry,
-        string memory version
-    ) internal returns (LBPMigrationRouterMock) {
+    function deployLBPMigrationRouterMock(BalancerContractRegistry contractRegistry, string memory version)
+        internal
+        returns (LBPMigrationRouterMock)
+    {
         if (reusingArtifacts) {
-            return
-                LBPMigrationRouterMock(
-                    deployCode(
-                        _computeLBPTestPath(type(LBPMigrationRouterMock).name),
-                        abi.encode(contractRegistry, version)
-                    )
-                );
+            return LBPMigrationRouterMock(
+                deployCode(
+                    _computeLBPTestPath(type(LBPMigrationRouterMock).name), abi.encode(contractRegistry, version)
+                )
+            );
         } else {
             return new LBPMigrationRouterMock(contractRegistry, version);
         }

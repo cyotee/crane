@@ -4,18 +4,18 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { HooksConfigLibMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/HooksConfigLibMock.sol";
-import { WordCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
-import { PoolConfigConst } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { HooksConfigLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
+import {HooksConfigLibMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/HooksConfigLibMock.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
+import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
 
-import { VaultContractsDeployer } from "../utils/VaultContractsDeployer.sol";
+import {VaultContractsDeployer} from "../utils/VaultContractsDeployer.sol";
 
 contract HooksConfigLibHelpersTest is VaultContractsDeployer {
     using WordCodec for bytes32;
@@ -43,10 +43,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         );
 
         uint256 value = hooksConfigLibMock.callComputeDynamicSwapFeeHook(
-            swapParams,
-            pool,
-            staticSwapFeePercentage,
-            IHooks(hooksContract)
+            swapParams, pool, staticSwapFeePercentage, IHooks(hooksContract)
         );
 
         assertEq(value, swapFeePercentage, "swap fee percentage mismatch");
@@ -78,10 +75,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.DynamicSwapFeeHookFailed.selector));
 
         hooksConfigLibMock.callComputeDynamicSwapFeeHook(
-            swapParams,
-            pool,
-            staticSwapFeePercentage,
-            IHooks(hooksContract)
+            swapParams, pool, staticSwapFeePercentage, IHooks(hooksContract)
         );
     }
 
@@ -296,10 +290,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         );
     }
 
-    function _getParamsForCallAfterSwap(
-        SwapKind kind,
-        uint256 limitRaw
-    )
+    function _getParamsForCallAfterSwap(SwapKind kind, uint256 limitRaw)
         internal
         pure
         returns (
@@ -362,17 +353,16 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
             abi.encode(true, hookAdjustedAmountCalculatedRaw)
         );
 
-        return
-            hooksConfigLibMock.callAfterSwapHook(
-                config,
-                amountCalculatedScaled18,
-                amountCalculatedRaw,
-                router,
-                params,
-                state,
-                poolData,
-                IHooks(hooksContract)
-            );
+        return hooksConfigLibMock.callAfterSwapHook(
+            config,
+            amountCalculatedScaled18,
+            amountCalculatedRaw,
+            router,
+            params,
+            state,
+            poolData,
+            IHooks(hooksContract)
+        );
     }
 
     function _callAfterSwapAndExpectRevert(
@@ -412,9 +402,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IVaultErrors.HookAdjustedSwapLimit.selector,
-                hookAdjustedAmountCalculatedRaw,
-                params.limitRaw
+                IVaultErrors.HookAdjustedSwapLimit.selector, hookAdjustedAmountCalculatedRaw, params.limitRaw
             )
         );
 
@@ -460,11 +448,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         );
 
         hooksConfigLibMock.callBeforeAddLiquidityHook(
-            router,
-            maxAmountsInScaled18,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            router, maxAmountsInScaled18, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -498,11 +482,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.BeforeAddLiquidityHookFailed.selector));
 
         hooksConfigLibMock.callBeforeAddLiquidityHook(
-            router,
-            maxAmountsInScaled18,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            router, maxAmountsInScaled18, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -519,13 +499,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         PoolConfigBits config;
         uint256[] memory values = _callAfterAddLiquidity(
-            config,
-            amountsInScaled18,
-            amountsInRaw,
-            bptAmountOut,
-            hookAdjustedAmountsInRaw,
-            params,
-            poolData
+            config, amountsInScaled18, amountsInRaw, bptAmountOut, hookAdjustedAmountsInRaw, params, poolData
         );
 
         assertEq(values.length, amountsInRaw.length, "values length mismatch");
@@ -546,13 +520,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         PoolConfigBits config;
         config = config.setHookAdjustedAmounts(true);
         uint256[] memory values = _callAfterAddLiquidity(
-            config,
-            amountsInScaled18,
-            amountsInRaw,
-            bptAmountOut,
-            hookAdjustedAmountsInRaw,
-            params,
-            poolData
+            config, amountsInScaled18, amountsInRaw, bptAmountOut, hookAdjustedAmountsInRaw, params, poolData
         );
 
         assertEq(values.length, hookAdjustedAmountsInRaw.length, "values length mismatch");
@@ -577,13 +545,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.AfterAddLiquidityHookFailed.selector));
         _callAfterAddLiquidity(
-            config,
-            amountsInScaled18,
-            amountsInRaw,
-            bptAmountOut,
-            hookAdjustedAmountsInRaw,
-            params,
-            poolData
+            config, amountsInScaled18, amountsInRaw, bptAmountOut, hookAdjustedAmountsInRaw, params, poolData
         );
     }
 
@@ -619,14 +581,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         PoolConfigBits config;
         hooksConfigLibMock.callAfterAddLiquidityHook(
-            config,
-            router,
-            amountsInScaled18,
-            amountsInRaw,
-            bptAmountOut,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            config, router, amountsInScaled18, amountsInRaw, bptAmountOut, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -656,13 +611,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
             )
         );
         _callAfterAddLiquidity(
-            config,
-            amountsInScaled18,
-            amountsInRaw,
-            bptAmountOut,
-            hookAdjustedAmountsInRaw,
-            params,
-            poolData
+            config, amountsInScaled18, amountsInRaw, bptAmountOut, hookAdjustedAmountsInRaw, params, poolData
         );
     }
 
@@ -726,17 +675,9 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
             abi.encode(true, hookAdjustedAmountsInRaw)
         );
 
-        return
-            hooksConfigLibMock.callAfterAddLiquidityHook(
-                config,
-                router,
-                amountsInScaled18,
-                amountsInRaw,
-                bptAmountOut,
-                params,
-                poolData,
-                IHooks(hooksContract)
-            );
+        return hooksConfigLibMock.callAfterAddLiquidityHook(
+            config, router, amountsInScaled18, amountsInRaw, bptAmountOut, params, poolData, IHooks(hooksContract)
+        );
     }
 
     // callBeforeRemoveLiquidityHook tests
@@ -769,11 +710,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         );
 
         hooksConfigLibMock.callBeforeRemoveLiquidityHook(
-            minAmountsOutScaled18,
-            router,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            minAmountsOutScaled18, router, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -807,11 +744,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.BeforeRemoveLiquidityHookFailed.selector));
         hooksConfigLibMock.callBeforeRemoveLiquidityHook(
-            minAmountsOutScaled18,
-            router,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            minAmountsOutScaled18, router, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -828,13 +761,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         PoolConfigBits config;
         uint256[] memory values = _callAfterRemoveLiquidityHook(
-            config,
-            amountsOutScaled18,
-            amountsOutRaw,
-            bptAmountIn,
-            hookAdjustedAmountsOutRaw,
-            params,
-            poolData
+            config, amountsOutScaled18, amountsOutRaw, bptAmountIn, hookAdjustedAmountsOutRaw, params, poolData
         );
 
         assertEq(values.length, amountsOutRaw.length, "values length mismatch");
@@ -855,13 +782,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         PoolConfigBits config;
         config = config.setHookAdjustedAmounts(true);
         uint256[] memory values = _callAfterRemoveLiquidityHook(
-            config,
-            amountsOutScaled18,
-            amountsOutRaw,
-            bptAmountIn,
-            hookAdjustedAmountsOutRaw,
-            params,
-            poolData
+            config, amountsOutScaled18, amountsOutRaw, bptAmountIn, hookAdjustedAmountsOutRaw, params, poolData
         );
 
         assertEq(values.length, hookAdjustedAmountsOutRaw.length, "values length mismatch");
@@ -886,13 +807,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.AfterRemoveLiquidityHookFailed.selector));
         _callAfterRemoveLiquidityHook(
-            config,
-            amountsOutScaled18,
-            amountsOutRaw,
-            bptAmountIn,
-            hookAdjustedAmountsOutRaw,
-            params,
-            poolData
+            config, amountsOutScaled18, amountsOutRaw, bptAmountIn, hookAdjustedAmountsOutRaw, params, poolData
         );
     }
 
@@ -928,14 +843,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         PoolConfigBits config;
         hooksConfigLibMock.callAfterRemoveLiquidityHook(
-            config,
-            router,
-            amountsOutScaled18,
-            amountsOutRaw,
-            bptAmountIn,
-            params,
-            poolData,
-            IHooks(hooksContract)
+            config, router, amountsOutScaled18, amountsOutRaw, bptAmountIn, params, poolData, IHooks(hooksContract)
         );
     }
 
@@ -965,13 +873,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
             )
         );
         _callAfterRemoveLiquidityHook(
-            config,
-            amountsOutScaled18,
-            amountsOutRaw,
-            bptAmountIn,
-            hookAdjustedAmountsOutRaw,
-            params,
-            poolData
+            config, amountsOutScaled18, amountsOutRaw, bptAmountIn, hookAdjustedAmountsOutRaw, params, poolData
         );
     }
 
@@ -1032,17 +934,9 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
             abi.encode(true, hookAdjustedAmountsOutRaw)
         );
 
-        return
-            hooksConfigLibMock.callAfterRemoveLiquidityHook(
-                config,
-                router,
-                amountsOutScaled18,
-                amountsOutRaw,
-                bptAmountIn,
-                params,
-                poolData,
-                IHooks(hooksContract)
-            );
+        return hooksConfigLibMock.callAfterRemoveLiquidityHook(
+            config, router, amountsOutScaled18, amountsOutRaw, bptAmountIn, params, poolData, IHooks(hooksContract)
+        );
     }
 
     // callBeforeInitializeHook tests.
@@ -1086,10 +980,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
         );
 
         hooksConfigLibMock.callAfterInitializeHook(
-            exactAmountsInScaled18,
-            bptAmountOut,
-            userData,
-            IHooks(hooksContract)
+            exactAmountsInScaled18, bptAmountOut, userData, IHooks(hooksContract)
         );
     }
 
@@ -1106,10 +997,7 @@ contract HooksConfigLibHelpersTest is VaultContractsDeployer {
 
         vm.expectRevert(abi.encodeWithSelector(IVaultErrors.AfterInitializeHookFailed.selector));
         hooksConfigLibMock.callAfterInitializeHook(
-            exactAmountsInScaled18,
-            bptAmountOut,
-            userData,
-            IHooks(hooksContract)
+            exactAmountsInScaled18, bptAmountOut, userData, IHooks(hooksContract)
         );
     }
 }

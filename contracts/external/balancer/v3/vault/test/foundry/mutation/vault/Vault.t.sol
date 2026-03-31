@@ -6,16 +6,16 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
 
-import { BaseVaultTest } from "../../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../../utils/BaseVaultTest.sol";
 
 contract VaultMutationTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -88,28 +88,16 @@ contract VaultMutationTest is BaseVaultTest {
     }
 
     function testAddLiquidityWithLockedVault() public {
-        AddLiquidityParams memory params = AddLiquidityParams(
-            address(pool),
-            address(0),
-            amountsIn,
-            0,
-            AddLiquidityKind.PROPORTIONAL,
-            bytes("")
-        );
+        AddLiquidityParams memory params =
+            AddLiquidityParams(address(pool), address(0), amountsIn, 0, AddLiquidityKind.PROPORTIONAL, bytes(""));
 
         vm.expectRevert(IVaultErrors.VaultIsNotUnlocked.selector);
         vault.addLiquidity(params);
     }
 
     function testRemoveLiquidityWithLockedVault() public {
-        RemoveLiquidityParams memory params = RemoveLiquidityParams(
-            address(pool),
-            address(0),
-            0,
-            amountsIn,
-            RemoveLiquidityKind.PROPORTIONAL,
-            bytes("")
-        );
+        RemoveLiquidityParams memory params =
+            RemoveLiquidityParams(address(pool), address(0), 0, amountsIn, RemoveLiquidityKind.PROPORTIONAL, bytes(""));
 
         vm.expectRevert(IVaultErrors.VaultIsNotUnlocked.selector);
         vault.removeLiquidity(params);

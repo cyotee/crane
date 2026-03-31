@@ -10,7 +10,6 @@ import {ERC721MetadataRepo} from "@crane/contracts/tokens/ERC721/ERC721MetadataR
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
-
     /* ------------------------------- IFacet ------------------------------- */
 
     // tag::facetName()[]
@@ -20,6 +19,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
     function facetName() public pure returns (string memory) {
         return type(ERC721MetadataFacet).name;
     }
+
     // end::facetName[]
 
     // tag::facetInterfaces()[]
@@ -30,6 +30,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
         facetInterfaces_ = new bytes4[](1);
         facetInterfaces_[0] = type(IERC721Metadata).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -42,6 +43,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
         facetFuncs_[1] = IERC721Metadata.symbol.selector;
         facetFuncs_[2] = IERC721Metadata.tokenURI.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

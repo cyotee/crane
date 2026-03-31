@@ -243,12 +243,7 @@ library BalancerV3LBPoolRepo {
     function _getGradualWeightUpdateParams(Storage storage layout)
         internal
         view
-        returns (
-            uint256 startTime,
-            uint256 endTime,
-            uint256[] memory startWeights,
-            uint256[] memory endWeights
-        )
+        returns (uint256 startTime, uint256 endTime, uint256[] memory startWeights, uint256[] memory endWeights)
     {
         startTime = layout.startTime;
         endTime = layout.endTime;
@@ -265,12 +260,7 @@ library BalancerV3LBPoolRepo {
     function _getGradualWeightUpdateParams()
         internal
         view
-        returns (
-            uint256 startTime,
-            uint256 endTime,
-            uint256[] memory startWeights,
-            uint256[] memory endWeights
-        )
+        returns (uint256 startTime, uint256 endTime, uint256[] memory startWeights, uint256[] memory endWeights)
     {
         return _getGradualWeightUpdateParams(_layout());
     }

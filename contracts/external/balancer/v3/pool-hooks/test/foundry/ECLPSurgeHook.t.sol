@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
-import { GyroECLPPool } from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
+import {GyroECLPPool} from "@crane/contracts/external/balancer/v3/pool-gyro/contracts/GyroECLPPool.sol";
 
-import { ECLPSurgeHookBaseTest } from "./ECLPSurgeHookBase.t.sol";
+import {ECLPSurgeHookBaseTest} from "./ECLPSurgeHookBase.t.sol";
 
 contract ECLPSurgeHookTest is ECLPSurgeHookBaseTest {
     function _setupEclpParams()
@@ -20,23 +20,17 @@ contract ECLPSurgeHookTest is ECLPSurgeHookBaseTest {
         // The pool has a price interval of [1.5, 2]. The peak price is around 1.73,
         // so s/c must be 1.73 and s^2 + c^2 = 1. Lambda was chosen arbitrarily.
         eclpParams = IGyroECLPPool.EclpParams({
-            alpha: 1.5e18,
-            beta: 2e18,
-            c: 0.5e18,
-            s: 0.866025403784439000e18,
-            lambda: 5000000000000000000
+            alpha: 1.5e18, beta: 2e18, c: 0.5e18, s: 0.866025403784439e18, lambda: 5000000000000000000
         });
 
         // Derived params calculated offchain based on the params above, using the jupyter notebook file on
         // "pkg/pool-hooks/jupyter/SurgeECLP.ipynb".
         derivedECLPParams = IGyroECLPPool.DerivedEclpParams({
             tauAlpha: IGyroECLPPool.Vector2({
-                x: -30690318166048988038075742958735327232,
-                y: 95174074047855558443958259070940479488
+                x: -30690318166048988038075742958735327232, y: 95174074047855558443958259070940479488
             }),
             tauBeta: IGyroECLPPool.Vector2({
-                x: 28744935033874503200864052705113407488,
-                y: 95779583993136743138661466794178379776
+                x: 28744935033874503200864052705113407488, y: 95779583993136743138661466794178379776
             }),
             u: 25736219575747051354722245276237561856,
             v: 95628206506816527245215873647337537536,

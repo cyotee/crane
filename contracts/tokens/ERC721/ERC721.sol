@@ -79,7 +79,16 @@ abstract contract ERC721 is SoladyERC721 {
      * This variant allows specifying whether to emit an Approval event.
      * Used by contracts that manage approvals in custom storage (like NonfungiblePositionManager).
      */
-    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal virtual {
+    function _approve(
+        address to,
+        uint256 tokenId,
+        address,
+        /*auth*/
+        bool emitEvent
+    )
+        internal
+        virtual
+    {
         if (emitEvent) {
             address owner = _ownerOf(tokenId);
             emit Approval(owner, to, tokenId);
@@ -203,9 +212,8 @@ abstract contract ERC721 is SoladyERC721 {
      * This provides OpenZeppelin-compatible semantics for authorization checking.
      */
     function _isAuthorized(address owner, address spender, uint256 tokenId) internal view virtual returns (bool) {
-        return
-            spender != address(0) &&
-            (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
+        return spender != address(0)
+            && (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
     }
 
     /**

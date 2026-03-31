@@ -8,23 +8,29 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultMock } from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BasicAuthorizerMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { GradualValueChange } from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/lib/GradualValueChange.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BasicAuthorizerMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/BasicAuthorizerMock.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    GradualValueChange
+} from "@crane/contracts/external/balancer/v3/pool-weighted/contracts/lib/GradualValueChange.sol";
 
-import { ReClammPoolContractsDeployer } from "./ReClammPoolContractsDeployer.sol";
-import { IReClammPool } from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
-import { ReClammPoolMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
-import { ReClammMath, a, b } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
-import { BaseReClammTest } from "./BaseReClammTest.sol";
+import {ReClammPoolContractsDeployer} from "./ReClammPoolContractsDeployer.sol";
+import {IReClammPool} from "contracts/protocols/dexes/balancer/v3/reclamm/interfaces/IReClammPool.sol";
+import {ReClammPoolMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammPoolMock.sol";
+import {ReClammMath, a, b} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {BaseReClammTest} from "./BaseReClammTest.sol";
 
 contract E2eSwapFuzzPoolParamsHelper is Test, ReClammPoolContractsDeployer {
     using ArrayHelpers for *;
@@ -79,19 +85,15 @@ contract E2eSwapFuzzPoolParamsHelper is Test, ReClammPoolContractsDeployer {
         );
 
         {
-            (uint256[] memory theoreticalBalances, , , ) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
-                testParams.minPrice,
-                testParams.maxPrice,
-                testParams.targetPrice
+            (uint256[] memory theoreticalBalances,,,) = ReClammMath.computeTheoreticalPriceRatioAndBalances(
+                testParams.minPrice, testParams.maxPrice, testParams.targetPrice
             );
 
             uint256 balanceRatio = theoreticalBalances[b].divDown(theoreticalBalances[a]);
             // Both tokens must be kept below _MAX_TOKEN_BALANCE. The balance ratio can be anything, so we need
             // to cap the initialBalance[a] keeping in mind that initialBalance[b] also needs to be below the abs max.
-            uint256 maxBalance = Math.min(
-                _MAX_TOKEN_BALANCE.divDown(balanceRatio),
-                _MAX_TOKEN_BALANCE.mulDown(balanceRatio)
-            );
+            uint256 maxBalance =
+                Math.min(_MAX_TOKEN_BALANCE.divDown(balanceRatio), _MAX_TOKEN_BALANCE.mulDown(balanceRatio));
 
             if (maxBalance < _MIN_TOKEN_BALANCE) {
                 testParams.initialBalances[a] = _MIN_TOKEN_BALANCE;
@@ -110,11 +112,8 @@ contract E2eSwapFuzzPoolParamsHelper is Test, ReClammPoolContractsDeployer {
             5e17
         );
 
-        (uint256 currentCenteredness, ) = ReClammMath.computeCenteredness(
-            testParams.initialBalances,
-            virtualBalanceA,
-            virtualBalanceB
-        );
+        (uint256 currentCenteredness,) =
+            ReClammMath.computeCenteredness(testParams.initialBalances, virtualBalanceA, virtualBalanceB);
 
         vm.assume(currentCenteredness >= 1e17);
 
@@ -153,46 +152,30 @@ contract E2eSwapFuzzPoolParamsHelper is Test, ReClammPoolContractsDeployer {
         testParams.decimalsTokenB = decimalsTokenB;
         testParams.minTradeAmount = minTradeAmount;
 
-        (, , , uint256[] memory balancesScaled18) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory balancesScaled18) = vault.getPoolTokenInfo(pool);
 
-        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB, ) = ReClammPoolMock(payable(pool))
-            .computeCurrentVirtualBalances(balancesScaled18);
+        (uint256 currentVirtualBalanceA, uint256 currentVirtualBalanceB,) =
+            ReClammPoolMock(payable(pool)).computeCurrentVirtualBalances(balancesScaled18);
 
         uint256 tokenAMinTradeAmountInExactOut = _toAmountRaw(
             ReClammMath.computeInGivenOut(
-                balancesScaled18,
-                currentVirtualBalanceA,
-                currentVirtualBalanceB,
-                a,
-                b,
-                testParams.minTradeAmount
+                balancesScaled18, currentVirtualBalanceA, currentVirtualBalanceB, a, b, testParams.minTradeAmount
             ),
             testParams.rateTokenA,
             testParams.decimalsTokenA
         );
         uint256 tokenBMinTradeAmountOutExactIn = _toAmountRaw(
             ReClammMath.computeOutGivenIn(
-                balancesScaled18,
-                currentVirtualBalanceA,
-                currentVirtualBalanceB,
-                a,
-                b,
-                testParams.minTradeAmount
+                balancesScaled18, currentVirtualBalanceA, currentVirtualBalanceB, a, b, testParams.minTradeAmount
             ),
             testParams.rateTokenB,
             testParams.decimalsTokenB
         );
 
-        uint256 tokenAMinTradeAmountInExactIn = _toAmountRaw(
-            testParams.minTradeAmount,
-            testParams.rateTokenA,
-            testParams.decimalsTokenA
-        );
-        uint256 tokenBMinTradeAmountOutExactOut = _toAmountRaw(
-            testParams.minTradeAmount,
-            testParams.rateTokenB,
-            testParams.decimalsTokenB
-        );
+        uint256 tokenAMinTradeAmountInExactIn =
+            _toAmountRaw(testParams.minTradeAmount, testParams.rateTokenA, testParams.decimalsTokenA);
+        uint256 tokenBMinTradeAmountOutExactOut =
+            _toAmountRaw(testParams.minTradeAmount, testParams.rateTokenB, testParams.decimalsTokenB);
 
         // If the calculated minimum amount is less than the swap size, we use the minimum swap amount instead.
         minSwapAmountTokenA = Math.max(tokenAMinTradeAmountInExactOut, tokenAMinTradeAmountInExactIn);
@@ -220,21 +203,16 @@ contract E2eSwapFuzzPoolParamsHelper is Test, ReClammPoolContractsDeployer {
 
         // Reduce 1% to avoid AmountOutGreaterThanBalance.
         maxSwapAmountTokenA = _toAmountRaw(
-            ReClammMath.computeInGivenOut(
-                balancesScaled18_,
-                currentVirtualBalanceA,
-                currentVirtualBalanceB,
-                a,
-                b,
-                balancesScaled18_[b]
-            ),
-            testParams.rateTokenA,
-            testParams.decimalsTokenA
-        ).mulDown(99e16);
+                ReClammMath.computeInGivenOut(
+                    balancesScaled18_, currentVirtualBalanceA, currentVirtualBalanceB, a, b, balancesScaled18_[b]
+                ),
+                testParams.rateTokenA,
+                testParams.decimalsTokenA
+            ).mulDown(99e16);
 
         // Reduce 1% to avoid AmountOutGreaterThanBalance.
-        maxSwapAmountTokenB = _toAmountRaw(balancesScaled18_[b], testParams.rateTokenB, testParams.decimalsTokenB)
-            .mulDown(99e16);
+        maxSwapAmountTokenB =
+            _toAmountRaw(balancesScaled18_[b], testParams.rateTokenB, testParams.decimalsTokenB).mulDown(99e16);
     }
 
     function _toAmountRaw(uint256 amountScaled18, uint256 rate, uint256 decimals) internal pure returns (uint256) {

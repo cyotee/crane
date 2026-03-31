@@ -106,9 +106,8 @@ abstract contract VetoGovernorVotesQuorumFraction is VetoGovernorVotes {
 
         // Make sure we keep track of the original numerator in contracts upgraded from a version without checkpoints.
         if (oldQuorumNumerator != 0 && _quorumNumeratorHistory._checkpoints.length == 0) {
-            _quorumNumeratorHistory._checkpoints.push(
-                Checkpoints.Checkpoint224({_key: 0, _value: oldQuorumNumerator.toUint224()})
-            );
+            _quorumNumeratorHistory._checkpoints
+                .push(Checkpoints.Checkpoint224({_key: 0, _value: oldQuorumNumerator.toUint224()}));
         }
 
         // Set new quorum for future proposals

@@ -87,7 +87,9 @@ contract BetterSafeERC20_Test is Test {
         bool result = harness.safeTransfer(IERC20(address(standardToken)), bob, TRANSFER_AMOUNT);
         assertTrue(result, "safeTransfer should return true");
         assertEq(standardToken.balanceOf(bob), TRANSFER_AMOUNT, "Bob should receive tokens");
-        assertEq(standardToken.balanceOf(address(harness)), MINT_AMOUNT - TRANSFER_AMOUNT, "Harness balance should decrease");
+        assertEq(
+            standardToken.balanceOf(address(harness)), MINT_AMOUNT - TRANSFER_AMOUNT, "Harness balance should decrease"
+        );
     }
 
     function test_safeTransfer_nonReturningToken_transfersSuccessfully() public {
@@ -259,7 +261,9 @@ contract BetterSafeERC20_Test is Test {
 
     function test_safeApprove_falseReturningToken_whenFalse_reverts() public {
         falseReturningToken.setShouldReturnFalse(true);
-        vm.expectRevert(abi.encodeWithSelector(SafeERC20.SafeERC20FailedOperation.selector, address(falseReturningToken)));
+        vm.expectRevert(
+            abi.encodeWithSelector(SafeERC20.SafeERC20FailedOperation.selector, address(falseReturningToken))
+        );
         harness.safeApprove(IERC20(address(falseReturningToken)), spender, TRANSFER_AMOUNT);
     }
 

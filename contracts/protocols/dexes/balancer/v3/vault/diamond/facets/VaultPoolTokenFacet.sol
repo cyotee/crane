@@ -22,7 +22,6 @@ import {BalancerV3MultiTokenRepo} from "../BalancerV3MultiTokenRepo.sol";
  * acts as a "token address" in the multi-token accounting system.
  */
 contract VaultPoolTokenFacet is BalancerV3VaultModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -93,5 +92,4 @@ contract VaultPoolTokenFacet is BalancerV3VaultModifiers, IFacet {
         BalancerV3MultiTokenRepo._transfer(msg.sender, from, to, amount);
         return true;
     }
-
 }

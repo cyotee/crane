@@ -3,7 +3,7 @@
 pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {
     PoolConfigBits,
     FEE_BITLENGTH,
@@ -11,9 +11,9 @@ import {
     FEE_SCALING_FACTOR
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { PoolConfigConst } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
-import { PoolConfigLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
-import { WordCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
+import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
+import {PoolConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
 
 contract PoolConfigLibTest is Test {
     using WordCodec for bytes32;
@@ -45,9 +45,8 @@ contract PoolConfigLibTest is Test {
 
     function testIsPoolRegistered() public pure {
         PoolConfigBits config;
-        config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.POOL_REGISTERED_OFFSET)
-        );
+        config =
+            PoolConfigBits.wrap(PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.POOL_REGISTERED_OFFSET));
         assertTrue(config.isPoolRegistered(), "isPoolRegistered is false (getter)");
     }
 
@@ -73,9 +72,7 @@ contract PoolConfigLibTest is Test {
 
     function testIsPoolPaused() public pure {
         PoolConfigBits config;
-        config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.POOL_PAUSED_OFFSET)
-        );
+        config = PoolConfigBits.wrap(PoolConfigBits.unwrap(config).insertBool(true, PoolConfigConst.POOL_PAUSED_OFFSET));
         assertTrue(config.isPoolPaused(), "isPoolPaused is false (getter)");
     }
 
@@ -217,11 +214,8 @@ contract PoolConfigLibTest is Test {
     function testGetAggregateSwapFeePercentage() public pure {
         PoolConfigBits config;
         config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertUint(
-                _MAX_UINT24_VALUE,
-                PoolConfigConst.AGGREGATE_SWAP_FEE_OFFSET,
-                FEE_BITLENGTH
-            )
+            PoolConfigBits.unwrap(config)
+                .insertUint(_MAX_UINT24_VALUE, PoolConfigConst.AGGREGATE_SWAP_FEE_OFFSET, FEE_BITLENGTH)
         );
 
         assertEq(
@@ -260,11 +254,8 @@ contract PoolConfigLibTest is Test {
     function testGetAggregateYieldFeePercentage() public pure {
         PoolConfigBits config;
         config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertUint(
-                _MAX_UINT24_VALUE,
-                PoolConfigConst.AGGREGATE_YIELD_FEE_OFFSET,
-                FEE_BITLENGTH
-            )
+            PoolConfigBits.unwrap(config)
+                .insertUint(_MAX_UINT24_VALUE, PoolConfigConst.AGGREGATE_YIELD_FEE_OFFSET, FEE_BITLENGTH)
         );
 
         assertEq(
@@ -293,11 +284,8 @@ contract PoolConfigLibTest is Test {
     function testGetStaticSwapFeePercentage() public pure {
         PoolConfigBits config;
         config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertUint(
-                _MAX_UINT24_VALUE,
-                PoolConfigConst.STATIC_SWAP_FEE_OFFSET,
-                FEE_BITLENGTH
-            )
+            PoolConfigBits.unwrap(config)
+                .insertUint(_MAX_UINT24_VALUE, PoolConfigConst.STATIC_SWAP_FEE_OFFSET, FEE_BITLENGTH)
         );
 
         assertEq(
@@ -326,16 +314,15 @@ contract PoolConfigLibTest is Test {
     function testGetTokenDecimalDiffs() public pure {
         PoolConfigBits config;
         config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertUint(
-                _MAX_UINT40_VALUE,
-                PoolConfigConst.DECIMAL_SCALING_FACTORS_OFFSET,
-                PoolConfigConst.TOKEN_DECIMAL_DIFFS_BITLENGTH
-            )
+            PoolConfigBits.unwrap(config)
+                .insertUint(
+                    _MAX_UINT40_VALUE,
+                    PoolConfigConst.DECIMAL_SCALING_FACTORS_OFFSET,
+                    PoolConfigConst.TOKEN_DECIMAL_DIFFS_BITLENGTH
+                )
         );
         assertEq(
-            config.getTokenDecimalDiffs(),
-            _MAX_UINT40_VALUE,
-            "tokenDecimalDiffs mismatch (testGetTokenDecimalDiffs)"
+            config.getTokenDecimalDiffs(), _MAX_UINT40_VALUE, "tokenDecimalDiffs mismatch (testGetTokenDecimalDiffs)"
         );
     }
 
@@ -352,11 +339,8 @@ contract PoolConfigLibTest is Test {
         uint256 valueTwo = 20;
 
         bytes32 value = bytes32(0);
-        value = value.insertUint(valueOne, 0, PoolConfigConst.DECIMAL_DIFF_BITLENGTH).insertUint(
-            valueTwo,
-            PoolConfigConst.DECIMAL_DIFF_BITLENGTH,
-            PoolConfigConst.DECIMAL_DIFF_BITLENGTH
-        );
+        value = value.insertUint(valueOne, 0, PoolConfigConst.DECIMAL_DIFF_BITLENGTH)
+            .insertUint(valueTwo, PoolConfigConst.DECIMAL_DIFF_BITLENGTH, PoolConfigConst.DECIMAL_DIFF_BITLENGTH);
 
         config = config.setTokenDecimalDiffs(uint40(uint256(value)));
 
@@ -369,16 +353,13 @@ contract PoolConfigLibTest is Test {
     function testGetPauseWindowEndTime() public pure {
         PoolConfigBits config;
         config = PoolConfigBits.wrap(
-            PoolConfigBits.unwrap(config).insertUint(
-                _MAX_UINT32_VALUE,
-                PoolConfigConst.PAUSE_WINDOW_END_TIME_OFFSET,
-                PoolConfigConst.TIMESTAMP_BITLENGTH
-            )
+            PoolConfigBits.unwrap(config)
+                .insertUint(
+                    _MAX_UINT32_VALUE, PoolConfigConst.PAUSE_WINDOW_END_TIME_OFFSET, PoolConfigConst.TIMESTAMP_BITLENGTH
+                )
         );
         assertEq(
-            config.getPauseWindowEndTime(),
-            _MAX_UINT32_VALUE,
-            "pauseWindowEndTime mismatch (testGetPauseWindowEndTime)"
+            config.getPauseWindowEndTime(), _MAX_UINT32_VALUE, "pauseWindowEndTime mismatch (testGetPauseWindowEndTime)"
         );
     }
 
@@ -395,11 +376,10 @@ contract PoolConfigLibTest is Test {
         tokenDecimalDiffs[1] = 2;
 
         uint256 value = uint256(
-            bytes32(0).insertUint(tokenDecimalDiffs[0], 0, PoolConfigConst.DECIMAL_DIFF_BITLENGTH).insertUint(
-                tokenDecimalDiffs[1],
-                PoolConfigConst.DECIMAL_DIFF_BITLENGTH,
-                PoolConfigConst.DECIMAL_DIFF_BITLENGTH
-            )
+            bytes32(0).insertUint(tokenDecimalDiffs[0], 0, PoolConfigConst.DECIMAL_DIFF_BITLENGTH)
+                .insertUint(
+                    tokenDecimalDiffs[1], PoolConfigConst.DECIMAL_DIFF_BITLENGTH, PoolConfigConst.DECIMAL_DIFF_BITLENGTH
+                )
         );
 
         assertEq(

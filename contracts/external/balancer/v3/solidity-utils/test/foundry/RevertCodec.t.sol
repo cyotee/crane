@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { RevertCodec } from "../../contracts/helpers/RevertCodec.sol";
+import {RevertCodec} from "../../contracts/helpers/RevertCodec.sol";
 
 contract RevertCodecTest is Test {
     error TestCustomError(uint256 code);

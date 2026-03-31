@@ -56,9 +56,7 @@ contract VeBALFeeDiscountHookExample is BaseHooksTarget {
      * @param pool The pool address.
      */
     event VeBALFeeDiscountHookExampleRegistered(
-        address indexed hooksContract,
-        address indexed factory,
-        address indexed pool
+        address indexed hooksContract, address indexed factory, address indexed pool
     );
 
     /* ========================================================================== */
@@ -72,12 +70,9 @@ contract VeBALFeeDiscountHookExample is BaseHooksTarget {
      * @param veBAL_ The veBAL token address for eligibility checks.
      * @param trustedRouter_ The router trusted to provide accurate sender info.
      */
-    constructor(
-        IVault vault_,
-        address allowedFactory_,
-        address veBAL_,
-        address trustedRouter_
-    ) BaseHooksTarget(vault_) {
+    constructor(IVault vault_, address allowedFactory_, address veBAL_, address trustedRouter_)
+        BaseHooksTarget(vault_)
+    {
         _allowedFactory = allowedFactory_;
         _trustedRouter = trustedRouter_;
         _veBAL = IERC20(veBAL_);
@@ -93,25 +88,26 @@ contract VeBALFeeDiscountHookExample is BaseHooksTarget {
     }
 
     /// @inheritdoc BaseHooksTarget
-    function onRegister(
-        address factory,
-        address pool,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public override onlyVault returns (bool) {
+    function onRegister(address factory, address pool, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        override
+        onlyVault
+        returns (bool)
+    {
         emit VeBALFeeDiscountHookExampleRegistered(address(this), factory, pool);
 
         // Restrictive: only pools from the allowed factory
-        return factory == _allowedFactory &&
-            IBasePoolFactory(factory).isPoolFromFactory(pool);
+        return factory == _allowedFactory && IBasePoolFactory(factory).isPoolFromFactory(pool);
     }
 
     /// @inheritdoc BaseHooksTarget
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata params,
-        address,
-        uint256 staticSwapFeePercentage
-    ) public view override onlyVault returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata params, address, uint256 staticSwapFeePercentage)
+        public
+        view
+        override
+        onlyVault
+        returns (bool, uint256)
+    {
         // Security: Only apply discount via trusted router
         // Untrusted routers could manipulate getSender()
         if (params.router != _trustedRouter) {

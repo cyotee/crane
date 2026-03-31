@@ -5,10 +5,12 @@ pragma solidity ^0.8.24;
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
 
-import { IAuthorizer } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { Authentication } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
+import {
+    Authentication
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
 
 /**
  * @notice OwnableAuthentication is a contract that combines ownership management with authentication.
@@ -26,10 +28,10 @@ contract OwnableAuthentication is Ownable2Step, Authentication {
 
     IVault public immutable vault;
 
-    constructor(
-        IVault vault_,
-        address initialOwner
-    ) Ownable(initialOwner) Authentication(bytes32(uint256(uint160(address(this))))) {
+    constructor(IVault vault_, address initialOwner)
+        Ownable(initialOwner)
+        Authentication(bytes32(uint256(uint160(address(this)))))
+    {
         if (address(vault_) == address(0)) {
             revert VaultNotSet();
         }

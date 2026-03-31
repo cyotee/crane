@@ -6,17 +6,23 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IERC20MultiTokenErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IVaultEvents } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
-import { PoolConfig } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    IERC20MultiTokenErrors
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IERC20MultiTokenErrors.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVaultEvents} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultEvents.sol";
+import {PoolConfig} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ERC4626TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    ERC4626TestToken
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC4626TestToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import { BaseVaultTest } from "../utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "../utils/BaseVaultTest.sol";
 
 contract VaultAdminUnitTest is BaseVaultTest {
     // This pool address was not registered and initialized and should be used only to test internal functions that
@@ -177,10 +183,7 @@ contract VaultAdminUnitTest is BaseVaultTest {
         emit IVaultEvents.BufferSharesMinted(waDAI, bob, issuedShares);
         vm.expectEmit();
         emit IVaultEvents.LiquidityAddedToBuffer(
-            waDAI,
-            underlyingAmount,
-            wrappedAmount,
-            PackedTokenBalance.toPackedBalance(underlyingAmount, wrappedAmount)
+            waDAI, underlyingAmount, wrappedAmount, PackedTokenBalance.toPackedBalance(underlyingAmount, wrappedAmount)
         );
         issuedShares = vault.initializeBuffer(waDAI, underlyingAmount, wrappedAmount, 0, bob);
 
@@ -213,11 +216,7 @@ contract VaultAdminUnitTest is BaseVaultTest {
         emit IVaultEvents.BufferSharesMinted(waDAI, address(0), BUFFER_MINIMUM_TOTAL_SUPPLY);
         vault.manualMintMinimumBufferSupplyReserve(waDAI);
 
-        assertEq(
-            vault.getBufferOwnerShares(waDAI, address(0)),
-            BUFFER_MINIMUM_TOTAL_SUPPLY,
-            "address(0): wrong shares"
-        );
+        assertEq(vault.getBufferOwnerShares(waDAI, address(0)), BUFFER_MINIMUM_TOTAL_SUPPLY, "address(0): wrong shares");
         assertEq(vault.getBufferTotalShares(waDAI), BUFFER_MINIMUM_TOTAL_SUPPLY, "Wrong total buffer shares");
     }
 

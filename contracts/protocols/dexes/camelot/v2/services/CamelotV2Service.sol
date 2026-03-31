@@ -154,12 +154,20 @@ library CamelotV2Service {
         );
     }
 
-    function _sortReserves(ICamelotPair pool, IERC20 knownToken) internal view returns (uint256 knownReserve, uint256 opposingReserve, uint256 knownFeePercent, uint256 opposingFeePercent) {
+    function _sortReserves(ICamelotPair pool, IERC20 knownToken)
+        internal
+        view
+        returns (uint256 knownReserve, uint256 opposingReserve, uint256 knownFeePercent, uint256 opposingFeePercent)
+    {
         ReserveInfo memory reserves = _sortReservesStruct(pool, knownToken);
         return (reserves.reserveIn, reserves.reserveOut, reserves.feePercent, reserves.unknownFee);
     }
 
-    function _sortReservesStruct(ICamelotPair pool, IERC20 knownToken) internal view returns (ReserveInfo memory reserves) {
+    function _sortReservesStruct(ICamelotPair pool, IERC20 knownToken)
+        internal
+        view
+        returns (ReserveInfo memory reserves)
+    {
         (uint112 reserve0, uint112 reserve1, uint16 token0feePercent, uint16 token1FeePercent) = pool.getReserves();
         address token0 = pool.token0();
         if (address(knownToken) == address(0)) {

@@ -16,7 +16,9 @@ import {
     PoolSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {CastingHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
 import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
@@ -30,10 +32,10 @@ import {
 import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
 import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 
-import {StableSurgeHook} from
-    "@crane/contracts/protocols/dexes/balancer/v3/hooks/StableSurgeHook.sol";
-import {ISurgeHookCommon} from
-    "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
+import {StableSurgeHook} from "@crane/contracts/protocols/dexes/balancer/v3/hooks/StableSurgeHook.sol";
+import {
+    ISurgeHookCommon
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/ISurgeHookCommon.sol";
 
 /**
  * @title StableSurgeHookTest
@@ -69,32 +71,25 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
     }
 
     function createPoolFactory() internal override returns (address) {
-        return address(deployStablePoolFactory(
-            IVault(address(vault)),
-            365 days,
-            "Factory v1",
-            "Pool v1"
-        ));
+        return address(deployStablePoolFactory(IVault(address(vault)), 365 days, "Factory v1", "Pool v1"));
     }
 
     function createHook() internal override returns (address) {
         vm.prank(lp);
         stableSurgeHook = address(
             new StableSurgeHook(
-                IVault(address(vault)),
-                DEFAULT_MAX_SURGE_FEE,
-                DEFAULT_SURGE_THRESHOLD,
-                "StableSurgeHook v1"
+                IVault(address(vault)), DEFAULT_MAX_SURGE_FEE, DEFAULT_SURGE_THRESHOLD, "StableSurgeHook v1"
             )
         );
         vm.label(stableSurgeHook, "Stable Surge Hook");
         return stableSurgeHook;
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool Test";
         string memory symbol = "STABLE-TEST";
 
@@ -104,34 +99,29 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
         // StableSurgeHookRegistered(pool, factory) - pool is first indexed, factory is second indexed
 
         newPool = address(
-            StablePoolFactory(poolFactory).create(
-                name,
-                symbol,
-                vault.buildTokenConfig(tokens.asIERC20()),
-                DEFAULT_AMP_FACTOR,
-                roleAccounts,
-                BASE_MIN_SWAP_FEE,
-                poolHooksContract,
-                false, // Does not allow donations
-                false, // Do not disable unbalanced add/remove liquidity
-                ZERO_BYTES32
-            )
+            StablePoolFactory(poolFactory)
+                .create(
+                    name,
+                    symbol,
+                    vault.buildTokenConfig(tokens.asIERC20()),
+                    DEFAULT_AMP_FACTOR,
+                    roleAccounts,
+                    BASE_MIN_SWAP_FEE,
+                    poolHooksContract,
+                    false, // Does not allow donations
+                    false, // Do not disable unbalanced add/remove liquidity
+                    ZERO_BYTES32
+                )
         );
         vm.label(newPool, label);
 
-        authorizer.grantRole(
-            vault.getActionId(IVaultAdmin.setStaticSwapFeePercentage.selector),
-            admin
-        );
+        authorizer.grantRole(vault.getActionId(IVaultAdmin.setStaticSwapFeePercentage.selector), admin);
         vm.prank(admin);
         vault.setStaticSwapFeePercentage(newPool, SWAP_FEE_PERCENTAGE);
 
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: "Pool v1"
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: "Pool v1"
             }),
             vault
         );
@@ -145,19 +135,10 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
         HooksConfig memory hooksConfig = vault.getHooksConfig(pool);
 
         assertEq(hooksConfig.hooksContract, poolHooksContract, "hooksContract is wrong");
-        assertTrue(
-            hooksConfig.shouldCallComputeDynamicSwapFee,
-            "shouldCallComputeDynamicSwapFee is false"
-        );
+        assertTrue(hooksConfig.shouldCallComputeDynamicSwapFee, "shouldCallComputeDynamicSwapFee is false");
         // SurgeHookCommon uses AFTER callbacks, not BEFORE
-        assertTrue(
-            hooksConfig.shouldCallAfterAddLiquidity,
-            "shouldCallAfterAddLiquidity is false"
-        );
-        assertTrue(
-            hooksConfig.shouldCallAfterRemoveLiquidity,
-            "shouldCallAfterRemoveLiquidity is false"
-        );
+        assertTrue(hooksConfig.shouldCallAfterAddLiquidity, "shouldCallAfterAddLiquidity is false");
+        assertTrue(hooksConfig.shouldCallAfterRemoveLiquidity, "shouldCallAfterRemoveLiquidity is false");
     }
 
     function testDefaultSurgeParameters() public view {
@@ -237,14 +218,8 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
             );
 
         // Fee should be higher than static when surging
-        assertTrue(
-            feePercentage > SWAP_FEE_PERCENTAGE,
-            "Fee should be higher when surging"
-        );
-        assertTrue(
-            feePercentage <= DEFAULT_MAX_SURGE_FEE,
-            "Fee should not exceed max surge fee"
-        );
+        assertTrue(feePercentage > SWAP_FEE_PERCENTAGE, "Fee should be higher when surging");
+        assertTrue(feePercentage <= DEFAULT_MAX_SURGE_FEE, "Fee should not exceed max surge fee");
     }
 
     function testSwapExecution() public {
@@ -253,29 +228,15 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp);
 
         vm.prank(bob);
-        router.swapSingleTokenExactIn(
-            pool,
-            dai,
-            usdc,
-            swapAmount,
-            0,
-            MAX_UINT256,
-            false,
-            bytes("")
-        );
+        router.swapSingleTokenExactIn(pool, dai, usdc, swapAmount, 0, MAX_UINT256, false, bytes(""));
 
         BaseVaultTest.Balances memory balancesAfter = getBalances(lp);
 
         // Verify swap executed
         assertEq(
-            balancesBefore.bobTokens[daiIdx] - balancesAfter.bobTokens[daiIdx],
-            swapAmount,
-            "Bob DAI spent is wrong"
+            balancesBefore.bobTokens[daiIdx] - balancesAfter.bobTokens[daiIdx], swapAmount, "Bob DAI spent is wrong"
         );
-        assertTrue(
-            balancesAfter.bobTokens[usdcIdx] > balancesBefore.bobTokens[usdcIdx],
-            "Bob should receive USDC"
-        );
+        assertTrue(balancesAfter.bobTokens[usdcIdx] > balancesBefore.bobTokens[usdcIdx], "Bob should receive USDC");
     }
 
     /* ========================================================================== */
@@ -308,10 +269,7 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
 
         // Grant role to admin
         authorizer.grantRole(
-            StableSurgeHook(stableSurgeHook).getActionId(
-                ISurgeHookCommon.setMaxSurgeFeePercentage.selector
-            ),
-            admin
+            StableSurgeHook(stableSurgeHook).getActionId(ISurgeHookCommon.setMaxSurgeFeePercentage.selector), admin
         );
 
         vm.prank(admin);
@@ -326,10 +284,7 @@ contract StableSurgeHookTest is StablePoolContractsDeployer, BaseVaultTest {
 
         // Grant role to admin
         authorizer.grantRole(
-            StableSurgeHook(stableSurgeHook).getActionId(
-                ISurgeHookCommon.setSurgeThresholdPercentage.selector
-            ),
-            admin
+            StableSurgeHook(stableSurgeHook).getActionId(ISurgeHookCommon.setSurgeThresholdPercentage.selector), admin
         );
 
         vm.prank(admin);

@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
 import {UniswapV2Service} from "contracts/protocols/dexes/uniswap/v2/services/UniswapV2Service.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
+import {
+    TestBase_ConstProdUtils_Uniswap
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 
 contract ConstProdUtils_withdrawQuote_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {
@@ -109,10 +111,13 @@ contract ConstProdUtils_withdrawQuote_Uniswap_Test is TestBase_ConstProdUtils_Un
         uint256 initialBalanceA = uniswapExtremeTokenA.balanceOf(address(this));
         uint256 initialBalanceB = uniswapExtremeTokenB.balanceOf(address(this));
 
-        (uint256 amount0, uint256 amount1) = UniswapV2Service._withdrawDirect(uniswapExtremeUnbalancedPair, lpTokensToWithdraw);
+        (uint256 amount0, uint256 amount1) =
+            UniswapV2Service._withdrawDirect(uniswapExtremeUnbalancedPair, lpTokensToWithdraw);
 
-        uint256 actualAmountA = address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0() ? amount0 : amount1;
-        uint256 actualAmountB = address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0() ? amount1 : amount0;
+        uint256 actualAmountA =
+            address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0() ? amount0 : amount1;
+        uint256 actualAmountB =
+            address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0() ? amount1 : amount0;
 
         assertEq(actualAmountA, expectedAmountA, "TokenA amounts should match");
         assertEq(actualAmountB, expectedAmountB, "TokenB amounts should match");

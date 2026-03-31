@@ -55,7 +55,8 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
 
     bytes32 internal constant DEPOSITOR_TRANSIENT_SLOT = keccak256(abi.encode("crane.pkg.erc4626.transient.depositor"));
     bytes32 internal constant RECIPIENT_TRANSIENT_SLOT = keccak256(abi.encode("crane.pkg.erc4626.transient.recipient"));
-    bytes32 internal constant INITIAL_DEPOSIT_TRANSIENT_SLOT = keccak256(abi.encode("crane.pkg.erc4626.transient.initialDeposit"));
+    bytes32 internal constant INITIAL_DEPOSIT_TRANSIENT_SLOT =
+        keccak256(abi.encode("crane.pkg.erc4626.transient.initialDeposit"));
 
     IFacet immutable ERC20_FACET;
     IFacet immutable ERC5267_FACET;
@@ -173,7 +174,6 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
         return true;
     }
 
-
     function initAccount(bytes memory initArgs) public {
         (PkgArgs memory decodedArgs) = abi.decode(initArgs, (PkgArgs));
         if (decodedArgs.optionalInitialDeposit != 0) {
@@ -220,7 +220,7 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
         if (address(this) != proxy) {
             // We're not in the proxy yet, so call the proxy to DEELGATECALL to this function.
             IPostDeployAccountHook(proxy).postDeploy();
-        } else if (address (this) == proxy) {
+        } else if (address(this) == proxy) {
             // We're in the proxy, so perform the post deploy logic.
             uint256 initialDeposit = INITIAL_DEPOSIT_TRANSIENT_SLOT.asUint256().tload();
             if (initialDeposit != 0) {

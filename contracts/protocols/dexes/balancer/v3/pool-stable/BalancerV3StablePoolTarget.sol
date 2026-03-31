@@ -5,7 +5,11 @@ pragma solidity ^0.8.0;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {PoolSwapParams, Rounding, SwapKind} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
@@ -16,7 +20,9 @@ import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/c
 
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 import {IBalancerV3StablePool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3StablePool.sol";
-import {BalancerV3StablePoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
+import {
+    BalancerV3StablePoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-stable/BalancerV3StablePoolRepo.sol";
 
 /**
  * @title Balancer V3 Stable Pool Target
@@ -81,12 +87,8 @@ contract BalancerV3StablePoolTarget is IBalancerV3Pool, IBalancerV3StablePool {
         }
 
         // Compute new balance given the target invariant
-        newBalance = StableMath.computeBalance(
-            currentAmp,
-            balancesLiveScaled18,
-            invariant.mulUp(invariantRatio),
-            tokenInIndex
-        );
+        newBalance =
+            StableMath.computeBalance(currentAmp, balancesLiveScaled18, invariant.mulUp(invariantRatio), tokenInIndex);
     }
 
     /**
@@ -158,13 +160,7 @@ contract BalancerV3StablePoolTarget is IBalancerV3Pool, IBalancerV3StablePool {
         view
         virtual
         override(IBalancerV3StablePool)
-        returns (
-            uint256 startValue,
-            uint256 endValue,
-            uint256 startTime,
-            uint256 endTime,
-            uint256 precision
-        )
+        returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime, uint256 precision)
     {
         (startValue, endValue, startTime, endTime) = BalancerV3StablePoolRepo._getAmplificationState();
         precision = StableMath.AMP_PRECISION;

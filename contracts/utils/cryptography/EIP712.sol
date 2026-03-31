@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import {ECDSA} from "./ECDSA.sol";
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @dev OpenZeppelin-compatible EIP712 implementation.
@@ -20,6 +21,8 @@ import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
  * ({_hashTypedDataV4}).
  */
 abstract contract EIP712 is IERC5267 {
+    using BetterEfficientHashLib for bytes;
+
     bytes32 private constant TYPE_HASH =
         keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
@@ -88,7 +91,8 @@ abstract contract EIP712 is IERC5267 {
     }
 
     function _buildDomainSeparator() private view returns (bytes32) {
-        return keccak256(abi.encode(TYPE_HASH, _hashedName, _hashedVersion, block.chainid, address(this)));
+        // return keccak256(abi.encode(TYPE_HASH, _hashedName, _hashedVersion, block.chainid, address(this)));
+        return abi.encode(TYPE_HASH, _hashedName, _hashedVersion, block.chainid, address(this))._hash();
     }
 
     /**

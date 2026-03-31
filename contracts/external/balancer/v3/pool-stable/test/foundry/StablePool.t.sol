@@ -4,11 +4,16 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { TokenConfig, PoolRoleAccounts } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IPoolInfo } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    TokenConfig,
+    PoolRoleAccounts
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
 import {
     IStablePool,
     AmplificationState,
@@ -16,16 +21,18 @@ import {
     StablePoolDynamicData
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
-import { BasePoolTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
-import { PoolHooksMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {BasePoolTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BasePoolTest.sol";
+import {PoolHooksMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolHooksMock.sol";
 
-import { StablePoolContractsDeployer } from "./utils/StablePoolContractsDeployer.sol";
-import { StablePoolFactory } from "../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../contracts/StablePool.sol";
+import {StablePoolContractsDeployer} from "./utils/StablePoolContractsDeployer.sol";
+import {StablePoolFactory} from "../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../contracts/StablePool.sol";
 
 contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
     using CastingHelpers for address[];
@@ -53,9 +60,7 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
         string memory symbol = "ERC20POOL";
 
         TokenConfig[] memory tokenConfigs = new TokenConfig[](2);
-        IERC20[] memory sortedTokens = InputHelpers.sortTokens(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory sortedTokens = InputHelpers.sortTokens([address(dai), address(usdc)].toMemoryArray().asIERC20());
         for (uint256 i = 0; i < sortedTokens.length; i++) {
             poolTokens.push(sortedTokens[i]);
             tokenConfigs[i].token = sortedTokens[i];
@@ -70,26 +75,24 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
         // Allow pools created by `factory` to use poolHooksMock hooks
         PoolHooksMock(poolHooksContract).allowFactory(poolFactory);
 
-        newPool = StablePoolFactory(poolFactory).create(
-            name,
-            symbol,
-            tokenConfigs,
-            DEFAULT_AMP_FACTOR,
-            roleAccounts,
-            BASE_MIN_SWAP_FEE,
-            poolHooksContract,
-            false, // Do not enable donations
-            false, // Do not disable unbalanced add/remove liquidity
-            ZERO_BYTES32
-        );
+        newPool = StablePoolFactory(poolFactory)
+            .create(
+                name,
+                symbol,
+                tokenConfigs,
+                DEFAULT_AMP_FACTOR,
+                roleAccounts,
+                BASE_MIN_SWAP_FEE,
+                poolHooksContract,
+                false, // Do not enable donations
+                false, // Do not disable unbalanced add/remove liquidity
+                ZERO_BYTES32
+            );
 
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: POOL_VERSION
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: POOL_VERSION
             }),
             vault
         );
@@ -110,12 +113,10 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
 
     function testGetBptRate() public {
         uint256 invariantBefore = StableMath.computeInvariant(
-            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION,
-            [TOKEN_AMOUNT, TOKEN_AMOUNT].toMemoryArray()
+            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION, [TOKEN_AMOUNT, TOKEN_AMOUNT].toMemoryArray()
         );
         uint256 invariantAfter = StableMath.computeInvariant(
-            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION,
-            [2 * TOKEN_AMOUNT, TOKEN_AMOUNT].toMemoryArray()
+            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION, [2 * TOKEN_AMOUNT, TOKEN_AMOUNT].toMemoryArray()
         );
 
         uint256[] memory amountsIn = [TOKEN_AMOUNT, 0].toMemoryArray();
@@ -129,15 +130,13 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
         // Ensure the swap manager doesn't have permission through governance.
         assertFalse(
             authorizer.hasRole(
-                IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-                alice
+                IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector), alice
             ),
             "Has governance-granted start permission"
         );
         assertFalse(
             authorizer.hasRole(
-                IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector),
-                alice
+                IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector), alice
             ),
             "Has governance-granted stop permission"
         );
@@ -152,19 +151,18 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
         vm.startPrank(alice);
         IStablePool(pool).startAmplificationParameterUpdate(newAmplificationParameter, endTime);
 
-        (, bool isUpdating, ) = IStablePool(pool).getAmplificationParameter();
+        (, bool isUpdating,) = IStablePool(pool).getAmplificationParameter();
         assertTrue(isUpdating, "Amplification update not started");
 
         IStablePool(pool).stopAmplificationParameterUpdate();
         vm.stopPrank();
 
-        (, isUpdating, ) = IStablePool(pool).getAmplificationParameter();
+        (, isUpdating,) = IStablePool(pool).getAmplificationParameter();
         assertFalse(isUpdating, "Amplification update not stopped");
 
         // Grant to Bob via governance.
         authorizer.grantRole(
-            IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-            bob
+            IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector), bob
         );
 
         vm.startPrank(bob);
@@ -173,11 +171,8 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
     }
 
     function testAmplificationUpdateByGovernance() public {
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(0x00),
-            swapFeeManager: address(0x00),
-            poolCreator: address(0x00)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(0x00), swapFeeManager: address(0x00), poolCreator: address(0x00)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExtension.getPoolRoleAccounts.selector, pool),
@@ -186,15 +181,13 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
 
         assertFalse(
             authorizer.hasRole(
-                IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-                bob
+                IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector), bob
             ),
             "Has governance-granted start permission"
         );
         assertFalse(
             authorizer.hasRole(
-                IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector),
-                bob
+                IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector), bob
             ),
             "Has governance-granted stop permission"
         );
@@ -213,24 +206,22 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
 
         // Grant to Bob via governance.
         authorizer.grantRole(
-            IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector),
-            bob
+            IAuthentication(pool).getActionId(StablePool.startAmplificationParameterUpdate.selector), bob
         );
         authorizer.grantRole(
-            IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector),
-            bob
+            IAuthentication(pool).getActionId(StablePool.stopAmplificationParameterUpdate.selector), bob
         );
 
         vm.startPrank(bob);
         IStablePool(pool).startAmplificationParameterUpdate(newAmplificationParameter, endTime);
 
-        (, bool isUpdating, ) = IStablePool(pool).getAmplificationParameter();
+        (, bool isUpdating,) = IStablePool(pool).getAmplificationParameter();
         assertTrue(isUpdating, "Amplification update not started");
 
         IStablePool(pool).stopAmplificationParameterUpdate();
         vm.stopPrank();
 
-        (, isUpdating, ) = IStablePool(pool).getAmplificationParameter();
+        (, isUpdating,) = IStablePool(pool).getAmplificationParameter();
         assertFalse(isUpdating, "Amplification update not stopped");
     }
 
@@ -265,8 +256,8 @@ contract StablePoolTest is BasePoolTest, StablePoolContractsDeployer {
 
     function testGetStablePoolImmutableData() public view {
         StablePoolImmutableData memory data = IStablePool(pool).getStablePoolImmutableData();
-        (, , uint256 precision) = IStablePool(pool).getAmplificationParameter();
-        (uint256[] memory scalingFactors, ) = vault.getPoolTokenRates(pool);
+        (,, uint256 precision) = IStablePool(pool).getAmplificationParameter();
+        (uint256[] memory scalingFactors,) = vault.getPoolTokenRates(pool);
         IERC20[] memory tokens = IPoolInfo(pool).getTokens();
 
         assertEq(data.amplificationParameterPrecision, precision, "Wrong amplification parameter precision");

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 // tag::IFacet[]
 /**
- * @title IFacet - Optional delcarative interface for Facet funtionality and metadata.
+ * @title IFacet - Optional declarative interface for Facet functionality and metadata.
  * @author cyotee doge <not_cyotee@proton.me>
  * @dev Optional for facets to implement for declarative metadata about the facet.
  */

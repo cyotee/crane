@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { AggregatorV3Interface } from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 interface ILPOracleBase {

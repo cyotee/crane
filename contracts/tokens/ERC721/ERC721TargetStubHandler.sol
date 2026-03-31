@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
 import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
-import {IERC721Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
+import {IERC721Errors} from "@crane/contracts/interfaces/IERC721Errors.sol";
 import {ERC721TargetStub} from "@crane/contracts/tokens/ERC721/ERC721TargetStub.sol";
 
 /**

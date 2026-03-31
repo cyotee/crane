@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { PriceRatioState } from "./lib/ReClammMath.sol";
+import {PriceRatioState} from "./lib/ReClammMath.sol";
 
 /**
  * @notice Storage layout for the ReClammPool.

@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.24;
 
-import { IPoolSwapFeeHelper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolSwapFeeHelper.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IPoolSwapFeeHelper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IPoolSwapFeeHelper.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { PoolHelperCommon } from "./PoolHelperCommon.sol";
+import {PoolHelperCommon} from "./PoolHelperCommon.sol";
 
 contract PoolSwapFeeHelper is IPoolSwapFeeHelper, PoolHelperCommon {
     constructor(IVault vault, address initialOwner) PoolHelperCommon(vault, initialOwner) {
@@ -22,7 +24,7 @@ contract PoolSwapFeeHelper is IPoolSwapFeeHelper, PoolHelperCommon {
     }
 
     /***************************************************************************
-                                Internal functions                                
+                                Internal functions
     ***************************************************************************/
 
     /// @inheritdoc PoolHelperCommon

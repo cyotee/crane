@@ -43,7 +43,7 @@ abstract contract Notifier is INotifier {
     {
         ISubscriber _subscriber = subscriber[tokenId];
 
-        if (_subscriber != NO_SUBSCRIBER) revert AlreadySubscribed(tokenId, address(_subscriber));
+        if ((address(_subscriber)) != address(NO_SUBSCRIBER)) revert AlreadySubscribed(tokenId, address(_subscriber));
         _setSubscribed(tokenId);
 
         subscriber[tokenId] = ISubscriber(newSubscriber);
@@ -65,7 +65,7 @@ abstract contract Notifier is INotifier {
     function _unsubscribe(uint256 tokenId) internal {
         ISubscriber _subscriber = subscriber[tokenId];
 
-        if (_subscriber == NO_SUBSCRIBER) revert NotSubscribed();
+        if ((address(_subscriber)) == address(NO_SUBSCRIBER)) revert NotSubscribed();
         _setUnsubscribed(tokenId);
 
         delete subscriber[tokenId];
@@ -110,10 +110,7 @@ abstract contract Notifier is INotifier {
         );
 
         if (!success) {
-            revert ModifyLiquidityNotificationReverted(
-                _subscriber,
-                ISubscriber.notifyModifyLiquidity.selector
-            );
+            revert ModifyLiquidityNotificationReverted(_subscriber, ISubscriber.notifyModifyLiquidity.selector);
         }
     }
 

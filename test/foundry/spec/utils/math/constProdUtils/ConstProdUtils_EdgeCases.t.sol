@@ -375,60 +375,64 @@ contract ConstProdUtils_EdgeCases_Test is Test {
     /* ---------------------------------------------------------------------- */
 
     function test_quoteWithdrawWithFee_zeroOwnedLP() public pure {
-        (uint256 a, uint256 b) = ConstProdUtils._quoteWithdrawWithFee(
-            0, // ownedLPAmount = 0
-            1000e18,
-            1000e18,
-            1000e18,
-            1e36,
-            16666,
-            true
-        );
+        (uint256 a, uint256 b) =
+            ConstProdUtils._quoteWithdrawWithFee(
+                0, // ownedLPAmount = 0
+                1000e18,
+                1000e18,
+                1000e18,
+                1e36,
+                16666,
+                true
+            );
 
         assertEq(a, 0, "Should return 0 for zero owned LP");
         assertEq(b, 0, "Should return 0 for zero owned LP");
     }
 
     function test_quoteWithdrawWithFee_zeroTotalSupply() public pure {
-        (uint256 a, uint256 b) = ConstProdUtils._quoteWithdrawWithFee(
-            100e18,
-            0, // lpTotalSupply = 0
-            1000e18,
-            1000e18,
-            1e36,
-            16666,
-            true
-        );
+        (uint256 a, uint256 b) =
+            ConstProdUtils._quoteWithdrawWithFee(
+                100e18,
+                0, // lpTotalSupply = 0
+                1000e18,
+                1000e18,
+                1e36,
+                16666,
+                true
+            );
 
         assertEq(a, 0, "Should return 0 for zero total supply");
         assertEq(b, 0, "Should return 0 for zero total supply");
     }
 
     function test_quoteWithdrawWithFee_zeroReserveA() public pure {
-        (uint256 a, uint256 b) = ConstProdUtils._quoteWithdrawWithFee(
-            100e18,
-            1000e18,
-            0, // totalReserveA = 0
-            1000e18,
-            1e36,
-            16666,
-            true
-        );
+        (uint256 a, uint256 b) =
+            ConstProdUtils._quoteWithdrawWithFee(
+                100e18,
+                1000e18,
+                0, // totalReserveA = 0
+                1000e18,
+                1e36,
+                16666,
+                true
+            );
 
         assertEq(a, 0, "Should return 0 for zero reserve A");
         assertEq(b, 0, "Should return 0 for zero reserve A");
     }
 
     function test_quoteWithdrawWithFee_zeroReserveB() public pure {
-        (uint256 a, uint256 b) = ConstProdUtils._quoteWithdrawWithFee(
-            100e18,
-            1000e18,
-            1000e18,
-            0, // totalReserveB = 0
-            1e36,
-            16666,
-            true
-        );
+        (uint256 a, uint256 b) =
+            ConstProdUtils._quoteWithdrawWithFee(
+                100e18,
+                1000e18,
+                1000e18,
+                0, // totalReserveB = 0
+                1e36,
+                16666,
+                true
+            );
 
         assertEq(a, 0, "Should return 0 for zero reserve B");
         assertEq(b, 0, "Should return 0 for zero reserve B");

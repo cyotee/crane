@@ -1,0 +1,5 @@
+import * as RedstoneCommon from "../common";
+
+// CONSTANTS WHICH ARE NOT PART OF THE PROTOCOL BUT USED BY MORE THEN ONE PACKAGE
+
+export const DEFAULT_LATEST_DATA_PACKAGES_MAX_DELAY_MS = RedstoneCommon.minToMs(1);

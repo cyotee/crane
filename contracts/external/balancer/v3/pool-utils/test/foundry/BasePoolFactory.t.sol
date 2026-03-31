@@ -4,24 +4,30 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IBasePoolFactory } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     TokenConfig,
     PoolRoleAccounts,
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { BasePoolFactoryMock } from "../../contracts/test/BasePoolFactoryMock.sol";
+import {BasePoolFactoryMock} from "../../contracts/test/BasePoolFactoryMock.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract BasePoolFactoryTest is BaseVaultTest {
+    using BetterEfficientHashLib for bytes;
     using CastingHelpers for address[];
     using ArrayHelpers for *;
 
@@ -32,22 +38,16 @@ contract BasePoolFactoryTest is BaseVaultTest {
     function setUp() public override {
         BaseVaultTest.setUp();
 
-        testFactory = new BasePoolFactoryMock(
-            IVault(address(vault)),
-            _DEFAULT_PAUSE_WINDOW,
-            type(PoolMock).creationCode
-        );
+        testFactory =
+            new BasePoolFactoryMock(IVault(address(vault)), _DEFAULT_PAUSE_WINDOW, type(PoolMock).creationCode);
     }
 
     function testConstructor() public {
         bytes memory creationCode = type(PoolMock).creationCode;
         uint32 pauseWindowDuration = _DEFAULT_PAUSE_WINDOW;
 
-        BasePoolFactoryMock newFactory = new BasePoolFactoryMock(
-            IVault(address(vault)),
-            pauseWindowDuration,
-            creationCode
-        );
+        BasePoolFactoryMock newFactory =
+            new BasePoolFactoryMock(IVault(address(vault)), pauseWindowDuration, creationCode);
 
         assertEq(newFactory.getPauseWindowDuration(), pauseWindowDuration, "pauseWindowDuration is wrong");
         assertEq(address(newFactory.getVault()), address(vault), "Vault is wrong");
@@ -160,9 +160,8 @@ contract BasePoolFactoryTest is BaseVaultTest {
 
     function testRegisterPoolWithVault() public {
         address newPool = address(deployPoolMock(IVault(address(vault)), "Test Pool", "TEST"));
-        TokenConfig[] memory newTokens = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory newTokens =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
         uint256 newSwapFeePercentage = 0;
         bool protocolFeeExempt = false;
         PoolRoleAccounts memory roleAccounts;
@@ -197,7 +196,8 @@ contract BasePoolFactoryTest is BaseVaultTest {
     function testGetDeploymentAddress() public {
         string memory name = "Test Deployment Address";
         string memory symbol = "DEPLOYMENT_ADDRESS";
-        bytes32 salt = keccak256(abi.encode("abc"));
+        // bytes32 salt = keccak256(abi.encode("abc"));
+        bytes32 salt = abi.encode("abc")._hash();
 
         bytes memory poolArgs = abi.encode(vault, name, symbol);
 

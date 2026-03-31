@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { IAuthentication } from "../solidity-utils/helpers/IAuthentication.sol";
+import {IAuthentication} from "../solidity-utils/helpers/IAuthentication.sol";
 
 /**
  * @notice Base interface for a Balancer Pool Factory.
@@ -62,10 +62,10 @@ interface IBasePoolFactory is IAuthentication {
      * @param salt The salt used to deploy the pool
      * @return deploymentAddress The predicted address of the pool, given the salt
      */
-    function getDeploymentAddress(
-        bytes memory constructorArgs,
-        bytes32 salt
-    ) external view returns (address deploymentAddress);
+    function getDeploymentAddress(bytes memory constructorArgs, bytes32 salt)
+        external
+        view
+        returns (address deploymentAddress);
 
     /**
      * @notice Check whether this factory has been disabled by governance.

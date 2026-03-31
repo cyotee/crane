@@ -17,7 +17,6 @@ import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 /// @notice Local (non-fork) tests for UniV2Factory and UniV2Router02 stubs
 /// @dev Validates that local stubs behave like Uniswap V2 for primitives we depend on
 contract UniswapV2Stubs_Sanity is Test {
-
     /* -------------------------------------------------------------------------- */
     /*                              Test Infrastructure                           */
     /* -------------------------------------------------------------------------- */
@@ -91,23 +90,14 @@ contract UniswapV2Stubs_Sanity is Test {
         uint256 amountIn = 1 ether;
 
         // Get quote from ConstProdUtils
-        uint256 expectedOut = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveA,
-            reserveB,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
-        );
+        uint256 expectedOut =
+            ConstProdUtils._saleQuote(amountIn, reserveA, reserveB, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR);
 
         // Execute swap via router
         uint256 actualOut = _executeSwap(address(tokenA18), address(tokenB18), amountIn);
 
         // Assert exact match
-        assertEq(
-            expectedOut,
-            actualOut,
-            "18/18 decimals: Swap output should equal ConstProdUtils quote"
-        );
+        assertEq(expectedOut, actualOut, "18/18 decimals: Swap output should equal ConstProdUtils quote");
     }
 
     /// @notice Test 18/6 decimal tokens: swap output equals ConstProdUtils quote
@@ -128,23 +118,14 @@ contract UniswapV2Stubs_Sanity is Test {
         uint256 amountIn = 1 ether;
 
         // Get quote from ConstProdUtils
-        uint256 expectedOut = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveA,
-            reserveB,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
-        );
+        uint256 expectedOut =
+            ConstProdUtils._saleQuote(amountIn, reserveA, reserveB, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR);
 
         // Execute swap via router
         uint256 actualOut = _executeSwap(address(tokenA18_2), address(tokenB6), amountIn);
 
         // Assert exact match
-        assertEq(
-            expectedOut,
-            actualOut,
-            "18/6 decimals: Swap output should equal ConstProdUtils quote"
-        );
+        assertEq(expectedOut, actualOut, "18/6 decimals: Swap output should equal ConstProdUtils quote");
     }
 
     /// @notice Test 18/18 reverse direction: swap output equals ConstProdUtils quote
@@ -167,8 +148,8 @@ contract UniswapV2Stubs_Sanity is Test {
         // Get quote from ConstProdUtils (reversed: B in, A out)
         uint256 expectedOut = ConstProdUtils._saleQuote(
             amountIn,
-            reserveB,  // in reserve
-            reserveA,  // out reserve
+            reserveB, // in reserve
+            reserveA, // out reserve
             UNISWAP_V2_FEE_PERCENT,
             UNISWAP_V2_FEE_DENOMINATOR
         );
@@ -177,11 +158,7 @@ contract UniswapV2Stubs_Sanity is Test {
         uint256 actualOut = _executeSwap(address(tokenB18), address(tokenA18), amountIn);
 
         // Assert exact match
-        assertEq(
-            expectedOut,
-            actualOut,
-            "18/18 decimals reverse: Swap output should equal ConstProdUtils quote"
-        );
+        assertEq(expectedOut, actualOut, "18/18 decimals reverse: Swap output should equal ConstProdUtils quote");
     }
 
     /// @notice Test 18/6 reverse direction: swap output equals ConstProdUtils quote
@@ -204,8 +181,8 @@ contract UniswapV2Stubs_Sanity is Test {
         // Get quote from ConstProdUtils (reversed: B in, A out)
         uint256 expectedOut = ConstProdUtils._saleQuote(
             amountIn,
-            reserveB,  // in reserve
-            reserveA,  // out reserve
+            reserveB, // in reserve
+            reserveA, // out reserve
             UNISWAP_V2_FEE_PERCENT,
             UNISWAP_V2_FEE_DENOMINATOR
         );
@@ -214,11 +191,7 @@ contract UniswapV2Stubs_Sanity is Test {
         uint256 actualOut = _executeSwap(address(tokenB6), address(tokenA18_2), amountIn);
 
         // Assert exact match
-        assertEq(
-            expectedOut,
-            actualOut,
-            "18/6 decimals reverse: Swap output should equal ConstProdUtils quote"
-        );
+        assertEq(expectedOut, actualOut, "18/6 decimals reverse: Swap output should equal ConstProdUtils quote");
     }
 
     /// @notice Test router getAmountsOut matches ConstProdUtils quote
@@ -244,19 +217,10 @@ contract UniswapV2Stubs_Sanity is Test {
         uint256 routerQuote = amounts[1];
 
         // Get quote from ConstProdUtils
-        uint256 constProdQuote = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveA,
-            reserveB,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
-        );
+        uint256 constProdQuote =
+            ConstProdUtils._saleQuote(amountIn, reserveA, reserveB, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR);
 
-        assertEq(
-            routerQuote,
-            constProdQuote,
-            "Router getAmountsOut should match ConstProdUtils quote"
-        );
+        assertEq(routerQuote, constProdQuote, "Router getAmountsOut should match ConstProdUtils quote");
     }
 
     /// @notice Test router getAmountsIn matches ConstProdUtils quote
@@ -283,20 +247,11 @@ contract UniswapV2Stubs_Sanity is Test {
 
         // Get quote from ConstProdUtils
         uint256 constProdQuote = ConstProdUtils._purchaseQuote(
-            amountOut,
-            reserveA,
-            reserveB,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
+            amountOut, reserveA, reserveB, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR
         );
 
         // Should match within 1 wei (rounding)
-        assertApproxEqAbs(
-            routerQuote,
-            constProdQuote,
-            1,
-            "Router getAmountsIn should match ConstProdUtils quote"
-        );
+        assertApproxEqAbs(routerQuote, constProdQuote, 1, "Router getAmountsIn should match ConstProdUtils quote");
     }
 
     /// @notice Test pair creation succeeds
@@ -307,9 +262,7 @@ contract UniswapV2Stubs_Sanity is Test {
         // Verify pair exists
         assertTrue(pairAddress != address(0), "Pair should be created");
         assertEq(
-            factory.getPair(address(tokenA18), address(tokenB18)),
-            pairAddress,
-            "Factory should return pair address"
+            factory.getPair(address(tokenA18), address(tokenB18)), pairAddress, "Factory should return pair address"
         );
         assertEq(
             factory.getPair(address(tokenB18), address(tokenA18)),
@@ -330,14 +283,7 @@ contract UniswapV2Stubs_Sanity is Test {
 
         // Add liquidity
         (uint256 amountA, uint256 amountB, uint256 liquidity) = router.addLiquidity(
-            address(tokenA18),
-            address(tokenB18),
-            100 ether,
-            100 ether,
-            0,
-            0,
-            address(this),
-            block.timestamp + 1
+            address(tokenA18), address(tokenB18), 100 ether, 100 ether, 0, 0, address(this), block.timestamp + 1
         );
 
         assertTrue(amountA > 0, "Should use some tokenA");
@@ -360,21 +306,14 @@ contract UniswapV2Stubs_Sanity is Test {
 
         // Add liquidity (creates pair if needed)
         router.addLiquidity(
-            address(tokenA18),
-            address(tokenB18),
-            INITIAL_LIQ_A,
-            INITIAL_LIQ_B,
-            0,
-            0,
-            address(this),
-            block.timestamp + 1
+            address(tokenA18), address(tokenB18), INITIAL_LIQ_A, INITIAL_LIQ_B, 0, 0, address(this), block.timestamp + 1
         );
     }
 
     function _seedLiquidity18_6() internal {
         // For 18/6 decimals, scale B appropriately
-        uint256 liqA = INITIAL_LIQ_A;       // 100 ether (18 decimals)
-        uint256 liqB = 100 * 1e6;           // 100 units (6 decimals)
+        uint256 liqA = INITIAL_LIQ_A; // 100 ether (18 decimals)
+        uint256 liqB = 100 * 1e6; // 100 units (6 decimals)
 
         // Mint tokens
         tokenA18_2.mint(address(this), liqA);
@@ -385,22 +324,10 @@ contract UniswapV2Stubs_Sanity is Test {
         tokenB6.approve(address(router), liqB);
 
         // Add liquidity
-        router.addLiquidity(
-            address(tokenA18_2),
-            address(tokenB6),
-            liqA,
-            liqB,
-            0,
-            0,
-            address(this),
-            block.timestamp + 1
-        );
+        router.addLiquidity(address(tokenA18_2), address(tokenB6), liqA, liqB, 0, 0, address(this), block.timestamp + 1);
     }
 
-    function _executeSwap(address tokenIn, address tokenOut, uint256 amountIn)
-        internal
-        returns (uint256 amountOut)
-    {
+    function _executeSwap(address tokenIn, address tokenOut, uint256 amountIn) internal returns (uint256 amountOut) {
         // Mint tokens to swap
         ERC20PermitMintableStub(tokenIn).mint(address(this), amountIn);
 

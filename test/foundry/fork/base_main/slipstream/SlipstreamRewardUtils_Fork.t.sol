@@ -4,8 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {SlipstreamRewardUtils} from
-    "@crane/contracts/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.sol";
+import {SlipstreamRewardUtils} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/SlipstreamRewardUtils.sol";
 import {TestBase_SlipstreamFork} from "./TestBase_SlipstreamFork.sol";
 
 /// @title SlipstreamRewardUtils Fork Tests
@@ -226,10 +225,7 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         uint256 effectiveGrowth = SlipstreamRewardUtils._getEffectiveRewardGrowthGlobalX128(pool);
 
         // Effective growth should not exceed max possible from reserve
-        assertTrue(
-            effectiveGrowth <= maxPossibleGrowth,
-            "Effective growth should be capped by reward reserve"
-        );
+        assertTrue(effectiveGrowth <= maxPossibleGrowth, "Effective growth should be capped by reward reserve");
 
         console.log("Reserve cap test:");
         console.log("  maxPossibleGrowth:", maxPossibleGrowth);
@@ -369,15 +365,13 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
 
         // Warp 1 hour and measure pending reward
         vm.warp(startTime + 1 hours);
-        uint256 reward1h = SlipstreamRewardUtils._estimatePendingReward(
-            pool, tickLower, tickUpper, liquidity, rewardGrowthInsideLast
-        );
+        uint256 reward1h =
+            SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, liquidity, rewardGrowthInsideLast);
 
         // Warp 2 hours (from start) and measure pending reward
         vm.warp(startTime + 2 hours);
-        uint256 reward2h = SlipstreamRewardUtils._estimatePendingReward(
-            pool, tickLower, tickUpper, liquidity, rewardGrowthInsideLast
-        );
+        uint256 reward2h =
+            SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, liquidity, rewardGrowthInsideLast);
 
         console.log("Pending reward proportionality:");
         console.log("  reward after 1h:", reward1h);
@@ -432,16 +426,14 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
             SlipstreamRewardUtils._estimatePendingRewardDetailed(params);
 
         // Verify the simple estimate matches detailed
-        uint256 simpleEstimate = SlipstreamRewardUtils._estimatePendingReward(
-            pool, tickLower, tickUpper, 1e18, growthInsideLast
-        );
+        uint256 simpleEstimate =
+            SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, 1e18, growthInsideLast);
 
         assertEq(result.pendingReward, simpleEstimate, "Detailed and simple estimates should match");
 
         // Growth inside should be >= last
         assertTrue(
-            result.rewardGrowthInsideX128 >= growthInsideLast,
-            "Current growth inside should be >= last snapshot"
+            result.rewardGrowthInsideX128 >= growthInsideLast, "Current growth inside should be >= last snapshot"
         );
 
         // Effective global should be >= stored
@@ -483,14 +475,12 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         uint128 liquidity = 1e18;
 
         // Estimate for 1 day
-        uint256 dailyReward = SlipstreamRewardUtils._estimateRewardForDuration(
-            pool, tickLower, tickUpper, liquidity, 1 days
-        );
+        uint256 dailyReward =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, 1 days);
 
         // Estimate for 7 days
-        uint256 weeklyReward = SlipstreamRewardUtils._estimateRewardForDuration(
-            pool, tickLower, tickUpper, liquidity, 7 days
-        );
+        uint256 weeklyReward =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, 7 days);
 
         console.log("Duration-based reward estimates:");
         console.log("  daily reward:", dailyReward);
@@ -534,9 +524,8 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         uint256 remaining = SlipstreamRewardUtils._getRewardPeriodRemaining(pool);
 
         // Estimate for exactly remaining time
-        uint256 rewardRemaining = SlipstreamRewardUtils._estimateRewardForDuration(
-            pool, tickLower, tickUpper, liquidity, remaining
-        );
+        uint256 rewardRemaining =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, liquidity, remaining);
 
         // Estimate for way more time (should be capped at remaining)
         uint256 rewardExcess = SlipstreamRewardUtils._estimateRewardForDuration(
@@ -580,9 +569,8 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         // Assume 1 AERO liquidity value for simplicity
         uint256 liquidityValue = 1e18;
 
-        uint256 aprBps = SlipstreamRewardUtils._calculateRewardAPR(
-            pool, tickLower, tickUpper, liquidity, liquidityValue
-        );
+        uint256 aprBps =
+            SlipstreamRewardUtils._calculateRewardAPR(pool, tickLower, tickUpper, liquidity, liquidityValue);
 
         console.log("Reward APR (bps):", aprBps);
         console.log("  APR %:", aprBps / 100);
@@ -594,9 +582,8 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         assertTrue(aprBps < type(uint256).max / 2, "APR should be finite");
 
         // Verify proportionality: doubling liquidityValue should halve APR
-        uint256 aprBps2x = SlipstreamRewardUtils._calculateRewardAPR(
-            pool, tickLower, tickUpper, liquidity, liquidityValue * 2
-        );
+        uint256 aprBps2x =
+            SlipstreamRewardUtils._calculateRewardAPR(pool, tickLower, tickUpper, liquidity, liquidityValue * 2);
         assertApproxEqRel(aprBps2x, aprBps / 2, 0.01e18, "APR should halve when liquidityValue doubles");
     }
 
@@ -661,8 +648,7 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         address gauge_ = pool.gauge();
         uint256 tokenId = 12345;
 
-        SlipstreamRewardUtils.ClaimParams memory params =
-            SlipstreamRewardUtils._prepareClaimParams(gauge_, tokenId);
+        SlipstreamRewardUtils.ClaimParams memory params = SlipstreamRewardUtils._prepareClaimParams(gauge_, tokenId);
 
         assertEq(params.gauge, gauge_, "gauge should match");
         assertEq(params.tokenId, tokenId, "tokenId should match");
@@ -706,16 +692,14 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         vm.warp(block.timestamp + duration);
 
         // Get pending reward
-        uint256 pendingReward = SlipstreamRewardUtils._estimatePendingReward(
-            pool, tickLower, tickUpper, posLiquidity, growthInsideLast
-        );
+        uint256 pendingReward =
+            SlipstreamRewardUtils._estimatePendingReward(pool, tickLower, tickUpper, posLiquidity, growthInsideLast);
 
         // Calculate expected from duration estimation
         // Note: we need to warp back to get the duration estimate at the original time
         vm.warp(block.timestamp - duration);
-        uint256 durationEstimate = SlipstreamRewardUtils._estimateRewardForDuration(
-            pool, tickLower, tickUpper, posLiquidity, duration
-        );
+        uint256 durationEstimate =
+            SlipstreamRewardUtils._estimateRewardForDuration(pool, tickLower, tickUpper, posLiquidity, duration);
 
         console.log("Pending vs Duration estimate consistency:");
         console.log("  pending reward (1h warp):", pendingReward);
@@ -725,10 +709,7 @@ contract SlipstreamRewardUtils_Fork_Test is TestBase_SlipstreamFork {
         // Allow 5% tolerance because reward growth is tick-dependent
         if (durationEstimate > 0) {
             assertApproxEqRel(
-                pendingReward,
-                durationEstimate,
-                0.05e18,
-                "Pending reward should approximately match duration estimate"
+                pendingReward, durationEstimate, 0.05e18, "Pending reward should approximately match duration estimate"
             );
         }
     }

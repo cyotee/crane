@@ -7,14 +7,14 @@ import "forge-std/Test.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
-import { ReClammMath, a, b } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
+import {ReClammMathMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
+import {ReClammMath, a, b} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
 
 contract ReClammMathTest is BaseReClammTest {
     using ArrayHelpers for *;
@@ -64,12 +64,7 @@ contract ReClammMathTest is BaseReClammTest {
         uint256[] memory virtualBalances = [virtualBalanceA, virtualBalanceB].toMemoryArray();
 
         uint256 amountIn = ReClammMath.computeInGivenOut(
-            balances,
-            virtualBalanceA,
-            virtualBalanceB,
-            tokenIn,
-            tokenOut,
-            amountGivenScaled18
+            balances, virtualBalanceA, virtualBalanceB, tokenIn, tokenOut, amountGivenScaled18
         );
 
         uint256 expected = FixedPoint.mulDivUp(
@@ -121,26 +116,16 @@ contract ReClammMathTest is BaseReClammTest {
         uint256[] memory balances = [balanceA, balanceB].toMemoryArray();
         uint256[] memory virtualBalances = [virtualBalanceA, virtualBalanceB].toMemoryArray();
 
-        uint256 expectedAmountOutScaled18 = _computeOutGivenInAllowError(
-            balances,
-            virtualBalances,
-            tokenIn,
-            tokenOut,
-            amountGivenScaled18
-        );
+        uint256 expectedAmountOutScaled18 =
+            _computeOutGivenInAllowError(balances, virtualBalances, tokenIn, tokenOut, amountGivenScaled18);
         vm.assume(expectedAmountOutScaled18 < (tokenOut == 0 ? balanceA : balanceB));
 
         uint256 amountOut = ReClammMath.computeOutGivenIn(
-            balances,
-            virtualBalanceA,
-            virtualBalanceB,
-            tokenIn,
-            tokenOut,
-            amountGivenScaled18
+            balances, virtualBalanceA, virtualBalanceB, tokenIn, tokenOut, amountGivenScaled18
         );
 
-        uint256 expected = ((balances[tokenOut] + virtualBalances[tokenOut]) * amountGivenScaled18) /
-            (balances[tokenIn] + virtualBalances[tokenIn] + amountGivenScaled18);
+        uint256 expected = ((balances[tokenOut] + virtualBalances[tokenOut]) * amountGivenScaled18)
+            / (balances[tokenIn] + virtualBalances[tokenIn] + amountGivenScaled18);
 
         assertEq(amountOut, expected, "Amount out should be correct");
     }
@@ -187,17 +172,11 @@ contract ReClammMathTest is BaseReClammTest {
         virtualBalances[b] = virtualBalanceB;
 
         bool isInRange = ReClammMath.isPoolWithinTargetRange(
-            balancesScaled18,
-            virtualBalances[a],
-            virtualBalances[b],
-            centerednessMargin
+            balancesScaled18, virtualBalances[a], virtualBalances[b], centerednessMargin
         );
 
-        (uint256 centeredness, ) = ReClammMath.computeCenteredness(
-            balancesScaled18,
-            virtualBalances[a],
-            virtualBalances[b]
-        );
+        (uint256 centeredness,) =
+            ReClammMath.computeCenteredness(balancesScaled18, virtualBalances[a], virtualBalances[b]);
         assertEq(isInRange, centeredness >= centerednessMargin, "In range flag does not match calculation");
     }
 
@@ -220,11 +199,8 @@ contract ReClammMathTest is BaseReClammTest {
         virtualBalances[a] = virtualBalanceA;
         virtualBalances[b] = virtualBalanceB;
 
-        (uint256 centeredness, ) = ReClammMath.computeCenteredness(
-            balancesScaled18,
-            virtualBalances[a],
-            virtualBalances[b]
-        );
+        (uint256 centeredness,) =
+            ReClammMath.computeCenteredness(balancesScaled18, virtualBalances[a], virtualBalances[b]);
 
         if (balanceA == 0 || balanceB == 0) {
             assertEq(centeredness, 0);
@@ -234,10 +210,7 @@ contract ReClammMathTest is BaseReClammTest {
                 ? FixedPoint.ONE.divDown(expectedCenteredness)
                 : expectedCenteredness;
             assertApproxEqAbs(
-                centeredness,
-                expectedCenteredness,
-                _MAX_CENTEREDNESS_ERROR_ABS,
-                "Centeredness does not match"
+                centeredness, expectedCenteredness, _MAX_CENTEREDNESS_ERROR_ABS, "Centeredness does not match"
             );
         }
     }
@@ -247,16 +220,13 @@ contract ReClammMathTest is BaseReClammTest {
         uint256[] memory virtualBalances = new uint256[](2);
 
         balancesScaled18[b] = 1;
-        (uint256 centeredness, ) = ReClammMath.computeCenteredness(
-            balancesScaled18,
-            virtualBalances[a],
-            virtualBalances[b]
-        );
+        (uint256 centeredness,) =
+            ReClammMath.computeCenteredness(balancesScaled18, virtualBalances[a], virtualBalances[b]);
         assertEq(centeredness, 0, "(0,1) non-zero centeredness with A=0");
 
         balancesScaled18[a] = 1;
         balancesScaled18[b] = 0;
-        (centeredness, ) = ReClammMath.computeCenteredness(balancesScaled18, virtualBalances[a], virtualBalances[b]);
+        (centeredness,) = ReClammMath.computeCenteredness(balancesScaled18, virtualBalances[a], virtualBalances[b]);
         assertEq(centeredness, 0, "(1,0) non-zero centeredness with B=0");
     }
 
@@ -278,14 +248,11 @@ contract ReClammMathTest is BaseReClammTest {
             maxPrice - minPrice.mulDown((_MIN_PRICE_RATIO - FixedPoint.ONE) / 2)
         );
 
-        (uint256[] memory realBalances, uint256 virtualBalanceA, uint256 virtualBalanceB, ) = ReClammMath
-            .computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
+        (uint256[] memory realBalances, uint256 virtualBalanceA, uint256 virtualBalanceB,) =
+            ReClammMath.computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
 
-        (uint256 computedMinPrice, uint256 computedMaxPrice) = ReClammMath.computePriceRange(
-            realBalances,
-            virtualBalanceA,
-            virtualBalanceB
-        );
+        (uint256 computedMinPrice, uint256 computedMaxPrice) =
+            ReClammMath.computePriceRange(realBalances, virtualBalanceA, virtualBalanceB);
 
         // 0.00000001% error tolerance.
         assertApproxEqRel(computedMinPrice, minPrice, 1e8, "Min price does not match");

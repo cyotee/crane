@@ -67,11 +67,7 @@ library CowPoolRepo {
      * @param cowPoolFactory_ The address of the factory creating this pool.
      * @param trustedCowRouter_ The address of the trusted CoW Router.
      */
-    function _initialize(
-        Storage storage layout,
-        address cowPoolFactory_,
-        address trustedCowRouter_
-    ) internal {
+    function _initialize(Storage storage layout, address cowPoolFactory_, address trustedCowRouter_) internal {
         if (cowPoolFactory_ == address(0)) revert InvalidCowPoolFactory();
         if (trustedCowRouter_ == address(0)) revert InvalidTrustedCowRouter();
 

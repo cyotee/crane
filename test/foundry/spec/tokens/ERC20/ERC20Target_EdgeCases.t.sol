@@ -12,7 +12,6 @@ import {ERC20TargetStub} from "@crane/contracts/tokens/ERC20TargetStub.sol";
  * @notice Edge case tests for ERC20Target implementation
  */
 contract ERC20Target_EdgeCases is Test {
-
     ERC20TargetStub token;
     address alice;
     address bob;
@@ -45,7 +44,9 @@ contract ERC20Target_EdgeCases is Test {
     function test_transfer_insufficientBalance_reverts() public {
         uint256 amount = INITIAL_SUPPLY + 1;
         vm.prank(alice);
-        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, INITIAL_SUPPLY, amount));
+        vm.expectRevert(
+            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, INITIAL_SUPPLY, amount)
+        );
         token.transfer(bob, amount);
     }
 
@@ -184,7 +185,9 @@ contract ERC20Target_EdgeCases is Test {
         token.approve(bob, amount);
 
         vm.prank(bob);
-        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, INITIAL_SUPPLY, amount));
+        vm.expectRevert(
+            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, alice, INITIAL_SUPPLY, amount)
+        );
         token.transferFrom(alice, bob, amount);
     }
 

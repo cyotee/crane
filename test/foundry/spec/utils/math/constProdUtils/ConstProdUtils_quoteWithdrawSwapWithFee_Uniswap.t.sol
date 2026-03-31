@@ -44,7 +44,9 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         address tokenA,
         address tokenB,
         uint256 swapPercentage // basis points of reserves (e.g., 100 = 1%)
-    ) internal {
+    )
+        internal
+    {
         (uint112 reserveA, uint112 reserveB,) = pair.getReserves();
 
         uint256 swapAmountA = (uint256(reserveA) * swapPercentage) / 10000;
@@ -60,11 +62,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         pathAB[1] = tokenB;
 
         uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            1,
-            pathAB,
-            address(this),
-            block.timestamp
+            swapAmountA, 1, pathAB, address(this), block.timestamp
         );
 
         uint256 receivedB = IERC20(tokenB).balanceOf(address(this));
@@ -74,11 +72,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         pathBA[1] = tokenA;
 
         uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            receivedB,
-            1,
-            pathBA,
-            address(this),
-            block.timestamp
+            receivedB, 1, pathBA, address(this), block.timestamp
         );
     }
 
@@ -92,7 +86,13 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         }
     }
 
-    function _performActualWithdrawSwap(address pool, uint256 lpAmount, address tokenA, address tokenB, uint256 /* feePercent */)
+    function _performActualWithdrawSwap(
+        address pool,
+        uint256 lpAmount,
+        address tokenA,
+        address tokenB,
+        uint256 /* feePercent */
+    )
         internal
         returns (uint256 actualTokenAAmount)
     {
@@ -118,11 +118,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
 
             uint256 beforeA = IERC20(tokenA).balanceOf(address(this));
             router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                actualB,
-                0,
-                path,
-                address(this),
-                block.timestamp + 300
+                actualB, 0, path, address(this), block.timestamp + 300
             );
             uint256 afterA = IERC20(tokenA).balanceOf(address(this));
             uint256 receivedA = afterA - beforeA;
@@ -162,10 +158,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
             data.kLast = pair.kLast();
             data.totalLP = pair.totalSupply();
             (data.reserveA, data.reserveB) = ConstProdUtils._sortReserves(
-                data.tokenA,
-                pair.token0(),
-                uint256(data.reserveA),
-                uint256(data.reserveB)
+                data.tokenA, pair.token0(), uint256(data.reserveA), uint256(data.reserveB)
             );
         } else {
             _setupUniswapFees(false);
@@ -174,17 +167,11 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 ownerFeeShare = feesEnabled ? 16666 : 0;
 
         data.quote = UniswapV2Utils._quoteWithdrawSwapFee(
-            data.lpAmount,
-            data.totalLP,
-            data.reserveA,
-            data.reserveB,
-            UNISWAP_FEE_PERCENT,
-            0,
-            data.kLast,
-            feesEnabled
+            data.lpAmount, data.totalLP, data.reserveA, data.reserveB, UNISWAP_FEE_PERCENT, 0, data.kLast, feesEnabled
         );
 
-        data.actualAmount = _performActualWithdrawSwap(data.pool, data.lpAmount, data.tokenA, data.tokenB, UNISWAP_FEE_PERCENT);
+        data.actualAmount =
+            _performActualWithdrawSwap(data.pool, data.lpAmount, data.tokenA, data.tokenB, UNISWAP_FEE_PERCENT);
 
         assertEq(data.quote, data.actualAmount, "Quote should match actual execution");
     }
@@ -218,7 +205,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         _initializeUniswapBalancedPools();
         _testWithdrawSwapWithFee(uniswapBalancedPair, HIGH_PERCENTAGE, true);
     }
-    
+
     function test_withdrawSwapQuote_Uniswap_balancedPool() public {
         _initializeUniswapBalancedPools();
         (uint112 reserve0, uint112 reserve1,) = uniswapBalancedPair.getReserves();
@@ -236,9 +223,8 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 lpBalance = uniswapBalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false
-        );
+        uint256 expectedTotalTokenA =
+            UniswapV2Utils._quoteWithdrawSwapFee(ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false);
 
         // Execute actual withdraw + swap
         uint256 initialTokenABalance = uniswapBalancedTokenA.balanceOf(address(this));
@@ -283,9 +269,8 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 lpBalance = uniswapUnbalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false
-        );
+        uint256 expectedTotalTokenA =
+            UniswapV2Utils._quoteWithdrawSwapFee(ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false);
 
         uint256 initialTokenABalance = uniswapUnbalancedTokenA.balanceOf(address(this));
 
@@ -323,10 +308,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         _initializeUniswapExtremeUnbalancedPools();
         (uint112 reserve0, uint112 reserve1,) = uniswapExtremeUnbalancedPair.getReserves();
         (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(uniswapExtremeTokenA),
-            uniswapExtremeUnbalancedPair.token0(),
-            reserve0,
-            reserve1
+            address(uniswapExtremeTokenA), uniswapExtremeUnbalancedPair.token0(), reserve0, reserve1
         );
         // Sanity: ensure reserveA corresponds to uniswapExtremeTokenA
         if (uniswapExtremeUnbalancedPair.token0() == address(uniswapExtremeTokenA)) {
@@ -339,16 +321,13 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 lpBalance = uniswapExtremeUnbalancedPair.balanceOf(address(this));
         uint256 ownedLPAmount = lpBalance / 2;
 
-        uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false
-        );
+        uint256 expectedTotalTokenA =
+            UniswapV2Utils._quoteWithdrawSwapFee(ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 0, 0, false);
 
         uint256 initialTokenABalance = uniswapExtremeTokenA.balanceOf(address(this));
 
-
         uniswapExtremeUnbalancedPair.transfer(address(uniswapExtremeUnbalancedPair), ownedLPAmount);
         (uint256 amountA, uint256 amountB) = uniswapExtremeUnbalancedPair.burn(address(this));
-
 
         uint256 actualAmountA;
         uint256 actualAmountB;
@@ -359,7 +338,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
             actualAmountA = amountB;
             actualAmountB = amountA;
         }
-
 
         if (actualAmountB > 0) {
             uniswapExtremeTokenB.approve(address(uniswapV2Router), actualAmountB);
@@ -374,8 +352,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
 
         uint256 finalTokenABalance = uniswapExtremeTokenA.balanceOf(address(this));
         uint256 actualTotalTokenA = finalTokenABalance - initialTokenABalance;
-
-        
 
         assertEq(actualTotalTokenA, expectedTotalTokenA, "Should receive exactly the expected total TokenA amount");
     }
@@ -401,14 +377,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount,
-            lpTotalSupply,
-            reserveA,
-            reserveB,
-            300,
-            1000,
-            uniswapBalancedPair.kLast(),
-            true
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 1000, uniswapBalancedPair.kLast(), true
         );
 
         uint256 initialTokenABalance = uniswapBalancedTokenA.balanceOf(address(this));
@@ -453,14 +422,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount,
-            lpTotalSupply,
-            reserveA,
-            reserveB,
-            300,
-            1000,
-            uniswapUnbalancedPair.kLast(),
-            true
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 1000, uniswapUnbalancedPair.kLast(), true
         );
 
         uint256 initialTokenABalance = uniswapUnbalancedTokenA.balanceOf(address(this));
@@ -501,10 +463,7 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         _initializeUniswapExtremeUnbalancedPools();
         (uint112 reserve0, uint112 reserve1,) = uniswapExtremeUnbalancedPair.getReserves();
         (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(
-            address(uniswapExtremeTokenA),
-            uniswapExtremeUnbalancedPair.token0(),
-            reserve0,
-            reserve1
+            address(uniswapExtremeTokenA), uniswapExtremeUnbalancedPair.token0(), reserve0, reserve1
         );
         // Sanity: ensure reserveA corresponds to uniswapExtremeTokenA (fees-enabled)
         if (uniswapExtremeUnbalancedPair.token0() == address(uniswapExtremeTokenA)) {
@@ -518,22 +477,13 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
         uint256 ownedLPAmount = lpBalance / 2;
 
         uint256 expectedTotalTokenA = UniswapV2Utils._quoteWithdrawSwapFee(
-            ownedLPAmount,
-            lpTotalSupply,
-            reserveA,
-            reserveB,
-            300,
-            1000,
-            uniswapExtremeUnbalancedPair.kLast(),
-            true
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, 300, 1000, uniswapExtremeUnbalancedPair.kLast(), true
         );
 
         uint256 initialTokenABalance = uniswapExtremeTokenA.balanceOf(address(this));
 
-
         uniswapExtremeUnbalancedPair.transfer(address(uniswapExtremeUnbalancedPair), ownedLPAmount);
         (uint256 amountA, uint256 amountB) = uniswapExtremeUnbalancedPair.burn(address(this));
-
 
         uint256 actualAmountA;
         uint256 actualAmountB;
@@ -544,7 +494,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
             actualAmountA = amountB;
             actualAmountB = amountA;
         }
-
 
         if (actualAmountB > 0) {
             uniswapExtremeTokenB.approve(address(uniswapV2Router), actualAmountB);
@@ -559,7 +508,6 @@ contract ConstProdUtils_quoteWithdrawSwapWithFee_Uniswap is TestBase_ConstProdUt
 
         uint256 finalTokenABalance = uniswapExtremeTokenA.balanceOf(address(this));
         uint256 actualTotalTokenA = finalTokenABalance - initialTokenABalance;
-
 
         assertEq(actualTotalTokenA, expectedTotalTokenA, "Fees-enabled: Should receive exactly expected TokenA amount");
     }

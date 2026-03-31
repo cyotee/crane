@@ -1,0 +1,175 @@
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import js from "@eslint/js";
+import * as tsParser from "@typescript-eslint/parser";
+import type { Linter } from "eslint";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import arrayFunc from "eslint-plugin-array-func";
+import importXPlugin from "eslint-plugin-import-x";
+import prettierEslintRecommended from "eslint-plugin-prettier/recommended";
+import workspaces from "eslint-plugin-workspaces";
+import { defineConfig, globalIgnores } from "eslint/config";
+import tseslint from "typescript-eslint";
+import { redstoneConfig } from "./redstone-eslint-config";
+
+const noConsolePackageNames = [
+  "agents",
+  "cache-service",
+  "chain-agnostic-oracle-tests",
+  "fetchers",
+  "fuel-connector",
+  "healthcheck",
+  "http-client",
+  "move-connector",
+  "pub-sub",
+  "node-commons",
+  "on-chain-relayer",
+  "oracle-node",
+  "radix-connector",
+  "stellar-connector",
+  "rpc-providers",
+  "sui-connector",
+  "utils",
+];
+
+const noUnusedExpressionsPackagesNames = [
+  "contract-deployments-*",
+  "erc7412",
+  "evm-adapters",
+  "evm-multicall",
+  "lambda/lambda-cache-layer",
+  "on-chain-relayer",
+  "rpc-providers",
+];
+
+export default defineConfig([
+  js.configs.recommended,
+  importXPlugin.flatConfigs.recommended as Linter.Config,
+  importXPlugin.flatConfigs.typescript as Linter.Config,
+  arrayFunc.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  comments.recommended,
+  prettierEslintRecommended,
+  workspaces.configs["flat/recommended"],
+  redstoneConfig,
+  {
+    languageOptions: {
+      parser: tsParser,
+      sourceType: "module",
+
+      parserOptions: {
+        projectService: {},
+        tsconfigRootDir: __dirname,
+      },
+    },
+
+    settings: {
+      "import-x/resolver": {
+        typescript: true,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-unnecessary-condition": "error",
+      "no-constant-condition": "off",
+      "no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-expressions": "error",
+      "no-return-await": "off",
+      "class-methods-use-this": "off",
+      "@typescript-eslint/class-methods-use-this": [
+        "error",
+        {
+          ignoreOverrideMethods: true,
+          ignoreClassesThatImplementAnInterface: true,
+        },
+      ],
+      "@typescript-eslint/return-await": ["error", "always"],
+      "workspaces/require-dependency": "error",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: false,
+        },
+      ],
+      "no-loss-of-precision": "off",
+      "@typescript-eslint/no-loss-of-precision": "error",
+      "@typescript-eslint/unbound-method": [
+        "error",
+        {
+          ignoreStatic: true,
+        },
+      ],
+      "no-throw-literal": "off",
+      "@typescript-eslint/only-throw-error": "error",
+      "prefer-promise-reject-errors": "error",
+      "import-x/no-extraneous-dependencies": [
+        "error",
+        { includeTypes: true, whitelist: ["@jest/types", "typescript"] },
+      ],
+      "import-x/no-named-as-default": ["off"],
+      "import-x/no-named-as-default-member": ["off"],
+      "import-x/no-unresolved": [
+        "error",
+        {
+          commonjs: true,
+          ignore: ["warp-contracts/lib/types/contract/testing/Testing"],
+        },
+      ],
+      "import-x/order": "off",
+      "import-x/namespace": "off",
+      eqeqeq: "error",
+      "array-func/prefer-array-from": "off",
+      "@typescript-eslint/no-deprecated": "error",
+      "@eslint-community/eslint-comments/require-description": [
+        "error",
+        { ignore: ["eslint-disable"] },
+      ],
+      "@eslint-community/eslint-comments/no-unlimited-disable": "off",
+      "@eslint-community/eslint-comments/disable-enable-pair": "off",
+    },
+  },
+  {
+    files: ["packages/**/*.spec.ts"],
+    rules: {
+      "@eslint-community/eslint-comments/require-description": "off",
+    },
+  },
+  {
+    files: [`packages/{${noConsolePackageNames.join(",")}}/src/**/*.ts`],
+    rules: {
+      "no-console": "error",
+    },
+  },
+  {
+    files: [`packages/{${noUnusedExpressionsPackagesNames.join(",")}}/**/*.test.ts`],
+    rules: {
+      // allow for chai assertions like expect(v).to.be.true;
+      "@typescript-eslint/no-unused-expressions": "off",
+    },
+  },
+  eslintConfigPrettier,
+  {
+    // rules disabled by prettier config that we want to re-enable
+    rules: {
+      curly: "error",
+    },
+  },
+  globalIgnores([
+    "**/artifacts",
+    "**/typechain-types",
+    "**/sdk-test-app",
+    "**/dist",
+    "**/oracle-node/tools",
+    "**/generated",
+    "**/autogenerated",
+    "**/*.js",
+    "**/*.mjs",
+    "!**/.jest",
+  ]),
+]);

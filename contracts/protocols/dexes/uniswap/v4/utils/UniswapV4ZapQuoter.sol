@@ -40,22 +40,22 @@ library UniswapV4ZapQuoter {
         PoolKey key;
         int24 tickLower;
         int24 tickUpper;
-        bool zeroForOne;       // true if input is currency0, false if currency1
+        bool zeroForOne; // true if input is currency0, false if currency1
         uint256 amountIn;
         uint160 sqrtPriceLimitX96;
-        uint32 maxSwapSteps;   // 0 == unlimited
-        uint16 searchIters;    // binary search iterations (e.g., 16-24)
+        uint32 maxSwapSteps; // 0 == unlimited
+        uint16 searchIters; // binary search iterations (e.g., 16-24)
     }
 
     /// @notice Result of zap-in quote
     struct ZapInQuote {
-        uint256 swapAmountIn;  // Amount of input currency to swap
-        uint256 amount0;       // Amount of currency0 for minting (after swap)
-        uint256 amount1;       // Amount of currency1 for minting (after swap)
-        uint128 liquidity;     // Liquidity that can be minted
-        uint256 dust0;         // Leftover currency0 after mint
-        uint256 dust1;         // Leftover currency1 after mint
-        UniswapV4Quoter.SwapQuoteResult swap;  // Swap quote details
+        uint256 swapAmountIn; // Amount of input currency to swap
+        uint256 amount0; // Amount of currency0 for minting (after swap)
+        uint256 amount1; // Amount of currency1 for minting (after swap)
+        uint128 liquidity; // Liquidity that can be minted
+        uint256 dust0; // Leftover currency0 after mint
+        uint256 dust1; // Leftover currency1 after mint
+        UniswapV4Quoter.SwapQuoteResult swap; // Swap quote details
     }
 
     /// @notice Execution params for V4 zap (swap + modifyLiquidity on PoolManager)
@@ -97,19 +97,19 @@ library UniswapV4ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool wantCurrency0;        // true if output is currency0, false if currency1
+        bool wantCurrency0; // true if output is currency0, false if currency1
         uint160 sqrtPriceLimitX96;
-        uint32 maxSwapSteps;       // 0 == unlimited
+        uint32 maxSwapSteps; // 0 == unlimited
     }
 
     /// @notice Result of zap-out quote
     struct ZapOutQuote {
-        uint256 burnAmount0;       // Amount of currency0 received from burn
-        uint256 burnAmount1;       // Amount of currency1 received from burn
-        uint256 swapAmountIn;      // Amount to swap (of unwanted currency)
-        uint256 amountOut;         // Total output amount (wanted currency)
-        uint256 dust;              // Leftover of unwanted currency (if swap not fully filled)
-        UniswapV4Quoter.SwapQuoteResult swap;  // Swap quote details
+        uint256 burnAmount0; // Amount of currency0 received from burn
+        uint256 burnAmount1; // Amount of currency1 received from burn
+        uint256 swapAmountIn; // Amount to swap (of unwanted currency)
+        uint256 amountOut; // Total output amount (wanted currency)
+        uint256 dust; // Leftover of unwanted currency (if swap not fully filled)
+        UniswapV4Quoter.SwapQuoteResult swap; // Swap quote details
     }
 
     /// @notice Execution params for V4 zap-out (modifyLiquidity + swap on PoolManager)
@@ -119,7 +119,7 @@ library UniswapV4ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool zeroForOne;           // Direction of swap (after burn)
+        bool zeroForOne; // Direction of swap (after burn)
         uint256 swapAmountIn;
         uint160 sqrtPriceLimitX96;
     }
@@ -131,7 +131,7 @@ library UniswapV4ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool zeroForOne;           // Direction of swap (after burn)
+        bool zeroForOne; // Direction of swap (after burn)
         uint256 swapAmountIn;
         uint160 sqrtPriceLimitX96;
     }
@@ -155,20 +155,18 @@ library UniswapV4ZapQuoter {
         PoolId poolId = p.key.toId();
 
         // Get current pool state via StateLibrary (V4-specific: uses extsload)
-        (uint160 sqrtPriceX96, , , ) = p.manager.getSlot0(poolId);
+        (uint160 sqrtPriceX96,,,) = p.manager.getSlot0(poolId);
         require(sqrtPriceX96 != 0, "UNIV4ZAP:UNINIT");
 
         // Set default price limit if not specified
         if (p.sqrtPriceLimitX96 == 0) {
-            p.sqrtPriceLimitX96 = p.zeroForOne
-                ? TickMath.MIN_SQRT_PRICE + 1
-                : TickMath.MAX_SQRT_PRICE - 1;
+            p.sqrtPriceLimitX96 = p.zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
         }
 
         // Binary search for optimal swap amount
         uint256 low = 0;
         uint256 high = p.amountIn;
-        uint16 iterations = p.searchIters > 0 ? p.searchIters : 20;  // Default 20 iterations
+        uint16 iterations = p.searchIters > 0 ? p.searchIters : 20; // Default 20 iterations
 
         uint128 bestLiquidity = 0;
         uint256 bestSwapAmount = 0;
@@ -234,11 +232,11 @@ library UniswapV4ZapQuoter {
 
     /// @notice Evaluate liquidity for a given swap amount
     /// @dev V4-specific: Uses UniswapV4Quoter and UniswapV4Utils
-    function _evaluateSwapAmount(
-        ZapInParams memory p,
-        uint160 sqrtPriceX96,
-        uint256 swapAmount
-    ) private view returns (ZapInQuote memory q) {
+    function _evaluateSwapAmount(ZapInParams memory p, uint160 sqrtPriceX96, uint256 swapAmount)
+        private
+        view
+        returns (ZapInQuote memory q)
+    {
         q.swapAmountIn = swapAmount;
 
         if (swapAmount == 0) {
@@ -292,21 +290,12 @@ library UniswapV4ZapQuoter {
         uint160 priceForMint = swapAmount > 0 ? q.swap.sqrtPriceAfterX96 : sqrtPriceX96;
 
         // Calculate max liquidity from available amounts using V4 utils
-        q.liquidity = UniswapV4Utils._quoteLiquidityForAmounts(
-            priceForMint,
-            p.tickLower,
-            p.tickUpper,
-            q.amount0,
-            q.amount1
-        );
+        q.liquidity =
+            UniswapV4Utils._quoteLiquidityForAmounts(priceForMint, p.tickLower, p.tickUpper, q.amount0, q.amount1);
 
         // Calculate amounts actually used for minting
-        (uint256 used0, uint256 used1) = UniswapV4Utils._quoteAmountsForLiquidity(
-            priceForMint,
-            p.tickLower,
-            p.tickUpper,
-            q.liquidity
-        );
+        (uint256 used0, uint256 used1) =
+            UniswapV4Utils._quoteAmountsForLiquidity(priceForMint, p.tickLower, p.tickUpper, q.liquidity);
 
         // Calculate dust (leftover currencies)
         q.dust0 = q.amount0 > used0 ? q.amount0 - used0 : 0;
@@ -343,7 +332,11 @@ library UniswapV4ZapQuoter {
     /// @dev V4: Returns params for PositionManager NFT-based operations
     /// @param p Zap-in parameters
     /// @return e Execution params for V4 PositionManager
-    function quoteZapInPositionManager(ZapInParams memory p) internal view returns (PositionManagerZapInExecution memory e) {
+    function quoteZapInPositionManager(ZapInParams memory p)
+        internal
+        view
+        returns (PositionManagerZapInExecution memory e)
+    {
         ZapInQuote memory q = quoteZapInSingleCore(p);
 
         e.key = p.key;
@@ -375,16 +368,12 @@ library UniswapV4ZapQuoter {
         PoolId poolId = p.key.toId();
 
         // Get current pool state via StateLibrary (V4-specific: uses extsload)
-        (uint160 sqrtPriceX96, , , ) = p.manager.getSlot0(poolId);
+        (uint160 sqrtPriceX96,,,) = p.manager.getSlot0(poolId);
         require(sqrtPriceX96 != 0, "UNIV4ZAP:UNINIT");
 
         // Calculate amounts received from burning liquidity using V4 utils
-        (q.burnAmount0, q.burnAmount1) = UniswapV4Utils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            p.tickLower,
-            p.tickUpper,
-            p.liquidity
-        );
+        (q.burnAmount0, q.burnAmount1) =
+            UniswapV4Utils._quoteAmountsForLiquidity(sqrtPriceX96, p.tickLower, p.tickUpper, p.liquidity);
 
         // Determine swap direction: swap the unwanted currency to get more of the wanted currency
         // If wantCurrency0: swap currency1 → currency0 (zeroForOne = false)
@@ -414,9 +403,7 @@ library UniswapV4ZapQuoter {
         // Set default price limit if not specified
         uint160 sqrtPriceLimitX96 = p.sqrtPriceLimitX96;
         if (sqrtPriceLimitX96 == 0) {
-            sqrtPriceLimitX96 = zeroForOne
-                ? TickMath.MIN_SQRT_PRICE + 1
-                : TickMath.MAX_SQRT_PRICE - 1;
+            sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_PRICE + 1 : TickMath.MAX_SQRT_PRICE - 1;
         }
 
         // Quote the swap using V4 quoter
@@ -454,7 +441,7 @@ library UniswapV4ZapQuoter {
         e.tickLower = p.tickLower;
         e.tickUpper = p.tickUpper;
         e.liquidity = p.liquidity;
-        e.zeroForOne = !p.wantCurrency0;  // Swap direction: opposite of wanted currency
+        e.zeroForOne = !p.wantCurrency0; // Swap direction: opposite of wanted currency
         e.swapAmountIn = q.swapAmountIn;
         e.sqrtPriceLimitX96 = p.sqrtPriceLimitX96 != 0
             ? p.sqrtPriceLimitX96
@@ -465,14 +452,18 @@ library UniswapV4ZapQuoter {
     /// @dev V4: Returns params for PositionManager NFT-based operations
     /// @param p Zap-out parameters
     /// @return e Execution params for V4 PositionManager
-    function quoteZapOutPositionManager(ZapOutParams memory p) internal view returns (PositionManagerZapOutExecution memory e) {
+    function quoteZapOutPositionManager(ZapOutParams memory p)
+        internal
+        view
+        returns (PositionManagerZapOutExecution memory e)
+    {
         ZapOutQuote memory q = quoteZapOutSingleCore(p);
 
         e.key = p.key;
         e.tickLower = p.tickLower;
         e.tickUpper = p.tickUpper;
         e.liquidity = p.liquidity;
-        e.zeroForOne = !p.wantCurrency0;  // Swap direction: opposite of wanted currency
+        e.zeroForOne = !p.wantCurrency0; // Swap direction: opposite of wanted currency
         e.swapAmountIn = q.swapAmountIn;
         e.sqrtPriceLimitX96 = p.sqrtPriceLimitX96 != 0
             ? p.sqrtPriceLimitX96

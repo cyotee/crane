@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {
-    toBeforeSwapDelta,
-    BeforeSwapDelta,
-    BeforeSwapDeltaLibrary
-} from "../../types/BeforeSwapDelta.sol";
+import {toBeforeSwapDelta, BeforeSwapDelta, BeforeSwapDeltaLibrary} from "../../types/BeforeSwapDelta.sol";
 import {Currency, CurrencyLibrary} from "../../types/Currency.sol";
 import {PoolKey} from "../../types/PoolKey.sol";
 import {SafeCast} from "../../libraries/SafeCast.sol";

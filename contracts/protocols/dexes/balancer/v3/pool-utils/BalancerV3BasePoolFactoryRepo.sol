@@ -4,21 +4,16 @@ pragma solidity ^0.8.0;
 import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IRateProvider.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IBasePoolFactory} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBasePoolFactory.sol";
-import {
-    TokenType,
-    TokenConfig
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
+import {TokenType, TokenConfig} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/VaultTypes.sol";
 import {AddressSet, AddressSetRepo} from "@crane/contracts/utils/collections/sets/AddressSetRepo.sol";
 
 library BalancerV3BasePoolFactoryRepo {
-
     using AddressSetRepo for AddressSet;
 
     /// @notice The factory deployer gave a duration that would overflow the Unix timestamp.
     error PoolPauseWindowDurationOverflow();
 
-    bytes32 internal constant STORAGE_SLOT =
-        keccak256("protocols.dexes.balancer.v3.base.pool.factory.common");
+    bytes32 internal constant STORAGE_SLOT = keccak256("protocols.dexes.balancer.v3.base.pool.factory.common");
 
     // The pause window end time is stored in 32 bits.
     uint32 private constant _MAX_TIMESTAMP = type(uint32).max;
@@ -54,11 +49,7 @@ library BalancerV3BasePoolFactoryRepo {
         return _layout(STORAGE_SLOT);
     }
 
-    function _initialize(
-        Storage storage layout,
-        uint32 pauseWindowDuration,
-        address poolManager
-    ) internal {
+    function _initialize(Storage storage layout, uint32 pauseWindowDuration, address poolManager) internal {
         uint32 pauseWindowEndTime = uint32(block.timestamp) + pauseWindowDuration;
         if (pauseWindowEndTime > _MAX_TIMESTAMP) {
             revert PoolPauseWindowDurationOverflow();
@@ -68,15 +59,8 @@ library BalancerV3BasePoolFactoryRepo {
         layout.poolManager = poolManager;
     }
 
-    function _initialize(
-        uint32 pauseWindowDuration,
-        address poolFeeManager
-    ) internal {
-        _initialize(
-            _layout(),
-            pauseWindowDuration,
-            poolFeeManager
-        );
+    function _initialize(uint32 pauseWindowDuration, address poolFeeManager) internal {
+        _initialize(_layout(), pauseWindowDuration, poolFeeManager);
     }
 
     function _isDisabled(Storage storage layout) internal view returns (bool) {
@@ -133,11 +117,7 @@ library BalancerV3BasePoolFactoryRepo {
         _addPool(_layout(), pool);
     }
 
-    function _isPoolFromFactory(Storage storage layout, address pool)
-        internal
-        view
-        returns (bool)
-    {
+    function _isPoolFromFactory(Storage storage layout, address pool) internal view returns (bool) {
         return layout.pools._contains(pool);
     }
 
@@ -145,11 +125,7 @@ library BalancerV3BasePoolFactoryRepo {
         return _isPoolFromFactory(_layout(), pool);
     }
 
-    function _getPoolCount(Storage storage layout)
-        internal
-        view
-        returns (uint256)
-    {
+    function _getPoolCount(Storage storage layout) internal view returns (uint256) {
         return layout.pools._length();
     }
 
@@ -157,11 +133,11 @@ library BalancerV3BasePoolFactoryRepo {
         return _getPoolCount(_layout());
     }
 
-    function _getPoolsInRange(
-        Storage storage layout,
-        uint256 start,
-        uint256 count
-    ) internal view returns (address[] memory) {
+    function _getPoolsInRange(Storage storage layout, uint256 start, uint256 count)
+        internal
+        view
+        returns (address[] memory)
+    {
         return layout.pools._range(start, count);
     }
 
@@ -181,7 +157,11 @@ library BalancerV3BasePoolFactoryRepo {
         _setTokenConfigs(_layout(), pool_, tokenConfig_);
     }
 
-    function _getTokenConfigs(Storage storage layout, address pool_) internal view returns (TokenConfig[] memory tokenConfigs) {
+    function _getTokenConfigs(Storage storage layout, address pool_)
+        internal
+        view
+        returns (TokenConfig[] memory tokenConfigs)
+    {
         uint256 length = layout.tokensOfPool[pool_]._length();
         tokenConfigs = new TokenConfig[](length);
         for (uint256 cursor = 0; cursor < length; cursor++) {
@@ -204,10 +184,8 @@ library BalancerV3BasePoolFactoryRepo {
             layout.tokensOfPool[pool_]._add(address(tokenConfig_[cursor].token));
             layout.rateProviderOfTokenOfPool[pool_][address(tokenConfig_[cursor].token)] =
                 address(tokenConfig_[cursor].rateProvider);
-            layout.typeOfTokenOfPool[pool_][address(tokenConfig_[cursor].token)] =
-            tokenConfig_[cursor].tokenType;
-            layout.paysYieldFeesOfPool[pool_][address(tokenConfig_[cursor].token)] =
-            tokenConfig_[cursor].paysYieldFees;
+            layout.typeOfTokenOfPool[pool_][address(tokenConfig_[cursor].token)] = tokenConfig_[cursor].tokenType;
+            layout.paysYieldFeesOfPool[pool_][address(tokenConfig_[cursor].token)] = tokenConfig_[cursor].paysYieldFees;
         }
     }
 
@@ -237,5 +215,4 @@ library BalancerV3BasePoolFactoryRepo {
     function _getHooksContract(address pool_) internal view returns (address) {
         return _getHooksContract(_layout(), pool_);
     }
-
 }

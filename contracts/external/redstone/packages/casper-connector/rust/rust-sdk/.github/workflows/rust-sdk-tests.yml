@@ -1,0 +1,21 @@
+name: Rust SDK CI
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust-sdk-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Set up Rust PATH
+        run: echo "$HOME/.cargo/bin:$PATH" >> $GITHUB_PATH
+      - name: Lint rust
+        run: make check-lint
+      - name: Test rust
+        run: make test

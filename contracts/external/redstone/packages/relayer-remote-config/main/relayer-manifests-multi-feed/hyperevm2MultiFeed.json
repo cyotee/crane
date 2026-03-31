@@ -1,0 +1,66 @@
+{
+  "chain": {
+    "name": "hyperevm",
+    "id": 999
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.5,
+    "timeSinceLastUpdateInMilliseconds": 21600000
+  },
+  "adapterContract": "0x24c8964338Deb5204B096039147B8e8C3AEa42Cc",
+  "adapterContractType": "multi-feed",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "thBILL_FUNDAMENTAL": {
+      "priceFeedAddress": "0x3EbFAAe0eF43f63dBb176FF11cAb16dcd976607b"
+    },
+    "wVLP_FUNDAMENTAL": {
+      "priceFeedAddress": "0xBe92962Ec21B99870A583e232aBcFdD64cdB78c9"
+    },
+    "stHYPE_LP_FUNDAMENTAL": {
+      "priceFeedAddress": "0x5f138218aD5F40804C1e3f18266102493Df872AD"
+    },
+    "dnHYPE_FUNDAMENTAL": {
+      "priceFeedAddress": "0xb7699E81Acf22456fa83696573738dfa25f1d6be"
+    },
+    "beHYPE_MAIN_FUNDAMENTAL": {
+      "priceFeedAddress": "0x5016c48F36f7e4C83b5C4D4b7227BFEf35Ae7688"
+    },
+    "dnPUMP_FUNDAMENTAL": {
+      "priceFeedAddress": "0xeeF31c7d9F2E82e8A497b140cc60cc082Be4b94e"
+    },
+    "hbUSDC_FUNDAMENTAL": {
+      "priceFeedAddress": "0x368eE51E47a594fe1E9908b48228748a30BC7ca4"
+    },
+    "USDH": {
+      "priceFeedAddress": "0xE18aAD6733D1db21e19cb83B697082D3d4eE5170"
+    },
+    "wNLP_FUNDAMENTAL": {
+      "priceFeedAddress": "0xFd7457B6f09990243Bf8E4C6C956EB909C0E6417"
+    },
+    "HYPE": {
+      "priceFeedAddress": "0x40EA33eA76Fbe35e9FB422eDd175b8c8D84A63Cc"
+    },
+    "USDp_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xf0DEbDAE819b354D076b0D162e399BE013A856d3",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "sUSDp_HYPEREVM_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xD15862FC3D5407A03B696548b6902D6464A69b8c",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "syzUSD_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xB5B408A269217f414da4Bb01225F7b57664eAf6F",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    }
+  }
+}

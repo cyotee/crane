@@ -2,23 +2,25 @@
 
 pragma solidity ^0.8.24;
 
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IFixedPriceLBPool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { PoolInfo } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {PoolInfo} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
 
-import { LBPValidation } from "./LBPValidation.sol";
-import { LBPCommon } from "./LBPCommon.sol";
+import {LBPValidation} from "./LBPValidation.sol";
+import {LBPCommon} from "./LBPCommon.sol";
 
 /**
  * @notice Fixed-price Liquidity Bootstrapping Pool for token sales at a constant rate.
@@ -52,11 +54,7 @@ contract FixedPriceLBPool is IFixedPriceLBPool, LBPCommon, BalancerPoolToken, Po
      */
     uint256 private immutable _projectTokenRate;
 
-    constructor(
-        LBPCommonParams memory lbpCommonParams,
-        FactoryParams memory factoryParams,
-        uint256 projectTokenRate
-    )
+    constructor(LBPCommonParams memory lbpCommonParams, FactoryParams memory factoryParams, uint256 projectTokenRate)
         LBPCommon(
             lbpCommonParams,
             _getEmptyMigrationParams(),
@@ -107,7 +105,7 @@ contract FixedPriceLBPool is IFixedPriceLBPool, LBPCommon, BalancerPoolToken, Po
         data.projectTokenIndex = _projectTokenIndex;
         data.reserveTokenIndex = _reserveTokenIndex;
 
-        (data.decimalScalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _vault.getPoolTokenRates(address(this));
         data.startTime = _startTime;
         data.endTime = _endTime;
 
@@ -206,10 +204,13 @@ contract FixedPriceLBPool is IFixedPriceLBPool, LBPCommon, BalancerPoolToken, Po
      * @param exactAmountsInScaled18 The amounts being used to initialize the pool (18-decimal scaled)
      * @return success Always true: allow the initialization to proceed if all conditions have been met
      */
-    function onBeforeInitialize(
-        uint256[] memory exactAmountsInScaled18,
-        bytes memory
-    ) public view override onlyBeforeSale returns (bool) {
+    function onBeforeInitialize(uint256[] memory exactAmountsInScaled18, bytes memory)
+        public
+        view
+        override
+        onlyBeforeSale
+        returns (bool)
+    {
         // Verify the sender is the owner through the trusted router
         if (ISenderGuard(_trustedRouter).getSender() != owner()) {
             return false;

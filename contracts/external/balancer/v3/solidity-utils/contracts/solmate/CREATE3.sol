@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { Bytes32AddressLib } from "./Bytes32AddressLib.sol";
+import {Bytes32AddressLib} from "./Bytes32AddressLib.sol";
 
 /**
  * @notice Deploy to deterministic addresses without an initcode factor.
@@ -36,7 +36,7 @@ library CREATE3 {
     // 0x60       |  0x6018               | PUSH1 18         | 24 8                   //
     // 0xf3       |  0xf3                 | RETURN           |                        //
     //--------------------------------------------------------------------------------//
-    bytes internal constant _PROXY_BYTECODE = hex"67_36_3d_3d_37_36_3d_34_f0_3d_52_60_08_60_18_f3";
+    bytes internal constant _PROXY_BYTECODE = hex"67363d3d37363d34f03d5260086018f3";
 
     bytes32 internal constant _PROXY_BYTECODE_HASH = keccak256(_PROXY_BYTECODE);
 
@@ -53,7 +53,7 @@ library CREATE3 {
         require(proxy != address(0), "DEPLOYMENT_FAILED");
 
         deployed = getDeployed(salt);
-        (bool success, ) = proxy.call{ value: value }(creationCode);
+        (bool success,) = proxy.call{value: value}(creationCode);
         require(success && deployed.code.length != 0, "INITIALIZATION_FAILED");
     }
 
@@ -63,24 +63,23 @@ library CREATE3 {
 
     function getDeployed(bytes32 salt, address creator) internal pure returns (address) {
         address proxy = keccak256(
-            abi.encodePacked(
-                // Prefix:
-                bytes1(0xFF),
-                // Creator:
-                creator,
-                // Salt:
-                salt,
-                // Bytecode hash:
-                _PROXY_BYTECODE_HASH
-            )
-        ).fromLast20Bytes();
+                abi.encodePacked(
+                    // Prefix:
+                    bytes1(0xFF),
+                    // Creator:
+                    creator,
+                    // Salt:
+                    salt,
+                    // Bytecode hash:
+                    _PROXY_BYTECODE_HASH
+                )
+            ).fromLast20Bytes();
 
-        return
-            keccak256(
+        return keccak256(
                 abi.encodePacked(
                     // 0xd6 = 0xc0 (short RLP prefix) + 0x16 (length of: 0x94 ++ proxy ++ 0x01)
                     // 0x94 = 0x80 + 0x14 (0x14 = the length of an address, 20 bytes, in hex)
-                    hex"d6_94",
+                    hex"d694",
                     proxy,
                     hex"01" // Nonce of the proxy contract (1)
                 )

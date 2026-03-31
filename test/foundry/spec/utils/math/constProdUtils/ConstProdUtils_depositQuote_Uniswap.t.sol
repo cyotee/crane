@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {betterconsole as console} from "contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {ConstProdUtils} from "contracts/utils/math/ConstProdUtils.sol";
-import {TestBase_ConstProdUtils_Uniswap} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
+import {
+    TestBase_ConstProdUtils_Uniswap
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Uniswap.sol";
 
 contract ConstProdUtils_depositQuote_Uniswap_Test is TestBase_ConstProdUtils_Uniswap {
     function setUp() public override {
@@ -29,7 +31,7 @@ contract ConstProdUtils_depositQuote_Uniswap_Test is TestBase_ConstProdUtils_Uni
         uniswapBalancedTokenB.approve(address(uniswapV2Router), amountB);
 
         // addLiquidity returns (amountA, amountB, liquidity)
-        (, , uint256 actualLPTokens) = uniswapV2Router.addLiquidity(
+        (,, uint256 actualLPTokens) = uniswapV2Router.addLiquidity(
             address(uniswapBalancedTokenA),
             address(uniswapBalancedTokenB),
             amountA,
@@ -72,7 +74,7 @@ contract ConstProdUtils_depositQuote_Uniswap_Test is TestBase_ConstProdUtils_Uni
         uniswapBalancedTokenB.approve(address(uniswapV2Router), amountB);
 
         // addLiquidity returns (amountA, amountB, liquidity)
-        (, , uint256 actualLPTokens) = uniswapV2Router.addLiquidity(
+        (,, uint256 actualLPTokens) = uniswapV2Router.addLiquidity(
             address(uniswapBalancedTokenA),
             address(uniswapBalancedTokenB),
             amountA,

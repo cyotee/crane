@@ -6,21 +6,23 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
 import {
     IUnbalancedAddViaSwapRouter
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedAddViaSwapRouter.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { UnbalancedAddViaSwapRouter } from "../../contracts/UnbalancedAddViaSwapRouter.sol";
-import { PoolFactoryMock } from "../../contracts/test/PoolFactoryMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {UnbalancedAddViaSwapRouter} from "../../contracts/UnbalancedAddViaSwapRouter.sol";
+import {PoolFactoryMock} from "../../contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
     using CastingHelpers for address[];
@@ -59,10 +61,7 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         for (uint256 i = 0; i < tokens.length; ++i) {
             tokens[i].approve(address(permit2), type(uint256).max);
             permit2.approve(
-                address(tokens[i]),
-                address(unbalancedAddViaSwapRouter),
-                type(uint160).max,
-                type(uint48).max
+                address(tokens[i]), address(unbalancedAddViaSwapRouter), type(uint160).max, type(uint48).max
             );
         }
         vm.stopPrank();
@@ -103,8 +102,8 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         uint256 exactAmount = (proportionalWeth * 90) / 100; // 10% less
         uint256 maxAdjustableAmount = proportionalDai * 2; // Generous limit since we ADD to adjustable
 
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: bptAmount,
                 exactToken: weth,
                 exactAmount: exactAmount,
@@ -121,7 +120,9 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         vm.prank(alice);
         uint256[] memory amountsIn = unbalancedAddViaSwapRouter.addLiquidityUnbalanced{
             value: wethIsEth ? exactAmount : 0
-        }(pool, MAX_UINT256, wethIsEth, params);
+        }(
+            pool, MAX_UINT256, wethIsEth, params
+        );
 
         TestBalances memory balancesAfter = _getBalances();
 
@@ -156,8 +157,8 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         // Set limit too low - would need to add more DAI, but limit prevents it
         uint256 maxAdjustableAmount = proportionalDai; // This will be exceeded after the swap
 
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: bptAmount,
                 exactToken: weth,
                 exactAmount: exactAmount,
@@ -190,8 +191,8 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         uint256 exactAmount = (proportionalWeth * 110) / 100; // 10% more
         uint256 maxAdjustableAmount = proportionalDai * 2; // Generous since we might need more after reduction
 
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: bptAmount,
                 exactToken: weth,
                 exactAmount: exactAmount,
@@ -208,7 +209,9 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         vm.prank(alice);
         uint256[] memory amountsIn = unbalancedAddViaSwapRouter.addLiquidityUnbalanced{
             value: wethIsEth ? exactAmount : 0
-        }(pool, MAX_UINT256, wethIsEth, params);
+        }(
+            pool, MAX_UINT256, wethIsEth, params
+        );
 
         TestBalances memory balancesAfter = _getBalances();
 
@@ -243,8 +246,8 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
         // Set limit very low - even after EXACT_IN reduces DAI, the final amount will still exceed this
         uint256 maxAdjustableAmount = (proportionalDai * 50) / 100;
 
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: bptAmount,
                 exactToken: weth,
                 exactAmount: exactAmount,
@@ -263,16 +266,15 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
     ***************************************************************************/
 
     function testNonTwoTokenPools() public {
-        IERC20[] memory tokens = InputHelpers.sortTokens(
-            [address(weth), address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        IERC20[] memory tokens =
+            InputHelpers.sortTokens([address(weth), address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         address threePool = PoolFactoryMock(poolFactory).createPool("Three Tokens", "3TKN");
 
         PoolFactoryMock(poolFactory).registerTestPool(threePool, vault.buildTokenConfig(tokens), poolHooksContract, lp);
 
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: 0,
                 exactToken: weth,
                 exactAmount: 1e18,
@@ -286,8 +288,8 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
     }
 
     function testSwapAfterDeadline() public {
-        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params = IUnbalancedAddViaSwapRouter
-            .AddLiquidityAndSwapParams({
+        IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams memory params =
+            IUnbalancedAddViaSwapRouter.AddLiquidityAndSwapParams({
                 exactBptAmountOut: 0,
                 exactToken: weth,
                 exactAmount: 1e18,
@@ -337,9 +339,7 @@ contract UnbalancedAddViaSwapRouterTest is BaseVaultTest {
             );
         } else {
             assertEq(
-                balancesAfter.userWeth,
-                balancesBefore.userWeth - amountsIn[wethIdx],
-                "Alice WETH balance incorrect"
+                balancesAfter.userWeth, balancesBefore.userWeth - amountsIn[wethIdx], "Alice WETH balance incorrect"
             );
         }
         assertEq(balancesAfter.userDai, balancesBefore.userDai - amountsIn[daiIdx], "Alice DAI balance incorrect");

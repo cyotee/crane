@@ -4,8 +4,12 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import {BalancerV3WeightedPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
-import {BalancerV3WeightedPoolTargetStub} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolTargetStub.sol";
+import {
+    BalancerV3WeightedPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
+import {
+    BalancerV3WeightedPoolTargetStub
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolTargetStub.sol";
 
 /**
  * @title BalancerV3WeightedPoolRepo_Test
@@ -13,7 +17,6 @@ import {BalancerV3WeightedPoolTargetStub} from "@crane/contracts/protocols/dexes
  * @dev Covers ZeroWeight(), WeightsMustSumToOne(), and InvalidWeightsLength() revert paths.
  */
 contract BalancerV3WeightedPoolRepo_Test is Test {
-
     BalancerV3WeightedPoolTargetStub internal pool;
 
     function setUp() public {

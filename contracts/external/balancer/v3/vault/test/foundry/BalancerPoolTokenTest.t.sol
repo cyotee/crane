@@ -4,23 +4,23 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { ERC20Permit } from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC20Permit} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
-import { IEIP712 } from "@crane/contracts/interfaces/IEIP712.sol";
+import {IEIP712} from "@crane/contracts/interfaces/IEIP712.sol";
 
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BalancerPoolToken } from "../../contracts/BalancerPoolToken.sol";
-import { PoolMock } from "../../contracts/test/PoolMock.sol";
+import {BalancerPoolToken} from "../../contracts/BalancerPoolToken.sol";
+import {PoolMock} from "../../contracts/test/PoolMock.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract BalancerPoolTokenTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -364,15 +364,8 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         vm.assume(to != address(usr));
         vm.assume(to != address(vault));
 
-        (uint8 v, bytes32 r, bytes32 s) = getPermitSignature(
-            IEIP712(address(poolToken)),
-            usr,
-            to,
-            amount,
-            CURRENT_NONCE,
-            deadline,
-            privKey
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            getPermitSignature(IEIP712(address(poolToken)), usr, to, amount, CURRENT_NONCE, deadline, privKey);
 
         poolToken.permit(usr, to, amount, deadline, v, r, s);
 
@@ -396,42 +389,25 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
         address usr = vm.addr(privKey);
 
-        (uint8 v, bytes32 r, bytes32 s) = getPermitSignature(
-            IEIP712(address(poolToken)),
-            usr,
-            to,
-            amount,
-            nonce,
-            deadline,
-            privKey
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            getPermitSignature(IEIP712(address(poolToken)), usr, to, amount, nonce, deadline, privKey);
 
         vm.expectRevert();
         poolToken.permit(usr, to, amount, deadline, v, r, s);
     }
 
     /// @dev Just test for general fail as it is hard to compute error arguments.
-    function testRevertsWhenPermitBadDeadline__Fuzz(
-        uint248 privKey,
-        address to,
-        uint256 amount,
-        uint256 deadline
-    ) public {
+    function testRevertsWhenPermitBadDeadline__Fuzz(uint248 privKey, address to, uint256 amount, uint256 deadline)
+        public
+    {
         deadline = bound(deadline, 0, block.timestamp - 1);
         vm.assume(privKey != 0);
         vm.assume(to != address(0));
 
         address usr = vm.addr(privKey);
 
-        (uint8 v, bytes32 r, bytes32 s) = getPermitSignature(
-            IEIP712(address(poolToken)),
-            usr,
-            to,
-            amount,
-            CURRENT_NONCE,
-            deadline,
-            privKey
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            getPermitSignature(IEIP712(address(poolToken)), usr, to, amount, CURRENT_NONCE, deadline, privKey);
 
         vm.expectRevert();
         poolToken.permit(usr, to, amount, deadline + 1, v, r, s);
@@ -444,15 +420,8 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
         address usr = vm.addr(privKey);
 
-        (uint8 v, bytes32 r, bytes32 s) = getPermitSignature(
-            IEIP712(address(poolToken)),
-            usr,
-            to,
-            amount,
-            CURRENT_NONCE,
-            deadline,
-            privKey
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            getPermitSignature(IEIP712(address(poolToken)), usr, to, amount, CURRENT_NONCE, deadline, privKey);
 
         vm.expectRevert(abi.encodeWithSelector(ERC20Permit.ERC2612ExpiredSignature.selector, deadline));
         poolToken.permit(usr, to, amount, deadline, v, r, s);
@@ -466,15 +435,8 @@ contract BalancerPoolTokenTest is BaseVaultTest {
 
         address usr = vm.addr(privKey);
 
-        (uint8 v, bytes32 r, bytes32 s) = getPermitSignature(
-            IEIP712(address(poolToken)),
-            usr,
-            to,
-            amount,
-            CURRENT_NONCE,
-            deadline,
-            privKey
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            getPermitSignature(IEIP712(address(poolToken)), usr, to, amount, CURRENT_NONCE, deadline, privKey);
 
         poolToken.permit(usr, to, amount, deadline, v, r, s);
         vm.expectRevert();
@@ -500,12 +462,7 @@ contract BalancerPoolTokenTest is BaseVaultTest {
         vm.startPrank(lp);
         IERC20[] memory tokens = vault.getPoolTokens(address(poolToken));
         router.initialize(
-            address(poolToken),
-            tokens,
-            [poolInitAmount, poolInitAmount].toMemoryArray(),
-            0,
-            false,
-            bytes("")
+            address(poolToken), tokens, [poolInitAmount, poolInitAmount].toMemoryArray(), 0, false, bytes("")
         );
         vm.stopPrank();
 

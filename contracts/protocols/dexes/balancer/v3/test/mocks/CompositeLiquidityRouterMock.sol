@@ -2,15 +2,21 @@
 
 pragma solidity ^0.8.24;
 
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
-import {AddressToUintMappingSlot} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
-import {TransientEnumerableSet} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
+import {
+    AddressToUintMappingSlot
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {
+    TransientEnumerableSet
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
 
-import {CompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/vault/contracts/CompositeLiquidityRouter.sol";
+import {
+    CompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/vault/contracts/CompositeLiquidityRouter.sol";
 
 string constant MOCK_CL_ROUTER_VERSION = "Mock CompositeLiquidityRouter v1";
 

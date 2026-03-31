@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { TokenInfo, PoolRoleAccounts, PoolData, PoolConfig, PoolSwapParams, HooksConfig } from "./VaultTypes.sol";
+import {TokenInfo, PoolRoleAccounts, PoolData, PoolConfig, PoolSwapParams, HooksConfig} from "./VaultTypes.sol";
 
 /**
  * @notice Helper contract that exposes the full permissionless Vault interface.
@@ -166,10 +166,10 @@ interface IVaultExplorer {
      * @return tokenCount Number of tokens in the pool
      * @return index Index corresponding to the given token in the pool's token list
      */
-    function getPoolTokenCountAndIndexOfToken(
-        address pool,
-        IERC20 token
-    ) external view returns (uint256 tokenCount, uint256 index);
+    function getPoolTokenCountAndIndexOfToken(address pool, IERC20 token)
+        external
+        view
+        returns (uint256 tokenCount, uint256 index);
 
     /**
      * @notice Gets pool token rates.
@@ -180,9 +180,10 @@ interface IVaultExplorer {
      * @return decimalScalingFactors Token decimal scaling factors
      * @return tokenRates Token rates for yield-bearing tokens, or FP(1) for standard tokens
      */
-    function getPoolTokenRates(
-        address pool
-    ) external view returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates);
+    function getPoolTokenRates(address pool)
+        external
+        view
+        returns (uint256[] memory decimalScalingFactors, uint256[] memory tokenRates);
 
     /**
      * @notice Returns comprehensive pool data for the given pool.
@@ -203,9 +204,7 @@ interface IVaultExplorer {
      * @return balancesRaw Raw balances, sorted in token registration order
      * @return lastBalancesLiveScaled18 Last saved live balances, sorted in token registration order
      */
-    function getPoolTokenInfo(
-        address pool
-    )
+    function getPoolTokenInfo(address pool)
         external
         view
         returns (
@@ -307,9 +306,7 @@ interface IVaultExplorer {
      * @return poolBufferPeriodEndTime The timestamp after which the Pool unpauses itself (if paused)
      * @return pauseManager The pause manager, or the zero address
      */
-    function getPoolPausedState(
-        address pool
-    )
+    function getPoolPausedState(address pool)
         external
         view
         returns (bool poolPaused, uint32 poolPauseWindowEndTime, uint32 poolBufferPeriodEndTime, address pauseManager);
@@ -361,10 +358,10 @@ interface IVaultExplorer {
      * @param swapParams The swap parameters used to compute the fee
      * @return dynamicSwapFeePercentage The dynamic swap fee percentage
      */
-    function computeDynamicSwapFeePercentage(
-        address pool,
-        PoolSwapParams memory swapParams
-    ) external view returns (uint256 dynamicSwapFeePercentage);
+    function computeDynamicSwapFeePercentage(address pool, PoolSwapParams memory swapParams)
+        external
+        view
+        returns (uint256 dynamicSwapFeePercentage);
 
     /*******************************************************************************
                                     Recovery Mode
@@ -540,9 +537,10 @@ interface IVaultExplorer {
      * @return aggregateSwapFeePercentage The aggregate percentage fee applied to swaps
      * @return aggregateYieldFeePercentage The aggregate percentage fee applied to yield
      */
-    function getAggregateFeePercentages(
-        address pool
-    ) external view returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage);
+    function getAggregateFeePercentages(address pool)
+        external
+        view
+        returns (uint256 aggregateSwapFeePercentage, uint256 aggregateYieldFeePercentage);
 
     /**
      * @notice Collects accumulated aggregate swap and yield fees for the specified pool.
@@ -611,10 +609,10 @@ interface IVaultExplorer {
      * @param liquidityOwner Address of the user that owns liquidity in the wrapped token's buffer
      * @return ownerShares Amount of shares allocated to the liquidity owner, in native underlying token decimals
      */
-    function getBufferOwnerShares(
-        IERC4626 wrappedToken,
-        address liquidityOwner
-    ) external view returns (uint256 ownerShares);
+    function getBufferOwnerShares(IERC4626 wrappedToken, address liquidityOwner)
+        external
+        view
+        returns (uint256 ownerShares);
 
     /**
      * @notice Returns the supply shares (internal buffer BPT) of the ERC4626 buffer.
@@ -631,7 +629,8 @@ interface IVaultExplorer {
      * @return underlyingBalanceRaw Amount of underlying tokens deposited into the buffer, in native token decimals
      * @return wrappedBalanceRaw Amount of wrapped tokens deposited into the buffer, in native token decimals
      */
-    function getBufferBalance(
-        IERC4626 wrappedToken
-    ) external view returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw);
+    function getBufferBalance(IERC4626 wrappedToken)
+        external
+        view
+        returns (uint256 underlyingBalanceRaw, uint256 wrappedBalanceRaw);
 }

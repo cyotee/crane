@@ -1,0 +1,42 @@
+module Core where
+
+import Daml.Script
+import RedStoneCore
+import RedStoneCoreClient
+import IRedStoneCore
+import Input
+
+main : Input -> Script ()
+main input = script do
+  owner <- allocateParty "RedStoneOracleOwner"
+  viewer <- allocateParty "RedStoneOracleViewer"
+
+  coreCid <- submit owner do
+    createCmd RedStoneCore with
+      coreId = "RedStoneCore-123"
+      owner = owner
+      viewers = [viewer]
+
+  currentTime <- getTime
+
+  result <- submit viewer do
+    exerciseCmd (toInterfaceContractId @IRedStoneCore coreCid) GetPrices with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+
+  debug $ "Processed result: " <> show result
+
+  coreClientCid <- submit owner do
+    createCmd RedStoneCoreClient with
+      owner = owner
+      viewers = [viewer]
+
+  result <- submit viewer do
+    exerciseCmd coreClientCid GetPricesDisclosed with
+      payloadHex = input.payload
+      feedIds = input.feedIds
+      currentTime
+      adapterCid = (toInterfaceContractId @IRedStoneCore coreCid)
+
+  debug $ "Client result: " <> show result

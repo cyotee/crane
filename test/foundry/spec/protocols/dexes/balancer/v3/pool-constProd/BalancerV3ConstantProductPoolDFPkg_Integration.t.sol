@@ -17,13 +17,24 @@ import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {TokenConfig, TokenType, PoolRoleAccounts, LiquidityManagement} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    TokenConfig,
+    TokenType,
+    PoolRoleAccounts,
+    LiquidityManagement
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
-import {IUnbalancedLiquidityInvariantRatioBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    IUnbalancedLiquidityInvariantRatioBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -33,7 +44,7 @@ import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IDiamondLoupe} from "@crane/contracts/interfaces/IDiamondLoupe.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
@@ -47,10 +58,18 @@ import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 /*                              Real Facet Imports                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3VaultAwareFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
-import {BalancerV3PoolTokenFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
-import {BalancerV3AuthenticationFacet} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
-import {BalancerV3ConstantProductPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
+import {
+    BalancerV3VaultAwareFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareFacet.sol";
+import {
+    BalancerV3PoolTokenFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BetterBalancerV3PoolTokenFacet.sol";
+import {
+    BalancerV3AuthenticationFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationFacet.sol";
+import {
+    BalancerV3ConstantProductPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolFacet.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                   DFPkg                                    */
@@ -90,11 +109,26 @@ contract MockERC20 is IERC20, IERC20Events, IERC20Metadata {
         _decimals = decimals_;
     }
 
-    function name() external view override returns (string memory) { return _name; }
-    function symbol() external view override returns (string memory) { return _symbol; }
-    function decimals() external view override returns (uint8) { return _decimals; }
-    function totalSupply() external view override returns (uint256) { return _totalSupply; }
-    function balanceOf(address account) external view override returns (uint256) { return _balances[account]; }
+    function name() external view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view override returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
@@ -222,13 +256,7 @@ contract MockBalancerV3Vault {
         }
 
         emit PoolRegistered(
-            pool,
-            msg.sender,
-            tokenConfig,
-            swapFeePercentage,
-            pauseWindowEndTime,
-            protocolFeeExempt,
-            poolHooksContract
+            pool, msg.sender, tokenConfig, swapFeePercentage, pauseWindowEndTime, protocolFeeExempt, poolHooksContract
         );
     }
 
@@ -265,6 +293,7 @@ contract MockBalancerV3Vault {
 
 // Helper libraries to work around memory struct issues
 library PoolRoleAccountsHelper {}
+
 library LiquidityManagementHelper {}
 
 /**
@@ -325,68 +354,78 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
 
     function _deployRealFacets() internal {
         // Deploy real facets via Create3Factory for deterministic addresses
-        vaultAwareFacet = BalancerV3VaultAwareFacet(address(
-            create3Factory.deployFacet(
-                type(BalancerV3VaultAwareFacet).creationCode,
-                abi.encode(type(BalancerV3VaultAwareFacet).name)._hash()
+        vaultAwareFacet = BalancerV3VaultAwareFacet(
+            address(
+                create3Factory.deployFacet(
+                    type(BalancerV3VaultAwareFacet).creationCode,
+                    abi.encode(type(BalancerV3VaultAwareFacet).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(vaultAwareFacet), type(BalancerV3VaultAwareFacet).name);
 
-        poolTokenFacet = BalancerV3PoolTokenFacet(address(
-            create3Factory.deployFacet(
-                type(BalancerV3PoolTokenFacet).creationCode,
-                abi.encode(type(BalancerV3PoolTokenFacet).name)._hash()
+        poolTokenFacet = BalancerV3PoolTokenFacet(
+            address(
+                create3Factory.deployFacet(
+                    type(BalancerV3PoolTokenFacet).creationCode, abi.encode(type(BalancerV3PoolTokenFacet).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(poolTokenFacet), type(BalancerV3PoolTokenFacet).name);
 
-        authFacet = BalancerV3AuthenticationFacet(address(
-            create3Factory.deployFacet(
-                type(BalancerV3AuthenticationFacet).creationCode,
-                abi.encode(type(BalancerV3AuthenticationFacet).name)._hash()
+        authFacet = BalancerV3AuthenticationFacet(
+            address(
+                create3Factory.deployFacet(
+                    type(BalancerV3AuthenticationFacet).creationCode,
+                    abi.encode(type(BalancerV3AuthenticationFacet).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(authFacet), type(BalancerV3AuthenticationFacet).name);
 
-        constProdFacet = BalancerV3ConstantProductPoolFacet(address(
-            create3Factory.deployFacet(
-                type(BalancerV3ConstantProductPoolFacet).creationCode,
-                abi.encode(type(BalancerV3ConstantProductPoolFacet).name)._hash()
+        constProdFacet = BalancerV3ConstantProductPoolFacet(
+            address(
+                create3Factory.deployFacet(
+                    type(BalancerV3ConstantProductPoolFacet).creationCode,
+                    abi.encode(type(BalancerV3ConstantProductPoolFacet).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(constProdFacet), type(BalancerV3ConstantProductPoolFacet).name);
 
-        poolInfoFacet = MockPoolInfoFacet(address(
-            create3Factory.deployFacet(
-                type(MockPoolInfoFacet).creationCode,
-                abi.encode(type(MockPoolInfoFacet).name)._hash()
+        poolInfoFacet = MockPoolInfoFacet(
+            address(
+                create3Factory.deployFacet(
+                    type(MockPoolInfoFacet).creationCode, abi.encode(type(MockPoolInfoFacet).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(poolInfoFacet), type(MockPoolInfoFacet).name);
     }
 
     function _deployPkg() internal {
-        pkg = BalancerV3ConstantProductPoolDFPkg(address(
-            create3Factory.deployPackageWithArgs(
-                type(BalancerV3ConstantProductPoolDFPkg).creationCode,
-                abi.encode(
-                    IBalancerV3ConstantProductPoolStandardVaultPkg.PkgInit({
-                        balancerV3VaultAwareFacet: IFacet(address(vaultAwareFacet)),
-                        betterBalancerV3PoolTokenFacet: IFacet(address(poolTokenFacet)),
-                        defaultPoolInfoFacet: IFacet(address(poolInfoFacet)),
-                        standardSwapFeePercentageBoundsFacet: IFacet(address(poolInfoFacet)),
-                        unbalancedLiquidityInvariantRatioBoundsFacet: IFacet(address(poolInfoFacet)),
-                        balancerV3AuthenticationFacet: IFacet(address(authFacet)),
-                        balancerV3ConstProdPoolFacet: IFacet(address(constProdFacet)),
-                        balancerV3Vault: IVault(address(mockVault)),
-                        diamondFactory: diamondFactory,
-                        poolFeeManager: poolManager
-                    })
-                ),
-                abi.encode(type(BalancerV3ConstantProductPoolDFPkg).name)._hash()
+        pkg = BalancerV3ConstantProductPoolDFPkg(
+            address(
+                create3Factory.deployPackageWithArgs(
+                    type(BalancerV3ConstantProductPoolDFPkg).creationCode,
+                    abi.encode(
+                        IBalancerV3ConstantProductPoolStandardVaultPkg.PkgInit({
+                            balancerV3VaultAwareFacet: IFacet(address(vaultAwareFacet)),
+                            betterBalancerV3PoolTokenFacet: IFacet(address(poolTokenFacet)),
+                            defaultPoolInfoFacet: IFacet(address(poolInfoFacet)),
+                            standardSwapFeePercentageBoundsFacet: IFacet(address(poolInfoFacet)),
+                            unbalancedLiquidityInvariantRatioBoundsFacet: IFacet(address(poolInfoFacet)),
+                            balancerV3AuthenticationFacet: IFacet(address(authFacet)),
+                            balancerV3ConstProdPoolFacet: IFacet(address(constProdFacet)),
+                            balancerV3Vault: IVault(address(mockVault)),
+                            diamondFactory: diamondFactory,
+                            poolFeeManager: poolManager
+                        })
+                    ),
+                    abi.encode(type(BalancerV3ConstantProductPoolDFPkg).name)._hash()
+                )
             )
-        ));
+        );
         vm.label(address(pkg), type(BalancerV3ConstantProductPoolDFPkg).name);
     }
 
@@ -410,10 +449,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         // Deploy proxy via the real factory
@@ -430,10 +466,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -470,10 +503,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -496,10 +526,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -520,10 +547,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -536,8 +560,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         string memory actualName = token.name();
 
         assertTrue(
-            bytes(actualName).length > bytes(expectedNamePrefix).length,
-            "Name should be non-empty and constructed"
+            bytes(actualName).length > bytes(expectedNamePrefix).length, "Name should be non-empty and constructed"
         );
 
         // Symbol should be "BPT"
@@ -554,10 +577,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -588,10 +608,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -614,10 +631,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         // Deploy should trigger postDeploy which calls vault registration
@@ -635,10 +649,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         // updatePkg is called before postDeploy
@@ -659,10 +670,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         // Predict the address using calcAddress
@@ -677,7 +685,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
     /**
      * @notice Tests that token order does not affect the deployed address.
      */
-    function test_tokenOrderIndependence_produceSameAddress() public {
+    function test_tokenOrderIndependence_produceSameAddress() public view {
         // Create configs in different orders
         TokenConfig[] memory configsAB = new TokenConfig[](2);
         configsAB[0] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false);
@@ -688,17 +696,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         configsBA[1] = _createTokenConfig(address(tokenA), TokenType.STANDARD, address(0), false);
 
         bytes memory argsAB = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsAB,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsAB, hooksContract: address(0)})
         );
 
         bytes memory argsBA = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configsBA,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configsBA, hooksContract: address(0)})
         );
 
         bytes32 saltAB = pkg.calcSalt(argsAB);
@@ -720,10 +722,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -739,10 +738,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -758,10 +754,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -786,10 +779,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -815,10 +805,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -845,10 +832,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -870,10 +854,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -928,10 +909,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         configs[1] = _createTokenConfig(lower, TokenType.STANDARD, address(0), false);
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -971,10 +949,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         configs[1] = _createTokenConfig(lower, TokenType.STANDARD, address(0), false);
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -1012,10 +987,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         configs[1] = _createTokenConfig(lower, TokenType.STANDARD, address(0), false);
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         diamondFactory.deploy(pkg, pkgArgs);
@@ -1033,10 +1005,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
@@ -1052,10 +1021,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         diamondFactory.deploy(pkg, pkgArgs);
@@ -1070,10 +1036,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         TokenConfig[] memory configs = _createTwoTokenConfig();
 
         bytes memory pkgArgs = abi.encode(
-            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({
-                tokenConfigs: configs,
-                hooksContract: address(0)
-            })
+            IBalancerV3ConstantProductPoolStandardVaultPkg.PkgArgs({tokenConfigs: configs, hooksContract: address(0)})
         );
 
         address first = diamondFactory.deploy(pkg, pkgArgs);
@@ -1093,12 +1056,11 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         return configs;
     }
 
-    function _createTokenConfig(
-        address token,
-        TokenType tokenType,
-        address rateProvider,
-        bool paysYieldFees
-    ) internal pure returns (TokenConfig memory) {
+    function _createTokenConfig(address token, TokenType tokenType, address rateProvider, bool paysYieldFees)
+        internal
+        pure
+        returns (TokenConfig memory)
+    {
         return TokenConfig({
             token: IERC20(token),
             tokenType: tokenType,

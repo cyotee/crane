@@ -5,11 +5,18 @@ import "forge-std/Script.sol";
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import {ManagedRewardsFactory} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/ManagedRewardsFactory.sol";
-import {VotingRewardsFactory} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/VotingRewardsFactory.sol";
+import {
+    ManagedRewardsFactory
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/ManagedRewardsFactory.sol";
+import {
+    VotingRewardsFactory
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/VotingRewardsFactory.sol";
 import {GaugeFactory} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/GaugeFactory.sol";
 import {PoolFactory, IPoolFactory} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/PoolFactory.sol";
-import {IFactoryRegistry, FactoryRegistry} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/FactoryRegistry.sol";
+import {
+    IFactoryRegistry,
+    FactoryRegistry
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/factories/FactoryRegistry.sol";
 import {Pool} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Pool.sol";
 import {IMinter, Minter} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Minter.sol";
 import {IReward, Reward} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/rewards/Reward.sol";
@@ -19,8 +26,14 @@ import {FreeManagedReward} from "@crane/contracts/protocols/dexes/aerodrome/v1/s
 import {LockedManagedReward} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/rewards/LockedManagedReward.sol";
 import {IGauge, Gauge} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/gauges/Gauge.sol";
 import {PoolFees} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/PoolFees.sol";
-import {RewardsDistributor, IRewardsDistributor} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/RewardsDistributor.sol";
-import {IAirdropDistributor, AirdropDistributor} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/AirdropDistributor.sol";
+import {
+    RewardsDistributor,
+    IRewardsDistributor
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/RewardsDistributor.sol";
+import {
+    IAirdropDistributor,
+    AirdropDistributor
+} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/AirdropDistributor.sol";
 import {IRouter, Router} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Router.sol";
 import {IAero, Aero} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Aero.sol";
 import {IVoter, Voter} from "@crane/contracts/protocols/dexes/aerodrome/v1/stubs/Voter.sol";
@@ -38,7 +51,6 @@ import {BetterTest} from "@crane/contracts/test/BetterTest.sol";
 import {TestBase_Weth9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/TestBase_Weth9.sol";
 
 contract TestBase_Aerodrome is TestBase_Weth9 {
-
     address team = makeAddr("team");
     address emergencyCouncil = makeAddr("emergencyCouncil");
     address feeManager = makeAddr("feeManager");
@@ -46,7 +58,6 @@ contract TestBase_Aerodrome is TestBase_Weth9 {
     // IWETH public WETH;
     Aero public AERO;
     address[] public aeroGaugeTokens;
-
 
     /// @dev Core Deployment
     Forwarder public aeroFowarder;
@@ -139,8 +150,6 @@ contract TestBase_Aerodrome is TestBase_Weth9 {
             // Set contract vars
             aerodromePoolFactory.setFeeManager(feeManager);
             aerodromePoolFactory.setVoter(address(aeroVoter));
-
         }
     }
-
 }

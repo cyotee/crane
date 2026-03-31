@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { ERC20 } from "@crane/contracts/tokens/ERC20/ERC20.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IERC20 } from "@crane/contracts/interfaces/IERC20.sol";
-import { IERC20Events } from "@crane/contracts/interfaces/IERC20Events.sol";
+import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
 /// @notice WETH test token for Balancer testing
 /// @dev Implements IWETH interface

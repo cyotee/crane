@@ -6,20 +6,28 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 
-import { BaseERC4626BufferTest } from "./utils/BaseERC4626BufferTest.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
-import { ProtocolFeeControllerMock } from "../../contracts/test/ProtocolFeeControllerMock.sol";
+import {BaseERC4626BufferTest} from "./utils/BaseERC4626BufferTest.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
+import {ProtocolFeeControllerMock} from "../../contracts/test/ProtocolFeeControllerMock.sol";
 
 contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
     using ArrayHelpers for *;
@@ -55,14 +63,13 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
 
         vm.deal(payable(bob), bob.balance + 1000 * erc4626PoolInitialAmount);
         vm.prank(bob);
-        weth.deposit{ value: 1000 * erc4626PoolInitialAmount }();
+        weth.deposit{value: 1000 * erc4626PoolInitialAmount}();
 
         ProtocolFeeControllerMock feeController = ProtocolFeeControllerMock(address(vault.getProtocolFeeController()));
         IAuthentication feeControllerAuth = IAuthentication(address(feeController));
 
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector),
-            admin
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector), admin
         );
 
         vm.prank(poolCreator);
@@ -190,11 +197,8 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         }
 
         if (testLocals.shouldTestFee) {
-            testLocals.poolSwapFeePercentage = bound(
-                testLocals.poolSwapFeePercentage,
-                minPoolSwapFeePercentage,
-                maxPoolSwapFeePercentage
-            );
+            testLocals.poolSwapFeePercentage =
+                bound(testLocals.poolSwapFeePercentage, minPoolSwapFeePercentage, maxPoolSwapFeePercentage);
         } else {
             testLocals.poolSwapFeePercentage = minPoolSwapFeePercentage;
         }
@@ -202,21 +206,17 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         vault.manualSetStaticSwapFeePercentage(pool, testLocals.poolSwapFeePercentage);
 
         vm.assertEq(
-            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waDAI))),
-            0,
-            "Collected fees for waDAI are wrong"
+            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waDAI))), 0, "Collected fees for waDAI are wrong"
         );
         vm.assertEq(
-            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waWETH))),
-            0,
-            "Collected fees for waWETH are wrong"
+            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waWETH))), 0, "Collected fees for waWETH are wrong"
         );
 
         TestBalances memory balancesBefore = _getTestBalances(bob);
 
         SwapPathExactAmountIn[] memory pathsDo = _buildExactInPaths(dai, exactDaiAmountIn);
         vm.prank(bob);
-        (uint256[] memory pathAmountsOut, , ) = batchRouter.swapExactIn(pathsDo, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsOut,,) = batchRouter.swapExactIn(pathsDo, MAX_UINT256, false, bytes(""));
 
         // If amountsOut is smaller than minSwapAmount, we won't be able to undo the operation, so ignore the test.
         vm.assume(pathAmountsOut[0] > minSwapAmount);
@@ -247,11 +247,8 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         }
 
         if (testLocals.shouldTestFee) {
-            testLocals.poolSwapFeePercentage = bound(
-                testLocals.poolSwapFeePercentage,
-                minPoolSwapFeePercentage,
-                maxPoolSwapFeePercentage
-            );
+            testLocals.poolSwapFeePercentage =
+                bound(testLocals.poolSwapFeePercentage, minPoolSwapFeePercentage, maxPoolSwapFeePercentage);
         } else {
             testLocals.poolSwapFeePercentage = minPoolSwapFeePercentage;
         }
@@ -259,21 +256,17 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         vault.manualSetStaticSwapFeePercentage(pool, testLocals.poolSwapFeePercentage);
 
         vm.assertEq(
-            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waDAI))),
-            0,
-            "Collected fees for waDAI are wrong"
+            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waDAI))), 0, "Collected fees for waDAI are wrong"
         );
         vm.assertEq(
-            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waWETH))),
-            0,
-            "Collected fees for waWETH are wrong"
+            vault.getAggregateSwapFeeAmount(pool, IERC20(address(waWETH))), 0, "Collected fees for waWETH are wrong"
         );
 
         TestBalances memory balancesBefore = _getTestBalances(bob);
 
         SwapPathExactAmountOut[] memory pathsDo = _buildExactOutPaths(weth, exactWethAmountOut);
         vm.prank(bob);
-        (uint256[] memory pathAmountsIn, , ) = batchRouter.swapExactOut(pathsDo, MAX_UINT256, false, bytes(""));
+        (uint256[] memory pathAmountsIn,,) = batchRouter.swapExactOut(pathsDo, MAX_UINT256, false, bytes(""));
 
         // If amountsIn is smaller than minSwapAmount, we won't be able to undo the operation, so ignore the test.
         vm.assume(pathAmountsIn[0] > minSwapAmount);
@@ -290,15 +283,12 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         _checkUserBalancesAndPoolInvariant(balancesBefore, balancesAfter);
     }
 
-    function _checkUserBalancesAndPoolInvariant(
-        TestBalances memory balancesBefore,
-        TestBalances memory balancesAfter
-    ) private {
+    function _checkUserBalancesAndPoolInvariant(TestBalances memory balancesBefore, TestBalances memory balancesAfter)
+        private
+    {
         // Pool invariant should never decrease.
         assertGe(
-            balancesAfter.balances.poolInvariant,
-            balancesBefore.balances.poolInvariant,
-            "Pool invariant decreased"
+            balancesAfter.balances.poolInvariant, balancesBefore.balances.poolInvariant, "Pool invariant decreased"
         );
 
         // User balances should be smaller than before, and user should pay the fees.
@@ -317,38 +307,32 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         // calculating the amount of tokens in the Vault involves previewRedeem, used multiple times by buffers,
         // fee calculation, and to transform wrapped amounts in underlying amounts, which introduces rounding errors to
         // compare user and vault amounts. Make sure this rounding error is below 10 wei.
-        uint256 senderDaiDelta = balancesBefore.balances.bobTokens[balancesBefore.daiIdx] -
-            balancesAfter.balances.bobTokens[balancesAfter.daiIdx];
-        uint256 vaultTotalDaiBefore = balancesBefore.balances.vaultTokens[balancesBefore.daiIdx] +
-            _vaultPreviewRedeem(waDAI, balancesBefore.balances.vaultTokens[balancesBefore.waDaiIdx]);
-        uint256 vaultTotalDaiAfter = balancesAfter.balances.vaultTokens[balancesAfter.daiIdx] +
-            _vaultPreviewRedeem(waDAI, balancesAfter.balances.vaultTokens[balancesAfter.waDaiIdx]);
+        uint256 senderDaiDelta = balancesBefore.balances.bobTokens[balancesBefore.daiIdx]
+            - balancesAfter.balances.bobTokens[balancesAfter.daiIdx];
+        uint256 vaultTotalDaiBefore = balancesBefore.balances.vaultTokens[balancesBefore.daiIdx]
+            + _vaultPreviewRedeem(waDAI, balancesBefore.balances.vaultTokens[balancesBefore.waDaiIdx]);
+        uint256 vaultTotalDaiAfter = balancesAfter.balances.vaultTokens[balancesAfter.daiIdx]
+            + _vaultPreviewRedeem(waDAI, balancesAfter.balances.vaultTokens[balancesAfter.waDaiIdx]);
 
         // `vaultTotalDaiAfter - vaultTotalDaiBefore = senderDaiDelta`, solve for daiAfter to prevent underflow.
         assertApproxEqAbs(
-            vaultTotalDaiAfter,
-            senderDaiDelta + vaultTotalDaiBefore,
-            MAX_ERROR,
-            "Vault dai/waDAI balance is wrong"
+            vaultTotalDaiAfter, senderDaiDelta + vaultTotalDaiBefore, MAX_ERROR, "Vault dai/waDAI balance is wrong"
         );
 
         // All tokens paid by the user should stay in the Vault since pool creator fees were not charged yet. However,
         // calculating the amount of tokens in the Vault involves previewRedeem, used multiple times by buffers,
         // fee calculation, and to transform wrapped amounts in underlying amounts, which introduces rounding errors to
         // compare user and vault amounts. Make sure this rounding error is below 10 wei.
-        uint256 senderWethDelta = balancesBefore.balances.bobTokens[balancesBefore.wethIdx] -
-            balancesAfter.balances.bobTokens[balancesAfter.wethIdx];
-        uint256 vaultTotalWethBefore = balancesBefore.balances.vaultTokens[balancesBefore.wethIdx] +
-            _vaultPreviewRedeem(waWETH, balancesBefore.balances.vaultTokens[balancesBefore.waWethIdx]);
-        uint256 vaultTotalWethAfter = balancesAfter.balances.vaultTokens[balancesAfter.wethIdx] +
-            _vaultPreviewRedeem(waWETH, balancesAfter.balances.vaultTokens[balancesAfter.waWethIdx]);
+        uint256 senderWethDelta = balancesBefore.balances.bobTokens[balancesBefore.wethIdx]
+            - balancesAfter.balances.bobTokens[balancesAfter.wethIdx];
+        uint256 vaultTotalWethBefore = balancesBefore.balances.vaultTokens[balancesBefore.wethIdx]
+            + _vaultPreviewRedeem(waWETH, balancesBefore.balances.vaultTokens[balancesBefore.waWethIdx]);
+        uint256 vaultTotalWethAfter = balancesAfter.balances.vaultTokens[balancesAfter.wethIdx]
+            + _vaultPreviewRedeem(waWETH, balancesAfter.balances.vaultTokens[balancesAfter.waWethIdx]);
 
         // `vaultTotalWethAfter - vaultTotalWethBefore = senderWethDelta`, solve for wethAfter to prevent underflow.
         assertApproxEqAbs(
-            vaultTotalWethAfter,
-            senderWethDelta + vaultTotalWethBefore,
-            MAX_ERROR,
-            "Vault weth/waWETH balance is wrong"
+            vaultTotalWethAfter, senderWethDelta + vaultTotalWethBefore, MAX_ERROR, "Vault weth/waWETH balance is wrong"
         );
 
         // This can only happen in WETH, since the caller puts back in the undo operation all the WETH tokens that Do
@@ -375,18 +359,16 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         uint256 sumDeltaVault = vaultTotalWethAfter + vaultTotalDaiAfter - vaultTotalDaiBefore - vaultTotalWethBefore;
         uint256 sumDeltaSender = senderWethDelta + senderDaiDelta;
         assertApproxEqAbs(
-            sumDeltaVault,
-            sumDeltaSender,
-            MAX_ERROR,
-            "Sum of tokens in the vault after Do/Undo operation is wrong"
+            sumDeltaVault, sumDeltaSender, MAX_ERROR, "Sum of tokens in the vault after Do/Undo operation is wrong"
         );
         assertLe(sumDeltaVault, sumDeltaSender, "Sender paid less tokens than vault delta");
     }
 
-    function _buildExactInPaths(
-        IERC20 tokenIn,
-        uint256 amountIn
-    ) private view returns (SwapPathExactAmountIn[] memory paths) {
+    function _buildExactInPaths(IERC20 tokenIn, uint256 amountIn)
+        private
+        view
+        returns (SwapPathExactAmountIn[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](3);
         paths = new SwapPathExactAmountIn[](1);
 
@@ -395,22 +377,23 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         // and finally post-swap the waWETH through the WETH buffer to calculate the WETH amount out.
         // The only token transfers are DAI in (given) and WETH out (calculated).
         if (tokenIn == dai) {
-            steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: waDAI, isBuffer: true });
-            steps[1] = SwapPathStep({ pool: pool, tokenOut: waWETH, isBuffer: false });
-            steps[2] = SwapPathStep({ pool: address(waWETH), tokenOut: weth, isBuffer: true });
+            steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
+            steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
+            steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});
         } else {
-            steps[0] = SwapPathStep({ pool: address(waWETH), tokenOut: waWETH, isBuffer: true });
-            steps[1] = SwapPathStep({ pool: pool, tokenOut: waDAI, isBuffer: false });
-            steps[2] = SwapPathStep({ pool: address(waDAI), tokenOut: dai, isBuffer: true });
+            steps[0] = SwapPathStep({pool: address(waWETH), tokenOut: waWETH, isBuffer: true});
+            steps[1] = SwapPathStep({pool: pool, tokenOut: waDAI, isBuffer: false});
+            steps[2] = SwapPathStep({pool: address(waDAI), tokenOut: dai, isBuffer: true});
         }
 
-        paths[0] = SwapPathExactAmountIn({ tokenIn: tokenIn, steps: steps, exactAmountIn: amountIn, minAmountOut: 1 });
+        paths[0] = SwapPathExactAmountIn({tokenIn: tokenIn, steps: steps, exactAmountIn: amountIn, minAmountOut: 1});
     }
 
-    function _buildExactOutPaths(
-        IERC20 tokenOut,
-        uint256 amountOut
-    ) private view returns (SwapPathExactAmountOut[] memory paths) {
+    function _buildExactOutPaths(IERC20 tokenOut, uint256 amountOut)
+        private
+        view
+        returns (SwapPathExactAmountOut[] memory paths)
+    {
         SwapPathStep[] memory steps = new SwapPathStep[](3);
         paths = new SwapPathExactAmountOut[](1);
         IERC20 tokenIn = tokenOut == dai ? IERC20(address(weth)) : dai;
@@ -420,22 +403,19 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         // and finally post-swap the waDAI for DAI through the DAI buffer to calculate the DAI amount in.
         // The only token transfers are DAI in (calculated) and WETH out (given).
         if (tokenIn == dai) {
-            steps[0] = SwapPathStep({ pool: address(waDAI), tokenOut: waDAI, isBuffer: true });
-            steps[1] = SwapPathStep({ pool: pool, tokenOut: waWETH, isBuffer: false });
-            steps[2] = SwapPathStep({ pool: address(waWETH), tokenOut: weth, isBuffer: true });
+            steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
+            steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
+            steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});
         } else {
-            steps[0] = SwapPathStep({ pool: address(waWETH), tokenOut: waWETH, isBuffer: true });
-            steps[1] = SwapPathStep({ pool: pool, tokenOut: waDAI, isBuffer: false });
-            steps[2] = SwapPathStep({ pool: address(waDAI), tokenOut: dai, isBuffer: true });
+            steps[0] = SwapPathStep({pool: address(waWETH), tokenOut: waWETH, isBuffer: true});
+            steps[1] = SwapPathStep({pool: pool, tokenOut: waDAI, isBuffer: false});
+            steps[2] = SwapPathStep({pool: address(waDAI), tokenOut: dai, isBuffer: true});
         }
 
         // We cannot use MAX_UINT128 as maxAmountIn, since the maxAmountIn is paid upfront. We need to use a value that
         // "Bob" can pay.
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: tokenIn,
-            steps: steps,
-            maxAmountIn: dai.balanceOf(bob) / 10,
-            exactAmountOut: amountOut
+            tokenIn: tokenIn, steps: steps, maxAmountIn: dai.balanceOf(bob) / 10, exactAmountOut: amountOut
         });
     }
 
@@ -443,18 +423,10 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         // 10% to 1000% of erc4626 initial pool liquidity.
         // Matches E2eSwap.t.sol bounds to avoid StableMath MaxImbalanceRatioExceeded
         // (worst-case ratio is 100:1, well within MAX_IMBALANCE_RATIO of 10,000).
-        liquidityWaDai = bound(
-            liquidityWaDai,
-            erc4626PoolInitialAmount / 10,
-            10 * erc4626PoolInitialAmount
-        );
+        liquidityWaDai = bound(liquidityWaDai, erc4626PoolInitialAmount / 10, 10 * erc4626PoolInitialAmount);
         liquidityWaDai = _vaultPreviewDeposit(waDAI, liquidityWaDai);
         // 10% to 1000% of erc4626 initial pool liquidity.
-        liquidityWaWeth = bound(
-            liquidityWaWeth,
-            erc4626PoolInitialAmount / 10,
-            10 * erc4626PoolInitialAmount
-        );
+        liquidityWaWeth = bound(liquidityWaWeth, erc4626PoolInitialAmount / 10, 10 * erc4626PoolInitialAmount);
         liquidityWaWeth = _vaultPreviewDeposit(waWETH, liquidityWaWeth);
 
         uint256[] memory newPoolBalance = new uint256[](2);
@@ -465,7 +437,7 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         newPoolBalanceLiveScaled18[waDaiIdx] = liquidityWaDai.toScaled18ApplyRateRoundUp(1, waDAI.getRate());
         newPoolBalanceLiveScaled18[waWethIdx] = liquidityWaWeth.toScaled18ApplyRateRoundUp(1, waWETH.getRate());
 
-        (IERC20[] memory tokens, , , ) = vault.getPoolTokenInfo(pool);
+        (IERC20[] memory tokens,,,) = vault.getPoolTokenInfo(pool);
         vault.manualSetPoolTokensAndBalances(pool, tokens, newPoolBalance, newPoolBalanceLiveScaled18);
         // Updates pool data with latest token rates.
         vault.loadPoolDataUpdatingBalancesAndYieldFees(pool, Rounding.ROUND_DOWN);
@@ -474,7 +446,7 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
     function _getMaxSwapAmount() private view returns (uint256 newMaxSwapAmount) {
         // In the case of an yield-bearing pool, lastBalancesLiveScaled18 is the same as the balances in underlying
         // terms, if underlying and wrapped tokens have 18 decimals.
-        (, , , uint256[] memory underlyingBalances) = vault.getPoolTokenInfo(pool);
+        (,,, uint256[] memory underlyingBalances) = vault.getPoolTokenInfo(pool);
         uint256 smallerBalance = underlyingBalances[waDaiIdx] < underlyingBalances[waWethIdx]
             ? underlyingBalances[waDaiIdx]
             : underlyingBalances[waWethIdx];
@@ -504,9 +476,8 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         testBalances.wethIdx = 1;
         testBalances.waDaiIdx = 2;
         testBalances.waWethIdx = 3;
-        IERC20[] memory tokenArray = [address(dai), address(weth), address(waDAI), address(waWETH)]
-            .toMemoryArray()
-            .asIERC20();
+        IERC20[] memory tokenArray =
+            [address(dai), address(weth), address(waDAI), address(waWETH)].toMemoryArray().asIERC20();
         testBalances.balances = getBalances(sender, tokenArray);
 
         (uint256 waDAIBufferBalanceUnderlying, uint256 waDAIBufferBalanceWrapped) = vault.getBufferBalance(waDAI);
@@ -529,7 +500,7 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         uint256 underlyingToDeposit = 10000 * erc4626PoolInitialAmount;
         dai.mint(address(vault), underlyingToDeposit);
         vm.deal(payable(address(vault)), address(vault).balance + underlyingToDeposit);
-        weth.deposit{ value: underlyingToDeposit }();
+        weth.deposit{value: underlyingToDeposit}();
 
         dai.approve(address(waDAI), underlyingToDeposit);
         uint256 mintedWaDAI = waDAI.deposit(underlyingToDeposit, address(vault));

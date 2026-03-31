@@ -62,14 +62,33 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
     }
 
     function _createUniswapPairs() internal {
-        uniswapBalancedPair = IUniswapV2Pair(uniswapV2Factory.createPair(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB)));
-        vm.label(address(uniswapBalancedPair), string.concat("UniswapBalancedPair - ", uniswapBalancedTokenA.symbol(), " / ", uniswapBalancedTokenB.symbol()));
+        uniswapBalancedPair =
+            IUniswapV2Pair(uniswapV2Factory.createPair(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB)));
+        vm.label(
+            address(uniswapBalancedPair),
+            string.concat(
+                "UniswapBalancedPair - ", uniswapBalancedTokenA.symbol(), " / ", uniswapBalancedTokenB.symbol()
+            )
+        );
 
-        uniswapUnbalancedPair = IUniswapV2Pair(uniswapV2Factory.createPair(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB)));
-        vm.label(address(uniswapUnbalancedPair), string.concat("UniswapUnbalancedPair - ", uniswapUnbalancedTokenA.symbol(), " / ", uniswapUnbalancedTokenB.symbol()));
+        uniswapUnbalancedPair = IUniswapV2Pair(
+            uniswapV2Factory.createPair(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB))
+        );
+        vm.label(
+            address(uniswapUnbalancedPair),
+            string.concat(
+                "UniswapUnbalancedPair - ", uniswapUnbalancedTokenA.symbol(), " / ", uniswapUnbalancedTokenB.symbol()
+            )
+        );
 
-        uniswapExtremeUnbalancedPair = IUniswapV2Pair(uniswapV2Factory.createPair(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB)));
-        vm.label(address(uniswapExtremeUnbalancedPair), string.concat("UniswapExtremeUnbalancedPair - ", uniswapExtremeTokenA.symbol(), " / ", uniswapExtremeTokenB.symbol()));
+        uniswapExtremeUnbalancedPair =
+            IUniswapV2Pair(uniswapV2Factory.createPair(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB)));
+        vm.label(
+            address(uniswapExtremeUnbalancedPair),
+            string.concat(
+                "UniswapExtremeUnbalancedPair - ", uniswapExtremeTokenA.symbol(), " / ", uniswapExtremeTokenB.symbol()
+            )
+        );
     }
 
     function _initializeUniswapBalancedPools() internal {
@@ -78,7 +97,16 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
         uniswapBalancedTokenB.mint(address(this), INITIAL_LIQUIDITY);
         uniswapBalancedTokenB.approve(address(uniswapV2Router), INITIAL_LIQUIDITY);
 
-        uniswapV2Router.addLiquidity(address(uniswapBalancedTokenA), address(uniswapBalancedTokenB), INITIAL_LIQUIDITY, INITIAL_LIQUIDITY, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            INITIAL_LIQUIDITY,
+            INITIAL_LIQUIDITY,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
     function _initializeUniswapUnbalancedPools() internal {
@@ -87,7 +115,16 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
         uniswapUnbalancedTokenB.mint(address(this), UNBALANCED_RATIO_B);
         uniswapUnbalancedTokenB.approve(address(uniswapV2Router), UNBALANCED_RATIO_B);
 
-        uniswapV2Router.addLiquidity(address(uniswapUnbalancedTokenA), address(uniswapUnbalancedTokenB), UNBALANCED_RATIO_A, UNBALANCED_RATIO_B, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapUnbalancedTokenA),
+            address(uniswapUnbalancedTokenB),
+            UNBALANCED_RATIO_A,
+            UNBALANCED_RATIO_B,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
     function _initializeUniswapExtremeUnbalancedPools() internal {
@@ -96,10 +133,21 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
         uniswapExtremeTokenB.mint(address(this), UNBALANCED_RATIO_C);
         uniswapExtremeTokenB.approve(address(uniswapV2Router), UNBALANCED_RATIO_C);
 
-        uniswapV2Router.addLiquidity(address(uniswapExtremeTokenA), address(uniswapExtremeTokenB), UNBALANCED_RATIO_A, UNBALANCED_RATIO_C, 1, 1, address(this), block.timestamp);
+        uniswapV2Router.addLiquidity(
+            address(uniswapExtremeTokenA),
+            address(uniswapExtremeTokenB),
+            UNBALANCED_RATIO_A,
+            UNBALANCED_RATIO_C,
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
     }
 
-    function _executeUniswapTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB) internal {
+    function _executeUniswapTradesToGenerateFees(ERC20PermitMintableStub tokenA, ERC20PermitMintableStub tokenB)
+        internal
+    {
         uint256 swapAmountA = 100e18;
         tokenA.mint(address(this), swapAmountA);
         tokenA.approve(address(uniswapV2Router), swapAmountA);
@@ -109,11 +157,7 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
         path[1] = address(tokenB);
 
         uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmountA,
-            0,
-            path,
-            address(this),
-            block.timestamp + 300
+            swapAmountA, 0, path, address(this), block.timestamp + 300
         );
 
         uint256 balanceB = tokenB.balanceOf(address(this));
@@ -123,11 +167,7 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
             pathRev[0] = address(tokenB);
             pathRev[1] = address(tokenA);
             uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceB,
-                0,
-                pathRev,
-                address(this),
-                block.timestamp + 300
+                balanceB, 0, pathRev, address(this), block.timestamp + 300
             );
         }
 
@@ -135,13 +175,8 @@ contract TestBase_UniswapV2_Pools is TestBase_UniswapV2 {
         if (balanceA > 0) {
             tokenA.approve(address(uniswapV2Router), balanceA);
             uniswapV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                balanceA,
-                0,
-                path,
-                address(this),
-                block.timestamp + 300
+                balanceA, 0, path, address(this), block.timestamp + 300
             );
         }
     }
-
 }

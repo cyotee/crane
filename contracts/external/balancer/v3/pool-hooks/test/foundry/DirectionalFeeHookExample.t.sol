@@ -6,9 +6,9 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IVaultAdmin } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {
     HooksConfig,
     LiquidityManagement,
@@ -18,22 +18,24 @@ import {
     PoolSwapParams
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { StablePool } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
-import { StablePoolFactory } from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
+import {StablePool} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePool.sol";
+import {StablePoolFactory} from "@crane/contracts/external/balancer/v3/pool-stable/contracts/StablePoolFactory.sol";
 import {
     StablePoolContractsDeployer
 } from "@crane/contracts/external/balancer/v3/pool-stable/test/foundry/utils/StablePoolContractsDeployer.sol";
-import { PoolMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
+import {PoolMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolMock.sol";
 
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
 
-import { DirectionalFeeHookExample } from "../../contracts/DirectionalFeeHookExample.sol";
+import {DirectionalFeeHookExample} from "../../contracts/DirectionalFeeHookExample.sol";
 
 contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTest {
     using CastingHelpers for address[];
@@ -71,10 +73,11 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         return directionalFeeHook;
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "Stable Pool Test";
         string memory symbol = "STABLE-TEST";
 
@@ -84,18 +87,19 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         emit DirectionalFeeHookExample.DirectionalFeeHookExampleRegistered(directionalFeeHook, poolFactory, address(0));
 
         newPool = address(
-            StablePoolFactory(poolFactory).create(
-                name,
-                symbol,
-                vault.buildTokenConfig(tokens.asIERC20()),
-                DEFAULT_AMP_FACTOR,
-                roleAccounts,
-                BASE_MIN_SWAP_FEE,
-                poolHooksContract,
-                false, // Does not allow donations
-                false, // Do not disable unbalanced add/remove liquidity
-                ZERO_BYTES32
-            )
+            StablePoolFactory(poolFactory)
+                .create(
+                    name,
+                    symbol,
+                    vault.buildTokenConfig(tokens.asIERC20()),
+                    DEFAULT_AMP_FACTOR,
+                    roleAccounts,
+                    BASE_MIN_SWAP_FEE,
+                    poolHooksContract,
+                    false, // Does not allow donations
+                    false, // Do not disable unbalanced add/remove liquidity
+                    ZERO_BYTES32
+                )
         );
         vm.label(newPool, label);
 
@@ -106,10 +110,7 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         // poolArgs is used to check pool deployment address with create2.
         poolArgs = abi.encode(
             StablePool.NewPoolParams({
-                name: name,
-                symbol: symbol,
-                amplificationParameter: DEFAULT_AMP_FACTOR,
-                version: "Pool v1"
+                name: name, symbol: symbol, amplificationParameter: DEFAULT_AMP_FACTOR, version: "Pool v1"
             }),
             vault
         );
@@ -117,9 +118,8 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
 
     function testRegistryWithWrongFactory() public {
         address directionalFeePool = _createPoolToRegister();
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         // Registration fails because this factory is not allowed to register the hook.
         vm.expectRevert(
@@ -150,10 +150,8 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         BaseVaultTest.Balances memory balancesBefore = getBalances(lp);
 
         // Calculate the expected amount out (amount out without fees)
-        uint256 poolInvariant = StableMath.computeInvariant(
-            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION,
-            balancesBefore.poolTokens
-        );
+        uint256 poolInvariant =
+            StableMath.computeInvariant(DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION, balancesBefore.poolTokens);
         uint256 swapFeeAmount = daiExactAmountIn.mulUp(SWAP_FEE_PERCENTAGE);
         uint256 expectedAmountOut = StableMath.computeOutGivenExactIn(
             DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION,
@@ -237,10 +235,8 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         uint256[] memory balancesScaled18 = balancesBefore.poolTokens;
 
         // Calculate the expected amount out (amount out without fees).
-        uint256 poolInvariant = StableMath.computeInvariant(
-            DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION,
-            balancesScaled18
-        );
+        uint256 poolInvariant =
+            StableMath.computeInvariant(DEFAULT_AMP_FACTOR * StableMath.AMP_PRECISION, balancesScaled18);
 
         // Call the dynamic fee hook to fetch the expected swap fee percentage.
         vm.prank(address(vault));
@@ -347,11 +343,7 @@ contract DirectionalHookExampleTest is StablePoolContractsDeployer, BaseVaultTes
         LiquidityManagement memory liquidityManagement;
 
         poolFactoryMock.registerPool(
-            directionalFeePool,
-            tokenConfig,
-            roleAccounts,
-            poolHooksContract,
-            liquidityManagement
+            directionalFeePool, tokenConfig, roleAccounts, poolHooksContract, liquidityManagement
         );
     }
 }

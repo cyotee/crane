@@ -6,22 +6,24 @@ import "forge-std/Test.sol";
 
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 
-import { IVersion } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
-import { IGyroECLPPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IVersion} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IVersion.sol";
+import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { BasePoolFactory } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { StableMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {BasePoolFactory} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/BasePoolFactory.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
-import { ECLPSurgeHookDeployer } from "./utils/ECLPSurgeHookDeployer.sol";
-import { ECLPSurgePoolFactoryDeployer } from "./utils/ECLPSurgePoolFactoryDeployer.sol";
-import { ECLPSurgeHook } from "../../contracts/ECLPSurgeHook.sol";
-import { ECLPSurgePoolFactory } from "../../contracts/ECLPSurgePoolFactory.sol";
+import {ECLPSurgeHookDeployer} from "./utils/ECLPSurgeHookDeployer.sol";
+import {ECLPSurgePoolFactoryDeployer} from "./utils/ECLPSurgePoolFactoryDeployer.sol";
+import {ECLPSurgeHook} from "../../contracts/ECLPSurgeHook.sol";
+import {ECLPSurgePoolFactory} from "../../contracts/ECLPSurgePoolFactory.sol";
 
 contract ECLPSurgePoolFactoryTest is BaseVaultTest, ECLPSurgeHookDeployer, ECLPSurgePoolFactoryDeployer {
     using CastingHelpers for address[];
@@ -43,12 +45,8 @@ contract ECLPSurgePoolFactoryTest is BaseVaultTest, ECLPSurgeHookDeployer, ECLPS
     function setUp() public override {
         super.setUp();
 
-        ECLPSurgeHook eclpSurgeHook = deployECLPSurgeHook(
-            vault,
-            DEFAULT_MAX_SURGE_FEE_PERCENTAGE,
-            DEFAULT_SURGE_THRESHOLD_PERCENTAGE,
-            "Test"
-        );
+        ECLPSurgeHook eclpSurgeHook =
+            deployECLPSurgeHook(vault, DEFAULT_MAX_SURGE_FEE_PERCENTAGE, DEFAULT_SURGE_THRESHOLD_PERCENTAGE, "Test");
 
         eclpPoolFactory = deployECLPSurgePoolFactory(address(eclpSurgeHook), 365 days, FACTORY_VERSION, POOL_VERSION);
         vm.label(address(eclpPoolFactory), "eclp pool factory");
@@ -91,10 +89,8 @@ contract ECLPSurgePoolFactoryTest is BaseVaultTest, ECLPSurgeHookDeployer, ECLPS
         roleAccounts.poolCreator = alice;
         IERC20[] memory tokens = [address(dai), address(usdc)].toMemoryArray().asIERC20();
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedEclpParams
-        ) = getECLPPoolParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedEclpParams) =
+            getECLPPoolParams();
 
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(tokens);
 
@@ -160,10 +156,8 @@ contract ECLPSurgePoolFactoryTest is BaseVaultTest, ECLPSurgeHookDeployer, ECLPS
         TokenConfig[] memory tokenConfig = vault.buildTokenConfig(bigPoolTokens);
         PoolRoleAccounts memory roleAccounts;
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedEclpParams
-        ) = getECLPPoolParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedEclpParams) =
+            getECLPPoolParams();
 
         vm.expectRevert(IVaultErrors.MaxTokens.selector);
         eclpPoolFactory.create(
@@ -184,10 +178,8 @@ contract ECLPSurgePoolFactoryTest is BaseVaultTest, ECLPSurgeHookDeployer, ECLPS
         PoolRoleAccounts memory roleAccounts;
         IERC20[] memory tokens = [address(dai), address(usdc)].toMemoryArray().asIERC20();
 
-        (
-            IGyroECLPPool.EclpParams memory eclpParams,
-            IGyroECLPPool.DerivedEclpParams memory derivedEclpParams
-        ) = getECLPPoolParams();
+        (IGyroECLPPool.EclpParams memory eclpParams, IGyroECLPPool.DerivedEclpParams memory derivedEclpParams) =
+            getECLPPoolParams();
 
         address eclpPool = eclpPoolFactory.create(
             supportsDonation ? "Pool With Donation" : "Pool Without Donation",

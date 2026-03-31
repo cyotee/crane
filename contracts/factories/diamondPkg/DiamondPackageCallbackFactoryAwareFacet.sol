@@ -15,6 +15,7 @@ import {DiamondPackageFactoryAwareRepo} from "@crane/contracts/factories/diamond
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 contract DiamondPackageFactoryAwareFacet is
+
     // DiamondPackageCallbackFactoryAwareStorage,
     // Create3AwareContract,
     IDiamondPackageCallbackFactoryAware,
@@ -45,11 +46,12 @@ contract DiamondPackageFactoryAwareFacet is
     function facetMetadata()
         external
         pure
-        returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions) {
-            name = facetName();
-            interfaces = facetInterfaces();
-            functions = facetFuncs();
-        }
+        returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
+    }
 
     /* ---------------------------------------------------------------------- */
     /*                   IDiamondPackageCallbackFactoryAware                  */

@@ -6,27 +6,29 @@ import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IRouterCommon } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IRouterCommon} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouterCommon.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { StorageSlotExtension } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { RevertCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {RevertCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 import {
     TransientStorageHelpers
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { RouterWethLib } from "./lib/RouterWethLib.sol";
-import { SenderGuard } from "./SenderGuard.sol";
-import { VaultGuard } from "./VaultGuard.sol";
+import {RouterWethLib} from "./lib/RouterWethLib.sol";
+import {SenderGuard} from "./SenderGuard.sol";
+import {VaultGuard} from "./VaultGuard.sol";
 
 /**
  * @notice Abstract base contract for functions shared among all Routers.
@@ -81,12 +83,11 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
         _returnEth(sender);
     }
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) SenderGuard() VaultGuard(vault) Version(routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        SenderGuard()
+        VaultGuard(vault)
+        Version(routerVersion)
+    {
         _weth = weth;
         _permit2 = permit2;
         _isPrepaid = permit2 == IPermit2(address(0));
@@ -151,8 +152,8 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
             SignatureParts memory signatureParts = _getSignatureParts(signature);
             PermitApproval memory permitApproval = permitBatch[i];
 
-            try
-                IERC20Permit(permitApproval.token).permit(
+            try IERC20Permit(permitApproval.token)
+                .permit(
                     permitApproval.owner,
                     address(this),
                     permitApproval.amount,
@@ -160,11 +161,11 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
                     signatureParts.v,
                     signatureParts.r,
                     signatureParts.s
-                )
-            {
-                // solhint-disable-previous-line no-empty-blocks
-                // OK; carry on.
-            } catch (bytes memory returnData) {
+                ) {
+            // solhint-disable-previous-line no-empty-blocks
+            // OK; carry on.
+            }
+            catch (bytes memory returnData) {
                 // Did it fail because the permit was executed (possible DoS attack to make the transaction revert),
                 // or was it something else (e.g., deadline, invalid signature)?
                 if (
@@ -193,9 +194,13 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
     }
 
     /// @inheritdoc IRouterCommon
-    function multicall(
-        bytes[] calldata data
-    ) public payable virtual saveSenderAndManageEth returns (bytes[] memory results) {
+    function multicall(bytes[] calldata data)
+        public
+        payable
+        virtual
+        saveSenderAndManageEth
+        returns (bytes[] memory results)
+    {
         // Though theoretically these calls could be batched, the normal use case for multicall involves some
         // combination of operation and token transfers (either permit2 or direct to Vault), which cannot be
         // done with multicall alone.
@@ -258,11 +263,11 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
      * The returned array length matches the number of tokens in the pool.
      * Reverts if the given index is greater than or equal to the pool number of tokens.
      */
-    function _getSingleInputArrayAndTokenIndex(
-        address pool,
-        IERC20 token,
-        uint256 amountGiven
-    ) internal view returns (uint256[] memory amountsGiven, uint256 tokenIndex) {
+    function _getSingleInputArrayAndTokenIndex(address pool, IERC20 token, uint256 amountGiven)
+        internal
+        view
+        returns (uint256[] memory amountsGiven, uint256 tokenIndex)
+    {
         uint256 numTokens;
         (numTokens, tokenIndex) = _vault.getPoolTokenCountAndIndexOfToken(pool, token);
         amountsGiven = new uint256[](numTokens);

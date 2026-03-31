@@ -20,7 +20,10 @@ library DiamondPackageCallBackFactoryAwareRepo {
         return _layout(STORAGE_SLOT);
     }
 
-    function _initialize(DiamondPackageCallBackFactoryAwareLayout storage layout, IDiamondPackageCallBackFactory factory_) internal {
+    function _initialize(
+        DiamondPackageCallBackFactoryAwareLayout storage layout,
+        IDiamondPackageCallBackFactory factory_
+    ) internal {
         layout.factory = factory_;
     }
 

@@ -12,16 +12,17 @@ fs_permissions = [
     { access = "read-write", path = "./script/output" }
 ]
 # block_gas_limit = "9223372036854775807"
-solc = "0.8.30"
+solc = "0.8.34"
 sizes = true
 optimizer = true
-# viaIR disabled - use structs to avoid "stack too deep" errors
-viaIR = false
 # optimizer_runs = 4294967295
 # CamelotFactory requires 16683 to fit within execution code size limits
 # optimizer_runs = 16683
+# optimizer_runs = 2000
 # optimizer_runs = 999
 optimizer_runs = 1
+# viaIR disabled - use structs to avoid "stack too deep" errors
+viaIR = false
 # Allow vm.expectRevert() for internal/library function calls (Foundry v1.0+ changed depth requirements)
 allow_internal_expect_revert = true
 remappings = [
@@ -35,9 +36,19 @@ ignored_error_codes = [
     5574, 
     2072
 ]
-ignored_warnings_from = ["lib/balancer-v3-monorepo/pkg/vault/contracts/RouterCommon.sol"]
 
-skip = ["lib/reclamm/**"]
+skip = [
+    "lib/reclamm/**",
+    # Euler v1 - external dep issues (LayerZero, Solmate, Uniswap V4, Pendle, Pyth)
+    "contracts/protocols/lending/euler/v1/**",
+    # External packages with missing dependencies
+    "contracts/external/openzeppelin-upgradeable/**",
+    "contracts/external/layerzero/**",
+    "contracts/external/pendle/**",
+    "contracts/external/pyth/**",
+    "contracts/external/redstone/**",
+    "contracts/external/uniswap/**",
+]
 
 [invariant]
 runs = 50
@@ -66,15 +77,82 @@ exclude_lints = [
     "unsafe-cheatcode",
     "named-struct-fields"
 ]
+ignore = [
+    "contracts/test/stubs/greeter/OperableGreeter.sol",
+    "contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3_WeightedPool.sol",
+    "contracts/constants/protocols/dexes/balancer/v3/BalancerV3_CONSTANTS.sol",
+    "contracts/external/balancer/v3/vault/test/foundry/RouterCommon.t.sol",
+    "contracts/external/balancer/v3/pool-stable/contracts/test/HardhatImports.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IVotingEscrow.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IEpochGovernor.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IAirdropDistributor.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IAero.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IFactoryRegistry.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IVotingRewardsFactory.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IGaugeFactory.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IPoolCallee.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IRewardsDistributor.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IVoter.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IMinter.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IVotes.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IGauge.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IReward.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IManagedRewardsFactory.sol",
+    "contracts/interfaces/protocols/dexes/aerodrome/IVeArtProxy.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IBatchRouter.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IBasePool.sol",
+    "contracts/interfaces/IERC20MinterFacade.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IPoolLiquidity.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IBufferRouter.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IRouter.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/ISenderGuard.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/RouterTypes.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IWeightedPool.sol",
+    "contracts/interfaces/protocols/dexes/balancer/v3/IRouterCommon.sol",
+    "contracts/external/balancer/v3/pool-weighted/contracts/test/HardhatImports.sol",
+    "test/foundry/spec/tokens/ERC20/ERC20DFPkg_IDiamondLoupe.t.sol",
+    "contracts/protocols/dexes/balancer/v3/test/bases/TestBase_BalancerV3_WeightedPool.sol",
+    "contracts/protocols/dexes/balancer/v3/vault/VaultGuardModifiers.sol",
+    "test/foundry/spec/introspection/ERC2535/DiamondLoupeFacet.t.sol",
+    "contracts/external/balancer/v3/pool-cow/contracts/test/HardhatImports.sol",
+    "contracts/external/balancer/v3/pool-hooks/contracts/test/HardhatImports.sol",
+    "contracts/external/balancer/v3/pool-gyro/contracts/test/HardhatImports.sol",
+    "contracts/registries/package/DiamondFactoryPackageRegistry.sol",
+    "contracts/external/openzeppelin/interfaces/IERC777Recipient.sol",
+    "contracts/external/openzeppelin/interfaces/IERC721Enumerable.sol",
+    "contracts/external/openzeppelin/interfaces/IERC721Metadata.sol",
+    "contracts/external/openzeppelin/interfaces/IERC777Sender.sol",
+    "contracts/external/openzeppelin/interfaces/IERC1155Receiver.sol",
+    "contracts/external/openzeppelin/interfaces/IERC721Receiver.sol",
+    "contracts/external/openzeppelin/interfaces/IERC1820Registry.sol",
+    "contracts/external/openzeppelin/interfaces/IERC1155.sol",
+    "contracts/external/openzeppelin/interfaces/IERC1820Implementer.sol",
+    "contracts/external/openzeppelin/interfaces/IERC3156.sol",
+    "contracts/external/openzeppelin/interfaces/IERC1155MetadataURI.sol",
+    "contracts/external/openzeppelin/interfaces/IERC20Metadata.sol",
+    "contracts/external/openzeppelin/interfaces/draft-IERC2612.sol",
+    "contracts/external/openzeppelin/interfaces/IERC777.sol",
+    "contracts/external/openzeppelin/token/ERC20/extensions/draft-IERC20Permit.sol",
+    "contracts/external/openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol"
+]
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
 ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+ethereum_mainnet_alchemy = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
 ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
+ethereum_sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
 sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
 base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
+base_mainnet_alchemy = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
 base_sepolia_infura = "https://base-sepolia.infura.io/v3/${INFURA_KEY}"
+base_sepolia_alchemy = "https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
+optimism_mainnet = "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
+fantom_mainnet = "https://fantom.drpc.org"
+
 apeChain_rpc = "https://rpc.apechain.com"
 apeChain_drpc = "https://apechain.drpc.org"
 apeChain_curtis_rpc = "https://rpc.curtis.apechain.com"
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

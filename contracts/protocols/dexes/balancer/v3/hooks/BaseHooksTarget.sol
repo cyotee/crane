@@ -87,12 +87,11 @@ abstract contract BaseHooksTarget is IHooks {
     /* ========================================================================== */
 
     /// @inheritdoc IHooks
-    function onRegister(
-        address,
-        address,
-        TokenConfig[] memory,
-        LiquidityManagement calldata
-    ) public virtual returns (bool) {
+    function onRegister(address, address, TokenConfig[] memory, LiquidityManagement calldata)
+        public
+        virtual
+        returns (bool)
+    {
         // By default, deny all factories. Override in derived contracts.
         return false;
     }
@@ -175,11 +174,12 @@ abstract contract BaseHooksTarget is IHooks {
     }
 
     /// @inheritdoc IHooks
-    function onComputeDynamicSwapFeePercentage(
-        PoolSwapParams calldata,
-        address,
-        uint256
-    ) public view virtual returns (bool, uint256) {
+    function onComputeDynamicSwapFeePercentage(PoolSwapParams calldata, address, uint256)
+        public
+        view
+        virtual
+        returns (bool, uint256)
+    {
         return (false, 0);
     }
 }

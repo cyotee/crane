@@ -5,7 +5,9 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ICamelotPair} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {ICamelotFactory} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol";
-import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
+import {
+    TestBase_ConstProdUtils_Camelot
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 import {CamelotPair} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/CamelotPair.sol";
@@ -91,7 +93,9 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         referrerTokenB.mint(address(this), REFERRER_INITIAL_LIQUIDITY);
         referrerTokenB.approve(address(camelotV2Router), REFERRER_INITIAL_LIQUIDITY);
 
-        CamelotV2Service._deposit(camelotV2Router, referrerTokenA, referrerTokenB, REFERRER_INITIAL_LIQUIDITY, REFERRER_INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router, referrerTokenA, referrerTokenB, REFERRER_INITIAL_LIQUIDITY, REFERRER_INITIAL_LIQUIDITY
+        );
     }
 
     function _setReferrerFeeShare(address _referrer, uint256 feeShare) internal {
@@ -142,7 +146,9 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
     /// @notice Test that referrersFeeShare() can be set to maximum
     function test_referrersFeeShare_canBeSetToMaximum() public {
         _setReferrerFeeShare(referrer, REFERRER_FEE_SHARE_MAX);
-        assertEq(camelotV2Factory.referrersFeeShare(referrer), REFERRER_FEE_SHARE_MAX, "Max fee share should be allowed");
+        assertEq(
+            camelotV2Factory.referrersFeeShare(referrer), REFERRER_FEE_SHARE_MAX, "Max fee share should be allowed"
+        );
     }
 
     /* ---------------------------------------------------------------------- */
@@ -170,12 +176,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         // Check referrer received fee
@@ -205,12 +206,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 referrerBalance = referrerTokenA.balanceOf(referrer);
@@ -235,12 +231,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
 
         // Swap without referrer (address(0))
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            address(0),
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), address(0), block.timestamp + 300
         );
 
         // Verify swap completed successfully - no revert means it worked
@@ -263,12 +254,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 referrerBalance = referrerTokenA.balanceOf(referrer);
@@ -312,12 +298,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 actualOutput = referrerTokenB.balanceOf(address(this)) - balanceBBefore;
@@ -366,7 +347,9 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         tokenC.approve(address(camelotV2Router), REFERRER_INITIAL_LIQUIDITY);
         tokenD.mint(address(this), REFERRER_INITIAL_LIQUIDITY);
         tokenD.approve(address(camelotV2Router), REFERRER_INITIAL_LIQUIDITY);
-        CamelotV2Service._deposit(camelotV2Router, tokenC, tokenD, REFERRER_INITIAL_LIQUIDITY, REFERRER_INITIAL_LIQUIDITY);
+        CamelotV2Service._deposit(
+            camelotV2Router, tokenC, tokenD, REFERRER_INITIAL_LIQUIDITY, REFERRER_INITIAL_LIQUIDITY
+        );
 
         // Second swap: with referrer
         tokenC.mint(address(this), swapAmount);
@@ -397,10 +380,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
     /* ---------------------------------------------------------------------- */
 
     /// @notice Fuzz test for referrer fee calculation
-    function testFuzz_referrerFeeCalculation(
-        uint256 referrerFeeShare,
-        uint256 swapAmount
-    ) public {
+    function testFuzz_referrerFeeCalculation(uint256 referrerFeeShare, uint256 swapAmount) public {
         // Bound inputs
         referrerFeeShare = bound(referrerFeeShare, 1, REFERRER_FEE_SHARE_MAX);
         swapAmount = bound(swapAmount, 1e15, 1000e18);
@@ -416,12 +396,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 referrerBalance = referrerTokenA.balanceOf(referrer);
@@ -456,12 +431,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 referrerBalance = referrerTokenA.balanceOf(referrer);
@@ -493,12 +463,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenA);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         // Referrer receives fee in tokenB (the input token)
@@ -534,12 +499,7 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         path[1] = address(referrerTokenB);
 
         camelotV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            swapAmount,
-            0,
-            path,
-            address(this),
-            referrer,
-            block.timestamp + 300
+            swapAmount, 0, path, address(this), referrer, block.timestamp + 300
         );
 
         uint256 referrerBalance = referrerTokenA.balanceOf(referrer);
@@ -568,14 +528,8 @@ contract CamelotV2_referrerFee_Test is TestBase_ConstProdUtils_Camelot {
         uint256 balanceBBefore = referrerTokenB.balanceOf(address(this));
 
         // Use CamelotV2Service._swap with referrer
-        uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            referrerPair,
-            swapAmount,
-            referrerTokenA,
-            referrerTokenB,
-            referrer
-        );
+        uint256 amountOut =
+            CamelotV2Service._swap(camelotV2Router, referrerPair, swapAmount, referrerTokenA, referrerTokenB, referrer);
 
         uint256 actualReceived = referrerTokenB.balanceOf(address(this)) - balanceBBefore;
 

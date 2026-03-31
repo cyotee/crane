@@ -16,8 +16,9 @@ contract ConstProdUtils_swapDepositSaleAmt_Aerodrome is TestBase_ConstProdUtils_
     function test_swapDepositSaleAmt_Aerodrome_balancedPool() public {
         _initializeAerodromeBalancedPools();
         Pool pair = aeroBalancedPool;
-        (uint256 r0, uint256 r1, ) = pair.getReserves();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(aeroBalancedTokenA), pair.token0(), r0, r1);
+        (uint256 r0, uint256 r1,) = pair.getReserves();
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroBalancedTokenA), pair.token0(), r0, r1);
 
         uint256 amountIn = 1000e18;
         uint256 feePercent = aerodromePoolFactory.getFee(address(pair), false);
@@ -31,15 +32,23 @@ contract ConstProdUtils_swapDepositSaleAmt_Aerodrome is TestBase_ConstProdUtils_
         aeroBalancedTokenA.mint(address(this), amountIn);
         aeroBalancedTokenA.approve(address(aerodromeRouter), saleAmt);
         IRouter.Route[] memory routes = new IRouter.Route[](1);
-        routes[0] = IRouter.Route({from: address(aeroBalancedTokenA), to: address(aeroBalancedTokenB), stable: false, factory: address(aerodromePoolFactory)});
-        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(saleAmt, 1, routes, address(this), block.timestamp);
+        routes[0] = IRouter.Route({
+            from: address(aeroBalancedTokenA),
+            to: address(aeroBalancedTokenB),
+            stable: false,
+            factory: address(aerodromePoolFactory)
+        });
+        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            saleAmt, 1, routes, address(this), block.timestamp
+        );
     }
 
     function test_swapDepositSaleAmt_Aerodrome_unbalancedPool() public {
         _initializeAerodromeUnbalancedPools();
         Pool pair = aeroUnbalancedPool;
-        (uint256 r0, uint256 r1, ) = pair.getReserves();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(aeroUnbalancedTokenA), pair.token0(), r0, r1);
+        (uint256 r0, uint256 r1,) = pair.getReserves();
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroUnbalancedTokenA), pair.token0(), r0, r1);
 
         uint256 amountIn = 1000e18;
         uint256 feePercent = aerodromePoolFactory.getFee(address(pair), false);
@@ -52,15 +61,23 @@ contract ConstProdUtils_swapDepositSaleAmt_Aerodrome is TestBase_ConstProdUtils_
         aeroUnbalancedTokenA.mint(address(this), amountIn);
         aeroUnbalancedTokenA.approve(address(aerodromeRouter), saleAmt);
         IRouter.Route[] memory routes = new IRouter.Route[](1);
-        routes[0] = IRouter.Route({from: address(aeroUnbalancedTokenA), to: address(aeroUnbalancedTokenB), stable: false, factory: address(aerodromePoolFactory)});
-        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(saleAmt, 1, routes, address(this), block.timestamp);
+        routes[0] = IRouter.Route({
+            from: address(aeroUnbalancedTokenA),
+            to: address(aeroUnbalancedTokenB),
+            stable: false,
+            factory: address(aerodromePoolFactory)
+        });
+        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            saleAmt, 1, routes, address(this), block.timestamp
+        );
     }
 
     function test_swapDepositSaleAmt_Aerodrome_extremePool() public {
         _initializeAerodromeExtremeUnbalancedPools();
         Pool pair = aeroExtremeUnbalancedPool;
-        (uint256 r0, uint256 r1, ) = pair.getReserves();
-        (uint256 reserveA, uint256 reserveB) = ConstProdUtils._sortReserves(address(aeroExtremeTokenA), pair.token0(), r0, r1);
+        (uint256 r0, uint256 r1,) = pair.getReserves();
+        (uint256 reserveA, uint256 reserveB) =
+            ConstProdUtils._sortReserves(address(aeroExtremeTokenA), pair.token0(), r0, r1);
 
         uint256 amountIn = 1000e18;
         uint256 feePercent = aerodromePoolFactory.getFee(address(pair), false);
@@ -73,7 +90,14 @@ contract ConstProdUtils_swapDepositSaleAmt_Aerodrome is TestBase_ConstProdUtils_
         aeroExtremeTokenA.mint(address(this), amountIn);
         aeroExtremeTokenA.approve(address(aerodromeRouter), saleAmt);
         IRouter.Route[] memory routes = new IRouter.Route[](1);
-        routes[0] = IRouter.Route({from: address(aeroExtremeTokenA), to: address(aeroExtremeTokenB), stable: false, factory: address(aerodromePoolFactory)});
-        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(saleAmt, 1, routes, address(this), block.timestamp);
+        routes[0] = IRouter.Route({
+            from: address(aeroExtremeTokenA),
+            to: address(aeroExtremeTokenB),
+            stable: false,
+            factory: address(aerodromePoolFactory)
+        });
+        aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            saleAmt, 1, routes, address(this), block.timestamp
+        );
     }
 }

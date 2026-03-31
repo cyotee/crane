@@ -7,32 +7,42 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Create2} from "@crane/contracts/utils/Create2.sol";
 
-import { ContractType } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IWeightedPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {
+    ContractType
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IWeightedPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { BalancerContractRegistry } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    BalancerContractRegistry
+} from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { LBPMigrationRouter } from "../../contracts/lbp/LBPMigrationRouter.sol";
-import { GradualValueChange } from "../../contracts/lib/GradualValueChange.sol";
-import { BaseLBPFactory } from "../../contracts/lbp/BaseLBPFactory.sol";
-import { LBPoolFactory } from "../../contracts/lbp/LBPoolFactory.sol";
-import { LBPValidation } from "../../contracts/lbp/LBPValidation.sol";
-import { LBPCommon } from "../../contracts/lbp/LBPCommon.sol";
-import { WeightedLBPTest } from "./utils/WeightedLBPTest.sol";
-import { LBPool } from "../../contracts/lbp/LBPool.sol";
+import {LBPMigrationRouter} from "../../contracts/lbp/LBPMigrationRouter.sol";
+import {GradualValueChange} from "../../contracts/lib/GradualValueChange.sol";
+import {BaseLBPFactory} from "../../contracts/lbp/BaseLBPFactory.sol";
+import {LBPoolFactory} from "../../contracts/lbp/LBPoolFactory.sol";
+import {LBPValidation} from "../../contracts/lbp/LBPValidation.sol";
+import {LBPCommon} from "../../contracts/lbp/LBPCommon.sol";
+import {WeightedLBPTest} from "./utils/WeightedLBPTest.sol";
+import {LBPool} from "../../contracts/lbp/LBPool.sol";
 
 contract LBPoolTest is WeightedLBPTest {
     using ArrayHelpers for *;
@@ -44,13 +54,12 @@ contract LBPoolTest is WeightedLBPTest {
     }
 
     function createPool() internal virtual override returns (address newPool, bytes memory poolArgs) {
-        return
-            _createLBPool(
-                address(0), // Pool creator
-                uint32(block.timestamp + DEFAULT_START_OFFSET),
-                uint32(block.timestamp + DEFAULT_END_OFFSET),
-                DEFAULT_PROJECT_TOKENS_SWAP_IN
-            );
+        return _createLBPool(
+            address(0), // Pool creator
+            uint32(block.timestamp + DEFAULT_START_OFFSET),
+            uint32(block.timestamp + DEFAULT_END_OFFSET),
+            DEFAULT_PROJECT_TOKENS_SWAP_IN
+        );
     }
 
     /********************************************************
@@ -250,7 +259,7 @@ contract LBPoolTest is WeightedLBPTest {
         vm.expectEmit();
         emit LBPool.GradualWeightUpdateScheduled(startTime, endTime, startWeights, endWeights);
 
-        (address newPool, ) = _createLBPoolWithCustomWeights(
+        (address newPool,) = _createLBPoolWithCustomWeights(
             address(0), // Pool creator
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -308,7 +317,7 @@ contract LBPoolTest is WeightedLBPTest {
         uint256 initNewWeightProjectToken = 60e16; // 60%
         uint256 initNewWeightReserveToken = 40e16; // 40%
 
-        (pool, ) = _createLBPoolWithMigration(
+        (pool,) = _createLBPoolWithMigration(
             address(0), // Pool creator
             initBptLockDuration,
             initBptPercentageToMigrate,
@@ -326,15 +335,9 @@ contract LBPoolTest is WeightedLBPTest {
         assertEq(data.migrationWeightReserveToken, initNewWeightReserveToken, "New reserve token weight mismatch");
 
         MigrationParams memory migrationParams = ILBPCommon(pool).getMigrationParameters();
+        assertEq(migrationParams.lockDurationAfterMigration, initBptLockDuration, "BPT lock duration mismatch (params)");
         assertEq(
-            migrationParams.lockDurationAfterMigration,
-            initBptLockDuration,
-            "BPT lock duration mismatch (params)"
-        );
-        assertEq(
-            migrationParams.bptPercentageToMigrate,
-            initBptPercentageToMigrate,
-            "Share to migrate mismatch (params)"
+            migrationParams.bptPercentageToMigrate, initBptPercentageToMigrate, "Share to migrate mismatch (params)"
         );
         assertEq(
             migrationParams.migrationWeightProjectToken,
@@ -357,9 +360,8 @@ contract LBPoolTest is WeightedLBPTest {
     }
 
     function testGetProjectIndices() public view {
-        (uint256 expectedProjectTokenIndex, uint256 expectedReserveTokenIndex) = projectToken < reserveToken
-            ? (0, 1)
-            : (1, 0);
+        (uint256 expectedProjectTokenIndex, uint256 expectedReserveTokenIndex) =
+            projectToken < reserveToken ? (0, 1) : (1, 0);
 
         (uint256 projectTokenIndex, uint256 reserveTokenIndex) = ILBPCommon(pool).getTokenIndices();
 
@@ -373,7 +375,7 @@ contract LBPoolTest is WeightedLBPTest {
         uint256[] memory customStartWeights = [uint256(22e16), uint256(78e16)].toMemoryArray();
         uint256[] memory customEndWeights = [uint256(65e16), uint256(35e16)].toMemoryArray();
 
-        (address newPool, ) = _createLBPoolWithCustomWeights(
+        (address newPool,) = _createLBPoolWithCustomWeights(
             address(0), // Pool creator
             customStartWeights[projectIdx],
             customStartWeights[reserveIdx],
@@ -416,7 +418,7 @@ contract LBPoolTest is WeightedLBPTest {
     }
 
     function testIsProjectTokenSwapInBlocked() public {
-        (address newPoolSwapDisabled, ) = _createLBPoolWithCustomWeights(
+        (address newPoolSwapDisabled,) = _createLBPoolWithCustomWeights(
             address(0), // Pool creator
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -428,11 +430,10 @@ contract LBPoolTest is WeightedLBPTest {
         );
 
         assertFalse(
-            ILBPCommon(newPoolSwapDisabled).isProjectTokenSwapInBlocked(),
-            "Swap of Project Token in is blocked"
+            ILBPCommon(newPoolSwapDisabled).isProjectTokenSwapInBlocked(), "Swap of Project Token in is blocked"
         );
 
-        (address newPoolSwapEnabled, ) = _createLBPoolWithCustomWeights(
+        (address newPoolSwapEnabled,) = _createLBPoolWithCustomWeights(
             address(0), // Pool creator
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -444,8 +445,7 @@ contract LBPoolTest is WeightedLBPTest {
         );
 
         assertTrue(
-            ILBPCommon(newPoolSwapEnabled).isProjectTokenSwapInBlocked(),
-            "Swap of Project Token in is not blocked"
+            ILBPCommon(newPoolSwapEnabled).isProjectTokenSwapInBlocked(), "Swap of Project Token in is not blocked"
         );
     }
 
@@ -478,9 +478,7 @@ contract LBPoolTest is WeightedLBPTest {
         );
 
         assertEq(
-            data.staticSwapFeePercentage,
-            vault.getStaticSwapFeePercentage(pool),
-            "staticSwapFeePercentage mismatch"
+            data.staticSwapFeePercentage, vault.getStaticSwapFeePercentage(pool), "staticSwapFeePercentage mismatch"
         );
         assertEq(data.totalSupply, IERC20(pool).totalSupply(), "TotalSupply mismatch");
 
@@ -499,16 +497,8 @@ contract LBPoolTest is WeightedLBPTest {
     function testGetLBPoolDynamicDataWeightInterpolation() public {
         // Check initial weights
         LBPoolDynamicData memory initialData = ILBPool(pool).getLBPoolDynamicData();
-        assertEq(
-            initialData.normalizedWeights[projectIdx],
-            startWeights[projectIdx],
-            "Initial project weight mismatch"
-        );
-        assertEq(
-            initialData.normalizedWeights[reserveIdx],
-            startWeights[reserveIdx],
-            "Initial reserve weight mismatch"
-        );
+        assertEq(initialData.normalizedWeights[projectIdx], startWeights[projectIdx], "Initial project weight mismatch");
+        assertEq(initialData.normalizedWeights[reserveIdx], startWeights[reserveIdx], "Initial reserve weight mismatch");
 
         // Warp to middle of weight update period
         vm.warp(block.timestamp + DEFAULT_START_OFFSET + 50);
@@ -546,28 +536,20 @@ contract LBPoolTest is WeightedLBPTest {
         assertEq(data.reserveTokenIndex, reserveIdx, "Reserve token index mismatch");
 
         // Check decimal scaling factors
-        (uint256[] memory decimalScalingFactors, ) = vault.getPoolTokenRates(pool);
+        (uint256[] memory decimalScalingFactors,) = vault.getPoolTokenRates(pool);
         assertEq(
-            data.decimalScalingFactors.length,
-            decimalScalingFactors.length,
-            "decimalScalingFactors length mismatch"
+            data.decimalScalingFactors.length, decimalScalingFactors.length, "decimalScalingFactors length mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[projectIdx],
-            decimalScalingFactors[projectIdx],
-            "Project scaling factor mismatch"
+            data.decimalScalingFactors[projectIdx], decimalScalingFactors[projectIdx], "Project scaling factor mismatch"
         );
         assertEq(
-            data.decimalScalingFactors[reserveIdx],
-            decimalScalingFactors[reserveIdx],
-            "Reserve scaling factor mismatch"
+            data.decimalScalingFactors[reserveIdx], decimalScalingFactors[reserveIdx], "Reserve scaling factor mismatch"
         );
 
         // Check project token swap in setting
         assertEq(
-            data.isProjectTokenSwapInBlocked,
-            DEFAULT_PROJECT_TOKENS_SWAP_IN,
-            "Project token swap in setting mismatch"
+            data.isProjectTokenSwapInBlocked, DEFAULT_PROJECT_TOKENS_SWAP_IN, "Project token swap in setting mismatch"
         );
 
         // Check start and end times
@@ -585,14 +567,12 @@ contract LBPoolTest is WeightedLBPTest {
         assertEq(data.endWeights[reserveIdx], endWeights[reserveIdx], "Reserve end weight mismatch");
 
         assertEq(
-            data.reserveTokenVirtualBalance,
-            reserveTokenVirtualBalance,
-            "Wrong reserve token balance (immutable data)"
+            data.reserveTokenVirtualBalance, reserveTokenVirtualBalance, "Wrong reserve token balance (immutable data)"
         );
     }
 
     function testReserveVirtualBalance() public view {
-        (uint256 virtualBalanceRaw, ) = ILBPool(pool).getReserveTokenVirtualBalance();
+        (uint256 virtualBalanceRaw,) = ILBPool(pool).getReserveTokenVirtualBalance();
 
         assertEq(virtualBalanceRaw, reserveTokenVirtualBalance, "Wrong reserve token balance (direct getter)");
     }
@@ -650,7 +630,7 @@ contract LBPoolTest is WeightedLBPTest {
 
     function testOnSwapProjectTokenInAllowed() public {
         // Deploy a new pool with project token swaps enabled
-        (pool, ) = _createLBPoolWithCustomWeights(
+        (pool,) = _createLBPoolWithCustomWeights(
             address(0), // Pool creator
             startWeights[projectIdx],
             startWeights[reserveIdx],
@@ -713,90 +693,90 @@ contract LBPoolTest is WeightedLBPTest {
 
     function testOnRegisterMoreThanTwoTokens() public {
         // Create token config array with 3 tokens
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc), address(wsteth)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc), address(wsteth)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister
         vm.prank(address(vault));
         vm.expectRevert(InputHelpers.InputLengthMismatch.selector);
-        IHooks(pool).onRegister(
-            poolFactory,
-            pool,
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        IHooks(pool)
+            .onRegister(
+                poolFactory,
+                pool,
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
     }
 
     function testOnRegisterNonStandardToken() public {
         // Create token config array with one STANDARD and one WITH_RATE token
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
         tokenConfig[1].tokenType = TokenType.WITH_RATE;
 
         // Mock vault call to onRegister
         vm.prank(address(vault));
         vm.expectRevert(IVaultErrors.InvalidTokenConfiguration.selector);
-        IHooks(pool).onRegister(
-            poolFactory,
-            pool,
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        IHooks(pool)
+            .onRegister(
+                poolFactory,
+                pool,
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
     }
 
     function testOnRegisterWrongPool() public {
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister with wrong pool address
         vm.prank(address(vault));
-        bool success = IHooks(pool).onRegister(
-            poolFactory,
-            address(1), // Wrong pool address
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        bool success = IHooks(pool)
+            .onRegister(
+                poolFactory,
+                address(1), // Wrong pool address
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
 
         assertFalse(success, "onRegister should return false when pool address doesn't match");
     }
 
     function testOnRegisterSuccess() public {
         // Create token config array with 2 standard tokens
-        TokenConfig[] memory tokenConfig = vault.buildTokenConfig(
-            [address(dai), address(usdc)].toMemoryArray().asIERC20()
-        );
+        TokenConfig[] memory tokenConfig =
+            vault.buildTokenConfig([address(dai), address(usdc)].toMemoryArray().asIERC20());
 
         // Mock vault call to onRegister with correct parameters
         vm.prank(address(vault));
-        bool success = IHooks(pool).onRegister(
-            poolFactory, // Correct factory address
-            pool, // Correct pool address
-            tokenConfig,
-            LiquidityManagement({
-                disableUnbalancedLiquidity: false,
-                enableAddLiquidityCustom: false,
-                enableRemoveLiquidityCustom: false,
-                enableDonation: false
-            })
-        );
+        bool success = IHooks(pool)
+            .onRegister(
+                poolFactory, // Correct factory address
+                pool, // Correct pool address
+                tokenConfig,
+                LiquidityManagement({
+                    disableUnbalancedLiquidity: false,
+                    enableAddLiquidityCustom: false,
+                    enableRemoveLiquidityCustom: false,
+                    enableDonation: false
+                })
+            );
 
         assertTrue(success, "onRegister should return true when parameters are valid");
     }
@@ -860,15 +840,16 @@ contract LBPoolTest is WeightedLBPTest {
         // Try to remove liquidity before end time.
         vm.prank(address(vault));
         vm.expectRevert(LBPCommon.RemovingLiquidityNotAllowed.selector);
-        IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
     }
 
     function testOnBeforeRemoveLiquidityBeforeStartTime() public {
@@ -876,15 +857,16 @@ contract LBPoolTest is WeightedLBPTest {
         vm.warp(block.timestamp + DEFAULT_START_OFFSET - 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
@@ -894,15 +876,16 @@ contract LBPoolTest is WeightedLBPTest {
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            ZERO_ADDRESS,
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                ZERO_ADDRESS,
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
@@ -944,21 +927,22 @@ contract LBPoolTest is WeightedLBPTest {
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            address(router),
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                address(router),
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true after end time");
     }
 
     function testOnBeforeRemoveLiquidityWithMigrationRouter() public {
-        (pool, ) = _createLBPoolWithMigration(
+        (pool,) = _createLBPoolWithMigration(
             address(0), // Pool creator
             30 days, // BPT lock duration
             50e16, // Share to migrate (50%)
@@ -973,21 +957,22 @@ contract LBPoolTest is WeightedLBPTest {
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            address(migrationRouter),
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                address(migrationRouter),
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertTrue(success, "onBeforeRemoveLiquidity should return true with migration router");
     }
 
     function testOnBeforeRemoveLiquidityWithMigrationRevertWithWrongRouter() public {
-        (pool, ) = _createLBPoolWithMigration(
+        (pool,) = _createLBPoolWithMigration(
             address(0), // Pool creator
             30 days, // BPT lock duration
             50e16, // Share to migrate (50%)
@@ -1000,15 +985,16 @@ contract LBPoolTest is WeightedLBPTest {
         vm.warp(block.timestamp + DEFAULT_END_OFFSET + 1);
 
         vm.prank(address(vault));
-        bool success = IHooks(pool).onBeforeRemoveLiquidity(
-            address(router),
-            ZERO_ADDRESS,
-            RemoveLiquidityKind.PROPORTIONAL,
-            0,
-            new uint256[](0),
-            new uint256[](0),
-            bytes("")
-        );
+        bool success = IHooks(pool)
+            .onBeforeRemoveLiquidity(
+                address(router),
+                ZERO_ADDRESS,
+                RemoveLiquidityKind.PROPORTIONAL,
+                0,
+                new uint256[](0),
+                new uint256[](0),
+                bytes("")
+            );
 
         assertFalse(success, "onBeforeRemoveLiquidity should return false with wrong migration router");
     }

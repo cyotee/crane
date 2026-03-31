@@ -1,0 +1,56 @@
+module IRedStoneAdapter where
+
+import RedStoneTypes
+
+interface IRedStoneAdapter where
+  viewtype RedStoneAdapterView
+
+  getPrices : [RedStoneFeedId] -> Time -> PayloadHex -> Update RedStoneResult
+  writePrices : [RedStoneFeedId] -> Time -> PayloadHex -> Update (ContractId IRedStoneAdapter)
+  readPriceData : [RedStoneFeedId] -> Update [Optional (RedStonePriceData RedStoneValue)]
+  readPrices : [RedStoneFeedId] -> Update [RedStoneValue]
+  getUniqueSignerThreshold: () -> Update Int
+
+  nonconsuming choice GetPrices : RedStoneResult
+    with
+      feedIds : [RedStoneFeedId]
+      currentTime : Time
+      payloadHex : PayloadHex
+    controller (view this).viewers
+    do
+      getPrices this feedIds currentTime payloadHex
+
+  choice WritePrices : ContractId IRedStoneAdapter
+    with
+      feedIds : [RedStoneFeedId]
+      currentTime : Time
+      payloadHex : PayloadHex
+    controller (view this).updaters
+    do
+      writePrices this feedIds currentTime payloadHex
+
+  nonconsuming choice ReadPrices : [RedStoneValue]
+    with
+      feedIds : [RedStoneFeedId]
+    controller (view this).viewers
+    do
+      readPrices this feedIds
+
+  nonconsuming choice ReadPriceData : [Optional (RedStonePriceData RedStoneValue)]
+    with
+      feedIds : [RedStoneFeedId]
+    controller (view this).viewers
+    do
+      readPriceData this feedIds
+
+  nonconsuming choice GetUniqueSignerThreshold : Int
+    controller (view this).viewers
+    do
+      getUniqueSignerThreshold this ()
+
+data RedStoneAdapterView = RedStoneAdapterView
+  with
+    updaters : [Party]
+    viewers : [Party]
+    adapterId : Text
+  deriving (Eq, Show, Ord)

@@ -6,10 +6,12 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IWrappedBalancerPoolToken } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IWrappedBalancerPoolToken.sol";
+import {
+    IWrappedBalancerPoolToken
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IWrappedBalancerPoolToken.sol";
 
-import { WrappedBalancerPoolToken } from "../../contracts/WrappedBalancerPoolToken.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {WrappedBalancerPoolToken} from "../../contracts/WrappedBalancerPoolToken.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract WrappedBalancerPoolTokenTest is BaseVaultTest {
     WrappedBalancerPoolToken public wBPT;

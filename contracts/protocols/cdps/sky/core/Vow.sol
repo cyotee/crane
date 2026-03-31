@@ -36,8 +36,8 @@ interface FlapLike {
 }
 
 interface VatLike {
-    function dai (address) external view returns (uint256);
-    function sin (address) external view returns (uint256);
+    function dai(address) external view returns (uint256);
+    function sin(address) external view returns (uint256);
     function heal(uint256) external;
     function hope(address) external;
     function nope(address) external;
@@ -45,36 +45,43 @@ interface VatLike {
 
 contract Vow {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { require(live == 1, "Vow/not-live"); wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        require(live == 1, "Vow/not-live");
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "Vow/not-authorized");
         _;
     }
 
     // --- Data ---
-    VatLike public vat;        // CDP Engine
-    FlapLike public flapper;   // Surplus Auction House
-    FlopLike public flopper;   // Debt Auction House
+    VatLike public vat; // CDP Engine
+    FlapLike public flapper; // Surplus Auction House
+    FlopLike public flopper; // Debt Auction House
 
-    mapping (uint256 => uint256) public sin;  // debt queue
-    uint256 public Sin;   // Queued debt            [rad]
-    uint256 public Ash;   // On-auction debt        [rad]
+    mapping(uint256 => uint256) public sin; // debt queue
+    uint256 public Sin; // Queued debt            [rad]
+    uint256 public Ash; // On-auction debt        [rad]
 
-    uint256 public wait;  // Flop delay             [seconds]
-    uint256 public dump;  // Flop initial lot size  [wad]
-    uint256 public sump;  // Flop fixed bid size    [rad]
+    uint256 public wait; // Flop delay             [seconds]
+    uint256 public dump; // Flop initial lot size  [wad]
+    uint256 public sump; // Flop fixed bid size    [rad]
 
-    uint256 public bump;  // Flap fixed lot size    [rad]
-    uint256 public hump;  // Surplus buffer         [rad]
+    uint256 public bump; // Flap fixed lot size    [rad]
+    uint256 public hump; // Surplus buffer         [rad]
 
-    uint256 public live;  // Active Flag
+    uint256 public live; // Active Flag
 
     // --- Init ---
     constructor(address vat_, address flapper_, address flopper_) {
         wards[msg.sender] = 1;
-        vat     = VatLike(vat_);
+        vat = VatLike(vat_);
         flapper = FlapLike(flapper_);
         flopper = FlopLike(flopper_);
         vat.hope(flapper_);
@@ -87,11 +94,13 @@ contract Vow {
             require((z = x + y) >= x);
         }
     }
+
     function _sub(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require((z = x - y) <= x);
         }
     }
+
     function _min(uint256 x, uint256 y) internal pure returns (uint256 z) {
         return x <= y ? x : y;
     }
@@ -111,9 +120,11 @@ contract Vow {
             vat.nope(address(flapper));
             flapper = FlapLike(data);
             vat.hope(data);
+        } else if (what == "flopper") {
+            flopper = FlopLike(data);
+        } else {
+            revert("Vow/file-unrecognized-param");
         }
-        else if (what == "flopper") flopper = FlopLike(data);
-        else revert("Vow/file-unrecognized-param");
     }
 
     // Push to debt-queue
@@ -121,6 +132,7 @@ contract Vow {
         sin[block.timestamp] = _add(sin[block.timestamp], tab);
         Sin = _add(Sin, tab);
     }
+
     // Pop from debt-queue
     function flog(uint256 era) external {
         require(_add(era, wait) <= block.timestamp, "Vow/wait-not-finished");
@@ -134,6 +146,7 @@ contract Vow {
         require(rad <= _sub(_sub(vat.sin(address(this)), Sin), Ash), "Vow/insufficient-debt");
         vat.heal(rad);
     }
+
     function kiss(uint256 rad) external {
         require(rad <= Ash, "Vow/not-enough-ash");
         require(rad <= vat.dai(address(this)), "Vow/insufficient-surplus");
@@ -148,6 +161,7 @@ contract Vow {
         Ash = _add(Ash, sump);
         id = flopper.kick(address(this), dump, sump);
     }
+
     // Surplus auction
     function flap() external returns (uint256 id) {
         require(vat.dai(address(this)) >= _add(_add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");

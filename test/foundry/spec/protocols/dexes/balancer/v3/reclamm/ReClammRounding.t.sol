@@ -6,12 +6,12 @@ import "forge-std/Test.sol";
 
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { PriceRatioState, ReClammMath } from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
-import { ReClammMathMock } from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
-import { BaseReClammTest } from "./utils/BaseReClammTest.sol";
+import {PriceRatioState, ReClammMath} from "contracts/protocols/dexes/balancer/v3/reclamm/lib/ReClammMath.sol";
+import {ReClammMathMock} from "contracts/protocols/dexes/balancer/v3/reclamm/test/ReClammMathMock.sol";
+import {BaseReClammTest} from "./utils/BaseReClammTest.sol";
 
 contract ReClammRoundingTest is BaseReClammTest {
     using SafeCast for *;
@@ -41,16 +41,14 @@ contract ReClammRoundingTest is BaseReClammTest {
             maxPrice - minPrice.mulDown((_MIN_PRICE_RATIO - FixedPoint.ONE) / 2)
         );
 
-        (uint256[] memory balances, uint256[] memory virtualBalances, ) = mathMock
-            .computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
+        (uint256[] memory balances, uint256[] memory virtualBalances,) =
+            mathMock.computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
 
         uint256 invariantRoundedUp = mathMock.computeInvariant(balances, virtualBalances, Rounding.ROUND_UP);
         uint256 invariantRoundedDown = mathMock.computeInvariant(balances, virtualBalances, Rounding.ROUND_DOWN);
 
         assertGe(
-            invariantRoundedUp,
-            invariantRoundedDown,
-            "invariantRoundedUp < invariantRoundedDown (computeInvariant)"
+            invariantRoundedUp, invariantRoundedDown, "invariantRoundedUp < invariantRoundedDown (computeInvariant)"
         );
     }
 
@@ -69,8 +67,8 @@ contract ReClammRoundingTest is BaseReClammTest {
             maxPrice - minPrice.mulDown((_MIN_PRICE_RATIO - FixedPoint.ONE) / 2)
         );
 
-        (uint256[] memory balances, uint256[] memory virtualBalances, uint256 priceRatio) = mathMock
-            .computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
+        (uint256[] memory balances, uint256[] memory virtualBalances, uint256 priceRatio) =
+            mathMock.computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
         uint256 fourthRootPriceRatio = ReClammMath.fourthRootScaled18(priceRatio);
 
         (uint256 tokenInIndex, uint256 tokenOutIndex) = isTokenAIn ? (0, 1) : (1, 0);
@@ -80,11 +78,7 @@ contract ReClammRoundingTest is BaseReClammTest {
 
         // Calculate maxAmountIn to make sure the transaction won't revert.
         uint256 maxAmountIn = mathMock.computeInGivenOut(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            balances[tokenOutIndex] - _MIN_TOKEN_BALANCE - 1
+            balances, virtualBalances, tokenInIndex, tokenOutIndex, balances[tokenOutIndex] - _MIN_TOKEN_BALANCE - 1
         );
 
         vm.assume(_MIN_SWAP_AMOUNT <= maxAmountIn);
@@ -97,13 +91,8 @@ contract ReClammRoundingTest is BaseReClammTest {
                 priceRatioUpdateEndTime: 0
             })
         );
-        uint256 amountOut = mathMock.computeOutGivenIn(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            amountGivenScaled18
-        );
+        uint256 amountOut =
+            mathMock.computeOutGivenIn(balances, virtualBalances, tokenInIndex, tokenOutIndex, amountGivenScaled18);
 
         // Assume the pool has enough balance to pay the swap.
         vm.assume(amountOut <= balances[tokenOutIndex] - _MIN_TOKEN_BALANCE);
@@ -111,20 +100,10 @@ contract ReClammRoundingTest is BaseReClammTest {
         uint256 roundedUpAmountIn = amountGivenScaled18 + 1;
         uint256 roundedDownAmountIn = amountGivenScaled18 - 1;
 
-        uint256 amountOutRoundedUp = mathMock.computeOutGivenIn(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            roundedUpAmountIn
-        );
-        uint256 amountOutRoundedDown = mathMock.computeOutGivenIn(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            roundedDownAmountIn
-        );
+        uint256 amountOutRoundedUp =
+            mathMock.computeOutGivenIn(balances, virtualBalances, tokenInIndex, tokenOutIndex, roundedUpAmountIn);
+        uint256 amountOutRoundedDown =
+            mathMock.computeOutGivenIn(balances, virtualBalances, tokenInIndex, tokenOutIndex, roundedDownAmountIn);
 
         assertGe(amountOutRoundedUp, amountOut, "amountOutRoundedUp < amountOut (computeOutGivenIn)");
         assertLe(amountOutRoundedDown, amountOut, "amountOutRoundedDown > amountOut (computeOutGivenIn)");
@@ -145,8 +124,8 @@ contract ReClammRoundingTest is BaseReClammTest {
             maxPrice - minPrice.mulDown((_MIN_PRICE_RATIO - FixedPoint.ONE) / 2)
         );
 
-        (uint256[] memory balances, uint256[] memory virtualBalances, uint256 priceRatio) = mathMock
-            .computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
+        (uint256[] memory balances, uint256[] memory virtualBalances, uint256 priceRatio) =
+            mathMock.computeTheoreticalPriceRatioAndBalances(minPrice, maxPrice, targetPrice);
         uint256 fourthRootPriceRatio = ReClammMath.fourthRootScaled18(priceRatio);
 
         (uint256 tokenInIndex, uint256 tokenOutIndex) = isTokenAIn ? (0, 1) : (1, 0);
@@ -155,11 +134,8 @@ contract ReClammRoundingTest is BaseReClammTest {
         vm.assume(balances[tokenInIndex] > _MIN_TOKEN_BALANCE);
 
         vm.assume(_MIN_SWAP_AMOUNT <= balances[tokenOutIndex] - _MIN_TOKEN_BALANCE - 1);
-        amountGivenScaled18 = bound(
-            amountGivenScaled18,
-            _MIN_SWAP_AMOUNT,
-            balances[tokenOutIndex] - _MIN_TOKEN_BALANCE - 1
-        );
+        amountGivenScaled18 =
+            bound(amountGivenScaled18, _MIN_SWAP_AMOUNT, balances[tokenOutIndex] - _MIN_TOKEN_BALANCE - 1);
 
         mathMock.startPriceRatioUpdate(
             PriceRatioState({
@@ -169,31 +145,16 @@ contract ReClammRoundingTest is BaseReClammTest {
                 priceRatioUpdateEndTime: 0
             })
         );
-        uint256 amountIn = mathMock.computeInGivenOut(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            amountGivenScaled18
-        );
+        uint256 amountIn =
+            mathMock.computeInGivenOut(balances, virtualBalances, tokenInIndex, tokenOutIndex, amountGivenScaled18);
 
         uint256 roundedUpAmountOut = amountGivenScaled18 + 1;
         uint256 roundedDownAmountOut = amountGivenScaled18 - 1;
 
-        uint256 amountInRoundedUp = mathMock.computeInGivenOut(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            roundedUpAmountOut
-        );
-        uint256 amountInRoundedDown = mathMock.computeInGivenOut(
-            balances,
-            virtualBalances,
-            tokenInIndex,
-            tokenOutIndex,
-            roundedDownAmountOut
-        );
+        uint256 amountInRoundedUp =
+            mathMock.computeInGivenOut(balances, virtualBalances, tokenInIndex, tokenOutIndex, roundedUpAmountOut);
+        uint256 amountInRoundedDown =
+            mathMock.computeInGivenOut(balances, virtualBalances, tokenInIndex, tokenOutIndex, roundedDownAmountOut);
 
         assertGe(amountInRoundedUp, amountIn, "amountInRoundedUp < amountIn (computeInGivenOut)");
         assertLe(amountInRoundedDown, amountIn, "amountInRoundedDown > amountIn (computeInGivenOut)");

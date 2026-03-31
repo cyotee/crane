@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.24;
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BasePoolMathMock } from "./BasePoolMathMock.sol";
+import {BasePoolMathMock} from "./BasePoolMathMock.sol";
 
 // Mock the linear math that we use in pool mocks for testing.
 contract LinearBasePoolMathMock is BasePoolMathMock {
@@ -21,11 +21,12 @@ contract LinearBasePoolMathMock is BasePoolMathMock {
         return invariant;
     }
 
-    function computeBalance(
-        uint256[] memory balances,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external pure override returns (uint256 newBalance) {
+    function computeBalance(uint256[] memory balances, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        pure
+        override
+        returns (uint256 newBalance)
+    {
         // inv = x + y
         uint256 invariant = computeInvariant(balances, Rounding.ROUND_DOWN);
         return (balances[tokenInIndex] + invariant.mulDown(invariantRatio)) - invariant;

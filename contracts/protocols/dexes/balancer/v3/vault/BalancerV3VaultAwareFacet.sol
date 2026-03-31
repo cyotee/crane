@@ -7,7 +7,9 @@ pragma solidity ^0.8.0;
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
-import {BalancerV3VaultAwareTarget} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareTarget.sol";
+import {
+    BalancerV3VaultAwareTarget
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareTarget.sol";
 
 contract BalancerV3VaultAwareFacet is BalancerV3VaultAwareTarget, IFacet {
     function facetName() public pure returns (string memory name) {

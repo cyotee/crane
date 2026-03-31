@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+
 /// @notice Minimal proxy library.
 /// @author Solady (https://github.com/vectorized/solady/blob/main/src/utils/LibClone.sol)
 /// @author Minimal proxy by 0age (https://github.com/0age)
@@ -67,14 +69,14 @@ pragma solidity ^0.8.4;
 /// if `calldatasize() == 1`. This code path skips the delegatecall and directly returns the
 /// - Uses the identity precompile (0x4) to copy args during deployment.
 library LibClone {
+    using BetterEfficientHashLib for bytes;
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                         CONSTANTS                          */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev The keccak256 of deployed code for the clone proxy,
     /// with the implementation set to `address(0)`.
-    bytes32 internal constant CLONE_CODE_HASH =
-        0x48db2cfdb2853fce0b464f1f93a1996469459df3ab6c812106074c4106a1eb1f;
+    bytes32 internal constant CLONE_CODE_HASH = 0x48db2cfdb2853fce0b464f1f93a1996469459df3ab6c812106074c4106a1eb1f;
 
     /// @dev The keccak256 of deployed code for the PUSH0 proxy,
     /// with the implementation set to `address(0)`.
@@ -83,16 +85,13 @@ library LibClone {
 
     /// @dev The keccak256 of deployed code for the ERC-1167 CWIA proxy,
     /// with the implementation set to `address(0)`.
-    bytes32 internal constant CWIA_CODE_HASH =
-        0x3cf92464268225a4513da40a34d967354684c32cd0edd67b5f668dfe3550e940;
+    bytes32 internal constant CWIA_CODE_HASH = 0x3cf92464268225a4513da40a34d967354684c32cd0edd67b5f668dfe3550e940;
 
     /// @dev The keccak256 of the deployed code for the ERC1967 proxy.
-    bytes32 internal constant ERC1967_CODE_HASH =
-        0xaaa52c8cc8a0e3fd27ce756cc6b4e70c51423e9b597b11f32d3e49f8b1fc890d;
+    bytes32 internal constant ERC1967_CODE_HASH = 0xaaa52c8cc8a0e3fd27ce756cc6b4e70c51423e9b597b11f32d3e49f8b1fc890d;
 
     /// @dev The keccak256 of the deployed code for the ERC1967I proxy.
-    bytes32 internal constant ERC1967I_CODE_HASH =
-        0xce700223c0d4cea4583409accfc45adac4a093b3519998a9cbbe1504dadba6f7;
+    bytes32 internal constant ERC1967I_CODE_HASH = 0xce700223c0d4cea4583409accfc45adac4a093b3519998a9cbbe1504dadba6f7;
 
     /// @dev The keccak256 of the deployed code for the ERC1967 beacon proxy.
     bytes32 internal constant ERC1967_BEACON_PROXY_CODE_HASH =
@@ -127,8 +126,7 @@ library LibClone {
     /// @dev Deploys a clone of `implementation`.
     /// Deposits `value` ETH during deployment.
     function clone(uint256 value, address implementation) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             /**
              * --------------------------------------------------------------------------+
              * CREATION (9 bytes)                                                        |
@@ -198,10 +196,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic clone of `implementation` with `salt`.
-    function cloneDeterministic(address implementation, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function cloneDeterministic(address implementation, bytes32 salt) internal returns (address instance) {
         instance = cloneDeterministic(0, implementation, salt);
     }
 
@@ -211,8 +206,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             mstore(0x21, 0x5af43d3d93803e602a57fd5bf3)
             mstore(0x14, implementation)
             mstore(0x00, 0x602c3d8160093d39f33d3d3d3d363d3d37363d73)
@@ -227,8 +221,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the clone of `implementation`.
     function initCode(address implementation) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x40), 0x5af43d3d93803e602a57fd5bf30000000000000000000000)
             mstore(add(c, 0x28), implementation)
@@ -240,8 +233,7 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the clone of `implementation`.
     function initCodeHash(address implementation) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             mstore(0x21, 0x5af43d3d93803e602a57fd5bf3)
             mstore(0x14, implementation)
             mstore(0x00, 0x602c3d8160093d39f33d3d3d3d363d3d37363d73)
@@ -272,12 +264,8 @@ library LibClone {
 
     /// @dev Deploys a PUSH0 clone of `implementation`.
     /// Deposits `value` ETH during deployment.
-    function clone_PUSH0(uint256 value, address implementation)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function clone_PUSH0(uint256 value, address implementation) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * --------------------------------------------------------------------------+
              * CREATION (9 bytes)                                                        |
@@ -348,10 +336,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic PUSH0 clone of `implementation` with `salt`.
-    function cloneDeterministic_PUSH0(address implementation, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function cloneDeterministic_PUSH0(address implementation, bytes32 salt) internal returns (address instance) {
         instance = cloneDeterministic_PUSH0(0, implementation, salt);
     }
 
@@ -361,8 +346,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             mstore(0x24, 0x5af43d5f5f3e6029573d5ffd5b3d5ff3) // 16
             mstore(0x14, implementation) // 20
             mstore(0x00, 0x602d5f8160095f39f35f5f365f5f37365f73) // 9 + 9
@@ -377,8 +361,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the PUSH0 clone of `implementation`.
     function initCode_PUSH0(address implementation) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x40), 0x5af43d5f5f3e6029573d5ffd5b3d5ff300000000000000000000) // 16
             mstore(add(c, 0x26), implementation) // 20
@@ -390,8 +373,7 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the PUSH0 clone of `implementation`.
     function initCodeHash_PUSH0(address implementation) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             mstore(0x24, 0x5af43d5f5f3e6029573d5ffd5b3d5ff3) // 16
             mstore(0x14, implementation) // 20
             mstore(0x00, 0x602d5f8160095f39f35f5f365f5f37365f73) // 9 + 9
@@ -402,11 +384,11 @@ library LibClone {
 
     /// @dev Returns the address of the PUSH0 clone of `implementation`, with `salt` by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddress_PUSH0(
-        address implementation,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddress_PUSH0(address implementation, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHash_PUSH0(implementation);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
@@ -422,12 +404,8 @@ library LibClone {
 
     /// @dev Deploys a clone of `implementation` with immutable arguments encoded in `args`.
     /// Deposits `value` ETH during deployment.
-    function clone(uint256 value, address implementation, bytes memory args)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function clone(uint256 value, address implementation, bytes memory args) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * ---------------------------------------------------------------------------+
              * CREATION (10 bytes)                                                        |
@@ -509,14 +487,11 @@ library LibClone {
 
     /// @dev Deploys a deterministic clone of `implementation`
     /// with immutable arguments encoded in `args` and `salt`.
-    function cloneDeterministic(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function cloneDeterministic(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x43), n))
@@ -545,14 +520,11 @@ library LibClone {
     /// @dev Deploys a deterministic clone of `implementation`
     /// with immutable arguments encoded in `args` and `salt`.
     /// This method does not revert if the clone has already been deployed.
-    function createDeterministicClone(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (bool alreadyDeployed, address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function createDeterministicClone(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (bool alreadyDeployed, address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x43), n))
@@ -590,13 +562,8 @@ library LibClone {
 
     /// @dev Returns the initialization code of the clone of `implementation`
     /// using immutable arguments encoded in `args`.
-    function initCode(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCode(address implementation, bytes memory args) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x2d = 0xffd2`.
@@ -615,13 +582,8 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the clone of `implementation`
     /// using immutable arguments encoded in `args`.
-    function initCodeHash(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes32 hash)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeHash(address implementation, bytes memory args) internal pure returns (bytes32 hash) {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x2d = 0xffd2`.
@@ -639,20 +601,18 @@ library LibClone {
     /// @dev Returns the address of the clone of
     /// `implementation` using immutable arguments encoded in `args`, with `salt`, by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddress(
-        address implementation,
-        bytes memory data,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddress(address implementation, bytes memory data, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHash(implementation, data);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
 
     /// @dev Equivalent to `argsOnClone(instance, 0, 2 ** 256 - 1)`.
     function argsOnClone(address instance) internal view returns (bytes memory args) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             mstore(args, and(0xffffffffff, sub(extcodesize(instance), 0x2d))) // Store the length.
             extcodecopy(instance, add(args, 0x20), 0x2d, add(mload(args), 0x20))
@@ -661,13 +621,8 @@ library LibClone {
     }
 
     /// @dev Equivalent to `argsOnClone(instance, start, 2 ** 256 - 1)`.
-    function argsOnClone(address instance, uint256 start)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnClone(address instance, uint256 start) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(instance), 0x2d))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -682,13 +637,8 @@ library LibClone {
     /// The `instance` MUST be deployed via the clone with immutable args functions.
     /// Otherwise, the behavior is undefined.
     /// Out-of-gas reverts if `instance` does not have any code.
-    function argsOnClone(address instance, uint256 start, uint256 end)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnClone(address instance, uint256 start, uint256 end) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))
@@ -718,12 +668,8 @@ library LibClone {
 
     /// @dev Deploys a minimal ERC1967 proxy with `implementation`.
     /// Deposits `value` ETH during deployment.
-    function deployERC1967(uint256 value, address implementation)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployERC1967(uint256 value, address implementation) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * ---------------------------------------------------------------------------------+
              * CREATION (34 bytes)                                                              |
@@ -802,10 +748,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic minimal ERC1967 proxy with `implementation` and `salt`.
-    function deployDeterministicERC1967(address implementation, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function deployDeterministicERC1967(address implementation, bytes32 salt) internal returns (address instance) {
         instance = deployDeterministicERC1967(0, implementation, salt);
     }
 
@@ -815,8 +758,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xcc3735a920a3ca505d382bbc545af43d6000803e6038573d6000fd5b3d6000f3)
             mstore(0x40, 0x5155f3363d3d373d3d363d7f360894a13ba1a3210667c828492db98dca3e2076)
@@ -851,8 +793,7 @@ library LibClone {
         internal
         returns (bool alreadyDeployed, address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xcc3735a920a3ca505d382bbc545af43d6000803e6038573d6000fd5b3d6000f3)
             mstore(0x40, 0x5155f3363d3d373d3d363d7f360894a13ba1a3210667c828492db98dca3e2076)
@@ -889,8 +830,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the minimal ERC1967 proxy of `implementation`.
     function initCodeERC1967(address implementation) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x60), 0x3735a920a3ca505d382bbc545af43d6000803e6038573d6000fd5b3d6000f300)
             mstore(add(c, 0x40), 0x55f3363d3d373d3d363d7f360894a13ba1a3210667c828492db98dca3e2076cc)
@@ -903,8 +843,7 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the minimal ERC1967 proxy of `implementation`.
     function initCodeHashERC1967(address implementation) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xcc3735a920a3ca505d382bbc545af43d6000803e6038573d6000fd5b3d6000f3)
             mstore(0x40, 0x5155f3363d3d373d3d363d7f360894a13ba1a3210667c828492db98dca3e2076)
@@ -919,11 +858,11 @@ library LibClone {
 
     /// @dev Returns the address of the ERC1967 proxy of `implementation`, with `salt` by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddressERC1967(
-        address implementation,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddressERC1967(address implementation, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHashERC1967(implementation);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
@@ -933,10 +872,7 @@ library LibClone {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Deploys a minimal ERC1967 proxy with `implementation` and `args`.
-    function deployERC1967(address implementation, bytes memory args)
-        internal
-        returns (address instance)
-    {
+    function deployERC1967(address implementation, bytes memory args) internal returns (address instance) {
         instance = deployERC1967(0, implementation, args);
     }
 
@@ -946,8 +882,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x60), n))
@@ -976,14 +911,11 @@ library LibClone {
 
     /// @dev Deploys a deterministic minimal ERC1967 proxy with `implementation`, `args` and `salt`.
     /// Deposits `value` ETH during deployment.
-    function deployDeterministicERC1967(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployDeterministicERC1967(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x60), n))
@@ -1016,14 +948,11 @@ library LibClone {
     /// Deposits `value` ETH during deployment.
     /// Note: This method is intended for use in ERC4337 factories,
     /// which are expected to NOT revert if the proxy is already deployed.
-    function createDeterministicERC1967(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (bool alreadyDeployed, address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function createDeterministicERC1967(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (bool alreadyDeployed, address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x60), n))
@@ -1062,13 +991,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code of the minimal ERC1967 proxy of `implementation` and `args`.
-    function initCodeERC1967(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeERC1967(address implementation, bytes memory args) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x3d = 0xffc2`.
@@ -1088,13 +1012,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code hash of the minimal ERC1967 proxy of `implementation` and `args`.
-    function initCodeHashERC1967(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes32 hash)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeHashERC1967(address implementation, bytes memory args) internal pure returns (bytes32 hash) {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x3d = 0xffc2`.
@@ -1126,8 +1045,7 @@ library LibClone {
 
     /// @dev Equivalent to `argsOnERC1967(instance, start, 2 ** 256 - 1)`.
     function argsOnERC1967(address instance) internal view returns (bytes memory args) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             mstore(args, and(0xffffffffff, sub(extcodesize(instance), 0x3d))) // Store the length.
             extcodecopy(instance, add(args, 0x20), 0x3d, add(mload(args), 0x20))
@@ -1136,13 +1054,8 @@ library LibClone {
     }
 
     /// @dev Equivalent to `argsOnERC1967(instance, start, 2 ** 256 - 1)`.
-    function argsOnERC1967(address instance, uint256 start)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967(address instance, uint256 start) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(instance), 0x3d))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -1157,13 +1070,8 @@ library LibClone {
     /// The `instance` MUST be deployed via the ERC1967 with immutable args functions.
     /// Otherwise, the behavior is undefined.
     /// Out-of-gas reverts if `instance` does not have any code.
-    function argsOnERC1967(address instance, uint256 start, uint256 end)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967(address instance, uint256 start, uint256 end) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))
@@ -1195,12 +1103,8 @@ library LibClone {
 
     /// @dev Deploys a ERC1967I proxy with `implementation`.
     /// Deposits `value` ETH during deployment.
-    function deployERC1967I(uint256 value, address implementation)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployERC1967I(uint256 value, address implementation) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * ---------------------------------------------------------------------------------+
              * CREATION (34 bytes)                                                              |
@@ -1300,10 +1204,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic ERC1967I proxy with `implementation` and `salt`.
-    function deployDeterministicERC1967I(address implementation, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function deployDeterministicERC1967I(address implementation, bytes32 salt) internal returns (address instance) {
         instance = deployDeterministicERC1967I(0, implementation, salt);
     }
 
@@ -1313,8 +1214,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d6000803e603e573d6000fd5b3d6000f35b6020600f3d393d51543d52593df3)
             mstore(0x40, 0xa13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc545af4)
@@ -1348,8 +1248,7 @@ library LibClone {
         internal
         returns (bool alreadyDeployed, address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d6000803e603e573d6000fd5b3d6000f35b6020600f3d393d51543d52593df3)
             mstore(0x40, 0xa13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc545af4)
@@ -1385,8 +1284,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the ERC1967I proxy of `implementation`.
     function initCodeERC1967I(address implementation) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x74), 0x3d6000803e603e573d6000fd5b3d6000f35b6020600f3d393d51543d52593df3)
             mstore(add(c, 0x54), 0xa13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc545af4)
@@ -1401,8 +1299,7 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the ERC1967I proxy of `implementation`.
     function initCodeHashERC1967I(address implementation) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d6000803e603e573d6000fd5b3d6000f35b6020600f3d393d51543d52593df3)
             mstore(0x40, 0xa13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc545af4)
@@ -1416,11 +1313,11 @@ library LibClone {
 
     /// @dev Returns the address of the ERC1967I proxy of `implementation`, with `salt` by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddressERC1967I(
-        address implementation,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddressERC1967I(address implementation, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHashERC1967I(implementation);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
@@ -1440,8 +1337,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x8b), n))
@@ -1471,14 +1367,11 @@ library LibClone {
 
     /// @dev Deploys a deterministic ERC1967I proxy with `implementation`, `args`, and `salt`.
     /// Deposits `value` ETH during deployment.
-    function deployDeterministicERC1967I(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployDeterministicERC1967I(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x8b), n))
@@ -1512,14 +1405,11 @@ library LibClone {
     /// Deposits `value` ETH during deployment.
     /// Note: This method is intended for use in ERC4337 factories,
     /// which are expected to NOT revert if the proxy is already deployed.
-    function createDeterministicERC1967I(
-        uint256 value,
-        address implementation,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (bool alreadyDeployed, address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function createDeterministicERC1967I(uint256 value, address implementation, bytes memory args, bytes32 salt)
+        internal
+        returns (bool alreadyDeployed, address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x75), n))
@@ -1559,13 +1449,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code of the ERC1967I proxy of `implementation` and `args`.
-    function initCodeERC1967I(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeERC1967I(address implementation, bytes memory args) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x52 = 0xffad`.
@@ -1586,13 +1471,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code hash of the ERC1967I proxy of `implementation` and `args.
-    function initCodeHashERC1967I(address implementation, bytes memory args)
-        internal
-        pure
-        returns (bytes32 hash)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeHashERC1967I(address implementation, bytes memory args) internal pure returns (bytes32 hash) {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x52 = 0xffad`.
@@ -1627,8 +1507,7 @@ library LibClone {
 
     /// @dev Equivalent to `argsOnERC1967I(instance, start, 2 ** 256 - 1)`.
     function argsOnERC1967I(address instance) internal view returns (bytes memory args) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             mstore(args, and(0xffffffffff, sub(extcodesize(instance), 0x52))) // Store the length.
             extcodecopy(instance, add(args, 0x20), 0x52, add(mload(args), 0x20))
@@ -1637,13 +1516,8 @@ library LibClone {
     }
 
     /// @dev Equivalent to `argsOnERC1967I(instance, start, 2 ** 256 - 1)`.
-    function argsOnERC1967I(address instance, uint256 start)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967I(address instance, uint256 start) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(instance), 0x52))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -1658,13 +1532,8 @@ library LibClone {
     /// The `instance` MUST be deployed via the ERC1967 with immutable args functions.
     /// Otherwise, the behavior is undefined.
     /// Out-of-gas reverts if `instance` does not have any code.
-    function argsOnERC1967I(address instance, uint256 start, uint256 end)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967I(address instance, uint256 start, uint256 end) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))
@@ -1702,8 +1571,8 @@ library LibClone {
     function erc1967Bootstrap(address authorizedUpgrader) internal returns (address bootstrap) {
         bytes memory c = initCodeERC1967Bootstrap(authorizedUpgrader);
         bootstrap = predictDeterministicAddress(keccak256(c), bytes32(0), address(this));
-        /// @solidity memory-safe-assembly
-        assembly {
+
+        assembly ("memory-safe") {
             if iszero(extcodesize(bootstrap)) {
                 if iszero(create2(0, add(c, 0x20), mload(c), 0)) {
                     mstore(0x00, 0x30116425) // `DeploymentFailed()`.
@@ -1715,8 +1584,7 @@ library LibClone {
 
     /// @dev Replaces the implementation at `instance`.
     function bootstrapERC1967(address instance, address implementation) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             mstore(0x00, implementation)
             if iszero(call(gas(), instance, 0, 0x0c, 0x14, codesize(), 0x00)) {
                 mstore(0x00, 0x30116425) // `DeploymentFailed()`.
@@ -1726,11 +1594,8 @@ library LibClone {
     }
 
     /// @dev Replaces the implementation at `instance`, and then call it with `data`.
-    function bootstrapERC1967AndCall(address instance, address implementation, bytes memory data)
-        internal
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function bootstrapERC1967AndCall(address instance, address implementation, bytes memory data) internal {
+        assembly ("memory-safe") {
             let n := mload(data)
             mstore(data, implementation)
             if iszero(call(gas(), instance, 0, add(data, 0x0c), add(n, 0x14), codesize(), 0x00)) {
@@ -1751,22 +1616,18 @@ library LibClone {
     }
 
     /// @dev Returns the implementation address of the ERC1967 bootstrap for this contract.
-    function predictDeterministicAddressERC1967Bootstrap(
-        address authorizedUpgrader,
-        address deployer
-    ) internal pure returns (address) {
+    function predictDeterministicAddressERC1967Bootstrap(address authorizedUpgrader, address deployer)
+        internal
+        pure
+        returns (address)
+    {
         bytes32 hash = initCodeHashERC1967Bootstrap(authorizedUpgrader);
         return predictDeterministicAddress(hash, bytes32(0), deployer);
     }
 
     /// @dev Returns the initialization code of the ERC1967 bootstrap.
-    function initCodeERC1967Bootstrap(address authorizedUpgrader)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeERC1967Bootstrap(address authorizedUpgrader) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x80), 0x3d3560601c5af46047573d6000383e3d38fd0000000000000000000000000000)
             mstore(add(c, 0x60), 0xa920a3ca505d382bbc55601436116049575b005b363d3d373d3d601436036014)
@@ -1779,12 +1640,9 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code hash of the ERC1967 bootstrap.
-    function initCodeHashERC1967Bootstrap(address authorizedUpgrader)
-        internal
-        pure
-        returns (bytes32)
-    {
-        return keccak256(initCodeERC1967Bootstrap(authorizedUpgrader));
+    function initCodeHashERC1967Bootstrap(address authorizedUpgrader) internal pure returns (bytes32) {
+        // return keccak256(initCodeERC1967Bootstrap(authorizedUpgrader));
+        return initCodeERC1967Bootstrap(authorizedUpgrader)._hash();
     }
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
@@ -1804,12 +1662,8 @@ library LibClone {
 
     /// @dev Deploys a minimal ERC1967 beacon proxy.
     /// Deposits `value` ETH during deployment.
-    function deployERC1967BeaconProxy(uint256 value, address beacon)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployERC1967BeaconProxy(uint256 value, address beacon) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * ---------------------------------------------------------------------------------+
              * CREATION (34 bytes)                                                              |
@@ -1904,10 +1758,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic minimal ERC1967 beacon proxy with `salt`.
-    function deployDeterministicERC1967BeaconProxy(address beacon, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function deployDeterministicERC1967BeaconProxy(address beacon, bytes32 salt) internal returns (address instance) {
         instance = deployDeterministicERC1967BeaconProxy(0, beacon, salt);
     }
 
@@ -1917,8 +1768,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xb3582b35133d50545afa5036515af43d6000803e604d573d6000fd5b3d6000f3)
             mstore(0x40, 0x1b60e01b36527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6c)
@@ -1952,8 +1802,7 @@ library LibClone {
         internal
         returns (bool alreadyDeployed, address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xb3582b35133d50545afa5036515af43d6000803e604d573d6000fd5b3d6000f3)
             mstore(0x40, 0x1b60e01b36527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6c)
@@ -1989,8 +1838,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the minimal ERC1967 beacon proxy.
     function initCodeERC1967BeaconProxy(address beacon) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x74), 0xb3582b35133d50545afa5036515af43d6000803e604d573d6000fd5b3d6000f3)
             mstore(add(c, 0x54), 0x1b60e01b36527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6c)
@@ -2005,7 +1853,6 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the minimal ERC1967 beacon proxy.
     function initCodeHashERC1967BeaconProxy(address beacon) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
         assembly {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0xb3582b35133d50545afa5036515af43d6000803e604d573d6000fd5b3d6000f3)
@@ -2020,11 +1867,11 @@ library LibClone {
 
     /// @dev Returns the address of the ERC1967 beacon proxy, with `salt` by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddressERC1967BeaconProxy(
-        address beacon,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddressERC1967BeaconProxy(address beacon, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHashERC1967BeaconProxy(beacon);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
@@ -2034,10 +1881,7 @@ library LibClone {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Deploys a minimal ERC1967 beacon proxy with `args`.
-    function deployERC1967BeaconProxy(address beacon, bytes memory args)
-        internal
-        returns (address instance)
-    {
+    function deployERC1967BeaconProxy(address beacon, bytes memory args) internal returns (address instance) {
         instance = deployERC1967BeaconProxy(0, beacon, args);
     }
 
@@ -2047,8 +1891,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x8b), n))
@@ -2076,14 +1919,11 @@ library LibClone {
 
     /// @dev Deploys a deterministic minimal ERC1967 beacon proxy with `args` and `salt`.
     /// Deposits `value` ETH during deployment.
-    function deployDeterministicERC1967BeaconProxy(
-        uint256 value,
-        address beacon,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployDeterministicERC1967BeaconProxy(uint256 value, address beacon, bytes memory args, bytes32 salt)
+        internal
+        returns (address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x8b), n))
@@ -2115,14 +1955,11 @@ library LibClone {
     /// Deposits `value` ETH during deployment.
     /// Note: This method is intended for use in ERC4337 factories,
     /// which are expected to NOT revert if the proxy is already deployed.
-    function createDeterministicERC1967BeaconProxy(
-        uint256 value,
-        address beacon,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (bool alreadyDeployed, address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function createDeterministicERC1967BeaconProxy(uint256 value, address beacon, bytes memory args, bytes32 salt)
+        internal
+        returns (bool alreadyDeployed, address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x8b), n))
@@ -2160,13 +1997,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code of the minimal ERC1967 beacon proxy.
-    function initCodeERC1967BeaconProxy(address beacon, bytes memory args)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeERC1967BeaconProxy(address beacon, bytes memory args) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x52 = 0xffad`.
@@ -2186,13 +2018,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code hash of the minimal ERC1967 beacon proxy with `args`.
-    function initCodeHashERC1967BeaconProxy(address beacon, bytes memory args)
-        internal
-        pure
-        returns (bytes32 hash)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeHashERC1967BeaconProxy(address beacon, bytes memory args) internal pure returns (bytes32 hash) {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x52 = 0xffad`.
@@ -2223,8 +2050,7 @@ library LibClone {
 
     /// @dev Equivalent to `argsOnERC1967BeaconProxy(instance, start, 2 ** 256 - 1)`.
     function argsOnERC1967BeaconProxy(address instance) internal view returns (bytes memory args) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             mstore(args, and(0xffffffffff, sub(extcodesize(instance), 0x52))) // Store the length.
             extcodecopy(instance, add(args, 0x20), 0x52, add(mload(args), 0x20))
@@ -2233,13 +2059,8 @@ library LibClone {
     }
 
     /// @dev Equivalent to `argsOnERC1967BeaconProxy(instance, start, 2 ** 256 - 1)`.
-    function argsOnERC1967BeaconProxy(address instance, uint256 start)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967BeaconProxy(address instance, uint256 start) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(instance), 0x52))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -2259,8 +2080,7 @@ library LibClone {
         view
         returns (bytes memory args)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))
@@ -2298,12 +2118,8 @@ library LibClone {
 
     /// @dev Deploys a ERC1967I beacon proxy.
     /// Deposits `value` ETH during deployment.
-    function deployERC1967IBeaconProxy(uint256 value, address beacon)
-        internal
-        returns (address instance)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployERC1967IBeaconProxy(uint256 value, address beacon) internal returns (address instance) {
+        assembly ("memory-safe") {
             /**
              * ---------------------------------------------------------------------------------+
              * CREATION (34 bytes)                                                              |
@@ -2403,10 +2219,7 @@ library LibClone {
     }
 
     /// @dev Deploys a deterministic ERC1967I beacon proxy with `salt`.
-    function deployDeterministicERC1967IBeaconProxy(address beacon, bytes32 salt)
-        internal
-        returns (address instance)
-    {
+    function deployDeterministicERC1967IBeaconProxy(address beacon, bytes32 salt) internal returns (address instance) {
         instance = deployDeterministicERC1967IBeaconProxy(0, beacon, salt);
     }
 
@@ -2416,8 +2229,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d50545afa361460525736515af43d600060013e6052573d6001fd5b3d6001f3)
             mstore(0x40, 0x527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b3513)
@@ -2451,8 +2263,7 @@ library LibClone {
         internal
         returns (bool alreadyDeployed, address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d50545afa361460525736515af43d600060013e6052573d6001fd5b3d6001f3)
             mstore(0x40, 0x527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b3513)
@@ -2488,8 +2299,7 @@ library LibClone {
 
     /// @dev Returns the initialization code of the ERC1967I beacon proxy.
     function initCodeERC1967IBeaconProxy(address beacon) internal pure returns (bytes memory c) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             c := mload(0x40)
             mstore(add(c, 0x79), 0x3d50545afa361460525736515af43d600060013e6052573d6001fd5b3d6001f3)
             mstore(add(c, 0x59), 0x527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b3513)
@@ -2504,8 +2314,7 @@ library LibClone {
 
     /// @dev Returns the initialization code hash of the ERC1967I beacon proxy.
     function initCodeHashERC1967IBeaconProxy(address beacon) internal pure returns (bytes32 hash) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x60, 0x3d50545afa361460525736515af43d600060013e6052573d6001fd5b3d6001f3)
             mstore(0x40, 0x527fa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b3513)
@@ -2519,11 +2328,11 @@ library LibClone {
 
     /// @dev Returns the address of the ERC1967I beacon proxy, with `salt` by `deployer`.
     /// Note: The returned result has dirty upper 96 bits. Please clean if used in assembly.
-    function predictDeterministicAddressERC1967IBeaconProxy(
-        address beacon,
-        bytes32 salt,
-        address deployer
-    ) internal pure returns (address predicted) {
+    function predictDeterministicAddressERC1967IBeaconProxy(address beacon, bytes32 salt, address deployer)
+        internal
+        pure
+        returns (address predicted)
+    {
         bytes32 hash = initCodeHashERC1967IBeaconProxy(beacon);
         predicted = predictDeterministicAddress(hash, salt, deployer);
     }
@@ -2533,10 +2342,7 @@ library LibClone {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Deploys a ERC1967I beacon proxy with `args.
-    function deployERC1967IBeaconProxy(address beacon, bytes memory args)
-        internal
-        returns (address instance)
-    {
+    function deployERC1967IBeaconProxy(address beacon, bytes memory args) internal returns (address instance) {
         instance = deployERC1967IBeaconProxy(0, beacon, args);
     }
 
@@ -2546,8 +2352,7 @@ library LibClone {
         internal
         returns (address instance)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x90), n))
@@ -2575,14 +2380,11 @@ library LibClone {
 
     /// @dev Deploys a deterministic ERC1967I beacon proxy with `args` and `salt`.
     /// Deposits `value` ETH during deployment.
-    function deployDeterministicERC1967IBeaconProxy(
-        uint256 value,
-        address beacon,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function deployDeterministicERC1967IBeaconProxy(uint256 value, address beacon, bytes memory args, bytes32 salt)
+        internal
+        returns (address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x90), n))
@@ -2614,14 +2416,11 @@ library LibClone {
     /// Deposits `value` ETH during deployment.
     /// Note: This method is intended for use in ERC4337 factories,
     /// which are expected to NOT revert if the proxy is already deployed.
-    function createDeterministicERC1967IBeaconProxy(
-        uint256 value,
-        address beacon,
-        bytes memory args,
-        bytes32 salt
-    ) internal returns (bool alreadyDeployed, address instance) {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function createDeterministicERC1967IBeaconProxy(uint256 value, address beacon, bytes memory args, bytes32 salt)
+        internal
+        returns (bool alreadyDeployed, address instance)
+    {
+        assembly ("memory-safe") {
             let m := mload(0x40)
             let n := mload(args)
             pop(staticcall(gas(), 4, add(args, 0x20), n, add(m, 0x90), n))
@@ -2659,13 +2458,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code of the ERC1967I beacon proxy with `args`.
-    function initCodeERC1967IBeaconProxy(address beacon, bytes memory args)
-        internal
-        pure
-        returns (bytes memory c)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeERC1967IBeaconProxy(address beacon, bytes memory args) internal pure returns (bytes memory c) {
+        assembly ("memory-safe") {
             c := mload(0x40)
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x57 = 0xffa8`.
@@ -2685,13 +2479,8 @@ library LibClone {
     }
 
     /// @dev Returns the initialization code hash of the ERC1967I beacon proxy with `args`.
-    function initCodeHashERC1967IBeaconProxy(address beacon, bytes memory args)
-        internal
-        pure
-        returns (bytes32 hash)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function initCodeHashERC1967IBeaconProxy(address beacon, bytes memory args) internal pure returns (bytes32 hash) {
+        assembly ("memory-safe") {
             let c := mload(0x40) // Cache the free memory pointer.
             let n := mload(args)
             // Do a out-of-gas revert if `n` is greater than `0xffff - 0x57 = 0xffa8`.
@@ -2722,8 +2511,7 @@ library LibClone {
 
     /// @dev Equivalent to `argsOnERC1967IBeaconProxy(instance, start, 2 ** 256 - 1)`.
     function argsOnERC1967IBeaconProxy(address instance) internal view returns (bytes memory args) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             mstore(args, and(0xffffffffff, sub(extcodesize(instance), 0x57))) // Store the length.
             extcodecopy(instance, add(args, 0x20), 0x57, add(mload(args), 0x20))
@@ -2732,13 +2520,8 @@ library LibClone {
     }
 
     /// @dev Equivalent to `argsOnERC1967IBeaconProxy(instance, start, 2 ** 256 - 1)`.
-    function argsOnERC1967IBeaconProxy(address instance, uint256 start)
-        internal
-        view
-        returns (bytes memory args)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
+    function argsOnERC1967IBeaconProxy(address instance, uint256 start) internal view returns (bytes memory args) {
+        assembly ("memory-safe") {
             args := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(instance), 0x57))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -2758,8 +2541,7 @@ library LibClone {
         view
         returns (bytes memory args)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             args := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))
@@ -2781,8 +2563,7 @@ library LibClone {
 
     /// @dev Returns `address(0)` if the implementation address cannot be determined.
     function implementationOf(address instance) internal view returns (address result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             for { extcodecopy(instance, 0x00, 0x00, 0x57) } 1 {} {
                 if mload(0x2d) {
                     // ERC1967I and ERC1967IBeaconProxy detection.
@@ -2824,8 +2605,7 @@ library LibClone {
         pure
         returns (address predicted)
     {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             // Compute and store the bytecode hash.
             mstore8(0x00, 0xff) // Write the prefix.
             mstore(0x35, hash)
@@ -2838,8 +2618,7 @@ library LibClone {
 
     /// @dev Requires that `salt` starts with either the zero address or `by`.
     function checkStartsWith(bytes32 salt, address by) internal pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             // If the salt does not start with the zero address or `by`.
             if iszero(or(iszero(shr(96, salt)), eq(shr(96, shl(96, by)), shr(96, salt)))) {
                 mstore(0x00, 0x0c4549ef) // `SaltDoesNotStartWith()`.
@@ -2851,8 +2630,7 @@ library LibClone {
     /// @dev Returns the `bytes32` at `offset` in `args`, without any bounds checks.
     /// To load an address, you can use `address(bytes20(argLoad(args, offset)))`.
     function argLoad(bytes memory args, uint256 offset) internal pure returns (bytes32 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly ("memory-safe") {
             result := mload(add(add(args, 0x20), offset))
         }
     }

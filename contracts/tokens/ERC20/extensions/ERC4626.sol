@@ -64,7 +64,13 @@ abstract contract ERC4626 is SoladyERC4626, IERC4626 {
         return SoladyERC20.transfer(to, value);
     }
 
-    function allowance(address owner, address spender) public view virtual override(SoladyERC20, IERC20) returns (uint256) {
+    function allowance(address owner, address spender)
+        public
+        view
+        virtual
+        override(SoladyERC20, IERC20)
+        returns (uint256)
+    {
         return SoladyERC20.allowance(owner, spender);
     }
 
@@ -72,7 +78,12 @@ abstract contract ERC4626 is SoladyERC4626, IERC4626 {
         return SoladyERC20.approve(spender, value);
     }
 
-    function transferFrom(address from, address to, uint256 value) public virtual override(SoladyERC20, IERC20) returns (bool) {
+    function transferFrom(address from, address to, uint256 value)
+        public
+        virtual
+        override(SoladyERC20, IERC20)
+        returns (bool)
+    {
         return SoladyERC20.transferFrom(from, to, value);
     }
 
@@ -105,7 +116,12 @@ abstract contract ERC4626 is SoladyERC4626, IERC4626 {
         return SoladyERC4626.previewDeposit(assets);
     }
 
-    function deposit(uint256 assets, address receiver) public virtual override(SoladyERC4626, IERC4626) returns (uint256) {
+    function deposit(uint256 assets, address receiver)
+        public
+        virtual
+        override(SoladyERC4626, IERC4626)
+        returns (uint256)
+    {
         return SoladyERC4626.deposit(assets, receiver);
     }
 
@@ -129,7 +145,12 @@ abstract contract ERC4626 is SoladyERC4626, IERC4626 {
         return SoladyERC4626.previewWithdraw(assets);
     }
 
-    function withdraw(uint256 assets, address receiver, address owner) public virtual override(SoladyERC4626, IERC4626) returns (uint256) {
+    function withdraw(uint256 assets, address receiver, address owner)
+        public
+        virtual
+        override(SoladyERC4626, IERC4626)
+        returns (uint256)
+    {
         return SoladyERC4626.withdraw(assets, receiver, owner);
     }
 
@@ -141,7 +162,12 @@ abstract contract ERC4626 is SoladyERC4626, IERC4626 {
         return SoladyERC4626.previewRedeem(shares);
     }
 
-    function redeem(uint256 shares, address receiver, address owner) public virtual override(SoladyERC4626, IERC4626) returns (uint256) {
+    function redeem(uint256 shares, address receiver, address owner)
+        public
+        virtual
+        override(SoladyERC4626, IERC4626)
+        returns (uint256)
+    {
         return SoladyERC4626.redeem(shares, receiver, owner);
     }
 }

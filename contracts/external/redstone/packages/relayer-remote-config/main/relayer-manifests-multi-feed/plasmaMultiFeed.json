@@ -1,0 +1,71 @@
+{
+  "chain": {
+    "name": "plasma",
+    "id": 9745
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.5,
+    "timeSinceLastUpdateInMilliseconds": 21600000
+  },
+  "adapterContract": "0x368eE51E47a594fe1E9908b48228748a30BC7ca4",
+  "adapterContractType": "multi-feed",
+  "dataServiceId": "redstone-primary-prod",
+  "priceFeeds": {
+    "ETH": {
+      "priceFeedAddress": "0xc555c100DB24dF36D406243642C169CC5A937f09"
+    },
+    "BTC": {
+      "priceFeedAddress": "0xf0DEbDAE819b354D076b0D162e399BE013A856d3"
+    },
+    "USDT": {
+      "priceFeedAddress": "0x4aF6b78d92432D32E3a635E824d3A541866f7a78",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "USR": {
+      "priceFeedAddress": "0x26FB59e5562405F42f55661f790fA1Bd2F410A3d",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.2,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "ENA": {
+      "priceFeedAddress": "0x65d0F14f7809CdC4f90c3978c753C4671b6B815b"
+    },
+    "weETH_FUNDAMENTAL": {
+      "priceFeedAddress": "0xeC7C6AdcC867E1C22713D14797339750E36538E4"
+    },
+    "EUR": {
+      "priceFeedAddress": "0x22d47686b3AEC9068768f84EFD8Ce2637a347B0A",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.15,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "thBILL_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xED2B1ca5D7E246f615c2291De309643D41FeC97e"
+    },
+    "XAUt": {
+      "priceFeedAddress": "0x17B0887c92575b147AcB34F2Ce63071b0D8841fb"
+    },
+    "XPL": {
+      "priceFeedAddress": "0x6ED89c637A6a42E0dc625Fbc16888263fa724d51"
+    },
+    "yzUSD_FUNDAMENTAL": {
+      "priceFeedAddress": "0xaE02D5bE17a23C8fdd0676C6A5f9143d91237979",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "syzUSD_FUNDAMENTAL/USD": {
+      "priceFeedAddress": "0xa8a94Da411425634e3Ed6C331a32ab4fd774aa43",
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    }
+  }
+}

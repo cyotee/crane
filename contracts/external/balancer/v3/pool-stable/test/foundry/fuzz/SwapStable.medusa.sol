@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SwapMedusaTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/fuzz/Swap.medusa.sol";
+import {SwapMedusaTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/fuzz/Swap.medusa.sol";
 
-import { StablePoolFactory } from "../../../contracts/StablePoolFactory.sol";
-import { StablePool } from "../../../contracts/StablePool.sol";
+import {StablePoolFactory} from "../../../contracts/StablePoolFactory.sol";
+import {StablePool} from "../../../contracts/StablePool.sol";
 
 contract SwapStableMedusaTest is SwapMedusaTest {
     uint256 private constant DEFAULT_SWAP_FEE = 1e16;
@@ -18,10 +18,11 @@ contract SwapStableMedusaTest is SwapMedusaTest {
 
     constructor() SwapMedusaTest() {}
 
-    function createPool(
-        IERC20[] memory tokens,
-        uint256[] memory initialBalances
-    ) internal override returns (address newPool) {
+    function createPool(IERC20[] memory tokens, uint256[] memory initialBalances)
+        internal
+        override
+        returns (address newPool)
+    {
         StablePoolFactory factory = new StablePoolFactory(IVault(address(vault)), 365 days, "Factory v1", "Pool v1");
         PoolRoleAccounts memory roleAccounts;
 

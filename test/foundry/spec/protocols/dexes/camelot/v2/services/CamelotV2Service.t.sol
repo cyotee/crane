@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ICamelotPair} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";
 import {CamelotV2Service} from "@crane/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol";
-import {TestBase_ConstProdUtils_Camelot} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
+import {
+    TestBase_ConstProdUtils_Camelot
+} from "@crane/test/foundry/spec/utils/math/constProdUtils/TestBase_ConstProdUtils_Camelot.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 import {ERC20PermitMintableStub} from "@crane/contracts/tokens/ERC20/ERC20PermitMintableStub.sol";
 
@@ -35,7 +37,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         camelotBalancedTokenA.mint(address(this), swapAmount);
         camelotBalancedTokenA.approve(address(camelotV2Router), swapAmount);
 
-        (uint112 reserveA, uint112 reserveB, uint16 feePercentA, ) = camelotBalancedPair.getReserves();
+        (uint112 reserveA, uint112 reserveB, uint16 feePercentA,) = camelotBalancedPair.getReserves();
 
         // Calculate expected output using ConstProdUtils
         uint256 expectedOut = ConstProdUtils._saleQuote(swapAmount, reserveA, reserveB, feePercentA);
@@ -73,12 +75,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
 
         // Execute swap using the pool overload
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            camelotBalancedPair,
-            swapAmount,
-            camelotBalancedTokenA,
-            camelotBalancedTokenB,
-            address(0)
+            camelotV2Router, camelotBalancedPair, swapAmount, camelotBalancedTokenA, camelotBalancedTokenB, address(0)
         );
 
         uint256 balanceAfter = camelotBalancedTokenB.balanceOf(address(this));
@@ -96,7 +93,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         camelotUnbalancedTokenA.approve(address(camelotV2Router), swapAmount);
 
         // Use _sortReserves to get reserves in the correct order for tokenA
-        (uint256 reserveIn, uint256 reserveOut, uint256 feePercent, ) =
+        (uint256 reserveIn, uint256 reserveOut, uint256 feePercent,) =
             CamelotV2Service._sortReserves(camelotUnbalancedPair, camelotUnbalancedTokenA);
 
         uint256 expectedOut = ConstProdUtils._saleQuote(swapAmount, reserveIn, reserveOut, feePercent);
@@ -125,12 +122,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         uint256 balanceBefore = camelotBalancedTokenA.balanceOf(address(this));
 
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            camelotBalancedPair,
-            swapAmount,
-            camelotBalancedTokenB,
-            camelotBalancedTokenA,
-            address(0)
+            camelotV2Router, camelotBalancedPair, swapAmount, camelotBalancedTokenB, camelotBalancedTokenA, address(0)
         );
 
         uint256 balanceAfter = camelotBalancedTokenA.balanceOf(address(this));
@@ -233,13 +225,8 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
 
         uint256 lpBefore = camelotBalancedPair.balanceOf(address(this));
 
-        uint256 liquidity = CamelotV2Service._deposit(
-            camelotV2Router,
-            camelotBalancedTokenA,
-            camelotBalancedTokenB,
-            amountA,
-            amountB
-        );
+        uint256 liquidity =
+            CamelotV2Service._deposit(camelotV2Router, camelotBalancedTokenA, camelotBalancedTokenB, amountA, amountB);
 
         uint256 lpAfter = camelotBalancedPair.balanceOf(address(this));
 
@@ -263,11 +250,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         freshTokenB.approve(address(camelotV2Router), amountB);
 
         uint256 liquidity = CamelotV2Service._deposit(
-            camelotV2Router,
-            IERC20(address(freshTokenA)),
-            IERC20(address(freshTokenB)),
-            amountA,
-            amountB
+            camelotV2Router, IERC20(address(freshTokenA)), IERC20(address(freshTokenB)), amountA, amountB
         );
 
         assertGt(liquidity, 0, "Should mint initial LP tokens");
@@ -307,7 +290,8 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         uint256 withdrawAmount = lpBalance / 4; // Withdraw 25%
 
         (uint256 amount0Full, uint256 amount1Full) = _calculateWithdrawAmounts(camelotBalancedPair, lpBalance);
-        (uint256 amount0Partial, uint256 amount1Partial) = CamelotV2Service._withdrawDirect(camelotBalancedPair, withdrawAmount);
+        (uint256 amount0Partial, uint256 amount1Partial) =
+            CamelotV2Service._withdrawDirect(camelotBalancedPair, withdrawAmount);
 
         // Partial withdrawal should be approximately 25% of full withdrawal
         assertApproxEqRel(amount0Partial * 4, amount0Full, 0.01e18, "Token0 should be ~25% of full");
@@ -325,12 +309,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         uint256 balanceBBefore = camelotBalancedTokenB.balanceOf(address(this));
 
         uint256 amountOut = CamelotV2Service._withdrawSwapDirect(
-            camelotBalancedPair,
-            camelotV2Router,
-            lpBalance,
-            camelotBalancedTokenB,
-            camelotBalancedTokenA,
-            address(0)
+            camelotBalancedPair, camelotV2Router, lpBalance, camelotBalancedTokenB, camelotBalancedTokenA, address(0)
         );
 
         uint256 balanceBAfter = camelotBalancedTokenB.balanceOf(address(this));
@@ -376,12 +355,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         camelotBalancedTokenA.approve(address(camelotV2Router), inputAmount);
 
         uint256[] memory amounts = CamelotV2Service._balanceAssets(
-            camelotV2Router,
-            camelotBalancedPair,
-            inputAmount,
-            camelotBalancedTokenA,
-            camelotBalancedTokenB,
-            address(0)
+            camelotV2Router, camelotBalancedPair, inputAmount, camelotBalancedTokenA, camelotBalancedTokenB, address(0)
         );
 
         assertEq(amounts.length, 2, "Should return two amounts");
@@ -399,7 +373,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         camelotUnbalancedTokenA.approve(address(camelotV2Router), inputAmount);
 
         // Use _sortReserves to get reserves in the correct order for tokenA
-        (uint256 reserveA, uint256 reserveB, , ) =
+        (uint256 reserveA, uint256 reserveB,,) =
             CamelotV2Service._sortReserves(camelotUnbalancedPair, camelotUnbalancedTokenA);
 
         uint256[] memory amounts = CamelotV2Service._balanceAssets(
@@ -466,10 +440,10 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
     function test_sortReserves_zeroAddress_defaultsToToken0() public {
         _initializeCamelotBalancedPools();
 
-        (uint256 knownReserve, uint256 opposingReserve, , ) =
+        (uint256 knownReserve, uint256 opposingReserve,,) =
             CamelotV2Service._sortReserves(camelotBalancedPair, IERC20(address(0)));
 
-        (uint112 reserve0, uint112 reserve1, , ) = camelotBalancedPair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = camelotBalancedPair.getReserves();
 
         assertEq(knownReserve, reserve0, "Zero address should default to token0 reserve");
         assertEq(opposingReserve, reserve1, "Opposing should be token1 reserve");
@@ -489,12 +463,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
         camelotBalancedTokenA.approve(address(camelotV2Router), swapAmount);
 
         uint256 amountOut = CamelotV2Service._swap(
-            camelotV2Router,
-            camelotBalancedPair,
-            swapAmount,
-            camelotBalancedTokenA,
-            camelotBalancedTokenB,
-            address(0)
+            camelotV2Router, camelotBalancedPair, swapAmount, camelotBalancedTokenA, camelotBalancedTokenB, address(0)
         );
 
         assertGt(amountOut, 0, "Any reasonable swap should produce output");
@@ -526,7 +495,7 @@ contract CamelotV2Service_Test is TestBase_ConstProdUtils_Camelot {
     /* ---------------------------------------------------------------------- */
 
     function _calculateWithdrawAmounts(ICamelotPair pair, uint256 lpAmount) internal view returns (uint256, uint256) {
-        (uint112 reserve0, uint112 reserve1, , ) = pair.getReserves();
+        (uint112 reserve0, uint112 reserve1,,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
         uint256 amount0 = (lpAmount * reserve0) / totalSupply;
         uint256 amount1 = (lpAmount * reserve1) / totalSupply;

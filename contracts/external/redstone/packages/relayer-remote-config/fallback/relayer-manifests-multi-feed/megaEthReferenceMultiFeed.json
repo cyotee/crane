@@ -1,0 +1,70 @@
+{
+  "chain": {
+    "name": "megaEth",
+    "id": 4326
+  },
+  "updateTriggers": {
+    "deviationPercentage": 0.1,
+    "timeSinceLastUpdateInMilliseconds": 0
+  },
+  "adapterContract": "0x57677Bdc4F24D5c08ddCE87E06670C26a00Cac0b",
+  "adapterContractType": "multi-feed",
+  "dataServiceId": "redstone-primary-prod",
+  "isHidden": true,
+  "dataPackagesNames": ["___FAST___"],
+  "priceFeeds": {
+    "ETH": {},
+    "BTC": {},
+    "USDC": {},
+    "USDT": {},
+    "BNB": {},
+    "XRP": {},
+    "ADA": {},
+    "SOL": {},
+    "DOGE": {},
+    "wstETH/ETH": {},
+    "cUSD_FUNDAMENTAL": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.05,
+        "timeSinceLastUpdateInMilliseconds": 86400000
+      }
+    },
+    "USDm": {},
+    "TRY": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "LBTC_FUNDAMENTAL": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "BTC.b_FUNDAMENTAL": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.25,
+        "timeSinceLastUpdateInMilliseconds": 43200000
+      }
+    },
+    "sUSDe": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "JITOSOL": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    },
+    "HYPE": {
+      "updateTriggersOverrides": {
+        "deviationPercentage": 0.1,
+        "timeSinceLastUpdateInMilliseconds": 21600000
+      }
+    }
+  }
+}

@@ -3,7 +3,9 @@
 pragma solidity ^0.8.24;
 
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {Authentication} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
+import {
+    Authentication
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Authentication.sol";
 
 /// @dev Base contract for performing access control on external functions within pools.
 /// @dev Vendored from Balancer V3 Vault.

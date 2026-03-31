@@ -5,9 +5,9 @@ pragma solidity ^0.8.24;
 import {
     IBalancerContractRegistry
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IBalancerContractRegistry.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { MevCaptureHook } from "../MevCaptureHook.sol";
+import {MevCaptureHook} from "../MevCaptureHook.sol";
 
 contract MevCaptureHookMock is MevCaptureHook {
     constructor(
@@ -19,11 +19,11 @@ contract MevCaptureHookMock is MevCaptureHook {
         // solhint-disable-previous-line no-empty-blocks
     }
 
-    function calculateSwapFeePercentageExternal(
-        uint256 staticSwapFeePercentage,
-        uint256 multiplier,
-        uint256 threshold
-    ) external view returns (uint256 feePercentage) {
+    function calculateSwapFeePercentageExternal(uint256 staticSwapFeePercentage, uint256 multiplier, uint256 threshold)
+        external
+        view
+        returns (uint256 feePercentage)
+    {
         return _calculateSwapFeePercentage(staticSwapFeePercentage, multiplier, threshold);
     }
 }

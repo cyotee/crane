@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "redstone-adapter"
+publish = false
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+doctest = false
+
+[dependencies]
+common = { workspace = true }
+hex-literal = { workspace = true }
+redstone = { workspace = true, default-features = false, features = [
+  "soroban",
+] }
+soroban-sdk = { workspace = true, features = ["alloc"] }

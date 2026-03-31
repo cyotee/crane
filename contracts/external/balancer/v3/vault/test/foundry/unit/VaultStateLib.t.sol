@@ -4,10 +4,12 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { WordCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
-import { BaseBitsConfigTest } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseBitsConfigTest.sol";
+import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
+import {
+    BaseBitsConfigTest
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseBitsConfigTest.sol";
 
-import { VaultStateLib, VaultStateBits, VaultStateBits } from "../../../contracts/lib/VaultStateLib.sol";
+import {VaultStateLib, VaultStateBits, VaultStateBits} from "../../../contracts/lib/VaultStateLib.sol";
 
 contract VaultStateLibTest is BaseBitsConfigTest {
     using VaultStateLib for VaultStateBits;

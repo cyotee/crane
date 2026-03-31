@@ -5,17 +5,17 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import { RevertCodec } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
+import {RevertCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/RevertCodec.sol";
 
-import { Router } from "../Router.sol";
-import { RouterHooks } from "../RouterHooks.sol";
+import {Router} from "../Router.sol";
+import {RouterHooks} from "../RouterHooks.sol";
 
 string constant MOCK_ROUTER_VERSION = "Mock Router v1";
 
@@ -57,11 +57,11 @@ contract RouterMock is Router {
         RouterHooks(payable(this)).querySwapHook(params);
     }
 
-    function getSingleInputArrayAndTokenIndex(
-        address pool,
-        IERC20 token,
-        uint256 amountGiven
-    ) external view returns (uint256[] memory amountsGiven, uint256 tokenIndex) {
+    function getSingleInputArrayAndTokenIndex(address pool, IERC20 token, uint256 amountGiven)
+        external
+        view
+        returns (uint256[] memory amountsGiven, uint256 tokenIndex)
+    {
         return _getSingleInputArrayAndTokenIndex(pool, token, amountGiven);
     }
 
@@ -72,25 +72,23 @@ contract RouterMock is Router {
         uint256 exactAmountIn,
         bytes calldata userData
     ) external returns (uint256 amountCalculated) {
-        try
-            _vault.quoteAndRevert(
-                abi.encodeCall(
-                    RouterHooks.querySwapHook,
-                    SwapSingleTokenHookParams({
-                        sender: msg.sender,
-                        kind: SwapKind.EXACT_IN,
-                        pool: pool,
-                        tokenIn: tokenIn,
-                        tokenOut: tokenOut,
-                        amountGiven: exactAmountIn,
-                        limit: 0,
-                        deadline: _MAX_AMOUNT,
-                        wethIsEth: false,
-                        userData: userData
-                    })
-                )
+        try _vault.quoteAndRevert(
+            abi.encodeCall(
+                RouterHooks.querySwapHook,
+                SwapSingleTokenHookParams({
+                    sender: msg.sender,
+                    kind: SwapKind.EXACT_IN,
+                    pool: pool,
+                    tokenIn: tokenIn,
+                    tokenOut: tokenOut,
+                    amountGiven: exactAmountIn,
+                    limit: 0,
+                    deadline: _MAX_AMOUNT,
+                    wethIsEth: false,
+                    userData: userData
+                })
             )
-        {
+        ) {
             revert("Unexpected success");
         } catch (bytes memory result) {
             return abi.decode(RevertCodec.catchEncodedResult(result), (uint256));
@@ -166,27 +164,22 @@ contract RouterMock is Router {
         uint256 minBptAmountOut;
     }
 
-    function manualAddAndRemoveLiquidity(
-        ManualAddRemoveLiquidityParams calldata params
-    )
+    function manualAddAndRemoveLiquidity(ManualAddRemoveLiquidityParams calldata params)
         external
         saveSender(msg.sender)
         returns (uint256[] memory amountsIn, uint256 bptAmountOut, uint256 bptAmountIn, uint256[] memory amountsOut)
     {
-        return
-            abi.decode(
-                _vault.unlock(abi.encodeCall(RouterMock.manualAddAndRemoveLiquidityHook, params)),
-                (uint256[], uint256, uint256, uint256[])
-            );
+        return abi.decode(
+            _vault.unlock(abi.encodeCall(RouterMock.manualAddAndRemoveLiquidityHook, params)),
+            (uint256[], uint256, uint256, uint256[])
+        );
     }
 
-    function manualAddAndRemoveLiquidityHook(
-        ManualAddRemoveLiquidityParams calldata params
-    )
+    function manualAddAndRemoveLiquidityHook(ManualAddRemoveLiquidityParams calldata params)
         external
         returns (uint256[] memory amountsIn, uint256 bptAmountOut, uint256 bptAmountIn, uint256[] memory amountsOut)
     {
-        (amountsIn, bptAmountOut, ) = _vault.addLiquidity(
+        (amountsIn, bptAmountOut,) = _vault.addLiquidity(
             AddLiquidityParams({
                 pool: params.pool,
                 to: params.sender,
@@ -214,7 +207,7 @@ contract RouterMock is Router {
             _vault.settle(token, amountIn);
         }
 
-        (bptAmountIn, amountsOut, ) = _vault.removeLiquidity(
+        (bptAmountIn, amountsOut,) = _vault.removeLiquidity(
             RemoveLiquidityParams({
                 pool: params.pool,
                 from: params.sender,

@@ -6,11 +6,11 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
-import { RouterWethLib } from "../../contracts/lib/RouterWethLib.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
+import {RouterWethLib} from "../../contracts/lib/RouterWethLib.sol";
 
 // @dev The test contract will act as the router.
 contract RouterWethLibTest is BaseVaultTest {
@@ -20,7 +20,7 @@ contract RouterWethLibTest is BaseVaultTest {
         BaseVaultTest.setUp();
 
         // Ensure the contract has no ETH balance.
-        (bool success, ) = payable(0).call{ value: address(this).balance }("");
+        (bool success,) = payable(0).call{value: address(this).balance}("");
         require(success, "Failed to send ETH to address 0");
     }
 
@@ -52,9 +52,7 @@ contract RouterWethLibTest is BaseVaultTest {
             "Vault WETH balance should increase"
         );
         assertEq(
-            vault.getReservesOf(weth),
-            vaultWethReserveBefore + TRANSFER_AMOUNT,
-            "Vault WETH reserve should increase"
+            vault.getReservesOf(weth), vaultWethReserveBefore + TRANSFER_AMOUNT, "Vault WETH reserve should increase"
         );
 
         // Router balances.
@@ -70,12 +68,8 @@ contract RouterWethLibTest is BaseVaultTest {
 
         vault.forceUnlock();
         vm.expectRevert(); // Expect math underflow due to insufficient WETH balance
-        RouterWethLibTest(payable(this)).externalUnwrapWethAndTransferToSender(
-            weth,
-            vault,
-            address(this),
-            TRANSFER_AMOUNT
-        );
+        RouterWethLibTest(payable(this))
+            .externalUnwrapWethAndTransferToSender(weth, vault, address(this), TRANSFER_AMOUNT);
     }
 
     function testUnwrapWethAndTransferToSenderSuccess() public {
@@ -101,9 +95,7 @@ contract RouterWethLibTest is BaseVaultTest {
             "Vault WETH balance should decrease"
         );
         assertEq(
-            vault.getReservesOf(weth),
-            vaultWethReserveBefore - TRANSFER_AMOUNT,
-            "Vault WETH reserve should decrease"
+            vault.getReservesOf(weth), vaultWethReserveBefore - TRANSFER_AMOUNT, "Vault WETH reserve should decrease"
         );
 
         // Router balances.

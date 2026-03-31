@@ -29,10 +29,7 @@ contract NFTDescriptorTokenURITest is Test {
         string memory uri = NFTDescriptor.constructTokenURI(params);
 
         // Verify JSON data URI prefix
-        assertTrue(
-            _startsWith(uri, JSON_PREFIX),
-            "tokenURI must start with data:application/json;base64,"
-        );
+        assertTrue(_startsWith(uri, JSON_PREFIX), "tokenURI must start with data:application/json;base64,");
     }
 
     /// @notice Test that decoded JSON contains the image field with correct prefix
@@ -47,8 +44,7 @@ contract NFTDescriptorTokenURITest is Test {
 
         // Verify JSON contains image field with SVG data URI prefix
         assertTrue(
-            _contains(json, SVG_IMAGE_PREFIX),
-            "JSON must contain image field with data:image/svg+xml;base64, prefix"
+            _contains(json, SVG_IMAGE_PREFIX), "JSON must contain image field with data:image/svg+xml;base64, prefix"
         );
     }
 
@@ -67,16 +63,10 @@ contract NFTDescriptorTokenURITest is Test {
         bytes memory svgBytes = SoladyBase64.decode(base64Svg);
 
         // Verify SVG starts with <svg
-        assertTrue(
-            _startsWith(string(svgBytes), "<svg"),
-            "SVG must start with <svg"
-        );
+        assertTrue(_startsWith(string(svgBytes), "<svg"), "SVG must start with <svg");
 
         // Verify SVG ends with </svg>
-        assertTrue(
-            _endsWith(string(svgBytes), "</svg>"),
-            "SVG must end with </svg>"
-        );
+        assertTrue(_endsWith(string(svgBytes), "</svg>"), "SVG must end with </svg>");
     }
 
     /// @notice Comprehensive shape validation test combining all checks
@@ -85,10 +75,7 @@ contract NFTDescriptorTokenURITest is Test {
         string memory uri = NFTDescriptor.constructTokenURI(params);
 
         // 1. Verify JSON prefix
-        assertTrue(
-            _startsWith(uri, JSON_PREFIX),
-            "Step 1: URI must have JSON data prefix"
-        );
+        assertTrue(_startsWith(uri, JSON_PREFIX), "Step 1: URI must have JSON data prefix");
 
         // 2. Decode JSON and verify structure
         string memory base64Json = _substring(uri, bytes(JSON_PREFIX).length, bytes(uri).length);
@@ -101,10 +88,7 @@ contract NFTDescriptorTokenURITest is Test {
         assertTrue(_contains(json, '"image"'), "JSON must contain image field");
 
         // 4. Verify image field has SVG prefix
-        assertTrue(
-            _contains(json, SVG_IMAGE_PREFIX),
-            "Step 4: Image must have SVG data prefix"
-        );
+        assertTrue(_contains(json, SVG_IMAGE_PREFIX), "Step 4: Image must have SVG data prefix");
 
         // 5. Extract and decode SVG
         string memory base64Svg = _extractBase64Svg(json);
@@ -126,17 +110,17 @@ contract NFTDescriptorTokenURITest is Test {
         return NFTDescriptor.ConstructTokenURIParams({
             tokenId: 1,
             quoteTokenAddress: address(0x6B175474E89094C44Da98b954EedeAC495271d0F), // DAI
-            baseTokenAddress: address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2),  // WETH
+            baseTokenAddress: address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2), // WETH
             quoteTokenSymbol: "DAI",
             baseTokenSymbol: "WETH",
             quoteTokenDecimals: 18,
             baseTokenDecimals: 18,
             flipRatio: false,
-            tickLower: -887220,  // Near min tick but valid
-            tickUpper: 887220,   // Near max tick but valid
-            tickCurrent: 0,      // 1:1 price
-            tickSpacing: 60,     // Standard for 0.3% fee tier
-            fee: 3000,           // 0.3%
+            tickLower: -887220, // Near min tick but valid
+            tickUpper: 887220, // Near max tick but valid
+            tickCurrent: 0, // 1:1 price
+            tickSpacing: 60, // Standard for 0.3% fee tier
+            fee: 3000, // 0.3%
             poolAddress: address(0x1234567890123456789012345678901234567890)
         });
     }

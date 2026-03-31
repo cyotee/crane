@@ -4,10 +4,10 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { BalancerPoolToken } from "../../contracts/BalancerPoolToken.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {BalancerPoolToken} from "../../contracts/BalancerPoolToken.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract FungibilityTest is BaseVaultTest {
     using FixedPoint for uint256;
@@ -22,7 +22,7 @@ contract FungibilityTest is BaseVaultTest {
     function testFungibilityAddUnbalanced__Fuzz(uint256 proportion) public {
         proportion = bound(proportion, 1e12, 2e18);
 
-        (, , uint256[] memory balancesRaw, ) = vault.getPoolTokenInfo(pool);
+        (,, uint256[] memory balancesRaw,) = vault.getPoolTokenInfo(pool);
 
         uint256[] memory exactAmountsInUnbalanced = new uint256[](balancesRaw.length);
         uint256[] memory maxAmountsIn = new uint256[](balancesRaw.length);
@@ -37,31 +37,21 @@ contract FungibilityTest is BaseVaultTest {
         uint256 snapshotId = vm.snapshotState();
         // Execute unbalanced add liquidity, because this is the kind of addLiquidity that computes the invariant.
         vm.prank(lp);
-        uint256 bptAmountOutUnbalanced = router.addLiquidityUnbalanced(
-            pool,
-            exactAmountsInUnbalanced,
-            0,
-            false,
-            bytes("")
-        );
+        uint256 bptAmountOutUnbalanced =
+            router.addLiquidityUnbalanced(pool, exactAmountsInUnbalanced, 0, false, bytes(""));
         vm.revertToState(snapshotId);
 
         vm.prank(lp);
         // Compare the BPTs minted by addLiquidityUnbalanced with the BPTs of proportional, to make sure it's a
         // smaller value.
-        uint256[] memory exactAmountsInProportional = router.addLiquidityProportional(
-            pool,
-            maxAmountsIn,
-            exactBptOutProportional,
-            false,
-            bytes("")
-        );
+        uint256[] memory exactAmountsInProportional =
+            router.addLiquidityProportional(pool, maxAmountsIn, exactBptOutProportional, false, bytes(""));
 
         // Ensure minted BPT is within 0.0001% of what it ideally should be.
         assertGe(exactBptOutProportional, bptAmountOutUnbalanced, "BPT unbalanced is bigger than proportional");
         assertApproxEqRel(exactBptOutProportional, bptAmountOutUnbalanced, 1e12, "BPT out is wrong");
 
-        for (uint i = 0; i < balancesRaw.length; i++) {
+        for (uint256 i = 0; i < balancesRaw.length; i++) {
             assertLe(
                 exactAmountsInProportional[i],
                 exactAmountsInUnbalanced[i],

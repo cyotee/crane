@@ -112,11 +112,7 @@ contract ERC5267ProxyIntegration_Test is Test {
             functionSelectors: erc5267Facet.facetFuncs()
         });
 
-        bytes memory initCalldata = abi.encodeWithSelector(
-            ERC5267InitTarget.initialize.selector,
-            NAME,
-            VERSION
-        );
+        bytes memory initCalldata = abi.encodeWithSelector(ERC5267InitTarget.initialize.selector, NAME, VERSION);
 
         vm.prank(owner);
         proxy.diamondCut(cuts, address(initTarget), initCalldata);
@@ -136,17 +132,10 @@ contract ERC5267ProxyIntegration_Test is Test {
         (,,,, address verifyingContract,,) = IERC5267(address(proxy)).eip712Domain();
 
         // The critical assertion: verifyingContract must be the PROXY address
-        assertEq(
-            verifyingContract,
-            address(proxy),
-            "verifyingContract must equal proxy address, not facet address"
-        );
+        assertEq(verifyingContract, address(proxy), "verifyingContract must equal proxy address, not facet address");
 
         // Explicitly verify it's NOT the facet address
-        assertTrue(
-            verifyingContract != address(erc5267Facet),
-            "verifyingContract must NOT be the facet address"
-        );
+        assertTrue(verifyingContract != address(erc5267Facet), "verifyingContract must NOT be the facet address");
     }
 
     /**
@@ -215,11 +204,7 @@ contract ERC5267ProxyIntegration_Test is Test {
             functionSelectors: erc5267Facet.facetFuncs()
         });
 
-        bytes memory initCalldata = abi.encodeWithSelector(
-            ERC5267InitTarget.initialize.selector,
-            "SecondToken",
-            "2"
-        );
+        bytes memory initCalldata = abi.encodeWithSelector(ERC5267InitTarget.initialize.selector, "SecondToken", "2");
 
         vm.prank(owner);
         proxy2.diamondCut(cuts, address(initTarget), initCalldata);
@@ -247,10 +232,6 @@ contract ERC5267ProxyIntegration_Test is Test {
         vm.chainId(fuzzChainId);
         (,,,, address verifyingContract,,) = IERC5267(address(proxy)).eip712Domain();
 
-        assertEq(
-            verifyingContract,
-            address(proxy),
-            "verifyingContract must equal proxy address on any chain"
-        );
+        assertEq(verifyingContract, address(proxy), "verifyingContract must equal proxy address on any chain");
     }
 }

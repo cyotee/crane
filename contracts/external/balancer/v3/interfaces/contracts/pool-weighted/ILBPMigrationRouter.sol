@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { PoolRoleAccounts } from "../vault/VaultTypes.sol";
-import { IWeightedPool } from "./IWeightedPool.sol";
-import { ILBPool } from "./ILBPool.sol";
+import {PoolRoleAccounts} from "../vault/VaultTypes.sol";
+import {IWeightedPool} from "./IWeightedPool.sol";
+import {ILBPool} from "./ILBPool.sol";
 
 /// @notice Interface for migrating liquidity from an LBP to a new Weighted Pool with custom parameters.
 interface ILBPMigrationRouter {
@@ -64,11 +64,9 @@ interface ILBPMigrationRouter {
      * @return exactAmountsIn The amounts of tokens used to initialize the pool, sorted in token registration order
      * @return bptAmountOut The amount of BPT tokens received from the weighted pool after migration
      */
-    function migrateLiquidity(
-        ILBPool lbp,
-        address excessReceiver,
-        WeightedPoolParams memory params
-    ) external returns (IWeightedPool weightedPool, uint256[] memory exactAmountsIn, uint256 bptAmountOut);
+    function migrateLiquidity(ILBPool lbp, address excessReceiver, WeightedPoolParams memory params)
+        external
+        returns (IWeightedPool weightedPool, uint256[] memory exactAmountsIn, uint256 bptAmountOut);
 
     /**
      * @notice Simulates a liquidity migration to estimate results before execution.

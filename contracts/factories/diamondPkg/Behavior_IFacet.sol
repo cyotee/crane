@@ -337,11 +337,7 @@ library Behavior_IFacet {
         bytes4[] memory individualFuncs = subject.facetFuncs();
 
         // Validate name consistency
-        bool nameValid = areValid_IFacet_facetName(
-            vm.getLabel(address(subject)),
-            individualName,
-            metaName
-        );
+        bool nameValid = areValid_IFacet_facetName(vm.getLabel(address(subject)), individualName, metaName);
 
         if (!nameValid) {
             console.logBehaviorError(
@@ -353,11 +349,7 @@ library Behavior_IFacet {
         }
 
         // Validate interfaces consistency
-        bool interfacesValid = areValid_IFacet_facetInterfaces(
-            subject,
-            individualInterfaces,
-            metaInterfaces
-        );
+        bool interfacesValid = areValid_IFacet_facetInterfaces(subject, individualInterfaces, metaInterfaces);
 
         if (!interfacesValid) {
             console.logBehaviorError(
@@ -369,11 +361,7 @@ library Behavior_IFacet {
         }
 
         // Validate functions consistency
-        bool funcsValid = areValid_IFacet_facetFuncs(
-            subject,
-            individualFuncs,
-            metaFuncs
-        );
+        bool funcsValid = areValid_IFacet_facetFuncs(subject, individualFuncs, metaFuncs);
 
         if (!funcsValid) {
             console.logBehaviorError(
@@ -387,10 +375,7 @@ library Behavior_IFacet {
         valid = nameValid && interfacesValid && funcsValid;
 
         console.logBehaviorValidation(
-            _Behavior_IFacetName(),
-            "isValid_IFacet_facetMetadata_consistency",
-            "metadata consistency",
-            valid
+            _Behavior_IFacetName(), "isValid_IFacet_facetMetadata_consistency", "metadata consistency", valid
         );
 
         console.logBehaviorExit(_Behavior_IFacetName(), "isValid_IFacet_facetMetadata_consistency");

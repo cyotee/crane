@@ -13,7 +13,9 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
@@ -48,18 +50,28 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
-import {IBalancerV3GyroECLPPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
+import {
+    IBalancerV3GyroECLPPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/gyro/IBalancerV3GyroECLPPool.sol";
 import {
     BalancerV3BasePoolFactory
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactory.sol";
 import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {
+    BalancerV3BasePoolFactoryRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3GyroECLPPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3GyroECLPPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolRepo.sol";
 
 interface IBalancerV3GyroECLPPoolDFPkg {
     struct PkgInit {
@@ -140,13 +152,8 @@ contract BalancerV3GyroECLPPoolDFPkg is
         DEFAULT_POOL_INFO_FACET = pkgInit.defaultPoolInfoFacet;
         BALANCER_V3_AUTHENTICATION_FACET = pkgInit.balancerV3AuthenticationFacet;
         BALANCER_V3_GYRO_ECLP_POOL_FACET = pkgInit.balancerV3GyroECLPPoolFacet;
-        BalancerV3BasePoolFactoryRepo._initialize(
-            365 days,
-            pkgInit.poolFeeManager
-        );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3BasePoolFactoryRepo._initialize(365 days, pkgInit.poolFeeManager);
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
 
         // Initialize vault repo so postDeploy can call _registerPoolWithBalV3Vault
         BalancerV3VaultAwareRepo._initialize(pkgInit.balancerV3Vault);
@@ -296,10 +303,7 @@ contract BalancerV3GyroECLPPoolDFPkg is
 
         // Include ALL parameters in salt calculation
         bytes memory saltData = abi.encode(
-            decodedArgs.tokenConfigs,
-            decodedArgs.eclpParams,
-            decodedArgs.derivedEclpParams,
-            decodedArgs.hooksContract
+            decodedArgs.tokenConfigs, decodedArgs.eclpParams, decodedArgs.derivedEclpParams, decodedArgs.hooksContract
         );
         return saltData._hash();
     }
@@ -333,39 +337,20 @@ contract BalancerV3GyroECLPPoolDFPkg is
 
         string memory name = _buildPoolName(tokens);
 
-        ERC20Repo._initialize(
-            name,
-            "BPT",
-            18
-        );
-        EIP712Repo._initialize(
-            name,
-            "1"
-        );
+        ERC20Repo._initialize(name, "BPT", 18);
+        EIP712Repo._initialize(name, "1");
         BalancerV3PoolRepo._initialize(
-            _MIN_INVARIANT_RATIO,
-            _MAX_INVARIANT_RATIO,
-            _MIN_SWAP_FEE_PERCENTAGE,
-            _MAX_SWAP_FEE_PERCENTAGE,
-            tokens
+            _MIN_INVARIANT_RATIO, _MAX_INVARIANT_RATIO, _MIN_SWAP_FEE_PERCENTAGE, _MAX_SWAP_FEE_PERCENTAGE, tokens
         );
-        BalancerV3GyroECLPPoolRepo._initialize(
-            decodedArgs.eclpParams,
-            decodedArgs.derivedEclpParams
-        );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3GyroECLPPoolRepo._initialize(decodedArgs.eclpParams, decodedArgs.derivedEclpParams);
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
     }
 
     function _buildPoolName(address[] memory tokens) internal view returns (string memory) {
-        return string.concat(
-            "BV3ECLP of (",
-            IERC20Metadata(tokens[0]).name(),
-            " / ",
-            IERC20Metadata(tokens[1]).name(),
-            ")"
-        );
+        return
+            string.concat(
+                "BV3ECLP of (", IERC20Metadata(tokens[0]).name(), " / ", IERC20Metadata(tokens[1]).name(), ")"
+            );
     }
 
     function _roleAccounts() internal view returns (PoolRoleAccounts memory roleAccounts) {

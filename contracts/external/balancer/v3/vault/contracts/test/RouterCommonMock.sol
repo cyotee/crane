@@ -2,26 +2,26 @@
 
 pragma solidity ^0.8.24;
 
-import { IAllowanceTransfer } from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 
-import { StorageSlotExtension } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
 
-import { RouterCommon } from "../../contracts/RouterCommon.sol";
-import { SenderGuard } from "../../contracts/SenderGuard.sol";
+import {RouterCommon} from "../../contracts/RouterCommon.sol";
+import {SenderGuard} from "../../contracts/SenderGuard.sol";
 
 contract RouterCommonMock is RouterCommon {
     event CurrentSenderMock(address sender);
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2
-    ) RouterCommon(vault, weth, permit2, "Mock RouterCommon v1") {}
+    constructor(IVault vault, IWETH weth, IPermit2 permit2)
+        RouterCommon(vault, weth, permit2, "Mock RouterCommon v1")
+    {}
 
     function call(address to, bytes calldata data) external saveSender(msg.sender) returns (bytes memory) {
         (bool success, bytes memory result) = to.call(data);
@@ -30,9 +30,7 @@ contract RouterCommonMock is RouterCommon {
     }
 
     function emitSender() external {
-        (bool success, bytes memory result) = address(this).call(
-            abi.encodeWithSelector(SenderGuard.getSender.selector)
-        );
+        (bool success, bytes memory result) = address(this).call(abi.encodeWithSelector(SenderGuard.getSender.selector));
         require(success, "RouterCommonMock: failed getSender call");
 
         emit CurrentSenderMock(abi.decode(result, (address)));

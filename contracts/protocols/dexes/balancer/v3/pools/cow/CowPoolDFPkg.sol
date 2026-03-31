@@ -13,7 +13,9 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
-import {ISwapFeePercentageBounds} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
@@ -48,19 +50,31 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IBalancerV3VaultAware} from "@crane/contracts/interfaces/IBalancerV3VaultAware.sol";
 import {IBalancerPoolToken} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerPoolToken.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {
     BalancerV3BasePoolFactory
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactory.sol";
 import {TokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/utils/TokenConfigUtils.sol";
-import {WeightedTokenConfigUtils} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/WeightedTokenConfigUtils.sol";
-import {BalancerV3BasePoolFactoryRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
+import {
+    WeightedTokenConfigUtils
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/WeightedTokenConfigUtils.sol";
+import {
+    BalancerV3BasePoolFactoryRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-utils/BalancerV3BasePoolFactoryRepo.sol";
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {BalancerV3PoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3PoolRepo.sol";
-import {BalancerV3AuthenticationRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
-import {BalancerV3VaultAwareRepo} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
-import {BalancerV3WeightedPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
+import {
+    BalancerV3AuthenticationRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3AuthenticationRepo.sol";
+import {
+    BalancerV3VaultAwareRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/vault/BalancerV3VaultAwareRepo.sol";
+import {
+    BalancerV3WeightedPoolRepo
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-weighted/BalancerV3WeightedPoolRepo.sol";
 import {CowPoolRepo} from "@crane/contracts/protocols/dexes/balancer/v3/pools/cow/CowPoolRepo.sol";
 
 /**
@@ -108,10 +122,9 @@ interface ICowPoolDFPkg {
      * @param normalizedWeights Weights for each token.
      * @return pool The deployed pool address.
      */
-    function deployPool(
-        TokenConfig[] calldata tokenConfigs,
-        uint256[] calldata normalizedWeights
-    ) external returns (address pool);
+    function deployPool(TokenConfig[] calldata tokenConfigs, uint256[] calldata normalizedWeights)
+        external
+        returns (address pool);
 }
 
 /**
@@ -135,11 +148,7 @@ interface ICowPoolDFPkg {
  * - EIP712Repo: domain separator
  * - BalancerV3VaultAwareRepo: vault reference
  */
-contract CowPoolDFPkg is
-    BalancerV3BasePoolFactory,
-    IDiamondFactoryPackage,
-    ICowPoolDFPkg
-{
+contract CowPoolDFPkg is BalancerV3BasePoolFactory, IDiamondFactoryPackage, ICowPoolDFPkg {
     using Address for address[];
     using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
@@ -182,13 +191,8 @@ contract CowPoolDFPkg is
         BALANCER_V3_AUTHENTICATION_FACET = pkgInit.balancerV3AuthenticationFacet;
         COW_POOL_FACET = pkgInit.cowPoolFacet;
 
-        BalancerV3BasePoolFactoryRepo._initialize(
-            365 days,
-            pkgInit.poolFeeManager
-        );
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3BasePoolFactoryRepo._initialize(365 days, pkgInit.poolFeeManager);
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
 
         // Initialize vault repo so postDeploy can call _registerPoolWithBalV3Vault
         BalancerV3VaultAwareRepo._initialize(pkgInit.balancerV3Vault);
@@ -217,18 +221,12 @@ contract CowPoolDFPkg is
      * @param normalizedWeights_ Weights for each token (must sum to 1e18).
      * @return pool The deployed pool proxy address.
      */
-    function deployPool(
-        TokenConfig[] calldata tokenConfigs_,
-        uint256[] calldata normalizedWeights_
-    ) public returns (address pool) {
+    function deployPool(TokenConfig[] calldata tokenConfigs_, uint256[] calldata normalizedWeights_)
+        public
+        returns (address pool)
+    {
         pool = DIAMOND_PACKAGE_FACTORY.deploy(
-            this,
-            abi.encode(
-                PkgArgs({
-                    tokenConfigs: tokenConfigs_,
-                    normalizedWeights: normalizedWeights_
-                })
-            )
+            this, abi.encode(PkgArgs({tokenConfigs: tokenConfigs_, normalizedWeights: normalizedWeights_}))
         );
     }
 
@@ -372,56 +370,34 @@ contract CowPoolDFPkg is
         string memory name = _buildPoolName(tokens);
 
         // Initialize ERC20 token storage
-        ERC20Repo._initialize(
-            name,
-            "BPT",
-            18
-        );
+        ERC20Repo._initialize(name, "BPT", 18);
 
         // Initialize EIP712 for permit functionality
-        EIP712Repo._initialize(
-            name,
-            "1"
-        );
+        EIP712Repo._initialize(name, "1");
 
         // Initialize base pool storage
         BalancerV3PoolRepo._initialize(
-            _MIN_INVARIANT_RATIO,
-            _MAX_INVARIANT_RATIO,
-            _MIN_SWAP_FEE_PERCENTAGE,
-            _MAX_SWAP_FEE_PERCENTAGE,
-            tokens
+            _MIN_INVARIANT_RATIO, _MAX_INVARIANT_RATIO, _MIN_SWAP_FEE_PERCENTAGE, _MAX_SWAP_FEE_PERCENTAGE, tokens
         );
 
         // Initialize weighted pool weights
-        BalancerV3WeightedPoolRepo._initialize(
-            decodedArgs.normalizedWeights
-        );
+        BalancerV3WeightedPoolRepo._initialize(decodedArgs.normalizedWeights);
 
         // Initialize authentication with factory's action ID root
-        BalancerV3AuthenticationRepo._initialize(
-            keccak256(abi.encode(address(this)))
-        );
+        BalancerV3AuthenticationRepo._initialize(keccak256(abi.encode(address(this))));
 
         // Initialize vault awareness for pool operations
         BalancerV3VaultAwareRepo._initialize(BALANCER_V3_VAULT);
 
         // CRITICAL: Initialize CoW pool storage with factory and trusted router
         // This is required for CowPoolTarget.onRegister() to succeed
-        CowPoolRepo._initialize(
-            COW_POOL_FACTORY,
-            TRUSTED_COW_ROUTER
-        );
+        CowPoolRepo._initialize(COW_POOL_FACTORY, TRUSTED_COW_ROUTER);
     }
 
     function _buildPoolName(address[] memory tokens) internal view returns (string memory) {
         if (tokens.length == 2) {
             return string.concat(
-                "BV3CoW of (",
-                IERC20Metadata(tokens[0]).name(),
-                " / ",
-                IERC20Metadata(tokens[1]).name(),
-                ")"
+                "BV3CoW of (", IERC20Metadata(tokens[0]).name(), " / ", IERC20Metadata(tokens[1]).name(), ")"
             );
         } else {
             string memory result = "BV3CoW of (";

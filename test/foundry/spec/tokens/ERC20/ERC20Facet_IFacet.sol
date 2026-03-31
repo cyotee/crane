@@ -12,9 +12,9 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {IFacet} from "contracts/interfaces/IFacet.sol";
-import {TestBase_IFacet} from "contracts/factories/diamondPkg/TestBase_IFacet.sol";
-import {ERC20Facet} from "contracts/tokens/ERC20/ERC20Facet.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {TestBase_IFacet} from "@crane/contracts/factories/diamondPkg/TestBase_IFacet.sol";
+import {ERC20Facet} from "@crane/contracts/tokens/ERC20/ERC20Facet.sol";
 
 contract ERC20Facet_IFacet_Test is TestBase_IFacet {
     function facetTestInstance() public virtual override returns (IFacet) {

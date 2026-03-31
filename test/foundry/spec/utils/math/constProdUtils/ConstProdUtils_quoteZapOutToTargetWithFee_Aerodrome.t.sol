@@ -41,19 +41,27 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
     }
 
     function test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenA_1pct() public {
-        _testZapOutToTargetWithFeePercentage(aeroBalancedPool, aeroBalancedTokenA, aeroBalancedTokenB, false, PERCENTAGE_1_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            aeroBalancedPool, aeroBalancedTokenA, aeroBalancedTokenB, false, PERCENTAGE_1_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenA_5pct_feesEnabled() public {
-        _testZapOutToTargetWithFeePercentage(aeroBalancedPool, aeroBalancedTokenA, aeroBalancedTokenB, true, PERCENTAGE_5_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            aeroBalancedPool, aeroBalancedTokenA, aeroBalancedTokenB, true, PERCENTAGE_5_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenB_10pct() public {
-        _testZapOutToTargetWithFeePercentage(aeroBalancedPool, aeroBalancedTokenB, aeroBalancedTokenA, false, PERCENTAGE_10_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            aeroBalancedPool, aeroBalancedTokenB, aeroBalancedTokenA, false, PERCENTAGE_10_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_targetTokenB_25pct_feesEnabled() public {
-        _testZapOutToTargetWithFeePercentage(aeroBalancedPool, aeroBalancedTokenB, aeroBalancedTokenA, true, PERCENTAGE_25_PCT);
+        _testZapOutToTargetWithFeePercentage(
+            aeroBalancedPool, aeroBalancedTokenB, aeroBalancedTokenA, true, PERCENTAGE_25_PCT
+        );
     }
 
     function test_quoteZapOutToTargetWithFee_Aerodrome_balancedPool_impossible_scenarios() public {
@@ -74,9 +82,10 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
         _executeAerodromeTradesToGenerateFees(targetToken, saleToken);
 
         PoolState memory poolState;
-        (poolState.r0, poolState.r1, ) = pair.getReserves();
+        (poolState.r0, poolState.r1,) = pair.getReserves();
         poolState.totalSupply = pair.totalSupply();
-        (poolState.reserveTarget, poolState.reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
+        (poolState.reserveTarget, poolState.reserveSale) =
+            ConstProdUtils._sortReserves(address(targetToken), pair.token0(), poolState.r0, poolState.r1);
 
         poolState.desiredOut = (poolState.reserveTarget * percentage) / 10000;
         if (poolState.desiredOut > poolState.reserveTarget) poolState.desiredOut = poolState.reserveTarget;
@@ -114,8 +123,12 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
             state.tokenFrom = pair.token0() == address(targetToken) ? pair.token1() : pair.token0();
             IERC20(state.tokenFrom).approve(address(aerodromeRouter), state.saleAmount);
             IRouter.Route[] memory routes = new IRouter.Route[](1);
-            routes[0] = IRouter.Route({from: state.tokenFrom, to: address(targetToken), stable: false, factory: address(aerodromePoolFactory)});
-            aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(state.saleAmount, 1, routes, address(this), block.timestamp);
+            routes[0] = IRouter.Route({
+                from: state.tokenFrom, to: address(targetToken), stable: false, factory: address(aerodromePoolFactory)
+            });
+            aerodromeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                state.saleAmount, 1, routes, address(this), block.timestamp
+            );
         }
 
         state.balAfter = targetToken.balanceOf(address(this));
@@ -131,10 +144,11 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
     ) internal {
         _initializeAerodromeBalancedPools();
 
-        (uint256 r0, uint256 r1, ) = pair.getReserves();
+        (uint256 r0, uint256 r1,) = pair.getReserves();
         uint256 totalSupply = pair.totalSupply();
         uint256 kLast = 0;
-        (uint256 reserveTarget, uint256 reserveSale) = ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
+        (uint256 reserveTarget, uint256 reserveSale) =
+            ConstProdUtils._sortReserves(address(targetToken), pair.token0(), r0, r1);
 
         ConstProdUtils.ZapOutToTargetWithFeeArgs memory args1 = ConstProdUtils.ZapOutToTargetWithFeeArgs({
             desiredOut: reserveTarget + 1,

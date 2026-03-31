@@ -6,8 +6,8 @@ import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
 
 /**
- * @title 
- * @author 
+ * @title
+ * @author
  * @notice
  * +------+   +------------------------------------+   +----------------------+   +-------+
  * |User  |   | DiamondPackageCallBackFactory (F)  |   |DiamondFactoryPackage |   | Proxy |
@@ -70,4 +70,6 @@ interface IDiamondPackageCallBackFactory {
     function calcAddress(IDiamondFactoryPackage pkg, bytes memory pkgArgs) external view returns (address);
 
     function deploy(IDiamondFactoryPackage pkg, bytes memory pkgArgs) external returns (address proxy);
+
+    function initAccount(IDiamondFactoryPackage pkg, bytes memory pkgArgs) external returns (bool);
 }

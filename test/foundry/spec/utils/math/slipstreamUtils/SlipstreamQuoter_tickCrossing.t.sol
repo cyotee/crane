@@ -5,7 +5,10 @@ import "forge-std/Test.sol";
 
 import {SlipstreamQuoter} from "@crane/contracts/utils/math/SlipstreamQuoter.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {SqrtPriceMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SqrtPriceMath.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 
@@ -64,7 +67,7 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
             zeroForOne: true,
             amount: amountIn,
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
-            maxSteps: 0,  // unlimited
+            maxSteps: 0, // unlimited
             includeUnstakedFee: false
         });
 
@@ -114,7 +117,7 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
 
         // Price should decrease for zeroForOne (selling token0)
-        (uint160 initialPrice, , , , , ) = pool.slot0();
+        (uint160 initialPrice,,,,,) = pool.slot0();
         assertTrue(result.sqrtPriceAfterX96 <= initialPrice, "Price should decrease for zeroForOne");
     }
 
@@ -134,7 +137,7 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         SlipstreamQuoter.SwapQuoteResult memory result = SlipstreamQuoter.quoteExactInput(params);
 
         // Price should increase for oneForZero (selling token1)
-        (uint160 initialPrice, , , , , ) = pool.slot0();
+        (uint160 initialPrice,,,,,) = pool.slot0();
         assertTrue(result.sqrtPriceAfterX96 >= initialPrice, "Price should increase for oneForZero");
     }
 
@@ -169,12 +172,13 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
     /// @notice Test maxSteps limits iterations
     function test_quoteExactInput_maxStepsLimit() public view {
         // Pick an amount that is guaranteed to reach the next initialized tick at -5000.
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint160 sqrtPriceAtMinus5000 = TickMath.getSqrtRatioAtTick(nearestUsableTick(-5000, TICK_SPACING_MEDIUM));
         uint128 activeLiquidity = pool.liquidity();
 
         // amount0 required (pre-fee) to move price from current -> -5000
-        uint256 amountInToCross = SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
+        uint256 amountInToCross =
+            SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
         uint256 amountIn = amountInToCross * 3;
 
         SlipstreamQuoter.SwapQuoteParams memory unlimitedParams = SlipstreamQuoter.SwapQuoteParams({
@@ -206,11 +210,12 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
     }
 
     function test_quoteExactInput_multiStep_happensInPractice() public view {
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint160 sqrtPriceAtMinus5000 = TickMath.getSqrtRatioAtTick(nearestUsableTick(-5000, TICK_SPACING_MEDIUM));
         uint128 activeLiquidity = pool.liquidity();
 
-        uint256 amountInToCross = SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
+        uint256 amountInToCross =
+            SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
 
         SlipstreamQuoter.SwapQuoteParams memory params = SlipstreamQuoter.SwapQuoteParams({
             pool: ICLPool(address(pool)),
@@ -253,7 +258,7 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         SlipstreamQuoter.SwapQuoteParams memory params = SlipstreamQuoter.SwapQuoteParams({
             pool: ICLPool(address(pool)),
             zeroForOne: true,
-            amount: 1,  // 1 wei
+            amount: 1, // 1 wei
             sqrtPriceLimitX96: TickMath.MIN_SQRT_RATIO + 1,
             maxSteps: 0,
             includeUnstakedFee: false
@@ -273,10 +278,10 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         uint256 amountIn = 100e18;
 
         // Get current price
-        (uint160 currentPrice, , , , , ) = pool.slot0();
+        (uint160 currentPrice,,,,,) = pool.slot0();
 
         // Set a tight price limit (only allow small price movement)
-        uint160 sqrtPriceLimitX96 = currentPrice - (currentPrice / 100);  // 1% below current
+        uint160 sqrtPriceLimitX96 = currentPrice - (currentPrice / 100); // 1% below current
 
         SlipstreamQuoter.SwapQuoteParams memory params = SlipstreamQuoter.SwapQuoteParams({
             pool: ICLPool(address(pool)),
@@ -295,22 +300,23 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
 
     /// @notice Test invalid price limit reverts
     function test_quoteExactInput_invalidPriceLimit_reverts() public view {
-        (uint160 currentPrice, , , , , ) = pool.slot0();
+        (uint160 currentPrice,,,,,) = pool.slot0();
 
         // For zeroForOne, limit must be below current price
         SlipstreamQuoter.SwapQuoteParams memory params = SlipstreamQuoter.SwapQuoteParams({
             pool: ICLPool(address(pool)),
             zeroForOne: true,
             amount: 1e18,
-            sqrtPriceLimitX96: currentPrice + 1,  // Invalid: above current for zeroForOne
+            sqrtPriceLimitX96: currentPrice + 1, // Invalid: above current for zeroForOne
             maxSteps: 0,
             includeUnstakedFee: false
         });
 
         bool reverted = false;
         try this.helperQuoteExactInput(params) {
-            // Should not reach here
-        } catch {
+        // Should not reach here
+        }
+        catch {
             reverted = true;
         }
         assertTrue(reverted, "Should revert for invalid price limit");
@@ -429,10 +435,11 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         // Use an amount just large enough to cross a tick boundary but NOT exhaust all liquidity.
         // amountInToCross gets us from current price to the -5000 tick boundary; multiply by
         // ~1.1 to push slightly past it into the second liquidity range.
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
         uint160 sqrtPriceAtMinus5000 = TickMath.getSqrtRatioAtTick(nearestUsableTick(-5000, TICK_SPACING_MEDIUM));
         uint128 activeLiquidity = pool.liquidity();
-        uint256 amountInToCross = SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
+        uint256 amountInToCross =
+            SqrtPriceMath.getAmount0Delta(sqrtPriceAtMinus5000, sqrtPriceX96, activeLiquidity, true);
         uint256 amountIn = amountInToCross + (amountInToCross / 10); // ~10% past the tick boundary
 
         SlipstreamQuoter.SwapQuoteParams memory baseline = SlipstreamQuoter.SwapQuoteParams({
@@ -456,6 +463,8 @@ contract SlipstreamQuoter_tickCrossing_Test is TestBase_Slipstream {
         SlipstreamQuoter.SwapQuoteResult memory feeResult = SlipstreamQuoter.quoteExactInput(withFee);
 
         assertTrue(baseResult.steps > 1, "Baseline should cross ticks");
-        assertTrue(feeResult.amountOut < baseResult.amountOut, "Unstaked fee should reduce output across tick crossings");
+        assertTrue(
+            feeResult.amountOut < baseResult.amountOut, "Unstaked fee should reduce output across tick crossings"
+        );
     }
 }

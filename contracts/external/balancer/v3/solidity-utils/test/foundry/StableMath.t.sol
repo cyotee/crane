@@ -4,13 +4,14 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
-import { StableMath } from "../../contracts/math/StableMath.sol";
-import { FixedPoint } from "../../contracts/math/FixedPoint.sol";
-import { ArrayHelpers } from "../../contracts/test/ArrayHelpers.sol";
-import { StableMathMock } from "../../contracts/test/StableMathMock.sol";
-import { ScalingHelpers } from "../../contracts/helpers/ScalingHelpers.sol";
+import {StableMath} from "../../contracts/math/StableMath.sol";
+import {FixedPoint} from "../../contracts/math/FixedPoint.sol";
+import {ArrayHelpers} from "../../contracts/test/ArrayHelpers.sol";
+import {StableMathMock} from "../../contracts/test/StableMathMock.sol";
+import {ScalingHelpers} from "../../contracts/helpers/ScalingHelpers.sol";
 
 // In the `StableMath` functions, the protocol aims for computing a value either as small as possible or as large as possible
 // by means of rounding in its favor; in order to achieve this, it may use arbitrary rounding directions during the calculations.
@@ -20,6 +21,7 @@ import { ScalingHelpers } from "../../contracts/helpers/ScalingHelpers.sol";
 contract StableMathTest is Test {
     using FixedPoint for uint256;
     using ArrayHelpers for *;
+    using BetterEfficientHashLib for bytes;
 
     uint256 constant MIN_TOKENS = 2;
     uint256 constant MAX_TOKENS = 8;
@@ -54,10 +56,11 @@ contract StableMathTest is Test {
         tokenIndex = rawTokenIndex % NUM_TOKENS;
     }
 
-    function boundTokenIndexes(
-        uint256 rawTokenIndexIn,
-        uint256 rawTokenIndexOut
-    ) internal pure returns (uint256 tokenIndexIn, uint256 tokenIndexOut) {
+    function boundTokenIndexes(uint256 rawTokenIndexIn, uint256 rawTokenIndexOut)
+        internal
+        pure
+        returns (uint256 tokenIndexIn, uint256 tokenIndexOut)
+    {
         tokenIndexIn = boundTokenIndex(rawTokenIndexIn);
         tokenIndexOut = boundTokenIndex(rawTokenIndexOut);
         vm.assume(tokenIndexIn != tokenIndexOut);
@@ -82,9 +85,8 @@ contract StableMathTest is Test {
     function testComputeInvariant__Fuzz(uint256 amp, uint256[NUM_TOKENS] calldata rawBalances) external view {
         amp = boundAmp(amp);
         uint256[] memory balances = boundBalances(rawBalances);
-        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {} catch (
-            bytes memory result
-        ) {
+        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch (bytes memory result) {
             assertEq(bytes4(result), StableMath.StableInvariantDidNotConverge.selector, "Unexpected error");
             vm.assume(false);
         }
@@ -105,47 +107,27 @@ contract StableMathTest is Test {
         (tokenIndexIn, tokenIndexOut) = boundTokenIndexes(tokenIndexIn, tokenIndexOut);
         tokenAmountIn = boundAmount(tokenAmountIn, balances[tokenIndexIn]);
 
-        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {} catch (
-            bytes memory result
-        ) {
+        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch (bytes memory result) {
             assertEq(bytes4(result), StableMath.StableInvariantDidNotConverge.selector, "Unexpected error");
             vm.assume(false);
         }
 
         uint256 invariant = stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN);
 
-        uint256 outGivenExactIn = stableMathMock.computeOutGivenExactIn(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountIn,
-            invariant
-        );
+        uint256 outGivenExactIn =
+            stableMathMock.computeOutGivenExactIn(amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountIn, invariant);
 
         uint256 outGivenExactInNotPermuted = stableMathMock.mockComputeOutGivenExactIn(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountIn,
-            invariant
+            amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountIn, invariant
         );
         uint256 outGivenExactInPermuted = stableMathMock.mockComputeOutGivenExactIn(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountIn,
-            invariant,
-            roundingPermutation
+            amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountIn, invariant, roundingPermutation
         );
 
         assertEq(outGivenExactIn, outGivenExactInNotPermuted, "Mock function and base one should be equivalent.");
         assertLe(
-            outGivenExactIn,
-            outGivenExactInPermuted,
-            "Output should be less than or equal to the permuted mock value."
+            outGivenExactIn, outGivenExactInPermuted, "Output should be less than or equal to the permuted mock value."
         );
     }
 
@@ -162,9 +144,8 @@ contract StableMathTest is Test {
         (tokenIndexIn, tokenIndexOut) = boundTokenIndexes(tokenIndexIn, tokenIndexOut);
         tokenAmountOut = boundAmount(tokenAmountOut, balances[tokenIndexOut]);
 
-        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {} catch (
-            bytes memory result
-        ) {
+        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch (bytes memory result) {
             assertEq(bytes4(result), StableMath.StableInvariantDidNotConverge.selector, "Unexpected error");
             vm.assume(false);
         }
@@ -172,30 +153,14 @@ contract StableMathTest is Test {
         uint256 invariant = stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN);
 
         uint256 inGivenExactOut = stableMathMock.computeInGivenExactOut(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountOut,
-            invariant
+            amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountOut, invariant
         );
 
         uint256 inGivenExactOutNotPermuted = stableMathMock.mockComputeInGivenExactOut(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountOut,
-            invariant
+            amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountOut, invariant
         );
         uint256 inGivenExactOutPermuted = stableMathMock.mockComputeInGivenExactOut(
-            amp,
-            balances,
-            tokenIndexIn,
-            tokenIndexOut,
-            tokenAmountOut,
-            invariant,
-            roundingPermutation
+            amp, balances, tokenIndexIn, tokenIndexOut, tokenAmountOut, invariant, roundingPermutation
         );
 
         assertEq(inGivenExactOut, inGivenExactOutNotPermuted, "Mock function and base one should be equivalent.");
@@ -215,9 +180,8 @@ contract StableMathTest is Test {
         amp = boundAmp(amp);
         uint256[] memory balances = boundBalances(rawBalances);
 
-        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {} catch (
-            bytes memory result
-        ) {
+        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch (bytes memory result) {
             assertEq(bytes4(result), StableMath.StableInvariantDidNotConverge.selector, "Unexpected error");
             vm.assume(false);
         }
@@ -228,13 +192,8 @@ contract StableMathTest is Test {
         uint256 balance = stableMathMock.computeBalance(amp, balances, invariant, tokenIndex);
 
         uint256 balanceNotPermuted = stableMathMock.mockComputeBalance(amp, balances, invariant, tokenIndex);
-        uint256 balancePermuted = stableMathMock.mockComputeBalance(
-            amp,
-            balances,
-            invariant,
-            tokenIndex,
-            roundingPermutation
-        );
+        uint256 balancePermuted =
+            stableMathMock.mockComputeBalance(amp, balances, invariant, tokenIndex, roundingPermutation);
 
         assertEq(balance, balanceNotPermuted, "Mock function and base one should be equivalent.");
         assertGe(balance, balancePermuted, "Output should be greater than or equal to the permuted mock value.");
@@ -251,9 +210,8 @@ contract StableMathTest is Test {
         tokenIndex = bound(tokenIndex, 0, NUM_TOKENS - 1);
         invariantDiff = bound(invariantDiff, 1, 100000);
 
-        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {} catch (
-            bytes memory result
-        ) {
+        try stableMathMock.computeInvariant(amp, balances, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch (bytes memory result) {
             assertEq(bytes4(result), StableMath.StableInvariantDidNotConverge.selector, "Unexpected error");
             vm.assume(false);
         }
@@ -284,18 +242,16 @@ contract StableMathTest is Test {
         balancesLiveScaled18[1] = balance1;
         balancesLiveScaled18[2] = balance2;
 
-        try stableMathMock.computeInvariant(currentAmp, balancesLiveScaled18, Rounding.ROUND_DOWN) returns (
-            uint256
-        ) {} catch {
+        try stableMathMock.computeInvariant(currentAmp, balancesLiveScaled18, Rounding.ROUND_DOWN) returns (uint256) {}
+        catch {
             vm.assume(false);
         }
 
         uint256 balanceRoundDown = StableMath.computeBalance(
             currentAmp,
             balancesLiveScaled18,
-            stableMathMock.computeInvariant(currentAmp, balancesLiveScaled18, Rounding.ROUND_DOWN).mulDown(
-                invariantRatio
-            ),
+            stableMathMock.computeInvariant(currentAmp, balancesLiveScaled18, Rounding.ROUND_DOWN)
+                .mulDown(invariantRatio),
             tokenInIndex
         );
 
@@ -335,41 +291,35 @@ contract StableMathTest is Test {
         // Check that the invariant converges in every case.
         try stableMathMock.computeInvariant(currentAmp, currentBalances.toMemoryArray(), Rounding.ROUND_DOWN) returns (
             uint256
-        ) {} catch {
+        ) {}
+        catch {
             vm.assume(false);
         }
 
-        try stableMathMock.computeInvariant(currentAmp, newBalances, Rounding.ROUND_UP) returns (uint256) {} catch {
+        try stableMathMock.computeInvariant(currentAmp, newBalances, Rounding.ROUND_UP) returns (uint256) {}
+        catch {
             vm.assume(false);
         }
 
-        try stableMathMock.computeInvariant(currentAmp, newBalancesRoundDown, Rounding.ROUND_UP) returns (
-            uint256
-        ) {} catch {
+        try stableMathMock.computeInvariant(currentAmp, newBalancesRoundDown, Rounding.ROUND_UP) returns (uint256) {}
+        catch {
             vm.assume(false);
         }
 
         // Base case: use same rounding for balances in numerator and denominator, and use same rounding direction
         // for `computeInvariant` calls (which is accurate to 1 wei in stable math).
-        uint256 currentInvariant = stableMathMock.computeInvariant(
-            currentAmp,
-            currentBalances.toMemoryArray(),
-            Rounding.ROUND_DOWN
-        );
-        uint256 invariantRatioRegular = stableMathMock
-            .computeInvariant(currentAmp, newBalances, Rounding.ROUND_DOWN)
-            .divDown(currentInvariant);
+        uint256 currentInvariant =
+            stableMathMock.computeInvariant(currentAmp, currentBalances.toMemoryArray(), Rounding.ROUND_DOWN);
+        uint256 invariantRatioRegular =
+            stableMathMock.computeInvariant(currentAmp, newBalances, Rounding.ROUND_DOWN).divDown(currentInvariant);
 
         // Improved rounding down: use balances rounded down in numerator, and use rounding direction when calling
         // `computeInvariant` (1 wei difference).
-        uint256 currentInvariantUp = stableMathMock.computeInvariant(
-            currentAmp,
-            currentBalances.toMemoryArray(),
-            Rounding.ROUND_UP
-        );
-        uint256 invariantRatioDown = stableMathMock
-            .computeInvariant(currentAmp, newBalancesRoundDown, Rounding.ROUND_DOWN)
-            .divDown(currentInvariantUp);
+        uint256 currentInvariantUp =
+            stableMathMock.computeInvariant(currentAmp, currentBalances.toMemoryArray(), Rounding.ROUND_UP);
+        uint256 invariantRatioDown = stableMathMock.computeInvariant(
+                currentAmp, newBalancesRoundDown, Rounding.ROUND_DOWN
+            ).divDown(currentInvariantUp);
 
         assertLe(invariantRatioDown, invariantRatioRegular, "Invariant ratio should have gone down");
     }
@@ -383,13 +333,7 @@ contract StableMathTest is Test {
         uint256[8] memory balancesRaw
     ) public view {
         _testComputeInvariantLessThanInvariantWithDelta(
-            amp,
-            tokenCount,
-            deltaCount,
-            indexes,
-            deltas,
-            balancesRaw,
-            type(uint128).max
+            amp, tokenCount, deltaCount, indexes, deltas, balancesRaw, type(uint128).max
         );
     }
 
@@ -401,15 +345,7 @@ contract StableMathTest is Test {
         uint256[8] memory deltas,
         uint256[8] memory balancesRaw
     ) public view {
-        _testComputeInvariantLessThanInvariantWithDelta(
-            amp,
-            tokenCount,
-            deltaCount,
-            indexes,
-            deltas,
-            balancesRaw,
-            1000
-        );
+        _testComputeInvariantLessThanInvariantWithDelta(amp, tokenCount, deltaCount, indexes, deltas, balancesRaw, 1000);
     }
 
     function testGetMinAndMaxBalances__Fuzz(
@@ -431,11 +367,12 @@ contract StableMathTest is Test {
         testBalances[minBalanceIndex] = MIN_BALANCE_BOUND - 1;
         testBalances[maxBalanceIndex] = MAX_BALANCE_BOUND + 1;
 
-        bytes32 hashBefore = keccak256(abi.encodePacked(testBalances));
+        // bytes32 hashBefore = keccak256(abi.encodePacked(testBalances));
+        bytes32 hashBefore = abi.encodePacked(testBalances)._hash();
 
         (uint256 minBalance, uint256 maxBalance) = StableMath.getMinAndMaxBalances(testBalances);
 
-        bytes32 hashAfter = keccak256(abi.encodePacked(testBalances));
+        bytes32 hashAfter = abi.encodePacked(testBalances)._hash();
 
         assertEq(minBalance, MIN_BALANCE_BOUND - 1, "Incorrect min balance");
         assertEq(maxBalance, MAX_BALANCE_BOUND + 1, "Incorrect max balance");

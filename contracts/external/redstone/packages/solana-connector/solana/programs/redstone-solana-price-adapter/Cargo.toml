@@ -1,0 +1,28 @@
+[package]
+description = "RedStone Solana Price Adapter"
+edition = "2021"
+name = "redstone-solana-price-adapter"
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "redstone_solana_price_adapter"
+
+[features]
+cpi = ["no-entrypoint"]
+default = []
+dev = []
+idl-build = ["anchor-lang/idl-build"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+
+agnostic-tests = []
+
+[dependencies]
+anchor-lang = { version = "0.31.1", default-features = false, features = ["init-if-needed"] }
+hex-literal = { version = "0.4.1" }
+redstone = { git = "https://github.com/redstone-finance/rust-sdk", tag = "3.1.0-pre1", default-features = false, features=["solana"] }
+
+[dev-dependencies]
+rand = { version = "0.8.4", features = ["std"] }

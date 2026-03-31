@@ -42,9 +42,9 @@ interface RwaOutputConduit3Abstract is RwaOutputConduitBaseAbstract {
     function gem() external view returns (address);
     function quitTo() external view returns (address);
     function file(bytes32, address) external;
-    function push(uint) external;
+    function push(uint256) external;
     function quit() external;
-    function quit(uint) external;
+    function quit(uint256) external;
     function yank(address, address, uint256) external;
     function expectedGemAmt(uint256) external view returns (uint256);
     function requiredDaiWad(uint256) external view returns (uint256);

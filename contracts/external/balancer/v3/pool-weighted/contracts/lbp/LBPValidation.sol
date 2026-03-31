@@ -6,9 +6,9 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { GradualValueChange } from "../lib/GradualValueChange.sol";
+import {GradualValueChange} from "../lib/GradualValueChange.sol";
 
 /**
  * @notice Shared validation library for LBP parameters.
@@ -88,16 +88,14 @@ library LBPValidation {
      * @param migrationRouter The migration router address (must be non-zero if migration is enabled)
      * @return hasMigration True if migration parameters indicate migration is enabled
      */
-    function validateMigrationParams(
-        MigrationParams memory migrationParams,
-        address migrationRouter
-    ) internal pure returns (bool hasMigration) {
+    function validateMigrationParams(MigrationParams memory migrationParams, address migrationRouter)
+        internal
+        pure
+        returns (bool hasMigration)
+    {
         // If all migration params are zero, this is a no-migration pool
-        hasMigration =
-            migrationParams.bptPercentageToMigrate != 0 ||
-            migrationParams.lockDurationAfterMigration != 0 ||
-            migrationParams.migrationWeightProjectToken != 0 ||
-            migrationParams.migrationWeightReserveToken != 0;
+        hasMigration = migrationParams.bptPercentageToMigrate != 0 || migrationParams.lockDurationAfterMigration != 0
+            || migrationParams.migrationWeightProjectToken != 0 || migrationParams.migrationWeightReserveToken != 0;
 
         if (hasMigration) {
             // If migration is enabled, the migration router must be set
@@ -106,28 +104,26 @@ library LBPValidation {
             }
 
             // Validate migration weights sum to 1 and meet minimum requirements
-            uint256 totalTokenWeight = migrationParams.migrationWeightProjectToken +
-                migrationParams.migrationWeightReserveToken;
+            uint256 totalTokenWeight =
+                migrationParams.migrationWeightProjectToken + migrationParams.migrationWeightReserveToken;
 
             if (
-                totalTokenWeight != FixedPoint.ONE ||
-                migrationParams.migrationWeightProjectToken == 0 ||
-                migrationParams.migrationWeightReserveToken < MIN_RESERVE_TOKEN_MIGRATION_WEIGHT
+                totalTokenWeight != FixedPoint.ONE || migrationParams.migrationWeightProjectToken == 0
+                    || migrationParams.migrationWeightReserveToken < MIN_RESERVE_TOKEN_MIGRATION_WEIGHT
             ) {
                 revert InvalidMigrationWeights();
             }
 
             // Must be a valid percentage, and doesn't make sense to be zero if there is a migration.
-            if (
-                migrationParams.bptPercentageToMigrate > FixedPoint.ONE || migrationParams.bptPercentageToMigrate == 0
-            ) {
+            if (migrationParams.bptPercentageToMigrate > FixedPoint.ONE || migrationParams.bptPercentageToMigrate == 0)
+            {
                 revert InvalidBptPercentageToMigrate();
             }
 
             // Cannot go over the maximum duration. There is no minimum duration, but it shouldn't be zero.
             if (
-                migrationParams.lockDurationAfterMigration > MAX_BPT_LOCK_DURATION ||
-                migrationParams.lockDurationAfterMigration == 0
+                migrationParams.lockDurationAfterMigration > MAX_BPT_LOCK_DURATION
+                    || migrationParams.lockDurationAfterMigration == 0
             ) {
                 revert InvalidBptLockDuration();
             }

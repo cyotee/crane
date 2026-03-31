@@ -89,16 +89,15 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
     }
 
     /// @notice Get sorted reserves for a pair given the tokens
-    function getReserves(IUniswapV2Pair pair, address tokenA, address tokenB)
+    function getReserves(IUniswapV2Pair pair, address tokenA, address /* tokenB */)
         internal
         view
         returns (uint256 reserveA, uint256 reserveB)
     {
         (uint112 reserve0, uint112 reserve1,) = pair.getReserves();
         address token0 = pair.token0();
-        (reserveA, reserveB) = tokenA == token0
-            ? (uint256(reserve0), uint256(reserve1))
-            : (uint256(reserve1), uint256(reserve0));
+        (reserveA, reserveB) =
+            tokenA == token0 ? (uint256(reserve0), uint256(reserve1)) : (uint256(reserve1), uint256(reserve0));
     }
 
     /* -------------------------------------------------------------------------- */
@@ -138,11 +137,7 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
         returns (uint256 amountOut)
     {
         amountOut = ConstProdUtils._saleQuote(
-            amountIn,
-            reserveIn,
-            reserveOut,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
+            amountIn, reserveIn, reserveOut, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR
         );
     }
 
@@ -153,11 +148,7 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
         returns (uint256 amountIn)
     {
         amountIn = ConstProdUtils._purchaseQuote(
-            amountOut,
-            reserveIn,
-            reserveOut,
-            UNISWAP_V2_FEE_PERCENT,
-            UNISWAP_V2_FEE_DENOMINATOR
+            amountOut, reserveIn, reserveOut, UNISWAP_V2_FEE_PERCENT, UNISWAP_V2_FEE_DENOMINATOR
         );
     }
 
@@ -166,12 +157,10 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Execute a swap via the router (exact input)
-    function swapExactTokensForTokens(
-        uint256 amountIn,
-        address tokenIn,
-        address tokenOut,
-        address recipient
-    ) internal returns (uint256 amountOut) {
+    function swapExactTokensForTokens(uint256 amountIn, address tokenIn, address tokenOut, address recipient)
+        internal
+        returns (uint256 amountOut)
+    {
         // Deal tokens to this contract
         deal(tokenIn, address(this), amountIn);
 
@@ -196,12 +185,10 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
     }
 
     /// @notice Execute a swap via the router (exact output)
-    function swapTokensForExactTokens(
-        uint256 amountOut,
-        address tokenIn,
-        address tokenOut,
-        address recipient
-    ) internal returns (uint256 amountIn) {
+    function swapTokensForExactTokens(uint256 amountOut, address tokenIn, address tokenOut, address recipient)
+        internal
+        returns (uint256 amountIn)
+    {
         // Deal a large amount of tokens to this contract
         uint256 maxAmountIn = amountOut * 10000 + 100 ether;
         deal(tokenIn, address(this), maxAmountIn);
@@ -215,13 +202,8 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
         path[1] = tokenOut;
 
         // Execute swap
-        uint256[] memory amounts = uniswapV2Router.swapTokensForExactTokens(
-            amountOut,
-            maxAmountIn,
-            path,
-            recipient,
-            block.timestamp + 1
-        );
+        uint256[] memory amounts =
+            uniswapV2Router.swapTokensForExactTokens(amountOut, maxAmountIn, path, recipient, block.timestamp + 1);
 
         amountIn = amounts[0];
     }

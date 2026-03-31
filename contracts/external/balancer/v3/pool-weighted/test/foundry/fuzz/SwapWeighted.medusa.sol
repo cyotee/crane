@@ -4,13 +4,13 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { SwapMedusaTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/fuzz/Swap.medusa.sol";
+import {SwapMedusaTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/fuzz/Swap.medusa.sol";
 
-import { WeightedPoolFactory } from "../../../contracts/WeightedPoolFactory.sol";
-import { WeightedPool } from "../../../contracts/WeightedPool.sol";
+import {WeightedPoolFactory} from "../../../contracts/WeightedPoolFactory.sol";
+import {WeightedPool} from "../../../contracts/WeightedPool.sol";
 
 contract SwapWeightedMedusaTest is SwapMedusaTest {
     uint256 private constant DEFAULT_SWAP_FEE = 1e16;
@@ -27,12 +27,7 @@ contract SwapWeightedMedusaTest is SwapMedusaTest {
         // Sum of weights should equal 100%.
         weights[2] = 100e16 - (weights[0] + weights[1]);
 
-        WeightedPoolFactory factory = new WeightedPoolFactory(
-            IVault(address(vault)),
-            365 days,
-            "Factory v1",
-            "Pool v1"
-        );
+        WeightedPoolFactory factory = new WeightedPoolFactory(IVault(address(vault)), 365 days, "Factory v1", "Pool v1");
         PoolRoleAccounts memory roleAccounts;
 
         WeightedPool newPool = WeightedPool(

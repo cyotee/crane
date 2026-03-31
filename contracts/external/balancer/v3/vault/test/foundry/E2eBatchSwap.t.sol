@@ -6,19 +6,25 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-import { IProtocolFeeController } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import { Rounding } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ERC20TestToken } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ERC20TestToken} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ERC20TestToken.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { ProtocolFeeControllerMock } from "../../contracts/test/ProtocolFeeControllerMock.sol";
-import { BaseVaultTest } from "./utils/BaseVaultTest.sol";
+import {ProtocolFeeControllerMock} from "../../contracts/test/ProtocolFeeControllerMock.sol";
+import {BaseVaultTest} from "./utils/BaseVaultTest.sol";
 
 contract E2eBatchSwapTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -62,8 +68,7 @@ contract E2eBatchSwapTest is BaseVaultTest {
         IAuthentication feeControllerAuth = IAuthentication(address(feeController));
 
         authorizer.grantRole(
-            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector),
-            admin
+            feeControllerAuth.getActionId(IProtocolFeeController.setGlobalProtocolSwapFeePercentage.selector), admin
         );
 
         _setUpVariables();
@@ -71,13 +76,13 @@ contract E2eBatchSwapTest is BaseVaultTest {
         // Initialize pools that will be used by batch router.
         // Create poolA.
         vm.startPrank(lp);
-        (poolA, ) = _createPool([address(tokenA), address(tokenB)].toMemoryArray(), "poolA");
+        (poolA,) = _createPool([address(tokenA), address(tokenB)].toMemoryArray(), "poolA");
         _initPool(poolA, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
         // Create poolB.
-        (poolB, ) = _createPool([address(tokenB), address(tokenC)].toMemoryArray(), "poolB");
+        (poolB,) = _createPool([address(tokenB), address(tokenC)].toMemoryArray(), "poolB");
         _initPool(poolB, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
         // Create poolC.
-        (poolC, ) = _createPool([address(tokenC), address(tokenD)].toMemoryArray(), "poolC");
+        (poolC,) = _createPool([address(tokenC), address(tokenD)].toMemoryArray(), "poolC");
         _initPool(poolC, [poolInitAmount, poolInitAmount].toMemoryArray(), 0);
         vm.stopPrank();
 
@@ -181,12 +186,7 @@ contract E2eBatchSwapTest is BaseVaultTest {
         assertGe(amountInUndo, exactAmountOut + feesTokenD, "Amount in undo should be >= exactAmountOut");
 
         _checkUserBalancesAndPoolInvariants(
-            balancesBefore,
-            balancesAfter,
-            invariantsBefore,
-            invariantsAfter,
-            feesTokenA,
-            0
+            balancesBefore, balancesAfter, invariantsBefore, invariantsAfter, feesTokenA, 0
         );
     }
 
@@ -213,12 +213,7 @@ contract E2eBatchSwapTest is BaseVaultTest {
         vm.stopPrank();
 
         // Error tolerance is proportional to swap fee percentage.
-        assertApproxEqRel(
-            amountIn,
-            exactAmountIn,
-            2 * poolFeePercentage,
-            "ExactIn and ExactOut amountsIn should match"
-        );
+        assertApproxEqRel(amountIn, exactAmountIn, 2 * poolFeePercentage, "ExactIn and ExactOut amountsIn should match");
     }
 
     function testExactInRepeatEachOperation__Fuzz(
@@ -264,8 +259,8 @@ contract E2eBatchSwapTest is BaseVaultTest {
     function _executeAndCheckBatchExactIn(IERC20 tokenIn, uint256 exactAmountIn) private returns (uint256 amountOut) {
         SwapPathExactAmountIn[] memory swapPath = _buildExactInPaths(tokenIn, exactAmountIn, 0);
 
-        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) = batchRouter
-            .swapExactIn(swapPath, MAX_UINT128, false, bytes(""));
+        (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut) =
+            batchRouter.swapExactIn(swapPath, MAX_UINT128, false, bytes(""));
 
         assertEq(pathAmountsOut.length, 1, "pathAmountsOut incorrect length");
         assertEq(tokensOut.length, 1, "tokensOut incorrect length");
@@ -283,76 +278,31 @@ contract E2eBatchSwapTest is BaseVaultTest {
     }
 
     function _executeEachOperationExactIn(uint256 exactAmountIn) private returns (uint256 amountOut) {
-        uint256 amountOutTokenB = router.swapSingleTokenExactIn(
-            poolA,
-            tokenA,
-            tokenB,
-            exactAmountIn,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
-        uint256 amountOutTokenC = router.swapSingleTokenExactIn(
-            poolB,
-            tokenB,
-            tokenC,
-            amountOutTokenB,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
-        amountOut = router.swapSingleTokenExactIn(
-            poolC,
-            tokenC,
-            tokenD,
-            amountOutTokenC,
-            0,
-            MAX_UINT128,
-            false,
-            bytes("")
-        );
+        uint256 amountOutTokenB =
+            router.swapSingleTokenExactIn(poolA, tokenA, tokenB, exactAmountIn, 0, MAX_UINT128, false, bytes(""));
+        uint256 amountOutTokenC =
+            router.swapSingleTokenExactIn(poolB, tokenB, tokenC, amountOutTokenB, 0, MAX_UINT128, false, bytes(""));
+        amountOut =
+            router.swapSingleTokenExactIn(poolC, tokenC, tokenD, amountOutTokenC, 0, MAX_UINT128, false, bytes(""));
     }
 
     function _executeEachOperationExactOut(uint256 exactAmountOut) private returns (uint256 amountIn) {
         uint256 amountInTokenC = router.swapSingleTokenExactOut(
-            poolC,
-            tokenC,
-            tokenD,
-            exactAmountOut,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            poolC, tokenC, tokenD, exactAmountOut, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
         uint256 amountInTokenB = router.swapSingleTokenExactOut(
-            poolB,
-            tokenB,
-            tokenC,
-            amountInTokenC,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            poolB, tokenB, tokenC, amountInTokenC, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
         amountIn = router.swapSingleTokenExactOut(
-            poolA,
-            tokenA,
-            tokenB,
-            amountInTokenB,
-            MAX_UINT128,
-            MAX_UINT128,
-            false,
-            bytes("")
+            poolA, tokenA, tokenB, amountInTokenB, MAX_UINT128, MAX_UINT128, false, bytes("")
         );
     }
 
     function _executeAndCheckBatchExactOut(IERC20 tokenIn, uint256 exactAmountOut) private returns (uint256 amountIn) {
         SwapPathExactAmountOut[] memory swapPath = _buildExactOutPaths(tokenIn, MAX_UINT128, exactAmountOut);
 
-        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) = batchRouter
-            .swapExactOut(swapPath, MAX_UINT128, false, bytes(""));
+        (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) =
+            batchRouter.swapExactOut(swapPath, MAX_UINT128, false, bytes(""));
 
         assertEq(pathAmountsIn.length, 1, "pathAmountsIn incorrect length");
         assertEq(tokensIn.length, 1, "tokensIn incorrect length");
@@ -390,14 +340,10 @@ contract E2eBatchSwapTest is BaseVaultTest {
             "Wrong sender tokenA balance"
         );
         assertEq(
-            balancesAfter.userTokens[tokenBIdx],
-            balancesBefore.userTokens[tokenBIdx],
-            "Wrong sender tokenB balance"
+            balancesAfter.userTokens[tokenBIdx], balancesBefore.userTokens[tokenBIdx], "Wrong sender tokenB balance"
         );
         assertEq(
-            balancesAfter.userTokens[tokenCIdx],
-            balancesBefore.userTokens[tokenCIdx],
-            "Wrong sender tokenC balance"
+            balancesAfter.userTokens[tokenCIdx], balancesBefore.userTokens[tokenCIdx], "Wrong sender tokenC balance"
         );
 
         // If feesTokenD is not 0, it means that an exact_in swap occurred and was reverted. So, an exactAmountIn of
@@ -411,31 +357,25 @@ contract E2eBatchSwapTest is BaseVaultTest {
         );
     }
 
-    function _buildExactInPaths(
-        IERC20 tokenIn,
-        uint256 exactAmountIn,
-        uint256 minAmountOut
-    ) private view returns (SwapPathExactAmountIn[] memory paths) {
+    function _buildExactInPaths(IERC20 tokenIn, uint256 exactAmountIn, uint256 minAmountOut)
+        private
+        view
+        returns (SwapPathExactAmountIn[] memory paths)
+    {
         paths = new SwapPathExactAmountIn[](1);
         paths[0] = SwapPathExactAmountIn({
-            tokenIn: tokenIn,
-            steps: _getSwapSteps(tokenIn),
-            exactAmountIn: exactAmountIn,
-            minAmountOut: minAmountOut
+            tokenIn: tokenIn, steps: _getSwapSteps(tokenIn), exactAmountIn: exactAmountIn, minAmountOut: minAmountOut
         });
     }
 
-    function _buildExactOutPaths(
-        IERC20 tokenIn,
-        uint256 maxAmountIn,
-        uint256 exactAmountOut
-    ) private view returns (SwapPathExactAmountOut[] memory paths) {
+    function _buildExactOutPaths(IERC20 tokenIn, uint256 maxAmountIn, uint256 exactAmountOut)
+        private
+        view
+        returns (SwapPathExactAmountOut[] memory paths)
+    {
         paths = new SwapPathExactAmountOut[](1);
         paths[0] = SwapPathExactAmountOut({
-            tokenIn: tokenIn,
-            steps: _getSwapSteps(tokenIn),
-            maxAmountIn: maxAmountIn,
-            exactAmountOut: exactAmountOut
+            tokenIn: tokenIn, steps: _getSwapSteps(tokenIn), maxAmountIn: maxAmountIn, exactAmountOut: exactAmountOut
         });
     }
 
@@ -443,13 +383,13 @@ contract E2eBatchSwapTest is BaseVaultTest {
         steps = new SwapPathStep[](3);
 
         if (address(tokenIn) == address(tokenD)) {
-            steps[0] = SwapPathStep({ pool: poolC, tokenOut: IERC20(address(tokenC)), isBuffer: false });
-            steps[1] = SwapPathStep({ pool: poolB, tokenOut: IERC20(address(tokenB)), isBuffer: false });
-            steps[2] = SwapPathStep({ pool: poolA, tokenOut: IERC20(address(tokenA)), isBuffer: false });
+            steps[0] = SwapPathStep({pool: poolC, tokenOut: IERC20(address(tokenC)), isBuffer: false});
+            steps[1] = SwapPathStep({pool: poolB, tokenOut: IERC20(address(tokenB)), isBuffer: false});
+            steps[2] = SwapPathStep({pool: poolA, tokenOut: IERC20(address(tokenA)), isBuffer: false});
         } else {
-            steps[0] = SwapPathStep({ pool: poolA, tokenOut: IERC20(address(tokenB)), isBuffer: false });
-            steps[1] = SwapPathStep({ pool: poolB, tokenOut: IERC20(address(tokenC)), isBuffer: false });
-            steps[2] = SwapPathStep({ pool: poolC, tokenOut: IERC20(address(tokenD)), isBuffer: false });
+            steps[0] = SwapPathStep({pool: poolA, tokenOut: IERC20(address(tokenB)), isBuffer: false});
+            steps[1] = SwapPathStep({pool: poolB, tokenOut: IERC20(address(tokenC)), isBuffer: false});
+            steps[2] = SwapPathStep({pool: poolC, tokenOut: IERC20(address(tokenD)), isBuffer: false});
         }
     }
 
@@ -458,16 +398,14 @@ contract E2eBatchSwapTest is BaseVaultTest {
         poolInvariants = new uint256[](pools.length);
 
         for (uint256 i = 0; i < pools.length; i++) {
-            (, , , uint256[] memory lastBalancesLiveScaled18) = vault.getPoolTokenInfo(pools[i]);
+            (,,, uint256[] memory lastBalancesLiveScaled18) = vault.getPoolTokenInfo(pools[i]);
             poolInvariants[i] = IBasePool(pools[i]).computeInvariant(lastBalancesLiveScaled18, rounding);
         }
     }
 
-    function _setPoolSwapFees(
-        uint256 poolAFeePercentage,
-        uint256 poolBFeePercentage,
-        uint256 poolCFeePercentage
-    ) private {
+    function _setPoolSwapFees(uint256 poolAFeePercentage, uint256 poolBFeePercentage, uint256 poolCFeePercentage)
+        private
+    {
         poolAFeePercentage = bound(poolAFeePercentage, poolMinSwapFeePercentage, poolMaxSwapFeePercentage);
         poolBFeePercentage = bound(poolBFeePercentage, poolMinSwapFeePercentage, poolMaxSwapFeePercentage);
         poolCFeePercentage = bound(poolCFeePercentage, poolMinSwapFeePercentage, poolMaxSwapFeePercentage);

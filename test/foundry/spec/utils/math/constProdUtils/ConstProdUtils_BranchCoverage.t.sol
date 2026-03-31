@@ -10,12 +10,11 @@ import {FEE_DENOMINATOR} from "@crane/contracts/constants/Constants.sol";
  * @notice Exposes internal ConstProdUtils library functions for testing
  */
 contract ConstProdUtilsHarness {
-    function sortReserves(
-        address knownToken,
-        address token0,
-        uint256 reserve0,
-        uint256 reserve1
-    ) external pure returns (uint256 knownReserve, uint256 unknownReserve) {
+    function sortReserves(address knownToken, address token0, uint256 reserve0, uint256 reserve1)
+        external
+        pure
+        returns (uint256 knownReserve, uint256 unknownReserve)
+    {
         return ConstProdUtils._sortReserves(knownToken, token0, reserve0, reserve1);
     }
 
@@ -29,16 +28,9 @@ contract ConstProdUtilsHarness {
     )
         external
         pure
-        returns (
-            uint256 knownReserve,
-            uint256 knownReserveFee,
-            uint256 unknownReserve,
-            uint256 unknownReserveFee
-        )
+        returns (uint256 knownReserve, uint256 knownReserveFee, uint256 unknownReserve, uint256 unknownReserveFee)
     {
-        return ConstProdUtils._sortReserves(
-            knownToken, token0, reserve0, reserve0Fee, reserve1, reserve1Fee
-        );
+        return ConstProdUtils._sortReserves(knownToken, token0, reserve0, reserve0Fee, reserve1, reserve1Fee);
     }
 
     function depositQuote(
@@ -48,17 +40,14 @@ contract ConstProdUtilsHarness {
         uint256 lpReserveA,
         uint256 lpReserveB
     ) external pure returns (uint256 lpAmount) {
-        return ConstProdUtils._depositQuote(
-            amountADeposit, amountBDeposit, lpTotalSupply, lpReserveA, lpReserveB
-        );
+        return ConstProdUtils._depositQuote(amountADeposit, amountBDeposit, lpTotalSupply, lpReserveA, lpReserveB);
     }
 
-    function saleQuote(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 saleFeePercent
-    ) external pure returns (uint256) {
+    function saleQuote(uint256 amountIn, uint256 reserveIn, uint256 reserveOut, uint256 saleFeePercent)
+        external
+        pure
+        returns (uint256)
+    {
         return ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, saleFeePercent);
     }
 
@@ -69,17 +58,14 @@ contract ConstProdUtilsHarness {
         uint256 saleFeePercent,
         uint256 feeDenominator
     ) external pure returns (uint256) {
-        return ConstProdUtils._saleQuote(
-            amountIn, reserveIn, reserveOut, saleFeePercent, feeDenominator
-        );
+        return ConstProdUtils._saleQuote(amountIn, reserveIn, reserveOut, saleFeePercent, feeDenominator);
     }
 
-    function purchaseQuote(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint256 feePercent
-    ) external pure returns (uint256 amountIn) {
+    function purchaseQuote(uint256 amountOut, uint256 reserveIn, uint256 reserveOut, uint256 feePercent)
+        external
+        pure
+        returns (uint256 amountIn)
+    {
         return ConstProdUtils._purchaseQuote(amountOut, reserveIn, reserveOut, feePercent);
     }
 
@@ -90,9 +76,7 @@ contract ConstProdUtilsHarness {
         uint256 feePercent,
         uint256 feeDenominator
     ) external pure returns (uint256 amountIn) {
-        return ConstProdUtils._purchaseQuote(
-            amountOut, reserveIn, reserveOut, feePercent, feeDenominator
-        );
+        return ConstProdUtils._purchaseQuote(amountOut, reserveIn, reserveOut, feePercent, feeDenominator);
     }
 
     function quoteSwapDepositWithFee(
@@ -110,11 +94,11 @@ contract ConstProdUtilsHarness {
         );
     }
 
-    function swapDepositSaleAmt(
-        uint256 amountIn,
-        uint256 saleReserve,
-        uint256 feePercent
-    ) external pure returns (uint256 saleAmt) {
+    function swapDepositSaleAmt(uint256 amountIn, uint256 saleReserve, uint256 feePercent)
+        external
+        pure
+        returns (uint256 saleAmt)
+    {
         return ConstProdUtils._swapDepositSaleAmt(amountIn, saleReserve, feePercent);
     }
 
@@ -141,15 +125,12 @@ contract ConstProdUtilsHarness {
         );
     }
 
-    function withdrawQuote(
-        uint256 ownedLPAmount,
-        uint256 lpTotalSupply,
-        uint256 totalReserveA,
-        uint256 totalReserveB
-    ) external pure returns (uint256 ownedReserveA, uint256 ownedReserveB) {
-        return ConstProdUtils._withdrawQuote(
-            ownedLPAmount, lpTotalSupply, totalReserveA, totalReserveB
-        );
+    function withdrawQuote(uint256 ownedLPAmount, uint256 lpTotalSupply, uint256 totalReserveA, uint256 totalReserveB)
+        external
+        pure
+        returns (uint256 ownedReserveA, uint256 ownedReserveB)
+    {
+        return ConstProdUtils._withdrawQuote(ownedLPAmount, lpTotalSupply, totalReserveA, totalReserveB);
     }
 
     function quoteZapOutToTargetWithFee(
@@ -189,29 +170,27 @@ contract ConstProdUtilsHarness {
         );
     }
 
-    function calculateProtocolFee(
-        uint256 lpTotalSupply,
-        uint256 newK,
-        uint256 kLast,
-        uint256 ownerFeeShare
-    ) external pure returns (uint256 lpOfYield) {
+    function calculateProtocolFee(uint256 lpTotalSupply, uint256 newK, uint256 kLast, uint256 ownerFeeShare)
+        external
+        pure
+        returns (uint256 lpOfYield)
+    {
         return ConstProdUtils._calculateProtocolFee(lpTotalSupply, newK, kLast, ownerFeeShare);
     }
 
-    function calculateProtocolFeeMint(
-        uint256 lpTotalSupply,
-        uint256 reserve0,
-        uint256 reserve1,
-        uint256 kLast
-    ) external pure returns (uint256 liquidity) {
+    function calculateProtocolFeeMint(uint256 lpTotalSupply, uint256 reserve0, uint256 reserve1, uint256 kLast)
+        external
+        pure
+        returns (uint256 liquidity)
+    {
         return ConstProdUtils._calculateProtocolFeeMint(lpTotalSupply, reserve0, reserve1, kLast);
     }
 
-    function equivLiquidity(
-        uint256 amountA,
-        uint256 reserveA,
-        uint256 reserveB
-    ) external pure returns (uint256 amountB) {
+    function equivLiquidity(uint256 amountA, uint256 reserveA, uint256 reserveB)
+        external
+        pure
+        returns (uint256 amountB)
+    {
         return ConstProdUtils._equivLiquidity(amountA, reserveA, reserveB);
     }
 
@@ -226,14 +205,7 @@ contract ConstProdUtilsHarness {
         bool feeOn
     ) external pure returns (uint256 lpAmt) {
         return ConstProdUtils._quoteDepositWithFee(
-            amountADeposit,
-            amountBDeposit,
-            lpTotalSupply,
-            lpReserveA,
-            lpReserveB,
-            kLast,
-            ownerFeeShare,
-            feeOn
+            amountADeposit, amountBDeposit, lpTotalSupply, lpReserveA, lpReserveB, kLast, ownerFeeShare, feeOn
         );
     }
 
@@ -249,15 +221,7 @@ contract ConstProdUtilsHarness {
         bool feeOn
     ) external pure returns (uint256 totalAmountA) {
         return ConstProdUtils._quoteWithdrawSwapWithFee(
-            ownedLPAmount,
-            lpTotalSupply,
-            reserveA,
-            reserveB,
-            feePercent,
-            feeDenominator,
-            kLast,
-            ownerFeeShare,
-            feeOn
+            ownedLPAmount, lpTotalSupply, reserveA, reserveB, feePercent, feeDenominator, kLast, ownerFeeShare, feeOn
         );
     }
 }
@@ -405,41 +369,41 @@ contract ConstProdUtils_BranchCoverage_Test is Test {
 
     function test_quoteSwapDepositWithFee_feeOff_skipsProtocolFee() public view {
         // Branch: feeOn = false
-        uint256 lpAmt = harness.quoteSwapDepositWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 3000, 25000000e36, 16667, false
-        );
+        uint256 lpAmt =
+            harness.quoteSwapDepositWithFee(1000e18, 10000e18, 5000e18, 5000e18, 3000, 25000000e36, 16667, false);
         assertGt(lpAmt, 0);
     }
 
     function test_quoteSwapDepositWithFee_kLastZero_skipsProtocolFee() public view {
         // Branch: kLast == 0
-        uint256 lpAmt = harness.quoteSwapDepositWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 3000, 0, 16667, true
-        );
+        uint256 lpAmt = harness.quoteSwapDepositWithFee(1000e18, 10000e18, 5000e18, 5000e18, 3000, 0, 16667, true);
         assertGt(lpAmt, 0);
     }
 
     function test_quoteSwapDepositWithFee_zeroReserves_returnsZero() public view {
         // Branch: reserveIn == 0 || reserveOut == 0
-        uint256 lpAmt = harness.quoteSwapDepositWithFee(
-            1000e18, 10000e18, 0, 5000e18, 3000, 0, 16667, false
-        );
+        uint256 lpAmt = harness.quoteSwapDepositWithFee(1000e18, 10000e18, 0, 5000e18, 3000, 0, 16667, false);
         assertEq(lpAmt, 0);
     }
 
     function test_quoteSwapDepositWithFee_amountBOptimalLessOrEqual_usesAmountBOptimal() public view {
         // Branch: amountBOptimal <= amountBDesired
         // This is typical when pool ratio matches zap ratio
-        uint256 lpAmt = harness.quoteSwapDepositWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 3000, 0, 0, false
-        );
+        uint256 lpAmt = harness.quoteSwapDepositWithFee(1000e18, 10000e18, 5000e18, 5000e18, 3000, 0, 0, false);
         assertGt(lpAmt, 0);
     }
 
     function test_quoteSwapDepositWithFee_smallFeePercent_uses1000Denom() public view {
         // Branch: feePercent <= 10 -> uses 1000 as feeDenom
         uint256 lpAmt = harness.quoteSwapDepositWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 3, 0, 0, false // fee = 0.3% with 1000 denom
+            1000e18,
+            10000e18,
+            5000e18,
+            5000e18,
+            3,
+            0,
+            0,
+            false // fee = 0.3% with 1000 denom
         );
         assertGt(lpAmt, 0);
     }
@@ -475,63 +439,52 @@ contract ConstProdUtils_BranchCoverage_Test is Test {
 
     function test_quoteWithdrawWithFee_zeroOwnedLP_returnsZero() public view {
         // Branch: ownedLPAmount == 0
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            0, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(0, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(a, 0);
         assertEq(b, 0);
     }
 
     function test_quoteWithdrawWithFee_zeroTotalSupply_returnsZero() public view {
         // Branch: lpTotalSupply == 0
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            1000e18, 0, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(1000e18, 0, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(a, 0);
         assertEq(b, 0);
     }
 
     function test_quoteWithdrawWithFee_zeroReserveA_returnsZero() public view {
         // Branch: totalReserveA == 0
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            1000e18, 10000e18, 0, 5000e18, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(1000e18, 10000e18, 0, 5000e18, 25000000e36, 16667, true);
         assertEq(a, 0);
         assertEq(b, 0);
     }
 
     function test_quoteWithdrawWithFee_zeroReserveB_returnsZero() public view {
         // Branch: totalReserveB == 0
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            1000e18, 10000e18, 5000e18, 0, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(1000e18, 10000e18, 5000e18, 0, 25000000e36, 16667, true);
         assertEq(a, 0);
         assertEq(b, 0);
     }
 
     function test_quoteWithdrawWithFee_ownedExceedsTotalSupply_returnsZero() public view {
         // Branch: ownedLPAmount > lpTotalSupply
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            20000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) =
+            harness.quoteWithdrawWithFee(20000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(a, 0);
         assertEq(b, 0);
     }
 
     function test_quoteWithdrawWithFee_feeOnKLastNonZero_adjustsForProtocolFee() public view {
         // Branch: feeOn && kLast != 0
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        (uint256 a, uint256 b) =
+            harness.quoteWithdrawWithFee(1000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertGt(a, 0);
         assertGt(b, 0);
     }
 
     function test_quoteWithdrawWithFee_feeOff_skipsFeeAdjustment() public view {
         // Branch: feeOn = false
-        (uint256 a, uint256 b) = harness.quoteWithdrawWithFee(
-            1000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, false
-        );
+        (uint256 a, uint256 b) =
+            harness.quoteWithdrawWithFee(1000e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, false);
         assertGt(a, 0);
         assertGt(b, 0);
     }
@@ -821,57 +774,43 @@ contract ConstProdUtils_BranchCoverage_Test is Test {
 
     function test_quoteDepositWithFee_zeroAmountADeposit_returnsZero() public view {
         // Branch: amountADeposit == 0
-        uint256 lp = harness.quoteDepositWithFee(
-            0, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(0, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(lp, 0);
     }
 
     function test_quoteDepositWithFee_zeroAmountBDeposit_returnsZero() public view {
         // Branch: amountBDeposit == 0
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 0, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 0, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(lp, 0);
     }
 
     function test_quoteDepositWithFee_zeroTotalSupply_returnsZero() public view {
         // Branch: lpTotalSupply == 0
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 100e18, 0, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 100e18, 0, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertEq(lp, 0);
     }
 
     function test_quoteDepositWithFee_zeroReserveA_returnsZero() public view {
         // Branch: lpReserveA == 0
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 100e18, 10000e18, 0, 5000e18, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 100e18, 10000e18, 0, 5000e18, 25000000e36, 16667, true);
         assertEq(lp, 0);
     }
 
     function test_quoteDepositWithFee_zeroReserveB_returnsZero() public view {
         // Branch: lpReserveB == 0
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 100e18, 10000e18, 5000e18, 0, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 100e18, 10000e18, 5000e18, 0, 25000000e36, 16667, true);
         assertEq(lp, 0);
     }
 
     function test_quoteDepositWithFee_feeOnAndKLastNonZero_adjustsForProtocolFee() public view {
         // Branch: feeOn && kLast != 0
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, true);
         assertGt(lp, 0);
     }
 
     function test_quoteDepositWithFee_feeOff_skipsFeeAdjustment() public view {
         // Branch: feeOn = false
-        uint256 lp = harness.quoteDepositWithFee(
-            100e18, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, false
-        );
+        uint256 lp = harness.quoteDepositWithFee(100e18, 100e18, 10000e18, 5000e18, 5000e18, 25000000e36, 16667, false);
         assertGt(lp, 0);
     }
 

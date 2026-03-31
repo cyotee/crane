@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
+import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
@@ -15,12 +15,16 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /*                            Gyro Pool Components                            */
 /* -------------------------------------------------------------------------- */
 
-import {BalancerV3GyroECLPPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
+import {
+    BalancerV3GyroECLPPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolFacet.sol";
 import {
     IBalancerV3GyroECLPPoolDFPkg,
     BalancerV3GyroECLPPoolDFPkg
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolDFPkg.sol";
-import {BalancerV3Gyro2CLPPoolFacet} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolFacet.sol";
+import {
+    BalancerV3Gyro2CLPPoolFacet
+} from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/2clp/BalancerV3Gyro2CLPPoolFacet.sol";
 import {
     IBalancerV3Gyro2CLPPoolDFPkg,
     BalancerV3Gyro2CLPPoolDFPkg
@@ -66,12 +70,9 @@ library GyroPoolFactoryService {
      * @param create3Factory The CREATE3 factory for deterministic deployment.
      * @return gyroECLPPoolFacet The deployed ECLP pool facet.
      */
-    function deployGyroECLPPoolFacet(
-        ICreate3Factory create3Factory
-    ) internal returns (IFacet gyroECLPPoolFacet) {
+    function deployGyroECLPPoolFacet(ICreate3FactoryProxy create3Factory) internal returns (IFacet gyroECLPPoolFacet) {
         gyroECLPPoolFacet = create3Factory.deployFacet(
-            type(BalancerV3GyroECLPPoolFacet).creationCode,
-            abi.encode(type(BalancerV3GyroECLPPoolFacet).name)._hash()
+            type(BalancerV3GyroECLPPoolFacet).creationCode, abi.encode(type(BalancerV3GyroECLPPoolFacet).name)._hash()
         );
     }
 
@@ -84,7 +85,7 @@ library GyroPoolFactoryService {
      * @return eclpDFPkg The deployed ECLP pool DFPkg.
      */
     function initGyroECLPPoolDFPkg(
-        ICreate3Factory create3Factory,
+        ICreate3FactoryProxy create3Factory,
         SharedFacets memory sharedFacets,
         IVault balancerV3Vault,
         address poolFeeManager
@@ -124,12 +125,9 @@ library GyroPoolFactoryService {
      * @param create3Factory The CREATE3 factory for deterministic deployment.
      * @return gyro2CLPPoolFacet The deployed 2-CLP pool facet.
      */
-    function deployGyro2CLPPoolFacet(
-        ICreate3Factory create3Factory
-    ) internal returns (IFacet gyro2CLPPoolFacet) {
+    function deployGyro2CLPPoolFacet(ICreate3FactoryProxy create3Factory) internal returns (IFacet gyro2CLPPoolFacet) {
         gyro2CLPPoolFacet = create3Factory.deployFacet(
-            type(BalancerV3Gyro2CLPPoolFacet).creationCode,
-            abi.encode(type(BalancerV3Gyro2CLPPoolFacet).name)._hash()
+            type(BalancerV3Gyro2CLPPoolFacet).creationCode, abi.encode(type(BalancerV3Gyro2CLPPoolFacet).name)._hash()
         );
     }
 
@@ -142,7 +140,7 @@ library GyroPoolFactoryService {
      * @return twoCLPDFPkg The deployed 2-CLP pool DFPkg.
      */
     function initGyro2CLPPoolDFPkg(
-        ICreate3Factory create3Factory,
+        ICreate3FactoryProxy create3Factory,
         SharedFacets memory sharedFacets,
         IVault balancerV3Vault,
         address poolFeeManager
@@ -188,28 +186,12 @@ library GyroPoolFactoryService {
      * @return twoCLPDFPkg The deployed 2-CLP pool DFPkg.
      */
     function initAllGyroPools(
-        ICreate3Factory create3Factory,
+        ICreate3FactoryProxy create3Factory,
         SharedFacets memory sharedFacets,
         IVault balancerV3Vault,
         address poolFeeManager
-    )
-        internal
-        returns (
-            IBalancerV3GyroECLPPoolDFPkg eclpDFPkg,
-            IBalancerV3Gyro2CLPPoolDFPkg twoCLPDFPkg
-        )
-    {
-        eclpDFPkg = initGyroECLPPoolDFPkg(
-            create3Factory,
-            sharedFacets,
-            balancerV3Vault,
-            poolFeeManager
-        );
-        twoCLPDFPkg = initGyro2CLPPoolDFPkg(
-            create3Factory,
-            sharedFacets,
-            balancerV3Vault,
-            poolFeeManager
-        );
+    ) internal returns (IBalancerV3GyroECLPPoolDFPkg eclpDFPkg, IBalancerV3Gyro2CLPPoolDFPkg twoCLPDFPkg) {
+        eclpDFPkg = initGyroECLPPoolDFPkg(create3Factory, sharedFacets, balancerV3Vault, poolFeeManager);
+        twoCLPDFPkg = initGyro2CLPPoolDFPkg(create3Factory, sharedFacets, balancerV3Vault, poolFeeManager);
     }
 }

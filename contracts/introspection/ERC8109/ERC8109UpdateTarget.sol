@@ -8,20 +8,14 @@ contract ERC8109UpdateTarget is IERC8109Update {
     function upgradeDiamond(
         FacetFunctions[] calldata _addFunctions,
         FacetFunctions[] calldata _replaceFunctions,
-        bytes4[] calldata _removeFunctions,           
+        bytes4[] calldata _removeFunctions,
         address _delegate,
         bytes calldata _functionCall,
         bytes32 _tag,
         bytes calldata _metadata
     ) external {
         ERC8109Repo._processDiamondUpgrade(
-            _addFunctions,
-            _replaceFunctions,
-            _removeFunctions,
-            _delegate,
-            _functionCall,
-            _tag,
-            _metadata
+            _addFunctions, _replaceFunctions, _removeFunctions, _delegate, _functionCall, _tag, _metadata
         );
     }
 }

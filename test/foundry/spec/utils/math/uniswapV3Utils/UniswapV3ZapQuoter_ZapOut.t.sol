@@ -20,8 +20,8 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     IUniswapV3Pool pool;
     address tokenA;
     address tokenB;
-    address token0;  // Actual token0 from pool (sorted)
-    address token1;  // Actual token1 from pool (sorted)
+    address token0; // Actual token0 from pool (sorted)
+    address token1; // Actual token1 from pool (sorted)
 
     uint256 constant INITIAL_LIQUIDITY = 10_000e18;
     int24 tickLower;
@@ -50,13 +50,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
         tickUpper = nearestUsableTick(6000, tickSpacing);
 
         // Add initial liquidity in a range around current price
-        mintPosition(
-            pool,
-            address(this),
-            tickLower,
-            tickUpper,
-            uint128(INITIAL_LIQUIDITY)
-        );
+        mintPosition(pool, address(this), tickLower, tickUpper, uint128(INITIAL_LIQUIDITY));
     }
 
     /* -------------------------------------------------------------------------- */
@@ -64,7 +58,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test zap-out wanting token0
-    function test_quoteZapOutSingleCore_wantToken0() public {
+    function test_quoteZapOutSingleCore_wantToken0() public view {
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
@@ -94,7 +88,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test zap-out wanting token1
-    function test_quoteZapOutSingleCore_wantToken1() public {
+    function test_quoteZapOutSingleCore_wantToken1() public view {
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
@@ -125,14 +119,14 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
         MockERC20(token0).approve(address(pool), type(uint256).max);
 
         // Get current state
-        (uint160 sqrtPriceBefore, int24 tickBefore, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceBefore, int24 tickBefore,,,,,) = pool.slot0();
         console.log("Tick before:", uint24(tickBefore >= 0 ? tickBefore : -tickBefore));
 
         // Do a swap to move price (zeroForOne = true means token0 -> token1)
         // Pass payer address in callback data
         pool.swap(address(this), true, int256(4000e18), TickMath.MIN_SQRT_RATIO + 1, abi.encode(address(this)));
 
-        (uint160 sqrtPriceAfter, int24 tickAfter, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceAfter, int24 tickAfter,,,,,) = pool.slot0();
         console.log("Tick after:", uint24(tickAfter >= 0 ? tickAfter : -tickAfter));
 
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
@@ -140,7 +134,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: 100e18,
-            wantToken0: true,  // Want token0
+            wantToken0: true, // Want token0
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -171,7 +165,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
             tickLower: tickLower,
             tickUpper: tickUpper,
             liquidity: 100e18,
-            wantToken0: false,  // Want token1
+            wantToken0: false, // Want token1
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
         });
@@ -192,7 +186,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test pool-native wrapper
-    function test_quoteZapOutPool() public {
+    function test_quoteZapOutPool() public view {
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
@@ -213,7 +207,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     }
 
     /// @notice Test position manager wrapper
-    function test_quoteZapOutPositionManager() public {
+    function test_quoteZapOutPositionManager() public view {
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
@@ -224,7 +218,8 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
             maxSwapSteps: 0
         });
 
-        UniswapV3ZapQuoter.PositionManagerZapOutExecution memory exec = UniswapV3ZapQuoter.quoteZapOutPositionManager(params);
+        UniswapV3ZapQuoter.PositionManagerZapOutExecution memory exec =
+            UniswapV3ZapQuoter.quoteZapOutPositionManager(params);
 
         assertEq(exec.tickLower, tickLower, "tickLower mismatch");
         assertEq(exec.tickUpper, tickUpper, "tickUpper mismatch");
@@ -238,14 +233,14 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test helper to create ZapOutParams from token address
-    function test_createZapOutParams() public {
+    function test_createZapOutParams() public view {
         // Use actual pool tokens (sorted by address)
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.createZapOutParams(
             pool,
             tickLower,
             tickUpper,
             100e18,
-            token0,  // tokenOut = token0
+            token0, // tokenOut = token0
             0,
             0
         );
@@ -262,7 +257,7 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
             tickLower,
             tickUpper,
             50e18,
-            token1,  // tokenOut = token1
+            token1, // tokenOut = token1
             0,
             0
         );
@@ -275,12 +270,12 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test with small liquidity
-    function test_quoteZapOutSingleCore_smallLiquidity() public {
+    function test_quoteZapOutSingleCore_smallLiquidity() public view {
         UniswapV3ZapQuoter.ZapOutParams memory params = UniswapV3ZapQuoter.ZapOutParams({
             pool: pool,
             tickLower: tickLower,
             tickUpper: tickUpper,
-            liquidity: 1e15,  // Very small liquidity
+            liquidity: 1e15, // Very small liquidity
             wantToken0: true,
             sqrtPriceLimitX96: 0,
             maxSwapSteps: 0
@@ -324,7 +319,9 @@ contract UniswapV3ZapQuoter_ZapOut_Test is TestBase_UniswapV3 {
         // Execute swap (token1 -> token0, zeroForOne = false)
         if (quote.swapAmountIn > 0) {
             MockERC20(token1).approve(address(pool), type(uint256).max);
-            pool.swap(address(this), false, int256(quote.swapAmountIn), TickMath.MAX_SQRT_RATIO - 1, abi.encode(address(this)));
+            pool.swap(
+                address(this), false, int256(quote.swapAmountIn), TickMath.MAX_SQRT_RATIO - 1, abi.encode(address(this))
+            );
         }
 
         // Check final balance

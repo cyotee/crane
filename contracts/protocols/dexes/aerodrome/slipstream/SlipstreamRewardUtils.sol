@@ -189,9 +189,8 @@ library SlipstreamRewardUtils {
     {
         result.effectiveRewardGrowthGlobalX128 = _getEffectiveRewardGrowthGlobalX128(params.pool);
 
-        result.rewardGrowthInsideX128 = params.pool.getRewardGrowthInside(
-            params.tickLower, params.tickUpper, result.effectiveRewardGrowthGlobalX128
-        );
+        result.rewardGrowthInsideX128 = params.pool
+        .getRewardGrowthInside(params.tickLower, params.tickUpper, result.effectiveRewardGrowthGlobalX128);
 
         // Calculate reward delta
         uint256 rewardGrowthDelta = result.rewardGrowthInsideX128 - params.positionRewardGrowthInsideLastX128;

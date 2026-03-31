@@ -23,7 +23,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * @dev Implements swap functions from IRouter interface.
  */
 contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -79,8 +78,16 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         bytes calldata userData
     ) external payable saveSender(msg.sender) returns (uint256) {
         return _unlockSwap(
-            msg.sender, SwapKind.EXACT_IN, pool, tokenIn, tokenOut,
-            exactAmountIn, minAmountOut, deadline, wethIsEth, userData
+            msg.sender,
+            SwapKind.EXACT_IN,
+            pool,
+            tokenIn,
+            tokenOut,
+            exactAmountIn,
+            minAmountOut,
+            deadline,
+            wethIsEth,
+            userData
         );
     }
 
@@ -93,8 +100,15 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external saveSender(sender) returns (uint256) {
         return _quoteSwap(
-            msg.sender, SwapKind.EXACT_IN, pool, tokenIn, tokenOut,
-            exactAmountIn, 0, BalancerV3RouterStorageRepo.MAX_AMOUNT, userData
+            msg.sender,
+            SwapKind.EXACT_IN,
+            pool,
+            tokenIn,
+            tokenOut,
+            exactAmountIn,
+            0,
+            BalancerV3RouterStorageRepo.MAX_AMOUNT,
+            userData
         );
     }
 
@@ -109,8 +123,16 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         bytes calldata userData
     ) external payable saveSender(msg.sender) returns (uint256) {
         return _unlockSwap(
-            msg.sender, SwapKind.EXACT_OUT, pool, tokenIn, tokenOut,
-            exactAmountOut, maxAmountIn, deadline, wethIsEth, userData
+            msg.sender,
+            SwapKind.EXACT_OUT,
+            pool,
+            tokenIn,
+            tokenOut,
+            exactAmountOut,
+            maxAmountIn,
+            deadline,
+            wethIsEth,
+            userData
         );
     }
 
@@ -123,8 +145,15 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         bytes memory userData
     ) external saveSender(sender) returns (uint256) {
         return _quoteSwap(
-            msg.sender, SwapKind.EXACT_OUT, pool, tokenIn, tokenOut,
-            exactAmountOut, BalancerV3RouterStorageRepo.MAX_AMOUNT, type(uint256).max, userData
+            msg.sender,
+            SwapKind.EXACT_OUT,
+            pool,
+            tokenIn,
+            tokenOut,
+            exactAmountOut,
+            BalancerV3RouterStorageRepo.MAX_AMOUNT,
+            type(uint256).max,
+            userData
         );
     }
 
@@ -132,15 +161,21 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
     /*                              HOOK FUNCTIONS                                */
     /* ========================================================================== */
 
-    function swapSingleTokenHook(
-        SwapSingleTokenHookParams calldata params
-    ) external nonReentrant onlyVault returns (uint256) {
+    function swapSingleTokenHook(SwapSingleTokenHookParams calldata params)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256)
+    {
         return _swapSingleTokenHook(params);
     }
 
-    function querySwapHook(
-        SwapSingleTokenHookParams calldata params
-    ) external nonReentrant onlyVault returns (uint256) {
+    function querySwapHook(SwapSingleTokenHookParams calldata params)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256)
+    {
         return _querySwapHook(params);
     }
 
@@ -173,9 +208,8 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.swapSingleTokenHook, params)
-        );
+        bytes memory result =
+            BalancerV3RouterStorageRepo._vault().unlock(abi.encodeCall(this.swapSingleTokenHook, params));
         return abi.decode(result, (uint256));
     }
 
@@ -203,25 +237,19 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.querySwapHook, params)
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(abi.encodeCall(this.querySwapHook, params));
         return abi.decode(result, (uint256));
     }
 
-    function _swapSingleTokenHook(
-        SwapSingleTokenHookParams calldata params
-    ) internal returns (uint256) {
+    function _swapSingleTokenHook(SwapSingleTokenHookParams calldata params) internal returns (uint256) {
         (uint256 amountCalculated, uint256 amountIn, uint256 amountOut) = _swapHook(params);
         _handleSwapTokens(params, amountIn, amountOut);
         return amountCalculated;
     }
 
-    function _handleSwapTokens(
-        SwapSingleTokenHookParams calldata params,
-        uint256 amountIn,
-        uint256 amountOut
-    ) internal {
+    function _handleSwapTokens(SwapSingleTokenHookParams calldata params, uint256 amountIn, uint256 amountOut)
+        internal
+    {
         bool isPrepaid = BalancerV3RouterStorageRepo._isPrepaid();
         IWETH weth = BalancerV3RouterStorageRepo._weth();
         IVault vault = BalancerV3RouterStorageRepo._vault();
@@ -239,11 +267,7 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _handlePrepaidTokenIn(
-        SwapSingleTokenHookParams calldata params,
-        IVault vault,
-        uint256 amountIn
-    ) internal {
+    function _handlePrepaidTokenIn(SwapSingleTokenHookParams calldata params, IVault vault, uint256 amountIn) internal {
         uint256 amountInHint = params.kind == SwapKind.EXACT_IN ? params.amountGiven : params.limit;
 
         uint256 tokenInCredit = vault.settle(params.tokenIn, amountInHint);
@@ -257,13 +281,14 @@ contract RouterSwapFacet is BalancerV3RouterModifiers, IFacet {
     }
 
     function _querySwapHook(SwapSingleTokenHookParams calldata params) internal returns (uint256) {
-        (uint256 amountCalculated, , ) = _swapHook(params);
+        (uint256 amountCalculated,,) = _swapHook(params);
         return amountCalculated;
     }
 
-    function _swapHook(
-        SwapSingleTokenHookParams calldata params
-    ) internal returns (uint256 amountCalculated, uint256 amountIn, uint256 amountOut) {
+    function _swapHook(SwapSingleTokenHookParams calldata params)
+        internal
+        returns (uint256 amountCalculated, uint256 amountIn, uint256 amountOut)
+    {
         if (block.timestamp > params.deadline) {
             revert SwapDeadline();
         }

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "../math/FixedPoint.sol";
+import {FixedPoint} from "../math/FixedPoint.sol";
 
 contract FixedPointMock {
     function mulDown(uint256 a, uint256 b) external pure returns (uint256) {

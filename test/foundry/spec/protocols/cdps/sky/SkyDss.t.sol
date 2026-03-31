@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import { TestBase_SkyDss } from "@crane/contracts/protocols/cdps/sky/test/bases/TestBase_SkyDss.sol";
+import {TestBase_SkyDss} from "@crane/contracts/protocols/cdps/sky/test/bases/TestBase_SkyDss.sol";
 
 /// @title SkyDss_Test
 /// @notice Basic tests for the Sky/DSS port
 contract SkyDss_Test is TestBase_SkyDss {
-
     function setUp() public override {
         super.setUp();
     }
@@ -38,7 +37,7 @@ contract SkyDss_Test is TestBase_SkyDss {
 
     function test_openCdp_basicOperation() public {
         uint256 collateral = 10 * WAD; // 10 GEM
-        uint256 debt = 1000 * WAD;     // 1000 DAI
+        uint256 debt = 1000 * WAD; // 1000 DAI
 
         openCdp(alice, collateral, debt);
 

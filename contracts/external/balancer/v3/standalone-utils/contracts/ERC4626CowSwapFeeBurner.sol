@@ -6,16 +6,22 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { IComposableCow } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IComposableCow.sol";
-import { IProtocolFeeSweeper } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {
+    IComposableCow
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IComposableCow.sol";
+import {
+    IProtocolFeeSweeper
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IProtocolFeeSweeper.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { PackedTokenBalance } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
-import { CowSwapFeeBurner } from "./CowSwapFeeBurner.sol";
+import {CowSwapFeeBurner} from "./CowSwapFeeBurner.sol";
 
 /**
  * @title ERC4626CowSwapFeeBurner
@@ -70,9 +76,8 @@ contract ERC4626CowSwapFeeBurner is CowSwapFeeBurner {
         // the underlying token.
         IERC20(address(erc4626Token)).safeTransferFrom(msg.sender, address(this), exactFeeTokenAmountIn);
 
-        (uint256 minTargetTokenAmountOut, uint256 minERC4626AmountOut) = PackedTokenBalance.fromPackedBalance(
-            bytes32(encodedMinAmountsOut)
-        );
+        (uint256 minTargetTokenAmountOut, uint256 minERC4626AmountOut) =
+            PackedTokenBalance.fromPackedBalance(bytes32(encodedMinAmountsOut));
 
         uint256 feeTokenBalanceBefore = underlyingToken.balanceOf(address(this));
 

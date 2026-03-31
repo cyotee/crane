@@ -22,13 +22,13 @@ abstract contract TestBase_Slipstream is Test {
     /* -------------------------------------------------------------------------- */
 
     // Standard fee tiers (in pips: 1 pip = 0.0001%)
-    uint24 internal constant FEE_LOW = 500;      // 0.05%
-    uint24 internal constant FEE_MEDIUM = 3000;  // 0.3%
-    uint24 internal constant FEE_HIGH = 10000;   // 1%
+    uint24 internal constant FEE_LOW = 500; // 0.05%
+    uint24 internal constant FEE_MEDIUM = 3000; // 0.3%
+    uint24 internal constant FEE_HIGH = 10000; // 1%
 
     // Standard tick spacings for each fee tier
-    int24 internal constant TICK_SPACING_LOW = 1;    // Slipstream default
-    int24 internal constant TICK_SPACING_MEDIUM = 50;  // Common for CL pools
+    int24 internal constant TICK_SPACING_LOW = 1; // Slipstream default
+    int24 internal constant TICK_SPACING_MEDIUM = 50; // Common for CL pools
     int24 internal constant TICK_SPACING_HIGH = 100;
 
     /* -------------------------------------------------------------------------- */
@@ -50,13 +50,11 @@ abstract contract TestBase_Slipstream is Test {
     /// @param tickSpacing Tick spacing for the pool
     /// @param sqrtPriceX96 Initial sqrt price in Q64.96 format
     /// @return pool The created mock pool
-    function createMockPool(
-        address tokenA,
-        address tokenB,
-        uint24 fee,
-        int24 tickSpacing,
-        uint160 sqrtPriceX96
-    ) internal virtual returns (MockCLPool pool) {
+    function createMockPool(address tokenA, address tokenB, uint24 fee, int24 tickSpacing, uint160 sqrtPriceX96)
+        internal
+        virtual
+        returns (MockCLPool pool)
+    {
         // Ensure tokens are ordered (token0 < token1)
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
 
@@ -75,12 +73,11 @@ abstract contract TestBase_Slipstream is Test {
     /// @param fee Fee tier
     /// @param tickSpacing Tick spacing
     /// @return pool The created pool
-    function createMockPoolOneToOne(
-        address tokenA,
-        address tokenB,
-        uint24 fee,
-        int24 tickSpacing
-    ) internal virtual returns (MockCLPool pool) {
+    function createMockPoolOneToOne(address tokenA, address tokenB, uint24 fee, int24 tickSpacing)
+        internal
+        virtual
+        returns (MockCLPool pool)
+    {
         // 1:1 price = sqrt(1) * 2^96
         uint160 sqrtPriceX96 = uint160(uint256(1) << 96);
         return createMockPool(tokenA, tokenB, fee, tickSpacing, sqrtPriceX96);
@@ -95,12 +92,7 @@ abstract contract TestBase_Slipstream is Test {
     /// @param tickLower Lower tick of position
     /// @param tickUpper Upper tick of position
     /// @param liquidity Amount of liquidity to add
-    function addLiquidity(
-        MockCLPool pool,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 liquidity
-    ) internal virtual {
+    function addLiquidity(MockCLPool pool, int24 tickLower, int24 tickUpper, uint128 liquidity) internal virtual {
         pool.addLiquidity(tickLower, tickUpper, liquidity);
     }
 
@@ -112,11 +104,7 @@ abstract contract TestBase_Slipstream is Test {
     /// @param reserve0 Reserve of token0
     /// @param reserve1 Reserve of token1
     /// @return sqrtPriceX96 The sqrt price in Q64.96 format
-    function encodePriceSqrt(uint256 reserve0, uint256 reserve1)
-        internal
-        pure
-        returns (uint160 sqrtPriceX96)
-    {
+    function encodePriceSqrt(uint256 reserve0, uint256 reserve1) internal pure returns (uint160 sqrtPriceX96) {
         require(reserve0 > 0, "reserve0 must be > 0");
 
         uint256 sqrtReserve0 = BetterMath._sqrt(reserve0);
@@ -133,11 +121,7 @@ abstract contract TestBase_Slipstream is Test {
     /// @param tick The tick to align
     /// @param tickSpacing The tick spacing
     /// @return Aligned tick
-    function nearestUsableTick(int24 tick, int24 tickSpacing)
-        internal
-        pure
-        returns (int24)
-    {
+    function nearestUsableTick(int24 tick, int24 tickSpacing) internal pure returns (int24) {
         int24 rounded = (tick / tickSpacing) * tickSpacing;
 
         if (rounded < TickMath.MIN_TICK) {
@@ -218,7 +202,7 @@ contract MockCLPool is ICLPool {
         token1 = _token1;
         _fee = fee_;
         tickSpacing = tickSpacing_;
-        factory = address(0);  // Mock factory
+        factory = address(0); // Mock factory
         _unlocked = true;
     }
 
@@ -226,14 +210,7 @@ contract MockCLPool is ICLPool {
     /*                           Initialization                                   */
     /* -------------------------------------------------------------------------- */
 
-    function initialize(
-        address,
-        address,
-        address,
-        int24,
-        address,
-        uint160 sqrtPriceX96_
-    ) external override {
+    function initialize(address, address, address, int24, address, uint160 sqrtPriceX96_) external override {
         _initializeInternal(sqrtPriceX96_);
     }
 
@@ -294,7 +271,9 @@ contract MockCLPool is ICLPool {
             bool unlocked
         )
     {
-        return (_sqrtPriceX96, _tick, _observationIndex, _observationCardinality, _observationCardinalityNext, _unlocked);
+        return (
+            _sqrtPriceX96, _tick, _observationIndex, _observationCardinality, _observationCardinalityNext, _unlocked
+        );
     }
 
     function gaugeFees() external pure override returns (uint128, uint128) {
@@ -401,7 +380,12 @@ contract MockCLPool is ICLPool {
         return (0, 0);
     }
 
-    function collect(address, int24, int24, uint128, uint128, address) external pure override returns (uint128, uint128) {
+    function collect(address, int24, int24, uint128, uint128, address)
+        external
+        pure
+        override
+        returns (uint128, uint128)
+    {
         return (0, 0);
     }
 
@@ -415,23 +399,16 @@ contract MockCLPool is ICLPool {
 
     /// @notice Execute swap (simplified implementation for testing)
     /// @dev Implements basic swap math for single-tick quotes
-    function swap(
-        address,
-        bool zeroForOne,
-        int256 amountSpecified,
-        uint160 sqrtPriceLimitX96,
-        bytes calldata
-    ) external override returns (int256 amount0, int256 amount1) {
+    function swap(address, bool zeroForOne, int256 amountSpecified, uint160 sqrtPriceLimitX96, bytes calldata)
+        external
+        override
+        returns (int256 amount0, int256 amount1)
+    {
         require(_sqrtPriceX96 != 0, "Not initialized");
 
         // Simple implementation: compute step using SwapMath
-        (uint160 sqrtRatioNextX96, uint256 amountIn, uint256 amountOut, uint256 feeAmount) = SwapMath.computeSwapStep(
-            _sqrtPriceX96,
-            sqrtPriceLimitX96,
-            _liquidity,
-            amountSpecified,
-            _fee
-        );
+        (uint160 sqrtRatioNextX96, uint256 amountIn, uint256 amountOut, uint256 feeAmount) =
+            SwapMath.computeSwapStep(_sqrtPriceX96, sqrtPriceLimitX96, _liquidity, amountSpecified, _fee);
 
         // Update state
         _sqrtPriceX96 = sqrtRatioNextX96;
@@ -491,7 +468,7 @@ contract MockCLPool is ICLPool {
 
         // Update ticks - both get the same liquidityGross
         // liquidityNet: +amount at lower tick, -amount at upper tick
-        _updateTickWithLiquidity(tickLower, amount, true);  // isLower = true
+        _updateTickWithLiquidity(tickLower, amount, true); // isLower = true
         _updateTickWithLiquidity(tickUpper, amount, false); // isLower = false
 
         // Update liquidity if current tick is in range

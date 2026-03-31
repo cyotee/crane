@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { SingletonAuthentication } from "../SingletonAuthentication.sol";
+import {SingletonAuthentication} from "../SingletonAuthentication.sol";
 
 contract SingletonAuthenticationMock is SingletonAuthentication {
     constructor(IVault vault) SingletonAuthentication(vault) {

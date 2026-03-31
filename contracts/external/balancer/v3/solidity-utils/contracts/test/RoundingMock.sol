@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "../math/FixedPoint.sol";
+import {FixedPoint} from "../math/FixedPoint.sol";
 
 library RoundingMock {
     function mockMul(uint256 a, uint256 b, bool roundUp) internal pure returns (uint256) {

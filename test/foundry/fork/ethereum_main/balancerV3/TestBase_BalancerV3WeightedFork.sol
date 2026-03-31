@@ -10,7 +10,12 @@ import "forge-std/Test.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import {PoolSwapParams, Rounding, SwapKind, TokenInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
+import {
+    PoolSwapParams,
+    Rounding,
+    SwapKind,
+    TokenInfo
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
 
@@ -20,7 +25,9 @@ import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.sol";
-import {IBalancerV3WeightedPool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
+import {
+    IBalancerV3WeightedPool
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3WeightedPool.sol";
 import {IBalancerV3Pool} from "@crane/contracts/interfaces/protocols/dexes/balancer/v3/IBalancerV3Pool.sol";
 
 /// @title TestBase_BalancerV3WeightedFork
@@ -132,10 +139,7 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
 
         // Get pool tokens from vault
         try vault.getPoolTokenInfo(weightedPool) returns (
-            IERC20[] memory tokens,
-            TokenInfo[] memory,
-            uint256[] memory,
-            uint256[] memory
+            IERC20[] memory tokens, TokenInfo[] memory, uint256[] memory, uint256[] memory
         ) {
             poolTokens = tokens;
 
@@ -158,10 +162,7 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
 
         // Get live balances from vault
         try vault.getPoolTokenInfo(weightedPool) returns (
-            IERC20[] memory,
-            TokenInfo[] memory,
-            uint256[] memory balances,
-            uint256[] memory
+            IERC20[] memory, TokenInfo[] memory, uint256[] memory balances, uint256[] memory
         ) {
             balancesLiveScaled18 = balances;
         } catch {
@@ -207,11 +208,11 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
     /// @param weights Normalized weights (sum to 1e18)
     /// @param roundDown True for round down, false for round up
     /// @return invariant The computed invariant
-    function computeInvariantLocal(
-        uint256[] memory balances,
-        uint256[] memory weights,
-        bool roundDown
-    ) internal pure returns (uint256 invariant) {
+    function computeInvariantLocal(uint256[] memory balances, uint256[] memory weights, bool roundDown)
+        internal
+        pure
+        returns (uint256 invariant)
+    {
         if (roundDown) {
             invariant = WeightedMath.computeInvariantDown(weights, balances);
         } else {
@@ -223,10 +224,11 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
     /// @param balances Token balances scaled to 18 decimals
     /// @param rounding Rounding direction
     /// @return invariant The computed invariant
-    function computeInvariantOnChain(
-        uint256[] memory balances,
-        Rounding rounding
-    ) internal view returns (uint256 invariant) {
+    function computeInvariantOnChain(uint256[] memory balances, Rounding rounding)
+        internal
+        view
+        returns (uint256 invariant)
+    {
         invariant = IBasePool(weightedPool).computeInvariant(balances, rounding);
     }
 
@@ -247,9 +249,7 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
         uint256 invariantRatio
     ) internal pure returns (uint256 newBalance) {
         newBalance = WeightedMath.computeBalanceOutGivenInvariant(
-            balances[tokenIndex],
-            weights[tokenIndex],
-            invariantRatio
+            balances[tokenIndex], weights[tokenIndex], invariantRatio
         );
     }
 
@@ -258,11 +258,11 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
     /// @param tokenIndex Index of token to compute balance for
     /// @param invariantRatio Ratio of new invariant to old
     /// @return newBalance The computed new balance
-    function computeBalanceOnChain(
-        uint256[] memory balances,
-        uint256 tokenIndex,
-        uint256 invariantRatio
-    ) internal view returns (uint256 newBalance) {
+    function computeBalanceOnChain(uint256[] memory balances, uint256 tokenIndex, uint256 invariantRatio)
+        internal
+        view
+        returns (uint256 newBalance)
+    {
         newBalance = IBasePool(weightedPool).computeBalance(balances, tokenIndex, invariantRatio);
     }
 
@@ -284,13 +284,7 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
         uint256 weightOut,
         uint256 amountIn
     ) internal pure returns (uint256 amountOut) {
-        amountOut = WeightedMath.computeOutGivenExactIn(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountIn
-        );
+        amountOut = WeightedMath.computeOutGivenExactIn(balanceIn, weightIn, balanceOut, weightOut, amountIn);
     }
 
     /// @notice Compute swap input using Crane's WeightedMath library (exact out)
@@ -307,13 +301,7 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
         uint256 weightOut,
         uint256 amountOut
     ) internal pure returns (uint256 amountIn) {
-        amountIn = WeightedMath.computeInGivenExactOut(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountOut
-        );
+        amountIn = WeightedMath.computeInGivenExactOut(balanceIn, weightIn, balanceOut, weightOut, amountOut);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -325,31 +313,28 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
     /// @param b Second value
     /// @param toleranceBps Tolerance in basis points
     /// @param message Error message
-    function assertApproxEqBps(
-        uint256 a,
-        uint256 b,
-        uint256 toleranceBps,
-        string memory message
-    ) internal pure {
+    function assertApproxEqBps(uint256 a, uint256 b, uint256 toleranceBps, string memory message) internal pure {
         uint256 maxVal = a > b ? a : b;
         uint256 tolerance = (maxVal * toleranceBps) / 10000;
         if (tolerance == 0) tolerance = 1; // Minimum 1 wei tolerance
 
         uint256 diff = a > b ? a - b : b - a;
         if (diff > tolerance) {
-            revert(string.concat(
-                message,
-                " - values differ by more than ",
-                vm.toString(toleranceBps),
-                " bps: a=",
-                vm.toString(a),
-                ", b=",
-                vm.toString(b),
-                ", diff=",
-                vm.toString(diff),
-                ", tolerance=",
-                vm.toString(tolerance)
-            ));
+            revert(
+                string.concat(
+                    message,
+                    " - values differ by more than ",
+                    vm.toString(toleranceBps),
+                    " bps: a=",
+                    vm.toString(a),
+                    ", b=",
+                    vm.toString(b),
+                    ", diff=",
+                    vm.toString(diff),
+                    ", tolerance=",
+                    vm.toString(tolerance)
+                )
+            );
         }
     }
 
@@ -357,17 +342,8 @@ abstract contract TestBase_BalancerV3WeightedFork is Test {
     /// @param local Value from local computation
     /// @param onChain Value from on-chain call
     /// @param label Description for error messages
-    function assertParity(
-        uint256 local,
-        uint256 onChain,
-        string memory label
-    ) internal pure {
-        assertApproxEqBps(
-            local,
-            onChain,
-            PARITY_TOLERANCE_BPS,
-            string.concat("Parity check failed for ", label)
-        );
+    function assertParity(uint256 local, uint256 onChain, string memory label) internal pure {
+        assertApproxEqBps(local, onChain, PARITY_TOLERANCE_BPS, string.concat("Parity check failed for ", label));
     }
 
     /* -------------------------------------------------------------------------- */

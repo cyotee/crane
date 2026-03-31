@@ -3,12 +3,17 @@ pragma solidity ^0.8.0;
 
 import {CLFactory} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/CLFactory.sol";
 import {CLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/CLPool.sol";
-import {TestBase_SlipstreamFork} from
-    "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_SlipstreamFork.sol";
+import {
+    TestBase_SlipstreamFork
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_SlipstreamFork.sol";
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
 import {ICLFactory} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLFactory.sol";
-import {ICLMintCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLMintCallback.sol";
-import {ICLSwapCallback} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLSwapCallback.sol";
+import {
+    ICLMintCallback
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLMintCallback.sol";
+import {
+    ICLSwapCallback
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/callback/ICLSwapCallback.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
@@ -107,24 +112,14 @@ contract SlipstreamForkParityTest is TestBase_SlipstreamFork {
         internal
         returns (uint256 amount0, uint256 amount1)
     {
-        (amount0, amount1) = ICLPool(pool).mint(
-            address(this),
-            tickLower,
-            tickUpper,
-            liquidityAmount,
-            abi.encode(pool.token0(), pool.token1())
-        );
+        (amount0, amount1) = ICLPool(pool)
+            .mint(address(this), tickLower, tickUpper, liquidityAmount, abi.encode(pool.token0(), pool.token1()));
     }
 
     function _swapExactInput(ICLPool pool, bool zeroForOne, uint256 amountIn) internal returns (uint256 amountOut) {
         uint160 limit = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
-        (int256 amount0Delta, int256 amount1Delta) = ICLPool(pool).swap(
-            address(this),
-            zeroForOne,
-            int256(amountIn),
-            limit,
-            abi.encode(pool.token0(), pool.token1())
-        );
+        (int256 amount0Delta, int256 amount1Delta) = ICLPool(pool)
+            .swap(address(this), zeroForOne, int256(amountIn), limit, abi.encode(pool.token0(), pool.token1()));
         amountOut = zeroForOne ? uint256(-amount1Delta) : uint256(-amount0Delta);
     }
 
@@ -176,12 +171,10 @@ contract SlipstreamForkParityTest is TestBase_SlipstreamFork {
 
         // Collect owed amounts
         {
-            (uint128 prodCol0, uint128 prodCol1) = productionPool.collect(
-                address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max
-            );
-            (uint128 locCol0, uint128 locCol1) = localPool.collect(
-                address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max
-            );
+            (uint128 prodCol0, uint128 prodCol1) =
+                productionPool.collect(address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max);
+            (uint128 locCol0, uint128 locCol1) =
+                localPool.collect(address(this), tickLower, tickUpper, type(uint128).max, type(uint128).max);
             assertEq(uint256(locCol0), uint256(prodCol0), "collect amount0 parity");
             assertEq(uint256(locCol1), uint256(prodCol1), "collect amount1 parity");
         }

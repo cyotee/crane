@@ -6,30 +6,39 @@ import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {Ownable} from "@crane/contracts/access/Ownable.sol";
 
-import { ILBPMigrationRouter } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPMigrationRouter.sol";
-import { ILBPool, LBPoolImmutableData } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
-import { IWeightedPool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
+import {
+    ILBPMigrationRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPMigrationRouter.sol";
+import {
+    ILBPool,
+    LBPoolImmutableData
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
+import {
+    IWeightedPool
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 import {
     TokenConfig,
     RemoveLiquidityParams,
     RemoveLiquidityKind
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { ScalingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
+import {
+    ScalingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/ScalingHelpers.sol";
 import {
     ReentrancyGuardTransient
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/ReentrancyGuardTransient.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
 import {
     BalancerContractRegistry,
     ContractType
 } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { VaultGuard } from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
+import {VaultGuard} from "@crane/contracts/external/balancer/v3/vault/contracts/VaultGuard.sol";
 
-import { WeightedPoolFactory } from "../WeightedPoolFactory.sol";
-import { BPTTimeLocker } from "./BPTTimeLocker.sol";
-import { LBPool } from "./LBPool.sol";
+import {WeightedPoolFactory} from "../WeightedPoolFactory.sol";
+import {BPTTimeLocker} from "./BPTTimeLocker.sol";
+import {LBPool} from "./LBPool.sol";
 
 contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Version, VaultGuard, BPTTimeLocker {
     using FixedPoint for uint256;
@@ -51,14 +60,12 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
         _;
     }
 
-    constructor(
-        BalancerContractRegistry contractRegistry,
-        string memory version
-    ) Version(version) VaultGuard(contractRegistry.getVault()) {
-        (address weightedPoolFactoryAddress, bool isActive) = contractRegistry.getBalancerContract(
-            ContractType.POOL_FACTORY,
-            "WeightedPool"
-        );
+    constructor(BalancerContractRegistry contractRegistry, string memory version)
+        Version(version)
+        VaultGuard(contractRegistry.getVault())
+    {
+        (address weightedPoolFactoryAddress, bool isActive) =
+            contractRegistry.getBalancerContract(ContractType.POOL_FACTORY, "WeightedPool");
         if (isActive == false) {
             revert NoRegisteredWeightedPoolFactory();
         }
@@ -67,11 +74,12 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
     }
 
     /// @inheritdoc ILBPMigrationRouter
-    function migrateLiquidity(
-        ILBPool lbp,
-        address excessReceiver,
-        WeightedPoolParams memory params
-    ) external onlyLBPOwner(lbp) nonReentrant returns (IWeightedPool, uint256[] memory, uint256) {
+    function migrateLiquidity(ILBPool lbp, address excessReceiver, WeightedPoolParams memory params)
+        external
+        onlyLBPOwner(lbp)
+        nonReentrant
+        returns (IWeightedPool, uint256[] memory, uint256)
+    {
         return _migrateLiquidity(lbp, msg.sender, excessReceiver, params, false);
     }
 
@@ -85,10 +93,12 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
         (, exactAmountsIn, bptAmountOut) = _migrateLiquidity(lbp, sender, excessReceiver, params, true);
     }
 
-    function migrateLiquidityHook(
-        MigrationHookParams memory params
-    ) external onlyVault returns (uint256[] memory exactAmountsIn, uint256 bptAmountOut) {
-        (, uint256[] memory removeAmountsOut, ) = _vault.removeLiquidity(
+    function migrateLiquidityHook(MigrationHookParams memory params)
+        external
+        onlyVault
+        returns (uint256[] memory exactAmountsIn, uint256 bptAmountOut)
+    {
+        (, uint256[] memory removeAmountsOut,) = _vault.removeLiquidity(
             RemoveLiquidityParams({
                 pool: address(params.lbp),
                 from: params.sender,
@@ -114,14 +124,8 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
             }
         }
 
-        bptAmountOut = _vault.initialize(
-            address(params.weightedPool),
-            address(this),
-            params.tokens,
-            exactAmountsIn,
-            0,
-            bytes("")
-        );
+        bptAmountOut =
+            _vault.initialize(address(params.weightedPool), address(this), params.tokens, exactAmountsIn, 0, bytes(""));
         _lockBPT(IERC20(address(params.weightedPool)), params.sender, bptAmountOut, params.lockDurationAfterMigration);
 
         emit PoolMigrated(params.lbp, params.weightedPool, exactAmountsIn, bptAmountOut);
@@ -208,12 +212,10 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
         // Compute the spot price (project token per reserve tokens) based on the current weights and the amounts out
         // from the LBP.
         uint256 projectAmountOutScaled18 = removeAmountsOut[data.projectTokenIndex].toScaled18ApplyRateRoundDown(
-            decimalScalingFactors[data.projectTokenIndex],
-            tokenRates[data.projectTokenIndex]
+            decimalScalingFactors[data.projectTokenIndex], tokenRates[data.projectTokenIndex]
         );
         uint256 reserveAmountRemovedScaled18 = removeAmountsOut[data.reserveTokenIndex].toScaled18ApplyRateRoundDown(
-            decimalScalingFactors[data.reserveTokenIndex],
-            tokenRates[data.reserveTokenIndex]
+            decimalScalingFactors[data.reserveTokenIndex], tokenRates[data.reserveTokenIndex]
         );
 
         // For seedless LBPs, the spot price is determined by effective balance (real + virtual).
@@ -222,8 +224,9 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
         uint256 effectiveReserveAmountScaled18 = reserveAmountRemovedScaled18 + virtualBalanceScaled18;
 
         // Compute the spot price using effective reserve balance.
-        uint256 priceScaled18 = ((projectAmountOutScaled18 * currentWeights[data.reserveTokenIndex]) /
-            effectiveReserveAmountScaled18).divDown(currentWeights[data.projectTokenIndex]);
+        uint256 priceScaled18 = ((projectAmountOutScaled18 * currentWeights[data.reserveTokenIndex])
+                / effectiveReserveAmountScaled18)
+        .divDown(currentWeights[data.projectTokenIndex]);
 
         // Calculate the reserve amount for the weighted pool based on the LBP ending price and the new weights.
         // We start by assuming we can withdraw the entire project token balance. We want to use as much as possible,
@@ -231,29 +234,25 @@ contract LBPMigrationRouter is ILBPMigrationRouter, ReentrancyGuardTransient, Ve
         //
         // If this isn't possible, since using the full project balance would require more reserve tokens than we have
         // available, we fall back on using the full reserve balance and calculating the project amount instead.
-        uint256 reserveAmountOutScaled18 = (projectAmountOutScaled18.mulDown(migrationWeightReserveToken)).divDown(
-            priceScaled18.mulDown(migrationWeightProjectToken)
-        );
+        uint256 reserveAmountOutScaled18 = (projectAmountOutScaled18.mulDown(migrationWeightReserveToken))
+        .divDown(priceScaled18.mulDown(migrationWeightProjectToken));
 
         // If the reserveAmountOut is greater than the amount of reserve tokens removed, we need to calculate
         // projectAmountOut based on the price and the new weights.
         // Note: we compare against real reserve removed, not effective - we can only migrate real tokens.
         if (reserveAmountOutScaled18 > reserveAmountRemovedScaled18) {
             reserveAmountOutScaled18 = reserveAmountRemovedScaled18;
-            projectAmountOutScaled18 =
-                (priceScaled18 * reserveAmountOutScaled18).mulDown(migrationWeightProjectToken) /
-                migrationWeightReserveToken;
+            projectAmountOutScaled18 = (priceScaled18 * reserveAmountOutScaled18).mulDown(migrationWeightProjectToken)
+                / migrationWeightReserveToken;
         }
 
         // Stack too deep.
         uint256 bptPercentageToMigrate_ = bptPercentageToMigrate;
 
         // Calculate the exact amounts in based on the share to migrate.
-        exactAmountsIn[data.projectTokenIndex] = projectAmountOutScaled18
-            .mulDown(bptPercentageToMigrate_)
+        exactAmountsIn[data.projectTokenIndex] = projectAmountOutScaled18.mulDown(bptPercentageToMigrate_)
             .toRawUndoRateRoundDown(decimalScalingFactors[data.projectTokenIndex], tokenRates[data.projectTokenIndex]);
-        exactAmountsIn[data.reserveTokenIndex] = reserveAmountOutScaled18
-            .mulDown(bptPercentageToMigrate_)
+        exactAmountsIn[data.reserveTokenIndex] = reserveAmountOutScaled18.mulDown(bptPercentageToMigrate_)
             .toRawUndoRateRoundDown(decimalScalingFactors[data.reserveTokenIndex], tokenRates[data.reserveTokenIndex]);
     }
 }

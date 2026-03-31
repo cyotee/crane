@@ -3,16 +3,16 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     IUnbalancedAddViaSwapRouter
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedAddViaSwapRouter.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import { RouterHooks } from "./RouterHooks.sol";
+import {RouterHooks} from "./RouterHooks.sol";
 
 /**
  * @notice Enable adding liquidity unbalanced to two-token pools that do not support it natively.
@@ -21,12 +21,9 @@ import { RouterHooks } from "./RouterHooks.sol";
  * the standard router, then checks the limits.
  */
 contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter {
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) RouterHooks(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        RouterHooks(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -37,58 +34,59 @@ contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter 
         bool wethIsEth,
         AddLiquidityAndSwapParams calldata params
     ) external payable saveSender(msg.sender) returns (uint256[] memory amountsIn) {
-        return
-            abi.decode(
-                _vault.unlock(
-                    abi.encodeCall(
-                        UnbalancedAddViaSwapRouter.addLiquidityUnbalancedHook,
-                        AddLiquidityAndSwapHookParams({
-                            pool: pool,
-                            sender: msg.sender,
-                            deadline: deadline,
-                            wethIsEth: wethIsEth,
-                            operationParams: params
-                        })
-                    )
-                ),
-                (uint256[])
-            );
+        return abi.decode(
+            _vault.unlock(
+                abi.encodeCall(
+                    UnbalancedAddViaSwapRouter.addLiquidityUnbalancedHook,
+                    AddLiquidityAndSwapHookParams({
+                        pool: pool,
+                        sender: msg.sender,
+                        deadline: deadline,
+                        wethIsEth: wethIsEth,
+                        operationParams: params
+                    })
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /***************************************************************************
                                    Queries
     ***************************************************************************/
 
-    function queryAddLiquidityUnbalanced(
-        address pool,
-        address sender,
-        AddLiquidityAndSwapParams calldata params
-    ) external saveSender(sender) returns (uint256[] memory amountsIn) {
-        return
-            abi.decode(
-                _vault.quote(
-                    abi.encodeCall(
-                        UnbalancedAddViaSwapRouter.queryAddLiquidityUnbalancedHook,
-                        AddLiquidityAndSwapHookParams({
-                            pool: pool,
-                            sender: address(this), // Queries use the router as the sender
-                            deadline: _MAX_AMOUNT, // Queries do not have deadlines
-                            wethIsEth: false, // wethIsEth is false for queries
-                            operationParams: params
-                        })
-                    )
-                ),
-                (uint256[])
-            );
+    function queryAddLiquidityUnbalanced(address pool, address sender, AddLiquidityAndSwapParams calldata params)
+        external
+        saveSender(sender)
+        returns (uint256[] memory amountsIn)
+    {
+        return abi.decode(
+            _vault.quote(
+                abi.encodeCall(
+                    UnbalancedAddViaSwapRouter.queryAddLiquidityUnbalancedHook,
+                    AddLiquidityAndSwapHookParams({
+                        pool: pool,
+                        sender: address(this), // Queries use the router as the sender
+                        deadline: _MAX_AMOUNT, // Queries do not have deadlines
+                        wethIsEth: false, // wethIsEth is false for queries
+                        operationParams: params
+                    })
+                )
+            ),
+            (uint256[])
+        );
     }
 
     /***************************************************************************
                                    Hooks
     ***************************************************************************/
 
-    function addLiquidityUnbalancedHook(
-        AddLiquidityAndSwapHookParams calldata hookParams
-    ) external nonReentrant onlyVault returns (uint256[] memory amountsIn) {
+    function addLiquidityUnbalancedHook(AddLiquidityAndSwapHookParams calldata hookParams)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256[] memory amountsIn)
+    {
         // The deadline is timestamp-based: it should not be relied upon for sub-minute accuracy.
         // solhint-disable-next-line not-rely-on-time
         if (block.timestamp > hookParams.deadline) {
@@ -104,9 +102,12 @@ contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter 
         _returnEth(hookParams.sender);
     }
 
-    function queryAddLiquidityUnbalancedHook(
-        AddLiquidityAndSwapHookParams calldata params
-    ) external nonReentrant onlyVault returns (uint256[] memory amountsIn) {
+    function queryAddLiquidityUnbalancedHook(AddLiquidityAndSwapHookParams calldata params)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256[] memory amountsIn)
+    {
         (, amountsIn) = _computeAddLiquidityUnbalancedViaSwap(params);
     }
 
@@ -131,24 +132,24 @@ contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter 
      *
      * Final result: Net contribution of `exactToken` exactly equals exactAmountIn
      */
-    function _computeAddLiquidityUnbalancedViaSwap(
-        AddLiquidityAndSwapHookParams calldata hookParams
-    ) private returns (IERC20[] memory tokens, uint256[] memory amountsIn) {
+    function _computeAddLiquidityUnbalancedViaSwap(AddLiquidityAndSwapHookParams calldata hookParams)
+        private
+        returns (IERC20[] memory tokens, uint256[] memory amountsIn)
+    {
         tokens = _vault.getPoolTokens(hookParams.pool);
 
         if (tokens.length != 2) {
             revert NotTwoTokenPool();
         }
 
-        (uint256 exactTokenIndex, uint256 adjustableTokenIndex) = hookParams.operationParams.exactToken == tokens[0]
-            ? (0, 1)
-            : (1, 0);
+        (uint256 exactTokenIndex, uint256 adjustableTokenIndex) =
+            hookParams.operationParams.exactToken == tokens[0] ? (0, 1) : (1, 0);
 
         uint256[] memory maxAmountsIn = new uint256[](2);
         maxAmountsIn[0] = _MAX_AMOUNT;
         maxAmountsIn[1] = _MAX_AMOUNT;
 
-        (amountsIn, , ) = _vault.addLiquidity(
+        (amountsIn,,) = _vault.addLiquidity(
             AddLiquidityParams({
                 pool: hookParams.pool,
                 to: hookParams.sender,
@@ -197,8 +198,7 @@ contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter 
 
         if (amountsIn[adjustableTokenIndex] > hookParams.operationParams.maxAdjustableAmount) {
             revert AmountInAboveMaxAdjustableAmount(
-                amountsIn[adjustableTokenIndex],
-                hookParams.operationParams.maxAdjustableAmount
+                amountsIn[adjustableTokenIndex], hookParams.operationParams.maxAdjustableAmount
             );
         }
 

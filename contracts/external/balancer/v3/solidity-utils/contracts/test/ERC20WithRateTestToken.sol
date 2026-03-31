@@ -2,9 +2,11 @@
 
 pragma solidity ^0.8.24;
 
-import { IRateProvider } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 
-import { ERC20TestToken } from "./ERC20TestToken.sol";
+import {ERC20TestToken} from "./ERC20TestToken.sol";
 
 contract ERC20WithRateTestToken is IRateProvider, ERC20TestToken {
     uint256 private _rate;

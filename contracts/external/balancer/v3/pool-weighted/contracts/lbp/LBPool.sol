@@ -2,23 +2,23 @@
 
 pragma solidity ^0.8.24;
 
-import { ISenderGuard } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {ISenderGuard} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISenderGuard.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPCommon.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/ILBPool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { PoolInfo } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {PoolInfo} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
 
-import { GradualValueChange } from "../lib/GradualValueChange.sol";
-import { WeightedPool } from "../WeightedPool.sol";
-import { LBPoolLib } from "../lib/LBPoolLib.sol";
-import { LBPCommon } from "./LBPCommon.sol";
+import {GradualValueChange} from "../lib/GradualValueChange.sol";
+import {WeightedPool} from "../WeightedPool.sol";
+import {LBPoolLib} from "../lib/LBPoolLib.sol";
+import {LBPCommon} from "./LBPCommon.sol";
 
 /**
  * @notice Weighted Pool with mutable weights, designed to support v3 Liquidity Bootstrapping.
@@ -47,10 +47,7 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
      * @param endWeights The final weights after the update is completed
      */
     event GradualWeightUpdateScheduled(
-        uint256 startTime,
-        uint256 endTime,
-        uint256[] startWeights,
-        uint256[] endWeights
+        uint256 startTime, uint256 endTime, uint256[] startWeights, uint256[] endWeights
     );
 
     /// @notice LBPs are WeightedPools by inheritance, but WeightedPool immutable/dynamic getters are wrong for LBPs.
@@ -64,8 +61,7 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
     )
         LBPCommon(lbpCommonParams, migrationParams, factoryParams.trustedRouter, migrationParams.migrationRouter)
         WeightedPool(
-            _buildWeightedPoolParams(lbpCommonParams, lbpParams, factoryParams.poolVersion),
-            factoryParams.vault
+            _buildWeightedPoolParams(lbpCommonParams, lbpParams, factoryParams.poolVersion), factoryParams.vault
         )
     {
         LBPoolLib.verifyWeightUpdateParameters(
@@ -84,22 +80,16 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         _reserveTokenScalingFactor = _computeScalingFactor(lbpCommonParams.reserveToken);
 
         // The reserve virtual balance is given in native decimals; scale up to store as scaled18.
-        _reserveTokenVirtualBalanceScaled18 = _toScaled18(
-            lbpParams.reserveTokenVirtualBalance,
-            _reserveTokenScalingFactor
-        );
+        _reserveTokenVirtualBalanceScaled18 =
+            _toScaled18(lbpParams.reserveTokenVirtualBalance, _reserveTokenScalingFactor);
 
         // Preserve event compatibility with previous LBP versions.
         uint256[] memory startWeights = new uint256[](_TWO_TOKENS);
         uint256[] memory endWeights = new uint256[](_TWO_TOKENS);
-        (startWeights[_projectTokenIndex], startWeights[_reserveTokenIndex]) = (
-            lbpParams.projectTokenStartWeight,
-            lbpParams.reserveTokenStartWeight
-        );
-        (endWeights[_projectTokenIndex], endWeights[_reserveTokenIndex]) = (
-            lbpParams.projectTokenEndWeight,
-            lbpParams.reserveTokenEndWeight
-        );
+        (startWeights[_projectTokenIndex], startWeights[_reserveTokenIndex]) =
+        (lbpParams.projectTokenStartWeight, lbpParams.reserveTokenStartWeight);
+        (endWeights[_projectTokenIndex], endWeights[_reserveTokenIndex]) =
+        (lbpParams.projectTokenEndWeight, lbpParams.reserveTokenEndWeight);
 
         emit GradualWeightUpdateScheduled(_startTime, _endTime, startWeights, endWeights);
     }
@@ -114,16 +104,12 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         endTime = _endTime;
 
         startWeights = new uint256[](_TWO_TOKENS);
-        (startWeights[_projectTokenIndex], startWeights[_reserveTokenIndex]) = (
-            _projectTokenStartWeight,
-            _reserveTokenStartWeight
-        );
+        (startWeights[_projectTokenIndex], startWeights[_reserveTokenIndex]) =
+        (_projectTokenStartWeight, _reserveTokenStartWeight);
 
         endWeights = new uint256[](_TWO_TOKENS);
-        (endWeights[_projectTokenIndex], endWeights[_reserveTokenIndex]) = (
-            _projectTokenEndWeight,
-            _reserveTokenEndWeight
-        );
+        (endWeights[_projectTokenIndex], endWeights[_reserveTokenIndex]) =
+        (_projectTokenEndWeight, _reserveTokenEndWeight);
     }
 
     /**
@@ -164,7 +150,7 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         data.projectTokenIndex = _projectTokenIndex;
         data.reserveTokenIndex = _reserveTokenIndex;
 
-        (data.decimalScalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _vault.getPoolTokenRates(address(this));
         data.isProjectTokenSwapInBlocked = _blockProjectTokenSwapsIn;
         data.startTime = _startTime;
         data.endTime = _endTime;
@@ -191,10 +177,11 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
 
     /// @inheritdoc ILBPool
     function getReserveTokenVirtualBalance() external view returns (uint256, uint256) {
-        return (
-            _toRaw(_reserveTokenVirtualBalanceScaled18, _reserveTokenScalingFactor),
-            _reserveTokenVirtualBalanceScaled18
-        );
+        return
+            (
+                _toRaw(_reserveTokenVirtualBalanceScaled18, _reserveTokenScalingFactor),
+                _reserveTokenVirtualBalanceScaled18
+            );
     }
 
     /*******************************************************************************
@@ -206,10 +193,12 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
      * @notice Implementation of computeInvariant that adjusts for the virtual balance in seedless LBPs.
      * @dev The Vault calls this during liquidity operations.
      */
-    function computeInvariant(
-        uint256[] memory balancesLiveScaled18,
-        Rounding rounding
-    ) public view override(IBasePool, WeightedPool) returns (uint256 invariant) {
+    function computeInvariant(uint256[] memory balancesLiveScaled18, Rounding rounding)
+        public
+        view
+        override(IBasePool, WeightedPool)
+        returns (uint256 invariant)
+    {
         if (_reserveTokenVirtualBalanceScaled18 == 0) {
             // This is not a seedless LBP, fall back on standard Weighted Pool behavior.
             invariant = super.computeInvariant(balancesLiveScaled18, rounding);
@@ -226,11 +215,12 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
     }
 
     /// @inheritdoc WeightedPool
-    function computeBalance(
-        uint256[] memory,
-        uint256,
-        uint256
-    ) public pure override(IBasePool, WeightedPool) returns (uint256) {
+    function computeBalance(uint256[] memory, uint256, uint256)
+        public
+        pure
+        override(IBasePool, WeightedPool)
+        returns (uint256)
+    {
         // This is unused in these pools. We do not support single-token liquidity operations.
         revert UnsupportedOperation();
     }
@@ -274,10 +264,13 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
      * @dev Ensure the owner is initializing the pool, and ensure seedless LBPs do not accept reserve tokens.
      * @return success Allow the initialization to proceed if the conditions have been met
      */
-    function onBeforeInitialize(
-        uint256[] memory exactAmountsIn,
-        bytes memory
-    ) public view override onlyBeforeSale returns (bool) {
+    function onBeforeInitialize(uint256[] memory exactAmountsIn, bytes memory)
+        public
+        view
+        override
+        onlyBeforeSale
+        returns (bool)
+    {
         if (_reserveTokenVirtualBalanceScaled18 > 0) {
             // This is a seedless LBP; ensure the caller is initializing with 0 reserve tokens.
             if (exactAmountsIn[_reserveTokenIndex] > 0) {
@@ -353,10 +346,8 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         LBPParams memory lbpParams,
         string memory poolVersion
     ) private view returns (NewPoolParams memory) {
-        (uint256 projectTokenIndex, uint256 reserveTokenIndex) = lbpCommonParams.projectToken <
-            lbpCommonParams.reserveToken
-            ? (0, 1)
-            : (1, 0);
+        (uint256 projectTokenIndex, uint256 reserveTokenIndex) =
+            lbpCommonParams.projectToken < lbpCommonParams.reserveToken ? (0, 1) : (1, 0);
 
         uint256[] memory normalizedWeights = new uint256[](_TWO_TOKENS);
         normalizedWeights[projectTokenIndex] = lbpParams.projectTokenStartWeight;
@@ -369,14 +360,13 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         uint256[] memory minTokenBalances = MinTokenBalanceLib.computeMinTokenBalances(tokens);
 
         // The WeightedPool will validate the starting weights (i.e., ensure they respect the minimum and sum to ONE).
-        return
-            NewPoolParams({
-                name: lbpCommonParams.name,
-                symbol: lbpCommonParams.symbol,
-                numTokens: _TWO_TOKENS,
-                normalizedWeights: normalizedWeights,
-                version: poolVersion,
-                minTokenBalances: minTokenBalances
-            });
+        return NewPoolParams({
+            name: lbpCommonParams.name,
+            symbol: lbpCommonParams.symbol,
+            numTokens: _TWO_TOKENS,
+            normalizedWeights: normalizedWeights,
+            version: poolVersion,
+            minTokenBalances: minTokenBalances
+        });
     }
 }

@@ -23,22 +23,22 @@ library UniswapV3ZapQuoter {
         IUniswapV3Pool pool;
         int24 tickLower;
         int24 tickUpper;
-        bool zeroForOne;       // true if input is token0, false if token1
+        bool zeroForOne; // true if input is token0, false if token1
         uint256 amountIn;
         uint160 sqrtPriceLimitX96;
-        uint32 maxSwapSteps;   // 0 == unlimited
-        uint16 searchIters;    // binary search iterations (e.g., 16-24)
+        uint32 maxSwapSteps; // 0 == unlimited
+        uint16 searchIters; // binary search iterations (e.g., 16-24)
     }
 
     /// @notice Result of zap-in quote
     struct ZapInQuote {
-        uint256 swapAmountIn;  // Amount of input token to swap
-        uint256 amount0;       // Amount of token0 for minting (after swap)
-        uint256 amount1;       // Amount of token1 for minting (after swap)
-        uint128 liquidity;     // Liquidity that can be minted
-        uint256 dust0;         // Leftover token0 after mint
-        uint256 dust1;         // Leftover token1 after mint
-        UniswapV3Quoter.SwapQuoteResult swap;  // Swap quote details
+        uint256 swapAmountIn; // Amount of input token to swap
+        uint256 amount0; // Amount of token0 for minting (after swap)
+        uint256 amount1; // Amount of token1 for minting (after swap)
+        uint128 liquidity; // Liquidity that can be minted
+        uint256 dust0; // Leftover token0 after mint
+        uint256 dust1; // Leftover token1 after mint
+        UniswapV3Quoter.SwapQuoteResult swap; // Swap quote details
     }
 
     /// @notice Execution params for pool-native zap (swap + mint directly on pool)
@@ -74,19 +74,19 @@ library UniswapV3ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool wantToken0;           // true if output is token0, false if token1
+        bool wantToken0; // true if output is token0, false if token1
         uint160 sqrtPriceLimitX96;
-        uint32 maxSwapSteps;       // 0 == unlimited
+        uint32 maxSwapSteps; // 0 == unlimited
     }
 
     /// @notice Result of zap-out quote
     struct ZapOutQuote {
-        uint256 burnAmount0;       // Amount of token0 received from burn
-        uint256 burnAmount1;       // Amount of token1 received from burn
-        uint256 swapAmountIn;      // Amount to swap (of unwanted token)
-        uint256 amountOut;         // Total output amount (wanted token)
-        uint256 dust;              // Leftover of unwanted token (if swap not fully filled)
-        UniswapV3Quoter.SwapQuoteResult swap;  // Swap quote details
+        uint256 burnAmount0; // Amount of token0 received from burn
+        uint256 burnAmount1; // Amount of token1 received from burn
+        uint256 swapAmountIn; // Amount to swap (of unwanted token)
+        uint256 amountOut; // Total output amount (wanted token)
+        uint256 dust; // Leftover of unwanted token (if swap not fully filled)
+        UniswapV3Quoter.SwapQuoteResult swap; // Swap quote details
     }
 
     /// @notice Execution params for pool-native zap-out (burn + swap directly on pool)
@@ -94,7 +94,7 @@ library UniswapV3ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool zeroForOne;           // Direction of swap (after burn)
+        bool zeroForOne; // Direction of swap (after burn)
         uint256 swapAmountIn;
         uint160 sqrtPriceLimitX96;
     }
@@ -104,7 +104,7 @@ library UniswapV3ZapQuoter {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        bool zeroForOne;           // Direction of swap (after burn)
+        bool zeroForOne; // Direction of swap (after burn)
         uint256 swapAmountIn;
         uint160 sqrtPriceLimitX96;
     }
@@ -122,19 +122,17 @@ library UniswapV3ZapQuoter {
         require(p.tickLower < p.tickUpper, "ZAPQ:INVALID_RANGE");
 
         // Get current pool state
-        (uint160 sqrtPriceX96, , , , , , ) = p.pool.slot0();
+        (uint160 sqrtPriceX96,,,,,,) = p.pool.slot0();
 
         // Set default price limit if not specified
         if (p.sqrtPriceLimitX96 == 0) {
-            p.sqrtPriceLimitX96 = p.zeroForOne
-                ? TickMath.MIN_SQRT_RATIO + 1
-                : TickMath.MAX_SQRT_RATIO - 1;
+            p.sqrtPriceLimitX96 = p.zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
         }
 
         // Binary search for optimal swap amount
         uint256 low = 0;
         uint256 high = p.amountIn;
-        uint16 iterations = p.searchIters > 0 ? p.searchIters : 20;  // Default 20 iterations
+        uint16 iterations = p.searchIters > 0 ? p.searchIters : 20; // Default 20 iterations
 
         uint128 bestLiquidity = 0;
         uint256 bestSwapAmount = 0;
@@ -199,11 +197,11 @@ library UniswapV3ZapQuoter {
     }
 
     /// @notice Evaluate liquidity for a given swap amount
-    function _evaluateSwapAmount(
-        ZapInParams memory p,
-        uint160 sqrtPriceX96,
-        uint256 swapAmount
-    ) private view returns (ZapInQuote memory q) {
+    function _evaluateSwapAmount(ZapInParams memory p, uint160 sqrtPriceX96, uint256 swapAmount)
+        private
+        view
+        returns (ZapInQuote memory q)
+    {
         q.swapAmountIn = swapAmount;
 
         if (swapAmount == 0) {
@@ -256,21 +254,12 @@ library UniswapV3ZapQuoter {
         uint160 priceForMint = swapAmount > 0 ? q.swap.sqrtPriceAfterX96 : sqrtPriceX96;
 
         // Calculate max liquidity from available amounts
-        q.liquidity = UniswapV3Utils._quoteLiquidityForAmounts(
-            priceForMint,
-            p.tickLower,
-            p.tickUpper,
-            q.amount0,
-            q.amount1
-        );
+        q.liquidity =
+            UniswapV3Utils._quoteLiquidityForAmounts(priceForMint, p.tickLower, p.tickUpper, q.amount0, q.amount1);
 
         // Calculate amounts actually used for minting
-        (uint256 used0, uint256 used1) = UniswapV3Utils._quoteAmountsForLiquidity(
-            priceForMint,
-            p.tickLower,
-            p.tickUpper,
-            q.liquidity
-        );
+        (uint256 used0, uint256 used1) =
+            UniswapV3Utils._quoteAmountsForLiquidity(priceForMint, p.tickLower, p.tickUpper, q.liquidity);
 
         // Calculate dust (leftover tokens)
         q.dust0 = q.amount0 > used0 ? q.amount0 - used0 : 0;
@@ -304,7 +293,11 @@ library UniswapV3ZapQuoter {
     /// @notice Quote zap-in and return position manager execution params
     /// @param p Zap-in parameters
     /// @return e Execution params for NFT position manager
-    function quoteZapInPositionManager(ZapInParams memory p) internal view returns (PositionManagerZapInExecution memory e) {
+    function quoteZapInPositionManager(ZapInParams memory p)
+        internal
+        view
+        returns (PositionManagerZapInExecution memory e)
+    {
         ZapInQuote memory q = quoteZapInSingleCore(p);
 
         e.zeroForOne = p.zeroForOne;
@@ -360,15 +353,11 @@ library UniswapV3ZapQuoter {
         require(p.tickLower < p.tickUpper, "ZAPQ:INVALID_RANGE");
 
         // Get current pool state
-        (uint160 sqrtPriceX96, , , , , , ) = p.pool.slot0();
+        (uint160 sqrtPriceX96,,,,,,) = p.pool.slot0();
 
         // Calculate amounts received from burning liquidity
-        (q.burnAmount0, q.burnAmount1) = UniswapV3Utils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            p.tickLower,
-            p.tickUpper,
-            p.liquidity
-        );
+        (q.burnAmount0, q.burnAmount1) =
+            UniswapV3Utils._quoteAmountsForLiquidity(sqrtPriceX96, p.tickLower, p.tickUpper, p.liquidity);
 
         // Determine swap direction: swap the unwanted token to get more of the wanted token
         // If wantToken0: swap token1 → token0 (zeroForOne = false)
@@ -398,9 +387,7 @@ library UniswapV3ZapQuoter {
         // Set default price limit if not specified
         uint160 sqrtPriceLimitX96 = p.sqrtPriceLimitX96;
         if (sqrtPriceLimitX96 == 0) {
-            sqrtPriceLimitX96 = zeroForOne
-                ? TickMath.MIN_SQRT_RATIO + 1
-                : TickMath.MAX_SQRT_RATIO - 1;
+            sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
         }
 
         // Quote the swap
@@ -435,7 +422,7 @@ library UniswapV3ZapQuoter {
         e.tickLower = p.tickLower;
         e.tickUpper = p.tickUpper;
         e.liquidity = p.liquidity;
-        e.zeroForOne = !p.wantToken0;  // Swap direction: opposite of wanted token
+        e.zeroForOne = !p.wantToken0; // Swap direction: opposite of wanted token
         e.swapAmountIn = q.swapAmountIn;
         e.sqrtPriceLimitX96 = p.sqrtPriceLimitX96 != 0
             ? p.sqrtPriceLimitX96
@@ -445,13 +432,17 @@ library UniswapV3ZapQuoter {
     /// @notice Quote zap-out and return position manager execution params
     /// @param p Zap-out parameters
     /// @return e Execution params for NFT position manager
-    function quoteZapOutPositionManager(ZapOutParams memory p) internal view returns (PositionManagerZapOutExecution memory e) {
+    function quoteZapOutPositionManager(ZapOutParams memory p)
+        internal
+        view
+        returns (PositionManagerZapOutExecution memory e)
+    {
         ZapOutQuote memory q = quoteZapOutSingleCore(p);
 
         e.tickLower = p.tickLower;
         e.tickUpper = p.tickUpper;
         e.liquidity = p.liquidity;
-        e.zeroForOne = !p.wantToken0;  // Swap direction: opposite of wanted token
+        e.zeroForOne = !p.wantToken0; // Swap direction: opposite of wanted token
         e.swapAmountIn = q.swapAmountIn;
         e.sqrtPriceLimitX96 = p.sqrtPriceLimitX96 != 0
             ? p.sqrtPriceLimitX96

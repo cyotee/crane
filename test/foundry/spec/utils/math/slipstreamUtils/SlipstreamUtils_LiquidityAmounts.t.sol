@@ -4,7 +4,10 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 
 import {SlipstreamUtils} from "@crane/contracts/utils/math/SlipstreamUtils.sol";
-import {TestBase_Slipstream, MockCLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
+import {
+    TestBase_Slipstream,
+    MockCLPool
+} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 
 /// @title Test SlipstreamUtils liquidity/amount helpers
 /// @notice Validates _quoteAmountsForLiquidity and _quoteLiquidityForAmounts
@@ -32,15 +35,11 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, int24 currentTick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 currentTick,,,,) = pool.slot0();
         assertTrue(currentTick >= tickLower && currentTick < tickUpper, "Price should be in range");
 
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            uint128(1000e18)
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, uint128(1000e18));
 
         assertTrue(amount0 > 0, "amount0 should be > 0 when in range");
         assertTrue(amount1 > 0, "amount1 should be > 0 when in range");
@@ -50,15 +49,11 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(12000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, int24 currentTick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 currentTick,,,,) = pool.slot0();
         assertTrue(currentTick < tickLower, "Price should be below range");
 
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            uint128(1000e18)
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, uint128(1000e18));
 
         assertTrue(amount0 > 0, "amount0 should be > 0 when below range");
         assertEq(amount1, 0, "amount1 should be 0 when below range");
@@ -68,15 +63,11 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-12000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, int24 currentTick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 currentTick,,,,) = pool.slot0();
         assertTrue(currentTick >= tickUpper, "Price should be above range");
 
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            uint128(1000e18)
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, uint128(1000e18));
 
         assertEq(amount0, 0, "amount0 should be 0 when above range");
         assertTrue(amount1 > 0, "amount1 should be > 0 when above range");
@@ -86,21 +77,13 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, int24 currentTick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 currentTick,,,,) = pool.slot0();
 
-        (uint256 amount0_sqrtPrice, uint256 amount1_sqrtPrice) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            uint128(1000e18)
-        );
+        (uint256 amount0_sqrtPrice, uint256 amount1_sqrtPrice) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, uint128(1000e18));
 
-        (uint256 amount0_tick, uint256 amount1_tick) = SlipstreamUtils._quoteAmountsForLiquidity(
-            currentTick,
-            tickLower,
-            tickUpper,
-            uint128(1000e18)
-        );
+        (uint256 amount0_tick, uint256 amount1_tick) =
+            SlipstreamUtils._quoteAmountsForLiquidity(currentTick, tickLower, tickUpper, uint128(1000e18));
 
         assertEq(amount0_sqrtPrice, amount0_tick, "amount0 mismatch");
         assertEq(amount1_sqrtPrice, amount1_tick, "amount1 mismatch");
@@ -110,14 +93,10 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            0
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, 0);
 
         assertEq(amount0, 0, "amount0 should be 0 for zero liquidity");
         assertEq(amount1, 0, "amount1 should be 0 for zero liquidity");
@@ -131,15 +110,10 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            1000e18,
-            1000e18
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 1000e18, 1000e18);
 
         assertTrue(liquidity > 0, "liquidity should be > 0");
     }
@@ -148,23 +122,13 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(12000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            1000e18,
-            1000e18
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 1000e18, 1000e18);
 
-        uint128 liquidityFromZeroOnly = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            1000e18,
-            0
-        );
+        uint128 liquidityFromZeroOnly =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 1000e18, 0);
 
         assertEq(liquidity, liquidityFromZeroOnly, "liquidity should only depend on token0");
     }
@@ -173,23 +137,13 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-12000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            1000e18,
-            1000e18
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 1000e18, 1000e18);
 
-        uint128 liquidityFromOneOnly = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            0,
-            1000e18
-        );
+        uint128 liquidityFromOneOnly =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 0, 1000e18);
 
         assertEq(liquidity, liquidityFromOneOnly, "liquidity should only depend on token1");
     }
@@ -198,23 +152,13 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, int24 currentTick, , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 currentTick,,,,) = pool.slot0();
 
-        uint128 liquidity_sqrtPrice = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            1000e18,
-            1000e18
-        );
+        uint128 liquidity_sqrtPrice =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 1000e18, 1000e18);
 
-        uint128 liquidity_tick = SlipstreamUtils._quoteLiquidityForAmounts(
-            currentTick,
-            tickLower,
-            tickUpper,
-            1000e18,
-            1000e18
-        );
+        uint128 liquidity_tick =
+            SlipstreamUtils._quoteLiquidityForAmounts(currentTick, tickLower, tickUpper, 1000e18, 1000e18);
 
         assertEq(liquidity_sqrtPrice, liquidity_tick, "liquidity mismatch");
     }
@@ -223,15 +167,9 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            0,
-            0
-        );
+        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, 0, 0);
 
         assertEq(liquidity, 0, "liquidity should be 0 for zero amounts");
     }
@@ -244,25 +182,16 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
         uint256 inputAmount0 = 1000e18;
         uint256 inputAmount1 = 1000e18;
 
-        uint128 liquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            inputAmount0,
-            inputAmount1
-        );
+        uint128 liquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, inputAmount0, inputAmount1);
 
-        (uint256 outputAmount0, uint256 outputAmount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            liquidity
-        );
+        (uint256 outputAmount0, uint256 outputAmount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, liquidity);
 
         assertTrue(outputAmount0 <= inputAmount0, "output amount0 should be <= input");
         assertTrue(outputAmount1 <= inputAmount1, "output amount1 should be <= input");
@@ -276,24 +205,15 @@ contract SlipstreamUtils_LiquidityAmounts_Test is TestBase_Slipstream {
         int24 tickLower = nearestUsableTick(-6000, TICK_SPACING_MEDIUM);
         int24 tickUpper = nearestUsableTick(6000, TICK_SPACING_MEDIUM);
 
-        (uint160 sqrtPriceX96, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,) = pool.slot0();
 
         uint128 inputLiquidity = uint128(1000e18);
 
-        (uint256 amount0, uint256 amount1) = SlipstreamUtils._quoteAmountsForLiquidity(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            inputLiquidity
-        );
+        (uint256 amount0, uint256 amount1) =
+            SlipstreamUtils._quoteAmountsForLiquidity(sqrtPriceX96, tickLower, tickUpper, inputLiquidity);
 
-        uint128 outputLiquidity = SlipstreamUtils._quoteLiquidityForAmounts(
-            sqrtPriceX96,
-            tickLower,
-            tickUpper,
-            amount0,
-            amount1
-        );
+        uint128 outputLiquidity =
+            SlipstreamUtils._quoteLiquidityForAmounts(sqrtPriceX96, tickLower, tickUpper, amount0, amount1);
 
         assertApproxEqAbs(outputLiquidity, inputLiquidity, 10, "liquidity should round-trip");
     }

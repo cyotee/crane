@@ -4,25 +4,33 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import { IAuthentication } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+import {
+    IAuthentication
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
 import {
     PoolSwapParams,
     MAX_FEE_PERCENTAGE,
     PoolRoleAccounts
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import { IVaultExtension } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
-import { IMevCaptureHook } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IMevCaptureHook.sol";
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
+import {
+    IMevCaptureHook
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-hooks/IMevCaptureHook.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BalancerContractRegistry } from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
-import { CastingHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
-import { ArrayHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
-import { PoolFactoryMock } from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
-import { BaseVaultTest } from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {
+    BalancerContractRegistry
+} from "@crane/contracts/external/balancer/v3/standalone-utils/contracts/BalancerContractRegistry.sol";
+import {
+    CastingHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/CastingHelpers.sol";
+import {ArrayHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/test/ArrayHelpers.sol";
+import {PoolFactoryMock} from "@crane/contracts/external/balancer/v3/vault/contracts/test/PoolFactoryMock.sol";
+import {BaseVaultTest} from "@crane/contracts/external/balancer/v3/vault/test/foundry/utils/BaseVaultTest.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
-import { MevCaptureHookMock } from "../../contracts/test/MevCaptureHookMock.sol";
+import {MevCaptureHookMock} from "../../contracts/test/MevCaptureHookMock.sol";
 
 contract MevCaptureHookTest is BaseVaultTest {
     using ArrayHelpers for *;
@@ -55,16 +63,16 @@ contract MevCaptureHookTest is BaseVaultTest {
 
         for (uint256 i = 0; i < mevCaptureHookSelectors.length; i++) {
             authorizer.grantRole(
-                IAuthentication(address(_mevCaptureHook)).getActionId(mevCaptureHookSelectors[i]),
-                admin
+                IAuthentication(address(_mevCaptureHook)).getActionId(mevCaptureHookSelectors[i]), admin
             );
         }
     }
 
-    function _createPool(
-        address[] memory tokens,
-        string memory label
-    ) internal override returns (address newPool, bytes memory poolArgs) {
+    function _createPool(address[] memory tokens, string memory label)
+        internal
+        override
+        returns (address newPool, bytes memory poolArgs)
+    {
         string memory name = "ERC20 Pool";
         string memory symbol = "ERC20POOL";
 
@@ -73,11 +81,8 @@ contract MevCaptureHookTest is BaseVaultTest {
 
         // Pool supports unbalanced liquidity even if technically the dynamic fee above static fee because it blocks
         // unbalanced liquidity operations when that happens.
-        PoolFactoryMock(poolFactory).registerPoolWithHook(
-            newPool,
-            vault.buildTokenConfig(tokens.asIERC20()),
-            poolHooksContract
-        );
+        PoolFactoryMock(poolFactory)
+            .registerPoolWithHook(newPool, vault.buildTokenConfig(tokens.asIERC20()), poolHooksContract);
 
         poolArgs = abi.encode(vault, name, symbol);
     }
@@ -85,10 +90,7 @@ contract MevCaptureHookTest is BaseVaultTest {
     function createHook() internal override returns (address) {
         registry = new BalancerContractRegistry(vault);
         _mevCaptureHook = new MevCaptureHookMock(
-            IVault(address(vault)),
-            registry,
-            DEFAULT_MEV_TAX_MULTIPLIER,
-            DEFAULT_MEV_TAX_THRESHOLD
+            IVault(address(vault)), registry, DEFAULT_MEV_TAX_MULTIPLIER, DEFAULT_MEV_TAX_THRESHOLD
         );
         vm.label(address(_mevCaptureHook), "MEV Hook");
         return address(_mevCaptureHook);
@@ -111,10 +113,7 @@ contract MevCaptureHookTest is BaseVaultTest {
         );
         vm.expectRevert(abi.encodeWithSelector(IMevCaptureHook.InvalidBalancerContractRegistry.selector));
         new MevCaptureHookMock(
-            IVault(address(vault)),
-            mockRegistry,
-            DEFAULT_MEV_TAX_THRESHOLD,
-            DEFAULT_MEV_TAX_MULTIPLIER
+            IVault(address(vault)), mockRegistry, DEFAULT_MEV_TAX_THRESHOLD, DEFAULT_MEV_TAX_MULTIPLIER
         );
     }
 
@@ -128,26 +127,19 @@ contract MevCaptureHookTest is BaseVaultTest {
 
         vm.expectRevert(MockRegistryRevert.selector);
         new MevCaptureHookMock(
-            IVault(address(vault)),
-            mockRegistry,
-            DEFAULT_MEV_TAX_THRESHOLD,
-            DEFAULT_MEV_TAX_MULTIPLIER
+            IVault(address(vault)), mockRegistry, DEFAULT_MEV_TAX_THRESHOLD, DEFAULT_MEV_TAX_MULTIPLIER
         );
     }
 
     function testDefaultMevTaxMultiplier() public view {
         assertEq(
-            _mevCaptureHook.getDefaultMevTaxMultiplier(),
-            DEFAULT_MEV_TAX_MULTIPLIER,
-            "Wrong default MEV tax multiplier"
+            _mevCaptureHook.getDefaultMevTaxMultiplier(), DEFAULT_MEV_TAX_MULTIPLIER, "Wrong default MEV tax multiplier"
         );
     }
 
     function testDefaultMevTaxThreshold() public view {
         assertEq(
-            _mevCaptureHook.getDefaultMevTaxThreshold(),
-            DEFAULT_MEV_TAX_THRESHOLD,
-            "Wrong default MEV tax threshold"
+            _mevCaptureHook.getDefaultMevTaxThreshold(), DEFAULT_MEV_TAX_THRESHOLD, "Wrong default MEV tax threshold"
         );
     }
 
@@ -196,9 +188,7 @@ contract MevCaptureHookTest is BaseVaultTest {
     ********************************************************/
     function getMaxMevSwapFeePercentage() public view {
         assertEq(
-            _mevCaptureHook.getMaxMevSwapFeePercentage(),
-            MAX_FEE_PERCENTAGE,
-            "Incorrect initial max mev fee percentage"
+            _mevCaptureHook.getMaxMevSwapFeePercentage(), MAX_FEE_PERCENTAGE, "Incorrect initial max mev fee percentage"
         );
     }
 
@@ -213,9 +203,7 @@ contract MevCaptureHookTest is BaseVaultTest {
     function testSetMaxMevSwapFeePercentageAboveMax() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                IMevCaptureHook.MevSwapFeePercentageAboveMax.selector,
-                MAX_FEE_PERCENTAGE + 1,
-                MAX_FEE_PERCENTAGE
+                IMevCaptureHook.MevSwapFeePercentageAboveMax.selector, MAX_FEE_PERCENTAGE + 1, MAX_FEE_PERCENTAGE
             )
         );
         vm.prank(admin);
@@ -225,9 +213,7 @@ contract MevCaptureHookTest is BaseVaultTest {
     function testSetMaxMevSwapFeePercentage() public {
         uint256 newMaxMevSwapFeePercentage = 50e16;
         assertEq(
-            _mevCaptureHook.getMaxMevSwapFeePercentage(),
-            MAX_FEE_PERCENTAGE,
-            "Incorrect initial max mev fee percentage"
+            _mevCaptureHook.getMaxMevSwapFeePercentage(), MAX_FEE_PERCENTAGE, "Incorrect initial max mev fee percentage"
         );
         vm.prank(admin);
         vm.expectEmit();
@@ -379,8 +365,7 @@ contract MevCaptureHookTest is BaseVaultTest {
         address newHook = createHook();
 
         authorizer.grantRole(
-            IAuthentication(newHook).getActionId(IMevCaptureHook.setPoolMevTaxMultiplier.selector),
-            admin
+            IAuthentication(newHook).getActionId(IMevCaptureHook.setPoolMevTaxMultiplier.selector), admin
         );
 
         vm.prank(admin);
@@ -416,9 +401,7 @@ contract MevCaptureHookTest is BaseVaultTest {
         );
 
         assertEq(
-            _mevCaptureHook.getDefaultMevTaxMultiplier(),
-            firstDefaultMevTaxMultiplier,
-            "Default multiplier changed"
+            _mevCaptureHook.getDefaultMevTaxMultiplier(), firstDefaultMevTaxMultiplier, "Default multiplier changed"
         );
     }
 
@@ -454,8 +437,7 @@ contract MevCaptureHookTest is BaseVaultTest {
         address newHook = createHook();
 
         authorizer.grantRole(
-            IAuthentication(newHook).getActionId(IMevCaptureHook.setPoolMevTaxThreshold.selector),
-            admin
+            IAuthentication(newHook).getActionId(IMevCaptureHook.setPoolMevTaxThreshold.selector), admin
         );
 
         vm.prank(admin);
@@ -498,9 +480,7 @@ contract MevCaptureHookTest is BaseVaultTest {
         emit IMevCaptureHook.PoolMevTaxThresholdSet(pool, newPoolMevTaxThreshold);
         _mevCaptureHook.setPoolMevTaxThreshold(pool, newPoolMevTaxThreshold);
         assertEq(
-            _mevCaptureHook.getPoolMevTaxThreshold(pool),
-            newPoolMevTaxThreshold,
-            "poolMevTaxThreshold is not correct"
+            _mevCaptureHook.getPoolMevTaxThreshold(pool), newPoolMevTaxThreshold, "poolMevTaxThreshold is not correct"
         );
 
         assertEq(_mevCaptureHook.getDefaultMevTaxThreshold(), firstDefaultMevTaxThreshold, "Default threshold changed");
@@ -573,11 +553,8 @@ contract MevCaptureHookTest is BaseVaultTest {
         vm.fee(baseFee);
         vm.txGasPrice(baseFee + priorityThreshold - gasPriceDelta);
 
-        uint256 feePercentage = _mevCaptureHook.calculateSwapFeePercentageExternal(
-            staticSwapFeePercentage,
-            multiplier,
-            priorityThreshold
-        );
+        uint256 feePercentage =
+            _mevCaptureHook.calculateSwapFeePercentageExternal(staticSwapFeePercentage, multiplier, priorityThreshold);
         assertEq(feePercentage, staticSwapFeePercentage, "Fee percentage not equal to static fee percentage");
     }
 
@@ -599,11 +576,8 @@ contract MevCaptureHookTest is BaseVaultTest {
 
         uint256 expectedFeePercentage = staticSwapFeePercentage + gasPriceDelta.mulDown(multiplier);
 
-        uint256 feePercentage = _mevCaptureHook.calculateSwapFeePercentageExternal(
-            staticSwapFeePercentage,
-            multiplier,
-            priorityThreshold
-        );
+        uint256 feePercentage =
+            _mevCaptureHook.calculateSwapFeePercentageExternal(staticSwapFeePercentage, multiplier, priorityThreshold);
         assertEq(feePercentage, expectedFeePercentage, "Fee percentage not equal to expected fee percentage");
         assertGe(feePercentage, staticSwapFeePercentage, "Fee percentage not greater than static fee percentage");
     }
@@ -625,11 +599,8 @@ contract MevCaptureHookTest is BaseVaultTest {
         vm.fee(baseFee);
         vm.txGasPrice(baseFee + priorityThreshold + gasPriceDelta);
 
-        uint256 feePercentage = _mevCaptureHook.calculateSwapFeePercentageExternal(
-            staticSwapFeePercentage,
-            multiplier,
-            priorityThreshold
-        );
+        uint256 feePercentage =
+            _mevCaptureHook.calculateSwapFeePercentageExternal(staticSwapFeePercentage, multiplier, priorityThreshold);
         assertEq(feePercentage, maxMevSwapFeePercentage, "Fee percentage not equal to max fee percentage");
         assertGe(feePercentage, staticSwapFeePercentage, "Fee percentage not greater than static fee percentage");
     }
@@ -650,11 +621,8 @@ contract MevCaptureHookTest is BaseVaultTest {
         vm.fee(baseFee);
         vm.txGasPrice(baseFee + priorityThreshold + gasPriceDelta);
 
-        uint256 feePercentage = _mevCaptureHook.calculateSwapFeePercentageExternal(
-            staticSwapFeePercentage,
-            multiplier,
-            priorityThreshold
-        );
+        uint256 feePercentage =
+            _mevCaptureHook.calculateSwapFeePercentageExternal(staticSwapFeePercentage, multiplier, priorityThreshold);
         assertEq(feePercentage, maxMevSwapFeePercentage, "Fee percentage not equal to max fee percentage");
         assertGe(feePercentage, staticSwapFeePercentage, "Fee percentage not greater than static fee percentage");
     }
@@ -675,11 +643,8 @@ contract MevCaptureHookTest is BaseVaultTest {
         vm.fee(baseFee);
         vm.txGasPrice(baseFee + priorityThreshold + gasPriceDelta);
 
-        uint256 feePercentage = _mevCaptureHook.calculateSwapFeePercentageExternal(
-            staticSwapFeePercentage,
-            multiplier,
-            priorityThreshold
-        );
+        uint256 feePercentage =
+            _mevCaptureHook.calculateSwapFeePercentageExternal(staticSwapFeePercentage, multiplier, priorityThreshold);
         // If maxMevSwapFeePercentage < staticSwapFeePercentage, return staticSwapFeePercentage.
         assertEq(feePercentage, staticSwapFeePercentage, "Fee percentage not equal to static fee percentage");
     }
@@ -764,11 +729,8 @@ contract MevCaptureHookTest is BaseVaultTest {
                             Other
     ********************************************************/
     function _mockPoolRoleAccounts(address swapFeeManager) private {
-        PoolRoleAccounts memory poolRoleAccounts = PoolRoleAccounts({
-            pauseManager: address(0x01),
-            swapFeeManager: swapFeeManager,
-            poolCreator: address(0x01)
-        });
+        PoolRoleAccounts memory poolRoleAccounts =
+            PoolRoleAccounts({pauseManager: address(0x01), swapFeeManager: swapFeeManager, poolCreator: address(0x01)});
         vm.mockCall(
             address(vault),
             abi.encodeWithSelector(IVaultExtension.getPoolRoleAccounts.selector, pool),

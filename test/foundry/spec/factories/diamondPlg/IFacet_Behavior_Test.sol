@@ -87,8 +87,13 @@ contract Behavior_Stub_IFacet_Bad is Behavior_IFacet_Bad, IFacet {
 }
 
 contract Behavior_Stub_IFacet_Bad_Complex is Behavior_Stub_IFacet_Good, Behavior_Stub_IFacet_Bad {
-
-    function facetName() public pure virtual override(Behavior_Stub_IFacet_Good, Behavior_Stub_IFacet_Bad) returns (string memory name) {
+    function facetName()
+        public
+        pure
+        virtual
+        override(Behavior_Stub_IFacet_Good, Behavior_Stub_IFacet_Bad)
+        returns (string memory name)
+    {
         return type(Behavior_Stub_IFacet_Bad_Complex).name;
     }
 
@@ -238,19 +243,27 @@ contract Behavior_IFacet_Test is Test {
 
     /// forge-lint: disable-next-line(mixed-case-function)
     function test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_goodFacet() public {
-        assert(Behavior_IFacet.areValid_IFacet_facetFuncs(goodFacet(), goodFacet().facetFuncs(), IFacet_control_facetFuncs()));
+        assert(
+            Behavior_IFacet.areValid_IFacet_facetFuncs(
+                goodFacet(), goodFacet().facetFuncs(), IFacet_control_facetFuncs()
+            )
+        );
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
     function test_Behavior_IFacet_areValid_IFacet_facetInterfaces_subject_badFacet() public {
         assertFalse(
-            Behavior_IFacet.areValid_IFacet_facetInterfaces(badFacet(), badFacet().facetInterfaces(), IFacet_control_facetInterfaces())
+            Behavior_IFacet.areValid_IFacet_facetInterfaces(
+                badFacet(), badFacet().facetInterfaces(), IFacet_control_facetInterfaces()
+            )
         );
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
     function test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_badFacet() public {
-        assertFalse(Behavior_IFacet.areValid_IFacet_facetFuncs(badFacet(), badFacet().facetFuncs(), IFacet_control_facetFuncs()));
+        assertFalse(
+            Behavior_IFacet.areValid_IFacet_facetFuncs(badFacet(), badFacet().facetFuncs(), IFacet_control_facetFuncs())
+        );
     }
 
     /// forge-lint: disable-next-line(mixed-case-function)
@@ -265,7 +278,9 @@ contract Behavior_IFacet_Test is Test {
     /// forge-lint: disable-next-line(mixed-case-function)
     function test_Behavior_IFacet_areValid_IFacet_facetFuncs_subject_badFacetComplex() public {
         assertFalse(
-            Behavior_IFacet.areValid_IFacet_facetFuncs(badComplexFacet(), badComplexFacet().facetFuncs(), IFacet_control_facetFuncs())
+            Behavior_IFacet.areValid_IFacet_facetFuncs(
+                badComplexFacet(), badComplexFacet().facetFuncs(), IFacet_control_facetFuncs()
+            )
         );
     }
 

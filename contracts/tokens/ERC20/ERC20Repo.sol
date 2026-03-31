@@ -28,6 +28,7 @@ library ERC20Repo {
         mapping(address account => uint256 balance) balanceOf;
         mapping(address account => mapping(address spender => uint256 approval)) allowances;
     }
+
     // end::Storage[]
 
     // tag::_layout(bytes32)[]
@@ -47,9 +48,7 @@ library ERC20Repo {
         return _layout(DEFAULT_SLOT);
     }
 
-    function _initialize(Storage storage layout, string memory name_, string memory symbol_, uint8 decimals_)
-        internal
-    {
+    function _initialize(Storage storage layout, string memory name_, string memory symbol_, uint8 decimals_) internal {
         layout.name = name_;
         layout.symbol = symbol_;
         layout.decimals = decimals_;

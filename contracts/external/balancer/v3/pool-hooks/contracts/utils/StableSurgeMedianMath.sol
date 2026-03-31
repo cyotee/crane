@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import { Arrays } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/Arrays.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Arrays} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/Arrays.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 
 library StableSurgeMedianMath {
     using Arrays for uint256[];
@@ -15,7 +15,7 @@ library StableSurgeMedianMath {
         uint256 totalBalance = 0;
         uint256 totalDiff = 0;
 
-        for (uint i = 0; i < balances.length; i++) {
+        for (uint256 i = 0; i < balances.length; i++) {
             totalBalance += balances[i];
             totalDiff += absSub(balances[i], median);
         }

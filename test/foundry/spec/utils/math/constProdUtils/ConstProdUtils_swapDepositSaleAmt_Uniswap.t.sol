@@ -21,23 +21,18 @@ contract ConstProdUtils_swapDepositSaleAmt_Uniswap is TestBase_ConstProdUtils_Un
         uint256 tokenBReceived
     ) internal {
         uint256 lpTotalBefore = uniswapBalancedPair.totalSupply();
-        (uint256 amountAUsed, uint256 amountBUsed, uint256 actualLPTokens) = uniswapV2Router
-            .addLiquidity(
-                address(uniswapBalancedTokenA),
-                address(uniswapBalancedTokenB),
-                remainingTokenA,
-                tokenBReceived,
-                1,
-                1,
-                address(this),
-                block.timestamp + 300
-            );
+        (uint256 amountAUsed, uint256 amountBUsed, uint256 actualLPTokens) = uniswapV2Router.addLiquidity(
+            address(uniswapBalancedTokenA),
+            address(uniswapBalancedTokenB),
+            remainingTokenA,
+            tokenBReceived,
+            1,
+            1,
+            address(this),
+            block.timestamp + 300
+        );
         uint256 expected = ConstProdUtils._depositQuote(
-            amountAUsed,
-            amountBUsed,
-            lpTotalBefore,
-            reserveA + saleAmt,
-            reserveB - tokenBReceived
+            amountAUsed, amountBUsed, lpTotalBefore, reserveA + saleAmt, reserveB - tokenBReceived
         );
         assertEq(actualLPTokens, expected);
     }
@@ -117,12 +112,10 @@ contract ConstProdUtils_swapDepositSaleAmt_Uniswap is TestBase_ConstProdUtils_Un
 
         // Read updated reserves after swap
         (uint112 ur0, uint112 ur1,) = uniswapUnbalancedPair.getReserves();
-        uint256 updatedReserveA = (address(uniswapUnbalancedTokenA) == uniswapUnbalancedPair.token0())
-            ? uint256(ur0)
-            : uint256(ur1);
-        uint256 updatedReserveB = (address(uniswapUnbalancedTokenA) == uniswapUnbalancedPair.token0())
-            ? uint256(ur1)
-            : uint256(ur0);
+        uint256 updatedReserveA =
+            (address(uniswapUnbalancedTokenA) == uniswapUnbalancedPair.token0()) ? uint256(ur0) : uint256(ur1);
+        uint256 updatedReserveB =
+            (address(uniswapUnbalancedTokenA) == uniswapUnbalancedPair.token0()) ? uint256(ur1) : uint256(ur0);
 
         // Approve and add liquidity via router to capture actual amounts used
         uint256 lpTotalBefore = uniswapUnbalancedPair.totalSupply();
@@ -193,12 +186,10 @@ contract ConstProdUtils_swapDepositSaleAmt_Uniswap is TestBase_ConstProdUtils_Un
 
         // Read updated reserves after swap
         (uint112 ur0, uint112 ur1,) = uniswapExtremeUnbalancedPair.getReserves();
-        uint256 updatedReserveA = (address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0())
-            ? uint256(ur0)
-            : uint256(ur1);
-        uint256 updatedReserveB = (address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0())
-            ? uint256(ur1)
-            : uint256(ur0);
+        uint256 updatedReserveA =
+            (address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0()) ? uint256(ur0) : uint256(ur1);
+        uint256 updatedReserveB =
+            (address(uniswapExtremeTokenA) == uniswapExtremeUnbalancedPair.token0()) ? uint256(ur1) : uint256(ur0);
 
         // Approve and add liquidity via router
         uint256 lpTotalBefore = uniswapExtremeUnbalancedPair.totalSupply();

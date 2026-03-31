@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {GreeterFacet} from "@crane/contracts/test/stubs/greeter/GreeterFacet.sol";
 import {GreeterLayout, GreeterRepo} from "@crane/contracts/test/stubs/greeter/GreeterRepo.sol";
+import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
+
+interface IGreeterFacetDiamondFactoryPackage is IDiamondFactoryPackage {
+    struct PkgInit {
+        IDiamondPackageCallBackFactory diamondPackageFactory;
+        IFacet greeterFacet;
+    }
+}
 
 contract GreeterFacetDiamondFactoryPackage is GreeterFacet, IDiamondFactoryPackage {
     IDiamondFactoryPackage immutable SELF;

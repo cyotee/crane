@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.24;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
-import { BaseContractsDeployer } from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
+import {
+    BaseContractsDeployer
+} from "@crane/contracts/external/balancer/v3/solidity-utils/test/foundry/utils/BaseContractsDeployer.sol";
 
-import { StableSurgeHook } from "../../../contracts/StableSurgeHook.sol";
-import { StableSurgeHookMock } from "../../../contracts/test/StableSurgeHookMock.sol";
-import { StableSurgePoolFactory } from "../../../contracts/StableSurgePoolFactory.sol";
+import {StableSurgeHook} from "../../../contracts/StableSurgeHook.sol";
+import {StableSurgeHookMock} from "../../../contracts/test/StableSurgeHookMock.sol";
+import {StableSurgePoolFactory} from "../../../contracts/StableSurgePoolFactory.sol";
 
 /**
  * @dev This contract contains functions for deploying mocks and contracts related to the "StableSurgeHook".
@@ -36,13 +38,12 @@ contract StableSurgeHookDeployer is BaseContractsDeployer {
         string memory version
     ) internal returns (StableSurgeHook) {
         if (reusingArtifacts) {
-            return
-                StableSurgeHook(
-                    deployCode(
-                        "artifacts/contracts/StableSurgeHook.sol/StableSurgeHook.json",
-                        abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
-                    )
-                );
+            return StableSurgeHook(
+                deployCode(
+                    "artifacts/contracts/StableSurgeHook.sol/StableSurgeHook.json",
+                    abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
+                )
+            );
         } else {
             return new StableSurgeHook(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version);
         }
@@ -55,13 +56,12 @@ contract StableSurgeHookDeployer is BaseContractsDeployer {
         string memory version
     ) internal returns (StableSurgeHookMock) {
         if (reusingArtifacts) {
-            return
-                StableSurgeHookMock(
-                    deployCode(
-                        "artifacts/contracts/test/StableSurgeHookMock.sol/StableSurgeHookMock.json",
-                        abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
-                    )
-                );
+            return StableSurgeHookMock(
+                deployCode(
+                    "artifacts/contracts/test/StableSurgeHookMock.sol/StableSurgeHookMock.json",
+                    abi.encode(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version)
+                )
+            );
         } else {
             return
                 new StableSurgeHookMock(vault, defaultMaxSurgeFeePercentage, defaultSurgeThresholdPercentage, version);

@@ -10,11 +10,15 @@ import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/con
 import {
     ICompositeLiquidityRouterErrors
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouterErrors.sol";
-import {ICompositeLiquidityRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
+import {
+    ICompositeLiquidityRouter
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ICompositeLiquidityRouter.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/RouterTypes.sol";
 
-import {EVMCallModeHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
 import {
     TransientEnumerableSet
@@ -44,7 +48,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * - Token type detection (ERC20, BPT, ERC4626)
  */
 contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -129,9 +132,8 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.addLiquidityUnbalancedNestedPoolHook, (params, tokensIn, tokensToWrap))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(abi.encodeCall(this.addLiquidityUnbalancedNestedPoolHook, (params, tokensIn, tokensToWrap)));
         return abi.decode(result, (uint256));
     }
 
@@ -156,9 +158,8 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.addLiquidityUnbalancedNestedPoolHook, (params, tokensIn, tokensToWrap))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.addLiquidityUnbalancedNestedPoolHook, (params, tokensIn, tokensToWrap)));
         return abi.decode(result, (uint256));
     }
 
@@ -184,9 +185,8 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(this.removeLiquidityProportionalNestedPoolHook, (params, tokensOut, tokensToUnwrap))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(abi.encodeCall(this.removeLiquidityProportionalNestedPoolHook, (params, tokensOut, tokensToUnwrap)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -211,9 +211,8 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
             userData: userData
         });
 
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.removeLiquidityProportionalNestedPoolHook, (params, tokensOut, tokensToUnwrap))
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.removeLiquidityProportionalNestedPoolHook, (params, tokensOut, tokensToUnwrap)));
         return abi.decode(result, (uint256[]));
     }
 
@@ -242,12 +241,11 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
         // Process nested pools bottom-up
-        (uint256[] memory amountsIn, bool parentPoolNeedsLiquidity) = _addLiquidityToParentPool(
-            vault, params, isStaticCall, tokensToWrap
-        );
+        (uint256[] memory amountsIn, bool parentPoolNeedsLiquidity) =
+            _addLiquidityToParentPool(vault, params, isStaticCall, tokensToWrap);
 
         if (parentPoolNeedsLiquidity) {
-            (, exactBptAmountOut, ) = vault.addLiquidity(
+            (, exactBptAmountOut,) = vault.addLiquidity(
                 _buildAddLiquidityParams(params, amountsIn, isStaticCall ? address(this) : params.sender)
             );
         }
@@ -334,7 +332,8 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
 
             if (tokenType == CompositeTokenType.BPT) {
                 // Token is a child pool BPT - add liquidity to child first
-                amountsIn[i] = _addLiquidityToChildPool(vault, parentPoolToken, isStaticCall, tokensToWrap, params.userData);
+                amountsIn[i] =
+                    _addLiquidityToChildPool(vault, parentPoolToken, isStaticCall, tokensToWrap, params.userData);
             } else if (tokenType == CompositeTokenType.ERC4626) {
                 // Token needs wrapping
                 amountsIn[i] = _wrapToken(vault, parentPoolToken, amountIn, isStaticCall);
@@ -389,7 +388,7 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         }
 
         if (needsLiquidity) {
-            (, bptAmountOut, ) = vault.addLiquidity(
+            (, bptAmountOut,) = vault.addLiquidity(
                 AddLiquidityParams({
                     pool: childPool,
                     to: address(this),
@@ -402,12 +401,10 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _wrapToken(
-        IVault vault,
-        address wrappedToken,
-        uint256 underlyingAmount,
-        bool isStaticCall
-    ) internal returns (uint256 wrappedAmount) {
+    function _wrapToken(IVault vault, address wrappedToken, uint256 underlyingAmount, bool isStaticCall)
+        internal
+        returns (uint256 wrappedAmount)
+    {
         if (underlyingAmount == 0) return 0;
 
         address underlying = vault.getERC4626BufferAsset(IERC4626(wrappedToken));
@@ -421,7 +418,7 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
             BalancerV3BatchRouterStorageRepo._currentSwapTokenInAmounts().tAdd(underlying, underlyingAmount);
         }
 
-        (, , wrappedAmount) = vault.erc4626BufferWrapOrUnwrap(
+        (,, wrappedAmount) = vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_IN,
                 direction: WrappingDirection.WRAP,
@@ -432,20 +429,16 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         );
     }
 
-    function _removeFromParentPool(
-        IVault vault,
-        RemoveLiquidityHookParams calldata params,
-        uint256 numTokens
-    ) internal returns (uint256[] memory amountsOut) {
+    function _removeFromParentPool(IVault vault, RemoveLiquidityHookParams calldata params, uint256 numTokens)
+        internal
+        returns (uint256[] memory amountsOut)
+    {
         if (vault.isPoolInRecoveryMode(params.pool)) {
             amountsOut = vault.removeLiquidityRecovery(
-                params.pool,
-                params.sender,
-                params.maxBptAmountIn,
-                new uint256[](numTokens)
+                params.pool, params.sender, params.maxBptAmountIn, new uint256[](numTokens)
             );
         } else {
-            (, amountsOut, ) = vault.removeLiquidity(
+            (, amountsOut,) = vault.removeLiquidity(
                 RemoveLiquidityParams({
                     pool: params.pool,
                     from: params.sender,
@@ -495,13 +488,10 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
 
         if (vault.isPoolInRecoveryMode(childPool)) {
             childAmountsOut = vault.removeLiquidityRecovery(
-                childPool,
-                address(this),
-                bptAmountIn,
-                new uint256[](childPoolTokens.length)
+                childPool, address(this), bptAmountIn, new uint256[](childPoolTokens.length)
             );
         } else {
-            (, childAmountsOut, ) = vault.removeLiquidity(
+            (, childAmountsOut,) = vault.removeLiquidity(
                 RemoveLiquidityParams({
                     pool: childPool,
                     from: address(this),
@@ -530,7 +520,7 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
     function _unwrapAndTrack(IVault vault, IERC4626 wrappedToken, uint256 wrappedAmount) internal {
         if (wrappedAmount == 0) return;
 
-        (, , uint256 underlyingAmount) = vault.erc4626BufferWrapOrUnwrap(
+        (,, uint256 underlyingAmount) = vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_IN,
                 direction: WrappingDirection.UNWRAP,
@@ -541,21 +531,20 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         );
 
         BalancerV3BatchRouterStorageRepo._updateSwapTokensOut(
-            vault.getERC4626BufferAsset(wrappedToken),
-            underlyingAmount
+            vault.getERC4626BufferAsset(wrappedToken), underlyingAmount
         );
     }
 
-    function _buildOutputAmounts(
-        address[] memory tokensOut,
-        uint256[] memory minAmountsOut
-    ) internal returns (uint256[] memory amountsOut) {
+    function _buildOutputAmounts(address[] memory tokensOut, uint256[] memory minAmountsOut)
+        internal
+        view
+        returns (uint256[] memory amountsOut)
+    {
         uint256 numTokensOut = tokensOut.length;
 
         if (BalancerV3BatchRouterStorageRepo._currentSwapTokensOut().length() != numTokensOut) {
             revert ICompositeLiquidityRouterErrors.WrongTokensOut(
-                BalancerV3BatchRouterStorageRepo._currentSwapTokensOut().values(),
-                tokensOut
+                BalancerV3BatchRouterStorageRepo._currentSwapTokensOut().values(), tokensOut
             );
         }
 
@@ -568,8 +557,7 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
 
             if (checkedTokenIndexes[tokenIndex]) {
                 revert ICompositeLiquidityRouterErrors.WrongTokensOut(
-                    BalancerV3BatchRouterStorageRepo._currentSwapTokensOut().values(),
-                    tokensOut
+                    BalancerV3BatchRouterStorageRepo._currentSwapTokensOut().values(), tokensOut
                 );
             }
 
@@ -582,11 +570,11 @@ contract CompositeLiquidityNestedFacet is BalancerV3RouterModifiers, IFacet {
         }
     }
 
-    function _computeEffectiveCompositeTokenType(
-        IVault vault,
-        address token,
-        address[] memory tokensToWrapOrUnwrap
-    ) internal view returns (CompositeTokenType) {
+    function _computeEffectiveCompositeTokenType(IVault vault, address token, address[] memory tokensToWrapOrUnwrap)
+        internal
+        view
+        returns (CompositeTokenType)
+    {
         // Check if it's a registered pool (BPT)
         if (vault.isPoolRegistered(token)) {
             return CompositeTokenType.BPT;

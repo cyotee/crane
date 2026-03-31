@@ -4,8 +4,12 @@ pragma solidity ^0.8.24;
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import {IProtocolFeeController} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
-import {IRateProvider} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+import {
+    IProtocolFeeController
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IProtocolFeeController.sol";
+import {
+    IRateProvider
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
 import {IVaultExtension} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultExtension.sol";
 import {IAuthorizer} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IAuthorizer.sol";
 import {IVaultAdmin} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultAdmin.sol";
@@ -13,8 +17,12 @@ import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import {StorageSlotExtension} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
-import {PackedTokenBalance} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    PackedTokenBalance
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 import {BufferHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/BufferHelpers.sol";
 import {
     TransientStorageHelpers,
@@ -22,8 +30,14 @@ import {
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 import {WordCodec} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/WordCodec.sol";
 
-import {VaultStateLib, VaultStateBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
-import {PoolConfigLib, PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
+import {
+    VaultStateLib,
+    VaultStateBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/VaultStateLib.sol";
+import {
+    PoolConfigLib,
+    PoolConfigBits
+} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigLib.sol";
 import {HooksConfigLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/HooksConfigLib.sol";
 import {PoolConfigConst} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolConfigConst.sol";
 import {PoolDataLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/PoolDataLib.sol";
@@ -59,11 +73,9 @@ contract VaultMock is IVaultMainMock, Vault {
     PoolFactoryMock private immutable _poolFactoryMock;
     InputHelpersMock private immutable _inputHelpersMock;
 
-    constructor(
-        IVaultExtension vaultExtension,
-        IAuthorizer authorizer,
-        IProtocolFeeController protocolFeeController
-    ) Vault(vaultExtension, authorizer, protocolFeeController) {
+    constructor(IVaultExtension vaultExtension, IAuthorizer authorizer, IProtocolFeeController protocolFeeController)
+        Vault(vaultExtension, authorizer, protocolFeeController)
+    {
         uint32 pauseWindowEndTime = IVaultAdmin(address(vaultExtension)).getPauseWindowEndTime();
         uint32 bufferPeriodDuration = IVaultAdmin(address(vaultExtension)).getBufferPeriodDuration();
         _poolFactoryMock = new PoolFactoryMock(IVault(address(this)), pauseWindowEndTime - bufferPeriodDuration);
@@ -97,11 +109,10 @@ contract VaultMock is IVaultMainMock, Vault {
         );
     }
 
-    function manualRegisterPoolWithSwapFee(
-        address pool,
-        IERC20[] memory tokens,
-        uint256 swapFeePercentage
-    ) external whenVaultNotPaused {
+    function manualRegisterPoolWithSwapFee(address pool, IERC20[] memory tokens, uint256 swapFeePercentage)
+        external
+        whenVaultNotPaused
+    {
         LiquidityManagement memory liquidityManagement = _getDefaultLiquidityManagement();
         liquidityManagement.disableUnbalancedLiquidity = true;
 
@@ -183,13 +194,10 @@ contract VaultMock is IVaultMainMock, Vault {
         poolConfigBits = poolConfigBits.setAggregateYieldFeePercentage(config.aggregateYieldFeePercentage);
         poolConfigBits = poolConfigBits.setTokenDecimalDiffs(config.tokenDecimalDiffs);
         poolConfigBits = poolConfigBits.setPauseWindowEndTime(config.pauseWindowEndTime);
-        poolConfigBits = poolConfigBits.setDisableUnbalancedLiquidity(
-            config.liquidityManagement.disableUnbalancedLiquidity
-        );
+        poolConfigBits =
+            poolConfigBits.setDisableUnbalancedLiquidity(config.liquidityManagement.disableUnbalancedLiquidity);
         poolConfigBits = poolConfigBits.setAddLiquidityCustom(config.liquidityManagement.enableAddLiquidityCustom);
-        poolConfigBits = poolConfigBits.setRemoveLiquidityCustom(
-            config.liquidityManagement.enableRemoveLiquidityCustom
-        );
+        poolConfigBits = poolConfigBits.setRemoveLiquidityCustom(config.liquidityManagement.enableRemoveLiquidityCustom);
         poolConfigBits = poolConfigBits.setDonation(config.liquidityManagement.enableDonation);
 
         _poolConfigBits[pool] = poolConfigBits;
@@ -305,34 +313,33 @@ contract VaultMock is IVaultMainMock, Vault {
         tokenConfig = _inputHelpersMock.sortTokenConfig(tokenConfig);
     }
 
-    function buildTokenConfig(
-        IERC20[] memory tokens,
-        IRateProvider[] memory rateProviders
-    ) public view returns (TokenConfig[] memory tokenConfig) {
+    function buildTokenConfig(IERC20[] memory tokens, IRateProvider[] memory rateProviders)
+        public
+        view
+        returns (TokenConfig[] memory tokenConfig)
+    {
         tokenConfig = new TokenConfig[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             tokenConfig[i].token = tokens[i];
             tokenConfig[i].rateProvider = rateProviders[i];
-            tokenConfig[i].tokenType = rateProviders[i] == IRateProvider(address(0))
-                ? TokenType.STANDARD
-                : TokenType.WITH_RATE;
+            tokenConfig[i].tokenType =
+                address(rateProviders[i]) == address(0) ? TokenType.STANDARD : TokenType.WITH_RATE;
         }
 
         tokenConfig = _inputHelpersMock.sortTokenConfig(tokenConfig);
     }
 
-    function buildTokenConfig(
-        IERC20[] memory tokens,
-        IRateProvider[] memory rateProviders,
-        bool[] memory yieldFeeFlags
-    ) public view returns (TokenConfig[] memory tokenConfig) {
+    function buildTokenConfig(IERC20[] memory tokens, IRateProvider[] memory rateProviders, bool[] memory yieldFeeFlags)
+        public
+        view
+        returns (TokenConfig[] memory tokenConfig)
+    {
         tokenConfig = new TokenConfig[](tokens.length);
         for (uint256 i = 0; i < tokens.length; ++i) {
             tokenConfig[i].token = tokens[i];
             tokenConfig[i].rateProvider = rateProviders[i];
-            tokenConfig[i].tokenType = rateProviders[i] == IRateProvider(address(0))
-                ? TokenType.STANDARD
-                : TokenType.WITH_RATE;
+            tokenConfig[i].tokenType =
+                address(rateProviders[i]) == address(0) ? TokenType.STANDARD : TokenType.WITH_RATE;
             tokenConfig[i].paysYieldFees = yieldFeeFlags[i];
         }
 
@@ -360,17 +367,18 @@ contract VaultMock is IVaultMainMock, Vault {
         // solhint-disable-previous-line no-empty-blocks
     }
 
-    function loadPoolDataUpdatingBalancesAndYieldFees(
-        address pool,
-        Rounding roundingDirection
-    ) external returns (PoolData memory) {
+    function loadPoolDataUpdatingBalancesAndYieldFees(address pool, Rounding roundingDirection)
+        external
+        returns (PoolData memory)
+    {
         return _loadPoolDataUpdatingBalancesAndYieldFees(pool, roundingDirection);
     }
 
-    function loadPoolDataUpdatingBalancesAndYieldFeesReentrancy(
-        address pool,
-        Rounding roundingDirection
-    ) external nonReentrant returns (PoolData memory) {
+    function loadPoolDataUpdatingBalancesAndYieldFeesReentrancy(address pool, Rounding roundingDirection)
+        external
+        nonReentrant
+        returns (PoolData memory)
+    {
         return _loadPoolDataUpdatingBalancesAndYieldFees(pool, roundingDirection);
     }
 
@@ -469,12 +477,8 @@ contract VaultMock is IVaultMainMock, Vault {
     {
         PoolSwapParams memory poolSwapParams = _buildPoolSwapParams(vaultSwapParams, state, poolData);
 
-        (amountCalculatedRaw, amountCalculatedScaled18, amountIn, amountOut) = _swap(
-            vaultSwapParams,
-            state,
-            poolData,
-            poolSwapParams
-        );
+        (amountCalculatedRaw, amountCalculatedScaled18, amountIn, amountOut) =
+            _swap(vaultSwapParams, state, poolData, poolSwapParams);
 
         return (amountCalculatedRaw, amountCalculatedScaled18, amountIn, amountOut, vaultSwapParams, state, poolData);
     }
@@ -556,11 +560,8 @@ contract VaultMock is IVaultMainMock, Vault {
     {
         bytes32 paramsHashBefore = abi.encode(params)._hash();
 
-        (amountsInRaw, amountsInScaled18, bptAmountOut, returnData) = _addLiquidity(
-            poolData,
-            params,
-            maxAmountsInScaled18
-        );
+        (amountsInRaw, amountsInScaled18, bptAmountOut, returnData) =
+            _addLiquidity(poolData, params, maxAmountsInScaled18);
 
         require(paramsHashBefore == keccak256(abi.encode(params)), "Input parameters have changed");
 
@@ -591,11 +592,8 @@ contract VaultMock is IVaultMainMock, Vault {
     {
         bytes32 paramsHashBefore = abi.encode(params)._hash();
 
-        (bptAmountIn, amountsOutRaw, amountsOutScaled18, returnData) = _removeLiquidity(
-            poolData,
-            params,
-            minAmountsOutScaled18
-        );
+        (bptAmountIn, amountsOutRaw, amountsOutScaled18, returnData) =
+            _removeLiquidity(poolData, params, minAmountsOutScaled18);
 
         require(paramsHashBefore == abi.encode(params)._hash(), "Input parameters have changed");
 
@@ -624,12 +622,9 @@ contract VaultMock is IVaultMainMock, Vault {
         return _bufferTokenBalances[wrappedToken];
     }
 
-    function manualSettleWrap(
-        IERC20 underlyingToken,
-        IERC20 wrappedToken,
-        uint256 underlyingHint,
-        uint256 wrappedHint
-    ) external {
+    function manualSettleWrap(IERC20 underlyingToken, IERC20 wrappedToken, uint256 underlyingHint, uint256 wrappedHint)
+        external
+    {
         _settleWrap(underlyingToken, wrappedToken, underlyingHint, wrappedHint);
     }
 
@@ -686,9 +681,11 @@ contract VaultMock is IVaultMainMock, Vault {
         _bufferTokenBalances[wrappedToken] = PackedTokenBalance.toPackedBalance(underlyingAmount, wrappedAmount);
     }
 
-    function manualErc4626BufferWrapOrUnwrapReentrancy(
-        BufferWrapOrUnwrapParams memory params
-    ) external nonReentrant returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw) {
+    function manualErc4626BufferWrapOrUnwrapReentrancy(BufferWrapOrUnwrapParams memory params)
+        external
+        nonReentrant
+        returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw)
+    {
         return IVault(address(this)).erc4626BufferWrapOrUnwrap(params);
     }
 
@@ -724,10 +721,11 @@ contract VaultMock is IVaultMainMock, Vault {
         return _computeAmountGivenScaled18(vaultSwapParams, poolData, swapState);
     }
 
-    function manualLoadSwapState(
-        VaultSwapParams memory vaultSwapParams,
-        PoolData memory poolData
-    ) public pure returns (SwapState memory swapState) {
+    function manualLoadSwapState(VaultSwapParams memory vaultSwapParams, PoolData memory poolData)
+        public
+        pure
+        returns (SwapState memory swapState)
+    {
         return _loadSwapState(vaultSwapParams, poolData);
     }
 
@@ -751,26 +749,20 @@ contract VaultMock is IVaultMainMock, Vault {
     }
 
     function manualUpdateAggregateSwapFeePercentage(address pool, uint256 newAggregateSwapFeePercentage) external {
-        _poolConfigBits[pool] = _manualSetAggregateSwapFeePercentage(
-            _poolConfigBits[pool],
-            newAggregateSwapFeePercentage
-        );
+        _poolConfigBits[pool] =
+            _manualSetAggregateSwapFeePercentage(_poolConfigBits[pool], newAggregateSwapFeePercentage);
     }
 
-    function _manualSetAggregateSwapFeePercentage(
-        PoolConfigBits config,
-        uint256 value
-    ) internal pure returns (PoolConfigBits) {
+    function _manualSetAggregateSwapFeePercentage(PoolConfigBits config, uint256 value)
+        internal
+        pure
+        returns (PoolConfigBits)
+    {
         value /= FEE_SCALING_FACTOR;
 
-        return
-            PoolConfigBits.wrap(
-                PoolConfigBits.unwrap(config).insertUint(
-                    value,
-                    PoolConfigConst.AGGREGATE_SWAP_FEE_OFFSET,
-                    FEE_BITLENGTH
-                )
-            );
+        return PoolConfigBits.wrap(
+            PoolConfigBits.unwrap(config).insertUint(value, PoolConfigConst.AGGREGATE_SWAP_FEE_OFFSET, FEE_BITLENGTH)
+        );
     }
 
     function previewDeposit(IERC4626 wrapper, uint256 amountInUnderlying) external returns (uint256 amountOutWrapped) {
@@ -778,12 +770,7 @@ contract VaultMock is IVaultMainMock, Vault {
             return 0;
         }
 
-        (, amountOutWrapped, ) = _wrapWithBuffer(
-            SwapKind.EXACT_IN,
-            IERC20(wrapper.asset()),
-            wrapper,
-            amountInUnderlying
-        );
+        (, amountOutWrapped,) = _wrapWithBuffer(SwapKind.EXACT_IN, IERC20(wrapper.asset()), wrapper, amountInUnderlying);
     }
 
     function previewMint(IERC4626 wrapper, uint256 amountOutWrapped) external returns (uint256 amountInUnderlying) {
@@ -791,12 +778,7 @@ contract VaultMock is IVaultMainMock, Vault {
             return 0;
         }
 
-        (amountInUnderlying, , ) = _wrapWithBuffer(
-            SwapKind.EXACT_OUT,
-            IERC20(wrapper.asset()),
-            wrapper,
-            amountOutWrapped
-        );
+        (amountInUnderlying,,) = _wrapWithBuffer(SwapKind.EXACT_OUT, IERC20(wrapper.asset()), wrapper, amountOutWrapped);
     }
 
     function previewRedeem(IERC4626 wrapper, uint256 amountInWrapped) external returns (uint256 amountOutUnderlying) {
@@ -804,12 +786,8 @@ contract VaultMock is IVaultMainMock, Vault {
             return 0;
         }
 
-        (, amountOutUnderlying, ) = _unwrapWithBuffer(
-            SwapKind.EXACT_IN,
-            IERC20(wrapper.asset()),
-            wrapper,
-            amountInWrapped
-        );
+        (, amountOutUnderlying,) =
+            _unwrapWithBuffer(SwapKind.EXACT_IN, IERC20(wrapper.asset()), wrapper, amountInWrapped);
     }
 
     function previewWithdraw(IERC4626 wrapper, uint256 amountOutUnderlying) external returns (uint256 amountInWrapped) {
@@ -817,11 +795,7 @@ contract VaultMock is IVaultMainMock, Vault {
             return 0;
         }
 
-        (amountInWrapped, , ) = _unwrapWithBuffer(
-            SwapKind.EXACT_OUT,
-            IERC20(wrapper.asset()),
-            wrapper,
-            amountOutUnderlying
-        );
+        (amountInWrapped,,) =
+            _unwrapWithBuffer(SwapKind.EXACT_OUT, IERC20(wrapper.asset()), wrapper, amountOutUnderlying);
     }
 }

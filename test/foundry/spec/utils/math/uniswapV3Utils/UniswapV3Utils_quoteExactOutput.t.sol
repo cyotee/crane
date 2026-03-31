@@ -55,7 +55,7 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
         uint256 amountOut = TEST_AMOUNT;
 
         // Get current pool state
-        (uint160 sqrtPriceX96, , , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Get quote from UniswapV3Utils
@@ -64,7 +64,7 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            true  // token0 -> token1
+            true // token0 -> token1
         );
 
         // Execute actual swap
@@ -79,7 +79,7 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
         uint256 amountOut = TEST_AMOUNT;
 
         // Get current pool state
-        (uint160 sqrtPriceX96, , , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96,,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Get quote from UniswapV3Utils
@@ -88,7 +88,7 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
             sqrtPriceX96,
             liquidity,
             FEE_MEDIUM,
-            false  // token1 -> token0
+            false // token1 -> token0
         );
 
         // Execute actual swap
@@ -103,29 +103,18 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test tick overload produces same result as sqrtPrice version
-    function test_quoteExactOutput_tickOverload_matchesSqrtPriceVersion() public {
+    function test_quoteExactOutput_tickOverload_matchesSqrtPriceVersion() public view {
         uint256 amountOut = TEST_AMOUNT;
 
-        (uint160 sqrtPriceX96, int24 tick, , , , , ) = pool.slot0();
+        (uint160 sqrtPriceX96, int24 tick,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
         // Quote using sqrtPriceX96
-        uint256 quotedWithSqrtPrice = UniswapV3Utils._quoteExactOutputSingle(
-            amountOut,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedWithSqrtPrice =
+            UniswapV3Utils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
         // Quote using tick
-        uint256 quotedWithTick = UniswapV3Utils._quoteExactOutputSingle(
-            amountOut,
-            tick,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedWithTick = UniswapV3Utils._quoteExactOutputSingle(amountOut, tick, liquidity, FEE_MEDIUM, true);
 
         // Should be identical
         assertEq(quotedWithSqrtPrice, quotedWithTick, "Tick overload mismatch");
@@ -146,11 +135,8 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
             uint24 fee = feeTiers[i];
 
             // Create pool for this fee tier
-            IUniswapV3Pool testPool = createPoolOneToOne(
-                address(new MockERC20("A", "A", 18)),
-                address(new MockERC20("B", "B", 18)),
-                fee
-            );
+            IUniswapV3Pool testPool =
+                createPoolOneToOne(address(new MockERC20("A", "A", 18)), address(new MockERC20("B", "B", 18)), fee);
 
             // Add liquidity
             int24 tickSpacing = getTickSpacing(fee);
@@ -163,16 +149,10 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
             );
 
             // Get quote
-            (uint160 sqrtPriceX96, , , , , , ) = testPool.slot0();
+            (uint160 sqrtPriceX96,,,,,,) = testPool.slot0();
             uint128 liquidity = testPool.liquidity();
 
-            uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
-                amountOut,
-                sqrtPriceX96,
-                liquidity,
-                fee,
-                true
-            );
+            uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(amountOut, sqrtPriceX96, liquidity, fee, true);
 
             // Execute actual swap
             uint256 actualIn = swapExactOutput(testPool, true, amountOut, address(this));
@@ -187,17 +167,11 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test quote with zero amount returns zero
-    function test_quoteExactOutput_zeroAmount() public {
-        (uint160 sqrtPriceX96, , , , , , ) = pool.slot0();
+    function test_quoteExactOutput_zeroAmount() public view {
+        (uint160 sqrtPriceX96,,,,,,) = pool.slot0();
         uint128 liquidity = pool.liquidity();
 
-        uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(
-            0,
-            sqrtPriceX96,
-            liquidity,
-            FEE_MEDIUM,
-            true
-        );
+        uint256 quotedIn = UniswapV3Utils._quoteExactOutputSingle(0, sqrtPriceX96, liquidity, FEE_MEDIUM, true);
 
         assertEq(quotedIn, 0, "Zero output should require zero input");
     }
@@ -207,31 +181,27 @@ contract UniswapV3Utils_quoteExactOutput_Test is TestBase_UniswapV3 {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Execute exact output swap on V3 pool
-    function swapExactOutput(
-        IUniswapV3Pool _pool,
-        bool zeroForOne,
-        uint256 amountOut,
-        address recipient
-    ) internal returns (uint256 amountIn) {
+    function swapExactOutput(IUniswapV3Pool _pool, bool zeroForOne, uint256 amountOut, address recipient)
+        internal
+        returns (uint256 amountIn)
+    {
         address tokenIn = zeroForOne ? _pool.token0() : _pool.token1();
 
         // Ensure we can pay in the swap callback.
         // Prefer mint() if available, otherwise fall back to Foundry deal().
-        (bool ok, ) = tokenIn.call(abi.encodeWithSignature("mint(address,uint256)", address(this), type(uint128).max));
+        (bool ok,) = tokenIn.call(abi.encodeWithSignature("mint(address,uint256)", address(this), type(uint128).max));
         if (!ok) {
             deal(tokenIn, address(this), type(uint128).max, true);
         }
 
         // Set price limit
-        uint160 sqrtPriceLimitX96 = zeroForOne
-            ? TickMath.MIN_SQRT_RATIO + 1
-            : TickMath.MAX_SQRT_RATIO - 1;
+        uint160 sqrtPriceLimitX96 = zeroForOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1;
 
         // Execute swap (negative amount for exact output)
         (int256 amount0, int256 amount1) = _pool.swap(
             recipient,
             zeroForOne,
-            -int256(amountOut),  // Negative for exact output
+            -int256(amountOut), // Negative for exact output
             sqrtPriceLimitX96,
             abi.encode(address(this))
         );

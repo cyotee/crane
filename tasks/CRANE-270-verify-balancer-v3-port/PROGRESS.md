@@ -96,3 +96,20 @@
 - JSON artifact writing pattern for Foundry tests:
   - `contracts/protocols/cdps/sky/test/ScriptTools.sol` shows `vm.serialize*` + `vm.writeJson` usage.
 - Repo convention reminder (do not undo): `out/` and `cache_forge/` are being committed to share artifacts and speed builds.
+
+### 2026-02-14 - Cleanup: accidental component file removed
+
+- Removed an accidentally added `docs/components/COMPONENT_REQUIREMENTS.md` (it was created while recovering context). That file is no longer present.
+- Repo convention: per-component requirements should live under `docs/components/` as separate files (e.g. `docs/components/vault.md`, `docs/components/router.md`, etc.). Currently there are no per-component requirement files in that directory.
+- Recommended next action for the follow-on agent: create/update per-component files for these components so an automated reviewer can operate without ambiguity:
+  - Vault
+  - Router
+  - Weighted Pool DFPkg
+  - Pool Info / Bounds
+  - Hooks / Custom Pools (gyro, stable, reclamm)
+  - FactoryServices & DFPkg patterns
+  - Testing / Fork harness requirements (pin block, RPC alias, gating, artifact locations)
+
+- Each per-component doc should include: Purpose, Files to inspect (paths), Concrete checks (short ordered list), Tests to run (commands), Fork gating notes, Artifact output path, and Acceptance criteria.
+
+- If you'd like, I can generate templated per-component files under `docs/components/` (one file per component) populated with the checklist items referenced above. Otherwise, the next agent should create or update these files before running an automated review.

@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import { IHooks } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
+import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { HooksConfigLib } from "../lib/HooksConfigLib.sol";
+import {HooksConfigLib} from "../lib/HooksConfigLib.sol";
 
 contract HooksConfigLibMock {
     using HooksConfigLib for PoolConfigBits;
@@ -33,17 +33,16 @@ contract HooksConfigLibMock {
         PoolData memory poolData,
         IHooks hooksContract
     ) public returns (uint256) {
-        return
-            HooksConfigLib.callAfterSwapHook(
-                config,
-                amountCalculatedScaled18,
-                amountCalculatedRaw,
-                router,
-                vaultSwapParams,
-                state,
-                poolData,
-                hooksContract
-            );
+        return HooksConfigLib.callAfterSwapHook(
+            config,
+            amountCalculatedScaled18,
+            amountCalculatedRaw,
+            router,
+            vaultSwapParams,
+            state,
+            poolData,
+            hooksContract
+        );
     }
 
     function callBeforeAddLiquidityHook(
@@ -66,17 +65,9 @@ contract HooksConfigLibMock {
         PoolData memory poolData,
         IHooks hooksContract
     ) public returns (uint256[] memory) {
-        return
-            HooksConfigLib.callAfterAddLiquidityHook(
-                config,
-                router,
-                amountsInScaled18,
-                amountsInRaw,
-                bptAmountOut,
-                params,
-                poolData,
-                hooksContract
-            );
+        return HooksConfigLib.callAfterAddLiquidityHook(
+            config, router, amountsInScaled18, amountsInRaw, bptAmountOut, params, poolData, hooksContract
+        );
     }
 
     function callBeforeRemoveLiquidityHook(
@@ -99,17 +90,9 @@ contract HooksConfigLibMock {
         PoolData memory poolData,
         IHooks hooksContract
     ) public returns (uint256[] memory) {
-        return
-            HooksConfigLib.callAfterRemoveLiquidityHook(
-                config,
-                router,
-                amountsOutScaled18,
-                amountsOutRaw,
-                bptAmountIn,
-                params,
-                poolData,
-                hooksContract
-            );
+        return HooksConfigLib.callAfterRemoveLiquidityHook(
+            config, router, amountsOutScaled18, amountsOutRaw, bptAmountIn, params, poolData, hooksContract
+        );
     }
 
     function callBeforeInitializeHook(

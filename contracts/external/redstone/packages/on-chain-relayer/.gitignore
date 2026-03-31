@@ -1,0 +1,14 @@
+node_modules
+.env
+coverage
+coverage.json
+
+healthcheck.txt
+
+relayer-remote-config
+
+config_*
+
+# Hardhat files
+cache
+artifacts

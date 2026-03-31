@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import { FixedPoint } from "./FixedPoint.sol";
+import {FixedPoint} from "./FixedPoint.sol";
 
 /**
  * @notice Stable Pool math library based on Curve's `StableSwap`.
@@ -65,10 +65,11 @@ library StableMath {
      * @param balances The current balances
      * @return invariant The calculated invariant of the pool
      */
-    function computeInvariant(
-        uint256 amplificationParameter,
-        uint256[] memory balances
-    ) internal pure returns (uint256) {
+    function computeInvariant(uint256 amplificationParameter, uint256[] memory balances)
+        internal
+        pure
+        returns (uint256)
+    {
         /**********************************************************************************************
         // invariant                                                                                 //
         // D = invariant                                                  D^(n+1)                    //
@@ -99,9 +100,8 @@ library StableMath {
 
             prevInvariant = invariant;
 
-            invariant =
-                ((((ampTimesTotal * sum) / AMP_PRECISION) + (D_P * numTokens)) * invariant) /
-                ((((ampTimesTotal - AMP_PRECISION) * invariant) / AMP_PRECISION) + ((numTokens + 1) * D_P));
+            invariant = ((((ampTimesTotal * sum) / AMP_PRECISION) + (D_P * numTokens)) * invariant)
+                / ((((ampTimesTotal - AMP_PRECISION) * invariant) / AMP_PRECISION) + ((numTokens + 1) * D_P));
 
             unchecked {
                 // We are explicitly checking the magnitudes here, so can use unchecked math.
@@ -273,9 +273,11 @@ library StableMath {
      * @return minBalance The minimum balance found in the array
      * @return maxBalance The maximum balance found in the array
      */
-    function getMinAndMaxBalances(
-        uint256[] memory balancesScaled18
-    ) internal pure returns (uint256 minBalance, uint256 maxBalance) {
+    function getMinAndMaxBalances(uint256[] memory balancesScaled18)
+        internal
+        pure
+        returns (uint256 minBalance, uint256 maxBalance)
+    {
         minBalance = balancesScaled18[0];
         maxBalance = minBalance;
 

@@ -5,7 +5,5 @@ import {Test} from "forge-std/Test.sol";
 import {BetterScript} from "@crane/contracts/script/BetterScript.sol";
 
 abstract contract BetterTest is BetterScript, Test {
-
     function setUp() public virtual {}
-
 }

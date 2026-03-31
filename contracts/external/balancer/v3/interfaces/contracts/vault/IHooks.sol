@@ -81,11 +81,9 @@ interface IHooks {
      * @param userData Optional, arbitrary data sent with the encoded request
      * @return success True if the pool accepts the initialization results
      */
-    function onAfterInitialize(
-        uint256[] memory exactAmountsIn,
-        uint256 bptAmountOut,
-        bytes memory userData
-    ) external returns (bool success);
+    function onAfterInitialize(uint256[] memory exactAmountsIn, uint256 bptAmountOut, bytes memory userData)
+        external
+        returns (bool success);
 
     /***************************************************************************
                                    Add Liquidity
@@ -224,9 +222,9 @@ interface IHooks {
      * @return success True if the pool wishes to proceed with settlement
      * @return hookAdjustedAmountCalculatedRaw New amount calculated, potentially modified by the hook
      */
-    function onAfterSwap(
-        AfterSwapParams calldata params
-    ) external returns (bool success, uint256 hookAdjustedAmountCalculatedRaw);
+    function onAfterSwap(AfterSwapParams calldata params)
+        external
+        returns (bool success, uint256 hookAdjustedAmountCalculatedRaw);
 
     /**
      * @notice Called after `onBeforeSwap` and before the main swap operation, if the pool has dynamic fees.

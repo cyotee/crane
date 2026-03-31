@@ -28,9 +28,18 @@ contract MockFacet is IFacet {
         _interfaces = interfaces_;
     }
 
-    function facetName() external view override returns (string memory) { return _name; }
-    function facetInterfaces() external view override returns (bytes4[] memory) { return _interfaces; }
-    function facetFuncs() external view override returns (bytes4[] memory) { return _funcs; }
+    function facetName() external view override returns (string memory) {
+        return _name;
+    }
+
+    function facetInterfaces() external view override returns (bytes4[] memory) {
+        return _interfaces;
+    }
+
+    function facetFuncs() external view override returns (bytes4[] memory) {
+        return _funcs;
+    }
+
     function facetMetadata() external view override returns (string memory, bytes4[] memory, bytes4[] memory) {
         return (_name, _interfaces, _funcs);
     }
@@ -176,10 +185,7 @@ contract CowRouterDFPkg_Test is Test {
             for (uint256 j = i + 1; j < allSelectors.length; j++) {
                 assertTrue(
                     allSelectors[i] != allSelectors[j],
-                    string.concat(
-                        "Selector collision detected: ",
-                        vm.toString(bytes32(allSelectors[i]))
-                    )
+                    string.concat("Selector collision detected: ", vm.toString(bytes32(allSelectors[i])))
                 );
             }
         }
@@ -258,19 +264,11 @@ contract CowRouterDFPkg_Test is Test {
     function test_calcSalt_deterministicForSameInputs() public {
         pkg = _deployPkg();
 
-        bytes memory args1 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args1 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: feeSweeper}));
 
-        bytes memory args2 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args2 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: feeSweeper}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -281,19 +279,11 @@ contract CowRouterDFPkg_Test is Test {
     function test_calcSalt_differentForDifferentFees() public {
         pkg = _deployPkg();
 
-        bytes memory args1 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args1 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: feeSweeper}));
 
-        bytes memory args2 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_20_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args2 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_20_PERCENT, feeSweeper: feeSweeper}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -306,19 +296,11 @@ contract CowRouterDFPkg_Test is Test {
 
         address otherSweeper = makeAddr("otherSweeper");
 
-        bytes memory args1 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args1 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: feeSweeper}));
 
-        bytes memory args2 = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: otherSweeper
-            })
-        );
+        bytes memory args2 =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: otherSweeper}));
 
         bytes32 salt1 = pkg.calcSalt(args1);
         bytes32 salt2 = pkg.calcSalt(args2);
@@ -333,12 +315,8 @@ contract CowRouterDFPkg_Test is Test {
     function test_processArgs_returnsUnchanged() public {
         pkg = _deployPkg();
 
-        bytes memory args = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: FEE_10_PERCENT,
-                feeSweeper: feeSweeper
-            })
-        );
+        bytes memory args =
+            abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: FEE_10_PERCENT, feeSweeper: feeSweeper}));
 
         bytes memory processed = pkg.processArgs(args);
 
@@ -356,22 +334,14 @@ contract CowRouterDFPkg_Test is Test {
 
         pkg = _deployPkg();
 
-        bytes memory args = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: fee,
-                feeSweeper: sweeper
-            })
-        );
+        bytes memory args = abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: fee, feeSweeper: sweeper}));
 
         // Should not revert for valid inputs
         bytes32 salt = pkg.calcSalt(args);
         assertTrue(salt != bytes32(0), "Salt should not be zero for valid config");
     }
 
-    function testFuzz_calcSalt_deterministicAcrossInstances(
-        uint256 fee,
-        address sweeper
-    ) public {
+    function testFuzz_calcSalt_deterministicAcrossInstances(uint256 fee, address sweeper) public {
         vm.assume(sweeper != address(0));
         vm.assume(fee <= MAX_FEE);
 
@@ -379,12 +349,7 @@ contract CowRouterDFPkg_Test is Test {
         CowRouterDFPkg pkg1 = _deployPkg();
         CowRouterDFPkg pkg2 = _deployPkg();
 
-        bytes memory args = abi.encode(
-            ICowRouterDFPkg.PkgArgs({
-                protocolFeePercentage: fee,
-                feeSweeper: sweeper
-            })
-        );
+        bytes memory args = abi.encode(ICowRouterDFPkg.PkgArgs({protocolFeePercentage: fee, feeSweeper: sweeper}));
 
         bytes32 salt1 = pkg1.calcSalt(args);
         bytes32 salt2 = pkg2.calcSalt(args);

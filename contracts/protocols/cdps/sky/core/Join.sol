@@ -25,18 +25,18 @@ pragma solidity ^0.8.0;
 
 interface GemLike {
     function decimals() external view returns (uint256);
-    function transfer(address,uint256) external returns (bool);
-    function transferFrom(address,address,uint256) external returns (bool);
+    function transfer(address, uint256) external returns (bool);
+    function transferFrom(address, address, uint256) external returns (bool);
 }
 
 interface DSTokenLike {
-    function mint(address,uint256) external;
-    function burn(address,uint256) external;
+    function mint(address, uint256) external;
+    function burn(address, uint256) external;
 }
 
 interface VatLike {
-    function slip(bytes32,address,int256) external;
-    function move(address,address,uint256) external;
+    function slip(bytes32, address, int256) external;
+    function move(address, address, uint256) external;
 }
 
 /*
@@ -65,19 +65,25 @@ interface VatLike {
 
 contract GemJoin {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "GemJoin/not-authorized");
         _;
     }
 
-    VatLike public vat;   // CDP Engine
-    bytes32 public ilk;   // Collateral Type
+    VatLike public vat; // CDP Engine
+    bytes32 public ilk; // Collateral Type
     GemLike public gem;
     uint256 public dec;
-    uint256 public live;  // Active Flag
+    uint256 public live; // Active Flag
 
     constructor(address vat_, bytes32 ilk_, address gem_) {
         wards[msg.sender] = 1;
@@ -87,15 +93,18 @@ contract GemJoin {
         gem = GemLike(gem_);
         dec = gem.decimals();
     }
+
     function cage() external auth {
         live = 0;
     }
+
     function join(address usr, uint256 wad) external {
         require(live == 1, "GemJoin/not-live");
         require(int256(wad) >= 0, "GemJoin/overflow");
         vat.slip(ilk, usr, int256(wad));
         require(gem.transferFrom(msg.sender, address(this), wad), "GemJoin/failed-transfer");
     }
+
     function exit(address usr, uint256 wad) external {
         require(wad <= 2 ** 255, "GemJoin/overflow");
         vat.slip(ilk, msg.sender, -int256(wad));
@@ -105,17 +114,23 @@ contract GemJoin {
 
 contract DaiJoin {
     // --- Auth ---
-    mapping (address => uint256) public wards;
-    function rely(address usr) external auth { wards[usr] = 1; }
-    function deny(address usr) external auth { wards[usr] = 0; }
-    modifier auth {
+    mapping(address => uint256) public wards;
+
+    function rely(address usr) external auth {
+        wards[usr] = 1;
+    }
+
+    function deny(address usr) external auth {
+        wards[usr] = 0;
+    }
+    modifier auth() {
         require(wards[msg.sender] == 1, "DaiJoin/not-authorized");
         _;
     }
 
-    VatLike public vat;      // CDP Engine
-    DSTokenLike public dai;  // Stablecoin Token
-    uint256 public live;     // Active Flag
+    VatLike public vat; // CDP Engine
+    DSTokenLike public dai; // Stablecoin Token
+    uint256 public live; // Active Flag
 
     constructor(address vat_, address dai_) {
         wards[msg.sender] = 1;
@@ -123,19 +138,23 @@ contract DaiJoin {
         vat = VatLike(vat_);
         dai = DSTokenLike(dai_);
     }
+
     function cage() external auth {
         live = 0;
     }
     uint256 constant ONE = 10 ** 27;
+
     function _mul(uint256 x, uint256 y) internal pure returns (uint256 z) {
         unchecked {
             require(y == 0 || (z = x * y) / y == x);
         }
     }
+
     function join(address usr, uint256 wad) external {
         vat.move(address(this), usr, _mul(ONE, wad));
         dai.burn(msg.sender, wad);
     }
+
     function exit(address usr, uint256 wad) external {
         require(live == 1, "DaiJoin/not-live");
         vat.move(msg.sender, address(this), _mul(ONE, wad));

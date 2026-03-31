@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import { CastingHelpers } from "./CastingHelpers.sol";
+import {CastingHelpers} from "./CastingHelpers.sol";
 
 library InputHelpers {
     /// @notice Arrays passed to a function and intended to be parallel have different lengths.

@@ -26,7 +26,6 @@ import {BalancerV3RouterModifiers} from "../BalancerV3RouterModifiers.sol";
  * - Query operations for simulating buffer actions
  */
 contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
-
     /* ========================================================================== */
     /*                                  IFacet                                    */
     /* ========================================================================== */
@@ -86,12 +85,13 @@ contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
         uint256 exactAmountWrappedIn,
         uint256 minIssuedShares
     ) external returns (uint256 issuedShares) {
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(
-                this.initializeBufferHook,
-                (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, minIssuedShares, msg.sender)
-            )
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(
+                abi.encodeCall(
+                    this.initializeBufferHook,
+                    (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, minIssuedShares, msg.sender)
+                )
+            );
         return abi.decode(result, (uint256));
     }
 
@@ -110,55 +110,53 @@ contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
         uint256 maxAmountWrappedIn,
         uint256 exactSharesToIssue
     ) external returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
-        bytes memory result = BalancerV3RouterStorageRepo._vault().unlock(
-            abi.encodeCall(
-                this.addLiquidityToBufferHook,
-                (wrappedToken, maxAmountUnderlyingIn, maxAmountWrappedIn, exactSharesToIssue, msg.sender)
-            )
-        );
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .unlock(
+                abi.encodeCall(
+                    this.addLiquidityToBufferHook,
+                    (wrappedToken, maxAmountUnderlyingIn, maxAmountWrappedIn, exactSharesToIssue, msg.sender)
+                )
+            );
         return abi.decode(result, (uint256, uint256));
     }
 
     /**
      * @notice Query initialization of a buffer (simulation).
      */
-    function queryInitializeBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactAmountUnderlyingIn,
-        uint256 exactAmountWrappedIn
-    ) external returns (uint256 issuedShares) {
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(
-                this.queryInitializeBufferHook,
-                (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn)
-            )
-        );
+    function queryInitializeBuffer(IERC4626 wrappedToken, uint256 exactAmountUnderlyingIn, uint256 exactAmountWrappedIn)
+        external
+        returns (uint256 issuedShares)
+    {
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(
+                abi.encodeCall(
+                    this.queryInitializeBufferHook, (wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn)
+                )
+            );
         return abi.decode(result, (uint256));
     }
 
     /**
      * @notice Query adding liquidity to a buffer (simulation).
      */
-    function queryAddLiquidityToBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToIssue
-    ) external returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.queryAddLiquidityToBufferHook, (wrappedToken, exactSharesToIssue))
-        );
+    function queryAddLiquidityToBuffer(IERC4626 wrappedToken, uint256 exactSharesToIssue)
+        external
+        returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn)
+    {
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.queryAddLiquidityToBufferHook, (wrappedToken, exactSharesToIssue)));
         return abi.decode(result, (uint256, uint256));
     }
 
     /**
      * @notice Query removing liquidity from a buffer (simulation).
      */
-    function queryRemoveLiquidityFromBuffer(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToRemove
-    ) external returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut) {
-        bytes memory result = BalancerV3RouterStorageRepo._vault().quote(
-            abi.encodeCall(this.queryRemoveLiquidityFromBufferHook, (wrappedToken, exactSharesToRemove))
-        );
+    function queryRemoveLiquidityFromBuffer(IERC4626 wrappedToken, uint256 exactSharesToRemove)
+        external
+        returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut)
+    {
+        bytes memory result = BalancerV3RouterStorageRepo._vault()
+            .quote(abi.encodeCall(this.queryRemoveLiquidityFromBufferHook, (wrappedToken, exactSharesToRemove)));
         return abi.decode(result, (uint256, uint256));
     }
 
@@ -180,11 +178,7 @@ contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
         issuedShares = vault.initializeBuffer(
-            wrappedToken,
-            exactAmountUnderlyingIn,
-            exactAmountWrappedIn,
-            minIssuedShares,
-            sharesOwner
+            wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, minIssuedShares, sharesOwner
         );
 
         address asset = vault.getERC4626BufferAsset(wrappedToken);
@@ -206,11 +200,7 @@ contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
         IVault vault = BalancerV3RouterStorageRepo._vault();
 
         (amountUnderlyingIn, amountWrappedIn) = vault.addLiquidityToBuffer(
-            wrappedToken,
-            maxAmountUnderlyingIn,
-            maxAmountWrappedIn,
-            exactSharesToIssue,
-            sharesOwner
+            wrappedToken, maxAmountUnderlyingIn, maxAmountWrappedIn, exactSharesToIssue, sharesOwner
         );
 
         address asset = vault.getERC4626BufferAsset(wrappedToken);
@@ -227,40 +217,34 @@ contract BufferRouterFacet is BalancerV3RouterModifiers, IFacet {
         uint256 exactAmountUnderlyingIn,
         uint256 exactAmountWrappedIn
     ) external nonReentrant onlyVault returns (uint256 issuedShares) {
-        issuedShares = BalancerV3RouterStorageRepo._vault().initializeBuffer(
-            wrappedToken,
-            exactAmountUnderlyingIn,
-            exactAmountWrappedIn,
-            0,
-            address(this)
-        );
+        issuedShares = BalancerV3RouterStorageRepo._vault()
+            .initializeBuffer(wrappedToken, exactAmountUnderlyingIn, exactAmountWrappedIn, 0, address(this));
     }
 
     /**
      * @notice Query hook for adding liquidity to buffer.
      * @dev Can only be called by the Vault.
      */
-    function queryAddLiquidityToBufferHook(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToIssue
-    ) external nonReentrant onlyVault returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn) {
-        (amountUnderlyingIn, amountWrappedIn) = BalancerV3RouterStorageRepo._vault().addLiquidityToBuffer(
-            wrappedToken,
-            type(uint128).max,
-            type(uint128).max,
-            exactSharesToIssue,
-            address(this)
-        );
+    function queryAddLiquidityToBufferHook(IERC4626 wrappedToken, uint256 exactSharesToIssue)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256 amountUnderlyingIn, uint256 amountWrappedIn)
+    {
+        (amountUnderlyingIn, amountWrappedIn) = BalancerV3RouterStorageRepo._vault()
+            .addLiquidityToBuffer(wrappedToken, type(uint128).max, type(uint128).max, exactSharesToIssue, address(this));
     }
 
     /**
      * @notice Query hook for removing liquidity from buffer.
      * @dev Can only be called by the Vault.
      */
-    function queryRemoveLiquidityFromBufferHook(
-        IERC4626 wrappedToken,
-        uint256 exactSharesToRemove
-    ) external nonReentrant onlyVault returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut) {
+    function queryRemoveLiquidityFromBufferHook(IERC4626 wrappedToken, uint256 exactSharesToRemove)
+        external
+        nonReentrant
+        onlyVault
+        returns (uint256 removedUnderlyingBalanceOut, uint256 removedWrappedBalanceOut)
+    {
         return BalancerV3RouterStorageRepo._vault().removeLiquidityFromBuffer(wrappedToken, exactSharesToRemove, 0, 0);
     }
 }

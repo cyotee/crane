@@ -41,11 +41,5 @@ interface IBalancerV3StablePool {
     function getAmplificationState()
         external
         view
-        returns (
-            uint256 startValue,
-            uint256 endValue,
-            uint256 startTime,
-            uint256 endTime,
-            uint256 precision
-        );
+        returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime, uint256 precision);
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {Address} from "@crane/contracts/utils/Address.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
@@ -58,8 +58,7 @@ abstract contract BalancerV3RouterModifiers is ISenderGuard {
 
     /// @dev Transient slot for reentrancy guard state.
     /// Using a distinct slot from Balancer's to avoid conflicts.
-    bytes32 private constant REENTRANCY_GUARD_SLOT =
-        keccak256("protocols.dexes.balancer.v3.router.diamond.reentrancy");
+    bytes32 private constant REENTRANCY_GUARD_SLOT = keccak256("protocols.dexes.balancer.v3.router.diamond.reentrancy");
 
     /* ------ Modifiers ------ */
 
@@ -179,11 +178,11 @@ abstract contract BalancerV3RouterModifiers is ISenderGuard {
      * @return amountsGiven Array with amountGiven at tokenIndex, 0 elsewhere.
      * @return tokenIndex The index of the token in the pool.
      */
-    function _getSingleInputArrayAndTokenIndex(
-        address pool,
-        IERC20 token,
-        uint256 amountGiven
-    ) internal view returns (uint256[] memory amountsGiven, uint256 tokenIndex) {
+    function _getSingleInputArrayAndTokenIndex(address pool, IERC20 token, uint256 amountGiven)
+        internal
+        view
+        returns (uint256[] memory amountsGiven, uint256 tokenIndex)
+    {
         IVault vault = BalancerV3RouterStorageRepo._vault();
         uint256 numTokens;
         (numTokens, tokenIndex) = vault.getPoolTokenCountAndIndexOfToken(pool, token);

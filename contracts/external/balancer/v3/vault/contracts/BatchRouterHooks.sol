@@ -5,14 +5,16 @@ pragma solidity ^0.8.24;
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import { IPermit2 } from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
+import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 
-import { IWETH } from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/BatchRouterTypes.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { EVMCallModeHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
 import {
     TransientEnumerableSet
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/TransientEnumerableSet.sol";
@@ -20,7 +22,7 @@ import {
     TransientStorageHelpers
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
 
-import { BatchRouterCommon } from "./BatchRouterCommon.sol";
+import {BatchRouterCommon} from "./BatchRouterCommon.sol";
 
 /**
  * @notice Entrypoint for batch swaps, and batch swap queries.
@@ -34,12 +36,9 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
     using SafeERC20 for IERC20;
     using SafeCast for *;
 
-    constructor(
-        IVault vault,
-        IWETH weth,
-        IPermit2 permit2,
-        string memory routerVersion
-    ) BatchRouterCommon(vault, weth, permit2, routerVersion) {
+    constructor(IVault vault, IWETH weth, IPermit2 permit2, string memory routerVersion)
+        BatchRouterCommon(vault, weth, permit2, routerVersion)
+    {
         // solhint-disable-previous-line no-empty-blocks
     }
 
@@ -47,9 +46,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
                                     Swaps Exact In
     ***************************************************************************/
 
-    function swapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function swapExactInHook(SwapExactInHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -60,9 +57,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         _settlePaths(params.sender, params.wethIsEth);
     }
 
-    function _swapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function _swapExactInHook(SwapExactInHookParams calldata params)
         internal
         virtual
         returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut)
@@ -89,9 +84,11 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         }
     }
 
-    function _computePathAmountsOut(
-        SwapExactInHookParams calldata params
-    ) internal virtual returns (uint256[] memory pathAmountsOut) {
+    function _computePathAmountsOut(SwapExactInHookParams calldata params)
+        internal
+        virtual
+        returns (uint256[] memory pathAmountsOut)
+    {
         pathAmountsOut = new uint256[](params.paths.length);
 
         if (_isPrepaid) {
@@ -131,12 +128,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
 
                 if (step.isBuffer) {
                     amountOut = _erc4626BufferWrapOrUnwrapExactIn(
-                        step.pool,
-                        stepTokenIn,
-                        step.tokenOut,
-                        stepExactAmountIn,
-                        minAmountOut,
-                        isLastStep
+                        step.pool, stepTokenIn, step.tokenOut, stepExactAmountIn, minAmountOut, isLastStep
                     );
                 } else if (address(stepTokenIn) == step.pool) {
                     amountOut = _removeLiquidityExactIn(
@@ -195,7 +187,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         uint256 minAmountOut,
         bool isLastStep
     ) internal returns (uint256 amountOut) {
-        (, , amountOut) = _vault.erc4626BufferWrapOrUnwrap(
+        (,, amountOut) = _vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_IN,
                 direction: pool == address(stepTokenIn) ? WrappingDirection.UNWRAP : WrappingDirection.WRAP,
@@ -254,16 +246,13 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
 
         // minAmountOut cannot be 0 in this case, as that would send an array of 0s to the Vault, which
         // wouldn't know which token to use.
-        (uint256[] memory amountsOut, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool,
-            stepTokenOut,
-            minAmountOut == 0 ? 1 : minAmountOut
-        );
+        (uint256[] memory amountsOut, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, stepTokenOut, minAmountOut == 0 ? 1 : minAmountOut);
 
         // The Router is always an intermediary in this case. The Vault will burn tokens from the Router, so
         // the Router is both owner and spender, which doesn't require approval.
         // Reusing `amountsOut` as input argument and function output to prevent stack too deep error.
-        (, amountsOut, ) = _vault.removeLiquidity(
+        (, amountsOut,) = _vault.removeLiquidity(
             RemoveLiquidityParams({
                 pool: pool,
                 from: address(this),
@@ -292,9 +281,9 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         bool isLastStep
     ) internal returns (uint256 amountOut) {
         // Token out is BPT: add liquidity - Single token exact in (unbalanced).
-        (uint256[] memory exactAmountsIn, ) = _getSingleInputArrayAndTokenIndex(pool, stepTokenIn, stepExactAmountIn);
+        (uint256[] memory exactAmountsIn,) = _getSingleInputArrayAndTokenIndex(pool, stepTokenIn, stepExactAmountIn);
 
-        (, uint256 bptAmountOut, ) = _vault.addLiquidity(
+        (, uint256 bptAmountOut,) = _vault.addLiquidity(
             AddLiquidityParams({
                 pool: pool,
                 to: isLastStep ? sender : address(_vault),
@@ -326,7 +315,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         bool isLastStep
     ) internal returns (uint256 amountOut) {
         // No BPT involved in the operation: regular swap exact in.
-        (, , amountOut) = _vault.swap(
+        (,, amountOut) = _vault.swap(
             VaultSwapParams({
                 kind: SwapKind.EXACT_IN,
                 pool: pool,
@@ -347,9 +336,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
                                     Swaps Exact Out
     ***************************************************************************/
 
-    function swapExactOutHook(
-        SwapExactOutHookParams calldata params
-    )
+    function swapExactOutHook(SwapExactOutHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -360,9 +347,11 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         _settlePaths(params.sender, params.wethIsEth);
     }
 
-    function _swapExactOutHook(
-        SwapExactOutHookParams calldata params
-    ) internal virtual returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn) {
+    function _swapExactOutHook(SwapExactOutHookParams calldata params)
+        internal
+        virtual
+        returns (uint256[] memory pathAmountsIn, address[] memory tokensIn, uint256[] memory amountsIn)
+    {
         // The deadline is timestamp-based: it should not be relied upon for sub-minute accuracy.
         // solhint-disable-next-line not-rely-on-time
         if (block.timestamp > params.deadline) {
@@ -394,9 +383,11 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
      * @dev Executes every swap path in the given input parameters.
      * Computes inputs for the path, and aggregates them by token and amounts as well in transient storage.
      */
-    function _computePathAmountsIn(
-        SwapExactOutHookParams calldata params
-    ) internal virtual returns (uint256[] memory pathAmountsIn) {
+    function _computePathAmountsIn(SwapExactOutHookParams calldata params)
+        internal
+        virtual
+        returns (uint256[] memory pathAmountsIn)
+    {
         pathAmountsIn = new uint256[](params.paths.length);
 
         if (_isPrepaid) {
@@ -525,7 +516,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
             _takeTokenIn(sender, stepTokenIn, pathMaxAmountIn, wethIsEth);
         }
 
-        (, amountIn, ) = _vault.erc4626BufferWrapOrUnwrap(
+        (, amountIn,) = _vault.erc4626BufferWrapOrUnwrap(
             BufferWrapOrUnwrapParams({
                 kind: SwapKind.EXACT_OUT,
                 direction: pool == address(stepTokenIn) ? WrappingDirection.UNWRAP : WrappingDirection.WRAP,
@@ -584,11 +575,11 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
             }
         }
 
-        (uint256[] memory exactAmountsOut, ) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, stepExactAmountOut);
+        (uint256[] memory exactAmountsOut,) = _getSingleInputArrayAndTokenIndex(pool, tokenOut, stepExactAmountOut);
 
         // The Router is always an intermediary in this case. The Vault will burn tokens from the Router, so
         // the Router is both owner and spender, which doesn't require approval.
-        (amountIn, , ) = _vault.removeLiquidity(
+        (amountIn,,) = _vault.removeLiquidity(
             RemoveLiquidityParams({
                 pool: pool,
                 from: address(this),
@@ -629,14 +620,11 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         bool isLastStep
     ) internal returns (uint256 amountIn) {
         // Token out is BPT: add liquidity - Single token exact out.
-        (uint256[] memory stepAmountsIn, uint256 tokenIndex) = _getSingleInputArrayAndTokenIndex(
-            pool,
-            stepTokenIn,
-            stepMaxAmountIn
-        );
+        (uint256[] memory stepAmountsIn, uint256 tokenIndex) =
+            _getSingleInputArrayAndTokenIndex(pool, stepTokenIn, stepMaxAmountIn);
 
         // Reusing `amountsIn` as input argument and function output to prevent stack too deep error.
-        (stepAmountsIn, , ) = _vault.addLiquidity(
+        (stepAmountsIn,,) = _vault.addLiquidity(
             AddLiquidityParams({
                 pool: pool,
                 to: isFirstStep ? sender : address(_vault),
@@ -681,7 +669,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         bool isLastStep
     ) internal returns (uint256 amountIn) {
         // No BPT involved in the operation: regular swap exact out.
-        (, amountIn, ) = _vault.swap(
+        (, amountIn,) = _vault.swap(
             VaultSwapParams({
                 kind: SwapKind.EXACT_OUT,
                 pool: pool,
@@ -706,9 +694,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
                                      Queries
     ***************************************************************************/
 
-    function querySwapExactInHook(
-        SwapExactInHookParams calldata params
-    )
+    function querySwapExactInHook(SwapExactInHookParams calldata params)
         external
         nonReentrant
         onlyVault
@@ -717,9 +703,7 @@ abstract contract BatchRouterHooks is BatchRouterCommon {
         (pathAmountsOut, tokensOut, amountsOut) = _swapExactInHook(params);
     }
 
-    function querySwapExactOutHook(
-        SwapExactOutHookParams calldata params
-    )
+    function querySwapExactOutHook(SwapExactOutHookParams calldata params)
         external
         nonReentrant
         onlyVault

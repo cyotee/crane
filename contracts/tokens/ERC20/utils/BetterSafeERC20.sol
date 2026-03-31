@@ -91,8 +91,7 @@ library BetterSafeERC20 {
     /* ---------------------------------------------------------------------- */
 
     function safeName(IERC20Metadata asset_) internal view returns (string memory) {
-        (bool success, bytes memory encodedName) =
-            address(asset_).staticcall(abi.encodeCall(IERC20Metadata.name, ()));
+        (bool success, bytes memory encodedName) = address(asset_).staticcall(abi.encodeCall(IERC20Metadata.name, ()));
         if (success && encodedName.length >= 32) {
             return abi.decode(encodedName, (string));
         }

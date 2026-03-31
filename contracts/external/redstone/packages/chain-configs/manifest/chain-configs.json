@@ -1,0 +1,1489 @@
+{
+  "defaultConfig": {
+    "hardhat": {
+      "name": "hardhat",
+      "networkId": 31337,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["http://localhost:1337"],
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 100000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "ethereum": {
+      "name": "Ethereum Mainnet",
+      "networkId": 1,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://eth.drpc.org",
+        "https://eth.llamarpc.com"
+      ],
+      "etherScanApi": "https://api.etherscan.io",
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 2000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "arbitrumOne": {
+      "name": "Arbitrum One",
+      "networkId": 42161,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://arb1.arbitrum.io/rpc",
+        "https://arbitrum-one.publicnode.com",
+        "https://1rpc.io/arb"
+      ],
+      "etherScanApi": "https://api.arbiscan.io",
+      "avgBlockTimeMs": 250,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": true,
+      "isMainnet": true
+    },
+    "avalanche": {
+      "name": "Avalanche Network",
+      "networkId": 43114,
+      "currencySymbol": "AVAX",
+      "publicRpcUrls": [
+        "https://api.avax.network/ext/bc/C/rpc",
+        "https://avalanche.drpc.org",
+        "https://avax.meowrpc.com",
+        "https://avalanche-c-chain.publicnode.com"
+      ],
+      "etherScanApi": "https://api.snowtrace.io",
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "optimism": {
+      "name": "Optimism",
+      "networkId": 10,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://mainnet.optimism.io",
+        "https://optimism.publicnode.com",
+        "https://1rpc.io/op",
+        "https://optimism.drpc.org"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "polygon": {
+      "name": "Polygon Mainnet",
+      "networkId": 137,
+      "currencySymbol": "POL",
+      "publicRpcUrls": [
+        "https://polygon-rpc.com",
+        "https://1rpc.io/matic",
+        "https://rpc-mainnet.matic.quiknode.pro"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0x52f530e1d42BdFeF939729C341Ed714698a993f7",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "celo": {
+      "name": "Celo Mainnet",
+      "networkId": 42220,
+      "currencySymbol": "CELO",
+      "publicRpcUrls": ["https://forno.celo.org"],
+      "etherScanApi": "https://api.celoscan.io",
+      "avgBlockTimeMs": 5000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "base": {
+      "name": "Base Mainnet",
+      "networkId": 8453,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://mainnet.base.org",
+        "https://base.publicnode.com",
+        "https://base.gateway.tenderly.co",
+        "https://base.meowrpc.com",
+        "https://base.llamarpc.com"
+      ],
+      "avgBlockTimeMs": 5000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "base-sepolia": {
+      "name": "Base Sepolia",
+      "networkId": 84532,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://base-sepolia-rpc.publicnode.com",
+        "https://sepolia.base.org",
+        "https://base-sepolia.drpc.org"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "canto": {
+      "name": "Canto",
+      "networkId": 7700,
+      "currencySymbol": "CANTO",
+      "publicRpcUrls": ["https://canto-rpc.ansybl.io"],
+      "avgBlockTimeMs": 6000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "manta": {
+      "name": "Manta Pacific Mainnet",
+      "networkId": 169,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://pacific-rpc.manta.network/http",
+        "https://1rpc.io/manta",
+        "https://manta-pacific-aperture.calderachain.xyz/http",
+        "https://manta-pacific-gascap.calderachain.xyz/http"
+      ],
+      "avgBlockTimeMs": 10000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "blast": {
+      "name": "Blast Mainnet",
+      "networkId": 81457,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://rpc.blast.io",
+        "https://blast-rpc.publicnode.com",
+        "https://blast.din.dev/rpc",
+        "https://blast.drpc.org"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "etherlinkShadownetTestnet": {
+      "name": "Etherlink Shadownet Testnet",
+      "networkId": 127823,
+      "currencySymbol": "XTZ",
+      "publicRpcUrls": [
+        "https://node.shadownet.etherlink.com",
+        "https://rpc.ankr.com/etherlink_shadownet_testnet"
+      ],
+      "avgBlockTimeMs": 6000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 10000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "etherlink": {
+      "name": "Etherlink Mainnet",
+      "networkId": 42793,
+      "currencySymbol": "XTZ",
+      "publicRpcUrls": ["https://node.mainnet.etherlink.com"],
+      "avgBlockTimeMs": 6000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 10000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "mode": {
+      "name": "Mode Mainnet",
+      "networkId": 34443,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://mainnet.mode.network/", "https://1rpc.io/mode"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "mantle": {
+      "name": "Mantle",
+      "networkId": 5000,
+      "currencySymbol": "MNT",
+      "publicRpcUrls": [
+        "https://rpc.mantle.xyz",
+        "https://mantle-rpc.publicnode.com",
+        "https://mantle.drpc.org",
+        "https://1rpc.io/mantle"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": true,
+      "isMainnet": true
+    },
+    "ethereum-sepolia": {
+      "name": "Ethereum Sepolia",
+      "networkId": 11155111,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://ethereum-sepolia-rpc.publicnode.com", "https://1rpc.io/sepolia"],
+      "etherScanApi": "https://api-sepolia.etherscan.io",
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "bnb": {
+      "name": "Binance chain",
+      "networkId": 56,
+      "currencySymbol": "BNB",
+      "publicRpcUrls": [
+        "https://binance.nodereal.io",
+        "https://1rpc.io/bnb",
+        "https://binance.llamarpc.com",
+        "https://bsc-dataseed.bnbchain.org",
+        "https://bsc-pokt.nodies.app"
+      ],
+      "etherScanApi": "https://api.bscscan.com",
+      "avgBlockTimeMs": 450,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "bnb-testnet": {
+      "name": "Binance chain testnet",
+      "networkId": 97,
+      "currencySymbol": "tBNB",
+      "publicRpcUrls": ["https://bsc-testnet-rpc.publicnode.com"],
+      "avgBlockTimeMs": 450,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "kava": {
+      "name": "Kava",
+      "networkId": 2222,
+      "currencySymbol": "KAVA",
+      "publicRpcUrls": [
+        "https://evm.kava.io",
+        "https://kava-evm-rpc.publicnode.com",
+        "https://kava-pokt.nodies.app",
+        "https://evm.kava-rpc.com",
+        "https://kava.drpc.org"
+      ],
+      "avgBlockTimeMs": 6000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "fraxtal": {
+      "name": "Fraxtal Mainnet",
+      "networkId": 252,
+      "currencySymbol": "frxETH",
+      "publicRpcUrls": ["https://rpc.frax.com"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true,
+      "fallbackToEthMaxPriorityFeePerGas": true
+    },
+    "linea": {
+      "name": "Linea Mainnet",
+      "networkId": 59144,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://linea.drpc.org",
+        "https://rpc.linea.build",
+        "https://1rpc.io/linea"
+      ],
+      "avgBlockTimeMs": 3000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "b2": {
+      "name": "B2 Mainnet",
+      "networkId": 223,
+      "currencySymbol": "BTC",
+      "publicRpcUrls": [
+        "https://rpc.bsquared.network",
+        "https://mainnet.b2-rpc.com",
+        "https://rpc.ankr.com/b2",
+        "https://b2-mainnet.alt.technology"
+      ],
+      "avgBlockTimeMs": 2500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "bob": {
+      "name": "BOB Mainnet",
+      "networkId": 60808,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc.gobob.xyz"],
+      "avgBlockTimeMs": 2500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "blast-sepolia": {
+      "name": "Blast sepolia",
+      "networkId": 168587773,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://sepolia.blast.io"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "merlin": {
+      "name": "Merlin Mainnet",
+      "networkId": 4200,
+      "currencySymbol": "BTC",
+      "publicRpcUrls": [
+        "https://rpc.merlinchain.io",
+        "https://merlin.blockpi.network/v1/rpc/public"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 200000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "sei": {
+      "name": "Sei Mainnet",
+      "networkId": 1329,
+      "currencySymbol": "SEI",
+      "publicRpcUrls": [
+        "https://evm-rpc.sei-apis.com",
+        "https://sei-public.nodies.app",
+        "https://sei.drpc.org"
+      ],
+      "avgBlockTimeMs": 500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "berachain-testnet": {
+      "name": "Berachain Testnet",
+      "networkId": 80069,
+      "currencySymbol": "BERA",
+      "publicRpcUrls": ["https://bepolia.rpc.berachain.com"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "cyber": {
+      "name": "Cyber",
+      "networkId": 7560,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://cyber.alt.technology"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "zksync": {
+      "name": "zkSync",
+      "networkId": 324,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://mainnet.era.zksync.io"],
+      "avgBlockTimeMs": 1200,
+      "multicall3": {
+        "address": "0x4a87b5ce9f56f353a4d6808BA3c012083912b8f2",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": true,
+      "isMainnet": true
+    },
+    "zkLink": {
+      "name": "zkLink",
+      "networkId": 810180,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc.zklink.io"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0x4a87b5ce9f56f353a4d6808BA3c012083912b8f2",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": true,
+      "isMainnet": true
+    },
+    "zircuit": {
+      "name": "Zircuit Mainnet",
+      "networkId": 48900,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://zircuit-mainnet.drpc.org", "https://zircuit1-mainnet.p2pify.com"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "scroll": {
+      "name": "Scroll",
+      "networkId": 534352,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc.scroll.io", "https://scroll.drpc.org"],
+      "avgBlockTimeMs": 3000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "hemiTestnet": {
+      "name": "Hemi Sepolia",
+      "networkId": 743111,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://testnet.rpc.hemi.network/rpc"],
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "hemi": {
+      "name": "Hemi Network",
+      "networkId": 43111,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc.hemi.network/rpc"],
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "unichainTestnet": {
+      "name": "Unichain Sepolia",
+      "networkId": 1301,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://unichain-sepolia-rpc.publicnode.com",
+        "https://sepolia.unichain.org"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "ink": {
+      "name": "Ink",
+      "networkId": 57073,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://rpc-qnd.inkonchain.com",
+        "https://ink.drpc.org",
+        "https://rpc-gel.inkonchain.com"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "inkSepolia": {
+      "name": "Ink Sepolia",
+      "networkId": 763373,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc-gel-sepolia.inkonchain.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "taiko": {
+      "name": "Taiko Mainnet",
+      "networkId": 167000,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://rpc.mainnet.taiko.xyz",
+        "https://taiko.drpc.org",
+        "https://rpc.ankr.com/taiko",
+        "https://taiko-rpc.publicnode.com"
+      ],
+      "avgBlockTimeMs": 6000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "corn": {
+      "name": "Corn Maizenet",
+      "networkId": 21000000,
+      "currencySymbol": "BTCN",
+      "publicRpcUrls": ["https://rpc.ankr.com/corn_maizenet", "https://maizenet-rpc.usecorn.com"],
+      "avgBlockTimeMs": 60000,
+      "multicall3": {
+        "address": "0x0871f732A0DaAFe1E6a80A862878648a86dE1298",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "cornTestnet": {
+      "name": "Corn Testnet",
+      "networkId": 21000001,
+      "currencySymbol": "BTCN",
+      "publicRpcUrls": ["https://testnet-rpc.usecorn.com", "https://rpc.ankr.com/corn_testnet"],
+      "avgBlockTimeMs": 60000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "swellchain": {
+      "name": "Swellchain",
+      "networkId": 1923,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://swell-mainnet.alt.technology", "https://rpc.ankr.com/swell"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "isMainnet": true
+    },
+    "hyperliquidTestnet": {
+      "name": "Hyperliquid Testnet",
+      "networkId": 998,
+      "currencySymbol": "HYPE",
+      "publicRpcUrls": ["https://rpc.hyperliquid-testnet.xyz/evm"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "sonic": {
+      "name": "Sonic Network",
+      "networkId": 146,
+      "currencySymbol": "S",
+      "publicRpcUrls": ["https://rpc.soniclabs.com", "https://sonic-rpc.publicnode.com"],
+      "avgBlockTimeMs": 700,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "rootstock": {
+      "name": "Rootstock Mainnet",
+      "networkId": 30,
+      "currencySymbol": "RBTC",
+      "publicRpcUrls": ["https://public-node.rsk.co", "https://mycrypto.rsk.co"],
+      "avgBlockTimeMs": 25000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": true,
+      "isMainnet": true
+    },
+    "rootstockTestnet": {
+      "name": "Rootstock Testnet",
+      "networkId": 31,
+      "currencySymbol": "tRBTC",
+      "publicRpcUrls": ["https://public-node.testnet.rsk.co"],
+      "avgBlockTimeMs": 25000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": true,
+      "isMainnet": false
+    },
+    "tac": {
+      "name": "TAC Mainnet",
+      "networkId": 239,
+      "currencySymbol": "TAC",
+      "publicRpcUrls": ["https://rpc.ankr.com/tac", "https://rpc.tac.build"],
+      "avgBlockTimeMs": 1300,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "decimalNumberOfBlocksForFeeHistory": true,
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "tacSpbTestnet": {
+      "name": "TAC Saint Petersburg Testnet",
+      "networkId": 2391,
+      "currencySymbol": "TAC",
+      "publicRpcUrls": ["https://spb.rpc.tac.build", "https://rpc.ankr.com/tac_spb"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "decimalNumberOfBlocksForFeeHistory": true,
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "holesky": {
+      "name": "Holesky",
+      "networkId": 17000,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://holesky.drpc.org"],
+      "avgBlockTimeMs": 14000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "amoy": {
+      "name": "Polygon Amoy",
+      "networkId": 80002,
+      "currencySymbol": "POL",
+      "publicRpcUrls": [
+        "https://polygon-amoy.drpc.org",
+        "https://polygon-amoy.gateway.tatum.io",
+        "https://polygon-amoy.gateway.tenderly.co",
+        "https://polygon-amoy-bor-rpc.publicnode.com"
+      ],
+      "avgBlockTimeMs": 20000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "megaEthTestnet": {
+      "name": "MegaETH Testnet",
+      "networkId": 6343,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://carrot.megaeth.com/rpc"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "megaEth": {
+      "name": "MegaETH Mainnet",
+      "networkId": 4326,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://mainnet.megaeth.com/rpc"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0x52f530e1d42BdFeF939729C341Ed714698a993f7",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "monadTestnet": {
+      "name": "Monad Testnet",
+      "networkId": 10143,
+      "currencySymbol": "MON",
+      "publicRpcUrls": [
+        "https://monad-testnet.drpc.org",
+        "https://rpc.ankr.com/monad_testnet",
+        "https://monad-testnet.gateway.tatum.io",
+        "https://testnet-rpc.monad.xyz"
+      ],
+      "avgBlockTimeMs": 400,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "monad": {
+      "name": "Monad Mainnet",
+      "networkId": 143,
+      "currencySymbol": "MON",
+      "publicRpcUrls": [
+        "https://rpc1.monad.xyz",
+        "https://rpc2.monad.xyz",
+        "https://rpc3.monad.xyz",
+        "https://rpc4.monad.xyz",
+        "https://rpc-mainnet.monadinfra.com"
+      ],
+      "avgBlockTimeMs": 400,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "berachain": {
+      "name": "Berachain",
+      "networkId": 80094,
+      "currencySymbol": "BERA",
+      "publicRpcUrls": ["https://rpc.berachain.com"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "story": {
+      "name": "Story",
+      "networkId": 1514,
+      "currencySymbol": "IP",
+      "publicRpcUrls": [
+        "https://mainnet.storyrpc.io",
+        "https://story-evm-rpc.spidernode.net",
+        "https://evm-rpc.story.mainnet.dteam.tech"
+      ],
+      "avgBlockTimeMs": 2500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "storyTestnet": {
+      "name": "Story Aeneid Testnet",
+      "networkId": 1315,
+      "currencySymbol": "IP",
+      "publicRpcUrls": ["https://aeneid.storyrpc.io", "https://rpc.ankr.com/story_aeneid_testnet"],
+      "avgBlockTimeMs": 2200,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "unichain": {
+      "name": "Unichain",
+      "networkId": 130,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://unichain.drpc.org",
+        "https://unichain-rpc.publicnode.com",
+        "https://unichain.api.onfinality.io/public"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "sui-testnet": {
+      "name": "Sui Testnet",
+      "networkId": "sui/1282977196",
+      "currencySymbol": "SUI",
+      "publicRpcUrls": [
+        "https://sui-testnet.gateway.tatum.io/",
+        "https://sui-testnet.api.onfinality.io/public"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "sui": {
+      "name": "Sui",
+      "networkId": "sui/897796746",
+      "currencySymbol": "SUI",
+      "publicRpcUrls": [
+        "https://rpc.ankr.com/sui",
+        "https://1rpc.io/sui",
+        "https://sui.blockpi.network/v1/rpc/public",
+        "https://sui-mainnet-endpoint.blockvision.org/",
+        "https://endpoints.omniatech.io/v1/sui/mainnet/public"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "movement-testnet": {
+      "name": "Movement Testnet",
+      "networkId": "movement/250",
+      "currencySymbol": "MOVE",
+      "publicRpcUrls": [
+        "https://testnet.movementnetwork.xyz/v1",
+        "https://rpc.sentio.xyz/movement-testnet/v1"
+      ],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "aptos-testnet": {
+      "name": "Aptos Testnet",
+      "networkId": "aptos/2",
+      "currencySymbol": "APT",
+      "publicRpcUrls": ["https://api.testnet.aptoslabs.com/v1"],
+      "avgBlockTimeMs": 130,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "aptos-mainnet": {
+      "name": "Aptos Mainnet",
+      "networkId": "aptos/1",
+      "currencySymbol": "APT",
+      "publicRpcUrls": ["https://api.mainnet.aptoslabs.com/v1"],
+      "avgBlockTimeMs": 130,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "radix-stokenet": {
+      "name": "Radix Stokenet",
+      "networkId": "radix/2",
+      "currencySymbol": "XRD",
+      "publicRpcUrls": ["https://stokenet.radixdlt.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "radix": {
+      "name": "Radix Mainnet",
+      "networkId": "radix/1",
+      "currencySymbol": "XRD",
+      "publicRpcUrls": ["https://mainnet.radixdlt.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "solana-devnet": {
+      "name": "Solana Devnet",
+      "networkId": "solana/3",
+      "currencySymbol": "SOL",
+      "publicRpcUrls": ["https://api.devnet.solana.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "solana-testnet": {
+      "name": "Solana Testnet",
+      "networkId": "solana/2",
+      "currencySymbol": "SOL",
+      "publicRpcUrls": ["https://api.testnet.solana.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "solana-mainnet": {
+      "name": "Solana Mainnet",
+      "networkId": "solana/1",
+      "currencySymbol": "SOL",
+      "publicRpcUrls": ["https://api.mainnet-beta.solana.com"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "arbitrumSepolia": {
+      "name": "Arbitrum Sepolia",
+      "networkId": 421614,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": [
+        "https://sepolia-rollup.arbitrum.io/rpc",
+        "https://arbitrum-sepolia.gateway.tenderly.co",
+        "https://arbitrum-sepolia.drpc.org"
+      ],
+      "avgBlockTimeMs": 300,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": true,
+      "isMainnet": false
+    },
+    "hyperevm": {
+      "name": "HyperEVM",
+      "networkId": 999,
+      "currencySymbol": "HYPE",
+      "publicRpcUrls": [
+        "https://rpc.hyperliquid.xyz/evm",
+        "https://hyperliquid.drpc.org",
+        "https://rpc.hyperlend.finance",
+        "https://rpc.hypurrscan.io"
+      ],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "citreaTestnet": {
+      "name": "Citrea Testnet",
+      "networkId": 5115,
+      "currencySymbol": "cBTC",
+      "publicRpcUrls": ["https://rpc.testnet.citrea.xyz"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xcA11bde05977b3631167028862bE2a173976CA11",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "citrea": {
+      "name": "Citrea Mainnet",
+      "networkId": 4114,
+      "currencySymbol": "cBTC",
+      "publicRpcUrls": ["https://rpc.mainnet.citrea.xyz"],
+      "avgBlockTimeMs": 2000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "westendHub": {
+      "name": "Westend Asset Hub",
+      "networkId": 420420421,
+      "currencySymbol": "WND",
+      "publicRpcUrls": ["https://westend-asset-hub-eth-rpc.polkadot.io"],
+      "avgBlockTimeMs": 10000,
+      "multicall3": {
+        "address": "0x566178C2D428e74C38FD8e7617cED52B99fa6741",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "katana": {
+      "name": "Katana",
+      "networkId": 747474,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc.katana.network"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "zeroGravityTestnet": {
+      "name": "0G Galileo Testnet",
+      "networkId": 16602,
+      "currencySymbol": "0G",
+      "publicRpcUrls": ["https://evmrpc-testnet.0g.ai"],
+      "avgBlockTimeMs": 700,
+      "multicall3": {
+        "address": "0xb4fe9028A4D4D8B3d00e52341F2BB0798860532C",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "zeroGravity": {
+      "name": "0G Aristotle Mainnet",
+      "networkId": 16661,
+      "currencySymbol": "0G",
+      "publicRpcUrls": ["http://evmrpc.0g.ai"],
+      "avgBlockTimeMs": 400,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "stellar-testnet": {
+      "name": "Stellar Testnet",
+      "networkId": "stellar/2",
+      "currencySymbol": "XLM",
+      "publicRpcUrls": ["https://soroban-testnet.stellar.org"],
+      "avgBlockTimeMs": 5000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "stellar-mainnet": {
+      "name": "Stellar Mainnet",
+      "networkId": "stellar/1",
+      "currencySymbol": "XLM",
+      "publicRpcUrls": [
+        "https://mainnet.sorobanrpc.com",
+        "https://soroban-rpc.mainnet.stellar.gateway.fm",
+        "https://stellar-soroban-public.nodies.app",
+        "https://stellar.api.onfinality.io/public"
+      ],
+      "avgBlockTimeMs": 5000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "incentivTestnet": {
+      "name": "Incentiv Testnet",
+      "networkId": 28802,
+      "currencySymbol": "TCENT",
+      "publicRpcUrls": ["https://rpc3.testnet.incentiv.io"],
+      "avgBlockTimeMs": 12000,
+      "multicall3": {
+        "address": "0x52f530e1d42BdFeF939729C341Ed714698a993f7",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "incentiv": {
+      "name": "Incentiv Mainnet",
+      "networkId": 24101,
+      "currencySymbol": "CENT",
+      "publicRpcUrls": ["https://rpc.incentiv.io", "https://rpc-archive.incentiv.io"],
+      "avgBlockTimeMs": 5500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "fallbackToEthMaxPriorityFeePerGas": true,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "edenTestnet": {
+      "name": "Eden Testnet (Celestia)",
+      "networkId": 3735928814,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://ev-reth-eden-testnet.binarybuilders.services:8545"],
+      "avgBlockTimeMs": 500,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "plasma": {
+      "name": "Plasma Mainnet",
+      "networkId": 9745,
+      "currencySymbol": "XPL",
+      "publicRpcUrls": ["https://plasma.drpc.org", "https://rpc.plasma.to"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "giwaTestnet": {
+      "name": "GIWA Sepolia",
+      "networkId": 91342,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://sepolia-rpc.giwa.io"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "plume": {
+      "name": "Plume",
+      "networkId": 98866,
+      "currencySymbol": "PLUME",
+      "publicRpcUrls": ["https://rpc.plume.org", "https://plume.drpc.org"],
+      "avgBlockTimeMs": 600,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "stable": {
+      "name": "Stable Mainnet",
+      "networkId": 988,
+      "currencySymbol": "gUSDT",
+      "publicRpcUrls": ["https://rpc.stable.xyz"],
+      "avgBlockTimeMs": 700,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "morph": {
+      "name": "Morph Mainnet",
+      "networkId": 2818,
+      "currencySymbol": "ETH",
+      "publicRpcUrls": ["https://rpc-quicknode.morphl2.io", "https://rpc.morphl2.io"],
+      "avgBlockTimeMs": 4000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "tempo": {
+      "name": "Tempo Mainnet",
+      "networkId": 4217,
+      "currencySymbol": "pathUSD",
+      "publicRpcUrls": [],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0xaD6CC5a465E5c8284a49eC9eD10EFE275460678c",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": true
+    },
+    "tempoTestnet": {
+      "name": "Tempo Testnet (Moderato)",
+      "networkId": 42431,
+      "currencySymbol": "USD",
+      "publicRpcUrls": ["https://rpc.moderato.tempo.xyz"],
+      "avgBlockTimeMs": 1000,
+      "multicall3": {
+        "address": "0x52f530e1d42BdFeF939729C341Ed714698a993f7",
+        "type": "RedstoneMulticall3",
+        "gasLimitPerCall": 1000000
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    },
+    "canton-devnet": {
+      "name": "Canton Devnet",
+      "networkId": "canton/2",
+      "currencySymbol": "XLM",
+      "publicRpcUrls": ["https://localhost:7575"],
+      "avgBlockTimeMs": 10000,
+      "multicall3": {
+        "address": "",
+        "type": "Multicall3"
+      },
+      "isAuctionModel": false,
+      "twoDimensionalFees": false,
+      "isMainnet": false
+    }
+  },
+  "temporaryConfigUpdates": {
+    "expirationTimestamp": "2025-08-05T12:01:00+02:00"
+  }
+}
