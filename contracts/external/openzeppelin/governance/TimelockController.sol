@@ -191,7 +191,7 @@ contract TimelockController is AccessControl, IERC721Receiver, IERC1155Receiver 
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return BetterEfficientHashLib._hash(target, value, data, predecessor, salt);
+        return BetterEfficientHashLib._hash(abi.encode(target, value, data, predecessor, salt));
     }
 
     /**
@@ -205,7 +205,7 @@ contract TimelockController is AccessControl, IERC721Receiver, IERC1155Receiver 
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return BetterEfficientHashLib._hash(targets, values, payloads, predecessor, salt);
+        return BetterEfficientHashLib._hash(abi.encode(targets, values, payloads, predecessor, salt));
     }
 
     /**
