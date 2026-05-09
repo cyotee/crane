@@ -2,8 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-import {IOFT, SendParam} from "@crane/contracts/external/layerzero/@layerzerolabs/lz-evm-oapp-v2/contracts/oft/interfaces/IOFT.sol";
-import {MessagingFee} from "@crane/contracts/external/layerzero/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol";
+import {
+    IOFT,
+    MessagingFee,
+    SendParam
+} from "@crane/contracts/protocols/lending/euler/v1/stubs/layerzero/@layerzerolabs/lz-evm-oapp-v2/contracts/oft/interfaces/IOFT.sol";
 import {FeeCollectorUtil, IERC20, SafeERC20} from "../Util/FeeCollectorUtil.sol";
 
 /// @title OFTFeeCollector

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "hardhat/console.sol";
+import "@crane/contracts/protocols/lending/euler/v1/stubs/hardhat/console.sol";
 
 library HardhatLoggerLib {
   function logUint256Array(uint256[] memory arr) internal pure {

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC1363Receiver} from "@openzeppelin/contracts/interfaces/IERC1363Receiver.sol";
+import {IERC1363Receiver} from "@crane/contracts/external/openzeppelin/interfaces/IERC1363Receiver.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 contract ERC1363ReceiverMockUpgradeable is Initializable, IERC1363Receiver {

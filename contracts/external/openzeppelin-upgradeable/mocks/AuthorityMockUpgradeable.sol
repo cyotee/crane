@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessManaged} from "@openzeppelin/contracts/access/manager/IAccessManaged.sol";
-import {IAuthority} from "@openzeppelin/contracts/access/manager/IAuthority.sol";
+import {IAccessManaged} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManaged.sol";
+import {IAuthority} from "@crane/contracts/external/openzeppelin/access/manager/IAuthority.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 contract NotAuthorityMockUpgradeable is Initializable, IAuthority {

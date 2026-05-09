@@ -216,7 +216,7 @@ contract Vault is IVaultMain, VaultCommon, Proxy {
             revert AmountGivenZero();
         }
 
-        if (vaultSwapParams.tokenIn == vaultSwapParams.tokenOut) {
+        if (address(vaultSwapParams.tokenIn) == address(vaultSwapParams.tokenOut)) {
             revert CannotSwapSameToken();
         }
 

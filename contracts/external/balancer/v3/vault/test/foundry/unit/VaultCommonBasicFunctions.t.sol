@@ -405,7 +405,7 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
         IERC20 lastToken = IERC20(address(0));
         for (uint256 i = 0; i < length; ++i) {
             IERC20 currentToken = IERC20(tokensRaw[i]);
-            vm.assume(currentToken > lastToken);
+            vm.assume(address(currentToken) > address(lastToken));
             tokens[i] = currentToken;
             lastToken = currentToken;
         }
@@ -422,7 +422,7 @@ contract VaultCommonBasicFunctionsTest is BaseVaultTest {
         IERC20[] memory tokens = new IERC20[](length);
         for (uint256 i = 0; i < length; ++i) {
             IERC20 currentToken = IERC20(tokensRaw[i]);
-            vm.assume(currentToken != nonRegisteredToken);
+            vm.assume(address(currentToken) != address(nonRegisteredToken));
             tokens[i] = currentToken;
         }
 

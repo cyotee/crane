@@ -8,13 +8,13 @@ contract SampleNumericArrayLib {
   uint256[] cachedArray;
   uint256 public cachedMedian;
 
-  function testSortTx(uint256[] memory arr) public {
+  function sortTx(uint256[] memory arr) public {
     NumericArrayLib.sort(arr);
     cachedArray = arr;
   }
 
-  // Can be used to compare gas costs with the `testSortTx` function
-  function testArrayUpdatingInStorage(uint256[] memory arr) public {
+  // Can be used to compare gas costs with the `sortTx` function
+  function updateArrayInStorage(uint256[] memory arr) public {
     cachedArray = arr;
   }
 
@@ -22,7 +22,7 @@ contract SampleNumericArrayLib {
     return cachedArray;
   }
 
-  function testMedianSelection(uint256[] memory arr) public {
+  function medianSelection(uint256[] memory arr) public {
     cachedMedian = NumericArrayLib.pickMedian(arr);
   }
 }

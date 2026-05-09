@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 
 import {SqrtPriceMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/SqrtPriceMath.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
-import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/FixedPoint96.sol";
+import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 
 /**
  * @title SqrtPriceMath_V4_Test

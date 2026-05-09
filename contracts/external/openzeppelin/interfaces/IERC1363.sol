@@ -3,8 +3,8 @@
 
 pragma solidity ^0.8.0;
 
-import "./IERC20.sol";
-import "./IERC165.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 
 /**
  * @dev Interface of an ERC1363 compliant contract, as defined in the

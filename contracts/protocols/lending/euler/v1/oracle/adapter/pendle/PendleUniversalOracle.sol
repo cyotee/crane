@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IPMarket} from "@pendle/core-v2/interfaces/IPMarket.sol";
-import {IPPrincipalToken} from "@pendle/core-v2/interfaces/IPPrincipalToken.sol";
-import {IPPYLpOracle} from "@pendle/core-v2/interfaces/IPPYLpOracle.sol";
-import {IStandardizedYield} from "@pendle/core-v2/interfaces/IStandardizedYield.sol";
-import {PendlePYOracleLib} from "@pendle/core-v2/oracles/PendlePYOracleLib.sol";
-import {PendleLpOracleLib} from "@pendle/core-v2/oracles/PendleLpOracleLib.sol";
+import {IPMarket} from "@crane/contracts/protocols/perps/pendle/interfaces/IPMarket.sol";
+import {IPPrincipalToken} from "@crane/contracts/protocols/perps/pendle/interfaces/IPPrincipalToken.sol";
+import {IPPYLpOracle} from "@crane/contracts/protocols/perps/pendle/interfaces/IPPYLpOracle.sol";
+import {IStandardizedYield} from "@crane/contracts/protocols/perps/pendle/interfaces/IStandardizedYield.sol";
+import {PendlePYOracleLib} from "@crane/contracts/protocols/perps/pendle/oracles/PendlePYOracleLib.sol";
+import {PendleLpOracleLib} from "@crane/contracts/protocols/perps/pendle/oracles/PendleLpOracleLib.sol";
 import {BaseAdapter, Errors, IPriceOracle} from "../BaseAdapter.sol";
 import {ScaleUtils, Scale} from "../../lib/ScaleUtils.sol";
 

@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 /* -------------------------------------------------------------------------- */
-/*                                Open Zppelin                                */
+/*                                Open Zeppelin                                */
 /* -------------------------------------------------------------------------- */
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 // import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
-// NOTE: IERC1363 removed - requires OpenZeppelin dependency
 // import {IERC1363} from "@openzeppelin/contracts/interfaces/IERC1363.sol";
+// import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

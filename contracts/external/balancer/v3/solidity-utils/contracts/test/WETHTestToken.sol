@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.24;
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
@@ -27,7 +28,7 @@ contract WETHTestToken is ERC20, IWETH {
 
     function withdraw(uint256 wad) public override {
         _burn(msg.sender, wad);
-        payable(msg.sender).transfer(wad);
+        BetterAddress.sendValue(payable(msg.sender), wad);
         emit Withdrawal(msg.sender, wad);
     }
 

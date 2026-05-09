@@ -22,7 +22,9 @@ contract GovernedPerspective is EVCUtil, Ownable, BasePerspective {
     /// @notice Creates a new GovernedPerspective instance.
     /// @param _evc The address of the EVC.
     /// @param _owner The address that will be set as the owner of the contract.
-    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable(_owner) BasePerspective(address(0)) {}
+    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable() BasePerspective(address(0)) {
+        _transferOwnership(_owner);
+    }
 
     /// @inheritdoc BasePerspective
     function name() public pure virtual override returns (string memory) {

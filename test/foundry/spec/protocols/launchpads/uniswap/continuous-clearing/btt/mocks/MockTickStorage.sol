@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import {TickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol';
+
+contract MockTickStorage is TickStorage {
+    constructor(uint256 _tickSpacing, uint256 _floorPrice) TickStorage(_tickSpacing, _floorPrice) {}
+
+    function updateTickDemand(uint256 price, uint256 demandQ96) external {
+        super._updateTickDemand(price, demandQ96);
+    }
+
+    function initializeTickIfNeeded(uint256 prevPrice, uint256 price) external {
+        super._initializeTickIfNeeded(prevPrice, price);
+    }
+}

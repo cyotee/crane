@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {ICLPool} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/interfaces/ICLPool.sol";
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SwapMath.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
-import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/BitMath.sol";
+import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
 import {LiquidityMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/LiquidityMath.sol";
 
 /// @title SlipstreamQuoter

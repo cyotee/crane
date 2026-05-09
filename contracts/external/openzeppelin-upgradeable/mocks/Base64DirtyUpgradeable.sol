@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
+import {Base64} from "@crane/contracts/external/openzeppelin/utils/Base64.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 contract Base64DirtyUpgradeable is Initializable {

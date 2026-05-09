@@ -110,7 +110,8 @@ abstract contract ERC20WrapperLocked is EVCUtil, Ownable, ERC20Wrapper {
         address _underlying,
         string memory _name,
         string memory _symbol
-    ) EVCUtil(_evc) Ownable(_owner) ERC20Wrapper(IERC20(_underlying)) ERC20(_name, _symbol) {
+    ) EVCUtil(_evc) Ownable() ERC20Wrapper(IERC20(_underlying)) ERC20(_name, _symbol) {
+        _transferOwnership(_owner);
         remainderReceiver = _remainderReceiver;
         emit RemainderReceiverSet(_remainderReceiver);
     }

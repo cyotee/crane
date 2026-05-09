@@ -50,7 +50,7 @@ library WeightedTokenConfigUtils {
         for (uint256 i = 1; i < sortedConfigs.length; i++) {
             swapped = false;
             for (uint256 j = 0; j < sortedConfigs.length - i; j++) {
-                if (sortedConfigs[j + 1].token < sortedConfigs[j].token) {
+                if (address(sortedConfigs[j + 1].token) < address(sortedConfigs[j].token)) {
                     // Swap token configs
                     TokenConfig memory tempConfig = sortedConfigs[j];
                     sortedConfigs[j] = sortedConfigs[j + 1];

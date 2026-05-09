@@ -2,11 +2,12 @@
 
 pragma solidity ^0.8.17;
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import "../mocks/RedstoneConsumerNumericMock.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@crane/contracts/external/openzeppelin/utils/Context.sol";
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import "@crane/contracts/external/openzeppelin/access/Ownable.sol";
 
 /**
  * @dev Implementation of the {IERC20} interface.
@@ -323,6 +324,7 @@ contract ERC20Initializable is Context, IERC20, IERC20Metadata {
 }
 
 contract SampleSyntheticToken is ERC20Initializable, Ownable, RedstoneConsumerNumericMock {
+  using BetterAddress for address payable;
   bool private initialized;
   bytes32 public asset;
   address public broker;
@@ -384,7 +386,8 @@ contract SampleSyntheticToken is ERC20Initializable, Ownable, RedstoneConsumerNu
   function removeCollateral(uint256 amount) external virtual remainsSolvent {
     require(collateral[msg.sender] >= amount, "Cannot remove more collateral than deposited");
     collateral[msg.sender] -= amount;
-    payable(msg.sender).transfer(amount);
+    // payable(msg.sender).transfer(amount);
+    payable(msg.sender).sendValue(amount);
     emit CollateralRemoved(msg.sender, amount, block.timestamp);
   }
 
@@ -456,7 +459,8 @@ contract SampleSyntheticToken is ERC20Initializable, Ownable, RedstoneConsumerNu
 
     uint256 repaymentWithBonus = collateralRepayment + bonus;
     collateral[account] -= repaymentWithBonus;
-    payable(msg.sender).transfer(repaymentWithBonus);
+    // payable(msg.sender).transfer(repaymentWithBonus);
+    payable(msg.sender).sendValue(repaymentWithBonus);
 
     require(solvencyOf(account) >= MIN_SOLVENCY, "Account must be solvent after liquidation");
   }

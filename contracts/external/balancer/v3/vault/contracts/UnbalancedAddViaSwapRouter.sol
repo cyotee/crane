@@ -143,7 +143,7 @@ contract UnbalancedAddViaSwapRouter is RouterHooks, IUnbalancedAddViaSwapRouter 
         }
 
         (uint256 exactTokenIndex, uint256 adjustableTokenIndex) =
-            hookParams.operationParams.exactToken == tokens[0] ? (0, 1) : (1, 0);
+            address(hookParams.operationParams.exactToken) == address(tokens[0]) ? (0, 1) : (1, 0);
 
         uint256[] memory maxAmountsIn = new uint256[](2);
         maxAmountsIn[0] = _MAX_AMOUNT;

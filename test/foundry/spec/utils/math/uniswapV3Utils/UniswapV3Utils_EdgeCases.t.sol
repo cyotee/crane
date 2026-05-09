@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 
 import {UniswapV3Utils} from "@crane/contracts/utils/math/UniswapV3Utils.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
-import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FixedPoint96.sol";
+import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 
 /// @title Test UniswapV3Utils edge cases and boundary conditions
 contract UniswapV3Utils_EdgeCases_Test is Test {

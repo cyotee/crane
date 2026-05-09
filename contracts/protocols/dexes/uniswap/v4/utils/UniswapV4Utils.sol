@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 import {SwapMath} from "../libraries/SwapMath.sol";
 import {SqrtPriceMath} from "../libraries/SqrtPriceMath.sol";
 import {TickMath} from "../libraries/TickMath.sol";
-import {FullMath} from "../libraries/FullMath.sol";
-import {FixedPoint96} from "../libraries/FixedPoint96.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 import {BetterMath} from "@crane/contracts/utils/math/BetterMath.sol";
 
 /// @title UniswapV4Utils

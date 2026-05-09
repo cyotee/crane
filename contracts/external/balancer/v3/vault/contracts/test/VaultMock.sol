@@ -315,7 +315,7 @@ contract VaultMock is IVaultMainMock, Vault {
             tokenConfig[i].token = tokens[i];
             tokenConfig[i].rateProvider = rateProviders[i];
             tokenConfig[i].tokenType =
-                rateProviders[i] == IRateProvider(address(0)) ? TokenType.STANDARD : TokenType.WITH_RATE;
+                address(rateProviders[i]) == address(0) ? TokenType.STANDARD : TokenType.WITH_RATE;
         }
 
         tokenConfig = _inputHelpersMock.sortTokenConfig(tokenConfig);
@@ -331,7 +331,7 @@ contract VaultMock is IVaultMainMock, Vault {
             tokenConfig[i].token = tokens[i];
             tokenConfig[i].rateProvider = rateProviders[i];
             tokenConfig[i].tokenType =
-                rateProviders[i] == IRateProvider(address(0)) ? TokenType.STANDARD : TokenType.WITH_RATE;
+                address(rateProviders[i]) == address(0) ? TokenType.STANDARD : TokenType.WITH_RATE;
             tokenConfig[i].paysYieldFees = yieldFeeFlags[i];
         }
 

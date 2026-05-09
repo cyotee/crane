@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {Set, SetStorage} from "./Set.sol";
 import {Events} from "./Events.sol";
 import {Errors} from "./Errors.sol";
@@ -16,6 +17,7 @@ import {IERC1271} from "./interfaces/IERC1271.sol";
 /// @author Euler Labs (https://www.eulerlabs.com/)
 /// @notice This contract implements the Ethereum Vault Connector.
 contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
+    using BetterEfficientHashLib for bytes;
     using ExecutionContext for EC;
     using Set for SetStorage;
 
@@ -1072,9 +1074,7 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
         bytes32 domainSeparator =
             block.chainid == CACHED_CHAIN_ID ? CACHED_DOMAIN_SEPARATOR : calculateDomainSeparator();
 
-        bytes32 structHash = keccak256(
-            abi.encode(PERMIT_TYPEHASH, signer, sender, nonceNamespace, nonce, deadline, value, keccak256(data))
-        );
+        bytes32 structHash = abi.encodePacked(PERMIT_TYPEHASH, signer, sender, nonceNamespace, nonce, deadline, value, data)._hash();
 
         // This code overwrites the two most significant bytes of the free memory pointer,
         // and restores them to 0 after
@@ -1155,7 +1155,8 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     /// @notice Calculates the EIP-712 domain separator for the contract.
     /// @return The calculated EIP-712 domain separator as a bytes32 value.
     function calculateDomainSeparator() internal view returns (bytes32) {
-        return keccak256(abi.encode(TYPE_HASH, HASHED_NAME, block.chainid, address(this)));
+        // return keccak256(abi.encode(TYPE_HASH, HASHED_NAME, block.chainid, address(this)));
+        return abi.encodePacked(TYPE_HASH, HASHED_NAME, block.chainid, address(this))._hash();
     }
 
     // Auxiliary functions

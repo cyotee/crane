@@ -2,11 +2,11 @@
 pragma solidity >=0.5.0;
 
 import "./LowGasSafeMath.sol";
-import "./SafeCast.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 
-import "./FullMath.sol";
-import "./UnsafeMath.sol";
-import "./FixedPoint96.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {UnsafeMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/UnsafeMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 
 /// @title Functions based on Q64.96 sqrt price and liquidity
 /// @notice Contains the math that uses square root of price as a Q64.96 and liquidity to compute deltas

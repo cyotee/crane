@@ -195,7 +195,7 @@ interface IEVC {
     /// @param authorized A boolean value that indicates whether the operator is being authorized or deauthorized.
     /// Reverts if the provided value is equal to the currently stored value.
     function setAccountOperator(address account, address operator, bool authorized) external payable;
-
+ 
     /// @notice Returns an array of collaterals enabled for an account.
     /// @dev A collateral is a vault for which an account's balances are under the control of the currently enabled
     /// controller vault.

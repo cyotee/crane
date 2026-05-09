@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import "../../interfaces/IUniswapV3Pool.sol";
 import "../../libraries/TickMath.sol";
-import "../../libraries/BitMath.sol";
-import "../../libraries/FullMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 import {Base64} from "@crane/contracts/utils/Base64.sol";
 import "./HexStrings.sol";

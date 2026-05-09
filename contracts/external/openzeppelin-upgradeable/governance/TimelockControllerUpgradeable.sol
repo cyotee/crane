@@ -3,10 +3,11 @@
 
 pragma solidity ^0.8.20;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {AccessControlUpgradeable} from "../access/AccessControlUpgradeable.sol";
 import {ERC721HolderUpgradeable} from "../token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import {ERC1155HolderUpgradeable} from "../token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**
@@ -23,6 +24,8 @@ import {Initializable} from "../proxy/utils/Initializable.sol";
  * a multisig or a DAO as the sole proposer.
  */
 contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeable, ERC721HolderUpgradeable, ERC1155HolderUpgradeable {
+    using BetterEfficientHashLib for bytes;
+
     bytes32 public constant PROPOSER_ROLE = keccak256("PROPOSER_ROLE");
     bytes32 public constant EXECUTOR_ROLE = keccak256("EXECUTOR_ROLE");
     bytes32 public constant CANCELLER_ROLE = keccak256("CANCELLER_ROLE");
@@ -260,7 +263,8 @@ contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeabl
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return keccak256(abi.encode(target, value, data, predecessor, salt));
+        // return keccak256(abi.encode(target, value, data, predecessor, salt));
+        return abi.encode(target, value, data, predecessor, salt)._hash();
     }
 
     /**
@@ -274,7 +278,8 @@ contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeabl
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return keccak256(abi.encode(targets, values, payloads, predecessor, salt));
+        // return keccak256(abi.encode(targets, values, payloads, predecessor, salt));
+        return abi.encode(targets, values, payloads, predecessor, salt)._hash();
     }
 
     /**
@@ -436,7 +441,7 @@ contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeabl
      */
     function _execute(address target, uint256 value, bytes calldata data) internal virtual {
         (bool success, bytes memory returndata) = target.call{value: value}(data);
-        Address.verifyCallResult(success, returndata);
+        Address.verifyCallResult(success, returndata, "Address: call failed");
     }
 
     /**

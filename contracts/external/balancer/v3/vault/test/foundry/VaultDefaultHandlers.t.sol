@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {Address} from "@crane/contracts/utils/Address.sol";
 
 import {
@@ -30,19 +31,19 @@ contract VaultDefaultHandlersTest is BaseVaultTest {
     function testReceiveVault() public {
         vm.prank(alice);
         vm.expectRevert(IVaultErrors.CannotReceiveEth.selector);
-        payable(address(vault)).transfer(1);
+        BetterAddress.sendValue(payable(address(vault)), 1);
     }
 
     function testReceiveVaultExtension() public {
         vm.prank(alice);
         vm.expectRevert(IVaultErrors.CannotReceiveEth.selector);
-        payable(address(vaultExtension)).transfer(1);
+        BetterAddress.sendValue(payable(address(vaultExtension)), 1);
     }
 
     function testReceiveVaultAdmin() public {
         vm.prank(alice);
         vm.expectRevert(IVaultErrors.CannotReceiveEth.selector);
-        payable(address(vaultAdmin)).transfer(1);
+        BetterAddress.sendValue(payable(address(vaultAdmin)), 1);
     }
 
     function testDefaultHandlerWithEth() public {

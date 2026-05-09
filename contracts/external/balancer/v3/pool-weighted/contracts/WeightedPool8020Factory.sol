@@ -70,7 +70,7 @@ contract WeightedPool8020Factory is IPoolVersion, BasePoolFactory, Version {
         uint256[] memory weights = new uint256[](2);
 
         // Tokens must be sorted.
-        (uint256 highWeightTokenIdx, uint256 lowWeightTokenIdx) = highWeightToken > lowWeightToken ? (1, 0) : (0, 1);
+        (uint256 highWeightTokenIdx, uint256 lowWeightTokenIdx) = address(highWeightToken) > address(lowWeightToken) ? (1, 0) : (0, 1);
 
         weights[highWeightTokenIdx] = _EIGHTY;
         weights[lowWeightTokenIdx] = _TWENTY;
@@ -118,7 +118,7 @@ contract WeightedPool8020Factory is IPoolVersion, BasePoolFactory, Version {
         returns (bytes memory constructorArgs)
     {
         // Tokens must be sorted.
-        (uint256 highWeightTokenIdx, uint256 lowWeightTokenIdx) = highWeightToken > lowWeightToken ? (1, 0) : (0, 1);
+        (uint256 highWeightTokenIdx, uint256 lowWeightTokenIdx) = address(highWeightToken) > address(lowWeightToken) ? (1, 0) : (0, 1);
 
         string memory highWeightTokenSymbol = IERC20Metadata(address(highWeightToken)).symbol();
         string memory lowWeightTokenSymbol = IERC20Metadata(address(lowWeightToken)).symbol();

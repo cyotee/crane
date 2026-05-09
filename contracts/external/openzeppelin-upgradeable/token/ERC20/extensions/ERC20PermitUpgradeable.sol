@@ -3,9 +3,10 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
 import {EIP712Upgradeable} from "../../../utils/cryptography/EIP712Upgradeable.sol";
 import {NoncesUpgradeable} from "../../../utils/NoncesUpgradeable.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
@@ -19,6 +20,8 @@ import {Initializable} from "../../../proxy/utils/Initializable.sol";
  * need to send a transaction, and thus is not required to hold Ether at all.
  */
 abstract contract ERC20PermitUpgradeable is Initializable, ERC20Upgradeable, IERC20Permit, EIP712Upgradeable, NoncesUpgradeable {
+    using BetterEfficientHashLib for bytes;
+
     bytes32 private constant PERMIT_TYPEHASH =
         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
@@ -59,7 +62,8 @@ abstract contract ERC20PermitUpgradeable is Initializable, ERC20Upgradeable, IER
             revert ERC2612ExpiredSignature(deadline);
         }
 
-        bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        // bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        bytes32 structHash = abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline)._hash();
 
         bytes32 hash = _hashTypedDataV4(structHash);
 

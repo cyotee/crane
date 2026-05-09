@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {AccessManagedUpgradeable} from "../access/manager/AccessManagedUpgradeable.sol";
-import {StorageSlot} from "@openzeppelin/contracts/utils/StorageSlot.sol";
+import {StorageSlot} from "@crane/contracts/external/openzeppelin/utils/StorageSlot.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 abstract contract AccessManagedTargetUpgradeable is Initializable, AccessManagedUpgradeable {

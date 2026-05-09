@@ -239,10 +239,10 @@ contract TokenPairRegistry is ITokenPairRegistry, OwnableAuthentication {
         bool foundOut = false;
 
         for (uint256 i = 0; i < tokens.length; ++i) {
-            if (tokens[i] == IERC20(tokenIn)) {
+            if (address(tokens[i]) == tokenIn) {
                 foundIn = true;
             }
-            if (tokens[i] == IERC20(tokenOut)) {
+            if (address(tokens[i]) == tokenOut) {
                 foundOut = true;
             }
         }

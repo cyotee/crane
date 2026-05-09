@@ -154,7 +154,7 @@ library QuoteLib {
 
             {
                 uint256 supplyCash = supplyVault.cash();
-                if (supplyBalance > supplyCash || supplyVault == borrowVault) {
+                if (supplyBalance > supplyCash || address(supplyVault) == address(borrowVault)) {
                     // Cash in supplyVault is limiting factor
                     if (supplyCash < outLimit) outLimit = supplyCash;
                 } else {

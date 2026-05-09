@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "../../../../../openzeppelin/token/ERC20/ERC20.sol";
+import "../../../../../openzeppelin-upgradeable/proxy/utils/Initializable.sol";
 import "../LockingRegistry.sol";
 
 /**
@@ -24,7 +24,7 @@ contract VestingWalletV2 is Initializable {
   uint64 public vestingDuration;
 
   /**
-   * @dev This returns the amount still locked in tohe contract, as a function of time
+   * @dev This returns the amount still locked in the contract, as a function of time
    */
   function getUnvestedAmount(uint256 timestamp) public view virtual returns (uint256) {
     timestamp;

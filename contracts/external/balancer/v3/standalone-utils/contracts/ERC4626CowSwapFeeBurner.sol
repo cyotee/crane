@@ -94,7 +94,7 @@ contract ERC4626CowSwapFeeBurner is CowSwapFeeBurner {
 
         // This case is not handled by the internal `_burn` function, but it's valid: we can consider that the token
         // has already been converted to the correct token, so we just forward the result and finish.
-        if (underlyingToken == targetToken) {
+        if (address(underlyingToken) == address(targetToken)) {
             // We apply the slippage check, but not deadline as the order settlement is instant in this case.
             if (exactFeeTokenAmountIn < minTargetTokenAmountOut) {
                 revert AmountOutBelowMin(targetToken, exactFeeTokenAmountIn, minTargetTokenAmountOut);

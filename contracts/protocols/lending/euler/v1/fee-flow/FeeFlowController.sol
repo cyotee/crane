@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {ERC20} from "solmate/tokens/ERC20.sol";
-import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {EVCUtil} from "../evc/utils/EVCUtil.sol";
 
 /// @title FeeFlowController
 /// @author Euler Labs (https://eulerlabs.com)
 /// @notice Continous back to back dutch auctions selling any asset received by this contract
 contract FeeFlowController is EVCUtil {
-    using SafeTransferLib for ERC20;
+    using SafeERC20 for IERC20;
 
     uint256 public constant MIN_EPOCH_PERIOD = 1 hours;
     uint256 public constant MAX_EPOCH_PERIOD = 365 days;
@@ -19,7 +19,7 @@ contract FeeFlowController is EVCUtil {
     uint256 public constant ABS_MAX_INIT_PRICE = type(uint192).max; // chosen so that initPrice * priceMultiplier does not exceed uint256
     uint256 public constant PRICE_MULTIPLIER_SCALE = 1e18;
 
-    ERC20 public immutable paymentToken;
+    IERC20 public immutable paymentToken;
     address public immutable paymentReceiver;
     uint256 public immutable epochPeriod;
     uint256 public immutable priceMultiplier;
@@ -94,7 +94,7 @@ contract FeeFlowController is EVCUtil {
         slot0.initPrice = uint192(initPrice);
         slot0.startTime = uint40(block.timestamp);
 
-        paymentToken = ERC20(paymentToken_);
+        paymentToken = IERC20(paymentToken_);
         paymentReceiver = paymentReceiver_;
         epochPeriod = epochPeriod_;
         priceMultiplier = priceMultiplier_;
@@ -136,8 +136,8 @@ contract FeeFlowController is EVCUtil {
 
         for (uint256 i = 0; i < assets.length; ++i) {
             // Transfer full balance to buyer
-            uint256 balance = ERC20(assets[i]).balanceOf(address(this));
-            ERC20(assets[i]).safeTransfer(assetsReceiver, balance);
+            uint256 balance = IERC20(assets[i]).balanceOf(address(this));
+            IERC20(assets[i]).safeTransfer(assetsReceiver, balance);
         }
 
         // Setup new auction

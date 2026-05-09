@@ -115,7 +115,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
     function _prepay(SwapPathExactAmountIn[] memory pathsExactIn, bool wethIsEth) internal {
         for (uint256 i = 0; i < pathsExactIn.length; i++) {
             IERC20 token = pathsExactIn[i].tokenIn;
-            if (wethIsEth && token == weth) {
+            if (wethIsEth && address(token) == address(weth)) {
                 continue;
             }
 
@@ -126,7 +126,7 @@ contract PrepaidBatchRouterE2ETest is BatchRouterE2ETest {
     function _prepay(SwapPathExactAmountOut[] memory pathsExactOut, bool wethIsEth) internal {
         for (uint256 i = 0; i < pathsExactOut.length; i++) {
             IERC20 token = pathsExactOut[i].tokenIn;
-            if (wethIsEth && token == weth) {
+            if (wethIsEth && address(token) == address(weth)) {
                 continue;
             }
 

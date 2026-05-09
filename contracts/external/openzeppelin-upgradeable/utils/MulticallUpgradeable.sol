@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
 import {ContextUpgradeable} from "./ContextUpgradeable.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 

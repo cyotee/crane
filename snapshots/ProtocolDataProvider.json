@@ -1,0 +1,19 @@
+{
+  "getATokenTotalSupply": "32502",
+  "getAllATokens": "69337",
+  "getAllReservesTokens": "44258",
+  "getFlashLoanEnabled": "12698",
+  "getInterestRateStrategyAddress": "8988",
+  "getIsVirtualAccActive": "771",
+  "getLiquidationProtocolFee": "12366",
+  "getPaused": "12716",
+  "getReserveCaps": "12477",
+  "getReserveConfigurationData": "12935",
+  "getReserveDeficit": "12417",
+  "getReserveTokensAddresses": "16693",
+  "getSiloedBorrowing": "12752",
+  "getTotalDebt": "32502",
+  "getUnbackedMintCap": "610",
+  "getUserReserveData": "73080",
+  "getVirtualUnderlyingBalance": "11905"
+}

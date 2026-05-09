@@ -2,9 +2,12 @@
 
 pragma solidity ^0.8.17;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import "../SampleRedstoneConsumerNumericMock.sol";
 
 contract HashCalldataModel is RedstoneConsumerNumericMock {
+  using BetterEfficientHashLib for bytes;
+
   mapping(bytes32 => bool) public requests;
   uint256 price = 0;
   bool deleteFromStorage = false;
@@ -14,7 +17,8 @@ contract HashCalldataModel is RedstoneConsumerNumericMock {
     bytes32 arg2,
     bytes32 arg3
   ) public returns (bytes32) {
-    bytes32 requestHash = keccak256(abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3));
+    // bytes32 requestHash = keccak256(abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3));
+    bytes32 requestHash = abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3)._hash();
     requests[requestHash] = true;
     return requestHash;
   }
@@ -26,9 +30,10 @@ contract HashCalldataModel is RedstoneConsumerNumericMock {
     bytes32 arg4,
     bytes32 arg5
   ) public returns (bytes32) {
-    bytes32 requestHash = keccak256(
-      abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3, arg4, arg5)
-    );
+    // bytes32 requestHash = keccak256(
+    //   abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3, arg4, arg5)
+    // );
+    bytes32 requestHash = abi.encodePacked(block.number, msg.sender, arg1, arg2, arg3, arg4, arg5)._hash();
     requests[requestHash] = true;
     return requestHash;
   }
@@ -74,7 +79,8 @@ contract HashCalldataModel is RedstoneConsumerNumericMock {
     bytes32 arg2,
     bytes32 arg3
   ) public {
-    bytes32 requestHash = keccak256(abi.encodePacked(blockNumber, sender, arg1, arg2, arg3));
+    // bytes32 requestHash = keccak256(abi.encodePacked(blockNumber, sender, arg1, arg2, arg3));
+    bytes32 requestHash = abi.encodePacked(blockNumber, sender, arg1, arg2, arg3)._hash();
 
     bool isIn = requests[requestHash];
     if (isIn == true) {
@@ -96,9 +102,10 @@ contract HashCalldataModel is RedstoneConsumerNumericMock {
     bytes32 arg4,
     bytes32 arg5
   ) public {
-    bytes32 requestHash = keccak256(
-      abi.encodePacked(blockNumber, sender, arg1, arg2, arg3, arg4, arg5)
-    );
+    // bytes32 requestHash = keccak256(
+    //   abi.encodePacked(blockNumber, sender, arg1, arg2, arg3, arg4, arg5)
+    // );
+    bytes32 requestHash = abi.encodePacked(blockNumber, sender, arg1, arg2, arg3, arg4, arg5)._hash();
 
     bool isIn = requests[requestHash];
     if (isIn == true) {

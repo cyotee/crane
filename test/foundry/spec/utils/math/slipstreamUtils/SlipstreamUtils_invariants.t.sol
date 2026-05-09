@@ -11,7 +11,7 @@ import {
 } from "@crane/contracts/protocols/dexes/aerodrome/slipstream/test/bases/TestBase_Slipstream.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SwapMath.sol";
-import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FullMath.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                        Handler Contract for Invariants                     */
@@ -296,8 +296,9 @@ contract SlipstreamUtilsHandler is Test {
 
         operationCount++;
 
-        // Higher liquidity means less price impact, so output should be >= low liquidity output
-        if (outputHighLiq < outputLowLiq) {
+        // Higher liquidity should not materially reduce output, but integer rounding at extreme
+        // prices can invert the comparison by 1 wei.
+        if (outputHighLiq + 1 < outputLowLiq) {
             monotonicityViolations++;
         }
     }

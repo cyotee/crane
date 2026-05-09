@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {IHooks} from "../interfaces/IHooks.sol";
-import {BitMath} from "./BitMath.sol";
+import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 import {Base64} from "@crane/contracts/utils/Base64.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";

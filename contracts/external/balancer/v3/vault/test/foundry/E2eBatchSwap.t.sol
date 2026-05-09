@@ -266,7 +266,7 @@ contract E2eBatchSwapTest is BaseVaultTest {
         assertEq(tokensOut.length, 1, "tokensOut incorrect length");
         assertEq(amountsOut.length, 1, "amountsOut incorrect length");
 
-        if (tokenIn == tokenA) {
+        if (address(tokenIn) == address(tokenA)) {
             assertEq(tokensOut[0], address(tokenD), "tokenOut is not tokenD");
         } else {
             assertEq(tokensOut[0], address(tokenA), "tokenOut is not tokenA");

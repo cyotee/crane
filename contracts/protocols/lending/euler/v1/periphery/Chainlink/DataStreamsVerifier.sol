@@ -3,7 +3,11 @@
 pragma solidity ^0.8.0;
 
 import {Ownable} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
-import {IERC20, SafeERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+// import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
 
 /// @title Verifier Proxy Interface
 /// @notice Interface for interacting with Chainlink's verifier proxy contract
@@ -61,7 +65,7 @@ abstract contract DataStreamsVerifier is Ownable {
     /// @param _authorizedCaller Address authorized to verify reports
     /// @param _verifierProxy Address of the verifier proxy contract
     /// @param _expectedVersion Expected version of the report
-    constructor(address _authorizedCaller, address _verifierProxy, uint16 _expectedVersion) Ownable(msg.sender) {
+    constructor(address _authorizedCaller, address _verifierProxy, uint16 _expectedVersion) Ownable() {
         AUTHORIZED_CALLER = _authorizedCaller;
         VERIFIER_PROXY = IVerifierProxy(_verifierProxy);
         EXPECTED_VERSION = _expectedVersion;

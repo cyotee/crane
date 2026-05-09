@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
 import {VestingWalletUpgradeable} from "./VestingWalletUpgradeable.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 

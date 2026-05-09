@@ -5,7 +5,7 @@ import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.s
 import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
-interface IUniswapV2ERC20 is IERC20, IERC2612, IERC20Events {
+interface IUniswapV2ERC20 is IERC20Events, IERC20, IERC2612 {
     // function DOMAIN_SEPARATOR() external view returns (bytes32);
     function PERMIT_TYPEHASH() external pure returns (bytes32);
     // function nonces(address owner) external view returns (uint);

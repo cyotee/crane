@@ -5,7 +5,7 @@ import {IPoolManager} from "./interfaces/IPoolManager.sol";
 import {PoolKey} from "./types/PoolKey.sol";
 import {Currency, CurrencyLibrary} from "./types/Currency.sol";
 import {BalanceDelta} from "./types/BalanceDelta.sol";
-import {SafeCast} from "./libraries/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import {Position} from "./libraries/Position.sol";
 import {StateLibrary} from "./libraries/StateLibrary.sol";
 import {TransientStateLibrary} from "./libraries/TransientStateLibrary.sol";

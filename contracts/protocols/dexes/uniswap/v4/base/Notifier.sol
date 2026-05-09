@@ -25,9 +25,11 @@ abstract contract Notifier is INotifier {
     /// @dev to be implemented by the parent contract (PositionManager)
     /// @param caller the address of the caller
     /// @param tokenId the tokenId of the position
+    // TODO Remove virtual
     modifier onlyIfApproved(address caller, uint256 tokenId) virtual;
 
     /// @notice Enforces that the PoolManager is locked.
+    // TODO Remove virtual
     modifier onlyIfPoolManagerLocked() virtual;
 
     function _setUnsubscribed(uint256 tokenId) internal virtual;

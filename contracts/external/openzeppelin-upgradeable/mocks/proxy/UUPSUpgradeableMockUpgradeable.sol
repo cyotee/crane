@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.20;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {UUPSUpgradeable} from "../../proxy/utils/UUPSUpgradeable.sol";
-import {ERC1967Utils} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol";
+import {ERC1967Utils} from "@crane/contracts/external/openzeppelin/proxy/ERC1967/ERC1967Utils.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 contract NonUpgradeableMockUpgradeable is Initializable {
@@ -24,6 +25,7 @@ contract NonUpgradeableMockUpgradeable is Initializable {
 }
 
 contract UUPSUpgradeableMockUpgradeable is Initializable, NonUpgradeableMockUpgradeable, UUPSUpgradeable {
+
     function __UUPSUpgradeableMock_init() internal onlyInitializing {
     }
 
@@ -34,6 +36,7 @@ contract UUPSUpgradeableMockUpgradeable is Initializable, NonUpgradeableMockUpgr
 }
 
 contract UUPSUpgradeableUnsafeMockUpgradeable is Initializable, UUPSUpgradeableMockUpgradeable {
+    
     function __UUPSUpgradeableUnsafeMock_init() internal onlyInitializing {
     }
 
@@ -45,12 +48,15 @@ contract UUPSUpgradeableUnsafeMockUpgradeable is Initializable, UUPSUpgradeableM
 }
 
 contract UUPSUnsupportedProxiableUUIDUpgradeable is Initializable, UUPSUpgradeableMockUpgradeable {
+    using BetterEfficientHashLib for bytes;
+    
     function __UUPSUnsupportedProxiableUUID_init() internal onlyInitializing {
     }
 
     function __UUPSUnsupportedProxiableUUID_init_unchained() internal onlyInitializing {
     }
     function proxiableUUID() external pure override returns (bytes32) {
-        return keccak256("invalid UUID");
+        // return keccak256("invalid UUID");
+        return bytes("invalid UUID")._hash();
     }
 }

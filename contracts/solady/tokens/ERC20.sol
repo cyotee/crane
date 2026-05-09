@@ -51,11 +51,11 @@ abstract contract ERC20 {
     /*                           EVENTS                           */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    /// @dev Emitted when `amount` tokens is transferred from `from` to `to`.
-    event Transfer(address indexed from, address indexed to, uint256 amount);
+    // /// @dev Emitted when `amount` tokens is transferred from `from` to `to`.
+    // event Transfer(address indexed from, address indexed to, uint256 amount);
 
-    /// @dev Emitted when `amount` tokens is approved by `owner` to be used by `spender`.
-    event Approval(address indexed owner, address indexed spender, uint256 amount);
+    // /// @dev Emitted when `amount` tokens is approved by `owner` to be used by `spender`.
+    // event Approval(address indexed owner, address indexed spender, uint256 amount);
 
     /// @dev `keccak256(bytes("Transfer(address,address,uint256)"))`.
     uint256 private constant _TRANSFER_EVENT_SIGNATURE =

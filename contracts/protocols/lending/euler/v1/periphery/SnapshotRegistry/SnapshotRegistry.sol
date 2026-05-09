@@ -46,7 +46,9 @@ contract SnapshotRegistry is EVCUtil, Ownable {
     /// @notice Deploy SnapshotRegistry.
     /// @param _evc The address of the EVC.
     /// @param _owner The address of the owner.
-    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable(_owner) {}
+    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable() {
+        _transferOwnership(_owner);
+    }
 
     /// @notice Adds an address to the registry.
     /// @param element The address to add.

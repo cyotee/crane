@@ -13,7 +13,7 @@ library TokenConfigUtils {
         for (uint256 i = 1; i < array.length; i++) {
             swapped = false;
             for (uint256 j = 0; j < array.length - i; j++) {
-                if (array[j + 1].token < array[j].token) {
+                if (address(array[j + 1].token) < address(array[j].token)) {
                     TokenConfig memory temp = array[j];
                     array[j] = array[j + 1];
                     array[j + 1] = temp;

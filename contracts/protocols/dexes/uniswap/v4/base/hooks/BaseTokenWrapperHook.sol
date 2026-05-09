@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {toBeforeSwapDelta, BeforeSwapDelta, BeforeSwapDeltaLibrary} from "../../types/BeforeSwapDelta.sol";
 import {Currency, CurrencyLibrary} from "../../types/Currency.sol";
 import {PoolKey} from "../../types/PoolKey.sol";
-import {SafeCast} from "../../libraries/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import {IHooks} from "../../interfaces/IHooks.sol";
 import {Hooks} from "../../libraries/Hooks.sol";
 import {IPoolManager} from "../../interfaces/IPoolManager.sol";

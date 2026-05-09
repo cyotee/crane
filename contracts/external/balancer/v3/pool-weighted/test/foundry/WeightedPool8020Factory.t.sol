@@ -78,7 +78,7 @@ contract WeightedPool8020FactoryTest is WeightedPoolContractsDeployer, VaultCont
 
         uint256[] memory poolWeights = pool.getNormalizedWeights();
         uint256[] memory minTokenBalances = new uint256[](2);
-        (uint256 aIdx, uint256 bIdx) = tokenA < tokenB ? (0, 1) : (1, 0);
+        (uint256 aIdx, uint256 bIdx) = address(tokenA) < address(tokenB) ? (0, 1) : (1, 0);
         minTokenBalances[aIdx] = _getMinTokenBalance(address(tokenA));
         minTokenBalances[bIdx] = _getMinTokenBalance(address(tokenB));
 
@@ -103,7 +103,7 @@ contract WeightedPool8020FactoryTest is WeightedPoolContractsDeployer, VaultCont
     }
 
     function testPoolCreation() public {
-        (uint256 highWeightIdx, uint256 lowWeightIdx) = tokenA > tokenB ? (1, 0) : (0, 1);
+        (uint256 highWeightIdx, uint256 lowWeightIdx) = address(tokenA) > address(tokenB) ? (1, 0) : (0, 1);
 
         WeightedPool pool = _createPool(tokenA, tokenB);
 

@@ -376,7 +376,7 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
         // Pre-swap through DAI buffer to get waDAI, then main swap waDAI for waWETH in the yield-bearing pool,
         // and finally post-swap the waWETH through the WETH buffer to calculate the WETH amount out.
         // The only token transfers are DAI in (given) and WETH out (calculated).
-        if (tokenIn == dai) {
+        if (address(tokenIn) == address(dai)) {
             steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
             steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
             steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});
@@ -396,13 +396,13 @@ contract E2eErc4626SwapsTest is BaseERC4626BufferTest {
     {
         SwapPathStep[] memory steps = new SwapPathStep[](3);
         paths = new SwapPathExactAmountOut[](1);
-        IERC20 tokenIn = tokenOut == dai ? IERC20(address(weth)) : dai;
+        IERC20 tokenIn = address(tokenOut) == address(dai) ? IERC20(address(weth)) : dai;
 
         // Since this is exact out, swaps will be executed in reverse order (though we submit in logical order).
         // Pre-swap through the WETH buffer to get waWETH, then main swap waWETH for waDAI in the yield-bearing pool,
         // and finally post-swap the waDAI for DAI through the DAI buffer to calculate the DAI amount in.
         // The only token transfers are DAI in (calculated) and WETH out (given).
-        if (tokenIn == dai) {
+        if (address(tokenIn) == address(dai)) {
             steps[0] = SwapPathStep({pool: address(waDAI), tokenOut: waDAI, isBuffer: true});
             steps[1] = SwapPathStep({pool: pool, tokenOut: waWETH, isBuffer: false});
             steps[2] = SwapPathStep({pool: address(waWETH), tokenOut: weth, isBuffer: true});

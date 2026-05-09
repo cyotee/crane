@@ -7,14 +7,14 @@ import {
     IFactoryRegistry
 } from "@crane/contracts/protocols/dexes/aerodrome/v1/interfaces/factories/IFactoryRegistry.sol";
 
-import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import {Tick} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/libraries/Tick.sol";
 import {TickBitmap} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickBitmap.sol";
 import {Position} from "@crane/contracts/protocols/dexes/aerodrome/slipstream/libraries/Position.sol";
 import {Oracle} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/Oracle.sol";
 
-import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FullMath.sol";
-import {FixedPoint128} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/FixedPoint128.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {FixedPoint128} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint128.sol";
 import {TransferHelper} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TransferHelper.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
 import {LiquidityMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/LiquidityMath.sol";

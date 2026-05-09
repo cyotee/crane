@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.24;
 
-import {SafeCast} from "./SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import {TickBitmap} from "./TickBitmap.sol";
 import {Position} from "./Position.sol";
-import {UnsafeMath} from "./UnsafeMath.sol";
-import {FixedPoint128} from "./FixedPoint128.sol";
+import {UnsafeMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/UnsafeMath.sol";
+import {FixedPoint128} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint128.sol";
 import {TickMath} from "./TickMath.sol";
 import {SqrtPriceMath} from "./SqrtPriceMath.sol";
 import {SwapMath} from "./SwapMath.sol";

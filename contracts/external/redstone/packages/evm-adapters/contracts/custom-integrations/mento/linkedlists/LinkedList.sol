@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@crane/contracts/external/openzeppelin/utils/math/SafeMath.sol";
 
 /**
  * @title Maintains a doubly linked list keyed by bytes32.

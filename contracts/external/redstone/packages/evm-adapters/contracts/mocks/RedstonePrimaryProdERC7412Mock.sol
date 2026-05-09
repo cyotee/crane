@@ -3,7 +3,7 @@
 pragma solidity ^0.8.17;
 
 import {RedstonePrimaryProdWithoutRoundsERC7412} from "../erc7412/RedstonePrimaryProdWithoutRoundsERC7412.sol";
-import {AuthorisedMockSignersBase} from "@redstone-finance/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
+import {AuthorisedMockSignersBase} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
 
 contract RedstonePrimaryProdERC7412Mock is RedstonePrimaryProdWithoutRoundsERC7412, AuthorisedMockSignersBase  {
 

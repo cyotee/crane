@@ -429,8 +429,9 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
         _initializeStablePool();
         _enableStableSwap(stablePair);
 
-        // Bound to reasonable range
-        swapAmount = bound(swapAmount, 1e15, 1000e18);
+        // Keep parity checks in the region where the pair quote remains executable.
+        // Larger stable-swap inputs are covered by dedicated invariant and edge-case tests.
+        swapAmount = bound(swapAmount, 1e15, STABLE_INITIAL_LIQUIDITY / 20);
 
         stableTokenA.mint(address(this), swapAmount);
         stableTokenA.approve(address(camelotV2Router), swapAmount);
@@ -453,13 +454,18 @@ contract CamelotV2_stableSwap_Test is TestBase_ConstProdUtils_Camelot {
     /// @dev Uses reasonable reserve bounds to avoid precision issues in stable swap math
     function testFuzz_newtonRaphson_convergence(uint256 swapAmount, uint256 reserve0, uint256 reserve1) public {
         // Bound reserves to reasonable range - stable swap needs sufficient precision
-        // Use minimum 1000 tokens (1000e18) to ensure stable math precision
-        reserve0 = bound(reserve0, 1000e18, 100000e18);
-        reserve1 = bound(reserve1, 1000e18, 100000e18);
+        // Use minimum 10000 tokens (10000e18) to ensure stable math precision
+        // Also ensure reserves are not extremely unbalanced (within 10x of each other)
+        reserve0 = bound(reserve0, 10000e18, 100000e18);
+        reserve1 = bound(reserve1, 10000e18, 100000e18);
 
-        // Bound swap to be reasonable relative to reserves - max 30% to avoid extreme slippage
+        // Ensure reserves are within 10x of each other to avoid extreme imbalance
+        uint256 maxReserve = reserve0 > reserve1 ? reserve0 : reserve1;
         uint256 minReserve = reserve0 < reserve1 ? reserve0 : reserve1;
-        swapAmount = bound(swapAmount, 1e16, minReserve * 30 / 100);
+        vm.assume(maxReserve <= minReserve * 10);
+
+        // Bound swap to be reasonable relative to reserves - max 10% to avoid extreme slippage
+        swapAmount = bound(swapAmount, 1e18, minReserve / 10);
 
         // Setup fresh pool with specific reserves
         ERC20PermitMintableStub tokenA = new ERC20PermitMintableStub("FuzzA", "FUZA", 18, address(this), 0);

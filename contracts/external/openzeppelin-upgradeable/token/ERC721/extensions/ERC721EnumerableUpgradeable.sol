@@ -4,8 +4,8 @@
 pragma solidity ^0.8.20;
 
 import {ERC721Upgradeable} from "../ERC721Upgradeable.sol";
-import {IERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {IERC721Enumerable} from "@crane/contracts/external/openzeppelin/token/ERC721/extensions/IERC721Enumerable.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**
@@ -54,7 +54,7 @@ abstract contract ERC721EnumerableUpgradeable is Initializable, ERC721Upgradeabl
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC721Upgradeable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
         return interfaceId == type(IERC721Enumerable).interfaceId || super.supportsInterface(interfaceId);
     }
 

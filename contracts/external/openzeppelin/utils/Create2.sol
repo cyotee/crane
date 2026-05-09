@@ -30,8 +30,7 @@ library Create2 {
     function deploy(uint256 amount, bytes32 salt, bytes memory bytecode) internal returns (address addr) {
         require(address(this).balance >= amount, "Create2: insufficient balance");
         require(bytecode.length != 0, "Create2: bytecode length is zero");
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             addr := create2(amount, add(bytecode, 0x20), mload(bytecode), salt)
         }
         require(addr != address(0), "Create2: Failed on deploy");
@@ -50,8 +49,7 @@ library Create2 {
      * `deployer`. If `deployer` is this contract's address, returns the same value as {computeAddress}.
      */
     function computeAddress(bytes32 salt, bytes32 bytecodeHash, address deployer) internal pure returns (address addr) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             let ptr := mload(0x40) // Get free memory pointer
 
             // |                   | ↓ ptr ...  ↓ ptr + 0x0B (start) ...  ↓ ptr + 0x20 ...  ↓ ptr + 0x40 ...   |

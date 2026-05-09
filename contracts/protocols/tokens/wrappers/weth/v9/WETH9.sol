@@ -19,10 +19,11 @@ pragma solidity ^0.8.24;
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
-contract WETH9 is IWETH, IERC20Events {
+contract WETH9 is IERC20Events, IWETH {
     string public name = "Wrapped Ether";
     string public symbol = "WETH";
     uint8 public decimals = 18;
@@ -50,7 +51,8 @@ contract WETH9 is IWETH, IERC20Events {
     function withdraw(uint256 wad) public {
         require(balanceOf[msg.sender] >= wad);
         balanceOf[msg.sender] -= wad;
-        payable(msg.sender).transfer(wad);
+        // payable(msg.sender).transfer(wad);
+        BetterAddress.sendValue(payable(msg.sender), wad);
         emit Withdrawal(msg.sender, wad);
     }
 

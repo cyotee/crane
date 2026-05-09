@@ -1,0 +1,4 @@
+node_modules/@layerzerolabs/oft-evm
+node_modules/@layerzerolabs/oft-evm-upgradeable
+node_modules/@layerzerolabs/lz-evm-oapp-v2
+node_modules/@layerzerolabs/lz-evm-protocol-v2

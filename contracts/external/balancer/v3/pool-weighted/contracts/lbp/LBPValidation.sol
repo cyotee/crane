@@ -63,15 +63,15 @@ library LBPValidation {
             revert InvalidOwner();
         }
 
-        if (lbpCommonParams.projectToken == IERC20(address(0))) {
+        if (address(lbpCommonParams.projectToken) == address(0)) {
             revert InvalidProjectToken();
         }
 
-        if (lbpCommonParams.reserveToken == IERC20(address(0))) {
+        if (address(lbpCommonParams.reserveToken) == address(0)) {
             revert InvalidReserveToken();
         }
 
-        if (lbpCommonParams.projectToken == lbpCommonParams.reserveToken) {
+        if (address(lbpCommonParams.projectToken) == address(lbpCommonParams.reserveToken)) {
             revert TokensMustBeDifferent();
         }
 

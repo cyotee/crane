@@ -3,9 +3,9 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessControlEnumerable} from "@openzeppelin/contracts/access/extensions/IAccessControlEnumerable.sol";
+import {IAccessControlEnumerable} from "@crane/contracts/external/openzeppelin/access/extensions/IAccessControlEnumerable.sol";
 import {AccessControlUpgradeable} from "../AccessControlUpgradeable.sol";
-import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

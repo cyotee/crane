@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {TransferHelper} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/TransferHelper.sol";
+import {TransferHelper} from "@crane/contracts/protocols/dexes/uniswap/v2/libraries/TransferHelper.sol";
 
 import {ICamelotFactory} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotFactory.sol";
 import {ICamelotPair} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotPair.sol";

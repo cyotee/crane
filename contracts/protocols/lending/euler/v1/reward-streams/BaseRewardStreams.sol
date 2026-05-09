@@ -3,7 +3,8 @@
 pragma solidity ^0.8.0;
 
 import {ReentrancyGuard} from "@crane/contracts/external/openzeppelin/utils/ReentrancyGuard.sol";
-import {SafeERC20, IERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
 import {EVCUtil} from "../evc/utils/EVCUtil.sol";
 import {Set, SetStorage} from "../evc/Set.sol";
 import {IRewardStreams} from "./interfaces/IRewardStreams.sol";

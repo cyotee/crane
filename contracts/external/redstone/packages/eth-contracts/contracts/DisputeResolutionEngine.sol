@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import "../../../../openzeppelin/utils/math/Math.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "./LockingRegistry.sol";
 
 /**
@@ -11,6 +12,8 @@ import "./LockingRegistry.sol";
  * @dev Implementation of basic dispute resolution protocol
  */
 contract DisputeResolutionEngine {
+  using BetterEfficientHashLib for bytes;
+  
   uint256 constant MIN_LOCK_AMOUNT_FOR_DISPUTE_CREATION = 10_000 * 1e18;
   uint256 constant MIN_LOCK_AMOUNT_FOR_VOTING = 5_000 * 1e18;
   uint256 constant PENALTY_AMOUNT = 2_000 * 1e18;
@@ -117,7 +120,7 @@ contract DisputeResolutionEngine {
         dispute.creationTimestampSeconds + COMMIT_PERIOD_SECONDS + REVEAL_PERIOD_SECONDS,
       "Reveal period ended"
     );
-    require(vote.lockedTokensAmount > 0, "Cannot find the commited vote to reveal");
+    require(vote.lockedTokensAmount > 0, "Cannot find the committed vote to reveal");
 
     // Verifying commit hash against the revealed vote
     bytes32 expectedCommitHash = calculateHashForVote(disputeId, salt, votedForGuilty);
@@ -136,7 +139,7 @@ contract DisputeResolutionEngine {
     }
   }
 
-  // Anyone can settle a dispute that has not beed settled before
+  // Anyone can settle a dispute that has not been settled before
   // when its reveal period ends. Settlement period is not limited in time
   function settleDispute(uint256 disputeId) external {
     Dispute storage dispute = _disputes[disputeId];
@@ -180,7 +183,7 @@ contract DisputeResolutionEngine {
     Dispute storage dispute = _disputes[disputeId];
     Vote storage userVote = _votes[disputeId][userAddress];
 
-    // Checking if the user is elgigble for the reward
+    // Checking if the user is eligible for the reward
     require(dispute.verdict != DisputeVerdict.Unknown, "Dispute has not been settled yet");
     require(userVote.revealedVote, "User didn't reveal vote");
     require(
@@ -189,7 +192,7 @@ contract DisputeResolutionEngine {
     );
     require(!userVote.claimedReward, "User already claimed reward for this dispute");
 
-    // Calculaing reward amount for the user
+    // Calculating reward amount for the user
     uint256 totalLockedTokenOfAllWinners = Math.max(
       dispute.revealedForGuiltyAmount,
       dispute.revealedForNotGuiltyAmount
@@ -213,7 +216,8 @@ contract DisputeResolutionEngine {
     bytes32 salt,
     bool votedForGuilty
   ) public pure returns (bytes32) {
-    return keccak256(abi.encode(disputeId, salt, votedForGuilty, "Redstone dispute"));
+    // return keccak256(abi.encode(disputeId, salt, votedForGuilty, "Redstone dispute"));
+    return abi.encode(disputeId, salt, votedForGuilty, "Redstone dispute")._hash();
   }
 
   function getDisputesCount() public view returns (uint256) {

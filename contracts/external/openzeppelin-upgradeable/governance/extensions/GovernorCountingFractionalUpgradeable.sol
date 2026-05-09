@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 
 import {GovernorUpgradeable} from "../GovernorUpgradeable.sol";
 import {GovernorCountingSimpleUpgradeable} from "./GovernorCountingSimpleUpgradeable.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

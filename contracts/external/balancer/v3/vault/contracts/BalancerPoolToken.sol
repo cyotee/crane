@@ -24,8 +24,8 @@ import {VaultGuard} from "./VaultGuard.sol";
  * @dev Vendored from Balancer V3 Vault.
  */
 contract BalancerPoolToken is
-    IERC20,
     IERC20Events,
+    IERC20,
     IERC20Metadata,
     IERC20Permit,
     IRateProvider,

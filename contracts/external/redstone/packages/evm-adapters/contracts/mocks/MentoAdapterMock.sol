@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {AuthorisedMockSignersBase} from "@redstone-finance/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
+import {AuthorisedMockSignersBase} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
 import {MentoAdapterBase} from "../custom-integrations/mento/MentoAdapterBase.sol";
 import {ISortedOracles} from "../custom-integrations/mento/ISortedOracles.sol";
 

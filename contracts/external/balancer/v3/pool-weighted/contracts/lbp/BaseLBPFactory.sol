@@ -142,7 +142,7 @@ abstract contract BaseLBPFactory is IPoolVersion, BasePoolFactory, ReentrancyGua
         tokenConfig = new TokenConfig[](_TWO_TOKENS);
 
         (tokenConfig[0].token, tokenConfig[1].token) =
-            projectToken < reserveToken ? (projectToken, reserveToken) : (reserveToken, projectToken);
+            address(projectToken) < address(reserveToken) ? (projectToken, reserveToken) : (reserveToken, projectToken);
     }
 
     function _registerLBP(

@@ -4,12 +4,12 @@
 pragma solidity ^0.8.20;
 
 import {GovernorUpgradeable} from "../GovernorUpgradeable.sol";
-import {AuthorityUtils} from "@openzeppelin/contracts/access/manager/AuthorityUtils.sol";
-import {IAccessManager} from "@openzeppelin/contracts/access/manager/IAccessManager.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import {Time} from "@openzeppelin/contracts/utils/types/Time.sol";
+import {AuthorityUtils} from "@crane/contracts/external/openzeppelin/access/manager/AuthorityUtils.sol";
+import {IAccessManager} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManager.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import {Time} from "@crane/contracts/external/openzeppelin/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**
@@ -299,7 +299,7 @@ abstract contract GovernorTimelockAccessUpgradeable is Initializable, GovernorUp
                 }
             } else {
                 (bool success, bytes memory returndata) = targets[i].call{value: values[i]}(calldatas[i]);
-                Address.verifyCallResult(success, returndata);
+                Address.verifyCallResult(success, returndata, "Address: call failed");
             }
         }
     }

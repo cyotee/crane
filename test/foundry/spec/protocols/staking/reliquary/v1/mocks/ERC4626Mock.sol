@@ -18,8 +18,8 @@ contract ERC4626Mock is IERC4626 {
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    // event Transfer(address indexed from, address indexed to, uint256 value);
+    // event Approval(address indexed owner, address indexed spender, uint256 value);
     event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
     event Withdraw(address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares);
 

@@ -4,7 +4,7 @@
 pragma solidity ^0.8.4;
 
 import "../CrossChainEnabled.sol";
-import "../../security/ReentrancyGuard.sol";
+import "@crane/contracts/external/openzeppelin/utils/ReentrancyGuard.sol";
 import "../../utils/Address.sol";
 import "../../vendor/polygon/IFxMessageProcessor.sol";
 

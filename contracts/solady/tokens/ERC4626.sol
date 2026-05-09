@@ -114,8 +114,7 @@ abstract contract ERC4626 is ERC20 {
     /// _decimals = success ? result : _DEFAULT_UNDERLYING_DECIMALS;
     /// ```
     function _tryGetAssetDecimals(address underlying) internal view returns (bool success, uint8 result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // Store the function selector of `decimals()`.
             mstore(0x00, 0x313ce567)
             // Arguments are evaluated last to first.
@@ -286,8 +285,7 @@ abstract contract ERC4626 is ERC20 {
 
     /// @dev Private helper to return if either value is zero.
     function _eitherIsZero(uint256 a, uint256 b) private pure returns (bool result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             result := or(iszero(a), iszero(b))
         }
     }
@@ -419,8 +417,7 @@ abstract contract ERC4626 is ERC20 {
 
     /// @dev Internal helper for reverting efficiently.
     function _revert(uint256 s) private pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             mstore(0x00, s)
             revert(0x1c, 0x04)
         }
@@ -436,8 +433,7 @@ abstract contract ERC4626 is ERC20 {
     function _deposit(address by, address to, uint256 assets, uint256 shares) internal virtual {
         SafeTransferLib.safeTransferFrom(asset(), by, address(this), assets);
         _mint(to, shares);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // Emit the {Deposit} event.
             mstore(0x00, assets)
             mstore(0x20, shares)
@@ -455,8 +451,7 @@ abstract contract ERC4626 is ERC20 {
         _beforeWithdraw(assets, shares);
         _burn(owner, shares);
         SafeTransferLib.safeTransfer(asset(), to, assets);
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // Emit the {Withdraw} event.
             mstore(0x00, assets)
             mstore(0x20, shares)

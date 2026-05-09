@@ -13,7 +13,7 @@ import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
  *      Tax is specified in basis points (1 bp = 0.01%, so 500 = 5%).
  *      Tax denominator is 10000 (100% = 10000 bp).
  */
-contract FeeOnTransferToken is IERC20, IERC20Events, IERC20Metadata {
+contract FeeOnTransferToken is IERC20Events, IERC20, IERC20Metadata {
     /* -------------------------------------------------------------------------- */
     /*                                  Constants                                 */
     /* -------------------------------------------------------------------------- */

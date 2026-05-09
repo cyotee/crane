@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {TickMath} from "./TickMath.sol";
-import {FullMath} from "./FullMath.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 import {LPFeeLibrary} from "./LPFeeLibrary.sol";
 import {Strings} from "@crane/contracts/utils/Strings.sol";
 import {Base64} from "@crane/contracts/utils/Base64.sol";

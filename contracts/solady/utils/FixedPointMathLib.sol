@@ -352,8 +352,7 @@ library FixedPointMathLib {
                     i = 32; // Inputs near `-1/e` take very long to converge.
                 }
             } else if (uint256(w >> 63) == uint256(0)) {
-                /// @solidity memory-safe-assembly
-                assembly {
+                assembly("memory-safe") {
                     // Inline log2 for more performance, since the range is small.
                     let v := shr(49, w)
                     let l := shl(3, lt(0xff, v))
@@ -365,8 +364,7 @@ library FixedPointMathLib {
                 }
             } else {
                 int256 ll = lnWad(w = lnWad(w));
-                /// @solidity memory-safe-assembly
-                assembly {
+                assembly("memory-safe") {
                     // `w = ln(x) - ln(ln(x)) + b * ln(ln(x)) / ln(x)`.
                     w := add(sdiv(mul(ll, 1023715080943847266), w), sub(w, ll))
                     i := add(3, iszero(shr(68, x)))
@@ -375,8 +373,7 @@ library FixedPointMathLib {
                 if (c == uint256(0)) {
                     do { // If `x` is big, use Newton's so that intermediate values won't overflow.
                         int256 e = expWad(w);
-                        /// @solidity memory-safe-assembly
-                        assembly {
+                        assembly("memory-safe") {
                             let t := mul(w, div(e, wad))
                             w := sub(w, sdiv(sub(t, x), div(add(e, t), wad)))
                         }
@@ -392,8 +389,7 @@ library FixedPointMathLib {
             }
             do { // Otherwise, use Halley's for faster convergence.
                 int256 e = expWad(w);
-                /// @solidity memory-safe-assembly
-                assembly {
+                assembly("memory-safe") {
                     let t := add(w, wad)
                     let s := sub(mul(w, e), mul(x, wad))
                     w := sub(w, sdiv(mul(s, wad), sub(mul(e, t), sdiv(mul(add(t, wad), s), add(t, t)))))

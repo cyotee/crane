@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {BalanceDelta} from "../types/BalanceDelta.sol";
-import {SafeCast} from "./SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 
 /// @title Slippage Check Library
 /// @notice a library for checking if a delta exceeds a maximum ceiling or fails to meet a minimum floor

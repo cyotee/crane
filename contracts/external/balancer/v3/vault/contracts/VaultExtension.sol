@@ -91,7 +91,7 @@ contract VaultExtension is IVaultExtension, VaultCommon, Proxy {
     }
 
     constructor(IVault mainVault, IVaultAdmin vaultAdmin) {
-        if (vaultAdmin.vault() != mainVault) {
+        if (address(vaultAdmin.vault()) != address(mainVault)) {
             revert WrongVaultAdminDeployment();
         }
 
@@ -219,15 +219,15 @@ contract VaultExtension is IVaultExtension, VaultCommon, Proxy {
             }
 
             // Enforce token sorting. (`previousToken` will be the zero address on the first iteration.)
-            if (token < previousToken) {
+            if (address(token) < address(previousToken)) {
                 revert InputHelpers.TokensNotSorted();
             }
 
-            if (token == previousToken) {
+            if (address(token) == address(previousToken)) {
                 revert TokenAlreadyRegistered(token);
             }
 
-            bool hasRateProvider = tokenData.rateProvider != IRateProvider(address(0));
+            bool hasRateProvider = address(tokenData.rateProvider) != address(0);
 
             _poolTokenInfo[pool][token] = TokenInfo({
                 tokenType: tokenData.tokenType,
@@ -422,7 +422,7 @@ contract VaultExtension is IVaultExtension, VaultCommon, Proxy {
             IERC20 actualToken = poolData.tokens[i];
 
             // Tokens passed into `initialize` are the "expected" tokens.
-            if (actualToken != tokens[i]) {
+            if (address(actualToken) != address(tokens[i])) {
                 revert TokensMismatch(pool, address(tokens[i]), address(actualToken));
             }
 

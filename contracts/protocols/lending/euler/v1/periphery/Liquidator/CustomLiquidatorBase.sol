@@ -18,7 +18,8 @@ abstract contract CustomLiquidatorBase is EVCUtil, Ownable {
 
     event CustomLiquidationVaultSet(address indexed vault, bool enabled);
 
-    constructor(address evc, address owner, address[] memory _customLiquidationVaults) EVCUtil(evc) Ownable(owner) {
+    constructor(address evc, address owner, address[] memory _customLiquidationVaults) EVCUtil(evc) Ownable() {
+        _transferOwnership(owner);
         for (uint256 i = 0; i < _customLiquidationVaults.length; i++) {
             customLiquidationVaults.add(_customLiquidationVaults[i]);
             emit CustomLiquidationVaultSet(_customLiquidationVaults[i], true);

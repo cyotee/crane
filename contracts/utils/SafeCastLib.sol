@@ -662,8 +662,7 @@ library SafeCastLib {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     function _revertOverflow() private pure {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // Store the function selector of `Overflow()`.
             mstore(0x00, 0x35278d12)
             // Revert with (offset, size).

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 pragma solidity ^0.8.0;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// By accessing or using Euler's products and services, I agree to the
@@ -14,6 +14,8 @@ import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVC
 /// @author Euler Labs (https://www.eulerlabs.com/)
 /// @notice A contract that allows users to sign the terms of use.
 contract TermsOfUseSigner is EVCUtil {
+    using BetterEfficientHashLib for bytes;
+
     /// @notice Mapping to store timestamp of last signature for each account and terms of use hash
     mapping(address => mapping(bytes32 => uint256)) internal termsOfUseLastSignatureTimestamps;
 
@@ -37,7 +39,8 @@ contract TermsOfUseSigner is EVCUtil {
     /// @param termsOfUseMessage The terms of use message to be signed
     /// @param termsOfUseHash The hash of the terms of use to sign
     function signTermsOfUse(string calldata termsOfUseMessage, bytes32 termsOfUseHash) external onlyEVCAccountOwner {
-        bytes32 expectedTermsOfUseHash = keccak256(abi.encodePacked(termsOfUseMessage));
+        // bytes32 expectedTermsOfUseHash = keccak256(abi.encodePacked(termsOfUseMessage));
+        bytes32 expectedTermsOfUseHash = abi.encodePacked(termsOfUseMessage)._hash();
         if (termsOfUseHash != expectedTermsOfUseHash) {
             revert InvalidTermsOfUseHash(termsOfUseHash, expectedTermsOfUseHash);
         }

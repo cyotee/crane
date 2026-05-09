@@ -2,7 +2,7 @@
 pragma solidity >=0.5.0;
 
 import "./LowGasSafeMath.sol";
-import "./SafeCast.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 
 import "./TickMath.sol";
 import "./LiquidityMath.sol";

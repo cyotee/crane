@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "../libraries/SafeCast.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import "../libraries/TickMath.sol";
 import "../interfaces/IUniswapV3Pool.sol";
 import "../interfaces/callback/IUniswapV3SwapCallback.sol";

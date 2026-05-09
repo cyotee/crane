@@ -106,7 +106,7 @@ abstract contract LBPCommon is ILBPCommon, Ownable2Step, BaseHooks {
         _blockProjectTokenSwapsIn = lbpCommonParams.blockProjectTokenSwapsIn;
 
         (_projectTokenIndex, _reserveTokenIndex) =
-            lbpCommonParams.projectToken < lbpCommonParams.reserveToken ? (0, 1) : (1, 0);
+            address(lbpCommonParams.projectToken) < address(lbpCommonParams.reserveToken) ? (0, 1) : (1, 0);
 
         _lockDurationAfterMigration = migrationParams.lockDurationAfterMigration;
         _bptPercentageToMigrate = migrationParams.bptPercentageToMigrate;

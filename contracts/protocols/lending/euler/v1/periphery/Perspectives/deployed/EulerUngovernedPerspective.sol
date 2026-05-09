@@ -6,7 +6,6 @@ import {IERC4626} from "forge-std/interfaces/IERC4626.sol";
 import {EulerRouter} from "@crane/contracts/protocols/lending/euler/v1/oracle/EulerRouter.sol";
 import {GenericFactory} from "@crane/contracts/protocols/lending/euler/v1/vault/GenericFactory/GenericFactory.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
-import {Constants} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 
 import {IEulerRouterFactory} from "../../EulerRouterFactory/interfaces/IEulerRouterFactory.sol";
 import {IEulerKinkIRMFactory} from "../../IRMFactory/interfaces/IEulerKinkIRMFactory.sol";

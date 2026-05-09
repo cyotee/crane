@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {AuthorisedMockSignersBase} from "@redstone-finance/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
+import {AuthorisedMockSignersBase} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
 import {LayerBankOracleAdapterV1} from "../custom-integrations/layerbank/LayerBankOracleAdapterV1.sol";
 
 contract LayerBankOracleAdapterV1Mock is LayerBankOracleAdapterV1, AuthorisedMockSignersBase {

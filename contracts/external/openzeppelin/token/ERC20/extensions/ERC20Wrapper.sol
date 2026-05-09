@@ -19,7 +19,7 @@ abstract contract ERC20Wrapper is ERC20 {
     IERC20 private immutable _underlying;
 
     constructor(IERC20 underlyingToken) {
-        require(underlyingToken != this, "ERC20Wrapper: cannot self wrap");
+        require(address(underlyingToken) != address(this), "ERC20Wrapper: cannot self wrap");
         _underlying = underlyingToken;
     }
 

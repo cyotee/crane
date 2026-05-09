@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {SafeERC20, IERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+// import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
 import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 
 import {IEVC} from "../../evc/interfaces/IEthereumVaultConnector.sol";
@@ -54,12 +57,14 @@ library FundsLib {
 
         if (balance > 0) {
             uint256 avail = amount < balance ? amount : balance;
+            // forge-lint: disable-next-item(unchecked-call)
             IEVC(evc).call(supplyVault, eulerAccount, 0, abi.encodeCall(IERC4626.withdraw, (avail, to, eulerAccount)));
             amount -= avail;
         }
 
         if (amount > 0) {
             IEVC(evc).enableController(eulerAccount, borrowVault);
+            // forge-lint: disable-next-item(unchecked-call)
             IEVC(evc).call(borrowVault, eulerAccount, 0, abi.encodeCall(IBorrowing.borrow, (amount, to)));
         }
     }
@@ -90,6 +95,7 @@ library FundsLib {
             deposited += repaid;
 
             if (debt == 0) {
+                // forge-lint: disable-next-item(unchecked-call)
                 IEVC(evc).call(borrowVault, eulerAccount, 0, abi.encodeCall(IRiskManager.disableController, ()));
             }
         }

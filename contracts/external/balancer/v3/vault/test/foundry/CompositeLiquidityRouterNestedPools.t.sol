@@ -2395,27 +2395,27 @@ contract CompositeLiquidityRouterNestedPoolsTest is BaseERC4626BufferTest {
         (IERC20[] memory tokens,, uint256[] memory poolBalances,) = vault.getPoolTokenInfo(pool);
         for (uint256 i = 0; i < tokens.length; i++) {
             IERC20 currentToken = tokens[i];
-            if (currentToken == dai) {
+            if (address(currentToken) == address(dai)) {
                 balances.dai = poolBalances[i];
-            } else if (currentToken == weth) {
+            } else if (address(currentToken) == address(weth)) {
                 balances.weth = poolBalances[i];
-            } else if (currentToken == wsteth) {
+            } else if (address(currentToken) == address(wsteth)) {
                 balances.wsteth = poolBalances[i];
-            } else if (currentToken == IERC20(address(waDAI))) {
+            } else if (address(currentToken) == address(waDAI)) {
                 balances.waDAI = poolBalances[i];
-            } else if (currentToken == IERC20(address(waUSDC))) {
+            } else if (address(currentToken) == address(waUSDC)) {
                 balances.waUSDC = poolBalances[i];
-            } else if (currentToken == IERC20(address(waWETH))) {
+            } else if (address(currentToken) == address(waWETH)) {
                 balances.waWETH = poolBalances[i];
-            } else if (currentToken == usdc) {
+            } else if (address(currentToken) == address(usdc)) {
                 balances.usdc = poolBalances[i];
-            } else if (currentToken == usdt) {
+            } else if (address(currentToken) == address(usdt)) {
                 balances.usdt = poolBalances[i];
-            } else if (currentToken == IERC20(childPoolA)) {
+            } else if (address(currentToken) == address(childPoolA)) {
                 balances.childPoolABpt = poolBalances[i];
-            } else if (currentToken == IERC20(childPoolB)) {
+            } else if (address(currentToken) == address(childPoolB)) {
                 balances.childPoolBBpt = poolBalances[i];
-            } else if (currentToken == IERC20(childPoolERC4626)) {
+            } else if (address(currentToken) == address(childPoolERC4626)) {
                 balances.childPoolERC4626Bpt = poolBalances[i];
             }
         }

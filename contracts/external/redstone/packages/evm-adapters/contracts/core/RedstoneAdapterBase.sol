@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {RedstoneConsumerNumericBase, RedstoneDefaultsLib} from "@redstone-finance/evm-connector/contracts/core/RedstoneConsumerNumericBase.sol";
+import {RedstoneConsumerNumericBase, RedstoneDefaultsLib} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/core/RedstoneConsumerNumericBase.sol";
 import {IRedstoneAdapter} from "./IRedstoneAdapter.sol";
 
 /**

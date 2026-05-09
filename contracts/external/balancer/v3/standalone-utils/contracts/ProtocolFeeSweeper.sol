@@ -113,7 +113,7 @@ contract ProtocolFeeSweeper is IProtocolFeeSweeper, SingletonAuthentication, Ree
                 IERC20 targetToken = _targetToken;
 
                 // If the fee token is already the target, there's no need to swap. Simply transfer it.
-                if (feeToken == targetToken) {
+                if (address(feeToken) == address(targetToken)) {
                     if (shouldUnwrap) {
                         revert UnwrapIsNotAllowed();
                     }

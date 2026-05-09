@@ -2,14 +2,14 @@
 // OpenZeppelin Contracts (last updated v5.1.0) (governance/utils/Votes.sol)
 pragma solidity ^0.8.20;
 
-import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
+import {IERC5805} from "@crane/contracts/external/openzeppelin/interfaces/IERC5805.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
 import {NoncesUpgradeable} from "../../utils/NoncesUpgradeable.sol";
 import {EIP712Upgradeable} from "../../utils/cryptography/EIP712Upgradeable.sol";
-import {Checkpoints} from "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {Time} from "@openzeppelin/contracts/utils/types/Time.sol";
+import {Checkpoints} from "@crane/contracts/external/openzeppelin/utils/structs/Checkpoints.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
+import {Time} from "@crane/contracts/external/openzeppelin/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

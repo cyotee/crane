@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import {ERC4626EVC, ERC4626EVCCollateral, ERC20, IERC20} from "../implementation/ERC4626EVCCollateral.sol";
 import {IVault} from "@crane/contracts/protocols/lending/euler/v1/evc/interfaces/IVault.sol";
-import @crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
+import {MAX_SANE_AMOUNT} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 
 /// @title ERC4626EVCCollateralCapped
 /// @custom:security-contact security@euler.xyz

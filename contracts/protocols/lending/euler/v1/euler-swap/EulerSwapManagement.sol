@@ -2,7 +2,7 @@
 pragma solidity ^0.8.27;
 
 import {IEVC} from "../evc/interfaces/IEthereumVaultConnector.sol";
-import {IEVault} from "../../vault/EVault/IEVault.sol";
+import {IEVault} from "../vault/EVault/IEVault.sol";
 
 import {EulerSwapBase} from "./EulerSwapBase.sol";
 import {IEulerSwap} from "./interfaces/IEulerSwap.sol";

@@ -2,10 +2,11 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+
 import {ERC4626Upgradeable} from "../../token/ERC20/extensions/ERC4626Upgradeable.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /// @dev ERC-4626 vault with entry/exit fees expressed in https://en.wikipedia.org/wiki/Basis_point[basis point (bp)].

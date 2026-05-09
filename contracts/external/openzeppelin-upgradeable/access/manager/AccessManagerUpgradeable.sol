@@ -3,13 +3,14 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessManager} from "@openzeppelin/contracts/access/manager/IAccessManager.sol";
-import {IAccessManaged} from "@openzeppelin/contracts/access/manager/IAccessManaged.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {IAccessManager} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManager.sol";
+import {IAccessManaged} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManaged.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
 import {MulticallUpgradeable} from "../../utils/MulticallUpgradeable.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
-import {Time} from "@openzeppelin/contracts/utils/types/Time.sol";
+import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
+import {Time} from "@crane/contracts/external/openzeppelin/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**
@@ -60,6 +61,7 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * {AccessControl-renounceRole}.
  */
 contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, MulticallUpgradeable, IAccessManager {
+    using BetterEfficientHashLib for bytes;
     using Time for *;
 
     // Structure that stores the details for a target contract.
@@ -495,7 +497,7 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
         // Reuse variable due to stack too deep
         when = uint48(Math.max(when, minWhen)); // cast is safe: both inputs are uint48
 
-        // If caller is authorised, schedule operation
+        // If caller is authorized, schedule operation
         operationId = hashOperation(caller, target, data);
 
         _checkNotScheduled(operationId);
@@ -543,7 +545,7 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
         bytes32 operationId = hashOperation(caller, target, data);
         uint32 nonce;
 
-        // If caller is authorised, check operation was scheduled early enough
+        // If caller is authorized, check operation was scheduled early enough
         // Consume an available schedule even if there is no currently enforced delay
         if (setback != 0 || getSchedule(operationId) != 0) {
             nonce = _consumeScheduledOp(operationId);
@@ -622,7 +624,8 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
 
     /// @inheritdoc IAccessManager
     function hashOperation(address caller, address target, bytes calldata data) public view virtual returns (bytes32) {
-        return keccak256(abi.encode(caller, target, data));
+        // return keccak256(abi.encode(caller, target, data));
+        return abi.encode(caller, target, data)._hash();
     }
 
     // ==================================================== OTHERS ====================================================
@@ -778,6 +781,7 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
      * @dev Hashing function for execute protection
      */
     function _hashExecutionId(address target, bytes4 selector) private pure returns (bytes32) {
-        return keccak256(abi.encode(target, selector));
+        // return keccak256(abi.encode(target, selector));
+        return abi.encode(target, selector)._hash();
     }
 }

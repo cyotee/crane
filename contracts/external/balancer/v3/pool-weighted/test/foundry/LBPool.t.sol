@@ -361,7 +361,7 @@ contract LBPoolTest is WeightedLBPTest {
 
     function testGetProjectIndices() public view {
         (uint256 expectedProjectTokenIndex, uint256 expectedReserveTokenIndex) =
-            projectToken < reserveToken ? (0, 1) : (1, 0);
+            address(projectToken) < address(reserveToken) ? (0, 1) : (1, 0);
 
         (uint256 projectTokenIndex, uint256 reserveTokenIndex) = ILBPCommon(pool).getTokenIndices();
 

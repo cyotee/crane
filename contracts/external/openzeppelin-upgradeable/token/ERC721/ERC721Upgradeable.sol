@@ -3,14 +3,14 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
-import {ERC721Utils} from "@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol";
+import {IERC721} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721.sol";
+import {IERC721Metadata} from "@crane/contracts/external/openzeppelin/token/ERC721/extensions/IERC721Metadata.sol";
+import {ERC721Utils} from "@crane/contracts/external/openzeppelin/token/ERC721/utils/ERC721Utils.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {Strings} from "@crane/contracts/external/openzeppelin/utils/Strings.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {ERC165Upgradeable} from "../../utils/introspection/ERC165Upgradeable.sol";
-import {IERC721Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import {IERC721Errors} from "@crane/contracts/external/openzeppelin/interfaces/draft-IERC6093.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

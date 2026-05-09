@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 
 /// @notice Crane-local port of Balancer's WETHTestToken for testing purposes.
@@ -24,7 +25,8 @@ contract WETHTestToken is ERC20 {
 
     function withdraw(uint256 wad) public {
         _burn(msg.sender, wad);
-        payable(msg.sender).transfer(wad);
+        // payable(msg.sender).transfer(wad);
+        BetterAddress.sendValue(payable(msg.sender), wad);
         emit Withdrawal(msg.sender, wad);
     }
 }

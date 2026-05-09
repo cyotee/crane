@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.17;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import "./RedstoneConsumerBase.sol";
 
 /**
@@ -20,7 +21,7 @@ import "./RedstoneConsumerBase.sol";
  * 1. "Tricky" calldata pointers - we decided to use single uint256 values and store
  * the calldata offset in the first 128 bits of those numbers, and the value byte size
  * in the last 128 bits of the value. It allowed us to reuse a big part of core logic
- * and even slightly optimised memory usage. To optimise gas costs, we left the burden
+ * and even slightly optimized memory usage. To optimize gas costs, we left the burden
  * of converting tricky calldata pointers to calldata bytes arrays on the consumer
  * contracts developers. They can use a helpful `getCalldataBytesFromCalldataPointer`
  * function for it
@@ -28,11 +29,12 @@ import "./RedstoneConsumerBase.sol";
  * 2. Returning memory pointers instead of actual values - we need to work with
  * dynamic bytes arrays in this contract, but the core logic of RedstoneConsumerBase
  * contract expects a uint256 number as a result of values aggregation. That's
- * why we swtiched to returning a memory pointers instead of actual values. But this is
+ * why we switched to returning a memory pointers instead of actual values. But this is
  * more an implementation detail and should not affect end developers during the
  * integration with the Redstone protocol
  */
 abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
+  using BetterEfficientHashLib for bytes;
 
   uint256 constant BITS_COUNT_IN_16_BYTES = 128;
 
@@ -42,7 +44,7 @@ abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
    * By default, it checks if all the values are identical and returns the first one
    *
    * @param calldataPointersForValues An array of "tricky" calldata pointers to
-   * the values provided by different authorised signers. Each tricky calldata pointer
+   * the values provided by different authorized signers. Each tricky calldata pointer
    * is a uint256 number, first 128 bits of which represent calldata offset, and the
    * last 128 bits - the byte length of the value
    *
@@ -59,13 +61,14 @@ abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
       revert EmptyCalldataPointersArr();
     }
     bytes calldata firstValue = getCalldataBytesFromCalldataPointer(calldataPointersForValues[0]);
-    bytes32 expectedHash = keccak256(firstValue);
+    // bytes32 expectedHash = keccak256(firstValue);
+    bytes32 expectedHash = firstValue._hash();
 
     for (uint256 i = 1; i < calldataPointersForValues.length; i++) {
       bytes calldata currentValue = getCalldataBytesFromCalldataPointer(
         calldataPointersForValues[i]
       );
-      if (keccak256(currentValue) != expectedHash) {
+      if (currentValue._hash() != expectedHash) {
         revert EachSignerMustProvideTheSameValue();
       }
     }
@@ -104,7 +107,7 @@ abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
    * @dev This function can be used in a consumer contract to securely extract an
    * oracle value for a given data feed id. Security is achieved by
    * signatures verification, timestamp validation, and aggregating bytes values
-   * from different authorised signers into a single bytes array. If any of the
+   * from different authorized signers into a single bytes array. If any of the
    * required conditions do not match, the function will revert.
    * Note! This function expects that tx calldata contains redstone payload in the end
    * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
@@ -121,7 +124,7 @@ abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
    * @dev This function can be used in a consumer contract to securely extract several
    * numeric oracle values for a given array of data feed ids. Security is achieved by
    * signatures verification, timestamp validation, and aggregating values
-   * from different authorised signers into a single numeric value. If any of the
+   * from different authorized signers into a single numeric value. If any of the
    * required conditions do not match, the function will revert.
    * Note! This function expects that tx calldata contains redstone payload in the end
    * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
@@ -152,7 +155,7 @@ abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
    * to the aggregated bytes array value (instead the value itself)
    *
    * @param calldataPointersToValues An array of "tricky" calldata pointers to
-   * the values provided by different authorised signers. Each tricky calldata pointer
+   * the values provided by different authorized signers. Each tricky calldata pointer
    * is a uint256 number, first 128 bits of which represent calldata offset, and the
    * last 128 bits - the byte length of the value
    *

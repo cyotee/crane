@@ -61,7 +61,7 @@ contract E2eSwapRateProviderTest is VaultContractsDeployer, E2eSwapTest {
     }
 
     function getRate(IERC20 token) internal view override returns (uint256) {
-        if (token == tokenA) {
+        if (address(token) == address(tokenA)) {
             return rateProviderTokenA.getRate();
         } else {
             return rateProviderTokenB.getRate();

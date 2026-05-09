@@ -1,0 +1,14 @@
+{
+  "getEModeCategoryCollateralConfig": "8942",
+  "getEModeCategoryData": "11491",
+  "getLiquidationGracePeriod": "8143",
+  "getReserveData": "30061",
+  "getUserAccountData: supplies: 0, borrows: 0": "21762",
+  "getUserAccountData: supplies: 0, borrows: 0 with eMode enabled": "21762",
+  "getUserAccountData: supplies: 1, borrows: 0": "56868",
+  "getUserAccountData: supplies: 1, borrows: 0 with eMode enabled": "62181",
+  "getUserAccountData: supplies: 2, borrows: 0": "86285",
+  "getUserAccountData: supplies: 2, borrows: 0 with eMode enabled": "92458",
+  "getUserAccountData: supplies: 2, borrows: 1": "117180",
+  "getUserAccountData: supplies: 2, borrows: 1 with eMode enabled": "123354"
+}

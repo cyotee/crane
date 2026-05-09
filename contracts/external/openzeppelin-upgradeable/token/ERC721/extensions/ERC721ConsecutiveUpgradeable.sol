@@ -4,9 +4,9 @@
 pragma solidity ^0.8.20;
 
 import {ERC721Upgradeable} from "../ERC721Upgradeable.sol";
-import {IERC2309} from "@openzeppelin/contracts/interfaces/IERC2309.sol";
-import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
-import {Checkpoints} from "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
+import {IERC2309} from "@crane/contracts/external/openzeppelin/interfaces/IERC2309.sol";
+import {BitMaps} from "@crane/contracts/external/openzeppelin/utils/structs/BitMaps.sol";
+import {Checkpoints} from "@crane/contracts/external/openzeppelin/utils/structs/Checkpoints.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

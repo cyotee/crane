@@ -1,7 +1,7 @@
 # Task Index: Crane Framework
 
 **Repo:** CRANE
-**Last Updated:** 2026-02-08
+**Last Updated:** 2026-04-24
 
 ## Active Tasks
 
@@ -108,6 +108,7 @@
 | CRANE-268 | Add Prepaid Mode Tests for Router | Ready | CRANE-163 ✓ | `test/CRANE-268-prepaid-mode-router-tests` |
 | CRANE-269 | Add NatSpec Documenting Prepaid Mode Behavior | Ready | CRANE-163 ✓ | `docs/CRANE-269-prepaid-mode-natspec` |
 | CRANE-270 | Verify Ported Balancer V3 for Production Deployment | Ready | - | `feature/CRANE-270-verify-balancer-v3-port` |
+| CRANE-271 | Port Aave V3 Origin Code to Local Contracts | Ready | - | - |
 
 ## Status Legend
 
@@ -231,6 +232,9 @@
 
 **Resupply CDP Port (1 task):**
 - **CRANE-153: Port Resupply Protocol to Local Contracts (Ready)**
+
+**Aave V3 Port (1 task):**
+- **CRANE-271: Port Aave V3 Origin Code to Local Contracts (Ready)**
 
 **Sky/DSS CDP Port (1 task):**
 - ~~CRANE-154: Port Sky/DSS Protocol to Local Contracts~~ → Complete

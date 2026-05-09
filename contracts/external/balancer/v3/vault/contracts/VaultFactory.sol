@@ -116,7 +116,7 @@ contract VaultFactory is ReentrancyGuardTransient, Ownable2Step {
             revert VaultAddressMismatch();
         }
 
-        if (protocolFeeController == IProtocolFeeController(address(0))) {
+        if (address(protocolFeeController) == address(0)) {
             revert InvalidProtocolFeeController();
         }
 

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
 import {EIP712Upgradeable} from "../utils/cryptography/EIP712Upgradeable.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 

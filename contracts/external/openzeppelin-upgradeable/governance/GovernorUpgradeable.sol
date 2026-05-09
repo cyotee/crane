@@ -3,19 +3,20 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import {IERC1155Receiver} from "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {IERC721Receiver} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721Receiver.sol";
+import {IERC1155Receiver} from "@crane/contracts/external/openzeppelin/token/ERC1155/IERC1155Receiver.sol";
 import {EIP712Upgradeable} from "../utils/cryptography/EIP712Upgradeable.sol";
-import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {SignatureChecker} from "@crane/contracts/external/openzeppelin/utils/cryptography/SignatureChecker.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {ERC165Upgradeable} from "../utils/introspection/ERC165Upgradeable.sol";
-import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import {DoubleEndedQueue} from "@crane/contracts/external/openzeppelin/utils/structs/DoubleEndedQueue.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
 import {ContextUpgradeable} from "../utils/ContextUpgradeable.sol";
 import {NoncesUpgradeable} from "../utils/NoncesUpgradeable.sol";
-import {IGovernor} from "@openzeppelin/contracts/governance/IGovernor.sol";
-import {IERC6372} from "@openzeppelin/contracts/interfaces/IERC6372.sol";
+import {IGovernor} from "@crane/contracts/external/openzeppelin/governance/IGovernor.sol";
+import {IERC6372} from "@crane/contracts/external/openzeppelin/interfaces/IERC6372.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**
@@ -29,6 +30,7 @@ import {Initializable} from "../proxy/utils/Initializable.sol";
  */
 abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC165Upgradeable, EIP712Upgradeable, NoncesUpgradeable, IGovernor, IERC721Receiver, IERC1155Receiver {
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
+    using BetterEfficientHashLib for bytes;
 
     bytes32 public constant BALLOT_TYPEHASH =
         keccak256("Ballot(uint256 proposalId,uint8 support,address voter,uint256 nonce)");
@@ -150,7 +152,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         bytes[] memory calldatas,
         bytes32 descriptionHash
     ) public pure virtual returns (uint256) {
-        return uint256(keccak256(abi.encode(targets, values, calldatas, descriptionHash)));
+        // return uint256(keccak256(abi.encode(targets, values, calldatas, descriptionHash)));
+        return uint256(abi.encode(targets, values, calldatas, descriptionHash)._hash());
     }
 
     /**
@@ -253,7 +256,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
             revert GovernorOnlyExecutor(_msgSender());
         }
         if (_executor() != address(this)) {
-            bytes32 msgDataHash = keccak256(_msgData());
+            // bytes32 msgDataHash = keccak256(_msgData());
+            bytes32 msgDataHash = _msgData()._hash();
             // loop until popping the expected operation - throw if deque is empty (operation not authorized)
             while ($._governanceCall.popFront() != msgDataHash) {}
         }
@@ -338,7 +342,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         address proposer
     ) internal virtual returns (uint256 proposalId) {
         GovernorStorage storage $ = _getGovernorStorage();
-        proposalId = hashProposal(targets, values, calldatas, keccak256(bytes(description)));
+        // proposalId = hashProposal(targets, values, calldatas, keccak256(bytes(description)));
+        proposalId = hashProposal(targets, values, calldatas, bytes(description)._hash());
 
         if (targets.length != values.length || targets.length != calldatas.length || targets.length == 0) {
             revert GovernorInvalidProposalLength(targets.length, calldatas.length, values.length);
@@ -443,7 +448,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         if (_executor() != address(this)) {
             for (uint256 i = 0; i < targets.length; ++i) {
                 if (targets[i] == address(this)) {
-                    $._governanceCall.pushBack(keccak256(calldatas[i]));
+                    // $._governanceCall.pushBack(keccak256(calldatas[i]));
+                    $._governanceCall.pushBack(calldatas[i]._hash());
                 }
             }
         }
@@ -476,7 +482,7 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
     ) internal virtual {
         for (uint256 i = 0; i < targets.length; ++i) {
             (bool success, bytes memory returndata) = targets[i].call{value: values[i]}(calldatas[i]);
-            Address.verifyCallResult(success, returndata);
+            Address.verifyCallResult(success, returndata, "Address: call failed");
         }
     }
 
@@ -594,7 +600,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
     ) public virtual returns (uint256) {
         bool valid = SignatureChecker.isValidSignatureNow(
             voter,
-            _hashTypedDataV4(keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support, voter, _useNonce(voter)))),
+            // _hashTypedDataV4(keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support, voter, _useNonce(voter)))),
+            _hashTypedDataV4(abi.encode(BALLOT_TYPEHASH, proposalId, support, voter, _useNonce(voter))._hash()),
             signature
         );
 
@@ -619,17 +626,17 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         bool valid = SignatureChecker.isValidSignatureNow(
             voter,
             _hashTypedDataV4(
-                keccak256(
-                    abi.encode(
-                        EXTENDED_BALLOT_TYPEHASH,
-                        proposalId,
-                        support,
-                        voter,
-                        _useNonce(voter),
-                        keccak256(bytes(reason)),
-                        keccak256(params)
-                    )
-                )
+                abi.encode(
+                    EXTENDED_BALLOT_TYPEHASH,
+                    proposalId,
+                    support,
+                    voter,
+                    _useNonce(voter),
+                    // keccak256(bytes(reason)),
+                    bytes(reason)._hash(),
+                    // keccak256(params)
+                    params._hash()
+                )._hash()
             ),
             signature
         );
@@ -691,7 +698,7 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
      */
     function relay(address target, uint256 value, bytes calldata data) external payable virtual onlyGovernance {
         (bool success, bytes memory returndata) = target.call{value: value}(data);
-        Address.verifyCallResult(success, returndata);
+        Address.verifyCallResult(success, returndata, "Address: call failed");
     }
 
     /**

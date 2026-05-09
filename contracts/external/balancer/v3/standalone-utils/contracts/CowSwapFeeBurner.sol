@@ -176,7 +176,7 @@ contract CowSwapFeeBurner is ICowSwapFeeBurner, FeeBurnerAuthentication, Reentra
         uint256 deadline,
         bool pullFeeToken
     ) internal {
-        if (targetToken == feeToken) {
+        if (address(targetToken) == address(feeToken)) {
             revert InvalidOrderParameters("Fee token and target token are the same");
         } else if (feeTokenAmount == 0) {
             revert InvalidOrderParameters("Fee token amount is zero");

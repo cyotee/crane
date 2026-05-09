@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
@@ -1581,7 +1583,8 @@ contract ReClammPoolTest is BaseReClammTest {
     function testEthTransferPool() public {
         vm.prank(alice);
         vm.expectRevert(IVaultErrors.CannotReceiveEth.selector);
-        payable(pool).transfer(1);
+        // payable(pool).transfer(1);
+        BetterAddress.sendValue(payable(pool), 1);
     }
 
     function testEthTransferExtension() public {
@@ -1589,7 +1592,8 @@ contract ReClammPoolTest is BaseReClammTest {
 
         vm.prank(alice);
         vm.expectRevert(IVaultErrors.CannotReceiveEth.selector);
-        payable(extension).transfer(1);
+        // payable(extension).transfer(1);
+        BetterAddress.sendValue(payable(extension), 1);
     }
 
     function testEthFallbackPool() public {

@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.22;
 
-import {IERC20Metadata} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import {Ownable} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
-import {OFTCore} from "@crane/contracts/external/layerzero/oft-evm/contracts/OFTCore.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
+import {OFTCore} from "@crane/contracts/protocols/lending/euler/v1/stubs/layerzero/oft-evm/contracts/OFTCore.sol";
 import {ERC20BurnableMintable} from "../ERC20/deployed/ERC20BurnableMintable.sol";
 
 /// @title MintBurnOFTAdapter
@@ -30,7 +29,6 @@ contract MintBurnOFTAdapter is OFTCore {
      */
     constructor(address _token, address _lzEndpoint, address _delegate)
         OFTCore(IERC20Metadata(_token).decimals(), _lzEndpoint, _delegate)
-        Ownable(_delegate)
     {
         innerToken = ERC20BurnableMintable(_token);
     }
@@ -42,7 +40,7 @@ contract MintBurnOFTAdapter is OFTCore {
      *
      * @dev In the case of MintBurnOFTAdapter, address(this) and erc20 are NOT the same contract.
      */
-    function token() public view returns (address) {
+    function token() public view override returns (address) {
         return address(innerToken);
     }
 
@@ -53,7 +51,7 @@ contract MintBurnOFTAdapter is OFTCore {
      *
      * @dev In this MintBurnOFTAdapter, approval is required because it `burnFrom` function is used.
      */
-    function approvalRequired() external pure virtual returns (bool) {
+    function approvalRequired() external pure virtual override returns (bool) {
         return true;
     }
 

@@ -42,7 +42,8 @@ contract EulerEarnFactory is Ownable, EVCUtil, IEulerEarnFactory {
     /// @param _evc The address of the EVC contract.
     /// @param _permit2 The address of the Permit2 contract.
     /// @param _perspective The address of the supported perspective contract.
-    constructor(address _owner, address _evc, address _permit2, address _perspective) Ownable(_owner) EVCUtil(_evc) {
+    constructor(address _owner, address _evc, address _permit2, address _perspective) Ownable() EVCUtil(_evc) {
+        _transferOwnership(_owner);
         if (_perspective == address(0)) revert ErrorsLib.ZeroAddress();
 
         permit2Address = _permit2;

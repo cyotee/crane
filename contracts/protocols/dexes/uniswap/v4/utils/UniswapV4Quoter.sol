@@ -7,7 +7,7 @@ import {PoolKey} from "../types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "../types/PoolId.sol";
 import {SwapMath} from "../libraries/SwapMath.sol";
 import {TickMath} from "../libraries/TickMath.sol";
-import {BitMath} from "../libraries/BitMath.sol";
+import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
 import {LiquidityMath} from "../libraries/LiquidityMath.sol";
 
 /// @title UniswapV4Quoter

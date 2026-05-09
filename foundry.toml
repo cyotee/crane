@@ -9,10 +9,18 @@ fs_permissions = [
     # CRANE-270: allow fork parity tests to persist JSON artifacts.
     { access = "read-write", path = "./tasks/CRANE-270-verify-balancer-v3-port/artifacts" },
     # Existing scripts export JSON under script/output.
-    { access = "read-write", path = "./script/output" }
+    { access = "read-write", path = "./script/output" },
+    # Aave V4 deployment-procedure and Logger tests write reports under ./output.
+    { access = "read-write", path = "./output" },
+    # Aave V4 vm.eip712HashType / vm.eip712HashStruct reads the generated EIP-712 bindings file.
+    { access = "read", path = "./test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol" },
+    { access = "read-write", path = "./"},
+    { access = "write", path = "./reports" },
+    { access = "read", path = "./out" },
+    { access = "read", path = "./config" }
 ]
 # block_gas_limit = "9223372036854775807"
-solc = "0.8.34"
+solc = "0.8.35"
 sizes = true
 optimizer = true
 # optimizer_runs = 4294967295
@@ -27,28 +35,29 @@ viaIR = false
 allow_internal_expect_revert = true
 remappings = [
     "forge-std/=lib/forge-std/src/",
-    "@crane/contracts/=contracts/"
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/"
 ]
 
 ignored_error_codes = [
     2394, 
     3860, 
     5574, 
-    2072
+    2072,
+    1878
 ]
 
 skip = [
-    "lib/reclamm/**",
-    # Euler v1 - external dep issues (LayerZero, Solmate, Uniswap V4, Pendle, Pyth)
-    "contracts/protocols/lending/euler/v1/**",
-    # External packages with missing dependencies
-    "contracts/external/openzeppelin-upgradeable/**",
-    "contracts/external/layerzero/**",
-    "contracts/external/pendle/**",
-    "contracts/external/pyth/**",
-    "contracts/external/redstone/**",
-    "contracts/external/uniswap/**",
+    # Aave V3.6 upstream formal-verification trees that are not required for runtime compilation.
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/certora/**",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts-upgradeable/certora/**",
+    # Aave V4 generated EIP-712 bindings file (kept out of test compilation; read at runtime via vm.eip712HashType).
+    "test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol",
 ]
+
+[bind_json]
+out = "test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol"
+include = ["test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/EIP712Types.sol"]
 
 [invariant]
 runs = 50
@@ -133,7 +142,14 @@ ignore = [
     "contracts/external/openzeppelin/interfaces/draft-IERC2612.sol",
     "contracts/external/openzeppelin/interfaces/IERC777.sol",
     "contracts/external/openzeppelin/token/ERC20/extensions/draft-IERC20Permit.sol",
-    "contracts/external/openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol"
+    "contracts/external/openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Enumerable.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Metadata.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155Receiver.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Receiver.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155MetadataURI.sol",
+    "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC20Metadata.sol",
 ]
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"

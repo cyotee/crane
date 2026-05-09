@@ -6,7 +6,7 @@ import {BalanceDelta} from "./types/BalanceDelta.sol";
 import {PoolKey} from "./types/PoolKey.sol";
 import {Currency} from "./types/Currency.sol";
 import {TickMath} from "./libraries/TickMath.sol";
-import {SafeCast} from "./libraries/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 import {SwapParams} from "./types/PoolOperation.sol";
 
 import {PathKey} from "./libraries/PathKey.sol";

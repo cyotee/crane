@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IPyth} from "@pyth/IPyth.sol";
-import {PythStructs} from "@pyth/PythStructs.sol";
+import {IPyth} from "@crane/contracts/external/pyth/IPyth.sol";
+import {PythStructs} from "@crane/contracts/external/pyth/PythStructs.sol";
 import {BaseAdapter, Errors, IPriceOracle} from "../BaseAdapter.sol";
 import {ScaleUtils, Scale} from "../../lib/ScaleUtils.sol";
 

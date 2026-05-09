@@ -9,8 +9,8 @@ import {ERC721} from "@crane/contracts/tokens/ERC721/ERC721.sol";
 import {ERC721Enumerable} from "@crane/contracts/tokens/ERC721/ERC721Enumerable.sol";
 
 import "../interfaces/IUniswapV3Pool.sol";
-import "../libraries/FixedPoint128.sol";
-import "../libraries/FullMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint128.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 
 import "./interfaces/INonfungiblePositionManager.sol";
 import "./interfaces/INonfungibleTokenPositionDescriptor.sol";

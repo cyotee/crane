@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.19;
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
@@ -80,7 +81,7 @@ contract Forwarder is IForwarder, ERC165 {
         (success, ret) = req.to.call{gas: req.gas, value: req.value}(callData);
 
         if (req.value != 0 && address(this).balance > 0) {
-            payable(req.from).transfer(address(this).balance);
+            BetterAddress.sendValue(payable(req.from), address(this).balance);
         }
 
         return (success, ret);

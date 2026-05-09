@@ -56,9 +56,10 @@ contract HookTargetTermsOfUse is BaseHookTarget, EVCUtil, Ownable {
     /// @param _termsOfUseHash The initial terms of use hash.
     constructor(address _evc, address _owner, address _eVaultFactory, address _termsOfUseContract, bytes32 _termsOfUseHash)
         BaseHookTarget(_eVaultFactory)
-        Ownable(_owner)
+        Ownable()
         EVCUtil(_evc)
     {
+        _transferOwnership(_owner);
         termsOfUseContract = _termsOfUseContract;
         termsOfUseHash = _termsOfUseHash;
 

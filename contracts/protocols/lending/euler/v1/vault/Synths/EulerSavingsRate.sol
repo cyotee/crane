@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {Context} from "../../../../../../external/openzeppelin/utils/Context.sol";
 import {Math} from "../../../../../../external/openzeppelin/utils/math/Math.sol";
-import {IERC20} from "../../../../../../external/openzeppelin/token/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ERC20} from "../../../../../../external/openzeppelin/token/ERC20/ERC20.sol";
 import {ERC4626} from "../../../../../../external/openzeppelin/token/ERC20/extensions/ERC4626.sol";
 import {EVCUtil} from "../../evc/utils/EVCUtil.sol";

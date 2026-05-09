@@ -20,8 +20,10 @@ contract SwapperOwnable is Swapper, EVCUtil, Ownable {
     constructor(address evc, address owner, address uniswapRouterV2, address uniswapRouterV3)
         Swapper(uniswapRouterV2, uniswapRouterV3)
         EVCUtil(evc)
-        Ownable(owner)
-    {}
+        Ownable()
+    {
+        _transferOwnership(owner);
+    }
 
     /// @inheritdoc ISwapper
     function swap(SwapParams memory params) public override onlyOwnerOrSelf {

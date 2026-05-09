@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
-import {BaseHook} from "v4-periphery/src/utils/BaseHook.sol";
-import {PoolKey} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
-import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
-import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
-import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
-import {SafeCast} from "@uniswap/v4-core/src/libraries/SafeCast.sol";
+import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol";
+import {BaseHook} from "@crane/contracts/protocols/dexes/uniswap/v4/utils/BaseHook.sol";
+import {PoolKey} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolKey.sol";
+import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
+import {IHooks} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IHooks.sol";
+import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
+import {SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolOperation.sol";
 import {
     BeforeSwapDelta, toBeforeSwapDelta, BeforeSwapDeltaLibrary
-} from "@uniswap/v4-core/src/types/BeforeSwapDelta.sol";
+} from "@crane/contracts/protocols/dexes/uniswap/v4/types/BeforeSwapDelta.sol";
 
-import {IEVault} from "../../vault/EVault/IEVault.sol";
+import {IEVault} from "../vault/EVault/IEVault.sol";
 
 import {EulerSwapBase} from "./EulerSwapBase.sol";
 import {IEulerSwap} from "./interfaces/IEulerSwap.sol";
@@ -36,7 +37,7 @@ abstract contract UniswapHook is EulerSwapBase, BaseHook {
     function activateHook(IEulerSwap.StaticParams memory sParams) internal nonReentrant {
         if (address(poolManager) == address(0)) return;
 
-        Hooks.validateHookPermissions(this, getHookPermissions());
+        Hooks.validateHookPermissions(IHooks(address(this)), getHookPermissions());
 
         address asset0Addr = IEVault(sParams.supplyVault0).asset();
         address asset1Addr = IEVault(sParams.supplyVault1).asset();
@@ -63,7 +64,7 @@ abstract contract UniswapHook is EulerSwapBase, BaseHook {
     /// in activateHook().
     function validateHookAddress(BaseHook _this) internal pure override {}
 
-    function _beforeSwap(address sender, PoolKey calldata key, IPoolManager.SwapParams calldata params, bytes calldata)
+    function _beforeSwap(address sender, PoolKey calldata key, SwapParams calldata params, bytes calldata)
         internal
         override
         nonReentrant

@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "HookMinerCreate3 focused validation",
+			"type": "shell",
+			"command": "CI=1 forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v4/hooks/public/libraries/HookMinerCreate3.t.sol -vvv",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "StableSwapNG fuzz validation",
+			"type": "shell",
+			"command": "CI=1 forge test --match-path test/foundry/spec/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/StableSwapNG/StableSwapNGFuzz.t.sol -vvv 2>&1",
+			"isBackground": false,
+			"group": "build"
+		}
+	]
+}

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {AggregatorV3Interface} from "@crane/contracts/external/chainlink/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV3Interface.sol";
 
 import {ILPOracleBase} from "./ILPOracleBase.sol";
 import {IBasePool} from "../vault/IBasePool.sol";

@@ -90,7 +90,7 @@ abstract contract RouterCommon is IRouterCommon, SenderGuard, VaultGuard, Reentr
     {
         _weth = weth;
         _permit2 = permit2;
-        _isPrepaid = permit2 == IPermit2(address(0));
+        _isPrepaid = address(permit2) == address(0);
     }
 
     /// @inheritdoc IRouterCommon

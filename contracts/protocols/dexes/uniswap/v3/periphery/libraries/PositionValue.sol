@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "../../interfaces/IUniswapV3Pool.sol";
-import "../../libraries/FixedPoint128.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint128.sol";
 import "../../libraries/TickMath.sol";
-import "../../libraries/FullMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 import "../interfaces/INonfungiblePositionManager.sol";
 import "./LiquidityAmounts.sol";
 import "./PoolAddress.sol";

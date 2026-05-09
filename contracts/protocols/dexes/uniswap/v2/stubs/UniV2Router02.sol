@@ -7,7 +7,7 @@ import "forge-std/console.sol";
 
 import {BetterIERC20 as IERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
 import {IUniswapV2Factory} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
-import {TransferHelper} from "./deps/libs/TransferHelper.sol";
+import {TransferHelper} from "@crane/contracts/protocols/dexes/uniswap/v2/libraries/TransferHelper.sol";
 
 // import {IUniswapV2Router02} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router02.sol";
 import {IUniswapV2Router} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Router.sol";

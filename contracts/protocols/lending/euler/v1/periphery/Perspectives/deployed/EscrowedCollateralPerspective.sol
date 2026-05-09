@@ -4,7 +4,6 @@ pragma solidity ^0.8.24;
 
 import {GenericFactory} from "@crane/contracts/protocols/lending/euler/v1/vault/GenericFactory/GenericFactory.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
-import @crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 
 import {BasePerspective} from "../implementation/BasePerspective.sol";
 

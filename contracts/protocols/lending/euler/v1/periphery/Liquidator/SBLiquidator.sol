@@ -3,7 +3,7 @@
 pragma solidity >=0.8.0;
 
 import {CustomLiquidatorBase} from "./CustomLiquidatorBase.sol";
-import {IERC20} from "@crane/contracts/external/openzeppelin/interfaces/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
 
 interface ISBToken is IERC20 {
@@ -44,6 +44,7 @@ contract SBuidlLiquidator is CustomLiquidatorBase {
         liabilityVault.liquidate(violator, collateral, repayAssets, minYieldBalance);
         uint256 collateralBalanceAfter = collateralVault.balanceOf(address(this));
 
+        // forge-lint: disable-next-item
         evc.call(
             liability, _msgSender(), 0, abi.encodeCall(liabilityVault.pullDebt, (type(uint256).max, address(this)))
         );

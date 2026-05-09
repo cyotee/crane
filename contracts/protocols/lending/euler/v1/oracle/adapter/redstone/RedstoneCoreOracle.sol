@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {RedstoneDefaultsLib} from "@redstone/evm-connector/core/RedstoneDefaultsLib.sol";
+import {RedstoneDefaultsLib} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/core/RedstoneDefaultsLib.sol";
 import {PrimaryProdDataServiceConsumerBase} from
-    "@redstone/evm-connector/data-services/PrimaryProdDataServiceConsumerBase.sol";
+    "@crane/contracts/external/redstone/packages/evm-connector/contracts/data-services/PrimaryProdDataServiceConsumerBase.sol";
 import {BaseAdapter, Errors, IPriceOracle} from "../BaseAdapter.sol";
 import {ScaleUtils, Scale} from "../../lib/ScaleUtils.sol";
 
@@ -11,7 +11,7 @@ import {ScaleUtils, Scale} from "../../lib/ScaleUtils.sol";
 /// @custom:security-contact security@euler.xyz
 /// @author Euler Labs (https://www.eulerlabs.com/)
 /// @notice Adapter for Redstone pull-based price feeds.
-contract RedstoneCoreOracle is PrimaryProdDataServiceConsumerBase, BaseAdapter {
+abstract contract RedstoneCoreOracle is PrimaryProdDataServiceConsumerBase, BaseAdapter {
     /// @notice Struct holding information about the latest price.
     struct Cache {
         /// @notice The Redstone price.

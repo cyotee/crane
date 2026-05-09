@@ -26,6 +26,12 @@
   "lib/comet": {
     "rev": "ed6ebcd84ac00906e8e725716891d482f4bef8b9"
   },
+  "lib/continuous-clearing-auction": {
+    "tag": {
+      "name": "v1.1.0",
+      "rev": "a0aabaa45d8677a4944fc04d5dea2c4b499b3d3a"
+    }
+  },
   "lib/ethereum-vault-connector": {
     "tag": {
       "name": "v1.0.1",
@@ -54,7 +60,10 @@
     }
   },
   "lib/openzeppelin-contracts": {
-    "rev": "6308fdc5e8e0d5e8a94dc9d5d4c79f6331334c81"
+    "tag": {
+      "name": "v5.6.1",
+      "rev": "5fd1781b1454fd1ef8e722282f86f9293cacf256"
+    }
   },
   "lib/permit2": {
     "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
@@ -103,6 +112,9 @@
       "name": "v4.0.0",
       "rev": "e50237c43811bd9b526eff40f26772152a42daba"
     }
+  },
+  "lib/v4-hooks-public": {
+    "rev": "b53aa1d80efc82c1df6632daa14d0fce14616c8e"
   },
   "lib/v4-periphery": {
     "rev": "3779387e5d296f39df543d23524b050f89a62917"

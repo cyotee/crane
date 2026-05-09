@@ -156,7 +156,7 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
         (uint256[] memory scalingFactors, uint256[] memory rates) = _vault.getPoolTokenRates(params.pool);
 
         for (uint256 i = 0; i < tokens.length; ++i) {
-            if (tokens[i] == params.tokenIn) {
+            if (address(tokens[i]) == address(params.tokenIn)) {
                 if (params.tokenInBalanceScaled18 != currentLiveBalances[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
@@ -165,7 +165,7 @@ contract PoolHooksMock is BaseHooks, VaultGuard {
                 if (expectedTokenInBalanceRaw != balancesRaw[i]) {
                     return (false, params.amountCalculatedRaw);
                 }
-            } else if (tokens[i] == params.tokenOut) {
+            } else if (address(tokens[i]) == address(params.tokenOut)) {
                 if (params.tokenOutBalanceScaled18 != currentLiveBalances[i]) {
                     return (false, params.amountCalculatedRaw);
                 }

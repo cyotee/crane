@@ -4,11 +4,11 @@
 pragma solidity ^0.8.20;
 
 import {ERC2771ContextUpgradeable} from "./ERC2771ContextUpgradeable.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
 import {EIP712Upgradeable} from "../utils/cryptography/EIP712Upgradeable.sol";
 import {NoncesUpgradeable} from "../utils/NoncesUpgradeable.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {Errors} from "@openzeppelin/contracts/utils/Errors.sol";
+import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {Errors} from "@crane/contracts/external/openzeppelin/utils/Errors.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**

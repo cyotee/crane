@@ -347,7 +347,7 @@ contract LBPool is ILBPool, LBPCommon, WeightedPool {
         string memory poolVersion
     ) private view returns (NewPoolParams memory) {
         (uint256 projectTokenIndex, uint256 reserveTokenIndex) =
-            lbpCommonParams.projectToken < lbpCommonParams.reserveToken ? (0, 1) : (1, 0);
+            address(lbpCommonParams.projectToken) < address(lbpCommonParams.reserveToken) ? (0, 1) : (1, 0);
 
         uint256[] memory normalizedWeights = new uint256[](_TWO_TOKENS);
         normalizedWeights[projectTokenIndex] = lbpParams.projectTokenStartWeight;

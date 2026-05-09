@@ -1,0 +1,36 @@
+{
+  "accessManager": "0x10b4Fe097950a3cFF5B80958D30961A384ED0F3D",
+  "configPositionManager": "0x5aC0A1198aFc2D142d108c24a4E7A68fa48D5248",
+  "giverPositionManager": "0x9860D320079Dea24AcFCD8602abFe29Ad7b04680",
+  "hub": {
+    "core": "0x7941294Df4FB68f36cA959963D4363ECC096f7Fb",
+    "prime": "0xf21A029D694CB7c713016E5a846fE9d32E975B13"
+  },
+  "hubConfigurator": "0x8b6Ace6f4Ea1CDdb99a95fa89ff5fc33ac2EB46a",
+  "hubImplementation": {
+    "core": "0x2D30617645f60AD91390F9b7a44F1F1f436429A6",
+    "prime": "0x7D9fEd9135638aE43A12986e6e4072D2c2aA4C13"
+  },
+  "irStrategy": {
+    "core": "0x0Fdd49433D800271dFAFB75FCcD5e1085f97c5a1",
+    "prime": "0x27e0d9f3411F56c0fB87d059C5caE13f22A920ac"
+  },
+  "nativeTokenGateway": "0x1968513eC6D112a5755B801f484c3AeFA0016E5c",
+  "oracle": {
+    "lrt": "0x7bbF82d926eeB5089eeFABb513Fd48B8caDAa985",
+    "mainnet": "0xF98EA47C7980e60Dc9Ad3b59e2E90BA7aaD18cb0"
+  },
+  "salt": "0x8bcfa1e0aed22543ed44d41a95e315383294a18f9fb6e67ee082afcd585a6ff1",
+  "signatureGateway": "0x73452c7a95C9B472037A36bAb44804233a1c6524",
+  "spoke": {
+    "lrt": "0x5024828f3786Bb1959388679fd2da006b7A8F2f4",
+    "mainnet": "0xBaFF62a4955056F5d1c633Ab0b325B10047171F8"
+  },
+  "spokeConfigurator": "0x3005e9f0C25968a2f2F72d4e8224882A58BC42f6",
+  "spokeImplementation": {
+    "lrt": "0x7C4E6542AFD2370B74eB2CBceD7060D150Ad5D0F",
+    "mainnet": "0xe68Ed6B8e100b6F72796b0d0565BC6Dc04043aeA"
+  },
+  "takerPositionManager": "0x3Ffb529e0D08a087a1c65031Ba29C5B276C6d975",
+  "treasurySpoke": "0x6d539Aa7aB7094495D3836448D877f7298Be8175"
+}

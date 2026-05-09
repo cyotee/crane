@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import {FullMath} from "./FullMath.sol";
-import {FixedPoint128} from "./FixedPoint128.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {FixedPoint128} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint128.sol";
 import {LiquidityMath} from "./LiquidityMath.sol";
 import {CustomRevert} from "./CustomRevert.sol";
 

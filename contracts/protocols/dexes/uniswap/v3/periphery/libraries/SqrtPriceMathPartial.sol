@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "../../libraries/FullMath.sol";
-import "../../libraries/UnsafeMath.sol";
-import "../../libraries/FixedPoint96.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {UnsafeMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/UnsafeMath.sol";
+import "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 
 /// @title Functions based on Q64.96 sqrt price and liquidity
 /// @notice Exposes two functions from @uniswap/v3-core SqrtPriceMath

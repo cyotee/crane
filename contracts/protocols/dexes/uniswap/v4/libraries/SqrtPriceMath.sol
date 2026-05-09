@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {SafeCast} from "./SafeCast.sol";
-import {FullMath} from "./FullMath.sol";
-import {UnsafeMath} from "./UnsafeMath.sol";
-import {FixedPoint96} from "./FixedPoint96.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {UnsafeMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/UnsafeMath.sol";
+import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
 
 /// @title Functions based on Q64.96 sqrt price and liquidity
 /// @notice Contains the math that uses square root of price as a Q64.96 and liquidity to compute deltas

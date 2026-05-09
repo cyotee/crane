@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v3/interfaces/IUniswapV3Pool.sol";
 import {SwapMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/SwapMath.sol";
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/TickMath.sol";
-import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/BitMath.sol";
+import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
 import {LiquidityMath} from "@crane/contracts/protocols/dexes/uniswap/v3/libraries/LiquidityMath.sol";
 
 /// @title UniswapV3Quoter

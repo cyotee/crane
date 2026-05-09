@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import {GovernorAccessControl} from "./GovernorAccessControl.sol";
 import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import {IGovernance} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
-import @crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
+import {OP_MAX_VALUE} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 
 /// @title GovernorAccessControlEmergency
 /// @custom:security-contact security@euler.xyz

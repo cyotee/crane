@@ -1,0 +1,130 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
+
+import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol';
+import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
+import {VmSafe} from 'forge-std/Vm.sol';
+// Chore: move to a shared place
+import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
+import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
+import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {CompactStep, CompactStepLib, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol';
+import {AuctionBaseTest} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol';
+
+struct AuctionFuzzConstructorParams {
+    address token;
+    uint128 totalSupply;
+    AuctionParameters parameters;
+    Step[] steps;
+}
+
+contract BttBase is AuctionBaseTest {
+    function isCoverage() internal view returns (bool) {
+        return vm.isContext(VmSafe.ForgeContext.Coverage);
+    }
+
+    modifier setupAuctionConstructorParams(AuctionFuzzConstructorParams memory _params) {
+        _params = validAuctionConstructorInputs(_params);
+        _;
+    }
+
+    // Temporary clone of function within auction base test
+    function _boundPriceParams(uint128 _totalSupply, AuctionParameters memory _parameters) private pure {
+        uint256 maxBidPrice = MaxBidPriceLib.maxBidPrice(_totalSupply);
+        // Bound tick spacing and floor price to reasonable values
+        _parameters.floorPrice =
+            _bound(_parameters.floorPrice, ConstantsLib.MIN_FLOOR_PRICE, maxBidPrice - ConstantsLib.MIN_TICK_SPACING);
+        // Bound tick spacing to allow for at least one tick above the floor price to be initialized
+        _parameters.tickSpacing =
+            _bound(_parameters.tickSpacing, ConstantsLib.MIN_TICK_SPACING, maxBidPrice - _parameters.floorPrice);
+        // Round down floor price to the closest multiple of tick spacing
+        _parameters.floorPrice = helper__roundPriceDownToTickSpacing(_parameters.floorPrice, _parameters.tickSpacing);
+        vm.assume(_parameters.floorPrice != 0 && _parameters.floorPrice >= ConstantsLib.MIN_FLOOR_PRICE);
+    }
+
+    function validAuctionConstructorInputs(AuctionFuzzConstructorParams memory _params)
+        internal
+        pure
+        returns (AuctionFuzzConstructorParams memory)
+    {
+        // Bound to be sensible values
+        _params.totalSupply = uint128(_bound(_params.totalSupply, 1, ConstantsLib.MAX_TOTAL_SUPPLY));
+        vm.assume(_params.token != _params.parameters.currency);
+        vm.assume(_params.token != address(0));
+        vm.assume(_params.parameters.fundsRecipient != address(0));
+        vm.assume(_params.parameters.tokensRecipient != address(0));
+
+        (bytes memory auctionStepsData, uint256 numberOfBlocks,) = generateAuctionSteps(_params.steps);
+
+        vm.assume(numberOfBlocks > 0);
+
+        _params.parameters.startBlock =
+            uint64(bound(_params.parameters.startBlock, 1, type(uint64).max - numberOfBlocks - 2));
+        _params.parameters.endBlock = _params.parameters.startBlock + uint64(numberOfBlocks);
+        _params.parameters.claimBlock = _params.parameters.endBlock + 1;
+        _params.parameters.auctionStepsData = auctionStepsData;
+
+        _boundPriceParams(_params.totalSupply, _params.parameters);
+
+        return _params;
+    }
+
+    /**
+     * Take in a randomly generated sequencer of auction steps and generate a compatible sequence
+     * - The sum of all of the mps generated should be equal to the total mps
+     * - If the randomly generated sequence becomes too large, or falls short, we fill it with a single step which mades up the difference
+     */
+    function generateAuctionSteps(Step[] memory _steps) internal pure returns (bytes memory, uint256, Step[] memory) {
+        vm.assume(_steps.length > 0);
+
+        uint256 totalMps = 0;
+        uint256 numberOfSteps = 0;
+        while (totalMps < ConstantsLib.MPS && numberOfSteps < _steps.length) {
+            _steps[numberOfSteps].mps = uint24(bound(_steps[numberOfSteps].mps, 0, ConstantsLib.MPS - totalMps));
+            _steps[numberOfSteps].blockDelta = uint40(bound(_steps[numberOfSteps].blockDelta, 1, type(uint16).max));
+
+            // If the next step would exceed the total mps, or we are on the last step, set the mps and block delta to the remaining mps and 1
+            // Otherwise if we are out of fuzz steps, we need to just make up the difference
+            if (
+                totalMps + (_steps[numberOfSteps].mps * _steps[numberOfSteps].blockDelta) > ConstantsLib.MPS
+                    || numberOfSteps == _steps.length - 1
+            ) {
+                _steps[numberOfSteps].mps = uint24(ConstantsLib.MPS - totalMps);
+                _steps[numberOfSteps].blockDelta = 1;
+            }
+            totalMps += _steps[numberOfSteps].mps * _steps[numberOfSteps].blockDelta;
+            numberOfSteps++;
+        }
+        assertEq(totalMps, ConstantsLib.MPS, 'totalMps');
+
+        // Encode the steps into the compact step format
+        // Calculate the total number of blocks to inform the fuzzed endBlock Values
+        CompactStep[] memory steps = new CompactStep[](numberOfSteps);
+        uint256 numberOfBlocks = 0;
+        for (uint256 i = 0; i < numberOfSteps; i++) {
+            steps[i] = CompactStepLib.create(uint24(_steps[i].mps), uint40(_steps[i].blockDelta));
+            numberOfBlocks += _steps[i].blockDelta;
+        }
+
+        bytes memory auctionStepsData = CompactStepLib.pack(steps);
+
+        return (auctionStepsData, numberOfBlocks, _steps);
+    }
+
+    function assertEq(Bid memory _bid, Bid memory _bid2) internal pure {
+        assertEq(_bid.startBlock, _bid2.startBlock, 'startBlock');
+        assertEq(_bid.startCumulativeMps, _bid2.startCumulativeMps, 'startCumulativeMps');
+        assertEq(_bid.exitedBlock, _bid2.exitedBlock, 'exitedBlock');
+        assertEq(_bid.maxPrice, _bid2.maxPrice, 'maxPrice');
+        assertEq(_bid.owner, _bid2.owner, 'owner');
+        assertEq(_bid.amountQ96, _bid2.amountQ96, 'amountQ96');
+        assertEq(_bid.tokensFilled, _bid2.tokensFilled, 'tokensFilled');
+    }
+
+    function assertEq(AuctionStep memory _step, AuctionStep memory _step2) internal pure {
+        assertEq(_step.startBlock, _step2.startBlock, 'startBlock');
+        assertEq(_step.endBlock, _step2.endBlock, 'endBlock');
+        assertEq(_step.mps, _step2.mps, 'mps');
+    }
+}

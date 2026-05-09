@@ -376,10 +376,10 @@ contract CowRouter is SingletonAuthentication, VaultGuard, ICowRouter {
             // returned to the sender.
             uint256 rawSenderDebts = donatedAmounts[i] + feeAmounts[i];
 
-            if (tokens[i] == swapTokenIn) {
+            if (address(tokens[i]) == address(swapTokenIn)) {
                 // Debit the sender for tokens charged in the swap operation.
                 rawSenderDebts += swapAmountIn;
-            } else if (tokens[i] == swapTokenOut) {
+            } else if (address(tokens[i]) == address(swapTokenOut)) {
                 // Credit the sender for tokens received in the swap operation.
                 rawSenderCredits += swapAmountOut;
             }

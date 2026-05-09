@@ -13,8 +13,7 @@ library StorageSlotExtension {
 
     /// @dev Returns an `Int256Slot` with member `value` located at `slot`.
     function getInt256Slot(bytes32 slot) internal pure returns (Int256Slot storage r) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             r.slot := slot
         }
     }
@@ -61,80 +60,70 @@ library StorageSlotExtension {
 
     /// @dev Load the value held at location `slot` in transient storage.
     function tload(AddressSlotType slot) internal view returns (address value) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             value := tload(slot)
         }
     }
 
     /// @dev Store `value` at location `slot` in transient storage.
     function tstore(AddressSlotType slot, address value) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             tstore(slot, value)
         }
     }
 
     /// @dev Load the value held at location `slot` in transient storage.
     function tload(BooleanSlotType slot) internal view returns (bool value) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             value := tload(slot)
         }
     }
 
     /// @dev Store `value` at location `slot` in transient storage.
     function tstore(BooleanSlotType slot, bool value) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             tstore(slot, value)
         }
     }
 
     /// @dev Load the value held at location `slot` in transient storage.
     function tload(Bytes32SlotType slot) internal view returns (bytes32 value) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             value := tload(slot)
         }
     }
 
     /// @dev Store `value` at location `slot` in transient storage.
     function tstore(Bytes32SlotType slot, bytes32 value) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             tstore(slot, value)
         }
     }
 
     /// @dev Load the value held at location `slot` in transient storage.
     function tload(Uint256SlotType slot) internal view returns (uint256 value) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             value := tload(slot)
         }
     }
 
     /// @dev Store `value` at location `slot` in transient storage.
     function tstore(Uint256SlotType slot, uint256 value) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             tstore(slot, value)
         }
     }
 
     /// @dev Load the value held at location `slot` in transient storage.
     function tload(Int256SlotType slot) internal view returns (int256 value) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             value := tload(slot)
         }
     }
 
     /// @dev Store `value` at location `slot` in transient storage.
     function tstore(Int256SlotType slot, int256 value) internal {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             tstore(slot, value)
         }
     }

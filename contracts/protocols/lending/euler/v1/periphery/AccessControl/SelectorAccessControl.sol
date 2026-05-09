@@ -3,8 +3,7 @@
 pragma solidity ^0.8.0;
 
 import {ContextUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/utils/ContextUpgradeable.sol";
-import {AccessControlEnumerableUpgradeable} from
-    @crane/contracts/external/openzeppelin-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol";
+import {AccessControlEnumerableUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol";
 import {
     AccessControlUpgradeable,
     IAccessControl

@@ -9,7 +9,7 @@ import {OracleLens} from "./OracleLens.sol";
 import {UtilsLens} from "./UtilsLens.sol";
 import {IRMLens} from "./IRMLens.sol";
 import {Utils} from "./Utils.sol";
-import @crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
+import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import "./LensTypes.sol";
 
 contract VaultLens is Utils {

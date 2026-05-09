@@ -35,7 +35,7 @@ contract ESynth is ERC20EVCCompatible, Ownable {
 
     constructor(address evc_, string memory name_, string memory symbol_)
         ERC20EVCCompatible(evc_, name_, symbol_)
-        Ownable(msg.sender)
+        Ownable()
     {
         ignoredForTotalSupply.add(address(this));
     }

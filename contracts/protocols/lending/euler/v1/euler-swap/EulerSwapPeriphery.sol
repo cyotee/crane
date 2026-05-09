@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {SafeERC20, IERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+// import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
 
 import {IEulerSwapPeriphery} from "./interfaces/IEulerSwapPeriphery.sol";
 import {IEulerSwap} from "./interfaces/IEulerSwap.sol";

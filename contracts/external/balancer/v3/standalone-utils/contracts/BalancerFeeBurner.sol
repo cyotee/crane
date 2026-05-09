@@ -47,16 +47,16 @@ contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, Vaul
             SwapPathStep memory step = steps[i];
 
             if (step.isBuffer) {
-                bool isUnwrap = step.pool == address(stepTokenIn);
+                bool isUnwrap = address(step.pool) == address(stepTokenIn);
                 IERC4626 wrappedToken = IERC4626(step.pool);
                 address underlyingToken = _vault.getERC4626BufferAsset(wrappedToken);
                 if (underlyingToken == address(0)) {
                     revert BufferNotInitialized(step.pool);
                 }
 
-                if (isUnwrap && step.tokenOut != IERC20(underlyingToken)) {
+                if (isUnwrap && address(step.tokenOut) != underlyingToken) {
                     revert InvalidBufferTokenOut(step.tokenOut, i);
-                } else if (isUnwrap == false && step.tokenOut != IERC20(address(wrappedToken))) {
+                } else if (isUnwrap == false && address(step.tokenOut) != address(wrappedToken)) {
                     revert InvalidBufferTokenOut(step.tokenOut, i);
                 }
             } else {
@@ -128,7 +128,7 @@ contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, Vaul
 
         SwapPathStep[] memory steps = _getBurnPath(feeToken);
         uint256 lastStepIndex = steps.length - 1;
-        if (steps[lastStepIndex].tokenOut != targetToken) {
+        if (address(steps[lastStepIndex].tokenOut) != address(targetToken)) {
             revert TargetTokenOutMismatch();
         }
 
@@ -182,7 +182,7 @@ contract BalancerFeeBurner is IBalancerFeeBurner, ReentrancyGuardTransient, Vaul
 
     function _tokenExists(IERC20 token, IERC20[] memory tokens) private pure returns (bool) {
         for (uint256 i = 0; i < tokens.length; i++) {
-            if (tokens[i] == token) {
+            if (address(tokens[i]) == address(token)) {
                 return true;
             }
         }

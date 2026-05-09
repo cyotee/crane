@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {FullMath} from "./FullMath.sol";
-import {FixedPoint96} from "./FixedPoint96.sol";
-import {SafeCast} from "./SafeCast.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
+import {FixedPoint96} from "@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol";
+import {SafeCast} from "@crane/contracts/protocols/dexes/uniswap/libraries/SafeCast.sol";
 
 /// @notice Provides functions for computing liquidity amounts from token amounts and prices
 /// @dev Ported from Uniswap V4 for compatibility with Solidity 0.8.30
