@@ -23,6 +23,12 @@
   "lib/balancer-v3-monorepo": {
     "rev": "a2fe650f622e1bd6201537cc5c754afe7feac24a"
   },
+  "lib/chainlink-local": {
+    "tag": {
+      "name": "v0.2.8",
+      "rev": "5a0655baf3514bd06ffee39c6b72563a5e44f47d"
+    }
+  },
   "lib/comet": {
     "rev": "ed6ebcd84ac00906e8e725716891d482f4bef8b9"
   },
