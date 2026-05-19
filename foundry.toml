@@ -36,7 +36,8 @@ allow_internal_expect_revert = true
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@crane/contracts/=contracts/",
-    "@crane/test/=test/"
+    "@crane/test/=test/",
+    "battlechain-lib/=lib/battlechain-lib/src/"
 ]
 
 ignored_error_codes = [
