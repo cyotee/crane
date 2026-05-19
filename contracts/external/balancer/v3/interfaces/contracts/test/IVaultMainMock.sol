@@ -1,12 +1,28 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity ^0.8.24;
 
-import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 
-import {IRateProvider} from "../solidity-utils/helpers/IRateProvider.sol";
-import "../vault/VaultTypes.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {
+    AddLiquidityParams,
+    BufferWrapOrUnwrapParams,
+    HooksConfig,
+    PoolConfig,
+    PoolConfigBits,
+    PoolData,
+    PoolRoleAccounts,
+    PoolSwapParams,
+    RemoveLiquidityParams,
+    Rounding,
+    SwapState,
+    TokenConfig,
+    TokenInfo,
+    TokenType,
+    VaultState,
+    VaultSwapParams
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 interface IVaultMainMock {
     function getPoolFactoryMock() external view returns (address);

@@ -10,7 +10,7 @@ import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 import {IStablePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-stable/IStablePool.sol";
 import {
     IRateProvider
-} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {

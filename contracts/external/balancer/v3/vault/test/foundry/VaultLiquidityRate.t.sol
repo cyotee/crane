@@ -8,7 +8,7 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {
     IRateProvider
-} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {PoolData, Rounding} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IPoolLiquidity} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IPoolLiquidity.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";

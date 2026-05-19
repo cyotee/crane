@@ -7,7 +7,7 @@ pragma solidity ^0.8.0;
 
 import {
     IRateProvider
-} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

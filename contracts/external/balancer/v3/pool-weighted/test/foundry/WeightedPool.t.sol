@@ -8,7 +8,7 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {
     IRateProvider
-} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {
     TokenConfig,
     PoolRoleAccounts

@@ -28,6 +28,7 @@ Behaviour
 beije
 BERC
 betterconsole
+BITLENGTH
 BITPOS
 Bloemen
 Boba

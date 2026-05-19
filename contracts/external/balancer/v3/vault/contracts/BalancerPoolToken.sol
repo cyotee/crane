@@ -14,7 +14,7 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 
 import {
     IRateProvider
-} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/helpers/IRateProvider.sol";
+} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 
 import {VaultGuard} from "./VaultGuard.sol";
