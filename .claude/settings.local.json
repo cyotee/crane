@@ -48,7 +48,9 @@
       "Bash(FOUNDRY_SOLC=/Users/cyotee/.svm/0.8.34/solc-0.8.34 forge test --match-path \"test/foundry/spec/access/**\" --offline)",
       "Bash(FOUNDRY_SOLC=/Users/cyotee/.svm/0.8.34/solc-0.8.34 forge test --match-path \"test/foundry/spec/factories/**\" --offline)",
       "Bash(COLORBT_SHOW_HIDDEN=1 FOUNDRY_SOLC=/Users/cyotee/.svm/0.8.34/solc-0.8.34 forge test --match-path \"test/foundry/spec/protocols/dexes/**\" --offline)",
-      "Bash(FOUNDRY_SOLC=0.8.34 forge build --skip test --offline)"
+      "Bash(FOUNDRY_SOLC=0.8.34 forge build --skip test --offline)",
+      "WebFetch(domain:docs.battlechain.com)",
+      "WebFetch(domain:api.github.com)"
     ]
   },
   "sandbox": {
