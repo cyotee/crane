@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.17;
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import "../interfaces/IPLimitRouter.sol";
 import "../core/libraries/TokenHelper.sol";
 import "../interfaces/IStandardizedYield.sol";
@@ -10,6 +11,8 @@ import "../core/libraries/Errors.sol";
 import "./BytesLib.sol";
 
 contract LimitBackendHelper is TokenHelper {
+    using BetterAddress for address;
+
     address private immutable WNATIVE;
     address private immutable original;
 
@@ -60,7 +63,17 @@ contract LimitBackendHelper is TokenHelper {
         minted = new uint256[](length);
 
         for (uint256 i = 0; i < length; i++) {
-            (, bytes memory result) = original.delegatecall(
+            // forge-lint: disable-next-line(unchecked-call)
+            // (, bytes memory result) = original.delegatecall(
+            //     abi.encodeWithSignature(
+            //         "mintSyFromTokenRevert(address,address,address,uint256)",
+            //         makers[i],
+            //         SY,
+            //         tokens[i],
+            //         amounts[i]
+            //     )
+            // );
+            bytes memory result = original.functionDelegateCall(
                 abi.encodeWithSignature(
                     "mintSyFromTokenRevert(address,address,address,uint256)",
                     makers[i],

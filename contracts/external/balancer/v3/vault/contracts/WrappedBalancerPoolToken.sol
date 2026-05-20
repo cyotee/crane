@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.24;
 
-import {ERC20Permit} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {ERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/ERC20.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
 
 import {
     IWrappedBalancerPoolToken

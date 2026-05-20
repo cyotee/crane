@@ -10,7 +10,7 @@ import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearin
 import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
 import {AuctionParamsBuilder} from './utils/AuctionParamsBuilder.sol';
 import {AuctionStepsBuilder} from './utils/AuctionStepsBuilder.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 /// @title AuctionStepDiffTest
 /// @notice Tests for different auction steps data combinations

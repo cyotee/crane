@@ -7,7 +7,7 @@ import {IAuthority} from "./IAuthority.sol";
 import {AuthorityUtils} from "./AuthorityUtils.sol";
 import {IAccessManager} from "./IAccessManager.sol";
 import {IAccessManaged} from "./IAccessManaged.sol";
-import {Context} from "../../utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 
 /**
  * @dev This contract module makes available a {restricted} modifier. Functions decorated with this modifier will be

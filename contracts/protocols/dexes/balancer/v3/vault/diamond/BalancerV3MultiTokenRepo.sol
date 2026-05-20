@@ -58,35 +58,35 @@ library BalancerV3MultiTokenRepo {
 
     /* ------ Layout Functions ------ */
 
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ View Functions ------ */
 
-    function _totalSupply(Storage storage layout, address pool) internal view returns (uint256) {
-        return layout.totalSupplyOf[pool];
+    function _totalSupply(Storage storage layoutStruct, address pool) internal view returns (uint256) {
+        return layoutStruct.totalSupplyOf[pool];
     }
 
     function _totalSupply(address pool) internal view returns (uint256) {
-        return _totalSupply(_layout(), pool);
+        return _totalSupply(_layoutStruct(), pool);
     }
 
-    function _balanceOf(Storage storage layout, address pool, address account) internal view returns (uint256) {
-        return layout.balances[pool][account];
+    function _balanceOf(Storage storage layoutStruct, address pool, address account) internal view returns (uint256) {
+        return layoutStruct.balances[pool][account];
     }
 
     function _balanceOf(address pool, address account) internal view returns (uint256) {
-        return _balanceOf(_layout(), pool, account);
+        return _balanceOf(_layoutStruct(), pool, account);
     }
 
-    function _allowance(Storage storage layout, address pool, address owner, address spender)
+    function _allowance(Storage storage layoutStruct, address pool, address owner, address spender)
         internal
         view
         returns (uint256)
@@ -94,66 +94,66 @@ library BalancerV3MultiTokenRepo {
         if (owner == spender) {
             return type(uint256).max;
         }
-        return layout.allowances[pool][owner][spender];
+        return layoutStruct.allowances[pool][owner][spender];
     }
 
     function _allowance(address pool, address owner, address spender) internal view returns (uint256) {
-        return _allowance(_layout(), pool, owner, spender);
+        return _allowance(_layoutStruct(), pool, owner, spender);
     }
 
     /* ------ State-Modifying Functions ------ */
 
-    function _mint(Storage storage layout, address pool, address to, uint256 amount) internal {
+    function _mint(Storage storage layoutStruct, address pool, address to, uint256 amount) internal {
         if (to == address(0)) {
             revert IERC20Errors.ERC20InvalidReceiver(to);
         }
 
-        uint256 newTotalSupply = layout.totalSupplyOf[pool] + amount;
+        uint256 newTotalSupply = layoutStruct.totalSupplyOf[pool] + amount;
         unchecked {
-            layout.balances[pool][to] += amount;
+            layoutStruct.balances[pool][to] += amount;
         }
 
         _ensurePoolMinimumTotalSupply(newTotalSupply);
-        layout.totalSupplyOf[pool] = newTotalSupply;
+        layoutStruct.totalSupplyOf[pool] = newTotalSupply;
 
         emit Transfer(pool, address(0), to, amount);
         BalancerPoolToken(pool).emitTransfer(address(0), to, amount);
     }
 
     function _mint(address pool, address to, uint256 amount) internal {
-        _mint(_layout(), pool, to, amount);
+        _mint(_layoutStruct(), pool, to, amount);
     }
 
-    function _mintMinimumSupplyReserve(Storage storage layout, address pool) internal {
-        layout.totalSupplyOf[pool] += POOL_MINIMUM_TOTAL_SUPPLY;
+    function _mintMinimumSupplyReserve(Storage storage layoutStruct, address pool) internal {
+        layoutStruct.totalSupplyOf[pool] += POOL_MINIMUM_TOTAL_SUPPLY;
         unchecked {
-            layout.balances[pool][address(0)] += POOL_MINIMUM_TOTAL_SUPPLY;
+            layoutStruct.balances[pool][address(0)] += POOL_MINIMUM_TOTAL_SUPPLY;
         }
         emit Transfer(pool, address(0), address(0), POOL_MINIMUM_TOTAL_SUPPLY);
         BalancerPoolToken(pool).emitTransfer(address(0), address(0), POOL_MINIMUM_TOTAL_SUPPLY);
     }
 
     function _mintMinimumSupplyReserve(address pool) internal {
-        _mintMinimumSupplyReserve(_layout(), pool);
+        _mintMinimumSupplyReserve(_layoutStruct(), pool);
     }
 
-    function _burn(Storage storage layout, address pool, address from, uint256 amount) internal {
+    function _burn(Storage storage layoutStruct, address pool, address from, uint256 amount) internal {
         if (from == address(0)) {
             revert IERC20Errors.ERC20InvalidSender(from);
         }
 
-        uint256 accountBalance = layout.balances[pool][from];
+        uint256 accountBalance = layoutStruct.balances[pool][from];
         if (amount > accountBalance) {
             revert IERC20Errors.ERC20InsufficientBalance(from, accountBalance, amount);
         }
 
         unchecked {
-            layout.balances[pool][from] = accountBalance - amount;
+            layoutStruct.balances[pool][from] = accountBalance - amount;
         }
-        uint256 newTotalSupply = layout.totalSupplyOf[pool] - amount;
+        uint256 newTotalSupply = layoutStruct.totalSupplyOf[pool] - amount;
 
         _ensurePoolMinimumTotalSupply(newTotalSupply);
-        layout.totalSupplyOf[pool] = newTotalSupply;
+        layoutStruct.totalSupplyOf[pool] = newTotalSupply;
 
         // Try/catch for recovery mode resilience
         try BalancerPoolToken(pool).emitTransfer(from, address(0), amount) {} catch {}
@@ -162,10 +162,10 @@ library BalancerV3MultiTokenRepo {
     }
 
     function _burn(address pool, address from, uint256 amount) internal {
-        _burn(_layout(), pool, from, amount);
+        _burn(_layoutStruct(), pool, from, amount);
     }
 
-    function _transfer(Storage storage layout, address pool, address from, address to, uint256 amount) internal {
+    function _transfer(Storage storage layoutStruct, address pool, address from, address to, uint256 amount) internal {
         if (from == address(0)) {
             revert IERC20Errors.ERC20InvalidSender(from);
         }
@@ -173,14 +173,14 @@ library BalancerV3MultiTokenRepo {
             revert IERC20Errors.ERC20InvalidReceiver(to);
         }
 
-        uint256 fromBalance = layout.balances[pool][from];
+        uint256 fromBalance = layoutStruct.balances[pool][from];
         if (amount > fromBalance) {
             revert IERC20Errors.ERC20InsufficientBalance(from, fromBalance, amount);
         }
 
         unchecked {
-            layout.balances[pool][from] = fromBalance - amount;
-            layout.balances[pool][to] += amount;
+            layoutStruct.balances[pool][from] = fromBalance - amount;
+            layoutStruct.balances[pool][to] += amount;
         }
 
         emit Transfer(pool, from, to, amount);
@@ -188,10 +188,10 @@ library BalancerV3MultiTokenRepo {
     }
 
     function _transfer(address pool, address from, address to, uint256 amount) internal {
-        _transfer(_layout(), pool, from, to, amount);
+        _transfer(_layoutStruct(), pool, from, to, amount);
     }
 
-    function _approve(Storage storage layout, address pool, address owner, address spender, uint256 amount) internal {
+    function _approve(Storage storage layoutStruct, address pool, address owner, address spender, uint256 amount) internal {
         if (owner == address(0)) {
             revert IERC20Errors.ERC20InvalidApprover(owner);
         }
@@ -199,7 +199,7 @@ library BalancerV3MultiTokenRepo {
             revert IERC20Errors.ERC20InvalidSpender(spender);
         }
 
-        layout.allowances[pool][owner][spender] = amount;
+        layoutStruct.allowances[pool][owner][spender] = amount;
 
         // Try/catch for recovery mode resilience
         try BalancerPoolToken(pool).emitApproval(owner, spender, amount) {} catch {}
@@ -208,40 +208,40 @@ library BalancerV3MultiTokenRepo {
     }
 
     function _approve(address pool, address owner, address spender, uint256 amount) internal {
-        _approve(_layout(), pool, owner, spender, amount);
+        _approve(_layoutStruct(), pool, owner, spender, amount);
     }
 
-    function _spendAllowance(Storage storage layout, address pool, address owner, address spender, uint256 amount)
+    function _spendAllowance(Storage storage layoutStruct, address pool, address owner, address spender, uint256 amount)
         internal
     {
-        uint256 currentAllowance = _allowance(layout, pool, owner, spender);
+        uint256 currentAllowance = _allowance(layoutStruct, pool, owner, spender);
         if (currentAllowance != type(uint256).max) {
             if (amount > currentAllowance) {
                 revert IERC20Errors.ERC20InsufficientAllowance(spender, currentAllowance, amount);
             }
             unchecked {
-                _approve(layout, pool, owner, spender, currentAllowance - amount);
+                _approve(layoutStruct, pool, owner, spender, currentAllowance - amount);
             }
         }
     }
 
     function _spendAllowance(address pool, address owner, address spender, uint256 amount) internal {
-        _spendAllowance(_layout(), pool, owner, spender, amount);
+        _spendAllowance(_layoutStruct(), pool, owner, spender, amount);
     }
 
     /**
      * @dev Only callable in static call (query) context. Temporarily increases balance
      * to allow burn to succeed during removeLiquidity queries.
      */
-    function _queryModeBalanceIncrease(Storage storage layout, address pool, address to, uint256 amount) internal {
+    function _queryModeBalanceIncrease(Storage storage layoutStruct, address pool, address to, uint256 amount) internal {
         if (EVMCallModeHelpers.isStaticCall() == false) {
             revert EVMCallModeHelpers.NotStaticCall();
         }
-        layout.balances[address(pool)][to] += amount;
+        layoutStruct.balances[address(pool)][to] += amount;
     }
 
     function _queryModeBalanceIncrease(address pool, address to, uint256 amount) internal {
-        _queryModeBalanceIncrease(_layout(), pool, to, amount);
+        _queryModeBalanceIncrease(_layoutStruct(), pool, to, amount);
     }
 
     /* ------ Private Helpers ------ */

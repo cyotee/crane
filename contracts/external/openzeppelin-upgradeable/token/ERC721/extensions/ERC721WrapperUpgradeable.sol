@@ -3,9 +3,9 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC721} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721.sol";
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
 import {ERC721Upgradeable} from "../ERC721Upgradeable.sol";
-import {IERC721Receiver} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721Receiver.sol";
+import {IERC721Receiver} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/IERC721Receiver.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

@@ -14,7 +14,7 @@ import {FuzzDeploymentParams} from '../utils/FuzzStructs.sol';
 import {FuzzBid} from '../utils/FuzzStructs.sol';
 import {MockContinuousClearingAuction} from '../utils/MockAuction.sol';
 import {AuctionUnitTest} from './AuctionUnitTest.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract AuctionIterateOverTicksTest is AuctionUnitTest {
     using ValueX7Lib for *;

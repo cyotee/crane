@@ -30,9 +30,9 @@ import {TokenHandler} from './utils/TokenHandler.sol';
 import {Test} from 'forge-std/Test.sol';
 import {console} from 'forge-std/console.sol';
 import {console2} from 'forge-std/console2.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
-import {SafeTransferLib} from 'contracts/solady/utils/SafeTransferLib.sol';
+import {SafeTransferLib} from 'contracts/external/solady/utils/SafeTransferLib.sol';
 import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
 
 contract AuctionTest is AuctionBaseTest {
@@ -2088,7 +2088,7 @@ contract AuctionTest is AuctionBaseTest {
     }
 
     // Test that all of the state getters for constants / immutable variables are correct
-    function test_constructor_immutable_getters() public {
+    function test_constructor_immutable_getters() public view {
         assertEq(auction.currency(), ETH_SENTINEL);
         assertEq(auction.token(), address(token));
         assertEq(auction.totalSupply(), TOTAL_SUPPLY);

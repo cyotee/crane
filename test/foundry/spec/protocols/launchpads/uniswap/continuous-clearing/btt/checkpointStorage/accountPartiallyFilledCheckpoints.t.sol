@@ -10,7 +10,7 @@ import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-cl
 import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
 import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
 import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract AccountPartiallyFilledCheckpointsTest is BttBase {
     using ValueX7Lib for uint256;

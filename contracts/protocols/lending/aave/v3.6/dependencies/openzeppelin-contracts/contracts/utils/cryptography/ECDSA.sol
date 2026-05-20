@@ -89,8 +89,8 @@ library ECDSA {
      * be too long), and then calling {MessageHashUtils-toEthSignedMessageHash} on it.
      */
     function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
-        _throwError(error, errorArg);
+        (address recovered, RecoverError errorStruct, bytes32 errorArg) = tryRecover(hash, signature);
+        _throwError(errorStruct, errorArg);
         return recovered;
     }
 
@@ -116,8 +116,8 @@ library ECDSA {
      * @dev Overload of {ECDSA-recover} that receives the `r and `vs` short-signature fields separately.
      */
     function recover(bytes32 hash, bytes32 r, bytes32 vs) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
-        _throwError(error, errorArg);
+        (address recovered, RecoverError errorStruct, bytes32 errorArg) = tryRecover(hash, r, vs);
+        _throwError(errorStruct, errorArg);
         return recovered;
     }
 
@@ -158,22 +158,22 @@ library ECDSA {
      * `r` and `s` signature fields separately.
      */
     function recover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
-        _throwError(error, errorArg);
+        (address recovered, RecoverError errorStruct, bytes32 errorArg) = tryRecover(hash, v, r, s);
+        _throwError(errorStruct, errorArg);
         return recovered;
     }
 
     /**
      * @dev Optionally reverts with the corresponding custom error according to the `error` argument provided.
      */
-    function _throwError(RecoverError error, bytes32 errorArg) private pure {
-        if (error == RecoverError.NoError) {
+    function _throwError(RecoverError errorStruct, bytes32 errorArg) private pure {
+        if (errorStruct == RecoverError.NoError) {
             return; // no error: do nothing
-        } else if (error == RecoverError.InvalidSignature) {
+        } else if (errorStruct == RecoverError.InvalidSignature) {
             revert ECDSAInvalidSignature();
-        } else if (error == RecoverError.InvalidSignatureLength) {
+        } else if (errorStruct == RecoverError.InvalidSignatureLength) {
             revert ECDSAInvalidSignatureLength(uint256(errorArg));
-        } else if (error == RecoverError.InvalidSignatureS) {
+        } else if (errorStruct == RecoverError.InvalidSignatureS) {
             revert ECDSAInvalidSignatureS(errorArg);
         }
     }

@@ -26,8 +26,9 @@ contract MockValidationHook is IValidationHook {
         willRevert = _willRevert;
     }
 
-    function validate(uint256 maxPrice, uint128 amount, address owner, address sender, bytes calldata hookData)
+    function validate(uint256 /*maxPrice*/, uint128 /*amount*/, address /*owner*/, address /*sender*/, bytes calldata /*hookData*/)
         external
+        view
     {
         if (willRevert) {
             revert RevertError();

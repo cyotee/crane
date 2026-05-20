@@ -12,7 +12,7 @@ import {IERC165, ERC165} from "../utils/introspection/ERC165.sol";
 import {SafeCast} from "../utils/math/SafeCast.sol";
 import {DoubleEndedQueue} from "../utils/structs/DoubleEndedQueue.sol";
 import {Address} from "../utils/Address.sol";
-import {Context} from "../utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import {Nonces} from "../utils/Nonces.sol";
 import {IGovernor, IERC6372} from "./IGovernor.sol";
 

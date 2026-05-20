@@ -6,69 +6,75 @@ import 'forge-std/Vm.sol';
 import '../interfaces/IMarketReportTypes.sol';
 import '@crane/contracts/protocols/lending/aave/v3.6/dependencies/solidity-utils/contracts/transparent-proxy/TransparentProxyFactory.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract DeployUtils {
-  using stdJson for string;
+  
+    using BetterEfficientHashLib for bytes;
 
-  Vm private constant vm = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
+    using stdJson for string;
 
-  function _deployFromArtifacts(string memory contractPath) internal returns (address deployment) {
-    bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath));
-    assembly {
-      deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+    Vm private constant vm = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
+
+    function _deployFromArtifacts(string memory contractPath) internal returns (address deployment) {
+        bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath));
+        assembly {
+          deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        }
+
+        return deployment;
     }
 
-    return deployment;
-  }
+    function _deployFromArtifactsWithBroadcast(
+        string memory contractPath
+    ) internal returns (address deployment) {
+        bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath));
+        vm.broadcast();
+        assembly {
+          deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        }
 
-  function _deployFromArtifactsWithBroadcast(
-    string memory contractPath
-  ) internal returns (address deployment) {
-    bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath));
-    vm.broadcast();
-    assembly {
-      deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        return deployment;
     }
 
-    return deployment;
-  }
+    function _deployFromArtifactsWithBroadcast(
+        string memory contractPath,
+        bytes memory args
+    ) internal returns (address deployment) {
+        bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
 
-  function _deployFromArtifactsWithBroadcast(
-    string memory contractPath,
-    bytes memory args
-  ) internal returns (address deployment) {
-    bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
+        vm.broadcast();
+        assembly {
+          deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        }
 
-    vm.broadcast();
-    assembly {
-      deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        return deployment;
     }
 
-    return deployment;
-  }
+    function _deployFromArtifacts(
+        string memory contractPath,
+        bytes memory args
+    ) internal returns (address deployment) {
+        bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
+        assembly {
+          deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        }
 
-  function _deployFromArtifacts(
-    string memory contractPath,
-    bytes memory args
-  ) internal returns (address deployment) {
-    bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
-    assembly {
-      deployment := create(0, add(bytecode, 0x20), mload(bytecode))
+        return deployment;
     }
 
-    return deployment;
-  }
+    function getCreate2Address(
+        string memory contractPath,
+        bytes memory args,
+        bytes32 _salt
+    ) public view returns (address) {
+        bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
 
-  function getCreate2Address(
-    string memory contractPath,
-    bytes memory args,
-    bytes32 _salt
-  ) public view returns (address) {
-    bytes memory bytecode = abi.encodePacked(vm.getCode(contractPath), args);
+        // bytes32 hash = keccak256(
+        //   abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode))
+        // );
+        bytes32 hash = abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode))._hash();
 
-    bytes32 hash = keccak256(
-      abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode))
-    );
-
-    return address(uint160(uint(hash)));
-  }
+        return address(uint160(uint(hash)));
+    }
 }

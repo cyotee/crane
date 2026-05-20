@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.24;
 
-import {TransientSlot} from "@crane/contracts/external/openzeppelin/utils/TransientSlot.sol";
+import {TransientSlot} from "@crane/contracts/external/openzeppelin-contracts/utils/TransientSlot.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**

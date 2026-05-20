@@ -95,7 +95,7 @@ contract BalancerV3StablePoolTarget_Test is Test {
         assertLe(invariantDown, invariantUp, "ROUND_DOWN should be <= ROUND_UP");
     }
 
-    function test_computeInvariant_threeTokenPool_works() public {
+    function test_computeInvariant_threeTokenPool_works() public view {
         // Re-initialize with a 3-token pool scenario - test StableMath handles it
         uint256[] memory balances = new uint256[](3);
         balances[0] = 1000e18;
@@ -107,7 +107,7 @@ contract BalancerV3StablePoolTarget_Test is Test {
         assertTrue(invariant > 0, "3-token invariant should be positive");
     }
 
-    function test_computeInvariant_fiveTokenPool_works() public {
+    function test_computeInvariant_fiveTokenPool_works() public view {
         // Maximum tokens for stable pools
         uint256[] memory balances = new uint256[](5);
         for (uint256 i = 0; i < 5; i++) {

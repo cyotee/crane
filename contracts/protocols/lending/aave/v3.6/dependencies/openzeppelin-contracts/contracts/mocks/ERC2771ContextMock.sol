@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {ContextMock} from "./ContextMock.sol";
-import {Context} from "../utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import {Multicall} from "../utils/Multicall.sol";
 import {ERC2771Context} from "../metatx/ERC2771Context.sol";
 

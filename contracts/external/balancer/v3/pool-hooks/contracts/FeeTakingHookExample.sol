@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {Ownable} from "@crane/contracts/access/Ownable.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
 
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";

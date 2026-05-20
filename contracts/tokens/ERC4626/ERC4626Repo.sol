@@ -16,76 +16,76 @@ library ERC4626Repo {
         uint256 lastTotalAssets;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage l) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage l) {
         assembly {
             l.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage l) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage l) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     function _initialize(
-        Storage storage layout,
+        Storage storage layoutStruct,
         IERC20 reserveAsset_,
         uint8 reserveAssetDecimals_,
         uint8 decimalOffset_
     ) internal {
-        _setReserveAsset(layout, reserveAsset_, reserveAssetDecimals_);
-        _setDecimalOffset(layout, decimalOffset_);
+        _setReserveAsset(layoutStruct, reserveAsset_, reserveAssetDecimals_);
+        _setDecimalOffset(layoutStruct, decimalOffset_);
     }
 
     function _initialize(IERC20 reserveAsset_, uint8 reserveAssetDecimals_, uint8 decimalOffset_) internal {
-        _initialize(_layout(), reserveAsset_, reserveAssetDecimals_, decimalOffset_);
+        _initialize(_layoutStruct(), reserveAsset_, reserveAssetDecimals_, decimalOffset_);
     }
 
-    function _setReserveAsset(Storage storage layout, IERC20 reserveAsset_, uint8 reserveAssetDecimals_) internal {
-        layout.reserveAsset = reserveAsset_;
-        layout.reserveAssetDecimals = reserveAssetDecimals_;
+    function _setReserveAsset(Storage storage layoutStruct, IERC20 reserveAsset_, uint8 reserveAssetDecimals_) internal {
+        layoutStruct.reserveAsset = reserveAsset_;
+        layoutStruct.reserveAssetDecimals = reserveAssetDecimals_;
     }
 
-    function _setDecimalOffset(Storage storage layout, uint8 decimalOffset_) internal {
-        layout.decimalOffset = decimalOffset_;
+    function _setDecimalOffset(Storage storage layoutStruct, uint8 decimalOffset_) internal {
+        layoutStruct.decimalOffset = decimalOffset_;
     }
 
-    function _setLastTotalAssets(Storage storage layout, uint256 lastTotalAssets_) internal {
-        layout.lastTotalAssets = lastTotalAssets_;
+    function _setLastTotalAssets(Storage storage layoutStruct, uint256 lastTotalAssets_) internal {
+        layoutStruct.lastTotalAssets = lastTotalAssets_;
     }
 
     function _setLastTotalAssets(uint256 lastTotalAssets_) internal {
-        _setLastTotalAssets(_layout(), lastTotalAssets_);
+        _setLastTotalAssets(_layoutStruct(), lastTotalAssets_);
     }
 
-    function _reserveAsset(Storage storage layout) internal view returns (IERC20) {
-        return layout.reserveAsset;
+    function _reserveAsset(Storage storage layoutStruct) internal view returns (IERC20) {
+        return layoutStruct.reserveAsset;
     }
 
     function _reserveAsset() internal view returns (IERC20) {
-        return _layout().reserveAsset;
+        return _layoutStruct().reserveAsset;
     }
 
-    function _reserveAssetDecimals(Storage storage layout) internal view returns (uint8) {
-        return layout.reserveAssetDecimals;
+    function _reserveAssetDecimals(Storage storage layoutStruct) internal view returns (uint8) {
+        return layoutStruct.reserveAssetDecimals;
     }
 
     function _reserveAssetDecimals() internal view returns (uint8) {
-        return _layout().reserveAssetDecimals;
+        return _layoutStruct().reserveAssetDecimals;
     }
 
-    function _decimalOffset(Storage storage layout) internal view returns (uint8) {
-        return layout.decimalOffset;
+    function _decimalOffset(Storage storage layoutStruct) internal view returns (uint8) {
+        return layoutStruct.decimalOffset;
     }
 
     function _decimalOffset() internal view returns (uint8) {
-        return _layout().decimalOffset;
+        return _layoutStruct().decimalOffset;
     }
 
-    function _lastTotalAssets(Storage storage layout) internal view returns (uint256) {
-        return layout.lastTotalAssets;
+    function _lastTotalAssets(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.lastTotalAssets;
     }
 
     function _lastTotalAssets() internal view returns (uint256) {
-        return _layout().lastTotalAssets;
+        return _layoutStruct().lastTotalAssets;
     }
 }

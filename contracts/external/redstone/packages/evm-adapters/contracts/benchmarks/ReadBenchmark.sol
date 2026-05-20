@@ -52,6 +52,7 @@ contract ReadBenchmark {
   }
 
   function readUsingStaticCall() external view returns (uint256) {
+    // forge-lint: disable-next-item(unchecked-call)
     (, bytes memory data) = rawAddress.staticcall(getBtcValueWithLowestGasSig);
     return uint8(data[0]);
   }
@@ -210,6 +211,7 @@ contract ReadBenchmark {
   }
 
   function readUsingCall() external returns (uint256) {
+    // forge-lint: disable-next-line(unchecked-call)
     (, bytes memory data) = rawAddress.call(getBtcValueWithLowestGasSig);
     return uint8(data[0]);
   }

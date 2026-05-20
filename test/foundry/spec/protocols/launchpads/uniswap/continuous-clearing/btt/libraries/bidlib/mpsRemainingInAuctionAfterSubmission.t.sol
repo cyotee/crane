@@ -6,7 +6,7 @@ import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-cle
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 
 contract MpsRemainingInAuctionAfterSubmissionTest is BttBase {
-    function test_WhenCalledWithBid(uint24 _startCumulativeMps) external {
+    function test_WhenCalledWithBid(uint24 _startCumulativeMps) external pure {
         // it returns mps - bid.startCumulativeMps
 
         uint24 startCumulativeMps = uint24(bound(_startCumulativeMps, 0, ConstantsLib.MPS));

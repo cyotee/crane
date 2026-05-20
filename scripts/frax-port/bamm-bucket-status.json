@@ -1,0 +1,40 @@
+{
+  "bucket": "BAMM",
+  "status": "complete",
+  "updated": "2026-06-04",
+  "foundryPath": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+  "contractsPath": "contracts/protocols/tokens/stable/frax/BAMM/",
+  "upstreamJs": [
+    {
+      "path": "BAMM/BAMM.js",
+      "foundry": "BAMMTest.t.sol",
+      "tests": 17,
+      "notes": "Local DummyToken + FraxswapDummyRouter harness; full mint/redeem/vault/rent/swap/liquidate parity."
+    },
+    {
+      "path": "BAMM/BAMM-Fuzz.js",
+      "foundry": "BAMMFuzzTest.t.sol",
+      "tests": 3,
+      "notes": "PnL fuzz i=1..90 and Fuzz1 x100 behind FRAX_BAMM_HEAVY_FUZZ=1; default 10/5 iterations for CI."
+    },
+    {
+      "path": "BAMM/BAMMHelper.js",
+      "foundry": "BAMMHelperTest.t.sol",
+      "tests": 12,
+      "notes": "Includes scaled-precision getSwapAmount/addLiquidity cases; upstream dead code after line 295 not ported."
+    },
+    {
+      "path": "BAMM/FraxswapOracle.js",
+      "foundry": "FraxswapOracleTest.t.sol",
+      "tests": 3,
+      "notes": "FRAX_ORACLE_FUZZ_OUTER env for outer loop count."
+    }
+  ],
+  "upstreamFoundry": {
+    "path": "lib/frax-solidity/src/foundry/test/BAMM/BAMMTest.t.sol",
+    "status": "superseded",
+    "notes": "Mainnet-fork cases commented in upstream; replaced by local BAMMTest.t.sol."
+  },
+  "deferred": [],
+  "verify": "forge test --match-path \"test/foundry/spec/protocols/tokens/stable/frax/BAMM/**\""
+}

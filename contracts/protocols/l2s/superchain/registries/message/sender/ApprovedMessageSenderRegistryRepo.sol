@@ -13,38 +13,38 @@ library ApprovedMessageSenderRegistryRepo {
         mapping(address recipient => mapping(address sender => bool)) isApprovedSenderForRecipient;
     }
 
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _isApprovedSender(Storage storage layout_, address recipient, address sender) internal view returns (bool) {
-        return layout_.isApprovedSenderForRecipient[recipient][sender];
+    function _isApprovedSender(Storage storage layoutStruct, address recipient, address sender) internal view returns (bool) {
+        return layoutStruct.isApprovedSenderForRecipient[recipient][sender];
     }
 
     function _isApprovedSender(address recipient, address sender) internal view returns (bool) {
-        return _isApprovedSender(_layout(), recipient, sender);
+        return _isApprovedSender(_layoutStruct(), recipient, sender);
     }
 
-    function _allApprovedSenders(Storage storage layout_, address recipient) internal view returns (address[] memory) {
-        return layout_.approvedSendersForRecipient[recipient]._values();
+    function _allApprovedSenders(Storage storage layoutStruct, address recipient) internal view returns (address[] memory) {
+        return layoutStruct.approvedSendersForRecipient[recipient]._values();
     }
 
     function _allApprovedSenders(address recipient) internal view returns (address[] memory) {
-        return _allApprovedSenders(_layout(), recipient);
+        return _allApprovedSenders(_layoutStruct(), recipient);
     }
 
-    function _approveSender(Storage storage layout_, address recipient, address sender) internal {
-        layout_.isApprovedSenderForRecipient[recipient][sender] = true;
-        layout_.approvedSendersForRecipient[recipient]._add(sender);
+    function _approveSender(Storage storage layoutStruct, address recipient, address sender) internal {
+        layoutStruct.isApprovedSenderForRecipient[recipient][sender] = true;
+        layoutStruct.approvedSendersForRecipient[recipient]._add(sender);
     }
 
     function _approveSender(address recipient, address sender) internal {
-        _approveSender(_layout(), recipient, sender);
+        _approveSender(_layoutStruct(), recipient, sender);
     }
 }

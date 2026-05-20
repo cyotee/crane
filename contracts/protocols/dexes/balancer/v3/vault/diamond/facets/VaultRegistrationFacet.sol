@@ -198,7 +198,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
 
             // Reload data after hook (rates may have changed)
             poolData.reloadBalancesAndRates(
-                BalancerV3VaultStorageRepo._layout().poolTokenBalances[pool], Rounding.ROUND_DOWN
+                BalancerV3VaultStorageRepo._layoutStruct().poolTokenBalances[pool], Rounding.ROUND_DOWN
             );
 
             exactAmountsInScaled18 = exactAmountsIn.copyToScaled18ApplyRateRoundDownArray(
@@ -220,7 +220,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
     /* ========================================================================== */
 
     function _registerPool(address pool, PoolRegistrationParams memory params) internal {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         // Ensure the pool isn't already registered
         if (_isPoolRegistered(pool)) {
@@ -264,8 +264,8 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
                 paysYieldFees: tokenData.paysYieldFees
             });
 
-            layout.poolTokenInfo[pool][token] = tokenInfo;
-            layout.poolTokenBalances[pool][i] = bytes32(0);
+            layoutStruct.poolTokenInfo[pool][token] = tokenInfo;
+            layoutStruct.poolTokenBalances[pool][i] = bytes32(0);
 
             // Calculate decimal difference for scaling
             uint8 tokenDecimals = _getTokenDecimals(token);
@@ -275,13 +275,13 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
             previousToken = token;
         }
 
-        layout.poolTokens[pool] = poolTokens;
+        layoutStruct.poolTokens[pool] = poolTokens;
 
         // Store role accounts
-        layout.poolRoleAccounts[pool] = params.roleAccounts;
+        layoutStruct.poolRoleAccounts[pool] = params.roleAccounts;
 
         // Register with protocol fee controller if not exempt
-        IProtocolFeeController feeController = layout.protocolFeeController;
+        IProtocolFeeController feeController = layoutStruct.protocolFeeController;
         if (address(feeController) != address(0)) {
             feeController.registerPool(pool, address(0), params.protocolFeeExempt);
         }
@@ -302,7 +302,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         // Configure hooks if provided
         if (params.poolHooksContract != address(0)) {
             IHooks hooksContract = IHooks(params.poolHooksContract);
-            layout.hooksContracts[pool] = hooksContract;
+            layoutStruct.hooksContracts[pool] = hooksContract;
 
             // Get hooks config from the hooks contract and set each flag
             HookFlags memory hookFlags = hooksContract.getHookFlags();
@@ -323,7 +323,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         // Set swap fee
         poolConfigBits = poolConfigBits.setStaticSwapFeePercentage(params.swapFeePercentage);
 
-        layout.poolConfigBits[pool] = poolConfigBits;
+        layoutStruct.poolConfigBits[pool] = poolConfigBits;
 
         emit PoolRegistered(
             pool,
@@ -346,8 +346,8 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         uint256[] memory exactAmountsInScaled18,
         uint256 minBptAmountOut
     ) internal returns (uint256 bptAmountOut) {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolBalances = layout.poolTokenBalances[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolBalances = layoutStruct.poolTokenBalances[pool];
 
         uint256 numTokens = poolData.tokens.length;
 
@@ -365,7 +365,7 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
 
         // Mark pool as initialized
         poolData.poolConfigBits = poolData.poolConfigBits.setPoolInitialized(true);
-        layout.poolConfigBits[pool] = poolData.poolConfigBits;
+        layoutStruct.poolConfigBits[pool] = poolData.poolConfigBits;
 
         // Compute initial BPT from invariant
         bptAmountOut = IBasePool(pool).computeInvariant(exactAmountsInScaled18, Rounding.ROUND_DOWN);

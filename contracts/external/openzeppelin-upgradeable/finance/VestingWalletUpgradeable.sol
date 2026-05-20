@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 
-import {SafeERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {ContextUpgradeable} from "../utils/ContextUpgradeable.sol";
 import {OwnableUpgradeable} from "../access/OwnableUpgradeable.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";

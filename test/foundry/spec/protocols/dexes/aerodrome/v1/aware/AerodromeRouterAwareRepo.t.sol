@@ -18,7 +18,7 @@ contract AerodromeRouterAwareHarness {
     }
 
     function initializeWithSlot(bytes32 slot, IRouter router_) external {
-        AerodromeRouterAwareRepo._initialize(AerodromeRouterAwareRepo._layout(slot), router_);
+        AerodromeRouterAwareRepo._initialize(AerodromeRouterAwareRepo._layoutStruct(slot), router_);
     }
 
     function aerodromeRouter() external view returns (IRouter) {
@@ -26,7 +26,7 @@ contract AerodromeRouterAwareHarness {
     }
 
     function aerodromeRouterFromSlot(bytes32 slot) external view returns (IRouter) {
-        return AerodromeRouterAwareRepo._aerodromeRouter(AerodromeRouterAwareRepo._layout(slot));
+        return AerodromeRouterAwareRepo._aerodromeRouter(AerodromeRouterAwareRepo._layoutStruct(slot));
     }
 
     function storageSlot() external pure returns (bytes32) {

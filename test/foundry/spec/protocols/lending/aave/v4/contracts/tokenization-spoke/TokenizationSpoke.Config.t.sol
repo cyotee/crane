@@ -26,7 +26,7 @@ contract TokenizationSpokeConfigTest is TokenizationSpokeBaseTest {
     assertEq(instance.MAX_ALLOWED_SPOKE_CAP(), hub1.MAX_ALLOWED_SPOKE_CAP());
   }
 
-  function test_setUp() public {
+  function test_setUp() public view {
     assertEq(daiVault.name(), SHARE_NAME);
     assertEq(daiVault.symbol(), SHARE_SYMBOL);
     assertEq(daiVault.decimals(), tokenList.dai.decimals());

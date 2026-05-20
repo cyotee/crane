@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import {Ownable, Context} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
+import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {Swapper} from "./Swapper.sol";
 import {ISwapper} from "./ISwapper.sol";

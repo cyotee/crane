@@ -12,7 +12,7 @@ pragma solidity ^0.8.24;
 /*                                   Solady                                   */
 /* -------------------------------------------------------------------------- */
 
-import {LibBytes} from "@crane/contracts/solady/utils/LibBytes.sol";
+import {LibBytes} from "@crane/contracts/external/solady/utils/LibBytes.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

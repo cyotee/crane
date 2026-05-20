@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {AaveV4DeployBatchBaseScript} from '@crane/test/foundry/spec/protocols/lending/aave/v4/scripts/deploy/AaveV4DeployBatchBase.s.sol';
 import {InputUtils} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/InputUtils.sol';
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 
 /// @title AaveV4DeployAnvil
 /// @author Aave Labs

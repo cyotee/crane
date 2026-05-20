@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "../../../../libraries/math/PMath.sol";
 import "../../../../../interfaces/Curve/ICrvPool.sol";
 import "./Curve3CrvPoolHelper.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library CurveUsdd3CrvPoolHelper {
     using PMath for uint256;
@@ -102,7 +102,7 @@ library CurveUsdd3CrvPoolHelper {
         return result;
     }
 
-    function get_D(uint256[N_COINS] memory _xp, uint256 _amp) internal pure returns (uint256) {
+    function get_D(uint256[N_COINS] memory _xp, uint256 _amp) internal pure returns (uint256 D) {
         uint256 S = 0;
         uint256 Dprev = 0;
         for (uint256 k = 0; k < N_COINS; ++k) {
@@ -110,7 +110,8 @@ library CurveUsdd3CrvPoolHelper {
         }
         if (S == 0) return 0;
 
-        uint256 D = S;
+        // uint256 
+        D = S;
         uint256 Ann = _amp * N_COINS;
         for (uint256 _i = 0; _i < 255; ++_i) {
             uint256 D_P = D;

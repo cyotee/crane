@@ -14,11 +14,16 @@ import {InputUtils} from '@crane/contracts/protocols/lending/aave/v4/deployments
 import {Logger} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/Logger.sol';
 import {DeployConstants} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/DeployConstants.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title AaveV4DeployOrchestration Library
 /// @author Aave Labs
 /// @notice Main orchestrator that deploys all Aave V4 contracts in order and configures roles.
 library AaveV4DeployOrchestration {
-  bytes32 public constant SALT = keccak256('AAVE_V4');
+  
+    using BetterEfficientHashLib for bytes;
+
+    bytes32 public constant SALT = keccak256('AAVE_V4');
 
   /// @notice Deploys all Aave V4 contracts, configures roles, and returns the full deployment report.
   /// @param logger The logger instance used for console and JSON output.
@@ -499,7 +504,8 @@ library AaveV4DeployOrchestration {
   ///      and the remaining 96 bits from the user-provided salt.
   ///      Layout: [deployer (160 bits) | truncated_hash (96 bits)].
   function _deriveSalt(address deployer, bytes32 salt) internal pure returns (bytes32) {
-    return bytes32(bytes20(deployer)) | (keccak256(abi.encode(SALT, salt)) >> 160);
+    // return bytes32(bytes20(deployer)) | (keccak256(abi.encode(SALT, salt)) >> 160);
+    return bytes32(bytes20(deployer)) | (abi.encodePacked(SALT, salt)._hash() >> 160);
   }
 
   /// @dev Derives a child salt from a base salt, contract type, and label.
@@ -512,6 +518,7 @@ library AaveV4DeployOrchestration {
     string memory contractType,
     string memory label
   ) internal pure returns (bytes32) {
-    return keccak256(abi.encode(baseSalt, contractType, label));
+    // return keccak256(abi.encode(baseSalt, contractType, label));
+    return abi.encodePacked(baseSalt, contractType, label)._hash();
   }
 }

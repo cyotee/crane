@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {SafeMath} from "@crane/contracts/external/openzeppelin/utils/math/SafeMath.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
 import {ISortedOracles} from "./ISortedOracles.sol";
 import {AddressSortedLinkedListWithMedian} from "./linkedlists/AddressSortedLinkedListWithMedian.sol";
 import {SortedLinkedListWithMedian} from "./linkedlists/SortedLinkedListWithMedian.sol";

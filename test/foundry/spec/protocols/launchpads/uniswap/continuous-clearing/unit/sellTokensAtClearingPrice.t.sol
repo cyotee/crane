@@ -9,7 +9,7 @@ import {ValueX7, ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/contin
 import {FuzzDeploymentParams} from '../utils/FuzzStructs.sol';
 import {MockContinuousClearingAuction} from '../utils/MockAuction.sol';
 import {AuctionUnitTest} from './AuctionUnitTest.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 import {console} from 'forge-std/console.sol';
 

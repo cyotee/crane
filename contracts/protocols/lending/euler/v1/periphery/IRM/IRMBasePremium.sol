@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin/access/extensions/AccessControlEnumerable.sol";
-import {AccessControl, IAccessControl, Context} from "@crane/contracts/external/openzeppelin/access/AccessControl.sol";
+import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
+import {AccessControl, IAccessControl, Context} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {IIRM} from "@crane/contracts/protocols/lending/euler/v1/vault/InterestRateModels/IIRM.sol";
 

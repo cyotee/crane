@@ -445,7 +445,7 @@ contract PositionStatusMapTest is Base {
   }
 
   // non state reading helpers tests below
-  function test_bucketId() public {
+  function test_bucketId() public view {
     uint256 reserveId = vm.randomUint();
     assertEq(p.bucketId(reserveId), reserveId / 128);
   }
@@ -529,7 +529,7 @@ contract PositionStatusMapTest is Base {
     }
   }
 
-  function test_popCount(bytes32) public {
+  function test_popCount(bytes32) public view {
     uint256 bits = vm.randomUint();
     assertEq(LibBit.popCount(bits), _popCountNaive(bits));
   }

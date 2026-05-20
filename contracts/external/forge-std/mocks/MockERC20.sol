@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.2 <0.9.0;
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @notice This is a mock contract of the ERC20 standard for testing purposes only, it SHOULD NOT be used in production.
 /// @dev Forked from: https://github.com/transmissions11/solmate/blob/0384dbaaa4fcb5715738a9254a7c0a4cb62cf458/src/tokens/ERC20.sol
 contract MockERC20 {
+    
+    using BetterEfficientHashLib for bytes;
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -108,25 +113,46 @@ contract MockERC20 {
     {
         require(deadline >= block.timestamp, "PERMIT_DEADLINE_EXPIRED");
 
+        // address recoveredAddress = ecrecover(
+        //     keccak256(
+        //         abi.encodePacked(
+        //             "\x19\x01",
+        //             DOMAIN_SEPARATOR(),
+        //             keccak256(
+        //                 abi.encode(
+        //                     keccak256(
+        //                         "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
+        //                     ),
+        //                     owner,
+        //                     spender,
+        //                     value,
+        //                     nonces[owner]++,
+        //                     deadline
+        //                 )
+        //             )
+        //         )
+        //     ),
+        //     v,
+        //     r,
+        //     s
+        // );
+        bytes32 permitHash = bytes(
+            "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
+        )._hash();
+        bytes32 argsHash = abi.encode(
+            permitHash,
+            owner,
+            spender,
+            value,
+            nonces[owner]++,
+            deadline
+        )._hash();
         address recoveredAddress = ecrecover(
-            keccak256(
-                abi.encodePacked(
-                    "\x19\x01",
-                    DOMAIN_SEPARATOR(),
-                    keccak256(
-                        abi.encode(
-                            keccak256(
-                                "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
-                            ),
-                            owner,
-                            spender,
-                            value,
-                            nonces[owner]++,
-                            deadline
-                        )
-                    )
-                )
-            ),
+            abi.encodePacked(
+                "\x19\x01",
+                DOMAIN_SEPARATOR(),
+                argsHash
+            )._hash(),
             v,
             r,
             s
@@ -144,15 +170,25 @@ contract MockERC20 {
     }
 
     function computeDomainSeparator() internal view virtual returns (bytes32) {
-        return keccak256(
-            abi.encode(
-                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
-                keccak256(bytes(name)),
-                keccak256("1"),
-                _pureChainId(),
-                address(this)
-            )
-        );
+        // return keccak256(
+        //     abi.encode(
+        //         keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
+        //         keccak256(bytes(name)),
+        //         keccak256("1"),
+        //         _pureChainId(),
+        //         address(this)
+        //     )
+        // );
+        return abi.encode(
+            // keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
+            bytes("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)")._hash(),
+            // keccak256(bytes(name)),
+            bytes(name)._hash(),
+            // keccak256("1"),
+            bytes("1")._hash(),
+            _pureChainId(),
+            address(this)
+        )._hash();
     }
 
     /*//////////////////////////////////////////////////////////////

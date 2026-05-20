@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {IAero} from "../interfaces/IAero.sol";
 import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
-import {Ownable} from "@crane/contracts/access/Ownable.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {IAirdropDistributor} from "../interfaces/IAirdropDistributor.sol";
 // import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
@@ -15,7 +15,7 @@ contract AirdropDistributor is IAirdropDistributor, Ownable {
     /// @inheritdoc IAirdropDistributor
     IVotingEscrow public immutable ve;
 
-    constructor(address _ve) Ownable(msg.sender) {
+    constructor(address _ve) {
         ve = IVotingEscrow(_ve);
         aero = IAero(IVotingEscrow(_ve).token());
     }

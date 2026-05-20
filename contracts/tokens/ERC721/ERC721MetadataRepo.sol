@@ -11,69 +11,69 @@ library ERC721MetadataRepo {
         mapping(uint256 tokenId => string tokenURI) tokenURIs;
     }
 
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout_, string memory name_, string memory symbol_) internal {
-        layout_.name = name_;
-        layout_.symbol = symbol_;
+    function _initialize(Storage storage layoutStruct, string memory name_, string memory symbol_) internal {
+        layoutStruct.name = name_;
+        layoutStruct.symbol = symbol_;
     }
 
     function _initialize(string memory name_, string memory symbol_) internal {
-        _initialize(_layout(), name_, symbol_);
+        _initialize(_layoutStruct(), name_, symbol_);
     }
 
-    function _initialize(Storage storage layout_, string memory name_, string memory symbol_, string memory baseURI_)
+    function _initialize(Storage storage layoutStruct, string memory name_, string memory symbol_, string memory baseURI_)
         internal
     {
-        _initialize(layout_, name_, symbol_);
-        layout_.baseURI = baseURI_;
+        _initialize(layoutStruct, name_, symbol_);
+        layoutStruct.baseURI = baseURI_;
     }
 
-    function _name(Storage storage layout_) internal view returns (string storage) {
-        return layout_.name;
+    function _name(Storage storage layoutStruct) internal view returns (string storage) {
+        return layoutStruct.name;
     }
 
     function _name() internal view returns (string memory) {
-        return _name(_layout());
+        return _name(_layoutStruct());
     }
 
-    function _symbol(Storage storage layout_) internal view returns (string storage) {
-        return layout_.symbol;
+    function _symbol(Storage storage layoutStruct) internal view returns (string storage) {
+        return layoutStruct.symbol;
     }
 
     function _symbol() internal view returns (string memory) {
-        return _symbol(_layout());
+        return _symbol(_layoutStruct());
     }
 
-    function _baseURI(Storage storage layout_) internal view returns (string storage) {
-        return layout_.baseURI;
+    function _baseURI(Storage storage layoutStruct) internal view returns (string storage) {
+        return layoutStruct.baseURI;
     }
 
     function _baseURI() internal view returns (string memory) {
-        return _baseURI(_layout());
+        return _baseURI(_layoutStruct());
     }
 
-    function _tokenURI(Storage storage layout_, uint256 tokenId) internal view returns (string storage) {
-        return layout_.tokenURIs[tokenId];
+    function _tokenURI(Storage storage layoutStruct, uint256 tokenId) internal view returns (string storage) {
+        return layoutStruct.tokenURIs[tokenId];
     }
 
     function _tokenURI(uint256 tokenId) internal view returns (string memory) {
-        return _tokenURI(_layout(), tokenId);
+        return _tokenURI(_layoutStruct(), tokenId);
     }
 
-    function _setTokenURI(Storage storage layout_, uint256 tokenId, string memory tokenURI_) internal {
-        layout_.tokenURIs[tokenId] = tokenURI_;
+    function _setTokenURI(Storage storage layoutStruct, uint256 tokenId, string memory tokenURI_) internal {
+        layoutStruct.tokenURIs[tokenId] = tokenURI_;
     }
 
     function _setTokenURI(uint256 tokenId, string memory tokenURI_) internal {
-        _setTokenURI(_layout(), tokenId, tokenURI_);
+        _setTokenURI(_layoutStruct(), tokenId, tokenURI_);
     }
 }

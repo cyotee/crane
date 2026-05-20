@@ -12,6 +12,8 @@ import {Math} from './Math.sol';
 import {Time} from './Time.sol';
 import {Hashes} from './Hashes.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev AccessManager is a central contract to store the permissions of a system.
  *
@@ -60,7 +62,10 @@ import {Hashes} from './Hashes.sol';
  * {AccessControl-renounceRole}.
  */
 contract AccessManager is Context, Multicall, IAccessManager {
-  using Time for *;
+  
+    using BetterEfficientHashLib for bytes;
+
+    using Time for *;
 
   // Structure that stores the details for a target contract.
   struct TargetConfig {
@@ -613,7 +618,8 @@ contract AccessManager is Context, Multicall, IAccessManager {
     address target,
     bytes calldata data
   ) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(caller, target, data));
+    // return keccak256(abi.encode(caller, target, data));
+    return abi.encodePacked(caller, target, data)._hash();
   }
 
   // ==================================================== OTHERS ====================================================

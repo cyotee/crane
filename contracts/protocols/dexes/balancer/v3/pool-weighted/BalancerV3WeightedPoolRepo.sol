@@ -20,23 +20,23 @@ library BalancerV3WeightedPoolRepo {
         uint256[] normalizedWeights;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /**
      * @notice Initialize the weighted pool with normalized weights.
      * @dev Weights must sum to 1e18 (FixedPoint.ONE).
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param normalizedWeights_ Array of normalized weights (e.g., [0.8e18, 0.2e18] for 80/20 pool).
      */
-    function _initialize(Storage storage layout, uint256[] memory normalizedWeights_) internal {
+    function _initialize(Storage storage layoutStruct, uint256[] memory normalizedWeights_) internal {
         // Require at least 2 weights to match pool usage (Finding 3 fix)
         if (normalizedWeights_.length < 2) revert InvalidWeightsLength();
 
@@ -48,50 +48,50 @@ library BalancerV3WeightedPoolRepo {
         }
         if (sum != FixedPoint.ONE) revert WeightsMustSumToOne();
 
-        layout.normalizedWeights = normalizedWeights_;
+        layoutStruct.normalizedWeights = normalizedWeights_;
     }
 
     function _initialize(uint256[] memory normalizedWeights_) internal {
-        _initialize(_layout(), normalizedWeights_);
+        _initialize(_layoutStruct(), normalizedWeights_);
     }
 
     /**
      * @notice Get the normalized weights of the pool tokens.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return weights Array of normalized weights.
      */
-    function _getNormalizedWeights(Storage storage layout) internal view returns (uint256[] memory weights) {
-        weights = layout.normalizedWeights;
+    function _getNormalizedWeights(Storage storage layoutStruct) internal view returns (uint256[] memory weights) {
+        weights = layoutStruct.normalizedWeights;
     }
 
     function _getNormalizedWeights() internal view returns (uint256[] memory weights) {
-        return _getNormalizedWeights(_layout());
+        return _getNormalizedWeights(_layoutStruct());
     }
 
     /**
      * @notice Get the normalized weight for a specific token index.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param tokenIndex Index of the token.
      * @return weight Normalized weight of the token.
      */
-    function _getNormalizedWeight(Storage storage layout, uint256 tokenIndex) internal view returns (uint256 weight) {
-        return layout.normalizedWeights[tokenIndex];
+    function _getNormalizedWeight(Storage storage layoutStruct, uint256 tokenIndex) internal view returns (uint256 weight) {
+        return layoutStruct.normalizedWeights[tokenIndex];
     }
 
     function _getNormalizedWeight(uint256 tokenIndex) internal view returns (uint256 weight) {
-        return _getNormalizedWeight(_layout(), tokenIndex);
+        return _getNormalizedWeight(_layoutStruct(), tokenIndex);
     }
 
     /**
      * @notice Get the number of tokens in the pool.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return count Number of tokens.
      */
-    function _getNumTokens(Storage storage layout) internal view returns (uint256 count) {
-        return layout.normalizedWeights.length;
+    function _getNumTokens(Storage storage layoutStruct) internal view returns (uint256 count) {
+        return layoutStruct.normalizedWeights.length;
     }
 
     function _getNumTokens() internal view returns (uint256 count) {
-        return _getNumTokens(_layout());
+        return _getNumTokens(_layoutStruct());
     }
 }

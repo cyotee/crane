@@ -3,7 +3,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/SafeMath.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
 import "./SortedLinkedList.sol";
 
 /**

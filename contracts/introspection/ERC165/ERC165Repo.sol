@@ -25,46 +25,46 @@ library ERC165Repo {
         mapping(bytes4 interfaceId => bool isSupported) isSupportedInterface;
     }
 
-    // tag::_layout(bytes32)[]
+    // tag::_layoutStruct(bytes32)[]
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
-     * @return layout_ A struct from a Layout library bound to the provided slot.
+     * @return layoutStruct_ A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
-    // end::_layout(bytes32)[]
+    // end::_layoutStruct(bytes32)[]
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(ERC165_STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(ERC165_STORAGE_SLOT);
     }
 
-    function _registerInterface(Storage storage layout, bytes4 interfaceId) internal {
-        layout.isSupportedInterface[interfaceId] = true;
+    function _registerInterface(Storage storage layoutStruct, bytes4 interfaceId) internal {
+        layoutStruct.isSupportedInterface[interfaceId] = true;
     }
 
     function _registerInterface(bytes4 interfaceId) internal {
-        _layout().isSupportedInterface[interfaceId] = true;
+        _layoutStruct().isSupportedInterface[interfaceId] = true;
     }
 
-    function _registerInterfaces(Storage storage layout, bytes4[] memory interfaceIds) internal {
+    function _registerInterfaces(Storage storage layoutStruct, bytes4[] memory interfaceIds) internal {
         for (uint256 cursor = 0; cursor < interfaceIds.length; cursor++) {
-            _registerInterface(layout, interfaceIds[cursor]);
+            _registerInterface(layoutStruct, interfaceIds[cursor]);
         }
     }
 
     function _registerInterfaces(bytes4[] memory interfaceIds) internal {
-        _registerInterfaces(_layout(), interfaceIds);
+        _registerInterfaces(_layoutStruct(), interfaceIds);
     }
 
-    function _supportsInterface(Storage storage layout, bytes4 interfaceId) internal view returns (bool) {
-        return layout.isSupportedInterface[interfaceId];
+    function _supportsInterface(Storage storage layoutStruct, bytes4 interfaceId) internal view returns (bool) {
+        return layoutStruct.isSupportedInterface[interfaceId];
     }
 
     function _supportsInterface(bytes4 interfaceId) internal view returns (bool) {
-        return _layout().isSupportedInterface[interfaceId];
+        return _layoutStruct().isSupportedInterface[interfaceId];
     }
 }

@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 import "../../interfaces/IPMsgSendEndpoint.sol";
 import "../../core/libraries/BoringOwnableUpgradeable.sol";
 import "../../core/libraries/Errors.sol";
-import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableMap.sol";
-import "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableMap.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 
 // solhint-disable no-empty-blocks
 

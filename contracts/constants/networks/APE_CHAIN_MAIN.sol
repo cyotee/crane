@@ -46,10 +46,6 @@ library APE_CHAIN_MAIN {
 
     address constant CRANE_ERC20_PERMIT_FACET_V1 = 0xb4271727bfE496c5c2f42382f650b06a504366AD;
 
-    // address constant CRANE_ERC20_PERMIT_DFPKG_V1 =
-
-    // address constant ERC20_PERMIT_OPERABLE_MINT_BURN_DFPKG_V1 =
-
     address constant CRANE_DIAMOND_CUT_FACET_DFPKG_V1 = 0x9A1bC412Ba2EB68f216aA3E893f345d1f5c9dD85;
 
     /* ---------------------------------------------------------------------- */

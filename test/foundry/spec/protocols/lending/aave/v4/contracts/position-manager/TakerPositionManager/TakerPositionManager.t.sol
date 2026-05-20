@@ -802,7 +802,7 @@ contract TakerPositionManagerTest is TakerPositionManagerBaseTest {
     address owner,
     address spender,
     uint256 amount
-  ) internal {
+  ) internal view {
     Vm.Log[] memory entries = vm.getRecordedLogs();
     bytes32 sig = ITakerPositionManager.WithdrawApproval.selector;
     for (uint256 i; i < entries.length; ++i) {
@@ -827,7 +827,7 @@ contract TakerPositionManagerTest is TakerPositionManagerBaseTest {
     address owner,
     address spender,
     uint256 amount
-  ) internal {
+  ) internal view {
     Vm.Log[] memory entries = vm.getRecordedLogs();
     bytes32 sig = ITakerPositionManager.BorrowApproval.selector;
     for (uint256 i; i < entries.length; ++i) {

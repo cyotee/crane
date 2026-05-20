@@ -97,15 +97,17 @@ contract PendleSwellStakingERC20SY is SYBase {
 
     function _getAdditionalTokens() internal view virtual returns (address[] memory) {}
 
-    function _previewToStakeToken(address, uint256) internal view virtual returns (uint256) {
+    function _previewToStakeToken(address, uint256) internal view virtual returns (uint256 amountOut) {
+        amountOut= 0;
         assert(false);
     }
 
-    function _wrapToStakeToken(address, uint256) internal virtual returns (uint256) {
+    function _wrapToStakeToken(address, uint256) internal virtual returns (uint256 amountOut) {
+        amountOut= 0;
         assert(false);
     }
 
-    function _canWrapToStakeToken(address) internal view virtual returns (bool) {
+    function _canWrapToStakeToken(address) internal view virtual returns (bool canWrap) {
         return false;
     }
 }

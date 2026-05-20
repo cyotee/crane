@@ -8,7 +8,7 @@ import {ITokenizationSpoke} from '@crane/contracts/protocols/lending/aave/v4/spo
 /// @title Assertions
 /// @notice Assertion utilities for tokenization spoke tests.
 abstract contract Assertions is SpokeHelpers {
-  function _assertVaultHasNoBalanceOrAllowance(ITokenizationSpoke vault, address who) internal {
+  function _assertVaultHasNoBalanceOrAllowance(ITokenizationSpoke vault, address who) internal view {
     _assertEntityHasNoBalanceOrAllowance({
       underlying: IERC20(vault.asset()),
       entity: address(vault),

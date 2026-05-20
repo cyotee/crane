@@ -3,14 +3,15 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC721} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721.sol";
-import {IERC721Metadata} from "@crane/contracts/external/openzeppelin/token/ERC721/extensions/IERC721Metadata.sol";
-import {ERC721Utils} from "@crane/contracts/external/openzeppelin/token/ERC721/utils/ERC721Utils.sol";
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {IERC721Events} from '@crane/contracts/interfaces/IERC721Events.sol';
+import {IERC721Metadata} from "@crane/contracts/interfaces/IERC721Metadata.sol";
+import {ERC721Utils} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Utils.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
-import {Strings} from "@crane/contracts/external/openzeppelin/utils/Strings.sol";
+import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
-import {ERC165Upgradeable} from "../../utils/introspection/ERC165Upgradeable.sol";
-import {IERC721Errors} from "@crane/contracts/external/openzeppelin/interfaces/draft-IERC6093.sol";
+import {ERC165Upgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import {IERC721Errors} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC6093.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**
@@ -18,7 +19,7 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
  */
-abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeable, IERC721, IERC721Metadata, IERC721Errors {
+abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeable, IERC721Events, IERC721Errors, IERC721, IERC721Metadata {
     using Strings for uint256;
 
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC721
@@ -63,7 +64,7 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165Upgradeable, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165Upgradeable) returns (bool) {
         return
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
@@ -126,7 +127,7 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
     /**
      * @dev See {IERC721-approve}.
      */
-    function approve(address to, uint256 tokenId) public virtual {
+    function approve(address to, uint256 tokenId) public payable virtual {
         _approve(to, tokenId, _msgSender());
     }
 
@@ -157,7 +158,7 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
     /**
      * @dev See {IERC721-transferFrom}.
      */
-    function transferFrom(address from, address to, uint256 tokenId) public virtual {
+    function transferFrom(address from, address to, uint256 tokenId) public payable virtual {
         if (to == address(0)) {
             revert ERC721InvalidReceiver(address(0));
         }
@@ -172,14 +173,14 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public {
+    function safeTransferFrom(address from, address to, uint256 tokenId) public payable {
         safeTransferFrom(from, to, tokenId, "");
     }
 
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public virtual {
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public payable virtual {
         transferFrom(from, to, tokenId);
         ERC721Utils.checkOnERC721Received(_msgSender(), from, to, tokenId, data);
     }

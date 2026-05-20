@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../../openzeppelin/token/ERC20/ERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
 
 /**
  * @title RedstoneToken

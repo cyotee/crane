@@ -10,29 +10,29 @@ library CamelotV2FactoryAwareRepo {
         ICamelotFactory factory;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, ICamelotFactory factory_) internal {
-        layout.factory = factory_;
+    function _initialize(Storage storage layoutStruct, ICamelotFactory factory_) internal {
+        layoutStruct.factory = factory_;
     }
 
     function _initialize(ICamelotFactory factory_) internal {
-        _initialize(_layout(), factory_);
+        _initialize(_layoutStruct(), factory_);
     }
 
-    function _camelotV2Factory(Storage storage layout) internal view returns (ICamelotFactory factory_) {
-        return layout.factory;
+    function _camelotV2Factory(Storage storage layoutStruct) internal view returns (ICamelotFactory factory_) {
+        return layoutStruct.factory;
     }
 
     function _camelotV2Factory() internal view returns (ICamelotFactory factory_) {
-        return _camelotV2Factory(_layout());
+        return _camelotV2Factory(_layoutStruct());
     }
 }

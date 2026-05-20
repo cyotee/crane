@@ -163,12 +163,12 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         view
         returns (bool paused, uint32 pauseWindowEndTime, uint32 bufferPeriodEndTime)
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        return (layout.vaultStateBits.isVaultPaused(), layout.vaultPauseWindowEndTime, layout.vaultBufferPeriodEndTime);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        return (layoutStruct.vaultStateBits.isVaultPaused(), layoutStruct.vaultPauseWindowEndTime, layoutStruct.vaultBufferPeriodEndTime);
     }
 
     function _setVaultPaused(bool pausing) internal {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         if (_isVaultPaused()) {
             if (pausing) {
@@ -179,7 +179,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         } else {
             if (pausing) {
                 // Not paused; can pause within window
-                if (block.timestamp >= layout.vaultPauseWindowEndTime) {
+                if (block.timestamp >= layoutStruct.vaultPauseWindowEndTime) {
                     revert VaultPauseWindowExpired();
                 }
             } else {
@@ -188,7 +188,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
             }
         }
 
-        layout.vaultStateBits = layout.vaultStateBits.setVaultPaused(pausing);
+        layoutStruct.vaultStateBits = layoutStruct.vaultStateBits.setVaultPaused(pausing);
         emit VaultPausedStateChanged(pausing);
     }
 
@@ -213,15 +213,15 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
     }
 
     function _setPoolPaused(address pool, bool pausing) internal {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        PoolRoleAccounts memory roleAccounts = layout.poolRoleAccounts[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        PoolRoleAccounts memory roleAccounts = layoutStruct.poolRoleAccounts[pool];
 
         // Only pause manager can pause/unpause
         if (msg.sender != roleAccounts.pauseManager) {
             revert IAuthentication.SenderNotAllowed();
         }
 
-        PoolConfigBits config = layout.poolConfigBits[pool];
+        PoolConfigBits config = layoutStruct.poolConfigBits[pool];
         uint32 pauseWindowEndTime = config.getPauseWindowEndTime();
 
         if (pausing) {
@@ -230,7 +230,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
             }
         }
 
-        layout.poolConfigBits[pool] = config.setPoolPaused(pausing);
+        layoutStruct.poolConfigBits[pool] = config.setPoolPaused(pausing);
         emit PoolPausedStateChanged(pool, pausing);
     }
 
@@ -256,12 +256,12 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Returns whether buffers are paused.
      */
     function areBuffersPaused() external view returns (bool) {
-        return BalancerV3VaultStorageRepo._layout().vaultStateBits.areBuffersPaused();
+        return BalancerV3VaultStorageRepo._layoutStruct().vaultStateBits.areBuffersPaused();
     }
 
     function _setVaultBufferPauseState(bool pausing) internal {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.vaultStateBits = layout.vaultStateBits.setBuffersPaused(pausing);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.vaultStateBits = layoutStruct.vaultStateBits.setBuffersPaused(pausing);
         emit VaultBuffersPausedStateChanged(pausing);
     }
 
@@ -277,8 +277,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
     function setStaticSwapFeePercentage(address pool, uint256 swapFeePercentage) external withRegisteredPool(pool) {
         _ensureUnpaused(pool);
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        PoolRoleAccounts memory roleAccounts = layout.poolRoleAccounts[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        PoolRoleAccounts memory roleAccounts = layoutStruct.poolRoleAccounts[pool];
 
         // Only swap fee manager can set fees
         if (msg.sender != roleAccounts.swapFeeManager) {
@@ -302,9 +302,9 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
             revert IProtocolFeeController.ProtocolSwapFeePercentageTooHigh();
         }
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.poolConfigBits[pool] =
-            layout.poolConfigBits[pool].setAggregateSwapFeePercentage(newAggregateSwapFeePercentage);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.poolConfigBits[pool] =
+            layoutStruct.poolConfigBits[pool].setAggregateSwapFeePercentage(newAggregateSwapFeePercentage);
         emit AggregateSwapFeePercentageChanged(pool, newAggregateSwapFeePercentage);
     }
 
@@ -321,9 +321,9 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
             revert IProtocolFeeController.ProtocolYieldFeePercentageTooHigh();
         }
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.poolConfigBits[pool] =
-            layout.poolConfigBits[pool].setAggregateYieldFeePercentage(newAggregateYieldFeePercentage);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.poolConfigBits[pool] =
+            layoutStruct.poolConfigBits[pool].setAggregateYieldFeePercentage(newAggregateYieldFeePercentage);
         emit AggregateYieldFeePercentageChanged(pool, newAggregateYieldFeePercentage);
     }
 
@@ -345,8 +345,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         withRegisteredPool(pool)
         returns (uint256[] memory totalSwapFees, uint256[] memory totalYieldFees)
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        IERC20[] memory poolTokens = layout.poolTokens[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        IERC20[] memory poolTokens = layoutStruct.poolTokens[pool];
         uint256 numTokens = poolTokens.length;
 
         totalSwapFees = new uint256[](numTokens);
@@ -354,14 +354,14 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
 
         for (uint256 i = 0; i < numTokens; ++i) {
             IERC20 token = poolTokens[i];
-            bytes32 packedFees = layout.aggregateFeeAmounts[pool][token];
+            bytes32 packedFees = layoutStruct.aggregateFeeAmounts[pool][token];
 
             totalSwapFees[i] = packedFees.getBalanceRaw();
             totalYieldFees[i] = packedFees.getBalanceDerived();
 
             if (totalSwapFees[i] > 0 || totalYieldFees[i] > 0) {
                 // Reset accumulated fees
-                layout.aggregateFeeAmounts[pool][token] = bytes32(0);
+                layoutStruct.aggregateFeeAmounts[pool][token] = bytes32(0);
 
                 // Supply credit to fee controller
                 uint256 totalFees = totalSwapFees[i] + totalYieldFees[i];
@@ -380,8 +380,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * Permissionless if pool/vault is paused, otherwise requires governance.
      */
     function enableRecoveryMode(address pool) external withRegisteredPool(pool) {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        PoolConfigBits config = layout.poolConfigBits[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        PoolConfigBits config = layoutStruct.poolConfigBits[pool];
 
         if (config.isPoolInRecoveryMode()) {
             revert PoolInRecoveryMode(pool);
@@ -389,14 +389,14 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
 
         // Permissionless if pool or vault is paused
         bool poolPaused = config.isPoolPaused();
-        bool vaultPaused = layout.vaultStateBits.isVaultPaused();
+        bool vaultPaused = layoutStruct.vaultStateBits.isVaultPaused();
 
         if (!poolPaused && !vaultPaused) {
             // Requires governance if not paused
             _authenticateCaller();
         }
 
-        layout.poolConfigBits[pool] = config.setPoolInRecoveryMode(true);
+        layoutStruct.poolConfigBits[pool] = config.setPoolInRecoveryMode(true);
         emit PoolRecoveryModeStateChanged(pool, true);
     }
 
@@ -405,8 +405,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @dev Only governance can disable recovery mode.
      */
     function disableRecoveryMode(address pool) external withRegisteredPool(pool) authenticate {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        PoolConfigBits config = layout.poolConfigBits[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        PoolConfigBits config = layoutStruct.poolConfigBits[pool];
 
         if (!config.isPoolInRecoveryMode()) {
             revert PoolNotInRecoveryMode(pool);
@@ -415,21 +415,21 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         // Sync pool balances after recovery
         _syncPoolBalancesAfterRecoveryMode(pool);
 
-        layout.poolConfigBits[pool] = config.setPoolInRecoveryMode(false);
+        layoutStruct.poolConfigBits[pool] = config.setPoolInRecoveryMode(false);
         emit PoolRecoveryModeStateChanged(pool, false);
     }
 
     function _syncPoolBalancesAfterRecoveryMode(address pool) internal {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        IERC20[] memory poolTokens = layout.poolTokens[pool];
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        IERC20[] memory poolTokens = layoutStruct.poolTokens[pool];
         uint256 numTokens = poolTokens.length;
 
         for (uint256 i = 0; i < numTokens; ++i) {
-            bytes32 packedBalance = layout.poolTokenBalances[pool][i];
+            bytes32 packedBalance = layoutStruct.poolTokenBalances[pool][i];
             uint256 rawBalance = packedBalance.getBalanceRaw();
 
             // Set live balance equal to raw balance (forfeit any yield)
-            layout.poolTokenBalances[pool][i] = PackedTokenBalance.toPackedBalance(rawBalance, rawBalance);
+            layoutStruct.poolTokenBalances[pool][i] = PackedTokenBalance.toPackedBalance(rawBalance, rawBalance);
         }
     }
 
@@ -441,8 +441,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Disables query functionality.
      */
     function disableQuery() external authenticate {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.vaultStateBits = layout.vaultStateBits.setQueryDisabled(true);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.vaultStateBits = layoutStruct.vaultStateBits.setQueryDisabled(true);
         emit VaultQueriesDisabled();
     }
 
@@ -450,9 +450,9 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Permanently disables query functionality.
      */
     function disableQueryPermanently() external authenticate {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.queriesDisabledPermanently = true;
-        layout.vaultStateBits = layout.vaultStateBits.setQueryDisabled(true);
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.queriesDisabledPermanently = true;
+        layoutStruct.vaultStateBits = layoutStruct.vaultStateBits.setQueryDisabled(true);
         emit VaultQueriesDisabled();
     }
 
@@ -461,13 +461,13 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @dev Will revert if queries were permanently disabled.
      */
     function enableQuery() external authenticate {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
-        if (layout.queriesDisabledPermanently) {
+        if (layoutStruct.queriesDisabledPermanently) {
             revert QueriesDisabledPermanently();
         }
 
-        layout.vaultStateBits = layout.vaultStateBits.setQueryDisabled(false);
+        layoutStruct.vaultStateBits = layoutStruct.vaultStateBits.setQueryDisabled(false);
         emit VaultQueriesEnabled();
     }
 
@@ -475,7 +475,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @notice Returns whether queries are disabled.
      */
     function isQueryDisabled() external view returns (bool) {
-        return BalancerV3VaultStorageRepo._layout().vaultStateBits.isQueryDisabled();
+        return BalancerV3VaultStorageRepo._layoutStruct().vaultStateBits.isQueryDisabled();
     }
 
     /* ========================================================================== */
@@ -487,8 +487,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
      * @param newAuthorizer The new authorizer contract
      */
     function setAuthorizer(IAuthorizer newAuthorizer) external authenticate {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.authorizer = newAuthorizer;
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.authorizer = newAuthorizer;
         emit AuthorizerChanged(newAuthorizer);
     }
 
@@ -501,8 +501,8 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         authenticate
         nonReentrant
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
-        layout.protocolFeeController = newProtocolFeeController;
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
+        layoutStruct.protocolFeeController = newProtocolFeeController;
         emit ProtocolFeeControllerChanged(newProtocolFeeController);
     }
 

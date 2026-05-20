@@ -14,11 +14,16 @@ import {ITIP20} from "./interfaces/ITIP20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title TempoExchangeAggregator
 /// @notice Singleton Uniswap V4 hook that aggregates liquidity from Tempo's enshrined stablecoin DEX
 /// @dev Supports multiple pools and both exact-input and exact-output swaps
 /// @dev Tempo uses uint128 for amounts; this contract handles the conversion from uint256
 contract TempoExchangeAggregator is BaseAggregatorHook {
+    
+    using BetterEfficientHashLib for bytes;
+
     using StateLibrary for IPoolManager;
     using SafeERC20 for IERC20;
 
@@ -194,7 +199,8 @@ contract TempoExchangeAggregator is BaseAggregatorHook {
     /// @notice Returns the canonical storage key for a token pair (ordered by address)
     function _canonicalPairKey(address token0, address token1) private pure returns (bytes32) {
         (address t0, address t1) = token0 < token1 ? (token0, token1) : (token1, token0);
-        return keccak256(abi.encode(t0, t1));
+        // return keccak256(abi.encode(t0, t1));
+        return abi.encodePacked(t0, t1)._hash();
     }
 
     /// @notice Returns a buffer to account for per-tick vs per-order rounding in exact-out quotes

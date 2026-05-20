@@ -16,7 +16,7 @@ contract Create3FactoryAwareHarness {
     }
 
     function initializeWithSlot(bytes32 slot, ICreate3FactoryProxy factory_) external {
-        Create3FactoryAwareRepo._initialize(Create3FactoryAwareRepo._layout(slot), factory_);
+        Create3FactoryAwareRepo._initialize(Create3FactoryAwareRepo._layoutStruct(slot), factory_);
     }
 
     function create3Factory() external view returns (ICreate3FactoryProxy) {
@@ -24,7 +24,7 @@ contract Create3FactoryAwareHarness {
     }
 
     function create3FactoryFromSlot(bytes32 slot) external view returns (ICreate3FactoryProxy) {
-        return Create3FactoryAwareRepo._create3Factory(Create3FactoryAwareRepo._layout(slot));
+        return Create3FactoryAwareRepo._create3Factory(Create3FactoryAwareRepo._layoutStruct(slot));
     }
 
     function storageSlot() external pure returns (bytes32) {

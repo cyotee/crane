@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import "@crane/contracts/external/openzeppelin/utils/Context.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 
 /**
  * @dev Pendle's ERC20 implementation, modified from @openzeppelin implementation

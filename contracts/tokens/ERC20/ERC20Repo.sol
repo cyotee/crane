@@ -11,7 +11,7 @@ import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 // tag::ERC20Repo[]
 /**
- * @title ERC20Repo Library to usage the related Struct as a storage layout.
+ * @title ERC20Repo Library to usage the related Struct as a storage layoutStruct.
  * @author cyotee doge <cyotee@syscoin.org>
  * @notice Simplifies Assembly operations upon the related Struct.
  */
@@ -31,181 +31,181 @@ library ERC20Repo {
 
     // end::Storage[]
 
-    // tag::_layout(bytes32)[]
+    // tag::_layoutStruct(bytes32)[]
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
-     * @return layout_ A struct from a Layout library bound to the provided slot.
+     * @return layoutStruct_ A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
-    // end::_layout(bytes32)[]
+    // end::_layoutStruct(bytes32)[]
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(DEFAULT_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(DEFAULT_SLOT);
     }
 
-    function _initialize(Storage storage layout, string memory name_, string memory symbol_, uint8 decimals_) internal {
-        layout.name = name_;
-        layout.symbol = symbol_;
-        layout.decimals = decimals_;
+    function _initialize(Storage storage layoutStruct, string memory name_, string memory symbol_, uint8 decimals_) internal {
+        layoutStruct.name = name_;
+        layoutStruct.symbol = symbol_;
+        layoutStruct.decimals = decimals_;
     }
 
     function _initialize(string memory name_, string memory symbol_, uint8 decimals_) internal {
-        _initialize(_layout(), name_, symbol_, decimals_);
+        _initialize(_layoutStruct(), name_, symbol_, decimals_);
     }
 
-    function _approve(Storage storage layout, address owner, address spender, uint256 amount) internal {
+    function _approve(Storage storage layoutStruct, address owner, address spender, uint256 amount) internal {
         if (spender == address(0)) {
             // Revert if address(0).
             revert IERC20Errors.ERC20InvalidSpender(spender);
         }
-        layout.allowances[owner][spender] = amount;
+        layoutStruct.allowances[owner][spender] = amount;
         emit IERC20Events.Approval(owner, spender, amount);
     }
 
     function _approve(address owner, address spender, uint256 amount) internal {
-        _approve(_layout(), owner, spender, amount);
+        _approve(_layoutStruct(), owner, spender, amount);
     }
 
-    function _spendAllowance(Storage storage layout, address owner, address spender, uint256 amount) internal {
+    function _spendAllowance(Storage storage layoutStruct, address owner, address spender, uint256 amount) internal {
         if (spender == address(0)) {
             // Revert if address(0).
             revert IERC20Errors.ERC20InvalidSpender(spender);
         }
-        uint256 currentAllowance = _allowance(layout, owner, spender);
+        uint256 currentAllowance = _allowance(layoutStruct, owner, spender);
         if (currentAllowance < amount) {
             revert IERC20Errors.ERC20InsufficientAllowance(spender, currentAllowance, amount);
         }
-        _approve(layout, owner, spender, currentAllowance - amount);
+        _approve(layoutStruct, owner, spender, currentAllowance - amount);
     }
 
-    function _increaseBalanceOf(Storage storage layout, address account, uint256 amount) internal {
+    function _increaseBalanceOf(Storage storage layoutStruct, address account, uint256 amount) internal {
         if (account == address(0)) {
             // Revert if address(0).
             revert IERC20Errors.ERC20InvalidReceiver(account);
         }
-        layout.balanceOf[account] += amount;
+        layoutStruct.balanceOf[account] += amount;
     }
 
     function _increaseBalanceOf(address account, uint256 amount) internal {
-        _increaseBalanceOf(_layout(), account, amount);
+        _increaseBalanceOf(_layoutStruct(), account, amount);
     }
 
-    function _decreaseBalanceOf(Storage storage layout, address account, uint256 amount) internal {
+    function _decreaseBalanceOf(Storage storage layoutStruct, address account, uint256 amount) internal {
         if (account == address(0)) {
             // Revert if address(0).
             revert IERC20Errors.ERC20InvalidSender(account);
         }
-        uint256 currentBalance = layout.balanceOf[account];
+        uint256 currentBalance = layoutStruct.balanceOf[account];
         if (currentBalance < amount) {
             revert IERC20Errors.ERC20InsufficientBalance(account, currentBalance, amount);
         }
-        layout.balanceOf[account] = currentBalance - amount;
+        layoutStruct.balanceOf[account] = currentBalance - amount;
     }
 
     function _decreaseBalanceOf(address account, uint256 amount) internal {
-        _decreaseBalanceOf(_layout(), account, amount);
+        _decreaseBalanceOf(_layoutStruct(), account, amount);
     }
 
-    function _transfer(Storage storage layout, address owner, address recipient, uint256 amount) internal {
+    function _transfer(Storage storage layoutStruct, address owner, address recipient, uint256 amount) internal {
         // address(0) MAY NEVER spend it's balance.
         if (msg.sender == address(0)) {
             // Revert if address(0).
             revert IERC20Errors.ERC20InvalidSpender(msg.sender);
         }
         // Decrease the balance of `sender` by `amount`.
-        _decreaseBalanceOf(layout, owner, amount);
+        _decreaseBalanceOf(layoutStruct, owner, amount);
         // Increase the balance of `recipient` by `amount`.
-        _increaseBalanceOf(layout, recipient, amount);
+        _increaseBalanceOf(layoutStruct, recipient, amount);
         emit IERC20Events.Transfer(owner, recipient, amount);
     }
 
     function _transfer(address owner, address recipient, uint256 amount) internal {
-        _transfer(_layout(), owner, recipient, amount);
+        _transfer(_layoutStruct(), owner, recipient, amount);
     }
 
-    function _transferFrom(Storage storage layout, address owner, address recipient, uint256 amount) internal {
+    function _transferFrom(Storage storage layoutStruct, address owner, address recipient, uint256 amount) internal {
         // Spend the allowance of `msg.sender` for `owner` by `amount`.
-        _spendAllowance(layout, owner, msg.sender, amount);
+        _spendAllowance(layoutStruct, owner, msg.sender, amount);
         // Transfer the tokens.
-        _transfer(layout, owner, recipient, amount);
+        _transfer(layoutStruct, owner, recipient, amount);
     }
 
     function _transferFrom(address owner, address recipient, uint256 amount) internal {
-        _transferFrom(_layout(), owner, recipient, amount);
+        _transferFrom(_layoutStruct(), owner, recipient, amount);
     }
 
-    function _mint(Storage storage layout, address recipient, uint256 amount) internal {
-        // _increaseBalanceOf(layout, recipient, amount);
-        layout.balanceOf[recipient] += amount;
-        layout.totalSupply += amount;
+    function _mint(Storage storage layoutStruct, address recipient, uint256 amount) internal {
+        // _increaseBalanceOf(layoutStruct, recipient, amount);
+        layoutStruct.balanceOf[recipient] += amount;
+        layoutStruct.totalSupply += amount;
         emit IERC20Events.Transfer(address(0), recipient, amount);
     }
 
     function _mint(address recipient, uint256 amount) internal {
-        _mint(_layout(), recipient, amount);
+        _mint(_layoutStruct(), recipient, amount);
     }
 
-    function _burn(Storage storage layout, address account, uint256 amount) internal {
-        // _decreaseBalanceOf(layout, account, amount);
-        layout.balanceOf[account] -= amount;
-        layout.totalSupply -= amount;
+    function _burn(Storage storage layoutStruct, address account, uint256 amount) internal {
+        // _decreaseBalanceOf(layoutStruct, account, amount);
+        layoutStruct.balanceOf[account] -= amount;
+        layoutStruct.totalSupply -= amount;
         emit IERC20Events.Transfer(account, address(0), amount);
     }
 
     function _burn(address account, uint256 amount) internal {
-        _burn(_layout(), account, amount);
+        _burn(_layoutStruct(), account, amount);
     }
 
-    function _name(Storage storage layout) internal view returns (string memory) {
-        return layout.name;
+    function _name(Storage storage layoutStruct) internal view returns (string memory) {
+        return layoutStruct.name;
     }
 
     function _name() internal view returns (string memory) {
-        return _name(_layout());
+        return _name(_layoutStruct());
     }
 
-    function _symbol(Storage storage layout) internal view returns (string memory) {
-        return layout.symbol;
+    function _symbol(Storage storage layoutStruct) internal view returns (string memory) {
+        return layoutStruct.symbol;
     }
 
     function _symbol() internal view returns (string memory) {
-        return _symbol(_layout());
+        return _symbol(_layoutStruct());
     }
 
-    function _decimals(Storage storage layout) internal view returns (uint8) {
-        return layout.decimals;
+    function _decimals(Storage storage layoutStruct) internal view returns (uint8) {
+        return layoutStruct.decimals;
     }
 
     function _decimals() internal view returns (uint8) {
-        return _decimals(_layout());
+        return _decimals(_layoutStruct());
     }
 
-    function _totalSupply(Storage storage layout) internal view returns (uint256) {
-        return layout.totalSupply;
+    function _totalSupply(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.totalSupply;
     }
 
     function _totalSupply() internal view returns (uint256) {
-        return _totalSupply(_layout());
+        return _totalSupply(_layoutStruct());
     }
 
-    function _balanceOf(Storage storage layout, address account) internal view returns (uint256) {
-        return layout.balanceOf[account];
+    function _balanceOf(Storage storage layoutStruct, address account) internal view returns (uint256) {
+        return layoutStruct.balanceOf[account];
     }
 
     function _balanceOf(address account) internal view returns (uint256) {
-        return _balanceOf(_layout(), account);
+        return _balanceOf(_layoutStruct(), account);
     }
 
-    function _allowance(Storage storage layout, address owner, address spender) internal view returns (uint256) {
-        return layout.allowances[owner][spender];
+    function _allowance(Storage storage layoutStruct, address owner, address spender) internal view returns (uint256) {
+        return layoutStruct.allowances[owner][spender];
     }
 
     function _allowance(address owner, address spender) internal view returns (uint256) {
-        return _allowance(_layout(), owner, spender);
+        return _allowance(_layoutStruct(), owner, spender);
     }
 }

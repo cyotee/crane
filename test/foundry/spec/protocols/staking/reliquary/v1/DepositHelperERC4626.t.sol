@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 import "forge-std/Test.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 import {IReliquary} from "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReliquary.sol";
-import {ERC721Holder} from "@crane/contracts/external/openzeppelin/token/ERC721/utils/ERC721Holder.sol";
+import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
 import {WETH9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
 import {DepositHelperERC4626} from "@crane/contracts/protocols/staking/reliquary/v1/helpers/DepositHelperERC4626.sol";
 import {NFTDescriptor} from "@crane/contracts/protocols/staking/reliquary/v1/nft_descriptors/NFTDescriptor.sol";

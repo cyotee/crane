@@ -7,7 +7,7 @@ import {MockStepStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/co
 import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {SSTORE2} from 'contracts/solady/utils/SSTORE2.sol';
+import {SSTORE2} from 'contracts/external/solady/utils/SSTORE2.sol';
 
 contract ValidateTest is BttBase {
     using SSTORE2 for *;

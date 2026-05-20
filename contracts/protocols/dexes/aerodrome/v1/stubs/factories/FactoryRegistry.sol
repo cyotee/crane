@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.19;
 
-import {Ownable} from "@crane/contracts/access/Ownable.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {IFactoryRegistry} from "../../interfaces/factories/IFactoryRegistry.sol";
-import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 
 /// @title Protocol Factory Registry
 /// @author Carter Carlson (@pegahcarter)
@@ -33,7 +33,7 @@ contract FactoryRegistry is IFactoryRegistry, Ownable {
         address _fallbackVotingRewardsFactory,
         address _fallbackGaugeFactory,
         address _newManagedRewardsFactory
-    ) Ownable(msg.sender) {
+    ) {
         fallbackPoolFactory = _fallbackPoolFactory;
 
         approve(_fallbackPoolFactory, _fallbackVotingRewardsFactory, _fallbackGaugeFactory);

@@ -4,8 +4,8 @@
 pragma solidity ^0.8.20;
 
 import {GovernorVotesUpgradeable} from "./GovernorVotesUpgradeable.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
-import {Checkpoints} from "@crane/contracts/external/openzeppelin/utils/structs/Checkpoints.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
+import {Checkpoints} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/Checkpoints.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

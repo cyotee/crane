@@ -10,55 +10,55 @@ library SuperchainSenderNonceRepo {
         mapping(address sender => mapping(uint256 targetChainId => uint256 nextNonce)) nextNonce;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _nextNonce(Storage storage layout, address sender, uint256 targetChainId)
+    function _nextNonce(Storage storage layoutStruct, address sender, uint256 targetChainId)
         internal
         view
         returns (uint256 nonce)
     {
-        return layout.nextNonce[sender][targetChainId];
+        return layoutStruct.nextNonce[sender][targetChainId];
     }
 
     function _nextNonce(address sender, uint256 targetChainId) internal view returns (uint256 nonce) {
-        return _nextNonce(_layout(), sender, targetChainId);
+        return _nextNonce(_layoutStruct(), sender, targetChainId);
     }
 
-    function _useNonce(Storage storage layout, address sender, uint256 targetChainId)
+    function _useNonce(Storage storage layoutStruct, address sender, uint256 targetChainId)
         internal
         returns (uint256 nonce)
     {
-        nonce = layout.nextNonce[sender][targetChainId];
-        layout.nextNonce[sender][targetChainId] = nonce + 1;
+        nonce = layoutStruct.nextNonce[sender][targetChainId];
+        layoutStruct.nextNonce[sender][targetChainId] = nonce + 1;
     }
 
     function _useNonce(address sender, uint256 targetChainId) internal returns (uint256 nonce) {
-        return _useNonce(_layout(), sender, targetChainId);
+        return _useNonce(_layoutStruct(), sender, targetChainId);
     }
 
-    function _useCheckedNonce(Storage storage layout, address sender, uint256 targetChainId, uint256 providedNonce)
+    function _useCheckedNonce(Storage storage layoutStruct, address sender, uint256 targetChainId, uint256 providedNonce)
         internal
         returns (uint256 currentNonce)
     {
-        currentNonce = layout.nextNonce[sender][targetChainId];
+        currentNonce = layoutStruct.nextNonce[sender][targetChainId];
         if (currentNonce != providedNonce) {
             revert InvalidSenderNonce(sender, targetChainId, currentNonce, providedNonce);
         }
-        layout.nextNonce[sender][targetChainId] = currentNonce + 1;
+        layoutStruct.nextNonce[sender][targetChainId] = currentNonce + 1;
     }
 
     function _useCheckedNonce(address sender, uint256 targetChainId, uint256 providedNonce)
         internal
         returns (uint256 currentNonce)
     {
-        return _useCheckedNonce(_layout(), sender, targetChainId, providedNonce);
+        return _useCheckedNonce(_layoutStruct(), sender, targetChainId, providedNonce);
     }
 }

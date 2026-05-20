@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
-import {ERC721Holder} from "@crane/contracts/external/openzeppelin/token/ERC721/utils/ERC721Holder.sol";
+import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
 
 import {Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/Reliquary.sol";
 import {IReliquary} from "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReliquary.sol";

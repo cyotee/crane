@@ -3,9 +3,9 @@
 pragma solidity ^0.8.24;
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
+import {Ownable2Step} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable2StepInit.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {Ownable} from "@crane/contracts/access/Ownable.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
 
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";

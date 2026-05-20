@@ -4,6 +4,8 @@ pragma solidity ^0.8.17;
 
 import {PriceFeedsAdapterBase} from "../PriceFeedsAdapterBase.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @title Implementation of a price feeds adapter without rounds support
  * @author The Redstone Oracles team
@@ -17,7 +19,10 @@ import {PriceFeedsAdapterBase} from "../PriceFeedsAdapterBase.sol";
  * values, as it can significantly reduce gas usage
  */
 abstract contract PriceFeedsAdapterWithoutRounds is PriceFeedsAdapterBase {
-  bytes32 constant VALUES_MAPPING_STORAGE_LOCATION = 0x4dd0c77efa6f6d590c97573d8c70b714546e7311202ff7c11c484cc841d91bfc; // keccak256("RedStone.oracleValuesMapping");
+  
+    using BetterEfficientHashLib for bytes;
+
+    bytes32 constant VALUES_MAPPING_STORAGE_LOCATION = 0x4dd0c77efa6f6d590c97573d8c70b714546e7311202ff7c11c484cc841d91bfc; // keccak256("RedStone.oracleValuesMapping");
 
   /**
    * @dev Helpful virtual function for handling value validation and saving
@@ -52,6 +57,7 @@ abstract contract PriceFeedsAdapterWithoutRounds is PriceFeedsAdapterBase {
    * @return locationInStorage
    */
   function _getValueLocationInStorage(bytes32 dataFeedId) private pure returns (bytes32) {
-    return keccak256(abi.encode(dataFeedId, VALUES_MAPPING_STORAGE_LOCATION));
+    // return keccak256(abi.encode(dataFeedId, VALUES_MAPPING_STORAGE_LOCATION));
+    return abi.encodePacked(dataFeedId, VALUES_MAPPING_STORAGE_LOCATION)._hash();
   }
 }

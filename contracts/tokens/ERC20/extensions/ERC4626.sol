@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ERC4626 as SoladyERC4626} from "@crane/contracts/solady/tokens/ERC4626.sol";
-import {ERC20 as SoladyERC20} from "@crane/contracts/solady/tokens/ERC20.sol";
+import {ERC4626 as SoladyERC4626} from "@crane/contracts/external/solady/tokens/ERC4626.sol";
+import {ERC20 as SoladyERC20} from "@crane/contracts/external/solady/tokens/ERC20.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";

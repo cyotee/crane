@@ -7,7 +7,7 @@ import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHash
 import {AccessControlUpgradeable} from "../access/AccessControlUpgradeable.sol";
 import {ERC721HolderUpgradeable} from "../token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import {ERC1155HolderUpgradeable} from "../token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**

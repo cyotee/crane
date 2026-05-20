@@ -11,14 +11,14 @@
 
 This report was generated on 2026-05-15 from a broad multi-agent inventory and then substantially executed across six sessions ending 2026-05-16. The §2a Aave 3.6 legacy-OZ migration arc is closed: 3 of its files (legacy `Ownable`, `Context`, `AccessControl`) are deleted; the remaining 4 are Aave-specific proxy infrastructure that aren't duplicates (step 5 won't-fix). The total commit count on `dedupe` since `c4422a71` is large but a significant portion of session-6 was a sequence of mistakes + reverts — see [Session-6 mistakes and their correction](#session-6-mistakes-and-their-correction) below for the architectural lesson.
 
-> **Important principle (learned the hard way in session 6):** Crane-native libraries at `contracts/access/*`, `contracts/utils/*`, etc. are **NOT** duplicates of OpenZeppelin's libraries at `contracts/external/openzeppelin/*`. They are intentionally separate implementations: Crane's `Ownable` wraps Solady and omits `Context` inheritance; OZ's `Ownable` extends `Context` and supports meta-tx via `_msgSender()`. The fact that they have similar method signatures doesn't make them duplicates — they live at different paths because they have different semantics. **Migration target rule: if a consumer uses OZ semantics (Context, `_msgSender`, string reverts, v4 constructor patterns), it routes to `external/openzeppelin/`. If a consumer is Crane-native code, it can use `contracts/access/` / `contracts/utils/`. NEVER cross those boundaries during dedup.**
+> **Important principle (learned the hard way in session 6):** Crane-native libraries at `contracts/access/*`, `contracts/utils/*`, etc. are **NOT** duplicates of OpenZeppelin's libraries at `contracts/external/openzeppelin-contracts/*`. They are intentionally separate implementations: Crane's `Ownable` wraps Solady and omits `Context` inheritance; OZ's `Ownable` extends `Context` and supports meta-tx via `_msgSender()`. The fact that they have similar method signatures doesn't make them duplicates — they live at different paths because they have different semantics. **Migration target rule: if a consumer uses OZ semantics (Context, `_msgSender`, string reverts, v4 constructor patterns), it routes to `external/openzeppelin/`. If a consumer is Crane-native code, it can use `contracts/access/` / `contracts/utils/`. NEVER cross those boundaries during dedup.**
 
 > **What "dedup" means in this report (post-session-6 definition):** collapsing two files that contain the SAME code (byte-identical or structurally identical at the same OZ version) when one is a per-port bundled copy and the other is centrally vendored. It does NOT mean: migrating across OZ major versions, swapping Crane-native for OZ-vendored (or vice versa), or moving consumers from one canonical declaration to another canonical declaration with the same name. Those are all API/architectural changes, not deduplication.
 
 A re-verification pass at the start of the most recent session confirmed every file count in [Top-level structure](#top-level-structure-post-migration-2026-05-16) below matches on-disk state. That pass found three drift items, two of which were trivial leftovers and one of which was a wrong claim in the outstanding-work list — all addressed in the same session:
 
 - `contracts/external/pendle/` was an empty leftover from the Pendle promotion — `rmdir`'d in `8414f608`.
-- `contracts/external/openzeppelin/interfaces/IERC5805.sol.bak` was a stray backup from the `ed6bb9b5` revert — deleted in `8414f608`.
+- `contracts/external/openzeppelin-contracts/interfaces/IERC5805.sol.bak` was a stray backup from the `ed6bb9b5` revert — deleted in `8414f608`.
 - §7 step 4 claimed "UnsafeMath — both unused, no consolidation needed." Re-verification found UnsafeMath *is* consumed in both V3 (`SqrtPriceMath` + `SqrtPriceMathPartial`) and V4 (`Pool` + `SqrtPriceMath`). V4 is a strict superset of V3 (adds `simpleMulDiv`); both standalone copies consolidated to `protocols/dexes/uniswap/libraries/UnsafeMath.sol` in `dd1ee41f`. Euler EulerSwap's own UnsafeMath has a different API surface (uint8/int256 overloads) and stays separate.
 
 Other work landed in session 5:
@@ -39,12 +39,12 @@ All session-5-and-6 OZ-migrations were reverted/retargeted in session 6:
 
 | Original commit | What it did wrong | Revert commit |
 |---|---|---|
-| `9ec14b08` (step 2 Address+Context) | Routed to `@crane/contracts/utils/{Address,Context}.sol` (Crane native) | `a6fe3562` — retargeted to `@crane/contracts/external/openzeppelin/utils/{Address,Context}.sol` |
-| `bbb0e03d` (step 3 Ownable, 9 consumers) | Routed to `@crane/contracts/access/Ownable.sol` (Crane Solady-native, no Context), forced v5 constructor pattern, removed `_msgSender()` from Faucet | `c286cbee` — retargeted to `@crane/contracts/external/openzeppelin/access/Ownable.sol` (vendored OZ v4.9.0, extends Context); restored v4 `transferOwnership(owner)` constructor pattern; restored Faucet `_msgSender()` |
+| `9ec14b08` (step 2 Address+Context) | Routed to `@crane/contracts/utils/{Address,Context}.sol` (Crane native) | `a6fe3562` — retargeted to `@crane/contracts/external/openzeppelin-contracts/utils/{Address,Context}.sol` |
+| `bbb0e03d` (step 3 Ownable, 9 consumers) | Routed to `@crane/contracts/access/Ownable.sol` (Crane Solady-native, no Context), forced v5 constructor pattern, removed `_msgSender()` from Faucet | `c286cbee` — retargeted to `@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol` (vendored OZ v4.9.0, extends Context); restored v4 `transferOwnership(owner)` constructor pattern; restored Faucet `_msgSender()` |
 | `12d144c7` (step 4 AccessControl, ACLManager) | Migrated v4 → v5 with `_setupRole` → `_grantRole` rename | `2b1a1573` — restored bundled v4 `AccessControl.sol`; reverted `_setupRole` |
 | `701736a6` (step 6b ECDSA/ERC20/Multicall/MessageHashUtils + v5 Ownable + OwnableWithGuardian `_msgSender` removal) | Routed v5.x consumers to Crane-vendored v5.5 (version drift); v5 Ownable consumers to Crane native | `0cae89a5` — all retargeted back to Aave bundled paths; restored OwnableWithGuardian `_msgSender()` |
 
-**What stayed shipped from session 6:** `72fcbeb9` (SafeCast migration, byte-identical v5.1.0 files between Crane vendored and Aave bundled — a true byte-for-byte duplicate collapse, the only one). 19 Aave consumers now import SafeCast from `@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol` instead of the bundled copy.
+**What stayed shipped from session 6:** `72fcbeb9` (SafeCast migration, byte-identical v5.1.0 files between Crane vendored and Aave bundled — a true byte-for-byte duplicate collapse, the only one). 19 Aave consumers now import SafeCast from `@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol` instead of the bundled copy.
 
 **What stayed shipped from session 5:** The Aave step-3 + step-4 + step-6b code-changes were reverted, but the **legacy `dependencies/openzeppelin/contracts/{Ownable,Context}.sol` deletions stayed** because those files ARE genuine duplicates of the vendored OZ files Crane has at `external/openzeppelin/`. After the retargeting, Aave consumers import directly from `external/openzeppelin/`, removing the per-port bundled copy. Net: 2 OZ files collapsed (Ownable, Context); AccessControl restored because it was a different version, not a dedup target.
 
@@ -109,7 +109,7 @@ All session-5-and-6 OZ-migrations were reverted/retargeted in session 6:
 3. **API drift between stubs and canonical is common when stubs were a snapshot of an older upstream.** Examples this session: Uniswap V4's `SwapParams` moved out of `IPoolManager`; `BeforeSwapDelta` became a value type (no `memory`); RedStone's `getOracleNumericValue` was renamed to `getOracleNumericValueFromTxMsg`; Solady's `SafeTransferLib` takes `address` rather than `ERC20`. Plan for per-consumer code edits in addition to import rewrites.
 4. **Use the `@crane/` remapping for every import.** User-mandated rule (see `feedback_crane_imports.md` memory). Convert any surviving relative imports (`./X.sol`, `../libraries/X.sol`, `../../libraries/X.sol`) to the absolute `@crane/contracts/...` form as part of any migration.
 5. **Suffix-based sed is the right tool for bulk import rewriting.** Patterns like `s|protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/utils/|utils/|g` rewrite correctly regardless of whether the original used `@crane/` or bare `contracts/` prefix. Saves enumerating both forms.
-6. **OZ-vendored tree deletions need TWO greps.** Zero-Crane-consumer files inside `contracts/external/openzeppelin/` may still be load-bearing for OZ-internal cross-references. `IERC1967.sol` looked deletable but `ERC1967Upgrade` consumes it; same for `IERC6909`/`ERC6909`. **Always verify BOTH Crane-side grep AND OZ-internal grep before deleting.** Mistake in `0f93ce75`, reverted in `ed6bb9b5`.
+6. **OZ-vendored tree deletions need TWO greps.** Zero-Crane-consumer files inside `contracts/external/openzeppelin-contracts/` may still be load-bearing for OZ-internal cross-references. `IERC1967.sol` looked deletable but `ERC1967Upgrade` consumes it; same for `IERC6909`/`ERC6909`. **Always verify BOTH Crane-side grep AND OZ-internal grep before deleting.** Mistake in `0f93ce75`, reverted in `ed6bb9b5`.
 7. **Foundry build cache can mislead after restructuring.** If you delete or rename files and `forge build` errors with stale paths after sed succeeds, run `rm -rf cache out` and rebuild. Hit once during the V3↔V4 math consolidation.
 
 ## Purpose
@@ -192,7 +192,7 @@ Four `external/` subdirectories hold what *looks like* protocol logic at first g
 
 Key insight: `contracts/external/<protocol>/` directories are not automatically misplaced just because they contain protocol-shaped contracts. The Balancer V3 case shows one valid pattern — the upstream-pinned source lives in `external/` and the Diamond-refactored facets that consume its interfaces/libraries/utils live in `protocols/`. Redstone shows another — a vendored protocol that is intentionally retained for future reference even with no current consumer. Uniswap V3 and Pendle, by contrast, are being promoted into `protocols/` because that's the more natural home for an upstream that the team owns and intends to refactor or extend in-place.
 
-Cross-tree imports already point to `external/balancer/v3/` as a library (e.g. `dexes/uniswap` and `dexes/camelot` import `IWETH` from `@crane/contracts/external/balancer/v3/interfaces/.../IWETH.sol`). That import is fine in shape but suggests IWETH should be promoted to a more neutral home (e.g. `contracts/external/openzeppelin/.../IWETH.sol`-equivalent or `contracts/tokens/wrappers/`) rather than reach into Balancer's tree for a generic interface.
+Cross-tree imports already point to `external/balancer/v3/` as a library (e.g. `dexes/uniswap` and `dexes/camelot` import `IWETH` from `@crane/contracts/external/balancer/v3/interfaces/.../IWETH.sol`). That import is fine in shape but suggests IWETH should be promoted to a more neutral home (e.g. `contracts/external/openzeppelin-contracts/.../IWETH.sol`-equivalent or `contracts/tokens/wrappers/`) rather than reach into Balancer's tree for a generic interface.
 
 ---
 
@@ -210,7 +210,7 @@ Aave v3.6 vendors **three OpenZeppelin generations** in parallel:
 - Aave-specific math kept here: `WadRayMath.sol`, `PercentageMath.sol`, `MathUtils.sol` — these *do* belong with Aave (protocol-specific)
 - Plus the surprising `dependencies/openzeppelin-contracts/lib/forge-std/src/interfaces/IERC20.sol` — forge-std's stub interface vendored four levels deep inside Aave's inlined OZ checkout
 
-Recommendation: keep the WadRay/Percentage/MathUtils libraries (Aave-specific), drop the entire `dependencies/openzeppelin*` trees, and rewrite imports to `@crane/contracts/external/openzeppelin/...` (or to the Crane-canonical `contracts/access/`, `contracts/utils/`, `contracts/tokens/ERC20/` wrappers, depending on which the rest of the repo prefers).
+Recommendation: keep the WadRay/Percentage/MathUtils libraries (Aave-specific), drop the entire `dependencies/openzeppelin*` trees, and rewrite imports to `@crane/contracts/external/openzeppelin-contracts/...` (or to the Crane-canonical `contracts/access/`, `contracts/utils/`, `contracts/tokens/ERC20/` wrappers, depending on which the rest of the repo prefers).
 
 ### 2a investigation (2026-05-16) — facts before any code changes
 
@@ -246,13 +246,13 @@ Recommendation: keep the WadRay/Percentage/MathUtils libraries (Aave-specific), 
 - `Address.sol` (3 consumers, stateless library) → `@crane/contracts/utils/Address.sol`. API surface is essentially unchanged across OZ v4→v5. **Likely a clean import-only rewrite.**
 - `Context.sol` (2 consumers, inheritance with `_msgSender`) → `@crane/contracts/utils/Context.sol`. Same story. **Likely clean.**
 - `Ownable.sol` (9 consumers, inheritance) → `@crane/contracts/access/Ownable.sol`. **API-breaking.** Aave's legacy Ownable uses the v4 `constructor()` pattern that auto-assigns `msg.sender` as owner. Crane's `contracts/access/Ownable.sol` wraps Solady's Ownable which follows the v5+ `Ownable(initialOwner)` pattern — every Aave contract that inherits `is Ownable` would need its constructor updated to pass `msg.sender` explicitly. Needs per-consumer code edit and Aave-test verification.
-- `AccessControl.sol` (1 consumer, inheritance). Crane has no native AccessControl (per §7 step 1 table — the Crane-native alternative is `contracts/access/operable/`). Migrating would be either (a) repoint to `@crane/contracts/external/openzeppelin/access/AccessControl.sol` (which the canonical-sources table calls the "fallback when a port needs the exact upstream API") or (b) refactor to `operable`. Option (a) is the lower-risk choice.
+- `AccessControl.sol` (1 consumer, inheritance). Crane has no native AccessControl (per §7 step 1 table — the Crane-native alternative is `contracts/access/operable/`). Migrating would be either (a) repoint to `@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol` (which the canonical-sources table calls the "fallback when a port needs the exact upstream API") or (b) refactor to `operable`. Option (a) is the lower-risk choice.
 
 **v5.x tree (`dependencies/openzeppelin-contracts/`) — top imported paths:**
 
 `SafeCast.sol` (35×), `Math.sol` (17×), `Address.sol` (17×), `ECDSA.sol` (12×), `SafeERC20.sol` (9×), `Strings.sol` (8×), `IGovernor.sol` (8×), `Checkpoints.sol` (7×), `TransparentUpgradeableProxy.sol` (7×), `draft-IERC6093.sol` (7×), `Arrays.sol` (6×), `IERC20Permit.sol` (6×), `IAccessControl.sol` (6×), `Time.sol` (5×), `EnumerableSet.sol` (5×).
 
-All these exist in Crane's vendored OZ at `contracts/external/openzeppelin/...`. API-compatible in principle (both v5.x), but Crane's vendored fork has internal import rewrites (e.g. `SafeERC20.sol` imports `IERC20` from `@crane/contracts/interfaces/IERC20.sol` rather than the OZ sibling). Migrating 126 Aave consumer imports would route Aave through Crane's slightly-modified OZ — **net effect: Aave starts depending on `contracts/interfaces/IERC20.sol`** instead of the bundled `dependencies/openzeppelin-contracts/.../IERC20.sol`. Likely fine in practice (interfaces are structural) but warrants verification.
+All these exist in Crane's vendored OZ at `contracts/external/openzeppelin-contracts/...`. API-compatible in principle (both v5.x), but Crane's vendored fork has internal import rewrites (e.g. `SafeERC20.sol` imports `IERC20` from `@crane/contracts/interfaces/IERC20.sol` rather than the OZ sibling). Migrating 126 Aave consumer imports would route Aave through Crane's slightly-modified OZ — **net effect: Aave starts depending on `contracts/interfaces/IERC20.sol`** instead of the bundled `dependencies/openzeppelin-contracts/.../IERC20.sol`. Likely fine in practice (interfaces are structural) but warrants verification.
 
 **Upgradeable tree (`dependencies/openzeppelin-contracts-upgradeable/`) — top imported paths:**
 
@@ -267,7 +267,7 @@ These have analogues in `contracts/external/openzeppelin-upgradeable/`, but the 
 3. **Migrate legacy `Ownable.sol` consumers** (medium risk, 9 consumer files; each needs constructor signature update to pass `msg.sender` explicitly; needs Aave test verification).
 4. **Migrate legacy `AccessControl.sol` consumer** (medium risk, 1 consumer file; choice between OZ vendored fallback and Crane `operable` rewrite).
 5. **After 1-4: delete the entire legacy `dependencies/openzeppelin/` tree** (saves 14 files including the 7 from step 1 plus the 4 actively used after migration plus the 3 used by `misc/aave-upgradeability/` adapters — those 3 also need migration to a canonical proxy implementation, or accept that they're Aave-specific frozen artifacts).
-6. **(Large) Migrate the 126 v5.x `dependencies/openzeppelin-contracts/` consumers to `@crane/contracts/external/openzeppelin/...`.** Expect to spend most of the effort here. Run Aave's test suite after each batch — Aave already has ~75 pre-existing failures, so noise/signal separation is itself work.
+6. **(Large) Migrate the 126 v5.x `dependencies/openzeppelin-contracts/` consumers to `@crane/contracts/external/openzeppelin-contracts/...`.** Expect to spend most of the effort here. Run Aave's test suite after each batch — Aave already has ~75 pre-existing failures, so noise/signal separation is itself work.
 7. **(Largest) Migrate the 5 `dependencies/openzeppelin-contracts-upgradeable/` consumers** — but consider deferring or design-discussing whether Aave should stay on OZ upgradeable patterns at all.
 
 Each step needs Aave's test suite run after migration (`forge test` excluding fork tests). Per `MEMORY.md`, the full non-fork test suite is ~8-9 minutes and currently has ~75 failing tests of unrelated provenance — pre-existing/environmental failures must be distinguished from new ones introduced by the migration.
@@ -281,7 +281,7 @@ This single launchpad ships **396 vendored .sol files**:
 - `dependencies/v4-periphery/...` — Uniswap V4 periphery (52 files)
 - `dependencies/blocknumberish/` — 5 files
 
-Both OZ and Solady are also vendored elsewhere in the repo (see §3). Recommendation: drop the `dependencies/openzeppelin-contracts/` and `dependencies/solady/` subtrees entirely, point its imports at `contracts/external/openzeppelin/...` and `contracts/solady/...`. The `v4-periphery/` subtree should consolidate with `contracts/protocols/dexes/uniswap/v4/`.
+Both OZ and Solady are also vendored elsewhere in the repo (see §3). Recommendation: drop the `dependencies/openzeppelin-contracts/` and `dependencies/solady/` subtrees entirely, point its imports at `contracts/external/openzeppelin-contracts/...` and `contracts/solady/...`. The `v4-periphery/` subtree should consolidate with `contracts/protocols/dexes/uniswap/v4/`.
 
 **Completed 2026-05-16** in commit `06c9e931`. The entire `dependencies/` tree was deleted (~390 vendored files, 80,168 lines). Investigation found only 10 of the ~396 bundled files were actually imported by launchpad code; the rest were transitive. Migration:
 
@@ -361,8 +361,8 @@ Concrete breakdowns for the most-duplicated runtime contracts:
 ```
 contracts/interfaces/IERC20.sol                                                                          [Crane canonical]
 contracts/tokens/ERC20/IERC20.sol                                                                        [Crane canonical, ERC20 dir]
-contracts/external/openzeppelin/interfaces/IERC20.sol                                                    [OZ alias]
-contracts/external/openzeppelin/token/ERC20/IERC20.sol                                                   [OZ canonical]
+contracts/external/openzeppelin-contracts/interfaces/IERC20.sol                                                    [OZ alias]
+contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol                                                   [OZ canonical]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC20.sol      [drop with §2b]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol     [drop with §2b]
 contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/lib/forge-std/src/interfaces/IERC20.sol                   [drop with §2a]
@@ -373,7 +373,7 @@ Even after §2 cleanup, the remaining four (`contracts/interfaces/`, `contracts/
 ```
 contracts/solady/tokens/ERC20.sol                                                                        [Solady canonical]
 contracts/tokens/ERC20/ERC20.sol                                                                         [Crane canonical]
-contracts/external/openzeppelin/token/ERC20/ERC20.sol                                                    [OZ canonical]
+contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol                                                    [OZ canonical]
 contracts/protocols/lending/euler/v1/stubs/solmate/tokens/ERC20.sol                                      [drop with §2c]
 contracts/protocols/dexes/uniswap/v4/external/solmate/tokens/ERC20.sol                                   [vendored Solmate inside V4]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/solady/src/tokens/ERC20.sol      [drop with §2b]
@@ -387,7 +387,7 @@ Five of eight collapse via §2. The remaining three (Crane, OZ, Solady) coexist 
 contracts/utils/SafeERC20.sol                                                                            [Crane wrapper -> SafeTransferLib]
 contracts/solady/utils/SafeTransferLib.sol                                                               [Solady canonical]
 contracts/tokens/ERC20/utils/SafeTransferLib.sol                                                         [Crane canonical for ERC20 stack]
-contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol                                          [OZ canonical]
+contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol                                          [OZ canonical]
 contracts/protocols/lending/euler/v1/stubs/solmate/utils/SafeTransferLib.sol                             [drop with §2c]
 contracts/protocols/dexes/uniswap/v4/external/solmate/utils/SafeTransferLib.sol                          [vendored Solmate inside V4]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/solady/src/utils/SafeTransferLib.sol      [drop with §2b]
@@ -401,7 +401,7 @@ After §2: four copies remain (Crane wrapper, Crane ERC20-stack, Solady, OZ). `c
 ```
 contracts/access/Ownable.sol                                                                             [Crane canonical]
 contracts/solady/auth/Ownable.sol                                                                        [Solady canonical]
-contracts/external/openzeppelin/access/Ownable.sol                                                       [OZ canonical]
+contracts/external/openzeppelin-contracts/access/Ownable.sol                                                       [OZ canonical]
 contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin/contracts/Ownable.sol                    [drop with §2a]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/solady/src/auth/Ownable.sol      [drop with §2b]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/access/Ownable.sol  [drop with §2b]
@@ -413,8 +413,8 @@ Plus: Ownable2Step duplicated identically across the same paths; `OwnableUpgrade
 ```
 contracts/utils/ReentrancyGuard.sol                                                                      [Crane canonical]
 contracts/solady/utils/ReentrancyGuard.sol                                                               [Solady canonical]
-contracts/external/openzeppelin/security/ReentrancyGuard.sol                                             [OZ legacy path]
-contracts/external/openzeppelin/utils/ReentrancyGuard.sol                                                [OZ modern path -- internal OZ dup]
+contracts/external/openzeppelin-contracts/security/ReentrancyGuard.sol                                             [OZ legacy path]
+contracts/external/openzeppelin-contracts/utils/ReentrancyGuard.sol                                                [OZ modern path -- internal OZ dup]
 contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol      [drop with §2a]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol  [drop with §2b]
 contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/solady/src/utils/ReentrancyGuard.sol       [drop with §2b]
@@ -445,7 +445,7 @@ The Camelot/Uniswap V2 pair is a free win — identical files, easy consolidatio
 
 ---
 
-## 4. Internal duplicates inside `contracts/external/openzeppelin/`
+## 4. Internal duplicates inside `contracts/external/openzeppelin-contracts/`
 
 The vendored OZ copy itself contains historical-path duplicates that should be flattened to its current canonical paths:
 
@@ -463,13 +463,13 @@ The vendored OZ copy itself contains historical-path duplicates that should be f
 | Upstream | Submodule (`lib/`) | Vendored (`contracts/external/`) | Resolution |
 |---|---|---|---|
 | forge-std | `lib/forge-std` (full, version 8b531a01) | `contracts/external/forge-std/mocks/{MockERC20,MockERC721}.sol` | **Keep the stub.** The submodule version no longer ships `src/mocks/`, but Aave's `test/foundry/spec/protocols/lending/aave/3.6/treasury/Collector.t.sol` actively imports `MockERC20` from the stub. Closed as won't-fix on 2026-05-15 (see §7 step 6). |
-| OpenZeppelin | `lib/openzeppelin-contracts` (v5.6.1, 338 .sol files) | `contracts/external/openzeppelin/` (mixed v4.x/v5.x, Crane-modified, 169 .sol files) | **Keep both.** Investigation 2026-05-15 found the two are not interchangeable — see "OZ submodule vs vendored: investigation" below. |
+| OpenZeppelin | `lib/openzeppelin-contracts` (v5.6.1, 338 .sol files) | `contracts/external/openzeppelin-contracts/` (mixed v4.x/v5.x, Crane-modified, 169 .sol files) | **Keep both.** Investigation 2026-05-15 found the two are not interchangeable — see "OZ submodule vs vendored: investigation" below. |
 | ds-test | none | `contracts/external/ds-test/test.sol` | Keep — Dappsys is intended as a vendored base |
 | layerzero | (`lib/evk-periphery/lib/layerzero-devtools/` via symlinks) | `contracts/external/layerzero/` (symlinks only) | Keep — it's just a path indirection |
 
 ### OZ submodule vs vendored: investigation (2026-05-15)
 
-The original analysis assumed `lib/openzeppelin-contracts` was v4.8 and `contracts/external/openzeppelin/` was v5.x — that "different major versions" framing was wrong. Findings:
+The original analysis assumed `lib/openzeppelin-contracts` was v4.8 and `contracts/external/openzeppelin-contracts/` was v5.x — that "different major versions" framing was wrong. Findings:
 
 **Submodule** (`lib/openzeppelin-contracts`, commit `5fd1781b` = OZ v5.6.1):
 - Clean upstream snapshot.
@@ -478,7 +478,7 @@ The original analysis assumed `lib/openzeppelin-contracts` was v4.8 and `contrac
 - Used by 82 consumers across the repo: Pendle (35 files), test fixtures (27), Redstone (9), Uniswap V4 ports (8), `contracts/tokens/` natives (2), `protocols/tokens/wrappers/` (1).
 - Top imported symbols: `IERC20` (35×), `SafeERC20` (25×), `UUPSUpgradeable` (20×), `IERC20Metadata` (10×), `SafeCast` (8×), `Proxy` (4×).
 
-**Vendored** (`contracts/external/openzeppelin/`, headers report v5.4.0 for most files):
+**Vendored** (`contracts/external/openzeppelin-contracts/`, headers report v5.4.0 for most files):
 - **Not a pristine snapshot — Crane-modified fork.** Examples:
   - `token/ERC20/IERC20.sol` (v5.4.0 header) has its **interface body entirely commented out** — dead code that compiles to nothing. Currently zero consumers in the repo so the build passes, but the file is broken. Surfaced earlier as a §7 step 5 follow-up.
   - `token/ERC20/utils/SafeERC20.sol` is **v4.9.3** (older than v5.4.0 elsewhere in the same tree) and has its imports **rewritten to point at Crane natives** — `import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";` instead of the upstream `import {IERC20} from "../IERC20.sol";`. Also imports `IERC20Permit` from a Crane-canonical path that the upstream v4.9.3 OZ never imports.
@@ -494,7 +494,7 @@ The original analysis assumed `lib/openzeppelin-contracts` was v4.8 and `contrac
 
 **Outstanding cleanup (lower-priority, follow-ups for future passes):**
 
-- Fix the broken `contracts/external/openzeppelin/token/ERC20/IERC20.sol` (uncomment the interface body) so the file is usable if any consumer ever imports it directly. Zero-consumer landmine.
+- Fix the broken `contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol` (uncomment the interface body) so the file is usable if any consumer ever imports it directly. Zero-consumer landmine.
 - The vendored `SafeERC20.sol` is v4.9.3 while the submodule has v5.5.0. If someone wants the Crane wrapper to be on a current OZ baseline, bump the vendored copy and re-apply the Crane import rewrites.
 - The mixed-version vendored tree should ideally be pinned to a single OZ version (e.g. v5.4.0 or v5.6.1 to match the submodule) with Crane modifications applied as a documented patch set, not as ad-hoc edits.
 
@@ -506,7 +506,7 @@ The original analysis assumed `lib/openzeppelin-contracts` was v4.8 and `contrac
 
 To frame the scope: most of the repo's import graph is clean. None of the four agent passes found protocol code reaching across into a sibling protocol's internals. Aave does not import from Euler, Sky does not import from Aave, Reliquary is self-contained, Aerodrome's Slipstream submodule only reaches its own `aerodrome/v1/` siblings (which is correct given it's the same protocol's forks), Sky/Chainlink/Reliquary are dependency-light.
 
-Top-level `contracts/utils/` is a deliberately-curated set of Crane-native utilities (`Strings`, `SafeCast`, `SafeCastLib`, `Create2`, `Math`, `Address`, `Context`, `ReentrancyGuard`, `SafeERC20`, `BetterAddress`, `BetterBytes`, `BetterEfficientHashLib`, `LibString`, `Base64`, `Bytecode`, `Bytes32`, `Bytes4`, `LibBytes`, `Creation`, `TransientSlot`, `UInt256`, `Nonces`, `Panic`, `ShortStrings`, plus organized `cryptography/`, `introspection/`, `math/`, `collections/`). Nothing stray. This is the intended target for `contracts/external/openzeppelin/...` consumers to migrate to where a Crane-native equivalent already exists.
+Top-level `contracts/utils/` is a deliberately-curated set of Crane-native utilities (`Strings`, `SafeCast`, `SafeCastLib`, `Create2`, `Math`, `Address`, `Context`, `ReentrancyGuard`, `SafeERC20`, `BetterAddress`, `BetterBytes`, `BetterEfficientHashLib`, `LibString`, `Base64`, `Bytecode`, `Bytes32`, `Bytes4`, `LibBytes`, `Creation`, `TransientSlot`, `UInt256`, `Nonces`, `Panic`, `ShortStrings`, plus organized `cryptography/`, `introspection/`, `math/`, `collections/`). Nothing stray. This is the intended target for `contracts/external/openzeppelin-contracts/...` consumers to migrate to where a Crane-native equivalent already exists.
 
 ---
 
@@ -521,7 +521,7 @@ The cleanups have natural dependencies; doing them in this order minimizes churn
    - Ownable / ReentrancyGuard / EIP712 / ECDSA: Crane's `contracts/access/` and `contracts/utils/` versus vendored OZ?
    The downstream dedup work all keys off these decisions.
 
-   **Decision (2026-05-15): prefer Crane-native; vendored only when a port truly needs the exact upstream API.** Default canonical = Crane-native paths. Vendored copies under `contracts/external/openzeppelin/`, `contracts/external/openzeppelin-upgradeable/`, and `contracts/solady/` stay as-is for ported protocols (Aave 3.6, the launchpad, Euler) that depend on their exact upstream API surface. New Crane code targets the natives.
+   **Decision (2026-05-15): prefer Crane-native; vendored only when a port truly needs the exact upstream API.** Default canonical = Crane-native paths. Vendored copies under `contracts/external/openzeppelin-contracts/`, `contracts/external/openzeppelin-upgradeable/`, and `contracts/solady/` stay as-is for ported protocols (Aave 3.6, the launchpad, Euler) that depend on their exact upstream API surface. New Crane code targets the natives.
 
    ### Canonical-sources table
 
@@ -529,40 +529,40 @@ The cleanups have natural dependencies; doing them in this order minimizes churn
 
    | Symbol | Canonical (Crane-native) | Fallback (vendored, when port requires it) | Notes |
    |---|---|---|---|
-   | `IERC20` | `contracts/interfaces/IERC20.sol` | `contracts/external/openzeppelin/token/ERC20/IERC20.sol` | The duplicate at `contracts/tokens/ERC20/IERC20.sol` should be deprecated or made a re-export of the `interfaces/` copy. |
-   | `IERC20Metadata` | `contracts/interfaces/IERC20Metadata.sol` | `contracts/external/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol` | Same dedup needed for `contracts/tokens/ERC20/IERC20Metadata.sol`. |
-   | `IERC20Permit` | `contracts/tokens/ERC20/IERC20Permit.sol` | `contracts/external/openzeppelin/token/ERC20/extensions/IERC20Permit.sol` | No `contracts/interfaces/` copy. |
-   | `ERC20` | `contracts/tokens/ERC20/ERC20.sol` | `contracts/external/openzeppelin/token/ERC20/ERC20.sol` | |
-   | `ERC20Permit` (impl) | *(no Crane native)* | `contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol` | If Crane needs a native, add one under `contracts/tokens/ERC20/extensions/`. |
-   | `SafeERC20` | `contracts/utils/SafeERC20.sol` | `contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol` | Crane wrapper delegates to Solady's `SafeTransferLib`. |
+   | `IERC20` | `contracts/interfaces/IERC20.sol` | `contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol` | The duplicate at `contracts/tokens/ERC20/IERC20.sol` should be deprecated or made a re-export of the `interfaces/` copy. |
+   | `IERC20Metadata` | `contracts/interfaces/IERC20Metadata.sol` | `contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol` | Same dedup needed for `contracts/tokens/ERC20/IERC20Metadata.sol`. |
+   | `IERC20Permit` | `contracts/tokens/ERC20/IERC20Permit.sol` | `contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Permit.sol` | No `contracts/interfaces/` copy. |
+   | `ERC20` | `contracts/tokens/ERC20/ERC20.sol` | `contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol` | |
+   | `ERC20Permit` (impl) | *(no Crane native)* | `contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol` | If Crane needs a native, add one under `contracts/tokens/ERC20/extensions/`. |
+   | `SafeERC20` | `contracts/utils/SafeERC20.sol` | `contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol` | Crane wrapper delegates to Solady's `SafeTransferLib`. |
    | `SafeTransferLib` | `contracts/tokens/ERC20/utils/SafeTransferLib.sol` | `contracts/solady/utils/SafeTransferLib.sol` | Solmate copies under `protocols/lending/euler/v1/stubs/solmate/` and `protocols/dexes/uniswap/v4/external/solmate/` are removable in Step 3 once consumers migrate. |
-   | `Ownable` | `contracts/access/Ownable.sol` | `contracts/external/openzeppelin/access/Ownable.sol` | Crane also has `contracts/access/ERC8023/` (multi-step ownable, [ERC-8023](https://eips.ethereum.org/EIPS/eip-8023)) and `contracts/access/operable/` (Diamond operable pattern) — choose whichever fits the contract's role; `Ownable.sol` is the default. |
-   | `Ownable2Step` | `contracts/access/Ownable2Step.sol` | `contracts/external/openzeppelin/access/Ownable2Step.sol` | Or use `contracts/access/ERC8023/` for the Diamond multi-step pattern. |
-   | `AccessControl` | *(no Crane native)* — use `contracts/access/operable/` instead, or vendored OZ if you need the OZ role-based API exactly | `contracts/external/openzeppelin/access/AccessControl.sol` | Crane's `operable` pattern is the Diamond-native equivalent. |
-   | `ReentrancyGuard` | `contracts/utils/ReentrancyGuard.sol` | `contracts/external/openzeppelin/utils/ReentrancyGuard.sol` | For Diamond facets specifically, prefer `contracts/access/reentrancy/` (storage-slot-aware variant). |
-   | `Math` | `contracts/utils/Math.sol` | `contracts/external/openzeppelin/utils/math/Math.sol` | `contracts/utils/math/` holds Crane-specific math (`BetterMath`, `ConstProdUtils`, AMM utils) — different scope, not a replacement for `Math.sol`. |
-   | `SafeCast` | `contracts/utils/SafeCast.sol` (wraps `SafeCastLib`) | `contracts/external/openzeppelin/utils/math/SafeCast.sol` | The Solady-based `contracts/utils/SafeCastLib.sol` is the underlying impl; prefer `SafeCast.sol` as the public surface. |
-   | `Address` | `contracts/utils/Address.sol` | `contracts/external/openzeppelin/utils/Address.sol` | |
-   | `Strings` | `contracts/utils/Strings.sol` | `contracts/external/openzeppelin/utils/Strings.sol` | Wraps Solady `LibString`. |
-   | `Context` | `contracts/utils/Context.sol` | `contracts/external/openzeppelin/utils/Context.sol` | |
-   | `Create2` | `contracts/utils/Create2.sol` | `contracts/external/openzeppelin/utils/Create2.sol` | |
-   | `Nonces` | `contracts/utils/Nonces.sol` | `contracts/external/openzeppelin/utils/Nonces.sol` | |
-   | `Panic` | `contracts/utils/Panic.sol` | `contracts/external/openzeppelin/utils/Panic.sol` | |
-   | `ECDSA` | `contracts/utils/cryptography/ECDSA.sol` | `contracts/external/openzeppelin/utils/cryptography/ECDSA.sol` | |
-   | `EIP712` | `contracts/utils/cryptography/EIP712.sol` | `contracts/external/openzeppelin/utils/cryptography/EIP712.sol` | The `contracts/utils/cryptography/EIP712/` directory holds `EIP712Repo.sol` (Diamond storage helper) — companion, not replacement. |
-   | `MerkleProof` | *(no Crane native)* | `contracts/external/openzeppelin/utils/cryptography/MerkleProof.sol` | Add under `contracts/utils/cryptography/` if Crane needs one. |
-   | `EnumerableSet` | *(no Crane native — Crane uses different patterns)* — use `contracts/utils/collections/sets/{Address,Bytes32,Bytes4,String,UInt256}SetRepo.sol` for typed Diamond sets | `contracts/external/openzeppelin/utils/structs/EnumerableSet.sol` | Crane's `*SetRepo.sol` are Diamond-storage-aware typed sets, not a drop-in OZ replacement. Use the OZ vendored when you need the OZ API. |
+   | `Ownable` | `contracts/access/Ownable.sol` | `contracts/external/openzeppelin-contracts/access/Ownable.sol` | Crane also has `contracts/access/ERC8023/` (multi-step ownable, [ERC-8023](https://eips.ethereum.org/EIPS/eip-8023)) and `contracts/access/operable/` (Diamond operable pattern) — choose whichever fits the contract's role; `Ownable.sol` is the default. |
+   | `Ownable2Step` | `contracts/access/Ownable2Step.sol` | `contracts/external/openzeppelin-contracts/access/Ownable2Step.sol` | Or use `contracts/access/ERC8023/` for the Diamond multi-step pattern. |
+   | `AccessControl` | *(no Crane native)* — use `contracts/access/operable/` instead, or vendored OZ if you need the OZ role-based API exactly | `contracts/external/openzeppelin-contracts/access/AccessControl.sol` | Crane's `operable` pattern is the Diamond-native equivalent. |
+   | `ReentrancyGuard` | `contracts/utils/ReentrancyGuard.sol` | `contracts/external/openzeppelin-contracts/utils/ReentrancyGuard.sol` | For Diamond facets specifically, prefer `contracts/access/reentrancy/` (storage-slot-aware variant). |
+   | `Math` | `contracts/utils/Math.sol` | `contracts/external/openzeppelin-contracts/utils/math/Math.sol` | `contracts/utils/math/` holds Crane-specific math (`BetterMath`, `ConstProdUtils`, AMM utils) — different scope, not a replacement for `Math.sol`. |
+   | `SafeCast` | `contracts/utils/SafeCast.sol` (wraps `SafeCastLib`) | `contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol` | The Solady-based `contracts/utils/SafeCastLib.sol` is the underlying impl; prefer `SafeCast.sol` as the public surface. |
+   | `Address` | `contracts/utils/Address.sol` | `contracts/external/openzeppelin-contracts/utils/Address.sol` | |
+   | `Strings` | `contracts/utils/Strings.sol` | `contracts/external/openzeppelin-contracts/utils/Strings.sol` | Wraps Solady `LibString`. |
+   | `Context` | `contracts/utils/Context.sol` | `contracts/external/openzeppelin-contracts/utils/Context.sol` | |
+   | `Create2` | `contracts/utils/Create2.sol` | `contracts/external/openzeppelin-contracts/utils/Create2.sol` | |
+   | `Nonces` | `contracts/utils/Nonces.sol` | `contracts/external/openzeppelin-contracts/utils/Nonces.sol` | |
+   | `Panic` | `contracts/utils/Panic.sol` | `contracts/external/openzeppelin-contracts/utils/Panic.sol` | |
+   | `ECDSA` | `contracts/utils/cryptography/ECDSA.sol` | `contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol` | |
+   | `EIP712` | `contracts/utils/cryptography/EIP712.sol` | `contracts/external/openzeppelin-contracts/utils/cryptography/EIP712.sol` | The `contracts/utils/cryptography/EIP712/` directory holds `EIP712Repo.sol` (Diamond storage helper) — companion, not replacement. |
+   | `MerkleProof` | *(no Crane native)* | `contracts/external/openzeppelin-contracts/utils/cryptography/MerkleProof.sol` | Add under `contracts/utils/cryptography/` if Crane needs one. |
+   | `EnumerableSet` | *(no Crane native — Crane uses different patterns)* — use `contracts/utils/collections/sets/{Address,Bytes32,Bytes4,String,UInt256}SetRepo.sol` for typed Diamond sets | `contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol` | Crane's `*SetRepo.sol` are Diamond-storage-aware typed sets, not a drop-in OZ replacement. Use the OZ vendored when you need the OZ API. |
    | `Initializable` | *(no Crane native; Diamond pattern uses `PostDeployHookFacet` instead — see CLAUDE.md memory)* | `contracts/external/openzeppelin-upgradeable/proxy/utils/Initializable.sol` | Only relevant for upgradeable proxy contracts; Diamond contracts don't use it. |
-   | `IERC4626` | `contracts/tokens/ERC4626/IERC4626.sol` (verify exists) | `contracts/external/openzeppelin/interfaces/IERC4626.sol` | |
-   | `ERC4626` | `contracts/tokens/ERC4626/ERC4626.sol` (verify exists) | `contracts/external/openzeppelin/token/ERC20/extensions/ERC4626.sol` | |
-   | `Multicall` | *(no Crane native)* | `contracts/external/openzeppelin/utils/Multicall.sol` | Or use Crane's Diamond facet pattern for multicall behavior. |
-   | `IERC721`, `ERC721`, `IERC1155`, `ERC1155`, `IERC165`, `ERC165` | `contracts/tokens/ERC721/`, `contracts/tokens/ERC1155/`, `contracts/utils/introspection/` (verify) | `contracts/external/openzeppelin/...` | Crane has token-stack natives for these too. |
+   | `IERC4626` | `contracts/tokens/ERC4626/IERC4626.sol` (verify exists) | `contracts/external/openzeppelin-contracts/interfaces/IERC4626.sol` | |
+   | `ERC4626` | `contracts/tokens/ERC4626/ERC4626.sol` (verify exists) | `contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol` | |
+   | `Multicall` | *(no Crane native)* | `contracts/external/openzeppelin-contracts/utils/Multicall.sol` | Or use Crane's Diamond facet pattern for multicall behavior. |
+   | `IERC721`, `ERC721`, `IERC1155`, `ERC1155`, `IERC165`, `ERC165` | `contracts/tokens/ERC721/`, `contracts/tokens/ERC1155/`, `contracts/utils/introspection/` (verify) | `contracts/external/openzeppelin-contracts/...` | Crane has token-stack natives for these too. |
 
    ### Implications for Step 3
 
    The "delete in-protocol vendored OZ" sweep doesn't happen as one mechanical pass. Each ported protocol's bundled OZ must be evaluated against:
 
-   1. **Is the bundled OZ version API-compatible with the chosen canonical?** (e.g. Aave 3.6 ships OZ v5.x in `dependencies/openzeppelin-contracts/`; that *might* be API-compatible with `contracts/external/openzeppelin/` v5.x — but Aave also ships an older `dependencies/openzeppelin/` ^0.8.0 that almost certainly is not API-compatible with anything modern.)
+   1. **Is the bundled OZ version API-compatible with the chosen canonical?** (e.g. Aave 3.6 ships OZ v5.x in `dependencies/openzeppelin-contracts/`; that *might* be API-compatible with `contracts/external/openzeppelin-contracts/` v5.x — but Aave also ships an older `dependencies/openzeppelin/` ^0.8.0 that almost certainly is not API-compatible with anything modern.)
    2. **Does the protocol use any OZ-version-specific behavior?** (Aave's WadRayMath/PercentageMath/MathUtils stay regardless — those are Aave-specific.)
    3. **Are the test harnesses (Certora, etc.) bundled with the OZ copy still used?**
 
@@ -589,7 +589,7 @@ The cleanups have natural dependencies; doing them in this order minimizes churn
 
 5. **Flatten the internal OZ duplicates** (§4) — drop the OZ `interfaces/IERC20.sol` alias and the OZ `security/ReentrancyGuard.sol` legacy path.
 
-   **Completed 2026-05-15** in commit `4e73ec37`. Both files deleted; one internal OZ relative-import consumer (`crosschain/polygon/CrossChainEnabledPolygonChild.sol`) repointed to the modern `utils/ReentrancyGuard.sol` via a `@crane/` path. **New finding flagged for follow-up:** the canonical OZ IERC20 file at `contracts/external/openzeppelin/token/ERC20/IERC20.sol` is itself entirely commented out — the interface body is dead code. Currently nothing imports it so the build passes, but the file should be either uncommented or replaced if the OZ-vendored IERC20 is ever needed. Similarly, the OZ `interfaces/` directory still has ~20 other alias files (`IERC1155.sol`, `IERC1271.sol`, `IERC1363.sol`, `IERC1820*.sol`, `IERC1967.sol`, `IERC2309.sol`, `IERC2612.sol`, `IERC2981.sol`, `IERC3156*.sol`, `IERC4626.sol`, `IERC4906.sol`, `IERC5267.sol`, etc.) following the same re-export pattern; same dedup could be applied if any of them have zero consumers. The OZ `security/` directory still has `Pausable.sol` and `PullPayment.sol`; check whether OZ v5.x moved these to `utils/` and dedup analogously.
+   **Completed 2026-05-15** in commit `4e73ec37`. Both files deleted; one internal OZ relative-import consumer (`crosschain/polygon/CrossChainEnabledPolygonChild.sol`) repointed to the modern `utils/ReentrancyGuard.sol` via a `@crane/` path. **New finding flagged for follow-up:** the canonical OZ IERC20 file at `contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol` is itself entirely commented out — the interface body is dead code. Currently nothing imports it so the build passes, but the file should be either uncommented or replaced if the OZ-vendored IERC20 is ever needed. Similarly, the OZ `interfaces/` directory still has ~20 other alias files (`IERC1155.sol`, `IERC1271.sol`, `IERC1363.sol`, `IERC1820*.sol`, `IERC1967.sol`, `IERC2309.sol`, `IERC2612.sol`, `IERC2981.sol`, `IERC3156*.sol`, `IERC4626.sol`, `IERC4906.sol`, `IERC5267.sol`, etc.) following the same re-export pattern; same dedup could be applied if any of them have zero consumers. The OZ `security/` directory still has `Pausable.sol` and `PullPayment.sol`; check whether OZ v5.x moved these to `utils/` and dedup analogously.
 
 6. **Resolve submodule vs vendored mismatches** (§5) — at minimum drop `contracts/external/forge-std/`.
 
@@ -646,7 +646,7 @@ These were originally framed as Aave steps 6 / 7, but on closer inspection they 
 
 ### Not dedup — fork-discipline hygiene
 
-- [ ] **Pin `contracts/external/openzeppelin/` to a single OZ baseline.** Currently mixed v4.x/v5.x (`Address` v4.9, `SafeERC20` v4.9.3, `Pausable` v4.7, `SafeCast` v5.1, `ECDSA` v5.5, `Multicall` v5.5, etc.). Picking a single baseline (e.g. v5.6.1 to match the submodule) and resetting every file would be a Crane refactor with audit-trail value. **This is the single biggest enabler** — it unblocks Aave step 6/7 because once Crane vendored is at v5.x, the consumers in Aave's bundled v5 tree have a real dedup target. But the refactor itself is fork-management work, not dedup.
+- [ ] **Pin `contracts/external/openzeppelin-contracts/` to a single OZ baseline.** Currently mixed v4.x/v5.x (`Address` v4.9, `SafeERC20` v4.9.3, `Pausable` v4.7, `SafeCast` v5.1, `ECDSA` v5.5, `Multicall` v5.5, etc.). Picking a single baseline (e.g. v5.6.1 to match the submodule) and resetting every file would be a Crane refactor with audit-trail value. **This is the single biggest enabler** — it unblocks Aave step 6/7 because once Crane vendored is at v5.x, the consumers in Aave's bundled v5 tree have a real dedup target. But the refactor itself is fork-management work, not dedup.
 - [ ] **Pendle's 44 `@openzeppelin/contracts/...` imports** auto-resolve via the submodule (v5.6.1). Could be repointed to Crane vendored for consistency once the OZ baseline above is pinned. Same as above: not dedup until the baseline is matched.
 
 ### Blocked

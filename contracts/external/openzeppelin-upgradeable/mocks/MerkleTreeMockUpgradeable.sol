@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import {MerkleTree} from "@crane/contracts/external/openzeppelin/utils/structs/MerkleTree.sol";
+import {MerkleTree} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/MerkleTree.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 contract MerkleTreeMockUpgradeable is Initializable {

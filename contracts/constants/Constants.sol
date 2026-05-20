@@ -88,22 +88,27 @@ string constant PLOT_CORRELATOR = "x-axis";
 string constant SEP = "********************************************************************************";
 string constant DIV = "--------------------------------------------------------------------------------";
 
+// TODO Restore
 // bytes32 constant PERMIT_TYPEHASH
 //     = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
 bytes32 constant EIP712_TYPE_HASH =
     keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
+// TODO Deprecate
 bytes32 constant _PERMIT_TYPEHASH =
     keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
+// TODO Rename to PERMIT_DETAILS_TYPEHASH
 bytes32 constant _PERMIT_DETAILS_TYPEHASH =
     keccak256("PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)");
 
+// TODO Rename to PERMIT_BATCH_TYPEHASH
 bytes32 constant _PERMIT_BATCH_TYPEHASH = keccak256(
     "PermitBatch(PermitDetails[] details,address spender,uint256 sigDeadline)PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)"
 );
 
+// TODO Rename to PERMIT_SINGLE_TYPEHASH
 bytes32 constant _PERMIT_SINGLE_TYPEHASH = keccak256(
     "PermitSingle(PermitDetails details,address spender,uint256 sigDeadline)PermitDetails(address token,uint160 amount,uint48 expiration,uint48 nonce)"
 );

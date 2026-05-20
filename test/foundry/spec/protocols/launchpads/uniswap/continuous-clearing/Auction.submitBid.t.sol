@@ -12,7 +12,7 @@ import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearin
 import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
 import {FuzzBid, FuzzDeploymentParams} from './utils/FuzzStructs.sol';
 import {console2} from 'forge-std/console2.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract AuctionSubmitBidTest is AuctionBaseTest {
     using BidLib for *;

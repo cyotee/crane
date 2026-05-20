@@ -4,13 +4,13 @@
 pragma solidity ^0.8.20;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import {IAccessManager} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManager.sol";
-import {IAccessManaged} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManaged.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {IAccessManager} from "@crane/contracts/external/openzeppelin-contracts/access/manager/IAccessManager.sol";
+import {IAccessManaged} from "@crane/contracts/external/openzeppelin-contracts/access/manager/IAccessManaged.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
 import {MulticallUpgradeable} from "../../utils/MulticallUpgradeable.sol";
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {Time} from "@crane/contracts/external/openzeppelin/utils/types/Time.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {Time} from "@crane/contracts/external/openzeppelin-contracts/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

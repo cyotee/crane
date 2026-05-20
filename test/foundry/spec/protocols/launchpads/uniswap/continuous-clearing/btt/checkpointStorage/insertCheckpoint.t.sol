@@ -18,7 +18,7 @@ contract InsertCheckpointTest is BttBase {
     function test_GivenBlockNumberLTELastCheckpointedBlock(
         Checkpoint memory _checkpoint,
         uint64 _blockNumber,
-        Checkpoint memory _checkpoint2,
+        Checkpoint memory /*_checkpoint2*/,
         uint64 _blockNumber2
     ) external {
         // it reverts with {CheckpointBlockNotIncreasing}

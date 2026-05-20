@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {Context} from "../../../../../../external/openzeppelin/utils/Context.sol";
-import {Math} from "../../../../../../external/openzeppelin/utils/math/Math.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {ERC20} from "../../../../../../external/openzeppelin/token/ERC20/ERC20.sol";
-import {ERC4626} from "../../../../../../external/openzeppelin/token/ERC20/extensions/ERC4626.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {ERC4626} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol";
 import {EVCUtil} from "../../evc/utils/EVCUtil.sol";
 
 /// @title EulerSavingsRate

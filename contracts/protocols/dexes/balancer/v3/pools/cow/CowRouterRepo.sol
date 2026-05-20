@@ -38,7 +38,7 @@ library CowRouterRepo {
     /* ------ Storage ------ */
 
     /**
-     * @notice Storage layout for CoW Router.
+     * @notice Storage layoutStruct for CoW Router.
      * @param feeSweeper Address that receives protocol fees on withdrawal.
      * @param protocolFeePercentage Percentage of donations charged as protocol fee (18-decimal FP).
      * @param collectedProtocolFees Mapping of token => accumulated fees not yet withdrawn.
@@ -54,33 +54,33 @@ library CowRouterRepo {
     /**
      * @notice Returns a storage pointer for a given slot.
      * @param slot The storage slot to use.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
     /**
      * @notice Returns a storage pointer using the default slot.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Initialization ------ */
 
     /**
      * @notice Initialize the CoW Router with fee settings.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param protocolFeePercentage_ Initial protocol fee percentage (18-decimal FP, max 50%).
      * @param feeSweeper_ Address to receive collected fees.
      */
-    function _initialize(Storage storage layout, uint256 protocolFeePercentage_, address feeSweeper_) internal {
-        _setProtocolFeePercentage(layout, protocolFeePercentage_);
-        _setFeeSweeper(layout, feeSweeper_);
+    function _initialize(Storage storage layoutStruct, uint256 protocolFeePercentage_, address feeSweeper_) internal {
+        _setProtocolFeePercentage(layoutStruct, protocolFeePercentage_);
+        _setFeeSweeper(layoutStruct, feeSweeper_);
     }
 
     /**
@@ -89,7 +89,7 @@ library CowRouterRepo {
      * @param feeSweeper_ Address to receive collected fees.
      */
     function _initialize(uint256 protocolFeePercentage_, address feeSweeper_) internal {
-        _initialize(_layout(), protocolFeePercentage_, feeSweeper_);
+        _initialize(_layoutStruct(), protocolFeePercentage_, feeSweeper_);
     }
 
     /* ------ Getters ------ */
@@ -104,11 +104,11 @@ library CowRouterRepo {
 
     /**
      * @notice Get the current protocol fee percentage.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return protocolFeePercentage Current fee percentage.
      */
-    function _getProtocolFeePercentage(Storage storage layout) internal view returns (uint256 protocolFeePercentage) {
-        return layout.protocolFeePercentage;
+    function _getProtocolFeePercentage(Storage storage layoutStruct) internal view returns (uint256 protocolFeePercentage) {
+        return layoutStruct.protocolFeePercentage;
     }
 
     /**
@@ -116,16 +116,16 @@ library CowRouterRepo {
      * @return protocolFeePercentage Current fee percentage.
      */
     function _getProtocolFeePercentage() internal view returns (uint256 protocolFeePercentage) {
-        return _getProtocolFeePercentage(_layout());
+        return _getProtocolFeePercentage(_layoutStruct());
     }
 
     /**
      * @notice Get the fee sweeper address.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return feeSweeper Address that receives fees.
      */
-    function _getFeeSweeper(Storage storage layout) internal view returns (address feeSweeper) {
-        return layout.feeSweeper;
+    function _getFeeSweeper(Storage storage layoutStruct) internal view returns (address feeSweeper) {
+        return layoutStruct.feeSweeper;
     }
 
     /**
@@ -133,17 +133,17 @@ library CowRouterRepo {
      * @return feeSweeper Address that receives fees.
      */
     function _getFeeSweeper() internal view returns (address feeSweeper) {
-        return _getFeeSweeper(_layout());
+        return _getFeeSweeper(_layoutStruct());
     }
 
     /**
      * @notice Get collected protocol fees for a specific token.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param token The token to check.
      * @return fees Accumulated fees for the token.
      */
-    function _getCollectedProtocolFees(Storage storage layout, IERC20 token) internal view returns (uint256 fees) {
-        return layout.collectedProtocolFees[token];
+    function _getCollectedProtocolFees(Storage storage layoutStruct, IERC20 token) internal view returns (uint256 fees) {
+        return layoutStruct.collectedProtocolFees[token];
     }
 
     /**
@@ -152,7 +152,7 @@ library CowRouterRepo {
      * @return fees Accumulated fees for the token.
      */
     function _getCollectedProtocolFees(IERC20 token) internal view returns (uint256 fees) {
-        return _getCollectedProtocolFees(_layout(), token);
+        return _getCollectedProtocolFees(_layoutStruct(), token);
     }
 
     /* ------ Setters ------ */
@@ -160,15 +160,15 @@ library CowRouterRepo {
     /**
      * @notice Set the protocol fee percentage.
      * @dev Emits ProtocolFeePercentageChanged event.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param newProtocolFeePercentage_ New fee percentage (must be <= 50%).
      */
-    function _setProtocolFeePercentage(Storage storage layout, uint256 newProtocolFeePercentage_) internal {
+    function _setProtocolFeePercentage(Storage storage layoutStruct, uint256 newProtocolFeePercentage_) internal {
         if (newProtocolFeePercentage_ > MAX_PROTOCOL_FEE_PERCENTAGE) {
             revert ProtocolFeePercentageAboveLimit(newProtocolFeePercentage_, MAX_PROTOCOL_FEE_PERCENTAGE);
         }
 
-        layout.protocolFeePercentage = newProtocolFeePercentage_;
+        layoutStruct.protocolFeePercentage = newProtocolFeePercentage_;
 
         emit ICowRouter.ProtocolFeePercentageChanged(newProtocolFeePercentage_);
     }
@@ -178,21 +178,21 @@ library CowRouterRepo {
      * @param newProtocolFeePercentage_ New fee percentage.
      */
     function _setProtocolFeePercentage(uint256 newProtocolFeePercentage_) internal {
-        _setProtocolFeePercentage(_layout(), newProtocolFeePercentage_);
+        _setProtocolFeePercentage(_layoutStruct(), newProtocolFeePercentage_);
     }
 
     /**
      * @notice Set the fee sweeper address.
      * @dev Emits FeeSweeperChanged event.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param newFeeSweeper_ New fee sweeper address.
      */
-    function _setFeeSweeper(Storage storage layout, address newFeeSweeper_) internal {
+    function _setFeeSweeper(Storage storage layoutStruct, address newFeeSweeper_) internal {
         if (newFeeSweeper_ == address(0)) {
             revert InvalidFeeSweeper();
         }
 
-        layout.feeSweeper = newFeeSweeper_;
+        layoutStruct.feeSweeper = newFeeSweeper_;
 
         emit ICowRouter.FeeSweeperChanged(newFeeSweeper_);
     }
@@ -202,19 +202,19 @@ library CowRouterRepo {
      * @param newFeeSweeper_ New fee sweeper address.
      */
     function _setFeeSweeper(address newFeeSweeper_) internal {
-        _setFeeSweeper(_layout(), newFeeSweeper_);
+        _setFeeSweeper(_layoutStruct(), newFeeSweeper_);
     }
 
     /* ------ Fee Operations ------ */
 
     /**
      * @notice Add collected fees for a token.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param token The token to add fees for.
      * @param amount Amount to add.
      */
-    function _addCollectedFees(Storage storage layout, IERC20 token, uint256 amount) internal {
-        layout.collectedProtocolFees[token] += amount;
+    function _addCollectedFees(Storage storage layoutStruct, IERC20 token, uint256 amount) internal {
+        layoutStruct.collectedProtocolFees[token] += amount;
     }
 
     /**
@@ -223,19 +223,19 @@ library CowRouterRepo {
      * @param amount Amount to add.
      */
     function _addCollectedFees(IERC20 token, uint256 amount) internal {
-        _addCollectedFees(_layout(), token, amount);
+        _addCollectedFees(_layoutStruct(), token, amount);
     }
 
     /**
      * @notice Clear collected fees for a token and return the amount.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param token The token to clear fees for.
      * @return amount Amount that was cleared.
      */
-    function _clearCollectedFees(Storage storage layout, IERC20 token) internal returns (uint256 amount) {
-        amount = layout.collectedProtocolFees[token];
+    function _clearCollectedFees(Storage storage layoutStruct, IERC20 token) internal returns (uint256 amount) {
+        amount = layoutStruct.collectedProtocolFees[token];
         if (amount > 0) {
-            layout.collectedProtocolFees[token] = 0;
+            layoutStruct.collectedProtocolFees[token] = 0;
         }
     }
 
@@ -245,6 +245,6 @@ library CowRouterRepo {
      * @return amount Amount that was cleared.
      */
     function _clearCollectedFees(IERC20 token) internal returns (uint256 amount) {
-        return _clearCollectedFees(_layout(), token);
+        return _clearCollectedFees(_layoutStruct(), token);
     }
 }

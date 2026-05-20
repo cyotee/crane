@@ -11,7 +11,7 @@ import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-cl
 import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
 import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
 import {FuzzDeploymentParams} from './utils/FuzzStructs.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
 
 /// @dev These tests fuzz over the full range of inputs for both the auction parameters and the bids submitted

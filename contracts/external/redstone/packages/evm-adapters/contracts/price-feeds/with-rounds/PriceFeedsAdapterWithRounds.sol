@@ -4,6 +4,8 @@ pragma solidity ^0.8.17;
 
 import {PriceFeedsAdapterBase} from "../PriceFeedsAdapterBase.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @title Price feeds adapter contract with rounds support
  * @author The Redstone Oracles team
@@ -17,7 +19,10 @@ import {PriceFeedsAdapterBase} from "../PriceFeedsAdapterBase.sol";
  * values, as it can significantly reduce gas usage
  */
 abstract contract PriceFeedsAdapterWithRounds is PriceFeedsAdapterBase {
-  bytes32 constant VALUES_MAPPING_STORAGE_LOCATION = 0x4dd0c77efa6f6d590c97573d8c70b714546e7311202ff7c11c484cc841d91bfc; // keccak256("RedStone.oracleValuesMapping");
+  
+    using BetterEfficientHashLib for bytes;
+
+    bytes32 constant VALUES_MAPPING_STORAGE_LOCATION = 0x4dd0c77efa6f6d590c97573d8c70b714546e7311202ff7c11c484cc841d91bfc; // keccak256("RedStone.oracleValuesMapping");
   bytes32 constant ROUND_TIMESTAMPS_MAPPING_STORAGE_LOCATION = 0x207e00944d909d1224f0c253d58489121d736649f8393199f55eecf4f0cf3eb0; // keccak256("RedStone.roundTimestampMapping");
   bytes32 constant LATEST_ROUND_ID_STORAGE_LOCATION = 0xc68d7f1ee07d8668991a8951e720010c9d44c2f11c06b5cac61fbc4083263938; // keccak256("RedStone.latestRoundId");
 
@@ -122,7 +127,8 @@ abstract contract PriceFeedsAdapterWithRounds is PriceFeedsAdapterBase {
    * @return locationInStorage
    */
   function _getValueLocationInStorage(bytes32 dataFeedId, uint256 roundId) private pure returns (bytes32) {
-    return keccak256(abi.encode(dataFeedId, roundId, VALUES_MAPPING_STORAGE_LOCATION));
+    // return keccak256(abi.encode(dataFeedId, roundId, VALUES_MAPPING_STORAGE_LOCATION));
+    return abi.encodePacked(dataFeedId, roundId, VALUES_MAPPING_STORAGE_LOCATION)._hash();
   }
 
 
@@ -132,7 +138,8 @@ abstract contract PriceFeedsAdapterWithRounds is PriceFeedsAdapterBase {
    * @return locationInStorage
    */
   function _getRoundTimestampsLocationInStorage(uint256 roundId) private pure returns (bytes32) {
-    return keccak256(abi.encode(roundId, ROUND_TIMESTAMPS_MAPPING_STORAGE_LOCATION));
+    // return keccak256(abi.encode(roundId, ROUND_TIMESTAMPS_MAPPING_STORAGE_LOCATION));
+    return abi.encodePacked(roundId, ROUND_TIMESTAMPS_MAPPING_STORAGE_LOCATION)._hash();
   }
 
 

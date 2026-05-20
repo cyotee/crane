@@ -3,7 +3,7 @@ pragma solidity >=0.5.0;
 
 import {IEulerEarnFactory} from "./IEulerEarnFactory.sol";
 
-import {IERC4626} from "@crane/contracts/external/openzeppelin/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC4626.sol";
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 
 import {MarketConfig, PendingUint136, PendingAddress} from "../libraries/PendingLib.sol";

@@ -10,9 +10,14 @@ import {IDistributionStrategy} from './interfaces/external/IDistributionStrategy
 import {Create2} from 'contracts/utils/Create2.sol';
 import {ActionConstants} from 'contracts/protocols/dexes/uniswap/v4/libraries/ActionConstants.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title ContinuousClearingAuctionFactory
 /// @custom:security-contact security@uniswap.org
 contract ContinuousClearingAuctionFactory is IContinuousClearingAuctionFactory {
+    
+    using BetterEfficientHashLib for bytes;
+
     /// @inheritdoc IDistributionStrategy
     function initializeDistribution(address token, uint256 amount, bytes calldata configData, bytes32 salt)
         external
@@ -50,12 +55,16 @@ contract ContinuousClearingAuctionFactory is IContinuousClearingAuctionFactory {
         // If the fundsRecipient is address(1), set it to the msg.sender
         if (parameters.fundsRecipient == ActionConstants.MSG_SENDER) parameters.fundsRecipient = sender;
 
-        bytes32 initCodeHash = keccak256(
-            abi.encodePacked(
-                type(ContinuousClearingAuction).creationCode, abi.encode(token, uint128(amount), parameters)
-            )
-        );
-        salt = keccak256(abi.encode(sender, salt));
+        // bytes32 initCodeHash = keccak256(
+        //     abi.encodePacked(
+        //         type(ContinuousClearingAuction).creationCode, abi.encode(token, uint128(amount), parameters)
+        //     )
+        // );
+        bytes32 initCodeHash = abi.encodePacked(
+            type(ContinuousClearingAuction).creationCode, abi.encode(token, uint128(amount), parameters)
+        )._hash();
+        // salt = keccak256(abi.encode(sender, salt));
+        salt = abi.encode(sender, salt)._hash();
         return Create2.computeAddress(salt, initCodeHash, address(this));
     }
 }

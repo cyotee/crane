@@ -50,6 +50,7 @@ contract DSTest {
         } else {
             bool globalFailed = false;
             if (hasHEVMContext()) {
+                // forge-lint: disable-next-item(unchecked-call)
                 (, bytes memory retdata) = HEVM_ADDRESS.call(
                     abi.encodePacked(
                         bytes4(keccak256("load(address,bytes32)")),

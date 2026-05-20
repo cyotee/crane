@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {Context} from "@crane/contracts/external/openzeppelin/utils/Context.sol";
-import {ERC4626, ERC20, IERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC4626.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {ERC4626, ERC20, IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol";
 import {SafeERC20Permit2Lib, IERC20 as SafeERC20Permit2LibIERC20} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/libraries/SafeERC20Permit2Lib.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 

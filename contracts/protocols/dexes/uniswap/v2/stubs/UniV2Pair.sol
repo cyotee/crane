@@ -69,7 +69,7 @@ contract UniV2Pair is ERC20Target, IUniswapV2Pair {
         _token0 = token0_;
         _token1 = token1_;
         string memory symbol_ = string.concat(IERC20(token0_).symbol(), "/", IERC20(token1_).symbol());
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         ERC20Repo._initialize(erc20, string.concat("MockUniV2 Pair of ", symbol_), symbol_, 18);
         _DOMAIN_SEPARATOR = keccak256(
             abi.encode(

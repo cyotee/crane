@@ -10,29 +10,29 @@ library DiamondPackageFactoryAwareRepo {
         IDiamondPackageCallBackFactory diamondPackageFactory;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, IDiamondPackageCallBackFactory diamondPackageFactory) internal {
-        layout.diamondPackageFactory = diamondPackageFactory;
+    function _initialize(Storage storage layoutStruct, IDiamondPackageCallBackFactory diamondPackageFactory) internal {
+        layoutStruct.diamondPackageFactory = diamondPackageFactory;
     }
 
     function _initialize(IDiamondPackageCallBackFactory diamondPackageFactory) internal {
-        _initialize(_layout(), diamondPackageFactory);
+        _initialize(_layoutStruct(), diamondPackageFactory);
     }
 
-    function _diamondPackageFactory(Storage storage layout) internal view returns (IDiamondPackageCallBackFactory) {
-        return layout.diamondPackageFactory;
+    function _diamondPackageFactory(Storage storage layoutStruct) internal view returns (IDiamondPackageCallBackFactory) {
+        return layoutStruct.diamondPackageFactory;
     }
 
     function _diamondPackageFactory() internal view returns (IDiamondPackageCallBackFactory) {
-        return _diamondPackageFactory(_layout());
+        return _diamondPackageFactory(_layoutStruct());
     }
 }

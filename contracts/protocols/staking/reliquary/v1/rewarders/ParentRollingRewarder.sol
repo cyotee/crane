@@ -3,8 +3,8 @@ pragma solidity ^0.8.23;
 
 import "@crane/contracts/protocols/staking/reliquary/v1/rewarders/RollingRewarder.sol";
 import "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IParentRollingRewarder.sol";
-import "@crane/contracts/access/Ownable.sol";
-import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 
 /// @title Extension to the SingleAssetRewarder contract that allows managing multiple reward tokens via access control
 /// and enumerable children contracts.

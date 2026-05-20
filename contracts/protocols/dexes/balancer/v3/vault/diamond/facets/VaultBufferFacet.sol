@@ -94,7 +94,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
         nonReentrant
         returns (uint256 amountCalculatedRaw, uint256 amountInRaw, uint256 amountOutRaw)
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         IERC20 underlyingToken = IERC20(params.wrappedToken.asset());
         _ensureCorrectBufferAsset(params.wrappedToken, address(underlyingToken));
@@ -103,12 +103,12 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
         if (params.direction == WrappingDirection.UNWRAP) {
             bytes32 bufferBalances;
             (amountInRaw, amountOutRaw, bufferBalances) =
-                _unwrapWithBuffer(layout, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw);
+                _unwrapWithBuffer(layoutStruct, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw);
             emit Unwrap(params.wrappedToken, amountInRaw, amountOutRaw, bufferBalances);
         } else {
             bytes32 bufferBalances;
             (amountInRaw, amountOutRaw, bufferBalances) =
-                _wrapWithBuffer(layout, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw);
+                _wrapWithBuffer(layoutStruct, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw);
             emit Wrap(params.wrappedToken, amountInRaw, amountOutRaw, bufferBalances);
         }
 
@@ -141,7 +141,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
      * @dev Wraps underlying tokens to wrapped tokens using the buffer.
      */
     function _wrapWithBuffer(
-        BalancerV3VaultStorageRepo.Storage storage layout,
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct,
         SwapKind kind,
         IERC20 underlyingToken,
         IERC4626 wrappedToken,
@@ -153,7 +153,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             (amountInUnderlying, amountOutWrapped) = (wrappedToken.previewMint(amountGiven + 1) + 1, amountGiven);
         }
 
-        bufferBalances = layout.bufferTokenBalances[wrappedToken];
+        bufferBalances = layoutStruct.bufferTokenBalances[wrappedToken];
 
         if (_isQueryContext()) {
             return (amountInUnderlying, amountOutWrapped, bufferBalances);
@@ -169,7 +169,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             bufferBalances = PackedTokenBalance.toPackedBalance(
                 bufferBalances.getBalanceRaw() + amountInUnderlying, newDerivedBalance
             );
-            layout.bufferTokenBalances[wrappedToken] = bufferBalances;
+            layoutStruct.bufferTokenBalances[wrappedToken] = bufferBalances;
         } else {
             // Need to rebalance via external call
             uint256 vaultUnderlyingDeltaHint;
@@ -191,14 +191,14 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             underlyingToken.forceApprove(address(wrappedToken), 0);
 
             _settleWrap(
-                layout, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
+                layoutStruct, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
             );
 
             bufferBalances = PackedTokenBalance.toPackedBalance(
                 bufferBalances.getBalanceRaw() + amountInUnderlying - vaultUnderlyingDeltaHint,
                 bufferBalances.getBalanceDerived() + vaultWrappedDeltaHint - amountOutWrapped
             );
-            layout.bufferTokenBalances[wrappedToken] = bufferBalances;
+            layoutStruct.bufferTokenBalances[wrappedToken] = bufferBalances;
         }
 
         _takeDebt(underlyingToken, amountInUnderlying);
@@ -209,7 +209,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
      * @dev Unwraps wrapped tokens to underlying tokens using the buffer.
      */
     function _unwrapWithBuffer(
-        BalancerV3VaultStorageRepo.Storage storage layout,
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct,
         SwapKind kind,
         IERC20 underlyingToken,
         IERC4626 wrappedToken,
@@ -221,7 +221,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             (amountInWrapped, amountOutUnderlying) = (wrappedToken.previewWithdraw(amountGiven + 1) + 1, amountGiven);
         }
 
-        bufferBalances = layout.bufferTokenBalances[wrappedToken];
+        bufferBalances = layoutStruct.bufferTokenBalances[wrappedToken];
 
         if (_isQueryContext()) {
             return (amountInWrapped, amountOutUnderlying, bufferBalances);
@@ -236,7 +236,7 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
 
             bufferBalances =
                 PackedTokenBalance.toPackedBalance(newRawBalance, bufferBalances.getBalanceDerived() + amountInWrapped);
-            layout.bufferTokenBalances[wrappedToken] = bufferBalances;
+            layoutStruct.bufferTokenBalances[wrappedToken] = bufferBalances;
         } else {
             // Need to rebalance via external call
             uint256 vaultUnderlyingDeltaHint;
@@ -253,14 +253,14 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             }
 
             _settleUnwrap(
-                layout, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
+                layoutStruct, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
             );
 
             bufferBalances = PackedTokenBalance.toPackedBalance(
                 bufferBalances.getBalanceRaw() + vaultUnderlyingDeltaHint - amountOutUnderlying,
                 bufferBalances.getBalanceDerived() + amountInWrapped - vaultWrappedDeltaHint
             );
-            layout.bufferTokenBalances[wrappedToken] = bufferBalances;
+            layoutStruct.bufferTokenBalances[wrappedToken] = bufferBalances;
         }
 
         _takeDebt(IERC20(address(wrappedToken)), amountInWrapped);
@@ -268,37 +268,37 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
     }
 
     function _settleWrap(
-        BalancerV3VaultStorageRepo.Storage storage layout,
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct,
         IERC20 underlyingToken,
         IERC20 wrappedToken,
         uint256 underlyingDeltaHint,
         uint256 wrappedDeltaHint
     ) internal {
         uint256 expectedUnderlyingReservesAfter =
-            layout.reservesOf[underlyingToken] - underlyingDeltaHint;
-        uint256 expectedWrappedReservesAfter = layout.reservesOf[wrappedToken] + wrappedDeltaHint;
+            layoutStruct.reservesOf[underlyingToken] - underlyingDeltaHint;
+        uint256 expectedWrappedReservesAfter = layoutStruct.reservesOf[wrappedToken] + wrappedDeltaHint;
         _settleWrapUnwrap(
-            layout, underlyingToken, wrappedToken, expectedUnderlyingReservesAfter, expectedWrappedReservesAfter
+            layoutStruct, underlyingToken, wrappedToken, expectedUnderlyingReservesAfter, expectedWrappedReservesAfter
         );
     }
 
     function _settleUnwrap(
-        BalancerV3VaultStorageRepo.Storage storage layout,
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct,
         IERC20 underlyingToken,
         IERC20 wrappedToken,
         uint256 underlyingDeltaHint,
         uint256 wrappedDeltaHint
     ) internal {
         uint256 expectedUnderlyingReservesAfter =
-            layout.reservesOf[underlyingToken] + underlyingDeltaHint;
-        uint256 expectedWrappedReservesAfter = layout.reservesOf[wrappedToken] - wrappedDeltaHint;
+            layoutStruct.reservesOf[underlyingToken] + underlyingDeltaHint;
+        uint256 expectedWrappedReservesAfter = layoutStruct.reservesOf[wrappedToken] - wrappedDeltaHint;
         _settleWrapUnwrap(
-            layout, underlyingToken, wrappedToken, expectedUnderlyingReservesAfter, expectedWrappedReservesAfter
+            layoutStruct, underlyingToken, wrappedToken, expectedUnderlyingReservesAfter, expectedWrappedReservesAfter
         );
     }
 
     function _settleWrapUnwrap(
-        BalancerV3VaultStorageRepo.Storage storage layout,
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct,
         IERC20 underlyingToken,
         IERC20 wrappedToken,
         uint256 expectedUnderlyingReservesAfter,
@@ -310,12 +310,12 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
                 IERC4626(address(wrappedToken)), expectedUnderlyingReservesAfter, underlyingBalancesAfter
             );
         }
-        layout.reservesOf[underlyingToken] = underlyingBalancesAfter;
+        layoutStruct.reservesOf[underlyingToken] = underlyingBalancesAfter;
 
         uint256 wrappedBalancesAfter = wrappedToken.balanceOf(address(this));
         if (wrappedBalancesAfter < expectedWrappedReservesAfter) {
             revert NotEnoughWrapped(IERC4626(address(wrappedToken)), expectedWrappedReservesAfter, wrappedBalancesAfter);
         }
-        layout.reservesOf[wrappedToken] = wrappedBalancesAfter;
+        layoutStruct.reservesOf[wrappedToken] = wrappedBalancesAfter;
     }
 }

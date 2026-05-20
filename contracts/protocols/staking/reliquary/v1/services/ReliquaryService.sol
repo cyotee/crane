@@ -5,8 +5,8 @@ import "../interfaces/IReliquary.sol";
 import "../interfaces/IRewarder.sol";
 import "./ReliquaryEvents.sol";
 import "@crane/contracts/utils/SafeERC20.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
 
 struct LocalVariables_updateRelic {
     uint256 received;

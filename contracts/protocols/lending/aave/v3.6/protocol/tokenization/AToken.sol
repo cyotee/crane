@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.10;
 
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 import {ECDSA} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol';
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
@@ -16,12 +16,15 @@ import {IncentivizedERC20} from './base/IncentivizedERC20.sol';
 import {EIP712Base} from './base/EIP712Base.sol';
 import {TokenMath} from '../libraries/helpers/TokenMath.sol';
 
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+
 /**
  * @title Aave ERC20 AToken
  * @author Aave
  * @notice Implementation of the interest bearing token for the Aave protocol
  */
 abstract contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, IAToken {
+    using BetterEfficientHashLib for bytes;
   using TokenMath for uint256;
   using SafeCast for uint256;
   using GPv2SafeERC20 for IERC20;
@@ -171,13 +174,18 @@ abstract contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP7
     //solium-disable-next-line
     require(block.timestamp <= deadline, Errors.InvalidExpiration());
     uint256 currentValidNonce = _nonces[owner];
-    bytes32 digest = keccak256(
-      abi.encodePacked(
+    // bytes32 digest = keccak256(
+    //   abi.encodePacked(
+    //     '\x19\x01',
+    //     DOMAIN_SEPARATOR(),
+    //     keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline))
+    //   )
+    // );
+    bytes32 digest = abi.encodePacked(
         '\x19\x01',
         DOMAIN_SEPARATOR(),
         keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline))
-      )
-    );
+      )._hash();
     require(owner == ECDSA.recover(digest, v, r, s), Errors.InvalidSignature());
     _nonces[owner] = currentValidNonce + 1;
     _approve({owner: owner, spender: spender, amount: value, emitEvent: true});

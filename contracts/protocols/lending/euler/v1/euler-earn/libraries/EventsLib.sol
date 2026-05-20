@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {FlowCapsConfig} from "../interfaces/IPublicAllocator.sol";
 
-import {IERC4626} from "@crane/contracts/external/openzeppelin/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC4626.sol";
 
 import {PendingAddress} from "./PendingLib.sol";
 

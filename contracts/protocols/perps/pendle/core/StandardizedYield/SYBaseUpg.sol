@@ -10,7 +10,7 @@ import "../libraries/ArrayLib.sol";
 import "../libraries/TokenHelper.sol";
 import "../libraries/Errors.sol";
 import "../libraries/BoringOwnableUpgradeable.sol";
-import "@crane/contracts/external/openzeppelin/utils/Pausable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Pausable.sol";
 
 abstract contract SYBaseUpg is
     IStandardizedYield,

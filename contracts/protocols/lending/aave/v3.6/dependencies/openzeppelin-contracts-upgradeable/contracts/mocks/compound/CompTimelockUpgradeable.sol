@@ -27,7 +27,11 @@
 pragma solidity ^0.8.20;
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract CompTimelockUpgradeable is Initializable {
+    using BetterEfficientHashLib for bytes;
+
     event NewAdmin(address indexed newAdmin);
     event NewPendingAdmin(address indexed newPendingAdmin);
     event NewDelay(uint256 indexed newDelay);
@@ -117,7 +121,8 @@ contract CompTimelockUpgradeable is Initializable {
             "Timelock::queueTransaction: Estimated execution block must satisfy delay."
         );
 
-        bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+        // bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+        bytes32 txHash = abi.encode(target, value, signature, data, eta)._hash();
         queuedTransactions[txHash] = true;
 
         emit QueueTransaction(txHash, target, value, signature, data, eta);
@@ -133,7 +138,8 @@ contract CompTimelockUpgradeable is Initializable {
     ) public {
         require(msg.sender == admin, "Timelock::cancelTransaction: Call must come from admin.");
 
-        bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+        // bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+        bytes32 txHash = abi.encode(target, value, signature, data, eta)._hash();
         queuedTransactions[txHash] = false;
 
         emit CancelTransaction(txHash, target, value, signature, data, eta);
@@ -148,7 +154,9 @@ contract CompTimelockUpgradeable is Initializable {
     ) public payable returns (bytes memory) {
         require(msg.sender == admin, "Timelock::executeTransaction: Call must come from admin.");
 
-        bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+
+        // bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
+        bytes32 txHash = abi.encode(target, value, signature, data, eta)._hash();
         require(queuedTransactions[txHash], "Timelock::executeTransaction: Transaction hasn't been queued.");
         require(getBlockTimestamp() >= eta, "Timelock::executeTransaction: Transaction hasn't surpassed time lock.");
         require(getBlockTimestamp() <= eta + GRACE_PERIOD, "Timelock::executeTransaction: Transaction is stale.");

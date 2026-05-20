@@ -12,38 +12,38 @@ library ERC4626RateProviderRepo {
         uint8 assetDecimals;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout_, IERC4626 erc4626Vault_, uint8 assetDecimals) internal {
-        layout_.erc4626Vault = erc4626Vault_;
-        layout_.assetDecimals = assetDecimals;
+    function _initialize(Storage storage layoutStruct_, IERC4626 erc4626Vault_, uint8 assetDecimals) internal {
+        layoutStruct_.erc4626Vault = erc4626Vault_;
+        layoutStruct_.assetDecimals = assetDecimals;
     }
 
     function _initialize(IERC4626 erc4626Vault_, uint8 assetDecimals) internal {
-        _initialize(_layout(), erc4626Vault_, assetDecimals);
+        _initialize(_layoutStruct(), erc4626Vault_, assetDecimals);
     }
 
-    function _erc4626Vault(Storage storage layout_) internal view returns (IERC4626) {
-        return layout_.erc4626Vault;
+    function _erc4626Vault(Storage storage layoutStruct_) internal view returns (IERC4626) {
+        return layoutStruct_.erc4626Vault;
     }
 
     function _erc4626Vault() internal view returns (IERC4626) {
-        return _erc4626Vault(_layout());
+        return _erc4626Vault(_layoutStruct());
     }
 
-    function _assetDecimals(Storage storage layout_) internal view returns (uint8) {
-        return layout_.assetDecimals;
+    function _assetDecimals(Storage storage layoutStruct_) internal view returns (uint8) {
+        return layoutStruct_.assetDecimals;
     }
 
     function _assetDecimals() internal view returns (uint8) {
-        return _assetDecimals(_layout());
+        return _assetDecimals(_layoutStruct());
     }
 }

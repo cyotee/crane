@@ -10,36 +10,36 @@ struct DiamondPackageCallBackFactoryAwareLayout {
 library DiamondPackageCallBackFactoryAwareRepo {
     bytes32 internal constant STORAGE_SLOT = keccak256("crane.diamond.package.callback.factory.aware");
 
-    function _layout(bytes32 slot) internal pure returns (DiamondPackageCallBackFactoryAwareLayout storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (DiamondPackageCallBackFactoryAwareLayout storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (DiamondPackageCallBackFactoryAwareLayout storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (DiamondPackageCallBackFactoryAwareLayout storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     function _initialize(
-        DiamondPackageCallBackFactoryAwareLayout storage layout,
+        DiamondPackageCallBackFactoryAwareLayout storage layoutStruct,
         IDiamondPackageCallBackFactory factory_
     ) internal {
-        layout.factory = factory_;
+        layoutStruct.factory = factory_;
     }
 
     function _initialize(IDiamondPackageCallBackFactory factory_) internal {
-        _initialize(_layout(), factory_);
+        _initialize(_layoutStruct(), factory_);
     }
 
-    function _diamondPackageCallBackFactory(DiamondPackageCallBackFactoryAwareLayout storage layout)
+    function _diamondPackageCallBackFactory(DiamondPackageCallBackFactoryAwareLayout storage layoutStruct)
         internal
         view
         returns (IDiamondPackageCallBackFactory factory_)
     {
-        return layout.factory;
+        return layoutStruct.factory;
     }
 
     function _diamondPackageCallBackFactory() internal view returns (IDiamondPackageCallBackFactory factory_) {
-        return _diamondPackageCallBackFactory(_layout());
+        return _diamondPackageCallBackFactory(_layoutStruct());
     }
 }

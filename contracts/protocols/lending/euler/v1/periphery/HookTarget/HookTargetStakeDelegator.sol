@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import {Ownable} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
-import {ERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Burnable.sol";
-import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 import {ProtocolConfig} from "@crane/contracts/protocols/lending/euler/v1/vault/ProtocolConfig/ProtocolConfig.sol";
 import {IHookTarget} from "@crane/contracts/protocols/lending/euler/v1/vault/interfaces/IHookTarget.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";

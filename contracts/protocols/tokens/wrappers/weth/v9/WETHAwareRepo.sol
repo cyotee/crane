@@ -11,33 +11,33 @@ struct WETHAwareLayout {
 library WETHAwareRepo {
     bytes32 internal constant STORAGE_RANGE = keccak256(abi.encode("protocols.tokens.wrappers.weth.v9"));
 
-    function _layout(bytes32 storageRange) internal pure returns (WETHAwareLayout storage layout_) {
+    function _layoutStruct(bytes32 storageRange) internal pure returns (WETHAwareLayout storage layoutStruct) {
         assembly {
-            layout_.slot := storageRange
+            layoutStruct.slot := storageRange
         }
     }
 
-    function _layout() internal pure returns (WETHAwareLayout storage) {
-        return _layout(STORAGE_RANGE);
+    function _layoutStruct() internal pure returns (WETHAwareLayout storage) {
+        return _layoutStruct(STORAGE_RANGE);
     }
 
-    function _initialize(WETHAwareLayout storage layout, IWETH weth) internal {
-        _setWeth(layout, weth);
+    function _initialize(WETHAwareLayout storage layoutStruct, IWETH weth) internal {
+        _setWeth(layoutStruct, weth);
     }
 
     function _initialize(IWETH weth) internal {
-        _initialize(_layout(), weth);
+        _initialize(_layoutStruct(), weth);
     }
 
-    function _setWeth(WETHAwareLayout storage layout, IWETH weth) internal {
-        layout.weth = weth;
+    function _setWeth(WETHAwareLayout storage layoutStruct, IWETH weth) internal {
+        layoutStruct.weth = weth;
     }
 
-    function _weth(WETHAwareLayout storage layout) internal view returns (IWETH) {
-        return layout.weth;
+    function _weth(WETHAwareLayout storage layoutStruct) internal view returns (IWETH) {
+        return layoutStruct.weth;
     }
 
     function _weth() internal view returns (IWETH) {
-        return _weth(_layout());
+        return _weth(_layoutStruct());
     }
 }

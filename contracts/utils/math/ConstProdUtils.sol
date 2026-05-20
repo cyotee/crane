@@ -468,6 +468,113 @@ library ConstProdUtils {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                            ZapIn to Target Quote                           */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @dev Quotes the amount of `tokenIn` required to ZapIn and mint at least `targetLP` LP tokens.
+     *
+     * The ZapIn flow is: split `amountIn` into a sale portion (swapped to opToken) and a deposit
+     * portion, then add both to the pool proportionally. The optimal split is computed internally
+     * by `_swapDepositSaleAmt`. This function inverts that forward operation via binary search.
+     *
+     * Binary-search strategy:
+     *  - Low bound: 1
+     *  - High bound: 4 * targetLP * reserveIn / lpTotalSupply (generous ceiling; never overflows
+     *    because targetLP ≤ lpTotalSupply and reserves are bounded by pool state)
+     *  - Monotone property: `_quoteSwapDepositWithFee` is monotone increasing in `amountIn`,
+     *    so the minimal amountIn is found at the first point where the forward quote ≥ targetLP.
+     *
+     * @param targetLP    Desired LP token amount (must be < lpTotalSupply).
+     * @param lpTotalSupply  Current LP total supply.
+     * @param reserveIn   Reserve of the ZapIn token.
+     * @param reserveOut  Reserve of the opposing token.
+     * @param feePercent  Swap fee numerator.
+     * @param feeDenominator  Swap fee denominator.
+     * @param kLast       Last stored K value (0 if protocol fees disabled).
+     * @param ownerFeeShare  Protocol fee share denominator (e.g. 16667 for 1/6).
+     * @param feeOn       Whether protocol fees are enabled.
+     * @return amountIn   Minimum `tokenIn` required to obtain at least `targetLP`.
+     */
+    function _quoteZapInToTargetLPWithFee(
+        uint256 targetLP,
+        uint256 lpTotalSupply,
+        uint256 reserveIn,
+        uint256 reserveOut,
+        uint256 feePercent,
+        uint256 feeDenominator,
+        uint256 kLast,
+        uint256 ownerFeeShare,
+        bool feeOn
+    ) internal pure returns (uint256 amountIn) {
+        if (targetLP == 0 || lpTotalSupply == 0 || reserveIn == 0 || reserveOut == 0) {
+            return 0;
+        }
+        if (targetLP >= lpTotalSupply) {
+            return 0; // Cannot mint 100% of existing supply via ZapIn
+        }
+
+        // Protocol-fee-adjusted supply (same adjustment as in _quoteSwapDepositWithFee)
+        uint256 adjSupply = lpTotalSupply;
+        if (feeOn && kLast != 0 && ownerFeeShare != 0) {
+            uint256 newK = reserveIn * reserveOut;
+            if (newK > kLast) {
+                uint256 pFee = _calculateProtocolFee(adjSupply, newK, kLast, ownerFeeShare);
+                adjSupply += pFee;
+            }
+        }
+
+        // Conservative upper bound: ZapIn produces at most ~amountIn * lpSupply / (2 * reserveIn)
+        // LP when the price is 1:1. Multiply by 4 for safety margin and round up.
+        // high = 4 * targetLP * reserveIn / lpTotalSupply, but clamp to prevent huge inputs.
+        uint256 high;
+        {
+            // targetLP * reserveIn / lpTotalSupply  ≈ LP-proportional share of reserveIn
+            // Multiply by 4 as generous headroom.
+            uint256 tmp = (targetLP * reserveIn) / adjSupply;
+            high = tmp * 4 + 1;
+            if (high < 2) high = 2;
+        }
+
+        // Verify high is sufficient; if not, double until it is.
+        // (In degenerate pools the 4x may still be too low; bound by 128 doublings.)
+        for (uint256 i = 0; i < 128; i++) {
+            uint256 candidate = _quoteSwapDepositWithFee(
+                high, lpTotalSupply, reserveIn, reserveOut, feePercent, feeDenominator, kLast, ownerFeeShare, feeOn
+            );
+            if (candidate >= targetLP) break;
+            high = high * 2;
+        }
+
+        // Binary search: find minimal amountIn such that forward quote >= targetLP
+        uint256 low = 1;
+        while (low < high) {
+            uint256 mid = low + (high - low) / 2;
+            uint256 out = _quoteSwapDepositWithFee(
+                mid, lpTotalSupply, reserveIn, reserveOut, feePercent, feeDenominator, kLast, ownerFeeShare, feeOn
+            );
+            if (out >= targetLP) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        amountIn = low;
+
+        // Safety: step up until we actually get at least targetLP (guards against rounding at boundary)
+        for (uint256 i = 0; i < 4; i++) {
+            uint256 check = _quoteSwapDepositWithFee(
+                amountIn, lpTotalSupply, reserveIn, reserveOut, feePercent, feeDenominator, kLast, ownerFeeShare, feeOn
+            );
+            if (check >= targetLP) break;
+            amountIn++;
+        }
+
+        return amountIn;
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                           ZapOut to Target Quote                           */
     /* -------------------------------------------------------------------------- */
 

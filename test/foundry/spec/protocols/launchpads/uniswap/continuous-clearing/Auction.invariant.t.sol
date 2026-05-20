@@ -18,7 +18,7 @@ import {MockContinuousClearingAuction} from './utils/MockAuction.sol';
 import {Test} from 'forge-std/Test.sol';
 import {console} from 'forge-std/console.sol';
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
 
 contract AuctionInvariantHandler is Test, Assertions {
@@ -133,6 +133,7 @@ contract AuctionInvariantHandler is Test, Assertions {
     /// @dev Bounded by purchasing the total supply of tokens and some reasonable max price for bids to prevent overflow
     function _useAmountMaxPrice(uint128 amount, uint256 clearingPrice, uint8 tickNumber)
         internal
+        view
         returns (uint128, uint256)
     {
         tickNumber = uint8(_bound(tickNumber, 1, uint256(type(uint8).max)));
@@ -153,7 +154,7 @@ contract AuctionInvariantHandler is Test, Assertions {
 
     /// @notice Find the first bid which can be early exited as of the stale checkpoint
     /// @return bidId The id of the first bid which can be early exited, or type(uint256).max if no bid can be exited
-    function _useOutbidBidId() internal returns (uint256) {
+    function _useOutbidBidId() internal view returns (uint256) {
         // Find first bid which can be exited as of the stale checkpoint
         // We could checkpoint again but no need, can use the stale checkpoint
         for (uint256 i = 0; i < bidCount; i++) {
@@ -446,7 +447,7 @@ contract AuctionInvariantTest is AuctionUnitTest {
     }
 
     /// @notice Assert that the auction loses no more than 1e18 wei of currency or tokens
-    function assertAcceptableDustBalances() internal {
+    function assertAcceptableDustBalances() internal view {
         assertApproxEqAbs(
             address(mockAuction).balance, 0, 1e18, 'Auction currency balance is not within 1e18 wei of zero'
         );

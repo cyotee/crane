@@ -8,7 +8,7 @@ import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/sr
 import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract CalculateFillTest is BttBase {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -19,7 +19,7 @@ contract CalculateFillTest is BttBase {
 
     function test_WhenCalledWithParams(Bid memory _bid, uint256 _cumulativeMpsPerPriceDelta, uint24 _cumulativeMpsDelta)
         external
-        view
+        pure
     {
         // it returns the tokens filled
         // it returns the currency spent

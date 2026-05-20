@@ -30,33 +30,33 @@ library ERC721Repo {
         mapping(address owner => mapping(address operator => bool)) operatorApprovals;
     }
 
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _balanceOf(Storage storage layout_, address owner) internal view returns (uint256) {
-        return layout_.balanceOfAccount[owner];
+    function _balanceOf(Storage storage layoutStruct_, address owner) internal view returns (uint256) {
+        return layoutStruct_.balanceOfAccount[owner];
     }
 
     function _balanceOf(address owner) internal view returns (uint256) {
-        return _balanceOf(_layout(), owner);
+        return _balanceOf(_layoutStruct(), owner);
     }
 
-    function _ownerOf(Storage storage layout_, uint256 tokenId) internal view returns (address) {
-        return layout_.ownerOfTokenId[tokenId];
+    function _ownerOf(Storage storage layoutStruct_, uint256 tokenId) internal view returns (address) {
+        return layoutStruct_.ownerOfTokenId[tokenId];
     }
 
     function _ownerOf(uint256 tokenId) internal view returns (address) {
-        return _ownerOf(_layout(), tokenId);
+        return _ownerOf(_layoutStruct(), tokenId);
     }
 
-    function _safeTransferFrom(Storage storage layout_, address from, address to, uint256 tokenId, bytes memory data)
+    function _safeTransferFrom(Storage storage layoutStruct_, address from, address to, uint256 tokenId, bytes memory data)
         internal
     {
         if (to.code.length > 0) {
@@ -68,139 +68,139 @@ library ERC721Repo {
                 revert IERC721Errors.ERC721InvalidReceiver(to);
             }
         }
-        _transferFrom(layout_, from, to, tokenId);
+        _transferFrom(layoutStruct_, from, to, tokenId);
     }
 
     function _safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) internal {
-        _safeTransferFrom(_layout(), from, to, tokenId, data);
+        _safeTransferFrom(_layoutStruct(), from, to, tokenId, data);
     }
 
-    function _safeTransferFrom(Storage storage layout_, address from, address to, uint256 tokenId) internal {
-        _safeTransferFrom(layout_, from, to, tokenId, "");
+    function _safeTransferFrom(Storage storage layoutStruct_, address from, address to, uint256 tokenId) internal {
+        _safeTransferFrom(layoutStruct_, from, to, tokenId, "");
     }
 
     function _safeTransferFrom(address from, address to, uint256 tokenId) internal {
-        _safeTransferFrom(_layout(), from, to, tokenId, "");
+        _safeTransferFrom(_layoutStruct(), from, to, tokenId, "");
     }
 
-    function _transferFrom(Storage storage layout_, address from, address to, uint256 tokenId) internal {
+    function _transferFrom(Storage storage layoutStruct_, address from, address to, uint256 tokenId) internal {
         if (from == address(0)) {
             revert IERC721Errors.ERC721InvalidOwner(from);
         }
         if (to == address(0)) {
             revert IERC721Errors.ERC721InvalidOwner(to);
         }
-        if (!layout_.allTokenIds._contains(tokenId)) {
+        if (!layoutStruct_.allTokenIds._contains(tokenId)) {
             revert IERC721Errors.ERC721NonexistentToken(tokenId);
         }
-        address owner = layout_.ownerOfTokenId[tokenId];
+        address owner = layoutStruct_.ownerOfTokenId[tokenId];
         if (owner != from) {
             revert IERC721Errors.ERC721IncorrectOwner(from, tokenId, owner);
         }
         if (
-            from != address(msg.sender) && layout_.approvedForTokenId[tokenId] != msg.sender
-                && !layout_.operatorApprovals[from][msg.sender]
+            from != address(msg.sender) && layoutStruct_.approvedForTokenId[tokenId] != msg.sender
+                && !layoutStruct_.operatorApprovals[from][msg.sender]
         ) {
             revert IERC721Errors.ERC721InsufficientApproval(msg.sender, tokenId);
         }
-        delete layout_.approvedForTokenId[tokenId];
-        layout_.ownerOfTokenId[tokenId] = to;
-        layout_.balanceOfAccount[from]--;
-        layout_.balanceOfAccount[to]++;
+        delete layoutStruct_.approvedForTokenId[tokenId];
+        layoutStruct_.ownerOfTokenId[tokenId] = to;
+        layoutStruct_.balanceOfAccount[from]--;
+        layoutStruct_.balanceOfAccount[to]++;
         emit IERC721Events.Transfer(from, to, tokenId);
     }
 
     function _transferFrom(address from, address to, uint256 tokenId) internal {
-        _transferFrom(_layout(), from, to, tokenId);
+        _transferFrom(_layoutStruct(), from, to, tokenId);
     }
 
-    function _approve(Storage storage layout_, address operator, uint256 tokenId) internal {
+    function _approve(Storage storage layoutStruct_, address operator, uint256 tokenId) internal {
         if (operator == address(0)) {
             revert IERC721Errors.ERC721InvalidOperator(operator);
         }
-        address owner = _ownerOf(layout_, tokenId);
+        address owner = _ownerOf(layoutStruct_, tokenId);
         if (owner != msg.sender) {
             revert IERC721Errors.ERC721IncorrectOwner(msg.sender, tokenId, owner);
         }
-        layout_.approvedForTokenId[tokenId] = operator;
+        layoutStruct_.approvedForTokenId[tokenId] = operator;
         emit IERC721Events.Approval(owner, operator, tokenId);
     }
 
     function _approve(address operator, uint256 tokenId) internal {
-        _approve(_layout(), operator, tokenId);
+        _approve(_layoutStruct(), operator, tokenId);
     }
 
-    function _setApprovalForAll(Storage storage layout_, address operator, bool approved) internal {
+    function _setApprovalForAll(Storage storage layoutStruct_, address operator, bool approved) internal {
         if (operator == address(0)) {
             revert IERC721Errors.ERC721InvalidOperator(operator);
         }
-        layout_.operatorApprovals[msg.sender][operator] = approved;
+        layoutStruct_.operatorApprovals[msg.sender][operator] = approved;
         emit IERC721Events.ApprovalForAll(msg.sender, operator, approved);
     }
 
     function _setApprovalForAll(address operator, bool approved) internal {
-        _setApprovalForAll(_layout(), operator, approved);
+        _setApprovalForAll(_layoutStruct(), operator, approved);
     }
 
-    function _getApproved(Storage storage layout_, uint256 tokenId) internal view returns (address) {
-        return layout_.approvedForTokenId[tokenId];
+    function _getApproved(Storage storage layoutStruct_, uint256 tokenId) internal view returns (address) {
+        return layoutStruct_.approvedForTokenId[tokenId];
     }
 
     function _getApproved(uint256 tokenId) internal view returns (address) {
-        return _getApproved(_layout(), tokenId);
+        return _getApproved(_layoutStruct(), tokenId);
     }
 
-    function _isApprovedForAll(Storage storage layout_, address owner, address operator) internal view returns (bool) {
-        return layout_.operatorApprovals[owner][operator];
+    function _isApprovedForAll(Storage storage layoutStruct_, address owner, address operator) internal view returns (bool) {
+        return layoutStruct_.operatorApprovals[owner][operator];
     }
 
     function _isApprovedForAll(address owner, address operator) internal view returns (bool) {
-        return _isApprovedForAll(_layout(), owner, operator);
+        return _isApprovedForAll(_layoutStruct(), owner, operator);
     }
 
-    function _mint(Storage storage layout_, address to) internal returns (uint256 tokenId) {
+    function _mint(Storage storage layoutStruct_, address to) internal returns (uint256 tokenId) {
         if (to == address(0)) {
             revert IERC721Errors.ERC721InvalidOwner(to);
         }
-        tokenId = layout_.nextTokenId++;
-        layout_.allTokenIds._add(tokenId);
-        layout_.ownerOfTokenId[tokenId] = to;
-        layout_.balanceOfAccount[to]++;
+        tokenId = layoutStruct_.nextTokenId++;
+        layoutStruct_.allTokenIds._add(tokenId);
+        layoutStruct_.ownerOfTokenId[tokenId] = to;
+        layoutStruct_.balanceOfAccount[to]++;
         emit IERC721Events.Transfer(address(0), to, tokenId);
     }
 
     function _mint(address to) internal returns (uint256 tokenId) {
-        return _mint(_layout(), to);
+        return _mint(_layoutStruct(), to);
     }
 
-    function _burn(Storage storage layout_, address owner, uint256 tokenId) internal {
-        if (!layout_.allTokenIds._contains(tokenId)) {
+    function _burn(Storage storage layoutStruct_, address owner, uint256 tokenId) internal {
+        if (!layoutStruct_.allTokenIds._contains(tokenId)) {
             revert IERC721Errors.ERC721NonexistentToken(tokenId);
         }
-        // address owner = layout_.ownerOfTokenId[tokenId];
+        // address owner = layoutStruct_.ownerOfTokenId[tokenId];
         if (
-            owner != address(msg.sender) && layout_.approvedForTokenId[tokenId] != msg.sender
-                && !layout_.operatorApprovals[owner][msg.sender]
+            owner != address(msg.sender) && layoutStruct_.approvedForTokenId[tokenId] != msg.sender
+                && !layoutStruct_.operatorApprovals[owner][msg.sender]
         ) {
             revert IERC721Errors.ERC721InsufficientApproval(msg.sender, tokenId);
         }
-        delete layout_.ownerOfTokenId[tokenId];
-        delete layout_.approvedForTokenId[tokenId];
-        layout_.allTokenIds._remove(tokenId);
-        layout_.balanceOfAccount[owner]--;
+        delete layoutStruct_.ownerOfTokenId[tokenId];
+        delete layoutStruct_.approvedForTokenId[tokenId];
+        layoutStruct_.allTokenIds._remove(tokenId);
+        layoutStruct_.balanceOfAccount[owner]--;
         emit IERC721Events.Transfer(owner, address(0), tokenId);
     }
 
     function _burn(address owner, uint256 tokenId) internal {
-        _burn(_layout(), owner, tokenId);
+        _burn(_layoutStruct(), owner, tokenId);
     }
 
-    function _burn(Storage storage layout_, uint256 tokenId) internal {
-        address owner = layout_.ownerOfTokenId[tokenId];
-        _burn(layout_, owner, tokenId);
+    function _burn(Storage storage layoutStruct_, uint256 tokenId) internal {
+        address owner = layoutStruct_.ownerOfTokenId[tokenId];
+        _burn(layoutStruct_, owner, tokenId);
     }
 
     function _burn(uint256 tokenId) internal {
-        _burn(_layout(), tokenId);
+        _burn(_layoutStruct(), tokenId);
     }
 }

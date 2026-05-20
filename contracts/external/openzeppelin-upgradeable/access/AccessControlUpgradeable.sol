@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessControl} from "@crane/contracts/external/openzeppelin/access/IAccessControl.sol";
+import {IAccessControl} from "@crane/contracts/external/openzeppelin-contracts/access/IAccessControl.sol";
 import {ContextUpgradeable} from "../utils/ContextUpgradeable.sol";
 import {ERC165Upgradeable} from "../utils/introspection/ERC165Upgradeable.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";

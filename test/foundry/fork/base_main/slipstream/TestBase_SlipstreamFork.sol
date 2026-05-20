@@ -118,7 +118,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     }
 
     /// @notice Get pool at mainnet address
-    function getPool(address poolAddress) internal view returns (ICLPool) {
+    function getPool(address poolAddress) internal pure returns (ICLPool) {
         return ICLPool(poolAddress);
     }
 

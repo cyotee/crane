@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /*                                   Solady                                   */
 /* -------------------------------------------------------------------------- */
 
-import {LibSort} from "@crane/contracts/solady/utils/LibSort.sol";
+import {LibSort} from "@crane/contracts/external/solady/utils/LibSort.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

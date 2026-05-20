@@ -3,10 +3,10 @@
 pragma solidity ^0.8.20;
 
 import {ERC20PermitUpgradeable} from "../../token/ERC20/extensions/ERC20PermitUpgradeable.sol";
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {IVotes} from "@crane/contracts/external/openzeppelin/governance/utils/IVotes.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
-import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {IVotes} from "@crane/contracts/external/openzeppelin-contracts/governance/utils/IVotes.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

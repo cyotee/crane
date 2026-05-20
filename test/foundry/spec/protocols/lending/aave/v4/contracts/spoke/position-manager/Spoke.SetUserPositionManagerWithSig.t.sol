@@ -370,7 +370,7 @@ contract SpokeSetUserPositionManagersWithSigTest is Base {
   function _setUserPositionManagerData(
     address user,
     uint256 deadline
-  ) internal returns (ISpoke.SetUserPositionManagers memory) {
+  ) internal view returns (ISpoke.SetUserPositionManagers memory) {
     ISpoke.PositionManagerUpdate[] memory updates = new ISpoke.PositionManagerUpdate[](1);
     updates[0] = ISpoke.PositionManagerUpdate(POSITION_MANAGER, true);
     ISpoke.SetUserPositionManagers memory params = ISpoke.SetUserPositionManagers({

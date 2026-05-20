@@ -1,0 +1,15 @@
+{
+  "bucket": "Fraxbonds",
+  "status": "complete",
+  "updated": "2026-06-04",
+  "foundryPath": "test/foundry/spec/protocols/tokens/stable/frax/Fraxbonds/",
+  "contractsPath": "contracts/protocols/tokens/stable/frax/Fraxbonds/",
+  "upstreamJs": [
+    {
+      "path": "Fraxbonds/SlippageAuction.js",
+      "foundry": "SlippageAuction_Test.t.sol",
+      "tests": 3
+    }
+  ],
+  "verify": "forge test --match-path \"test/foundry/spec/protocols/tokens/stable/frax/Fraxbonds/**\""
+}

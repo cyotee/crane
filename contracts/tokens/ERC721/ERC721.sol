@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ERC721 as SoladyERC721} from "@crane/contracts/solady/tokens/ERC721.sol";
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
+import {IERC721Events} from '@crane/contracts/interfaces/IERC721Events.sol';
+// import {IERC721Errors} from '@crane/contracts/interfaces/IERC721Errors.sol';
+import {ERC721 as SoladyERC721} from "@crane/contracts/external/solady/tokens/ERC721.sol";
 
 /**
  * @title ERC721
@@ -91,7 +94,7 @@ abstract contract ERC721 is SoladyERC721 {
     {
         if (emitEvent) {
             address owner = _ownerOf(tokenId);
-            emit Approval(owner, to, tokenId);
+            emit IERC721Events.Approval(owner, to, tokenId);
         }
         // Note: This version doesn't actually store the approval in Solady's storage
         // as it's meant for custom storage implementations
@@ -126,7 +129,8 @@ abstract contract ERC721 is SoladyERC721 {
             if (from != address(0) && from != auth && !isApprovedForAll(from, auth)) {
                 address approvedAddr = _getApproved(tokenId);
                 if (approvedAddr != auth) {
-                    revert NotOwnerNorApproved();
+                    // revert NotOwnerNorApproved();
+                    revert ERC721IncorrectOwner(auth, tokenId, from);
                 }
             }
         }
@@ -197,7 +201,8 @@ abstract contract ERC721 is SoladyERC721 {
     function _requireOwned(uint256 tokenId) internal view virtual returns (address) {
         address owner = _ownerOf(tokenId);
         if (owner == address(0)) {
-            revert TokenDoesNotExist();
+            // revert TokenDoesNotExist();
+            revert ERC721NonexistentToken(tokenId);
         }
         return owner;
     }
@@ -220,8 +225,7 @@ abstract contract ERC721 is SoladyERC721 {
      * @dev Converts a uint256 to its ASCII string decimal representation.
      */
     function _toString(uint256 value) internal pure virtual returns (string memory str) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // Max length of uint256 as decimal string is 78 digits
             str := add(mload(0x40), 0x80)
             mstore(0x40, str)

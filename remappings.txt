@@ -3,3 +3,7 @@ forge-std/=lib/forge-std/src/
 @crane/contracts/=contracts/
 @crane/test/=test/
 battlechain-lib/=lib/battlechain-lib/src/
+battlechain-lib-mocks/=lib/battlechain-lib/test/mocks/
+lib/battlechain-lib/:src/=lib/battlechain-lib/src/
+@oz/=lib/openzeppelin-contracts/
+@ozu=lib/openzeppelin-contracts-upgradable/

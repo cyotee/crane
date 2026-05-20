@@ -1,0 +1,12 @@
+# GitBook configuration for Crane documentation
+# https://gitbook.com/docs/getting-started/git-sync/content-configuration
+
+root: ./docs/
+
+structure:
+  readme: README.md
+  summary: SUMMARY.md
+
+# Optional: add redirects or other settings as the docs grow
+# redirects:
+#   old-page.md: new-section/new-page.md

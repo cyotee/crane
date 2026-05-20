@@ -5,8 +5,8 @@ import "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IRollingRewar
 import "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IRewarder.sol";
 import "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReliquary.sol";
 import "@crane/contracts/utils/SafeERC20.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import "@crane/contracts/access/Ownable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
 
 /// @title Rewarder that can be funded with a set token, distributing it over a period of time.
 contract RollingRewarder is IRollingRewarder {

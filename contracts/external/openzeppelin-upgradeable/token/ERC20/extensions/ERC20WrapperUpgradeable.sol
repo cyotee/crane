@@ -7,7 +7,7 @@ import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
-import {SafeERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

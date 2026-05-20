@@ -8,7 +8,7 @@ import {CapsEngine} from './CapsEngine.sol';
 import {BorrowEngine} from './BorrowEngine.sol';
 import {CollateralEngine} from './CollateralEngine.sol';
 import {ConfiguratorInputTypes} from '../../../protocol/libraries/types/ConfiguratorInputTypes.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 library ListingEngine {
   using Address for address;

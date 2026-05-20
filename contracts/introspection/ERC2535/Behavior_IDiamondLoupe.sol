@@ -35,39 +35,39 @@ library Behavior_IDiamondLoupeRepo {
     bytes32 internal constant _BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT =
         keccak256(abi.encode(type(Behavior_IDiamondLoupeRepo).name));
 
-    function _layout(bytes32 slot_) internal pure returns (Behavior_IDiamondLoupeLayout storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Behavior_IDiamondLoupeLayout storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Behavior_IDiamondLoupeLayout storage) {
-        return _layout(_BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Behavior_IDiamondLoupeLayout storage) {
+        return _layoutStruct(_BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT);
     }
 
-    function _expected_facetAddr(Behavior_IDiamondLoupeLayout storage layout, IDiamondLoupe subject, bytes4 func)
+    function _expected_facetAddr(Behavior_IDiamondLoupeLayout storage layoutStruct, IDiamondLoupe subject, bytes4 func)
         internal
         view
         returns (address)
     {
-        return layout.expected_facetAddr[subject][func];
+        return layoutStruct.expected_facetAddr[subject][func];
     }
 
     function _expected_facetAddr(IDiamondLoupe subject, bytes4 func) internal view returns (address) {
-        return _layout().expected_facetAddr[subject][func];
+        return _layoutStruct().expected_facetAddr[subject][func];
     }
 
     function _set_expected_facetAddr(
-        Behavior_IDiamondLoupeLayout storage layout,
+        Behavior_IDiamondLoupeLayout storage layoutStruct,
         IDiamondLoupe subject,
         bytes4 func,
         address facet
     ) internal {
-        layout.expected_facetAddr[subject][func] = facet;
+        layoutStruct.expected_facetAddr[subject][func] = facet;
     }
 
     function _set_expected_facetAddr(IDiamondLoupe subject, bytes4 func, address facet) internal {
-        _layout().expected_facetAddr[subject][func] = facet;
+        _layoutStruct().expected_facetAddr[subject][func] = facet;
     }
 }
 

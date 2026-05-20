@@ -18,55 +18,55 @@ library DeployedAddressesRepo {
         mapping(uint256 chainId => mapping(bytes32 instanceId => address deployedAddress)) deployedAddressOfInstanceId;
     }
 
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     function _registerDeployedAddress(
-        Storage storage layout_,
+        Storage storage layoutStruct,
         address deployedAddress_,
         uint256 chainId_,
         bytes32 instanceId_
     ) internal {
-        layout_.deployedAddresses._add(deployedAddress_);
-        layout_.deployedAddressOfInstanceId[chainId_][instanceId_] = deployedAddress_;
+        layoutStruct.deployedAddresses._add(deployedAddress_);
+        layoutStruct.deployedAddressOfInstanceId[chainId_][instanceId_] = deployedAddress_;
     }
 
     function _registerDeployedAddress(address deployedAddress_, uint256 chainId_, bytes32 instanceId_) internal {
-        _registerDeployedAddress(_layout(), deployedAddress_, chainId_, instanceId_);
+        _registerDeployedAddress(_layoutStruct(), deployedAddress_, chainId_, instanceId_);
     }
 
-    function _registerDeployedAddress(Storage storage layout_, address deployedAddress_, bytes32 instanceId_) internal {
-        _registerDeployedAddress(layout_, deployedAddress_, block.chainid, instanceId_);
+    function _registerDeployedAddress(Storage storage layoutStruct, address deployedAddress_, bytes32 instanceId_) internal {
+        _registerDeployedAddress(layoutStruct, deployedAddress_, block.chainid, instanceId_);
     }
 
     function _registerDeployedAddress(address deployedAddress_, bytes32 instanceId_) internal {
-        _registerDeployedAddress(_layout(), deployedAddress_, instanceId_);
+        _registerDeployedAddress(_layoutStruct(), deployedAddress_, instanceId_);
     }
 
-    function _deployedAddress(Storage storage layout_, uint256 chainId, bytes32 instanceId_)
+    function _deployedAddress(Storage storage layoutStruct, uint256 chainId, bytes32 instanceId_)
         internal
         view
         returns (address)
     {
-        return layout_.deployedAddressOfInstanceId[chainId][instanceId_];
+        return layoutStruct.deployedAddressOfInstanceId[chainId][instanceId_];
     }
 
     function _deployedAddress(uint256 chainId, bytes32 instanceId_) internal view returns (address) {
-        return _deployedAddress(_layout(), chainId, instanceId_);
+        return _deployedAddress(_layoutStruct(), chainId, instanceId_);
     }
 
-    function _deployedAddress(Storage storage layout_, bytes32 instanceId_) internal view returns (address) {
-        return _deployedAddress(layout_, block.chainid, instanceId_);
+    function _deployedAddress(Storage storage layoutStruct, bytes32 instanceId_) internal view returns (address) {
+        return _deployedAddress(layoutStruct, block.chainid, instanceId_);
     }
 
     function _deployedAddress(bytes32 instanceId_) internal view returns (address) {
-        return _deployedAddress(_layout(), instanceId_);
+        return _deployedAddress(_layoutStruct(), instanceId_);
     }
 }

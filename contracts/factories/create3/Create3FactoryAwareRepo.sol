@@ -10,29 +10,29 @@ library Create3FactoryAwareRepo {
         ICreate3FactoryProxy factory;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, ICreate3FactoryProxy factory_) internal {
-        layout.factory = factory_;
+    function _initialize(Storage storage layoutStruct, ICreate3FactoryProxy factory_) internal {
+        layoutStruct.factory = factory_;
     }
 
     function _initialize(ICreate3FactoryProxy factory_) internal {
-        _initialize(_layout(), factory_);
+        _initialize(_layoutStruct(), factory_);
     }
 
-    function _create3Factory(Storage storage layout) internal view returns (ICreate3FactoryProxy factory_) {
-        return layout.factory;
+    function _create3Factory(Storage storage layoutStruct) internal view returns (ICreate3FactoryProxy factory_) {
+        return layoutStruct.factory;
     }
 
     function _create3Factory() internal view returns (ICreate3FactoryProxy factory_) {
-        return _create3Factory(_layout());
+        return _create3Factory(_layoutStruct());
     }
 }

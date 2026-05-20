@@ -12,6 +12,8 @@ import {Math} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/op
 import {Time} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev AccessManager is a central contract to store the permissions of a system.
  *
@@ -60,6 +62,9 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * {AccessControl-renounceRole}.
  */
 contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, MulticallUpgradeable, IAccessManager {
+    
+    using BetterEfficientHashLib for bytes;
+
     using Time for *;
 
     // Structure that stores the details for a target contract.
@@ -622,7 +627,8 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
 
     /// @inheritdoc IAccessManager
     function hashOperation(address caller, address target, bytes calldata data) public view virtual returns (bytes32) {
-        return keccak256(abi.encode(caller, target, data));
+        // return keccak256(abi.encode(caller, target, data));
+        return abi.encode(caller, target, data)._hash();
     }
 
     // ==================================================== OTHERS ====================================================
@@ -778,6 +784,7 @@ contract AccessManagerUpgradeable is Initializable, ContextUpgradeable, Multical
      * @dev Hashing function for execute protection
      */
     function _hashExecutionId(address target, bytes4 selector) private pure returns (bytes32) {
-        return keccak256(abi.encode(target, selector));
+        // return keccak256(abi.encode(target, selector));
+        return abi.encode(target, selector)._hash();
     }
 }

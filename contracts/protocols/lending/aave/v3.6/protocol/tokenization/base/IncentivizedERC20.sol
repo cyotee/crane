@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {Context} from '@crane/contracts/external/openzeppelin/utils/Context.sol';
+import {Context} from '@crane/contracts/external/openzeppelin-contracts/utils/Context.sol';
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 import {WadRayMath} from '../../libraries/math/WadRayMath.sol';
 import {Errors} from '../../libraries/helpers/Errors.sol';
 import {IAaveIncentivesController} from '../../../interfaces/IAaveIncentivesController.sol';

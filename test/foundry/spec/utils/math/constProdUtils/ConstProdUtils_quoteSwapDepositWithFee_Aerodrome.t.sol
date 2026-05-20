@@ -178,7 +178,7 @@ contract ConstProdUtils_quoteSwapDepositWithFee_Aerodrome is TestBase_ConstProdU
         uint256 reserveIn,
         uint256 reserveOut,
         uint256 feePercent
-    ) internal view {
+    ) internal pure {
         QuoteIntermediates memory q;
         q.feeDenom = (feePercent <= 10) ? 1000 : AERO_FEE_DENOM;
         q.amtInSaleAmt = ConstProdUtils._swapDepositSaleAmt(amountIn, reserveIn, feePercent, q.feeDenom);

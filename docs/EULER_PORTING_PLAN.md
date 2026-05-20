@@ -233,7 +233,7 @@ euler-price-oracle
 #### ethereum-vault-connector (`lib/ethereum-vault-connector/`)
 | Dependency | Version | Import Path | Status in Crane |
 |-----------|---------|-------------|----------------|
-| OpenZeppelin Contracts | v4.9.3 | `openzeppelin/...` | **Already vendored** at `contracts/external/openzeppelin/` |
+| OpenZeppelin Contracts | v4.9.3 | `openzeppelin/...` | **Already vendored** at `contracts/external/openzeppelin-contracts/` |
 | forge-std | v1.5.6 | `forge-std/...` | **Already vendored** via `lib/forge-std/` |
 | ds-test | — | `ds-test/...` | Provided by Foundry |
 | erc4626-tests | — | `erc4626-tests/...` | N/A (test utility) |
@@ -249,7 +249,7 @@ euler-price-oracle
 #### euler-price-oracle (`lib/euler-price-oracle/`)
 | Dependency | Version | Import Path | Status in Crane |
 |-----------|---------|-------------|----------------|
-| OpenZeppelin Contracts | release-v4.9 | `@openzeppelin/contracts/...` | **Already vendored** at `contracts/external/openzeppelin/` |
+| OpenZeppelin Contracts | release-v4.9 | `@openzeppelin/contracts/...` | **Already vendored** at `contracts/external/openzeppelin-contracts/` |
 | Uniswap V3 Core | 0.8 branch | `@uniswap/v3-core/...` | **Already vendored** at `contracts/external/balancer/v3/` (subset) — check full coverage |
 | Uniswap V3 Periphery | 0.8 branch | `@uniswap/v3-periphery/...` | **Already vendored** at `contracts/external/balancer/v3/` (subset) — check full coverage |
 | Solady | rev 0123b4c0 | `@solady/utils/FixedPointMathLib.sol` | **Already vendored** at `contracts/solady/` |
@@ -262,7 +262,7 @@ euler-price-oracle
 #### euler-vault-kit (`lib/euler-vault-kit/`)
 | Dependency | Version | Import Path | Status in Crane |
 |-----------|---------|-------------|----------------|
-| OpenZeppelin Contracts | v4.8.0 | `openzeppelin-contracts/...`, `@openzeppelin/contracts/...` | **Already vendored** at `contracts/external/openzeppelin/` |
+| OpenZeppelin Contracts | v4.8.0 | `openzeppelin-contracts/...`, `@openzeppelin/contracts/...` | **Already vendored** at `contracts/external/openzeppelin-contracts/` |
 | Permit2 | rev cc56ad0 | `permit2/src/interfaces/IAllowanceTransfer.sol`, `permit2/src/Permit2.sol` | **Already vendored** — Crane has integration at `contracts/protocols/utils/permit2/`, but **full Permit2 lib needed** for vault-kit |
 | solmate | v6 | `solmate/src/tokens/ERC20.sol`, `solmate/src/utils/SafeTransferLib.sol` | **Already vendored** (subset in balancer/solidity-utils, full in `lib/evc-playground/lib/solmate`) |
 | forge-std | rev b6a506d | `forge-std/...` | **Already vendored** via `lib/forge-std/` |
@@ -282,7 +282,7 @@ euler-price-oracle
 
 | Dependency | Source | Import Path | Status in Crane |
 |-----------|--------|-------------|----------------|
-| OpenZeppelin Contracts | Nested `lib/euler-vault-kit/lib/openzeppelin-contracts/` + `lib/euler-price-oracle/lib/openzeppelin-contracts/` | `openzeppelin-contracts/...` | **Already vendored** at `contracts/external/openzeppelin/` |
+| OpenZeppelin Contracts | Nested `lib/euler-vault-kit/lib/openzeppelin-contracts/` + `lib/euler-price-oracle/lib/openzeppelin-contracts/` | `openzeppelin-contracts/...` | **Already vendored** at `contracts/external/openzeppelin-contracts/` |
 | LayerZero Labs V2 | `src/OFT/` | `@layerzerolabs/lz-evm-oapp-v2/...`, `@layerzerolabs/lz-evm-protocol-v2/...` | **NOT vendored** — needs vendor under `contracts/external/layerzerolabs/` |
 | Uniswap V4 Core | Nested `lib/euler-swap/lib/uniswap-v4-core/` | `@uniswap/v4-core/...` | **NOT vendored** in Crane — needs vendor |
 | Uniswap V3 Core/Periphery | Nested `lib/euler-price-oracle/lib/v3-core/`, `lib/v3-periphery/` | `@uniswap/v3-core/...`, `@uniswap/v3-periphery/...` | **Already vendored** at `contracts/external/balancer/v3/` — check coverage |
@@ -505,7 +505,7 @@ certora/                           # Formal verification specs (at repo root)
    - `Set.sol`
    - `EthereumVaultConnector.sol`
 3. Update imports in ported files:
-   - OpenZeppelin → use `@crane/contracts/external/openzeppelin/...`
+   - OpenZeppelin → use `@crane/contracts/external/openzeppelin-contracts/...`
    - Any internal imports → use `@euler/evc/...`
 4. Port Certora specs: copy `lib/ethereum-vault-connector/certora/` → `certora/EVC/`
 
@@ -871,7 +871,7 @@ Port in this order to minimize import errors:
 ### Already Available in Crane ✅
 | Dependency | Crane Location | Notes |
 |-----------|---------------|-------|
-| OpenZeppelin | `contracts/external/openzeppelin/` | Full v4.x; use via `@crane/contracts/external/openzeppelin/` |
+| OpenZeppelin | `contracts/external/openzeppelin-contracts/` | Full v4.x; use via `@crane/contracts/external/openzeppelin-contracts/` |
 | Uniswap V3 Core | `contracts/external/balancer/v3/` | Check if full coverage; may need supplement |
 | Uniswap V3 Periphery | `contracts/external/balancer/v3/` | Check if full coverage; may need supplement |
 | Solady | `contracts/solady/` + `contracts/external/balancer/v3/solidity-utils/contracts/solmate/` | Full Solady at `contracts/solady/` |
@@ -909,7 +909,7 @@ Add to `remappings.txt`:
 
 ### Import Rewriting Strategy
 
-**Rule**: When porting any submodule, rewrite all OpenZeppelin imports to use Crane's existing vendored copy at `contracts/external/openzeppelin/`. Do NOT copy nested OZ libs from submodules.
+**Rule**: When porting any submodule, rewrite all OpenZeppelin imports to use Crane's existing vendored copy at `contracts/external/openzeppelin-contracts/`. Do NOT copy nested OZ libs from submodules.
 
 **evk-periphery special handling**:
 - evk-periphery's `lib/euler-price-oracle/` and `lib/euler-vault-kit/` are nested copies used by its tests — port these together as a unit
@@ -941,7 +941,7 @@ When porting evk-periphery:
 ## Crane Conventions to Follow
 
 1. **Naming**: Use Crane suffixes (Repo, Target, Facet, Service, AwareRepo, TestBase_)
-2. **Storage**: Use Diamond storage pattern with `_layout()` functions
+2. **Storage**: Use Diamond storage pattern with `_layoutStruct()` functions
 3. **Interfaces**: Prefix with `I` (IEVault, IPriceOracle)
 4. **Tests**: TestBase in `contracts/`, specs in `test/foundry/spec/`
 5. **Imports**: Use `@crane/contracts/...` remappings

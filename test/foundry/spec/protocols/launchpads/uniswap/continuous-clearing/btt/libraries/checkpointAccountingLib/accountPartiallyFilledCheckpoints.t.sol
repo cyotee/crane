@@ -11,7 +11,7 @@ import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearin
 
 contract AccountPartiallyFilledCheckpointsTest is BttBase {
     // should never happen but we catch it in the code to avoid div by 0
-    function test_WhenTickDemandEQ0(Bid memory _bid, ValueX7 _cumulativeCurrencyRaisedAtClearingPriceQ96_X7) external {
+    function test_WhenTickDemandEQ0(Bid memory _bid, ValueX7 _cumulativeCurrencyRaisedAtClearingPriceQ96_X7) external pure {
         // it returns (0, 0)
 
         (uint256 tokensFilled, uint256 currencySpent) = CheckpointAccountingLib.accountPartiallyFilledCheckpoints(
@@ -26,7 +26,7 @@ contract AccountPartiallyFilledCheckpointsTest is BttBase {
         _;
     }
 
-    function test_WhenCurrencySpentRoundsDownToZero(Bid memory _bid, uint256 _tickDemand) external givenTickDemandGT0 {
+    function test_WhenCurrencySpentRoundsDownToZero(Bid memory _bid, uint256 _tickDemand) external pure givenTickDemandGT0 {
         // it returns 1 currency spent
 
         // assume reasonable bounds
@@ -48,7 +48,7 @@ contract AccountPartiallyFilledCheckpointsTest is BttBase {
         assertEq(currencySpent, 1);
     }
 
-    function test_WhenTokensFilledRoundsDownToZero(Bid memory _bid, uint256 _tickDemand) external givenTickDemandGT0 {
+    function test_WhenTokensFilledRoundsDownToZero(Bid memory _bid, uint256 _tickDemand) external pure givenTickDemandGT0 {
         // it returns 0 tokens filled
 
         // assume reasonable bounds

@@ -29,30 +29,30 @@ library Permit2AwareRepo {
 
     bytes32 private constant STORAGE_SLOT = keccak256(abi.encode("protocols.utils.permit2.aware"));
 
-    function _layout(bytes32 storageRange) internal pure returns (Permit2AwareLayout storage layout_) {
+    function _layoutStruct(bytes32 storageRange) internal pure returns (Permit2AwareLayout storage layoutStruct_) {
         assembly {
-            layout_.slot := storageRange
+            layoutStruct_.slot := storageRange
         }
     }
 
-    function _layout() internal pure returns (Permit2AwareLayout storage) {
-        return STORAGE_SLOT._layout();
+    function _layoutStruct() internal pure returns (Permit2AwareLayout storage) {
+        return STORAGE_SLOT._layoutStruct();
     }
 
-    function _initialize(Permit2AwareLayout storage layout, IPermit2 permit2) internal {
-        layout.permit2 = permit2;
+    function _initialize(Permit2AwareLayout storage layoutStruct, IPermit2 permit2) internal {
+        layoutStruct.permit2 = permit2;
     }
 
     function _initialize(IPermit2 permit2) internal {
-        _initialize(_layout(), permit2);
+        _initialize(_layoutStruct(), permit2);
     }
 
-    function _permit2(Permit2AwareLayout storage layout) internal view returns (IPermit2) {
-        return layout.permit2;
+    function _permit2(Permit2AwareLayout storage layoutStruct) internal view returns (IPermit2) {
+        return layoutStruct.permit2;
     }
 
     function _permit2() internal view returns (IPermit2) {
-        return _permit2(_layout());
+        return _permit2(_layoutStruct());
     }
 }
 // end::repo[]

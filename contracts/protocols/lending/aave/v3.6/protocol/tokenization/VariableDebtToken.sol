@@ -2,7 +2,7 @@
 pragma solidity ^0.8.10;
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {IPool} from '../../interfaces/IPool.sol';
 import {IInitializableDebtToken} from '../../interfaces/IInitializableDebtToken.sol';

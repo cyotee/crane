@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/proxy/Proxy.sol";
+import "@crane/contracts/external/openzeppelin-contracts/proxy/Proxy.sol";
 import "../interfaces/IPActionStorageV4.sol";
 import "./RouterStorage.sol";
 
@@ -19,5 +19,5 @@ contract PendleRouterV4 is Proxy, RouterStorage {
         return facet;
     }
 
-    receive() external payable {}
+    receive() external payable override {}
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
 
 import {PoolAddressesProvider, IPoolAddressesProvider} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/PoolAddressesProvider.sol';
-import {Ownable} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/access/Ownable.sol';
+import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol';
 import {PoolInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/PoolInstance.sol';
 import {DefaultReserveInterestRateStrategyV2, IReserveInterestRateStrategy} from '@crane/contracts/protocols/lending/aave/v3.6/misc/DefaultReserveInterestRateStrategyV2.sol';
 import {MockInitializableV1, MockInitializableV2} from '@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/upgradeability/MockInitializableImplementation.sol';

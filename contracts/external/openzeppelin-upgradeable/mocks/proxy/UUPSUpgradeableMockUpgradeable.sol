@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {UUPSUpgradeable} from "../../proxy/utils/UUPSUpgradeable.sol";
-import {ERC1967Utils} from "@crane/contracts/external/openzeppelin/proxy/ERC1967/ERC1967Utils.sol";
+import {ERC1967Utils} from "@crane/contracts/external/openzeppelin-contracts/proxy/ERC1967/ERC1967Utils.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 contract NonUpgradeableMockUpgradeable is Initializable {

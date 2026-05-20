@@ -10,7 +10,7 @@ import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 
 import {EulerEarn} from "./EulerEarn.sol";
 
-import {Ownable, Context} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
+import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {EVCUtil} from "../evc/utils/EVCUtil.sol";
 
 /// @title EulerEarnFactory

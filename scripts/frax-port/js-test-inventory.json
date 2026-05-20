@@ -1,0 +1,719 @@
+{
+  "total": 129,
+  "by_category": {
+    "spec_bucket": 30,
+    "spec": 24,
+    "fork": 22,
+    "old_tests": 41,
+    "fixture": 12
+  },
+  "entries": [
+    {
+      "path": "BAMM/BAMM-Fuzz.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "foundryFile": "BAMMFuzzTest.t.sol",
+      "portStatus": "complete"
+    },
+    {
+      "path": "BAMM/BAMM.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "foundryFile": "BAMMTest.t.sol",
+      "portStatus": "complete"
+    },
+    {
+      "path": "BAMM/BAMMHelper.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "foundryFile": "BAMMHelperTest.t.sol",
+      "portStatus": "complete"
+    },
+    {
+      "path": "BAMM/FraxswapOracle.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "foundryFile": "FraxswapOracleTest.t.sol",
+      "portStatus": "complete"
+    },
+    {
+      "path": "CPITrackerOracle-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "ComboOracle_SLP_UniV2_UniV3-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "CrossChainCanonical-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FPI-FPIS-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FPIControllerPool-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxFarmRageQuitter-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxGaugeController-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxGaugeFXSRewardsDistributor-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxLiquidityBridger-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxMiddlemanGauge-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxUnifiedFarm_ERC20-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxUnifiedFarm_KyberSwapElastic-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxUnifiedFarm_PosRebase-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FraxUnifiedFarm_UniV3-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "Fraxbonds/SlippageAuction.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxbonds",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxbonds/",
+      "foundryFile": "SlippageAuction_Test.t.sol",
+      "portStatus": "complete"
+    },
+    {
+      "path": "Fraxferry/Fraxferry-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxferry",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxferry/"
+    },
+    {
+      "path": "FraxferryV2/FerryV2-test.js",
+      "category": "spec_bucket",
+      "bucket": "FraxferryV2",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/FraxferryV2/"
+    },
+    {
+      "path": "Fraxoracle/Fraxoracle-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/"
+    },
+    {
+      "path": "Fraxoracle/StateProver-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/"
+    },
+    {
+      "path": "Fraxoracle/StateRootOracle.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/"
+    },
+    {
+      "path": "Fraxswap/brick-pause-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputCurve.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputFraxswap.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputFraxswapV2.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputSaddle.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputSushiSwap.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputUniswapV2.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputUniswapV3.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/fraxswap-router-utils.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-router-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-twamm-test-unbalanced.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-twamm-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/fraxswap-uniV2-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/twamm-utils.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap/utilities.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/"
+    },
+    {
+      "path": "Fraxswap-FraxswapRange-test.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "Fraxswap-UniswapV2-test.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "FrxETH/FrxETHMiniRouter-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "FrxETH",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/FrxETH/"
+    },
+    {
+      "path": "Governance_Slap_2.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "Lending_AMOs/AaveAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/"
+    },
+    {
+      "path": "Lending_AMOs/KashiAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/"
+    },
+    {
+      "path": "Lending_AMOs/Rari-AMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/"
+    },
+    {
+      "path": "Lending_AMOs/TruefiAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/"
+    },
+    {
+      "path": "LeveragePool-test.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "TWAMM_AMO-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "UniV3TWAPOracle-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/ComboOracle_KyberSwapElastic-Tests_ARBI.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/CrossChainBridgeBacker_ARBI_AnySwap-Tests.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/CurveAMO-ARBI-Tests.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV2-Tests.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV3_ERC20-Tests.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV4_ERC20-Tests.js",
+      "category": "fork",
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__AURORA/CrossChainBridgeBacker_AUR_Rainbow-Tests.js",
+      "category": "fork",
+      "chain": "aurora",
+      "target": "test/foundry/fork/aurora/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__AVALANCHE/AxialAMO-Tests.js",
+      "category": "fork",
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__AVALANCHE/CrossChainBridgeBacker_AVAX_AnySwap-Tests.js",
+      "category": "fork",
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__AVALANCHE/PangolinLiquidityAMO-Tests.js",
+      "category": "fork",
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__BSC/ApeSwapAMO-Tests.js",
+      "category": "fork",
+      "chain": "bsc",
+      "target": "test/foundry/fork/bsc/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__FANTOM/CrossChainBridgeBacker_FTM_AnySwap-Tests.js",
+      "category": "fork",
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__FANTOM/CurveAMO-FTM-Tests.js",
+      "category": "fork",
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__FANTOM/FPIControllerPool-Tests.js",
+      "category": "fork",
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__FANTOM/ScreamAMO-Tests.js",
+      "category": "fork",
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__FANTOM/SpiritSwapAMO-Tests.js",
+      "category": "fork",
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__HARMONY/CrossChainBridgeBacker_HARM_Horizon-Tests.js",
+      "category": "fork",
+      "chain": "harmony",
+      "target": "test/foundry/fork/harmony/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__MOONBEAM/CrossChainBridgeBacker_MNBM_Nomad-Tests.js",
+      "category": "fork",
+      "chain": "moonbeam",
+      "target": "test/foundry/fork/moonbeam/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__MOONRIVER/CCFrax1to1AMM-Tests.js",
+      "category": "fork",
+      "chain": "moonriver",
+      "target": "test/foundry/fork/moonriver/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__OPTIMISM/CrossChainBridgeBacker_OPTI_Celer-Tests.js",
+      "category": "fork",
+      "chain": "optimism",
+      "target": "test/foundry/fork/optimism/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__POLYGON/CrossChainBridgeBacker_POLY_MaticBridge-Tests.js",
+      "category": "fork",
+      "chain": "polygon",
+      "target": "test/foundry/fork/polygon/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "__POLYGON/SushiSwapLiquidityAMO_POLY-Tests.js",
+      "category": "fork",
+      "chain": "polygon",
+      "target": "test/foundry/fork/polygon/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "old_tests/AaveAMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/CommunalFarm-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Convex-AMO.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Core-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Curve-AMO-V4.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/CurveMetapoolLockerAMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FPI-PermissionedSend-test.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FPI-TWAMMSwap-test.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FPI-staking2-test.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FPI-test.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FXS1559AMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FXSOracleWrapper-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FXSRewards-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxBond_NFT-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxBonds.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxCrossChainLiquidityTracker-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxFarmBSC_Dual_V5.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxLendingAMO.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxPoolInvestorForV2-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxPoolV3-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxUniV3Farm_Stable_FRAX_DAI-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/FraxUniV3Farm_Stable_FRAX_USDC-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Governance_Slap.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/InvestorAMO_V2-Upgrade.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/InvestorAMO_V3-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/MIM-Convex-AMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/MSIGHelper-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/MigratableFarmBSC_FRAX_FXS-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/OHM-AMO.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/PIDController-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Rari-AMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Slippage-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/Smart-Wallet-Whitelist-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/StakeDAO-AMO.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/StakingRewardsDualV5-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/TokenTrackerV2-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/UniV3LiquidityAMO-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/UniV3LiquidityAMO_V2-Tests.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/UnlockStakes.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/openzeppelin/ERC20.behavior.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/openzeppelin/ERC20.test.js",
+      "category": "old_tests",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/"
+    },
+    {
+      "path": "old_tests/truffle-fixture-old.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Aurora.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Avalanche.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-BSC.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Ethereum.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Fantom.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Harmony.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Moonbeam.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Moonriver.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Optimism.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture-Polygon.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "truffle-fixture.js",
+      "category": "fixture",
+      "target": "setUp() in chain fork/spec tests"
+    },
+    {
+      "path": "veFPIS-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "veFPISYieldDistributorV5-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "veFXS-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    },
+    {
+      "path": "veFXSYieldDistributorV4-Tests.js",
+      "category": "spec",
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/"
+    }
+  ]
+}

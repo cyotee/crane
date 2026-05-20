@@ -58,7 +58,7 @@ contract TickStorageTest is Test, Assertions {
         return _price + (_tickSpacing - remainder);
     }
 
-    function helper__assumeValidPrice(uint256 _price) internal returns (uint256) {
+    function helper__assumeValidPrice(uint256 _price) internal view returns (uint256) {
         uint256 minPrice = _roundPriceUpToTickSpacing($floorPrice_rounded, $tickSpacing);
         uint256 maxPrice = _roundPriceDownToTickSpacing(MaxBidPriceLib.MAX_V4_PRICE, $tickSpacing);
         _price = _bound(_price, minPrice, maxPrice);
@@ -68,11 +68,11 @@ contract TickStorageTest is Test, Assertions {
         return _price;
     }
 
-    function helper__assumeUninitializedTick(uint256 _price) internal {
+    function helper__assumeUninitializedTick(uint256 _price) internal view {
         vm.assume(tickStorage.ticks(_price).next == 0);
     }
 
-    function helper__assumeValidPreviousHint(uint256 _prevPrice, uint256 _price) internal {
+    function helper__assumeValidPreviousHint(uint256 _prevPrice, uint256 _price) internal view {
         // Assume ordering is right
         vm.assume(_prevPrice < _price);
         // Assume that next price is greater than or equal to the price, also checks initialized for free

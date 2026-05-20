@@ -5,6 +5,8 @@ pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "../../proxy/utils/UUPSUpgradeable.sol";
 import {ERC1967Utils} from "../../proxy/ERC1967/ERC1967Utils.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract NonUpgradeableMock {
     uint256 internal _counter;
 
@@ -29,7 +31,11 @@ contract UUPSUpgradeableUnsafeMock is UUPSUpgradeableMock {
 }
 
 contract UUPSUnsupportedProxiableUUID is UUPSUpgradeableMock {
+    
+    using BetterEfficientHashLib for bytes;
+
     function proxiableUUID() external pure override returns (bytes32) {
-        return keccak256("invalid UUID");
+        // return keccak256("invalid UUID");
+        return bytes("invalid UUID")._hash();
     }
 }

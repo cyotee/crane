@@ -12,68 +12,68 @@ library SuperChainBridgeTokenRegistryRepo {
         mapping(uint256 chainId => mapping(IERC20 remoteToken => uint256 minGasLimit)) minGasLimit;
     }
 
-    // tag::_layout(bytes32)[]
+    // tag::_layoutStruct(bytes32)[]
     /**
-     * @dev Argumented version of _layout to allow for custom storage slot usage.
+     * @dev Argumented version of _layoutStruct to allow for custom storage slot usage.
      * @param slot Storage slot to bind to the Repo's Storage struct.
-     * @return layout The bound Storage struct.
+     * @return layoutStruct The bound Storage struct.
      */
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
-    // end::_layout(bytes32)[]
+    // end::_layoutStruct(bytes32)[]
 
-    // tag::_layout()[]
+    // tag::_layoutStruct()[]
     /**
-     * @dev Default version of _layout binding to the standard STORAGE_SLOT.
-     * @return layout The bound Storage struct.
+     * @dev Default version of _layoutStruct binding to the standard STORAGE_SLOT.
+     * @return layoutStruct The bound Storage struct.
      */
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _getRemoteToken(Storage storage layout, uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken) {
-        return layout.remoteToken[chainId][localToken];
+    function _getRemoteToken(Storage storage layoutStruct, uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken) {
+        return layoutStruct.remoteToken[chainId][localToken];
     }
 
     function _getRemoteToken(uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken) {
-        return _getRemoteToken(_layout(), chainId, localToken);
+        return _getRemoteToken(_layoutStruct(), chainId, localToken);
     }
 
-    function _getMinGasLimit(Storage storage layout, uint256 chainId, IERC20 remoteToken) internal view returns (uint256 minGasLimit) {
-        return layout.minGasLimit[chainId][remoteToken];
+    function _getMinGasLimit(Storage storage layoutStruct, uint256 chainId, IERC20 remoteToken) internal view returns (uint256 minGasLimit) {
+        return layoutStruct.minGasLimit[chainId][remoteToken];
     }
 
     function _getMinGasLimit(uint256 chainId, IERC20 remoteToken) internal view returns (uint256 minGasLimit) {
-        return _getMinGasLimit(_layout(), chainId, remoteToken);
+        return _getMinGasLimit(_layoutStruct(), chainId, remoteToken);
     }
 
-    function _getRemoteTokenAndLimit(Storage storage layout, uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken, uint256 minGasLimit) {
-        remoteToken = _getRemoteToken(layout, chainId, localToken);
-        minGasLimit = _getMinGasLimit(layout, chainId, remoteToken);
+    function _getRemoteTokenAndLimit(Storage storage layoutStruct, uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken, uint256 minGasLimit) {
+        remoteToken = _getRemoteToken(layoutStruct, chainId, localToken);
+        minGasLimit = _getMinGasLimit(layoutStruct, chainId, remoteToken);
     }
 
     function _getRemoteTokenAndLimit(uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken, uint256 minGasLimit) {
-        return _getRemoteTokenAndLimit(_layout(), chainId, localToken);
+        return _getRemoteTokenAndLimit(_layoutStruct(), chainId, localToken);
     }
 
-    function _setRemoteToken(Storage storage layout, uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit) internal {
-        layout.remoteToken[chainId][localToken] = remoteToken;
-        layout.minGasLimit[chainId][remoteToken] = minGasLimit;
+    function _setRemoteToken(Storage storage layoutStruct, uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit) internal {
+        layoutStruct.remoteToken[chainId][localToken] = remoteToken;
+        layoutStruct.minGasLimit[chainId][remoteToken] = minGasLimit;
     }
 
     function _setRemoteToken(uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit) internal {
-        _setRemoteToken(_layout(), chainId, localToken, remoteToken, minGasLimit);
+        _setRemoteToken(_layoutStruct(), chainId, localToken, remoteToken, minGasLimit);
     }
 
-    function _setRemoteTokenMinGasLimit(Storage storage layout, uint256 chainId, IERC20 remoteToken, uint256 minGasLimit) internal {
-        layout.minGasLimit[chainId][remoteToken] = minGasLimit;
+    function _setRemoteTokenMinGasLimit(Storage storage layoutStruct, uint256 chainId, IERC20 remoteToken, uint256 minGasLimit) internal {
+        layoutStruct.minGasLimit[chainId][remoteToken] = minGasLimit;
     }
 
     function _setRemoteTokenMinGasLimit(uint256 chainId, IERC20 remoteToken, uint256 minGasLimit) internal {
-        _setRemoteTokenMinGasLimit(_layout(), chainId, remoteToken, minGasLimit);
+        _setRemoteTokenMinGasLimit(_layoutStruct(), chainId, remoteToken, minGasLimit);
     }
 
 }

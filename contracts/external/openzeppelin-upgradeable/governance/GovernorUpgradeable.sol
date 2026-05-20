@@ -4,19 +4,19 @@
 pragma solidity ^0.8.20;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import {IERC721Receiver} from "@crane/contracts/external/openzeppelin/token/ERC721/IERC721Receiver.sol";
-import {IERC1155Receiver} from "@crane/contracts/external/openzeppelin/token/ERC1155/IERC1155Receiver.sol";
+import {IERC721Receiver} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/IERC721Receiver.sol";
+import {IERC1155Receiver} from "@crane/contracts/external/openzeppelin-contracts/token/ERC1155/IERC1155Receiver.sol";
 import {EIP712Upgradeable} from "../utils/cryptography/EIP712Upgradeable.sol";
-import {SignatureChecker} from "@crane/contracts/external/openzeppelin/utils/cryptography/SignatureChecker.sol";
+import {SignatureChecker} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/SignatureChecker.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {ERC165Upgradeable} from "../utils/introspection/ERC165Upgradeable.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
-import {DoubleEndedQueue} from "@crane/contracts/external/openzeppelin/utils/structs/DoubleEndedQueue.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
+import {DoubleEndedQueue} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/DoubleEndedQueue.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {ContextUpgradeable} from "../utils/ContextUpgradeable.sol";
 import {NoncesUpgradeable} from "../utils/NoncesUpgradeable.sol";
-import {IGovernor} from "@crane/contracts/external/openzeppelin/governance/IGovernor.sol";
-import {IERC6372} from "@crane/contracts/external/openzeppelin/interfaces/IERC6372.sol";
+import {IGovernor} from "@crane/contracts/external/openzeppelin-contracts/governance/IGovernor.sol";
+import {IERC6372} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC6372.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 /**

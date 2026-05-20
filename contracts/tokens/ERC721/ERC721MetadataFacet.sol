@@ -72,12 +72,12 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
     }
 
     function tokenURI(uint256 tokenId) external view returns (string memory finalUri_) {
-        ERC721MetadataRepo.Storage storage layout = ERC721MetadataRepo._layout();
-        string storage baseUri = ERC721MetadataRepo._baseURI(layout);
+        ERC721MetadataRepo.Storage storage layoutStruct = ERC721MetadataRepo._layoutStruct();
+        string storage baseUri = ERC721MetadataRepo._baseURI(layoutStruct);
         if (bytes(baseUri).length > 0) {
             finalUri_ = baseUri;
         }
-        string storage tokenUri = ERC721MetadataRepo._tokenURI(layout, tokenId);
+        string storage tokenUri = ERC721MetadataRepo._tokenURI(layoutStruct, tokenId);
         if (bytes(tokenUri).length > 0) {
             finalUri_ = string.concat(finalUri_, tokenUri);
         }

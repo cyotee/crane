@@ -14,7 +14,7 @@ Every feature in Crane follows a three-tier architecture:
 
 | Layer | File Pattern | Purpose |
 |-------|--------------|---------|
-| **Repo** | `*Repo.sol` | Storage library with assembly-based slot binding. Defines `Storage` struct and dual `_layout()` functions. No state variables. |
+| **Repo** | `*Repo.sol` | Storage library with assembly-based slot binding. Defines `Storage` struct and dual `_layoutStruct()` functions. No state variables. |
 | **Target** | `*Target.sol` | Implementation contract with business logic. Uses Repo for storage access. Inherits interfaces. |
 | **Facet** | `*Facet.sol` | Diamond facet. Extends Target and implements `IFacet` for metadata (name, interfaces, selectors). |
 
@@ -37,13 +37,13 @@ library ExampleRepo {
     }
 
     // Parameterized version - allows custom slot
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
-        assembly { layout.slot := slot }
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
+        assembly { layoutStruct.slot := slot }
     }
 
     // Default version - uses STORAGE_SLOT
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 }
 ```
@@ -54,13 +54,13 @@ Every Repo function has TWO overloads:
 
 ```solidity
 // 1. Parameterized: takes Storage as first param
-function _isOperator(Storage storage layout, address query) internal view returns (bool) {
-    return layout.isOperator[query];
+function _isOperator(Storage storage layoutStruct, address query) internal view returns (bool) {
+    return layoutStruct.isOperator[query];
 }
 
-// 2. Default: calls parameterized with _layout()
+// 2. Default: calls parameterized with _layoutStruct()
 function _isOperator(address query) internal view returns (bool) {
-    return _isOperator(_layout(), query);
+    return _isOperator(_layoutStruct(), query);
 }
 ```
 
@@ -75,14 +75,14 @@ Repos contain `_onlyXxx()` guard functions with access control logic. Modifiers 
 
 ```solidity
 // In Repo - contains the actual check logic
-function _onlyOperator(Storage storage layout) internal view {
-    if (!_isOperator(layout, msg.sender) && !_isFunctionOperator(layout, msg.sig, msg.sender)) {
+function _onlyOperator(Storage storage layoutStruct) internal view {
+    if (!_isOperator(layoutStruct, msg.sender) && !_isFunctionOperator(layoutStruct, msg.sig, msg.sender)) {
         revert IOperable.NotOperator(msg.sender);
     }
 }
 
 function _onlyOperator() internal view {
-    _onlyOperator(_layout());
+    _onlyOperator(_layoutStruct());
 }
 
 // In Modifiers contract - thin delegation wrapper
@@ -135,8 +135,8 @@ library BalancerV3VaultAwareRepo {
         IVault balancerV3Vault;
     }
 
-    function _initialize(IVault vault) internal { _layout().balancerV3Vault = vault; }
-    function _balancerV3Vault() internal view returns (IVault) { return _layout().balancerV3Vault; }
+    function _initialize(IVault vault) internal { _layoutStruct().balancerV3Vault = vault; }
+    function _balancerV3Vault() internal view returns (IVault) { return _layoutStruct().balancerV3Vault; }
 }
 ```
 

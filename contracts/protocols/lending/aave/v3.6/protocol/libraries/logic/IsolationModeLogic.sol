@@ -6,7 +6,7 @@ import {IPool} from '../../../interfaces/IPool.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 /**
  * @title IsolationModeLogic library

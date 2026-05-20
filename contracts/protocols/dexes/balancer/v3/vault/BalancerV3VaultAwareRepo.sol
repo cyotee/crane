@@ -10,29 +10,29 @@ library BalancerV3VaultAwareRepo {
         IVault balancerV3Vault;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, IVault vault) internal {
-        layout.balancerV3Vault = vault;
+    function _initialize(Storage storage layoutStruct, IVault vault) internal {
+        layoutStruct.balancerV3Vault = vault;
     }
 
     function _initialize(IVault vault) internal {
-        _initialize(_layout(), vault);
+        _initialize(_layoutStruct(), vault);
     }
 
-    function _balancerV3Vault(Storage storage layout) internal view returns (IVault) {
-        return layout.balancerV3Vault;
+    function _balancerV3Vault(Storage storage layoutStruct) internal view returns (IVault) {
+        return layoutStruct.balancerV3Vault;
     }
 
     function _balancerV3Vault() internal view returns (IVault vault) {
-        return _balancerV3Vault(_layout());
+        return _balancerV3Vault(_layoutStruct());
     }
 }

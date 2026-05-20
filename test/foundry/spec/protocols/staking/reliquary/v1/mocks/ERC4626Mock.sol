@@ -67,7 +67,7 @@ contract ERC4626Mock is IERC4626 {
         return (shares * totalAssets()) / supply;
     }
 
-    function maxDeposit(address) external view returns (uint256) {
+    function maxDeposit(address) external pure returns (uint256) {
         return type(uint256).max;
     }
 
@@ -75,7 +75,7 @@ contract ERC4626Mock is IERC4626 {
         return convertToShares(assets);
     }
 
-    function maxMint(address) external view returns (uint256) {
+    function maxMint(address) external pure returns (uint256) {
         return type(uint256).max;
     }
 

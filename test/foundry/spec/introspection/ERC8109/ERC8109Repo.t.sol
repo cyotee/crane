@@ -27,15 +27,15 @@ contract ERC8109RepoHarness {
     }
 
     function addFunctions(IERC8109Update.FacetFunctions memory functionsToAdd) external {
-        ERC8109Repo._addFunctions(ERC2535Repo._layout(), functionsToAdd);
+        ERC8109Repo._addFunctions(ERC2535Repo._layoutStruct(), functionsToAdd);
     }
 
     function replaceFunctions(IERC8109Update.FacetFunctions memory functionsToReplace) external {
-        ERC8109Repo._replaceFunctions(ERC2535Repo._layout(), functionsToReplace);
+        ERC8109Repo._replaceFunctions(ERC2535Repo._layoutStruct(), functionsToReplace);
     }
 
     function removeFunctions(bytes4[] memory functionSelectorsToRemove) external {
-        ERC8109Repo._removeFunctions(ERC2535Repo._layout(), functionSelectorsToRemove);
+        ERC8109Repo._removeFunctions(ERC2535Repo._layoutStruct(), functionSelectorsToRemove);
     }
 
     function functionFacetPairs() external view returns (IERC8109Introspection.FunctionFacetPair[] memory) {
@@ -43,7 +43,7 @@ contract ERC8109RepoHarness {
     }
 
     function facetAddress(bytes4 selector) external view returns (address) {
-        return ERC2535Repo._layout().facetAddress[selector];
+        return ERC2535Repo._layoutStruct().facetAddress[selector];
     }
 }
 

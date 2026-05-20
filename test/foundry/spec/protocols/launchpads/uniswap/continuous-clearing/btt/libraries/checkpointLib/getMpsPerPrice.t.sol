@@ -8,13 +8,13 @@ import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-cl
 import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
 
 contract GetMpsPerPriceTest is BttBase {
-    function test_WhenCalledWithPriceEQ0(uint24 _mps) external {
+    function test_WhenCalledWithPriceEQ0(uint24 _mps) external pure {
         // it returns 0
 
         assertEq(CheckpointLib.getMpsPerPrice(_mps, 0), 0);
     }
 
-    function test_WhenCalledWithPriceGT0(uint24 _mps, uint256 _price) external {
+    function test_WhenCalledWithPriceGT0(uint24 _mps, uint256 _price) external pure {
         // it returns mps * Q96 ** 2 div price
 
         uint24 mps = uint24(bound(_mps, 0, ConstantsLib.MPS));

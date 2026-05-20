@@ -5,7 +5,7 @@ import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous
 import {StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
 
 contract ParseTest is BttBase {
-    function test_WhenCalledWith8BytesOfData(uint24 _mps, uint40 _blockDelta) external {
+    function test_WhenCalledWith8BytesOfData(uint24 _mps, uint40 _blockDelta) external pure {
         // it returns mps and block delta
         uint256 value = uint256(_mps) << 40 | uint256(_blockDelta);
         bytes8 data = bytes8(uint64(value));

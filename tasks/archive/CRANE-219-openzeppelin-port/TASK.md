@@ -74,9 +74,9 @@ As a developer, I want cryptography utilities ported so that EIP-712 and signatu
 As a developer, I want token implementations ported for test mocks and base contracts.
 
 **Acceptance Criteria:**
-- [ ] Port `ERC20.sol` to `contracts/external/openzeppelin/token/ERC20/`
-- [ ] Port `ERC20Permit.sol` to `contracts/external/openzeppelin/token/ERC20/extensions/`
-- [ ] Port `ERC165.sol` to `contracts/external/openzeppelin/utils/introspection/`
+- [ ] Port `ERC20.sol` to `contracts/external/openzeppelin-contracts/token/ERC20/`
+- [ ] Port `ERC20Permit.sol` to `contracts/external/openzeppelin-contracts/token/ERC20/extensions/`
+- [ ] Port `ERC165.sol` to `contracts/external/openzeppelin-contracts/utils/introspection/`
 - [ ] Update `MockERC20.sol` to use ported ERC20
 - [ ] All token implementation files include original MIT license headers
 
@@ -252,16 +252,16 @@ After porting, update `foundry.toml`:
 # Remove or comment out:
 # "@openzeppelin/=lib/openzeppelin-contracts/"
 
-# Add if using contracts/external/openzeppelin structure:
-# "@openzeppelin/=contracts/external/openzeppelin/"
+# Add if using contracts/external/openzeppelin-contracts structure:
+# "@openzeppelin/=contracts/external/openzeppelin-contracts/"
 ```
 
 ## Files to Create/Modify
 
 **New Files (ported from OZ latest):**
-- `contracts/external/openzeppelin/token/ERC20/ERC20.sol`
-- `contracts/external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol`
-- `contracts/external/openzeppelin/utils/introspection/ERC165.sol`
+- `contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol`
+- `contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol`
+- `contracts/external/openzeppelin-contracts/utils/introspection/ERC165.sol`
 - `contracts/utils/math/SafeCast.sol`
 - `contracts/utils/cryptography/ECDSA.sol`
 - `contracts/utils/cryptography/EIP712.sol`

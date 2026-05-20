@@ -10,6 +10,8 @@ import {EIP712Upgradeable} from "../../../utils/cryptography/EIP712Upgradeable.s
 import {NoncesUpgradeable} from "../../../utils/NoncesUpgradeable.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev Implementation of the ERC-20 Permit extension allowing approvals to be made via signatures, as defined in
  * https://eips.ethereum.org/EIPS/eip-2612[ERC-2612].
@@ -19,6 +21,9 @@ import {Initializable} from "../../../proxy/utils/Initializable.sol";
  * need to send a transaction, and thus is not required to hold Ether at all.
  */
 abstract contract ERC20PermitUpgradeable is Initializable, ERC20Upgradeable, IERC20Permit, EIP712Upgradeable, NoncesUpgradeable {
+    
+    using BetterEfficientHashLib for bytes;
+
     bytes32 private constant PERMIT_TYPEHASH =
         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
 
@@ -59,7 +64,8 @@ abstract contract ERC20PermitUpgradeable is Initializable, ERC20Upgradeable, IER
             revert ERC2612ExpiredSignature(deadline);
         }
 
-        bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        // bytes32 structHash = keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        bytes32 structHash = abi.encode(PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline)._hash();
 
         bytes32 hash = _hashTypedDataV4(structHash);
 

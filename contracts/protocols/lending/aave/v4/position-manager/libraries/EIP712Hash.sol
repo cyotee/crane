@@ -5,11 +5,16 @@ import {IConfigPositionManager} from '@crane/contracts/protocols/lending/aave/v4
 import {ISignatureGateway} from '@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ISignatureGateway.sol';
 import {ITakerPositionManager} from '@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ITakerPositionManager.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title EIP712Hash library
 /// @author Aave Labs
 /// @notice Helper methods to hash EIP712 typed data structs.
 library EIP712Hash {
-  bytes32 public constant SUPPLY_TYPEHASH =
+  
+    using BetterEfficientHashLib for bytes;
+
+    bytes32 public constant SUPPLY_TYPEHASH =
     // keccak256('Supply(address spoke,uint256 reserveId,uint256 amount,address onBehalfOf,uint256 nonce,uint256 deadline)')
     0xe85497eb293c001e8483fe105efadd1d50aa0dadfc0570b27058031dfceab2e6;
 
@@ -63,23 +68,42 @@ library EIP712Hash {
 
   function hash(ISignatureGateway.Supply calldata params) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
-          SUPPLY_TYPEHASH,
-          params.spoke,
-          params.reserveId,
-          params.amount,
-          params.onBehalfOf,
-          params.nonce,
-          params.deadline
-        )
-      );
+      // keccak256(
+      //   abi.encode(
+      //     SUPPLY_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.amount,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
+        SUPPLY_TYPEHASH,
+        params.spoke,
+        params.reserveId,
+        params.amount,
+        params.onBehalfOf,
+        params.nonce,
+        params.deadline
+      )._hash();
   }
 
   function hash(ISignatureGateway.Withdraw calldata params) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     WITHDRAW_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.amount,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           WITHDRAW_TYPEHASH,
           params.spoke,
           params.reserveId,
@@ -87,14 +111,23 @@ library EIP712Hash {
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(ISignatureGateway.Borrow calldata params) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     BORROW_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.amount,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           BORROW_TYPEHASH,
           params.spoke,
           params.reserveId,
@@ -102,14 +135,23 @@ library EIP712Hash {
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(ISignatureGateway.Repay calldata params) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     REPAY_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.amount,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           REPAY_TYPEHASH,
           params.spoke,
           params.reserveId,
@@ -117,16 +159,25 @@ library EIP712Hash {
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ISignatureGateway.SetUsingAsCollateral calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     SET_USING_AS_COLLATERAL_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.useAsCollateral,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           SET_USING_AS_COLLATERAL_TYPEHASH,
           params.spoke,
           params.reserveId,
@@ -134,45 +185,69 @@ library EIP712Hash {
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ISignatureGateway.UpdateUserRiskPremium calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     UPDATE_USER_RISK_PREMIUM_TYPEHASH,
+      //     params.spoke,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           UPDATE_USER_RISK_PREMIUM_TYPEHASH,
           params.spoke,
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ISignatureGateway.UpdateUserDynamicConfig calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH,
+      //     params.spoke,
+      //     params.onBehalfOf,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH,
           params.spoke,
           params.onBehalfOf,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ITakerPositionManager.WithdrawPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     WITHDRAW_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.owner,
+      //     params.spender,
+      //     params.amount,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           WITHDRAW_PERMIT_TYPEHASH,
           params.spoke,
@@ -182,15 +257,25 @@ library EIP712Hash {
           params.amount,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ITakerPositionManager.BorrowPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     BORROW_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.reserveId,
+      //     params.owner,
+      //     params.spender,
+      //     params.amount,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           BORROW_PERMIT_TYPEHASH,
           params.spoke,
@@ -200,15 +285,24 @@ library EIP712Hash {
           params.amount,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     IConfigPositionManager.SetGlobalPermissionPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     SET_GLOBAL_PERMISSION_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.delegator,
+      //     params.delegatee,
+      //     params.status,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           SET_GLOBAL_PERMISSION_PERMIT_TYPEHASH,
           params.spoke,
@@ -217,15 +311,24 @@ library EIP712Hash {
           params.status,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     IConfigPositionManager.SetCanSetUsingAsCollateralPermissionPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     SET_CAN_SET_USING_AS_COLLATERAL_PERMISSION_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.delegator,
+      //     params.delegatee,
+      //     params.status,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           SET_CAN_SET_USING_AS_COLLATERAL_PERMISSION_PERMIT_TYPEHASH,
           params.spoke,
@@ -234,15 +337,24 @@ library EIP712Hash {
           params.status,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     IConfigPositionManager.SetCanUpdateUserRiskPremiumPermissionPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     SET_CAN_UPDATE_USER_RISK_PREMIUM_PERMISSION_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.delegator,
+      //     params.delegatee,
+      //     params.status,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           SET_CAN_UPDATE_USER_RISK_PREMIUM_PERMISSION_PERMIT_TYPEHASH,
           params.spoke,
@@ -251,15 +363,24 @@ library EIP712Hash {
           params.status,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     IConfigPositionManager.SetCanUpdateUserDynamicConfigPermissionPermit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
+      // keccak256(
+      //   abi.encode(
+      //     SET_CAN_UPDATE_USER_DYNAMIC_CONFIG_PERMISSION_PERMIT_TYPEHASH,
+      //     params.spoke,
+      //     params.delegator,
+      //     params.delegatee,
+      //     params.status,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
         abi.encode(
           SET_CAN_UPDATE_USER_DYNAMIC_CONFIG_PERMISSION_PERMIT_TYPEHASH,
           params.spoke,
@@ -268,7 +389,6 @@ library EIP712Hash {
           params.status,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 }

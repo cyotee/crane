@@ -27,11 +27,11 @@ contract ERC5267Target is IERC5267 {
             uint256[] memory extensions
         )
     {
-        EIP712Layout storage layout = EIP712Repo._layout();
+        EIP712Layout storage layoutStruct = EIP712Repo._layoutStruct();
         return (
             hex"0f", // 01111
-            EIP712Repo._EIP712Name(layout),
-            EIP712Repo._EIP712Version(layout),
+            EIP712Repo._EIP712Name(layoutStruct),
+            EIP712Repo._EIP712Version(layoutStruct),
             block.chainid,
             address(this),
             bytes32(0),

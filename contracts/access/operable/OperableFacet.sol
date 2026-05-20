@@ -1,23 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
 import {OperableRepo} from "@crane/contracts/access/operable/OperableRepo.sol";
 import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
 import {OperableTarget} from "@crane/contracts/access/operable/OperableTarget.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
+// tag::OperableFacet[]
 /**
  * @title OperableFacet - Facet for Diamond proxies to expose IOperable.
  * @author cyotee doge <doge.cyotee>
  * @dev Reusable across proxies.
  * @dev Do not inherit into your own Facets.
- * @dev Include in your Package to reuse deployed Facet.
+ * @dev Include in your Package to reuse the deployed Facet.
  */
 contract OperableFacet is
-
-    // Some functions are restricted to Owner.
-    MultiStepOwnableModifiers,
     OperableTarget,
     IFacet
 {
@@ -25,10 +22,16 @@ contract OperableFacet is
     /*                                 IFacet                                 */
     /* ---------------------------------------------------------------------- */
 
+    // tag::facetMetadata()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetName() public pure returns (string memory name) {
         return type(OperableFacet).name;
     }
+    // end::facetName()[]
 
+    // tag::facetInterfaces()[]
     /**
      * @inheritdoc IFacet
      */
@@ -36,7 +39,9 @@ contract OperableFacet is
         interfaces = new bytes4[](1);
         interfaces[0] = type(IOperable).interfaceId;
     }
+    // end::facetInterfaces()[]
 
+    // tag::facetFuncs()[]
     /**
      * @inheritdoc IFacet
      */
@@ -47,7 +52,12 @@ contract OperableFacet is
         funcs[2] = IOperable.setOperator.selector;
         funcs[3] = IOperable.setOperatorFor.selector;
     }
+    // end::facetFuncs()[]
 
+    // tag::facetMetadata()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetMetadata()
         external
         pure
@@ -57,4 +67,6 @@ contract OperableFacet is
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+    // end::facetMetadata()[]
 }
+// end::OperableFacet[]

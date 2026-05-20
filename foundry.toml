@@ -14,6 +14,9 @@ fs_permissions = [
     { access = "read-write", path = "./output" },
     # Aave V4 vm.eip712HashType / vm.eip712HashStruct reads the generated EIP-712 bindings file.
     { access = "read", path = "./test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol" },
+    # Liquity Bold NFTMetadata tests read trove SVG/font assets and write generated test_output HTML.
+    { access = "read", path = "./utils/assets/" },
+    { access = "read-write", path = "./utils/assets/test_output" },
     { access = "read-write", path = "./"},
     { access = "write", path = "./reports" },
     { access = "read", path = "./out" },
@@ -35,9 +38,12 @@ viaIR = false
 allow_internal_expect_revert = true
 remappings = [
     "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts/",
     "@crane/contracts/=contracts/",
     "@crane/test/=test/",
-    "battlechain-lib/=lib/battlechain-lib/src/"
+    "battlechain-lib/=lib/battlechain-lib/src/",
+    "@oz/=lib/openzeppelin-contracts/",
+    "@ozu=lib/openzeppelin-contracts-upgradable/"
 ]
 
 ignored_error_codes = [
@@ -45,7 +51,13 @@ ignored_error_codes = [
     3860, 
     5574, 
     2072,
-    1878
+    1878,
+    # Unreachable code
+    5740,
+    # will be promoted to keyword in the future and will not be allowed as an identifier anymore
+    6335,
+    # Virtual modifiers are deprecated and scheduled for removal
+    8429
 ]
 
 skip = [
@@ -54,6 +66,20 @@ skip = [
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts-upgradeable/certora/**",
     # Aave V4 generated EIP-712 bindings file (kept out of test compilation; read at runtime via vm.eip712HashType).
     "test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol",
+    # Liquity Bold upstream submodule — port lives in contracts/protocols/staking/liquity/v2/.
+    "lib/bold/**",
+    # Frax upstream submodule — ported tree lives under contracts/protocols/tokens/stable/frax/.
+    "lib/frax-solidity/**",
+    # frax-std: tests only need FraxTest + helpers (skip script/proxy extras).
+    "contracts/external/frax-std/FraxUpgradeableProxy.sol",
+    "contracts/external/frax-std/FraxTransparentProxy.sol",
+    "contracts/external/frax-std/BaseScript.sol",
+    "contracts/external/frax-std/SafeTxHelper.sol",
+    "contracts/external/frax-std/TestHelper.sol",
+    "contracts/external/frax-std/Logger.sol",
+    "contracts/external/frax-std/NumberFormat.sol",
+    "contracts/external/frax-std/access-control/**",
+    "contracts/external/frax-std/BytesHelper.sol",
 ]
 
 [bind_json]
@@ -128,22 +154,22 @@ ignore = [
     "contracts/external/balancer/v3/pool-hooks/contracts/test/HardhatImports.sol",
     "contracts/external/balancer/v3/pool-gyro/contracts/test/HardhatImports.sol",
     "contracts/registries/package/DiamondFactoryPackageRegistry.sol",
-    "contracts/external/openzeppelin/interfaces/IERC777Recipient.sol",
-    "contracts/external/openzeppelin/interfaces/IERC721Enumerable.sol",
-    "contracts/external/openzeppelin/interfaces/IERC721Metadata.sol",
-    "contracts/external/openzeppelin/interfaces/IERC777Sender.sol",
-    "contracts/external/openzeppelin/interfaces/IERC1155Receiver.sol",
-    "contracts/external/openzeppelin/interfaces/IERC721Receiver.sol",
-    "contracts/external/openzeppelin/interfaces/IERC1820Registry.sol",
-    "contracts/external/openzeppelin/interfaces/IERC1155.sol",
-    "contracts/external/openzeppelin/interfaces/IERC1820Implementer.sol",
-    "contracts/external/openzeppelin/interfaces/IERC3156.sol",
-    "contracts/external/openzeppelin/interfaces/IERC1155MetadataURI.sol",
-    "contracts/external/openzeppelin/interfaces/IERC20Metadata.sol",
-    "contracts/external/openzeppelin/interfaces/draft-IERC2612.sol",
-    "contracts/external/openzeppelin/interfaces/IERC777.sol",
-    "contracts/external/openzeppelin/token/ERC20/extensions/draft-IERC20Permit.sol",
-    "contracts/external/openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC777Recipient.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC721Enumerable.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC721Metadata.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC777Sender.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC1155Receiver.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC721Receiver.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC1820Registry.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC1155.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC1820Implementer.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC3156.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC1155MetadataURI.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC20Metadata.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/draft-IERC2612.sol",
+    "contracts/external/openzeppelin-contracts/interfaces/IERC777.sol",
+    "contracts/external/openzeppelin-contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
+    "contracts/external/openzeppelin-contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Enumerable.sol",
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Metadata.sol",
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155Receiver.sol",
@@ -151,11 +177,20 @@ ignore = [
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155.sol",
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155MetadataURI.sol",
     "contracts/protocols/launchpads/uniswap/continuous-clearing/dependencies/openzeppelin-contracts/contracts/interfaces/IERC20Metadata.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Enumerable.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Metadata.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155Receiver.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Receiver.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155.sol",
+    "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155MetadataURI.sol",
+    "contracts/interfaces/IMultiStepOwnableView.sol"
 ]
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
 ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
 ethereum_mainnet_alchemy = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
 ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 ethereum_sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
@@ -167,8 +202,26 @@ base_sepolia_infura = "https://base-sepolia.infura.io/v3/${INFURA_KEY}"
 base_sepolia_alchemy = "https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
 
 optimism_mainnet = "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+optimism_mainnet_alchemy = "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
+arbitrum_mainnet_alchemy = "https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+arbitrum_mainnet_infura = "https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}"
+
+avalanche_mainnet_alchemy = "https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+avalanche_mainnet_infura = "https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}"
+
+bsc_mainnet_alchemy = "https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
+polygon_mainnet_alchemy = "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+polygon_mainnet_infura = "https://polygon-mainnet.infura.io/v3/${INFURA_KEY}"
 
 fantom_mainnet = "https://fantom.drpc.org"
+
+# No Alchemy tier — public / drpc fallbacks for Frax fork tests
+aurora_mainnet = "https://mainnet.aurora.dev"
+harmony_mainnet = "https://api.harmony.one"
+moonbeam_mainnet = "https://rpc.api.moonbeam.network"
+moonriver_mainnet = "https://rpc.api.moonriver.moonbeam.network"
 
 apeChain_rpc = "https://rpc.apechain.com"
 apeChain_drpc = "https://apechain.drpc.org"

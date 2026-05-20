@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "../core/libraries/BoringOwnableUpgradeable.sol";
 import "../core/libraries/TokenHelper.sol";
 import "../interfaces/IPMerkleDistributor.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract PendleMerkleDistributor is IPMerkleDistributor, UUPSUpgradeable, BoringOwnableUpgradeable, TokenHelper {
+    
+    using BetterEfficientHashLib for bytes;
+
     address public immutable token;
 
     bytes32 public merkleRoot;
@@ -70,7 +75,8 @@ contract PendleMerkleDistributor is IPMerkleDistributor, UUPSUpgradeable, Boring
     }
 
     function _verifyMerkleData(address user, uint256 amount, bytes32[] calldata proof) internal view returns (bool) {
-        bytes32 leaf = keccak256(abi.encodePacked(user, amount));
+        // bytes32 leaf = keccak256(abi.encodePacked(user, amount));
+        bytes32 leaf = abi.encodePacked(user, amount)._hash();
         return MerkleProof.verify(proof, merkleRoot, leaf);
     }
 

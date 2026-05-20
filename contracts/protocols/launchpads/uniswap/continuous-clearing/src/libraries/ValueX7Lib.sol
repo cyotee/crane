@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {ConstantsLib} from './ConstantsLib.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 /// @notice A ValueX7 is a uint256 value that has been multiplied by MPS
 /// @dev X7 values are used for demand values to avoid intermediate division by MPS

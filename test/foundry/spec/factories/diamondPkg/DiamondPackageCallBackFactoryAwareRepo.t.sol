@@ -20,7 +20,7 @@ contract DiamondPackageCallBackFactoryAwareHarness {
 
     function initializeWithSlot(bytes32 slot, IDiamondPackageCallBackFactory factory_) external {
         DiamondPackageCallBackFactoryAwareRepo._initialize(
-            DiamondPackageCallBackFactoryAwareRepo._layout(slot), factory_
+            DiamondPackageCallBackFactoryAwareRepo._layoutStruct(slot), factory_
         );
     }
 
@@ -34,7 +34,7 @@ contract DiamondPackageCallBackFactoryAwareHarness {
         returns (IDiamondPackageCallBackFactory)
     {
         return DiamondPackageCallBackFactoryAwareRepo._diamondPackageCallBackFactory(
-            DiamondPackageCallBackFactoryAwareRepo._layout(slot)
+            DiamondPackageCallBackFactoryAwareRepo._layoutStruct(slot)
         );
     }
 

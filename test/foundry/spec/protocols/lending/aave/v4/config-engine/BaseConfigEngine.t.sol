@@ -35,7 +35,7 @@ import {SpokeEngine} from '@crane/contracts/protocols/lending/aave/v4/config-eng
 import {PositionManagerEngine} from '@crane/contracts/protocols/lending/aave/v4/config-engine/libraries/PositionManagerEngine.sol';
 import {TokenizationSpokeDeployer} from '@crane/contracts/protocols/lending/aave/v4/config-engine/libraries/TokenizationSpokeDeployer.sol';
 
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 import {TestnetERC20} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol';
 import {AaveV4PayloadWrapper} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/config-engine/AaveV4PayloadWrapper.sol';
 import {MockPriceFeed} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/MockPriceFeed.sol';
@@ -186,7 +186,7 @@ abstract contract BaseConfigEngineTest is Test, Create2TestHelper {
     return irStrategies[1];
   }
 
-  function _assertExactEventCount(uint256 expectedCount) internal {
+  function _assertExactEventCount(uint256 expectedCount) internal view {
     assertEq(vm.getRecordedLogs().length, expectedCount);
   }
 

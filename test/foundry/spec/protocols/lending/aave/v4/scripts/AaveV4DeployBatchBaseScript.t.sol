@@ -5,7 +5,7 @@ import {Test} from 'forge-std/Test.sol';
 import {AaveV4DeployBatchBaseScript} from '@crane/test/foundry/spec/protocols/lending/aave/v4/scripts/deploy/AaveV4DeployBatchBase.s.sol';
 import {InputUtils} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/InputUtils.sol';
 import {DeployConstants} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/DeployConstants.sol';
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 
 contract AaveV4DeployBatchBaseScriptHarness is AaveV4DeployBatchBaseScript {
   // use harness to expose internal functions for testing

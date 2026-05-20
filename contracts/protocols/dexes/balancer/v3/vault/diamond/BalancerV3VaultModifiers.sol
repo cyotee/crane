@@ -386,13 +386,13 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
      * @dev Load pool data (view only, no side effects).
      */
     function _loadPoolData(address pool, Rounding roundingDirection) internal view returns (PoolData memory poolData) {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         poolData.load(
-            layout.poolTokenBalances[pool],
-            layout.poolConfigBits[pool],
-            layout.poolTokenInfo[pool],
-            layout.poolTokens[pool],
+            layoutStruct.poolTokenBalances[pool],
+            layoutStruct.poolConfigBits[pool],
+            layoutStruct.poolTokenInfo[pool],
+            layoutStruct.poolTokens[pool],
             roundingDirection
         );
     }
@@ -405,17 +405,17 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
         nonReentrant
         returns (PoolData memory poolData)
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         poolData.load(
-            layout.poolTokenBalances[pool],
-            layout.poolConfigBits[pool],
-            layout.poolTokenInfo[pool],
-            layout.poolTokens[pool],
+            layoutStruct.poolTokenBalances[pool],
+            layoutStruct.poolConfigBits[pool],
+            layoutStruct.poolTokenInfo[pool],
+            layoutStruct.poolTokens[pool],
             roundingDirection
         );
 
-        PoolDataLib.syncPoolBalancesAndFees(poolData, layout.poolTokenBalances[pool], layout.aggregateFeeAmounts[pool]);
+        PoolDataLib.syncPoolBalancesAndFees(poolData, layoutStruct.poolTokenBalances[pool], layoutStruct.aggregateFeeAmounts[pool]);
     }
 
     /**

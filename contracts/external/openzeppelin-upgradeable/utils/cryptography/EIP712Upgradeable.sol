@@ -4,8 +4,8 @@
 pragma solidity ^0.8.20;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import {MessageHashUtils} from "@crane/contracts/external/openzeppelin/utils/cryptography/MessageHashUtils.sol";
-import {IERC5267} from "@crane/contracts/external/openzeppelin/interfaces/IERC5267.sol";
+import {MessageHashUtils} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MessageHashUtils.sol";
+import {IERC5267} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC5267.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

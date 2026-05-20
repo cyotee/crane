@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {FixedPoint96} from '@crane/contracts/protocols/dexes/uniswap/libraries/FixedPoint96.sol';
 import {FullMath} from '@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 /// @notice Provides functions for computing liquidity amounts from token amounts and prices
 /// @dev copied from v4-periphery/src/libraries/LiquidityAmounts.sol but the safe cast has been removed

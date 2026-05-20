@@ -8,7 +8,7 @@ import {VmSafe} from 'forge-std/Vm.sol';
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
 import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 import {CompactStep, CompactStepLib, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol';
 import {AuctionBaseTest} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol';
 

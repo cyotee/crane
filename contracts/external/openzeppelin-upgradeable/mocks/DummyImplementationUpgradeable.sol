@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {ERC1967Utils} from "@crane/contracts/external/openzeppelin/proxy/ERC1967/ERC1967Utils.sol";
-import {StorageSlot} from "@crane/contracts/external/openzeppelin/utils/StorageSlot.sol";
+import {ERC1967Utils} from "@crane/contracts/external/openzeppelin-contracts/proxy/ERC1967/ERC1967Utils.sol";
+import {StorageSlot} from "@crane/contracts/external/openzeppelin-contracts/utils/StorageSlot.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 abstract contract ImplUpgradeable is Initializable {

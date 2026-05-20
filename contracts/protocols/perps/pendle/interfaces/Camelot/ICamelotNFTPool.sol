@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
 
 interface ICamelotNFTPool is IERC721 {
     function createPosition(uint256 amount, uint256 lockDuration) external;

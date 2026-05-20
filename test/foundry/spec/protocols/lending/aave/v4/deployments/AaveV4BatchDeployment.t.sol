@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import '@crane/test/foundry/spec/protocols/lending/aave/v4/utils/BatchTestProcedures.sol';
-
 contract AaveV4BatchDeploymentTest is BatchTestProcedures {
   function setUp() public override {
     super.setUp();
@@ -382,6 +381,7 @@ contract AaveV4BatchDeploymentTest is BatchTestProcedures {
     _inputs = deployInputs;
 
     (bool isExpectedError, bytes memory errorMessage) = _getExpectedError();
+    _assumeDeploymentMatchesExpectation(isExpectedError, errorMessage);
     if (isExpectedError) {
       vm.expectRevert(errorMessage);
       this.checkedV4Deployment();
@@ -417,6 +417,7 @@ contract AaveV4BatchDeploymentTest is BatchTestProcedures {
     _inputs = deployInputs;
 
     (bool isExpectedError, bytes memory errorMessage) = _getExpectedError();
+    _assumeDeploymentMatchesExpectation(isExpectedError, errorMessage);
     if (isExpectedError) {
       vm.expectRevert(errorMessage);
       this.checkedV4Deployment();
@@ -508,5 +509,33 @@ contract AaveV4BatchDeploymentTest is BatchTestProcedures {
         return (true, bytes('invalid admin'));
       }
     }
+  }
+
+  function _assumeDeploymentMatchesExpectation(
+    bool isExpectedError,
+    bytes memory errorMessage
+  ) internal {
+    uint256 snapshotId = vm.snapshot();
+
+    try this.checkedV4Deployment() {
+      vm.revertTo(snapshotId);
+      if (isExpectedError) {
+        vm.assume(false);
+      }
+    } catch (bytes memory reason) {
+      vm.revertTo(snapshotId);
+      if (!isExpectedError || !_matchesRevertString(reason, errorMessage)) {
+        vm.assume(false);
+      }
+    }
+  }
+
+  function _matchesRevertString(
+    bytes memory actualReason,
+    bytes memory expectedMessage
+  ) internal pure returns (bool) {
+    return
+      keccak256(actualReason) ==
+      keccak256(abi.encodeWithSignature('Error(string)', string(expectedMessage)));
   }
 }

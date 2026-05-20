@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
+import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
 import "./interfaces/IReliquary.sol";
 import "./interfaces/IParentRollingRewarder.sol";
 import "./interfaces/IRewarder.sol";
@@ -8,12 +9,12 @@ import "./interfaces/INFTDescriptor.sol";
 import "./services/ReliquaryService.sol";
 import "./services/ReliquaryEvents.sol";
 import "@crane/contracts/utils/SafeERC20.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC721/ERC721.sol";
-import "@crane/contracts/external/openzeppelin/access/extensions/AccessControlEnumerable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC721/ERC721.sol";
+import "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
 import "@crane/contracts/utils/ReentrancyGuard.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import "@crane/contracts/external/openzeppelin/utils/Multicall.sol";
-import "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Multicall.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
 
 /**
  * @title Reliquary
@@ -28,7 +29,7 @@ import "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
  * increased composability without affecting accounting logic too much, and users can
  * trade their Relics without withdrawing liquidity or affecting the position's maturity.
  */
-contract Reliquary is IReliquary, Multicall, ERC721, AccessControlEnumerable, ReentrancyGuard {
+contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnumerable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
 

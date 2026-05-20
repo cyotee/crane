@@ -5,12 +5,17 @@ import {TransparentUpgradeableProxy} from '@crane/contracts/protocols/lending/aa
 import {Create2Utils} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/Create2Utils.sol';
 import {TokenizationSpokeInstance} from '@crane/contracts/protocols/lending/aave/v4/spoke/instances/TokenizationSpokeInstance.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title TokenizationSpokeDeployer
 /// @author Aave Labs
 /// @notice Library for deterministic CREATE2 deployment and address pre-computation of TokenizationSpoke proxies
 /// using the Safe Singleton Factory.
 library TokenizationSpokeDeployer {
-  /// @notice Deploys a TokenizationSpokeInstance implementation and TransparentUpgradeableProxy via CREATE2
+  
+    using BetterEfficientHashLib for bytes;
+
+    /// @notice Deploys a TokenizationSpokeInstance implementation and TransparentUpgradeableProxy via CREATE2
   /// through the Safe Singleton Factory.
   /// @dev The proxy admin owner is set to `msg.sender`.
   /// @param hub The address of the Hub.
@@ -100,7 +105,8 @@ library TokenizationSpokeDeployer {
     string memory name,
     string memory symbol
   ) internal pure returns (bytes32) {
-    return keccak256(abi.encode(hub, underlying, name, symbol, 'impl'));
+    // return keccak256(abi.encode(hub, underlying, name, symbol, 'impl'));
+    return abi.encodePacked(hub, underlying, name, symbol, 'impl')._hash();
   }
 
   function _computeProxySalt(
@@ -109,6 +115,7 @@ library TokenizationSpokeDeployer {
     string memory name,
     string memory symbol
   ) internal pure returns (bytes32) {
-    return keccak256(abi.encode(hub, underlying, name, symbol, 'proxy'));
+    // return keccak256(abi.encode(hub, underlying, name, symbol, 'proxy'));
+    return abi.encodePacked(hub, underlying, name, symbol, 'proxy')._hash();
   }
 }

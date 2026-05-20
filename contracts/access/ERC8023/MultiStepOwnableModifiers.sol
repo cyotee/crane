@@ -8,7 +8,7 @@ import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwn
  * @title MultiStepOwnableModifiers - Modifiers for MultiStepOwnable functionality.
  * @author cyotee doge <not_cyotee@proton.me>
  * @dev Declared abstract to indicate this should be inherited, not deployed directly.
- * @dev Compiler will inline on the modifiers used in the inheriting contract.
+ * @dev Compiler will inline the modifiers used in the inheriting contract.
  */
 abstract contract MultiStepOwnableModifiers {
     /**

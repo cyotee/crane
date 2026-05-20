@@ -20,13 +20,13 @@ import {PoolConfigBits} from "@crane/contracts/external/balancer/v3/vault/contra
 
 /**
  * @title BalancerV3VaultStorageRepo
- * @notice Diamond-compatible storage layout for Balancer V3 Vault.
+ * @notice Diamond-compatible storage layoutStruct for Balancer V3 Vault.
  * @dev This library implements the Facet-Target-Repo pattern for the Balancer V3 Vault.
  *
  * Key differences from original VaultStorage.sol:
- * 1. Uses Diamond storage pattern with slot-based layout
+ * 1. Uses Diamond storage pattern with slot-based layoutStruct
  * 2. Replaces immutables with storage variables (initialized once)
- * 3. Maintains exact storage layout compatibility for all state variables
+ * 3. Maintains exact storage layoutStruct compatibility for all state variables
  *
  * The original VaultStorage uses immutables for:
  * - _MINIMUM_TRADE_AMOUNT, _MINIMUM_WRAP_AMOUNT (config)
@@ -162,22 +162,22 @@ library BalancerV3VaultStorageRepo {
     /* ------ Layout Functions ------ */
 
     /**
-     * @dev Returns storage layout at the specified slot.
+     * @dev Returns storage layoutStruct at the specified slot.
      * @param slot_ Custom storage slot.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
     /**
-     * @dev Returns storage layout at the default slot.
+     * @dev Returns storage layoutStruct at the default slot.
      * @return Storage pointer.
      */
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Initialization ------ */
@@ -185,7 +185,7 @@ library BalancerV3VaultStorageRepo {
     /**
      * @notice Initialize vault storage with configuration.
      * @dev Can only be called once. Sets values that were immutables in original.
-     * @param layout Storage layout to initialize.
+     * @param layoutStruct Storage layoutStruct to initialize.
      * @param minimumTradeAmount_ Minimum trade amount in scaled18.
      * @param minimumWrapAmount_ Minimum wrap amount in native decimals.
      * @param pauseWindowDuration Duration of pause window from deployment.
@@ -194,7 +194,7 @@ library BalancerV3VaultStorageRepo {
      * @param protocolFeeController_ Protocol fee controller contract.
      */
     function _initialize(
-        Storage storage layout,
+        Storage storage layoutStruct,
         uint256 minimumTradeAmount_,
         uint256 minimumWrapAmount_,
         uint32 pauseWindowDuration,
@@ -202,24 +202,24 @@ library BalancerV3VaultStorageRepo {
         IAuthorizer authorizer_,
         IProtocolFeeController protocolFeeController_
     ) internal {
-        require(!layout.initialized, "BalancerV3VaultStorageRepo: already initialized");
+        require(!layoutStruct.initialized, "BalancerV3VaultStorageRepo: already initialized");
         require(pauseWindowDuration <= MAX_PAUSE_WINDOW_DURATION, "BalancerV3VaultStorageRepo: pause window too long");
         require(
             bufferPeriodDuration <= MAX_BUFFER_PERIOD_DURATION, "BalancerV3VaultStorageRepo: buffer period too long"
         );
 
-        layout.minimumTradeAmount = minimumTradeAmount_;
-        layout.minimumWrapAmount = minimumWrapAmount_;
+        layoutStruct.minimumTradeAmount = minimumTradeAmount_;
+        layoutStruct.minimumWrapAmount = minimumWrapAmount_;
 
         // Calculate timestamps based on block.timestamp
         uint32 pauseWindowEndTime = uint32(block.timestamp) + pauseWindowDuration;
-        layout.vaultPauseWindowEndTime = pauseWindowEndTime;
-        layout.vaultBufferPeriodDuration = bufferPeriodDuration;
-        layout.vaultBufferPeriodEndTime = pauseWindowEndTime + bufferPeriodDuration;
+        layoutStruct.vaultPauseWindowEndTime = pauseWindowEndTime;
+        layoutStruct.vaultBufferPeriodDuration = bufferPeriodDuration;
+        layoutStruct.vaultBufferPeriodEndTime = pauseWindowEndTime + bufferPeriodDuration;
 
-        layout.authorizer = authorizer_;
-        layout.protocolFeeController = protocolFeeController_;
-        layout.initialized = true;
+        layoutStruct.authorizer = authorizer_;
+        layoutStruct.protocolFeeController = protocolFeeController_;
+        layoutStruct.initialized = true;
     }
 
     /**
@@ -234,7 +234,7 @@ library BalancerV3VaultStorageRepo {
         IProtocolFeeController protocolFeeController_
     ) internal {
         _initialize(
-            _layout(),
+            _layoutStruct(),
             minimumTradeAmount_,
             minimumWrapAmount_,
             pauseWindowDuration,
@@ -246,331 +246,331 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Configuration Accessors ------ */
 
-    function _minimumTradeAmount(Storage storage layout) internal view returns (uint256) {
-        return layout.minimumTradeAmount;
+    function _minimumTradeAmount(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.minimumTradeAmount;
     }
 
     function _minimumTradeAmount() internal view returns (uint256) {
-        return _minimumTradeAmount(_layout());
+        return _minimumTradeAmount(_layoutStruct());
     }
 
-    function _minimumWrapAmount(Storage storage layout) internal view returns (uint256) {
-        return layout.minimumWrapAmount;
+    function _minimumWrapAmount(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.minimumWrapAmount;
     }
 
     function _minimumWrapAmount() internal view returns (uint256) {
-        return _minimumWrapAmount(_layout());
+        return _minimumWrapAmount(_layoutStruct());
     }
 
-    function _vaultPauseWindowEndTime(Storage storage layout) internal view returns (uint32) {
-        return layout.vaultPauseWindowEndTime;
+    function _vaultPauseWindowEndTime(Storage storage layoutStruct) internal view returns (uint32) {
+        return layoutStruct.vaultPauseWindowEndTime;
     }
 
     function _vaultPauseWindowEndTime() internal view returns (uint32) {
-        return _vaultPauseWindowEndTime(_layout());
+        return _vaultPauseWindowEndTime(_layoutStruct());
     }
 
-    function _vaultBufferPeriodEndTime(Storage storage layout) internal view returns (uint32) {
-        return layout.vaultBufferPeriodEndTime;
+    function _vaultBufferPeriodEndTime(Storage storage layoutStruct) internal view returns (uint32) {
+        return layoutStruct.vaultBufferPeriodEndTime;
     }
 
     function _vaultBufferPeriodEndTime() internal view returns (uint32) {
-        return _vaultBufferPeriodEndTime(_layout());
+        return _vaultBufferPeriodEndTime(_layoutStruct());
     }
 
-    function _vaultBufferPeriodDuration(Storage storage layout) internal view returns (uint32) {
-        return layout.vaultBufferPeriodDuration;
+    function _vaultBufferPeriodDuration(Storage storage layoutStruct) internal view returns (uint32) {
+        return layoutStruct.vaultBufferPeriodDuration;
     }
 
     function _vaultBufferPeriodDuration() internal view returns (uint32) {
-        return _vaultBufferPeriodDuration(_layout());
+        return _vaultBufferPeriodDuration(_layoutStruct());
     }
 
     /* ------ Contract References ------ */
 
-    function _authorizer(Storage storage layout) internal view returns (IAuthorizer) {
-        return layout.authorizer;
+    function _authorizer(Storage storage layoutStruct) internal view returns (IAuthorizer) {
+        return layoutStruct.authorizer;
     }
 
     function _authorizer() internal view returns (IAuthorizer) {
-        return _authorizer(_layout());
+        return _authorizer(_layoutStruct());
     }
 
-    function _setAuthorizer(Storage storage layout, IAuthorizer newAuthorizer) internal {
-        layout.authorizer = newAuthorizer;
+    function _setAuthorizer(Storage storage layoutStruct, IAuthorizer newAuthorizer) internal {
+        layoutStruct.authorizer = newAuthorizer;
     }
 
     function _setAuthorizer(IAuthorizer newAuthorizer) internal {
-        _setAuthorizer(_layout(), newAuthorizer);
+        _setAuthorizer(_layoutStruct(), newAuthorizer);
     }
 
-    function _protocolFeeController(Storage storage layout) internal view returns (IProtocolFeeController) {
-        return layout.protocolFeeController;
+    function _protocolFeeController(Storage storage layoutStruct) internal view returns (IProtocolFeeController) {
+        return layoutStruct.protocolFeeController;
     }
 
     function _protocolFeeController() internal view returns (IProtocolFeeController) {
-        return _protocolFeeController(_layout());
+        return _protocolFeeController(_layoutStruct());
     }
 
-    function _setProtocolFeeController(Storage storage layout, IProtocolFeeController newController) internal {
-        layout.protocolFeeController = newController;
+    function _setProtocolFeeController(Storage storage layoutStruct, IProtocolFeeController newController) internal {
+        layoutStruct.protocolFeeController = newController;
     }
 
     function _setProtocolFeeController(IProtocolFeeController newController) internal {
-        _setProtocolFeeController(_layout(), newController);
+        _setProtocolFeeController(_layoutStruct(), newController);
     }
 
     /* ------ Vault State ------ */
 
-    function _vaultStateBits(Storage storage layout) internal view returns (VaultStateBits) {
-        return layout.vaultStateBits;
+    function _vaultStateBits(Storage storage layoutStruct) internal view returns (VaultStateBits) {
+        return layoutStruct.vaultStateBits;
     }
 
     function _vaultStateBits() internal view returns (VaultStateBits) {
-        return _vaultStateBits(_layout());
+        return _vaultStateBits(_layoutStruct());
     }
 
-    function _setVaultStateBits(Storage storage layout, VaultStateBits bits) internal {
-        layout.vaultStateBits = bits;
+    function _setVaultStateBits(Storage storage layoutStruct, VaultStateBits bits) internal {
+        layoutStruct.vaultStateBits = bits;
     }
 
     function _setVaultStateBits(VaultStateBits bits) internal {
-        _setVaultStateBits(_layout(), bits);
+        _setVaultStateBits(_layoutStruct(), bits);
     }
 
-    function _queriesDisabledPermanently(Storage storage layout) internal view returns (bool) {
-        return layout.queriesDisabledPermanently;
+    function _queriesDisabledPermanently(Storage storage layoutStruct) internal view returns (bool) {
+        return layoutStruct.queriesDisabledPermanently;
     }
 
     function _queriesDisabledPermanently() internal view returns (bool) {
-        return _queriesDisabledPermanently(_layout());
+        return _queriesDisabledPermanently(_layoutStruct());
     }
 
-    function _setQueriesDisabledPermanently(Storage storage layout, bool disabled) internal {
-        layout.queriesDisabledPermanently = disabled;
+    function _setQueriesDisabledPermanently(Storage storage layoutStruct, bool disabled) internal {
+        layoutStruct.queriesDisabledPermanently = disabled;
     }
 
     function _setQueriesDisabledPermanently(bool disabled) internal {
-        _setQueriesDisabledPermanently(_layout(), disabled);
+        _setQueriesDisabledPermanently(_layoutStruct(), disabled);
     }
 
     /* ------ Reserves ------ */
 
-    function _reservesOf(Storage storage layout, IERC20 token) internal view returns (uint256) {
-        return layout.reservesOf[token];
+    function _reservesOf(Storage storage layoutStruct, IERC20 token) internal view returns (uint256) {
+        return layoutStruct.reservesOf[token];
     }
 
     function _reservesOf(IERC20 token) internal view returns (uint256) {
-        return _reservesOf(_layout(), token);
+        return _reservesOf(_layoutStruct(), token);
     }
 
-    function _setReservesOf(Storage storage layout, IERC20 token, uint256 amount) internal {
-        layout.reservesOf[token] = amount;
+    function _setReservesOf(Storage storage layoutStruct, IERC20 token, uint256 amount) internal {
+        layoutStruct.reservesOf[token] = amount;
     }
 
     function _setReservesOf(IERC20 token, uint256 amount) internal {
-        _setReservesOf(_layout(), token, amount);
+        _setReservesOf(_layoutStruct(), token, amount);
     }
 
     /* ------ Pool Config ------ */
 
-    function _poolConfigBits(Storage storage layout, address pool) internal view returns (PoolConfigBits) {
-        return layout.poolConfigBits[pool];
+    function _poolConfigBits(Storage storage layoutStruct, address pool) internal view returns (PoolConfigBits) {
+        return layoutStruct.poolConfigBits[pool];
     }
 
     function _poolConfigBits(address pool) internal view returns (PoolConfigBits) {
-        return _poolConfigBits(_layout(), pool);
+        return _poolConfigBits(_layoutStruct(), pool);
     }
 
-    function _setPoolConfigBits(Storage storage layout, address pool, PoolConfigBits config) internal {
-        layout.poolConfigBits[pool] = config;
+    function _setPoolConfigBits(Storage storage layoutStruct, address pool, PoolConfigBits config) internal {
+        layoutStruct.poolConfigBits[pool] = config;
     }
 
     function _setPoolConfigBits(address pool, PoolConfigBits config) internal {
-        _setPoolConfigBits(_layout(), pool, config);
+        _setPoolConfigBits(_layoutStruct(), pool, config);
     }
 
     /* ------ Pool Role Accounts ------ */
 
-    function _poolRoleAccounts(Storage storage layout, address pool) internal view returns (PoolRoleAccounts storage) {
-        return layout.poolRoleAccounts[pool];
+    function _poolRoleAccounts(Storage storage layoutStruct, address pool) internal view returns (PoolRoleAccounts storage) {
+        return layoutStruct.poolRoleAccounts[pool];
     }
 
     function _poolRoleAccounts(address pool) internal view returns (PoolRoleAccounts storage) {
-        return _poolRoleAccounts(_layout(), pool);
+        return _poolRoleAccounts(_layoutStruct(), pool);
     }
 
-    function _setPoolRoleAccounts(Storage storage layout, address pool, PoolRoleAccounts memory accounts) internal {
-        layout.poolRoleAccounts[pool] = accounts;
+    function _setPoolRoleAccounts(Storage storage layoutStruct, address pool, PoolRoleAccounts memory accounts) internal {
+        layoutStruct.poolRoleAccounts[pool] = accounts;
     }
 
     function _setPoolRoleAccounts(address pool, PoolRoleAccounts memory accounts) internal {
-        _setPoolRoleAccounts(_layout(), pool, accounts);
+        _setPoolRoleAccounts(_layoutStruct(), pool, accounts);
     }
 
     /* ------ Pool Hooks ------ */
 
-    function _hooksContract(Storage storage layout, address pool) internal view returns (IHooks) {
-        return layout.hooksContracts[pool];
+    function _hooksContract(Storage storage layoutStruct, address pool) internal view returns (IHooks) {
+        return layoutStruct.hooksContracts[pool];
     }
 
     function _hooksContract(address pool) internal view returns (IHooks) {
-        return _hooksContract(_layout(), pool);
+        return _hooksContract(_layoutStruct(), pool);
     }
 
-    function _setHooksContract(Storage storage layout, address pool, IHooks hooks) internal {
-        layout.hooksContracts[pool] = hooks;
+    function _setHooksContract(Storage storage layoutStruct, address pool, IHooks hooks) internal {
+        layoutStruct.hooksContracts[pool] = hooks;
     }
 
     function _setHooksContract(address pool, IHooks hooks) internal {
-        _setHooksContract(_layout(), pool, hooks);
+        _setHooksContract(_layoutStruct(), pool, hooks);
     }
 
     /* ------ Pool Tokens ------ */
 
-    function _poolTokens(Storage storage layout, address pool) internal view returns (IERC20[] storage) {
-        return layout.poolTokens[pool];
+    function _poolTokens(Storage storage layoutStruct, address pool) internal view returns (IERC20[] storage) {
+        return layoutStruct.poolTokens[pool];
     }
 
     function _poolTokens(address pool) internal view returns (IERC20[] storage) {
-        return _poolTokens(_layout(), pool);
+        return _poolTokens(_layoutStruct(), pool);
     }
 
     /* ------ Pool Token Info ------ */
 
-    function _poolTokenInfo(Storage storage layout, address pool, IERC20 token)
+    function _poolTokenInfo(Storage storage layoutStruct, address pool, IERC20 token)
         internal
         view
         returns (TokenInfo storage)
     {
-        return layout.poolTokenInfo[pool][token];
+        return layoutStruct.poolTokenInfo[pool][token];
     }
 
     function _poolTokenInfo(address pool, IERC20 token) internal view returns (TokenInfo storage) {
-        return _poolTokenInfo(_layout(), pool, token);
+        return _poolTokenInfo(_layoutStruct(), pool, token);
     }
 
     /* ------ Pool Token Balances ------ */
 
-    function _poolTokenBalances(Storage storage layout, address pool)
+    function _poolTokenBalances(Storage storage layoutStruct, address pool)
         internal
         view
         returns (mapping(uint256 => bytes32) storage)
     {
-        return layout.poolTokenBalances[pool];
+        return layoutStruct.poolTokenBalances[pool];
     }
 
     function _poolTokenBalances(address pool) internal view returns (mapping(uint256 => bytes32) storage) {
-        return _poolTokenBalances(_layout(), pool);
+        return _poolTokenBalances(_layoutStruct(), pool);
     }
 
     /* ------ Aggregate Fee Amounts ------ */
 
-    function _aggregateFeeAmounts(Storage storage layout, address pool)
+    function _aggregateFeeAmounts(Storage storage layoutStruct, address pool)
         internal
         view
         returns (mapping(IERC20 => bytes32) storage)
     {
-        return layout.aggregateFeeAmounts[pool];
+        return layoutStruct.aggregateFeeAmounts[pool];
     }
 
     function _aggregateFeeAmounts(address pool) internal view returns (mapping(IERC20 => bytes32) storage) {
-        return _aggregateFeeAmounts(_layout(), pool);
+        return _aggregateFeeAmounts(_layoutStruct(), pool);
     }
 
-    function _getAggregateFeeAmount(Storage storage layout, address pool, IERC20 token)
+    function _getAggregateFeeAmount(Storage storage layoutStruct, address pool, IERC20 token)
         internal
         view
         returns (bytes32)
     {
-        return layout.aggregateFeeAmounts[pool][token];
+        return layoutStruct.aggregateFeeAmounts[pool][token];
     }
 
     function _getAggregateFeeAmount(address pool, IERC20 token) internal view returns (bytes32) {
-        return _getAggregateFeeAmount(_layout(), pool, token);
+        return _getAggregateFeeAmount(_layoutStruct(), pool, token);
     }
 
-    function _setAggregateFeeAmount(Storage storage layout, address pool, IERC20 token, bytes32 amount) internal {
-        layout.aggregateFeeAmounts[pool][token] = amount;
+    function _setAggregateFeeAmount(Storage storage layoutStruct, address pool, IERC20 token, bytes32 amount) internal {
+        layoutStruct.aggregateFeeAmounts[pool][token] = amount;
     }
 
     function _setAggregateFeeAmount(address pool, IERC20 token, bytes32 amount) internal {
-        _setAggregateFeeAmount(_layout(), pool, token, amount);
+        _setAggregateFeeAmount(_layoutStruct(), pool, token, amount);
     }
 
     /* ------ Buffer Token Balances ------ */
 
-    function _bufferTokenBalance(Storage storage layout, IERC4626 wrappedToken) internal view returns (bytes32) {
-        return layout.bufferTokenBalances[wrappedToken];
+    function _bufferTokenBalance(Storage storage layoutStruct, IERC4626 wrappedToken) internal view returns (bytes32) {
+        return layoutStruct.bufferTokenBalances[wrappedToken];
     }
 
     function _bufferTokenBalance(IERC4626 wrappedToken) internal view returns (bytes32) {
-        return _bufferTokenBalance(_layout(), wrappedToken);
+        return _bufferTokenBalance(_layoutStruct(), wrappedToken);
     }
 
-    function _setBufferTokenBalance(Storage storage layout, IERC4626 wrappedToken, bytes32 balance) internal {
-        layout.bufferTokenBalances[wrappedToken] = balance;
+    function _setBufferTokenBalance(Storage storage layoutStruct, IERC4626 wrappedToken, bytes32 balance) internal {
+        layoutStruct.bufferTokenBalances[wrappedToken] = balance;
     }
 
     function _setBufferTokenBalance(IERC4626 wrappedToken, bytes32 balance) internal {
-        _setBufferTokenBalance(_layout(), wrappedToken, balance);
+        _setBufferTokenBalance(_layoutStruct(), wrappedToken, balance);
     }
 
     /* ------ Buffer LP Shares ------ */
 
-    function _bufferLpShares(Storage storage layout, IERC4626 wrappedToken, address user)
+    function _bufferLpShares(Storage storage layoutStruct, IERC4626 wrappedToken, address user)
         internal
         view
         returns (uint256)
     {
-        return layout.bufferLpShares[wrappedToken][user];
+        return layoutStruct.bufferLpShares[wrappedToken][user];
     }
 
     function _bufferLpShares(IERC4626 wrappedToken, address user) internal view returns (uint256) {
-        return _bufferLpShares(_layout(), wrappedToken, user);
+        return _bufferLpShares(_layoutStruct(), wrappedToken, user);
     }
 
-    function _setBufferLpShares(Storage storage layout, IERC4626 wrappedToken, address user, uint256 shares) internal {
-        layout.bufferLpShares[wrappedToken][user] = shares;
+    function _setBufferLpShares(Storage storage layoutStruct, IERC4626 wrappedToken, address user, uint256 shares) internal {
+        layoutStruct.bufferLpShares[wrappedToken][user] = shares;
     }
 
     function _setBufferLpShares(IERC4626 wrappedToken, address user, uint256 shares) internal {
-        _setBufferLpShares(_layout(), wrappedToken, user, shares);
+        _setBufferLpShares(_layoutStruct(), wrappedToken, user, shares);
     }
 
     /* ------ Buffer Total Shares ------ */
 
-    function _bufferTotalShares(Storage storage layout, IERC4626 wrappedToken) internal view returns (uint256) {
-        return layout.bufferTotalShares[wrappedToken];
+    function _bufferTotalShares(Storage storage layoutStruct, IERC4626 wrappedToken) internal view returns (uint256) {
+        return layoutStruct.bufferTotalShares[wrappedToken];
     }
 
     function _bufferTotalShares(IERC4626 wrappedToken) internal view returns (uint256) {
-        return _bufferTotalShares(_layout(), wrappedToken);
+        return _bufferTotalShares(_layoutStruct(), wrappedToken);
     }
 
-    function _setBufferTotalShares(Storage storage layout, IERC4626 wrappedToken, uint256 shares) internal {
-        layout.bufferTotalShares[wrappedToken] = shares;
+    function _setBufferTotalShares(Storage storage layoutStruct, IERC4626 wrappedToken, uint256 shares) internal {
+        layoutStruct.bufferTotalShares[wrappedToken] = shares;
     }
 
     function _setBufferTotalShares(IERC4626 wrappedToken, uint256 shares) internal {
-        _setBufferTotalShares(_layout(), wrappedToken, shares);
+        _setBufferTotalShares(_layoutStruct(), wrappedToken, shares);
     }
 
     /* ------ Buffer Assets ------ */
 
-    function _bufferAsset(Storage storage layout, IERC4626 wrappedToken) internal view returns (address) {
-        return layout.bufferAssets[wrappedToken];
+    function _bufferAsset(Storage storage layoutStruct, IERC4626 wrappedToken) internal view returns (address) {
+        return layoutStruct.bufferAssets[wrappedToken];
     }
 
     function _bufferAsset(IERC4626 wrappedToken) internal view returns (address) {
-        return _bufferAsset(_layout(), wrappedToken);
+        return _bufferAsset(_layoutStruct(), wrappedToken);
     }
 
-    function _setBufferAsset(Storage storage layout, IERC4626 wrappedToken, address underlyingToken) internal {
-        layout.bufferAssets[wrappedToken] = underlyingToken;
+    function _setBufferAsset(Storage storage layoutStruct, IERC4626 wrappedToken, address underlyingToken) internal {
+        layoutStruct.bufferAssets[wrappedToken] = underlyingToken;
     }
 
     function _setBufferAsset(IERC4626 wrappedToken, address underlyingToken) internal {
-        _setBufferAsset(_layout(), wrappedToken, underlyingToken);
+        _setBufferAsset(_layoutStruct(), wrappedToken, underlyingToken);
     }
 }

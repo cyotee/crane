@@ -15,8 +15,7 @@ library Base64 {
     /// @param fileSafe  Whether to replace '+' with '-' and '/' with '_'.
     /// @param noPadding Whether to strip away the padding.
     function encode(bytes memory data, bool fileSafe, bool noPadding) internal pure returns (string memory result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             let dataLength := mload(data)
 
             if dataLength {
@@ -99,8 +98,7 @@ library Base64 {
     /// It is the user's responsibility to ensure that the `data`
     /// is a valid base64 encoded string.
     function decode(string memory data) internal pure returns (bytes memory result) {
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             let dataLength := mload(data)
 
             if dataLength {

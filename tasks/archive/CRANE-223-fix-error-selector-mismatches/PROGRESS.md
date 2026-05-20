@@ -34,7 +34,7 @@
    - `vm.expectRevert(abi.encodeWithSelector(SafeCast.SafeCastOverflowedUintDowncast.selector, 160, amountToDeposit))` → `vm.expectRevert(SafeCastLib.Overflow.selector)`
 
 3. **WeightedPool8020Factory.t.sol** (line 10, 120, 134):
-   - Removed: `import { Errors } from "@crane/contracts/external/openzeppelin/utils/Errors.sol";`
+   - Removed: `import { Errors } from "@crane/contracts/external/openzeppelin-contracts/utils/Errors.sol";`
    - `vm.expectRevert(Errors.FailedDeployment.selector)` → `vm.expectRevert(Create2.Create2FailedDeployment.selector)` (2 occurrences)
 
 4. **StableSurgeHook.t.sol** (line 146):

@@ -1,66 +1,36 @@
-## Foundry
+# Crane
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Diamond-first (ERC2535) Solidity development framework.
 
-Foundry consists of:
+Crane separates storage management, business logic, and Diamond exposure into distinct layers. Facets deploy once at deterministic addresses via CREATE3. Multiple proxies reuse the same facets on every chain.
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Primary Value
+
+- Facets deployed once. Proxies composed from references to those facets.
+- Deterministic addresses for facets and packages across all EVM chains.
+- Storage isolated per proxy through library-based Diamond storage with namespaced slots.
+- Packages (DFPkg) bundle facet cuts and initialization for repeatable Diamond instances.
+- Reduced deployment cost: logic gas is paid once per facet, not per proxy.
+
+## Core Patterns
+
+- Facet-Target-Repo
+- CREATE3 + DiamondPackageCallBackFactory
+- IDiamondFactoryPackage (DFPkg)
+- Structured TestBase + Behavior validation
 
 ## Documentation
 
-https://book.getfoundry.sh/
+Full documentation is maintained in `/docs` and published via GitBook.
 
-## Usage
+## Build and Test
 
-### Build
-
-```shell
-$ forge build
+```bash
+forge build
+forge test
+forge fmt
 ```
 
-### Test
+## Repository
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+https://github.com/cyotee/crane

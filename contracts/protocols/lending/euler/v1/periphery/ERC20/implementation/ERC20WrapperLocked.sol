@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import {ERC20Wrapper, ERC20, IERC20, SafeERC20} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC20Wrapper.sol";
-import {Ownable, Context} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
-import {EnumerableMap} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableMap.sol";
+import {ERC20Wrapper, ERC20, IERC20, SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Wrapper.sol";
+import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
+import {EnumerableMap} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableMap.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// @title ERC20WrapperLocked

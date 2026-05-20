@@ -13,11 +13,11 @@ import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 
 /**
  * @title BalancerV3RouterStorageRepo
- * @notice Diamond-compatible storage layout for Balancer V3 Router.
+ * @notice Diamond-compatible storage layoutStruct for Balancer V3 Router.
  * @dev This library implements the Facet-Target-Repo pattern for the Balancer V3 Router.
  *
  * Key differences from original RouterCommon.sol:
- * 1. Uses Diamond storage pattern with slot-based layout
+ * 1. Uses Diamond storage pattern with slot-based layoutStruct
  * 2. Replaces immutables with storage variables (initialized once)
  * 3. Maintains exact behavioral compatibility with original Router
  *
@@ -94,22 +94,22 @@ library BalancerV3RouterStorageRepo {
     /* ------ Layout Functions ------ */
 
     /**
-     * @dev Returns storage layout at the specified slot.
+     * @dev Returns storage layoutStruct at the specified slot.
      * @param slot_ Custom storage slot.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
     /**
-     * @dev Returns storage layout at the default slot.
+     * @dev Returns storage layoutStruct at the default slot.
      * @return Storage pointer.
      */
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Initialization ------ */
@@ -117,84 +117,84 @@ library BalancerV3RouterStorageRepo {
     /**
      * @notice Initialize router storage with configuration.
      * @dev Can only be called once. Sets values that were immutables in original.
-     * @param layout Storage layout to initialize.
+     * @param layoutStruct Storage layoutStruct to initialize.
      * @param vault_ Vault contract reference.
      * @param weth_ WETH token reference.
      * @param permit2_ Permit2 contract reference (zero address for prepaid routers).
      * @param routerVersion_ Version string for the router.
      */
     function _initialize(
-        Storage storage layout,
+        Storage storage layoutStruct,
         IVault vault_,
         IWETH weth_,
         IPermit2 permit2_,
         string memory routerVersion_
     ) internal {
-        require(!layout.initialized, "BalancerV3RouterStorageRepo: already initialized");
+        require(!layoutStruct.initialized, "BalancerV3RouterStorageRepo: already initialized");
 
-        layout.vault = vault_;
-        layout.weth = weth_;
-        layout.permit2 = permit2_;
-        layout.isPrepaid = address(permit2_) == address(0);
-        layout.routerVersion = routerVersion_;
-        layout.initialized = true;
+        layoutStruct.vault = vault_;
+        layoutStruct.weth = weth_;
+        layoutStruct.permit2 = permit2_;
+        layoutStruct.isPrepaid = address(permit2_) == address(0);
+        layoutStruct.routerVersion = routerVersion_;
+        layoutStruct.initialized = true;
     }
 
     /**
      * @notice Initialize using default storage slot.
      */
     function _initialize(IVault vault_, IWETH weth_, IPermit2 permit2_, string memory routerVersion_) internal {
-        _initialize(_layout(), vault_, weth_, permit2_, routerVersion_);
+        _initialize(_layoutStruct(), vault_, weth_, permit2_, routerVersion_);
     }
 
     /* ------ Accessors ------ */
 
-    function _weth(Storage storage layout) internal view returns (IWETH) {
-        return layout.weth;
+    function _weth(Storage storage layoutStruct) internal view returns (IWETH) {
+        return layoutStruct.weth;
     }
 
     function _weth() internal view returns (IWETH) {
-        return _weth(_layout());
+        return _weth(_layoutStruct());
     }
 
-    function _permit2(Storage storage layout) internal view returns (IPermit2) {
-        return layout.permit2;
+    function _permit2(Storage storage layoutStruct) internal view returns (IPermit2) {
+        return layoutStruct.permit2;
     }
 
     function _permit2() internal view returns (IPermit2) {
-        return _permit2(_layout());
+        return _permit2(_layoutStruct());
     }
 
-    function _vault(Storage storage layout) internal view returns (IVault) {
-        return layout.vault;
+    function _vault(Storage storage layoutStruct) internal view returns (IVault) {
+        return layoutStruct.vault;
     }
 
     function _vault() internal view returns (IVault) {
-        return _vault(_layout());
+        return _vault(_layoutStruct());
     }
 
-    function _isPrepaid(Storage storage layout) internal view returns (bool) {
-        return layout.isPrepaid;
+    function _isPrepaid(Storage storage layoutStruct) internal view returns (bool) {
+        return layoutStruct.isPrepaid;
     }
 
     function _isPrepaid() internal view returns (bool) {
-        return _isPrepaid(_layout());
+        return _isPrepaid(_layoutStruct());
     }
 
-    function _routerVersion(Storage storage layout) internal view returns (string memory) {
-        return layout.routerVersion;
+    function _routerVersion(Storage storage layoutStruct) internal view returns (string memory) {
+        return layoutStruct.routerVersion;
     }
 
     function _routerVersion() internal view returns (string memory) {
-        return _routerVersion(_layout());
+        return _routerVersion(_layoutStruct());
     }
 
-    function _isInitialized(Storage storage layout) internal view returns (bool) {
-        return layout.initialized;
+    function _isInitialized(Storage storage layoutStruct) internal view returns (bool) {
+        return layoutStruct.initialized;
     }
 
     function _isInitialized() internal view returns (bool) {
-        return _isInitialized(_layout());
+        return _isInitialized(_layoutStruct());
     }
 
     /* ------ Transient Storage Helpers ------ */

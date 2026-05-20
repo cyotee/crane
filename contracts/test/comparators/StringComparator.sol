@@ -16,14 +16,14 @@ library StringComparatorRepo {
 
     bytes32 internal constant STORAGE_SLOT = keccak256(abi.encode(type(StringComparatorRepo).name));
 
-    function _layout(bytes32 slot) internal pure returns (StringComparatorLayout storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (StringComparatorLayout storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
     function _stringCompare(address subject) internal pure returns (StringComparatorLayout storage) {
-        return _layout(subject._toBytes32() ^ STORAGE_SLOT);
+        return _layoutStruct(subject._toBytes32() ^ STORAGE_SLOT);
     }
 
     function _recExpectedString(address subject, bytes4 func, string memory expected) internal {

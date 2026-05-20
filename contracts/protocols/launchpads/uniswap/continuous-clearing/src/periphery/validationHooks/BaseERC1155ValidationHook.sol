@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {IValidationHook} from '../../interfaces/IValidationHook.sol';
 import {IValidationHookIntrospection, ValidationHookIntrospection} from './ValidationHookIntrospection.sol';
-import {IERC1155} from 'contracts/external/openzeppelin/token/ERC1155/IERC1155.sol';
+import {IERC1155} from 'contracts/external/openzeppelin-contracts/token/ERC1155/IERC1155.sol';
 import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
 
 interface IBaseERC1155ValidationHook is IValidationHookIntrospection {

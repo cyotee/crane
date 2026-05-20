@@ -178,7 +178,7 @@ contract AssetInterestRateStrategyTest is Base {
     test_calculateInterestRate_fuzz_ZeroDebt(0);
   }
 
-  function test_calculateInterestRate_LeftToOptimalPoint(uint256 utilizationRatio) public {
+  function test_calculateInterestRate_LeftToOptimalPoint(uint256 utilizationRatio) public view {
     uint256 utilizationRatioRay = bound(utilizationRatio, 1, rateData.optimalUsageRatio).bpsToRay();
 
     (
@@ -208,11 +208,11 @@ contract AssetInterestRateStrategyTest is Base {
     }
   }
 
-  function test_calculateInterestRate_AtOptimalPoint() public {
+  function test_calculateInterestRate_AtOptimalPoint() public view {
     test_calculateInterestRate_LeftToOptimalPoint(100_00);
   }
 
-  function test_calculateInterestRate_RightToOptimalPoint(uint256 utilizationRatio) public {
+  function test_calculateInterestRate_RightToOptimalPoint(uint256 utilizationRatio) public view {
     uint256 utilizationRatioRay = bound(utilizationRatio, rateData.optimalUsageRatio + 1, 100_00)
       .bpsToRay();
 
@@ -246,13 +246,13 @@ contract AssetInterestRateStrategyTest is Base {
     }
   }
 
-  function test_calculateInterestRate_AtMaxUtilization() public {
+  function test_calculateInterestRate_AtMaxUtilization() public view {
     test_calculateInterestRate_RightToOptimalPoint(100_00);
   }
 
   function _generateCalculateDrawnRateParams(
     uint256 targetUtilizationRatioRay
-  ) internal returns (uint256 liquidity, uint256 drawn, uint256 deficit, uint256 swept) {
+  ) internal view returns (uint256 liquidity, uint256 drawn, uint256 deficit, uint256 swept) {
     drawn = bound(vm.randomUint(), 1, MAX_SUPPLY_AMOUNT);
 
     // utilizationRatio = drawn / (drawn + liquidity)

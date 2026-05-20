@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {Ownable} from "../../../../../../external/openzeppelin/access/Ownable.sol";
-import {EnumerableSet} from "../../../../../../external/openzeppelin/utils/structs/EnumerableSet.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 import {ERC20EVCCompatible, Context} from "./ERC20EVCCompatible.sol";
 import {IEVault} from "../EVault/IEVault.sol";
 

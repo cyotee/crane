@@ -41,19 +41,19 @@ library BalancerV3LBPoolRepo {
         uint256 reserveTokenScalingFactor;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /**
      * @notice Initialize the LBP with sale parameters.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param projectTokenIndex_ Index of the project token (0 or 1).
      * @param reserveTokenIndex_ Index of the reserve token (0 or 1).
      * @param projectTokenStartWeight_ Starting weight for project token (e.g., 0.99e18 for 99%).
@@ -65,7 +65,7 @@ library BalancerV3LBPoolRepo {
      * @param reserveTokenScalingFactor_ Scaling factor for reserve token decimals.
      */
     function _initialize(
-        Storage storage layout,
+        Storage storage layoutStruct,
         uint256 projectTokenIndex_,
         uint256 reserveTokenIndex_,
         uint256 projectTokenStartWeight_,
@@ -91,17 +91,17 @@ library BalancerV3LBPoolRepo {
             revert InvalidWeights();
         }
 
-        layout.projectTokenIndex = projectTokenIndex_;
-        layout.reserveTokenIndex = reserveTokenIndex_;
-        layout.projectTokenStartWeight = projectTokenStartWeight_;
-        layout.projectTokenEndWeight = projectTokenEndWeight_;
-        layout.reserveTokenStartWeight = reserveTokenStartWeight_;
-        layout.reserveTokenEndWeight = reserveTokenEndWeight_;
-        layout.startTime = startTime_;
-        layout.endTime = endTime_;
-        layout.blockProjectTokenSwapsIn = blockProjectTokenSwapsIn_;
-        layout.reserveTokenVirtualBalanceScaled18 = reserveTokenVirtualBalanceScaled18_;
-        layout.reserveTokenScalingFactor = reserveTokenScalingFactor_;
+        layoutStruct.projectTokenIndex = projectTokenIndex_;
+        layoutStruct.reserveTokenIndex = reserveTokenIndex_;
+        layoutStruct.projectTokenStartWeight = projectTokenStartWeight_;
+        layoutStruct.projectTokenEndWeight = projectTokenEndWeight_;
+        layoutStruct.reserveTokenStartWeight = reserveTokenStartWeight_;
+        layoutStruct.reserveTokenEndWeight = reserveTokenEndWeight_;
+        layoutStruct.startTime = startTime_;
+        layoutStruct.endTime = endTime_;
+        layoutStruct.blockProjectTokenSwapsIn = blockProjectTokenSwapsIn_;
+        layoutStruct.reserveTokenVirtualBalanceScaled18 = reserveTokenVirtualBalanceScaled18_;
+        layoutStruct.reserveTokenScalingFactor = reserveTokenScalingFactor_;
     }
 
     function _initialize(
@@ -116,7 +116,7 @@ library BalancerV3LBPoolRepo {
         uint256 reserveTokenScalingFactor_
     ) internal {
         _initialize(
-            _layout(),
+            _layoutStruct(),
             projectTokenIndex_,
             reserveTokenIndex_,
             projectTokenStartWeight_,
@@ -133,104 +133,104 @@ library BalancerV3LBPoolRepo {
     /*                               Getters                                   */
     /* ---------------------------------------------------------------------- */
 
-    function _getProjectTokenIndex(Storage storage layout) internal view returns (uint256) {
-        return layout.projectTokenIndex;
+    function _getProjectTokenIndex(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.projectTokenIndex;
     }
 
     function _getProjectTokenIndex() internal view returns (uint256) {
-        return _getProjectTokenIndex(_layout());
+        return _getProjectTokenIndex(_layoutStruct());
     }
 
-    function _getReserveTokenIndex(Storage storage layout) internal view returns (uint256) {
-        return layout.reserveTokenIndex;
+    function _getReserveTokenIndex(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.reserveTokenIndex;
     }
 
     function _getReserveTokenIndex() internal view returns (uint256) {
-        return _getReserveTokenIndex(_layout());
+        return _getReserveTokenIndex(_layoutStruct());
     }
 
-    function _getStartTime(Storage storage layout) internal view returns (uint256) {
-        return layout.startTime;
+    function _getStartTime(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.startTime;
     }
 
     function _getStartTime() internal view returns (uint256) {
-        return _getStartTime(_layout());
+        return _getStartTime(_layoutStruct());
     }
 
-    function _getEndTime(Storage storage layout) internal view returns (uint256) {
-        return layout.endTime;
+    function _getEndTime(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.endTime;
     }
 
     function _getEndTime() internal view returns (uint256) {
-        return _getEndTime(_layout());
+        return _getEndTime(_layoutStruct());
     }
 
-    function _getProjectTokenStartWeight(Storage storage layout) internal view returns (uint256) {
-        return layout.projectTokenStartWeight;
+    function _getProjectTokenStartWeight(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.projectTokenStartWeight;
     }
 
     function _getProjectTokenStartWeight() internal view returns (uint256) {
-        return _getProjectTokenStartWeight(_layout());
+        return _getProjectTokenStartWeight(_layoutStruct());
     }
 
-    function _getProjectTokenEndWeight(Storage storage layout) internal view returns (uint256) {
-        return layout.projectTokenEndWeight;
+    function _getProjectTokenEndWeight(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.projectTokenEndWeight;
     }
 
     function _getProjectTokenEndWeight() internal view returns (uint256) {
-        return _getProjectTokenEndWeight(_layout());
+        return _getProjectTokenEndWeight(_layoutStruct());
     }
 
-    function _getReserveTokenStartWeight(Storage storage layout) internal view returns (uint256) {
-        return layout.reserveTokenStartWeight;
+    function _getReserveTokenStartWeight(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.reserveTokenStartWeight;
     }
 
     function _getReserveTokenStartWeight() internal view returns (uint256) {
-        return _getReserveTokenStartWeight(_layout());
+        return _getReserveTokenStartWeight(_layoutStruct());
     }
 
-    function _getReserveTokenEndWeight(Storage storage layout) internal view returns (uint256) {
-        return layout.reserveTokenEndWeight;
+    function _getReserveTokenEndWeight(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.reserveTokenEndWeight;
     }
 
     function _getReserveTokenEndWeight() internal view returns (uint256) {
-        return _getReserveTokenEndWeight(_layout());
+        return _getReserveTokenEndWeight(_layoutStruct());
     }
 
-    function _isBlockProjectTokenSwapsIn(Storage storage layout) internal view returns (bool) {
-        return layout.blockProjectTokenSwapsIn;
+    function _isBlockProjectTokenSwapsIn(Storage storage layoutStruct) internal view returns (bool) {
+        return layoutStruct.blockProjectTokenSwapsIn;
     }
 
     function _isBlockProjectTokenSwapsIn() internal view returns (bool) {
-        return _isBlockProjectTokenSwapsIn(_layout());
+        return _isBlockProjectTokenSwapsIn(_layoutStruct());
     }
 
-    function _getReserveTokenVirtualBalanceScaled18(Storage storage layout) internal view returns (uint256) {
-        return layout.reserveTokenVirtualBalanceScaled18;
+    function _getReserveTokenVirtualBalanceScaled18(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.reserveTokenVirtualBalanceScaled18;
     }
 
     function _getReserveTokenVirtualBalanceScaled18() internal view returns (uint256) {
-        return _getReserveTokenVirtualBalanceScaled18(_layout());
+        return _getReserveTokenVirtualBalanceScaled18(_layoutStruct());
     }
 
-    function _getReserveTokenScalingFactor(Storage storage layout) internal view returns (uint256) {
-        return layout.reserveTokenScalingFactor;
+    function _getReserveTokenScalingFactor(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.reserveTokenScalingFactor;
     }
 
     function _getReserveTokenScalingFactor() internal view returns (uint256) {
-        return _getReserveTokenScalingFactor(_layout());
+        return _getReserveTokenScalingFactor(_layoutStruct());
     }
 
     /**
      * @notice Check if swaps are currently enabled (within sale period).
      * @return True if current time is between startTime and endTime.
      */
-    function _isSwapEnabled(Storage storage layout) internal view returns (bool) {
-        return block.timestamp >= layout.startTime && block.timestamp <= layout.endTime;
+    function _isSwapEnabled(Storage storage layoutStruct) internal view returns (bool) {
+        return block.timestamp >= layoutStruct.startTime && block.timestamp <= layoutStruct.endTime;
     }
 
     function _isSwapEnabled() internal view returns (bool) {
-        return _isSwapEnabled(_layout());
+        return _isSwapEnabled(_layoutStruct());
     }
 
     /**
@@ -240,21 +240,21 @@ library BalancerV3LBPoolRepo {
      * @return startWeights Array of [projectTokenStartWeight, reserveTokenStartWeight].
      * @return endWeights Array of [projectTokenEndWeight, reserveTokenEndWeight].
      */
-    function _getGradualWeightUpdateParams(Storage storage layout)
+    function _getGradualWeightUpdateParams(Storage storage layoutStruct)
         internal
         view
         returns (uint256 startTime, uint256 endTime, uint256[] memory startWeights, uint256[] memory endWeights)
     {
-        startTime = layout.startTime;
-        endTime = layout.endTime;
+        startTime = layoutStruct.startTime;
+        endTime = layoutStruct.endTime;
 
         startWeights = new uint256[](2);
-        startWeights[layout.projectTokenIndex] = layout.projectTokenStartWeight;
-        startWeights[layout.reserveTokenIndex] = layout.reserveTokenStartWeight;
+        startWeights[layoutStruct.projectTokenIndex] = layoutStruct.projectTokenStartWeight;
+        startWeights[layoutStruct.reserveTokenIndex] = layoutStruct.reserveTokenStartWeight;
 
         endWeights = new uint256[](2);
-        endWeights[layout.projectTokenIndex] = layout.projectTokenEndWeight;
-        endWeights[layout.reserveTokenIndex] = layout.reserveTokenEndWeight;
+        endWeights[layoutStruct.projectTokenIndex] = layoutStruct.projectTokenEndWeight;
+        endWeights[layoutStruct.reserveTokenIndex] = layoutStruct.reserveTokenEndWeight;
     }
 
     function _getGradualWeightUpdateParams()
@@ -262,6 +262,6 @@ library BalancerV3LBPoolRepo {
         view
         returns (uint256 startTime, uint256 endTime, uint256[] memory startWeights, uint256[] memory endWeights)
     {
-        return _getGradualWeightUpdateParams(_layout());
+        return _getGradualWeightUpdateParams(_layoutStruct());
     }
 }

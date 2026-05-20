@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {Context} from "@crane/contracts/external/openzeppelin/utils/Context.sol";
-import {Ownable} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// @title SnapshotRegistry
@@ -100,8 +100,7 @@ contract SnapshotRegistry is EVCUtil, Ownable {
             }
         }
 
-        /// @solidity memory-safe-assembly
-        assembly {
+        assembly("memory-safe") {
             // update the length
             mstore(validElements, numValid)
         }

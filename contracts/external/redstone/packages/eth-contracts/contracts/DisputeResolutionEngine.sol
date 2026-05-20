@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import "../../../../openzeppelin/utils/math/Math.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "./LockingRegistry.sol";
 

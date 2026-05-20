@@ -55,24 +55,24 @@ library BalancerV3StablePoolRepo {
         uint32 endTime;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /**
      * @notice Initialize the stable pool with an amplification parameter.
      * @dev The amplification parameter must be within [MIN_AMP, MAX_AMP].
      * Stored value includes the AMP_PRECISION multiplier.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param amplificationParameter_ Initial amplification factor (1-5000, without precision).
      */
-    function _initialize(Storage storage layout, uint256 amplificationParameter_) internal {
+    function _initialize(Storage storage layoutStruct, uint256 amplificationParameter_) internal {
         if (amplificationParameter_ < StableMath.MIN_AMP) revert AmplificationFactorTooLow();
         if (amplificationParameter_ > StableMath.MAX_AMP) revert AmplificationFactorTooHigh();
 
@@ -80,31 +80,31 @@ library BalancerV3StablePoolRepo {
         uint64 initialAmp = uint64(amplificationParameter_ * StableMath.AMP_PRECISION);
 
         // Set start = end to indicate no transition in progress
-        layout.startValue = initialAmp;
-        layout.endValue = initialAmp;
-        layout.startTime = uint32(block.timestamp);
-        layout.endTime = uint32(block.timestamp);
+        layoutStruct.startValue = initialAmp;
+        layoutStruct.endValue = initialAmp;
+        layoutStruct.startTime = uint32(block.timestamp);
+        layoutStruct.endTime = uint32(block.timestamp);
     }
 
     function _initialize(uint256 amplificationParameter_) internal {
-        _initialize(_layout(), amplificationParameter_);
+        _initialize(_layoutStruct(), amplificationParameter_);
     }
 
     /**
      * @notice Start a gradual amplification parameter update.
      * @dev Validates rate limits and duration requirements.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param rawEndValue Target amplification value (without precision multiplier).
      * @param endTime Timestamp when the update should complete.
      */
-    function _startAmplificationParameterUpdate(Storage storage layout, uint256 rawEndValue, uint256 endTime) internal {
+    function _startAmplificationParameterUpdate(Storage storage layoutStruct, uint256 rawEndValue, uint256 endTime) internal {
         if (rawEndValue < StableMath.MIN_AMP) revert AmplificationFactorTooLow();
         if (rawEndValue > StableMath.MAX_AMP) revert AmplificationFactorTooHigh();
 
         uint256 duration = endTime - block.timestamp;
         if (duration < MIN_UPDATE_TIME) revert AmpUpdateDurationTooShort();
 
-        (uint256 currentValue, bool isUpdating) = _getAmplificationParameter(layout);
+        (uint256 currentValue, bool isUpdating) = _getAmplificationParameter(layoutStruct);
         if (isUpdating) revert AmpUpdateAlreadyStarted();
 
         uint256 endValue = rawEndValue * StableMath.AMP_PRECISION;
@@ -117,43 +117,43 @@ library BalancerV3StablePoolRepo {
 
         if (dailyRate > MAX_AMP_UPDATE_DAILY_RATE) revert AmpUpdateRateTooFast();
 
-        layout.startValue = uint64(currentValue);
-        layout.endValue = uint64(endValue);
-        layout.startTime = uint32(block.timestamp);
-        layout.endTime = uint32(endTime);
+        layoutStruct.startValue = uint64(currentValue);
+        layoutStruct.endValue = uint64(endValue);
+        layoutStruct.startTime = uint32(block.timestamp);
+        layoutStruct.endTime = uint32(endTime);
     }
 
     function _startAmplificationParameterUpdate(uint256 rawEndValue, uint256 endTime) internal {
-        _startAmplificationParameterUpdate(_layout(), rawEndValue, endTime);
+        _startAmplificationParameterUpdate(_layoutStruct(), rawEndValue, endTime);
     }
 
     /**
      * @notice Stop an in-progress amplification update.
      * @dev Freezes the current interpolated value as the new static value.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      */
-    function _stopAmplificationParameterUpdate(Storage storage layout) internal {
-        (uint256 currentValue, bool isUpdating) = _getAmplificationParameter(layout);
+    function _stopAmplificationParameterUpdate(Storage storage layoutStruct) internal {
+        (uint256 currentValue, bool isUpdating) = _getAmplificationParameter(layoutStruct);
         if (!isUpdating) revert AmpUpdateNotStarted();
 
-        _stopAmplification(layout, currentValue);
+        _stopAmplification(layoutStruct, currentValue);
     }
 
     function _stopAmplificationParameterUpdate() internal {
-        _stopAmplificationParameterUpdate(_layout());
+        _stopAmplificationParameterUpdate(_layoutStruct());
     }
 
     /**
      * @notice Get the current amplification parameter with interpolation.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return value Current amplification value (includes precision).
      * @return isUpdating True if currently transitioning.
      */
-    function _getAmplificationParameter(Storage storage layout) internal view returns (uint256 value, bool isUpdating) {
-        uint256 startValue = layout.startValue;
-        uint256 endValue = layout.endValue;
-        uint256 startTime = layout.startTime;
-        uint256 endTime = layout.endTime;
+    function _getAmplificationParameter(Storage storage layoutStruct) internal view returns (uint256 value, bool isUpdating) {
+        uint256 startValue = layoutStruct.startValue;
+        uint256 endValue = layoutStruct.endValue;
+        uint256 startTime = layoutStruct.startTime;
+        uint256 endTime = layoutStruct.endTime;
 
         if (block.timestamp < endTime) {
             isUpdating = true;
@@ -175,26 +175,26 @@ library BalancerV3StablePoolRepo {
     }
 
     function _getAmplificationParameter() internal view returns (uint256 value, bool isUpdating) {
-        return _getAmplificationParameter(_layout());
+        return _getAmplificationParameter(_layoutStruct());
     }
 
     /**
      * @notice Get the full amplification state.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return startValue Starting value of transition.
      * @return endValue Ending value of transition.
      * @return startTime Start timestamp.
      * @return endTime End timestamp.
      */
-    function _getAmplificationState(Storage storage layout)
+    function _getAmplificationState(Storage storage layoutStruct)
         internal
         view
         returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
     {
-        startValue = layout.startValue;
-        endValue = layout.endValue;
-        startTime = layout.startTime;
-        endTime = layout.endTime;
+        startValue = layoutStruct.startValue;
+        endValue = layoutStruct.endValue;
+        startTime = layoutStruct.startTime;
+        endTime = layoutStruct.endTime;
     }
 
     function _getAmplificationState()
@@ -202,21 +202,21 @@ library BalancerV3StablePoolRepo {
         view
         returns (uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)
     {
-        return _getAmplificationState(_layout());
+        return _getAmplificationState(_layoutStruct());
     }
 
     /**
      * @notice Internal helper to stop amplification at a specific value.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param value The value to freeze at.
      */
-    function _stopAmplification(Storage storage layout, uint256 value) internal {
+    function _stopAmplification(Storage storage layoutStruct, uint256 value) internal {
         uint64 currentValueUint64 = uint64(value);
-        layout.startValue = currentValueUint64;
-        layout.endValue = currentValueUint64;
+        layoutStruct.startValue = currentValueUint64;
+        layoutStruct.endValue = currentValueUint64;
 
         uint32 currentTime = uint32(block.timestamp);
-        layout.startTime = currentTime;
-        layout.endTime = currentTime;
+        layoutStruct.startTime = currentTime;
+        layoutStruct.endTime = currentTime;
     }
 }

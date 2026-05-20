@@ -11,43 +11,43 @@ library TokenTransferRelayerRepo {
         IApprovedMessageSenderRegistry approvedMessageSenderRegistry;
     }
 
-    // tag::_layout(bytes32)[]
+    // tag::_layoutStruct(bytes32)[]
     /**
-     * @dev Argumented version of _layout to allow for custom storage slot usage.
+     * @dev Argumented version of _layoutStruct to allow for custom storage slot usage.
      * @param slot Storage slot to bind to the Repo's Storage struct.
-     * @return layout The bound Storage struct.
+     * @return layoutStruct The bound Storage struct.
      */
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
-    // end::_layout(bytes32)[]
+    // end::_layoutStruct(bytes32)[]
 
-    // tag::_layout()[]
+    // tag::_layoutStruct()[]
     /**
-     * @dev Default version of _layout binding to the standard STORAGE_SLOT.
-     * @return layout The bound Storage struct.
+     * @dev Default version of _layoutStruct binding to the standard STORAGE_SLOT.
+     * @return layoutStruct The bound Storage struct.
      */
-    function _layout() internal pure returns (Storage storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
-    // end::_layout()[]
+    // end::_layoutStruct()[]
 
-    function _initialize(Storage storage layout, IApprovedMessageSenderRegistry approvedMessageSenderRegistry) internal {
-        layout.approvedMessageSenderRegistry = approvedMessageSenderRegistry;
+    function _initialize(Storage storage layoutStruct, IApprovedMessageSenderRegistry approvedMessageSenderRegistry) internal {
+        layoutStruct.approvedMessageSenderRegistry = approvedMessageSenderRegistry;
     }
 
     function _initialize(IApprovedMessageSenderRegistry approvedMessageSenderRegistry) internal {
-        _initialize(_layout(), approvedMessageSenderRegistry);
+        _initialize(_layoutStruct(), approvedMessageSenderRegistry);
     }
 
-    function _approvedMessageSenderRegistry(Storage storage layout) internal view returns (IApprovedMessageSenderRegistry) {
-        return layout.approvedMessageSenderRegistry;
+    function _approvedMessageSenderRegistry(Storage storage layoutStruct) internal view returns (IApprovedMessageSenderRegistry) {
+        return layoutStruct.approvedMessageSenderRegistry;
     }
 
     function _approvedMessageSenderRegistry() internal view returns (IApprovedMessageSenderRegistry) {
-        return _approvedMessageSenderRegistry(_layout());
+        return _approvedMessageSenderRegistry(_layoutStruct());
     }
 
 }

@@ -8,7 +8,7 @@ import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/sr
 import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract AccountFullyFilledCheckpointsTest is BttBase {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -19,6 +19,7 @@ contract AccountFullyFilledCheckpointsTest is BttBase {
 
     function test_WhenCalledWithParams(Bid memory _bid, Checkpoint memory _upper, Checkpoint memory _startCheckpoint)
         external
+        view
     {
         // it will compute deltas
         // it will call calculateFill with those deltas

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@crane/contracts/interfaces/IERC721.sol";
 import "@crane/contracts/external/openzeppelin-upgradeable/proxy/utils/Initializable.sol";
 import "../../../../interfaces/Kyber/IKyberLiquidityMining.sol";
 import "../../../../interfaces/Kyber/IKyberElasticPool.sol";

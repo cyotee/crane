@@ -29,7 +29,7 @@ library CowPoolRepo {
     /* ------ Storage ------ */
 
     /**
-     * @notice Storage layout for CoW Pool.
+     * @notice Storage layoutStruct for CoW Pool.
      * @param trustedCowRouter The address of the trusted CoW Router for MEV-protected swaps.
      * @param cowPoolFactory The address of the factory that created this pool.
      */
@@ -43,36 +43,36 @@ library CowPoolRepo {
     /**
      * @notice Returns a storage pointer for a given slot.
      * @param slot The storage slot to use.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
     /**
      * @notice Returns a storage pointer using the default slot.
-     * @return layout Storage pointer.
+     * @return layoutStruct Storage pointer.
      */
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Initialization ------ */
 
     /**
      * @notice Initialize the CoW Pool with factory and trusted router addresses.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param cowPoolFactory_ The address of the factory creating this pool.
      * @param trustedCowRouter_ The address of the trusted CoW Router.
      */
-    function _initialize(Storage storage layout, address cowPoolFactory_, address trustedCowRouter_) internal {
+    function _initialize(Storage storage layoutStruct, address cowPoolFactory_, address trustedCowRouter_) internal {
         if (cowPoolFactory_ == address(0)) revert InvalidCowPoolFactory();
         if (trustedCowRouter_ == address(0)) revert InvalidTrustedCowRouter();
 
-        layout.cowPoolFactory = cowPoolFactory_;
-        layout.trustedCowRouter = trustedCowRouter_;
+        layoutStruct.cowPoolFactory = cowPoolFactory_;
+        layoutStruct.trustedCowRouter = trustedCowRouter_;
 
         emit ICowPool.CowTrustedRouterChanged(trustedCowRouter_);
     }
@@ -83,18 +83,18 @@ library CowPoolRepo {
      * @param trustedCowRouter_ The address of the trusted CoW Router.
      */
     function _initialize(address cowPoolFactory_, address trustedCowRouter_) internal {
-        _initialize(_layout(), cowPoolFactory_, trustedCowRouter_);
+        _initialize(_layoutStruct(), cowPoolFactory_, trustedCowRouter_);
     }
 
     /* ------ Getters ------ */
 
     /**
      * @notice Get the trusted CoW Router address.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return trustedCowRouter The trusted router address.
      */
-    function _getTrustedCowRouter(Storage storage layout) internal view returns (address trustedCowRouter) {
-        return layout.trustedCowRouter;
+    function _getTrustedCowRouter(Storage storage layoutStruct) internal view returns (address trustedCowRouter) {
+        return layoutStruct.trustedCowRouter;
     }
 
     /**
@@ -102,16 +102,16 @@ library CowPoolRepo {
      * @return trustedCowRouter The trusted router address.
      */
     function _getTrustedCowRouter() internal view returns (address trustedCowRouter) {
-        return _getTrustedCowRouter(_layout());
+        return _getTrustedCowRouter(_layoutStruct());
     }
 
     /**
      * @notice Get the factory address that created this pool.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return cowPoolFactory The factory address.
      */
-    function _getCowPoolFactory(Storage storage layout) internal view returns (address cowPoolFactory) {
-        return layout.cowPoolFactory;
+    function _getCowPoolFactory(Storage storage layoutStruct) internal view returns (address cowPoolFactory) {
+        return layoutStruct.cowPoolFactory;
     }
 
     /**
@@ -119,7 +119,7 @@ library CowPoolRepo {
      * @return cowPoolFactory The factory address.
      */
     function _getCowPoolFactory() internal view returns (address cowPoolFactory) {
-        return _getCowPoolFactory(_layout());
+        return _getCowPoolFactory(_layoutStruct());
     }
 
     /* ------ Setters ------ */
@@ -127,13 +127,13 @@ library CowPoolRepo {
     /**
      * @notice Update the trusted CoW Router address.
      * @dev Emits CowTrustedRouterChanged event.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param trustedCowRouter_ The new trusted router address.
      */
-    function _setTrustedCowRouter(Storage storage layout, address trustedCowRouter_) internal {
+    function _setTrustedCowRouter(Storage storage layoutStruct, address trustedCowRouter_) internal {
         if (trustedCowRouter_ == address(0)) revert InvalidTrustedCowRouter();
 
-        layout.trustedCowRouter = trustedCowRouter_;
+        layoutStruct.trustedCowRouter = trustedCowRouter_;
 
         emit ICowPool.CowTrustedRouterChanged(trustedCowRouter_);
     }
@@ -143,6 +143,6 @@ library CowPoolRepo {
      * @param trustedCowRouter_ The new trusted router address.
      */
     function _setTrustedCowRouter(address trustedCowRouter_) internal {
-        _setTrustedCowRouter(_layout(), trustedCowRouter_);
+        _setTrustedCowRouter(_layoutStruct(), trustedCowRouter_);
     }
 }

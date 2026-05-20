@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC2981} from "@crane/contracts/external/openzeppelin/interfaces/IERC2981.sol";
+import {IERC2981} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC2981.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {ERC165Upgradeable} from "../../utils/introspection/ERC165Upgradeable.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";

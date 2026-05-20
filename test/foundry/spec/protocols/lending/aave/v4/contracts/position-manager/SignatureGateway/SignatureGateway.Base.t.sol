@@ -19,7 +19,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.Supply memory) {
+  ) internal view returns (ISignatureGateway.Supply memory) {
     return _supplyData(gateway, spoke, user, deadline);
   }
 
@@ -27,7 +27,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.Withdraw memory) {
+  ) internal view returns (ISignatureGateway.Withdraw memory) {
     return _withdrawData(gateway, spoke, user, deadline);
   }
 
@@ -35,7 +35,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.Borrow memory) {
+  ) internal view returns (ISignatureGateway.Borrow memory) {
     return _borrowData(gateway, spoke, user, deadline);
   }
 
@@ -43,7 +43,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.Repay memory) {
+  ) internal view returns (ISignatureGateway.Repay memory) {
     return _repayData(gateway, spoke, user, deadline);
   }
 
@@ -51,7 +51,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.SetUsingAsCollateral memory) {
+  ) internal view returns (ISignatureGateway.SetUsingAsCollateral memory) {
     return _setAsCollateralData(gateway, spoke, user, deadline);
   }
 
@@ -59,7 +59,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.UpdateUserRiskPremium memory) {
+  ) internal view returns (ISignatureGateway.UpdateUserRiskPremium memory) {
     return _updateRiskPremiumData(gateway, spoke, user, deadline);
   }
 
@@ -67,7 +67,7 @@ contract SignatureGatewayBaseTest is Base, SignatureGatewayHelpers {
     ISpoke spoke,
     address user,
     uint256 deadline
-  ) internal returns (ISignatureGateway.UpdateUserDynamicConfig memory) {
+  ) internal view returns (ISignatureGateway.UpdateUserDynamicConfig memory) {
     return _updateDynamicConfigData(gateway, spoke, user, deadline);
   }
 }

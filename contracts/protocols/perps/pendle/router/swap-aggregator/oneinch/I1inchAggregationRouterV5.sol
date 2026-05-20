@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface I1inchAggregationRouterV5 {
     struct SwapDescription {

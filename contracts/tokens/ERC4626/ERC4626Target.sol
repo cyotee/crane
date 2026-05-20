@@ -18,10 +18,10 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     using ERC4626Repo for ERC4626Repo.Storage;
 
     function deposit(uint256 assets, address receiver) public virtual lock returns (uint256 shares) {
-        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layout();
+        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 lastTotalAssets = ERC4626Repo._lastTotalAssets(erc4626);
         uint256 actualIn = ERC4626Service._secureReserveDeposit(erc4626, lastTotalAssets, assets);
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         uint256 totalSupply_ = ERC20Repo._totalSupply(erc20);
         shares = BetterMath._convertToSharesDown(
             actualIn, lastTotalAssets, totalSupply_, ERC4626Repo._decimalOffset(erc4626)
@@ -32,9 +32,9 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     }
 
     function mint(uint256 shares, address receiver) public virtual lock returns (uint256 assets) {
-        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layout();
+        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 lastTotalAssets = ERC4626Repo._lastTotalAssets(erc4626);
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         uint256 totalSupply_ = ERC20Repo._totalSupply(erc20);
         assets =
             BetterMath._convertToAssetsUp(shares, lastTotalAssets, totalSupply_, ERC4626Repo._decimalOffset(erc4626));
@@ -45,9 +45,9 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     }
 
     function withdraw(uint256 assets, address receiver, address owner) public virtual lock returns (uint256 shares) {
-        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layout();
+        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(erc4626);
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         uint256 totalSupply_ = ERC20Repo._totalSupply(erc20);
         shares = BetterMath._convertToSharesDown(assets, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset());
         if (msg.sender == owner || owner == address(this)) {
@@ -65,8 +65,8 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     }
 
     function redeem(uint256 shares, address receiver, address owner) public virtual lock returns (uint256 assets) {
-        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layout();
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(erc4626);
         uint256 totalSupply_ = ERC20Repo._totalSupply(erc20);
         // compute assets using pre-burn totalSupply to match previewRedeem
@@ -96,14 +96,14 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     }
 
     function convertToShares(uint256 assets) public view returns (uint256 shares) {
-        ERC4626Repo.Storage storage Storage = ERC4626Repo._layout();
+        ERC4626Repo.Storage storage Storage = ERC4626Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(Storage);
         uint256 totalSupply_ = ERC20Repo._totalSupply();
         return BetterMath._convertToSharesDown(assets, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage));
     }
 
     function convertToAssets(uint256 shares) public view returns (uint256 assets) {
-        ERC4626Repo.Storage storage Storage = ERC4626Repo._layout();
+        ERC4626Repo.Storage storage Storage = ERC4626Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(Storage);
         uint256 totalSupply_ = ERC20Repo._totalSupply();
         return BetterMath._convertToAssetsDown(shares, totalAssets_, totalSupply_, ERC4626Repo._decimalOffset(Storage));

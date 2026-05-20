@@ -62,7 +62,7 @@ contract BalancerV3LBPoolTarget_Test is Test {
     /*                         getNormalizedWeights Tests                      */
     /* ---------------------------------------------------------------------- */
 
-    function test_getNormalizedWeights_beforeStart_returnsStartWeights() public {
+    function test_getNormalizedWeights_beforeStart_returnsStartWeights() public view {
         // Before sale starts, weights should be at start values
         uint256[] memory weights = pool.getNormalizedWeights();
 

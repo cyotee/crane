@@ -16,7 +16,7 @@ contract UniswapV2RouterAwareHarness {
     }
 
     function initializeWithSlot(bytes32 slot, IUniswapV2Router router_) external {
-        UniswapV2RouterAwareRepo._initialize(UniswapV2RouterAwareRepo._layout(slot), router_);
+        UniswapV2RouterAwareRepo._initialize(UniswapV2RouterAwareRepo._layoutStruct(slot), router_);
     }
 
     function uniswapV2Router() external view returns (IUniswapV2Router) {
@@ -24,7 +24,7 @@ contract UniswapV2RouterAwareHarness {
     }
 
     function uniswapV2RouterFromSlot(bytes32 slot) external view returns (IUniswapV2Router) {
-        return UniswapV2RouterAwareRepo._uniswapV2Router(UniswapV2RouterAwareRepo._layout(slot));
+        return UniswapV2RouterAwareRepo._uniswapV2Router(UniswapV2RouterAwareRepo._layoutStruct(slot));
     }
 
     function storageSlot() external pure returns (bytes32) {

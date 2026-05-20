@@ -14,7 +14,7 @@ contract SimulateHelper {
     }
 
     function multicallRevert(
-        uint256 gasLimit,
+        uint256 /*gasLimit*/,
         address[] calldata targets,
         bytes[] calldata callDatas
     ) public payable virtual returns (bytes[] memory res, uint256[] memory gasUsed) {

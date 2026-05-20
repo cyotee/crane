@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {IGovernor} from "@crane/contracts/external/openzeppelin/governance/IGovernor.sol";
+import {IGovernor} from "@crane/contracts/external/openzeppelin-contracts/governance/IGovernor.sol";
 import {GovernorUpgradeable} from "../../../governance/GovernorUpgradeable.sol";
 import {GovernorCountingSimpleUpgradeable} from "../../../governance/extensions/GovernorCountingSimpleUpgradeable.sol";
 import {GovernorVotesUpgradeable} from "../../../governance/extensions/GovernorVotesUpgradeable.sol";
 import {GovernorVotesQuorumFractionUpgradeable} from "../../../governance/extensions/GovernorVotesQuorumFractionUpgradeable.sol";
 import {GovernorTimelockControlUpgradeable} from "../../../governance/extensions/GovernorTimelockControlUpgradeable.sol";
 import {TimelockControllerUpgradeable} from "../../../governance/TimelockControllerUpgradeable.sol";
-import {IVotes} from "@crane/contracts/external/openzeppelin/governance/utils/IVotes.sol";
+import {IVotes} from "@crane/contracts/external/openzeppelin-contracts/governance/utils/IVotes.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 

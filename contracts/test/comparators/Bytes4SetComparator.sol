@@ -54,11 +54,11 @@ library Bytes4SetComparatorRepo {
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
-     * @return layout_ A struct from a Layout library bound to the provided slot.
+     * @return layoutStruct A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (Bytes4SetComparatorLayout storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Bytes4SetComparatorLayout storage layoutStruct) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
@@ -69,7 +69,7 @@ library Bytes4SetComparatorRepo {
      * @return Storage layout bound to the derived slot
      */
     function _b4SetCompare(bytes32 actualHash) internal pure returns (Bytes4SetComparatorLayout storage) {
-        return _layout((actualHash ^ STORAGE_RANGE_OFFSET));
+        return _layoutStruct((actualHash ^ STORAGE_RANGE_OFFSET));
     }
 
     /**

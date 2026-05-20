@@ -18,7 +18,7 @@ import {IAToken} from '../../../interfaces/IAToken.sol';
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
 import {IPriceOracleGetter} from '../../../interfaces/IPriceOracleGetter.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 import {Errors} from '../helpers/Errors.sol';
 
 /**

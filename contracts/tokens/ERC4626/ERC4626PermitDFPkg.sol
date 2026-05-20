@@ -226,12 +226,12 @@ contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
             if (initialDeposit != 0) {
                 ReentrancyLockRepo._lock();
                 address depositor = DEPOSITOR_TRANSIENT_SLOT.asAddress().tload();
-                ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layout();
+                ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
                 IERC20 reserveAsset = ERC4626Repo._reserveAsset(erc4626);
                 reserveAsset.safeTransferFrom(depositor, address(this), initialDeposit);
                 initialDeposit = reserveAsset.balanceOf(address(this));
                 address recipient = RECIPIENT_TRANSIENT_SLOT.asAddress().tload();
-                ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+                ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
                 uint256 totalSupply_ = ERC20Repo._totalSupply(erc20);
                 uint256 shares = BetterMath._convertToSharesDown(
                     initialDeposit, 0, totalSupply_, ERC4626Repo._decimalOffset(erc4626)

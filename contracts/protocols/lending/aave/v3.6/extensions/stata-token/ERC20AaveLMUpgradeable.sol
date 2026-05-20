@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import {ERC20Upgradeable} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol';
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {SafeERC20} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 import {IRewardsController} from '../../rewards/interfaces/IRewardsController.sol';
 import {IERC20AaveLM} from './interfaces/IERC20AaveLM.sol';

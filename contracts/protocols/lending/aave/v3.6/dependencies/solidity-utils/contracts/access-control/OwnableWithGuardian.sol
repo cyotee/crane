@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0;
 
-import {Ownable} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/access/Ownable.sol';
+import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol';
 import {IWithGuardian} from './interfaces/IWithGuardian.sol';
 
 abstract contract OwnableWithGuardian is Ownable, IWithGuardian {

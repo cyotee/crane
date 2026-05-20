@@ -17,12 +17,12 @@ import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {EventsLib} from "./libraries/EventsLib.sol";
 import {SafeERC20Permit2Lib} from "./libraries/SafeERC20Permit2Lib.sol";
 import {UtilsLib, WAD} from "./libraries/UtilsLib.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 
-import {Context} from "@crane/contracts/external/openzeppelin/utils/Context.sol";
-import {ReentrancyGuard} from "@crane/contracts/external/openzeppelin/utils/ReentrancyGuard.sol";
-import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin/access/Ownable2Step.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {ReentrancyGuard} from "@crane/contracts/external/openzeppelin-contracts/utils/ReentrancyGuard.sol";
+import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable2Step.sol";
 import {
     IERC20,
     IERC4626,
@@ -30,7 +30,7 @@ import {
     ERC4626,
     Math,
     SafeERC20
-} from "@crane/contracts/external/openzeppelin/token/ERC20/extensions/ERC4626.sol";
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol";
 import {EVCUtil} from "../evc/utils/EVCUtil.sol";
 
 /// @title EulerEarn

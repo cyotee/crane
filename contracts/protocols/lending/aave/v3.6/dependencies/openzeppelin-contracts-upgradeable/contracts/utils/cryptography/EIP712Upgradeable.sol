@@ -7,6 +7,8 @@ import {MessageHashUtils} from "@crane/contracts/protocols/lending/aave/v3.6/dep
 import {IERC5267} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC5267.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev https://eips.ethereum.org/EIPS/eip-712[EIP-712] is a standard for hashing and signing of typed structured data.
  *
@@ -30,6 +32,9 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * separator from the immutable values, which is cheaper than accessing a cached version in cold storage.
  */
 abstract contract EIP712Upgradeable is Initializable, IERC5267 {
+    
+    using BetterEfficientHashLib for bytes;
+
     bytes32 private constant TYPE_HASH =
         keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
@@ -87,7 +92,8 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
     }
 
     function _buildDomainSeparator() private view returns (bytes32) {
-        return keccak256(abi.encode(TYPE_HASH, _EIP712NameHash(), _EIP712VersionHash(), block.chainid, address(this)));
+        // return keccak256(abi.encode(TYPE_HASH, _EIP712NameHash(), _EIP712VersionHash(), block.chainid, address(this)));
+        return abi.encode(TYPE_HASH, _EIP712NameHash(), _EIP712VersionHash(), block.chainid, address(this))._hash();
     }
 
     /**
@@ -173,7 +179,8 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
         EIP712Storage storage $ = _getEIP712Storage();
         string memory name = _EIP712Name();
         if (bytes(name).length > 0) {
-            return keccak256(bytes(name));
+            // return keccak256(bytes(name));
+            return bytes(name)._hash();
         } else {
             // If the name is empty, the contract may have been upgraded without initializing the new storage.
             // We return the name hash in storage if non-zero, otherwise we assume the name is empty by design.
@@ -181,7 +188,8 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
             if (hashedName != 0) {
                 return hashedName;
             } else {
-                return keccak256("");
+                // return keccak256("");
+                return bytes("")._hash();
             }
         }
     }
@@ -195,7 +203,8 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
         EIP712Storage storage $ = _getEIP712Storage();
         string memory version = _EIP712Version();
         if (bytes(version).length > 0) {
-            return keccak256(bytes(version));
+            // return keccak256(bytes(version));
+            return bytes(version)._hash();
         } else {
             // If the version is empty, the contract may have been upgraded without initializing the new storage.
             // We return the version hash in storage if non-zero, otherwise we assume the version is empty by design.
@@ -203,7 +212,8 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
             if (hashedVersion != 0) {
                 return hashedVersion;
             } else {
-                return keccak256("");
+                // return keccak256("");
+                return bytes("")._hash();
             }
         }
     }

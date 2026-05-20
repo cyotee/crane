@@ -21,13 +21,13 @@
 - No OZ imports in `test/` directory
 
 #### Strategy: Copy + Rewrite Imports
-1. Copied 42 OZ source files (13 direct + 29 transitive dependencies) to `contracts/external/openzeppelin/`
-2. Updated all 24 import statements across 18 files from `@openzeppelin/contracts/` to `@crane/contracts/external/openzeppelin/`
+1. Copied 42 OZ source files (13 direct + 29 transitive dependencies) to `contracts/external/openzeppelin-contracts/`
+2. Updated all 24 import statements across 18 files from `@openzeppelin/contracts/` to `@crane/contracts/external/openzeppelin-contracts/`
 3. Removed the `@openzeppelin/contracts/` remapping from foundry.toml entirely
 4. Internal OZ files retain relative imports (self-contained within the `external/openzeppelin/` tree)
 
 #### Files Created (42 total)
-Copied from `lib/openzeppelin-contracts/contracts/` to `contracts/external/openzeppelin/`:
+Copied from `lib/openzeppelin-contracts/contracts/` to `contracts/external/openzeppelin-contracts/`:
 
 **Interfaces (3):**
 - interfaces/IERC5267.sol
@@ -63,7 +63,7 @@ Copied from `lib/openzeppelin-contracts/contracts/` to `contracts/external/openz
 
 #### Files Modified (19 total)
 - `foundry.toml` - Removed `@openzeppelin/contracts/` remapping
-- 18 consuming `.sol` files - Rewrote 24 import paths from `@openzeppelin/contracts/` to `@crane/contracts/external/openzeppelin/`
+- 18 consuming `.sol` files - Rewrote 24 import paths from `@openzeppelin/contracts/` to `@crane/contracts/external/openzeppelin-contracts/`
 
 #### Verification
 - `forge build` - PASS (exit code 0)

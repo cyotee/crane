@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {Ownable} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/Ownable.sol';
 import {IAccessManaged} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/IAccessManaged.sol';
 
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 import {TestnetERC20} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol';
 
 import {Create2TestHelper} from '@crane/test/foundry/spec/protocols/lending/aave/v4/utils/Create2TestHelper.sol';

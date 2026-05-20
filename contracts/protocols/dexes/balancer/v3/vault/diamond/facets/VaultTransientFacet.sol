@@ -157,11 +157,11 @@ contract VaultTransientFacet is BalancerV3VaultModifiers, IFacet {
      * @return credit The actual credit amount recorded
      */
     function settle(IERC20 token, uint256 amountHint) external nonReentrant onlyWhenUnlocked returns (uint256 credit) {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
-        uint256 reservesBefore = layout.reservesOf[token];
+        uint256 reservesBefore = layoutStruct.reservesOf[token];
         uint256 currentReserves = token.balanceOf(address(this));
-        layout.reservesOf[token] = currentReserves;
+        layoutStruct.reservesOf[token] = currentReserves;
         credit = currentReserves - reservesBefore;
 
         // Cap the credit at the hint amount to handle leftover tokens
@@ -182,10 +182,10 @@ contract VaultTransientFacet is BalancerV3VaultModifiers, IFacet {
      * @param amount The amount to send
      */
     function sendTo(IERC20 token, address to, uint256 amount) external nonReentrant onlyWhenUnlocked {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         _takeDebt(token, amount);
-        layout.reservesOf[token] -= amount;
+        layoutStruct.reservesOf[token] -= amount;
 
         token.safeTransfer(to, amount);
     }

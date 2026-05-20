@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
 import {VotesUpgradeable} from "../../../governance/utils/VotesUpgradeable.sol";
-import {Checkpoints} from "@crane/contracts/external/openzeppelin/utils/structs/Checkpoints.sol";
+import {Checkpoints} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/Checkpoints.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

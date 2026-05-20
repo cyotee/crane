@@ -2,7 +2,7 @@
 pragma solidity ^0.8.10;
 
 import {GPv2SafeERC20} from '@crane/contracts/protocols/wallets/gnosis/GPv2SafeERC20.sol';
-import {Address} from '@crane/contracts/external/openzeppelin/utils/Address.sol';
+import {Address} from '@crane/contracts/external/openzeppelin-contracts/utils/Address.sol';
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IAToken} from '../../../interfaces/IAToken.sol';
 import {IPool} from '../../../interfaces/IPool.sol';

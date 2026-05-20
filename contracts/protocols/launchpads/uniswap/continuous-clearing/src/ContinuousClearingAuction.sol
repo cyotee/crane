@@ -23,9 +23,9 @@ import {ValidationHookLib} from './libraries/ValidationHookLib.sol';
 import {ValueX7, ValueX7Lib} from './libraries/ValueX7Lib.sol';
 import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
 import {BlockNumberish} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
-import {ReentrancyGuardTransient} from 'contracts/solady/utils/ReentrancyGuardTransient.sol';
-import {SafeTransferLib} from 'contracts/solady/utils/SafeTransferLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {ReentrancyGuardTransient} from 'contracts/external/solady/utils/ReentrancyGuardTransient.sol';
+import {SafeTransferLib} from 'contracts/external/solady/utils/SafeTransferLib.sol';
 
 /// @title ContinuousClearingAuction
 /// @custom:security-contact security@uniswap.org

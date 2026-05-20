@@ -11,38 +11,38 @@ library AerodromePoolMetadataRepo {
         bool isStable;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, IPoolFactory factory_, bool isStable_) internal {
-        layout.factory = factory_;
-        layout.isStable = isStable_;
+    function _initialize(Storage storage layoutStruct, IPoolFactory factory_, bool isStable_) internal {
+        layoutStruct.factory = factory_;
+        layoutStruct.isStable = isStable_;
     }
 
     function _initialize(IPoolFactory factory_, bool isStable_) internal {
-        _initialize(_layout(), factory_, isStable_);
+        _initialize(_layoutStruct(), factory_, isStable_);
     }
 
-    function _factory(Storage storage layout) internal view returns (IPoolFactory factory_) {
-        return layout.factory;
+    function _factory(Storage storage layoutStruct) internal view returns (IPoolFactory factory_) {
+        return layoutStruct.factory;
     }
 
     function _factory() internal view returns (IPoolFactory factory_) {
-        return _factory(_layout());
+        return _factory(_layoutStruct());
     }
 
-    function _isStable(Storage storage layout) internal view returns (bool isStable_) {
-        return layout.isStable;
+    function _isStable(Storage storage layoutStruct) internal view returns (bool isStable_) {
+        return layoutStruct.isStable;
     }
 
     function _isStable() internal view returns (bool isStable_) {
-        return _isStable(_layout());
+        return _isStable(_layoutStruct());
     }
 }

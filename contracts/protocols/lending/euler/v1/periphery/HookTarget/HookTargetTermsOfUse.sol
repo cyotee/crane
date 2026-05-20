@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {Ownable, Context} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
-import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 import {IEVC} from "@crane/contracts/protocols/lending/euler/v1/evc/interfaces/IEthereumVaultConnector.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {BaseHookTarget} from "./BaseHookTarget.sol";

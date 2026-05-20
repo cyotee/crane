@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 import {OwnableUpgradeable} from "../access/OwnableUpgradeable.sol";
-import {IERC1271} from "@crane/contracts/external/openzeppelin/interfaces/IERC1271.sol";
-import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
+import {IERC1271} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC1271.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
 contract ERC1271WalletMockUpgradeable is Initializable, OwnableUpgradeable, IERC1271 {

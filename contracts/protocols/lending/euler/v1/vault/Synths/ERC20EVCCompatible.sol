@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {ERC20, Context} from "../../../../../../external/openzeppelin/token/ERC20/ERC20.sol";
-import {ERC20Permit} from "../../../../../../external/openzeppelin/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC20, Context} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {ERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {EVCUtil} from "../../evc/utils/EVCUtil.sol";
 
 /// @title ERC20EVCCompatible

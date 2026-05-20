@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "../../../../libraries/math/PMath.sol";
 import "../../../../../interfaces/Curve/ITriCrvPool.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library Curve3CrvPoolHelper {
     using PMath for uint256;

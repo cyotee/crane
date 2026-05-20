@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 library LayerZeroHelper {
     uint256 constant EVM_ADDRESS_SIZE = 20;
 
-    function _getLayerZeroChainIds(uint256 chainId) internal pure returns (uint16) {
+    function _getLayerZeroChainIds(uint256 chainId) internal pure returns (uint16 layerZeroChainId) {
         if (chainId == 43113) return 10106;
         // fuji testnet
         else if (chainId == 80001) return 10109;
@@ -23,7 +23,7 @@ library LayerZeroHelper {
         assert(false);
     }
 
-    function _getOriginalChainIds(uint16 chainId) internal pure returns (uint256) {
+    function _getOriginalChainIds(uint16 chainId) internal pure returns (uint256 originalChainId) {
         if (chainId == 10106) return 43113;
         // fuji testnet
         else if (chainId == 10109) return 80001;

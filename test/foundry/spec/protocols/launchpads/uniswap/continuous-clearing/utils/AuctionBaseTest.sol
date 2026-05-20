@@ -22,7 +22,7 @@ import {TickBitmap, TickBitmapLib} from './TickBitmap.sol';
 import {TokenHandler} from './TokenHandler.sol';
 import {Test} from 'forge-std/Test.sol';
 import {console} from 'forge-std/console.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
 
 /// @notice Handler contract for setting up an auction
@@ -67,7 +67,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
     uint256 public $maxPrice;
 
     // Wrapper around vm.randomUint() to return a random uint128
-    function _randomUint128() private returns (uint128) {
+    function _randomUint128() private view returns (uint128) {
         return uint128(bound(uint256(vm.randomUint() >> 128), 1, type(uint128).max));
     }
 
@@ -77,7 +77,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
 
     /// @notice Get a random divisor of ConstantsLib.MPS (10,000,000) that fits in uint8
     /// @return A random valid divisor for numberOfSteps
-    function _getRandomDivisorOfMPS() private returns (uint8) {
+    function _getRandomDivisorOfMPS() private view returns (uint8) {
         // TODO(md): improve
         // All divisors of 10,000,000 that fit in uint8 (1-255)
         uint8[] memory validDivisors = new uint8[](20);

@@ -14,7 +14,7 @@ import {IEulerEarn, MarketAllocation} from "./interfaces/IEulerEarn.sol";
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {EventsLib} from "./libraries/EventsLib.sol";
 
-import {IERC4626} from "@crane/contracts/external/openzeppelin/interfaces/IERC4626.sol";
+import {IERC4626} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC4626.sol";
 import {EVCUtil} from "../evc/utils/EVCUtil.sol";
 
 /// @title PublicAllocator

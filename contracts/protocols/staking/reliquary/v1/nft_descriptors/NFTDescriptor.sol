@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import "@crane/contracts/external/openzeppelin/utils/Strings.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import "@crane/contracts/utils/Base64.sol";
 import "../interfaces/INFTDescriptor.sol";

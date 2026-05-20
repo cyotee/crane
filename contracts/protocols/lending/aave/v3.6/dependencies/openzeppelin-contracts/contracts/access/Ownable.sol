@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {Context} from "../utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where

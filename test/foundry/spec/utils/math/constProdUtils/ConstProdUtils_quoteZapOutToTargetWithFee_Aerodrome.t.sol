@@ -139,7 +139,7 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Aerodrome is TestBase_ConstPr
     function _testZapOutToTargetWithFeeImpossible(
         Pool pair,
         ERC20PermitMintableStub targetToken,
-        ERC20PermitMintableStub saleToken,
+        ERC20PermitMintableStub /*saleToken*/,
         bool feesEnabled
     ) internal {
         _initializeAerodromeBalancedPools();

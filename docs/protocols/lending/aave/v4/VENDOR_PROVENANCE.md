@@ -22,7 +22,7 @@
 ## Deduplication candidates (deferred)
 Bundled under `aave/v4/dependencies/` but already present elsewhere in Crane — to be
 deduplicated in a follow-up pass:
-- `dependencies/openzeppelin/` ↔ `contracts/external/openzeppelin/`
+- `dependencies/openzeppelin/` ↔ `contracts/external/openzeppelin-contracts/`
 - `dependencies/openzeppelin-upgradeable/` ↔ `contracts/external/openzeppelin-upgradeable/`
 - `dependencies/solady/` ↔ `contracts/solady/`
 - `dependencies/weth/` ↔ `contracts/protocols/tokens/wrappers/weth/v9/`
@@ -76,7 +76,7 @@ Aave V4's deployment-procedure tests write to `./output/` (Logger report JSON) a
 
 These remain bundled inside `aave/v4/dependencies/`. **Important note from a prior dedup arc:** Crane's strict "dedup" rule requires byte-identical or structurally-identical files at the **same upstream version** — cross-major-version migrations are explicitly NOT dedup. See `DEDUPLICATION.md` for the principle ("Crane-native vs OZ trap").
 
-- `dependencies/openzeppelin/` vs Crane's `contracts/external/openzeppelin/` — Aave at **v5.0.0+**, Crane at **v4.9.0**. **NOT dedup-eligible.** Would require first vendoring OZ v5.x into Crane.
+- `dependencies/openzeppelin/` vs Crane's `contracts/external/openzeppelin-contracts/` — Aave at **v5.0.0+**, Crane at **v4.9.0**. **NOT dedup-eligible.** Would require first vendoring OZ v5.x into Crane.
 - `dependencies/openzeppelin-upgradeable/` vs Crane's `contracts/external/openzeppelin-upgradeable/` — same major (v5) but minor drift. Three of six files (`Ownable2StepUpgradeable`, `OwnableUpgradeable`, `ContextUpgradeable`) are structurally identical at the same OZ version and ARE dedup-eligible. The other three (`Initializable`, `ERC20Upgradeable`, `AccessManagedUpgradeable`) are at higher minors in Aave V4.
 - `dependencies/solady/` vs Crane's `contracts/solady/` — the two Aave files (`LibBit`, `EIP712`) don't exist in Crane's solady tree. Not dedup; would be "extend Crane solady" work if desired.
 - `dependencies/weth/` vs Crane's `contracts/protocols/tokens/wrappers/weth/v9/` — Crane's WETH9 is a *customized* subclass that inherits `IWETH`, `IERC20Events`, uses `BetterAddress`. Aave's is the vanilla upstream contract. Not dedup; semantic divergence.

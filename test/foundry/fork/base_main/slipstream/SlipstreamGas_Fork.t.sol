@@ -19,7 +19,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Benchmark gas for quoteExactInputSingle with small amount (single tick)
-    function test_gas_quoteExactInputSingle_small() public {
+    function test_gas_quoteExactInputSingle_small() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -42,7 +42,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Benchmark gas for quoteExactInputSingle with medium amount
-    function test_gas_quoteExactInputSingle_medium() public {
+    function test_gas_quoteExactInputSingle_medium() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -64,7 +64,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Benchmark gas for quoteExactInputSingle with large amount
-    function test_gas_quoteExactInputSingle_large() public {
+    function test_gas_quoteExactInputSingle_large() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -90,7 +90,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Benchmark gas for quoteExactOutputSingle with small amount
-    function test_gas_quoteExactOutputSingle_small() public {
+    function test_gas_quoteExactOutputSingle_small() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -112,7 +112,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Benchmark gas for quoteExactOutputSingle with medium amount
-    function test_gas_quoteExactOutputSingle_medium() public {
+    function test_gas_quoteExactOutputSingle_medium() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -134,7 +134,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Benchmark gas for quoteExactOutputSingle with large amount
-    function test_gas_quoteExactOutputSingle_large() public {
+    function test_gas_quoteExactOutputSingle_large() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -160,7 +160,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Compare gas for sqrtPrice vs tick overload
-    function test_gas_tickOverload_comparison() public {
+    function test_gas_tickOverload_comparison() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96, int24 tick, uint128 liquidity) = getPoolState(pool);
@@ -190,7 +190,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Benchmark gas for quoteAmountsForLiquidity
-    function test_gas_quoteAmountsForLiquidity() public {
+    function test_gas_quoteAmountsForLiquidity() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
@@ -212,7 +212,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Benchmark gas for quoteLiquidityForAmounts
-    function test_gas_quoteLiquidityForAmounts() public {
+    function test_gas_quoteLiquidityForAmounts() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
@@ -250,7 +250,7 @@ contract SlipstreamGas_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Generate a complete gas benchmark report
-    function test_gas_summary_report() public {
+    function test_gas_summary_report() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         PoolState memory state;

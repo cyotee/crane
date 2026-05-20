@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ERC1155} from '@crane/contracts/solady/tokens/ERC1155.sol';
+import {ERC1155} from '@crane/contracts/external/solady/tokens/ERC1155.sol';
 
 /// @notice Simple mock ERC1155 for testing
 contract MockERC1155 is ERC1155 {

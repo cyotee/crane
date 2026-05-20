@@ -32,7 +32,7 @@ contract ConfigPositionManagerBaseTest is Base, ConfigPositionManagerHelpers {
     address delegator,
     bool permission,
     uint256 deadline
-  ) internal returns (IConfigPositionManager.SetGlobalPermissionPermit memory) {
+  ) internal view returns (IConfigPositionManager.SetGlobalPermissionPermit memory) {
     return
       _setGlobalPermissionPermitData(
         positionManager,
@@ -49,7 +49,7 @@ contract ConfigPositionManagerBaseTest is Base, ConfigPositionManagerHelpers {
     address delegator,
     bool permission,
     uint256 deadline
-  ) internal returns (IConfigPositionManager.SetCanSetUsingAsCollateralPermissionPermit memory) {
+  ) internal view returns (IConfigPositionManager.SetCanSetUsingAsCollateralPermissionPermit memory) {
     return
       _setCanSetUsingAsCollateralPermissionPermitData(
         positionManager,
@@ -66,7 +66,7 @@ contract ConfigPositionManagerBaseTest is Base, ConfigPositionManagerHelpers {
     address delegator,
     bool permission,
     uint256 deadline
-  ) internal returns (IConfigPositionManager.SetCanUpdateUserRiskPremiumPermissionPermit memory) {
+  ) internal view returns (IConfigPositionManager.SetCanUpdateUserRiskPremiumPermissionPermit memory) {
     return
       _setCanUpdateUserRiskPremiumPermissionPermitData(
         positionManager,
@@ -83,7 +83,7 @@ contract ConfigPositionManagerBaseTest is Base, ConfigPositionManagerHelpers {
     address delegator,
     bool permission,
     uint256 deadline
-  ) internal returns (IConfigPositionManager.SetCanUpdateUserDynamicConfigPermissionPermit memory) {
+  ) internal view returns (IConfigPositionManager.SetCanUpdateUserDynamicConfigPermissionPermit memory) {
     return
       _setCanUpdateUserDynamicConfigPermissionPermitData(
         positionManager,

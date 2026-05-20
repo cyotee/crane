@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import "./ICurves.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC721/IERC721.sol";
+import "@crane/contracts/interfaces/IERC721.sol";
 
 /// @dev Level of precision rewards are calculated to.
 uint256 constant ACC_REWARD_PRECISION = 1e41;

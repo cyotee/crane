@@ -29,6 +29,9 @@
       "rev": "7c89ebf72d7efd381b1df12a935cb1f994757ddc"
     }
   },
+  "lib/bold": {
+    "rev": "3fcaf602eb36541dd298c73710e067dcad42d8ae"
+  },
   "lib/chainlink-local": {
     "tag": {
       "name": "v0.2.8",

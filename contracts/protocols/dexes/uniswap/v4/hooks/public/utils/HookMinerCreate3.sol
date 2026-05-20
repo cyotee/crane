@@ -4,9 +4,14 @@ pragma solidity ^0.8.0;
 import {CREATE3} from "@crane/contracts/protocols/dexes/uniswap/v4/external/solmate/utils/CREATE3.sol";
 import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title HookMinerCreate3
 /// @notice A minimal library for mining hook addresses using CREATE3
 library HookMinerCreate3 {
+    
+    using BetterEfficientHashLib for bytes;
+
     // mask to slice out the bottom 14 bit of the address
     uint160 constant FLAG_MASK = Hooks.ALL_HOOK_MASK; // 0000 ... 0000 0011 1111 1111 1111
 
@@ -71,7 +76,8 @@ library HookMinerCreate3 {
 
         address hookAddress;
         for (uint256 i; i < MAX_LOOP; i++) {
-            bytes32 salt = keccak256(abi.encodePacked(saltPrefix, i));
+            // bytes32 salt = keccak256(abi.encodePacked(saltPrefix, i));
+            bytes32 salt = abi.encodePacked(saltPrefix, i)._hash();
             hookAddress = computeAddress(deployer, uint256(salt));
 
             // if the hook's bottom 14 bits match the desired flags AND the address does not have bytecode, we found a match

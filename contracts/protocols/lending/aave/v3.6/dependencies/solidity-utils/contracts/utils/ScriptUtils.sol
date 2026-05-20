@@ -138,6 +138,7 @@ library Create2Utils {
     } else {
       bytes memory creationBytecode = abi.encodePacked(salt, abi.encodePacked(bytecode, arguments));
       bytes memory returnData;
+      // forge-lint: disable-next-line(unchecked-call)
       (, returnData) = CREATE2_FACTORY.call(creationBytecode);
       address deployedAt = address(uint160(bytes20(returnData)));
       require(deployedAt == computed, 'failure at create2 address derivation');
@@ -156,6 +157,7 @@ library Create2Utils {
     } else {
       bytes memory creationBytecode = abi.encodePacked(salt, bytecode);
       bytes memory returnData;
+      // forge-lint: disable-next-line(unchecked-call)
       (, returnData) = CREATE2_FACTORY.call(creationBytecode);
       address deployedAt = address(uint160(bytes20(returnData)));
       require(deployedAt == computed, 'failure at create2 address derivation');

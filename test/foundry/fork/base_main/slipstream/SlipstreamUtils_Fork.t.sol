@@ -348,7 +348,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Test zero amount returns zero
-    function test_quoteExactInputSingle_zeroAmount() public {
+    function test_quoteExactInputSingle_zeroAmount() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -366,7 +366,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test zero output returns zero input on real pool
-    function test_quoteExactOutputSingle_zeroAmount_fork() public {
+    function test_quoteExactOutputSingle_zeroAmount_fork() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -380,7 +380,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Test dust output (1 wei WETH) on real WETH/USDC pool
-    function test_quoteExactOutputSingle_dustAmount_fork() public {
+    function test_quoteExactOutputSingle_dustAmount_fork() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -474,7 +474,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Test exact output round-trip on real pool: exactOut -> exactIn should be consistent
-    function test_quoteExactOutput_roundTrip_fork() public {
+    function test_quoteExactOutput_roundTrip_fork() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96,, uint128 liquidity) = getPoolState(pool);
@@ -503,7 +503,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Test quoteAmountsForLiquidity
-    function test_quoteAmountsForLiquidity() public {
+    function test_quoteAmountsForLiquidity() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);
@@ -533,7 +533,7 @@ contract SlipstreamUtils_Fork_Test is TestBase_SlipstreamFork {
     }
 
     /// @notice Test quoteLiquidityForAmounts
-    function test_quoteLiquidityForAmounts() public {
+    function test_quoteLiquidityForAmounts() public view {
         ICLPool pool = getPool(WETH_USDC_CL_500);
 
         (uint160 sqrtPriceX96, int24 tick,) = getPoolState(pool);

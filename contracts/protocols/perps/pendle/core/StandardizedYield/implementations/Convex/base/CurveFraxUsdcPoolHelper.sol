@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "../../../../libraries/math/PMath.sol";
 import "../../../../../interfaces/Curve/ICrvPool.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library CurveFraxUsdcPoolHelper {
     uint256 internal constant N_COINS = 2;
@@ -67,7 +67,7 @@ library CurveFraxUsdcPoolHelper {
         return _get_D(_xp, _amp);
     }
 
-    function _get_D(uint256[N_COINS] memory _xp, uint256 _amp) internal pure returns (uint256) {
+    function _get_D(uint256[N_COINS] memory _xp, uint256 _amp) internal pure returns (uint256 D) {
         uint256 S = 0;
         uint256 Dprev = 0;
 
@@ -76,7 +76,8 @@ library CurveFraxUsdcPoolHelper {
         }
         if (S == 0) return 0;
 
-        uint256 D = S;
+        // uint256 
+        D = S;
         uint256 Ann = _amp * N_COINS;
 
         for (uint256 _i = 0; _i < 255; ++_i) {

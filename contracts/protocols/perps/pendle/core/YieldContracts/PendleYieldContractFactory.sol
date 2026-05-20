@@ -25,8 +25,8 @@ pragma solidity ^0.8.17;
 
 import "../../interfaces/IPYieldContractFactory.sol";
 
-import "@crane/contracts/external/openzeppelin/token/ERC20/ERC20.sol";
-import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 
 import "../libraries/ExpiryUtilsLib.sol";
 import "../libraries/BaseSplitCodeFactory.sol";

@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import {MessageHashUtils} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol';
 import {ECDSA} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 import {Errors} from '../../libraries/helpers/Errors.sol';
 

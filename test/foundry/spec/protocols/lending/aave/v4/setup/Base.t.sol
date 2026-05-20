@@ -28,7 +28,7 @@ import {AuthorityUtils} from '@crane/contracts/protocols/lending/aave/v4/depende
 import {Ownable2Step, Ownable} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/Ownable2Step.sol';
 import {Math} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/Math.sol';
 import {SlotDerivation} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/SlotDerivation.sol';
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 import {LibBit} from '@crane/contracts/protocols/lending/aave/v4/dependencies/solady/LibBit.sol';
 
 import {Initializable} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin-upgradeable/Initializable.sol';

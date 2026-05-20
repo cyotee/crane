@@ -1,0 +1,1190 @@
+{
+  "updated": "2026-06-04",
+  "summary": {
+    "total": 129,
+    "byStatus": {
+      "complete": 24,
+      "not-started": 37,
+      "partial": 15,
+      "deferred": 41,
+      "fixture": 12
+    },
+    "specTestsPassing": "run: forge test --match-path test/foundry/spec/protocols/tokens/stable/frax/**"
+  },
+  "bucketsClosed": [
+    "BAMM",
+    "Fraxbonds"
+  ],
+  "stakingPartial": [
+    "veFXSYieldDistributorV4-Tests.js",
+    "FraxGaugeFXSRewardsDistributor-Tests.js"
+  ],
+  "nextRecommended": [
+    "Staking/gauges (veFXS, FraxGaugeController, UnifiedFarm) \u2014 partial",
+    "Top-level spec: CPITrackerOracle, ComboOracle, FPIControllerPool",
+    "Phase 7.1 document partial/fork-only gaps (Fraxoracle proofs, FerryV2 L1\u2192L2)"
+  ],
+  "entries": [
+    {
+      "path": "BAMM/BAMM-Fuzz.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "BAMM/BAMM.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "BAMM/BAMMHelper.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "BAMM/FraxswapOracle.js",
+      "category": "spec_bucket",
+      "bucket": "BAMM",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/BAMM/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "CPITrackerOracle-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "ComboOracle_SLP_UniV2_UniV3-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "CrossChainCanonical-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": "ERC20/__CROSSCHAIN/CrossChainCanonical_Tests.t.sol"
+    },
+    {
+      "path": "FPI-FPIS-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": "FPI/FPI_FPIS_Tests.t.sol"
+    },
+    {
+      "path": "FPIControllerPool-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxFarmRageQuitter-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxGaugeController-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxGaugeFXSRewardsDistributor-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": "Staking/FraxGaugeFXSRewardsDistributor_Test.t.sol"
+    },
+    {
+      "path": "FraxLiquidityBridger-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxMiddlemanGauge-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxUnifiedFarm_ERC20-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxUnifiedFarm_KyberSwapElastic-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxUnifiedFarm_PosRebase-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxUnifiedFarm_UniV3-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxbonds/SlippageAuction.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxbonds",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxbonds/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxferry/Fraxferry-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxferry",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxferry/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "FraxferryV2/FerryV2-test.js",
+      "category": "spec_bucket",
+      "bucket": "FraxferryV2",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/FraxferryV2/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxoracle/Fraxoracle-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxoracle/StateProver-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxoracle/StateRootOracle.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxoracle",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxoracle/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/brick-pause-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputCurve.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputFraxswap.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputFraxswapV2.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputSaddle.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputSushiSwap.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputUniswapV2.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/ethereumOutputUniswapV3.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router/fraxswap-router-utils.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-router-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-twamm-test-unbalanced.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-twamm-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/fraxswap-uniV2-test.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/twamm-utils.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap/utilities.js",
+      "category": "spec_bucket",
+      "bucket": "Fraxswap",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Fraxswap/",
+      "portStatus": "partial",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap-FraxswapRange-test.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Fraxswap-UniswapV2-test.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "FrxETH/FrxETHMiniRouter-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "FrxETH",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/FrxETH/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Governance_Slap_2.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "Lending_AMOs/AaveAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "Lending_AMOs/KashiAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "Lending_AMOs/Rari-AMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "Lending_AMOs/TruefiAMO-Tests.js",
+      "category": "spec_bucket",
+      "bucket": "Lending_AMOs",
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/Lending_AMOs/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "LeveragePool-test.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": "LeveragePool/LeveragePool_test.t.sol"
+    },
+    {
+      "path": "TWAMM_AMO-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "UniV3TWAPOracle-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/ComboOracle_KyberSwapElastic-Tests_ARBI.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/CrossChainBridgeBacker_ARBI_AnySwap-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/CurveAMO-ARBI-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV2-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV3_ERC20-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__ARBITRUM/FraxCrossChainFarmV4_ERC20-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "arbitrum",
+      "target": "test/foundry/fork/arbitrum/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__AURORA/CrossChainBridgeBacker_AUR_Rainbow-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "aurora",
+      "target": "test/foundry/fork/aurora/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__AVALANCHE/AxialAMO-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__AVALANCHE/CrossChainBridgeBacker_AVAX_AnySwap-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__AVALANCHE/PangolinLiquidityAMO-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "avalanche",
+      "target": "test/foundry/fork/avalanche/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__BSC/ApeSwapAMO-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "bsc",
+      "target": "test/foundry/fork/bsc/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__FANTOM/CrossChainBridgeBacker_FTM_AnySwap-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__FANTOM/CurveAMO-FTM-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__FANTOM/FPIControllerPool-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__FANTOM/ScreamAMO-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__FANTOM/SpiritSwapAMO-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "fantom",
+      "target": "test/foundry/fork/fantom/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__HARMONY/CrossChainBridgeBacker_HARM_Horizon-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "harmony",
+      "target": "test/foundry/fork/harmony/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__MOONBEAM/CrossChainBridgeBacker_MNBM_Nomad-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "moonbeam",
+      "target": "test/foundry/fork/moonbeam/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__MOONRIVER/CCFrax1to1AMM-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "moonriver",
+      "target": "test/foundry/fork/moonriver/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__OPTIMISM/CrossChainBridgeBacker_OPTI_Celer-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "optimism",
+      "target": "test/foundry/fork/optimism/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__POLYGON/CrossChainBridgeBacker_POLY_MaticBridge-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "polygon",
+      "target": "test/foundry/fork/polygon/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "__POLYGON/SushiSwapLiquidityAMO_POLY-Tests.js",
+      "category": "fork",
+      "bucket": null,
+      "chain": "polygon",
+      "target": "test/foundry/fork/polygon/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/AaveAMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/CommunalFarm-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Convex-AMO.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Core-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Curve-AMO-V4.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/CurveMetapoolLockerAMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FPI-PermissionedSend-test.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FPI-TWAMMSwap-test.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FPI-staking2-test.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FPI-test.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FXS1559AMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FXSOracleWrapper-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FXSRewards-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxBond_NFT-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxBonds.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxCrossChainLiquidityTracker-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxFarmBSC_Dual_V5.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxLendingAMO.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxPoolInvestorForV2-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxPoolV3-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxUniV3Farm_Stable_FRAX_DAI-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/FraxUniV3Farm_Stable_FRAX_USDC-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Governance_Slap.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/InvestorAMO_V2-Upgrade.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/InvestorAMO_V3-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/MIM-Convex-AMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/MSIGHelper-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/MigratableFarmBSC_FRAX_FXS-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/OHM-AMO.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/PIDController-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Rari-AMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Slippage-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/Smart-Wallet-Whitelist-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/StakeDAO-AMO.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/StakingRewardsDualV5-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/TokenTrackerV2-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/UniV3LiquidityAMO-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/UniV3LiquidityAMO_V2-Tests.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/UnlockStakes.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/openzeppelin/ERC20.behavior.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/openzeppelin/ERC20.test.js",
+      "category": "old_tests",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/old_tests/",
+      "portStatus": "deferred",
+      "foundryHint": null
+    },
+    {
+      "path": "old_tests/truffle-fixture-old.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Aurora.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Avalanche.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-BSC.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Ethereum.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Fantom.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Harmony.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Moonbeam.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Moonriver.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Optimism.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture-Polygon.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "truffle-fixture.js",
+      "category": "fixture",
+      "bucket": null,
+      "chain": null,
+      "target": "setUp() in chain fork/spec tests",
+      "portStatus": "fixture",
+      "foundryHint": null
+    },
+    {
+      "path": "veFPIS-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "veFPISYieldDistributorV5-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "veFXS-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "not-started",
+      "foundryHint": null
+    },
+    {
+      "path": "veFXSYieldDistributorV4-Tests.js",
+      "category": "spec",
+      "bucket": null,
+      "chain": null,
+      "target": "test/foundry/spec/protocols/tokens/stable/frax/",
+      "portStatus": "complete",
+      "foundryHint": "Staking/veFXSYieldDistributorV4_Test.t.sol"
+    }
+  ]
+}

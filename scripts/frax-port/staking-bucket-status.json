@@ -1,0 +1,55 @@
+{
+  "bucket": "Staking (top-level JS)",
+  "status": "partial",
+  "updated": "2026-06-04",
+  "foundryPath": "test/foundry/spec/protocols/tokens/stable/frax/Staking/",
+  "upstreamJs": [
+    {
+      "path": "veFXSYieldDistributorV4-Tests.js",
+      "foundry": "veFXSYieldDistributorV4_Test.t.sol",
+      "portStatus": "complete",
+      "tests": 9
+    },
+    {
+      "path": "FraxGaugeFXSRewardsDistributor-Tests.js",
+      "foundry": "FraxGaugeFXSRewardsDistributor_Test.t.sol",
+      "portStatus": "complete",
+      "tests": 6
+    },
+    {
+      "path": "old_tests/StakingRewardsDualV5-Tests.js",
+      "foundry": "StakingRewardsDualV5_Test.t.sol",
+      "portStatus": "partial",
+      "tests": 7,
+      "notes": "Local mocks; core locked-stake/reward paths; not full mainnet veFXS/LP setup"
+    },
+    {
+      "path": "veFXS-Tests.js",
+      "portStatus": "not-started",
+      "notes": "Requires veFXS Vyper or mainnet fork fixture"
+    },
+    {
+      "path": "FraxGaugeController-Tests.js",
+      "portStatus": "not-started",
+      "notes": "Requires FraxGaugeController Vyper or mock extension"
+    },
+    {
+      "path": "FraxUnifiedFarm_*-Tests.js",
+      "portStatus": "not-started",
+      "notes": "Heavy LP/reward/gauge deps"
+    },
+    {
+      "path": "FraxFarmRageQuitter-Tests.js",
+      "portStatus": "not-started",
+      "notes": "Mainnet farm + impersonation"
+    },
+    {
+      "path": "old_tests/CommunalFarm-Tests.js",
+      "foundry": "CommunalFarm_Test.t.sol",
+      "portStatus": "partial",
+      "tests": 9,
+      "notes": "Local MockSaddleD4LP; multi-reward + manager ACL; not full mainnet Saddle setup"
+    }
+  ],
+  "verify": "forge test --match-path \"test/foundry/spec/protocols/tokens/stable/frax/Staking/**\""
+}

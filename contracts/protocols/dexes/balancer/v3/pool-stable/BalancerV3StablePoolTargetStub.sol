@@ -55,10 +55,10 @@ contract BalancerV3StablePoolTargetStub is BalancerV3StablePoolTarget {
         view
         returns (uint64 startValue, uint64 endValue, uint32 startTime, uint32 endTime)
     {
-        BalancerV3StablePoolRepo.Storage storage layout = BalancerV3StablePoolRepo._layout();
-        startValue = layout.startValue;
-        endValue = layout.endValue;
-        startTime = layout.startTime;
-        endTime = layout.endTime;
+        BalancerV3StablePoolRepo.Storage storage layoutStruct = BalancerV3StablePoolRepo._layoutStruct();
+        startValue = layoutStruct.startValue;
+        endValue = layoutStruct.endValue;
+        startTime = layoutStruct.startTime;
+        endTime = layoutStruct.endTime;
     }
 }

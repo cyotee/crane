@@ -40,56 +40,56 @@ library Behavior_IERC8109IntrospectionRepo {
 
     bytes32 internal constant STORAGE_SLOT = keccak256(abi.encode(type(Behavior_IERC8109IntrospectionRepo).name));
 
-    function _layout(bytes32 slot_) internal pure returns (Behavior_IERC8109IntrospectionLayout storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Behavior_IERC8109IntrospectionLayout storage layoutStruct) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct.slot := slot_
         }
     }
 
-    function _layout() internal pure returns (Behavior_IERC8109IntrospectionLayout storage) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Behavior_IERC8109IntrospectionLayout storage) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Expected facetAddress ------ */
 
     function _expected_facetAddress(
-        Behavior_IERC8109IntrospectionLayout storage layout,
+        Behavior_IERC8109IntrospectionLayout storage layoutStruct,
         IERC8109Introspection subject,
         bytes4 selector
     ) internal view returns (address) {
-        return layout.expected_facetAddress[subject][selector];
+        return layoutStruct.expected_facetAddress[subject][selector];
     }
 
     function _expected_facetAddress(IERC8109Introspection subject, bytes4 selector) internal view returns (address) {
-        return _layout().expected_facetAddress[subject][selector];
+        return _layoutStruct().expected_facetAddress[subject][selector];
     }
 
     function _set_expected_facetAddress(
-        Behavior_IERC8109IntrospectionLayout storage layout,
+        Behavior_IERC8109IntrospectionLayout storage layoutStruct,
         IERC8109Introspection subject,
         bytes4 selector,
         address facet
     ) internal {
-        layout.expected_facetAddress[subject][selector] = facet;
-        layout.expected_selectors[subject]._add(selector);
+        layoutStruct.expected_facetAddress[subject][selector] = facet;
+        layoutStruct.expected_selectors[subject]._add(selector);
     }
 
     function _set_expected_facetAddress(IERC8109Introspection subject, bytes4 selector, address facet) internal {
-        _set_expected_facetAddress(_layout(), subject, selector, facet);
+        _set_expected_facetAddress(_layoutStruct(), subject, selector, facet);
     }
 
     /* ------ Expected selectors ------ */
 
-    function _expected_selectors(Behavior_IERC8109IntrospectionLayout storage layout, IERC8109Introspection subject)
+    function _expected_selectors(Behavior_IERC8109IntrospectionLayout storage layoutStruct, IERC8109Introspection subject)
         internal
         view
         returns (Bytes4Set storage)
     {
-        return layout.expected_selectors[subject];
+        return layoutStruct.expected_selectors[subject];
     }
 
     function _expected_selectors(IERC8109Introspection subject) internal view returns (Bytes4Set storage) {
-        return _layout().expected_selectors[subject];
+        return _layoutStruct().expected_selectors[subject];
     }
 }
 

@@ -4,10 +4,10 @@ pragma solidity ^0.8.17;
 
 import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import "../mocks/RedstoneConsumerNumericMock.sol";
-import "@crane/contracts/external/openzeppelin/utils/Context.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import "@crane/contracts/external/openzeppelin/access/Ownable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 
 /**
  * @dev Implementation of the {IERC20} interface.

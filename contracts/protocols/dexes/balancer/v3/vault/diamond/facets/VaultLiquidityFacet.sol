@@ -141,7 +141,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
         // Record that add liquidity was called in this session (for round-trip fee)
         _addLiquidityCalled().tSet(_sessionIdSlot().tload(), params.pool, true);
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         PoolData memory poolData = _loadPoolDataUpdatingBalancesAndYieldFees(params.pool, Rounding.ROUND_UP);
         InputHelpers.ensureInputLengthMatch(poolData.tokens.length, params.maxAmountsIn.length);
@@ -151,10 +151,10 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
         if (poolData.poolConfigBits.shouldCallBeforeAddLiquidity()) {
             HooksConfigLib.callBeforeAddLiquidityHook(
-                msg.sender, maxAmountsInScaled18, params, poolData, layout.hooksContracts[params.pool]
+                msg.sender, maxAmountsInScaled18, params, poolData, layoutStruct.hooksContracts[params.pool]
             );
 
-            poolData.reloadBalancesAndRates(layout.poolTokenBalances[params.pool], Rounding.ROUND_UP);
+            poolData.reloadBalancesAndRates(layoutStruct.poolTokenBalances[params.pool], Rounding.ROUND_UP);
             maxAmountsInScaled18 = params.maxAmountsIn
                 .copyToScaled18ApplyRateRoundDownArray(poolData.decimalScalingFactors, poolData.tokenRates);
         }
@@ -163,7 +163,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
         (amountsIn, amountsInScaled18, bptAmountOut, returnData) = _addLiquidity(poolData, params, maxAmountsInScaled18);
 
         if (poolData.poolConfigBits.shouldCallAfterAddLiquidity()) {
-            IHooks hooksContract = layout.hooksContracts[params.pool];
+            IHooks hooksContract = layoutStruct.hooksContracts[params.pool];
 
             amountsIn = poolData.poolConfigBits
                 .callAfterAddLiquidityHook(
@@ -187,7 +187,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
     {
         _ensureUnpaused(params.pool);
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         PoolData memory poolData = _loadPoolDataUpdatingBalancesAndYieldFees(params.pool, Rounding.ROUND_DOWN);
         InputHelpers.ensureInputLengthMatch(poolData.tokens.length, params.minAmountsOut.length);
@@ -197,10 +197,10 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
 
         if (poolData.poolConfigBits.shouldCallBeforeRemoveLiquidity()) {
             HooksConfigLib.callBeforeRemoveLiquidityHook(
-                minAmountsOutScaled18, msg.sender, params, poolData, layout.hooksContracts[params.pool]
+                minAmountsOutScaled18, msg.sender, params, poolData, layoutStruct.hooksContracts[params.pool]
             );
 
-            poolData.reloadBalancesAndRates(layout.poolTokenBalances[params.pool], Rounding.ROUND_DOWN);
+            poolData.reloadBalancesAndRates(layoutStruct.poolTokenBalances[params.pool], Rounding.ROUND_DOWN);
             minAmountsOutScaled18 = params.minAmountsOut
                 .copyToScaled18ApplyRateRoundUpArray(poolData.decimalScalingFactors, poolData.tokenRates);
         }
@@ -210,7 +210,7 @@ contract VaultLiquidityFacet is BalancerV3VaultModifiers, IFacet {
             _removeLiquidity(poolData, params, minAmountsOutScaled18);
 
         if (poolData.poolConfigBits.shouldCallAfterRemoveLiquidity()) {
-            IHooks hooksContract = layout.hooksContracts[params.pool];
+            IHooks hooksContract = layoutStruct.hooksContracts[params.pool];
 
             amountsOut = poolData.poolConfigBits
                 .callAfterRemoveLiquidityHook(

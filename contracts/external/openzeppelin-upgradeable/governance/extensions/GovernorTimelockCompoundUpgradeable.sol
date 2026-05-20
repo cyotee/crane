@@ -3,11 +3,11 @@
 
 pragma solidity ^0.8.20;
 
-import {IGovernor} from "@crane/contracts/external/openzeppelin/governance/IGovernor.sol";
+import {IGovernor} from "@crane/contracts/external/openzeppelin-contracts/governance/IGovernor.sol";
 import {GovernorUpgradeable} from "../GovernorUpgradeable.sol";
-import {ICompoundTimelock} from "@crane/contracts/external/openzeppelin/vendor/compound/ICompoundTimelock.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
+import {ICompoundTimelock} from "@crane/contracts/external/openzeppelin-contracts/vendor/compound/ICompoundTimelock.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

@@ -6,7 +6,7 @@ import "../../interfaces/IPPrincipalToken.sol";
 import "../../interfaces/IPInterestManagerYT.sol";
 import "../../interfaces/IPYieldContractFactory.sol";
 
-import "@crane/contracts/external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "../libraries/math/PMath.sol";
 import "../libraries/TokenHelper.sol";

@@ -6,10 +6,10 @@ pragma solidity ^0.8.24;
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
-import {IERC7674} from "@crane/contracts/external/openzeppelin/interfaces/draft-IERC7674.sol";
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {SlotDerivation} from "@crane/contracts/external/openzeppelin/utils/SlotDerivation.sol";
-import {TransientSlot} from "@crane/contracts/external/openzeppelin/utils/TransientSlot.sol";
+import {IERC7674} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC7674.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {SlotDerivation} from "@crane/contracts/external/openzeppelin-contracts/utils/SlotDerivation.sol";
+import {TransientSlot} from "@crane/contracts/external/openzeppelin-contracts/utils/TransientSlot.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

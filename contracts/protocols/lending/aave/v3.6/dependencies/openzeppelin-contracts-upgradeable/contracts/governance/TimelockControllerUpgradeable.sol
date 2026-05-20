@@ -9,6 +9,8 @@ import {ERC1155HolderUpgradeable} from "../token/ERC1155/utils/ERC1155HolderUpgr
 import {Address} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/Address.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev Contract module which acts as a timelocked controller. When set as the
  * owner of an `Ownable` smart contract, it enforces a timelock on all
@@ -23,6 +25,9 @@ import {Initializable} from "../proxy/utils/Initializable.sol";
  * a multisig or a DAO as the sole proposer.
  */
 contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeable, ERC721HolderUpgradeable, ERC1155HolderUpgradeable {
+    
+    using BetterEfficientHashLib for bytes;
+
     bytes32 public constant PROPOSER_ROLE = keccak256("PROPOSER_ROLE");
     bytes32 public constant EXECUTOR_ROLE = keccak256("EXECUTOR_ROLE");
     bytes32 public constant CANCELLER_ROLE = keccak256("CANCELLER_ROLE");
@@ -260,7 +265,8 @@ contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeabl
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return keccak256(abi.encode(target, value, data, predecessor, salt));
+        // return keccak256(abi.encode(target, value, data, predecessor, salt));
+        return abi.encode(target, value, data, predecessor, salt)._hash();
     }
 
     /**
@@ -274,7 +280,8 @@ contract TimelockControllerUpgradeable is Initializable, AccessControlUpgradeabl
         bytes32 predecessor,
         bytes32 salt
     ) public pure virtual returns (bytes32) {
-        return keccak256(abi.encode(targets, values, payloads, predecessor, salt));
+        // return keccak256(abi.encode(targets, values, payloads, predecessor, salt));
+        return abi.encode(targets, values, payloads, predecessor, salt)._hash();
     }
 
     /**

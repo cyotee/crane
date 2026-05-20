@@ -13,7 +13,7 @@ import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearin
 import {Assertions} from './utils/Assertions.sol';
 import {MockCheckpointStorage} from './utils/MockCheckpointStorage.sol';
 import {Test} from 'forge-std/Test.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract CheckpointStorageTest is Assertions, Test {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -220,7 +220,7 @@ contract CheckpointStorageTest is Assertions, Test {
         uint24 _startCumulativeMps,
         uint256 _cumulativeMpsPerPriceDelta,
         uint24 _cumulativeMpsDelta
-    ) public view {
+    ) public pure {
         vm.assume(_inputAmount > 0);
         vm.assume(_startCumulativeMps < ConstantsLib.MPS);
         _cumulativeMpsDelta = uint24(_bound(_cumulativeMpsDelta, 1, ConstantsLib.MPS));

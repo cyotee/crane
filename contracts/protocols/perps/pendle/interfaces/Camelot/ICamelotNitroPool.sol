@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@crane/contracts/interfaces/IERC721.sol";
 
 interface ICamelotNitroPool is IERC721 {
     struct RewardsToken {

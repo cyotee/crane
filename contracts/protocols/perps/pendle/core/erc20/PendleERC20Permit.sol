@@ -6,14 +6,19 @@ pragma solidity ^0.8.0;
 import "./PendleERC20.sol";
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import "@crane/contracts/external/openzeppelin/utils/Context.sol";
-import "@crane/contracts/external/openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol";
-import "@crane/contracts/external/openzeppelin/utils/cryptography/draft-EIP712.sol";
-import "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
-import "@crane/contracts/external/openzeppelin/utils/Counters.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/draft-EIP712.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Counters.sol";
+
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 
 /// @dev forked from OZ's ERC20Permit
 contract PendleERC20Permit is PendleERC20, IERC20Permit, EIP712 {
+
+    using BetterEfficientHashLib for bytes;
+
     using Counters for Counters.Counter;
 
     mapping(address => Counters.Counter) private _nonces;
@@ -42,7 +47,8 @@ contract PendleERC20Permit is PendleERC20, IERC20Permit, EIP712 {
     ) public virtual override {
         require(block.timestamp <= deadline, "ERC20Permit: expired deadline");
 
-        bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        // bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
+        bytes32 structHash = abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline)._hash();
 
         bytes32 hash = _hashTypedDataV4(structHash);
 

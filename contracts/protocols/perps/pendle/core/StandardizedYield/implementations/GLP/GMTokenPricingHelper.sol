@@ -2,9 +2,11 @@
 pragma solidity ^0.8.17;
 
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import "@crane/contracts/external/openzeppelin/proxy/utils/UUPSUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../../../libraries/BoringOwnableUpgradeable.sol";
 import {AggregatorV2V3Interface as IChainlinkAggregator} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
+
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 
 interface IGMXV2Oracle {
     function getPriceFeedMultiplier(address dataStore, address token) external view returns (uint256);
@@ -110,7 +112,8 @@ contract GMTokenPricingHelper is BoringOwnableUpgradeable, UUPSUpgradeable {
     }
 
     function _priceFeedKey(address token) internal pure returns (bytes32) {
-        return keccak256(abi.encode(PRICE_FEED, token));
+        // return keccak256(abi.encode(PRICE_FEED, token));
+        return abi.encode(PRICE_FEED, token)._hash();
     }
 
     /////////////////// UPGRADABLE LOGIC ///////////////////////////

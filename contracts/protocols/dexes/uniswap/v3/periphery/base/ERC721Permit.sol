@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@crane/contracts/tokens/ERC721/ERC721Enumerable.sol";
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
-import {ERC721 as SoladyERC721} from "@crane/contracts/solady/tokens/ERC721.sol";
+import {ERC721 as SoladyERC721} from "@crane/contracts/external/solady/tokens/ERC721.sol";
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 import "../libraries/ChainId.sol";

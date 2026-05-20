@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.0;
 
-import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
-import {Ownable, Context} from "@crane/contracts/external/openzeppelin/access/Ownable.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
+import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
 
@@ -79,6 +79,7 @@ abstract contract CustomLiquidatorBase is EVCUtil, Ownable {
             liabilityVault.liquidate(violator, collateral, repayAssets, minYieldBalance);
 
             // Pull the debt from this contract into the liquidator
+            // forge-lint: disable-next-item(unchecked-call)
             evc.call(
                 liability, _msgSender(), 0, abi.encodeCall(liabilityVault.pullDebt, (type(uint256).max, address(this)))
             );

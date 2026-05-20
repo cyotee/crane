@@ -3,8 +3,8 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC3156FlashBorrower} from "@crane/contracts/external/openzeppelin/interfaces/IERC3156FlashBorrower.sol";
-import {IERC3156FlashLender} from "@crane/contracts/external/openzeppelin/interfaces/IERC3156FlashLender.sol";
+import {IERC3156FlashBorrower} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC3156FlashBorrower.sol";
+import {IERC3156FlashLender} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC3156FlashLender.sol";
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 

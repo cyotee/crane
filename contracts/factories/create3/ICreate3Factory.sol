@@ -24,20 +24,6 @@ interface ICreate3Factory {
         external
         returns (address proxy);
 
-    /* ------------------------------------ ! ----------------------------------- */
-
-    // function deployFacetWithArgs(bytes calldata initCode, bytes calldata initArgs, bytes32 salt)
-    //     external
-    //     returns (IFacet facet);
-
-    // function deployFacet(bytes calldata initCode, bytes32 salt) external returns (IFacet facet);
-
-    // function deployPackageWithArgs(bytes calldata initCode, bytes calldata constructorArgs, bytes32 salt)
-    //     external
-    //     returns (IDiamondFactoryPackage package);
-
-    // function deployPackage(bytes calldata initCode, bytes32 salt) external returns (IDiamondFactoryPackage package);
-
     // function registerFacet(IFacet facet, string memory name, bytes4[] memory interfaces, bytes4[] memory functions)
     //     external
     //     returns (bool);

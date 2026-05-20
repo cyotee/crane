@@ -1073,6 +1073,28 @@ contract ERC721URIStorageUpgradeableWithInit is ERC721URIStorageUpgradeable {
     constructor() payable initializer {
         __ERC721URIStorage_init();
     }
+
+    // /**
+    //  * @dev See {IERC721-transferFrom}.
+    //  */
+    // function transferFrom(address from, address to, uint256 tokenId) public payable virtual override {
+    //     ERC721Upgradeable.transferFrom(from, to, tokenId);
+    // }
+
+    // /**
+    //  * @dev See {IERC721-safeTransferFrom}.
+    //  */
+    // function safeTransferFrom(address from, address to, uint256 tokenId) public payable {
+    //     ERC721Upgradeable.safeTransferFrom(from, to, tokenId, "");
+    // }
+
+    // /**
+    //  * @dev See {IERC721-safeTransferFrom}.
+    //  */
+    // function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public payable virtual {
+    //     ERC721Upgradeable.safeTransferFrom(from, to, tokenId, data);
+    // }
+
 }
 import "../token/ERC721/extensions/ERC721VotesUpgradeable.sol";
 
@@ -1081,7 +1103,7 @@ contract ERC721VotesUpgradeableWithInit is ERC721VotesUpgradeable {
         __ERC721Votes_init();
     }
 }
-import "../token/ERC721/extensions/ERC721WrapperUpgradeable.sol";
+import {ERC721WrapperUpgradeable} from "../token/ERC721/extensions/ERC721WrapperUpgradeable.sol";
 
 contract ERC721WrapperUpgradeableWithInit is ERC721WrapperUpgradeable {
     constructor(IERC721 underlyingToken) payable initializer {

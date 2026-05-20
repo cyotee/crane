@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import '../interfaces/IMarketReportTypes.sol';
-import {Ownable} from '@crane/contracts/external/openzeppelin/access/Ownable.sol';
+import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol';
 import {ACLManager} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/ACLManager.sol';
 import {IPoolConfigurator} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolConfigurator.sol';
 import {IPoolAddressesProvider} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolAddressesProvider.sol';
@@ -12,7 +12,11 @@ import {PoolAddressesProviderRegistry} from '@crane/contracts/protocols/lending/
 import {IEmissionManager} from '@crane/contracts/protocols/lending/aave/v3.6/rewards/interfaces/IEmissionManager.sol';
 import {IRewardsController} from '@crane/contracts/protocols/lending/aave/v3.6/rewards/interfaces/IRewardsController.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract AaveV3SetupProcedure {
+  using BetterEfficientHashLib for bytes;
+
   error MarketOwnerMustBeSet();
   error RewardsControllerImplementationMustBeSet();
 
@@ -125,7 +129,8 @@ contract AaveV3SetupProcedure {
       provider.setPriceOracleSentinel(input.priceOracleSentinel);
     }
 
-    bytes32 controllerId = keccak256('INCENTIVES_CONTROLLER');
+    // bytes32 controllerId = keccak256('INCENTIVES_CONTROLLER');
+    bytes32 controllerId = bytes('INCENTIVES_CONTROLLER')._hash();
     if (input.rewardsControllerProxy == address(0)) {
       if (input.rewardsControllerImplementation == address(0))
         revert RewardsControllerImplementationMustBeSet();

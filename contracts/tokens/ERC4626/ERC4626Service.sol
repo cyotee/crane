@@ -12,12 +12,12 @@ library ERC4626Service {
     using BetterSafeERC20 for IERC20;
 
     function _secureReserveDeposit(
-        ERC4626Repo.Storage storage layout,
+        ERC4626Repo.Storage storage layoutStruct,
         uint256 lastTotalAssets,
         uint256 amountTokenToDeposit
         // bool pretransfered
     ) internal returns (uint256 actualIn) {
-        IERC20 tokenIn = ERC4626Repo._reserveAsset(layout);
+        IERC20 tokenIn = ERC4626Repo._reserveAsset(layoutStruct);
         uint256 currentBalance = tokenIn.balanceOf(address(this));
         actualIn = currentBalance - lastTotalAssets;
         if (actualIn != amountTokenToDeposit) {
@@ -34,7 +34,7 @@ library ERC4626Service {
         if (actualIn != amountTokenToDeposit) {
             revert IERC4626Errors.ERC4626TransferNotReceived(amountTokenToDeposit, actualIn);
         }
-        ERC4626Repo._setLastTotalAssets(layout, currentBalance);
+        ERC4626Repo._setLastTotalAssets(layoutStruct, currentBalance);
     }
 
     function _secureReserveDeposit(
@@ -45,18 +45,18 @@ library ERC4626Service {
         internal
         returns (uint256 actualIn)
     {
-        return _secureReserveDeposit(ERC4626Repo._layout(), lastTotalAssets, amountTokenToDeposit);
+        return _secureReserveDeposit(ERC4626Repo._layoutStruct(), lastTotalAssets, amountTokenToDeposit);
     }
 
     function _secureReserveDeposit(
-        ERC4626Repo.Storage storage layout,
+        ERC4626Repo.Storage storage layoutStruct,
         uint256 amountTokenToDeposit
         // bool pretransfered
     )
         internal
         returns (uint256 actualIn)
     {
-        return _secureReserveDeposit(layout, ERC4626Repo._lastTotalAssets(layout), amountTokenToDeposit);
+        return _secureReserveDeposit(layoutStruct, ERC4626Repo._lastTotalAssets(layoutStruct), amountTokenToDeposit);
     }
 
     function _secureReserveDeposit(
@@ -66,6 +66,6 @@ library ERC4626Service {
         internal
         returns (uint256 actualIn)
     {
-        return _secureReserveDeposit(ERC4626Repo._layout(), amountTokenToDeposit);
+        return _secureReserveDeposit(ERC4626Repo._layoutStruct(), amountTokenToDeposit);
     }
 }

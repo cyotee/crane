@@ -217,17 +217,17 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
             uint256[] memory lastBalancesLiveScaled18
         )
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
-        tokens = layout.poolTokens[pool];
+        tokens = layoutStruct.poolTokens[pool];
         uint256 numTokens = tokens.length;
         tokenInfo = new TokenInfo[](numTokens);
         balancesRaw = new uint256[](numTokens);
         lastBalancesLiveScaled18 = new uint256[](numTokens);
 
         for (uint256 i = 0; i < numTokens; ++i) {
-            tokenInfo[i] = layout.poolTokenInfo[pool][tokens[i]];
-            bytes32 packedBalance = layout.poolTokenBalances[pool][i];
+            tokenInfo[i] = layoutStruct.poolTokenInfo[pool][tokens[i]];
+            bytes32 packedBalance = layoutStruct.poolTokenBalances[pool][i];
             balancesRaw[i] = packedBalance.getBalanceRaw();
             lastBalancesLiveScaled18[i] = packedBalance.getBalanceDerived();
         }
@@ -708,7 +708,7 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      */
     function quote(bytes calldata data) external returns (bytes memory result) {
         // Quote must be disabled if queries are disabled
-        if (BalancerV3VaultStorageRepo._layout().vaultStateBits.isQueryDisabled()) {
+        if (BalancerV3VaultStorageRepo._layoutStruct().vaultStateBits.isQueryDisabled()) {
             revert QueriesDisabled();
         }
 
@@ -725,7 +725,7 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      */
     function quoteAndRevert(bytes calldata data) external {
         // Quote must be disabled if queries are disabled
-        if (BalancerV3VaultStorageRepo._layout().vaultStateBits.isQueryDisabled()) {
+        if (BalancerV3VaultStorageRepo._layoutStruct().vaultStateBits.isQueryDisabled()) {
             revert QueriesDisabled();
         }
 

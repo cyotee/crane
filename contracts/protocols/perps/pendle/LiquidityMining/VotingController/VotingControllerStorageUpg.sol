@@ -11,7 +11,7 @@ import "../libraries/VeHistoryLib.sol";
 import "../../core/libraries/MiniHelpers.sol";
 import "../../core/libraries/Errors.sol";
 
-import "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 
 abstract contract VotingControllerStorageUpg is IPVotingController {
     using VeBalanceLib for VeBalance;

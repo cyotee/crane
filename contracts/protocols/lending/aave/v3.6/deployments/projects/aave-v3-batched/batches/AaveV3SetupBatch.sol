@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import {Ownable} from '@crane/contracts/external/openzeppelin/access/Ownable.sol';
+import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol';
 import {AaveV3SetupProcedure} from '@crane/contracts/protocols/lending/aave/v3.6/deployments/procedures/AaveV3SetupProcedure.sol';
 import {MarketReportStorage} from '@crane/contracts/protocols/lending/aave/v3.6/deployments/MarketReportStorage.sol';
 import {InitialReport, SetupReport, Roles, MarketConfig, MarketReport} from '@crane/contracts/protocols/lending/aave/v3.6/deployments/interfaces/IMarketReportTypes.sol';

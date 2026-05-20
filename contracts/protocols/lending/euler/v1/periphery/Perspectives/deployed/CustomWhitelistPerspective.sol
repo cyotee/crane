@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {EnumerableSet} from "@crane/contracts/external/openzeppelin/utils/structs/EnumerableSet.sol";
+import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 import {BasePerspective} from "../implementation/BasePerspective.sol";
 
 /// @title CustomWhitelistPerspective

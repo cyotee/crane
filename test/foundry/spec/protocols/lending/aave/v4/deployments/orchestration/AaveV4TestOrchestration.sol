@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import 'forge-std/Vm.sol';
 
+import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {TestTypes} from '@crane/test/foundry/spec/protocols/lending/aave/v4/utils/TestTypes.sol';
 import {DeployConstants} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/DeployConstants.sol';
 import {TestnetERC20} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol';
@@ -21,7 +22,7 @@ import {AaveV4HubInstanceBatch} from '@crane/contracts/protocols/lending/aave/v4
 import {AaveV4SpokeInstanceBatch} from '@crane/contracts/protocols/lending/aave/v4/deployments/batches/AaveV4SpokeInstanceBatch.sol';
 import {TestTokensBatch} from '@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/batches/TestTokensBatch.sol';
 import {AaveV4DeployBase} from '@crane/contracts/protocols/lending/aave/v4/deployments/orchestration/AaveV4DeployBase.sol';
-import {WETH9} from '@crane/contracts/protocols/lending/aave/v4/dependencies/weth/WETH9.sol';
+import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
 import {IHub} from '@crane/contracts/protocols/lending/aave/v4/hub/interfaces/IHub.sol';
 import {IHubConfigurator} from '@crane/contracts/protocols/lending/aave/v4/hub/interfaces/IHubConfigurator.sol';
 import {IHubInstance} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/interfaces/IHubInstance.sol';
@@ -31,6 +32,7 @@ import {Create2Utils} from '@crane/contracts/protocols/lending/aave/v4/deploymen
 import {TransparentUpgradeableProxy} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/TransparentUpgradeableProxy.sol';
 
 library AaveV4TestOrchestration {
+  using BetterAddress for address;
   bool public constant IS_TEST = true;
   bytes internal constant CREATE2_FACTORY_BYTECODE =
     hex'7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3';
@@ -412,7 +414,9 @@ library AaveV4TestOrchestration {
     if (Create2Utils.isContractDeployed(computed)) return computed;
 
     bytes memory creationBytecode = abi.encodePacked(salt, bytecode);
+    // forge-lint: disable-next-line(unchecked-call)
     (, bytes memory returnData) = Create2Utils.CREATE2_FACTORY.call(creationBytecode);
+    // (bytes memory returnData) = Create2Utils.CREATE2_FACTORY.functionCall(creationBytecode);
     address deployedAt = address(uint160(bytes20(returnData)));
     require(deployedAt == computed, Create2DeploymentFailed());
     return deployedAt;

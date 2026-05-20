@@ -6,6 +6,7 @@ import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
 import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 
 /// @notice WETH test token for Balancer testing
@@ -33,6 +34,28 @@ contract WETHTestToken is ERC20, IWETH {
     }
 
     // ============ IERC20 overrides for diamond inheritance ============
+
+    /**
+     * @dev Returns the name of the token.
+     */
+    function name() public view virtual override(ERC20, IERC20Metadata) returns (string memory) {
+        return ERC20.name();
+    }
+
+    /**
+     * @dev Returns the symbol of the token.
+     */
+    function symbol() public view virtual override(ERC20, IERC20Metadata) returns (string memory) {
+        return ERC20.symbol();
+    }
+
+    /**
+     * @dev Returns the number of decimals used to get its user representation.
+     * Defaults to 18. Override to change.
+     */
+    function decimals() public view virtual override(ERC20, IERC20Metadata) returns (uint8) {
+        return ERC20.decimals();
+    }
 
     function totalSupply() public view override(ERC20, IERC20) returns (uint256) {
         return ERC20.totalSupply();

@@ -26,7 +26,7 @@ import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 
 contract ERC20PermitStub is ERC20PermitTarget {
     constructor(string memory name_, string memory symbol_, uint8 decimals_, address recipient, uint256 initialAmount) {
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         ERC20Repo._initialize(erc20, name_, symbol_, decimals_);
         ERC20Repo._mint(erc20, recipient, initialAmount);
     }

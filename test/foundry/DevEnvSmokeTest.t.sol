@@ -16,7 +16,6 @@ import {
     IDiamondPackageCallBackFactoryInit,
     DiamondPackageCallBackFactory
 } from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol";
-import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {GreeterFacet} from "@crane/contracts/test/stubs/greeter/GreeterFacet.sol";
 import {IGreeterDFPkg, GreeterDFPkg} from "@crane/contracts/test/stubs/greeter/GreeterDFPkg.sol";
 import {IGreeter} from "@crane/contracts/test/stubs/greeter/IGreeter.sol";
@@ -31,25 +30,7 @@ import {Hanlder_IDiamondLoupe} from "@crane/contracts/introspection/ERC2535/Hanl
 
 import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 
-// contract InitDevServiceGasReporter {
-//     function initEnv(address owner)
-//         external
-//         returns (ICreate3FactoryProxy factory, IDiamondPackageCallBackFactory diamondFactory)
-//     {
-//         return InitDevService.initEnv(owner);
-//     }
-
-//     function initFactory(address owner, bytes32 salt) external returns (ICreate3FactoryProxy factory) {
-//         return InitDevService.initFactory(owner, salt);
-//     }
-
-//     function initDiamondFactory(ICreate3FactoryProxy factory)
-//         external
-//         returns (IDiamondPackageCallBackFactory diamondFactory)
-//     {
-//         return InitDevService.initDiamondFactory(factory);
-//     }
-// }
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract DevEnvSmokeTest is CraneTest {
     using BetterEfficientHashLib for bytes;
@@ -58,10 +39,7 @@ contract DevEnvSmokeTest is CraneTest {
 
     bytes32 eventSelector;
         
-    // InitDevServiceGasReporter initDevServiceGasReporter;
-
     Handler_ERC165 erc165Handler;
-    // Hanlder_IDiamondLoupe erc2535Handler;
     Handler_IFacetRegistry facetRegistryHandler;
     Handler_IDiamondFactoryPackageRegistry dfpkgRegistryHandler;
 
@@ -76,7 +54,6 @@ contract DevEnvSmokeTest is CraneTest {
         eventSelector = DevEnvSmokeTest.TestEvent.selector;
         BetterTest.setUp();
         erc165Handler = new Handler_ERC165();
-        // erc2535Handler= new Hanlder_IDiamondLoupe();
         facetRegistryHandler = new Handler_IFacetRegistry();
         dfpkgRegistryHandler = new Handler_IDiamondFactoryPackageRegistry();
         // initDevServiceGasReporter = new InitDevServiceGasReporter();

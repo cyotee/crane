@@ -974,8 +974,8 @@ contract SpokeLiquidationCallBaseTest is LiquidationLogicBaseTest {
 
     // Liquidator
     if (
-      _getAssetUnderlyingByReserveId(params.spoke, params.collateralReserveId) ==
-      _getAssetUnderlyingByReserveId(params.spoke, params.debtReserveId)
+      address(_getAssetUnderlyingByReserveId(params.spoke, params.collateralReserveId)) ==
+      address(_getAssetUnderlyingByReserveId(params.spoke, params.debtReserveId))
     ) {
       assertEq(
         accountsInfoAfter.liquidatorBalanceInfo.collateralErc20Balance,
@@ -1047,8 +1047,8 @@ contract SpokeLiquidationCallBaseTest is LiquidationLogicBaseTest {
 
     // Liquidator
     if (
-      _getAssetUnderlyingByReserveId(params.spoke, params.collateralReserveId) ==
-      _getAssetUnderlyingByReserveId(params.spoke, params.debtReserveId)
+      address(_getAssetUnderlyingByReserveId(params.spoke, params.collateralReserveId)) ==
+      address(_getAssetUnderlyingByReserveId(params.spoke, params.debtReserveId))
     ) {
       assertEq(
         accountsInfoAfter.liquidatorBalanceInfo.collateralErc20Balance,

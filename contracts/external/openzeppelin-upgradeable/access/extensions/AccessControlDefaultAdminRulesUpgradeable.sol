@@ -3,12 +3,12 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessControlDefaultAdminRules} from "@crane/contracts/external/openzeppelin/access/extensions/IAccessControlDefaultAdminRules.sol";
+import {IAccessControlDefaultAdminRules} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/IAccessControlDefaultAdminRules.sol";
 import {AccessControlUpgradeable} from "../AccessControlUpgradeable.sol";
-import {IAccessControl} from "@crane/contracts/external/openzeppelin/access/IAccessControl.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {IERC5313} from "@crane/contracts/external/openzeppelin/interfaces/IERC5313.sol";
+import {IAccessControl} from "@crane/contracts/external/openzeppelin-contracts/access/IAccessControl.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {IERC5313} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC5313.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

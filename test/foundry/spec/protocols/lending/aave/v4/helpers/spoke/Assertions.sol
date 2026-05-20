@@ -472,7 +472,7 @@ abstract contract Assertions is QueryHelpers {
     IERC20 underlying,
     address entity,
     address user
-  ) internal {
+  ) internal view {
     assertEq(underlying.balanceOf(entity), 0);
     assertEq(underlying.allowance({owner: user, spender: entity}), 0);
     assertEq(underlying.allowance({owner: entity, spender: vm.randomAddress()}), 0);

@@ -115,7 +115,7 @@ contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
         ERC20PermitMintableStub tokenA,
         ERC20PermitMintableStub tokenB,
         uint256 reduce,
-        bool use5param
+        bool /*use5param*/
     ) internal {
         TestData memory data;
         {
@@ -179,7 +179,7 @@ contract ConstProdUtils_purchaseQuote_Aerodrome is TestBase_ConstProdUtils_Aerod
         ERC20PermitMintableStub tokenA,
         ERC20PermitMintableStub tokenB,
         uint256 reduce,
-        bool use5param
+        bool /*use5param*/
     ) internal {
         TestData memory data;
         {

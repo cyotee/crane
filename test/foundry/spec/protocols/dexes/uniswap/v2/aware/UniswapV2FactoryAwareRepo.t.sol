@@ -18,7 +18,7 @@ contract UniswapV2FactoryAwareHarness {
     }
 
     function initializeWithSlot(bytes32 slot, IUniswapV2Factory factory_) external {
-        UniswapV2FactoryAwareRepo._initialize(UniswapV2FactoryAwareRepo._layout(slot), factory_);
+        UniswapV2FactoryAwareRepo._initialize(UniswapV2FactoryAwareRepo._layoutStruct(slot), factory_);
     }
 
     function uniswapV2Factory() external view returns (IUniswapV2Factory) {
@@ -26,7 +26,7 @@ contract UniswapV2FactoryAwareHarness {
     }
 
     function uniswapV2FactoryFromSlot(bytes32 slot) external view returns (IUniswapV2Factory) {
-        return UniswapV2FactoryAwareRepo._uniswapV2Factory(UniswapV2FactoryAwareRepo._layout(slot));
+        return UniswapV2FactoryAwareRepo._uniswapV2Factory(UniswapV2FactoryAwareRepo._layoutStruct(slot));
     }
 
     function storageSlot() external pure returns (bytes32) {

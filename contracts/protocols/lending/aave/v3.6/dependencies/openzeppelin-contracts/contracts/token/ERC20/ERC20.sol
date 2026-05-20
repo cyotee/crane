@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
-import {Context} from "../../utils/Context.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import {IERC20Errors} from "@crane/contracts/interfaces/IERC20Errors.sol";
 
 /**

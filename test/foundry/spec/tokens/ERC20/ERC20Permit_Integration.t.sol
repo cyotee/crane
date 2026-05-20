@@ -30,7 +30,7 @@ contract ERC20PermitIntegrationStub is ERC20PermitTarget {
 
     constructor(string memory name_, string memory symbol_, uint8 decimals_, address recipient, uint256 initialAmount) {
         // Initialize ERC20
-        ERC20Repo.Storage storage erc20 = ERC20Repo._layout();
+        ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         ERC20Repo._initialize(erc20, name_, symbol_, decimals_);
         ERC20Repo._mint(erc20, recipient, initialAmount);
 

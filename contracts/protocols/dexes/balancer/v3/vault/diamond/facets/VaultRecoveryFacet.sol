@@ -123,14 +123,14 @@ contract VaultRecoveryFacet is BalancerV3VaultModifiers, IFacet {
         onlyInRecoveryMode(pool)
         returns (uint256[] memory amountsOutRaw)
     {
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
         mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolTokenBalances =
-            layout.poolTokenBalances[pool];
+            layoutStruct.poolTokenBalances[pool];
 
         RecoveryLocals memory locals;
 
         // Get tokens and balances
-        locals.tokens = layout.poolTokens[pool];
+        locals.tokens = layoutStruct.poolTokens[pool];
         locals.numTokens = locals.tokens.length;
         locals.balancesRaw = new uint256[](locals.numTokens);
 
@@ -148,7 +148,7 @@ contract VaultRecoveryFacet is BalancerV3VaultModifiers, IFacet {
         locals.chargeRoundtripFee = _addLiquidityCalled().tGet(_sessionIdSlot().tload(), pool);
 
         if (locals.chargeRoundtripFee) {
-            locals.swapFeePercentage = layout.poolConfigBits[pool].getStaticSwapFeePercentage();
+            locals.swapFeePercentage = layoutStruct.poolConfigBits[pool].getStaticSwapFeePercentage();
         }
 
         for (uint256 i = 0; i < locals.numTokens; ++i) {

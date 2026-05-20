@@ -4,7 +4,7 @@
 pragma solidity ^0.8.20;
 
 import {ERC1155Upgradeable} from "../ERC1155Upgradeable.sol";
-import {Arrays} from "@crane/contracts/external/openzeppelin/utils/Arrays.sol";
+import {Arrays} from "@crane/contracts/external/openzeppelin-contracts/utils/Arrays.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
 /**

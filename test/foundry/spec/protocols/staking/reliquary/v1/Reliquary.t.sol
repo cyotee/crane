@@ -9,7 +9,7 @@ import {NFTDescriptor} from "@crane/contracts/protocols/staking/reliquary/v1/nft
 import {LinearCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearCurve.sol";
 import {LinearPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearPlateauCurve.sol";
 import {PolynomialPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/PolynomialPlateauCurve.sol";
-import {ERC721Holder} from "@crane/contracts/external/openzeppelin/token/ERC721/utils/ERC721Holder.sol";
+import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
 import {ReliquaryEvents} from "@crane/contracts/protocols/staking/reliquary/v1/services/ReliquaryEvents.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {TestBase_Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/test/bases/TestBase_Reliquary.sol";

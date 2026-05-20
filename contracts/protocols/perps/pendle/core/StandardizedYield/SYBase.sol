@@ -9,7 +9,7 @@ import "../libraries/TokenHelper.sol";
 import "../libraries/ArrayLib.sol";
 import "../libraries/Errors.sol";
 import "../libraries/BoringOwnableUpgradeable.sol";
-import "@crane/contracts/external/openzeppelin/utils/Pausable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/Pausable.sol";
 
 abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, BoringOwnableUpgradeable, Pausable {
     using PMath for uint256;

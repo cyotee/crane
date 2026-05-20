@@ -15,21 +15,21 @@ library ERC2612Repo {
         mapping(address account => uint256) nonces;
     }
 
-    // tag::_layout[]
+    // tag::_layoutStruct[]
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
-     * @return layout_ A struct from a Layout library bound to the provided slot.
+     * @return layoutStruct_ A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
-    // end::_layout[]
+    // end::_layoutStruct[]
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /**
@@ -37,38 +37,38 @@ library ERC2612Repo {
      *
      * Returns the current value and increments nonce.
      */
-    function _useNonce(Storage storage layout, address owner) internal returns (uint256) {
+    function _useNonce(Storage storage layoutStruct, address owner) internal returns (uint256) {
         // For each account, the nonce has an initial value of 0, can only be incremented by one, and cannot be
         // decremented or reset. This guarantees that the nonce never overflows.
         unchecked {
             // It is important to do x++ and not ++x here.
-            return layout.nonces[owner]++;
+            return layoutStruct.nonces[owner]++;
         }
     }
 
     function _useNonce(address owner) internal returns (uint256) {
-        return _useNonce(_layout(), owner);
+        return _useNonce(_layoutStruct(), owner);
     }
 
     /**
      * @dev Same as {_useNonce} but checking that `nonce` is the next valid for `owner`.
      */
-    function _useCheckedNonce(Storage storage layout, address owner, uint256 nonce) internal {
-        uint256 current = _useNonce(layout, owner);
+    function _useCheckedNonce(Storage storage layoutStruct, address owner, uint256 nonce) internal {
+        uint256 current = _useNonce(layoutStruct, owner);
         if (nonce != current) {
             revert IERC2612.InvalidAccountNonce(owner, current);
         }
     }
 
     function _useCheckedNonce(address owner, uint256 nonce) internal {
-        _useCheckedNonce(_layout(), owner, nonce);
+        _useCheckedNonce(_layoutStruct(), owner, nonce);
     }
 
-    function _nonces(Storage storage layout, address owner) internal view returns (uint256) {
-        return layout.nonces[owner];
+    function _nonces(Storage storage layoutStruct, address owner) internal view returns (uint256) {
+        return layoutStruct.nonces[owner];
     }
 
     function _nonces(address owner) internal view returns (uint256) {
-        return _nonces(_layout(), owner);
+        return _nonces(_layoutStruct(), owner);
     }
 }

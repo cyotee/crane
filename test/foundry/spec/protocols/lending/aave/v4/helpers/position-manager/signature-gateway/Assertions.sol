@@ -12,7 +12,7 @@ abstract contract Assertions is SpokeHelpers {
     ISpoke spoke,
     ISignatureGateway _gateway,
     address who
-  ) internal {
+  ) internal view {
     for (uint256 reserveId; reserveId < spoke.getReserveCount(); ++reserveId) {
       _assertEntityHasNoBalanceOrAllowance({
         underlying: _underlying(spoke, reserveId),

@@ -21,7 +21,7 @@ library BalancerV3Gyro2CLPPoolRepo {
     error SqrtParamsWrong();
 
     /**
-     * @notice Storage layout for 2-CLP pool parameters.
+     * @notice Storage layoutStruct for 2-CLP pool parameters.
      * @dev sqrtAlpha must be less than sqrtBeta.
      */
     struct Storage {
@@ -31,14 +31,14 @@ library BalancerV3Gyro2CLPPoolRepo {
 
     /* ------ Layout Functions ------ */
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     /* ------ Initialization ------ */
@@ -46,61 +46,61 @@ library BalancerV3Gyro2CLPPoolRepo {
     /**
      * @notice Initialize the 2-CLP pool with parameters.
      * @dev sqrtAlpha must be less than sqrtBeta.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @param sqrtAlpha_ Square root of alpha (lower price bound).
      * @param sqrtBeta_ Square root of beta (upper price bound).
      */
-    function _initialize(Storage storage layout, uint256 sqrtAlpha_, uint256 sqrtBeta_) internal {
+    function _initialize(Storage storage layoutStruct, uint256 sqrtAlpha_, uint256 sqrtBeta_) internal {
         if (sqrtAlpha_ >= sqrtBeta_) revert SqrtParamsWrong();
 
-        layout.sqrtAlpha = sqrtAlpha_;
-        layout.sqrtBeta = sqrtBeta_;
+        layoutStruct.sqrtAlpha = sqrtAlpha_;
+        layoutStruct.sqrtBeta = sqrtBeta_;
     }
 
     function _initialize(uint256 sqrtAlpha_, uint256 sqrtBeta_) internal {
-        _initialize(_layout(), sqrtAlpha_, sqrtBeta_);
+        _initialize(_layoutStruct(), sqrtAlpha_, sqrtBeta_);
     }
 
     /* ------ Parameter Getters ------ */
 
     /**
      * @notice Get the 2-CLP parameters.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return sqrtAlpha Square root of alpha (lower price bound).
      * @return sqrtBeta Square root of beta (upper price bound).
      */
-    function _get2CLPParams(Storage storage layout) internal view returns (uint256 sqrtAlpha, uint256 sqrtBeta) {
-        sqrtAlpha = layout.sqrtAlpha;
-        sqrtBeta = layout.sqrtBeta;
+    function _get2CLPParams(Storage storage layoutStruct) internal view returns (uint256 sqrtAlpha, uint256 sqrtBeta) {
+        sqrtAlpha = layoutStruct.sqrtAlpha;
+        sqrtBeta = layoutStruct.sqrtBeta;
     }
 
     function _get2CLPParams() internal view returns (uint256 sqrtAlpha, uint256 sqrtBeta) {
-        return _get2CLPParams(_layout());
+        return _get2CLPParams(_layoutStruct());
     }
 
     /**
      * @notice Get the sqrtAlpha parameter.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return The sqrtAlpha parameter.
      */
-    function _getSqrtAlpha(Storage storage layout) internal view returns (uint256) {
-        return layout.sqrtAlpha;
+    function _getSqrtAlpha(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.sqrtAlpha;
     }
 
     function _getSqrtAlpha() internal view returns (uint256) {
-        return _getSqrtAlpha(_layout());
+        return _getSqrtAlpha(_layoutStruct());
     }
 
     /**
      * @notice Get the sqrtBeta parameter.
-     * @param layout Storage pointer.
+     * @param layoutStruct Storage pointer.
      * @return The sqrtBeta parameter.
      */
-    function _getSqrtBeta(Storage storage layout) internal view returns (uint256) {
-        return layout.sqrtBeta;
+    function _getSqrtBeta(Storage storage layoutStruct) internal view returns (uint256) {
+        return layoutStruct.sqrtBeta;
     }
 
     function _getSqrtBeta() internal view returns (uint256) {
-        return _getSqrtBeta(_layout());
+        return _getSqrtBeta(_layoutStruct());
     }
 }

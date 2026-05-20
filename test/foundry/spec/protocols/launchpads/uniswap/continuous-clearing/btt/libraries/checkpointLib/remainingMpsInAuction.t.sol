@@ -6,7 +6,7 @@ import {Checkpoint, CheckpointLib} from 'contracts/protocols/launchpads/uniswap/
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 
 contract RemainingMpsInAuctionTest is BttBase {
-    function test_WhenCalledWithCheckpoint(uint24 _cumulativeMps) external {
+    function test_WhenCalledWithCheckpoint(uint24 _cumulativeMps) external pure {
         // it returns mps - checkpoint.cumulativeMps
 
         uint24 cumulativeMps = uint24(bound(_cumulativeMps, 0, ConstantsLib.MPS));

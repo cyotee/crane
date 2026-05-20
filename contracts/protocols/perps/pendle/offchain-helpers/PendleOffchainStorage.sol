@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@crane/contracts/external/openzeppelin-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../interfaces/IPOffchainStorage.sol";
 
 contract PendleOffchainStorage is IPOffchainStorage, UUPSUpgradeable, AccessControlUpgradeable {

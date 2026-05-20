@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.10;
 
-import {Address} from '@crane/contracts/external/openzeppelin/utils/Address.sol';
+import {Address} from '@crane/contracts/external/openzeppelin-contracts/utils/Address.sol';
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
 
 import {IPoolAddressesProvider} from '../interfaces/IPoolAddressesProvider.sol';

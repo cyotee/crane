@@ -4,12 +4,12 @@
 pragma solidity ^0.8.20;
 
 import {GovernorUpgradeable} from "../GovernorUpgradeable.sol";
-import {AuthorityUtils} from "@crane/contracts/external/openzeppelin/access/manager/AuthorityUtils.sol";
-import {IAccessManager} from "@crane/contracts/external/openzeppelin/access/manager/IAccessManager.sol";
-import {Address} from "@crane/contracts/external/openzeppelin/utils/Address.sol";
-import {Math} from "@crane/contracts/external/openzeppelin/utils/math/Math.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol";
-import {Time} from "@crane/contracts/external/openzeppelin/utils/types/Time.sol";
+import {AuthorityUtils} from "@crane/contracts/external/openzeppelin-contracts/access/manager/AuthorityUtils.sol";
+import {IAccessManager} from "@crane/contracts/external/openzeppelin-contracts/access/manager/IAccessManager.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
+import {Time} from "@crane/contracts/external/openzeppelin-contracts/utils/types/Time.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 /**

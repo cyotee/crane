@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import "@crane/contracts/access/Ownable.sol";
+import "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
 import "@crane/contracts/utils/Address.sol";
 import "@crane/contracts/interfaces/IERC4626.sol";
 import "@crane/contracts/utils/SafeERC20.sol";

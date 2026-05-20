@@ -10,29 +10,29 @@ library CamelotV2RouterAwareRepo {
         ICamelotV2Router router;
     }
 
-    function _layout(bytes32 slot) internal pure returns (Storage storage layout) {
+    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
-    function _initialize(Storage storage layout, ICamelotV2Router router_) internal {
-        layout.router = router_;
+    function _initialize(Storage storage layoutStruct, ICamelotV2Router router_) internal {
+        layoutStruct.router = router_;
     }
 
     function _initialize(ICamelotV2Router router_) internal {
-        _initialize(_layout(), router_);
+        _initialize(_layoutStruct(), router_);
     }
 
-    function _camelotV2Router(Storage storage layout) internal view returns (ICamelotV2Router router_) {
-        return layout.router;
+    function _camelotV2Router(Storage storage layoutStruct) internal view returns (ICamelotV2Router router_) {
+        return layoutStruct.router;
     }
 
     function _camelotV2Router() internal view returns (ICamelotV2Router router_) {
-        return _camelotV2Router(_layout());
+        return _camelotV2Router(_layoutStruct());
     }
 }

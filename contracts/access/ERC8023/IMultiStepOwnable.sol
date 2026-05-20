@@ -28,6 +28,7 @@ interface IMultiStepOwnable {
      * @notice Ownership
      * @param prevOwner The address that initiated the ownership transfer. Is still the current owner.
      * @param newOwner The address to which ownership transfer has been confirmed.
+     * @custom:topic-signature OwnershipTransferConfirmed(address,address)
      * @custom:topiczero 0x646fe5eeb20d96ea45a9caafcb508854a2fb5660885ced7772e12a633c974571
      */
     event OwnershipTransferConfirmed(address indexed prevOwner, address indexed newOwner);
@@ -38,6 +39,7 @@ interface IMultiStepOwnable {
      * @notice Emitted when a pending ownership transfer is completed.
      * @param prevOwner The address that initiated the ownership transfer.
      * @param newOwner The address to which ownership transfer has been completed. Is the current owner.
+     * @custom:topic-signature OwnershipTransferred(address,address)
      * @custom:topiczero 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
      */
     event OwnershipTransferred(address indexed prevOwner, address indexed newOwner);

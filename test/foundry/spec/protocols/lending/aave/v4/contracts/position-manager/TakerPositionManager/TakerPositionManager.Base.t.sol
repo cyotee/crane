@@ -27,7 +27,7 @@ contract TakerPositionManagerBaseTest is Base, TakerPositionManagerHelpers {
     address spender,
     address onBehalfOf,
     uint256 deadline
-  ) internal returns (ITakerPositionManager.WithdrawPermit memory) {
+  ) internal view returns (ITakerPositionManager.WithdrawPermit memory) {
     return _withdrawPermitData(positionManager, spoke1, spender, onBehalfOf, deadline);
   }
 
@@ -35,7 +35,7 @@ contract TakerPositionManagerBaseTest is Base, TakerPositionManagerHelpers {
     address spender,
     address onBehalfOf,
     uint256 deadline
-  ) internal returns (ITakerPositionManager.BorrowPermit memory) {
+  ) internal view returns (ITakerPositionManager.BorrowPermit memory) {
     return _approveBorrowData(positionManager, spoke1, spender, onBehalfOf, deadline);
   }
 }

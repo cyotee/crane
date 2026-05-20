@@ -9,10 +9,15 @@ import {StableSwapAggregator} from "./StableSwapAggregator.sol";
 import {ICurveStableSwap} from "./interfaces/IStableSwap.sol";
 import {IMetaRegistry} from "./interfaces/IMetaRegistry.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title StableSwapAggregatorFactory
 /// @notice Factory for creating StableSwapAggregator hooks via CREATE2 and initializing Uniswap V4 pools
 /// @dev Deploys deterministic hook addresses and initializes pools for all token pairs in the Curve pool
 contract StableSwapAggregatorFactory {
+    
+    using BetterEfficientHashLib for bytes;
+
     /// @notice The Uniswap V4 PoolManager contract
     IPoolManager public immutable poolManager;
 
@@ -76,10 +81,12 @@ contract StableSwapAggregatorFactory {
     /// @param curvePool The Curve StableSwap pool
     /// @return computedAddress The predicted hook address
     function computeAddress(bytes32 salt, ICurveStableSwap curvePool) external view returns (address computedAddress) {
-        bytes32 bytecodeHash = keccak256(
-            abi.encodePacked(type(StableSwapAggregator).creationCode, abi.encode(poolManager, curvePool, metaRegistry))
-        );
+        // bytes32 bytecodeHash = keccak256(
+        //     abi.encodePacked(type(StableSwapAggregator).creationCode, abi.encode(poolManager, curvePool, metaRegistry))
+        // );
+        bytes32 bytecodeHash = abi.encodePacked(type(StableSwapAggregator).creationCode, abi.encode(poolManager, curvePool, metaRegistry))._hash();
         computedAddress =
-            address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
+            // address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
+            address(uint160(uint256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)._hash())));
     }
 }

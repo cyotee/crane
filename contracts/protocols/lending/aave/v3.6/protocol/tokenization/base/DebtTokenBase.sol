@@ -3,11 +3,13 @@ pragma solidity ^0.8.10;
 
 import {ECDSA} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol';
 
-import {Context} from '@crane/contracts/external/openzeppelin/utils/Context.sol';
+import {Context} from '@crane/contracts/external/openzeppelin-contracts/utils/Context.sol';
 import {Errors} from '../../libraries/helpers/Errors.sol';
 import {VersionedInitializable} from '../../../misc/aave-upgradeability/VersionedInitializable.sol';
 import {ICreditDelegationToken} from '../../../interfaces/ICreditDelegationToken.sol';
 import {EIP712Base} from './EIP712Base.sol';
+
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @title DebtTokenBase
@@ -20,6 +22,7 @@ abstract contract DebtTokenBase is
   Context,
   ICreditDelegationToken
 {
+  using BetterEfficientHashLib for bytes;
   // Map of borrow allowances (delegator => delegatee => borrowAllowanceAmount)
   mapping(address => mapping(address => uint256)) internal _borrowAllowances;
 
@@ -60,15 +63,22 @@ abstract contract DebtTokenBase is
     //solium-disable-next-line
     require(block.timestamp <= deadline, Errors.InvalidExpiration());
     uint256 currentValidNonce = _nonces[delegator];
-    bytes32 digest = keccak256(
-      abi.encodePacked(
+    // bytes32 digest = keccak256(
+    //   abi.encodePacked(
+    //     '\x19\x01',
+    //     DOMAIN_SEPARATOR(),
+    //     keccak256(
+    //       abi.encode(DELEGATION_WITH_SIG_TYPEHASH, delegatee, value, currentValidNonce, deadline)
+    //     )
+    //   )
+    // );
+    bytes32 digest = abi.encodePacked(
         '\x19\x01',
         DOMAIN_SEPARATOR(),
         keccak256(
           abi.encode(DELEGATION_WITH_SIG_TYPEHASH, delegatee, value, currentValidNonce, deadline)
         )
-      )
-    );
+      )._hash();
     require(delegator == ECDSA.recover(digest, v, r, s), Errors.InvalidSignature());
     _nonces[delegator] = currentValidNonce + 1;
     _approveDelegation(delegator, delegatee, value);

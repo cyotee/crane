@@ -3,15 +3,19 @@ pragma solidity ^0.8.0;
 
 import {ECDSA} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol';
 
-import {Ownable} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/access/Ownable.sol';
+import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol';
 import {ERC20} from '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol';
 import {IERC20WithPermit} from '../../../interfaces/IERC20WithPermit.sol';
+
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 
 /**
  * @title TestnetERC20
  * @dev ERC20 minting logic
  */
 contract TestnetERC20 is IERC20WithPermit, ERC20, Ownable {
+  using BetterEfficientHashLib for bytes;
+
   bytes public constant EIP712_REVISION = bytes('1');
   bytes32 internal constant EIP712_DOMAIN =
     keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)');
@@ -63,13 +67,18 @@ contract TestnetERC20 is IERC20WithPermit, ERC20, Ownable {
     //solium-disable-next-line
     require(block.timestamp <= deadline, 'INVALID_EXPIRATION');
     uint256 currentValidNonce = _nonces[owner];
-    bytes32 digest = keccak256(
-      abi.encodePacked(
+    // bytes32 digest = keccak256(
+    //   abi.encodePacked(
+    //     '\x19\x01',
+    //     DOMAIN_SEPARATOR,
+    //     keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline))
+    //   )
+    // );
+    bytes32 digest = abi.encodePacked(
         '\x19\x01',
         DOMAIN_SEPARATOR,
         keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline))
-      )
-    );
+      )._hash();
     require(owner == ECDSA.recover(digest, v, r, s), 'INVALID_SIGNATURE');
     _nonces[owner] = currentValidNonce + 1;
     _approve(owner, spender, value);

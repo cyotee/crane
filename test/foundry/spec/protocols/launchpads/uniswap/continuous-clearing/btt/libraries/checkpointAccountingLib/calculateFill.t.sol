@@ -6,7 +6,7 @@ import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-cle
 import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
 import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
 import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 contract CalculateFillTest is BttBase {
     using FixedPointMathLib for *;
@@ -61,7 +61,7 @@ contract CalculateFillTest is BttBase {
         Bid memory _bid,
         uint256 _cumulativeMpsPerPriceDelta,
         uint24 _cumulativeMpsDelta
-    ) external whenBidAmountQ96GT0 whenCumulativeMpsDeltaGT0AndCumulativeMpsPerPriceDeltaGT0 {
+    ) external pure whenBidAmountQ96GT0 whenCumulativeMpsDeltaGT0AndCumulativeMpsPerPriceDeltaGT0 {
         // it returns 1 currency spent
 
         _bid.startCumulativeMps = uint24(bound(_bid.startCumulativeMps, 0, ConstantsLib.MPS - 1));

@@ -8,6 +8,8 @@ import {IERC1271} from './IERC1271.sol';
 import {IERC7913SignatureVerifier} from './IERC7913.sol';
 import {Bytes} from './Bytes.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev Signature verification helper that can be used instead of `ECDSA.recover` to seamlessly support:
  *
@@ -18,7 +20,10 @@ import {Bytes} from './Bytes.sol';
  * See https://eips.ethereum.org/EIPS/eip-1271[ERC-1271] and https://eips.ethereum.org/EIPS/eip-7913[ERC-7913].
  */
 library SignatureChecker {
-  using Bytes for bytes;
+  
+    using BetterEfficientHashLib for bytes;
+
+    using Bytes for bytes;
 
   /**
    * @dev Checks if a signature is valid for a given signer and data hash. If the signer has code, the
@@ -150,7 +155,8 @@ library SignatureChecker {
       // If one of the signatures is invalid, reject the batch
       if (!isValidSignatureNow(signer, hash, signatures[i])) return false;
 
-      bytes32 id = keccak256(signer);
+      // bytes32 id = keccak256(signer);
+      bytes32 id = signer._hash();
       // If the current signer ID is greater than all previous IDs, then this is a new signer.
       if (lastId < id) {
         lastId = id;
@@ -158,7 +164,8 @@ library SignatureChecker {
         // If this signer id is not greater than all the previous ones, verify that it is not a duplicate of a previous one
         // This loop is never executed if the signers are ordered by id.
         for (uint256 j = 0; j < i; ++j) {
-          if (id == keccak256(signers[j])) return false;
+          // if (id == keccak256(signers[j])) return false;
+          if (id == signers[j]._hash()) return false;
         }
       }
     }

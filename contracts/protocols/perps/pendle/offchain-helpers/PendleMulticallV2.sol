@@ -63,7 +63,7 @@ contract PendleMulticallV2 {
     }
 
     function tryAggregateRevert(
-        uint256 gasLimit,
+        uint256 /*gasLimit*/,
         Call[] calldata calls
     ) public payable returns (bytes[] memory returnData) {
         uint256 length = calls.length;

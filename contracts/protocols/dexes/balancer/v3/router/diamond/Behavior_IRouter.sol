@@ -65,7 +65,7 @@ library Behavior_IRouter {
     /*                          INTERNAL STORAGE                                  */
     /* ========================================================================== */
 
-    /// @dev Storage layout for expected address values
+    /// @dev Storage layoutStruct for expected address values
     struct AddressExpectationLayout {
         mapping(address subject => mapping(bytes4 func => address expected)) recordedExpected;
     }
@@ -73,11 +73,11 @@ library Behavior_IRouter {
     /// @dev Storage slot for address expectations
     bytes32 private constant ADDRESS_EXPECTATION_SLOT = keccak256("Behavior_IRouter.AddressExpectationLayout");
 
-    /// @dev Returns the storage layout for address expectations
-    function _addressExpectationLayout() private pure returns (AddressExpectationLayout storage layout) {
+    /// @dev Returns the storage layoutStruct for address expectations
+    function _addressExpectationLayout() private pure returns (AddressExpectationLayout storage layoutStruct) {
         bytes32 slot = ADDRESS_EXPECTATION_SLOT;
         assembly {
-            layout.slot := slot
+            layoutStruct.slot := slot
         }
     }
 

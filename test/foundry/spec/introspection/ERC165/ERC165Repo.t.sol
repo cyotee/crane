@@ -14,7 +14,7 @@ contract ERC165RepoStub {
     }
 
     function registerInterfaceWithStorage(bytes4 interfaceId) external {
-        ERC165Repo._registerInterface(ERC165Repo._layout(), interfaceId);
+        ERC165Repo._registerInterface(ERC165Repo._layoutStruct(), interfaceId);
     }
 
     function registerInterfaces(bytes4[] memory interfaceIds) external {
@@ -22,7 +22,7 @@ contract ERC165RepoStub {
     }
 
     function registerInterfacesWithStorage(bytes4[] memory interfaceIds) external {
-        ERC165Repo._registerInterfaces(ERC165Repo._layout(), interfaceIds);
+        ERC165Repo._registerInterfaces(ERC165Repo._layoutStruct(), interfaceIds);
     }
 
     function supportsInterface(bytes4 interfaceId) external view returns (bool) {
@@ -30,7 +30,7 @@ contract ERC165RepoStub {
     }
 
     function supportsInterfaceWithStorage(bytes4 interfaceId) external view returns (bool) {
-        return ERC165Repo._supportsInterface(ERC165Repo._layout(), interfaceId);
+        return ERC165Repo._supportsInterface(ERC165Repo._layoutStruct(), interfaceId);
     }
 }
 
@@ -158,7 +158,7 @@ contract ERC165Repo_Test is Test {
         );
     }
 
-    function test_supportsInterface_storage_overload_unregistered() public {
+    function test_supportsInterface_storage_overload_unregistered() public view {
         // Verify unregistered interface returns false via storage-parameterized overload
         assertFalse(
             stub.supportsInterfaceWithStorage(TEST_INTERFACE_1),

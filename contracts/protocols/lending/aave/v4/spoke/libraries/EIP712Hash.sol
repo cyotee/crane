@@ -4,11 +4,16 @@ pragma solidity ^0.8.20;
 import {ITokenizationSpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ITokenizationSpoke.sol';
 import {ISpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title EIP712Hash library
 /// @author Aave Labs
 /// @notice Helper methods to hash EIP712 typed data structs.
 library EIP712Hash {
-  using EIP712Hash for *;
+  
+    using BetterEfficientHashLib for bytes;
+
+    using EIP712Hash for *;
 
   bytes32 public constant SET_USER_POSITION_MANAGERS_TYPEHASH =
     // keccak256('SetUserPositionManagers(address onBehalfOf,PositionManagerUpdate[] updates,uint256 nonce,uint256 deadline)PositionManagerUpdate(address positionManager,bool approve)')
@@ -43,16 +48,24 @@ library EIP712Hash {
     for (uint256 i = 0; i < updatesHashes.length; ++i) {
       updatesHashes[i] = params.updates[i].hash();
     }
+    // return
+    //   keccak256(
+    //     abi.encode(
+    //       SET_USER_POSITION_MANAGERS_TYPEHASH,
+    //       params.onBehalfOf,
+    //       keccak256(abi.encodePacked(updatesHashes)),
+    //       params.nonce,
+    //       params.deadline
+    //     )
+    //   );
     return
-      keccak256(
-        abi.encode(
+      abi.encode(
           SET_USER_POSITION_MANAGERS_TYPEHASH,
           params.onBehalfOf,
           keccak256(abi.encodePacked(updatesHashes)),
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
@@ -73,61 +86,94 @@ library EIP712Hash {
     ITokenizationSpoke.TokenizedDeposit calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     TOKENIZED_DEPOSIT_TYPEHASH,
+      //     params.depositor,
+      //     params.assets,
+      //     params.receiver,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           TOKENIZED_DEPOSIT_TYPEHASH,
           params.depositor,
           params.assets,
           params.receiver,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(ITokenizationSpoke.TokenizedMint calldata params) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
+      // keccak256(
+      //   abi.encode(
+      //     TOKENIZED_MINT_TYPEHASH,
+      //     params.depositor,
+      //     params.shares,
+      //     params.receiver,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
           TOKENIZED_MINT_TYPEHASH,
           params.depositor,
           params.shares,
           params.receiver,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 
   function hash(
     ITokenizationSpoke.TokenizedWithdraw calldata params
   ) internal pure returns (bytes32) {
     return
-      keccak256(
-        abi.encode(
-          TOKENIZED_WITHDRAW_TYPEHASH,
-          params.owner,
-          params.assets,
-          params.receiver,
-          params.nonce,
-          params.deadline
-        )
-      );
+      // keccak256(
+      //   abi.encode(
+      //     TOKENIZED_WITHDRAW_TYPEHASH,
+      //     params.owner,
+      //     params.assets,
+      //     params.receiver,
+      //     params.nonce,
+      //     params.deadline
+      //   )
+      // );
+      abi.encode(
+        TOKENIZED_WITHDRAW_TYPEHASH,
+        params.owner,
+        params.assets,
+        params.receiver,
+        params.nonce,
+        params.deadline
+      )._hash();
   }
 
   function hash(
     ITokenizationSpoke.TokenizedRedeem calldata params
   ) internal pure returns (bytes32) {
+    // return
+    //   keccak256(
+    //     abi.encode(
+    //       TOKENIZED_REDEEM_TYPEHASH,
+    //       params.owner,
+    //       params.shares,
+    //       params.receiver,
+    //       params.nonce,
+    //       params.deadline
+    //     )
+    //   );
     return
-      keccak256(
-        abi.encode(
+      abi.encode(
           TOKENIZED_REDEEM_TYPEHASH,
           params.owner,
           params.shares,
           params.receiver,
           params.nonce,
           params.deadline
-        )
-      );
+        )._hash();
   }
 }

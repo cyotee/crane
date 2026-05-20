@@ -114,7 +114,7 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
         uint256[] memory balances,
         LinearMath.Params memory params,
         ImmutableData memory imd
-    ) internal view returns (uint256) {
+    ) internal view returns (uint256 amountOut) {
         if (address(request.tokenIn) == address(imd.pool)) {
             return _swapGivenBptIn(request, balances, params, imd);
         } else if (address(request.tokenIn) == address(imd._mainToken)) {

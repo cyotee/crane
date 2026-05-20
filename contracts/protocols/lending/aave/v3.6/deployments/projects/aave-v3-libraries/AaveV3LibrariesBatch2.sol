@@ -10,13 +10,17 @@ import {LiquidationLogic} from '@crane/contracts/protocols/lending/aave/v3.6/pro
 import {PoolLogic} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/PoolLogic.sol';
 import {SupplyLogic} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/SupplyLogic.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract AaveV3LibrariesBatch2 is LibraryReportStorage {
+  using BetterEfficientHashLib for bytes;
+  
   constructor() {
     _librariesReport = _deployAaveV3Libraries();
   }
 
   function _deployAaveV3Libraries() internal returns (LibrariesReport memory libReport) {
-    bytes32 salt = keccak256('AAVE_V3_LIBRARIES_BATCH');
+    bytes32 salt = bytes('AAVE_V3_LIBRARIES_BATCH')._hash();
 
     libReport.flashLoanLogic = Create2Utils._create2Deploy(salt, type(FlashLoanLogic).creationCode);
     libReport.liquidationLogic = Create2Utils._create2Deploy(

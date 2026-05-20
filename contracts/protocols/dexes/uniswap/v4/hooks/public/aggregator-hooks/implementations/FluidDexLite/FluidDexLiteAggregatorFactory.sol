@@ -9,10 +9,15 @@ import {FluidDexLiteAggregator} from "./FluidDexLiteAggregator.sol";
 import {IFluidDexLite} from "./interfaces/IFluidDexLite.sol";
 import {IFluidDexLiteResolver} from "./interfaces/IFluidDexLiteResolver.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /// @title FluidDexLiteAggregatorFactory
 /// @notice Factory for creating FluidDexLiteAggregator hooks via CREATE2 and initializing Uniswap V4 pools
 /// @dev Deploys deterministic hook addresses that meet Uniswap V4's hook address requirements
 contract FluidDexLiteAggregatorFactory {
+    
+    using BetterEfficientHashLib for bytes;
+
     /// @notice The Uniswap V4 PoolManager contract
     IPoolManager public immutable poolManager;
     /// @notice The Fluid DEX Lite contract
@@ -62,13 +67,19 @@ contract FluidDexLiteAggregatorFactory {
     /// @param dexSalt The salt for the Fluid DEX Lite pool's DexKey
     /// @return computedAddress The predicted hook address
     function computeAddress(bytes32 salt, bytes32 dexSalt) external view returns (address computedAddress) {
-        bytes32 bytecodeHash = keccak256(
-            abi.encodePacked(
-                type(FluidDexLiteAggregator).creationCode,
-                abi.encode(poolManager, fluidDexLite, fluidDexLiteResolver, dexSalt)
-            )
-        );
+        // bytes32 bytecodeHash = keccak256(
+        //     abi.encodePacked(
+        //         type(FluidDexLiteAggregator).creationCode,
+        //         abi.encode(poolManager, fluidDexLite, fluidDexLiteResolver, dexSalt)
+        //     )
+        // );
+        bytes32 bytecodeHash = abi.encodePacked(
+            type(FluidDexLiteAggregator).creationCode,
+            abi.encode(poolManager, fluidDexLite, fluidDexLiteResolver, dexSalt)
+        )._hash();
+        // computedAddress =
+        //     address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
         computedAddress =
-            address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
+            address(uint160(uint256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)._hash())));
     }
 }

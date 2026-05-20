@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 
 import {EVCUtil} from "../../evc/utils/EVCUtil.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
-import {SafeERC20} from "../../../../../../external/openzeppelin/token/ERC20/utils/SafeERC20.sol";
-import {Math} from "../../../../../../external/openzeppelin/utils/math/Math.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {ESynth} from "./ESynth.sol";
 
 /// @title PegStabilityModule

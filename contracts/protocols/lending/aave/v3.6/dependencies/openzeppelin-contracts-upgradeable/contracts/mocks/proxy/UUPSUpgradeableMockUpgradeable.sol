@@ -6,6 +6,8 @@ import {UUPSUpgradeable} from "../../proxy/utils/UUPSUpgradeable.sol";
 import {ERC1967Utils} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Utils.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 contract NonUpgradeableMockUpgradeable is Initializable {
     uint256 internal _counter;
 
@@ -45,12 +47,16 @@ contract UUPSUpgradeableUnsafeMockUpgradeable is Initializable, UUPSUpgradeableM
 }
 
 contract UUPSUnsupportedProxiableUUIDUpgradeable is Initializable, UUPSUpgradeableMockUpgradeable {
+    
+    using BetterEfficientHashLib for bytes;
+
     function __UUPSUnsupportedProxiableUUID_init() internal onlyInitializing {
     }
 
     function __UUPSUnsupportedProxiableUUID_init_unchained() internal onlyInitializing {
     }
     function proxiableUUID() external pure override returns (bytes32) {
-        return keccak256("invalid UUID");
+        // return keccak256("invalid UUID");
+        return abi.encode("invalid UUID")._hash();
     }
 }

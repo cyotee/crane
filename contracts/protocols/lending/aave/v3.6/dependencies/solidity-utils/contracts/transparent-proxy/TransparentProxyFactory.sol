@@ -3,6 +3,8 @@ pragma solidity >=0.8.0;
 
 import {TransparentProxyFactoryBase} from './TransparentProxyFactoryBase.sol';
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @title TransparentProxyFactory
  * @author BGD Labs
@@ -11,20 +13,29 @@ import {TransparentProxyFactoryBase} from './TransparentProxyFactoryBase.sol';
  * time allowing `createDeterministic()` with salt == 0
  **/
 contract TransparentProxyFactory is TransparentProxyFactoryBase {
-  function _predictCreate2Address(
+  
+    using BetterEfficientHashLib for bytes;
+
+    function _predictCreate2Address(
     address creator,
     bytes32 salt,
     bytes memory creationCode,
     bytes memory constructorArgs
   ) internal pure override returns (address) {
-    bytes32 hash = keccak256(
-      abi.encodePacked(
+    // bytes32 hash = keccak256(
+    //   abi.encodePacked(
+    //     bytes1(0xff),
+    //     creator,
+    //     salt,
+    //     keccak256(abi.encodePacked(creationCode, constructorArgs))
+    //   )
+    // );
+    bytes32 hash = abi.encodePacked(
         bytes1(0xff),
         creator,
         salt,
-        keccak256(abi.encodePacked(creationCode, constructorArgs))
-      )
-    );
+        abi.encodePacked(creationCode, constructorArgs)._hash()
+    )._hash();
 
     return address(uint160(uint256(hash)));
   }

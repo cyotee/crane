@@ -137,7 +137,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
             revert CannotSwapSameToken();
         }
 
-        BalancerV3VaultStorageRepo.Storage storage layout = BalancerV3VaultStorageRepo._layout();
+        BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
 
         // Load pool data updating yield fees (non-reentrant internally).
         PoolData memory poolData = _loadPoolDataUpdatingBalancesAndYieldFees(vaultSwapParams.pool, Rounding.ROUND_DOWN);
@@ -146,11 +146,11 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
 
         if (poolData.poolConfigBits.shouldCallBeforeSwap()) {
             HooksConfigLib.callBeforeSwapHook(
-                poolSwapParams, vaultSwapParams.pool, layout.hooksContracts[vaultSwapParams.pool]
+                poolSwapParams, vaultSwapParams.pool, layoutStruct.hooksContracts[vaultSwapParams.pool]
             );
 
             // Reload after hook may have altered balances/rates
-            poolData.reloadBalancesAndRates(layout.poolTokenBalances[vaultSwapParams.pool], Rounding.ROUND_DOWN);
+            poolData.reloadBalancesAndRates(layoutStruct.poolTokenBalances[vaultSwapParams.pool], Rounding.ROUND_DOWN);
             swapState.amountGivenScaled18 = _computeAmountGivenScaled18(vaultSwapParams, poolData, swapState);
             poolSwapParams = _buildPoolSwapParams(vaultSwapParams, swapState, poolData);
         }
@@ -160,7 +160,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
                 poolSwapParams,
                 vaultSwapParams.pool,
                 swapState.swapFeePercentage,
-                layout.hooksContracts[vaultSwapParams.pool]
+                layoutStruct.hooksContracts[vaultSwapParams.pool]
             );
         }
 
@@ -170,7 +170,7 @@ contract VaultSwapFacet is BalancerV3VaultModifiers, IFacet {
             _swap(vaultSwapParams, swapState, poolData, poolSwapParams);
 
         if (poolData.poolConfigBits.shouldCallAfterSwap()) {
-            IHooks hooksContract = layout.hooksContracts[vaultSwapParams.pool];
+            IHooks hooksContract = layoutStruct.hooksContracts[vaultSwapParams.pool];
 
             amountCalculated = poolData.poolConfigBits
                 .callAfterSwapHook(

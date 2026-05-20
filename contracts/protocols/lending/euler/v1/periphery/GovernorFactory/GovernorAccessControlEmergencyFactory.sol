@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import {TimelockController} from "@crane/contracts/external/openzeppelin/governance/TimelockController.sol";
+import {TimelockController} from "@crane/contracts/external/openzeppelin-contracts/governance/TimelockController.sol";
 import {BaseFactory} from "../BaseFactory/BaseFactory.sol";
 import {GovernorAccessControlEmergency} from "../Governor/GovernorAccessControlEmergency.sol";
 import {IGovernorAccessControlEmergencyFactory} from "./interfaces/IGovernorAccessControlEmergencyFactory.sol";

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.18;
 
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 import {EngineFlags} from '../EngineFlags.sol';
 import {DataTypes} from '../../../protocol/libraries/types/DataTypes.sol';
 import {PercentageMath} from '../../../protocol/libraries/math/PercentageMath.sol';

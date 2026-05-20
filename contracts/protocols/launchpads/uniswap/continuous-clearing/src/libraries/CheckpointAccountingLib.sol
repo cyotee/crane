@@ -5,7 +5,7 @@ import {Bid, BidLib} from '../libraries/BidLib.sol';
 import {Checkpoint} from '../libraries/CheckpointLib.sol';
 import {FixedPoint96} from '../libraries/FixedPoint96.sol';
 import {ValueX7} from '../libraries/ValueX7Lib.sol';
-import {FixedPointMathLib} from 'contracts/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
 
 /// @title CheckpointAccountingLib
 /// @notice Pure accounting helpers for computing fills and currency spent across checkpoints

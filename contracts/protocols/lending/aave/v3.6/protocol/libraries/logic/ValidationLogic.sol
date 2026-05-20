@@ -2,7 +2,7 @@
 pragma solidity ^0.8.10;
 
 import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {Address} from '@crane/contracts/external/openzeppelin/utils/Address.sol';
+import {Address} from '@crane/contracts/external/openzeppelin-contracts/utils/Address.sol';
 import {GPv2SafeERC20} from '@crane/contracts/protocols/wallets/gnosis/GPv2SafeERC20.sol';
 import {IAToken} from '../../../interfaces/IAToken.sol';
 import {IPriceOracleSentinel} from '../../../interfaces/IPriceOracleSentinel.sol';
@@ -15,7 +15,7 @@ import {PercentageMath} from '../math/PercentageMath.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {ReserveLogic} from './ReserveLogic.sol';
 import {GenericLogic} from './GenericLogic.sol';
-import {SafeCast} from '@crane/contracts/external/openzeppelin/utils/math/SafeCast.sol';
+import {SafeCast} from '@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol';
 
 /**
  * @title ValidationLogic library

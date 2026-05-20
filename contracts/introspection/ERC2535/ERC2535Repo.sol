@@ -22,36 +22,36 @@ library ERC2535Repo {
         mapping(address facet => Bytes4Set functionSelectors) facetFunctionSelectors;
     }
 
-    // tag::_layout[]
+    // tag::_layoutStruct[]
     /**
      * @dev "Binds" this struct to a storage slot.
      * @param slot_ The first slot to use in the range of slots used by the struct.
-     * @return layout_ A struct from a Layout library bound to the provided slot.
+     * @return layoutStruct_ A struct from a Layout library bound to the provided slot.
      */
-    function _layout(bytes32 slot_) internal pure returns (Storage storage layout_) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct_) {
         assembly {
-            layout_.slot := slot_
+            layoutStruct_.slot := slot_
         }
     }
-    // end::_layout[]
+    // end::_layoutStruct[]
 
-    function _layout() internal pure returns (Storage storage layout) {
-        return _layout(STORAGE_SLOT);
+    function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
+        return _layoutStruct(STORAGE_SLOT);
     }
 
     function _diamondCut(IDiamond.FacetCut[] memory diamondCut_, address initTarget, bytes memory initCalldata)
         internal
     {
-        _diamondCut(_layout(), diamondCut_, initTarget, initCalldata);
+        _diamondCut(_layoutStruct(), diamondCut_, initTarget, initCalldata);
     }
 
     function _diamondCut(
-        Storage storage layout,
+        Storage storage layoutStruct,
         IDiamond.FacetCut[] memory diamondCut_,
         address initTarget,
         bytes memory initCalldata
     ) internal {
-        _processFacetCuts(layout, diamondCut_);
+        _processFacetCuts(layoutStruct, diamondCut_);
         // bytes memory returnData
         if (initCalldata.length > 0 && initTarget != address(0)) {
             initTarget.functionDelegateCall(initCalldata);
@@ -61,73 +61,73 @@ library ERC2535Repo {
     }
 
     function _processFacetCuts(IDiamond.FacetCut[] memory facetCuts) internal {
-        _processFacetCuts(_layout(), facetCuts);
+        _processFacetCuts(_layoutStruct(), facetCuts);
     }
 
-    function _processFacetCuts(Storage storage layout, IDiamond.FacetCut[] memory facetCuts) internal {
+    function _processFacetCuts(Storage storage layoutStruct, IDiamond.FacetCut[] memory facetCuts) internal {
         for (uint256 cursor = 0; cursor < facetCuts.length; cursor++) {
-            _processFacetCut(layout, facetCuts[cursor]);
+            _processFacetCut(layoutStruct, facetCuts[cursor]);
         }
     }
 
-    function _processFacetCut(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _processFacetCut(Storage storage layoutStruct, IDiamond.FacetCut memory facetCut) internal {
         if (facetCut.facetAddress == address(0)) {
             return;
         } else {
             // Y u no switch?
             if (facetCut.action == IDiamond.FacetCutAction.Add) {
-                _addFacet(layout, facetCut);
+                _addFacet(layoutStruct, facetCut);
             }
             if (facetCut.action == IDiamond.FacetCutAction.Replace) {
-                _replaceFacet(layout, facetCut);
+                _replaceFacet(layoutStruct, facetCut);
             }
             if (facetCut.action == IDiamond.FacetCutAction.Remove) {
-                _removeFacet(layout, facetCut);
+                _removeFacet(layoutStruct, facetCut);
             }
         }
     }
 
-    function _addFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _addFacet(Storage storage layoutStruct, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Add, update the function selector mapping for each functionSelectors item to the facetAddress.
             If any of the functionSelectors had a mapped facet, revert instead.
             */
-            if (layout.facetAddress[facetCut.functionSelectors[cursor]] != address(0)) {
+            if (layoutStruct.facetAddress[facetCut.functionSelectors[cursor]] != address(0)) {
                 revert IDiamondLoupe.FunctionAlreadyPresent(facetCut.functionSelectors[cursor]);
             }
-            layout.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
+            layoutStruct.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
         }
-        layout.facetFunctionSelectors[facetCut.facetAddress]._add(facetCut.functionSelectors);
-        layout.facetAddresses._add(facetCut.facetAddress);
+        layoutStruct.facetFunctionSelectors[facetCut.facetAddress]._add(facetCut.functionSelectors);
+        layoutStruct.facetAddresses._add(facetCut.facetAddress);
     }
 
-    function _replaceFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _replaceFacet(Storage storage layoutStruct, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Replace, update the function selector mapping for each functionSelectors item to the facetAddress.
             If any of the functionSelectors had a value equal to facetAddress or the selector was unset, revert instead.
             */
-            if (layout.facetAddress[facetCut.functionSelectors[cursor]] == address(0)) {
+            if (layoutStruct.facetAddress[facetCut.functionSelectors[cursor]] == address(0)) {
                 revert IDiamondLoupe.FunctionNotPresent(facetCut.functionSelectors[cursor]);
             }
-            if (layout.facetAddress[facetCut.functionSelectors[cursor]] == facetCut.facetAddress) {
+            if (layoutStruct.facetAddress[facetCut.functionSelectors[cursor]] == facetCut.facetAddress) {
                 revert IDiamondLoupe.FacetAlreadyPresent(facetCut.facetAddress);
             }
 
-            address currentFacet = layout.facetAddress[facetCut.functionSelectors[cursor]];
-            layout.facetFunctionSelectors[currentFacet]._remove(facetCut.functionSelectors[cursor]);
-            if (layout.facetFunctionSelectors[currentFacet]._length() == 0) {
-                layout.facetAddresses._remove(currentFacet);
+            address currentFacet = layoutStruct.facetAddress[facetCut.functionSelectors[cursor]];
+            layoutStruct.facetFunctionSelectors[currentFacet]._remove(facetCut.functionSelectors[cursor]);
+            if (layoutStruct.facetFunctionSelectors[currentFacet]._length() == 0) {
+                layoutStruct.facetAddresses._remove(currentFacet);
             }
 
-            layout.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
+            layoutStruct.facetAddress[facetCut.functionSelectors[cursor]] = facetCut.facetAddress;
         }
-        layout.facetFunctionSelectors[facetCut.facetAddress]._add(facetCut.functionSelectors);
-        layout.facetAddresses._add(facetCut.facetAddress);
+        layoutStruct.facetFunctionSelectors[facetCut.facetAddress]._add(facetCut.functionSelectors);
+        layoutStruct.facetAddresses._add(facetCut.facetAddress);
     }
 
-    function _removeFacet(Storage storage layout, IDiamond.FacetCut memory facetCut) internal {
+    function _removeFacet(Storage storage layoutStruct, IDiamond.FacetCut memory facetCut) internal {
         for (uint256 cursor = 0; cursor < facetCut.functionSelectors.length; cursor++) {
             /*
             If the action is Remove, remove the function selector mapping for each functionSelectors item.
@@ -137,7 +137,7 @@ library ERC2535Repo {
             */
             bytes4 selector = facetCut.functionSelectors[cursor];
             // CRANE-115: Resolve actual owning facet before clearing mappings
-            address currentFacet = layout.facetAddress[selector];
+            address currentFacet = layoutStruct.facetAddress[selector];
             if (currentFacet == address(0)) {
                 revert IDiamondLoupe.FunctionNotPresent(selector);
             }
@@ -145,11 +145,11 @@ library ERC2535Repo {
             if (currentFacet != facetCut.facetAddress) {
                 revert IDiamondLoupe.SelectorFacetMismatch(selector, facetCut.facetAddress, currentFacet);
             }
-            layout.facetAddress[selector] = address(0);
+            layoutStruct.facetAddress[selector] = address(0);
             // CRANE-115: Use resolved currentFacet (mirrors _replaceFacet pattern)
-            layout.facetFunctionSelectors[currentFacet]._remove(selector);
-            if (layout.facetFunctionSelectors[currentFacet]._length() == 0) {
-                layout.facetAddresses._remove(currentFacet);
+            layoutStruct.facetFunctionSelectors[currentFacet]._remove(selector);
+            if (layoutStruct.facetFunctionSelectors[currentFacet]._length() == 0) {
+                layoutStruct.facetAddresses._remove(currentFacet);
             }
             emit IERC8109Update.DiamondFunctionRemoved(selector, currentFacet);
         }
@@ -159,19 +159,19 @@ library ERC2535Repo {
      * @notice Gets all facet addresses and their four byte function selectors.
      * @return facets_ Facet
      */
-    function _facets(Storage storage layout) internal view returns (IDiamondLoupe.Facet[] memory facets_) {
-        uint256 facetAddrLen = layout.facetAddresses._length();
+    function _facets(Storage storage layoutStruct) internal view returns (IDiamondLoupe.Facet[] memory facets_) {
+        uint256 facetAddrLen = layoutStruct.facetAddresses._length();
         facets_ = new IDiamondLoupe.Facet[](facetAddrLen);
         for (uint256 cursor = 0; cursor < facetAddrLen; cursor++) {
-            address currentFacet = layout.facetAddresses._index(cursor);
+            address currentFacet = layoutStruct.facetAddresses._index(cursor);
             facets_[cursor] = IDiamondLoupe.Facet({
-                facetAddress: currentFacet, functionSelectors: layout.facetFunctionSelectors[currentFacet]._asArray()
+                facetAddress: currentFacet, functionSelectors: layoutStruct.facetFunctionSelectors[currentFacet]._asArray()
             });
         }
     }
 
     function _facets() internal view returns (IDiamondLoupe.Facet[] memory facets_) {
-        return _facets(_layout());
+        return _facets(_layoutStruct());
     }
 
     /**
@@ -179,12 +179,12 @@ library ERC2535Repo {
      * @param facetAddress The facet address.
      * @return facetFunctionSelectors_
      */
-    function _facetFunctionSelectors(Storage storage layout, address facetAddress)
+    function _facetFunctionSelectors(Storage storage layoutStruct, address facetAddress)
         internal
         view
         returns (bytes4[] memory facetFunctionSelectors_)
     {
-        return layout.facetFunctionSelectors[facetAddress]._asArray();
+        return layoutStruct.facetFunctionSelectors[facetAddress]._asArray();
     }
 
     function _facetFunctionSelectors(address facetAddress)
@@ -192,19 +192,19 @@ library ERC2535Repo {
         view
         returns (bytes4[] memory facetFunctionSelectors_)
     {
-        return _facetFunctionSelectors(_layout(), facetAddress);
+        return _facetFunctionSelectors(_layoutStruct(), facetAddress);
     }
 
     /**
      * @notice Get all the facet addresses used by a diamond.
      * @return facetAddresses_
      */
-    function _facetAddresses(Storage storage layout) internal view returns (address[] memory facetAddresses_) {
-        return layout.facetAddresses._values();
+    function _facetAddresses(Storage storage layoutStruct) internal view returns (address[] memory facetAddresses_) {
+        return layoutStruct.facetAddresses._values();
     }
 
     function _facetAddresses() internal view returns (address[] memory facetAddresses_) {
-        return _facetAddresses(_layout());
+        return _facetAddresses(_layoutStruct());
     }
 
     /**
@@ -213,15 +213,15 @@ library ERC2535Repo {
      * @param _functionSelector The function selector.
      * @return facetAddress_ The facet address.
      */
-    function _facetAddress(Storage storage layout, bytes4 _functionSelector)
+    function _facetAddress(Storage storage layoutStruct, bytes4 _functionSelector)
         internal
         view
         returns (address facetAddress_)
     {
-        return layout.facetAddress[_functionSelector];
+        return layoutStruct.facetAddress[_functionSelector];
     }
 
     function _facetAddress(bytes4 _functionSelector) internal view returns (address facetAddress_) {
-        return _facetAddress(_layout(), _functionSelector);
+        return _facetAddress(_layoutStruct(), _functionSelector);
     }
 }

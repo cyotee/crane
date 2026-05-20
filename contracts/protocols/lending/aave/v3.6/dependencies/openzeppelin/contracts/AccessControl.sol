@@ -3,7 +3,7 @@
 pragma solidity ^0.8.10;
 
 import '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/access/IAccessControl.sol';
-import '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/Context.sol';
+import '@crane/contracts/external/openzeppelin-contracts/utils/Context.sol';
 import '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/Strings.sol';
 import '@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol';
 

@@ -1,17 +1,17 @@
 {
   "deposit": "123587",
-  "depositWithSig": "134532",
+  "depositWithSig": "134547",
   "mint": "123255",
-  "mintWithSig": "134376",
+  "mintWithSig": "134391",
   "permit": "63995",
   "redeem: on behalf, full": "100423",
   "redeem: on behalf, partial": "124423",
   "redeem: self, full": "99510",
   "redeem: self, partial": "118710",
-  "redeemWithSig": "133671",
+  "redeemWithSig": "133686",
   "withdraw: on behalf, full": "100817",
   "withdraw: on behalf, partial": "124817",
   "withdraw: self, full": "99904",
   "withdraw: self, partial": "119104",
-  "withdrawWithSig": "134791"
+  "withdrawWithSig": "134806"
 }

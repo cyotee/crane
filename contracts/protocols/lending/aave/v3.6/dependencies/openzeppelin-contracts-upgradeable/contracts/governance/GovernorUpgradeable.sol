@@ -18,6 +18,8 @@ import {IGovernor} from "@crane/contracts/protocols/lending/aave/v3.6/dependenci
 import {IERC6372} from "@crane/contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC6372.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
+import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+
 /**
  * @dev Core of the governance system, designed to be extended through various modules.
  *
@@ -28,6 +30,9 @@ import {Initializable} from "../proxy/utils/Initializable.sol";
  * - Additionally, {votingPeriod} must also be implemented
  */
 abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC165Upgradeable, EIP712Upgradeable, NoncesUpgradeable, IGovernor, IERC721Receiver, IERC1155Receiver {
+    
+    using BetterEfficientHashLib for bytes;
+
     using DoubleEndedQueue for DoubleEndedQueue.Bytes32Deque;
 
     bytes32 public constant BALLOT_TYPEHASH =
@@ -253,7 +258,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
             revert GovernorOnlyExecutor(_msgSender());
         }
         if (_executor() != address(this)) {
-            bytes32 msgDataHash = keccak256(_msgData());
+            // bytes32 msgDataHash = keccak256(_msgData());
+            bytes32 msgDataHash = _msgData()._hash();
             // loop until popping the expected operation - throw if deque is empty (operation not authorized)
             while ($._governanceCall.popFront() != msgDataHash) {}
         }
@@ -338,7 +344,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         address proposer
     ) internal virtual returns (uint256 proposalId) {
         GovernorStorage storage $ = _getGovernorStorage();
-        proposalId = hashProposal(targets, values, calldatas, keccak256(bytes(description)));
+        // proposalId = hashProposal(targets, values, calldatas, keccak256(bytes(description)));
+        proposalId = hashProposal(targets, values, calldatas, bytes(description)._hash());
 
         if (targets.length != values.length || targets.length != calldatas.length || targets.length == 0) {
             revert GovernorInvalidProposalLength(targets.length, calldatas.length, values.length);
@@ -443,7 +450,8 @@ abstract contract GovernorUpgradeable is Initializable, ContextUpgradeable, ERC1
         if (_executor() != address(this)) {
             for (uint256 i = 0; i < targets.length; ++i) {
                 if (targets[i] == address(this)) {
-                    $._governanceCall.pushBack(keccak256(calldatas[i]));
+                    // $._governanceCall.pushBack(keccak256(calldatas[i]));
+                    $._governanceCall.pushBack(calldatas[i]._hash());
                 }
             }
         }

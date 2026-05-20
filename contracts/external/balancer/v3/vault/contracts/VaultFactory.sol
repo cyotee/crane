@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.24;
 
-import {Ownable2Step} from "@crane/contracts/access/Ownable2Step.sol";
-import {Ownable} from "@crane/contracts/access/Ownable.sol";
+import {Ownable2Step} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable2StepInit.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
 import {Create2} from "@crane/contracts/utils/Create2.sol";
 
 import {

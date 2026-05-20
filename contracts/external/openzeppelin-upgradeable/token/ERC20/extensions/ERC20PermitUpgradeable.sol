@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
 import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
 import {IERC20Permit} from "@crane/contracts/interfaces/IERC20Permit.sol";
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
-import {ECDSA} from "@crane/contracts/external/openzeppelin/utils/cryptography/ECDSA.sol";
+import {ECDSA} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol";
 import {EIP712Upgradeable} from "../../../utils/cryptography/EIP712Upgradeable.sol";
 import {NoncesUpgradeable} from "../../../utils/NoncesUpgradeable.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";

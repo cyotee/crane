@@ -10,9 +10,9 @@ contract GreeterTarget is IGreeter {
     }
 
     function setMessage(string memory message) public virtual returns (bool) {
-        GreeterLayout storage layout = GreeterRepo._layout();
-        emit NewMessage(GreeterRepo._getMessage(layout), message);
-        GreeterRepo._setMessage(layout, message);
+        GreeterLayout storage layoutStruct = GreeterRepo._layoutStruct();
+        emit NewMessage(GreeterRepo._getMessage(layoutStruct), message);
+        GreeterRepo._setMessage(layoutStruct, message);
         return true;
     }
 }

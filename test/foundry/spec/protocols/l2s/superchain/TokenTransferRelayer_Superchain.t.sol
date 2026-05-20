@@ -288,15 +288,15 @@ abstract contract SuperchainPackageTestBase is Test {
         );
     }
 
-    function _l1Messenger() internal view returns (ICrossDomainMessenger) {
+    function _l1Messenger() internal pure returns (ICrossDomainMessenger) {
         return ICrossDomainMessenger(_l1CrossDomainMessenger());
     }
 
-    function _l2Messenger() internal view returns (ICrossDomainMessenger) {
+    function _l2Messenger() internal pure returns (ICrossDomainMessenger) {
         return ICrossDomainMessenger(_l2CrossDomainMessenger());
     }
 
-    function _l1Bridge() internal view returns (IStandardBridge) {
+    function _l1Bridge() internal pure returns (IStandardBridge) {
         return IStandardBridge(payable(_l1StandardBridge()));
     }
 

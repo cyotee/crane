@@ -47,13 +47,13 @@ library VRFConsumerRepo {
         mapping(uint256 => RequestStatus) requests;
     }
 
-    function _layout() internal pure returns (Storage storage l) {
+    function _layoutStruct() internal pure returns (Storage storage l) {
         bytes32 slot = STORAGE_SLOT;
         assembly { l.slot := slot }
     }
 
     function _onlyCoordinator() internal view {
-        if (msg.sender != _layout().coordinator) revert("NotVRFCoordinator");
+        if (msg.sender != _layoutStruct().coordinator) revert("NotVRFCoordinator");
     }
 }
 ```
