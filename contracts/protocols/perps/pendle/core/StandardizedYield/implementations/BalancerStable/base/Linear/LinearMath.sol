@@ -76,11 +76,11 @@ library LinearMath {
         return divUp(mul(bptSupply, deltaNominalMain), invariant);
     }
 
-    function _calcWrappedOutPerMainIn(
-        uint256 mainIn,
-        uint256 mainBalance,
-        Params memory params
-    ) internal pure returns (uint256) {
+    function _calcWrappedOutPerMainIn(uint256 mainIn, uint256 mainBalance, Params memory params)
+        internal
+        pure
+        returns (uint256)
+    {
         // Amount out, so we round down overall.
 
         uint256 previousNominalMain = _toNominal(mainBalance, params);
@@ -88,11 +88,11 @@ library LinearMath {
         return afterNominalMain.sub(previousNominalMain);
     }
 
-    function _calcWrappedInPerMainOut(
-        uint256 mainOut,
-        uint256 mainBalance,
-        Params memory params
-    ) internal pure returns (uint256) {
+    function _calcWrappedInPerMainOut(uint256 mainOut, uint256 mainBalance, Params memory params)
+        internal
+        pure
+        returns (uint256)
+    {
         // Amount in, so we round up overall.
 
         uint256 previousNominalMain = _toNominal(mainBalance, params);
@@ -141,11 +141,11 @@ library LinearMath {
         return mainBalance.sub(newMainBalance);
     }
 
-    function _calcMainOutPerWrappedIn(
-        uint256 wrappedIn,
-        uint256 mainBalance,
-        Params memory params
-    ) internal pure returns (uint256) {
+    function _calcMainOutPerWrappedIn(uint256 wrappedIn, uint256 mainBalance, Params memory params)
+        internal
+        pure
+        returns (uint256)
+    {
         // Amount out, so we round down overall.
 
         uint256 previousNominalMain = _toNominal(mainBalance, params);
@@ -154,11 +154,11 @@ library LinearMath {
         return mainBalance.sub(newMainBalance);
     }
 
-    function _calcMainInPerWrappedOut(
-        uint256 wrappedOut,
-        uint256 mainBalance,
-        Params memory params
-    ) internal pure returns (uint256) {
+    function _calcMainInPerWrappedOut(uint256 wrappedOut, uint256 mainBalance, Params memory params)
+        internal
+        pure
+        returns (uint256)
+    {
         // Amount in, so we round up overall.
 
         uint256 previousNominalMain = _toNominal(mainBalance, params);
@@ -300,13 +300,13 @@ library LinearMath {
     ) internal pure returns (uint256[] memory) {
         unchecked {
             /**********************************************************************************************
-        // exactBPTInForTokensOut                                                                    //
-        // (per token)                                                                               //
-        // aO = tokenAmountOut             /        bptIn         \                                  //
-        // b = tokenBalance      a0 = b * | ---------------------  |                                 //
-        // bptIn = bptAmountIn             \     bptTotalSupply    /                                 //
-        // bpt = bptTotalSupply                                                                      //
-        **********************************************************************************************/
+            // exactBPTInForTokensOut                                                                    //
+            // (per token)                                                                               //
+            // aO = tokenAmountOut             /        bptIn         \                                  //
+            // b = tokenBalance      a0 = b * | ---------------------  |                                 //
+            // bptIn = bptAmountIn             \     bptTotalSupply    /                                 //
+            // bpt = bptTotalSupply                                                                      //
+            **********************************************************************************************/
 
             // Since we're computing an amount out, we round down overall. This means rounding down on both the
             // multiplication and division.

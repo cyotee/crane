@@ -6,12 +6,10 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
-import {MockERC20} from '@crane/contracts/tokens/ERC20/test/MockERC20.sol';
+import {MockERC20} from "@crane/contracts/tokens/ERC20/test/MockERC20.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";

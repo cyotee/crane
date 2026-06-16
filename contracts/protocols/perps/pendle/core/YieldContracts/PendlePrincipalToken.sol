@@ -27,13 +27,9 @@ contract PendlePrincipalToken is PendleERC20, Initializable, IPPrincipalToken {
         _;
     }
 
-    constructor(
-        address _SY,
-        string memory _name,
-        string memory _symbol,
-        uint8 __decimals,
-        uint256 _expiry
-    ) PendleERC20(_name, _symbol, __decimals) {
+    constructor(address _SY, string memory _name, string memory _symbol, uint8 __decimals, uint256 _expiry)
+        PendleERC20(_name, _symbol, __decimals)
+    {
         SY = _SY;
         expiry = _expiry;
         factory = msg.sender;

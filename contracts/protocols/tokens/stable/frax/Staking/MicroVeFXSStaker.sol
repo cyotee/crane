@@ -26,8 +26,8 @@ import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/IveFXS.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 // Inheritance
 import "./Owned.sol";
@@ -47,10 +47,10 @@ contract MicroVeFXSStaker is Owned {
     modifier onlyByOwner() {
         require(msg.sender == owner, "Not the owner");
         _;
-    }    
+    }
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (address _owner) Owned(_owner){}
+    constructor(address _owner) Owned(_owner) {}
 
     function vefxs_create_lock(uint256 fxs_amount, uint256 timestamp) external onlyByOwner {
         FXS.approve(address(veFXS), fxs_amount);
@@ -73,5 +73,4 @@ contract MicroVeFXSStaker is Owned {
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwner {
         ERC20(tokenAddress).transfer(owner, tokenAmount);
     }
-
 }

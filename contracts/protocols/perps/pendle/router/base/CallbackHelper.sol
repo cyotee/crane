@@ -59,12 +59,11 @@ abstract contract CallbackHelper {
         }
     }
 
-    function _encodeSwapExactYtForPt(
-        address receiver,
-        uint256 netPtOut,
-        IPPrincipalToken PT,
-        IPYieldToken YT
-    ) internal pure returns (bytes memory res) {
+    function _encodeSwapExactYtForPt(address receiver, uint256 netPtOut, IPPrincipalToken PT, IPYieldToken YT)
+        internal
+        pure
+        returns (bytes memory res)
+    {
         res = new bytes(160);
         uint256 actionType = uint256(ActionType.SwapExactYtForPt);
 
@@ -77,9 +76,11 @@ abstract contract CallbackHelper {
         }
     }
 
-    function _decodeSwapExactYtForPt(
-        bytes calldata data
-    ) internal pure returns (address receiver, uint256 netPtOut, IPPrincipalToken PT, IPYieldToken YT) {
+    function _decodeSwapExactYtForPt(bytes calldata data)
+        internal
+        pure
+        returns (address receiver, uint256 netPtOut, IPPrincipalToken PT, IPYieldToken YT)
+    {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))
@@ -89,12 +90,11 @@ abstract contract CallbackHelper {
         }
     }
 
-    function _encodeSwapExactPtForYt(
-        address receiver,
-        uint256 exactPtIn,
-        uint256 minYtOut,
-        IPYieldToken YT
-    ) internal pure returns (bytes memory res) {
+    function _encodeSwapExactPtForYt(address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldToken YT)
+        internal
+        pure
+        returns (bytes memory res)
+    {
         res = new bytes(160);
         uint256 actionType = uint256(ActionType.SwapExactPtForYt);
 
@@ -107,9 +107,11 @@ abstract contract CallbackHelper {
         }
     }
 
-    function _decodeSwapExactPtForYt(
-        bytes calldata data
-    ) internal pure returns (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldToken YT) {
+    function _decodeSwapExactPtForYt(bytes calldata data)
+        internal
+        pure
+        returns (address receiver, uint256 exactPtIn, uint256 minYtOut, IPYieldToken YT)
+    {
         assembly {
             // first 32 bytes is ActionType
             receiver := calldataload(add(data.offset, 32))

@@ -15,11 +15,10 @@ contract PendleSophonPointManager is PendleERC20, BoringOwnableUpgradeable, IPSo
 
     mapping(address => bool) public isAddressWhitelisted;
 
-    constructor(
-        address _sophonFarming,
-        uint256 _pid,
-        address _sy
-    ) PendleERC20("Pendle Sophon Point Receipt Token", __getSpointSymbol(_pid), 18) initializer {
+    constructor(address _sophonFarming, uint256 _pid, address _sy)
+        PendleERC20("Pendle Sophon Point Receipt Token", __getSpointSymbol(_pid), 18)
+        initializer
+    {
         sophonFarming = _sophonFarming;
         pid = _pid;
         sy = _sy;

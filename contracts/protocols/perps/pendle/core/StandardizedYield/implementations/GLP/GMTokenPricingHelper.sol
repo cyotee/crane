@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import "@crane/contracts/external/openzeppelin-contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../../../libraries/BoringOwnableUpgradeable.sol";
-import {AggregatorV2V3Interface as IChainlinkAggregator} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
+import {
+    AggregatorV2V3Interface as IChainlinkAggregator
+} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 interface IGMXV2Oracle {
     function getPriceFeedMultiplier(address dataStore, address token) external view returns (uint256);
@@ -21,12 +23,14 @@ interface IGMXV2Reader {
         uint256 min;
         uint256 max;
     }
+
     struct MarketProps {
         address marketToken;
         address indexToken;
         address longToken;
         address shortToken;
     }
+
     struct MarketPoolValueInfoProps {
         int256 poolValue;
         int256 longPnl;
@@ -71,7 +75,7 @@ contract GMTokenPricingHelper is BoringOwnableUpgradeable, UUPSUpgradeable {
 
     function getPrice(address gm) external view returns (uint256) {
         IGMXV2Reader.MarketProps memory prop = _getMarketProps(datastore, gm);
-        (int256 marketPrice, ) = reader.getMarketTokenPrice(
+        (int256 marketPrice,) = reader.getMarketTokenPrice(
             address(datastore),
             prop,
             _getTokenPrice(prop.indexToken),
@@ -87,18 +91,18 @@ contract GMTokenPricingHelper is BoringOwnableUpgradeable, UUPSUpgradeable {
     }
 
     function _getTokenPrice(address token) internal view returns (IGMXV2Reader.PriceProps memory price) {
-        (, int256 latestAnswer, , , ) = IChainlinkAggregator(datastore.getAddress(_priceFeedKey(token)))
-            .latestRoundData();
+        (, int256 latestAnswer,,,) = IChainlinkAggregator(datastore.getAddress(_priceFeedKey(token))).latestRoundData();
 
         uint256 multiplier = oracle.getPriceFeedMultiplier(address(datastore), token);
         uint256 adjustedPrice = (uint256(latestAnswer) * multiplier) / FLOAT_PRECISION;
         return IGMXV2Reader.PriceProps({min: adjustedPrice, max: adjustedPrice});
     }
 
-    function _getMarketProps(
-        IGMXV2DataStore dataStore,
-        address key
-    ) internal view returns (IGMXV2Reader.MarketProps memory) {
+    function _getMarketProps(IGMXV2DataStore dataStore, address key)
+        internal
+        view
+        returns (IGMXV2Reader.MarketProps memory)
+    {
         IGMXV2Reader.MarketProps memory prop;
         // prop.marketToken = dataStore.getAddress(keccak256(abi.encode(key, MARKET_TOKEN)));
         // prop.indexToken = dataStore.getAddress(keccak256(abi.encode(key, INDEX_TOKEN)));

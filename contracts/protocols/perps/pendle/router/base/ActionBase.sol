@@ -23,12 +23,10 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
 
     // ----------------- MINT REDEEM SY PY -----------------
 
-    function _mintSyFromToken(
-        address receiver,
-        address SY,
-        uint256 minSyOut,
-        TokenInput calldata inp
-    ) internal returns (uint256 netSyOut) {
+    function _mintSyFromToken(address receiver, address SY, uint256 minSyOut, TokenInput calldata inp)
+        internal
+        returns (uint256 netSyOut)
+    {
         SwapType swapType = inp.swapData.swapType;
 
         uint256 netTokenMintSy;
@@ -53,36 +51,23 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         else _transferFrom(IERC20(inp.tokenIn), msg.sender, inp.pendleSwap, inp.netTokenIn);
 
         IPSwapAggregator(inp.pendleSwap).swap{value: inp.tokenIn == NATIVE ? inp.netTokenIn : 0}(
-            inp.tokenIn,
-            inp.netTokenIn,
-            inp.swapData
+            inp.tokenIn, inp.netTokenIn, inp.swapData
         );
     }
 
-    function __mintSy(
-        address receiver,
-        address SY,
-        uint256 netTokenMintSy,
-        uint256 minSyOut,
-        TokenInput calldata inp
-    ) private returns (uint256 netSyOut) {
+    function __mintSy(address receiver, address SY, uint256 netTokenMintSy, uint256 minSyOut, TokenInput calldata inp)
+        private
+        returns (uint256 netSyOut)
+    {
         uint256 netNative = inp.tokenMintSy == NATIVE ? netTokenMintSy : 0;
         _safeApproveInf(inp.tokenMintSy, SY);
-        netSyOut = IStandardizedYield(SY).deposit{value: netNative}(
-            receiver,
-            inp.tokenMintSy,
-            netTokenMintSy,
-            minSyOut
-        );
+        netSyOut = IStandardizedYield(SY).deposit{value: netNative}(receiver, inp.tokenMintSy, netTokenMintSy, minSyOut);
     }
 
-    function _redeemSyToToken(
-        address receiver,
-        address SY,
-        uint256 netSyIn,
-        TokenOutput calldata out,
-        bool doPull
-    ) internal returns (uint256 netTokenOut) {
+    function _redeemSyToToken(address receiver, address SY, uint256 netSyIn, TokenOutput calldata out, bool doPull)
+        internal
+        returns (uint256 netTokenOut)
+    {
         SwapType swapType = out.swapData.swapType;
 
         if (swapType == SwapType.NONE) {
@@ -106,13 +91,10 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         if (netTokenOut < out.minTokenOut) revert("Slippage: INSUFFICIENT_TOKEN_OUT");
     }
 
-    function __redeemSy(
-        address receiver,
-        address SY,
-        uint256 netSyIn,
-        TokenOutput calldata out,
-        bool doPull
-    ) private returns (uint256 netTokenRedeemed) {
+    function __redeemSy(address receiver, address SY, uint256 netSyIn, TokenOutput calldata out, bool doPull)
+        private
+        returns (uint256 netTokenRedeemed)
+    {
         if (doPull) {
             _transferFrom(IERC20(SY), msg.sender, SY, netSyIn);
         }
@@ -120,14 +102,10 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         netTokenRedeemed = IStandardizedYield(SY).redeem(receiver, netSyIn, out.tokenRedeemSy, 0, true);
     }
 
-    function _mintPyFromSy(
-        address receiver,
-        address SY,
-        address YT,
-        uint256 netSyIn,
-        uint256 minPyOut,
-        bool doPull
-    ) internal returns (uint256 netPyOut) {
+    function _mintPyFromSy(address receiver, address SY, address YT, uint256 netSyIn, uint256 minPyOut, bool doPull)
+        internal
+        returns (uint256 netPyOut)
+    {
         if (doPull) {
             _transferFrom(IERC20(SY), msg.sender, YT, netSyIn);
         }
@@ -136,12 +114,10 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         if (netPyOut < minPyOut) revert("Slippage: INSUFFICIENT_PT_YT_OUT");
     }
 
-    function _redeemPyToSy(
-        address receiver,
-        address YT,
-        uint256 netPyIn,
-        uint256 minSyOut
-    ) internal returns (uint256 netSyOut) {
+    function _redeemPyToSy(address receiver, address YT, uint256 netPyIn, uint256 minSyOut)
+        internal
+        returns (uint256 netSyOut)
+    {
         address PT = IPYieldToken(YT).PT();
 
         _transferFrom(IERC20(PT), msg.sender, YT, netPyIn);
@@ -172,7 +148,7 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         uint256 minSyOut,
         LimitOrderData calldata limit
     ) internal returns (uint256 netSyOut, uint256 netSyFee) {
-        (, IPPrincipalToken PT, ) = IPMarket(market).readTokens();
+        (, IPPrincipalToken PT,) = IPMarket(market).readTokens();
 
         uint256 netPtLeft = exactPtIn;
         bool doMarketOrder = true;
@@ -185,11 +161,8 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         }
 
         if (doMarketOrder) {
-            (uint256 netSyOutMarket, uint256 netSyFeeMarket) = IPMarket(market).swapExactPtForSy(
-                receiver,
-                netPtLeft,
-                EMPTY_BYTES
-            );
+            (uint256 netSyOutMarket, uint256 netSyFeeMarket) =
+                IPMarket(market).swapExactPtForSy(receiver, netPtLeft, EMPTY_BYTES);
 
             netSyOut += netSyOutMarket;
             netSyFee += netSyFeeMarket;
@@ -210,7 +183,7 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         ApproxParams calldata guessPtOut,
         LimitOrderData calldata limit
     ) internal returns (uint256 netPtOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY,, IPYieldToken YT) = IPMarket(market).readTokens();
         uint256 netSyLeft = exactSyIn;
         bool doMarketOrder = true;
 
@@ -222,13 +195,8 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         }
 
         if (doMarketOrder) {
-            (uint256 netPtOutMarket, uint256 netSyFeeMarket) = _swapMarketExactSyForPt(
-                receiver,
-                market,
-                YT,
-                netSyLeft,
-                guessPtOut
-            );
+            (uint256 netPtOutMarket, uint256 netSyFeeMarket) =
+                _swapMarketExactSyForPt(receiver, market, YT, netSyLeft, guessPtOut);
 
             netPtOut += netPtOutMarket;
             netSyFee += netSyFeeMarket;
@@ -244,12 +212,8 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         uint256 netSyLeft,
         ApproxParams calldata guessPtOut
     ) internal returns (uint256 netPtOutMarket, uint256 netSyFeeMarket) {
-        (netPtOutMarket, ) = _readMarket(market).approxSwapExactSyForPt(
-            YT.newIndex(),
-            netSyLeft,
-            block.timestamp,
-            guessPtOut
-        );
+        (netPtOutMarket,) = _readMarket(market)
+            .approxSwapExactSyForPt(YT.newIndex(), netSyLeft, block.timestamp, guessPtOut);
 
         (, netSyFeeMarket) = IPMarket(market).swapSyForExactPt(receiver, netPtOutMarket, EMPTY_BYTES);
     }
@@ -280,13 +244,7 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         }
 
         if (doMarketOrder) {
-            (uint256 netSyOutMarket, uint256 netSyFeeMarket) = _swapMarketYtForSy(
-                receiver,
-                market,
-                SY,
-                YT,
-                netYtLeft
-            );
+            (uint256 netSyOutMarket, uint256 netSyFeeMarket) = _swapMarketYtForSy(receiver, market, SY, YT, netYtLeft);
 
             netSyFee += netSyFeeMarket;
             netSyOut += netSyOutMarket;
@@ -308,11 +266,7 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
     ) internal returns (uint256 netSyOutMarket, uint256 netSyFeeMarket) {
         uint256 preSyBalance = SY.balanceOf(receiver);
 
-        (, netSyFeeMarket) = IPMarket(market).swapSyForExactPt(
-            address(YT),
-            netYtLeft,
-            _encodeSwapYtForSy(receiver, YT)
-        );
+        (, netSyFeeMarket) = IPMarket(market).swapSyForExactPt(address(YT), netYtLeft, _encodeSwapYtForSy(receiver, YT));
 
         netSyOutMarket = SY.balanceOf(receiver) - preSyBalance;
     }
@@ -338,13 +292,8 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         }
 
         if (doMarketOrder) {
-            (uint256 netYtOutMarket, uint256 netSyFeeMarket) = _swapMarketSyForYt(
-                receiver,
-                market,
-                YT,
-                netSyLeft,
-                guessYtOut
-            );
+            (uint256 netYtOutMarket, uint256 netSyFeeMarket) =
+                _swapMarketSyForYt(receiver, market, YT, netSyLeft, guessYtOut);
 
             netYtOut += netYtOutMarket;
             netSyFee += netSyFeeMarket;
@@ -360,51 +309,32 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         uint256 netSyLeft,
         ApproxParams calldata guessYtOut
     ) internal returns (uint256 netYtOutMarket, uint256 netSyFeeMarket) {
-        (netYtOutMarket, ) = _readMarket(market).approxSwapExactSyForYt(
-            YT.newIndex(),
-            netSyLeft,
-            block.timestamp,
-            guessYtOut
-        );
+        (netYtOutMarket,) = _readMarket(market)
+            .approxSwapExactSyForYt(YT.newIndex(), netSyLeft, block.timestamp, guessYtOut);
 
-        (, netSyFeeMarket) = IPMarket(market).swapExactPtForSy(
-            address(YT),
-            netYtOutMarket,
-            _encodeSwapExactSyForYt(receiver, YT)
-        );
+        (, netSyFeeMarket) =
+            IPMarket(market).swapExactPtForSy(address(YT), netYtOutMarket, _encodeSwapExactSyForYt(receiver, YT));
     }
 
     // ----------------- LIMIT ORDERS -----------------
-    function _fillLimit(
-        address receiver,
-        IERC20 tokenIn,
-        uint256 netInput,
-        LimitOrderData calldata lim
-    ) internal returns (uint256 netLeft, uint256 netOut, uint256 netSyFee, bool doMarketOrder) {
+    function _fillLimit(address receiver, IERC20 tokenIn, uint256 netInput, LimitOrderData calldata lim)
+        internal
+        returns (uint256 netLeft, uint256 netOut, uint256 netSyFee, bool doMarketOrder)
+    {
         IPLimitRouter router = IPLimitRouter(lim.limitRouter);
         netLeft = netInput;
 
         if (lim.normalFills.length != 0) {
             _safeApproveInf(address(tokenIn), lim.limitRouter);
-            (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, ) = router.fill(
-                lim.normalFills,
-                receiver,
-                netLeft,
-                lim.optData,
-                EMPTY_BYTES
-            );
+            (uint256 actualMaking, uint256 actualTaking, uint256 totalFee,) =
+                router.fill(lim.normalFills, receiver, netLeft, lim.optData, EMPTY_BYTES);
             netOut += actualMaking;
             netLeft -= actualTaking;
             netSyFee += totalFee;
         }
 
         if (lim.flashFills.length != 0) {
-            (uint256 netUse, uint256 netReceived, uint256 totalFee) = _fillFlashLimit(
-                router,
-                lim,
-                receiver,
-                netLeft
-            );
+            (uint256 netUse, uint256 netReceived, uint256 totalFee) = _fillFlashLimit(router, lim, receiver, netLeft);
 
             netOut += netReceived;
             netLeft -= netUse;
@@ -418,33 +348,24 @@ abstract contract ActionBase is TokenHelper, CallbackHelper, IPLimitOrderType {
         return a.normalFills.length == 0 && a.flashFills.length == 0;
     }
 
-    function _fillFlashLimit(
-        IPLimitRouter router,
-        LimitOrderData calldata lim,
-        address receiver,
-        uint256 netLeft
-    ) internal returns (uint256 netUse, uint256 netReceived, uint256 totalFee) {
+    function _fillFlashLimit(IPLimitRouter router, LimitOrderData calldata lim, address receiver, uint256 netLeft)
+        internal
+        returns (uint256 netUse, uint256 netReceived, uint256 totalFee)
+    {
         address YT = lim.flashFills[0].order.YT;
         OrderType orderType = lim.flashFills[0].order.orderType;
         bytes memory ret;
         bytes memory callbackData = _encodeFlashFillCallback(orderType, YT, netLeft, receiver);
 
-        (, , totalFee, ret) = router.fill(
-            lim.flashFills,
-            YT,
-            type(uint256).max,
-            lim.optData,
-            callbackData
-        );
+        (,, totalFee, ret) = router.fill(lim.flashFills, YT, type(uint256).max, lim.optData, callbackData);
         (netUse, netReceived) = abi.decode(ret, (uint256, uint256));
     }
 
-    function _encodeFlashFillCallback(
-        OrderType orderType,
-        address YT,
-        uint256 netLeft,
-        address receiver
-    ) internal pure returns (bytes memory) {
+    function _encodeFlashFillCallback(OrderType orderType, address YT, uint256 netLeft, address receiver)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return abi.encode(orderType, YT, netLeft, receiver);
     }
 }

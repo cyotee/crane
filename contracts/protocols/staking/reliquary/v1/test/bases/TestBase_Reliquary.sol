@@ -9,7 +9,9 @@ import {Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/Reliqua
 import {IReliquary} from "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReliquary.sol";
 import {LinearCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearCurve.sol";
 import {LinearPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearPlateauCurve.sol";
-import {PolynomialPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/PolynomialPlateauCurve.sol";
+import {
+    PolynomialPlateauCurve
+} from "@crane/contracts/protocols/staking/reliquary/v1/curves/PolynomialPlateauCurve.sol";
 import {ReliquaryEvents} from "@crane/contracts/protocols/staking/reliquary/v1/services/ReliquaryEvents.sol";
 
 abstract contract TestBase_Reliquary is CraneTest, ERC721Holder {

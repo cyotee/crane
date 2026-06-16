@@ -1,474 +1,463 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import 'forge-std/Test.sol';
+import "forge-std/Test.sol";
 
-import {PoolAddressesProvider, IPoolAddressesProvider} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/PoolAddressesProvider.sol';
-import {Ownable} from '@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol';
-import {PoolInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/PoolInstance.sol';
-import {DefaultReserveInterestRateStrategyV2, IReserveInterestRateStrategy} from '@crane/contracts/protocols/lending/aave/v3.6/misc/DefaultReserveInterestRateStrategyV2.sol';
-import {MockInitializableV1, MockInitializableV2} from '@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/upgradeability/MockInitializableImplementation.sol';
-import {PoolConfiguratorInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/PoolConfiguratorInstance.sol';
-import {MockPoolInherited} from '@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/helpers/MockPool.sol';
-import {ACLManager} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/ACLManager.sol';
-import {TestnetProcedures} from '../../utils/TestnetProcedures.sol';
-import {SlotParser} from '../../utils/SlotParser.sol';
+import {
+    PoolAddressesProvider,
+    IPoolAddressesProvider
+} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/PoolAddressesProvider.sol";
+import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/OwnableInit.sol";
+import {PoolInstance} from "@crane/contracts/protocols/lending/aave/v3.6/instances/PoolInstance.sol";
+import {
+    DefaultReserveInterestRateStrategyV2,
+    IReserveInterestRateStrategy
+} from "@crane/contracts/protocols/lending/aave/v3.6/misc/DefaultReserveInterestRateStrategyV2.sol";
+import {
+    MockInitializableV1,
+    MockInitializableV2
+} from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/upgradeability/MockInitializableImplementation.sol";
+import {
+    PoolConfiguratorInstance
+} from "@crane/contracts/protocols/lending/aave/v3.6/instances/PoolConfiguratorInstance.sol";
+import {MockPoolInherited} from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/helpers/MockPool.sol";
+import {ACLManager} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/ACLManager.sol";
+import {TestnetProcedures} from "../../utils/TestnetProcedures.sol";
+import {SlotParser} from "../../utils/SlotParser.sol";
 
 contract PoolAddressesProviderTests is TestnetProcedures {
-  using stdStorage for StdStorage;
+    using stdStorage for StdStorage;
 
-  address internal stranger;
+    address internal stranger;
 
-  string constant CALLER_NOT_OWNER = 'Ownable: caller is not the owner';
+    function setUp() public {
+        stranger = makeAddr("STRANGER");
 
-  function setUp() public {
-    stranger = makeAddr('STRANGER');
+        initTestEnvironment();
+    }
 
-    initTestEnvironment();
-  }
+    function test_new_PoolAddressesProvider() public returns (PoolAddressesProvider) {
+        string memory id = "Constructor Test Market";
+        address expectedAddress = vm.computeCreateAddress(alice, vm.getNonce(alice));
 
-  function test_new_PoolAddressesProvider() public returns (PoolAddressesProvider) {
-    string memory id = 'Constructor Test Market';
-    address expectedAddress = vm.computeCreateAddress(alice, vm.getNonce(alice));
+        vm.expectEmit(expectedAddress);
+        emit Ownable.OwnershipTransferred(address(0), alice);
 
-    vm.expectEmit(expectedAddress);
-    emit Ownable.OwnershipTransferred(address(0), alice);
+        vm.expectEmit(expectedAddress);
+        emit IPoolAddressesProvider.MarketIdSet("", id);
 
-    vm.expectEmit(expectedAddress);
-    emit IPoolAddressesProvider.MarketIdSet('', id);
+        vm.prank(alice);
+        PoolAddressesProvider provider = new PoolAddressesProvider(id, alice);
 
-    vm.expectEmit(expectedAddress);
-    emit Ownable.OwnershipTransferred(alice, alice);
+        assertEq(provider.getMarketId(), id);
+        assertEq(provider.owner(), alice);
 
-    vm.prank(alice);
-    PoolAddressesProvider provider = new PoolAddressesProvider(id, alice);
+        return provider;
+    }
 
-    assertEq(provider.getMarketId(), id);
-    assertEq(provider.owner(), alice);
+    function test_getter_getMarketId() public {
+        string memory id = "Foundry Test Market";
+        PoolAddressesProvider provider = new PoolAddressesProvider(id, alice);
 
-    return provider;
-  }
+        assertEq(provider.getMarketId(), id);
+    }
 
-  function test_getter_getMarketId() public {
-    string memory id = 'Foundry Test Market';
-    PoolAddressesProvider provider = new PoolAddressesProvider(id, alice);
+    function test_setter_setMarketId() public {
+        string memory deploymentId = "Initial Market";
+        string memory updatedId = "New Test Market";
+        PoolAddressesProvider provider = new PoolAddressesProvider(deploymentId, alice);
 
-    assertEq(provider.getMarketId(), id);
-  }
+        assertEq(provider.getMarketId(), deploymentId);
 
-  function test_setter_setMarketId() public {
-    string memory deploymentId = 'Initial Market';
-    string memory updatedId = 'New Test Market';
-    PoolAddressesProvider provider = new PoolAddressesProvider(deploymentId, alice);
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.MarketIdSet(deploymentId, updatedId);
 
-    assertEq(provider.getMarketId(), deploymentId);
+        vm.prank(alice);
+        provider.setMarketId(updatedId);
 
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.MarketIdSet(deploymentId, updatedId);
+        assertEq(provider.getMarketId(), updatedId);
+    }
 
-    vm.prank(alice);
-    provider.setMarketId(updatedId);
+    function test_reverts_setters_notOwner() public {
+        string memory deploymentId = "Initial Market";
+        PoolAddressesProvider provider = new PoolAddressesProvider(deploymentId, alice);
+        bytes32 id = keccak256("REVERT_TEST");
+        address contractAddress = makeAddr("TEST");
 
-    assertEq(provider.getMarketId(), updatedId);
-  }
+        // Calls are made by this test contract (not pranked), which is not the owner.
+        bytes memory notOwner = abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, address(this));
 
-  function test_reverts_setters_notOwner() public {
-    string memory deploymentId = 'Initial Market';
-    PoolAddressesProvider provider = new PoolAddressesProvider(deploymentId, alice);
-    bytes32 id = keccak256('REVERT_TEST');
-    address contractAddress = makeAddr('TEST');
+        vm.expectRevert(notOwner);
+        provider.setMarketId("123");
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setMarketId('123');
+        vm.expectRevert(notOwner);
+        provider.setAddress(id, contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setAddress(id, contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setAddressAsProxy(id, contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setAddressAsProxy(id, contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setACLAdmin(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setACLAdmin(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setPoolImpl(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setPoolImpl(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setPoolConfiguratorImpl(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setPoolConfiguratorImpl(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setPriceOracle(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setPriceOracle(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setPriceOracleSentinel(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setPriceOracleSentinel(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setACLManager(contractAddress);
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setACLManager(contractAddress);
+        vm.expectRevert(notOwner);
+        provider.setPoolDataProvider(contractAddress);
+    }
 
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    provider.setPoolDataProvider(contractAddress);
-  }
+    function test_setAddressAsProxy_new_proxy() public returns (PoolAddressesProvider, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
 
-  function test_setAddressAsProxy_new_proxy() public returns (PoolAddressesProvider, address) {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
+        bytes32 id = keccak256("MOCK_TEST");
 
-    bytes32 id = keccak256('MOCK_TEST');
+        address implementation = address(new MockInitializableV1());
 
-    address implementation = address(new MockInitializableV1());
+        vm.expectEmit(true, false, true, true, address(provider));
+        emit IPoolAddressesProvider.ProxyCreated(id, address(0), implementation);
+        vm.expectEmit(true, true, true, true, address(provider));
+        emit IPoolAddressesProvider.AddressSetAsProxy(id, address(0), address(0), implementation);
+
+        vm.prank(alice);
+        provider.setAddressAsProxy(id, implementation);
+
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getAddress(id), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            implementation
+        );
+        return (provider, implementation);
+    }
+
+    function test_setAddressAsProxy_upgrade_proxy() public {
+        (PoolAddressesProvider provider, address previousImplementation) = test_setAddressAsProxy_new_proxy();
+        bytes32 id = keccak256("MOCK_TEST");
+        address proxyAddress = provider.getAddress(id);
+        address newImplementationAddress = address(new MockInitializableV2());
+
+        vm.expectEmit(true, true, true, true, address(provider));
+        emit IPoolAddressesProvider.AddressSetAsProxy(
+            id, proxyAddress, previousImplementation, newImplementationAddress
+        );
+
+        vm.prank(alice);
+        provider.setAddressAsProxy(id, newImplementationAddress);
+
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getAddress(id), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            newImplementationAddress
+        );
+    }
+
+    function test_reverts_setAddressAsProxy_notAuth() public {
+        PoolAddressesProvider provider = test_new_PoolAddressesProvider();
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, stranger));
+
+        vm.prank(stranger);
+        provider.setAddressAsProxy(keccak256("1"), address(1));
+    }
+
+    function test_setAddress() public {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
+
+        bytes32 id = keccak256("MOCK_CONTRACT");
+        address contractAddress = makeAddr("MOCK_CONTRACT");
+
+        vm.expectEmit();
+        emit IPoolAddressesProvider.AddressSet(id, address(0), contractAddress);
+
+        vm.prank(alice);
+        provider.setAddress(id, contractAddress);
+
+        assertEq(provider.getAddress(id), contractAddress);
+    }
+
+    function test_setAddress_updateAddress() public {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
+
+        bytes32 id = keccak256("MOCK_CONTRACT");
+        address firstContract = makeAddr("FIRST_CONTRACT");
+        address secondContract = makeAddr("SECOND_CONTRACT");
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.AddressSet(id, address(0), firstContract);
+
+        vm.prank(alice);
+        provider.setAddress(id, firstContract);
+
+        assertEq(provider.getAddress(id), firstContract);
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.AddressSet(id, firstContract, secondContract);
+
+        vm.prank(alice);
+        provider.setAddress(id, secondContract);
+        assertEq(provider.getAddress(id), secondContract);
+    }
+
+    function test_reverts_setAddress_noAuth() public {
+        PoolAddressesProvider provider = test_new_PoolAddressesProvider();
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, stranger));
+        vm.prank(stranger);
+        provider.setAddress(keccak256("0"), makeAddr("123"));
+
+        assertEq(provider.getAddress(keccak256("0")), address(0));
+    }
+
+    function test_setPoolImpl() public returns (PoolAddressesProvider, DefaultReserveInterestRateStrategyV2, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
+        DefaultReserveInterestRateStrategyV2 interestRateStrategy =
+            new DefaultReserveInterestRateStrategyV2(address(provider));
+
+        address poolImplementation = address(new PoolInstance(provider, interestRateStrategy));
+        assertEq(provider.getPool(), address(0));
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolUpdated(address(0), poolImplementation);
+
+        vm.prank(alice);
+        provider.setPoolImpl(poolImplementation);
+
+        assertTrue(provider.getPool() != address(0));
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getPool(), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            poolImplementation
+        );
+
+        return (provider, interestRateStrategy, poolImplementation);
+    }
+
+    function test_setPoolImpl_upgrade() public {
+        (
+            PoolAddressesProvider provider,
+            DefaultReserveInterestRateStrategyV2 interestRateStrategy,
+            address currentImplementation
+        ) = test_setPoolImpl();
+        address poolImplementation = address(new MockPoolInherited(provider, interestRateStrategy));
+        assertTrue(currentImplementation != address(0));
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolUpdated(currentImplementation, poolImplementation);
+
+        vm.prank(alice);
+        provider.setPoolImpl(poolImplementation);
+
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getPool(), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            poolImplementation
+        );
+    }
+
+    function test_setPoolConfiguratorImpl()
+        public
+        returns (PoolAddressesProvider, DefaultReserveInterestRateStrategyV2, address)
+    {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
+        DefaultReserveInterestRateStrategyV2 interestRateStrategy =
+            new DefaultReserveInterestRateStrategyV2(address(provider));
 
-    vm.expectEmit(true, false, true, true, address(provider));
-    emit IPoolAddressesProvider.ProxyCreated(id, address(0), implementation);
-    vm.expectEmit(true, true, true, true, address(provider));
-    emit IPoolAddressesProvider.AddressSetAsProxy(id, address(0), address(0), implementation);
-
-    vm.prank(alice);
-    provider.setAddressAsProxy(id, implementation);
-
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getAddress(id),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      implementation
-    );
-    return (provider, implementation);
-  }
-
-  function test_setAddressAsProxy_upgrade_proxy() public {
-    (
-      PoolAddressesProvider provider,
-      address previousImplementation
-    ) = test_setAddressAsProxy_new_proxy();
-    bytes32 id = keccak256('MOCK_TEST');
-    address proxyAddress = provider.getAddress(id);
-    address newImplementationAddress = address(new MockInitializableV2());
-
-    vm.expectEmit(true, true, true, true, address(provider));
-    emit IPoolAddressesProvider.AddressSetAsProxy(
-      id,
-      proxyAddress,
-      previousImplementation,
-      newImplementationAddress
-    );
-
-    vm.prank(alice);
-    provider.setAddressAsProxy(id, newImplementationAddress);
-
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getAddress(id),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      newImplementationAddress
-    );
-  }
-
-  function test_reverts_setAddressAsProxy_notAuth() public {
-    PoolAddressesProvider provider = test_new_PoolAddressesProvider();
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-
-    vm.prank(stranger);
-    provider.setAddressAsProxy(keccak256('1'), address(1));
-  }
-
-  function test_setAddress() public {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
-
-    bytes32 id = keccak256('MOCK_CONTRACT');
-    address contractAddress = makeAddr('MOCK_CONTRACT');
-
-    vm.expectEmit();
-    emit IPoolAddressesProvider.AddressSet(id, address(0), contractAddress);
-
-    vm.prank(alice);
-    provider.setAddress(id, contractAddress);
-
-    assertEq(provider.getAddress(id), contractAddress);
-  }
-
-  function test_setAddress_updateAddress() public {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
-
-    bytes32 id = keccak256('MOCK_CONTRACT');
-    address firstContract = makeAddr('FIRST_CONTRACT');
-    address secondContract = makeAddr('SECOND_CONTRACT');
-
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.AddressSet(id, address(0), firstContract);
-
-    vm.prank(alice);
-    provider.setAddress(id, firstContract);
-
-    assertEq(provider.getAddress(id), firstContract);
-
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.AddressSet(id, firstContract, secondContract);
-
-    vm.prank(alice);
-    provider.setAddress(id, secondContract);
-    assertEq(provider.getAddress(id), secondContract);
-  }
-
-  function test_reverts_setAddress_noAuth() public {
-    PoolAddressesProvider provider = test_new_PoolAddressesProvider();
-    vm.expectRevert(bytes(CALLER_NOT_OWNER));
-    vm.prank(stranger);
-    provider.setAddress(keccak256('0'), makeAddr('123'));
-
-    assertEq(provider.getAddress(keccak256('0')), address(0));
-  }
-
-  function test_setPoolImpl()
-    public
-    returns (PoolAddressesProvider, DefaultReserveInterestRateStrategyV2, address)
-  {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
-    DefaultReserveInterestRateStrategyV2 interestRateStrategy = new DefaultReserveInterestRateStrategyV2(
-        address(provider)
-      );
-
-    address poolImplementation = address(new PoolInstance(provider, interestRateStrategy));
-    assertEq(provider.getPool(), address(0));
-
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolUpdated(address(0), poolImplementation);
-
-    vm.prank(alice);
-    provider.setPoolImpl(poolImplementation);
-
-    assertTrue(provider.getPool() != address(0));
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getPool(),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      poolImplementation
-    );
-
-    return (provider, interestRateStrategy, poolImplementation);
-  }
-
-  function test_setPoolImpl_upgrade() public {
-    (
-      PoolAddressesProvider provider,
-      DefaultReserveInterestRateStrategyV2 interestRateStrategy,
-      address currentImplementation
-    ) = test_setPoolImpl();
-    address poolImplementation = address(new MockPoolInherited(provider, interestRateStrategy));
-    assertTrue(currentImplementation != address(0));
-
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolUpdated(currentImplementation, poolImplementation);
-
-    vm.prank(alice);
-    provider.setPoolImpl(poolImplementation);
-
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getPool(),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      poolImplementation
-    );
-  }
-
-  function test_setPoolConfiguratorImpl()
-    public
-    returns (PoolAddressesProvider, DefaultReserveInterestRateStrategyV2, address)
-  {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
-    DefaultReserveInterestRateStrategyV2 interestRateStrategy = new DefaultReserveInterestRateStrategyV2(
-        address(provider)
-      );
-
-    address implementation = address(new PoolConfiguratorInstance());
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolConfiguratorUpdated(address(0), implementation);
-
-    assertEq(provider.getPoolConfigurator(), address(0));
-
-    vm.prank(alice);
-    provider.setPoolConfiguratorImpl(implementation);
-
-    assertTrue(provider.getPoolConfigurator() != address(0));
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getPoolConfigurator(),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      implementation
-    );
-
-    return (provider, interestRateStrategy, implementation);
-  }
-
-  function test_setPoolConfiguratorImpl_upgrade() public {
-    (
-      PoolAddressesProvider provider,
-      DefaultReserveInterestRateStrategyV2 interestRateStrategy,
-      address currentImplementation
-    ) = test_setPoolConfiguratorImpl();
-
-    address implementation = address(new MockPoolInherited(provider, interestRateStrategy));
-    assertTrue(implementation != address(0));
-
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolConfiguratorUpdated(currentImplementation, implementation);
-
-    vm.prank(alice);
-    provider.setPoolConfiguratorImpl(implementation);
-
-    assertEq(
-      SlotParser.loadAddressFromSlot(
-        provider.getPoolConfigurator(),
-        bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      ),
-      implementation
-    );
-  }
-
-  function test_setPriceOracle() public returns (PoolAddressesProvider, address) {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
-
-    address contractAddress = makeAddr('PriceOracle');
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PriceOracleUpdated(address(0), contractAddress);
-
-    assertEq(provider.getPriceOracle(), address(0));
+        address implementation = address(new PoolConfiguratorInstance());
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolConfiguratorUpdated(address(0), implementation);
 
-    vm.prank(alice);
-    provider.setPriceOracle(contractAddress);
+        assertEq(provider.getPoolConfigurator(), address(0));
 
-    assertEq(provider.getPriceOracle(), contractAddress);
+        vm.prank(alice);
+        provider.setPoolConfiguratorImpl(implementation);
 
-    return (provider, contractAddress);
-  }
+        assertTrue(provider.getPoolConfigurator() != address(0));
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getPoolConfigurator(), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            implementation
+        );
 
-  function test_setPriceOracle_changeContract() public returns (PoolAddressesProvider, address) {
-    (PoolAddressesProvider provider, address previousAddress) = test_setPriceOracle();
-    address contractAddress = makeAddr('PriceOracle_V2');
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PriceOracleUpdated(previousAddress, contractAddress);
+        return (provider, interestRateStrategy, implementation);
+    }
 
-    assertEq(provider.getPriceOracle(), previousAddress);
+    function test_setPoolConfiguratorImpl_upgrade() public {
+        (
+            PoolAddressesProvider provider,
+            DefaultReserveInterestRateStrategyV2 interestRateStrategy,
+            address currentImplementation
+        ) = test_setPoolConfiguratorImpl();
 
-    vm.prank(alice);
-    provider.setPriceOracle(contractAddress);
+        address implementation = address(new MockPoolInherited(provider, interestRateStrategy));
+        assertTrue(implementation != address(0));
 
-    assertEq(provider.getPriceOracle(), contractAddress);
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolConfiguratorUpdated(currentImplementation, implementation);
 
-    return (provider, contractAddress);
-  }
+        vm.prank(alice);
+        provider.setPoolConfiguratorImpl(implementation);
 
-  function test_setACLManager_setACLAdmin() public returns (PoolAddressesProvider, address) {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
+        assertEq(
+            SlotParser.loadAddressFromSlot(
+                provider.getPoolConfigurator(), bytes32(uint256(keccak256("eip1967.proxy.implementation")) - 1)
+            ),
+            implementation
+        );
+    }
 
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.ACLAdminUpdated(address(0), alice);
+    function test_setPriceOracle() public returns (PoolAddressesProvider, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
 
-    vm.prank(alice);
-    provider.setACLAdmin(alice);
+        address contractAddress = makeAddr("PriceOracle");
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PriceOracleUpdated(address(0), contractAddress);
 
-    assertEq(provider.getACLAdmin(), alice);
+        assertEq(provider.getPriceOracle(), address(0));
 
-    address contractAddress = address(new ACLManager(IPoolAddressesProvider(address(provider))));
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.ACLManagerUpdated(address(0), contractAddress);
+        vm.prank(alice);
+        provider.setPriceOracle(contractAddress);
 
-    assertEq(provider.getACLManager(), address(0));
+        assertEq(provider.getPriceOracle(), contractAddress);
 
-    vm.prank(alice);
-    provider.setACLManager(contractAddress);
+        return (provider, contractAddress);
+    }
 
-    assertEq(provider.getACLManager(), contractAddress);
+    function test_setPriceOracle_changeContract() public returns (PoolAddressesProvider, address) {
+        (PoolAddressesProvider provider, address previousAddress) = test_setPriceOracle();
+        address contractAddress = makeAddr("PriceOracle_V2");
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PriceOracleUpdated(previousAddress, contractAddress);
 
-    return (provider, contractAddress);
-  }
+        assertEq(provider.getPriceOracle(), previousAddress);
 
-  function test_setACLManager_changeContract() public returns (PoolAddressesProvider, address) {
-    (PoolAddressesProvider provider, address previousAddress) = test_setACLManager_setACLAdmin();
-    address contractAddress = address(new ACLManager(IPoolAddressesProvider(address(provider))));
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.ACLManagerUpdated(previousAddress, contractAddress);
+        vm.prank(alice);
+        provider.setPriceOracle(contractAddress);
 
-    assertEq(provider.getACLManager(), previousAddress);
+        assertEq(provider.getPriceOracle(), contractAddress);
 
-    vm.prank(alice);
-    provider.setACLManager(contractAddress);
+        return (provider, contractAddress);
+    }
 
-    assertEq(provider.getACLManager(), contractAddress);
+    function test_setACLManager_setACLAdmin() public returns (PoolAddressesProvider, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
 
-    return (provider, contractAddress);
-  }
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.ACLAdminUpdated(address(0), alice);
 
-  function test_setPriceOracleSentinel() public returns (PoolAddressesProvider, address) {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
+        vm.prank(alice);
+        provider.setACLAdmin(alice);
 
-    address contractAddress = makeAddr('PriceOracleSentinel');
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PriceOracleSentinelUpdated(address(0), contractAddress);
+        assertEq(provider.getACLAdmin(), alice);
 
-    assertEq(provider.getPriceOracleSentinel(), address(0));
+        address contractAddress = address(new ACLManager(IPoolAddressesProvider(address(provider))));
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.ACLManagerUpdated(address(0), contractAddress);
 
-    vm.prank(alice);
-    provider.setPriceOracleSentinel(contractAddress);
+        assertEq(provider.getACLManager(), address(0));
 
-    assertEq(provider.getPriceOracleSentinel(), contractAddress);
+        vm.prank(alice);
+        provider.setACLManager(contractAddress);
 
-    return (provider, contractAddress);
-  }
+        assertEq(provider.getACLManager(), contractAddress);
 
-  function test_setPriceOracleSentinel_changeContract()
-    public
-    returns (PoolAddressesProvider, address)
-  {
-    (PoolAddressesProvider provider, address previousAddress) = test_setPriceOracleSentinel();
-    address contractAddress = makeAddr('PriceOracleSentinel_V2');
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PriceOracleSentinelUpdated(previousAddress, contractAddress);
+        return (provider, contractAddress);
+    }
 
-    assertEq(provider.getPriceOracleSentinel(), previousAddress);
+    function test_setACLManager_changeContract() public returns (PoolAddressesProvider, address) {
+        (PoolAddressesProvider provider, address previousAddress) = test_setACLManager_setACLAdmin();
+        address contractAddress = address(new ACLManager(IPoolAddressesProvider(address(provider))));
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.ACLManagerUpdated(previousAddress, contractAddress);
 
-    vm.prank(alice);
-    provider.setPriceOracleSentinel(contractAddress);
+        assertEq(provider.getACLManager(), previousAddress);
 
-    assertEq(provider.getPriceOracleSentinel(), contractAddress);
+        vm.prank(alice);
+        provider.setACLManager(contractAddress);
 
-    return (provider, contractAddress);
-  }
+        assertEq(provider.getACLManager(), contractAddress);
 
-  function test_setPoolDataProvider() public returns (PoolAddressesProvider, address) {
-    PoolAddressesProvider provider = new PoolAddressesProvider('test', alice);
+        return (provider, contractAddress);
+    }
 
-    address contractAddress = makeAddr('PoolDataProvider');
+    function test_setPriceOracleSentinel() public returns (PoolAddressesProvider, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
 
-    assertEq(provider.getPoolDataProvider(), address(0));
+        address contractAddress = makeAddr("PriceOracleSentinel");
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PriceOracleSentinelUpdated(address(0), contractAddress);
 
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolDataProviderUpdated(address(0), contractAddress);
+        assertEq(provider.getPriceOracleSentinel(), address(0));
 
-    vm.prank(alice);
-    provider.setPoolDataProvider(contractAddress);
+        vm.prank(alice);
+        provider.setPriceOracleSentinel(contractAddress);
 
-    assertEq(provider.getPoolDataProvider(), contractAddress);
+        assertEq(provider.getPriceOracleSentinel(), contractAddress);
 
-    return (provider, contractAddress);
-  }
+        return (provider, contractAddress);
+    }
 
-  function test_PoolDataProvider_changeContract() public returns (PoolAddressesProvider, address) {
-    (PoolAddressesProvider provider, address previousAddress) = test_setPoolDataProvider();
-    address contractAddress = makeAddr('PoolDataProvider_V2');
+    function test_setPriceOracleSentinel_changeContract() public returns (PoolAddressesProvider, address) {
+        (PoolAddressesProvider provider, address previousAddress) = test_setPriceOracleSentinel();
+        address contractAddress = makeAddr("PriceOracleSentinel_V2");
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PriceOracleSentinelUpdated(previousAddress, contractAddress);
 
-    assertEq(provider.getPoolDataProvider(), previousAddress);
+        assertEq(provider.getPriceOracleSentinel(), previousAddress);
 
-    vm.expectEmit(address(provider));
-    emit IPoolAddressesProvider.PoolDataProviderUpdated(previousAddress, contractAddress);
+        vm.prank(alice);
+        provider.setPriceOracleSentinel(contractAddress);
 
-    vm.prank(alice);
-    provider.setPoolDataProvider(contractAddress);
+        assertEq(provider.getPriceOracleSentinel(), contractAddress);
 
-    assertEq(provider.getPoolDataProvider(), contractAddress);
+        return (provider, contractAddress);
+    }
 
-    return (provider, contractAddress);
-  }
+    function test_setPoolDataProvider() public returns (PoolAddressesProvider, address) {
+        PoolAddressesProvider provider = new PoolAddressesProvider("test", alice);
+
+        address contractAddress = makeAddr("PoolDataProvider");
+
+        assertEq(provider.getPoolDataProvider(), address(0));
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolDataProviderUpdated(address(0), contractAddress);
+
+        vm.prank(alice);
+        provider.setPoolDataProvider(contractAddress);
+
+        assertEq(provider.getPoolDataProvider(), contractAddress);
+
+        return (provider, contractAddress);
+    }
+
+    function test_PoolDataProvider_changeContract() public returns (PoolAddressesProvider, address) {
+        (PoolAddressesProvider provider, address previousAddress) = test_setPoolDataProvider();
+        address contractAddress = makeAddr("PoolDataProvider_V2");
+
+        assertEq(provider.getPoolDataProvider(), previousAddress);
+
+        vm.expectEmit(address(provider));
+        emit IPoolAddressesProvider.PoolDataProviderUpdated(previousAddress, contractAddress);
+
+        vm.prank(alice);
+        provider.setPoolDataProvider(contractAddress);
+
+        assertEq(provider.getPoolDataProvider(), contractAddress);
+
+        return (provider, contractAddress);
+    }
 }

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IFluidDexT1} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexT1.sol";
+import {
+    IFluidDexT1
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexT1.sol";
 import {
     IFluidDexReservesResolver
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexReservesResolver.sol";

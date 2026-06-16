@@ -74,7 +74,9 @@ contract TempoExchangeExactOutBufferTest is Test {
         alphaUSD.mint(address(tempoExchange), INITIAL_BALANCE * 10);
         betaUSD.mint(address(tempoExchange), INITIAL_BALANCE * 10);
 
-        manager = IPoolManager(deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(0))));
+        manager = IPoolManager(
+            deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(0)))
+        );
 
         alphaUSD.mint(address(manager), INITIAL_BALANCE * 10);
         betaUSD.mint(address(manager), INITIAL_BALANCE * 10);

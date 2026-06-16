@@ -104,8 +104,8 @@ contract LiquidationsTest is DevTestSetup {
 
         // Check A retains ~4.5% of the collateral (after claiming from CollSurplus)
         // collAmount - 0.5% - (liquidationAmount to Coll + 5%)
-        uint256 collSurplusAmount = collAmount * 995 / 1000
-            - (liquidationAmount + initialValues.AInterest) * DECIMAL_PRECISION / price * 105 / 100;
+        uint256 collSurplusAmount = collAmount * 995 / 1000 - (liquidationAmount + initialValues.AInterest)
+            * DECIMAL_PRECISION / price * 105 / 100;
         assertApproxEqAbs(
             collToken.balanceOf(address(collSurplusPool)),
             collSurplusAmount,
@@ -407,12 +407,12 @@ contract LiquidationsTest is DevTestSetup {
         // vars.collAmount - 0.5% (of offset) - (vars.liquidationAmount to Coll + 5% / 10%)
         uint256 collSurplusAmount =
         // Portion offset
-        vars.collAmount * (vars.liquidationAmount / 2 - 1e18) / (vars.liquidationAmount + vars.AInterest) * 995 / 1000
+         vars.collAmount * (vars.liquidationAmount / 2 - 1e18) / (vars.liquidationAmount + vars.AInterest) * 995 / 1000
             - (vars.liquidationAmount / 2 - 1e18) * DECIMAL_PRECISION / vars.price * 105 / 100
-        // Portion redistributed
-        + vars.collAmount * (vars.liquidationAmount / 2 + 1e18 + vars.AInterest)
-            / (vars.liquidationAmount + vars.AInterest)
-            - (vars.liquidationAmount / 2 + 1e18 + vars.AInterest) * DECIMAL_PRECISION / vars.price * 110 / 100;
+            // Portion redistributed
+            + vars.collAmount * (vars.liquidationAmount / 2 + 1e18 + vars.AInterest)
+            / (vars.liquidationAmount + vars.AInterest) - (vars.liquidationAmount / 2 + 1e18 + vars.AInterest)
+            * DECIMAL_PRECISION / vars.price * 110 / 100;
         assertApproxEqAbs(
             collToken.balanceOf(address(collSurplusPool)),
             collSurplusAmount,

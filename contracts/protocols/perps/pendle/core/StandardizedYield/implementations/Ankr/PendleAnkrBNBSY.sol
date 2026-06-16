@@ -19,12 +19,9 @@ contract PendleAnkrBNBSY is SYBase {
     address public immutable ankrLiquidStaking;
     address public immutable ankrBNB; // certificate token
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _ankrLiquidStaking,
-        address _ankrBNB
-    ) SYBase(_name, _symbol, _ankrBNB) {
+    constructor(string memory _name, string memory _symbol, address _ankrLiquidStaking, address _ankrBNB)
+        SYBase(_name, _symbol, _ankrBNB)
+    {
         ankrLiquidStaking = _ankrLiquidStaking;
         ankrBNB = _ankrBNB;
     }
@@ -33,10 +30,12 @@ contract PendleAnkrBNBSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE) {
             uint256 preBalance = _selfBalance(ankrBNB);
             IAnkrLiquidStaking(ankrLiquidStaking).stakeCerts{value: amountDeposited}();
@@ -46,11 +45,12 @@ contract PendleAnkrBNBSY is SYBase {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE) {
             // Tho we can use previewRedeem here to get the accurate result
             // There's risk that ankr upgrade their contract logic or immutable/constant variables for MATH
@@ -77,10 +77,12 @@ contract PendleAnkrBNBSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == ankrBNB) {
             amountSharesOut = amountTokenToDeposit;
         } else {
@@ -92,10 +94,12 @@ contract PendleAnkrBNBSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == ankrBNB) {
             amountTokenOut = amountSharesToRedeem;
         } else {

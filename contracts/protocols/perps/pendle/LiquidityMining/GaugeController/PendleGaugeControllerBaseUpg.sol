@@ -11,9 +11,10 @@ import "../../interfaces/IPGaugeController.sol";
 import "../../interfaces/IPMarketFactory.sol";
 import "../../interfaces/IPMarket.sol";
 
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @dev Gauge controller provides no write function to any party other than voting controller
@@ -53,10 +54,8 @@ abstract contract PendleGaugeControllerBaseUpg is IPGaugeController, BoringOwnab
         if (isValidMarket[msg.sender]) {
             _;
         } else if (
-            marketFactory.isValidMarket(msg.sender) ||
-            marketFactory2.isValidMarket(msg.sender) ||
-            marketFactory3.isValidMarket(msg.sender) ||
-            marketFactory4.isValidMarket(msg.sender)
+            marketFactory.isValidMarket(msg.sender) || marketFactory2.isValidMarket(msg.sender)
+                || marketFactory3.isValidMarket(msg.sender) || marketFactory4.isValidMarket(msg.sender)
         ) {
             isValidMarket[msg.sender] = true;
             _;

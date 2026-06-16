@@ -77,8 +77,9 @@ contract PendleMarketFactory is BoringOwnableUpgradeable, IPMarketFactory {
 
         if (markets[PT][scalarRoot][initialAnchor] != address(0)) revert PendleErrors.MarketFactoryMarketExists();
 
-        if (initialAnchor < minInitialAnchor)
+        if (initialAnchor < minInitialAnchor) {
             revert PendleErrors.MarketFactoryInitialAnchorTooLow(initialAnchor, minInitialAnchor);
+        }
 
         market = BaseSplitCodeFactory._create2(
             0,
@@ -97,14 +98,13 @@ contract PendleMarketFactory is BoringOwnableUpgradeable, IPMarketFactory {
         emit CreateNewMarket(market, PT, scalarRoot, initialAnchor);
     }
 
-    function getMarketConfig(
-        address router
-    ) external view returns (address _treasury, uint80 _lnFeeRateRoot, uint8 _reserveFeePercent) {
-        (_treasury, _lnFeeRateRoot, _reserveFeePercent) = (
-            treasury,
-            defaultFee.lnFeeRateRoot,
-            defaultFee.reserveFeePercent
-        );
+    function getMarketConfig(address router)
+        external
+        view
+        returns (address _treasury, uint80 _lnFeeRateRoot, uint8 _reserveFeePercent)
+    {
+        (_treasury, _lnFeeRateRoot, _reserveFeePercent) =
+        (treasury, defaultFee.lnFeeRateRoot, defaultFee.reserveFeePercent);
 
         FeeConfig memory over = overriddenFee[router];
         if (over.active) {
@@ -142,10 +142,12 @@ contract PendleMarketFactory is BoringOwnableUpgradeable, IPMarketFactory {
     }
 
     function _verifyFeeConfig(uint80 newLnFeeRateRoot, uint8 newReserveFeePercent) internal view {
-        if (newLnFeeRateRoot > maxLnFeeRateRoot)
+        if (newLnFeeRateRoot > maxLnFeeRateRoot) {
             revert PendleErrors.MarketFactoryLnFeeRateRootTooHigh(newLnFeeRateRoot, maxLnFeeRateRoot);
-        if (newReserveFeePercent > maxReserveFeePercent)
+        }
+        if (newReserveFeePercent > maxReserveFeePercent) {
             revert PendleErrors.MarketFactoryReserveFeePercentTooHigh(newReserveFeePercent, maxReserveFeePercent);
+        }
     }
 
     function _emitNewMarketConfigEvent() internal {

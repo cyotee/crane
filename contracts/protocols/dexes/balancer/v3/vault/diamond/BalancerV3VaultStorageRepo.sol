@@ -392,7 +392,11 @@ library BalancerV3VaultStorageRepo {
 
     /* ------ Pool Role Accounts ------ */
 
-    function _poolRoleAccounts(Storage storage layoutStruct, address pool) internal view returns (PoolRoleAccounts storage) {
+    function _poolRoleAccounts(Storage storage layoutStruct, address pool)
+        internal
+        view
+        returns (PoolRoleAccounts storage)
+    {
         return layoutStruct.poolRoleAccounts[pool];
     }
 
@@ -400,7 +404,9 @@ library BalancerV3VaultStorageRepo {
         return _poolRoleAccounts(_layoutStruct(), pool);
     }
 
-    function _setPoolRoleAccounts(Storage storage layoutStruct, address pool, PoolRoleAccounts memory accounts) internal {
+    function _setPoolRoleAccounts(Storage storage layoutStruct, address pool, PoolRoleAccounts memory accounts)
+        internal
+    {
         layoutStruct.poolRoleAccounts[pool] = accounts;
     }
 
@@ -530,7 +536,9 @@ library BalancerV3VaultStorageRepo {
         return _bufferLpShares(_layoutStruct(), wrappedToken, user);
     }
 
-    function _setBufferLpShares(Storage storage layoutStruct, IERC4626 wrappedToken, address user, uint256 shares) internal {
+    function _setBufferLpShares(Storage storage layoutStruct, IERC4626 wrappedToken, address user, uint256 shares)
+        internal
+    {
         layoutStruct.bufferLpShares[wrappedToken][user] = shares;
     }
 

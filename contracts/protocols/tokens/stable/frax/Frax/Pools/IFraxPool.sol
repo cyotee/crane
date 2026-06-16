@@ -25,7 +25,15 @@ interface IFraxPool {
     function toggleRecollateralize() external;
     function toggleBuyBack() external;
     function toggleCollateralPrice(uint256 _new_price) external;
-    function setPoolParameters(uint256 new_ceiling, uint256 new_bonus_rate, uint256 new_redemption_delay, uint256 new_mint_fee, uint256 new_redeem_fee, uint256 new_buyback_fee, uint256 new_recollat_fee) external;
+    function setPoolParameters(
+        uint256 new_ceiling,
+        uint256 new_bonus_rate,
+        uint256 new_redemption_delay,
+        uint256 new_mint_fee,
+        uint256 new_redeem_fee,
+        uint256 new_buyback_fee,
+        uint256 new_recollat_fee
+    ) external;
     function setTimelock(address new_timelock) external;
     function setOwner(address _owner_address) external;
 }

@@ -34,7 +34,6 @@ import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interfa
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
 
 contract TWAMM_AMO is Owned {
-
     // Core
     IFrax public FRAX;
     IFxs public FXS;
@@ -71,11 +70,9 @@ contract TWAMM_AMO is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address,
-        address[8] memory _address_pack
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address, address[8] memory _address_pack)
+        Owned(_creator_address)
+    {
         // Set timelock
         timelock_address = _timelock_address;
 
@@ -102,7 +99,6 @@ contract TWAMM_AMO is Owned {
         num_twamm_intervals = swap_period / fraxswap_pair.orderTimeInterval();
     }
 
-
     /* ========== VIEWS ========== */
 
     // Needed as a FRAX AMO
@@ -113,16 +109,16 @@ contract TWAMM_AMO is Owned {
 
     // In Chainlink decimals
     function getFRAXPriceE18() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
 
         return ((uint256(price) * 1e18) / (10 ** chainlink_frax_usd_decimals));
     }
 
-    // In Chainlink decimals    
+    // In Chainlink decimals
     function getFXSPriceE18() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFXSUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFXSUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
 
         return ((uint256(price) * 1e18) / (10 ** chainlink_fxs_usd_decimals));
     }
@@ -130,7 +126,11 @@ contract TWAMM_AMO is Owned {
     /* ========== MUTATIVE ========== */
 
     // Use the TWAMM
-    function twammSwap(uint256 frax_sell_amt, uint256 fxs_sell_amount, uint256 override_intervals) external onlyByOwnGov returns (uint256 frax_to_use, uint256 fxs_to_use, uint256 new_order_id) {
+    function twammSwap(uint256 frax_sell_amt, uint256 fxs_sell_amount, uint256 override_intervals)
+        external
+        onlyByOwnGov
+        returns (uint256 frax_to_use, uint256 fxs_to_use, uint256 new_order_id)
+    {
         // Make sure only one direction occurs
         require(!((frax_sell_amt > 0) && (fxs_sell_amount > 0)), "Can only sell in one direction");
 
@@ -139,7 +139,7 @@ contract TWAMM_AMO is Owned {
                 // Sell FXS for FRAX
                 // --------------------------------
                 fxs_to_use = fxs_sell_amount;
-    
+
                 // Make sure nonzero
                 require(fxs_to_use > 0, "FXS sold must be nonzero");
 
@@ -151,13 +151,15 @@ contract TWAMM_AMO is Owned {
 
                 // Swap
                 if (frax_is_token0) {
-                    new_order_id = fraxswap_pair.longTermSwapFrom1To0(fxs_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
+                    new_order_id = fraxswap_pair.longTermSwapFrom1To0(
+                        fxs_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
+                } else {
+                    new_order_id = fraxswap_pair.longTermSwapFrom0To1(
+                        fxs_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
                 }
-                else {
-                    new_order_id = fraxswap_pair.longTermSwapFrom0To1(fxs_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
-                }
-            }
-            else {
+            } else {
                 // Use FRAX to buy FXS
                 // --------------------------------
                 frax_to_use = frax_sell_amt;
@@ -173,10 +175,13 @@ contract TWAMM_AMO is Owned {
 
                 // Swap
                 if (frax_is_token0) {
-                    new_order_id = fraxswap_pair.longTermSwapFrom0To1(frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
-                }
-                else {
-                    new_order_id = fraxswap_pair.longTermSwapFrom1To0(frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
+                    new_order_id = fraxswap_pair.longTermSwapFrom0To1(
+                        frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
+                } else {
+                    new_order_id = fraxswap_pair.longTermSwapFrom1To0(
+                        frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
                 }
             }
         }
@@ -200,8 +205,8 @@ contract TWAMM_AMO is Owned {
 
     // token_choice 0 = FRAX; 1 = FXS
     function burnAndOrGive(
-        uint8 token_choice, 
-        uint256 burn_amount, 
+        uint8 token_choice,
+        uint256 burn_amount,
         uint256 give_amount_yield_dist,
         uint256 give_amount_msig
     ) external onlyByOwnGov {
@@ -214,8 +219,7 @@ contract TWAMM_AMO is Owned {
 
             // Give some to the msig
             if (give_amount_msig > 0) TransferHelper.safeTransfer(address(FRAX), msig_address, give_amount_msig);
-        }
-        else {
+        } else {
             // Burn some of the FXS
             if (burn_amount > 0) burnFXS(burn_amount);
 
@@ -233,7 +237,7 @@ contract TWAMM_AMO is Owned {
     }
 
     /* ========== Burns and givebacks ========== */
-   
+
     // Burn unneeded or excess FRAX. Goes through the minter
     function burnFRAX(uint256 frax_amount) public onlyByOwnGov {
         FRAX.approve(address(amo_minter), frax_amount);
@@ -293,7 +297,9 @@ contract TWAMM_AMO is Owned {
     event SwapInitiated(uint256 order_id, uint256 frax_amt, uint256 fxs_amt, uint256 timestamp);
     event SwapCancelled(uint256 order_id);
     event SwapProceedsCollected(uint256 order_id, address reward_tkn, uint256 ttl_reward);
-    event burnAndOrGiven(uint8 token_choice, uint256 burn_amount, uint256 give_amount_yield_dist, uint256 give_amount_msig);
+    event burnAndOrGiven(
+        uint8 token_choice, uint256 burn_amount, uint256 give_amount_yield_dist, uint256 give_amount_msig
+    );
     event FRAXBurned(uint256 frax_amount);
     event FXSBurned(uint256 fxs_amount);
     event RecoveredERC20(address token, uint256 amount);

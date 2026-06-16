@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {
+    CheckpointAccountingLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract CalculateFillTest is BttBase {
     using FixedPointMathLib for *;

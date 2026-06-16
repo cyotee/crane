@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IExecutorHelper} from "../interfaces/IExecutorHelper.sol";
 import {IMetaAggregationRouterV2} from "../interfaces/IMetaAggregationRouterV2.sol";
 import {ScalingDataLib} from "./ScalingDataLib.sol";
@@ -60,16 +60,11 @@ library InputScalingHelper {
         bytes calldata dataToDecode = inputData[4:];
 
         if (selector == IMetaAggregationRouterV2.swap.selector) {
-            IMetaAggregationRouterV2.SwapExecutionParams memory params = abi.decode(
-                dataToDecode,
-                (IMetaAggregationRouterV2.SwapExecutionParams)
-            );
+            IMetaAggregationRouterV2.SwapExecutionParams memory params =
+                abi.decode(dataToDecode, (IMetaAggregationRouterV2.SwapExecutionParams));
 
             (params.desc, params.targetData) = _getScaledInputDataV2(
-                params.desc,
-                params.targetData,
-                newAmount,
-                _flagsChecked(params.desc.flags, _SIMPLE_SWAP)
+                params.desc, params.targetData, newAmount, _flagsChecked(params.desc.flags, _SIMPLE_SWAP)
             );
             return abi.encodeWithSelector(selector, params);
         } else if (selector == IMetaAggregationRouterV2.swapSimpleMode.selector) {
@@ -124,7 +119,7 @@ library InputScalingHelper {
         desc.amount = newAmount;
 
         uint256 nReceivers = desc.srcReceivers.length;
-        for (uint256 i = 0; i < nReceivers; ) {
+        for (uint256 i = 0; i < nReceivers;) {
             desc.srcAmounts[i] = (desc.srcAmounts[i] * newAmount) / oldAmount;
             unchecked {
                 ++i;
@@ -134,43 +129,37 @@ library InputScalingHelper {
     }
 
     /// @dev Scale the executorData in case swapSimpleMode
-    function _scaledSimpleSwapData(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function _scaledSimpleSwapData(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         SimpleSwapData memory swapData = abi.decode(data, (SimpleSwapData));
 
         uint256 nPools = swapData.firstPools.length;
-        for (uint256 i = 0; i < nPools; ) {
+        for (uint256 i = 0; i < nPools;) {
             swapData.firstSwapAmounts[i] = (swapData.firstSwapAmounts[i] * newAmount) / oldAmount;
             unchecked {
                 ++i;
             }
         }
-        swapData.positiveSlippageData = _scaledPositiveSlippageFeeData(
-            swapData.positiveSlippageData,
-            oldAmount,
-            newAmount
-        );
+        swapData.positiveSlippageData =
+            _scaledPositiveSlippageFeeData(swapData.positiveSlippageData, oldAmount, newAmount);
         return abi.encode(swapData);
     }
 
     /// @dev Scale the executorData in case normal swap
-    function _scaledExecutorCallBytesData(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function _scaledExecutorCallBytesData(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         SwapExecutorDescription memory executorDesc = abi.decode(data, (SwapExecutorDescription));
-        executorDesc.positiveSlippageData = _scaledPositiveSlippageFeeData(
-            executorDesc.positiveSlippageData,
-            oldAmount,
-            newAmount
-        );
+        executorDesc.positiveSlippageData =
+            _scaledPositiveSlippageFeeData(executorDesc.positiveSlippageData, oldAmount, newAmount);
 
         uint256 nSequences = executorDesc.swapSequences.length;
-        for (uint256 i = 0; i < nSequences; ) {
+        for (uint256 i = 0; i < nSequences;) {
             Swap memory swap = executorDesc.swapSequences[i][0];
             bytes4 functionSelector = bytes4(swap.selectorAndFlags);
 
@@ -320,11 +309,11 @@ library InputScalingHelper {
         return abi.encode(executorDesc);
     }
 
-    function _scaledPositiveSlippageFeeData(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory newData) {
+    function _scaledPositiveSlippageFeeData(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory newData)
+    {
         if (data.length > 32) {
             PositiveSlippageFeeData memory psData = abi.decode(data, (PositiveSlippageFeeData));
             uint256 left = uint256(psData.expectedReturnAmount >> 128);

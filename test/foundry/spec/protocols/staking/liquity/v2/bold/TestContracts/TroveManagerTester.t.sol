@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/TroveManager.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/TroveManager.sol";
 import "./Interfaces/ITroveManagerTester.sol";
 
 /* Tester contract inherits from TroveManager, and provides external functions

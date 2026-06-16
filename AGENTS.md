@@ -3,6 +3,18 @@
 This file provides guidance to AI Agents when working with code in this repository.
 If PROGRESS.md exists in the project root, read it for cross-session context before starting work.
 
+## Required Reading
+
+- Read this file for high-level Crane patterns and navigation.
+- Use/consult the skills installed in this repo (`.claude/skills/`), especially:
+  - `crane-deployment` for CREATE3, DFPkgs, FactoryService, and Diamond proxy instantiation.
+  - `crane-architecture` for Facet-Target-Repo, DFPkg structure, storage slots, etc.
+  - `crane-testing` for `CraneTest`, TestBase inheritance, factory bootstrap in tests, Behavior libraries, and handlers.
+- See `docs/` (especially `docs/deployment/`) for additional reference material.
+- See `docs/CODEBASE_MAP.md` for architecture overview.
+
+Consumers of Crane may layer additional rules (e.g. registries for certain packages). Those details belong in the consumer's documentation.
+
 ## Codebase Overview
 
 Crane is a Diamond-first (ERC2535) Solidity development framework for building modular, upgradeable smart contracts. It provides structured patterns, deterministic deployment infrastructure, and protocol integration utilities for DeFi development.
@@ -312,18 +324,16 @@ library BalancerV3VaultAwareRepo {
 }
 ```
 
-**`*DFPkg.sol`** - Diamond Factory Package bundles facets into deployable packages:
+**`*DFPkg.sol`** - Diamond Factory Package bundles facets into deployable packages.
+
+**Critical rule**: `PkgInit` and `PkgArgs` structs **must** be defined inside the `I*DFPkg` **interface**, never inside the contract. This enables `IMyDFPkg.PkgInit` in FactoryServices and typed `abi.encode` calls.
+
+See the `crane-architecture` skill + `references/dfpkg-pattern.md` (includes the common agent error of putting the struct on the contract).
+
 ```solidity
-// Interface defines structs for constructor and deployment args
 interface IERC20DFPkg {
-    struct PkgInit {           // Constructor arguments (immutable facet references)
-        IFacet erc20Facet;
-    }
-    struct PkgArgs {           // Deployment arguments (per-instance config)
-        string name;
-        string symbol;
-        uint8 decimals;
-    }
+    struct PkgInit { ... }
+    struct PkgArgs { ... }
 }
 
 contract ERC20DFPkg is IERC20DFPkg, IDiamondFactoryPackage {
@@ -413,7 +423,9 @@ This pattern centralizes all logic in the Repo and allows guard functions to be 
 
 ## Diamond Package Deployment Pattern
 
-The framework uses a two-factory system for deterministic cross-chain deployments:
+**For detailed guidance, consult the `crane-deployment` skill (and `crane-architecture` for DFPkg concepts).**
+
+Crane uses a two-factory system for deterministic cross-chain deployments. High-level overview:
 
 ### Factory Hierarchy
 
@@ -422,60 +434,26 @@ Create3Factory                    # Deploys facets, packages, and any contract
     └── DiamondPackageCallBackFactory   # Deploys Diamond proxy instances from packages
 ```
 
-### Deployment Flow
+### Basic Flow (see `crane-deployment` skill for code examples)
 
-**Step 1: Initialize factories** (typically in test `setUp()` or deployment script)
-```solidity
-(ICreate3FactoryProxy factory, IDiamondPackageCallBackFactory diamondFactory) =
-    InitDevService.initEnv(address(this));
-```
+1. Initialize via `InitDevService.initEnv(...)` (normally done by inheriting `CraneTest`).
+2. Deploy facets with `create3Factory.deployFacet(...)`.
+3. Deploy packages (with constructor args for facet refs) via `create3Factory.deployPackageWithArgs(...)`.
+4. Deploy actual Diamond proxy instances via the package helper or `diamondPackageFactory.deploy(pkg, args)`.
 
-**Step 2: Deploy facets via Create3Factory**
-```solidity
-IFacet erc20Facet = factory.deployFacet(
-    type(ERC20Facet).creationCode,
-    abi.encode(type(ERC20Facet).name)._hash()  // Salt from name hash
-);
-```
-
-**Step 3: Deploy package with facet references**
-```solidity
-IERC20DFPkg erc20Pkg = IERC20DFPkg(address(
-    factory.deployPackageWithArgs(
-        type(ERC20DFPkg).creationCode,
-        abi.encode(IERC20DFPkg.PkgInit({ erc20Facet: erc20Facet })),  // Constructor args
-        abi.encode(type(ERC20DFPkg).name)._hash()  // Salt
-    )
-));
-```
-
-**Step 4: Deploy Diamond proxy instances**
-```solidity
-// Option A: Via package's deploy() helper
-IERC20 token = erc20Pkg.deploy(diamondFactory, "Token", "TKN", 18, 1000e18, recipient, bytes32(0));
-
-// Option B: Via factory directly
-address proxy = diamondFactory.deploy(pkg, abi.encode(pkgArgs));
-```
-
-### Key Components
-
-| Component | Purpose |
-|-----------|---------|
-| `Create3Factory` | Deploys any contract with deterministic addresses via CREATE3 |
-| `DiamondPackageCallBackFactory` | Deploys Diamond proxies, calls `initAccount()` via delegatecall |
-| `IDiamondFactoryPackage` | Interface for packages - bundles facets + initialization logic |
-| `InitDevService` | Library to bootstrap the factory system in tests |
+**Key Components** (see skill for details):
+- `Create3Factory` — facets + packages
+- `DiamondPackageCallBackFactory` — proxy instances + initAccount callback
+- `IDiamondFactoryPackage` (DFPkg) — bundles facets and init logic
+- `InitDevService` / `CraneTest` — bootstrap
 
 ### Deployment Sequence Diagram
 
-See `/contracts/interfaces/IDiamondFactoryPackage.sol` for the full ASCII sequence diagram showing:
-1. User calls `factory.deploy(pkg, pkgArgs)`
-2. Factory calculates deterministic address via `pkg.calcSalt()`
-3. Factory deploys `MinimalDiamondCallBackProxy` via CREATE2
-4. Proxy calls back to factory's `initAccount()`
-5. Factory delegatecalls `pkg.initAccount()` to initialize storage
-6. Factory calls `pkg.postDeploy()` for any post-deployment hooks
+See `/contracts/interfaces/IDiamondFactoryPackage.sol` (NatSpec) for the callback flow diagram.
+
+### Consumer / Application Layers
+
+Crane provides the foundational primitives. Consuming projects may add registry, manager, or authorization layers on top (e.g., requiring registration of certain packages before instance deployment). Those rules live in the consuming project's documentation and TestBases — do not implement them in general Crane code.
 
 ### IFacet Interface
 
@@ -485,6 +463,15 @@ function facetName() external view returns (string memory name);
 function facetInterfaces() external view returns (bytes4[] memory interfaces);
 function facetFuncs() external view returns (bytes4[] memory funcs);
 function facetMetadata() external view returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions);
+```
+
+See the `crane-deployment` skill for:
+- Complete code patterns
+- FactoryService usage
+- Test setup with `CraneTest`
+- Salt conventions
+- Anti-patterns
+- Key file list
 ```
 
 ## Directory Structure
@@ -574,7 +561,7 @@ Use hierarchical dot-notation:
 - `/contracts/protocols/dexes/camelot/v2/services/CamelotV2Service.sol` - Service pattern example
 - `/contracts/utils/math/ConstProdUtils.sol` - Constant product AMM calculations
 - `/contracts/test/CraneTest.sol` - Base test contract for Crane tests
-- `/contracts/tokens/ERC20/ERC20DFPkg.sol` - Diamond Factory Package example
+- `/contracts/tokens/ERC20/ERC20DFPkg.sol` - Diamond Factory Package example (note: PkgInit/PkgArgs are on the interface)
 - `/contracts/access/AccessFacetFactoryService.sol` - FactoryService pattern example
 - `/contracts/introspection/IntrospectionFacetFactoryService.sol` - FactoryService with package deployment
 - `/contracts/interfaces/IDiamondFactoryPackage.sol` - DFPkg interface with deployment flow diagram

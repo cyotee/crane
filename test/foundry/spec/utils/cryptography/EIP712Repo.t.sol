@@ -11,7 +11,7 @@ import "forge-std/Test.sol";
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
 
-import {EIP712Repo, EIP712Layout} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
+import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 import {EIP712_TYPE_HASH} from "@crane/contracts/constants/Constants.sol";
 import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 
@@ -20,7 +20,7 @@ import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
  * @notice Test harness that exposes EIP712Repo library functions.
  */
 contract EIP712RepoHarness {
-    using EIP712Repo for EIP712Layout;
+    using EIP712Repo for EIP712Repo.Storage;
 
     function initialize(string memory name, string memory version) external {
         EIP712Repo._initialize(name, version);

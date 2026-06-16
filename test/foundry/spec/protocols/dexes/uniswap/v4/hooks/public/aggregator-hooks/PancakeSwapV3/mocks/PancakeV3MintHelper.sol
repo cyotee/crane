@@ -2,8 +2,12 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IPancakeV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Pool.sol";
-import {IPancakeV3MintCallback} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/callback/IPancakeV3MintCallback.sol";
+import {
+    IPancakeV3Pool
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Pool.sol";
+import {
+    IPancakeV3MintCallback
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/callback/IPancakeV3MintCallback.sol";
 
 /// @dev Pays mint callback; `payer` must approve this helper for both tokens.
 contract PancakeV3MintHelper is IPancakeV3MintCallback {

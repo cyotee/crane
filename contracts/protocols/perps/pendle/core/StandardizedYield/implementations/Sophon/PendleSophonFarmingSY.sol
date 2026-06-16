@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import "../../SYBaseWithRewards.sol";
 import "../../../../interfaces/Sophon/ISophonFarming.sol";
 import "../../../../interfaces/Sophon/IPSophonPointManager.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 
 contract PendleSophonFarmingSY is SYBaseWithRewards {
     using Address for address;
@@ -12,13 +13,9 @@ contract PendleSophonFarmingSY is SYBaseWithRewards {
     uint256 public immutable pid;
     address public immutable pointManager;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _sophonFarming,
-        uint256 _pid,
-        address _pointManager
-    ) SYBaseWithRewards(_name, _symbol, __getPoolDepositToken(_sophonFarming, _pid)) {
+    constructor(string memory _name, string memory _symbol, address _sophonFarming, uint256 _pid, address _pointManager)
+        SYBaseWithRewards(_name, _symbol, __getPoolDepositToken(_sophonFarming, _pid))
+    {
         sophonFarming = _sophonFarming;
         pid = _pid;
         pointManager = _pointManager;
@@ -26,7 +23,7 @@ contract PendleSophonFarmingSY is SYBaseWithRewards {
     }
 
     function __getPoolDepositToken(address _sophonFarming, uint256 _pid) internal view returns (address) {
-        (address lp, , , , , , , , , ) = ISophonFarming(_sophonFarming).poolInfo(_pid);
+        (address lp,,,,,,,,,) = ISophonFarming(_sophonFarming).poolInfo(_pid);
         return lp;
     }
 
@@ -34,16 +31,26 @@ contract PendleSophonFarmingSY is SYBaseWithRewards {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(address /*tokenIn*/, uint256 amountDeposited) internal virtual override returns (uint256) {
+    function _deposit(
+        address,
+        /*tokenIn*/
+        uint256 amountDeposited
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         ISophonFarming(sophonFarming).deposit(pid, amountDeposited, 0);
         return amountDeposited;
     }
 
-    function _redeem(
-        address receiver,
-        address,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    function _redeem(address receiver, address, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         ISophonFarming(sophonFarming).withdraw(pid, amountSharesToRedeem);
         _transferOut(yieldToken, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -81,16 +88,28 @@ contract PendleSophonFarmingSY is SYBaseWithRewards {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view override returns (uint256) {
+    )
+        internal
+        view
+        override
+        returns (uint256)
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal view override returns (uint256) {
+    )
+        internal
+        view
+        override
+        returns (uint256)
+    {
         return amountSharesToRedeem;
     }
 

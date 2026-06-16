@@ -30,7 +30,6 @@ import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
 contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
-
     /* ========== STATE VARIABLES ========== */
 
     // Core
@@ -48,23 +47,19 @@ contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
     /// @notice Constructor
     /// @param _owner The owner of this contract
     /// @param _factory The factory address
-    constructor(
-        address _owner, 
-        address _factory
-    ) Owned(_owner) {
+    constructor(address _owner, address _factory) Owned(_owner) {
         // Set the factory
         factory = FXBFactory(_factory);
     }
-
 
     /* ========== VIEW FUNCTIONS ========== */
 
     /// @notice Determines if a bond can be redeemed
     /// @return is_redeemable If the bond is redeemable
     function isBondRedeemable(address bond_address) public view returns (bool is_redeemable) {
-        is_redeemable = !factory.redeems_paused(bond_address) && (block.timestamp >= FXB(bond_address).maturity_timestamp());
+        is_redeemable =
+            !factory.redeems_paused(bond_address) && (block.timestamp >= FXB(bond_address).maturity_timestamp());
     }
-
 
     /* ========== PUBLIC FUNCTIONS ========== */
 
@@ -112,17 +107,16 @@ contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
 
         // Give FRAX to the recipient
         TransferHelper.safeTransfer(address(frax), recipient, redeem_amt);
-    
+
         emit BondsRedeemed(bond_address, recipient, redeem_amt);
     }
-
 
     /* ========== OWNER / GOVERNANCE FUNCTIONS ONLY ========== */
 
     /// @notice Mints FXB to this address
     /// @param bond_address Address of the bond
     /// @param mint_amt Amount to mint
-    function mintFXB(address bond_address, uint256 mint_amt) external onlyOwner() {
+    function mintFXB(address bond_address, uint256 mint_amt) external onlyOwner {
         // Make sure there is enough FRAX in this contract to pay for the FXB you are minting
         require(frax.balanceOf(address(this)) >= ((total_fxb_minted + mint_amt) - total_fxb_redeemed));
 
@@ -138,7 +132,7 @@ contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
 
     /// @notice Burn FRAX. Need to make sure you have enough to redeem all outstanding FXB first though.
     /// @param burn_amt Amount to burn
-    function burnFrax(uint256 burn_amt) external onlyOwner() {
+    function burnFrax(uint256 burn_amt) external onlyOwner {
         // Make sure there is enough FRAX in this contract to pay for the outstanding FXB
         require((frax.balanceOf(address(this)) - burn_amt) >= (total_fxb_minted - total_fxb_redeemed));
 
@@ -152,7 +146,16 @@ contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
     /// @param ,bond_address Address of the bond
     /// @param ,price_e18 How much FRAX per FXB
     /// @param ,auction_amt Amount to auction
-    function auctionFXB(address /*bond_address*/, address /*price_e18*/, uint256 /*auction_amt*/) external onlyOwner() {
+    function auctionFXB(
+        address,
+        /*bond_address*/
+        address,
+        /*price_e18*/
+        uint256 /*auction_amt*/
+    )
+        external
+        onlyOwner
+    {
         // TODO
 
         emit BondsAuctionInitiated();
@@ -171,7 +174,7 @@ contract FXBMintRedeemerAMO is Owned, ReentrancyGuard {
 
     /// @dev Emits when new bonds are minted
     event BondsMinted(address bond_address, uint256 mint_amt);
-    
+
     /// @dev Emits when bonds are redeemed
     event BondsRedeemed(address bond_address, address recipient, uint256 amount);
 

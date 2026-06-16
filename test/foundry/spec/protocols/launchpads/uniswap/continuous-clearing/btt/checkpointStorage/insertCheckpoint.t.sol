@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockCheckpointStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol';
-import {ICheckpointStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ICheckpointStorage.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockCheckpointStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol";
+import {
+    ICheckpointStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ICheckpointStorage.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
 
 contract InsertCheckpointTest is BttBase {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -18,7 +22,8 @@ contract InsertCheckpointTest is BttBase {
     function test_GivenBlockNumberLTELastCheckpointedBlock(
         Checkpoint memory _checkpoint,
         uint64 _blockNumber,
-        Checkpoint memory /*_checkpoint2*/,
+        Checkpoint memory,
+        /*_checkpoint2*/
         uint64 _blockNumber2
     ) external {
         // it reverts with {CheckpointBlockNotIncreasing}
@@ -61,11 +66,11 @@ contract InsertCheckpointTest is BttBase {
         mockCheckpointStorage.insertCheckpoint(_checkpoint2, _blockNumber2);
         (, bytes32[] memory writes) = vm.accesses(address(mockCheckpointStorage));
 
-        emit log_named_uint('blockNumber ', _blockNumber);
-        emit log_named_uint('blockNumber2', _blockNumber2);
+        emit log_named_uint("blockNumber ", _blockNumber);
+        emit log_named_uint("blockNumber2", _blockNumber2);
 
         for (uint64 i = 0; i < writes.length; i++) {
-            emit log_named_bytes32('writes', writes[i]);
+            emit log_named_bytes32("writes", writes[i]);
         }
 
         if (!isCoverage()) {

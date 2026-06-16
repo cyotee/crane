@@ -1,17 +1,26 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {MockContinuousClearingAuction} from '../mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ValueX7, ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {MockContinuousClearingAuction} from "../mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {
+    ValueX7,
+    ValueX7Lib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
 
 contract SweepCurrencyTest is BttBase {
     using ValueX7Lib for *;
@@ -92,13 +101,13 @@ contract SweepCurrencyTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
 
         // It's impossible to raise more than uint128.max currency given that bids are uint128s and
         // max price must be > 1 (given min tick spacing)
 
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         auction.exitPartiallyFilledBid(bidId, mParams.parameters.startBlock, 0);
@@ -129,7 +138,7 @@ contract SweepCurrencyTest is BttBase {
         mParams.parameters.currency = address(0);
         mParams.parameters.requiredCurrencyRaised = 0;
         mParams.parameters.validationHook = address(0);
-        mParams.parameters.fundsRecipient = makeAddr('fundsRecipient');
+        mParams.parameters.fundsRecipient = makeAddr("fundsRecipient");
         MockContinuousClearingAuction auction =
             new MockContinuousClearingAuction(mParams.token, mParams.totalSupply, mParams.parameters);
 
@@ -139,7 +148,7 @@ contract SweepCurrencyTest is BttBase {
         vm.roll(mParams.parameters.startBlock);
 
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, address(this), bytes(''));
+        auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, address(this), bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         Checkpoint memory checkpoint = auction.checkpoint();
@@ -172,7 +181,7 @@ contract SweepCurrencyTest is BttBase {
         vm.assume(mParams.token != mParams.parameters.currency);
         mParams.parameters.currency = address(0);
         mParams.parameters.requiredCurrencyRaised = 0;
-        mParams.parameters.fundsRecipient = makeAddr('fundsRecipient');
+        mParams.parameters.fundsRecipient = makeAddr("fundsRecipient");
         MockContinuousClearingAuction auction =
             new MockContinuousClearingAuction(mParams.token, mParams.totalSupply, mParams.parameters);
 

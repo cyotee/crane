@@ -4,7 +4,10 @@ pragma solidity ^0.8.28;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
+
 contract Lock {
+    using BetterAddress for address payable;
     uint256 public unlockTime;
     address payable public owner;
 
@@ -26,6 +29,7 @@ contract Lock {
 
         emit Withdrawal(address(this).balance, block.timestamp);
 
-        owner.transfer(address(this).balance);
+        // owner.transfer(address(this).balance);
+        payable(owner).sendValue(address(this).balance);
     }
 }

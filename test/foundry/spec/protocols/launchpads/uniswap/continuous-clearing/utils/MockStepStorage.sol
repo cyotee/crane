@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {StepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/StepStorage.sol';
+import {StepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/StepStorage.sol";
 
 /// @notice Mock auction step storage for testing
 contract MockStepStorage is StepStorage {

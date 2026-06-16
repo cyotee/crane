@@ -19,8 +19,8 @@ contract PendleChainlinkReceiver is Initializable {
 
     modifier mustOriginateFromTrustedRemote(uint16 srcChainId, bytes memory path) {
         if (
-            trustedRemoteAddr != LayerZeroHelper._getFirstAddressFromPath(path) ||
-            trustedRemoteChainId != LayerZeroHelper._getOriginalChainIds(srcChainId)
+            trustedRemoteAddr != LayerZeroHelper._getFirstAddressFromPath(path)
+                || trustedRemoteChainId != LayerZeroHelper._getOriginalChainIds(srcChainId)
         ) revert Errors.NotFromTrustedRemote(srcChainId, path);
         _;
     }
@@ -37,9 +37,14 @@ contract PendleChainlinkReceiver is Initializable {
     function lzReceive(
         uint16 _srcChainId,
         bytes calldata _path,
-        uint64 /*_nonce*/,
+        uint64,
+        /*_nonce*/
         bytes calldata _payload
-    ) external onlyLzEndpoint mustOriginateFromTrustedRemote(_srcChainId, _path) {
+    )
+        external
+        onlyLzEndpoint
+        mustOriginateFromTrustedRemote(_srcChainId, _path)
+    {
         int256 rate = abi.decode(_payload, (int256));
         latestAnswer = rate;
     }

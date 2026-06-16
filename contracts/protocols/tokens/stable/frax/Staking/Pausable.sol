@@ -6,10 +6,10 @@ import "./Owned.sol";
 
 // https://docs.synthetix.io/contracts/Pausable
 abstract contract Pausable is Owned {
-    uint public lastPauseTime;
+    uint256 public lastPauseTime;
     bool public paused;
 
-    constructor () {
+    constructor() {
         // This contract is abstract, and thus cannot be instantiated directly
         require(owner != address(0), "Owner must be set");
         // Paused will be false, and lastPauseTime will be 0 upon initialisation
@@ -39,7 +39,7 @@ abstract contract Pausable is Owned {
 
     event PauseChanged(bool isPaused);
 
-    modifier notPaused {
+    modifier notPaused() {
         require(!paused, "This action cannot be performed while the contract is paused");
         _;
     }

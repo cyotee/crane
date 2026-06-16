@@ -45,9 +45,15 @@ contract PendleStTAOSY is SYBaseUpg {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         _transferOut(stTAO, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -73,14 +79,22 @@ contract PendleStTAOSY is SYBaseUpg {
             revert MaxStTAOSupplyExceeded(amountTokenToDeposit, maxTaoForWrap);
         }
 
-        (uint256 amountWTaoAfterFee, ) = ITensorplexStTAO(stTAO).calculateAmtAfterFee(amountTokenToDeposit);
+        (uint256 amountWTaoAfterFee,) = ITensorplexStTAO(stTAO).calculateAmtAfterFee(amountTokenToDeposit);
         return ITensorplexStTAO(stTAO).getWstTAObyWTAO(amountWTaoAfterFee);
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

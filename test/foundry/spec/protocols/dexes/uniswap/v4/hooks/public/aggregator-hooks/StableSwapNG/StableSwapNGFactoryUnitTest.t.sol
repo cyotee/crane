@@ -33,8 +33,9 @@ contract StableSwapNGFactoryUnitTest is Test {
     uint160 constant SQRT_PRICE_1_1 = 79228162514264337593543950336; // 1:1 price
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
 
         token0 = new MockERC20("Token0", "TK0", 18);
         token1 = new MockERC20("Token1", "TK1", 18);

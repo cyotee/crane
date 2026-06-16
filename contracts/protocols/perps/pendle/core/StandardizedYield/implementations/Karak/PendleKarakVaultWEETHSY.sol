@@ -12,11 +12,9 @@ contract PendleKarakVaultWEETHSY is PendleKarakVaultSYBaseUpg {
     address public immutable eETH;
     address public immutable referee;
 
-    constructor(
-        address _vault,
-        address _vaultSupervisor,
-        address _referee
-    ) PendleKarakVaultSYBaseUpg(_vault, _vaultSupervisor) {
+    constructor(address _vault, address _vaultSupervisor, address _referee)
+        PendleKarakVaultSYBaseUpg(_vault, _vaultSupervisor)
+    {
         weETH = IERC4626(_vault).asset();
         liquidityPool = IEtherFiWEEth(weETH).liquidityPool();
         eETH = IEtherFiWEEth(weETH).eETH();
@@ -47,10 +45,13 @@ contract PendleKarakVaultWEETHSY is PendleKarakVaultSYBaseUpg {
         return ArrayLib.create(eETH, NATIVE);
     }
 
-    function _previewToStakeToken(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256) {
+    function _previewToStakeToken(address, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return IEtherFiLiquidityPool(liquidityPool).sharesForAmount(amountTokenToDeposit);
     }
 

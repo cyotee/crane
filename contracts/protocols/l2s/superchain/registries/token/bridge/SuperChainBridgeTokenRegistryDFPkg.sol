@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {MultiStepOwnableRepo} from '@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol';
-import {IDiamond} from '@crane/contracts/interfaces/IDiamond.sol';
-import {IFacet} from '@crane/contracts/interfaces/IFacet.sol';
+import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
-import {IMultiStepOwnable} from '@crane/contracts/interfaces/IMultiStepOwnable.sol';
-import {IOperable} from '@crane/contracts/interfaces/IOperable.sol';
-import {DFPkgBase} from '@crane/contracts/factories/diamondPkg/DFPkgBase.sol';
-import {ISuperChainBridgeTokenRegistry} from '@crane/contracts/interfaces/ISuperChainBridgeTokenRegistry.sol';
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
+import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
+import {DFPkgBase} from "@crane/contracts/factories/diamondPkg/DFPkgBase.sol";
+import {ISuperChainBridgeTokenRegistry} from "@crane/contracts/interfaces/ISuperChainBridgeTokenRegistry.sol";
 
 interface ISuperChainBridgeTokenRegistryDFPkg is IDiamondFactoryPackage {
-
     struct PkgInit {
         IFacet ownableFacet;
         IFacet operableFacet;
@@ -21,11 +20,9 @@ interface ISuperChainBridgeTokenRegistryDFPkg is IDiamondFactoryPackage {
     struct PkgArgs {
         address owner;
     }
-
 }
 
 contract SuperChainBridgeTokenRegistryDFPkg is DFPkgBase, ISuperChainBridgeTokenRegistryDFPkg {
-
     IFacet public immutable OWNABLE_FACET;
     IFacet public immutable OPERABLE_FACET;
     IFacet public immutable SUPER_CHAIN_BRIDGE_TOKEN_REGISTRY_FACET;
@@ -40,13 +37,18 @@ contract SuperChainBridgeTokenRegistryDFPkg is DFPkgBase, ISuperChainBridgeToken
      * @inheritdoc IDiamondFactoryPackage
      */
     function packageName() public pure override(IDiamondFactoryPackage, DFPkgBase) returns (string memory name) {
-        name = 'SuperChainBridgeTokenRegistryDFPkg';
+        name = "SuperChainBridgeTokenRegistryDFPkg";
     }
 
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetAddresses() public view override(IDiamondFactoryPackage, DFPkgBase) returns (address[] memory facetAddresses_) {
+    function facetAddresses()
+        public
+        view
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (address[] memory facetAddresses_)
+    {
         facetAddresses_ = new address[](3);
         facetAddresses_[0] = address(OWNABLE_FACET);
         facetAddresses_[1] = address(OPERABLE_FACET);
@@ -56,7 +58,12 @@ contract SuperChainBridgeTokenRegistryDFPkg is DFPkgBase, ISuperChainBridgeToken
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetInterfaces() public pure override(IDiamondFactoryPackage, DFPkgBase) returns (bytes4[] memory interfaces) {
+    function facetInterfaces()
+        public
+        pure
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (bytes4[] memory interfaces)
+    {
         interfaces = new bytes4[](3);
         interfaces[0] = type(IMultiStepOwnable).interfaceId;
         interfaces[1] = type(IOperable).interfaceId;
@@ -66,7 +73,12 @@ contract SuperChainBridgeTokenRegistryDFPkg is DFPkgBase, ISuperChainBridgeToken
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetCuts() public view override(IDiamondFactoryPackage, DFPkgBase) returns (IDiamond.FacetCut[] memory facetCuts_) {
+    function facetCuts()
+        public
+        view
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (IDiamond.FacetCut[] memory facetCuts_)
+    {
         facetCuts_ = new IDiamond.FacetCut[](3);
         facetCuts_[0] = IDiamond.FacetCut({
             facetAddress: address(OWNABLE_FACET),
@@ -92,5 +104,4 @@ contract SuperChainBridgeTokenRegistryDFPkg is DFPkgBase, ISuperChainBridgeToken
         PkgArgs memory args = abi.decode(initArgs, (PkgArgs));
         MultiStepOwnableRepo._initialize(args.owner, 3 days);
     }
-
 }

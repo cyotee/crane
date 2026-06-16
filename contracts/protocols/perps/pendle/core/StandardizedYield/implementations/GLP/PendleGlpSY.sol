@@ -57,10 +57,12 @@ contract PendleGlpSY is SYBaseWithRewardsUpg, GLPPreviewHelper {
     /**
      * @dev See {SYBase-_deposit}
      */
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == stakedGlp) {
             // GLP is already staked in stakedGlp's transferFrom, called in _transferIn()
             amountSharesOut = amountDeposited;
@@ -74,27 +76,20 @@ contract PendleGlpSY is SYBaseWithRewardsUpg, GLPPreviewHelper {
     /**
      * @dev See {SYBase-_redeem}
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == stakedGlp) {
             amountTokenOut = amountSharesToRedeem;
             _transferOut(tokenOut, receiver, amountTokenOut);
         } else if (tokenOut == NATIVE) {
-            amountTokenOut = IRewardRouterV2(glpRouter).unstakeAndRedeemGlpETH(
-                amountSharesToRedeem,
-                0,
-                payable(receiver)
-            );
+            amountTokenOut =
+                IRewardRouterV2(glpRouter).unstakeAndRedeemGlpETH(amountSharesToRedeem, 0, payable(receiver));
         } else {
-            amountTokenOut = IRewardRouterV2(glpRouter).unstakeAndRedeemGlp(
-                tokenOut,
-                amountSharesToRedeem,
-                0,
-                receiver
-            );
+            amountTokenOut = IRewardRouterV2(glpRouter).unstakeAndRedeemGlp(tokenOut, amountSharesToRedeem, 0, receiver);
         }
     }
 
@@ -130,12 +125,15 @@ contract PendleGlpSY is SYBaseWithRewardsUpg, GLPPreviewHelper {
                     MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
-        if (tokenIn == stakedGlp) amountSharesOut = amountTokenToDeposit;
-        else {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
+        if (tokenIn == stakedGlp) {
+            amountSharesOut = amountTokenToDeposit;
+        } else {
             if (tokenIn == NATIVE) tokenIn = weth;
 
             // Based on GlpManager's _addLiquidity
@@ -148,12 +146,15 @@ contract PendleGlpSY is SYBaseWithRewardsUpg, GLPPreviewHelper {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
-        if (tokenOut == stakedGlp) amountTokenOut = amountSharesToRedeem;
-        else {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
+        if (tokenOut == stakedGlp) {
+            amountTokenOut = amountSharesToRedeem;
+        } else {
             if (tokenOut == NATIVE) tokenOut = weth;
 
             // Based on GlpManager's _removeLiquidity

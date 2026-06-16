@@ -46,7 +46,7 @@ contract SnapshotRegistry is EVCUtil, Ownable {
     /// @notice Deploy SnapshotRegistry.
     /// @param _evc The address of the EVC.
     /// @param _owner The address of the owner.
-    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable() {
+    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable(msg.sender) {
         _transferOwnership(_owner);
     }
 
@@ -100,7 +100,7 @@ contract SnapshotRegistry is EVCUtil, Ownable {
             }
         }
 
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // update the length
             mstore(validElements, numValid)
         }
@@ -150,7 +150,7 @@ contract SnapshotRegistry is EVCUtil, Ownable {
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
     /// @return The address of the message sender.
-    function _msgSender() internal view override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 }

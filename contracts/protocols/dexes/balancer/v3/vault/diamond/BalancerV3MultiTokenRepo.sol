@@ -191,7 +191,9 @@ library BalancerV3MultiTokenRepo {
         _transfer(_layoutStruct(), pool, from, to, amount);
     }
 
-    function _approve(Storage storage layoutStruct, address pool, address owner, address spender, uint256 amount) internal {
+    function _approve(Storage storage layoutStruct, address pool, address owner, address spender, uint256 amount)
+        internal
+    {
         if (owner == address(0)) {
             revert IERC20Errors.ERC20InvalidApprover(owner);
         }
@@ -233,7 +235,9 @@ library BalancerV3MultiTokenRepo {
      * @dev Only callable in static call (query) context. Temporarily increases balance
      * to allow burn to succeed during removeLiquidity queries.
      */
-    function _queryModeBalanceIncrease(Storage storage layoutStruct, address pool, address to, uint256 amount) internal {
+    function _queryModeBalanceIncrease(Storage storage layoutStruct, address pool, address to, uint256 amount)
+        internal
+    {
         if (EVMCallModeHelpers.isStaticCall() == false) {
             revert EVMCallModeHelpers.NotStaticCall();
         }

@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {IValidationHook, ValidationHookLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    IValidationHook,
+    ValidationHookLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol";
 
 contract ValidationHookWrapper {
     function validate(
@@ -26,7 +29,17 @@ contract MockValidationHook is IValidationHook {
         willRevert = _willRevert;
     }
 
-    function validate(uint256 /*maxPrice*/, uint128 /*amount*/, address /*owner*/, address /*sender*/, bytes calldata /*hookData*/)
+    function validate(
+        uint256,
+        /*maxPrice*/
+        uint128,
+        /*amount*/
+        address,
+        /*owner*/
+        address,
+        /*sender*/
+        bytes calldata /*hookData*/
+    )
         external
         view
     {

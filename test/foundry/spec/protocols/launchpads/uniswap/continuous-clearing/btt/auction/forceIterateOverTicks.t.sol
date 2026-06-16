@@ -1,15 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockContinuousClearingAuction} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
+import {
+    AuctionFuzzConstructorParams,
+    BttBase
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockContinuousClearingAuction
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
 
 contract ForceIterateOverTicksTest is BttBase {
     function _fuzzPostState(MockContinuousClearingAuction _auction) internal {
@@ -89,22 +98,22 @@ contract ForceIterateOverTicksTest is BttBase {
         // Intiialize N number of ticks
         for (uint8 i = 1; i <= _n; i++) {
             auction.submitBid{value: 1}(
-                mParams.parameters.floorPrice + i * mParams.parameters.tickSpacing, 1, address(this), bytes('')
+                mParams.parameters.floorPrice + i * mParams.parameters.tickSpacing, 1, address(this), bytes("")
             );
         }
 
         // Move the price to maxPrice
         uint256 maxPrice = mParams.parameters.floorPrice + _n * mParams.parameters.tickSpacing;
         uint128 bidAmount = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice, FixedPoint96.Q96));
-        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, address(this), bytes(''));
+        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, address(this), bytes(""));
 
         vm.expectEmit(true, true, true, true);
         emit ITickStorage.NextActiveTickUpdated(auction.MAX_TICK_PTR());
         uint256 clearingPrice = auction.forceIterateOverTicks(auction.MAX_TICK_PTR());
-        assertEq(clearingPrice, maxPrice, 'Clearing price is not equal to max price');
-        assertEq(auction.clearingPrice(), maxPrice, 'clearingPrice() is not equal to max price');
+        assertEq(clearingPrice, maxPrice, "Clearing price is not equal to max price");
+        assertEq(auction.clearingPrice(), maxPrice, "clearingPrice() is not equal to max price");
         assertEq(
-            auction.nextActiveTickPrice(), auction.MAX_TICK_PTR(), 'nextActiveTickPrice() is not equal to MAX_TICK_PTR'
+            auction.nextActiveTickPrice(), auction.MAX_TICK_PTR(), "nextActiveTickPrice() is not equal to MAX_TICK_PTR"
         );
 
         _fuzzPostState(auction);
@@ -122,7 +131,7 @@ contract ForceIterateOverTicksTest is BttBase {
                 break;
             }
             uint256 clearingPrice = auction.forceIterateOverTicks(auction.MAX_TICK_PTR());
-            assertEq(clearingPrice, prevClearingPrice, 'Clearing price should not change');
+            assertEq(clearingPrice, prevClearingPrice, "Clearing price should not change");
             _fuzzPostState(auction);
         }
     }
@@ -226,7 +235,7 @@ contract ForceIterateOverTicksTest is BttBase {
         uint256 nextActiveTickPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
 
         // make a new bid to set nextActiveTickPrice
-        auction.submitBid{value: 1}(nextActiveTickPrice, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(nextActiveTickPrice, 1, address(this), bytes(""));
 
         // Revert if equal to the next active tick price
         vm.expectRevert(
@@ -283,14 +292,14 @@ contract ForceIterateOverTicksTest is BttBase {
 
         for (uint8 i = 1; i <= _n; i++) {
             auction.submitBid{value: 1}(
-                mParams.parameters.floorPrice + i * mParams.parameters.tickSpacing, 1, address(this), bytes('')
+                mParams.parameters.floorPrice + i * mParams.parameters.tickSpacing, 1, address(this), bytes("")
             );
         }
 
         // setup auction to move price up to n
         uint256 maxPrice = mParams.parameters.floorPrice + _n * mParams.parameters.tickSpacing;
         uint128 bidAmount = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice, FixedPoint96.Q96));
-        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, address(this), bytes(''));
+        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, address(this), bytes(""));
 
         uint256 untilTickPrice = mParams.parameters.floorPrice + _bound(_m, 1, _n) * mParams.parameters.tickSpacing;
         vm.assume(untilTickPrice > auction.nextActiveTickPrice());
@@ -301,9 +310,9 @@ contract ForceIterateOverTicksTest is BttBase {
         emit ITickStorage.NextActiveTickUpdated(untilTickPrice);
         uint256 clearingPrice = auction.forceIterateOverTicks(untilTickPrice);
         // In this case we only iterated to a price in the middle so the clearing price is greater than the nextActiveTickPrice
-        assertGt(clearingPrice, untilTickPrice, 'Clearing price is not greater than untilTickPrice');
-        assertGt(auction.clearingPrice(), untilTickPrice, 'clearingPrice() is not greater than untilTickPrice');
-        assertEq(auction.nextActiveTickPrice(), untilTickPrice, 'nextActiveTickPrice() is not equal to untilTickPrice');
+        assertGt(clearingPrice, untilTickPrice, "Clearing price is not greater than untilTickPrice");
+        assertGt(auction.clearingPrice(), untilTickPrice, "clearingPrice() is not greater than untilTickPrice");
+        assertEq(auction.nextActiveTickPrice(), untilTickPrice, "nextActiveTickPrice() is not equal to untilTickPrice");
 
         _fuzzPostState(auction);
     }

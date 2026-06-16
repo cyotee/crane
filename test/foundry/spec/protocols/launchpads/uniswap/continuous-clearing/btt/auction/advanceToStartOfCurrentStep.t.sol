@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {MockContinuousClearingAuction} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {
+    MockContinuousClearingAuction
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {AuctionStep} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
 
 contract AdvanceToStartOfCurrentStepTest is BttBase {
     function test_WhenStepStartBlockGTLastCheckpointedBlock(AuctionFuzzConstructorParams memory _params) external {

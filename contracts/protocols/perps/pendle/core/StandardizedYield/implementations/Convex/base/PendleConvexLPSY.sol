@@ -19,13 +19,9 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
     address public constant CRV = 0xD533a949740bb3306d119CC777fa900bA034cd52;
     address public constant CVX = 0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        uint256 _cvxPid,
-        address _crvLp,
-        address _crvPool
-    ) SYBaseWithRewards(_name, _symbol, _crvLp) {
+    constructor(string memory _name, string memory _symbol, uint256 _cvxPid, address _crvLp, address _crvPool)
+        SYBaseWithRewards(_name, _symbol, _crvLp)
+    {
         cvxPid = _cvxPid;
         crvPool = _crvPool;
 
@@ -38,7 +34,7 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
     function _getPoolInfo(uint256 _cvxPid) internal view returns (address _crvLp, address _cvxRewardManager) {
         if (_cvxPid > IBooster(BOOSTER).poolLength()) revert Errors.SYCurveInvalidPid();
 
-        (_crvLp, , , _cvxRewardManager, , ) = IBooster(BOOSTER).poolInfo(_cvxPid);
+        (_crvLp,,, _cvxRewardManager,,) = IBooster(BOOSTER).poolInfo(_cvxPid);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -63,11 +59,12 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
      * If any of the base curve pool tokens is specified as 'tokenOut',
      * it will redeem the corresponding liquidity the LP token represents via the prevailing exchange rate.
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         IRewards(cvxRewardManager).withdrawAndUnwrap(amountSharesToRedeem, false);
 
         if (tokenOut == crvLp) {
@@ -97,7 +94,8 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
      * Refer to currentExtraRewards array of reward tokens specific to the curve pool.
      * @dev We are aware that Convex might add or remove reward tokens, but also agreed that it was
      * not worth the complexity
-     **/
+     *
+     */
     function _getRewardTokens() internal view virtual override returns (address[] memory res) {
         res = new address[](2);
         res[0] = CRV;
@@ -113,10 +111,13 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
                     MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == crvLp) {
             amountSharesOut = amountTokenToDeposit;
         } else {
@@ -124,10 +125,13 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view virtual override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == crvLp) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -147,15 +151,17 @@ abstract contract PendleConvexLPSY is SYBaseWithRewards {
 
     function _redeemFromCurve(address tokenOut, uint256 amountLpToRedeem) internal virtual returns (uint256);
 
-    function _previewDepositToCurve(
-        address token,
-        uint256 amountTokenToDeposit
-    ) internal view virtual returns (uint256 amountLpOut);
+    function _previewDepositToCurve(address token, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        returns (uint256 amountLpOut);
 
-    function _previewRedeemFromCurve(
-        address token,
-        uint256 amountLpToRedeem
-    ) internal view virtual returns (uint256 amountTokenOut);
+    function _previewRedeemFromCurve(address token, uint256 amountLpToRedeem)
+        internal
+        view
+        virtual
+        returns (uint256 amountTokenOut);
 
     function assetInfo() external view returns (AssetType assetType, address assetAddress, uint8 assetDecimals) {
         return (AssetType.LIQUIDITY, crvLp, IERC20Metadata(crvLp).decimals());

@@ -31,6 +31,11 @@ contract ERC20TargetStubHandler is Test {
         _push(address(this));
     }
 
+    /// @dev Test helper to explicitly track an address that received tokens outside of fuzzed handlers (e.g. setup transfers).
+    function trackAddress(address a) external {
+        _push(a);
+    }
+
     // Normalize arbitrary uint input into small set of addresses
     function addrFromSeed(uint256 seed) public pure returns (address) {
         uint160 v = uint160((seed % 16) + 1);

@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.17;
 
@@ -9,11 +8,11 @@ contract MockCappedPriceFeed is CappedPriceFeed {
     uint256 _fundamentalRatio = 1 ether;
     IPriceFeed _marketPriceFeed = IPriceFeed(new MockMarketPriceFeed());
 
-    function getFundamentalRatio() view public virtual override returns (uint256) {
+    function getFundamentalRatio() public view virtual override returns (uint256) {
         return _fundamentalRatio;
     }
 
-    function getMarketPriceFeed() view public virtual override returns (IPriceFeed) {
+    function getMarketPriceFeed() public view virtual override returns (IPriceFeed) {
         return _marketPriceFeed;
     }
 
@@ -26,8 +25,6 @@ contract MockCappedPriceFeed is CappedPriceFeed {
         _marketPriceFeed = marketPriceFeed;
     }
 }
-
-
 
 contract MockMarketPriceFeed is IPriceFeed {
     int256 private answer = 1e18;
@@ -61,13 +58,7 @@ contract MockMarketPriceFeed is IPriceFeed {
         external
         view
         override
-        returns (
-            uint80 id,
-            int256 _answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        )
+        returns (uint80 id, int256 _answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
     {
         // This is a mock, so we can simplify the logic for round data
         return (_roundId, answer, block.timestamp, block.timestamp, _roundId);
@@ -85,13 +76,7 @@ contract MockMarketPriceFeed is IPriceFeed {
         external
         view
         override
-        returns (
-            uint80 id,
-            int256 _answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        )
+        returns (uint80 id, int256 _answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
     {
         return (roundId, answer, block.timestamp, block.timestamp, roundId);
     }

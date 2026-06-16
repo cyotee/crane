@@ -20,7 +20,9 @@ import {
     FluidDexLiteAggregator
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/FluidDexLiteAggregator.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
-import {IAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
+import {
+    IAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
 
 contract FluidDexLiteAggregatorUnitTest is Test {
     using PoolIdLibrary for PoolKey;
@@ -49,8 +51,9 @@ contract FluidDexLiteAggregatorUnitTest is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
         mockDex = new MockFluidDexLite();
         mockResolver = new MockFluidDexLiteResolver();

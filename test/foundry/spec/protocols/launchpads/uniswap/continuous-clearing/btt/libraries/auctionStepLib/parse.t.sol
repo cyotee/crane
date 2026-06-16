@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {StepLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
 
 contract ParseTest is BttBase {
     function test_WhenCalledWith8BytesOfData(uint24 _mps, uint40 _blockDelta) external pure {

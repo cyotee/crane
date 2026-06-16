@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import "./RedstoneConsumerBase.sol";
 
 /**
@@ -34,180 +34,181 @@ import "./RedstoneConsumerBase.sol";
  * integration with the Redstone protocol
  */
 abstract contract RedstoneConsumerBytesBase is RedstoneConsumerBase {
-  using BetterEfficientHashLib for bytes;
+    using BetterEfficientHashLib for bytes;
 
-  uint256 constant BITS_COUNT_IN_16_BYTES = 128;
+    uint256 constant BITS_COUNT_IN_16_BYTES = 128;
 
-  /**
-   * @dev This function may be overridden by the child consumer contract.
-   * It should aggregate values from different signers into a bytes array
-   * By default, it checks if all the values are identical and returns the first one
-   *
-   * @param calldataPointersForValues An array of "tricky" calldata pointers to
-   * the values provided by different authorized signers. Each tricky calldata pointer
-   * is a uint256 number, first 128 bits of which represent calldata offset, and the
-   * last 128 bits - the byte length of the value
-   *
-   * @return Result of the aggregation in the form of a bytes array
-   */
-  function aggregateByteValues(uint256[] memory calldataPointersForValues)
-    public
-    view
-    virtual
-    returns (bytes memory)
-  {
-    // Check if all byte arrays are identical
-    if (calldataPointersForValues.length <= 0) {
-      revert EmptyCalldataPointersArr();
-    }
-    bytes calldata firstValue = getCalldataBytesFromCalldataPointer(calldataPointersForValues[0]);
-    // bytes32 expectedHash = keccak256(firstValue);
-    bytes32 expectedHash = firstValue._hash();
+    /**
+     * @dev This function may be overridden by the child consumer contract.
+     * It should aggregate values from different signers into a bytes array
+     * By default, it checks if all the values are identical and returns the first one
+     *
+     * @param calldataPointersForValues An array of "tricky" calldata pointers to
+     * the values provided by different authorized signers. Each tricky calldata pointer
+     * is a uint256 number, first 128 bits of which represent calldata offset, and the
+     * last 128 bits - the byte length of the value
+     *
+     * @return Result of the aggregation in the form of a bytes array
+     */
+    function aggregateByteValues(uint256[] memory calldataPointersForValues)
+        public
+        view
+        virtual
+        returns (bytes memory)
+    {
+        // Check if all byte arrays are identical
+        if (calldataPointersForValues.length <= 0) {
+            revert EmptyCalldataPointersArr();
+        }
+        bytes calldata firstValue = getCalldataBytesFromCalldataPointer(calldataPointersForValues[0]);
+        // bytes32 expectedHash = keccak256(firstValue);
+        bytes32 expectedHash = firstValue._hash();
 
-    for (uint256 i = 1; i < calldataPointersForValues.length; i++) {
-      bytes calldata currentValue = getCalldataBytesFromCalldataPointer(
-        calldataPointersForValues[i]
-      );
-      if (currentValue._hash() != expectedHash) {
-        revert EachSignerMustProvideTheSameValue();
-      }
-    }
+        for (uint256 i = 1; i < calldataPointersForValues.length; i++) {
+            bytes calldata currentValue = getCalldataBytesFromCalldataPointer(calldataPointersForValues[i]);
+            if (currentValue._hash() != expectedHash) {
+                revert EachSignerMustProvideTheSameValue();
+            }
+        }
 
-    return firstValue;
-  }
-
-  /**
-   * @dev This function may be used to convert a "tricky" calldata pointer into a
-   * calldata bytes array. You may find it useful while overriding the
-   * `aggregateByteValues` function
-   *
-   * @param trickyCalldataPtr A "tricky" calldata pointer, 128 first bits of which
-   * represent the offset, and the last 128 bits - the byte length of the value
-   *
-   * @return bytesValueInCalldata The corresponding calldata bytes array
-   */
-  function getCalldataBytesFromCalldataPointer(uint256 trickyCalldataPtr)
-    internal
-    pure
-    returns (bytes calldata bytesValueInCalldata)
-  {
-    uint256 calldataOffset = _getNumberFromFirst128Bits(trickyCalldataPtr);
-    uint256 valueByteSize = _getNumberFromLast128Bits(trickyCalldataPtr);
-    if (calldataOffset + valueByteSize > msg.data.length) {
-      revert InvalidCalldataPointer();
+        return firstValue;
     }
 
-    assembly {
-      bytesValueInCalldata.offset := calldataOffset
-      bytesValueInCalldata.length := valueByteSize
+    /**
+     * @dev This function may be used to convert a "tricky" calldata pointer into a
+     * calldata bytes array. You may find it useful while overriding the
+     * `aggregateByteValues` function
+     *
+     * @param trickyCalldataPtr A "tricky" calldata pointer, 128 first bits of which
+     * represent the offset, and the last 128 bits - the byte length of the value
+     *
+     * @return bytesValueInCalldata The corresponding calldata bytes array
+     */
+    function getCalldataBytesFromCalldataPointer(uint256 trickyCalldataPtr)
+        internal
+        pure
+        returns (bytes calldata bytesValueInCalldata)
+    {
+        uint256 calldataOffset = _getNumberFromFirst128Bits(trickyCalldataPtr);
+        uint256 valueByteSize = _getNumberFromLast128Bits(trickyCalldataPtr);
+        if (calldataOffset + valueByteSize > msg.data.length) {
+            revert InvalidCalldataPointer();
+        }
+
+        assembly {
+            bytesValueInCalldata.offset := calldataOffset
+            bytesValueInCalldata.length := valueByteSize
+        }
     }
-  }
 
-  /**
-   * @dev This function can be used in a consumer contract to securely extract an
-   * oracle value for a given data feed id. Security is achieved by
-   * signatures verification, timestamp validation, and aggregating bytes values
-   * from different authorized signers into a single bytes array. If any of the
-   * required conditions do not match, the function will revert.
-   * Note! This function expects that tx calldata contains redstone payload in the end
-   * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
-   * @param dataFeedId bytes32 value that uniquely identifies the data feed
-   * @return Bytes array with the aggregated oracle value for the given data feed id
-   */
-  function getOracleBytesValueFromTxMsg(bytes32 dataFeedId) internal view returns (bytes memory) {
-    bytes32[] memory dataFeedIds = new bytes32[](1);
-    dataFeedIds[0] = dataFeedId;
-    return getOracleBytesValuesFromTxMsg(dataFeedIds)[0];
-  }
-
-  /**
-   * @dev This function can be used in a consumer contract to securely extract several
-   * numeric oracle values for a given array of data feed ids. Security is achieved by
-   * signatures verification, timestamp validation, and aggregating values
-   * from different authorized signers into a single numeric value. If any of the
-   * required conditions do not match, the function will revert.
-   * Note! This function expects that tx calldata contains redstone payload in the end
-   * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
-   * @param dataFeedIds An array of unique data feed identifiers
-   * @return arrayOfMemoryPointers TODO
-   */
-  function getOracleBytesValuesFromTxMsg(bytes32[] memory dataFeedIds)
-    internal
-    view
-    returns (bytes[] memory arrayOfMemoryPointers)
-  {
-    // The `_securelyExtractOracleValuesFromTxMsg` function contains the main logic
-    // for the data extraction and validation
-    (uint256[] memory arrayOfExtractedValues, uint256 timestamp) = _securelyExtractOracleValuesAndTimestampFromTxMsg(dataFeedIds);
-    validateTimestamp(timestamp);
-    assembly {
-      arrayOfMemoryPointers := arrayOfExtractedValues
+    /**
+     * @dev This function can be used in a consumer contract to securely extract an
+     * oracle value for a given data feed id. Security is achieved by
+     * signatures verification, timestamp validation, and aggregating bytes values
+     * from different authorized signers into a single bytes array. If any of the
+     * required conditions do not match, the function will revert.
+     * Note! This function expects that tx calldata contains redstone payload in the end
+     * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
+     * @param dataFeedId bytes32 value that uniquely identifies the data feed
+     * @return Bytes array with the aggregated oracle value for the given data feed id
+     */
+    function getOracleBytesValueFromTxMsg(bytes32 dataFeedId) internal view returns (bytes memory) {
+        bytes32[] memory dataFeedIds = new bytes32[](1);
+        dataFeedIds[0] = dataFeedId;
+        return getOracleBytesValuesFromTxMsg(dataFeedIds)[0];
     }
-  }
 
-  /**
-   * @dev This is a helpful function for the values aggregation
-   * Unlike in the RedstoneConsumerBase contract, you should not override
-   * this function. If you want to have a custom aggregation logic, you can
-   * override the `aggregateByteValues` instead
-   *
-   * Note! Unlike in the `RedstoneConsumerBase` this function returns a memory pointer
-   * to the aggregated bytes array value (instead the value itself)
-   *
-   * @param calldataPointersToValues An array of "tricky" calldata pointers to
-   * the values provided by different authorized signers. Each tricky calldata pointer
-   * is a uint256 number, first 128 bits of which represent calldata offset, and the
-   * last 128 bits - the byte length of the value
-   *
-   * @return pointerToResultBytesInMemory A memory pointer to the aggregated bytes array
-   */
-  function aggregateValues(uint256[] memory calldataPointersToValues)
-    public
-    view
-    override
-    returns (uint256 pointerToResultBytesInMemory)
-  {
-    bytes memory aggregatedBytes = aggregateByteValues(calldataPointersToValues);
-    assembly {
-      pointerToResultBytesInMemory := aggregatedBytes
+    /**
+     * @dev This function can be used in a consumer contract to securely extract several
+     * numeric oracle values for a given array of data feed ids. Security is achieved by
+     * signatures verification, timestamp validation, and aggregating values
+     * from different authorized signers into a single numeric value. If any of the
+     * required conditions do not match, the function will revert.
+     * Note! This function expects that tx calldata contains redstone payload in the end
+     * Learn more about redstone payload here: https://github.com/redstone-finance/redstone-oracles-monorepo/tree/main/packages/evm-connector#readme
+     * @param dataFeedIds An array of unique data feed identifiers
+     * @return arrayOfMemoryPointers TODO
+     */
+    function getOracleBytesValuesFromTxMsg(bytes32[] memory dataFeedIds)
+        internal
+        view
+        returns (bytes[] memory arrayOfMemoryPointers)
+    {
+        // The `_securelyExtractOracleValuesFromTxMsg` function contains the main logic
+        // for the data extraction and validation
+        (uint256[] memory arrayOfExtractedValues, uint256 timestamp) =
+            _securelyExtractOracleValuesAndTimestampFromTxMsg(dataFeedIds);
+        validateTimestamp(timestamp);
+        assembly {
+            arrayOfMemoryPointers := arrayOfExtractedValues
+        }
     }
-  }
 
-  /**
-   * @dev This function extracts details for a given data point and returns its dataFeedId,
-   * and a "tricky" calldata pointer for its value
-   *
-   * @param dataPointNegativeOffset Calldata offset for the requested data point
-   * @param dataPointValueByteSize Expected number of bytes for the requested data point value
-   *
-   * @return dataPointDataFeedId a data feed identifier for the extracted data point
-   * @return dataPointValue a "tricky" calldata pointer for the extracted value
-   */
-  function _extractDataPointValueAndDataFeedId(
-    uint256 dataPointNegativeOffset,
-    uint256 dataPointValueByteSize
-  ) internal pure override returns (bytes32 dataPointDataFeedId, uint256 dataPointValue) {
-    uint256 dataPointCalldataOffset = msg.data.length - dataPointNegativeOffset;
-    assembly {
-      dataPointDataFeedId := calldataload(dataPointCalldataOffset)
-      dataPointValue := prepareTrickyCalldataPointer(
-        add(dataPointCalldataOffset, DATA_POINT_SYMBOL_BS),
-        dataPointValueByteSize
-      )
-
-      function prepareTrickyCalldataPointer(calldataOffsetArg, valueByteSize) -> calldataPtr {
-        calldataPtr := or(shl(BITS_COUNT_IN_16_BYTES, calldataOffsetArg), valueByteSize)
-      }
+    /**
+     * @dev This is a helpful function for the values aggregation
+     * Unlike in the RedstoneConsumerBase contract, you should not override
+     * this function. If you want to have a custom aggregation logic, you can
+     * override the `aggregateByteValues` instead
+     *
+     * Note! Unlike in the `RedstoneConsumerBase` this function returns a memory pointer
+     * to the aggregated bytes array value (instead the value itself)
+     *
+     * @param calldataPointersToValues An array of "tricky" calldata pointers to
+     * the values provided by different authorized signers. Each tricky calldata pointer
+     * is a uint256 number, first 128 bits of which represent calldata offset, and the
+     * last 128 bits - the byte length of the value
+     *
+     * @return pointerToResultBytesInMemory A memory pointer to the aggregated bytes array
+     */
+    function aggregateValues(uint256[] memory calldataPointersToValues)
+        public
+        view
+        override
+        returns (uint256 pointerToResultBytesInMemory)
+    {
+        bytes memory aggregatedBytes = aggregateByteValues(calldataPointersToValues);
+        assembly {
+            pointerToResultBytesInMemory := aggregatedBytes
+        }
     }
-  }
 
-  /// @dev This is a helpful function for "tricky" calldata pointers
-  function _getNumberFromFirst128Bits(uint256 number) internal pure returns (uint256) {
-    return number >> 128;
-  }
+    /**
+     * @dev This function extracts details for a given data point and returns its dataFeedId,
+     * and a "tricky" calldata pointer for its value
+     *
+     * @param dataPointNegativeOffset Calldata offset for the requested data point
+     * @param dataPointValueByteSize Expected number of bytes for the requested data point value
+     *
+     * @return dataPointDataFeedId a data feed identifier for the extracted data point
+     * @return dataPointValue a "tricky" calldata pointer for the extracted value
+     */
+    function _extractDataPointValueAndDataFeedId(uint256 dataPointNegativeOffset, uint256 dataPointValueByteSize)
+        internal
+        pure
+        override
+        returns (bytes32 dataPointDataFeedId, uint256 dataPointValue)
+    {
+        uint256 dataPointCalldataOffset = msg.data.length - dataPointNegativeOffset;
+        assembly {
+            dataPointDataFeedId := calldataload(dataPointCalldataOffset)
+            dataPointValue := prepareTrickyCalldataPointer(
+                add(dataPointCalldataOffset, DATA_POINT_SYMBOL_BS),
+                dataPointValueByteSize
+            )
 
-  /// @dev This is a helpful function for "tricky" calldata pointers
-  function _getNumberFromLast128Bits(uint256 number) internal pure returns (uint256) {
-    return uint128(number);
-  }
+            function prepareTrickyCalldataPointer(calldataOffsetArg, valueByteSize) -> calldataPtr {
+                calldataPtr := or(shl(BITS_COUNT_IN_16_BYTES, calldataOffsetArg), valueByteSize)
+            }
+        }
+    }
+
+    /// @dev This is a helpful function for "tricky" calldata pointers
+    function _getNumberFromFirst128Bits(uint256 number) internal pure returns (uint256) {
+        return number >> 128;
+    }
+
+    /// @dev This is a helpful function for "tricky" calldata pointers
+    function _getNumberFromLast128Bits(uint256 number) internal pure returns (uint256) {
+        return uint128(number);
+    }
 }

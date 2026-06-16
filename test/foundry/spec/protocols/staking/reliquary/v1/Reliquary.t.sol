@@ -8,7 +8,9 @@ import {IReliquary} from "@crane/contracts/protocols/staking/reliquary/v1/interf
 import {NFTDescriptor} from "@crane/contracts/protocols/staking/reliquary/v1/nft_descriptors/NFTDescriptor.sol";
 import {LinearCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearCurve.sol";
 import {LinearPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearPlateauCurve.sol";
-import {PolynomialPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/PolynomialPlateauCurve.sol";
+import {
+    PolynomialPlateauCurve
+} from "@crane/contracts/protocols/staking/reliquary/v1/curves/PolynomialPlateauCurve.sol";
 import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
 import {ReliquaryEvents} from "@crane/contracts/protocols/staking/reliquary/v1/services/ReliquaryEvents.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
@@ -49,16 +51,7 @@ contract ReliquaryTest is TestBase_Reliquary {
         Reliquary(address(reliquary)).grantRole(keccak256("OPERATOR"), address(this));
         testToken.mint(address(this), 100_000_000 ether);
         testToken.approve(address(reliquary), 1);
-        reliquary.addPool(
-            100,
-            address(testToken),
-            address(0),
-            linearCurve,
-            "ETH Pool",
-            nftDescriptor,
-            true,
-            address(5)
-        );
+        reliquary.addPool(100, address(testToken), address(0), linearCurve, "ETH Pool", nftDescriptor, true, address(5));
 
         testToken.approve(address(reliquary), type(uint256).max);
     }
@@ -200,21 +193,16 @@ contract ReliquaryTest is TestBase_Reliquary {
 
     function testRevertOnSplitUnderflow(uint256 depositAmount, uint256 splitAmount) public {
         depositAmount = bound(depositAmount, 1, testToken.balanceOf(address(this)) / 2 - 1);
-        splitAmount = bound(
-            splitAmount, depositAmount + 1, testToken.balanceOf(address(this)) - depositAmount
-        );
+        splitAmount = bound(splitAmount, depositAmount + 1, testToken.balanceOf(address(this)) - depositAmount);
 
         uint256 relicId = reliquary.createRelicAndDeposit(address(this), 0, depositAmount);
         vm.expectRevert(stdError.arithmeticError);
         reliquary.split(relicId, splitAmount, address(this));
     }
 
-    function testShift(uint256 depositAmount1, uint256 depositAmount2, uint256 shiftAmount)
-        public
-    {
+    function testShift(uint256 depositAmount1, uint256 depositAmount2, uint256 shiftAmount) public {
         depositAmount1 = bound(depositAmount1, 1, testToken.balanceOf(address(this)) - 1);
-        depositAmount2 =
-            bound(depositAmount2, 1, testToken.balanceOf(address(this)) - depositAmount1);
+        depositAmount2 = bound(depositAmount2, 1, testToken.balanceOf(address(this)) - depositAmount1);
         shiftAmount = bound(shiftAmount, 1, depositAmount1);
 
         uint256 relicId = reliquary.createRelicAndDeposit(address(this), 0, depositAmount1);
@@ -227,9 +215,7 @@ contract ReliquaryTest is TestBase_Reliquary {
 
     function testRevertOnShiftUnderflow(uint256 depositAmount, uint256 shiftAmount) public {
         depositAmount = bound(depositAmount, 1, testToken.balanceOf(address(this)) / 2 - 1);
-        shiftAmount = bound(
-            shiftAmount, depositAmount + 1, testToken.balanceOf(address(this)) - depositAmount
-        );
+        shiftAmount = bound(shiftAmount, depositAmount + 1, testToken.balanceOf(address(this)) - depositAmount);
 
         uint256 relicId = reliquary.createRelicAndDeposit(address(this), 0, depositAmount);
         uint256 newRelicId = reliquary.createRelicAndDeposit(address(this), 0, 1);
@@ -239,8 +225,7 @@ contract ReliquaryTest is TestBase_Reliquary {
 
     function testMerge(uint256 depositAmount1, uint256 depositAmount2) public {
         depositAmount1 = bound(depositAmount1, 1, testToken.balanceOf(address(this)) - 1);
-        depositAmount2 =
-            bound(depositAmount2, 1, testToken.balanceOf(address(this)) - depositAmount1);
+        depositAmount2 = bound(depositAmount2, 1, testToken.balanceOf(address(this)) - depositAmount1);
 
         uint256 relicId = reliquary.createRelicAndDeposit(address(this), 0, depositAmount1);
         uint256 newRelicId = reliquary.createRelicAndDeposit(address(this), 0, depositAmount2);

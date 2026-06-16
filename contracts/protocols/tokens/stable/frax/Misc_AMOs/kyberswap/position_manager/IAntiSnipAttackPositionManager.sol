@@ -75,42 +75,55 @@ interface IAntiSnipAttackPositionManager {
         uint256 deadline;
     }
 
-  function DOMAIN_SEPARATOR (  ) external view returns ( bytes32 );
-  function PERMIT_TYPEHASH (  ) external view returns ( bytes32 );
-  function WETH (  ) external view returns ( address );
-  function addLiquidity ( IncreaseLiquidityParams memory params ) external returns ( uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed );
-  function addressToPoolId ( address ) external view returns ( uint80 );
-  function antiSnipAttackData ( uint256 ) external view returns ( uint32 lastActionTime, uint32 lockTime, uint32 unlockTime, uint256 feesLocked );
-  function approve ( address to, uint256 tokenId ) external;
-  function balanceOf ( address owner ) external view returns ( uint256 );
-  function burn ( uint256 tokenId ) external;
-  function burnRTokens ( BurnRTokenParams memory params ) external returns ( uint256 rTokenQty, uint256 amount0, uint256 amount1 );
-  function createAndUnlockPoolIfNecessary ( address token0, address token1, uint24 fee, uint160 currentSqrtP ) external returns ( address pool );
-  function factory (  ) external view returns ( address );
-  function getApproved ( uint256 tokenId ) external view returns ( address );
-  function isApprovedForAll ( address owner, address operator ) external view returns ( bool );
-  function isRToken ( address ) external view returns ( bool );
-  function mint ( MintParams memory params ) external returns ( uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1 );
-  function mintCallback ( uint256 deltaQty0, uint256 deltaQty1, bytes memory data ) external;
-  function multicall ( bytes[] memory data ) external returns ( bytes[] memory results );
-  function name (  ) external view returns ( string memory );
-  function nextPoolId (  ) external view returns ( uint80 );
-  function nextTokenId (  ) external view returns ( uint256 );
-  function ownerOf ( uint256 tokenId ) external view returns ( address );
-  function permit ( address spender, uint256 tokenId, uint256 deadline, uint8 v, bytes32 r, bytes32 s ) external;
-  function positions ( uint256 tokenId ) external view returns ( Position memory pos, PoolInfo memory info );
-  function refundEth (  ) external;
-  function removeLiquidity ( RemoveLiquidityParams memory params ) external returns ( uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed );
-  function safeTransferFrom ( address from, address to, uint256 tokenId ) external;
-  function safeTransferFrom ( address from, address to, uint256 tokenId, bytes memory _data ) external;
-  function setApprovalForAll ( address operator, bool approved ) external;
-  function supportsInterface ( bytes4 interfaceId ) external view returns ( bool );
-  function symbol (  ) external view returns ( string memory );
-  function tokenByIndex ( uint256 index ) external view returns ( uint256 );
-  function tokenOfOwnerByIndex ( address owner, uint256 index ) external view returns ( uint256 );
-  function tokenURI ( uint256 tokenId ) external view returns ( string memory );
-  function totalSupply (  ) external view returns ( uint256 );
-  function transferAllTokens ( address token, uint256 minAmount, address recipient ) external;
-  function transferFrom ( address from, address to, uint256 tokenId ) external;
-  function unwrapWeth ( uint256 minAmount, address recipient ) external;
+    function DOMAIN_SEPARATOR() external view returns (bytes32);
+    function PERMIT_TYPEHASH() external view returns (bytes32);
+    function WETH() external view returns (address);
+    function addLiquidity(IncreaseLiquidityParams memory params)
+        external
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function addressToPoolId(address) external view returns (uint80);
+    function antiSnipAttackData(uint256)
+        external
+        view
+        returns (uint32 lastActionTime, uint32 lockTime, uint32 unlockTime, uint256 feesLocked);
+    function approve(address to, uint256 tokenId) external;
+    function balanceOf(address owner) external view returns (uint256);
+    function burn(uint256 tokenId) external;
+    function burnRTokens(BurnRTokenParams memory params)
+        external
+        returns (uint256 rTokenQty, uint256 amount0, uint256 amount1);
+    function createAndUnlockPoolIfNecessary(address token0, address token1, uint24 fee, uint160 currentSqrtP)
+        external
+        returns (address pool);
+    function factory() external view returns (address);
+    function getApproved(uint256 tokenId) external view returns (address);
+    function isApprovedForAll(address owner, address operator) external view returns (bool);
+    function isRToken(address) external view returns (bool);
+    function mint(MintParams memory params)
+        external
+        returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
+    function mintCallback(uint256 deltaQty0, uint256 deltaQty1, bytes memory data) external;
+    function multicall(bytes[] memory data) external returns (bytes[] memory results);
+    function name() external view returns (string memory);
+    function nextPoolId() external view returns (uint80);
+    function nextTokenId() external view returns (uint256);
+    function ownerOf(uint256 tokenId) external view returns (address);
+    function permit(address spender, uint256 tokenId, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external;
+    function positions(uint256 tokenId) external view returns (Position memory pos, PoolInfo memory info);
+    function refundEth() external;
+    function removeLiquidity(RemoveLiquidityParams memory params)
+        external
+        returns (uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) external;
+    function setApprovalForAll(address operator, bool approved) external;
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+    function symbol() external view returns (string memory);
+    function tokenByIndex(uint256 index) external view returns (uint256);
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256);
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+    function totalSupply() external view returns (uint256);
+    function transferAllTokens(address token, uint256 minAmount, address recipient) external;
+    function transferFrom(address from, address to, uint256 tokenId) external;
+    function unwrapWeth(uint256 minAmount, address recipient) external;
 }

@@ -8,19 +8,20 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2pool.sol
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2poolToken.sol";
 
 contract FraxUnifiedFarm_ERC20_Convex_FRAXBP_Volatile is FraxUnifiedFarm_ERC20 {
-
     string public farm_type = "ERC20_Convex_FRAXBP_Volatile";
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
 
@@ -40,8 +41,8 @@ contract FraxUnifiedFarm_ERC20_Convex_FRAXBP_Volatile is FraxUnifiedFarm_ERC20 {
         // {
         //     // Half of the LP is FRAXBP. Half of that should be FRAX.
         //     // Using 0.25 * lp price for gas savings
-        //     frax_per_lp_token = (curvePool.lp_price() * (1e18)) / (4 * curvePool.price_oracle()); 
+        //     frax_per_lp_token = (curvePool.lp_price() * (1e18)) / (4 * curvePool.price_oracle());
         // }
 
-    }
+        }
 }

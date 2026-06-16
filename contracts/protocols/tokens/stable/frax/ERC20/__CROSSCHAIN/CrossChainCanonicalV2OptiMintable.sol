@@ -27,7 +27,7 @@ pragma solidity ^0.8.35;
 // Drake Evans: https://github.com/DrakeEvans
 // Justin Moore: https://github.com/0xJM
 
-import { ERC20PermitPermissionedOptiMintable } from "../ERC20PermitPermissionedOptiMintable.sol";
+import {ERC20PermitPermissionedOptiMintable} from "../ERC20PermitPermissionedOptiMintable.sol";
 
 contract CrossChainCanonicalV2OptiMintable is ERC20PermitPermissionedOptiMintable {
     /* ========== CONSTRUCTOR ========== */
@@ -39,8 +39,7 @@ contract CrossChainCanonicalV2OptiMintable is ERC20PermitPermissionedOptiMintabl
         string memory _name,
         string memory _symbol,
         uint256 _initial_mint_amt
-    ) ERC20PermitPermissionedOptiMintable(_creator_address, _timelock_address, _bridge, _remoteToken, _name,  _symbol) 
-    {
+    ) ERC20PermitPermissionedOptiMintable(_creator_address, _timelock_address, _bridge, _remoteToken, _name, _symbol) {
         // Mint some canonical tokens to the creator
         super._mint(_creator_address, _initial_mint_amt);
     }

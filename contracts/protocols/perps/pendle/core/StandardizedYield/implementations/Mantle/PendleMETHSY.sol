@@ -21,15 +21,24 @@ contract PendleMETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(address, uint256 amountDeposited) internal pure override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address, uint256 amountDeposited)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountDeposited;
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(tokenOut, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -46,17 +55,25 @@ contract PendleMETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

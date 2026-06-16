@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import '@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Metadata.sol';
-import '@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Enumerable.sol';
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
-import './IPoolInitializer.sol';
-import './IERC721Permit.sol';
-import './IPeripheryPayments.sol';
-import './IPeripheryImmutableState.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/periphery/libraries/PoolAddress.sol';
+import "./IPoolInitializer.sol";
+import "./IERC721Permit.sol";
+import "./IPeripheryPayments.sol";
+import "./IPeripheryImmutableState.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/periphery/libraries/PoolAddress.sol";
 
 /// @title Non-fungible token for positions
 /// @notice Wraps Uniswap V3 positions in a non-fungible token interface which allows for them to be transferred
@@ -100,12 +100,7 @@ interface INonfungiblePositionManager is
     function mint(MintParams calldata params)
         external
         payable
-        returns (
-            uint256 tokenId,
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1
-        );
+        returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
 
     struct IncreaseLiquidityParams {
         uint256 tokenId;
@@ -129,11 +124,7 @@ interface INonfungiblePositionManager is
     function increaseLiquidity(IncreaseLiquidityParams calldata params)
         external
         payable
-        returns (
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1
-        );
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1);
 
     struct DecreaseLiquidityParams {
         uint256 tokenId;

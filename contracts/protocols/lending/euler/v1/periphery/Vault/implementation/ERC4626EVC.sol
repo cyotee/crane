@@ -4,8 +4,15 @@ pragma solidity ^0.8.0;
 
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
-import {ERC4626, ERC20, IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol";
-import {SafeERC20Permit2Lib, IERC20 as SafeERC20Permit2LibIERC20} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/libraries/SafeERC20Permit2Lib.sol";
+import {
+    ERC4626,
+    ERC20,
+    IERC20
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC4626.sol";
+import {
+    SafeERC20Permit2Lib,
+    IERC20 as SafeERC20Permit2LibIERC20
+} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/libraries/SafeERC20Permit2Lib.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// @title ERC4626EVC
@@ -49,24 +56,12 @@ abstract contract ERC4626EVC is EVCUtil, ERC4626 {
     }
 
     /// @dev Internal conversion function (from assets to shares) with support for rounding direction.
-    function _convertToShares(uint256 assets, Math.Rounding rounding)
-        internal
-        view
-        virtual
-        override
-        returns (uint256)
-    {
+    function _convertToShares(uint256 assets, Math.Rounding rounding) internal view virtual override returns (uint256) {
         return assets.mulDiv(totalSupply() + VIRTUAL_AMOUNT, totalAssets() + VIRTUAL_AMOUNT, rounding);
     }
 
     /// @dev Internal conversion function (from shares to assets) with support for rounding direction.
-    function _convertToAssets(uint256 shares, Math.Rounding rounding)
-        internal
-        view
-        virtual
-        override
-        returns (uint256)
-    {
+    function _convertToAssets(uint256 shares, Math.Rounding rounding) internal view virtual override returns (uint256) {
         return shares.mulDiv(totalAssets() + VIRTUAL_AMOUNT, totalSupply() + VIRTUAL_AMOUNT, rounding);
     }
 
@@ -98,7 +93,7 @@ abstract contract ERC4626EVC is EVCUtil, ERC4626 {
 
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
-    function _msgSender() internal view virtual override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view virtual override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 }

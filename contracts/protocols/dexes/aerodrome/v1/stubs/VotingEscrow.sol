@@ -2,7 +2,6 @@
 pragma solidity ^0.8.19;
 
 import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";
-import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 import {IVeArtProxy} from "../interfaces/IVeArtProxy.sol";
 import {IVotingEscrow} from "../interfaces/IVotingEscrow.sol";
 import {IVoter} from "../interfaces/IVoter.sol";
@@ -27,7 +26,7 @@ import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHash
 /// @author Modified from Curve (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy)
 /// @author velodrome.finance, Solidly, @figs999, @pegahcarter
 /// @dev Vote weight decays linearly over time. Lock time cannot be more than `MAXTIME` (4 years).
-contract VotingEscrow is IVotingEscrow, IERC721Events, ERC2771Context, ReentrancyGuard {
+contract VotingEscrow is IVotingEscrow, ERC2771Context, ReentrancyGuard {
     using BetterEfficientHashLib for bytes;
     using SafeERC20 for IERC20;
     using SafeCastLibrary for uint256;

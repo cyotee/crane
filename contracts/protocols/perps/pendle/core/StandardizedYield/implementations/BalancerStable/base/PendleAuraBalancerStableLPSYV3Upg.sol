@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import "../../../../../interfaces/Balancer/IVault.sol";
 import "../../../../../interfaces/Balancer/IRateProvider.sol";
@@ -46,10 +46,10 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
         previewHelper = _previewHelper;
     }
 
-    function __PendleAuraBalancerStableLPSYV3Upg_init(
-        string memory _name,
-        string memory _symbol
-    ) internal onlyInitializing {
+    function __PendleAuraBalancerStableLPSYV3Upg_init(string memory _name, string memory _symbol)
+        internal
+        onlyInitializing
+    {
         __SYBaseUpg_init(_name, _symbol);
 
         _safeApproveInf(balLp, AURA_BOOSTER);
@@ -62,7 +62,7 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
 
     function _getPoolInfo(uint256 _auraPid) internal view returns (address _auraLp, address _auraRewardManager) {
         if (_auraPid > IBooster(AURA_BOOSTER).poolLength()) revert Errors.SYBalancerInvalidPid();
-        (_auraLp, , , _auraRewardManager, , ) = IBooster(AURA_BOOSTER).poolInfo(_auraPid);
+        (_auraLp,,, _auraRewardManager,,) = IBooster(AURA_BOOSTER).poolInfo(_auraPid);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -84,11 +84,12 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
     /**
      * @notice Either unwraps LP, or also exits pool using exact LP for only `tokenOut`
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         IRewards(auraRewardManager).withdrawAndUnwrap(amountSharesToRedeem, false);
 
         if (tokenOut == balLp) {
@@ -152,10 +153,12 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
         return _selfBalance(balLp);
     }
 
-    function _assembleJoinRequest(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual returns (IVault.JoinPoolRequest memory request) {
+    function _assembleJoinRequest(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        returns (IVault.JoinPoolRequest memory request)
+    {
         // max amounts in
         address[] memory assets = _getPoolTokenAddresses();
 
@@ -178,11 +181,11 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
         request = IVault.JoinPoolRequest(assets, maxAmountsIn, userData, false);
     }
 
-    function _redeemFromBalancer(
-        address receiver,
-        address tokenOut,
-        uint256 amountLpToRedeem
-    ) internal virtual returns (uint256) {
+    function _redeemFromBalancer(address receiver, address tokenOut, uint256 amountLpToRedeem)
+        internal
+        virtual
+        returns (uint256)
+    {
         uint256 balanceBefore = IERC20(tokenOut).balanceOf(receiver);
 
         IVault.ExitPoolRequest memory request = _assembleExitRequest(tokenOut, amountLpToRedeem);
@@ -193,10 +196,12 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
         return balanceAfter - balanceBefore;
     }
 
-    function _assembleExitRequest(
-        address tokenOut,
-        uint256 amountLpToRedeem
-    ) internal view virtual returns (IVault.ExitPoolRequest memory request) {
+    function _assembleExitRequest(address tokenOut, uint256 amountLpToRedeem)
+        internal
+        view
+        virtual
+        returns (IVault.ExitPoolRequest memory request)
+    {
         address[] memory assets = _getPoolTokenAddresses();
         uint256[] memory minAmountsOut = new uint256[](assets.length);
 
@@ -226,39 +231,37 @@ abstract contract PendleAuraBalancerStableLPSYV3Upg is SYBaseWithRewardsUpg {
                    PREVIEW FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == balLp) {
             amountSharesOut = amountTokenToDeposit;
         } else {
             IVault.JoinPoolRequest memory request = _assembleJoinRequest(tokenIn, amountTokenToDeposit);
             amountSharesOut = previewHelper.joinPoolPreview(
-                balPoolId,
-                address(this),
-                address(this),
-                request,
-                _getImmutablePoolData()
+                balPoolId, address(this), address(this), request, _getImmutablePoolData()
             );
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view virtual override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == balLp) {
             amountTokenOut = amountSharesToRedeem;
         } else {
             IVault.ExitPoolRequest memory request = _assembleExitRequest(tokenOut, amountSharesToRedeem);
 
             amountTokenOut = previewHelper.exitPoolPreview(
-                balPoolId,
-                address(this),
-                address(this),
-                request,
-                _getImmutablePoolData()
+                balPoolId, address(this), address(this), request, _getImmutablePoolData()
             );
         }
     }

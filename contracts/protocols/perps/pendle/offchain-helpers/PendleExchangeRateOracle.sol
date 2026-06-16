@@ -46,10 +46,7 @@ contract PendleExchangeRateOracle is BoringOwnableUpgradeable, IPExchangeRateOra
 
     function setExchangeRate(uint128 rate, uint64 dataBlock, uint32 dataTimestamp) external onlyOwner {
         ExchangeRateData memory newData = ExchangeRateData({
-            rate: rate,
-            dataBlock: dataBlock,
-            dataTimestamp: dataTimestamp,
-            updatedAt: uint32(block.timestamp)
+            rate: rate, dataBlock: dataBlock, dataTimestamp: dataTimestamp, updatedAt: uint32(block.timestamp)
         });
         _setExchangeRate(newData);
     }
@@ -76,9 +73,8 @@ contract PendleExchangeRateOracle is BoringOwnableUpgradeable, IPExchangeRateOra
 
     function _validateMetadata(ExchangeRateData memory oldData, ExchangeRateData memory newData) internal pure {
         if (
-            oldData.dataBlock >= newData.dataBlock ||
-            oldData.dataTimestamp >= newData.dataTimestamp ||
-            oldData.updatedAt + MIN_UPDATE_TIME_GAP >= newData.updatedAt
+            oldData.dataBlock >= newData.dataBlock || oldData.dataTimestamp >= newData.dataTimestamp
+                || oldData.updatedAt + MIN_UPDATE_TIME_GAP >= newData.updatedAt
         ) {
             revert InvalidMetadata(newData);
         }

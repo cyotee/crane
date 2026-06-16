@@ -42,10 +42,12 @@ contract PendleZtakeEzETHSY is SYBaseUpg {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE) {
             IRenzoRestakeManager(restakeManager).depositETH{value: amountDeposited}(referralId);
             amountSharesOut = _selfBalance(ezETH);
@@ -57,9 +59,16 @@ contract PendleZtakeEzETHSY is SYBaseUpg {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IZircuitZtaking(zircuitStaking).withdraw(ezETH, amountSharesToRedeem);
         _transferOut(ezETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -77,16 +86,20 @@ contract PendleZtakeEzETHSY is SYBaseUpg {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == ezETH) {
             return amountTokenToDeposit;
         }
 
         uint256 supply = IERC20(ezETH).totalSupply();
-        (, , uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
+        (,, uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
 
         uint256 value;
         if (tokenIn == NATIVE) {
@@ -99,9 +112,17 @@ contract PendleZtakeEzETHSY is SYBaseUpg {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

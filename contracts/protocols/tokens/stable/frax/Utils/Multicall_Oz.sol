@@ -24,7 +24,10 @@ contract Multicall_Oz {
     /**
      * @dev Receives and executes a batch of function calls on the target contract(s).
      */
-    function multicallMany(address[] memory target_addresses, bytes[] calldata data) external returns (bytes[] memory results) {
+    function multicallMany(address[] memory target_addresses, bytes[] calldata data)
+        external
+        returns (bytes[] memory results)
+    {
         results = new bytes[](data.length);
         for (uint256 i = 0; i < data.length; i++) {
             results[i] = Address_8.functionDelegateCall(target_addresses[i], data[i]);

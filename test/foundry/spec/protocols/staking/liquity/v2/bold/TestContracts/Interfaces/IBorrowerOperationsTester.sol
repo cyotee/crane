@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
 
 interface IBorrowerOperationsTester is IBorrowerOperations {
     function getCollToken() external view returns (IERC20);

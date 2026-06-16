@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
 
-import {MockBidLib} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
+import {MockBidLib} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
 
 contract ToEffectiveAmountTest is BttBase {
     MockBidLib internal mockBidLib;

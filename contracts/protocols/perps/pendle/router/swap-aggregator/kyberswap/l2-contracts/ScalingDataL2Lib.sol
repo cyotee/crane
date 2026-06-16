@@ -11,19 +11,19 @@ library ScalingDataL2Lib {
         return data.scaleUniSwap(oldAmount, newAmount);
     }
 
-    function newStableSwap(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newStableSwap(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleStableSwap(oldAmount, newAmount);
     }
 
-    function newCurveSwap(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newCurveSwap(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleCurveSwap(oldAmount, newAmount);
     }
 
@@ -31,19 +31,19 @@ library ScalingDataL2Lib {
         return data.scaleUniSwap(oldAmount, newAmount);
     }
 
-    function newUniswapV3KSElastic(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newUniswapV3KSElastic(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleUniswapV3KSElastic(oldAmount, newAmount);
     }
 
-    function newBalancerV2(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newBalancerV2(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleBalancerV2(oldAmount, newAmount);
     }
 
@@ -51,11 +51,11 @@ library ScalingDataL2Lib {
         return data.scaleDODO(oldAmount, newAmount);
     }
 
-    function newVelodrome(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newVelodrome(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleUniSwap(oldAmount, newAmount);
     }
 
@@ -63,11 +63,11 @@ library ScalingDataL2Lib {
         return data.scaleGMX(oldAmount, newAmount);
     }
 
-    function newSynthetix(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newSynthetix(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleSynthetix(oldAmount, newAmount);
     }
 
@@ -79,11 +79,11 @@ library ScalingDataL2Lib {
         return data.scalePlatypus(oldAmount, newAmount);
     }
 
-    function newWrappedstETHSwap(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newWrappedstETHSwap(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleWrappedstETH(oldAmount, newAmount);
     }
 
@@ -95,11 +95,11 @@ library ScalingDataL2Lib {
         return data.scaleUniSwap(oldAmount, newAmount);
     }
 
-    function newStETHSwap(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newStETHSwap(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleStETH(oldAmount, newAmount);
     }
 
@@ -111,19 +111,19 @@ library ScalingDataL2Lib {
         return data.scaleSyncSwap(oldAmount, newAmount);
     }
 
-    function newAlgebraV1(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newAlgebraV1(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleAlgebraV1(oldAmount, newAmount);
     }
 
-    function newBalancerBatch(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newBalancerBatch(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleBalancerBatch(oldAmount, newAmount);
     }
 
@@ -135,19 +135,19 @@ library ScalingDataL2Lib {
         return data.scaleIziSwap(oldAmount, newAmount);
     }
 
-    function newTraderJoeV2(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newTraderJoeV2(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleTraderJoeV2(oldAmount, newAmount);
     }
 
-    function newLevelFiV2(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newLevelFiV2(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleLevelFiV2(oldAmount, newAmount);
     }
 
@@ -159,11 +159,11 @@ library ScalingDataL2Lib {
         return data.scaleVooi(oldAmount, newAmount);
     }
 
-    function newVelocoreV2(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newVelocoreV2(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleVelocoreV2(oldAmount, newAmount);
     }
 
@@ -171,19 +171,19 @@ library ScalingDataL2Lib {
         return data.scaleKokonut(oldAmount, newAmount);
     }
 
-    function newBalancerV1(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newBalancerV1(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleBalancerV1(oldAmount, newAmount);
     }
 
-    function newArbswapStable(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newArbswapStable(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleArbswapStable(oldAmount, newAmount);
     }
 
@@ -195,11 +195,11 @@ library ScalingDataL2Lib {
         return data.scaleAmbient(oldAmount, newAmount);
     }
 
-    function newLighterV2(
-        bytes memory data,
-        uint256 oldAmount,
-        uint256 newAmount
-    ) internal pure returns (bytes memory) {
+    function newLighterV2(bytes memory data, uint256 oldAmount, uint256 newAmount)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return data.scaleLighterV2(oldAmount, newAmount);
     }
 }

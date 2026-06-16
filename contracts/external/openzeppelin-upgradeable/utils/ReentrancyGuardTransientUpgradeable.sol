@@ -38,11 +38,10 @@ abstract contract ReentrancyGuardTransientUpgradeable is Initializable {
         _nonReentrantAfter();
     }
 
-    function __ReentrancyGuardTransient_init() internal onlyInitializing {
-    }
+    function __ReentrancyGuardTransient_init() internal onlyInitializing {}
 
-    function __ReentrancyGuardTransient_init_unchained() internal onlyInitializing {
-    }
+    function __ReentrancyGuardTransient_init_unchained() internal onlyInitializing {}
+
     function _nonReentrantBefore() private {
         // On the first call to nonReentrant, _status will be NOT_ENTERED
         if (_reentrancyGuardEntered()) {

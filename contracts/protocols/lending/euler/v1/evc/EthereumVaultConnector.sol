@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {Set, SetStorage} from "./Set.sol";
 import {Events} from "./Events.sol";
 import {Errors} from "./Errors.sol";
@@ -305,10 +305,12 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function setPermitDisabledMode(
-        bytes19 addressPrefix,
-        bool enabled
-    ) public payable virtual onlyOwner(addressPrefix) {
+    function setPermitDisabledMode(bytes19 addressPrefix, bool enabled)
+        public
+        payable
+        virtual
+        onlyOwner(addressPrefix)
+    {
         if (ownerLookup[addressPrefix].isPermitDisabledMode != enabled) {
             // to increase user security, it is prohibited to disable this mode within the self-call of the permit
             // function (verified in the permit function) or within a checks-deferrable call. to disable this mode the
@@ -323,11 +325,12 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function setNonce(
-        bytes19 addressPrefix,
-        uint256 nonceNamespace,
-        uint256 nonce
-    ) public payable virtual onlyOwner(addressPrefix) {
+    function setNonce(bytes19 addressPrefix, uint256 nonceNamespace, uint256 nonce)
+        public
+        payable
+        virtual
+        onlyOwner(addressPrefix)
+    {
         uint256 currentNonce = nonceLookup[addressPrefix][nonceNamespace];
 
         if (currentNonce >= nonce) {
@@ -415,10 +418,13 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function enableCollateral(
-        address account,
-        address vault
-    ) public payable virtual nonReentrantChecksAndControlCollateral onlyOwnerOrOperator(account) {
+    function enableCollateral(address account, address vault)
+        public
+        payable
+        virtual
+        nonReentrantChecksAndControlCollateral
+        onlyOwnerOrOperator(account)
+    {
         if (vault == address(this)) revert EVC_InvalidAddress();
 
         if (accountCollaterals[account].insert(vault)) {
@@ -428,10 +434,13 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function disableCollateral(
-        address account,
-        address vault
-    ) public payable virtual nonReentrantChecksAndControlCollateral onlyOwnerOrOperator(account) {
+    function disableCollateral(address account, address vault)
+        public
+        payable
+        virtual
+        nonReentrantChecksAndControlCollateral
+        onlyOwnerOrOperator(account)
+    {
         if (accountCollaterals[account].remove(vault)) {
             emit CollateralStatus(account, vault, false);
         }
@@ -439,11 +448,13 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function reorderCollaterals(
-        address account,
-        uint8 index1,
-        uint8 index2
-    ) public payable virtual nonReentrantChecksAndControlCollateral onlyOwnerOrOperator(account) {
+    function reorderCollaterals(address account, uint8 index1, uint8 index2)
+        public
+        payable
+        virtual
+        nonReentrantChecksAndControlCollateral
+        onlyOwnerOrOperator(account)
+    {
         accountCollaterals[account].reorder(index1, index2);
         requireAccountStatusCheck(account);
     }
@@ -461,10 +472,13 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function enableController(
-        address account,
-        address vault
-    ) public payable virtual nonReentrantChecksAndControlCollateral onlyOwnerOrOperator(account) {
+    function enableController(address account, address vault)
+        public
+        payable
+        virtual
+        nonReentrantChecksAndControlCollateral
+        onlyOwnerOrOperator(account)
+    {
         if (vault == address(this)) revert EVC_InvalidAddress();
 
         if (accountControllers[account].insert(vault)) {
@@ -552,12 +566,13 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     // Calls forwarding
 
     /// @inheritdoc IEVC
-    function call(
-        address targetContract,
-        address onBehalfOfAccount,
-        uint256 value,
-        bytes calldata data
-    ) public payable virtual nonReentrantChecksAndControlCollateral returns (bytes memory result) {
+    function call(address targetContract, address onBehalfOfAccount, uint256 value, bytes calldata data)
+        public
+        payable
+        virtual
+        nonReentrantChecksAndControlCollateral
+        returns (bytes memory result)
+    {
         EC contextCache = executionContext;
         executionContext = contextCache.setChecksDeferred();
 
@@ -570,12 +585,7 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     }
 
     /// @inheritdoc IEVC
-    function controlCollateral(
-        address targetCollateral,
-        address onBehalfOfAccount,
-        uint256 value,
-        bytes calldata data
-    )
+    function controlCollateral(address targetCollateral, address onBehalfOfAccount, uint256 value, bytes calldata data)
         public
         payable
         virtual
@@ -757,11 +767,11 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     /// @param allowOperator A boolean indicating if operators are allowed to authenticate as the caller.
     /// @param checkLockdownMode A boolean indicating if the function should check for lockdown mode on the account.
     /// @return The address of the authenticated caller.
-    function authenticateCaller(
-        address account,
-        bool allowOperator,
-        bool checkLockdownMode
-    ) internal virtual returns (address) {
+    function authenticateCaller(address account, bool allowOperator, bool checkLockdownMode)
+        internal
+        virtual
+        returns (address)
+    {
         bytes19 addressPrefix = getAddressPrefixInternal(account);
         address owner = ownerLookup[addressPrefix].owner;
         bool lockdownMode = ownerLookup[addressPrefix].isLockdownMode;
@@ -811,11 +821,11 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     /// @param allowOperator A boolean indicating if operators are allowed to authenticate as the caller.
     /// @param checkLockdownMode A boolean indicating if the function should check for lockdown mode on the account.
     /// @return The address of the authenticated caller.
-    function authenticateCaller(
-        bytes19 addressPrefix,
-        bool allowOperator,
-        bool checkLockdownMode
-    ) internal virtual returns (address) {
+    function authenticateCaller(bytes19 addressPrefix, bool allowOperator, bool checkLockdownMode)
+        internal
+        virtual
+        returns (address)
+    {
         address owner = ownerLookup[addressPrefix].owner;
 
         return authenticateCaller({
@@ -986,8 +996,8 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
         bool success;
         (success, result) = vault.call(abi.encodeCall(IVault.checkVaultStatus, ()));
 
-        isValid =
-            success && result.length == 32 && abi.decode(result, (bytes32)) == bytes32(IVault.checkVaultStatus.selector);
+        isValid = success && result.length == 32
+            && abi.decode(result, (bytes32)) == bytes32(IVault.checkVaultStatus.selector);
 
         emit VaultStatusCheck(vault);
     }
@@ -1074,7 +1084,8 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
         bytes32 domainSeparator =
             block.chainid == CACHED_CHAIN_ID ? CACHED_DOMAIN_SEPARATOR : calculateDomainSeparator();
 
-        bytes32 structHash = abi.encodePacked(PERMIT_TYPEHASH, signer, sender, nonceNamespace, nonce, deadline, value, data)._hash();
+        bytes32 structHash =
+            abi.encodePacked(PERMIT_TYPEHASH, signer, sender, nonceNamespace, nonce, deadline, value, data)._hash();
 
         // This code overwrites the two most significant bytes of the free memory pointer,
         // and restores them to 0 after
@@ -1138,11 +1149,11 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     /// @param hash The hash of the data that was signed.
     /// @param signature The signature to validate.
     /// @return isValid True if the signature is valid according to ERC-1271, false otherwise.
-    function isValidERC1271Signature(
-        address signer,
-        bytes32 hash,
-        bytes memory signature
-    ) internal view returns (bool isValid) {
+    function isValidERC1271Signature(address signer, bytes32 hash, bytes memory signature)
+        internal
+        view
+        returns (bool isValid)
+    {
         if (signer.code.length == 0) return false;
 
         (bool success, bytes memory result) =
@@ -1203,10 +1214,11 @@ contract EthereumVaultConnector is Events, Errors, TransientStorage, IEVC {
     /// @param account The account address to check the operator authorization for.
     /// @param operator The operator address to check authorization status.
     /// @return isAuthorized True if the operator is authorized for the account, false otherwise.
-    function isAccountOperatorAuthorizedInternal(
-        address account,
-        address operator
-    ) internal view returns (bool isAuthorized) {
+    function isAccountOperatorAuthorizedInternal(address account, address operator)
+        internal
+        view
+        returns (bool isAuthorized)
+    {
         bytes19 addressPrefix = getAddressPrefixInternal(account);
         address owner = ownerLookup[addressPrefix].owner;
 

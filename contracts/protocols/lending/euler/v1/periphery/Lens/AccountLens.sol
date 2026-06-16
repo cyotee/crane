@@ -164,11 +164,7 @@ contract AccountLens is Utils {
         return result;
     }
 
-    function getAccountLiquidityInfo(address account, address vault)
-        public
-        view
-        returns (AccountLiquidityInfo memory)
-    {
+    function getAccountLiquidityInfo(address account, address vault) public view returns (AccountLiquidityInfo memory) {
         AccountLiquidityInfo memory result;
 
         result.account = account;
@@ -258,12 +254,10 @@ contract AccountLens is Utils {
 
         if (
             !result.queryFailure
-                || (
-                    bytes4(result.queryFailureReason) != Errors.E_TransientState.selector
-                        && bytes4(result.queryFailureReason) != Errors.E_NoLiability.selector
-                        && bytes4(result.queryFailureReason) != Errors.E_NotController.selector
-                        && bytes4(result.queryFailureReason) != Errors.E_NoPriceOracle.selector
-                )
+                || (bytes4(result.queryFailureReason) != Errors.E_TransientState.selector
+                    && bytes4(result.queryFailureReason) != Errors.E_NoLiability.selector
+                    && bytes4(result.queryFailureReason) != Errors.E_NotController.selector
+                    && bytes4(result.queryFailureReason) != Errors.E_NoPriceOracle.selector)
         ) return result;
 
         result.queryFailure = false;

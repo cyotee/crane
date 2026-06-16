@@ -9,9 +9,9 @@ import "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 
 contract TestERC20 is ERC20, ERC20Burnable, Ownable {
-    constructor() ERC20("TestERC20", "TestERC20") Ownable() {}
+    constructor() ERC20("TestERC20", "TestERC20") Ownable(msg.sender) {}
 
     function mint(address to, uint256 amount) external onlyOwner {
-      _mint(to, amount);
+        _mint(to, amount);
     }
 }

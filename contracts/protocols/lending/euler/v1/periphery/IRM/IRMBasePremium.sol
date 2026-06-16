@@ -2,8 +2,14 @@
 
 pragma solidity ^0.8.0;
 
-import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
-import {AccessControl, IAccessControl, Context} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
+import {
+    AccessControlEnumerable
+} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
+import {
+    AccessControl,
+    IAccessControl,
+    Context
+} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {IIRM} from "@crane/contracts/protocols/lending/euler/v1/vault/InterestRateModels/IIRM.sol";
 
@@ -69,7 +75,7 @@ contract IRMBasePremium is AccessControlEnumerable, EVCUtil, IIRM {
     function grantRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.grantRole(role, account);
@@ -81,7 +87,7 @@ contract IRMBasePremium is AccessControlEnumerable, EVCUtil, IIRM {
     function revokeRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.revokeRole(role, account);
@@ -93,7 +99,7 @@ contract IRMBasePremium is AccessControlEnumerable, EVCUtil, IIRM {
     function renounceRole(bytes32 role, address callerConfirmation)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.renounceRole(role, callerConfirmation);
@@ -162,7 +168,7 @@ contract IRMBasePremium is AccessControlEnumerable, EVCUtil, IIRM {
 
     /// @notice Retrieves the message sender in the context of the EVC.
     /// @return msgSender The address of the message sender.
-    function _msgSender() internal view virtual override (EVCUtil, Context) returns (address msgSender) {
+    function _msgSender() internal view virtual override(EVCUtil, Context) returns (address msgSender) {
         return EVCUtil._msgSender();
     }
 }

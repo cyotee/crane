@@ -16,10 +16,14 @@ contract SwETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             uint256 preBalance = _selfBalance(swETH);
             ISwETH(swETH).deposit{value: amountDeposited}();
@@ -32,9 +36,17 @@ contract SwETHSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(swETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -51,10 +63,14 @@ contract SwETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             return amountTokenToDeposit.divDown(ISwETH(swETH).getRate());
         } else {
@@ -63,9 +79,17 @@ contract SwETHSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

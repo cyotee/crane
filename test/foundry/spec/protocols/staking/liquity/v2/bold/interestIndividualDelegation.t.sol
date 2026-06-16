@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
 import "./TestContracts/DevTestSetup.sol";
 
 contract InterestIndividualDelegationTest is DevTestSetup {

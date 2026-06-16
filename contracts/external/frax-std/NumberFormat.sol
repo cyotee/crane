@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { console2 as console } from "forge-std/Test.sol";
-import { Strings } from "./@openzeppelin/contracts-5.4.0/utils/Strings.sol";
-import { StringsHelper } from "./StringsHelper.sol";
+import {console2 as console} from "forge-std/Test.sol";
+import {Strings} from "./@openzeppelin/contracts-5.4.0/utils/Strings.sol";
+import {StringsHelper} from "./StringsHelper.sol";
 
 // ====================================================================
 // |     ______                   _______                             |

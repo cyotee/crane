@@ -4,8 +4,7 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/Fraxbonds/SlippageAuction.js`
 
 import {Test} from "forge-std/Test.sol";
-import {SlippageAuction} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxbonds/SlippageAuction.sol";
+import {SlippageAuction} from "@crane/contracts/protocols/tokens/stable/frax/Fraxbonds/SlippageAuction.sol";
 import {MintableERC20} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MintableERC20.sol";
 
 contract SlippageAuction_Test is Test {
@@ -31,9 +30,8 @@ contract SlippageAuction_Test is Test {
 
     function test_createAuction_storesAuction() public {
         sellToken.approve(address(auction), 1e18);
-        uint256 auctionNo = auction.createAuction(
-            address(buyToken), address(sellToken), 1e18, 1e18, uint128(1e14), uint128(1e16)
-        );
+        uint256 auctionNo =
+            auction.createAuction(address(buyToken), address(sellToken), 1e18, 1e18, uint128(1e14), uint128(1e16));
         assertEq(auctionNo, 0);
 
         (
@@ -44,8 +42,7 @@ contract SlippageAuction_Test is Test {
             uint128 priceSlippage,
             uint128 amountLeft,
             uint128 amountOut,
-            uint128 lastPrice,
-            ,
+            uint128 lastPrice,,
             bool exited
         ) = auction.auctions(0);
 

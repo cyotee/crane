@@ -1,14 +1,13 @@
 pragma solidity ^0.8.35;
 
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IUniswapV2FactoryV5.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/Babylonian.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/FullMath.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IUniswapV2FactoryV5.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/Babylonian.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/FullMath.sol";
 
 // library containing some math for dealing with the liquidity shares of a pair, e.g. computing their exact value
 // in terms of the underlying tokens
 library UniswapV2LiquidityMathLibraryMini {
-
     // computes the direction and magnitude of the profit-maximizing trade
     // function computeProfitMaximizingTrade(
     //     uint256 truePriceTokenA,
@@ -44,19 +43,14 @@ library UniswapV2LiquidityMathLibraryMini {
         uint256 reserveIn,
         uint256 reserveOut,
         uint256 fee
-    ) pure internal returns (uint256 amountIn) {
+    ) internal pure returns (uint256 amountIn) {
         uint256 invariant = reserveIn * reserveOut;
 
         // true price is expressed as a ratio, so both values must be non-zero
         require(inTokenTruePrice != 0 && outTokenTruePrice != 0, "CPMT: ZERO_PRICE");
 
-        uint256 leftSide = Babylonian.sqrt(
-            FullMath.mulDiv(
-                (invariant * 10000),
-                inTokenTruePrice,
-                outTokenTruePrice * fee
-            )
-        );
+        uint256 leftSide =
+            Babylonian.sqrt(FullMath.mulDiv((invariant * 10000), inTokenTruePrice, outTokenTruePrice * fee));
         uint256 rightSide = (reserveIn * 10000) / fee;
 
         if (leftSide < rightSide) return (0);

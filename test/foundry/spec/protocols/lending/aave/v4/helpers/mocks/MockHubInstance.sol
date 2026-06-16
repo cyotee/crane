@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Hub} from '@crane/contracts/protocols/lending/aave/v4/hub/Hub.sol';
+import {Hub} from "@crane/contracts/protocols/lending/aave/v4/hub/Hub.sol";
 
 contract MockHubInstance is Hub {
-  bool public constant IS_TEST = true;
+    bool public constant IS_TEST = true;
 
-  uint64 public immutable HUB_REVISION;
+    uint64 public immutable HUB_REVISION;
 
-  constructor(uint64 hubRevision_) {
-    HUB_REVISION = hubRevision_;
-    _disableInitializers();
-  }
+    constructor(uint64 hubRevision_) {
+        HUB_REVISION = hubRevision_;
+        _disableInitializers();
+    }
 
-  function initialize(address authority) external override reinitializer(HUB_REVISION) {
-    require(authority != address(0), InvalidAddress());
-    __AccessManaged_init(authority);
-  }
+    function initialize(address authority) external override reinitializer(HUB_REVISION) {
+        require(authority != address(0), InvalidAddress());
+        __AccessManaged_init(authority);
+    }
 }

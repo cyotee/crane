@@ -5,7 +5,10 @@ pragma solidity ^0.8.0;
 import {SelectorAccessControl} from "../AccessControl/SelectorAccessControl.sol";
 import {BaseFactory} from "../BaseFactory/BaseFactory.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
-import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
+import {
+    AmountCap,
+    AmountCapLib
+} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import {MAX_SANE_AMOUNT} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 import {IGovernance} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
 

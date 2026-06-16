@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Checkpoint} from '../libraries/CheckpointLib.sol';
-import {ValueX7} from '../libraries/ValueX7Lib.sol';
-import {IBidStorage} from './IBidStorage.sol';
-import {ICheckpointStorage} from './ICheckpointStorage.sol';
-import {IStepStorage} from './IStepStorage.sol';
-import {ITickStorage} from './ITickStorage.sol';
-import {ITokenCurrencyStorage} from './ITokenCurrencyStorage.sol';
-import {IValidationHook} from './IValidationHook.sol';
-import {ILBPInitializer} from './external/ILBPInitializer.sol';
-import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
+import {Checkpoint} from "../libraries/CheckpointLib.sol";
+import {ValueX7} from "../libraries/ValueX7Lib.sol";
+import {IBidStorage} from "./IBidStorage.sol";
+import {ICheckpointStorage} from "./ICheckpointStorage.sol";
+import {IStepStorage} from "./IStepStorage.sol";
+import {ITickStorage} from "./ITickStorage.sol";
+import {ITokenCurrencyStorage} from "./ITokenCurrencyStorage.sol";
+import {IValidationHook} from "./IValidationHook.sol";
+import {ILBPInitializer} from "./external/ILBPInitializer.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 
 /// @notice Parameters for the auction
 /// @dev token and totalSupply are passed as constructor arguments

@@ -22,13 +22,9 @@ contract PendleStargateLPSY is SYBaseWithRewards {
     // preview variables
     uint256 public immutable convertRate;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _stargateLP,
-        address _stargateStaking,
-        uint256 _sid
-    ) SYBaseWithRewards(_name, _symbol, _stargateLP) {
+    constructor(string memory _name, string memory _symbol, address _stargateLP, address _stargateStaking, uint256 _sid)
+        SYBaseWithRewards(_name, _symbol, _stargateLP)
+    {
         lp = _stargateLP;
         underlying = IStargateLP(lp).token();
 
@@ -50,7 +46,7 @@ contract PendleStargateLPSY is SYBaseWithRewards {
     }
 
     function _validateStargateStakingId(address staking, uint256 id, address lpToken) internal view {
-        (address _lpToken, , , ) = IStargateStaking(staking).poolInfo(id);
+        (address _lpToken,,,) = IStargateStaking(staking).poolInfo(id);
         // Custom error not needed here since this only happens on deployment
         require(_lpToken == lpToken, "invalid sid & lpToken");
     }
@@ -63,10 +59,12 @@ contract PendleStargateLPSY is SYBaseWithRewards {
      * The underlying yield token is startgateLP. If the base token deposited is underlying, the function
      * deposits received underlying into the startgateLP contract.
      */
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == underlying) {
             IStargateRouter(stargateRouter).addLiquidity(pid, amountDeposited, address(this));
             amountSharesOut = _selfBalance(lp);
@@ -77,11 +75,12 @@ contract PendleStargateLPSY is SYBaseWithRewards {
         IStargateStaking(stargateStaking).deposit(sid, amountSharesOut);
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         IStargateStaking(stargateStaking).withdraw(sid, amountSharesToRedeem);
         if (tokenOut == lp) {
             amountTokenOut = amountSharesToRedeem;
@@ -140,10 +139,12 @@ contract PendleStargateLPSY is SYBaseWithRewards {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == lp) {
             amountSharesOut = amountTokenToDeposit;
         } else {
@@ -162,10 +163,12 @@ contract PendleStargateLPSY is SYBaseWithRewards {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == lp) {
             amountTokenOut = amountSharesToRedeem;
         } else {

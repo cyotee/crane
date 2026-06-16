@@ -25,24 +25,24 @@ import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol"
 import "@crane/contracts/external/uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 
 contract FraxswapDummyRouter {
-   struct FraxswapParams {
-      address tokenIn;
-      uint256 amountIn;
-      address tokenOut;
-      uint256 amountOutMinimum;
-      address recipient;
-      uint256 deadline;
-      bool approveMax;
-      uint8 v;
-      bytes32 r;
-      bytes32 s;
-      bytes route;
-   }
-   function swap(FraxswapParams memory params) external payable returns (uint256) {
-      TransferHelper.safeTransferFrom(params.tokenIn, msg.sender , address(this), params.amountIn);
-      TransferHelper.safeTransfer(params.tokenOut, params.recipient, params.amountOutMinimum);
-      return params.amountOutMinimum;
-   }
+    struct FraxswapParams {
+        address tokenIn;
+        uint256 amountIn;
+        address tokenOut;
+        uint256 amountOutMinimum;
+        address recipient;
+        uint256 deadline;
+        bool approveMax;
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+        bytes route;
+    }
+
+    function swap(FraxswapParams memory params) external payable returns (uint256) {
+        TransferHelper.safeTransferFrom(params.tokenIn, msg.sender, address(this), params.amountIn);
+        TransferHelper.safeTransfer(params.tokenOut, params.recipient, params.amountOutMinimum);
+        return params.amountOutMinimum;
+    }
 }
 
-    

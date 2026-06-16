@@ -87,7 +87,7 @@ contract FraxswapOracleTest is TestBase_FraxBAMM {
 
             for (uint256 i = 0; i <= 100; i++) {
                 (uint256 result0, uint256 result1) =
-                oracle.getPrice(IFraxswapPair(address(pair)), i * 100_002 + 10, 10, 10_000);
+                    oracle.getPrice(IFraxswapPair(address(pair)), i * 100_002 + 10, 10, 10_000);
 
                 uint256 sum0;
                 uint256 sum1;

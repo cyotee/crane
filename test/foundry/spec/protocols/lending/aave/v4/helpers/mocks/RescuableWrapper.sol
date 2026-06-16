@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Rescuable} from '@crane/contracts/protocols/lending/aave/v4/utils/Rescuable.sol';
+import {Rescuable} from "@crane/contracts/protocols/lending/aave/v4/utils/Rescuable.sol";
 
 contract RescuableWrapper is Rescuable {
-  address public admin;
+    address public admin;
 
-  constructor(address admin_) {
-    admin = admin_;
-  }
+    constructor(address admin_) {
+        admin = admin_;
+    }
 
-  function _rescueGuardian() internal view override returns (address) {
-    return admin;
-  }
+    function _rescueGuardian() internal view override returns (address) {
+        return admin;
+    }
 }

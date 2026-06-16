@@ -32,7 +32,7 @@ contract PendleUniversalOracle is BaseAdapter {
     /// @notice The address of the quote asset, the SY or underlying address.
     address public immutable quote;
     /// @notice The PendlePYOracleLib function to call.
-    function (IPMarket, uint32) view returns (uint256) internal immutable getRate;
+    function(IPMarket, uint32) view returns (uint256) internal immutable getRate;
     /// @notice The scale factors used for decimal conversions.
     Scale internal immutable scale;
 

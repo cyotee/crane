@@ -102,8 +102,9 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
 
         if (params.direction == WrappingDirection.UNWRAP) {
             bytes32 bufferBalances;
-            (amountInRaw, amountOutRaw, bufferBalances) =
-                _unwrapWithBuffer(layoutStruct, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw);
+            (amountInRaw, amountOutRaw, bufferBalances) = _unwrapWithBuffer(
+                layoutStruct, params.kind, underlyingToken, params.wrappedToken, params.amountGivenRaw
+            );
             emit Unwrap(params.wrappedToken, amountInRaw, amountOutRaw, bufferBalances);
         } else {
             bytes32 bufferBalances;
@@ -191,7 +192,11 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             underlyingToken.forceApprove(address(wrappedToken), 0);
 
             _settleWrap(
-                layoutStruct, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
+                layoutStruct,
+                underlyingToken,
+                IERC20(address(wrappedToken)),
+                vaultUnderlyingDeltaHint,
+                vaultWrappedDeltaHint
             );
 
             bufferBalances = PackedTokenBalance.toPackedBalance(
@@ -253,7 +258,11 @@ contract VaultBufferFacet is BalancerV3VaultModifiers, IFacet {
             }
 
             _settleUnwrap(
-                layoutStruct, underlyingToken, IERC20(address(wrappedToken)), vaultUnderlyingDeltaHint, vaultWrappedDeltaHint
+                layoutStruct,
+                underlyingToken,
+                IERC20(address(wrappedToken)),
+                vaultUnderlyingDeltaHint,
+                vaultWrappedDeltaHint
             );
 
             bufferBalances = PackedTokenBalance.toPackedBalance(

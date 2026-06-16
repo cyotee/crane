@@ -20,7 +20,7 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
 
     /// @dev Block number for fork reproducibility (Jan 2026)
     /// Use a recent block with known pool states for deterministic testing
-    uint256 internal constant FORK_BLOCK = 28_000_000;
+    // uint256 internal constant FORK_BLOCK = 28_000_000;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */
@@ -57,7 +57,7 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
 
         // Create fork at specific block for reproducibility
         // Uses the rpc_endpoints defined in foundry.toml
-        vm.createSelectFork("base_mainnet_infura", FORK_BLOCK);
+        vm.createSelectFork("base_mainnet_infura", BASE_MAIN.DEFAULT_FORK_BLOCK);
 
         // Set up contract references from network constants
         uniswapV2Factory = IUniswapV2Factory(BASE_MAIN.UNISWAP_V2_FACTORY);
@@ -67,7 +67,7 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
         vm.label(address(uniswapV2Router), "UniswapV2Router");
 
         // Label common tokens
-        vm.label(WETH, "WETH");
+        vm.label(BASE_MAIN.WETH9, "WETH");
         vm.label(USDC, "USDC");
         vm.label(USDbC, "USDbC");
         vm.label(DAI, "DAI");
@@ -89,7 +89,11 @@ abstract contract TestBase_UniswapV2ForkBase is Test {
     }
 
     /// @notice Get sorted reserves for a pair given the tokens
-    function getReserves(IUniswapV2Pair pair, address tokenA, address /* tokenB */)
+    function getReserves(
+        IUniswapV2Pair pair,
+        address tokenA,
+        address /* tokenB */
+    )
         internal
         view
         returns (uint256 reserveA, uint256 reserveB)

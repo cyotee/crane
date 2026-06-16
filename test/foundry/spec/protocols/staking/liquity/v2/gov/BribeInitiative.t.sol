@@ -4,11 +4,11 @@ pragma solidity ^0.8.35;
 import {Test, console2} from "forge-std/Test.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
 
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
 
 import {MockERC20Tester} from "./mocks/MockERC20Tester.sol";
 import {MockStakingV1} from "./mocks/MockStakingV1.sol";

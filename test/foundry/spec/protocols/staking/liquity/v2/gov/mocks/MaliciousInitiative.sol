@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {IInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IInitiative.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+import {IInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IInitiative.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 
 contract MaliciousInitiative is IInitiative {
     enum FunctionType {

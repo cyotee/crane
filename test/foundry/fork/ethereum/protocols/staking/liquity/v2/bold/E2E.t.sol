@@ -2,10 +2,14 @@
 pragma solidity ^0.8.35;
 
 import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";
-import {CurveV2GaugeRewards} from "@crane/contracts/protocols/staking/liquity/v2/gov/CurveV2GaugeRewards.sol";
-import {Ownable} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Ownable.sol";
-import {ICurveStableSwapNG} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Interfaces/Curve/ICurveStableSwapNG.sol";
-import {ILiquidityGaugeV6} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Interfaces/Curve/ILiquidityGaugeV6.sol";
+import {CurveV2GaugeRewards} from "@crane/contracts/protocols/cdps/liquity/v2/gov/CurveV2GaugeRewards.sol";
+import {Ownable} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Ownable.sol";
+import {
+    ICurveStableSwapNG
+} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Interfaces/Curve/ICurveStableSwapNG.sol";
+import {
+    ILiquidityGaugeV6
+} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Interfaces/Curve/ILiquidityGaugeV6.sol";
 import "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/E2EHelpers.sol";
 
 function coalesce(address a, address b) pure returns (address) {
@@ -68,10 +72,7 @@ contract E2ETest is E2EHelpers {
 
         vm.startPrank(owner);
         mainnet_V1_borrowerOperations.openTrove{value: collAmount}({
-            _LUSDAmount: lusdAmount,
-            _maxFeePercentage: borrowingRate,
-            _upperHint: lastTrove,
-            _lowerHint: address(0)
+            _LUSDAmount: lusdAmount, _maxFeePercentage: borrowingRate, _upperHint: lastTrove, _lowerHint: address(0)
         });
         vm.stopPrank();
 
@@ -361,8 +362,9 @@ contract E2ETest is E2EHelpers {
 
             for (uint256 i = 0; i < initiatives.length; ++i) {
                 governance.claimForInitiative(initiatives[i].addr);
-                initiativeShareOfInterest +=
-                    boldToken.balanceOf(coalesce(address(initiatives[i].gauge), initiatives[i].addr));
+                initiativeShareOfInterest += boldToken.balanceOf(
+                    coalesce(address(initiatives[i].gauge), initiatives[i].addr)
+                );
             }
 
             assertApproxEqRelDecimal(

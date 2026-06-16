@@ -12,7 +12,7 @@ library PendlePYOracleLib {
 
     /**
      * This function returns the twap rate PT/Asset on market, but take into account the current rate of SY
-     This is to account for special cases where underlying asset becomes insolvent and has decreasing exchangeRate
+     *  This is to account for special cases where underlying asset becomes insolvent and has decreasing exchangeRate
      * @param market market to get rate from
      * @param duration twap duration
      */
@@ -27,7 +27,7 @@ library PendlePYOracleLib {
 
     /**
      * This function returns the twap rate YT/Asset on market, but take into account the current rate of SY
-     This is to account for special cases where underlying asset becomes insolvent and has decreasing exchangeRate
+     *  This is to account for special cases where underlying asset becomes insolvent and has decreasing exchangeRate
      * @param market market to get rate from
      * @param duration twap duration
      */
@@ -80,7 +80,7 @@ library PendlePYOracleLib {
     }
 
     function getSYandPYIndexCurrent(IPMarket market) internal view returns (uint256 syIndex, uint256 pyIndex) {
-        (IStandardizedYield SY, , IPYieldToken YT) = market.readTokens();
+        (IStandardizedYield SY,, IPYieldToken YT) = market.readTokens();
 
         syIndex = SY.exchangeRate();
         uint256 pyIndexStored = YT.pyIndexStored();

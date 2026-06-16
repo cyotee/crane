@@ -40,7 +40,11 @@ library Behavior_IERC8109IntrospectionRepo {
 
     bytes32 internal constant STORAGE_SLOT = keccak256(abi.encode(type(Behavior_IERC8109IntrospectionRepo).name));
 
-    function _layoutStruct(bytes32 slot_) internal pure returns (Behavior_IERC8109IntrospectionLayout storage layoutStruct) {
+    function _layoutStruct(bytes32 slot_)
+        internal
+        pure
+        returns (Behavior_IERC8109IntrospectionLayout storage layoutStruct)
+    {
         assembly {
             layoutStruct.slot := slot_
         }
@@ -80,11 +84,10 @@ library Behavior_IERC8109IntrospectionRepo {
 
     /* ------ Expected selectors ------ */
 
-    function _expected_selectors(Behavior_IERC8109IntrospectionLayout storage layoutStruct, IERC8109Introspection subject)
-        internal
-        view
-        returns (Bytes4Set storage)
-    {
+    function _expected_selectors(
+        Behavior_IERC8109IntrospectionLayout storage layoutStruct,
+        IERC8109Introspection subject
+    ) internal view returns (Bytes4Set storage) {
         return layoutStruct.expected_selectors[subject];
     }
 

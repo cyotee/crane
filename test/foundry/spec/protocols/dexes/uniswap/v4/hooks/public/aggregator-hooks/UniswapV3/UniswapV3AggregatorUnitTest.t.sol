@@ -13,7 +13,9 @@ import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Ti
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {UniswapV3Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/UniswapV3Aggregator.sol";
+import {
+    UniswapV3Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/UniswapV3Aggregator.sol";
 import {MockUniV3Pool} from "./mocks/MockUniV3Pool.sol";
 import {MockUniV3Factory} from "./mocks/MockUniV3Factory.sol";
 
@@ -42,8 +44,9 @@ contract UniswapV3AggregatorUnitTest is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
 
         token0 = new MockERC20("Token0", "TK0", 18);

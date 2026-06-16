@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
+import {
+    AccessControlEnumerable
+} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
 import {IHookTarget} from "@crane/contracts/protocols/lending/euler/v1/vault/interfaces/IHookTarget.sol";
 
 /// @title HookTargetGuardian

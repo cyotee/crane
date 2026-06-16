@@ -13,25 +13,23 @@ library OracleLib {
         // 1 SLOT = 256 bits
     }
 
-    function transform(
-        Observation memory last,
-        uint32 blockTimestamp,
-        uint96 lnImpliedRate
-    ) public pure returns (Observation memory) {
-        return
-            Observation({
-                blockTimestamp: blockTimestamp,
-                lnImpliedRateCumulative: last.lnImpliedRateCumulative +
-                    uint216(lnImpliedRate) *
-                    (blockTimestamp - last.blockTimestamp),
-                initialized: true
-            });
+    function transform(Observation memory last, uint32 blockTimestamp, uint96 lnImpliedRate)
+        public
+        pure
+        returns (Observation memory)
+    {
+        return Observation({
+            blockTimestamp: blockTimestamp,
+            lnImpliedRateCumulative: last.lnImpliedRateCumulative + uint216(lnImpliedRate)
+                * (blockTimestamp - last.blockTimestamp),
+            initialized: true
+        });
     }
 
-    function initialize(
-        Observation[65535] storage self,
-        uint32 time
-    ) public returns (uint16 cardinality, uint16 cardinalityNext) {
+    function initialize(Observation[65535] storage self, uint32 time)
+        public
+        returns (uint16 cardinality, uint16 cardinalityNext)
+    {
         self[0] = Observation({blockTimestamp: time, lnImpliedRateCumulative: 0, initialized: true});
         return (1, 1);
     }
@@ -66,7 +64,7 @@ library OracleLib {
         if (next <= current) return current;
         // store in each slot to prevent fresh SSTOREs in swaps
         // this data will not be used because the initialized boolean is still false
-        for (uint16 i = current; i != next; ) {
+        for (uint16 i = current; i != next;) {
             self[i].blockTimestamp = 1;
             unchecked {
                 ++i;
@@ -75,12 +73,11 @@ library OracleLib {
         return next;
     }
 
-    function binarySearch(
-        Observation[65535] storage self,
-        uint32 target,
-        uint16 index,
-        uint16 cardinality
-    ) public view returns (Observation memory beforeOrAt, Observation memory atOrAfter) {
+    function binarySearch(Observation[65535] storage self, uint32 target, uint16 index, uint16 cardinality)
+        public
+        view
+        returns (Observation memory beforeOrAt, Observation memory atOrAfter)
+    {
         uint256 l = (index + 1) % cardinality; // oldest observation
         uint256 r = l + cardinality - 1; // newest observation
         uint256 i;
@@ -157,13 +154,8 @@ library OracleLib {
 
         uint32 target = time - secondsAgo;
 
-        (Observation memory beforeOrAt, Observation memory atOrAfter) = getSurroundingObservations(
-            self,
-            target,
-            lnImpliedRate,
-            index,
-            cardinality
-        );
+        (Observation memory beforeOrAt, Observation memory atOrAfter) =
+            getSurroundingObservations(self, target, lnImpliedRate, index, cardinality);
 
         if (target == beforeOrAt.blockTimestamp) {
             // we're at the left boundary
@@ -173,11 +165,12 @@ library OracleLib {
             return atOrAfter.lnImpliedRateCumulative;
         } else {
             // we're in the middle
-            return (beforeOrAt.lnImpliedRateCumulative +
-                uint216(
-                    (uint256(atOrAfter.lnImpliedRateCumulative - beforeOrAt.lnImpliedRateCumulative) *
-                        (target - beforeOrAt.blockTimestamp)) / (atOrAfter.blockTimestamp - beforeOrAt.blockTimestamp)
-                ));
+            return (beforeOrAt.lnImpliedRateCumulative
+                    + uint216(
+                        (uint256(atOrAfter.lnImpliedRateCumulative - beforeOrAt.lnImpliedRateCumulative)
+                                * (target - beforeOrAt.blockTimestamp))
+                            / (atOrAfter.blockTimestamp - beforeOrAt.blockTimestamp)
+                    ));
         }
     }
 

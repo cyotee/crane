@@ -58,7 +58,7 @@ contract ReserveTracker is Owned {
     address[] public fxs_pairs_array;
 
     // Mapping is also used for faster verification
-    mapping(address => bool) public fxs_pairs; 
+    mapping(address => bool) public fxs_pairs;
 
     uint256 public fxs_reserves;
 
@@ -86,7 +86,7 @@ contract ReserveTracker is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _frax_contract_address,
         address _fxs_contract_address,
         address _creator_address,
@@ -115,20 +115,21 @@ contract ReserveTracker is Owned {
     }
 
     function getFXSPrice() public view returns (uint256) {
-        return uint256(chainlink_fxs_oracle.getLatestPrice()).mul(PRICE_PRECISION).div(10 ** chainlink_fxs_oracle_decimals);
+        return
+            uint256(chainlink_fxs_oracle.getLatestPrice()).mul(PRICE_PRECISION).div(10 ** chainlink_fxs_oracle_decimals);
     }
 
     function getFXSReserves() public view returns (uint256) {
-        uint256 total_fxs_reserves = 0; 
+        uint256 total_fxs_reserves = 0;
 
-        for (uint i = 0; i < fxs_pairs_array.length; i++){ 
+        for (uint256 i = 0; i < fxs_pairs_array.length; i++) {
             // Exclude null addresses
-            if (fxs_pairs_array[i] != address(0)){
-                if(IUniswapV2Pair(fxs_pairs_array[i]).token0() == fxs_contract_address) {
-                    (uint reserves0, , ) = IUniswapV2Pair(fxs_pairs_array[i]).getReserves();
+            if (fxs_pairs_array[i] != address(0)) {
+                if (IUniswapV2Pair(fxs_pairs_array[i]).token0() == fxs_contract_address) {
+                    (uint256 reserves0,,) = IUniswapV2Pair(fxs_pairs_array[i]).getReserves();
                     total_fxs_reserves = total_fxs_reserves.add(reserves0);
                 } else if (IUniswapV2Pair(fxs_pairs_array[i]).token1() == fxs_contract_address) {
-                    ( , uint reserves1, ) = IUniswapV2Pair(fxs_pairs_array[i]).getReserves();
+                    (, uint256 reserves1,) = IUniswapV2Pair(fxs_pairs_array[i]).getReserves();
                     total_fxs_reserves = total_fxs_reserves.add(reserves1);
                 }
             }
@@ -142,7 +143,7 @@ contract ReserveTracker is Owned {
     function refreshFRAXCurveTWAP() public returns (uint256) {
         require(twap_paused == false, "TWAP has been paused");
         uint256 time_elapsed = (block.timestamp).sub(last_timestamp);
-        require(time_elapsed >= PERIOD, 'ReserveTracker: PERIOD_NOT_ELAPSED');
+        require(time_elapsed >= PERIOD, "ReserveTracker: PERIOD_NOT_ELAPSED");
         uint256[2] memory new_twap = frax_metapool.get_price_cumulative_last();
         uint256[2] memory balances = frax_metapool.get_twap_balances(old_twap, new_twap, time_elapsed);
         last_timestamp = block.timestamp;
@@ -157,7 +158,7 @@ contract ReserveTracker is Owned {
         twap_paused = _state;
     }
 
-    function setCurveTWAPPeriod(uint _period) external onlyByOwnGov {
+    function setCurveTWAPPeriod(uint256 _period) external onlyByOwnGov {
         PERIOD = _period;
     }
 
@@ -167,7 +168,11 @@ contract ReserveTracker is Owned {
     }
 
     // Get the pair of which to price FRAX from
-    function setFRAXPriceOracle(address _frax_price_oracle_address, address _frax_pair_collateral_address, uint256 _frax_pair_collateral_decimals) public onlyByOwnGov {
+    function setFRAXPriceOracle(
+        address _frax_price_oracle_address,
+        address _frax_pair_collateral_address,
+        uint256 _frax_pair_collateral_decimals
+    ) public onlyByOwnGov {
         frax_price_oracle_address = _frax_price_oracle_address;
         frax_pair_collateral_address = _frax_pair_collateral_address;
         frax_pair_collateral_decimals = _frax_pair_collateral_decimals;
@@ -187,29 +192,32 @@ contract ReserveTracker is Owned {
         fxs_weth_oracle = UniswapPairOracle(fxs_weth_oracle_address);
     }
 
-    function setETHCollateralOracle(address _weth_collateral_oracle_address, uint _collateral_decimals) public onlyByOwnGov {
+    function setETHCollateralOracle(address _weth_collateral_oracle_address, uint256 _collateral_decimals)
+        public
+        onlyByOwnGov
+    {
         weth_collat_oracle_address = _weth_collateral_oracle_address;
         weth_collat_decimals = _collateral_decimals;
         weth_collat_oracle = UniswapPairOracle(_weth_collateral_oracle_address);
         CONSULT_FXS_DEC = 1e6 * (10 ** (uint256(18).sub(_collateral_decimals)));
     }
 
-    // Adds collateral addresses supported, such as tether and busd, must be ERC20 
+    // Adds collateral addresses supported, such as tether and busd, must be ERC20
     function addFXSPair(address pair_address) public onlyByOwnGov {
         require(fxs_pairs[pair_address] == false, "Address already exists");
-        fxs_pairs[pair_address] = true; 
+        fxs_pairs[pair_address] = true;
         fxs_pairs_array.push(pair_address);
     }
 
-    // Remove a pool 
+    // Remove a pool
     function removeFXSPair(address pair_address) public onlyByOwnGov {
         require(fxs_pairs[pair_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete fxs_pairs[pair_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < fxs_pairs_array.length; i++){ 
+        for (uint256 i = 0; i < fxs_pairs_array.length; i++) {
             if (fxs_pairs_array[i] == pair_address) {
                 fxs_pairs_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;

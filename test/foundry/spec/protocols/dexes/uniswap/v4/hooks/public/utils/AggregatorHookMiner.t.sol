@@ -2,7 +2,9 @@
 pragma solidity ^0.8.21;
 
 import "forge-std/Test.sol";
-import {AggregatorHookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/utils/AggregatorHookMiner.sol";
+import {
+    AggregatorHookMiner
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/utils/AggregatorHookMiner.sol";
 import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
 
 contract AggregatorHookMinerTest is Test {

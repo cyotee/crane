@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.12;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IAggregationExecutor} from "./IAggregationExecutor.sol";
 
 interface IMetaAggregationRouterV2 {

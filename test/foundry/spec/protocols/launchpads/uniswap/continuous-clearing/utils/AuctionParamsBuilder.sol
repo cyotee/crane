@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
+import {
+    AuctionParameters
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
 
 library AuctionParamsBuilder {
     function init() internal pure returns (AuctionParameters memory) {
@@ -89,7 +91,7 @@ library AuctionParamsBuilder {
         pure
         returns (AuctionParameters memory)
     {
-        require(startBlock <= type(uint64).max, 'startBlock too large');
+        require(startBlock <= type(uint64).max, "startBlock too large");
         params.startBlock = uint64(startBlock);
         return params;
     }
@@ -109,7 +111,7 @@ library AuctionParamsBuilder {
         pure
         returns (AuctionParameters memory)
     {
-        require(endBlock <= type(uint64).max, 'endBlock too large');
+        require(endBlock <= type(uint64).max, "endBlock too large");
         params.endBlock = uint64(endBlock);
         return params;
     }
@@ -129,7 +131,7 @@ library AuctionParamsBuilder {
         pure
         returns (AuctionParameters memory)
     {
-        require(claimBlock <= type(uint64).max, 'claimBlock too large');
+        require(claimBlock <= type(uint64).max, "claimBlock too large");
         params.claimBlock = uint64(claimBlock);
         return params;
     }

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {ERC20Faucet} from "./ERC20Faucet.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 

@@ -11,7 +11,9 @@ contract BasicOps is DevTestSetup {
 
         vm.startPrank(G);
         vm.expectRevert(
-            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, address(borrowerOperations), 0, 2e18)
+            abi.encodeWithSelector(
+                IERC20Errors.ERC20InsufficientAllowance.selector, address(borrowerOperations), 0, 2e18
+            )
         );
         borrowerOperations.openTrove(
             G, 0, 2e18, 2000e18, 0, 0, MIN_ANNUAL_INTEREST_RATE, 1000e18, address(0), address(0), address(0)
@@ -24,9 +26,7 @@ contract BasicOps is DevTestSetup {
 
         vm.startPrank(G);
         collToken.approve(address(borrowerOperations), 2e18);
-        vm.expectRevert(
-            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, G, 0, 2e18)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, G, 0, 2e18));
         borrowerOperations.openTrove(
             G, 0, 2e18, 2000e18, 0, 0, MIN_ANNUAL_INTEREST_RATE, 1000e18, address(0), address(0), address(0)
         );

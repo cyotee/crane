@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {AuctionState, AuctionStateLens} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/lens/AuctionStateLens.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {AuctionUnitTest} from '../unit/AuctionUnitTest.sol';
-import {Test} from 'forge-std/Test.sol';
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    AuctionState,
+    AuctionStateLens
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/lens/AuctionStateLens.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {AuctionUnitTest} from "../unit/AuctionUnitTest.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract AuctionStateLensTest is AuctionUnitTest {
     AuctionStateLens public lens;

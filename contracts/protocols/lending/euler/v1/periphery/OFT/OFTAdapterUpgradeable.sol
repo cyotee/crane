@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.22;
 
-import {OFTAdapterUpgradeable as OFTAdapter} from "@crane/contracts/protocols/lending/euler/v1/stubs/layerzero/oft-evm-upgradeable/contracts/oft/OFTAdapterUpgradeable.sol";
+import {
+    OFTAdapterUpgradeable as OFTAdapter
+} from "@crane/contracts/protocols/lending/euler/v1/stubs/layerzero/oft-evm-upgradeable/contracts/oft/OFTAdapterUpgradeable.sol";
 
 /// @title OFTAdapterUpgradeable
 /// @custom:security-contact security@euler.xyz

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 /// @title MaxBidPriceLib
 /// @notice Library for calculating the maximum bid price for a given total supply

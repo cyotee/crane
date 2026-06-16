@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 library ETHEREUM_MAIN {
     uint256 constant CHAIN_ID = 1;
 
-    uint256 constant DEFAULT_FORK_BLOCK = 24_666_122;
+    uint256 constant DEFAULT_FORK_BLOCK = 25_000_000;
+    // uint256 constant DEFAULT_FORK_BLOCK = 25_300_000;
+    // uint256 constant DEFAULT_FORK_BLOCK = 25_352_857;
 
     /* ---------------------------------------------------------------------- */
     /*                                  WETH9                                 */
@@ -28,7 +30,7 @@ library ETHEREUM_MAIN {
     address constant BASE_L1_STANDARD_BRIDGE = 0x3154Cf16ccdb4C6d922629664174b904d80F2C35;
     address constant BASE_MIPS = 0x6463dEE3828677F6270d83d45408044fc5eDB908;
     address constant BASE_OPTIMISM_MINTABLE_ERC20_FACTORY = 0x05cc379EBD9B30BbA19C6fA282AB29218EC61D84;
-    address constant BASE_OPTIMISM_PORTAL	= 0x49048044D57e1C92A77f79988d21Fa8fAF74E97e;
+    address constant BASE_OPTIMISM_PORTAL = 0x49048044D57e1C92A77f79988d21Fa8fAF74E97e;
     address constant BASE_PERMISSIONED_DISPUTE_GAME = 0x58bf355C5d4EdFc723eF89d99582ECCfd143266A;
     address constant BASE_PREIMAGE_ORACLE = 0x1fb8cdFc6831fc866Ed9C51aF8817Da5c287aDD3;
     address constant BASE_PROXY_ADMIN = 0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E;
@@ -196,4 +198,17 @@ library ETHEREUM_MAIN {
     address constant BALANCER_V3_VOTING_ESCROW_DELEGATION = 0x2E96068b3D5B5BAE3D7515da4A1D2E52d08A2647;
     address constant BALANCER_V3_VOTING_ESCROW_DELEGATION_PROXY = 0x6f5a2eE11E7a772AeB5114A20d0D7c0ff61EB8A0;
     address constant BALANCER_V3_VOTING_ESCROW_REMAPPER = 0x83E443EF4f9963C77bd860f94500075556668cb8;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Aave V3                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Aave V3 PoolAddressesProvider on Ethereum mainnet
+    address constant AAVE_V3_POOL_ADDRESSES_PROVIDER = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
+
+    /// @notice Aave V3 Pool proxy on Ethereum mainnet
+    address constant AAVE_V3_POOL = 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2;
+
+    /// @notice StaticAToken (StataToken) Factory for Aave V3 on Ethereum mainnet
+    address constant AAVE_V3_STATIC_A_TOKEN_FACTORY = 0x90b1255a76e847cC92d41C295DeD5Bf2D4F24B3d;
 }

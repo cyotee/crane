@@ -39,9 +39,17 @@ contract PendleGMV2TokenSY is SYBaseWithRewards, IPPriceFeed {
      * @dev See {SYBase-_deposit}
      */
     function _deposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountDeposited;
     }
 
@@ -50,9 +58,17 @@ contract PendleGMV2TokenSY is SYBaseWithRewards, IPPriceFeed {
      */
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(gm, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -95,16 +111,32 @@ contract PendleGMV2TokenSY is SYBaseWithRewards, IPPriceFeed {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

@@ -22,10 +22,14 @@ contract PendleETHXSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             return IStaderStakeManager(stakeManager).deposit{value: amountDeposited}(address(this));
         } else {
@@ -35,9 +39,17 @@ contract PendleETHXSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(ethx, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -54,10 +66,14 @@ contract PendleETHXSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             uint256 maxDeposit = IStaderStakeManager(stakeManager).maxDeposit();
             uint256 minDeposit = IStaderStakeManager(stakeManager).minDeposit();
@@ -74,9 +90,17 @@ contract PendleETHXSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: LicenseRef-BUSL
 pragma solidity ^0.8.0;
 
-import {Script} from 'forge-std/Script.sol';
-import {console2 as console} from 'forge-std/console2.sol';
-import {SpokeDeployUtils} from '@crane/test/foundry/spec/protocols/lending/aave/v4/scripts/utils/SpokeDeployUtils.sol';
+import {Script} from "forge-std/Script.sol";
+import {console2 as console} from "forge-std/console2.sol";
+import {SpokeDeployUtils} from "@crane/test/foundry/spec/protocols/lending/aave/v4/scripts/utils/SpokeDeployUtils.sol";
 
 /**
  * @dev Deploy LiquidationLogic library using CREATE2 and save the output
@@ -19,27 +19,27 @@ import {SpokeDeployUtils} from '@crane/test/foundry/spec/protocols/lending/aave/
  *   forge script scripts/LibraryPreCompile.s.sol --broadcast --fork-url $RPC --ffi
  */
 contract LibraryPreCompile is Script {
-  function run() external {
-    bool found = SpokeDeployUtils._librariesPathExists();
+    function run() external {
+        bool found = SpokeDeployUtils._librariesPathExists();
 
-    if (found) {
-      address lastLib = SpokeDeployUtils._getLiquidationLogicAddress();
-      if (lastLib.code.length > 0) {
-        console.log('[LibraryPreCompile] LiquidationLogic detected. Skipping re-deployment.');
-        return;
-      } else {
-        SpokeDeployUtils._deleteLibrariesPath();
-        console.log(
-          'LibraryPreCompile: FOUNDRY_LIBRARIES was detected and removed. Please run again to deploy library with a fresh compilation.'
-        );
-        revert('RETRY AGAIN');
-      }
+        if (found) {
+            address lastLib = SpokeDeployUtils._getLiquidationLogicAddress();
+            if (lastLib.code.length > 0) {
+                console.log("[LibraryPreCompile] LiquidationLogic detected. Skipping re-deployment.");
+                return;
+            } else {
+                SpokeDeployUtils._deleteLibrariesPath();
+                console.log(
+                    "LibraryPreCompile: FOUNDRY_LIBRARIES was detected and removed. Please run again to deploy library with a fresh compilation."
+                );
+                revert("RETRY AGAIN");
+            }
+        }
+
+        vm.startBroadcast();
+        SpokeDeployUtils._deployAndWriteLibrariesConfig(bytes32(0));
+        vm.stopBroadcast();
+
+        console.log("LibraryPreCompile: FOUNDRY_LIBRARIES set. Run the main deploy script.");
     }
-
-    vm.startBroadcast();
-    SpokeDeployUtils._deployAndWriteLibrariesConfig(bytes32(0));
-    vm.stopBroadcast();
-
-    console.log('LibraryPreCompile: FOUNDRY_LIBRARIES set. Run the main deploy script.');
-  }
 }

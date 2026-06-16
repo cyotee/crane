@@ -4,18 +4,20 @@ pragma solidity ^0.8.35;
 import {Test} from "forge-std/Test.sol";
 import {VmSafe} from "forge-std/Vm.sol";
 
-import {ILQTY} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTY.sol";
-import {ILUSD} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILUSD.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {ILQTY} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTY.sol";
+import {ILUSD} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILUSD.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
 
-import {UserProxyFactory} from "@crane/contracts/protocols/staking/liquity/v2/gov/UserProxyFactory.sol";
-import {UserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/UserProxy.sol";
+import {UserProxyFactory} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UserProxyFactory.sol";
+import {UserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UserProxy.sol";
 
-import {PermitParams} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/Types.sol";
+import {PermitParams} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/Types.sol";
 
 import {MockERC20Tester} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockERC20Tester.sol";
 import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";
-import {MockStakingV1Deployer} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
+import {
+    MockStakingV1Deployer
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/constants.sol";
 
 abstract contract UserProxyTest is Test, MockStakingV1Deployer {

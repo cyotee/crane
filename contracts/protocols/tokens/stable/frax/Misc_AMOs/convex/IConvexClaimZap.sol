@@ -2,20 +2,26 @@
 pragma solidity ^0.8.35;
 
 interface IConvexClaimZap {
-  function chefRewards() external view returns (address);
-  function claimRewards(address[] calldata rewardContracts, uint256[] calldata chefIds, bool claimCvx, bool claimCvxStake, bool claimcvxCrv, uint256 depositCrvMaxAmount, uint256 depositCvxMaxAmount) external;
-  function crv() external view returns (address);
-  function crvDeposit() external view returns (address);
-  function cvx() external view returns (address);
-  function cvxCrv() external view returns (address);
-  function cvxCrvRewards() external view returns (address);
-  function cvxRewards() external view returns (address);
-  function owner() external view returns (address);
-  function setApprovals() external;
-  function setChefRewards(address _rewards) external;
+    function chefRewards() external view returns (address);
+    function claimRewards(
+        address[] calldata rewardContracts,
+        uint256[] calldata chefIds,
+        bool claimCvx,
+        bool claimCvxStake,
+        bool claimcvxCrv,
+        uint256 depositCrvMaxAmount,
+        uint256 depositCvxMaxAmount
+    ) external;
+    function crv() external view returns (address);
+    function crvDeposit() external view returns (address);
+    function cvx() external view returns (address);
+    function cvxCrv() external view returns (address);
+    function cvxCrvRewards() external view returns (address);
+    function cvxRewards() external view returns (address);
+    function owner() external view returns (address);
+    function setApprovals() external;
+    function setChefRewards(address _rewards) external;
 }
-
-
 
 // /**
 //  * @dev Collection of functions related to the address type
@@ -280,7 +286,6 @@ interface IConvexClaimZap {
 //     event Approval(address indexed owner, address indexed spender, uint256 value);
 // }
 
-
 // // File: node_modules\@openzeppelin\contracts\math\SafeMath.sol
 // pragma solidity >=0.6.0 <0.8.0;
 
@@ -495,12 +500,8 @@ interface IConvexClaimZap {
 //     }
 // }
 
-
 // // File: @openzeppelin\contracts\token\ERC20\SafeERC20.sol
 // pragma solidity >=0.6.0 <0.8.0;
-
-
-
 
 // /**
 //  * @title SafeERC20
@@ -572,7 +573,6 @@ interface IConvexClaimZap {
 
 // // File: contracts\ClaimZap.sol
 // pragma solidity ^0.8.35;
-
 
 // library Math {
 //     /**

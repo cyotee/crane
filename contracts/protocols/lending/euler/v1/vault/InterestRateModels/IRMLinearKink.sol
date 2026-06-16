@@ -52,7 +52,7 @@ contract IRMLinearKink is IIRM {
         uint256 totalAssets = cash + borrows;
 
         uint32 utilization = totalAssets == 0
-            ? 0 // empty pool arbitrarily given utilization of 0
+            ? 0  // empty pool arbitrarily given utilization of 0
             : uint32(borrows * type(uint32).max / totalAssets);
 
         uint256 ir = baseRate;

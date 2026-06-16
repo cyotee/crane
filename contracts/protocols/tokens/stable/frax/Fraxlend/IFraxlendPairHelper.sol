@@ -46,17 +46,9 @@ interface IFraxlendPairHelper {
     function getUserSnapshot(address _fraxlendPairAddress, address _address)
         external
         view
-        returns (
-            uint256 _userAssetShares,
-            uint256 _userBorrowShares,
-            uint256 _userCollateralBalance
-        );
+        returns (uint256 _userAssetShares, uint256 _userBorrowShares, uint256 _userCollateralBalance);
 
-    function previewLiquidatePure(
-        address _fraxlendPairAddress,
-        uint128 _sharesToLiquidate,
-        address _borrower
-    )
+    function previewLiquidatePure(address _fraxlendPairAddress, uint128 _sharesToLiquidate, address _borrower)
         external
         view
         returns (
@@ -66,37 +58,25 @@ interface IFraxlendPairHelper {
             uint128 _amountToSocialize
         );
 
-    function previewRateInterest(
-        address _fraxlendPairAddress,
-        uint256 _timestamp,
-        uint256 _blockNumber
-    ) external view returns (uint256 _interestEarned, uint256 _newRate);
-
-    function previewRateInterestFees(
-        address _fraxlendPairAddress,
-        uint256 _timestamp,
-        uint256 _blockNumber
-    )
+    function previewRateInterest(address _fraxlendPairAddress, uint256 _timestamp, uint256 _blockNumber)
         external
         view
-        returns (
-            uint256 _interestEarned,
-            uint256 _feesAmount,
-            uint256 _feesShare,
-            uint256 _newRate
-        );
+        returns (uint256 _interestEarned, uint256 _newRate);
 
-    function previewTotalAsset(
-        address _fraxlendPairAddress,
-        uint256 _timestamp,
-        uint256 _blockNumber
-    ) external view returns (VaultAccount memory _previewTotalBorrow);
+    function previewRateInterestFees(address _fraxlendPairAddress, uint256 _timestamp, uint256 _blockNumber)
+        external
+        view
+        returns (uint256 _interestEarned, uint256 _feesAmount, uint256 _feesShare, uint256 _newRate);
 
-    function previewTotalBorrow(
-        address _fraxlendPairAddress,
-        uint256 _timestamp,
-        uint256 _blockNumber
-    ) external view returns (VaultAccount memory _previewTotalBorrow);
+    function previewTotalAsset(address _fraxlendPairAddress, uint256 _timestamp, uint256 _blockNumber)
+        external
+        view
+        returns (VaultAccount memory _previewTotalBorrow);
+
+    function previewTotalBorrow(address _fraxlendPairAddress, uint256 _timestamp, uint256 _blockNumber)
+        external
+        view
+        returns (VaultAccount memory _previewTotalBorrow);
 
     function previewUpdateExchangeRate(address _fraxlendPairAddress) external view returns (uint256 _exchangeRate);
 
@@ -106,14 +86,7 @@ interface IFraxlendPairHelper {
         uint256 _timestamp,
         uint256 _blockNumber,
         bool _roundUp
-    )
-        external
-        view
-        returns (
-            uint256 _amount,
-            uint256 _totalAmount,
-            uint256 _totalShares
-        );
+    ) external view returns (uint256 _amount, uint256 _totalAmount, uint256 _totalShares);
 
     function toAssetShares(
         address _fraxlendPairAddress,
@@ -121,14 +94,7 @@ interface IFraxlendPairHelper {
         uint256 _timestamp,
         uint256 _blockNumber,
         bool _roundUp
-    )
-        external
-        view
-        returns (
-            uint256 _shares,
-            uint256 _totalAmount,
-            uint256 _totalShares
-        );
+    ) external view returns (uint256 _shares, uint256 _totalAmount, uint256 _totalShares);
 
     function toBorrowAmount(
         address _fraxlendPairAddress,
@@ -136,14 +102,7 @@ interface IFraxlendPairHelper {
         uint256 _timestamp,
         uint256 _blockNumber,
         bool _roundUp
-    )
-        external
-        view
-        returns (
-            uint256 _amount,
-            uint256 _totalAmount,
-            uint256 _totalShares
-        );
+    ) external view returns (uint256 _amount, uint256 _totalAmount, uint256 _totalShares);
 
     function toBorrowShares(
         address _fraxlendPairAddress,
@@ -151,14 +110,7 @@ interface IFraxlendPairHelper {
         uint256 _timestamp,
         uint256 _blockNumber,
         bool _roundUp
-    )
-        external
-        view
-        returns (
-            uint256 _shares,
-            uint256 _totalAmount,
-            uint256 _totalShares
-        );
+    ) external view returns (uint256 _shares, uint256 _totalAmount, uint256 _totalShares);
 
     function version() external view returns (string memory);
 }

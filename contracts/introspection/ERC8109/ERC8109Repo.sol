@@ -8,13 +8,39 @@ import {Bytes4Set, Bytes4SetRepo} from "@crane/contracts/utils/collections/sets/
 import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";
 
+// tag::ERC8109Repo[]
+/**
+ * @title ERC8109Repo - Storage helpers for ERC-8109 diamond update events and introspection queries.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Library to be used by ERC8109IntrospectionTarget, ERC8109UpdateTarget, and related facets.
+ * @dev Operates directly on ERC2535Repo.Storage (shared diamond loupe/cut storage) to emit
+ *      the update events defined by IERC8109Update (add/replace/remove, delegatecall, metadata).
+ * @dev Provides dual (parameterized + default) overloads for all functions.
+ * @dev No own Storage struct or STORAGE_SLOT: delegates exclusively to ERC2535Repo's layout
+ *      (which uses ERC1967-compliant derivation). The prior unused STORAGE_SLOT alias was removed.
+ */
 library ERC8109Repo {
     using AddressSetRepo for AddressSet;
     using Bytes4SetRepo for Bytes4Set;
     using BetterAddress for address;
 
-    bytes32 internal constant STORAGE_SLOT = ERC2535Repo.STORAGE_SLOT;
-
+    // tag::_processDiamondUpgrade(IERC8109Update.FacetFunctions[]-IERC8109Update.FacetFunctions[]-bytes4[]-address-bytes-bytes32-bytes)[]
+    /**
+     * @dev Default version of _processDiamondUpgrade binding to ERC2535 storage.
+     * Dispatches adds, then replaces, then removes. Optionally performs delegatecall and emits metadata.
+     * @param addFunctions Functions to add (grouped by facet).
+     * @param replaceFunctions Functions to replace (grouped by facet).
+     * @param removeFunctions Selectors to remove.
+     * @param delegate Optional delegate for functionCall (address(0) to skip).
+     * @param functionCall Optional calldata for delegatecall.
+     * @param tag Optional metadata tag (non-zero triggers emit).
+     * @param metadata Optional metadata bytes.
+     * @custom:emits IERC8109Update.DiamondFunctionAdded for each added selector
+     * @custom:emits IERC8109Update.DiamondFunctionReplaced for each replaced selector
+     * @custom:emits IERC8109Update.DiamondFunctionRemoved for each removed selector
+     * @custom:emits IERC8109Update.DiamondDelegateCall (if functionCall performed)
+     * @custom:emits IERC8109Update.DiamondMetadata (if tag or metadata provided)
+     */
     function _processDiamondUpgrade(
         IERC8109Update.FacetFunctions[] memory addFunctions,
         IERC8109Update.FacetFunctions[] memory replaceFunctions,
@@ -36,6 +62,25 @@ library ERC8109Repo {
         );
     }
 
+    // end::_processDiamondUpgrade(IERC8109Update.FacetFunctions[]-IERC8109Update.FacetFunctions[]-bytes4[]-address-bytes-bytes32-bytes)[]
+
+    // tag::_processDiamondUpgrade(ERC2535Repo.Storage-IERC8109Update.FacetFunctions[]-IERC8109Update.FacetFunctions[]-bytes4[]-address-bytes-bytes32-bytes)[]
+    /**
+     * @dev Argumented version of _processDiamondUpgrade to allow direct Storage access (on shared ERC2535 storage).
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @param addFunctions Functions to add (grouped by facet).
+     * @param replaceFunctions Functions to replace (grouped by facet).
+     * @param removeFunctions Selectors to remove.
+     * @param delegate Optional delegate for functionCall (address(0) to skip).
+     * @param functionCall Optional calldata for delegatecall.
+     * @param tag Optional metadata tag (non-zero triggers emit).
+     * @param metadata Optional metadata bytes.
+     * @custom:emits IERC8109Update.DiamondFunctionAdded for each added selector
+     * @custom:emits IERC8109Update.DiamondFunctionReplaced for each replaced selector
+     * @custom:emits IERC8109Update.DiamondFunctionRemoved for each removed selector
+     * @custom:emits IERC8109Update.DiamondDelegateCall (if functionCall performed)
+     * @custom:emits IERC8109Update.DiamondMetadata (if tag or metadata provided)
+     */
     function _processDiamondUpgrade(
         ERC2535Repo.Storage storage layoutStruct,
         IERC8109Update.FacetFunctions[] memory addFunctions,
@@ -62,9 +107,20 @@ library ERC8109Repo {
         }
     }
 
-    function _addFunctions(ERC2535Repo.Storage storage layoutStruct, IERC8109Update.FacetFunctions memory functionsToAdd)
-        internal
-    {
+    // end::_processDiamondUpgrade(ERC2535Repo.Storage-IERC8109Update.FacetFunctions[]-IERC8109Update.FacetFunctions[]-bytes4[]-address-bytes-bytes32-bytes)[]
+
+    // tag::_addFunctions(ERC2535Repo.Storage-IERC8109Update.FacetFunctions)[]
+    /**
+     * @dev Argumented helper to add functions for a facet. Reverts if selector already mapped.
+     * Updates facetAddress map, per-facet selectors set, and global facets set.
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @param functionsToAdd The facet + selectors to register.
+     * @custom:emits IERC8109Update.DiamondFunctionAdded for each
+     */
+    function _addFunctions(
+        ERC2535Repo.Storage storage layoutStruct,
+        IERC8109Update.FacetFunctions memory functionsToAdd
+    ) internal {
         for (uint256 cursor = 0; cursor < functionsToAdd.selectors.length; cursor++) {
             address facetAddress = layoutStruct.facetAddress[functionsToAdd.selectors[cursor]];
             if (facetAddress != address(0)) {
@@ -77,6 +133,16 @@ library ERC8109Repo {
         }
     }
 
+    // end::_addFunctions(ERC2535Repo.Storage-IERC8109Update.FacetFunctions)[]
+
+    // tag::_replaceFunctions(ERC2535Repo.Storage-IERC8109Update.FacetFunctions)[]
+    /**
+     * @dev Argumented helper to replace facet for selectors. Validates existence and difference.
+     * Cleans old facet's set (drops if empty), maps new.
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @param functionsToReplace The facet + selectors to remap.
+     * @custom:emits IERC8109Update.DiamondFunctionReplaced for each
+     */
     function _replaceFunctions(
         ERC2535Repo.Storage storage layoutStruct,
         IERC8109Update.FacetFunctions memory functionsToReplace
@@ -106,7 +172,19 @@ library ERC8109Repo {
         }
     }
 
-    function _removeFunctions(ERC2535Repo.Storage storage layoutStruct, bytes4[] memory functionSelectorsToRemove) internal {
+    // end::_replaceFunctions(ERC2535Repo.Storage-IERC8109Update.FacetFunctions)[]
+
+    // tag::_removeFunctions(ERC2535Repo.Storage-bytes4[])[]
+    /**
+     * @dev Argumented helper to remove selectors. Validates existence.
+     * Clears mapping, removes from facet set (drops facet if now empty).
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @param functionSelectorsToRemove The selectors to deregister.
+     * @custom:emits IERC8109Update.DiamondFunctionRemoved for each
+     */
+    function _removeFunctions(ERC2535Repo.Storage storage layoutStruct, bytes4[] memory functionSelectorsToRemove)
+        internal
+    {
         for (uint256 cursor = 0; cursor < functionSelectorsToRemove.length; cursor++) {
             address facetAddress = layoutStruct.facetAddress[functionSelectorsToRemove[cursor]];
             if (facetAddress == address(0)) {
@@ -121,10 +199,26 @@ library ERC8109Repo {
         }
     }
 
+    // end::_removeFunctions(ERC2535Repo.Storage-bytes4[])[]
+
+    // tag::_functionFacetPairs()[]
+    /**
+     * @dev Default version of _functionFacetPairs binding to ERC2535 storage.
+     * Returns all registered (selector, facet) pairs by walking facetAddresses.
+     * @return pairs Array of FunctionFacetPair describing current diamond functions.
+     */
     function _functionFacetPairs() internal view returns (IERC8109Introspection.FunctionFacetPair[] memory pairs) {
         return _functionFacetPairs(ERC2535Repo._layoutStruct());
     }
 
+    // end::_functionFacetPairs()[]
+
+    // tag::_functionFacetPairs(ERC2535Repo.Storage)[]
+    /**
+     * @dev Argumented version of _functionFacetPairs.
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @return pairs Array of FunctionFacetPair describing current diamond functions.
+     */
     function _functionFacetPairs(ERC2535Repo.Storage storage layoutStruct)
         internal
         view
@@ -135,6 +229,17 @@ library ERC8109Repo {
         }
     }
 
+    // end::_functionFacetPairs(ERC2535Repo.Storage)[]
+
+    // tag::_getFacetFuncs(ERC2535Repo.Storage-IERC8109Introspection.FunctionFacetPair[]-address)[]
+    /**
+     * @dev Internal helper that appends the selectors for one facet to the accumulating pairs array.
+     * Allocates new array and copies.
+     * @param layoutStruct The ERC2535Repo.Storage struct to operate on.
+     * @param pairs The pairs accumulated so far.
+     * @param facetAddress The facet whose functions to append.
+     * @return updatedPairs The extended array.
+     */
     function _getFacetFuncs(
         ERC2535Repo.Storage storage layoutStruct,
         IERC8109Introspection.FunctionFacetPair[] memory pairs,
@@ -146,10 +251,20 @@ library ERC8109Repo {
             updatedPairs[cursor] = pairs[cursor];
         }
         uint256 startIndex = pairs.length;
-        for (uint256 funcCursor = 0; funcCursor < layoutStruct.facetFunctionSelectors[facetAddress]._length(); funcCursor++) {
-            updatedPairs[startIndex + funcCursor] = IERC8109Introspection.FunctionFacetPair({
+        for (
+            uint256 funcCursor = 0;
+            funcCursor < layoutStruct.facetFunctionSelectors[facetAddress]._length();
+            funcCursor++
+        ) {
+            updatedPairs[
+                startIndex + funcCursor
+            ] = IERC8109Introspection.FunctionFacetPair({
                 selector: layoutStruct.facetFunctionSelectors[facetAddress]._index(funcCursor), facet: facetAddress
             });
         }
     }
+
+    // end::_getFacetFuncs(ERC2535Repo.Storage-IERC8109Introspection.FunctionFacetPair[]-address)[]
+
+    // end::ERC8109Repo[]
 }

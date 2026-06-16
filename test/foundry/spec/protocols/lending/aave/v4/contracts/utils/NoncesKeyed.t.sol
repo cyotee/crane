@@ -1,56 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import '@crane/test/foundry/spec/protocols/lending/aave/v4/setup/Base.t.sol';
+import "@crane/test/foundry/spec/protocols/lending/aave/v4/setup/Base.t.sol";
 
 contract NoncesKeyedTest is Base {
-  using SafeCast for *;
-  MockNoncesKeyed public mock;
+    using SafeCast for *;
+    MockNoncesKeyed public mock;
 
-  function setUp() public override {
-    mock = new MockNoncesKeyed();
-  }
+    function setUp() public override {
+        mock = new MockNoncesKeyed();
+    }
 
-  function test_useNonce_monotonic(bytes32) public {
-    vm.setArbitraryStorage(address(mock));
+    function test_useNonce_monotonic(bytes32) public {
+        vm.setArbitraryStorage(address(mock));
 
-    address owner = vm.randomAddress();
-    uint192 key = _randomNonceKey();
+        address owner = vm.randomAddress();
+        uint192 key = _randomNonceKey();
 
-    uint256 keyNonce = mock.nonces(owner, key);
+        uint256 keyNonce = mock.nonces(owner, key);
 
-    vm.prank(owner);
-    uint256 consumedKeyNonce = mock.useNonce(key);
+        vm.prank(owner);
+        uint256 consumedKeyNonce = mock.useNonce(key);
 
-    assertEq(consumedKeyNonce, keyNonce);
-    _assertNonceIncrement(mock, owner, keyNonce);
-  }
+        assertEq(consumedKeyNonce, keyNonce);
+        _assertNonceIncrement(mock, owner, keyNonce);
+    }
 
-  function test_useCheckedNonce_monotonic(bytes32) public {
-    vm.setArbitraryStorage(address(mock));
+    function test_useCheckedNonce_monotonic(bytes32) public {
+        vm.setArbitraryStorage(address(mock));
 
-    address owner = vm.randomAddress();
-    uint192 key = _randomNonceKey();
+        address owner = vm.randomAddress();
+        uint192 key = _randomNonceKey();
 
-    uint256 keyNonce = mock.nonces(owner, key);
+        uint256 keyNonce = mock.nonces(owner, key);
 
-    mock.useCheckedNonce(owner, keyNonce);
+        mock.useCheckedNonce(owner, keyNonce);
 
-    _assertNonceIncrement(mock, owner, keyNonce);
-  }
+        _assertNonceIncrement(mock, owner, keyNonce);
+    }
 
-  function test_useCheckedNonce_revertsWith_InvalidAccountNonce(bytes32) public {
-    vm.setArbitraryStorage(address(mock));
+    function test_useCheckedNonce_revertsWith_InvalidAccountNonce(bytes32) public {
+        vm.setArbitraryStorage(address(mock));
 
-    address owner = vm.randomAddress();
-    uint192 key = _randomNonceKey();
+        address owner = vm.randomAddress();
+        uint192 key = _randomNonceKey();
 
-    uint256 currentNonce = _burnRandomNoncesAtKey(mock, owner, key);
-    uint256 invalidNonce = _getRandomInvalidNonceAtKey(mock, owner, key);
+        uint256 currentNonce = _burnRandomNoncesAtKey(mock, owner, key);
+        uint256 invalidNonce = _getRandomInvalidNonceAtKey(mock, owner, key);
 
-    vm.expectRevert(
-      abi.encodeWithSelector(INoncesKeyed.InvalidAccountNonce.selector, owner, currentNonce)
-    );
-    mock.useCheckedNonce(owner, invalidNonce);
-  }
+        vm.expectRevert(abi.encodeWithSelector(INoncesKeyed.InvalidAccountNonce.selector, owner, currentNonce));
+        mock.useCheckedNonce(owner, invalidNonce);
+    }
 }

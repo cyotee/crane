@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {IFraxswapRangePair} from "./interfaces/IFraxswapRangePair.sol";
 import {FraxswapRangePair} from "./FraxswapRangePair.sol";
 

@@ -15,7 +15,9 @@ import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {UniV3MintHelper} from "../UniswapV3/mocks/UniV3MintHelper.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {SlipstreamAggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/Slipstream/SlipstreamAggregator.sol";
+import {
+    SlipstreamAggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/Slipstream/SlipstreamAggregator.sol";
 
 /// @dev CL factory: `getPool` (hook routing) + `createPool` (local pool on fork).
 interface ISlipstreamCLFactory {
@@ -72,8 +74,9 @@ contract SlipstreamAggregatorFuzz is Test {
         address slipFactory = vm.envAddress("SLIPSTREAM_FACTORY");
         clFactory = ISlipstreamCLFactory(slipFactory);
 
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
 
         token0 = new MockERC20("Token0", "TK0", 18);

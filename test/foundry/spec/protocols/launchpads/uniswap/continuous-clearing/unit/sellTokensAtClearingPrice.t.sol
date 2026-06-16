@@ -2,16 +2,19 @@
 pragma solidity ^0.8.0;
 
 // Place holder for BTT testing as that is not merged yet
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7, ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {FuzzDeploymentParams} from '../utils/FuzzStructs.sol';
-import {MockContinuousClearingAuction} from '../utils/MockAuction.sol';
-import {AuctionUnitTest} from './AuctionUnitTest.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    ValueX7,
+    ValueX7Lib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {FuzzDeploymentParams} from "../utils/FuzzStructs.sol";
+import {MockContinuousClearingAuction} from "../utils/MockAuction.sol";
+import {AuctionUnitTest} from "./AuctionUnitTest.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
-import {console} from 'forge-std/console.sol';
+import {console} from "forge-std/console.sol";
 
 contract AuctionSellTokensAtClearingPriceTest is AuctionUnitTest {
     using FixedPointMathLib for *;
@@ -224,7 +227,7 @@ contract AuctionSellTokensAtClearingPriceTest is AuctionUnitTest {
 
             // If the totalCleared is less than the tokens filled then the auction would be insolvent if
             // the bid exited and the unsold tokens were swept
-            assertGe(mockAuction.totalCleared(), tokensFilled, 'total cleared not less than tokens filled');
+            assertGe(mockAuction.totalCleared(), tokensFilled, "total cleared not less than tokens filled");
         }
     }
 }

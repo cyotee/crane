@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 // import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 import {IEVault} from "../../vault/EVault/IEVault.sol";
 
@@ -92,9 +92,8 @@ library SwapLib {
     function invokeBeforeSwapHook(SwapContext memory ctx) internal {
         if ((ctx.dParams.swapHookedOperations & EULER_SWAP_HOOK_BEFORE_SWAP) == 0) return;
 
-        (bool success, bytes memory data) = ctx.dParams.swapHook.call(
-            abi.encodeCall(IEulerSwapHookTarget.beforeSwap, (ctx.amount0Out, ctx.amount1Out, ctx.sender, ctx.to))
-        );
+        (bool success, bytes memory data) = ctx.dParams.swapHook
+            .call(abi.encodeCall(IEulerSwapHookTarget.beforeSwap, (ctx.amount0Out, ctx.amount1Out, ctx.sender, ctx.to)));
         require(success, HookError(EULER_SWAP_HOOK_BEFORE_SWAP, data));
     }
 
@@ -103,23 +102,24 @@ library SwapLib {
 
         s.status = 1; // Unlock the reentrancy guard during afterSwap, allowing hook to reconfigure()
 
-        (bool success, bytes memory data) = ctx.dParams.swapHook.call(
-            abi.encodeCall(
-                IEulerSwapHookTarget.afterSwap,
-                (
-                    ctx.amount0In,
-                    ctx.amount1In,
-                    ctx.amount0Out,
-                    ctx.amount1Out,
-                    fee0,
-                    fee1,
-                    ctx.sender,
-                    ctx.to,
-                    s.reserve0,
-                    s.reserve1
+        (bool success, bytes memory data) = ctx.dParams.swapHook
+            .call(
+                abi.encodeCall(
+                    IEulerSwapHookTarget.afterSwap,
+                    (
+                        ctx.amount0In,
+                        ctx.amount1In,
+                        ctx.amount0Out,
+                        ctx.amount1Out,
+                        fee0,
+                        fee1,
+                        ctx.sender,
+                        ctx.to,
+                        s.reserve0,
+                        s.reserve1
+                    )
                 )
-            )
-        );
+            );
         require(success, HookError(EULER_SWAP_HOOK_AFTER_SWAP, data));
 
         s.status = 2;

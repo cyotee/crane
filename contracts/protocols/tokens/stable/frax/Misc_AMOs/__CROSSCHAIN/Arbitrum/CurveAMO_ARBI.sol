@@ -18,7 +18,6 @@ pragma solidity ^0.8.35;
 // Primary Author(s)
 // Travis Moore: https://github.com/FortisFortuna
 
-
 // Reviewer(s) / Contributor(s)
 // Sam Kazemian: https://github.com/samkazemian
 // Jason Huan: https://github.com/jasonhuan
@@ -31,7 +30,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/IFRAX2pool
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2poolGaugeDeposit.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2pool.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/IZapDepositor2pool.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract CurveAMO_ARBI is Owned {
@@ -82,8 +81,8 @@ contract CurveAMO_ARBI is Owned {
         canFRAX = CrossChainCanonicalFRAX(_core_addresses[0]);
         USDC = ERC20(_core_addresses[1]);
         USDT = ERC20(_core_addresses[2]);
-        usdc_missing_decimals = uint(18) - USDC.decimals();
-        usdt_missing_decimals = uint(18) - USDT.decimals();
+        usdc_missing_decimals = uint256(18) - USDC.decimals();
+        usdt_missing_decimals = uint256(18) - USDT.decimals();
         cc_bridge_backer = CrossChainBridgeBacker_ARBI_AnySwap(_core_addresses[3]);
 
         // Pools
@@ -141,19 +140,24 @@ contract CurveAMO_ARBI is Owned {
         allocations[10] = (allocations[9] * frax2pool_price) / VIRTUAL_PRICE_PRECISION; // Free FRAX2pool USD value
 
         // Total USD value
-        allocations[11] = allocations[0] + allocations[2] + allocations[4] + allocations[6] + allocations[8] + allocations[10];
+        allocations[11] =
+            allocations[0] + allocations[2] + allocations[4] + allocations[6] + allocations[8] + allocations[10];
     }
 
     // Needed by CrossChainBridgeBacker
-    function allDollarBalances() public view returns (
-        uint256 frax_ttl, 
-        uint256 fxs_ttl,
-        uint256 col_ttl, // in native decimals()
-        uint256 ttl_val_usd_e18
-    ) {
+    function allDollarBalances()
+        public
+        view
+        returns (
+            uint256 frax_ttl,
+            uint256 fxs_ttl,
+            uint256 col_ttl, // in native decimals()
+            uint256 ttl_val_usd_e18
+        )
+    {
         uint256[12] memory allocations = showAllocations();
 
-        return(allocations[0], 0, allocations[1], allocations[11]);
+        return (allocations[0], 0, allocations[1], allocations[11]);
     }
 
     function borrowed_frax() public view returns (uint256) {
@@ -166,40 +170,41 @@ contract CurveAMO_ARBI is Owned {
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    function metapoolDeposit(uint256 _frax_amount, uint256 _usdc_amount, uint256 _usdt_amount) external onlyByOwnGov returns (uint256 metapool_LP_received) {
+    function metapoolDeposit(uint256 _frax_amount, uint256 _usdc_amount, uint256 _usdt_amount)
+        external
+        onlyByOwnGov
+        returns (uint256 metapool_LP_received)
+    {
         // Approve the FRAX to be zapped
-        if(_frax_amount > 0) {
+        if (_frax_amount > 0) {
             canFRAX.approve(address(zap_depositor), _frax_amount);
         }
 
         // Approve the USDC to be zapped
-        if(_usdc_amount > 0) {
+        if (_usdc_amount > 0) {
             USDC.approve(address(zap_depositor), _usdc_amount);
         }
-        
+
         // Approve the USDT to be zapped
-        if(_usdt_amount > 0) {
+        if (_usdt_amount > 0) {
             USDT.approve(address(zap_depositor), _usdt_amount);
         }
 
         // Calculate the min LP out expected
-        uint256 ttl_val_usd = _frax_amount + (_usdc_amount * (10 ** usdc_missing_decimals)) + (_usdt_amount * (10 ** usdt_missing_decimals));
+        uint256 ttl_val_usd = _frax_amount + (_usdc_amount * (10 ** usdc_missing_decimals))
+            + (_usdt_amount * (10 ** usdt_missing_decimals));
         ttl_val_usd = (ttl_val_usd * VIRTUAL_PRICE_PRECISION) / frax2pool.get_virtual_price();
         uint256 min_3pool_out = (ttl_val_usd * liq_slippage_2pool) / PRICE_PRECISION;
 
         // Zap the token(s)
-        metapool_LP_received = zap_depositor.add_liquidity(
-            address(frax2pool), 
-            [
-                _frax_amount,
-                _usdc_amount,
-                _usdt_amount
-            ], 
-            min_3pool_out
-        );
+        metapool_LP_received =
+            zap_depositor.add_liquidity(address(frax2pool), [_frax_amount, _usdc_amount, _usdt_amount], min_3pool_out);
     }
 
-    function _metapoolWithdrawOneCoin(uint256 _metapool_lp_in, int128 tkn_idx) internal returns (uint256 tokens_received) {
+    function _metapoolWithdrawOneCoin(uint256 _metapool_lp_in, int128 tkn_idx)
+        internal
+        returns (uint256 tokens_received)
+    {
         // Approve the metapool LP tokens for zapper contract
         frax2pool.approve(address(zap_depositor), _metapool_lp_in);
 
@@ -208,16 +213,12 @@ contract CurveAMO_ARBI is Owned {
         uint256 min_tkn_out = (lp_usd_value * liq_slippage_2pool) / PRICE_PRECISION;
 
         // Handle different decimals
-        if(tkn_idx == 1) min_tkn_out = min_tkn_out / (10 ** usdc_missing_decimals);
-        else if(tkn_idx == 2) min_tkn_out = min_tkn_out / (10 ** usdt_missing_decimals);
+        if (tkn_idx == 1) min_tkn_out = min_tkn_out / (10 ** usdc_missing_decimals);
+        else if (tkn_idx == 2) min_tkn_out = min_tkn_out / (10 ** usdt_missing_decimals);
 
         // Perform the liquidity swap
-        tokens_received = zap_depositor.remove_liquidity_one_coin(
-            address(frax2pool),
-            _metapool_lp_in,
-            tkn_idx,
-            min_tkn_out
-        );
+        tokens_received =
+            zap_depositor.remove_liquidity_one_coin(address(frax2pool), _metapool_lp_in, tkn_idx, min_tkn_out);
     }
 
     function metapoolWithdrawFrax(uint256 _metapool_lp_in) external onlyByOwnGov returns (uint256) {
@@ -232,21 +233,17 @@ contract CurveAMO_ARBI is Owned {
         return _metapoolWithdrawOneCoin(_metapool_lp_in, 2);
     }
 
-    function metapoolWithdrawAtCurRatio(
-        uint256 _metapool_lp_in, 
-        uint256 min_frax, 
-        uint256 min_usdc, 
-        uint256 min_usdt
-    ) external onlyByOwnGov returns (uint256 frax_received, uint256 usdc_received, uint256 usdt_received) {
+    function metapoolWithdrawAtCurRatio(uint256 _metapool_lp_in, uint256 min_frax, uint256 min_usdc, uint256 min_usdt)
+        external
+        onlyByOwnGov
+        returns (uint256 frax_received, uint256 usdc_received, uint256 usdt_received)
+    {
         // Approve the metapool LP tokens for zapper contract
         frax2pool.approve(address(zap_depositor), _metapool_lp_in);
 
         // Withdraw FRAX, USDC, and USDT from the metapool at the current balance
-        uint256[3] memory result_arr = zap_depositor.remove_liquidity(
-            address(frax2pool), 
-            _metapool_lp_in, 
-            [min_frax, min_usdc, min_usdt]
-        );
+        uint256[3] memory result_arr =
+            zap_depositor.remove_liquidity(address(frax2pool), _metapool_lp_in, [min_frax, min_usdc, min_usdt]);
         frax_received = result_arr[0];
         usdc_received = result_arr[1];
         usdt_received = result_arr[2];
@@ -264,7 +261,7 @@ contract CurveAMO_ARBI is Owned {
         USDC.approve(address(cc_bridge_backer), collat_amount);
         cc_bridge_backer.receiveBackViaAMO(address(USDC), collat_amount, do_bridging);
     }
-   
+
     /* ========== RESTRICTED GOVERNANCE FUNCTIONS ========== */
 
     function setCCBridgeBacker(address _cc_bridge_backer_address) external onlyByOwnGov {
@@ -289,12 +286,12 @@ contract CurveAMO_ARBI is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-       (bool success, bytes memory result) = _to.call{value:_value}(_data);
-        return(success, result);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
+        return (success, result);
     }
 }

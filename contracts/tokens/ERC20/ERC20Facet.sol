@@ -21,11 +21,33 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 // import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
 // import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
 
+// tag::ERC20Facet[]
+/**
+ * @title ERC20Facet - Reusable Diamond facet implementing ERC-20 standard (IERC20 + IERC20Metadata) per Facet-Target-Repo pattern.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Extends ERC20Target for business logic (delegates to ERC20Repo). Implements IFacet to declare supported interfaces and functions
+ *      for use with Diamond loupes, DFPkgs, and composition. The reported facetInterfaces() includes IERC20, IERC20Metadata, and their
+ *      XOR (metadata-only id) per current implementation.
+ * @custom:contractlistipfs
+ */
 contract ERC20Facet is ERC20Target, IFacet {
+    /* -------------------------------------------------------------------------- */
+    /*                                   IFacet                                   */
+    /* -------------------------------------------------------------------------- */
+
+    // tag::facetName()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetName() public pure returns (string memory name) {
         return type(ERC20Facet).name;
     }
+    // end::facetName()[]
 
+    // tag::facetInterfaces()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](3);
 
@@ -33,7 +55,12 @@ contract ERC20Facet is ERC20Target, IFacet {
         interfaces[1] = type(IERC20Metadata).interfaceId;
         interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
     }
+    // end::facetInterfaces()[]
 
+    // tag::facetFuncs()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetFuncs()
         public
         pure
@@ -55,7 +82,12 @@ contract ERC20Facet is ERC20Target, IFacet {
         funcs[7] = IERC20.transfer.selector;
         funcs[8] = IERC20.transferFrom.selector;
     }
+    // end::facetFuncs()[]
 
+    // tag::facetMetadata()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetMetadata()
         external
         pure
@@ -65,4 +97,6 @@ contract ERC20Facet is ERC20Target, IFacet {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+    // end::facetMetadata()[]
 }
+// end::ERC20Facet[]

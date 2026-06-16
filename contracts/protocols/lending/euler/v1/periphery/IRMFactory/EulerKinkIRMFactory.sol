@@ -23,11 +23,7 @@ contract EulerKinkIRMFactory is BaseFactory, IEulerKinkIRMFactory {
     /// @param slope2 Slope of the function after the kink
     /// @param kink Utilization at which the slope of the interest rate function changes. In type(uint32).max scale
     /// @return The deployment address.
-    function deploy(uint256 baseRate, uint256 slope1, uint256 slope2, uint32 kink)
-        external
-        override
-        returns (address)
-    {
+    function deploy(uint256 baseRate, uint256 slope1, uint256 slope2, uint32 kink) external override returns (address) {
         IRMLinearKink irm = new IRMLinearKink(baseRate, slope1, slope2, kink);
 
         // verify if the IRM is functional

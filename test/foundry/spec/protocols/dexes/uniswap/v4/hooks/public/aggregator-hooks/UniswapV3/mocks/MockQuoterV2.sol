@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IQuoterV2} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IQuoterV2.sol";
+import {
+    IQuoterV2
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IQuoterV2.sol";
 
 /// @notice Matches MockUniV3Pool math (99/100 out on exact in; inverse on exact out)
 contract MockQuoterV2 is IQuoterV2 {

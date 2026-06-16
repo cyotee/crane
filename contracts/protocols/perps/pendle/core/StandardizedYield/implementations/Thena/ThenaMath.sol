@@ -36,11 +36,11 @@ abstract contract ThenaMath {
 
     uint256 public binarySearchEps = DEFAULT_BINARY_SEARCH_EPS;
 
-    function _getZapInSwapAmount(
-        ThenaData memory data,
-        address tokenIn,
-        uint256 amountIn
-    ) internal view returns (uint256) {
+    function _getZapInSwapAmount(ThenaData memory data, address tokenIn, uint256 amountIn)
+        internal
+        view
+        returns (uint256)
+    {
         return data.isStable ? _getStableZapAmount(data, tokenIn, amountIn) : _getVolatileZapAmount(data, amountIn);
     }
 
@@ -55,11 +55,11 @@ abstract contract ThenaMath {
         return (numer * FEE_DENOMINATOR) / denom;
     }
 
-    function _getStableZapAmount(
-        ThenaData memory data,
-        address tokenIn,
-        uint256 amountIn
-    ) private view returns (uint256) {
+    function _getStableZapAmount(ThenaData memory data, address tokenIn, uint256 amountIn)
+        private
+        view
+        returns (uint256)
+    {
         StableBinarySearchParams memory params = _prepareStableBinarySearchParams(amountIn, data);
 
         while (!PMath.isAApproxB(params.guessMin, params.guessMax, binarySearchEps)) {
@@ -79,10 +79,11 @@ abstract contract ThenaMath {
         return params.guessMin;
     }
 
-    function _prepareStableBinarySearchParams(
-        uint256 amountIn,
-        ThenaData memory data
-    ) private pure returns (StableBinarySearchParams memory params) {
+    function _prepareStableBinarySearchParams(uint256 amountIn, ThenaData memory data)
+        private
+        pure
+        returns (StableBinarySearchParams memory params)
+    {
         uint256 X = data.reserve0.divDown(data.decimals0);
         uint256 Y = data.reserve1.divDown(data.decimals1);
         amountIn = amountIn.divDown(data.decimals0);

@@ -9,29 +9,29 @@ pragma solidity ^0.8.17;
 contract FluidRedstoneAdapterReader {
     bytes4 constant READ_EXCHANGE_RATE_SELECTOR = 0xe6aa216c;
 
-    function getRedstoneExchangeRate(address oracleAddress) public virtual returns(uint256 exchangeRate) {
+    function getRedstoneExchangeRate(address oracleAddress) public virtual returns (uint256 exchangeRate) {
         assembly {
             let freeSlot := mload(0x40)
 
             mstore(freeSlot, READ_EXCHANGE_RATE_SELECTOR)
 
-            let success := staticcall(
-                5000, // estimated gas cost for this function
-                oracleAddress,
-                freeSlot,
-                0x04,
-                freeSlot,
-                0x20
-            )
+            let success :=
+                staticcall(
+                    5000, // estimated gas cost for this function
+                    oracleAddress,
+                    freeSlot,
+                    0x04,
+                    freeSlot,
+                    0x20
+                )
 
             switch success
             case 0 {
-              revert(freeSlot, 0x40)
+                revert(freeSlot, 0x40)
             }
             default {
                 exchangeRate := mload(freeSlot)
             }
-
         }
     }
 }

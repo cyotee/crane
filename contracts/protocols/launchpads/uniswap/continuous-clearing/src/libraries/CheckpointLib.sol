@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ConstantsLib} from './ConstantsLib.sol';
-import {ValueX7} from './ValueX7Lib.sol';
+import {ConstantsLib} from "./ConstantsLib.sol";
+import {ValueX7} from "./ValueX7Lib.sol";
 
 struct Checkpoint {
     uint256 clearingPrice; // The X96 price which the auction is currently clearing at

@@ -53,9 +53,13 @@ interface IPancakeV3PoolEvents {
         uint256 paid1
     );
 
-    event IncreaseObservationCardinalityNext(uint16 observationCardinalityNextOld, uint16 observationCardinalityNextNew);
+    event IncreaseObservationCardinalityNext(
+        uint16 observationCardinalityNextOld, uint16 observationCardinalityNextNew
+    );
 
-    event SetFeeProtocol(uint32 feeProtocol0Old, uint32 feeProtocol1Old, uint32 feeProtocol0New, uint32 feeProtocol1New);
+    event SetFeeProtocol(
+        uint32 feeProtocol0Old, uint32 feeProtocol1Old, uint32 feeProtocol0New, uint32 feeProtocol1New
+    );
 
     event CollectProtocol(address indexed sender, address indexed recipient, uint128 amount0, uint128 amount1);
 }

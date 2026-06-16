@@ -37,19 +37,11 @@ interface IPActionAddRemoveLiqV3 {
     );
 
     event AddLiquiditySinglePt(
-        address indexed caller,
-        address indexed market,
-        address indexed receiver,
-        uint256 netPtIn,
-        uint256 netLpOut
+        address indexed caller, address indexed market, address indexed receiver, uint256 netPtIn, uint256 netLpOut
     );
 
     event AddLiquiditySingleSy(
-        address indexed caller,
-        address indexed market,
-        address indexed receiver,
-        uint256 netSyIn,
-        uint256 netLpOut
+        address indexed caller, address indexed market, address indexed receiver, uint256 netSyIn, uint256 netLpOut
     );
 
     event AddLiquiditySingleToken(

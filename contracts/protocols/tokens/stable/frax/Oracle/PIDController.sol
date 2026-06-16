@@ -20,11 +20,12 @@ pragma solidity ^0.8.35;
 // Reviewer(s) / Contributor(s)
 // Travis Moore: https://github.com/FortisFortuna
 
-import '@crane/contracts/protocols/tokens/stable/frax/Frax/Frax.sol';
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
-import "./ReserveTracker.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Curve/IMetaImplementationUSD.sol";
-
+import {Owned} from "@crane/contracts/external/solmate/auth/Owned.sol";
+import {FRAXStablecoin} from "@crane/contracts/protocols/tokens/stable/frax/Frax/Frax.sol";
+import {FRAXShares} from "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
+import {ReserveTracker} from "./ReserveTracker.sol";
+import {IMetaImplementationUSD} from "@crane/contracts/protocols/tokens/stable/frax/Curve/IMetaImplementationUSD.sol";
 
 contract PIDController is Owned {
     using SafeMath for uint256;
@@ -57,7 +58,7 @@ contract PIDController is Owned {
     // Time-related
     uint256 public internal_cooldown;
     uint256 public last_update;
-    
+
     // Booleans
     bool public is_active;
     bool public use_growth_ratio;
@@ -73,7 +74,7 @@ contract PIDController is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _frax_contract_address,
         address _fxs_contract_address,
         address _creator_address,
@@ -91,24 +92,23 @@ contract PIDController is Owned {
 
         // Upon genesis, if GR changes by more than 1% percent, enable change of collateral ratio
         GR_top_band = 1000;
-        GR_bottom_band = 1000; 
+        GR_bottom_band = 1000;
         is_active = false;
     }
 
-    
     /* ========== PUBLIC MUTATIVE FUNCTIONS ========== */
-    
+
     function refreshCollateralRatio() public {
-    	require(collateral_ratio_paused == false, "Collateral Ratio has been paused");
+        require(collateral_ratio_paused == false, "Collateral Ratio has been paused");
         uint256 time_elapsed = (block.timestamp).sub(last_update);
         require(time_elapsed >= internal_cooldown, "internal cooldown not passed");
         uint256 fxs_reserves = reserve_tracker.getFXSReserves();
         uint256 fxs_price = reserve_tracker.getFXSPrice();
-        
+
         uint256 fxs_liquidity = (fxs_reserves.mul(fxs_price)); // Has 6 decimals of precision
 
         uint256 frax_supply = FRAX.totalSupply();
-        
+
         // Get the FRAX TWAP on Curve Metapool
         uint256 frax_price = reserve_tracker.frax_twap_price();
 
@@ -117,21 +117,24 @@ contract PIDController is Owned {
         uint256 last_collateral_ratio = FRAX.global_collateral_ratio();
         uint256 new_collateral_ratio = last_collateral_ratio;
 
-        if(FIP_6){
-            require(frax_price > FRAX_top_band || frax_price < FRAX_bottom_band, "Use PIDController when FRAX is outside of peg");
+        if (FIP_6) {
+            require(
+                frax_price > FRAX_top_band || frax_price < FRAX_bottom_band,
+                "Use PIDController when FRAX is outside of peg"
+            );
         }
 
         // First, check if the price is out of the band
-        if(frax_price > FRAX_top_band){
+        if (frax_price > FRAX_top_band) {
             new_collateral_ratio = last_collateral_ratio.sub(frax_step);
-        } else if (frax_price < FRAX_bottom_band){
+        } else if (frax_price < FRAX_bottom_band) {
             new_collateral_ratio = last_collateral_ratio.add(frax_step);
 
-        // Else, check if the growth ratio has increased or decreased since last update
-        } else if(use_growth_ratio){
-            if(new_growth_ratio > growth_ratio.mul(1e6 + GR_top_band).div(1e6)){
+            // Else, check if the growth ratio has increased or decreased since last update
+        } else if (use_growth_ratio) {
+            if (new_growth_ratio > growth_ratio.mul(1e6 + GR_top_band).div(1e6)) {
                 new_collateral_ratio = last_collateral_ratio.sub(frax_step);
-            } else if (new_growth_ratio < growth_ratio.mul(1e6 - GR_bottom_band).div(1e6)){
+            } else if (new_growth_ratio < growth_ratio.mul(1e6 - GR_bottom_band).div(1e6)) {
                 new_collateral_ratio = last_collateral_ratio.add(frax_step);
             }
         }
@@ -139,19 +142,19 @@ contract PIDController is Owned {
         growth_ratio = new_growth_ratio;
         last_update = block.timestamp;
 
-        // No need for checking CR under 0 as the last_collateral_ratio.sub(frax_step) will throw 
+        // No need for checking CR under 0 as the last_collateral_ratio.sub(frax_step) will throw
         // an error above in that case
-        if(new_collateral_ratio > 1e6){
+        if (new_collateral_ratio > 1e6) {
             new_collateral_ratio = 1e6;
         }
 
-        if(is_active){
+        if (is_active) {
             uint256 delta_collateral_ratio;
-            if(new_collateral_ratio > last_collateral_ratio){
+            if (new_collateral_ratio > last_collateral_ratio) {
                 delta_collateral_ratio = new_collateral_ratio - last_collateral_ratio;
                 FRAX.setPriceTarget(0); // Set to zero to increase CR
                 emit FRAXdecollateralize(new_collateral_ratio);
-            } else if (new_collateral_ratio < last_collateral_ratio){
+            } else if (new_collateral_ratio < last_collateral_ratio) {
                 delta_collateral_ratio = last_collateral_ratio - new_collateral_ratio;
                 FRAX.setPriceTarget(1000e6); // Set to high value to decrease CR
                 emit FRAXrecollateralize(new_collateral_ratio);
@@ -166,7 +169,7 @@ contract PIDController is Owned {
             // Reset params
             FRAX.setFraxStep(0);
             FRAX.setRefreshCooldown(cooldown_before); // Set the cooldown period to what it was before, or until next controller refresh
-            FRAX.setPriceTarget(1e6);           
+            FRAX.setPriceTarget(1e6);
         }
     }
 
@@ -215,15 +218,14 @@ contract PIDController is Owned {
     }
 
     function toggleCollateralRatio(bool _is_paused) external onlyByOwnGov {
-    	collateral_ratio_paused = _is_paused;
+        collateral_ratio_paused = _is_paused;
     }
 
     function activateFIP6(bool _activate) external onlyByOwnGov {
         FIP_6 = _activate;
     }
 
-
-    /* ========== EVENTS ========== */  
+    /* ========== EVENTS ========== */
     event FRAXdecollateralize(uint256 new_collateral_ratio);
     event FRAXrecollateralize(uint256 new_collateral_ratio);
 }

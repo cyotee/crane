@@ -1,60 +1,53 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AaveV4HubRolesProcedure} from '@crane/contracts/protocols/lending/aave/v4/deployments/procedures/roles/AaveV4HubRolesProcedure.sol';
-import {Roles} from '@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/Roles.sol';
+import {
+    AaveV4HubRolesProcedure
+} from "@crane/contracts/protocols/lending/aave/v4/deployments/procedures/roles/AaveV4HubRolesProcedure.sol";
+import {Roles} from "@crane/contracts/protocols/lending/aave/v4/deployments/utils/libraries/Roles.sol";
 
 contract AaveV4HubRolesProcedureWrapper {
-  bool public IS_TEST = true;
+    bool public IS_TEST = true;
 
-  function grantHubAllRoles(address accessManager, address admin) external {
-    AaveV4HubRolesProcedure.grantHubAllRoles(accessManager, admin);
-  }
+    function grantHubAllRoles(address accessManager, address admin) external {
+        AaveV4HubRolesProcedure.grantHubAllRoles(accessManager, admin);
+    }
 
-  function grantHubRole(address accessManager, uint64 role, address admin) external {
-    AaveV4HubRolesProcedure.grantHubRole(accessManager, role, admin);
-  }
+    function grantHubRole(address accessManager, uint64 role, address admin) external {
+        AaveV4HubRolesProcedure.grantHubRole(accessManager, role, admin);
+    }
 
-  function setupHubRoles(address accessManager, address hub) external {
-    AaveV4HubRolesProcedure.setupHubAllRoles(accessManager, hub);
-  }
+    function setupHubRoles(address accessManager, address hub) external {
+        AaveV4HubRolesProcedure.setupHubAllRoles(accessManager, hub);
+    }
 
-  function setupHubFeeMinterRole(address accessManager, address hub) external {
-    AaveV4HubRolesProcedure.setupHubRole(
-      accessManager,
-      hub,
-      Roles.HUB_FEE_MINTER_ROLE,
-      Roles.getHubFeeMinterRoleSelectors()
-    );
-  }
+    function setupHubFeeMinterRole(address accessManager, address hub) external {
+        AaveV4HubRolesProcedure.setupHubRole(
+            accessManager, hub, Roles.HUB_FEE_MINTER_ROLE, Roles.getHubFeeMinterRoleSelectors()
+        );
+    }
 
-  function setupHubConfiguratorRole(address accessManager, address hub) external {
-    AaveV4HubRolesProcedure.setupHubRole(
-      accessManager,
-      hub,
-      Roles.HUB_CONFIGURATOR_ROLE,
-      Roles.getHubConfiguratorRoleSelectors()
-    );
-  }
+    function setupHubConfiguratorRole(address accessManager, address hub) external {
+        AaveV4HubRolesProcedure.setupHubRole(
+            accessManager, hub, Roles.HUB_CONFIGURATOR_ROLE, Roles.getHubConfiguratorRoleSelectors()
+        );
+    }
 
-  function getHubFeeMinterRoleSelectors() external pure returns (bytes4[] memory) {
-    return Roles.getHubFeeMinterRoleSelectors();
-  }
+    function getHubFeeMinterRoleSelectors() external pure returns (bytes4[] memory) {
+        return Roles.getHubFeeMinterRoleSelectors();
+    }
 
-  function setupHubDeficitEliminatorRole(address accessManager, address hub) external {
-    AaveV4HubRolesProcedure.setupHubRole(
-      accessManager,
-      hub,
-      Roles.HUB_DEFICIT_ELIMINATOR_ROLE,
-      Roles.getHubDeficitEliminatorRoleSelectors()
-    );
-  }
+    function setupHubDeficitEliminatorRole(address accessManager, address hub) external {
+        AaveV4HubRolesProcedure.setupHubRole(
+            accessManager, hub, Roles.HUB_DEFICIT_ELIMINATOR_ROLE, Roles.getHubDeficitEliminatorRoleSelectors()
+        );
+    }
 
-  function getHubConfiguratorRoleSelectors() external pure returns (bytes4[] memory) {
-    return Roles.getHubConfiguratorRoleSelectors();
-  }
+    function getHubConfiguratorRoleSelectors() external pure returns (bytes4[] memory) {
+        return Roles.getHubConfiguratorRoleSelectors();
+    }
 
-  function getHubDeficitEliminatorRoleSelectors() external pure returns (bytes4[] memory) {
-    return Roles.getHubDeficitEliminatorRoleSelectors();
-  }
+    function getHubDeficitEliminatorRoleSelectors() external pure returns (bytes4[] memory) {
+        return Roles.getHubDeficitEliminatorRoleSelectors();
+    }
 }

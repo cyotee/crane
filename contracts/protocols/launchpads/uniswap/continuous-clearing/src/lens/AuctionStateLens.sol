@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {IContinuousClearingAuction} from '../interfaces/IContinuousClearingAuction.sol';
-import {Checkpoint} from '../libraries/CheckpointLib.sol';
+import {IContinuousClearingAuction} from "../interfaces/IContinuousClearingAuction.sol";
+import {Checkpoint} from "../libraries/CheckpointLib.sol";
 
 /// @notice The state of the auction containing the latest checkpoint
 /// as well as the currency raised, total cleared, and whether the auction has graduated
@@ -22,7 +22,7 @@ contract AuctionStateLens {
     error InvalidRevertReasonLength();
 
     /// @notice Function which can be called from offchain to get the latest state of the auction
-    function state(IContinuousClearingAuction auction) external returns (AuctionState memory) {
+    function state(IContinuousClearingAuction auction) external returns (AuctionState memory stateStruct) {
         try this.revertWithState(auction) {}
         catch (bytes memory reason) {
             return parseRevertReason(reason);

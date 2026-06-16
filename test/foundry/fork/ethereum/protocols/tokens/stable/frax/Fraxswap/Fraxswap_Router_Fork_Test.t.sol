@@ -6,8 +6,9 @@ pragma solidity ^0.8.35;
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {IWETH} from "@crane/contracts/external/uniswap/v2-periphery/contracts/interfaces/IWETH.sol";
-import {FraxswapRouterMultihop} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
+import {
+    FraxswapRouterMultihop
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
 import {IFraxAMOMinter} from "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
@@ -45,7 +46,9 @@ contract Fraxswap_Router_Fork_Test is Test, TestBase_FraxEthereumFork {
     }
 
     function test_swap_fraxToFpi_fraxswapV1() public {
-        _runHop(HopConfig({tokenOut: FraxEthereumAddresses.FPI, swapType: 0, extraParam1: 0, pool: FRAXSWAP_V1_FPI_FRAX}));
+        _runHop(
+            HopConfig({tokenOut: FraxEthereumAddresses.FPI, swapType: 0, extraParam1: 0, pool: FRAXSWAP_V1_FPI_FRAX})
+        );
     }
 
     function _runHop(HopConfig memory cfg) internal {

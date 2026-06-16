@@ -58,7 +58,7 @@ contract ERC20ShareRepresentation is Ownable, ERC20 {
     /// @param _eVault The address of the EVault this token is associated with
     /// @dev The token name and symbol are derived from the EVault's name and symbol with "-STAKE" suffix
     constructor(address _eVault)
-        Ownable()
+        Ownable(msg.sender)
         ERC20(
             string(abi.encodePacked(ERC20(_eVault).name(), "-STAKE")),
             string(abi.encodePacked(ERC20(_eVault).symbol(), "-STAKE"))
@@ -120,7 +120,7 @@ contract HookTargetStakeDelegator is Ownable, IHookTarget {
     /// @notice Creates a new HookTargetStakeDelegator
     /// @param _eVault The EVault this hook target will be attached to
     /// @param _rewardVaultFactory Factory contract that creates reward vaults for stake tokens
-    constructor(address _eVault, address _rewardVaultFactory) Ownable() {
+    constructor(address _eVault, address _rewardVaultFactory) Ownable(msg.sender) {
         _transferOwnership(_eVault);
         evc = IEVC(IEVault(_eVault).EVC());
         eVault = IEVault(_eVault);

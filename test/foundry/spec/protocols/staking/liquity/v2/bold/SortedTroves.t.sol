@@ -2,9 +2,9 @@
 pragma solidity ^0.8.35;
 
 import "forge-std/Test.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/SortedTroves.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/AddressesRegistry.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Types/TroveId.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/SortedTroves.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/AddressesRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/TroveId.sol";
 
 uint256 constant FUZZ_INPUT_LENGTH = 9;
 
@@ -206,8 +206,9 @@ contract MockTroveManager {
         view
         returns (Hints memory)
     {
-        (uint256 prev, uint256 next) =
-            _sortedTroves.findInsertPosition(annualInterestRate, TroveId.unwrap(hints.prev), TroveId.unwrap(hints.next));
+        (uint256 prev, uint256 next) = _sortedTroves.findInsertPosition(
+            annualInterestRate, TroveId.unwrap(hints.prev), TroveId.unwrap(hints.next)
+        );
 
         return Hints(TroveId.wrap(prev), TroveId.wrap(next));
     }
@@ -491,9 +492,9 @@ contract SortedTrovesTest is Test {
         new SortedTroves{salt: SALT}(addressesRegistry);
     }
 
-    function test_SortsIndividualTrovesByAnnualInterestRate(
-        ArbIndividualTroveCreation[FUZZ_INPUT_LENGTH] calldata troves
-    ) public {
+    function test_SortsIndividualTrovesByAnnualInterestRate(ArbIndividualTroveCreation[FUZZ_INPUT_LENGTH] calldata troves)
+        public
+    {
         _buildList(troves);
         _checkOrdering();
     }

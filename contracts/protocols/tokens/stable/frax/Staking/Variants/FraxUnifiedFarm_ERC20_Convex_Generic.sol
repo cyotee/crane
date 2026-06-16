@@ -2,7 +2,7 @@
 pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/FraxUnifiedFarm_ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 // import '@crane/contracts/protocols/tokens/stable/frax/FXB/IFXB.sol';
 import "@crane/contracts/protocols/tokens/stable/frax/FPI/IFPI.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ICPITrackerOracle.sol";
@@ -15,9 +15,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/ICurveStab
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/ICurveTricryptoOptimizedWETH.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interface.sol";
 
-
 contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
-
     string public farm_type = "ERC20_Convex_Generic";
 
     // IFPI public FPI = IFPI(0x5Ca135cB8527d76e932f34B5145575F9d8cbE08E);
@@ -27,16 +25,18 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
     // // ============================================
     // AggregatorV3Interface internal priceFeedETHUSD = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
 
@@ -75,15 +75,15 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         // curveToken = ICurveTricryptoOptimizedWETH(address(stakingToken.curveToken()));
         // curvePool = ICurveTricryptoOptimizedWETH(address(stakingToken.curveToken()));
 
-    }
+        }
 
-    // // Convex tricryptoFRAX 
+    // // Convex tricryptoFRAX
     // // ============================================
     // function getLatestETHPriceE8() public view returns (int) {
     //     // Returns in E8
     //     (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
     //     require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+
     //     return price;
     // }
 
@@ -95,13 +95,13 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
 
     function fraxPerLPToken() public view override returns (uint256 frax_per_lp_token) {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
-        
+
         // Convex crvUSD/FRAX
         // ============================================
         // {
         //     // Half of the LP should be FRAX
         //     // Using 0.50 * virtual price for gas savings
-        //     frax_per_lp_token = curvePool.get_virtual_price() / 2; 
+        //     frax_per_lp_token = curvePool.get_virtual_price() / 2;
         // }
 
         // Convex FRAX/PYUSD
@@ -109,7 +109,7 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         // {
         //     // Half of the LP should be FRAX
         //     // Using 0.50 * virtual price for gas savings
-        //     frax_per_lp_token = curvePool.get_virtual_price() / 2; 
+        //     frax_per_lp_token = curvePool.get_virtual_price() / 2;
         // }
 
         // Convex DOLA/FRAXPYUSD
@@ -117,14 +117,14 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         // {
         //     // One quarter of the LP should be FRAX
         //     // Using 0.25 * virtual price for gas savings
-        //     frax_per_lp_token = curvePool.get_virtual_price() / 4; 
+        //     frax_per_lp_token = curvePool.get_virtual_price() / 4;
         // }
 
         // Convex FRAX/sDAI
         // ============================================
         // {
         //     // Special calculation because FRAX != sDAI
-        //     frax_per_lp_token = (IERC20(frax_address).balanceOf(address(curvePool)) * 1e18) / curvePool.totalSupply(); 
+        //     frax_per_lp_token = (IERC20(frax_address).balanceOf(address(curvePool)) * 1e18) / curvePool.totalSupply();
         // }
 
         // Convex FRAX/FPI NG
@@ -133,14 +133,14 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         //     // Count both FRAX and FPI as both are beneficial
         //     uint256 frax_balance = IERC20(frax_address).balanceOf(address(curvePool));
         //     uint256 fpi_value_e36 = FPI.balanceOf(address(curvePool)) * FPI_ORACLE.currPegPrice();
-        //     frax_per_lp_token = ((frax_balance * 1e18) + fpi_value_e36) / curvePool.totalSupply(); 
+        //     frax_per_lp_token = ((frax_balance * 1e18) + fpi_value_e36) / curvePool.totalSupply();
         // }
 
         // Convex FRAX/FXB
         // ============================================
         // {
         //     // Count both FRAX and FXB as both are beneficial
-        //     frax_per_lp_token = curvePool.get_virtual_price(); 
+        //     frax_per_lp_token = curvePool.get_virtual_price();
         // }
 
         // Convex triSDT
@@ -148,7 +148,7 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         // {
         //     // One third of the LP should be frxETH
         //     // Using lp_price / 3 for gas savings
-        //     frax_per_lp_token = curvePool.lp_price() / 3; 
+        //     frax_per_lp_token = curvePool.lp_price() / 3;
         // }
 
         // Convex tricryptoFRAX
@@ -157,7 +157,7 @@ contract FraxUnifiedFarm_ERC20_Convex_Generic is FraxUnifiedFarm_ERC20 {
         //     // Get the value of frxETH in the pool
         //     uint256 frxETH_in_pool = IERC20(0x5E8422345238F34275888049021821E8E08CAa1f).balanceOf(address(curvePool));
         //     uint256 frxETH_usd_val = (frxETH_in_pool * uint256(getLatestETHPriceE8())) / (1e8);
-            
+
         //     // Get the value of FRAX in the pool, assuming it is $1
         //     uint256 frax_balance = IERC20(frax_address).balanceOf(address(curvePool));
 

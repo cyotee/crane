@@ -22,10 +22,9 @@ abstract contract LimitRouterBase is
     using SafeERC20 for IERC20;
     using PMath for uint256;
 
-    bytes32 internal constant LIMIT_ORDER_TYPEHASH =
-        keccak256(
-            "Order(uint256 salt,uint256 expiry,uint256 nonce,uint8 orderType,address token,address YT,address maker,address receiver,uint256 makingAmount,uint256 lnImpliedRate,uint256 failSafeRate,bytes permit)"
-        );
+    bytes32 internal constant LIMIT_ORDER_TYPEHASH = keccak256(
+        "Order(uint256 salt,uint256 expiry,uint256 nonce,uint8 orderType,address token,address YT,address maker,address receiver,uint256 makingAmount,uint256 lnImpliedRate,uint256 failSafeRate,bytes permit)"
+    );
 
     uint128 internal constant _ORDER_DOES_NOT_EXIST = 0;
     uint128 internal constant _ORDER_FILLED = 1;
@@ -67,7 +66,8 @@ abstract contract LimitRouterBase is
         FillOrderParams[] memory params,
         address receiver,
         uint256 maxTaking,
-        bytes calldata /*optData*/,
+        bytes calldata,
+        /*optData*/
         bytes memory callback
     ) external returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn) {
         params = _validateSkipSigAndFilterOrders(params);
@@ -91,16 +91,18 @@ abstract contract LimitRouterBase is
         bytes callback;
     }
 
-    function fillNoOrders(
-        bytes memory callback
-    ) internal returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn) {
+    function fillNoOrders(bytes memory callback)
+        internal
+        returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn)
+    {
         callbackReturn = callbackIfNeeded(0, 0, 0, callback);
         return (0, 0, 0, callbackReturn);
     }
 
-    function fillTokenForPY(
-        Args memory a
-    ) internal returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn) {
+    function fillTokenForPY(Args memory a)
+        internal
+        returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn)
+    {
         (address SY, address PT, address YT, bytes32[] memory orderHashes) = _checkSig_updMakingAndStatus(a.params);
 
         // Token => This
@@ -128,9 +130,10 @@ abstract contract LimitRouterBase is
         _emitEvents(a.params, orderHashes, fromMakers, out.netTakings, out.netFees, out.notionalVolumes);
     }
 
-    function fillPYForToken(
-        Args memory a
-    ) internal returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn) {
+    function fillPYForToken(Args memory a)
+        internal
+        returns (uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callbackReturn)
+    {
         (address SY, address PT, address YT, bytes32[] memory orderHashes) = _checkSig_updMakingAndStatus(a.params);
 
         FillResults memory out = LimitMath.calcBatch(a.params, YT, getLnFeeRateRoot(YT));
@@ -159,9 +162,11 @@ abstract contract LimitRouterBase is
     }
 
     // ----------------- verify & convert functions -----------------
-    function _validateSkipSigAndFilterOrders(
-        FillOrderParams[] memory params
-    ) internal view returns (FillOrderParams[] memory res) {
+    function _validateSkipSigAndFilterOrders(FillOrderParams[] memory params)
+        internal
+        view
+        returns (FillOrderParams[] memory res)
+    {
         uint256 len = params.length;
         require(len != 0, "LOP: empty batch");
 
@@ -189,19 +194,18 @@ abstract contract LimitRouterBase is
         }
     }
 
-    function _checkSig_updMakingAndStatus(
-        FillOrderParams[] memory params
-    ) internal returns (address SY, address PT, address YT, bytes32[] memory orderHashes) {
+    function _checkSig_updMakingAndStatus(FillOrderParams[] memory params)
+        internal
+        returns (address SY, address PT, address YT, bytes32[] memory orderHashes)
+    {
         uint256 len = params.length;
         orderHashes = new bytes32[](len);
 
         for (uint256 i = 0; i < len; i++) {
             FillOrderParams memory param = params[i];
 
-            (bytes32 orderHash, uint256 remainingMakerAmount, uint256 filledMakerAmount) = _checkSig(
-                param.order,
-                param.signature
-            );
+            (bytes32 orderHash, uint256 remainingMakerAmount, uint256 filledMakerAmount) =
+                _checkSig(param.order, param.signature);
             uint256 netMaking = PMath.min(param.makingAmount, remainingMakerAmount);
 
             unchecked {
@@ -233,14 +237,7 @@ abstract contract LimitRouterBase is
         uint256 len = hashes.length;
 
         for (uint256 i = 0; i < len; i++) {
-            _emitOrderFilledV2(
-                hashes[i],
-                params[i].order,
-                fromMakers[i],
-                toMakers[i],
-                netFees[i],
-                notionalVolumes[i]
-            );
+            _emitOrderFilledV2(hashes[i], params[i].order, fromMakers[i], toMakers[i], netFees[i], notionalVolumes[i]);
         }
     }
 
@@ -266,26 +263,17 @@ abstract contract LimitRouterBase is
         );
     }
 
-    function callbackIfNeeded(
-        uint256 actualMaking,
-        uint256 actualTaking,
-        uint256 totalFee,
-        bytes memory callback
-    ) internal returns (bytes memory callbackReturn) {
+    function callbackIfNeeded(uint256 actualMaking, uint256 actualTaking, uint256 totalFee, bytes memory callback)
+        internal
+        returns (bytes memory callbackReturn)
+    {
         if (callback.length > 0) {
-            callbackReturn = IPLimitRouterCallback(msg.sender).limitRouterCallback(
-                actualMaking,
-                actualTaking,
-                totalFee,
-                callback
-            );
+            callbackReturn =
+                IPLimitRouterCallback(msg.sender).limitRouterCallback(actualMaking, actualTaking, totalFee, callback);
         }
     }
 
-    function _checkSig(
-        Order memory order,
-        bytes memory signature
-    )
+    function _checkSig(Order memory order, bytes memory signature)
         public
         view
         returns (
@@ -315,10 +303,10 @@ abstract contract LimitRouterBase is
 
     // ----------------- simple helper functions functions -----------------
 
-    function _transferFromMakers_mintSy_updMakings(
-        address SY,
-        FillOrderParams[] memory params
-    ) internal returns (uint256[] memory fromMakers) {
+    function _transferFromMakers_mintSy_updMakings(address SY, FillOrderParams[] memory params)
+        internal
+        returns (uint256[] memory fromMakers)
+    {
         uint256 len = params.length;
         fromMakers = new uint256[](len);
 
@@ -354,19 +342,13 @@ abstract contract LimitRouterBase is
         }
         _safeApproveInf(token, SY);
         return
-            IStandardizedYield(SY).deposit{value: token == NATIVE ? netTokenIn : 0}(
-                address(this),
-                token,
-                netTokenIn,
-                0
-            );
+            IStandardizedYield(SY).deposit{value: token == NATIVE ? netTokenIn : 0}(address(this), token, netTokenIn, 0);
     }
 
-    function _redeemSy_transferToMakers(
-        address SY,
-        FillOrderParams[] memory params,
-        uint256[] memory netSyOuts
-    ) internal returns (uint256[] memory toMakers) {
+    function _redeemSy_transferToMakers(address SY, FillOrderParams[] memory params, uint256[] memory netSyOuts)
+        internal
+        returns (uint256[] memory toMakers)
+    {
         uint256 len = params.length;
         toMakers = new uint256[](len);
 
@@ -415,18 +397,14 @@ abstract contract LimitRouterBase is
     }
 
     function __stillShared(address currentShared, address nextToken) private view returns (bool) {
-        return
-            (currentShared == nextToken) ||
-            (currentShared == NATIVE && nextToken == WNATIVE) ||
-            (currentShared == WNATIVE && nextToken == NATIVE);
+        return (currentShared == nextToken) || (currentShared == NATIVE && nextToken == WNATIVE)
+            || (currentShared == WNATIVE && nextToken == NATIVE);
     }
 
-    function __redeemSy_Single(
-        address receiver,
-        address SY,
-        address tokenOut,
-        uint256 netSyIn
-    ) private returns (uint256 netTokenOut) {
+    function __redeemSy_Single(address receiver, address SY, address tokenOut, uint256 netSyIn)
+        private
+        returns (uint256 netTokenOut)
+    {
         if (tokenOut == NATIVE || tokenOut == WNATIVE) {
             address otherToken = tokenOut == NATIVE ? WNATIVE : NATIVE;
             address tokenRedeemSy = IStandardizedYield(SY).isValidTokenOut(tokenOut) ? tokenOut : otherToken;
@@ -446,12 +424,9 @@ abstract contract LimitRouterBase is
     }
 
     // ! Allow self-fill of orders
-    function _transferFromMakers(
-        IERC20 token,
-        FillOrderParams[] memory params,
-        address to,
-        uint256[] memory netIn
-    ) internal {
+    function _transferFromMakers(IERC20 token, FillOrderParams[] memory params, address to, uint256[] memory netIn)
+        internal
+    {
         uint256 len = params.length;
         for (uint256 i = 0; i < len; i++) {
             if (params[i].order.maker == to) continue;
@@ -459,12 +434,9 @@ abstract contract LimitRouterBase is
         }
     }
 
-    function _transferToMakers(
-        IERC20 token,
-        address payer,
-        FillOrderParams[] memory params,
-        uint256[] memory netOut
-    ) internal {
+    function _transferToMakers(IERC20 token, address payer, FillOrderParams[] memory params, uint256[] memory netOut)
+        internal
+    {
         uint256 len = params.length;
         for (uint256 i = 0; i < len; i++) {
             if (payer == params[i].order.receiver) continue;

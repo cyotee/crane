@@ -10,7 +10,9 @@ import {FraxswapOracle} from "@crane/contracts/protocols/tokens/stable/frax/BAMM
 import {FraxswapDummyRouter} from "@crane/contracts/protocols/tokens/stable/frax/BAMM/FraxswapDummyRouter.sol";
 import {FraxswapFactory} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapFactory.sol";
 import {FraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapPair.sol";
-import {FraxswapRouterMultihop} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
+import {
+    FraxswapRouterMultihop
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
 
 contract BAMMFuzzTest is Test {
@@ -90,7 +92,9 @@ contract BAMMFuzzTest is Test {
 
             // Upstream logs a warning when LP profit is missing; do not hard-fail (known JS TODO).
             if (endLpOwner <= startLpOwner) {
-                assertTrue(startToken0 <= token0.balanceOf(user1) + 1e18 || startToken1 <= token1.balanceOf(user1) + 1e18);
+                assertTrue(
+                    startToken0 <= token0.balanceOf(user1) + 1e18 || startToken1 <= token1.balanceOf(user1) + 1e18
+                );
             }
         }
     }
@@ -192,12 +196,7 @@ contract BAMMFuzzTest is Test {
         FraxswapOracle fraxOracle = new FraxswapOracle();
 
         bamm = new BAMM(
-            pair,
-            true,
-            10_000 - feeTier,
-            FraxswapRouterMultihop(payable(address(dummyRouter))),
-            helper,
-            fraxOracle
+            pair, true, 10_000 - feeTier, FraxswapRouterMultihop(payable(address(dummyRouter))), helper, fraxOracle
         );
     }
 

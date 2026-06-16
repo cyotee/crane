@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {EIP712Helpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/EIP712Helpers.sol';
-import {SetupHelpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SetupHelpers.sol';
+import {EIP712Helpers} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/EIP712Helpers.sol";
+import {SetupHelpers} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SetupHelpers.sol";
 
 /// @title SpokeHelpers
 /// @notice Aggregates all spoke-level test helpers.

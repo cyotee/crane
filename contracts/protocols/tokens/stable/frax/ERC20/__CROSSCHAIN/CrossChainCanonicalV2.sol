@@ -25,7 +25,7 @@ pragma solidity ^0.8.35;
 // Sam Kazemian: https://github.com/samkazemian
 // Dennis: https://github.com/denett
 
-import { ERC20PermitPermissionedMint } from "../ERC20PermitPermissionedMint.sol";
+import {ERC20PermitPermissionedMint} from "../ERC20PermitPermissionedMint.sol";
 
 contract CrossChainCanonicalV2 is ERC20PermitPermissionedMint {
     /* ========== CONSTRUCTOR ========== */
@@ -35,8 +35,7 @@ contract CrossChainCanonicalV2 is ERC20PermitPermissionedMint {
         string memory _name,
         string memory _symbol,
         uint256 _initial_mint_amt
-    ) ERC20PermitPermissionedMint(_creator_address, _timelock_address, _name,  _symbol) 
-    {
+    ) ERC20PermitPermissionedMint(_creator_address, _timelock_address, _name, _symbol) {
         // Mint some canonical tokens to the creator
         super._mint(_creator_address, _initial_mint_amt);
     }

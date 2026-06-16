@@ -27,27 +27,20 @@ contract NFTDescriptor is INFTDescriptor {
     }
 
     /// @notice Generate tokenURI as a base64 encoding from live on-chain values.
-    function constructTokenURI(uint256 relicId)
-        external
-        view
-        override
-        returns (string memory uri)
-    {
+    function constructTokenURI(uint256 relicId) external view override returns (string memory uri) {
         IReliquary _reliquary = IReliquary(reliquary);
         PositionInfo memory position = _reliquary.getPositionForId(relicId);
         PoolInfo memory pool = _reliquary.getPoolInfo(position.poolId);
         LocalVariables_constructTokenURI memory vars;
         vars.underlying = address(_reliquary.getPoolInfo(position.poolId).poolToken);
-        vars.amount =
-            generateDecimalString(position.amount, IERC20Metadata(vars.underlying).decimals());
+        vars.amount = generateDecimalString(position.amount, IERC20Metadata(vars.underlying).decimals());
         vars.pendingReward = generateDecimalString(_reliquary.pendingReward(relicId), 18);
         vars.maturity = (block.timestamp - position.entry) / 1 days;
         vars.rewardSymbol = IERC20Metadata(address(_reliquary.rewardToken())).symbol();
 
         vars.description = generateDescription(pool.name);
-        vars.attributes = generateAttributes(
-            position, vars.amount, vars.pendingReward, vars.rewardSymbol, vars.maturity
-        );
+        vars.attributes =
+            generateAttributes(position, vars.amount, vars.pendingReward, vars.rewardSymbol, vars.maturity);
 
         uri = string.concat(
             "data:application/json;base64,",
@@ -69,11 +62,7 @@ contract NFTDescriptor is INFTDescriptor {
 
     /// @notice Generate description of the liquidity position for NFT metadata.
     /// @param poolName Name of pool as provided by operator.
-    function generateDescription(string memory poolName)
-        internal
-        pure
-        returns (string memory description)
-    {
+    function generateDescription(string memory poolName) internal pure returns (string memory description) {
         description = string.concat(
             "This NFT represents a position in a Reliquary ",
             poolName,
@@ -120,11 +109,7 @@ contract NFTDescriptor is INFTDescriptor {
      * @param num A number.
      * @param decimals Number of decimal places.
      */
-    function generateDecimalString(uint256 num, uint256 decimals)
-        internal
-        pure
-        returns (string memory decString)
-    {
+    function generateDecimalString(uint256 num, uint256 decimals) internal pure returns (string memory decString) {
         if (num == 0) {
             return "0";
         }

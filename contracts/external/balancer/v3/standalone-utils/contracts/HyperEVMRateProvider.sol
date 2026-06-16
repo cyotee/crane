@@ -4,9 +4,7 @@ pragma solidity ^0.8.24;
 import {
     IHyperEVMRateProvider
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/standalone-utils/IHyperEVMRateProvider.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 
 import {HyperSpotPricePrecompile} from "./utils/HyperSpotPricePrecompile.sol";
 import {HyperTokenInfoPrecompile} from "./utils/HyperTokenInfoPrecompile.sol";

@@ -54,10 +54,10 @@ abstract contract CamelotV1VolatileLpHelper is TokenHelper, CamelotV1VolatileCom
         }
     }
 
-    function _swapZapIn(
-        address tokenIn,
-        uint256 amountIn
-    ) private returns (uint256 amount0ToAddLiq, uint256 amount1ToAddLiq) {
+    function _swapZapIn(address tokenIn, uint256 amountIn)
+        private
+        returns (uint256 amount0ToAddLiq, uint256 amount1ToAddLiq)
+    {
         (uint256 reserve0, uint256 reserve1, uint256 fee0, uint256 fee1) = ICamelotPair(pair).getReserves();
 
         if (tokenIn == token0) {
@@ -78,29 +78,14 @@ abstract contract CamelotV1VolatileLpHelper is TokenHelper, CamelotV1VolatileCom
      */
 
     function _addLiquidity(uint256 amount0ToAddLiq, uint256 amount1ToAddLiq) private returns (uint256 amountLpOut) {
-        (, , amountLpOut) = ICamelotRouter(router).addLiquidity(
-            token0,
-            token1,
-            amount0ToAddLiq,
-            amount1ToAddLiq,
-            0,
-            0,
-            address(this),
-            block.timestamp
-        );
+        (,, amountLpOut) = ICamelotRouter(router)
+            .addLiquidity(token0, token1, amount0ToAddLiq, amount1ToAddLiq, 0, 0, address(this), block.timestamp);
     }
 
     function _removeLiquidity(uint256 amountLpToRemove) private returns (uint256 amountTokenA, uint256 amountTokenB) {
         return
-            ICamelotRouter(router).removeLiquidity(
-                token0,
-                token1,
-                amountLpToRemove,
-                0,
-                0,
-                address(this),
-                block.timestamp
-            );
+            ICamelotRouter(router)
+                .removeLiquidity(token0, token1, amountLpToRemove, 0, 0, address(this), block.timestamp);
     }
 
     function _swap(address tokenIn, uint256 amountTokenIn) private returns (uint256) {
@@ -113,14 +98,10 @@ abstract contract CamelotV1VolatileLpHelper is TokenHelper, CamelotV1VolatileCom
 
         uint256 preBalance = _selfBalance(tokenOut);
 
-        ICamelotRouter(router).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountTokenIn,
-            0,
-            path,
-            address(this),
-            address(0),
-            block.timestamp
-        );
+        ICamelotRouter(router)
+            .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                amountTokenIn, 0, path, address(this), address(0), block.timestamp
+            );
 
         return _selfBalance(tokenOut) - preBalance;
     }

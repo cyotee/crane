@@ -10,9 +10,7 @@ contract MockUniswapV2Pair is ERC20 {
     uint112 public reserve0;
     uint112 public reserve1;
 
-    constructor(address token0_, address token1_, uint112 reserve0_, uint112 reserve1_)
-        ERC20("Mock LP", "MLP")
-    {
+    constructor(address token0_, address token1_, uint112 reserve0_, uint112 reserve1_) ERC20("Mock LP", "MLP") {
         token0 = token0_;
         token1 = token1_;
         reserve0 = reserve0_;

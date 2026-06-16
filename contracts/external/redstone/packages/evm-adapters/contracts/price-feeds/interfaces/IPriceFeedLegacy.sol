@@ -9,16 +9,15 @@ pragma solidity ^0.8.17;
  * rely on some legacy functions
  */
 interface IPriceFeedLegacy {
-  /**
-   * @notice Old Chainlink function for getting the number of latest round
-   * @return latestRound The number of the latest update round
-   */
-  function latestRound() external view returns (uint80);
+    /**
+     * @notice Old Chainlink function for getting the number of latest round
+     * @return latestRound The number of the latest update round
+     */
+    function latestRound() external view returns (uint80);
 
-  
-  /**
-   * @notice Old Chainlink function for getting the latest successfully reported value
-   * @return latestAnswer The latest successfully reported value
-   */
-  function latestAnswer() external view returns (int256);
+    /**
+     * @notice Old Chainlink function for getting the latest successfully reported value
+     * @return latestAnswer The latest successfully reported value
+     */
+    function latestAnswer() external view returns (int256);
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeCast} from "@crane/contracts/utils/SafeCast.sol";

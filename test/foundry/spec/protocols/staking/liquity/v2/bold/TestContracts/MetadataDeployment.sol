@@ -3,11 +3,12 @@ pragma solidity ^0.8.35;
 
 import "forge-std/Script.sol";
 //import "forge-std/StdAssertions.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/NFTMetadata/utils/Utils.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/NFTMetadata/utils/FixedAssets.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/NFTMetadata/utils/Utils.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/NFTMetadata/utils/FixedAssets.sol";
 
-contract MetadataDeployment is Script /* , StdAssertions */ {
+contract MetadataDeployment is Script {
+    /* , StdAssertions */
     struct File {
         bytes data;
         uint256 start;

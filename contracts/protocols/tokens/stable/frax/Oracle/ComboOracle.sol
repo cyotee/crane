@@ -29,9 +29,8 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract ComboOracle is Owned {
-
     /* ========== STATE VARIABLES ========== */
-    
+
     address timelock_address;
     address address_to_consult;
     AggregatorV3Interface private priceFeedETHUSD;
@@ -47,13 +46,13 @@ contract ComboOracle is Owned {
     mapping(address => bool) public has_info; // token address => has info
 
     // Price mappings
-    uint public maxDelayTime = 90000; // 25 hrs. Mapping for max delay time
+    uint256 public maxDelayTime = 90000; // 25 hrs. Mapping for max delay time
 
     /* ========== STRUCTS ========== */
 
     struct TokenInfoConstructorArgs {
         address token_address;
-        address agg_addr_for_underlying; 
+        address agg_addr_for_underlying;
         uint256 agg_other_side; // 0: USD, 1: ETH
         address underlying_tkn_address; // Will be address(0) for simple tokens. Otherwise, the aUSDC, yvUSDC address, etc
         address pps_override_address;
@@ -64,7 +63,7 @@ contract ComboOracle is Owned {
     struct TokenInfo {
         address token_address;
         string symbol;
-        address agg_addr_for_underlying; 
+        address agg_addr_for_underlying;
         uint256 agg_other_side; // 0: USD, 1: ETH
         uint256 agg_decimals;
         address underlying_tkn_address; // Will be address(0) for simple tokens. Otherwise, the aUSDC, yvUSDC address, etc
@@ -76,14 +75,13 @@ contract ComboOracle is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner_address,
         address _eth_usd_chainlink_address,
         address _weth_address,
         string memory _native_token_symbol,
         string memory _weth_token_symbol
     ) Owned(_owner_address) {
-
         // Instantiate the instances
         priceFeedETHUSD = AggregatorV3Interface(_eth_usd_chainlink_address);
         WETH = ERC20(_weth_address);
@@ -125,7 +123,9 @@ contract ComboOracle is Owned {
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
-        require(msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock");
+        require(
+            msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock"
+        );
         _;
     }
 
@@ -137,7 +137,7 @@ contract ComboOracle is Owned {
 
     function allTokenInfos() public view returns (TokenInfo[] memory) {
         TokenInfo[] memory return_data = new TokenInfo[](all_token_addresses.length);
-        for (uint i = 0; i < all_token_addresses.length; i++){ 
+        for (uint256 i = 0; i < all_token_addresses.length; i++) {
             return_data[i] = token_info[all_token_addresses[i]];
         }
         return return_data;
@@ -145,40 +145,59 @@ contract ComboOracle is Owned {
 
     // E6
     function getETHPrice() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
-        require(price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
+        require(
+            price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID,
+            "Invalid chainlink price"
+        );
 
         return (uint256(price) * (PRICE_PRECISION)) / (1e8); // ETH/USD is 8 decimals on Chainlink
     }
 
     // E18
     function getETHPricePrecise() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
-        require(price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
+        require(
+            price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID,
+            "Invalid chainlink price"
+        );
 
         return (uint256(price) * (PRECISE_PRICE_PRECISION)) / (1e8); // ETH/USD is 8 decimals on Chainlink
     }
 
-    function getTokenPrice(address token_address) public view returns (uint256 precise_price, uint256 short_price, uint256 eth_price) {
+    function getTokenPrice(address token_address)
+        public
+        view
+        returns (uint256 precise_price, uint256 short_price, uint256 eth_price)
+    {
         // Get the token info
         TokenInfo memory thisTokenInfo = token_info[token_address];
 
         // Get the price for the underlying token
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = AggregatorV3Interface(thisTokenInfo.agg_addr_for_underlying).latestRoundData();
-        require(price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID, "Invalid chainlink price");
-        
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) =
+            AggregatorV3Interface(thisTokenInfo.agg_addr_for_underlying).latestRoundData();
+        require(
+            price >= 0 && (updatedAt >= block.timestamp - maxDelayTime) && answeredInRound >= roundID,
+            "Invalid chainlink price"
+        );
+
         uint256 agg_price = uint256(price);
 
         // Convert to USD, if not already
-        if (thisTokenInfo.agg_other_side == 1) agg_price = (agg_price * getETHPricePrecise()) / PRECISE_PRICE_PRECISION;
+        if (thisTokenInfo.agg_other_side == 1) {
+            agg_price = (agg_price * getETHPricePrecise()) / PRECISE_PRICE_PRECISION;
+        }
 
         // cToken balance * pps = amt of underlying in native decimals
         uint256 price_per_share = 1;
-        if (thisTokenInfo.underlying_tkn_address != address(0)){
+        if (thisTokenInfo.underlying_tkn_address != address(0)) {
             address pps_address_to_use = thisTokenInfo.token_address;
-            if (thisTokenInfo.pps_override_address != address(0)) pps_address_to_use = thisTokenInfo.pps_override_address;
-            (bool success, bytes memory data) = (pps_address_to_use).staticcall(abi.encodeWithSelector(thisTokenInfo.pps_call_selector));
-            require(success, 'Oracle Failed');
+            if (thisTokenInfo.pps_override_address != address(0)) {
+                pps_address_to_use = thisTokenInfo.pps_override_address;
+            }
+            (bool success, bytes memory data) =
+                (pps_address_to_use).staticcall(abi.encodeWithSelector(thisTokenInfo.pps_call_selector));
+            require(success, "Oracle Failed");
 
             price_per_share = abi.decode(data, (uint256));
         }
@@ -187,15 +206,16 @@ contract ComboOracle is Owned {
         uint256 pps_multiplier = (uint256(10) ** (thisTokenInfo.pps_decimals));
 
         // Handle difference in decimals()
-        if (thisTokenInfo.ctkn_undrly_missing_decs < 0){
+        if (thisTokenInfo.ctkn_undrly_missing_decs < 0) {
             uint256 ctkn_undr_miss_dec_mult = (10 ** uint256(-1 * thisTokenInfo.ctkn_undrly_missing_decs));
-            precise_price = (agg_price * PRECISE_PRICE_PRECISION * price_per_share) / (ctkn_undr_miss_dec_mult * pps_multiplier * (uint256(10) ** (thisTokenInfo.agg_decimals)));
-        }
-        else {
+            precise_price = (agg_price * PRECISE_PRICE_PRECISION * price_per_share)
+                / (ctkn_undr_miss_dec_mult * pps_multiplier * (uint256(10) ** (thisTokenInfo.agg_decimals)));
+        } else {
             uint256 ctkn_undr_miss_dec_mult = (10 ** uint256(thisTokenInfo.ctkn_undrly_missing_decs));
-            precise_price = (agg_price * PRECISE_PRICE_PRECISION * price_per_share * ctkn_undr_miss_dec_mult) / (pps_multiplier * (uint256(10) ** (thisTokenInfo.agg_decimals)));
+            precise_price = (agg_price * PRECISE_PRICE_PRECISION * price_per_share * ctkn_undr_miss_dec_mult)
+                / (pps_multiplier * (uint256(10) ** (thisTokenInfo.agg_decimals)));
         }
-        
+
         // E6
         short_price = precise_price / PRICE_MISSING_MULTIPLIER;
 
@@ -205,14 +225,16 @@ contract ComboOracle is Owned {
 
     // Return token price in ETH, multiplied by 2**112
     function getETHPx112(address token_address) external view returns (uint256) {
-        if (token_address == address(WETH) || token_address == 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE) return uint(2 ** 112);
-        require(maxDelayTime != 0, 'Max delay time not set');
+        if (token_address == address(WETH) || token_address == 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE) {
+            return uint256(2 ** 112);
+        }
+        require(maxDelayTime != 0, "Max delay time not set");
 
         // Get the ETH Price PRECISE_PRICE_PRECISION
-        ( , , uint256 eth_price) = getTokenPrice(token_address);
-        
+        (,, uint256 eth_price) = getTokenPrice(token_address);
+
         // Get the decimals
-        uint decimals = uint(ERC20(token_address).decimals());
+        uint256 decimals = uint256(ERC20(token_address).decimals());
 
         // Scale to 2*112
         // Also divide by the token decimals (needed for the math. Nothing to do with missing decimals or anything)
@@ -225,27 +247,27 @@ contract ComboOracle is Owned {
         timelock_address = _timelock_address;
     }
 
-    function setMaxDelayTime(uint _maxDelayTime) external onlyByOwnGov {
+    function setMaxDelayTime(uint256 _maxDelayTime) external onlyByOwnGov {
         maxDelayTime = _maxDelayTime;
     }
 
     function batchSetOracleInfoDirect(TokenInfoConstructorArgs[] memory _initial_token_infos) external onlyByOwnGov {
         // Batch set token info
-        for (uint256 i = 0; i < _initial_token_infos.length; i++){ 
+        for (uint256 i = 0; i < _initial_token_infos.length; i++) {
             TokenInfoConstructorArgs memory this_token_info = _initial_token_infos[i];
             _setTokenInfo(
-                this_token_info.token_address, 
-                this_token_info.agg_addr_for_underlying, 
-                this_token_info.agg_other_side, 
-                this_token_info.underlying_tkn_address, 
+                this_token_info.token_address,
+                this_token_info.agg_addr_for_underlying,
+                this_token_info.agg_other_side,
+                this_token_info.underlying_tkn_address,
                 this_token_info.pps_override_address,
-                this_token_info.pps_call_selector, 
+                this_token_info.pps_call_selector,
                 this_token_info.pps_decimals
             );
         }
     }
 
-    // Sets oracle info for a token 
+    // Sets oracle info for a token
     // Chainlink Addresses
     // https://docs.chain.link/docs/ethereum-addresses/
 
@@ -283,8 +305,8 @@ contract ComboOracle is Owned {
     // }, ['100940878321208298244715']);
 
     function _setTokenInfo(
-        address token_address, 
-        address agg_addr_for_underlying, 
+        address token_address,
+        address agg_addr_for_underlying,
         uint256 agg_other_side, // 0: USD, 1: ETH
         address underlying_tkn_address,
         address pps_override_address,
@@ -295,7 +317,7 @@ contract ComboOracle is Owned {
 
         // See if there are any missing decimals between a cToken and the underlying
         int256 ctkn_undrly_missing_decs = 0;
-        if (underlying_tkn_address != address(0)){
+        if (underlying_tkn_address != address(0)) {
             uint256 cToken_decs = ERC20(token_address).decimals();
             uint256 underlying_decs = ERC20(underlying_tkn_address).decimals();
 
@@ -304,7 +326,7 @@ contract ComboOracle is Owned {
 
         // Add the token address to the array if it doesn't already exist
         bool token_exists = false;
-        for (uint i = 0; i < all_token_addresses.length; i++){ 
+        for (uint256 i = 0; i < all_token_addresses.length; i++) {
             if (all_token_addresses[i] == token_address) {
                 token_exists = true;
                 break;
@@ -317,8 +339,7 @@ contract ComboOracle is Owned {
         string memory name_to_use;
         if (token_address == address(0)) {
             name_to_use = native_token_symbol;
-        }
-        else {
+        } else {
             name_to_use = ERC20(token_address).name();
         }
 
@@ -339,15 +360,22 @@ contract ComboOracle is Owned {
     }
 
     function setTokenInfo(
-        address token_address, 
-        address agg_addr_for_underlying, 
+        address token_address,
+        address agg_addr_for_underlying,
         uint256 agg_other_side,
         address underlying_tkn_address,
         address pps_override_address,
         bytes4 pps_call_selector,
         uint256 pps_decimals
     ) public onlyByOwnGov {
-        _setTokenInfo(token_address, agg_addr_for_underlying, agg_other_side, underlying_tkn_address, pps_override_address, pps_call_selector, pps_decimals);
+        _setTokenInfo(
+            token_address,
+            agg_addr_for_underlying,
+            agg_other_side,
+            underlying_tkn_address,
+            pps_override_address,
+            pps_call_selector,
+            pps_decimals
+        );
     }
-
 }

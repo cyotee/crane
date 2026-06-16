@@ -25,10 +25,9 @@ contract PendleAuraBbAWethSwethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelp
     )
         BbAWethHelper(_linearPreviewHelper, _BB_A_WETH, _BB_A_WETH_POOL_ID, _WA_WETH)
         PendleAuraBalancerStableLPSYV2(_name, _symbol, LP, AURA_PID, _composablePreviewHelper)
-    //solhint-disable-next-line
-    {
+        //solhint-disable-next-line
 
-    }
+    {}
 
     function _deposit(address tokenIn, uint256 amount) internal override returns (uint256 amountSharesOut) {
         if (tokenIn == NATIVE || tokenIn == WETH || tokenIn == WA_WETH) {
@@ -39,11 +38,11 @@ contract PendleAuraBbAWethSwethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelp
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE || tokenOut == WETH || tokenOut == WA_WETH) {
             uint256 amountBbAWeth = super._redeem(address(this), BB_A_WETH, amountSharesToRedeem);
             amountTokenOut = _redeemBbAWeth(receiver, tokenOut, amountBbAWeth);
@@ -52,10 +51,12 @@ contract PendleAuraBbAWethSwethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelp
         }
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE || tokenIn == WETH || tokenIn == WA_WETH) {
             uint256 amountBbAWeth = _previewDepositBbAWeth(tokenIn, amountTokenToDeposit);
             amountSharesOut = super._previewDeposit(BB_A_WETH, amountBbAWeth);
@@ -64,10 +65,12 @@ contract PendleAuraBbAWethSwethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelp
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE || tokenOut == WETH || tokenOut == WA_WETH) {
             uint256 amountBbAWeth = super._previewRedeem(BB_A_WETH, amountSharesToRedeem);
             amountTokenOut = _previewRedeemBbAWeth(tokenOut, amountBbAWeth);
@@ -135,12 +138,8 @@ contract PendleAuraBbAWethSwethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelp
     }
 
     function isValidTokenIn(address token) public view override returns (bool) {
-        return (token == NATIVE ||
-            token == WETH ||
-            token == WA_WETH ||
-            token == BB_A_WETH ||
-            token == SWETH ||
-            token == LP);
+        return (token == NATIVE || token == WETH || token == WA_WETH || token == BB_A_WETH || token == SWETH
+                || token == LP);
     }
 
     function isValidTokenOut(address token) public view override returns (bool) {

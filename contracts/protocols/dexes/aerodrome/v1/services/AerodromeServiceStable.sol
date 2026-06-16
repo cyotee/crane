@@ -6,27 +6,17 @@ import {IPool} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPool
 import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRouter.sol";
 import {IPoolFactory} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPoolFactory.sol";
 
+// tag::AerodromeServiceStable[]
 /**
- * @title AerodromeServiceStable
- * @notice Library for interacting with Aerodrome stable pools (x³y + xy³ = k curve)
- * @dev For volatile pools (xy = k curve), use AerodromeServiceVolatile instead.
- *
- * This library provides functions for:
- * - Swapping tokens in stable pools
- * - Swap-deposit (zap in) to stable pools
- * - Withdraw-swap (zap out) from stable pools
- * - Quoting optimal swap amounts for balanced deposits
- *
- * All functions explicitly use `stable: true` for pool/router interactions.
- *
- * @custom:math Stable Pool Curve
- * The stable pool uses the curve: x³y + xy³ = k
- * This provides lower slippage for similarly-priced assets (stablecoins, wrapped tokens).
- * The math is more complex than volatile pools and uses Newton-Raphson iteration
- * for output calculations.
+ * @title AerodromeServiceStable - Stateless library for Aerodrome V1 stable pool operations (x³y + xy³ = k): swaps, zap deposit/withdraw, and balanced liquidity quoting.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Internal-only API (prefixed _). Consumed via `using AerodromeServiceStable for ...` in targets/services or tests.
+ * @dev Explicitly passes `stable: true` to router/pool calls. Dedicated stable math (binary search + Newton-Raphson in _getY).
+ * @dev For volatile pools (xy = k), use AerodromeServiceVolatile instead. See legacy AerodromeService for migration notes.
+ * @dev See AGENTS.md for *Service pattern (structs for params, internal helpers) and PRD LR-1 for NatSpec + include-tag requirements.
+ * @dev Ties to LR-2 (protocol utility docs + usage in Aerodrome port tests).
  */
 library AerodromeServiceStable {
-
     /* -------------------------------------------------------------------------- */
     /*                                  Constants                                  */
     /* -------------------------------------------------------------------------- */
@@ -38,16 +28,10 @@ library AerodromeServiceStable {
     /*                                   Structs                                   */
     /* -------------------------------------------------------------------------- */
 
+    // tag::SwapStableParams[]
     /**
-     * @notice Parameters for swapping tokens in a stable pool
-     * @param router The Aerodrome router contract
-     * @param factory The Aerodrome pool factory contract
-     * @param pool The stable pool to swap in
-     * @param tokenIn The token being sold
-     * @param tokenOut The token being purchased
-     * @param amountIn The amount of tokenIn to swap
-     * @param recipient The address to receive tokenOut
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _swapStable on stable pools.
+     * Bundles router, factory, pool, tokens, amounts and execution params.
      */
     struct SwapStableParams {
         IRouter router;
@@ -60,17 +44,12 @@ library AerodromeServiceStable {
         uint256 deadline;
     }
 
+    // end::SwapStableParams[]
+
+    // tag::SwapDepositStableParams[]
     /**
-     * @notice Parameters for swap-deposit (zap in) to a stable pool
-     * @param router The Aerodrome router contract
-     * @param factory The Aerodrome pool factory contract
-     * @param pool The stable pool to deposit into
-     * @param token0 The token0 of the pool (for reserve sorting)
-     * @param tokenIn The single token being deposited
-     * @param opposingToken The other token in the pool
-     * @param amountIn The amount of tokenIn to deposit
-     * @param recipient The address to receive LP tokens
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _swapDepositStable and _quoteSwapDepositSaleAmtStable.
+     * Includes token0 for reserve side determination and opposingToken for the zap leg.
      */
     struct SwapDepositStableParams {
         IRouter router;
@@ -84,16 +63,12 @@ library AerodromeServiceStable {
         uint256 deadline;
     }
 
+    // end::SwapDepositStableParams[]
+
+    // tag::WithdrawSwapStableParams[]
     /**
-     * @notice Parameters for withdraw-swap (zap out) from a stable pool
-     * @param aerodromeRouter The Aerodrome router contract
-     * @param pool The stable pool to withdraw from
-     * @param factory The Aerodrome pool factory contract
-     * @param tokenOut The desired output token
-     * @param opposingToken The other token in the pool (will be swapped)
-     * @param lpBurnAmt The amount of LP tokens to burn
-     * @param recipient The address to receive tokenOut
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _withdrawSwapStable (zap out).
+     * Note: field order mirrors router.removeLiquidity + follow-on swap (aerodromeRouter first).
      */
     struct WithdrawSwapStableParams {
         IRouter aerodromeRouter;
@@ -106,19 +81,22 @@ library AerodromeServiceStable {
         uint256 deadline;
     }
 
+    // end::WithdrawSwapStableParams[]
+
     /* -------------------------------------------------------------------------- */
     /*                              Swap Functions                                 */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_swapStable(SwapStableParams)[]
     /**
-     * @notice Swaps tokens in a stable pool
-     * @dev Uses `stable: true` for the swap route
-     * @param params The swap parameters
-     * @return amountOut The amount of tokenOut received
+     * @notice Swaps tokens in a stable pool.
+     * Builds single-hop Route with stable=true, approves input, calls router.swapExactTokensForTokens (amountOutMin=0).
+     * @dev Caller responsible for slippage protection via amountOutMin in wrappers.
+     * @param params The swap parameters (includes router, factory, pool, tokenIn/Out, amountIn, recipient, deadline).
+     * @return amountOut The amount of tokenOut received.
+     * @custom:emits Transfer (approvals and token movements via router).
      */
-    function _swapStable(
-        SwapStableParams memory params
-    ) internal returns (uint256 amountOut) {
+    function _swapStable(SwapStableParams memory params) internal returns (uint256 amountOut) {
         IRouter.Route memory route = IRouter.Route({
             from: address(params.tokenIn),
             to: address(params.tokenOut),
@@ -130,52 +108,34 @@ library AerodromeServiceStable {
 
         params.tokenIn.approve(address(params.router), params.amountIn);
 
-        uint256[] memory amountsOut = params.router.swapExactTokensForTokens(
-            params.amountIn,
-            0, // amountOutMin - caller should implement slippage protection
-            routes,
-            params.recipient,
-            params.deadline
-        );
+        uint256[] memory amountsOut = params.router
+            .swapExactTokensForTokens(
+                params.amountIn,
+                0, // amountOutMin - caller should implement slippage protection
+                routes,
+                params.recipient,
+                params.deadline
+            );
 
         return amountsOut[amountsOut.length - 1];
     }
+
+    // end::_swapStable(SwapStableParams)[]
 
     /* -------------------------------------------------------------------------- */
     /*                           Swap-Deposit Functions                            */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_swapDepositStable(SwapDepositStableParams)[]
     /**
-     * @notice Performs a swap-deposit (zap in) to a stable pool
-     * @dev Swaps a portion of tokenIn for opposingToken, then deposits both
-     *
-     * ## Gas and Complexity Analysis
-     *
-     * This function invokes `_binarySearchOptimalSwapStable`, which performs:
-     * - Up to 20 binary search iterations
-     * - Each iteration calls `_getAmountOutStable`, which uses Newton-Raphson (up to 255 iterations)
-     *
-     * **Worst-case**: 20 × 255 = 5,100 inner iterations
-     * **Typical case**: 20 × 4-6 ≈ 80-120 inner iterations (Newton-Raphson converges quickly)
-     *
-     * Gas estimates (mainnet, ~25 gwei):
-     * - Quoting only (`_quoteSwapDepositSaleAmtStable`): ~50,000-80,000 gas
-     * - Full swap-deposit: ~250,000-400,000 gas (includes swap + addLiquidity)
-     *
-     * **Design Note**: This mirrors Aerodrome's pool math. The Newton-Raphson iteration
-     * converges rapidly for typical stable pool reserves because the curve is smooth
-     * and the initial guess (current reserve) is close to the solution.
-     *
-     * For latency-sensitive on-chain usage, consider:
-     * 1. Off-chain quoting with on-chain execution using slippage bounds
-     * 2. Caching optimal ratios for pools with predictable reserve compositions
-     *
-     * @param params The swap-deposit parameters
-     * @return lpOut The amount of LP tokens minted
+     * @notice Performs a swap-deposit (zap in) to a stable pool.
+     * Swaps a portion of tokenIn for opposingToken (using stable math), then adds balanced liquidity via router.addLiquidity (stable=true).
+     * @dev Invokes _quoteSwapDepositSaleAmtStable (binary search + Newton-Raphson). Recipient receives LP. Caller should apply slippage on final LP.
+     * @param params The swap-deposit parameters (router/factory/pool/token0/tokenIn/opposing/amountIn/recipient/deadline).
+     * @return lpOut The amount of LP tokens minted.
+     * @custom:emits Transfer (approvals + underlying token transfers); Liquidity events via pool.
      */
-    function _swapDepositStable(
-        SwapDepositStableParams memory params
-    ) internal returns (uint256 lpOut) {
+    function _swapDepositStable(SwapDepositStableParams memory params) internal returns (uint256 lpOut) {
         // Calculate optimal swap amount using stable pool math
         uint256 swapAmount = _quoteSwapDepositSaleAmtStable(params);
 
@@ -197,41 +157,41 @@ library AerodromeServiceStable {
         params.tokenIn.approve(address(params.router), depositAmountIn);
         params.opposingToken.approve(address(params.router), swapAmountOut);
 
-        (
-            , // amountA
-            , // amountB
-            lpOut
-        ) = params.router.addLiquidity(
-            address(params.tokenIn),
-            address(params.opposingToken),
-            true, // Stable pool
-            depositAmountIn,
-            swapAmountOut,
-            0, // amountAMin - caller should implement slippage protection
-            0, // amountBMin
-            params.recipient,
-            params.deadline
-        );
+        (,, lpOut) = params.router
+            .addLiquidity(
+                address(params.tokenIn),
+                address(params.opposingToken),
+                true, // Stable pool
+                depositAmountIn,
+                swapAmountOut,
+                0, // amountAMin - caller should implement slippage protection
+                0, // amountBMin
+                params.recipient,
+                params.deadline
+            );
     }
 
+    // end::_swapDepositStable(SwapDepositStableParams)[]
+
+    // tag::_quoteSwapDepositSaleAmtStable(SwapDepositStableParams)[]
     /**
-     * @notice Calculates the optimal swap amount for a swap-deposit to a stable pool
-     * @dev For stable pools, we use binary search since the curve math is non-linear.
-     *      The stable pool curve x³y + xy³ = k doesn't have a closed-form solution
-     *      for optimal swap amount like volatile pools do.
-     * @param params The swap-deposit parameters
-     * @return saleAmt The optimal amount to swap
+     * @notice Calculates the optimal swap amount for a swap-deposit to a stable pool.
+     * For stable pools, uses binary search (no closed form) because x³y + xy³ = k is non-linear.
+     * @dev Reads pool.metadata() + factory.getFee(..., true); then delegates to _binarySearchOptimalSwapStable.
+     * @param params The swap-deposit parameters.
+     * @return saleAmt The optimal amount of tokenIn to swap for opposingToken.
      */
-    function _quoteSwapDepositSaleAmtStable(
-        SwapDepositStableParams memory params
-    ) internal view returns (uint256 saleAmt) {
+    function _quoteSwapDepositSaleAmtStable(SwapDepositStableParams memory params)
+        internal
+        view
+        returns (uint256 saleAmt)
+    {
         // Get pool metadata
         (
             uint256 decimals0,
             uint256 decimals1,
             uint256 reserve0,
-            uint256 reserve1,
-            ,  // stable (we know it's true)
+            uint256 reserve1,, // stable (we know it's true)
             address token0,
             // address token1
         ) = params.pool.metadata();
@@ -250,45 +210,23 @@ library AerodromeServiceStable {
         // The goal is to find saleAmt such that after swapping:
         // (amountIn - saleAmt) / swapOutput ≈ reserveIn' / reserveOut'
         // This ensures a balanced deposit with minimal leftover
-        saleAmt = _binarySearchOptimalSwapStable(
-            params.amountIn,
-            reserveIn,
-            reserveOut,
-            decimalsIn,
-            decimalsOut,
-            fee
-        );
+        saleAmt = _binarySearchOptimalSwapStable(params.amountIn, reserveIn, reserveOut, decimalsIn, decimalsOut, fee);
     }
 
+    // end::_quoteSwapDepositSaleAmtStable(SwapDepositStableParams)[]
+
+    // tag::_binarySearchOptimalSwapStable(uint256-uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @notice Binary search to find optimal swap amount for stable pool deposit
-     * @dev Iteratively searches for the swap amount that results in the most balanced deposit
-     *
-     * ## Convergence Characteristics
-     *
-     * The binary search runs for a **fixed 20 iterations**, halving the search space each time.
-     * This provides precision of `amountIn / 2^20` ≈ `amountIn / 1,048,576`, sufficient for
-     * any practical token amount.
-     *
-     * **Early exit**: The search exits early if `mid == low`, indicating the bounds have
-     * converged to adjacent values.
-     *
-     * **Per-iteration cost**: Each iteration calls `_getAmountOutStable`, which internally
-     * uses Newton-Raphson to solve the stable curve equation. Newton-Raphson typically
-     * converges in 4-6 iterations for well-behaved inputs (balanced reserves, reasonable
-     * amounts).
-     *
-     * **Why binary search?**: Unlike volatile pools (xy = k), stable pools (x³y + xy³ = k)
-     * don't have a closed-form solution for optimal swap amount. The cubic terms make
-     * the ratio relationship non-linear, requiring numerical methods.
-     *
-     * @param amountIn Total amount being deposited
-     * @param reserveIn Reserve of the input token
-     * @param reserveOut Reserve of the output token
-     * @param decimalsIn Decimals multiplier for input token (10^decimals)
-     * @param decimalsOut Decimals multiplier for output token (10^decimals)
-     * @param fee Fee in basis points (out of 10000)
-     * @return optimalSwap The optimal amount to swap
+     * @notice Binary search to find optimal swap amount for stable pool deposit.
+     * Iteratively searches (fixed 20 iters) for the swap amount that results in most balanced post-swap reserves ratio.
+     * @dev Calls _getAmountOutStable per iteration (Newton-Raphson inside). Early exit if mid==low. Cubic curve requires numeric search.
+     * @param amountIn Total amount being deposited.
+     * @param reserveIn Reserve of the input token.
+     * @param reserveOut Reserve of the output token.
+     * @param decimalsIn Decimals multiplier for input token (10^decimals).
+     * @param decimalsOut Decimals multiplier for output token (10^decimals).
+     * @param fee Fee in basis points (out of 10000).
+     * @return optimalSwap The optimal amount to swap.
      */
     function _binarySearchOptimalSwapStable(
         uint256 amountIn,
@@ -309,14 +247,7 @@ library AerodromeServiceStable {
             if (mid == low) break;
 
             // Calculate output for this swap amount
-            uint256 swapOut = _getAmountOutStable(
-                mid,
-                reserveIn,
-                reserveOut,
-                decimalsIn,
-                decimalsOut,
-                fee
-            );
+            uint256 swapOut = _getAmountOutStable(mid, reserveIn, reserveOut, decimalsIn, decimalsOut, fee);
 
             // After swap, new reserves
             uint256 newReserveIn = reserveIn + mid;
@@ -342,20 +273,20 @@ library AerodromeServiceStable {
         return (low + high) / 2;
     }
 
+    // end::_binarySearchOptimalSwapStable(uint256-uint256-uint256-uint256-uint256-uint256)[]
+
+    // tag::_getAmountOutStable(uint256-uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @notice Calculates the output amount for a stable pool swap
-     * @dev Implements the stable pool curve math: x³y + xy³ = k
-     *      Uses Newton-Raphson iteration to find the output amount
-     *
-     * **Gas**: ~3,000-5,000 gas typical (dominated by `_getY` Newton-Raphson iteration)
-     *
-     * @param amountIn Amount of input token
-     * @param reserveIn Reserve of input token
-     * @param reserveOut Reserve of output token
-     * @param decimalsIn Decimals multiplier for input token (10^decimals)
-     * @param decimalsOut Decimals multiplier for output token (10^decimals)
-     * @param fee Fee in basis points (out of 10000)
-     * @return amountOut The calculated output amount
+     * @notice Calculates the output amount for a stable pool swap.
+     * Implements x³y + xy³ = k using Newton-Raphson via _getY after fee and k calc. Normalizes to 1e18 internally.
+     * @dev Gas ~3k-5k typical. Called from swap quote paths and binary search.
+     * @param amountIn Amount of input token.
+     * @param reserveIn Reserve of input token.
+     * @param reserveOut Reserve of output token.
+     * @param decimalsIn Decimals multiplier for input token (10^decimals).
+     * @param decimalsOut Decimals multiplier for output token (10^decimals).
+     * @param fee Fee in basis points (out of 10000).
+     * @return amountOut The calculated output amount.
      */
     function _getAmountOutStable(
         uint256 amountIn,
@@ -385,21 +316,19 @@ library AerodromeServiceStable {
         return (y * decimalsOut) / 1e18;
     }
 
+    // end::_getAmountOutStable(uint256-uint256-uint256-uint256-uint256-uint256)[]
+
+    // tag::_k(uint256-uint256-uint256-uint256)[]
     /**
-     * @notice Calculates the k invariant for stable pools
-     * @dev k = x³y + xy³ where x and y are normalized reserves
-     * @param x Reserve of token x
-     * @param y Reserve of token y
-     * @param decimalsX Decimals multiplier for token x
-     * @param decimalsY Decimals multiplier for token y
-     * @return k The invariant value
+     * @notice Calculates the k invariant for stable pools.
+     * k = x³y + xy³ where x,y normalized to 18 decimals.
+     * @param x Reserve of token x.
+     * @param y Reserve of token y.
+     * @param decimalsX Decimals multiplier for token x.
+     * @param decimalsY Decimals multiplier for token y.
+     * @return k The invariant value.
      */
-    function _k(
-        uint256 x,
-        uint256 y,
-        uint256 decimalsX,
-        uint256 decimalsY
-    ) internal pure returns (uint256) {
+    function _k(uint256 x, uint256 y, uint256 decimalsX, uint256 decimalsY) internal pure returns (uint256) {
         uint256 _x = (x * 1e18) / decimalsX;
         uint256 _y = (y * 1e18) / decimalsY;
         uint256 _a = (_x * _y) / 1e18;
@@ -407,9 +336,12 @@ library AerodromeServiceStable {
         return (_a * _b) / 1e18; // x³y + xy³ >= k
     }
 
+    // end::_k(uint256-uint256-uint256-uint256)[]
+
+    // tag::_f(uint256-uint256)[]
     /**
-     * @notice Helper function for stable pool curve calculation
-     * @dev f(x0, y) = x0 * y * (x0² + y²) - this is the curve equation
+     * @notice Helper function for stable pool curve calculation.
+     * @dev f(x0, y) = x0 * y * (x0² + y²) - this is the curve equation used in _getY.
      */
     function _f(uint256 x0, uint256 y) internal pure returns (uint256) {
         uint256 _a = (x0 * y) / 1e18;
@@ -417,42 +349,28 @@ library AerodromeServiceStable {
         return (_a * _b) / 1e18;
     }
 
+    // end::_f(uint256-uint256)[]
+
+    // tag::_d(uint256-uint256)[]
     /**
-     * @notice Derivative of f with respect to y
-     * @dev d(f)/dy = 3 * x0 * y² + x0³ (used in Newton-Raphson)
+     * @notice Derivative of f with respect to y.
+     * @dev d(f)/dy = 3 * x0 * y² + x0³ (used in Newton-Raphson inside _getY).
      */
     function _d(uint256 x0, uint256 y) internal pure returns (uint256) {
         return (3 * x0 * ((y * y) / 1e18)) / 1e18 + ((((x0 * x0) / 1e18) * x0) / 1e18);
     }
 
+    // end::_d(uint256-uint256)[]
+
+    // tag::_getY(uint256-uint256-uint256)[]
     /**
-     * @notice Newton-Raphson iteration to solve for y given x and k
-     * @dev Finds y such that f(x0, y) = xy (the k invariant)
-     *
-     * ## Convergence Characteristics
-     *
-     * **Max iterations**: 255 (worst case, protects against infinite loops)
-     * **Typical iterations**: 4-6 for balanced stable pools
-     *
-     * Newton-Raphson converges quadratically near the solution, meaning the number
-     * of correct digits roughly doubles each iteration. The stable curve is smooth
-     * and well-behaved, so convergence is reliable.
-     *
-     * **Early exit conditions**:
-     * 1. `dy == 0` with `k == xy`: Exact solution found
-     * 2. `dy == 0` with `f(x0, y+1) > xy` or `f(x0, y-1) < xy`: Closest integer found
-     * 3. Any `dy == 0` where further adjustment overshoots: Terminates with step of 1
-     *
-     * **Gas note**: Each iteration costs ~200-300 gas (mostly the `_f` and `_d` calls).
-     * Typical total: 800-1,800 gas per `_getY` call.
-     *
-     * **Revert condition**: If 255 iterations complete without convergence, the function
-     * reverts. This should only happen with malformed inputs (e.g., k=0, extreme imbalance).
-     *
-     * @param x0 New x reserve after swap
-     * @param xy The k invariant
-     * @param y Initial y value (current reserve)
-     * @return The new y value
+     * @notice Newton-Raphson iteration to solve for y given x and k.
+     * Finds y such that f(x0, y) = xy (the k invariant).
+     * @dev Max 255 iters. Typical 4-6. Reverts on no convergence. Quadratic convergence near solution.
+     * @param x0 New x reserve after swap.
+     * @param xy The k invariant.
+     * @param y Initial y value (current reserve).
+     * @return The new y value.
      */
     function _getY(uint256 x0, uint256 xy, uint256 y) internal pure returns (uint256) {
         for (uint256 i = 0; i < 255; i++) {
@@ -485,37 +403,44 @@ library AerodromeServiceStable {
         revert("AerodromeServiceStable: y calculation failed");
     }
 
+    // end::_getY(uint256-uint256-uint256)[]
+
+    // tag::_k_from_f(uint256-uint256)[]
     /**
-     * @notice Helper to calculate k using _f for comparison in Newton-Raphson
+     * @notice Helper to calculate k using _f for comparison in Newton-Raphson.
      */
     function _k_from_f(uint256 x0, uint256 y) internal pure returns (uint256) {
         return _f(x0, y);
     }
 
+    // end::_k_from_f(uint256-uint256)[]
+
     /* -------------------------------------------------------------------------- */
     /*                          Withdraw-Swap Functions                            */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_withdrawSwapStable(WithdrawSwapStableParams)[]
     /**
-     * @notice Performs a withdraw-swap (zap out) from a stable pool
-     * @dev Removes liquidity and swaps opposingToken to tokenOut
-     * @param params The withdraw-swap parameters
-     * @return amountOut The total amount of tokenOut received
+     * @notice Performs a withdraw-swap (zap out) from a stable pool.
+     * Removes liquidity (stable=true) to self, swaps the opposingToken portion to tokenOut, transfers direct tokenOut portion + swap proceeds.
+     * @dev Uses _swapStable internally for the swap leg.
+     * @param params The withdraw-swap parameters.
+     * @return amountOut The total amount of tokenOut received.
+     * @custom:emits Transfer (LP burn effects + swap transfers).
      */
-    function _withdrawSwapStable(
-        WithdrawSwapStableParams memory params
-    ) internal returns (uint256 amountOut) {
+    function _withdrawSwapStable(WithdrawSwapStableParams memory params) internal returns (uint256 amountOut) {
         // Remove liquidity from stable pool
-        (uint256 amountA, uint256 amountB) = params.aerodromeRouter.removeLiquidity(
-            address(params.tokenOut),
-            address(params.opposingToken),
-            true, // Stable pool
-            params.lpBurnAmt,
-            0, // amountAMin
-            0, // amountBMin
-            address(this),
-            params.deadline
-        );
+        (uint256 amountA, uint256 amountB) = params.aerodromeRouter
+            .removeLiquidity(
+                address(params.tokenOut),
+                address(params.opposingToken),
+                true, // Stable pool
+                params.lpBurnAmt,
+                0, // amountAMin
+                0, // amountBMin
+                address(this),
+                params.deadline
+            );
 
         // Swap opposingToken (amountB) to tokenOut
         SwapStableParams memory swapParams = SwapStableParams({
@@ -535,4 +460,7 @@ library AerodromeServiceStable {
 
         return amountA + swapAmountOut;
     }
+    // end::_withdrawSwapStable(WithdrawSwapStableParams)[]
+
+    // end::AerodromeServiceStable[]
 }

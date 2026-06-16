@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {RedstoneDefaultsLib} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/core/RedstoneDefaultsLib.sol";
-import {PrimaryProdDataServiceConsumerBase} from
-    "@crane/contracts/external/redstone/packages/evm-connector/contracts/data-services/PrimaryProdDataServiceConsumerBase.sol";
+import {
+    RedstoneDefaultsLib
+} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/core/RedstoneDefaultsLib.sol";
+import {
+    PrimaryProdDataServiceConsumerBase
+} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/data-services/PrimaryProdDataServiceConsumerBase.sol";
 import {BaseAdapter, Errors, IPriceOracle} from "../BaseAdapter.sol";
 import {ScaleUtils, Scale} from "../../lib/ScaleUtils.sol";
 

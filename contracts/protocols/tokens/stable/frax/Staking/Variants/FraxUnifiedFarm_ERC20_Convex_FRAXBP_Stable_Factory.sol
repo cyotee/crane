@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import "./FraxUnifiedFarm_ERC20_Convex_FRAXBP_Stable.sol";
 import "./FraxUnifiedFarm_ERC20_Convex_FRAXBP_Volatile.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
@@ -39,31 +39,31 @@ contract FraxUnifiedFarm_ERC20_Convex_FRAXBP_Stable_Factory {
         //     _stakingToken
         // ));
         bytes32 salt = abi.encodePacked(
-            _owner,
-            _rewardTokens,
-            _rewardManagers,
-            _rewardRates,
-            _gaugeControllers,
-            _rewardDistributors,
-            _stakingToken
-        )._hash();
+                _owner,
+                _rewardTokens,
+                _rewardManagers,
+                _rewardRates,
+                _gaugeControllers,
+                _rewardDistributors,
+                _stakingToken
+            )._hash();
 
         // Deploy the contract
-        farm_address = address(new FraxUnifiedFarm_ERC20_Convex_FRAXBP_Stable{salt: salt}(
-            _owner,
-            _rewardTokens,
-            _rewardManagers,
-            _rewardRates,
-            _gaugeControllers,
-            _rewardDistributors,
-            _stakingToken
-        ));
+        farm_address = address(
+            new FraxUnifiedFarm_ERC20_Convex_FRAXBP_Stable{salt: salt}(
+                _owner,
+                _rewardTokens,
+                _rewardManagers,
+                _rewardRates,
+                _gaugeControllers,
+                _rewardDistributors,
+                _stakingToken
+            )
+        );
 
         emit FXBPStableFarmCreated(msg.sender, _owner, farm_address);
-
     }
 
-    
     /* ========== EVENTS ========== */
     event FXBPStableFarmCreated(address indexed deployer, address indexed farm_owner, address indexed farm_address);
 }

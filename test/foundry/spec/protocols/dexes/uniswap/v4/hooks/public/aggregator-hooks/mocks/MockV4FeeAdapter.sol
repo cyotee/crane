@@ -5,8 +5,12 @@ import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfac
 import {PoolKey} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolKey.sol";
 import {PoolId} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
 import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
-import {IV4FeeAdapter} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeeAdapter.sol";
-import {IV4FeePolicy} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeePolicy.sol";
+import {
+    IV4FeeAdapter
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeeAdapter.sol";
+import {
+    IV4FeePolicy
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeePolicy.sol";
 
 /// @title MockV4FeeAdapter
 /// @notice Minimal mock of IV4FeeAdapter for unit testing protocol fees

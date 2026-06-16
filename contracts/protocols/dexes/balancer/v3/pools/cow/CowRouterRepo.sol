@@ -107,7 +107,11 @@ library CowRouterRepo {
      * @param layoutStruct Storage pointer.
      * @return protocolFeePercentage Current fee percentage.
      */
-    function _getProtocolFeePercentage(Storage storage layoutStruct) internal view returns (uint256 protocolFeePercentage) {
+    function _getProtocolFeePercentage(Storage storage layoutStruct)
+        internal
+        view
+        returns (uint256 protocolFeePercentage)
+    {
         return layoutStruct.protocolFeePercentage;
     }
 
@@ -142,7 +146,11 @@ library CowRouterRepo {
      * @param token The token to check.
      * @return fees Accumulated fees for the token.
      */
-    function _getCollectedProtocolFees(Storage storage layoutStruct, IERC20 token) internal view returns (uint256 fees) {
+    function _getCollectedProtocolFees(Storage storage layoutStruct, IERC20 token)
+        internal
+        view
+        returns (uint256 fees)
+    {
         return layoutStruct.collectedProtocolFees[token];
     }
 

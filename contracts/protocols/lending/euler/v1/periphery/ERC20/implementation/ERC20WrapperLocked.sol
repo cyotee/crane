@@ -2,7 +2,12 @@
 
 pragma solidity ^0.8.0;
 
-import {ERC20Wrapper, ERC20, IERC20, SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Wrapper.sol";
+import {
+    ERC20Wrapper,
+    ERC20,
+    IERC20,
+    SafeERC20
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Wrapper.sol";
 import {Ownable, Context} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import {EnumerableMap} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableMap.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
@@ -110,7 +115,7 @@ abstract contract ERC20WrapperLocked is EVCUtil, Ownable, ERC20Wrapper {
         address _underlying,
         string memory _name,
         string memory _symbol
-    ) EVCUtil(_evc) Ownable() ERC20Wrapper(IERC20(_underlying)) ERC20(_name, _symbol) {
+    ) EVCUtil(_evc) Ownable(msg.sender) ERC20Wrapper(IERC20(_underlying)) ERC20(_name, _symbol) {
         _transferOwnership(_owner);
         remainderReceiver = _remainderReceiver;
         emit RemainderReceiverSet(_remainderReceiver);
@@ -427,7 +432,7 @@ abstract contract ERC20WrapperLocked is EVCUtil, Ownable, ERC20Wrapper {
 
     /// @notice Internal function to get the authenticated message sender
     /// @return The address of the authenticated message sender
-    function _msgSender() internal view override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 }

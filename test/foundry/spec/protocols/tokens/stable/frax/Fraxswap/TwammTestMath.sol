@@ -17,11 +17,13 @@ library TwammTestMath {
     }
 
     /// @dev Instant full-fill TWAMM model from upstream `calculateTwammExpectedFraxswap` (timeIntervals unused there too).
-    function calculateTwammExpectedFraxswap(uint256 token0In, uint256 token1In, uint256 reserve0, uint256 reserve1, uint256 feeMult)
-        internal
-        pure
-        returns (uint256 finalReserve0, uint256 finalReserve1, uint256 token0Out, uint256 token1Out)
-    {
+    function calculateTwammExpectedFraxswap(
+        uint256 token0In,
+        uint256 token1In,
+        uint256 reserve0,
+        uint256 reserve1,
+        uint256 feeMult
+    ) internal pure returns (uint256 finalReserve0, uint256 finalReserve1, uint256 token0Out, uint256 token1Out) {
         uint256 token0InWithFee = token0In * feeMult / 10_000;
         uint256 token1InWithFee = token1In * feeMult / 10_000;
         uint256 k = reserve0 * reserve1;

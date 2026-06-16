@@ -19,6 +19,9 @@ import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {IERC8109Introspection} from "@crane/contracts/interfaces/IERC8109Introspection.sol";
 
+// Behavior for LR-7 declaration tests (mandatory per PRD LR-7 + crane-testing)
+import {Behavior_IFacet} from "@crane/contracts/factories/diamondPkg/Behavior_IFacet.sol";
+
 // Facets
 import {ERC165Facet} from "@crane/contracts/introspection/ERC165/ERC165Facet.sol";
 import {DiamondLoupeFacet} from "@crane/contracts/introspection/ERC2535/DiamondLoupeFacet.sol";
@@ -35,16 +38,34 @@ import {IGreeter} from "@crane/contracts/test/stubs/greeter/IGreeter.sol";
 /*                       MINIMAL TEST PACKAGE FOR TESTING                     */
 /* ========================================================================== */
 
+// tag::MinimalTestPackage[]
 /**
  * @title MinimalTestPackage
  * @notice A minimal IDiamondFactoryPackage implementation for testing factory deployment.
  * @dev Used to test base facet installation without additional package facets.
+ * @custom:signature MinimalTestPackage (test helper implementing IDiamondFactoryPackage)
  */
 contract MinimalTestPackage is IDiamondFactoryPackage {
+    // tag::packageName()[]
+    /**
+     * @notice Returns the package name for this test DFPkg.
+     * @return "MinimalTestPackage"
+     * @custom:signature packageName()
+     * @custom:selector 0xabc8b346
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function packageName() public pure returns (string memory) {
         return "MinimalTestPackage";
     }
+    // end::packageName()[]
 
+    // tag::packageMetadata()[]
+    /**
+     * @notice Returns package metadata (name + interfaces + facet addrs).
+     * @custom:signature packageMetadata()
+     * @custom:selector 0xf45469e7
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function packageMetadata()
         external
         pure
@@ -54,47 +75,125 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+    // end::packageMetadata()[]
 
+    // tag::facetAddresses()[]
+    /**
+     * @notice Returns empty facet addresses for this minimal test pkg (no additional facets).
+     * @custom:signature facetAddresses()
+     * @custom:selector 0x52ef6b2c
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetAddresses() public pure returns (address[] memory) {
         return new address[](0);
     }
+    // end::facetAddresses()[]
 
+    // tag::facetInterfaces()[]
+    /**
+     * @notice Returns empty interfaces for this minimal test pkg.
+     * @custom:signature facetInterfaces()
+     * @custom:selector 0x2ea80826
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetInterfaces() public pure returns (bytes4[] memory) {
         return new bytes4[](0);
     }
+    // end::facetInterfaces()[]
 
+    // tag::facetCuts()[]
+    /**
+     * @notice Returns empty facet cuts for minimal pkg.
+     * @custom:signature facetCuts()
+     * @custom:selector 0xa4b3ad35
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetCuts() public pure returns (IDiamond.FacetCut[] memory) {
         return new IDiamond.FacetCut[](0);
     }
+    // end::facetCuts()[]
 
+    // tag::diamondConfig()[]
+    /**
+     * @notice Returns empty diamond config for minimal pkg.
+     * @custom:signature diamondConfig()
+     * @custom:selector 0x65d375b3
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function diamondConfig() public pure returns (IDiamondFactoryPackage.DiamondConfig memory) {
         return
             IDiamondFactoryPackage.DiamondConfig({facetCuts: new IDiamond.FacetCut[](0), interfaces: new bytes4[](0)});
     }
+    // end::diamondConfig()[]
 
+    // tag::calcSalt(bytes)[]
+    /**
+     * @notice Computes salt for given pkgArgs (simple keccak for test).
+     * @custom:signature calcSalt(bytes)
+     * @custom:selector 0xd82be56e
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
         return keccak256(pkgArgs);
     }
+    // end::calcSalt(bytes)[]
 
+    // tag::processArgs(bytes)[]
+    /**
+     * @notice Passes through pkgArgs for test.
+     * @custom:signature processArgs(bytes)
+     * @custom:selector 0x87c3adb3
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function processArgs(bytes memory pkgArgs) external pure returns (bytes memory) {
         return pkgArgs;
     }
+    // end::processArgs(bytes)[]
 
+    // tag::updatePkg(address,bytes)[]
+    /**
+     * @notice No-op update for test pkg.
+     * @custom:signature updatePkg(address,bytes)
+     * @custom:selector 0xa9089235
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function updatePkg(address, bytes memory) external pure returns (bool) {
         return true;
     }
+    // end::updatePkg(address,bytes)[]
 
+    // tag::initAccount(bytes)[]
+    /**
+     * @notice No-op init for minimal pkg (no storage to set).
+     * @custom:signature initAccount(bytes)
+     * @custom:selector 0x870d4838
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function initAccount(bytes memory) external {}
 
+    // end::initAccount(bytes)[]
+
+    // tag::postDeploy(address)[]
+    /**
+     * @notice No-op postDeploy for minimal pkg.
+     * @custom:signature postDeploy(address)
+     * @custom:selector 0x70068fcf
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function postDeploy(address) external pure returns (bool) {
         return true;
     }
+    // end::postDeploy(address)[]
 }
+// end::MinimalTestPackage[]
 
+// tag::StorageCheckPackage[]
 /**
  * @title StorageCheckPackage
  * @notice A package that sets storage during initAccount to verify delegatecall context.
  * @dev Also exposes getStorageData as a facet function for test verification.
+ *      Demonstrates full DFPkg lifecycle per LR-7.
+ * @custom:signature StorageCheckPackage (test helper implementing IDiamondFactoryPackage + self-facet)
  */
 contract StorageCheckPackage is IDiamondFactoryPackage {
     // Storage slot for testing
@@ -112,10 +211,25 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         SELF = this;
     }
 
+    // tag::packageName()[]
+    /**
+     * @notice Package name.
+     * @custom:signature packageName()
+     * @custom:selector 0xabc8b346
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function packageName() external pure returns (string memory) {
         return "StorageCheckPackage";
     }
+    // end::packageName()[]
 
+    // tag::packageMetadata()[]
+    /**
+     * @notice Package metadata.
+     * @custom:signature packageMetadata()
+     * @custom:selector 0xf45469e7
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function packageMetadata()
         external
         view
@@ -125,44 +239,111 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+    // end::packageMetadata()[]
 
+    // tag::facetAddresses()[]
+    /**
+     * @notice Returns self as the facet address for this pkg (self-facet pattern for test).
+     * @custom:signature facetAddresses()
+     * @custom:selector 0x52ef6b2c
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetAddresses() public view returns (address[] memory addrs) {
         addrs = new address[](1);
         addrs[0] = address(SELF);
     }
+    // end::facetAddresses()[]
 
+    // tag::facetInterfaces()[]
+    /**
+     * @notice No extra interfaces declared.
+     * @custom:signature facetInterfaces()
+     * @custom:selector 0x2ea80826
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetInterfaces() public pure returns (bytes4[] memory) {
         return new bytes4[](0);
     }
+    // end::facetInterfaces()[]
 
+    /**
+     * @notice Returns the test-only getStorageData selector (exposed via facetCut).
+     */
     function facetFuncs() public pure returns (bytes4[] memory funcs) {
         funcs = new bytes4[](1);
         funcs[0] = StorageCheckPackage.getStorageData.selector;
     }
 
+    // tag::facetCuts()[]
+    /**
+     * @notice Single add cut for self exposing getStorageData.
+     * @custom:signature facetCuts()
+     * @custom:selector 0xa4b3ad35
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function facetCuts() public view returns (IDiamond.FacetCut[] memory cuts) {
         cuts = new IDiamond.FacetCut[](1);
         cuts[0] = IDiamond.FacetCut({
             facetAddress: address(SELF), action: IDiamond.FacetCutAction.Add, functionSelectors: facetFuncs()
         });
     }
+    // end::facetCuts()[]
 
+    // tag::diamondConfig()[]
+    /**
+     * @notice Diamond config for this test pkg.
+     * @custom:signature diamondConfig()
+     * @custom:selector 0x65d375b3
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function diamondConfig() public view returns (IDiamondFactoryPackage.DiamondConfig memory) {
         return IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+    // end::diamondConfig()[]
 
+    // tag::calcSalt(bytes)[]
+    /**
+     * @notice Salt derivation.
+     * @custom:signature calcSalt(bytes)
+     * @custom:selector 0xd82be56e
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
         return keccak256(pkgArgs);
     }
+    // end::calcSalt(bytes)[]
 
+    // tag::processArgs(bytes)[]
+    /**
+     * @notice Arg passthrough.
+     * @custom:signature processArgs(bytes)
+     * @custom:selector 0x87c3adb3
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function processArgs(bytes memory pkgArgs) external pure returns (bytes memory) {
         return pkgArgs;
     }
+    // end::processArgs(bytes)[]
 
+    // tag::updatePkg(address,bytes)[]
+    /**
+     * @notice No-op.
+     * @custom:signature updatePkg(address,bytes)
+     * @custom:selector 0xa9089235
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function updatePkg(address, bytes memory) external pure returns (bool) {
         return true;
     }
+    // end::updatePkg(address,bytes)[]
 
+    // tag::initAccount(bytes)[]
+    /**
+     * @notice Sets storage in delegatecall context (verifies proxy storage).
+     * @custom:signature initAccount(bytes)
+     * @custom:selector 0x870d4838
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function initAccount(bytes memory initArgs) external {
         uint256 value = abi.decode(initArgs, (uint256));
         StorageData storage sd = _getStorage();
@@ -170,10 +351,19 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         sd.initializer = address(this);
         sd.initialized = true;
     }
+    // end::initAccount(bytes)[]
 
+    // tag::postDeploy(address)[]
+    /**
+     * @notice No-op post deploy.
+     * @custom:signature postDeploy(address)
+     * @custom:selector 0x70068fcf
+     * @inheritdoc IDiamondFactoryPackage
+     */
     function postDeploy(address) external pure returns (bool) {
         return true;
     }
+    // end::postDeploy(address)[]
 
     function _getStorage() internal pure returns (StorageData storage sd) {
         bytes32 slot = STORAGE_SLOT;
@@ -188,11 +378,13 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         return (sd.value, sd.initializer, sd.initialized);
     }
 }
+// end::StorageCheckPackage[]
 
 /* ========================================================================== */
 /*                        DIAMOND PACKAGE CALLBACK FACTORY TESTS              */
 /* ========================================================================== */
 
+// tag::DiamondPackageCallBackFactory_Test[]
 /**
  * @title DiamondPackageCallBackFactory_Test
  * @notice End-to-end tests for DiamondPackageCallBackFactory.deploy()
@@ -202,6 +394,11 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
  *      - Base facet installation
  *      - Package facet installation
  *      - Post-deploy hook execution and removal
+ *
+ *      LR-7 focus: full init (real non-zero facets), exact asserts, Behavior_IFacet usage,
+ *      facet + package declaration tests, correct initAccount delegatecall, CREATE3 determinism parity via calc/deploy.
+ *      Uses central NatSpec values from CENTRALLY_COMPUTED_NATSPEC_VALUES.md for known selectors.
+ * @custom:see contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol
  */
 contract DiamondPackageCallBackFactory_Test is Test {
     // Factory under test
@@ -223,13 +420,22 @@ contract DiamondPackageCallBackFactory_Test is Test {
     /* ---------------------------------------------------------------------- */
 
     function setUp() public {
-        // Deploy base facets
+        // LR-7: Full and correct initialization - deploy real (non address(0)) facets before use.
+        // All packages use fully initialized subjects; no bypass of init. Inherits CraneTest patterns
+        // via manual construction for this factory-under-test (see crane-testing + AGENTS.md).
+        // Deploy base facets (real production-like instances for DFPkg/factory wiring)
         erc165Facet = new ERC165Facet();
         diamondLoupeFacet = new DiamondLoupeFacet();
         erc8109Facet = new ERC8109IntrospectionFacet();
         postDeployHookFacet = new PostDeployAccountHookFacet();
 
-        // Deploy factory with base facets
+        // Label for traces (per AGENTS.md FactoryService pattern)
+        vm.label(address(erc165Facet), "ERC165Facet");
+        vm.label(address(diamondLoupeFacet), "DiamondLoupeFacet");
+        vm.label(address(erc8109Facet), "ERC8109IntrospectionFacet");
+        vm.label(address(postDeployHookFacet), "PostDeployAccountHookFacet");
+
+        // Deploy factory with base facets - full init args, no zeros
         factory = new DiamondPackageCallBackFactory(
             IDiamondPackageCallBackFactoryInit.InitArgs({
                 erc165Facet: IFacet(address(erc165Facet)),
@@ -238,11 +444,39 @@ contract DiamondPackageCallBackFactory_Test is Test {
                 postDeployHookFacet: IFacet(address(postDeployHookFacet))
             })
         );
+        vm.label(address(factory), type(DiamondPackageCallBackFactory).name);
 
-        // Deploy test packages
+        // Deploy test packages (full init)
         minimalPackage = new MinimalTestPackage();
         greeterPackage = new GreeterFacetDiamondFactoryPackage();
         storageCheckPackage = new StorageCheckPackage();
+        vm.label(address(minimalPackage), "MinimalTestPackage");
+        vm.label(address(greeterPackage), "GreeterFacetDiamondFactoryPackage");
+        vm.label(address(storageCheckPackage), "StorageCheckPackage");
+
+        // LR-7: Set Behavior expectations for base facets (declaration tests use these)
+        // Use ONLY central values for IFacet selectors (from CENTRALLY_COMPUTED_NATSPEC_VALUES.md)
+        bytes4[] memory erc165Ifaces = new bytes4[](1);
+        erc165Ifaces[0] = type(IERC165).interfaceId;
+        Behavior_IFacet.expect_IFacet_facetInterfaces(erc165Facet, erc165Ifaces);
+        bytes4[] memory erc165Funcs = new bytes4[](1);
+        erc165Funcs[0] = IERC165.supportsInterface.selector;
+        Behavior_IFacet.expect_IFacet_facetFuncs(erc165Facet, erc165Funcs);
+        Behavior_IFacet.expect_IFacet_facetName(erc165Facet, type(ERC165Facet).name);
+
+        // Similar for loupe (minimal for declaration)
+        bytes4[] memory loupeIfaces = new bytes4[](1);
+        loupeIfaces[0] = type(IDiamondLoupe).interfaceId;
+        Behavior_IFacet.expect_IFacet_facetInterfaces(diamondLoupeFacet, loupeIfaces);
+        Behavior_IFacet.expect_IFacet_facetName(diamondLoupeFacet, type(DiamondLoupeFacet).name);
+
+        // LR-7: expanded Behavior_IFacet usage for exact funcs declaration (uses central IFacet selectors indirectly)
+        bytes4[] memory loupeFuncs = new bytes4[](4);
+        loupeFuncs[0] = IDiamondLoupe.facets.selector;
+        loupeFuncs[1] = IDiamondLoupe.facetFunctionSelectors.selector;
+        loupeFuncs[2] = IDiamondLoupe.facetAddresses.selector;
+        loupeFuncs[3] = IDiamondLoupe.facetAddress.selector;
+        Behavior_IFacet.expect_IFacet_facetFuncs(diamondLoupeFacet, loupeFuncs);
     }
 
     /* ====================================================================== */
@@ -318,7 +552,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         address proxy1 = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs1);
         address proxy2 = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs2);
 
-        assertTrue(proxy1 != proxy2, "Different args should produce different addresses");
+        assertNotEq(proxy1, proxy2, "Different args should produce different addresses");
     }
 
     /**
@@ -330,7 +564,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         address proxy1 = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs);
         address proxy2 = factory.deploy(IDiamondFactoryPackage(address(greeterPackage)), pkgArgs);
 
-        assertTrue(proxy1 != proxy2, "Different packages should produce different addresses");
+        assertNotEq(proxy1, proxy2, "Different packages should produce different addresses");
     }
 
     /**
@@ -349,8 +583,12 @@ contract DiamondPackageCallBackFactory_Test is Test {
     /*                  US-CRANE-016.2: BASE FACET INSTALLATION               */
     /* ====================================================================== */
 
+    // tag::test_deploy_baseFacetsInstalled()[]
     /**
      * @notice Test that base facets are installed in deployed proxy
+     * @dev LR-7: full init + exact facet count assertion (3 after postDeploy removal).
+     * @custom:signature test_deploy_baseFacetsInstalled()
+     * @custom:selector 0x58c14f2b
      */
     function test_deploy_baseFacetsInstalled() public {
         bytes memory pkgArgs = abi.encode("base facet test");
@@ -364,11 +602,10 @@ contract DiamondPackageCallBackFactory_Test is Test {
         IDiamondLoupe loupe = IDiamondLoupe(proxy);
         address[] memory facetAddresses = loupe.facetAddresses();
 
-        // Should have at least 3 base facets (ERC165, DiamondLoupe, ERC8109)
-        // Note: PostDeployHook is removed after deployment
-        assertGe(facetAddresses.length, 3, "Should have at least 3 base facets");
+        // LR-7: exact value assertion (not >=). Exactly 3 base facets after PostDeployHook removal.
+        assertEq(facetAddresses.length, 3, "Exactly 3 base facets (ERC165, DiamondLoupe, ERC8109) after postDeploy removal");
 
-        // Verify each base facet is present
+        // Verify each base facet is present (exact match)
         bool hasERC165 = false;
         bool hasDiamondLoupe = false;
         bool hasERC8109 = false;
@@ -383,6 +620,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         assertTrue(hasDiamondLoupe, "DiamondLoupe facet should be installed");
         assertTrue(hasERC8109, "ERC8109 facet should be installed");
     }
+    // end::test_deploy_baseFacetsInstalled()[]
 
     /**
      * @notice Test that ERC165 supportsInterface works on deployed proxy
@@ -416,9 +654,10 @@ contract DiamondPackageCallBackFactory_Test is Test {
 
         IDiamondLoupe loupe = IDiamondLoupe(proxy);
 
-        // Test facets() returns non-empty array
+        // LR-7: exact assertions
+        // Test facets() returns exactly 3 (base) array
         IDiamondLoupe.Facet[] memory facets = loupe.facets();
-        assertGe(facets.length, 3, "Should have at least 3 facets");
+        assertEq(facets.length, 3, "Exactly 3 facets after post-deploy removal");
 
         // Test facetAddress() for supportsInterface selector
         address facetAddr = loupe.facetAddress(IERC165.supportsInterface.selector);
@@ -426,7 +665,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
 
         // Test facetFunctionSelectors()
         bytes4[] memory selectors = loupe.facetFunctionSelectors(address(diamondLoupeFacet));
-        assertGe(selectors.length, 4, "DiamondLoupe should have at least 4 selectors");
+        assertEq(selectors.length, 4, "DiamondLoupe should have exactly 4 selectors (per implementation)");
     }
 
     /* ====================================================================== */
@@ -491,6 +730,99 @@ contract DiamondPackageCallBackFactory_Test is Test {
         // Read updated message
         assertEq(greeter.getMessage(), "Updated message", "Message should be updated");
     }
+
+    /* ====================================================================== */
+    /*                 LR-7: FACET + PACKAGE DECLARATION TESTS (Behavior)     */
+    /* ====================================================================== */
+
+    // tag::test_LR7_baseFacets_declaration_viaBehavior()[]
+    /**
+     * @notice LR-7 declaration test: base facets declare correctly using Behavior_IFacet.
+     *         Exact value validation via Behavior (mandatory per PRD).
+     * @custom:signature test_LR7_baseFacets_declaration_viaBehavior()
+     * @custom:selector 0x691ab102
+     */
+    function test_LR7_baseFacets_declaration_viaBehavior() public {
+        // facetName exact via Behavior (expect set in setUp, validate here)
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetName(erc165Facet),
+            "ERC165Facet facetName must match expected via Behavior"
+        );
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetName(diamondLoupeFacet),
+            "DiamondLoupeFacet facetName must match expected via Behavior"
+        );
+
+        // interfaces/funcs use hasValid (stored from expect)
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetInterfaces(erc165Facet),
+            "ERC165Facet interfaces via Behavior"
+        );
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetFuncs(erc165Facet),
+            "ERC165Facet funcs via Behavior"
+        );
+
+        // LR-7: facetMetadata consistency (Behavior)
+        assertTrue(
+            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(erc165Facet),
+            "ERC165Facet metadata consistency via Behavior"
+        );
+
+        // Expanded Behavior_IFacet usage for loupe (funcs expected in setUp)
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetInterfaces(diamondLoupeFacet),
+            "DiamondLoupeFacet interfaces via Behavior"
+        );
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetFuncs(diamondLoupeFacet),
+            "DiamondLoupeFacet funcs via Behavior"
+        );
+    }
+    // end::test_LR7_baseFacets_declaration_viaBehavior()[]
+
+    // tag::test_LR7_packageDeclarations_exact()[]
+    /**
+     * @notice LR-7: Package declaration tests (exact values + metadata).
+     *         Covers packageName, facet*, diamondConfig, calcSalt, processArgs.
+     * @custom:signature test_LR7_packageDeclarations_exact()
+     * @custom:selector 0x62950383
+     */
+    function test_LR7_packageDeclarations_exact() public view {
+        // Minimal package - exact
+        assertEq(minimalPackage.packageName(), "MinimalTestPackage", "exact packageName");
+        assertEq(minimalPackage.facetAddresses().length, 0, "minimal declares 0 facets");
+        assertEq(minimalPackage.facetInterfaces().length, 0, "minimal declares 0 interfaces");
+        IDiamond.FacetCut[] memory minCuts = minimalPackage.facetCuts();
+        assertEq(minCuts.length, 0, "minimal 0 cuts");
+        IDiamondFactoryPackage.DiamondConfig memory minCfg = minimalPackage.diamondConfig();
+        assertEq(minCfg.facetCuts.length, 0, "config 0 cuts");
+        assertEq(minCfg.interfaces.length, 0, "config 0 ifaces");
+
+        bytes memory args = abi.encode("foo");
+        bytes32 salt1 = minimalPackage.calcSalt(args);
+        bytes32 salt2 = minimalPackage.calcSalt(args);
+        assertEq(salt1, salt2, "calcSalt deterministic");
+        assertEq(keccak256(minimalPackage.processArgs(args)), keccak256(args), "processArgs passthrough");
+
+        // StorageCheck package declaration
+        assertEq(storageCheckPackage.packageName(), "StorageCheckPackage");
+        address[] memory addrs = storageCheckPackage.facetAddresses();
+        assertEq(addrs.length, 1, "exactly 1 facet addr");
+        assertEq(addrs[0], address(storageCheckPackage), "self addr");
+        bytes4[] memory pkgIfs = storageCheckPackage.facetInterfaces();
+        assertEq(pkgIfs.length, 0, "0 ifaces");
+        IDiamond.FacetCut[] memory cuts = storageCheckPackage.facetCuts();
+        assertEq(cuts.length, 1, "exactly 1 cut");
+        assertEq(uint8(cuts[0].action), uint8(IDiamond.FacetCutAction.Add), "cut action exact");
+        assertEq(cuts[0].facetAddress, address(storageCheckPackage));
+
+        // calcSalt / process exact
+        bytes memory pArgs = abi.encode(uint256(42));
+        assertEq(storageCheckPackage.calcSalt(pArgs), keccak256(pArgs));
+        assertEq(storageCheckPackage.processArgs(pArgs), pArgs);
+    }
+    // end::test_LR7_packageDeclarations_exact()[]
 
     /* ====================================================================== */
     /*                 US-CRANE-016.4: POSTDEPLOY HOOK REMOVAL                */
@@ -560,10 +892,14 @@ contract DiamondPackageCallBackFactory_Test is Test {
     /*                  US-CRANE-016.5: INITACCOUNT DELEGATECALL              */
     /* ====================================================================== */
 
+    // tag::test_deploy_initAccount_viaDelgatecall()[]
     /**
      * @notice Test that initAccount is called via delegatecall (storage is in proxy)
      * @dev When initAccount is called via delegatecall, address(this) in the package code
      *      is the PROXY address, not the package address. This proves delegatecall context.
+     *      LR-7 full initAccount lifecycle verification.
+     * @custom:signature test_deploy_initAccount_viaDelgatecall()
+     * @custom:selector 0x8fcd101a
      */
     function test_deploy_initAccount_viaDelgatecall() public {
         uint256 testValue = 12345;
@@ -585,6 +921,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         // This proves the initialization happened in proxy context (delegatecall)
         assertEq(initializer, proxy, "Initializer should be proxy address (proves delegatecall context)");
     }
+    // end::test_deploy_initAccount_viaDelgatecall()[]
 
     /**
      * @notice Test that greeter package initializes storage via initAccount
@@ -611,7 +948,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         address proxy2 = factory.deploy(IDiamondFactoryPackage(address(greeterPackage)), abi.encode(message2));
 
         // Proxies should have different addresses
-        assertTrue(proxy1 != proxy2, "Proxies should have different addresses");
+        assertNotEq(proxy1, proxy2, "Proxies should have different addresses");
 
         // Each proxy should have its own storage
         assertEq(IGreeter(proxy1).getMessage(), message1, "Proxy 1 should have message 1");
@@ -635,7 +972,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
 
         address proxy = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), pkgArgs);
 
-        assertTrue(proxy != address(0), "Should deploy with empty args");
+        assertNotEq(proxy, address(0), "Should deploy with empty args");
         assertTrue(proxy.code.length > 0, "Proxy should have code");
     }
 
@@ -708,7 +1045,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
 
         // Deployment should never revert
         address proxy = factory.deploy(IDiamondFactoryPackage(address(minimalPackage)), randomArgs);
-        assertTrue(proxy != address(0), "Deployment should succeed");
+        assertNotEq(proxy, address(0), "Deployment should succeed");
     }
 
     /**
@@ -733,7 +1070,9 @@ contract DiamondPackageCallBackFactory_Test is Test {
             }
         }
 
-        // Should have at least 2 DiamondCut events (base facets + package facets + postDeploy removal)
-        assertGe(diamondCutCount, 2, "Should emit at least 2 DiamondCut events");
+        // LR-7: exact value assertion (always exactly 2 for any pkg: 1 for base facets init + 1 for pkg initAccount;
+        // removal uses _processFacetCuts which does not emit). Reference: DiamondPackageCallBackFactory.initAccount + ERC2535Repo.
+        assertEq(diamondCutCount, 2, "Should emit exactly 2 DiamondCut events");
     }
 }
+// end::DiamondPackageCallBackFactory_Test[]

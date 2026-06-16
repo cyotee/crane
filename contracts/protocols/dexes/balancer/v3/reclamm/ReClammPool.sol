@@ -572,7 +572,8 @@ contract ReClammPool is
     {
         IERC20[] memory tokens = _vault.getPoolTokens(address(this));
 
-        (uint256 referenceTokenIdx, uint256 otherTokenIdx) = address(tokens[a]) == address(referenceToken) ? (a, b) : (b, a);
+        (uint256 referenceTokenIdx, uint256 otherTokenIdx) =
+            address(tokens[a]) == address(referenceToken) ? (a, b) : (b, a);
 
         if (referenceTokenIdx == b && address(referenceToken) != address(tokens[b])) {
             revert IVaultErrors.InvalidToken();

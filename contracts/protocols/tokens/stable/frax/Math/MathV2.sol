@@ -108,5 +108,4 @@ library Math {
         }
         return result;
     }
-
 }

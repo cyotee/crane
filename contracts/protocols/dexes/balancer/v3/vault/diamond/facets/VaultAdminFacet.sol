@@ -164,7 +164,11 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         returns (bool paused, uint32 pauseWindowEndTime, uint32 bufferPeriodEndTime)
     {
         BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
-        return (layoutStruct.vaultStateBits.isVaultPaused(), layoutStruct.vaultPauseWindowEndTime, layoutStruct.vaultBufferPeriodEndTime);
+        return (
+            layoutStruct.vaultStateBits.isVaultPaused(),
+            layoutStruct.vaultPauseWindowEndTime,
+            layoutStruct.vaultBufferPeriodEndTime
+        );
     }
 
     function _setVaultPaused(bool pausing) internal {

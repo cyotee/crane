@@ -11,7 +11,7 @@ contract NonReentrantGreeterStub is GreeterStub, ReentrancyLockModifiers, Reentr
 
     constructor(string memory message_) GreeterStub(message_) {}
 
-    function setMessage(string memory message) public override lock returns (bool) {
+    function setMessage(string memory message) public override nonReentrant returns (bool) {
         // If reentrancy is enabled, attempt to call back into this contract
         if (shouldReenter) {
             shouldReenter = false; // Disable to prevent infinite recursion

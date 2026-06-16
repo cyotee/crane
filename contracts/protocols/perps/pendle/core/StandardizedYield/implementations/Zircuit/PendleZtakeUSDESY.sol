@@ -32,16 +32,32 @@ contract PendleZtakeUSDESY is SYBaseUpg {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(address /*tokenIn*/, uint256 amountDeposited) internal virtual override returns (uint256) {
+    function _deposit(
+        address,
+        /*tokenIn*/
+        uint256 amountDeposited
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         IZircuitZtaking(zircuitStaking).depositFor(usde, address(this), amountDeposited);
         return amountDeposited;
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IZircuitZtaking(zircuitStaking).withdraw(usde, amountSharesToRedeem);
         _transferOut(usde, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -60,9 +76,17 @@ contract PendleZtakeUSDESY is SYBaseUpg {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         uint256 _newSupply = totalSupply() + amountTokenToDeposit;
         uint256 _supplyCap = supplyCap;
 
@@ -74,9 +98,17 @@ contract PendleZtakeUSDESY is SYBaseUpg {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

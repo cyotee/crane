@@ -12,9 +12,9 @@ import {IPriceFeedLegacy} from "./IPriceFeedLegacy.sol";
  * by each Redstone PriceFeed contract
  */
 interface IPriceFeed is IPriceFeedLegacy, AggregatorV3Interface {
-  /**
-   * @notice Returns data feed identifier for the PriceFeed contract
-   * @return dataFeedId The identifier of the data feed
-   */
-  function getDataFeedId() external view returns (bytes32);
+    /**
+     * @notice Returns data feed identifier for the PriceFeed contract
+     * @return dataFeedId The identifier of the data feed
+     */
+    function getDataFeedId() external view returns (bytes32);
 }

@@ -16,12 +16,9 @@ contract PendleZtakeRsETHSY is SYBaseUpg {
     address public immutable depositPool;
     address public immutable exchangeRateOracle;
 
-    constructor(
-        address _zircuitStaking,
-        address _rsETH,
-        address _depositPool,
-        address _exchangeRateOracle
-    ) SYBaseUpg(_rsETH) {
+    constructor(address _zircuitStaking, address _rsETH, address _depositPool, address _exchangeRateOracle)
+        SYBaseUpg(_rsETH)
+    {
         _disableInitializers();
         zircuitStaking = _zircuitStaking;
         rsETH = _rsETH;
@@ -38,14 +35,15 @@ contract PendleZtakeRsETHSY is SYBaseUpg {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE) {
             IKelpDepositPool(depositPool).depositETH{value: amountDeposited}(
-                0,
-                "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
+                0, "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
             );
             amountSharesOut = _selfBalance(rsETH);
         } else {
@@ -56,9 +54,16 @@ contract PendleZtakeRsETHSY is SYBaseUpg {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IZircuitZtaking(zircuitStaking).withdraw(rsETH, amountSharesToRedeem);
         _transferOut(rsETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -76,10 +81,14 @@ contract PendleZtakeRsETHSY is SYBaseUpg {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == rsETH) {
             return amountTokenToDeposit;
         }
@@ -87,9 +96,17 @@ contract PendleZtakeRsETHSY is SYBaseUpg {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

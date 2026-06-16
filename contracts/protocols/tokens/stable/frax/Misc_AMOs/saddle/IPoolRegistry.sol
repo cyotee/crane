@@ -48,17 +48,13 @@ interface IPoolRegistry {
      * @notice Returns the index + 1 of the pool address in the registry
      * @param poolAddress address to look for
      */
-    function poolsIndexOfPlusOne(address poolAddress)
-        external
-        returns (uint256);
+    function poolsIndexOfPlusOne(address poolAddress) external returns (uint256);
 
     /**
      * @notice Returns the index + 1 of the pool name in the registry
      * @param poolName pool name in bytes32 format to look for
      */
-    function poolsIndexOfNamePlusOne(bytes32 poolName)
-        external
-        returns (uint256);
+    function poolsIndexOfNamePlusOne(bytes32 poolName) external returns (uint256);
 
     /* Functions */
 
@@ -103,37 +99,25 @@ interface IPoolRegistry {
      * @notice Returns PoolData for given pool address
      * @param poolAddress address of the pool to read
      */
-    function getPoolData(address poolAddress)
-        external
-        view
-        returns (PoolData memory);
+    function getPoolData(address poolAddress) external view returns (PoolData memory);
 
     /**
      * @notice Returns PoolData at given index
      * @param index index of the pool to read
      */
-    function getPoolDataAtIndex(uint256 index)
-        external
-        view
-        returns (PoolData memory);
+    function getPoolDataAtIndex(uint256 index) external view returns (PoolData memory);
 
     /**
      * @notice Returns PoolData with given name
      * @param poolName name of the pool to read
      */
-    function getPoolDataByName(bytes32 poolName)
-        external
-        view
-        returns (PoolData memory);
+    function getPoolDataByName(bytes32 poolName) external view returns (PoolData memory);
 
     /**
      * @notice Returns virtual price of the given pool address
      * @param poolAddress address of the pool to read
      */
-    function getVirtualPrice(address poolAddress)
-        external
-        view
-        returns (uint256);
+    function getVirtualPrice(address poolAddress) external view returns (uint256);
 
     /**
      * @notice Returns A of the given pool address
@@ -151,28 +135,19 @@ interface IPoolRegistry {
      * @notice Returns the SwapStorage struct of the given pool address
      * @param poolAddress address of the pool to read
      */
-    function getSwapStorage(address poolAddress)
-        external
-        view
-        returns (SwapStorageData memory swapStorageData);
+    function getSwapStorage(address poolAddress) external view returns (SwapStorageData memory swapStorageData);
 
     /**
      * @notice Returns the tokens of the given pool address
      * @param poolAddress address of the pool to read
      */
-    function getTokens(address poolAddress)
-        external
-        view
-        returns (IERC20[] memory);
+    function getTokens(address poolAddress) external view returns (IERC20[] memory);
 
     /**
      * @notice Returns the underlying tokens of the given pool address. Base pools will return an empty array.
      * @param poolAddress address of the pool to read
      */
-    function getUnderlyingTokens(address poolAddress)
-        external
-        view
-        returns (IERC20[] memory);
+    function getUnderlyingTokens(address poolAddress) external view returns (IERC20[] memory);
 
     /**
      * @notice Returns number of entries in the registry. Includes removed pools
@@ -186,28 +161,19 @@ interface IPoolRegistry {
      * @param to address of the token to swap to
      * @return eligiblePools array of pool addresses that can swap between from and to
      */
-    function getEligiblePools(address from, address to)
-        external
-        view
-        returns (address[] memory eligiblePools);
+    function getEligiblePools(address from, address to) external view returns (address[] memory eligiblePools);
 
     /**
      * @notice Returns an array of balances of the tokens
      * @param poolAddress address of the pool to look up the token balances for
      * @return balances array of token balances
      */
-    function getTokenBalances(address poolAddress)
-        external
-        view
-        returns (uint256[] memory balances);
+    function getTokenBalances(address poolAddress) external view returns (uint256[] memory balances);
 
     /**
      * @notice Returns an array of balances of the tokens
      * @param poolAddress address of the pool to look up the token balances for
      * @return balances array of token balances
      */
-    function getUnderlyingTokenBalances(address poolAddress)
-        external
-        view
-        returns (uint256[] memory balances);
+    function getUnderlyingTokenBalances(address poolAddress) external view returns (uint256[] memory balances);
 }

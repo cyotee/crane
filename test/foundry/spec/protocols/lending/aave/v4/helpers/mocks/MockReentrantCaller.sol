@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Address} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/Address.sol';
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 
 contract MockReentrantCaller {
-  using Address for address;
+    using Address for address;
 
-  address public immutable TARGET;
-  bytes4 public immutable TARGET_SELECTOR;
+    address public immutable TARGET;
+    bytes4 public immutable TARGET_SELECTOR;
 
-  constructor(address target, bytes4 targetSelector) {
-    TARGET = target;
-    TARGET_SELECTOR = targetSelector;
-  }
+    constructor(address target, bytes4 targetSelector) {
+        TARGET = target;
+        TARGET_SELECTOR = targetSelector;
+    }
 
-  fallback() external {
-    TARGET.functionCall(bytes.concat(TARGET_SELECTOR, new bytes(1000)));
-  }
+    fallback() external {
+        TARGET.functionCall(bytes.concat(TARGET_SELECTOR, new bytes(1000)));
+    }
 }

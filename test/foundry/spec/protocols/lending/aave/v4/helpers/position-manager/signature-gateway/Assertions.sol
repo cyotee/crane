@@ -1,36 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {SpokeHelpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SpokeHelpers.sol';
-import {ISignatureGateway} from '@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ISignatureGateway.sol';
-import {ISpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol';
+import {SpokeHelpers} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SpokeHelpers.sol";
+import {
+    ISignatureGateway
+} from "@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ISignatureGateway.sol";
+import {ISpoke} from "@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol";
 
 /// @title Assertions
 /// @notice Assertion helpers for SignatureGateway tests.
 abstract contract Assertions is SpokeHelpers {
-  function _assertGatewayHasNoBalanceOrAllowance(
-    ISpoke spoke,
-    ISignatureGateway _gateway,
-    address who
-  ) internal view {
-    for (uint256 reserveId; reserveId < spoke.getReserveCount(); ++reserveId) {
-      _assertEntityHasNoBalanceOrAllowance({
-        underlying: _underlying(spoke, reserveId),
-        entity: address(_gateway),
-        user: who
-      });
+    function _assertGatewayHasNoBalanceOrAllowance(ISpoke spoke, ISignatureGateway _gateway, address who)
+        internal
+        view
+    {
+        for (uint256 reserveId; reserveId < spoke.getReserveCount(); ++reserveId) {
+            _assertEntityHasNoBalanceOrAllowance({
+                underlying: _underlying(spoke, reserveId), entity: address(_gateway), user: who
+            });
+        }
     }
-  }
 
-  function _assertGatewayHasNoActivePosition(
-    ISpoke spoke,
-    ISignatureGateway _gateway
-  ) internal view {
-    for (uint256 reserveId; reserveId < spoke.getReserveCount(); ++reserveId) {
-      assertEq(spoke.getUserSuppliedShares(reserveId, address(_gateway)), 0);
-      assertEq(spoke.getUserTotalDebt(reserveId, address(_gateway)), 0);
-      assertFalse(_isUsingAsCollateral(spoke, reserveId, address(_gateway)));
-      assertFalse(_isBorrowing(spoke, reserveId, address(_gateway)));
+    function _assertGatewayHasNoActivePosition(ISpoke spoke, ISignatureGateway _gateway) internal view {
+        for (uint256 reserveId; reserveId < spoke.getReserveCount(); ++reserveId) {
+            assertEq(spoke.getUserSuppliedShares(reserveId, address(_gateway)), 0);
+            assertEq(spoke.getUserTotalDebt(reserveId, address(_gateway)), 0);
+            assertFalse(_isUsingAsCollateral(spoke, reserveId, address(_gateway)));
+            assertFalse(_isBorrowing(spoke, reserveId, address(_gateway)));
+        }
     }
-  }
 }

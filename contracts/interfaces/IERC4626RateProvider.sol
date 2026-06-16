@@ -11,9 +11,7 @@ import {IERC4626} from "@crane/contracts/interfaces/IERC4626.sol";
 /*                                 Balancer V3                                */
 /* -------------------------------------------------------------------------- */
 
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */

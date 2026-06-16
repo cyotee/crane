@@ -5,4 +5,5 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 // Mock oneUSDC token
 contract oneUSDC is ERC20("USDC", "1USDC") {
     // Nothing here
-}
+
+    }

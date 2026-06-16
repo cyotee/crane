@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {MockStepStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol';
+import {
+    MockStepStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol";
 
-import {BttBase, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {BttBase, Step} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {AuctionStep} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
 
 contract AdvanceStepTest is BttBase {
     MockStepStorage public auctionStepStorage;
@@ -116,7 +118,7 @@ contract AdvanceStepTest is BttBase {
             prevStep = step;
         }
 
-        emit log_named_uint('endBlock', endBlock);
+        emit log_named_uint("endBlock", endBlock);
 
         vm.expectRevert(IStepStorage.AuctionIsOver.selector);
         auctionStepStorage.advanceStep();

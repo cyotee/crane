@@ -1,27 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import '@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/procedures/ProceduresBase.t.sol';
+import "@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/procedures/ProceduresBase.t.sol";
 
 contract AaveV4SignatureGatewayDeployProcedureTest is ProceduresBase {
-  AaveV4SignatureGatewayDeployProcedureWrapper public aaveV4SignatureGatewayDeployProcedureWrapper;
-  function setUp() public override {
-    super.setUp();
+    AaveV4SignatureGatewayDeployProcedureWrapper public aaveV4SignatureGatewayDeployProcedureWrapper;
 
-    aaveV4SignatureGatewayDeployProcedureWrapper = new AaveV4SignatureGatewayDeployProcedureWrapper();
-  }
+    function setUp() public override {
+        super.setUp();
 
-  function test_deploySignatureGateway() public {
-    address signatureGateway = aaveV4SignatureGatewayDeployProcedureWrapper.deploySignatureGateway(
-      owner,
-      salt
-    );
-    assertNotEq(signatureGateway, address(0));
-    assertEq(Ownable(signatureGateway).owner(), owner);
-  }
+        aaveV4SignatureGatewayDeployProcedureWrapper = new AaveV4SignatureGatewayDeployProcedureWrapper();
+    }
 
-  function test_deploySignatureGateway_reverts() public {
-    vm.expectRevert('invalid owner');
-    aaveV4SignatureGatewayDeployProcedureWrapper.deploySignatureGateway(address(0), salt);
-  }
+    function test_deploySignatureGateway() public {
+        address signatureGateway = aaveV4SignatureGatewayDeployProcedureWrapper.deploySignatureGateway(owner, salt);
+        assertNotEq(signatureGateway, address(0));
+        assertEq(Ownable(signatureGateway).owner(), owner);
+    }
+
+    function test_deploySignatureGateway_reverts() public {
+        vm.expectRevert("invalid owner");
+        aaveV4SignatureGatewayDeployProcedureWrapper.deploySignatureGateway(address(0), salt);
+    }
 }

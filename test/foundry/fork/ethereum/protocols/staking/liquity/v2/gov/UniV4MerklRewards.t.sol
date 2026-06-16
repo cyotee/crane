@@ -6,10 +6,13 @@ import {console} from "forge-std/console.sol";
 
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC20.sol";
 
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 
-import {UniV4MerklRewards, IDistributionCreator} from "@crane/contracts/protocols/staking/liquity/v2/gov/UniV4MerklRewards.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
+import {
+    UniV4MerklRewards,
+    IDistributionCreator
+} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UniV4MerklRewards.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
 
 contract UniV4MerklE2ETests is Test {
     IERC20 private constant lqty = IERC20(address(0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D));
@@ -97,7 +100,7 @@ contract UniV4MerklE2ETests is Test {
         // Gain some voting power
         vm.warp(block.timestamp + 30 days);
 
-        ( /*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/ ,, uint256 claimableAmount) =
+        (/*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/,, uint256 claimableAmount) =
             governance.getInitiativeState(address(uniV4MerklRewardsInitiative));
 
         uniV4MerklRewardsInitiative.claimForInitiative();
@@ -142,7 +145,7 @@ contract UniV4MerklE2ETests is Test {
         // Gain some voting power
         vm.warp(block.timestamp + 30 days);
 
-        ( /*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/ ,, uint256 claimableAmount) =
+        (/*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/,, uint256 claimableAmount) =
             governance.getInitiativeState(address(uniV4MerklRewardsInitiative));
 
         uniV4MerklRewardsInitiative.claimForInitiative();
@@ -197,7 +200,7 @@ contract UniV4MerklE2ETests is Test {
         // Gain some voting power
         vm.warp(block.timestamp + 30 days);
 
-        ( /*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/ ,, uint256 claimableAmount) =
+        (/*Governance.InitiativeStatus status, uint256 lastClaimEpoch*/,, uint256 claimableAmount) =
             governance.getInitiativeState(address(uniV4MerklRewardsInitiative));
 
         uint256 epochEnd = EPOCH_START + (governance.epoch() - 1) * EPOCH_DURATION;

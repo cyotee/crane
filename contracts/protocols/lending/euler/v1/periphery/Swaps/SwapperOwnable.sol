@@ -20,7 +20,7 @@ contract SwapperOwnable is Swapper, EVCUtil, Ownable {
     constructor(address evc, address owner, address uniswapRouterV2, address uniswapRouterV3)
         Swapper(uniswapRouterV2, uniswapRouterV3)
         EVCUtil(evc)
-        Ownable()
+        Ownable(msg.sender)
     {
         _transferOwnership(owner);
     }
@@ -31,11 +31,7 @@ contract SwapperOwnable is Swapper, EVCUtil, Ownable {
     }
 
     /// @inheritdoc ISwapper
-    function repay(address token, address vault, uint256 repayAmount, address account)
-        public
-        override
-        onlyOwnerOrSelf
-    {
+    function repay(address token, address vault, uint256 repayAmount, address account) public override onlyOwnerOrSelf {
         super.repay(token, vault, repayAmount, account);
     }
 
@@ -49,20 +45,12 @@ contract SwapperOwnable is Swapper, EVCUtil, Ownable {
     }
 
     /// @inheritdoc ISwapper
-    function deposit(address token, address vault, uint256 amountMin, address account)
-        public
-        override
-        onlyOwnerOrSelf
-    {
+    function deposit(address token, address vault, uint256 amountMin, address account) public override onlyOwnerOrSelf {
         super.deposit(token, vault, amountMin, account);
     }
 
     /// @inheritdoc ISwapper
-    function transfer(address token, uint256 amountMin, address receiver)
-        public
-        override
-        onlyOwnerOrSelf
-    {
+    function transfer(address token, uint256 amountMin, address receiver) public override onlyOwnerOrSelf {
         super.transfer(token, amountMin, receiver);
     }
 
@@ -76,7 +64,7 @@ contract SwapperOwnable is Swapper, EVCUtil, Ownable {
         super.multicall(calls);
     }
 
-    function _msgSender() internal view override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 }

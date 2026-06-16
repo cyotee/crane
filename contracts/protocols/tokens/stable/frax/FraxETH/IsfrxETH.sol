@@ -12,7 +12,15 @@ interface IsfrxETH {
     function convertToShares(uint256 assets) external view returns (uint256);
     function decimals() external view returns (uint8);
     function deposit(uint256 assets, address receiver) external returns (uint256 shares);
-    function depositWithSignature(uint256 assets, address receiver, uint256 deadline, bool approveMax, uint8 v, bytes32 r, bytes32 s) external returns (uint256 shares);
+    function depositWithSignature(
+        uint256 assets,
+        address receiver,
+        uint256 deadline,
+        bool approveMax,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external returns (uint256 shares);
     function lastRewardAmount() external view returns (uint192);
     function lastSync() external view returns (uint32);
     function maxDeposit(address) external view returns (uint256);
@@ -22,7 +30,8 @@ interface IsfrxETH {
     function mint(uint256 shares, address receiver) external returns (uint256 assets);
     function name() external view returns (string memory);
     function nonces(address) external view returns (uint256);
-    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external;
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external;
     function previewDeposit(uint256 assets) external view returns (uint256);
     function previewMint(uint256 shares) external view returns (uint256);
     function previewRedeem(uint256 shares) external view returns (uint256);

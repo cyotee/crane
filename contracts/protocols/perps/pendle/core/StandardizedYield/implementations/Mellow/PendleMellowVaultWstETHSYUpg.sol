@@ -18,21 +18,23 @@ contract PendleMellowVaultWstETHSYUpg is PendleMellowVaultSYBaseUpg, StEthHelper
         interfaceVersion = _interfaceVersion;
     }
 
-    function initialize(
-        string memory _name,
-        string memory _symbol,
-        address _pricingHelper
-    ) external override initializer {
+    function initialize(string memory _name, string memory _symbol, address _pricingHelper)
+        external
+        override
+        initializer
+    {
         __SYBaseUpg_init(_name, _symbol);
         _safeApproveInf(STETH, WSTETH);
         _safeApproveInf(WSTETH, vault);
         _setPricingHelper(_pricingHelper);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == vault) {
             return amountDeposited;
         }
@@ -41,29 +43,23 @@ contract PendleMellowVaultWstETHSYUpg is PendleMellowVaultSYBaseUpg, StEthHelper
         }
 
         if (interfaceVersion == 0) {
-            (, amountSharesOut) = IMellowVault(vault).deposit(
-                address(this),
-                ArrayLib.create(amountDeposited),
-                0,
-                type(uint256).max,
-                0
-            );
+            (, amountSharesOut) =
+                IMellowVault(vault).deposit(address(this), ArrayLib.create(amountDeposited), 0, type(uint256).max, 0);
         } else if (interfaceVersion == 1) {
-            (, amountSharesOut) = IMellowVault(vault).deposit(
-                address(this),
-                ArrayLib.create(amountDeposited),
-                0,
-                type(uint256).max
-            );
+            (, amountSharesOut) =
+                IMellowVault(vault).deposit(address(this), ArrayLib.create(amountDeposited), 0, type(uint256).max);
         }
     }
 
     /// @dev Mellow uses math calculations under 2**96 base. Also they are taking into account oracle prices
     /// even with one asset. So a discrepancy of 1e-6 in the result should be expected.
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == vault) {
             return amountTokenToDeposit;
         }

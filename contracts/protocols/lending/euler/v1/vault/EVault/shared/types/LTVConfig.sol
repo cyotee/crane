@@ -48,8 +48,8 @@ library LTVConfigLib {
             uint256 timeRemaining = self.targetTimestamp - block.timestamp;
 
             // targetLiquidationLTV < initialLiquidationLTV and timeRemaining <= rampDuration
-            currentLiquidationLTV = targetLiquidationLTV
-                + (currentLiquidationLTV - targetLiquidationLTV) * timeRemaining / self.rampDuration;
+            currentLiquidationLTV = targetLiquidationLTV + (currentLiquidationLTV - targetLiquidationLTV)
+                * timeRemaining / self.rampDuration;
         }
 
         // because ramping happens only when liquidation LTV decreases, it's safe to down-cast the new value

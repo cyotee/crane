@@ -126,13 +126,9 @@ interface IReliquary is IERC721 {
 
     function isApprovedOrOwner(address, uint256) external view returns (bool);
 
-    function createRelicAndDeposit(address _to, uint8 _poolId, uint256 _amount)
-        external
-        returns (uint256 newRelicId_);
+    function createRelicAndDeposit(address _to, uint8 _poolId, uint256 _amount) external returns (uint256 newRelicId_);
 
-    function split(uint256 _relicId, uint256 _amount, address _to)
-        external
-        returns (uint256 newRelicId_);
+    function split(uint256 _relicId, uint256 _amount, address _to) external returns (uint256 newRelicId_);
 
     function shift(uint256 _fromId, uint256 _toId, uint256 _amount) external;
 

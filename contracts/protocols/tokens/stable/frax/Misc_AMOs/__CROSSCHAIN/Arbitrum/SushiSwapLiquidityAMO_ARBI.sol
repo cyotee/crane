@@ -29,7 +29,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Bridges/Arbitrum/CrossChai
 import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/Interfaces/IUniswapV2Pair.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/Interfaces/IUniswapV2Router02.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 
 contract SushiSwapLiquidityAMO_ARBI is Owned {
     // SafeMath automatically included in Solidity >= 8.0.0
@@ -71,13 +71,16 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
-    
-    constructor (
+
+    constructor(
         address _owner_address,
         address _custodian_address,
         address _canonical_frax_address,
@@ -104,10 +107,10 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
         timelock_address = cc_bridge_backer.timelock_address();
 
         // Get the missing decimals for the collateral
-        missing_decimals = uint(18) - arbiCollateral.decimals();
+        missing_decimals = uint256(18) - arbiCollateral.decimals();
 
         // Set the initial pairs
-        for (uint256 i = 0; i < _initial_pairs.length; i++){ 
+        for (uint256 i = 0; i < _initial_pairs.length; i++) {
             _addTrackedLP(_initial_pairs[i]);
         }
     }
@@ -117,10 +120,10 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     function showAllocations() public view returns (uint256[17] memory allocations) {
         // Get the FXS price
         uint256 fxs_price = cc_bridge_backer.cross_chain_oracle().getPrice(canonical_fxs_address);
-        
+
         // Loop through the lp tokens
         uint256[] memory lp_tallies = new uint256[](4); // 0 = FRAX, 1 = FXS, 2 = Collateral, 3 = USD value
-        for (uint i = 0; i < frax_fxs_pair_addresses_array.length; i++){ 
+        for (uint256 i = 0; i < frax_fxs_pair_addresses_array.length; i++) {
             address pair_address = frax_fxs_pair_addresses_array[i];
             if (frax_fxs_pair_addresses_allowed[pair_address]) {
                 // Instantiate the pair
@@ -128,7 +131,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
                 // Get the pair info
                 uint256[4] memory lp_info_pack = lpTokenInfo(pair_address);
-                
+
                 // Get the lp token balance
                 uint256 lp_token_balance = the_pair.balanceOf(address(this));
 
@@ -143,15 +146,13 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
                 lp_tallies[2] += collat_amt;
 
                 // Get the USD value
-                if (lp_info_pack[3] == 0 || lp_info_pack[3] == 2){
+                if (lp_info_pack[3] == 0 || lp_info_pack[3] == 2) {
                     // If FRAX is in the pair, just double the FRAX balance since it is 50/50
                     lp_tallies[3] += (frax_amt * 2);
-                }
-                else {
+                } else {
                     // Otherwise, double the value of the FXS component
                     lp_tallies[3] += ((fxs_amt * fxs_price) / PRICE_PRECISION) * 2;
                 }
-
             }
         }
 
@@ -188,7 +189,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
         tkn_bals[1] = canFXS.balanceOf(address(this)); // canFXS
         tkn_bals[2] = arbiCollateral.balanceOf(address(this)); // arbiCollateral
     }
-    
+
     // [0] = FRAX per LP token
     // [1] = FXS per LP token
     // [2] = Collateral per LP token
@@ -199,7 +200,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Get the reserves
         uint256[] memory reserve_pack = new uint256[](3); // [0] = FRAX, [1] = FXS, [2] = Collateral
-        (uint256 reserve0, uint256 reserve1, ) = (the_pair.getReserves());
+        (uint256 reserve0, uint256 reserve1,) = (the_pair.getReserves());
         {
             // Get the underlying tokens in the LP
             address token0 = the_pair.token0();
@@ -229,12 +230,16 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     }
 
     // Needed by CrossChainBridgeBacker
-    function allDollarBalances() public view returns (
-        uint256 frax_ttl, 
-        uint256 fxs_ttl,
-        uint256 col_ttl, // in native decimals()
-        uint256 ttl_val_usd_e18
-    ) {
+    function allDollarBalances()
+        public
+        view
+        returns (
+            uint256 frax_ttl,
+            uint256 fxs_ttl,
+            uint256 col_ttl, // in native decimals()
+            uint256 ttl_val_usd_e18
+        )
+    {
         uint256[17] memory allocations = showAllocations();
 
         return (allocations[2], allocations[7], allocations[13], allocations[16]);
@@ -243,7 +248,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     function borrowed_frax() public view returns (uint256) {
         return cc_bridge_backer.frax_lent_balances(address(this));
     }
-    
+
     function borrowed_fxs() public view returns (uint256) {
         return cc_bridge_backer.fxs_lent_balances(address(this));
     }
@@ -262,7 +267,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
         profit = int256(allocations[2]) - int256(borrowed_frax());
 
         // Handle FXS
-        profit +=  ((int256(allocations[7]) - int256(borrowed_fxs())) * int256(fxs_price)) / int256(PRICE_PRECISION);
+        profit += ((int256(allocations[7]) - int256(borrowed_fxs())) * int256(fxs_price)) / int256(PRICE_PRECISION);
 
         // Handle Collat
         profit += (int256(allocations[13]) - int256(borrowed_collat())) * int256(10 ** missing_decimals);
@@ -279,37 +284,35 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
         uint256 decimals0 = ERC20(token0).decimals();
         uint256 decimals1 = ERC20(token1).decimals();
 
-        (uint256 reserve0, uint256 reserve1, ) = (the_pair.getReserves());
+        (uint256 reserve0, uint256 reserve1,) = (the_pair.getReserves());
 
         uint256 miss_dec = (decimals0 >= decimals1) ? (decimals0 - decimals1) : (decimals1 - decimals0);
 
         // Put everything into E18. Since one of the pair tokens will always be FRAX or FXS, this is ok to assume.
-        if (decimals0 >= decimals1){
+        if (decimals0 >= decimals1) {
             reserve1 *= (10 ** miss_dec);
-        }
-        else {
+        } else {
             reserve0 *= (10 ** miss_dec);
         }
 
         // Return the ratio
-        if (token0 == token_there_is_one_of){
+        if (token0 == token_there_is_one_of) {
             return (uint256(1e18) * reserve0) / reserve1;
-        }
-        else if (token1 == token_there_is_one_of){
+        } else if (token1 == token_there_is_one_of) {
             return (uint256(1e18) * reserve1) / reserve0;
+        } else {
+            revert("Token not in pair");
         }
-        else revert("Token not in pair");
     }
-   
+
     /* ========== Swap ========== */
 
     // Swap tokens directly
-    function swapTokens(
-        address from_token_address, 
-        uint256 from_in, 
-        address to_token_address,
-        uint256 to_token_out_min
-    ) public onlyByOwnGov returns (uint256[] memory amounts) {
+    function swapTokens(address from_token_address, uint256 from_in, address to_token_address, uint256 to_token_out_min)
+        public
+        onlyByOwnGov
+        returns (uint256[] memory amounts)
+    {
         // Approval
         ERC20(from_token_address).approve(address(router), from_in);
 
@@ -320,17 +323,17 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Swap
         amounts = router.swapExactTokensForTokens(
-            from_in, 
-            to_token_out_min, 
-            the_path, 
-            address(this), 
+            from_in,
+            to_token_out_min,
+            the_path,
+            address(this),
             block.timestamp + 604800 // Expiration: 7 days from now
         );
     }
 
     // If you need a specific path
     function swapTokensWithCustomPath(
-        address from_token_address, 
+        address from_token_address,
         uint256 from_in,
         uint256 end_token_out_min,
         address[] memory path
@@ -340,10 +343,10 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Swap
         amounts = router.swapExactTokensForTokens(
-            from_in, 
-            end_token_out_min, 
-            path, 
-            address(this), 
+            from_in,
+            end_token_out_min,
+            path,
+            address(this),
             block.timestamp + 604800 // Expiration: 7 days from now
         );
     }
@@ -351,10 +354,10 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     /* ========== Add / Remove Liquidity ========== */
 
     function addLiquidity(
-        address lp_token_address, 
-        address tokenA_address, 
-        uint256 tokenA_amt, 
-        address tokenB_address, 
+        address lp_token_address,
+        address tokenA_address,
+        uint256 tokenA_amt,
+        address tokenB_address,
         uint256 tokenB_amt
     ) public onlyByOwnGov returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
         require(frax_fxs_pair_addresses_allowed[lp_token_address], "LP address not allowed");
@@ -365,21 +368,22 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Add liquidity
         (amountA, amountB, liquidity) = router.addLiquidity(
-            tokenA_address, 
-            tokenB_address, 
-            tokenA_amt, 
-            tokenB_amt, 
-            tokenA_amt - ((tokenA_amt * add_rem_liq_slippage) / PRICE_PRECISION), 
-            tokenB_amt - ((tokenB_amt * add_rem_liq_slippage) / PRICE_PRECISION), 
-            address(this), 
+            tokenA_address,
+            tokenB_address,
+            tokenA_amt,
+            tokenB_amt,
+            tokenA_amt - ((tokenA_amt * add_rem_liq_slippage) / PRICE_PRECISION),
+            tokenB_amt - ((tokenB_amt * add_rem_liq_slippage) / PRICE_PRECISION),
+            address(this),
             block.timestamp + 604800 // Expiration: 7 days from now
         );
     }
 
-    function removeLiquidity(
-        address lp_token_address, 
-        uint256 lp_token_in
-    ) public onlyByOwnGov returns (uint256 amountA, uint256 amountB) {
+    function removeLiquidity(address lp_token_address, uint256 lp_token_in)
+        public
+        onlyByOwnGov
+        returns (uint256 amountA, uint256 amountB)
+    {
         require(frax_fxs_pair_addresses_allowed[lp_token_address], "LP address not allowed");
 
         // Approvals
@@ -391,12 +395,12 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Remove liquidity
         (amountA, amountB) = router.removeLiquidity(
-            tokenA, 
-            tokenB, 
-            lp_token_in, 
-            0, 
-            0, 
-            address(this), 
+            tokenA,
+            tokenB,
+            lp_token_in,
+            0,
+            0,
+            address(this),
             block.timestamp + 604800 // Expiration: 7 days from now
         );
     }
@@ -432,7 +436,7 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
 
         // Adjust the state variables
         require(frax_fxs_pair_addresses_allowed[pair_address] == false, "LP already exists");
-        frax_fxs_pair_addresses_allowed[pair_address] = true; 
+        frax_fxs_pair_addresses_allowed[pair_address] = true;
         frax_fxs_pair_addresses_array.push(pair_address);
     }
 
@@ -444,10 +448,10 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     function removeTrackedLP(address pair_address) public onlyByOwnGov {
         // Adjust the state variables
         require(frax_fxs_pair_addresses_allowed[pair_address] == true, "LP not already present");
-        frax_fxs_pair_addresses_allowed[pair_address] = false; 
-        
+        frax_fxs_pair_addresses_allowed[pair_address] = false;
+
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < frax_fxs_pair_addresses_array.length; i++){ 
+        for (uint256 i = 0; i < frax_fxs_pair_addresses_array.length; i++) {
             if (frax_fxs_pair_addresses_array[i] == pair_address) {
                 frax_fxs_pair_addresses_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -479,12 +483,12 @@ contract SushiSwapLiquidityAMO_ARBI is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 }

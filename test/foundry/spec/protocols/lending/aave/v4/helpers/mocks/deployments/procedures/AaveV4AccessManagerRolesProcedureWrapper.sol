@@ -1,28 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AaveV4AccessManagerRolesProcedure} from '@crane/contracts/protocols/lending/aave/v4/deployments/procedures/roles/AaveV4AccessManagerRolesProcedure.sol';
+import {
+    AaveV4AccessManagerRolesProcedure
+} from "@crane/contracts/protocols/lending/aave/v4/deployments/procedures/roles/AaveV4AccessManagerRolesProcedure.sol";
 
 contract AaveV4AccessManagerRolesProcedureWrapper {
-  bool public IS_TEST = true;
+    bool public IS_TEST = true;
 
-  function replaceDefaultAdminRole(
-    address accessManager,
-    address adminToAdd,
-    address adminToRemove
-  ) external {
-    AaveV4AccessManagerRolesProcedure.replaceDefaultAdminRole(
-      accessManager,
-      adminToAdd,
-      adminToRemove
-    );
-  }
+    function replaceDefaultAdminRole(address accessManager, address adminToAdd, address adminToRemove) external {
+        AaveV4AccessManagerRolesProcedure.replaceDefaultAdminRole(accessManager, adminToAdd, adminToRemove);
+    }
 
-  function grantAccessManagerAdminRole(address accessManager, address admin) external {
-    AaveV4AccessManagerRolesProcedure.grantAccessManagerAdminRole(accessManager, admin);
-  }
+    function grantAccessManagerAdminRole(address accessManager, address admin) external {
+        AaveV4AccessManagerRolesProcedure.grantAccessManagerAdminRole(accessManager, admin);
+    }
 
-  function labelAllRoles(address accessManager) external {
-    AaveV4AccessManagerRolesProcedure.labelAllRoles(accessManager);
-  }
+    function labelAllRoles(address accessManager) external {
+        AaveV4AccessManagerRolesProcedure.labelAllRoles(accessManager);
+    }
 }

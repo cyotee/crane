@@ -3,7 +3,7 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 import {stdError} from "forge-std/StdError.sol";
-import {MultiDelegateCall} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/MultiDelegateCall.sol";
+import {MultiDelegateCall} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/MultiDelegateCall.sol";
 
 contract Target is MultiDelegateCall {
     error CustomError(string);

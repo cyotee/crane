@@ -8,6 +8,16 @@ import {Uint512, BetterMath as Math} from "@crane/contracts/utils/math/BetterMat
 import {Math as UniV2Math} from "@crane/contracts/protocols/dexes/uniswap/v2/stubs/deps/libs/Math.sol";
 import {Math as CamMath} from "@crane/contracts/protocols/dexes/camelot/v2/stubs/libraries/Math.sol";
 
+// tag::ConstProdUtils[]
+/**
+ * @title ConstProdUtils
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @notice Core constant-product (xy = k) AMM math utilities for sale/purchase quotes, liquidity add/remove (including protocol fees), zap-in/out quoting, fee portions, and yield calcs.
+ * @dev Internal-only API (all _-prefixed functions). Consumed via `using ConstProdUtils for uint256;` (and for Uint512) inside *Service libs (CamelotV2Service, AerodromeService*, UniswapV2Utils etc), targets, and tests.
+ * @dev Pure math utility library (no storage, LR-6 n/a). Provides integer-arithmetic parity with UniswapV2 / Camelot / Aerodrome (volatile) pair math for exact quotes and LP accounting.
+ * @dev Models gold *Service / *Utils / InitDevService / Access*FactoryService NatSpec + AsciiDoc include-tag style per AGENTS.md and PRD LR-1. No @custom:selector/interfaceid (pure util; none in CENTRALLY_COMPUTED_NATSPEC_VALUES.md).
+ * @dev See AGENTS.md (utility libs highlighted as ConstProdUtils gold example), PRD LR-1 (tags + rich NatSpec), LR-2 (math utils coverage).
+ */
 library ConstProdUtils {
     using Math for uint256;
     using Math for Uint512;
@@ -19,14 +29,16 @@ library ConstProdUtils {
     /*                                  Reserves                                  */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_sortReserves(address-address-uint256-uint256)[]
     /**
-     * @dev Sorts reserves based on the known token and token0.
-     * @param knownToken The token that is known.
-     * @param token0 The token that is token0.
-     * @param reserve0 The reserve of the known token.
-     * @param reserve1 The reserve of the unknown token.
+     * @notice Sorts reserves based on the known token and token0.
+     * @dev Internal helper for reserve/fee ordering used by quote and liquidity flows.
+     * @param knownToken The token that is known (determines which side is "in").
+     * @param token0 The token that is token0 in the pair.
+     * @param reserve0 The reserve of token0.
+     * @param reserve1 The reserve of the other token.
      * @return knownReserve The reserve of the known token.
-     * @return unknownReserve The reserve of the unknown token.
+     * @return unknownReserve The reserve of the unknown/opposing token.
      */
     function _sortReserves(address knownToken, address token0, uint256 reserve0, uint256 reserve1)
         internal
@@ -35,19 +47,22 @@ library ConstProdUtils {
     {
         return knownToken == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
     }
+    // end::_sortReserves(address-address-uint256-uint256)[]
 
+    // tag::_sortReserves(address-address-uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Sorts reserves and fees based on the known token and token0.
-     * @param knownToken The token that is known.
-     * @param token0 The token that is token0.
-     * @param reserve0 The reserve of the known token.
-     * @param reserve0Fee The fee of the known token.
-     * @param reserve1 The reserve of the unknown token.
-     * @param reserve1Fee The fee of the unknown token.
+     * @notice Sorts reserves and fees based on the known token and token0.
+     * @dev Overload that also sorts per-side fees (e.g. Camelot token0feePercent / token1feePercent).
+     * @param knownToken The token that is known (determines which side is "in").
+     * @param token0 The token that is token0 in the pair.
+     * @param reserve0 The reserve of token0.
+     * @param reserve0Fee The fee of token0 side.
+     * @param reserve1 The reserve of the other token.
+     * @param reserve1Fee The fee of the other side.
      * @return knownReserve The reserve of the known token.
-     * @return knownReserveFee The fee of the known token.
-     * @return unknownReserve The reserve of the unknown token.
-     * @return unknownReserveFee The fee of the unknown token.
+     * @return knownReserveFee The fee of the known token side.
+     * @return unknownReserve The reserve of the unknown/opposing token.
+     * @return unknownReserveFee The fee of the unknown side.
      */
     function _sortReserves(
         address knownToken,
@@ -65,13 +80,16 @@ library ConstProdUtils {
             ? (reserve0, reserve0Fee, reserve1, reserve1Fee)
             : (reserve1, reserve1Fee, reserve0, reserve0Fee);
     }
+    // end::_sortReserves(address-address-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                                   Deposit                                  */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_depositQuote(uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Provides the LP token mint amount for a given deposit, reserve, and total supply.
+     * @notice Provides the LP token mint amount for a given deposit, reserve, and total supply.
+     * @dev Handles first-mint case (sqrt product minus min liquidity) and proportional case (min of ratios).
      * @param amountADeposit The amount of the first asset to deposit.
      * @param amountBDeposit The amount of the second asset to deposit.
      * @param lpTotalSupply The total supply of the LP token.
@@ -105,6 +123,7 @@ library ConstProdUtils {
         }
         return lpAmount;
     }
+    // end::_depositQuote(uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                                 Withdrawal                                 */
@@ -114,13 +133,15 @@ library ConstProdUtils {
     /*                                    Swaps                                   */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_saleQuote(uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the proceeds of a swap.
+     * @notice Calculates the proceeds of a swap (sale quote / amount out for amount in).
+     * @dev Default overload using FEE_DENOMINATOR (100000). Delegates to 5-param version.
      * @param amountIn The amount of token to be sold.
      * @param reserveIn The reserve of the input token in the pool (e.g., token A).
      * @param reserveOut The reserve of the output token in the pool (e.g., token B).
      * @param saleFeePercent The swap fee in PPHK, i.e 0.5% == 500.
-     * @return saleProceeds The proceeds of the swap.
+     * @return saleProceeds The proceeds of the swap (amount out).
      */
     function _saleQuote(uint256 amountIn, uint256 reserveIn, uint256 reserveOut, uint256 saleFeePercent)
         internal
@@ -140,14 +161,18 @@ library ConstProdUtils {
             FEE_DENOMINATOR
         );
     }
+    // end::_saleQuote(uint256-uint256-uint256-uint256)[]
 
+    // tag::_saleQuote(uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the proceeds of a swap.
+     * @notice Calculates the proceeds of a swap (sale quote / amount out for amount in).
+     * @dev Core constant product formula with fee: amountOut = (amountInWithFee * reserveOut) / (reserveIn * feeDen + amountInWithFee)
      * @param amountIn The amount of token to be sold.
      * @param reserveIn The reserve of the input token in the pool (e.g., token A).
      * @param reserveOut The reserve of the output token in the pool (e.g., token B).
      * @param saleFeePercent The swap fee in PPHK, i.e 0.5% == 500.
-     * @return saleProceeds The proceeds of the swap.
+     * @param feeDenominator The fee denominator used by the pool (e.g. 100000 or 1000).
+     * @return saleProceeds The proceeds of the swap (amount out).
      */
     function _saleQuote(
         uint256 amountIn,
@@ -161,9 +186,12 @@ library ConstProdUtils {
         uint256 denominator = (reserveIn * feeDenominator) + amountInWithFee;
         return numerator / denominator;
     }
+    // end::_saleQuote(uint256-uint256-uint256-uint256-uint256)[]
 
+    // tag::_purchaseQuote(uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the amount of token to sell to effect a purchase of a desired amount of the other token.
+     * @notice Calculates the amount of token to sell to effect a purchase of a desired amount of the other token (exact-out).
+     * @dev Default overload using FEE_DENOMINATOR. Delegates to 5-param version.
      * @param amountOut The amount of the token to purchase.
      * @param reserveIn The reserve of the input token in the pool (e.g., token A).
      * @param reserveOut The reserve of the output token in the pool (e.g., token B).
@@ -183,15 +211,20 @@ library ConstProdUtils {
         // // amountIn = (numerator / denominator);
         return _purchaseQuote(amountOut, reserveIn, reserveOut, feePercent, FEE_DENOMINATOR);
     }
+    // end::_purchaseQuote(uint256-uint256-uint256-uint256)[]
 
+    // tag::_purchaseQuote(uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the amount of token to sell to effect a purchase of a desired amount of the other token.
+     * @notice Calculates the amount of token to sell to effect a purchase of a desired amount of the other token (exact-out).
+     * @dev Core inversion of constant product with fee +1 for rounding safety. Reverts on invalid inputs.
      * @param amountOut The amount of the token to purchase.
      * @param reserveIn The reserve of the input token in the pool (e.g., token A).
      * @param reserveOut The reserve of the output token in the pool (e.g., token B).
      * @param feePercent The swap fee in PPHK, i.e 0.5% == 500.
      * @param feeDenominator The fee denominator used by the pool (e.g., 100,000).
      * @return amountIn The amount of the token to sell.
+     * @custom:throws ArgumentMustNotBeZero if amountOut==0 or reserveIn==0 (from GeneralErrors)
+     * @custom:throws ArgumentMustBeGreaterThan for insufficient liquidity or bad fee ratio (from GeneralErrors)
      */
     function _purchaseQuote(
         uint256 amountOut,
@@ -216,24 +249,16 @@ library ConstProdUtils {
         uint256 denominator = (reserveOut - amountOut) * (feeDenominator - feePercent);
         amountIn = (numerator / denominator) + 1;
     }
+    // end::_purchaseQuote(uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                            Swap/Deposit (ZapIn)                            */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
     /**
-     * @dev Calculates the expected LP tokens from a swap deposit operation, accounting for protocol fees.
-     *
-     * @notice This function uses a heuristic to infer the fee denominator from the fee percent value.
-     * The heuristic assumes:
-     * - feePercent <= 10: Legacy pool (denominator = 1000, e.g., 3/1000 = 0.3%)
-     * - feePercent > 10: Modern pool (denominator = 100,000, e.g., 300/100000 = 0.3%)
-     *
-     * @custom:edge-case This heuristic can misclassify low modern fees. For example, a modern
-     * pool with 0.01% fee uses feePercent=10 with denominator=100,000 (10/100000), but the
-     * heuristic would incorrectly treat it as a legacy 1% fee (10/1000). If you know the exact
-     * fee denominator, use the overload that accepts explicit `feeDenominator` parameter.
-     *
+     * @notice Calculates the expected LP tokens from a swap deposit operation (ZapIn), accounting for protocol fees.
+     * @dev Convenience overload that infers feeDenominator via heuristic (fee<=10 -> 1000 else 100000). See overload for explicit.
      * @param amountIn The amount of token being deposited.
      * @param lpTotalSupply The current total supply of LP tokens.
      * @param reserveIn The reserve of the input token.
@@ -268,13 +293,12 @@ library ConstProdUtils {
         args.feeOn = feeOn;
         return _quoteSwapDepositWithFee(args);
     }
+    // end::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
+    // tag::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
     /**
-     * @dev Calculates the expected LP tokens from a swap deposit operation with explicit fee denominator.
-     *
-     * @notice This overload allows specifying the exact fee denominator, avoiding the heuristic
-     * that can misclassify low modern fees (e.g., 10/100000 = 0.01%) as legacy fees (10/1000 = 1%).
-     *
+     * @notice Calculates the expected LP tokens from a swap deposit operation (ZapIn) with explicit fee denominator.
+     * @dev Overload that accepts explicit feeDenom to avoid heuristic misclassification of low modern fees.
      * @param amountIn The amount of token being deposited.
      * @param lpTotalSupply The current total supply of LP tokens.
      * @param reserveIn The reserve of the input token.
@@ -309,7 +333,13 @@ library ConstProdUtils {
         args.feeOn = feeOn;
         return _quoteSwapDepositWithFee(args);
     }
+    // end::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
+    // tag::SwapDepositArgs[]
+    /**
+     * @dev Internal param struct bundling inputs for _quoteSwapDepositWithFee (and related).
+     * Avoids stack-too-deep in complex zap/fee calcs.
+     */
     struct SwapDepositArgs {
         uint256 amountIn;
         uint256 lpTotalSupply;
@@ -321,11 +351,15 @@ library ConstProdUtils {
         uint256 ownerFeeShare;
         bool feeOn;
     }
+    // end::SwapDepositArgs[]
 
+    // tag::_quoteSwapDepositWithFee(SwapDepositArgs)[]
     /**
-     * @dev Internal implementation using SwapDepositArgs struct.
-     * @notice The feeDenominator field in args determines how feePercent is interpreted.
-     * Callers should set args.feeDenominator explicitly, or use the convenience overloads.
+     * @notice Internal implementation of swap-deposit quote using SwapDepositArgs struct.
+     * @dev The feeDenominator field in args determines how feePercent is interpreted.
+     *      Callers should set args.feeDenominator explicitly, or use the convenience overloads.
+     * @param args Bundled inputs.
+     * @return lpAmt Expected LP after the simulated swap+deposit (with fee logic).
      */
     function _quoteSwapDepositWithFee(SwapDepositArgs memory args) internal pure returns (uint256 lpAmt) {
         // Use explicit denominator from args (set by caller or heuristic in overload)
@@ -369,7 +403,17 @@ library ConstProdUtils {
         lpAmt = _depositQuote(amountA, amountB, args.lpTotalSupply, args.reserveIn, args.reserveOut);
         return (lpAmt);
     }
+    // end::_quoteSwapDepositWithFee(SwapDepositArgs)[]
 
+    // tag::_swapDepositSaleAmt(uint256-uint256-uint256)[]
+    /**
+     * @notice Computes the amount of input to sell (during zap deposit) to balance the deposit of remaining.
+     * @dev Default overload using FEE_DENOMINATOR. Solves quadratic for optimal split.
+     * @param amountIn Total input amount.
+     * @param saleReserve Reserve of the input side.
+     * @param feePercent Fee percent.
+     * @return saleAmt Amount of input to route through sale (swap) vs direct deposit.
+     */
     function _swapDepositSaleAmt(uint256 amountIn, uint256 saleReserve, uint256 feePercent)
         internal
         pure
@@ -386,7 +430,18 @@ library ConstProdUtils {
             FEE_DENOMINATOR
         );
     }
+    // end::_swapDepositSaleAmt(uint256-uint256-uint256)[]
 
+    // tag::_swapDepositSaleAmt(uint256-uint256-uint256-uint256)[]
+    /**
+     * @notice Computes the amount of input to sell (during zap deposit) to balance the deposit of remaining.
+     * @dev Uses quadratic formula derived from constant product invariant to find split point.
+     * @param amountIn Total input amount.
+     * @param saleReserve Reserve of the input side.
+     * @param feePercent Fee percent.
+     * @param feeDenominator Fee denominator.
+     * @return saleAmt Amount of input to route through sale (swap) vs direct deposit.
+     */
     function _swapDepositSaleAmt(uint256 amountIn, uint256 saleReserve, uint256 feePercent, uint256 feeDenominator)
         internal
         pure
@@ -405,11 +460,26 @@ library ConstProdUtils {
             saleAmt = amountIn; // Cap at amountIn
         }
     }
+    // end::_swapDepositSaleAmt(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                                  WITHDRAW                                  */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_quoteWithdrawWithFee(uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
+    /**
+     * @notice Quotes withdrawal amounts (pro-rata of reserves) with optional protocol fee adjustment on K growth.
+     * @dev Adjusts lpTotalSupply upward for fee mint before computing shares if feeOn.
+     * @param ownedLPAmount Owned amount of LP token.
+     * @param lpTotalSupply LP token total supply.
+     * @param totalReserveA LP reserve of Token A.
+     * @param totalReserveB LP reserve of Token B.
+     * @param kLast Last K value.
+     * @param ownerFeeShare Protocol owner fee share.
+     * @param feeOn Whether fees are on.
+     * @return ownedReserveA Owned share of Token A.
+     * @return ownedReserveB Owned share of Token B.
+     */
     function _quoteWithdrawWithFee(
         uint256 ownedLPAmount,
         uint256 lpTotalSupply,
@@ -439,10 +509,13 @@ library ConstProdUtils {
         // Calculate token amounts with adjusted supply
         return _withdrawQuote(ownedLPAmount, lpTotalSupply, totalReserveA, totalReserveB);
     }
+    // end::_quoteWithdrawWithFee(uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
+    // tag::_withdrawQuote(uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Provides the owned balances of a given liquidity pool reserve.
+     * @notice Provides the owned balances of a given liquidity pool reserve.
      * @dev Uses A/B nomenclature to indicate order DOES NOT matter, simply correlate variables to the same tokens.
+     *      Pure pro-rata share (no fees here).
      * @param ownedLPAmount Owned amount of LP token.
      * @param lpTotalSupply LP token total supply.
      * @param totalReserveA LP reserve of Token A
@@ -466,25 +539,17 @@ library ConstProdUtils {
         ownedReserveA = ((ownedLPAmount * totalReserveA) / lpTotalSupply);
         ownedReserveB = ((ownedLPAmount * totalReserveB) / lpTotalSupply);
     }
+    // end::_withdrawQuote(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                            ZapIn to Target Quote                           */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_quoteZapInToTargetLPWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
     /**
-     * @dev Quotes the amount of `tokenIn` required to ZapIn and mint at least `targetLP` LP tokens.
-     *
-     * The ZapIn flow is: split `amountIn` into a sale portion (swapped to opToken) and a deposit
-     * portion, then add both to the pool proportionally. The optimal split is computed internally
-     * by `_swapDepositSaleAmt`. This function inverts that forward operation via binary search.
-     *
-     * Binary-search strategy:
-     *  - Low bound: 1
-     *  - High bound: 4 * targetLP * reserveIn / lpTotalSupply (generous ceiling; never overflows
-     *    because targetLP ≤ lpTotalSupply and reserves are bounded by pool state)
-     *  - Monotone property: `_quoteSwapDepositWithFee` is monotone increasing in `amountIn`,
-     *    so the minimal amountIn is found at the first point where the forward quote ≥ targetLP.
-     *
+     * @notice Quotes the amount of `tokenIn` required to ZapIn and mint at least `targetLP` LP tokens.
+     * @dev The ZapIn flow is: split `amountIn` into sale portion + deposit portion then add proportionally.
+     *      Inverts via binary search + safety steps. See body for bounds/strategy.
      * @param targetLP    Desired LP token amount (must be < lpTotalSupply).
      * @param lpTotalSupply  Current LP total supply.
      * @param reserveIn   Reserve of the ZapIn token.
@@ -573,11 +638,16 @@ library ConstProdUtils {
 
         return amountIn;
     }
+    // end::_quoteZapInToTargetLPWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     /* -------------------------------------------------------------------------- */
     /*                           ZapOut to Target Quote                           */
     /* -------------------------------------------------------------------------- */
 
+    // tag::ZapOutToTargetWithFeeArgs[]
+    /**
+     * @dev Internal param struct for _quoteZapOutToTargetWithFee (quadratic + binary search impl).
+     */
     struct ZapOutToTargetWithFeeArgs {
         uint256 desiredOut;
         uint256 lpTotalSupply;
@@ -590,11 +660,13 @@ library ConstProdUtils {
         bool feeOn;
         uint256 protocolFeeDenominator; // Denominator for protocol fee share
     }
+    // end::ZapOutToTargetWithFeeArgs[]
 
+    // tag::_quoteZapOutToTargetWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
     /**
-     * @dev Quotes the amount of LP tokens needed for a ZapOut to receive at least a desired amount of output token in a Uniswap V2-like pool.
+     * @notice Quotes the amount of LP tokens needed for a ZapOut to receive at least a desired amount of output token in a Uniswap V2-like pool.
      * @dev Accounts for swap fees and protocol fee mints that dilute lpTotalSupply.
-     * @dev Overestimates lpNeeded by applying a bounded buffer on desiredOut to ensure >= desiredOut.
+     *      Overestimates lpNeeded by applying a bounded buffer on desiredOut to ensure >= desiredOut.
      * @param desiredOut Desired amount of output token.
      * @param lpTotalSupply Current LP total supply (includes past protocol fee mints).
      * @param reserveDesired Reserve of the output token.
@@ -631,9 +703,11 @@ library ConstProdUtils {
         });
         return _quoteZapOutToTargetWithFee(args);
     }
+    // end::_quoteZapOutToTargetWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
+    // tag::_quoteZapOutToTargetWithFee(ZapOutToTargetWithFeeArgs)[]
     /**
-     * @dev Quotes the amount of LP tokens needed for a ZapOut to receive at least a desired amount of output token.
+     * @notice Quotes the amount of LP tokens needed for a ZapOut to receive at least a desired amount of output token.
      * @dev Uses quadratic initial guess + binary search for minimal LP ensuring >= desiredOut precisely and efficiently.
      * @param args The input arguments.
      * @return lpNeeded Amount of LP tokens to burn (minimal exact for precision).
@@ -740,9 +814,11 @@ library ConstProdUtils {
         }
         return lpNeeded;
     }
+    // end::_quoteZapOutToTargetWithFee(ZapOutToTargetWithFeeArgs)[]
 
+    // tag::_computeZapOut(uint256-uint256-ZapOutToTargetWithFeeArgs)[]
     /**
-     * @dev Computes the exact output for a given LP burn amount using integer math (simulates ZapOut).
+     * @notice Computes the exact output for a given LP burn amount using integer math (simulates ZapOut).
      * @param lp Amount of LP to burn.
      * @param lpTotalSupply Adjusted total LP supply.
      * @param args The zap out parameters (reserves, fees, etc).
@@ -767,15 +843,17 @@ library ConstProdUtils {
         uint256 amountDesiredSwap = numerator / denominator;
         return amountDesiredDirect + amountDesiredSwap;
     }
+    // end::_computeZapOut(uint256-uint256-ZapOutToTargetWithFeeArgs)[]
 
     /* -------------------------------------------------------------------------- */
     /*                             Yield Calculations                             */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_calculateFeePortionForPosition(uint256-uint256-uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the portion of reserves attributable to market maker fees for a specific LP position
+     * @notice Calculates the portion of reserves attributable to market maker fees for a specific LP position
      * in a Uniswap V2-like pool, ensuring non-negative yields for vault fee calculations.
-     * Returns unsigned integers, clamping negatives to 0 (ignoring IL effects).
+     * @dev Returns unsigned integers, clamping negatives to 0 (ignoring IL effects).
      * @param ownedLP Amount of LP tokens owned by the position.
      * @param initialA Initial amount of Token A deposited to mint ownedLP.
      * @param initialB Initial amount of Token B deposited to mint ownedLP.
@@ -812,13 +890,16 @@ library ConstProdUtils {
         feeA = claimableA > noFeeA ? claimableA - noFeeA : 0;
         feeB = claimableB > noFeeB ? claimableB - noFeeB : 0;
     }
+    // end::_calculateFeePortionForPosition(uint256-uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                                Protocol Fees                               */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_calculateProtocolFee(uint256-uint256-uint256-uint256)[]
     /**
-     * @dev Calculates the protocol fee amount based on the growth of K value.
+     * @notice Calculates the protocol fee amount based on the growth of K value (sqrtK delta).
+     * @dev Branches for Uniswap (1/6) vs generic ownerFeeShare formulas; uses protocol-specific sqrt impls.
      * @param lpTotalSupply The current total supply of LP tokens.
      * @param newK The new K value after the operation.
      * @param kLast The last stored K value before the operation.
@@ -866,8 +947,18 @@ library ConstProdUtils {
         if (denominator == 0) return 0;
         return numerator / denominator;
     }
+    // end::_calculateProtocolFee(uint256-uint256-uint256-uint256)[]
 
-    // Exact Uniswap V2 fee mint calculation to mirror pair._mintFee
+    // tag::_calculateProtocolFeeMint(uint256-uint256-uint256-uint256)[]
+    /**
+     * @notice Exact Uniswap V2 fee mint calculation to mirror pair._mintFee.
+     * @dev Uses the specific 5*rootK + rootKLast denominator for Uniswap 1/6 share.
+     * @param lpTotalSupply Current total supply.
+     * @param reserve0 Current reserve0.
+     * @param reserve1 Current reserve1.
+     * @param kLast Prior kLast.
+     * @return liquidity LP to mint as fee.
+     */
     function _calculateProtocolFeeMint(uint256 lpTotalSupply, uint256 reserve0, uint256 reserve1, uint256 kLast)
         internal
         pure
@@ -881,14 +972,16 @@ library ConstProdUtils {
         uint256 denominator = (rootK * 5) + (rootKLast);
         liquidity = numerator / denominator;
     }
+    // end::_calculateProtocolFeeMint(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
     /*                             Additional Deposit                             */
     /* -------------------------------------------------------------------------- */
 
-    // tag::_equivLiquidity[]
+    // tag::_equivLiquidity(uint256-uint256-uint256)[]
     /**
-     * @dev Given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
+     * @notice Given some amount of an asset and pair reserves, returns an equivalent amount of the other asset (x * resB / resA).
+     * @dev Simple constant-product equivalent calc; used for balanced deposit math.
      * @param amountA The amount of the first asset.
      * @param reserveA The reserve of the first asset.
      * @param reserveB The reserve of the second asset.
@@ -904,9 +997,21 @@ library ConstProdUtils {
         }
         amountB = (amountA * reserveB) / reserveA;
     }
+    // end::_equivLiquidity(uint256-uint256-uint256)[]
 
-    // end::_equivLiquidity[]
-
+    // tag::_quoteDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
+    /**
+     * @notice Quotes LP for a direct deposit, optionally adding protocol fee to supply first.
+     * @param amountADeposit Desired deposit of A.
+     * @param amountBDeposit Desired deposit of B.
+     * @param lpTotalSupply Current supply (may be adjusted).
+     * @param lpReserveA Current reserve A.
+     * @param lpReserveB Current reserve B.
+     * @param kLast Prior kLast for fee calc.
+     * @param ownerFeeShare Fee share.
+     * @param feeOn Fees enabled.
+     * @return lpAmt LP to mint.
+     */
     function _quoteDepositWithFee(
         uint256 amountADeposit,
         uint256 amountBDeposit,
@@ -931,9 +1036,12 @@ library ConstProdUtils {
         lpAmt = _depositQuote(amountADeposit, amountBDeposit, lpTotalSupply, lpReserveA, lpReserveB);
         return (lpAmt);
     }
+    // end::_quoteDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
+    // tag::_quoteWithdrawSwapWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
     /**
-     * @dev Quotes the amount of tokens received from a withdrawal followed by a swap.
+     * @notice Quotes the amount of tokens received from a withdrawal followed by a swap (A out total).
+     * @dev Burns LP for pro-rata, then sells the B side into A using saleQuote on post-withdraw reserves.
      * @param ownedLPAmount The amount of LP tokens to burn.
      * @param lpTotalSupply The current total supply of LP tokens.
      * @param reserveA The reserve of Token A.
@@ -980,4 +1088,6 @@ library ConstProdUtils {
         totalAmountA = amountAWD + swapOut;
         return (totalAmountA);
     }
+    // end::_quoteWithdrawSwapWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
+// end::ConstProdUtils[]
 }

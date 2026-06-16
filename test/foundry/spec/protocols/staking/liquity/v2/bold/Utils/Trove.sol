@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {DECIMAL_PRECISION, ONE_YEAR} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+import {DECIMAL_PRECISION, ONE_YEAR} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 using TroveMethods for Trove global;
 

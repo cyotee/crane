@@ -2,7 +2,11 @@
 pragma solidity ^0.8.0;
 
 import {
-    IEulerEarn, IERC4626, MarketConfig, PendingUint136, PendingAddress
+    IEulerEarn,
+    IERC4626,
+    MarketConfig,
+    PendingUint136,
+    PendingAddress
 } from "@crane/contracts/protocols/lending/euler/v1/euler-earn/interfaces/IEulerEarn.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {UtilsLens} from "./UtilsLens.sol";

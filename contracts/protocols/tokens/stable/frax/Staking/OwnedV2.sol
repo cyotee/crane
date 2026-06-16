@@ -10,9 +10,9 @@ contract OwnedV2 {
     address public owner;
     address public nominatedOwner;
 
-    constructor (address _owner) {
+    constructor(address _owner) {
         // require(_owner != address(0), "Owner address cannot be 0");
-        if(_owner == address(0)) revert OwnerCannotBeZero();
+        if (_owner == address(0)) revert OwnerCannotBeZero();
         owner = _owner;
         emit OwnerChanged(address(0), _owner);
     }
@@ -24,15 +24,15 @@ contract OwnedV2 {
 
     function acceptOwnership() external {
         // require(msg.sender == nominatedOwner, "You must be nominated before you can accept ownership");
-        if(msg.sender != nominatedOwner) revert InvalidOwnershipAcceptance();
+        if (msg.sender != nominatedOwner) revert InvalidOwnershipAcceptance();
         emit OwnerChanged(owner, nominatedOwner);
         owner = nominatedOwner;
         nominatedOwner = address(0);
     }
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         // require(msg.sender == owner, "Only the contract owner may perform this action");
-        if(msg.sender != owner) revert OnlyOwner();
+        if (msg.sender != owner) revert OnlyOwner();
         _;
     }
 

@@ -4,7 +4,7 @@ pragma solidity ^0.8.35;
 // https://github.com/swervefi/swerve/blob/master/packages/swerve-contracts/interfaces/ILiquidityGauge.sol
 
 interface ILiquidityGaugeV2 {
-	// Public variables
+    // Public variables
     function minter() external view returns (address);
     function crv_token() external view returns (address);
     function lp_token() external view returns (address);
@@ -33,7 +33,7 @@ interface ILiquidityGaugeV2 {
     function claimable_tokens(address) external view returns (uint256); // function can be manually changed to "view" in the ABI
     function kick(address) external;
     function set_approve_deposit(address, bool) external;
-	function deposit(uint256) external;
+    function deposit(uint256) external;
     function deposit(uint256, address) external;
     function withdraw(uint256) external;
 }

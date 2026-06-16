@@ -4,67 +4,83 @@ pragma solidity ^0.8.0;
 import {InvalidPageSize} from "@crane/contracts/GeneralErrors.sol";
 import {BetterArrays as Arrays} from "@crane/contracts/utils/collections/BetterArrays.sol";
 
+// tag::AddressSet[]
 struct AddressSet {
     // 1-indexed to allow 0 to signify nonexistence
     mapping(address => uint256) indexes;
     // Values in set.
     address[] values;
 }
+// end::AddressSet[]
 
+// tag::AddressSetRepo[]
 /**
- * @title AddressSetRepo - Struct and atomic operations for a set of address values;
+ * @title AddressSetRepo - Struct and atomic operations for a set of address values.
  * @author cyotee doge <doge.cyotee>
  * @dev Distinct from OpenZeppelin to allow for operations upon an array of the same type.
+ * @dev Pure struct-passing utility Repo (no own STORAGE_SLOT / _layout binding); functions take AddressSet storage directly.
+ * @dev 1-indexed to allow 0 to signify nonexistence (in the `indexes` mapping).
+ * @dev Used (via `using AddressSetRepo for AddressSet;`) across FacetRegistryRepo, DiamondFactoryPackageRegistryRepo,
+ *      handlers, comparators, DeployedAddressesRepo and other collection consumers.
  */
 library AddressSetRepo {
     using Arrays for uint256;
     using AddressSetRepo for AddressSet;
 
+    // tag::_index(AddressSet-uint256)[]
     /**
-     * @dev Returns the value stored at the provided index.
-     * @dev Will return a default value if the index is not used.
-     * @param set The storage pointer of the struct upon which this function should operate.
-     * @param index The index of the value to retrieve.
+     * @dev Returns the value stored at the provided index (1-based).
+     * @dev Will revert if the index is not used (via BetterArrays).
+     * @param set The AddressSet storage struct upon which this function operates.
+     * @param index The (1-based) index of the value to retrieve.
      * @return value The value stored under the provided index.
      */
     function _index(AddressSet storage set, uint256 index) internal view returns (address value) {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+    // end::_index(AddressSet-uint256)[]
 
+    // tag::_indexOf(AddressSet-address)[]
     /**
      * @dev Returns the index of the provided value.
      * @dev Will return 2**256-1 if the value is not present.
      * @dev Using underflow to prevent reversion if value is not present.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param value The value of which to retrieve the index.
-     * @return index The index of the value.
+     * @return index The (1-based) index of the value (or max uint on absence).
      */
     function _indexOf(AddressSet storage set, address value) internal view returns (uint256 index) {
         unchecked {
             return set.indexes[value] - 1;
         }
     }
+    // end::_indexOf(AddressSet-address)[]
 
+    // tag::_contains(AddressSet-address)[]
     /**
      * @dev Returns boolean indicating if the value is present in the set.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param value The value for which to check presence.
      * @return isPresent Boolean indicating presence of value in set.
      */
     function _contains(AddressSet storage set, address value) internal view returns (bool isPresent) {
         return set.indexes[value] != 0;
     }
+    // end::_contains(AddressSet-address)[]
 
+    // tag::_length(AddressSet)[]
     /**
      * @dev Returns the length of the provided set.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @return length_ The "length", quantity of entries, of the provided set.
      */
     function _length(AddressSet storage set) internal view returns (uint256 length_) {
         return set.values.length;
     }
+    // end::_length(AddressSet)[]
 
+    // tag::_add(AddressSet-address)[]
     /**
      * @dev Written to be idempotent.
      * @dev Sets care about ensuring desired state.
@@ -72,7 +88,7 @@ library AddressSetRepo {
      * @dev If the value is present, desired state has been achieved.
      * @dev When the state change was achieved is irrelevant.
      * @dev If presence prior to addition is relevant, encapsulating logic should check for presence.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param value The value to ensure is present in the provided set.
      * @return success Boolean indicating desired set state has been achieved.
      */
@@ -83,10 +99,12 @@ library AddressSetRepo {
         }
         return true;
     }
+    // end::_add(AddressSet-address)[]
 
+    // tag::_add(AddressSet-address[])[]
     /**
      * @dev Idempotently adds an array of values to the provided set.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param values The array of values to ensure are present in the provided set.
      * @return success Boolean indicating desired set state has been achieved.
      */
@@ -96,11 +114,13 @@ library AddressSetRepo {
         }
         return true;
     }
+    // end::_add(AddressSet-address[])[]
 
+    // tag::_addAsc(AddressSet-address)[]
     /**
      * @notice Insert a new address (or do nothing if already present)
-     * @dev Keeps the `values` array sorted in ascending order
-     * @param set The set upon which this function operates.
+     * @dev Keeps the `values` array sorted in ascending order.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param addr The address to insert into the set in ascending order.
      */
     function _addAsc(AddressSet storage set, address addr) internal {
@@ -136,7 +156,9 @@ library AddressSetRepo {
         set.values[insertIdx] = addr;
         set.indexes[addr] = left;
     }
+    // end::_addAsc(AddressSet-address)[]
 
+    // tag::_remove(AddressSet-address)[]
     /**
      * @dev Written to be idempotent.
      * @dev Sets care about ensuring desired state.
@@ -144,7 +166,7 @@ library AddressSetRepo {
      * @dev If address is not present, desired state has been achieved.
      * @dev When the state change was achieved is irrelevant.
      * @dev If lack of presence prior to addition is relevant, encapsulating logic should check for lakc of presence.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param value The value to ensure is not present in the provided set.
      */
     function _remove(AddressSet storage set, address value) internal {
@@ -165,10 +187,12 @@ library AddressSetRepo {
             delete set.indexes[value];
         }
     }
+    // end::_remove(AddressSet-address)[]
 
+    // tag::_remove(AddressSet-address[])[]
     /**
      * @dev Idempotently removes an array of values to the provided set.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param values The array of values to ensure are not present in the provided set.
      */
     function _remove(AddressSet storage set, address[] memory values) internal {
@@ -176,10 +200,12 @@ library AddressSetRepo {
             _remove(set, values[iteration]);
         }
     }
+    // end::_remove(AddressSet-address[])[]
 
+    // tag::_removeAsc(AddressSet-address)[]
     /**
      * @notice Remove an address while preserving ascending order
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @param value The value to remove, reordering set to maintain ascending order.
      */
     function _removeAsc(AddressSet storage set, address value) internal {
@@ -199,33 +225,39 @@ library AddressSetRepo {
         set.values.pop();
         delete set.indexes[value];
     }
+    // end::_removeAsc(AddressSet-address)[]
 
+    // tag::_asArray(AddressSet)[]
     /**
      * @dev Copies the set into memory as an array.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @return array The members of the set copied to memory as an array.
      */
     function _asArray(AddressSet storage set) internal view returns (address[] memory array) {
         array = set.values;
     }
+    // end::_asArray(AddressSet)[]
 
+    // tag::_values(AddressSet)[]
     /**
      * @dev Provides the storage pointer of the underlying array of value.
      * @dev DO NOT alter values via this pointer.
      * @dev ONLY use to minimize memory usage when passing a reference internally for gas efficiency.
      * @dev OR when passing the array as an external return.
-     * @param set The storage pointer of the struct upon which this function should operate.
+     * @param set The AddressSet storage struct upon which this function operates.
      * @return values The members of the set copied to memory as an array.
      */
     function _values(AddressSet storage set) internal view returns (address[] storage values) {
         values = set.values;
     }
+    // end::_values(AddressSet)[]
 
+    // tag::_range(AddressSet-uint256-uint256)[]
     /**
      * @dev Returns a range of values from the set as an array.
-     * @param set The storage pointer of the struct upon which this function should operate.
-     * @param start The starting index of the range (inclusive).
-     * @param end The ending index of the range (inclusive).
+     * @param set The AddressSet storage struct upon which this function operates.
+     * @param start The starting index of the range (inclusive, 1-based).
+     * @param end The ending index of the range (inclusive, 1-based).
      * @return array The array of values in the specified range.
      */
     function _range(AddressSet storage set, uint256 start, uint256 end) internal view returns (address[] memory array) {
@@ -247,11 +279,13 @@ library AddressSetRepo {
             }
         }
     }
+    // end::_range(AddressSet-uint256-uint256)[]
 
+    // tag::_sortAsc(AddressSet)[]
     /**
      * @notice Sort the set in ascending order in-place
      * @dev Fixes both `values` array and `indexes` mapping
-     * @param set The set to sort
+     * @param set The AddressSet storage struct to sort.
      */
     function _sortAsc(AddressSet storage set) internal {
         uint256 len = set.values.length;
@@ -282,19 +316,23 @@ library AddressSetRepo {
             set.indexes[addr] = i + 1; // 1-indexed
         }
     }
+    // end::_sortAsc(AddressSet)[]
 
+    // tag::_quickSort(AddressSet)[]
     /**
      * @notice Sort the set in-place using QuickSort algorithm
      * @dev Fixes both `values` array and `indexes` mapping
-     * @param set The set to sort
+     * @param set The AddressSet storage struct to sort.
      */
     function _quickSort(AddressSet storage set) internal {
         _quickSort(set, 0, int256(set.values.length) - 1);
     }
+    // end::_quickSort(AddressSet)[]
 
+    // tag::_quickSort(AddressSet-int256-int256)[]
     /**
      * @notice Internal QuickSort implementation
-     * @param set The set to sort
+     * @param set The AddressSet storage struct to sort.
      * @param left The left index
      * @param right The right index
      */
@@ -321,7 +359,9 @@ library AddressSetRepo {
         if (left < j) _quickSort(set, left, j);
         if (i < right) _quickSort(set, i, right);
     }
+    // end::_quickSort(AddressSet-int256-int256)[]
 
+    // tag::_sort(address[])[]
     /**
      * @dev Sorts an array of addresses in ascending order using Bubble Sort.
      * @param array The array of addresses to sort.
@@ -347,7 +387,9 @@ library AddressSetRepo {
 
         return array;
     }
+    // end::_sort(address[])[]
 
+    // tag::_sort(address[]-uint256)[]
     /**
      * @dev Helper function to recursively sort an array of addresses using Bubble Sort.
      * @param _arr The array of addresses to sort.
@@ -368,4 +410,6 @@ library AddressSetRepo {
         }
         _sort(_arr, unsortedLen - 1);
     }
+    // end::_sort(address[]-uint256)[]
 }
+// end::AddressSetRepo[]

@@ -22,7 +22,7 @@ abstract contract ERC20EVCCompatible is EVCUtil, ERC20Permit {
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
     /// @return The address of the message sender.
-    function _msgSender() internal view virtual override (EVCUtil, Context) returns (address) {
+    function _msgSender() internal view virtual override(EVCUtil, Context) returns (address) {
         return EVCUtil._msgSender();
     }
 }

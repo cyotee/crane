@@ -14,7 +14,12 @@ interface IRewards {
 
     function exit(address) external;
 
-    function getReward(address /*_account*/, bool /*_claimExtras*/) external;
+    function getReward(
+        address,
+        /*_account*/
+        bool /*_claimExtras*/
+    )
+        external;
 
     function getReward() external;
 

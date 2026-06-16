@@ -1,12 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
 
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {ContinuousClearingAuctionFactory} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuctionFactory.sol';
-import {IContinuousClearingAuctionFactory} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuctionFactory.sol';
-import {IDistributionContract} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionContract.sol';
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    ContinuousClearingAuctionFactory
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuctionFactory.sol";
+import {
+    IContinuousClearingAuctionFactory
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuctionFactory.sol";
+import {
+    IDistributionContract
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionContract.sol";
 import {ActionConstants} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/ActionConstants.sol";
 
 contract InitializeDistributionTest is BttBase {

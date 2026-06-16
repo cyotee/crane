@@ -155,10 +155,9 @@ contract ERC777 is Context, IERC777, IERC20 {
      * @dev See {IERC777-isOperatorFor}.
      */
     function isOperatorFor(address operator, address tokenHolder) public view virtual override returns (bool) {
-        return
-            operator == tokenHolder ||
-            (_defaultOperators[operator] && !_revokedDefaultOperators[tokenHolder][operator]) ||
-            _operators[tokenHolder][operator];
+        return operator == tokenHolder
+            || (_defaultOperators[operator] && !_revokedDefaultOperators[tokenHolder][operator])
+            || _operators[tokenHolder][operator];
     }
 
     /**
@@ -219,12 +218,11 @@ contract ERC777 is Context, IERC777, IERC20 {
      *
      * Emits {Burned} and {IERC20-Transfer} events.
      */
-    function operatorBurn(
-        address account,
-        uint256 amount,
-        bytes memory data,
-        bytes memory operatorData
-    ) public virtual override {
+    function operatorBurn(address account, uint256 amount, bytes memory data, bytes memory operatorData)
+        public
+        virtual
+        override
+    {
         require(isOperatorFor(_msgSender(), account), "ERC777: caller is not an operator for holder");
         _burn(account, amount, data, operatorData);
     }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "../../../interfaces/IPMarket.sol";
 import "../../../interfaces/IPRouterStatic.sol";
 import "../../../interfaces/IPYieldContractFactory.sol";
@@ -20,9 +20,11 @@ contract ActionInfoStatic is IPActionInfoStatic {
     }
 
     /// can be SY, PY or Market
-    function getTokensInOut(
-        address token
-    ) external view returns (address[] memory tokensIn, address[] memory tokensOut) {
+    function getTokensInOut(address token)
+        external
+        view
+        returns (address[] memory tokensIn, address[] memory tokensOut)
+    {
         try IStandardizedYield(token).getTokensIn() returns (address[] memory res) {
             return (res, IStandardizedYield(token).getTokensOut());
         } catch {}
@@ -76,7 +78,7 @@ contract ActionInfoStatic is IPActionInfoStatic {
         if (uint256(state.totalLp) == 0) return res; // market not initialized
 
         // LP PT SY
-        (IStandardizedYield SY, IPPrincipalToken PT, ) = _market.readTokens();
+        (IStandardizedYield SY, IPPrincipalToken PT,) = _market.readTokens();
 
         uint256 userLp = _balanceOf(market, user);
         uint256 userPt = (userLp * uint256(state.totalPt)) / uint256(state.totalLp);
@@ -93,10 +95,11 @@ contract ActionInfoStatic is IPActionInfoStatic {
         res.unclaimedRewards = _zipTokenAmounts(rewardTokens, rewardsOut);
     }
 
-    function _zipTokenAmounts(
-        address[] memory tokens,
-        uint256[] memory amounts
-    ) internal pure returns (TokenAmount[] memory res) {
+    function _zipTokenAmounts(address[] memory tokens, uint256[] memory amounts)
+        internal
+        pure
+        returns (TokenAmount[] memory res)
+    {
         res = new TokenAmount[](tokens.length);
 
         for (uint256 i = 0; i < tokens.length; i++) {

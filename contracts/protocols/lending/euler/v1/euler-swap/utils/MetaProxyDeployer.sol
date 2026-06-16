@@ -16,11 +16,7 @@ library MetaProxyDeployer {
     bytes constant BYTECODE_TAIL = hex"5af43d3d93803e603457fd5bf3";
 
     /// @dev Computes the creation code
-    function creationCodeMetaProxy(address targetContract, bytes memory metadata)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function creationCodeMetaProxy(address targetContract, bytes memory metadata) internal pure returns (bytes memory) {
         return abi.encodePacked(BYTECODE_HEAD, targetContract, BYTECODE_TAIL, metadata);
     }
 

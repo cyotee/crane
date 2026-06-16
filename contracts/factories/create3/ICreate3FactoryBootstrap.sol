@@ -7,7 +7,10 @@ import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactor
 interface ICreate3FactoryBootstrap {
     function initFactory() external returns (bool);
     function deployCanonicalFacet(bytes calldata initCode, bytes32 salt) external returns (IFacet facet);
-    function deployCanonicalPackageWithArgs(bytes calldata initCode, bytes calldata constructorArgs, bytes32 salt, bytes4 interfaceId)
-        external
-        returns (IDiamondFactoryPackage package);
+    function deployCanonicalPackageWithArgs(
+        bytes calldata initCode,
+        bytes calldata constructorArgs,
+        bytes32 salt,
+        bytes4 interfaceId
+    ) external returns (IDiamondFactoryPackage package);
 }

@@ -5,9 +5,9 @@ import {Test} from "forge-std/Test.sol";
 import {BaseTargetFunctions} from "@crane/contracts/external/chimera/BaseTargetFunctions.sol";
 import {vm} from "@crane/contracts/external/chimera/Hevm.sol";
 
-import {IInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IInitiative.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
-import {DoubleLinkedList} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/DoubleLinkedList.sol";
+import {IInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IInitiative.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {DoubleLinkedList} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/DoubleLinkedList.sol";
 import {Properties} from "../Properties.sol";
 
 abstract contract BribeInitiativeTargets is Test, BaseTargetFunctions, Properties {

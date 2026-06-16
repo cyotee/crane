@@ -84,12 +84,10 @@ contract PendleYieldContractFactory is BoringOwnableUpgradeable, IPYieldContract
         ytCreationCodeSizeB = _ytCreationCodeSizeB;
     }
 
-    function initialize(
-        uint96 _expiryDivisor,
-        uint128 _interestFeeRate,
-        uint128 _rewardFeeRate,
-        address _treasury
-    ) external initializer {
+    function initialize(uint96 _expiryDivisor, uint128 _interestFeeRate, uint128 _rewardFeeRate, address _treasury)
+        external
+        initializer
+    {
         __BoringOwnable_init();
         setExpiryDivisor(_expiryDivisor);
         setInterestFeeRate(_interestFeeRate);
@@ -101,18 +99,19 @@ contract PendleYieldContractFactory is BoringOwnableUpgradeable, IPYieldContract
      * @notice Create a pair of (PT, YT) from any SY and valid expiry. Anyone can create a yield contract
      * @dev It's intentional to make expiry an uint32 to guard against fat fingers. uint32.max is year 2106
      */
-    function createYieldContract(
-        address SY,
-        uint32 expiry,
-        bool doCacheIndexSameBlock
-    ) external returns (address PT, address YT) {
-        if (MiniHelpers.isTimeInThePast(expiry) || expiry % expiryDivisor != 0) revert Errors.YCFactoryInvalidExpiry();
+    function createYieldContract(address SY, uint32 expiry, bool doCacheIndexSameBlock)
+        external
+        returns (address PT, address YT)
+    {
+        if (MiniHelpers.isTimeInThePast(expiry) || expiry % expiryDivisor != 0) {
+            revert Errors.YCFactoryInvalidExpiry();
+        }
 
         if (getPT[SY][expiry] != address(0)) revert Errors.YCFactoryYieldContractExisted();
 
         IStandardizedYield _SY = IStandardizedYield(SY);
 
-        (, , uint8 assetDecimals) = _SY.assetInfo();
+        (,, uint8 assetDecimals) = _SY.assetInfo();
 
         string memory syCoreName = _stripSYPrefix(_SY.name());
         string memory syCoreSymbol = _stripSYPrefix(_SY.symbol());
@@ -168,16 +167,18 @@ contract PendleYieldContractFactory is BoringOwnableUpgradeable, IPYieldContract
     }
 
     function setInterestFeeRate(uint128 newInterestFeeRate) public onlyOwner {
-        if (newInterestFeeRate > maxInterestFeeRate)
+        if (newInterestFeeRate > maxInterestFeeRate) {
             revert Errors.YCFactoryInterestFeeRateTooHigh(newInterestFeeRate, maxInterestFeeRate);
+        }
 
         interestFeeRate = newInterestFeeRate;
         emit SetInterestFeeRate(newInterestFeeRate);
     }
 
     function setRewardFeeRate(uint128 newRewardFeeRate) public onlyOwner {
-        if (newRewardFeeRate > maxRewardFeeRate)
+        if (newRewardFeeRate > maxRewardFeeRate) {
             revert Errors.YCFactoryRewardFeeRateTooHigh(newRewardFeeRate, maxRewardFeeRate);
+        }
 
         rewardFeeRate = newRewardFeeRate;
         emit SetRewardFeeRate(newRewardFeeRate);
@@ -197,7 +198,10 @@ contract PendleYieldContractFactory is BoringOwnableUpgradeable, IPYieldContract
         return str.beyond(delim_name).beyond(delim_symbol).toString();
     }
 
-    function _deployCreate2(uint256 amount, bytes32 salt, bytes memory creationCode) internal returns (address deployed) {
+    function _deployCreate2(uint256 amount, bytes32 salt, bytes memory creationCode)
+        internal
+        returns (address deployed)
+    {
         assembly {
             deployed := create2(amount, add(creationCode, 0x20), mload(creationCode), salt)
         }

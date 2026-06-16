@@ -17,20 +17,21 @@ pragma solidity ^0.8.35;
 
 // Frax Finance: https://github.com/FraxFinance
 
-// Frax Primary Forker(s) / Modifier(s) 
+// Frax Primary Forker(s) / Modifier(s)
 // Travis Moore: https://github.com/FortisFortuna
 
 // Reviewer(s) / Contributor(s)
 // C2tP: https://github.com/C2tP-C2tP
 
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {ERC20} from "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
+// import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "./CurveInterfaces.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Utils/Address.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Utils/Address.sol";
 
 contract CurveVoterProxy is Owned {
     using SafeERC20 for IERC20;
@@ -43,18 +44,13 @@ contract CurveVoterProxy is Owned {
     address public constant escrow = address(0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2);
     address public constant gaugeController = address(0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB);
     IFeeDistro public feeDistroDefault = IFeeDistro(0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc);
-    
+
     address public operator;
     address public depositor;
 
-
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(
-        address _owner,
-        address _operator,
-        address _depositor
-    ) Owned(_owner) {
+    constructor(address _owner, address _operator, address _depositor) Owned(_owner) {
         operator = _operator;
         depositor = _depositor;
     }
@@ -141,28 +137,30 @@ contract CurveVoterProxy is Owned {
         return true;
     }
 
-    function voteGaugeWeightMany(address[] memory _gauges, uint256[] memory _weights) external onlyOperator returns (bool) {
-        for (uint256 i = 0; i < _gauges.length; i++){
+    function voteGaugeWeightMany(address[] memory _gauges, uint256[] memory _weights)
+        external
+        onlyOperator
+        returns (bool)
+    {
+        for (uint256 i = 0; i < _gauges.length; i++) {
             voteGaugeWeight(_gauges[i], _weights[i]);
         }
-        
+
         return true;
     }
 
     function claimCrv(address _gauge) public onlyOperator returns (uint256) {
         uint256 _balance = 0;
-        try IMinter(mintr).mint(_gauge){
+        try IMinter(mintr).mint(_gauge) {
             _balance = IERC20(crv).balanceOf(address(this));
-        } catch {
-
-        }
+        } catch {}
 
         return _balance;
     }
 
     function claimCrvMany(address[] memory _gauges) external onlyOperator returns (uint256[] memory balances) {
-        for (uint256 i = 0; i < _gauges.length; i++){
-           balances[i] = claimCrv(_gauges[i]);
+        for (uint256 i = 0; i < _gauges.length; i++) {
+            balances[i] = claimCrv(_gauges[i]);
         }
     }
 
@@ -172,8 +170,8 @@ contract CurveVoterProxy is Owned {
     }
 
     function claimRewardsMany(address[] memory _gauges) external onlyOperator returns (bool) {
-        for (uint256 i = 0; i < _gauges.length; i++){
-           claimRewards(_gauges[i]);
+        for (uint256 i = 0; i < _gauges.length; i++) {
+            claimRewards(_gauges[i]);
         }
         return true;
     }
@@ -184,24 +182,38 @@ contract CurveVoterProxy is Owned {
         feeDistroDefault.claim_many([p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p]);
 
         // Gauge specific rewards
-        for (uint256 i = 0; i < _gauges.length; i++){
-           claimCrv(_gauges[i]);
-           claimRewards(_gauges[i]);
+        for (uint256 i = 0; i < _gauges.length; i++) {
+            claimCrv(_gauges[i]);
+            claimRewards(_gauges[i]);
         }
         return true;
     }
 
-    function claimFees(address _distroContract, address _token, uint256 /*arr_length*/) public onlyOperator returns (uint256) {
+    function claimFees(
+        address _distroContract,
+        address _token,
+        uint256 /*arr_length*/
+    )
+        public
+        onlyOperator
+        returns (uint256)
+    {
         address p = address(this);
         IFeeDistro(_distroContract).claim_many([p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p]);
         uint256 _balance = IERC20(_token).balanceOf(address(this));
         IERC20(_token).safeTransfer(operator, _balance);
         return _balance;
-    }  
+    }
 
-    function recoverManyERC20s(address[] memory tokenAddresses, uint256[] memory tokenAmounts, bool withdraw_entire_balance) external onlyOperator { 
-        for (uint256 i = 0; i < tokenAddresses.length; i++){
-            uint256 balance_to_use = withdraw_entire_balance ? IERC20(tokenAddresses[i]).balanceOf(address(this)) : tokenAmounts[i];
+    function recoverManyERC20s(
+        address[] memory tokenAddresses,
+        uint256[] memory tokenAmounts,
+        bool withdraw_entire_balance
+    ) external onlyOperator {
+        for (uint256 i = 0; i < tokenAddresses.length; i++) {
+            uint256 balance_to_use = withdraw_entire_balance
+                ? IERC20(tokenAddresses[i]).balanceOf(address(this))
+                : tokenAmounts[i];
             IERC20(tokenAddresses[i]).safeTransfer(operator, balance_to_use);
         }
     }
@@ -216,12 +228,12 @@ contract CurveVoterProxy is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyOperator returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyOperator
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
 
         return (success, result);
     }

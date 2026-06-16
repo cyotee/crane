@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ConstantsLib} from './ConstantsLib.sol';
+import {ConstantsLib} from "./ConstantsLib.sol";
 
 struct Bid {
     uint64 startBlock; // Block number when the bid was first made in

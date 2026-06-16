@@ -4,7 +4,7 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/FraxMiddlemanGauge.sol";
 
 contract FraxMiddlemanGauge_FRAX_mUSD is FraxMiddlemanGauge {
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _rewards_distributor_address,
@@ -13,7 +13,16 @@ contract FraxMiddlemanGauge_FRAX_mUSD is FraxMiddlemanGauge {
         address _destination_address_override,
         string memory _non_evm_destination_address,
         string memory _name
-    ) 
-    FraxMiddlemanGauge(_owner, _timelock_address, _rewards_distributor_address, _bridge_address, _bridge_type, _destination_address_override, _non_evm_destination_address, _name)
+    )
+        FraxMiddlemanGauge(
+            _owner,
+            _timelock_address,
+            _rewards_distributor_address,
+            _bridge_address,
+            _bridge_type,
+            _destination_address_override,
+            _non_evm_destination_address,
+            _name
+        )
     {}
 }

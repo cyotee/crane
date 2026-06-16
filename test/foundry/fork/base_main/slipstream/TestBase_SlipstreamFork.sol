@@ -19,7 +19,7 @@ abstract contract TestBase_SlipstreamFork is Test {
     /// @dev Block number for fork reproducibility (Jan 2026 - adjust as needed)
     /// Use a recent block with known pool states for deterministic testing
     /// Block 28,000,000 is a more recent block where AERO/USDC pool has liquidity
-    uint256 internal constant FORK_BLOCK = 28_000_000;
+    uint256 internal constant FORK_BLOCK = BASE_MAIN.DEFAULT_FORK_BLOCK;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */

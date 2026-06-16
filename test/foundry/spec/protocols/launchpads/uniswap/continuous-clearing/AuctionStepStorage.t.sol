@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {AuctionStepsBuilder} from './utils/AuctionStepsBuilder.sol';
-import {MockStepStorage} from './utils/MockStepStorage.sol';
-import {Test} from 'forge-std/Test.sol';
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {StepLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
+import {AuctionStep} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
+import {AuctionStepsBuilder} from "./utils/AuctionStepsBuilder.sol";
+import {MockStepStorage} from "./utils/MockStepStorage.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract AuctionStepStorageTest is Test {
     using AuctionStepsBuilder for bytes;
@@ -73,7 +73,7 @@ contract AuctionStepStorageTest is Test {
 
     function test_constructor_revertsWithInvalidEndBlock() public {
         // Not checked in this test
-        bytes memory auctionStepsData = bytes('');
+        bytes memory auctionStepsData = bytes("");
         vm.expectRevert(IStepStorage.InvalidEndBlock.selector);
         // Endblock is before startblock
         _create(auctionStepsData, 1, 0);
@@ -142,7 +142,7 @@ contract AuctionStepStorageTest is Test {
     }
 
     function test_emptyAuctionStepsData_reverts_withInvalidAuctionDataLength() public {
-        bytes memory auctionStepsData = bytes('');
+        bytes memory auctionStepsData = bytes("");
         vm.expectRevert(IStepStorage.InvalidAuctionDataLength.selector);
         _create(auctionStepsData, auctionStartBlock, auctionStartBlock + 1e7);
     }

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
-import {IERC721Events} from '@crane/contracts/interfaces/IERC721Events.sol';
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 // import {IERC721Errors} from '@crane/contracts/interfaces/IERC721Errors.sol';
 import {ERC721 as SoladyERC721} from "@crane/contracts/external/solady/tokens/ERC721.sol";
 
@@ -225,7 +225,7 @@ abstract contract ERC721 is SoladyERC721 {
      * @dev Converts a uint256 to its ASCII string decimal representation.
      */
     function _toString(uint256 value) internal pure virtual returns (string memory str) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Max length of uint256 as decimal string is 78 digits
             str := add(mload(0x40), 0x80)
             mstore(0x40, str)

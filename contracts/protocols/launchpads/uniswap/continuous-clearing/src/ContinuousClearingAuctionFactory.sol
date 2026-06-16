@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {ContinuousClearingAuction} from './ContinuousClearingAuction.sol';
-import {AuctionParameters} from './interfaces/IContinuousClearingAuction.sol';
-import {IContinuousClearingAuctionFactory} from './interfaces/IContinuousClearingAuctionFactory.sol';
-import {IDistributionContract} from './interfaces/external/IDistributionContract.sol';
-import {IDistributionStrategy} from './interfaces/external/IDistributionStrategy.sol';
+import {ContinuousClearingAuction} from "./ContinuousClearingAuction.sol";
+import {AuctionParameters} from "./interfaces/IContinuousClearingAuction.sol";
+import {IContinuousClearingAuctionFactory} from "./interfaces/IContinuousClearingAuctionFactory.sol";
+import {IDistributionContract} from "./interfaces/external/IDistributionContract.sol";
+import {IDistributionStrategy} from "./interfaces/external/IDistributionStrategy.sol";
 
-import {Create2} from 'contracts/utils/Create2.sol';
-import {ActionConstants} from 'contracts/protocols/dexes/uniswap/v4/libraries/ActionConstants.sol';
+import {Create2} from "contracts/utils/Create2.sol";
+import {ActionConstants} from "contracts/protocols/dexes/uniswap/v4/libraries/ActionConstants.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title ContinuousClearingAuctionFactory
 /// @custom:security-contact security@uniswap.org
 contract ContinuousClearingAuctionFactory is IContinuousClearingAuctionFactory {
-    
     using BetterEfficientHashLib for bytes;
 
     /// @inheritdoc IDistributionStrategy
@@ -61,8 +60,8 @@ contract ContinuousClearingAuctionFactory is IContinuousClearingAuctionFactory {
         //     )
         // );
         bytes32 initCodeHash = abi.encodePacked(
-            type(ContinuousClearingAuction).creationCode, abi.encode(token, uint128(amount), parameters)
-        )._hash();
+                type(ContinuousClearingAuction).creationCode, abi.encode(token, uint128(amount), parameters)
+            )._hash();
         // salt = keccak256(abi.encode(sender, salt));
         salt = abi.encode(sender, salt)._hash();
         return Create2.computeAddress(salt, initCodeHash, address(this));

@@ -3,26 +3,30 @@ pragma solidity ^0.8.35;
 
 import {CommonBase} from "forge-std/Base.sol";
 import {stdJson} from "forge-std/StdJson.sol";
-import {IERC20Metadata as IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {
+    IERC20Metadata as IERC20
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
-import {IUserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IUserProxy.sol";
-import {CurveV2GaugeRewards} from "@crane/contracts/protocols/staking/liquity/v2/gov/CurveV2GaugeRewards.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {IExchangeHelpers} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IExchangeHelpers.sol";
-import {ILeverageZapper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/ILeverageZapper.sol";
-import {IZapper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IZapper.sol";
-import {IActivePool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IActivePool.sol";
-import {IAddressesRegistry} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
-import {IBoldToken} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBoldToken.sol";
-import {IBorrowerOperations} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
-import {ICollateralRegistry} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
-import {IDefaultPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IDefaultPool.sol";
-import {IHintHelpers} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IHintHelpers.sol";
-import {ISortedTroves} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ISortedTroves.sol";
-import {ITroveManager} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveManager.sol";
-import {ITroveNFT} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveNFT.sol";
-import {IPriceFeed} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IPriceFeed.sol";
-import {IStabilityPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPool.sol";
+import {IUserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IUserProxy.sol";
+import {CurveV2GaugeRewards} from "@crane/contracts/protocols/cdps/liquity/v2/gov/CurveV2GaugeRewards.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {
+    IExchangeHelpers
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IExchangeHelpers.sol";
+import {ILeverageZapper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/ILeverageZapper.sol";
+import {IZapper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IZapper.sol";
+import {IActivePool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IActivePool.sol";
+import {IAddressesRegistry} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
+import {IBoldToken} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBoldToken.sol";
+import {IBorrowerOperations} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
+import {ICollateralRegistry} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
+import {IDefaultPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IDefaultPool.sol";
+import {IHintHelpers} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IHintHelpers.sol";
+import {ISortedTroves} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ISortedTroves.sol";
+import {ITroveManager} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveManager.sol";
+import {ITroveNFT} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveNFT.sol";
+import {IPriceFeed} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IPriceFeed.sol";
+import {IStabilityPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPool.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {ICurveStableSwapNG} from "../Interfaces/Curve/ICurveStableSwapNG.sol";
 import {ILiquidityGaugeV6} from "../Interfaces/Curve/ILiquidityGaugeV6.sol";

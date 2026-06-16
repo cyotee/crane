@@ -70,19 +70,15 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
 
     // -------------- Hooks --------------
 
-    function onUpdate(
-        ICurves _curve,
-        uint256 _relicId,
-        uint256 _amount,
-        uint256 _oldLevel,
-        uint256 _newLevel
-    ) external override onlyReliquary {
+    function onUpdate(ICurves _curve, uint256 _relicId, uint256 _amount, uint256 _oldLevel, uint256 _newLevel)
+        external
+        override
+        onlyReliquary
+    {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onUpdate(
-                _curve, _relicId, _amount, _oldLevel, _newLevel
-            );
+            IRewarder(childrenRewarders.at(i_)).onUpdate(_curve, _relicId, _amount, _oldLevel, _newLevel);
         }
     }
 
@@ -105,9 +101,8 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onDeposit(
-                _curve, _relicId, _depositAmount, _oldAmount, _oldLevel, _newLevel
-            );
+            IRewarder(childrenRewarders.at(i_))
+                .onDeposit(_curve, _relicId, _depositAmount, _oldAmount, _oldLevel, _newLevel);
         }
     }
 
@@ -122,9 +117,8 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onWithdraw(
-                _curve, _relicId, _withdrawAmount, _oldAmount, _oldLevel, _newLevel
-            );
+            IRewarder(childrenRewarders.at(i_))
+                .onWithdraw(_curve, _relicId, _withdrawAmount, _oldAmount, _oldLevel, _newLevel);
         }
     }
 
@@ -139,9 +133,7 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onSplit(
-                _curve, _fromId, _newId, _amount, _fromAmount, _level
-            );
+            IRewarder(childrenRewarders.at(i_)).onSplit(_curve, _fromId, _newId, _amount, _fromAmount, _level);
         }
     }
 
@@ -159,17 +151,10 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onShift(
-                _curve,
-                _fromId,
-                _toId,
-                _amount,
-                _oldFromAmount,
-                _oldToAmount,
-                _fromLevel,
-                _oldToLevel,
-                _newToLevel
-            );
+            IRewarder(childrenRewarders.at(i_))
+                .onShift(
+                    _curve, _fromId, _toId, _amount, _oldFromAmount, _oldToAmount, _fromLevel, _oldToLevel, _newToLevel
+                );
         }
     }
 
@@ -186,9 +171,8 @@ contract ParentRollingRewarder is IParentRollingRewarder, Ownable {
         uint256 length_ = childrenRewarders.length();
 
         for (uint256 i_; i_ < length_; ++i_) {
-            IRewarder(childrenRewarders.at(i_)).onMerge(
-                _curve, _fromId, _toId, _fromAmount, _toAmount, _fromLevel, _oldToLevel, _newToLevel
-            );
+            IRewarder(childrenRewarders.at(i_))
+                .onMerge(_curve, _fromId, _toId, _fromAmount, _toAmount, _fromLevel, _oldToLevel, _newToLevel);
         }
     }
 

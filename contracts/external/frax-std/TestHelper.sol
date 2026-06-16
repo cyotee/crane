@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract TestHelper is Test {
     // helper to move forward one block

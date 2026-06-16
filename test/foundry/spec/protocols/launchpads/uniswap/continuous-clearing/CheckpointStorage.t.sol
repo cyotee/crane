@@ -1,19 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ICheckpointStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ICheckpointStorage.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {CheckpointLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {Assertions} from './utils/Assertions.sol';
-import {MockCheckpointStorage} from './utils/MockCheckpointStorage.sol';
-import {Test} from 'forge-std/Test.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {
+    ICheckpointStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ICheckpointStorage.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {
+    CheckpointAccountingLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {
+    CheckpointLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {StepLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {Assertions} from "./utils/Assertions.sol";
+import {MockCheckpointStorage} from "./utils/MockCheckpointStorage.sol";
+import {Test} from "forge-std/Test.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract CheckpointStorageTest is Assertions, Test {
     MockCheckpointStorage public mockCheckpointStorage;

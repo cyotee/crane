@@ -3,7 +3,7 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 import {TargetFunctions} from "../TargetFunctions.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
 import {FoundryAsserts} from "@crane/contracts/external/chimera/FoundryAsserts.sol";
 
 import {console} from "forge-std/console.sol";

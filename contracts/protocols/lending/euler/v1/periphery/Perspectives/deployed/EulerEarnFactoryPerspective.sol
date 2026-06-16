@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import {IEulerEarnFactory} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/interfaces/IEulerEarnFactory.sol";
+import {
+    IEulerEarnFactory
+} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/interfaces/IEulerEarnFactory.sol";
 import {BasePerspective} from "../implementation/BasePerspective.sol";
 
 /// @title EulerEarnFactoryPerspective

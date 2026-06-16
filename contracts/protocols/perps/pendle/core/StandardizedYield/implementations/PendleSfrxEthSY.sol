@@ -12,11 +12,9 @@ contract PendleSfrxEthSY is SYBase {
     address public immutable frxETH;
     address public immutable sfrxETH;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _minter
-    ) SYBase(_name, _symbol, IFrxEthMinter(_minter).sfrxETHToken()) {
+    constructor(string memory _name, string memory _symbol, address _minter)
+        SYBase(_name, _symbol, IFrxEthMinter(_minter).sfrxETHToken())
+    {
         minter = _minter;
         sfrxETH = IFrxEthMinter(minter).sfrxETHToken();
         frxETH = IFrxEthMinter(minter).frxETHToken();
@@ -33,10 +31,14 @@ contract PendleSfrxEthSY is SYBase {
      * deposits through fraxMinterContract - the most efficient way to get frxETH and deposit
      * directly to sfrxETH.
      */
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             return IFrxEthMinter(minter).submitAndDeposit{value: amountDeposited}(address(this));
         } else if (tokenIn == frxETH) {
@@ -50,11 +52,14 @@ contract PendleSfrxEthSY is SYBase {
      * Withdrawal to sfrxETH and frxETH is done normally as other ERC4626.
      * Withdrawal to ETH is on the other hand not possible
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         if (tokenOut == sfrxETH) {
             _transferOut(sfrxETH, receiver, amountSharesToRedeem);
             return amountSharesToRedeem;
@@ -79,10 +84,14 @@ contract PendleSfrxEthSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == sfrxETH) {
             return amountTokenToDeposit;
         } else {
@@ -90,10 +99,14 @@ contract PendleSfrxEthSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         if (tokenOut == sfrxETH) {
             return amountSharesToRedeem;
         } else {

@@ -65,8 +65,16 @@ contract PendleHlpSY is SYBaseWithRewardsUpg {
      */
     function _deposit(
         address,
-        /*tokenIn*/ uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+        /*tokenIn*/
+        uint256 amountDeposited
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         IHLPStaking(hlpStakingPool).deposit(address(this), amountDeposited);
         return amountDeposited;
     }
@@ -77,8 +85,16 @@ contract PendleHlpSY is SYBaseWithRewardsUpg {
     function _redeem(
         address receiver,
         address,
-        /*tokenOut*/ uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+        /*tokenOut*/
+        uint256 amountSharesToRedeem
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IHLPStaking(hlpStakingPool).withdraw(amountSharesToRedeem);
         _transferOut(hlp, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -123,15 +139,31 @@ contract PendleHlpSY is SYBaseWithRewardsUpg {
 
     function _previewDeposit(
         address,
-        /*tokenIn*/ uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 /*amountSharesOut*/) {
+        /*tokenIn*/
+        uint256 amountTokenToDeposit
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
         address,
-        /*tokenOut*/ uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+        /*tokenOut*/
+        uint256 amountSharesToRedeem
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

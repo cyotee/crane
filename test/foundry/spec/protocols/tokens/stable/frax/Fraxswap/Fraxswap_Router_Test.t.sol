@@ -4,8 +4,9 @@ pragma solidity ^0.8.35;
 /// @notice Local port of encode/deadline behavior from `fraxswap-router-test.js`.
 
 import {Test} from "forge-std/Test.sol";
-import {FraxswapRouterMultihop} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
+import {
+    FraxswapRouterMultihop
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
 import {IWETH} from "@crane/contracts/external/uniswap/v2-periphery/contracts/interfaces/IWETH.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
 
@@ -32,7 +33,8 @@ contract Fraxswap_Router_Test is Test {
 
     function test_encodeStep_roundTrip() public view {
         bytes memory step = router.encodeStep(0, 1, 0, address(fxs), address(0xBEEF), 1, 2, 10_000);
-        FraxswapRouterMultihop.FraxswapStepData memory decoded = abi.decode(step, (FraxswapRouterMultihop.FraxswapStepData));
+        FraxswapRouterMultihop.FraxswapStepData memory decoded =
+            abi.decode(step, (FraxswapRouterMultihop.FraxswapStepData));
         assertEq(decoded.swapType, 0);
         assertEq(decoded.directFundNextPool, 1);
         assertEq(decoded.directFundThisPool, 0);

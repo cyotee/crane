@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {AuctionParameters, IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
-import {AuctionParamsBuilder} from './utils/AuctionParamsBuilder.sol';
-import {AuctionStepsBuilder} from './utils/AuctionStepsBuilder.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    AuctionParameters,
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionBaseTest} from "./utils/AuctionBaseTest.sol";
+import {AuctionParamsBuilder} from "./utils/AuctionParamsBuilder.sol";
+import {AuctionStepsBuilder} from "./utils/AuctionStepsBuilder.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 /// @title AuctionStepDiffTest
 /// @notice Tests for different auction steps data combinations
@@ -21,9 +26,9 @@ contract AuctionStepDiffTest is AuctionBaseTest {
 
     function setUp() public {
         setUpTokens();
-        alice = makeAddr('alice');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         // Missing start block, end block, claim block, and auction steps data
         params = AuctionParamsBuilder.init().withCurrency(ETH_SENTINEL).withFloorPrice(FLOOR_PRICE)
@@ -61,7 +66,7 @@ contract AuctionStepDiffTest is AuctionBaseTest {
             cumulativeMps += remainingSupply;
             cumulativeBlockDelta++;
         }
-        assertEq(cumulativeMps, ConstantsLib.MPS, 'fuzzed cumulative mps is not equal to the max mps');
+        assertEq(cumulativeMps, ConstantsLib.MPS, "fuzzed cumulative mps is not equal to the max mps");
         return (data, cumulativeMps, cumulativeBlockDelta);
     }
 
@@ -87,10 +92,10 @@ contract AuctionStepDiffTest is AuctionBaseTest {
         // Submit same bid to both auctions
         uint128 inputAmount = inputAmountForTokens(1000e18, tickNumberToPriceX96(2));
         firstAuction.submitBid{value: inputAmount}(
-            tickNumberToPriceX96(2), inputAmount, alice, tickNumberToPriceX96(1), bytes('')
+            tickNumberToPriceX96(2), inputAmount, alice, tickNumberToPriceX96(1), bytes("")
         );
         secondAuction.submitBid{value: inputAmount}(
-            tickNumberToPriceX96(2), inputAmount, alice, tickNumberToPriceX96(1), bytes('')
+            tickNumberToPriceX96(2), inputAmount, alice, tickNumberToPriceX96(1), bytes("")
         );
 
         vm.roll(firstAuction.endBlock());
@@ -127,7 +132,7 @@ contract AuctionStepDiffTest is AuctionBaseTest {
 
         vm.roll(startBlock);
         uint256 bidId =
-            newAuction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, tickNumberToPriceX96(1), bytes(''));
+            newAuction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, tickNumberToPriceX96(1), bytes(""));
 
         // Show you can checkpoint when the step is zero mps
         vm.roll(startBlock + 1e7 + 1);
@@ -137,7 +142,7 @@ contract AuctionStepDiffTest is AuctionBaseTest {
 
         // The auction has fully sold out 1e7 mps worth of tokens, so all future bids will revert
         vm.expectRevert(IContinuousClearingAuction.AuctionSoldOut.selector);
-        newAuction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, tickNumberToPriceX96(1), bytes(''));
+        newAuction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, tickNumberToPriceX96(1), bytes(""));
 
         vm.roll(endBlock);
         {

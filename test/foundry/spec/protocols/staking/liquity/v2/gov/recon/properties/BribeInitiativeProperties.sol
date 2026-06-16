@@ -2,7 +2,7 @@
 pragma solidity ^0.8.35;
 
 import {BeforeAfter} from "../BeforeAfter.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
 
 abstract contract BribeInitiativeProperties is BeforeAfter {
     function property_BI01() public {

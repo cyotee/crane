@@ -1,39 +1,39 @@
 // SPDX-License-Identifier: LicenseRef-BUSL
 pragma solidity ^0.8.20;
 
-import {SafeERC20, IERC20} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/SafeERC20.sol';
-import {Address} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/Address.sol';
-import {IRescuable} from '@crane/contracts/protocols/lending/aave/v4/interfaces/IRescuable.sol';
+import {SafeERC20, IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
+import {IRescuable} from "@crane/contracts/protocols/lending/aave/v4/interfaces/IRescuable.sol";
 
 /// @title Rescuable
 /// @author Aave Labs
 /// @notice Contract that allows for the rescue of tokens and native assets.
 abstract contract Rescuable is IRescuable {
-  using SafeERC20 for IERC20;
+    using SafeERC20 for IERC20;
 
-  modifier onlyRescueGuardian() {
-    _checkRescueGuardian();
-    _;
-  }
+    modifier onlyRescueGuardian() {
+        _checkRescueGuardian();
+        _;
+    }
 
-  /// @inheritdoc IRescuable
-  function rescueToken(address token, address to, uint256 amount) external onlyRescueGuardian {
-    IERC20(token).safeTransfer(to, amount);
-  }
+    /// @inheritdoc IRescuable
+    function rescueToken(address token, address to, uint256 amount) external onlyRescueGuardian {
+        IERC20(token).safeTransfer(to, amount);
+    }
 
-  /// @inheritdoc IRescuable
-  function rescueNative(address to, uint256 amount) external onlyRescueGuardian {
-    Address.sendValue(payable(to), amount);
-  }
+    /// @inheritdoc IRescuable
+    function rescueNative(address to, uint256 amount) external onlyRescueGuardian {
+        Address.sendValue(payable(to), amount);
+    }
 
-  /// @inheritdoc IRescuable
-  function rescueGuardian() external view returns (address) {
-    return _rescueGuardian();
-  }
+    /// @inheritdoc IRescuable
+    function rescueGuardian() external view returns (address) {
+        return _rescueGuardian();
+    }
 
-  function _rescueGuardian() internal view virtual returns (address);
+    function _rescueGuardian() internal view virtual returns (address);
 
-  function _checkRescueGuardian() internal view virtual {
-    require(_rescueGuardian() == msg.sender, OnlyRescueGuardian());
-  }
+    function _checkRescueGuardian() internal view virtual {
+        require(_rescueGuardian() == msg.sender, OnlyRescueGuardian());
+    }
 }

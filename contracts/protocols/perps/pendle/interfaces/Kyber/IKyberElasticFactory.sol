@@ -11,11 +11,7 @@ interface IKyberElasticFactory {
     /// @param tickDistance Minimum number of ticks between initialized ticks
     /// @param pool The address of the created pool
     event PoolCreated(
-        address indexed token0,
-        address indexed token1,
-        uint24 indexed swapFeeUnits,
-        int24 tickDistance,
-        address pool
+        address indexed token0, address indexed token1, uint24 indexed swapFeeUnits, int24 tickDistance, address pool
     );
 
     /// @notice Emitted when a new fee is enabled for pool creation via the factory

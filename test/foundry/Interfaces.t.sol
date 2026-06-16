@@ -4,15 +4,19 @@ pragma solidity ^0.8.0;
 import {betterconsole as console} from "@crane/contracts/utils/vm/foundry/tools/betterconsole.sol";
 import {CraneTest} from "@crane/contracts/test/CraneTest.sol";
 
-import {IOperable} from '@crane/contracts/access/operable/IOperable.sol';
+import {IOperable} from "@crane/contracts/access/operable/IOperable.sol";
 
 contract Interfaces is CraneTest {
-
     function test() public pure {
         console.log("IOperable interface ID: ", type(IOperable).interfaceId);
         console.logBytes4(type(IOperable).interfaceId);
-        console.log("IOperable NewGlobalOperatorStatus topic hash: ", keccak256("NewGlobalOperatorStatus(address,bool)"));
-        console.log("IOperable NewFunctionOperatorStatus topic hash: ", keccak256("NewFunctionOperatorStatus(address,bytes4,bool)"));
+        console.log(
+            "IOperable NewGlobalOperatorStatus topic hash: ", keccak256("NewGlobalOperatorStatus(address,bool)")
+        );
+        console.log(
+            "IOperable NewFunctionOperatorStatus topic hash: ",
+            keccak256("NewFunctionOperatorStatus(address,bytes4,bool)")
+        );
         console.log("IOperable NotOperator selector: ", IOperable.NotOperator.selector);
         console.logBytes4(IOperable.NotOperator.selector);
         console.log("IOperable isOperator selector: ", IOperable.isOperator.selector);
@@ -24,5 +28,4 @@ contract Interfaces is CraneTest {
         console.log("IOperable setOperatorFor selector:", IOperable.setOperatorFor.selector);
         console.logBytes4(IOperable.setOperatorFor.selector);
     }
-
 }

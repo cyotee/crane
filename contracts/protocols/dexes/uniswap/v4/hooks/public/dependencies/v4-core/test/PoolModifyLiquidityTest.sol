@@ -70,8 +70,7 @@ contract PoolModifyLiquidityTest is PoolTestBase {
         (,, int256 delta1) = _fetchBalances(data.key.currency1, data.sender, address(this));
 
         require(
-            int128(liquidityBefore) + data.params.liquidityDelta == int128(liquidityAfter),
-            "liquidity change incorrect"
+            int128(liquidityBefore) + data.params.liquidityDelta == int128(liquidityAfter), "liquidity change incorrect"
         );
 
         if (data.params.liquidityDelta < 0) {

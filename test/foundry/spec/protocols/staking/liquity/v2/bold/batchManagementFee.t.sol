@@ -367,7 +367,8 @@ contract BatchManagementFeeTest is DevTestSetup {
 
         assertApproxEqAbs(
             activePool.aggRecordedDebt(),
-            activePoolInitialDebt + batchAccruedInterest + batchAccruedManagementFee + troveAccruedInterest + upfrontFee,
+            activePoolInitialDebt + batchAccruedInterest + batchAccruedManagementFee + troveAccruedInterest
+                + upfrontFee,
             10
         );
     }

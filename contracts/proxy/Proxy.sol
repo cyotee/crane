@@ -1,24 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// tag::Proxy[]
 /**
- * @dev This abstract contract provides a fallback function that delegates all calls to another contract using the EVM
- * instruction `delegatecall`.
- * @notice Native Crane implementation - no external dependencies
- *
- * We refer to the second contract as the _implementation_ behind the proxy, and it has to
- * be specified by overriding the virtual {_implementation} function.
- *
- * Additionally, delegation to the implementation can be triggered manually through the {_fallback} function, or to a
- * different contract through the {_delegate} function.
- *
- * The success and return data of the delegated call will be returned back to the caller of the proxy.
+ * @title Proxy
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @notice Abstract base contract providing a fallback that delegates all calls to an implementation contract
+ *         using the EVM `delegatecall` instruction.
+ * @dev Native Crane implementation - no external dependencies.
+ * @dev This is the low-level proxy utility. The implementation address is supplied by overriding the virtual
+ *      {_implementation} function. Delegation can also be triggered via {_fallback} or directly via {_delegate}.
+ * @dev The success status and return data from the delegated call are forwarded directly to the proxy's caller.
+ *      No other functions are defined; inheritors supply the resolution logic.
  */
 abstract contract Proxy {
+    // tag::_delegate(address)[]
     /**
-     * @dev Delegates the current call to `implementation`.
-     *
-     * This function does not return to its internal call site, it will return directly to the external caller.
+     * @notice Delegates the current call to `implementation`.
+     * @dev This function does not return to its internal call site; it returns directly to the external caller.
+     * @dev The assembly takes full control of memory (overwrites Solidity scratch pad at position 0) and never
+     *      returns to calling Solidity code.
+     * @param implementation The address of the contract to which the call is delegated.
      */
     function _delegate(address implementation) internal virtual {
         assembly {
@@ -40,27 +42,35 @@ abstract contract Proxy {
             default { return(0, returndatasize()) }
         }
     }
+    // end::_delegate(address)[]
 
+    // tag::_implementation()[]
     /**
-     * @dev This is a virtual function that should be overridden so it returns the address to which the fallback
-     * function and {_fallback} should delegate.
+     * @notice Returns the address of the implementation contract to which calls should be delegated.
+     * @dev This is a virtual function that must be overridden by inheritors to supply the delegation target.
+     * @return The implementation address.
      */
     function _implementation() internal view virtual returns (address);
+    // end::_implementation()[]
 
+    // tag::_fallback()[]
     /**
-     * @dev Delegates the current call to the address returned by `_implementation()`.
-     *
-     * This function does not return to its internal call site, it will return directly to the external caller.
+     * @notice Delegates the current call to the address returned by {_implementation()}.
+     * @dev This function does not return to its internal call site; it returns directly to the external caller.
      */
     function _fallback() internal virtual {
         _delegate(_implementation());
     }
+    // end::_fallback()[]
 
+    // tag::fallback()[]
     /**
-     * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if no other
-     * function in the contract matches the call data.
+     * @notice Fallback function that delegates calls to the address returned by {_implementation()}.
+     * @dev Will run if no other function in the contract matches the call data. Payable to support value transfers.
      */
     fallback() external payable virtual {
         _fallback();
     }
+    // end::fallback()[]
 }
+// end::Proxy[]

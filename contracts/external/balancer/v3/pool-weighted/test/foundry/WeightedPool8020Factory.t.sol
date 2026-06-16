@@ -15,9 +15,7 @@ import {
     TokenType,
     PoolRoleAccounts
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IVaultMock} from "@crane/contracts/external/balancer/v3/interfaces/contracts/test/IVaultMock.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 

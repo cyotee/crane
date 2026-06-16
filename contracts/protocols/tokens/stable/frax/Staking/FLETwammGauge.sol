@@ -21,15 +21,14 @@ pragma solidity ^0.8.35;
 // Sam Kazemian: https://github.com/samkazemian
 // Dennis: https://github.com/denett
 
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/FXS/IFxs.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/OwnedV2.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interface.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 
 contract FLETwammGauge is OwnedV2 {
-
     // Core
     IFxs public FXS = IFxs(0xFc00000000000000000000000000000000000002);
     IERC20 public otherToken;
@@ -53,11 +52,7 @@ contract FLETwammGauge is OwnedV2 {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _ownerAddress,
-        address _operatorAddress,
-        address _fraxswap_pair
-    ) OwnedV2(_ownerAddress) {
+    constructor(address _ownerAddress, address _operatorAddress, address _fraxswap_pair) OwnedV2(_ownerAddress) {
         // Set operator
         operatorAddress = _operatorAddress;
 
@@ -69,8 +64,7 @@ contract FLETwammGauge is OwnedV2 {
         if (_token0 == address(FXS)) {
             isFxsToken0 = true;
             otherToken = IERC20(fraxswapPair.token1());
-        }
-        else {
+        } else {
             isFxsToken0 = false;
             otherToken = IERC20(_token0);
         }
@@ -79,11 +73,14 @@ contract FLETwammGauge is OwnedV2 {
         numTwammIntervals = swapPeriod / fraxswapPair.orderTimeInterval();
     }
 
-
     /* ========== MUTATIVE ========== */
 
     // Use the TWAMM
-    function twammLongTermSwap(uint256 _fxsSellAmount) external onlyByOwnerOrOperator returns (uint256 _fxsToUse, uint256 new_order_id) {
+    function twammLongTermSwap(uint256 _fxsSellAmount)
+        external
+        onlyByOwnerOrOperator
+        returns (uint256 _fxsToUse, uint256 new_order_id)
+    {
         // Sell FXS for another asset
         // --------------------------------
         _fxsToUse = _fxsSellAmount;
@@ -100,8 +97,7 @@ contract FLETwammGauge is OwnedV2 {
         // Swap
         if (isFxsToken0) {
             new_order_id = fraxswapPair.longTermSwapFrom0To1(_fxsToUse, numTwammIntervals);
-        }
-        else {
+        } else {
             new_order_id = fraxswapPair.longTermSwapFrom1To0(_fxsToUse, numTwammIntervals);
         }
 
@@ -124,7 +120,7 @@ contract FLETwammGauge is OwnedV2 {
 
     function collectCurrTWAMMProceeds(uint256 _order_id, bool _send_to_msig) external onlyByOwnerOrOperator {
         // Collect current proceeds.
-        ( , , uint256 _otherCollected) = fraxswapPair.withdrawProceedsFromLongTermSwap(_order_id);
+        (,, uint256 _otherCollected) = fraxswapPair.withdrawProceedsFromLongTermSwap(_order_id);
 
         // Optionally send the collected otherToken to the msig
         if (_send_to_msig) TransferHelper.safeTransfer(address(otherToken), owner, _otherCollected);
@@ -135,7 +131,6 @@ contract FLETwammGauge is OwnedV2 {
     // Send all otherToken to the msig
     function sendOtherTokenToMsig() external onlyByOwnerOrOperator {
         TransferHelper.safeTransfer(address(otherToken), owner, otherToken.balanceOf(address(this)));
-
     }
 
     /* ========== RESTRICTED FUNCTIONS ========== */
@@ -153,7 +148,6 @@ contract FLETwammGauge is OwnedV2 {
     function setOperator(address _newOperatorAddress) external onlyOwner {
         operatorAddress = _newOperatorAddress;
     }
-
 
     // Added to support other mistaken tokens
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {

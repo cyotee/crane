@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockTickStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockTickStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
 
 contract UpdateTickDemandTest is BttBase {
     function test_WhenTickIsUninitialized(uint64 _tickSize, uint64 _floorIndex, uint256 _priceTick, uint128 _demand)

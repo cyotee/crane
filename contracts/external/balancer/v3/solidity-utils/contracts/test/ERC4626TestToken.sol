@@ -7,9 +7,7 @@ import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {ERC4626} from "@crane/contracts/tokens/ERC20/extensions/ERC4626.sol";
 import {Math} from "@crane/contracts/utils/Math.sol";
 
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 
 import {ERC20TestToken} from "./ERC20TestToken.sol";
 import {FixedPoint} from "../math/FixedPoint.sol";

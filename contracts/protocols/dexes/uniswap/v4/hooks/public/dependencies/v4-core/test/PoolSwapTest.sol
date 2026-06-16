@@ -38,8 +38,7 @@ contract PoolSwapTest is PoolTestBase {
         returns (BalanceDelta delta)
     {
         delta = abi.decode(
-            manager.unlock(abi.encode(CallbackData(msg.sender, testSettings, key, params, hookData))),
-            (BalanceDelta)
+            manager.unlock(abi.encode(CallbackData(msg.sender, testSettings, key, params, hookData))), (BalanceDelta)
         );
 
         uint256 ethBalance = address(this).balance;

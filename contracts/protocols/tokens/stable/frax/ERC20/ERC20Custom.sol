@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/tokens/stable/frax/Common/Context.sol";
-import "./IERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Utils/Address.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
+import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 
 // Due to compiling issues, _name, _symbol, and _decimals were removed
-
 
 /**
  * @dev Implementation of the {IERC20} interface.
@@ -36,9 +35,9 @@ import "@crane/contracts/protocols/tokens/stable/frax/Utils/Address.sol";
 contract ERC20Custom is Context, IERC20 {
     using SafeMath for uint256;
 
-    mapping (address => uint256) internal _balances;
+    mapping(address => uint256) internal _balances;
 
-    mapping (address => mapping (address => uint256)) internal _allowances;
+    mapping(address => mapping(address => uint256)) internal _allowances;
 
     uint256 private _totalSupply;
 
@@ -102,7 +101,11 @@ contract ERC20Custom is Context, IERC20 {
      */
     function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
+        _approve(
+            sender,
+            _msgSender(),
+            _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance")
+        );
         return true;
     }
 
@@ -138,7 +141,11 @@ contract ERC20Custom is Context, IERC20 {
      * `subtractedValue`.
      */
     function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero"));
+        _approve(
+            _msgSender(),
+            spender,
+            _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero")
+        );
         return true;
     }
 
@@ -167,7 +174,8 @@ contract ERC20Custom is Context, IERC20 {
         emit Transfer(sender, recipient, amount);
     }
 
-    /** @dev Creates `amount` tokens and assigns them to `account`, increasing
+    /**
+     * @dev Creates `amount` tokens and assigns them to `account`, increasing
      * the total supply.
      *
      * Emits a {Transfer} event with `from` set to the zero address.
@@ -207,12 +215,12 @@ contract ERC20Custom is Context, IERC20 {
      * `amount`.
      */
     function burnFrom(address account, uint256 amount) public virtual {
-        uint256 decreasedAllowance = allowance(account, _msgSender()).sub(amount, "ERC20: burn amount exceeds allowance");
+        uint256 decreasedAllowance =
+            allowance(account, _msgSender()).sub(amount, "ERC20: burn amount exceeds allowance");
 
         _approve(account, _msgSender(), decreasedAllowance);
         _burn(account, amount);
     }
-
 
     /**
      * @dev Destroys `amount` tokens from `account`, reducing the
@@ -264,7 +272,11 @@ contract ERC20Custom is Context, IERC20 {
      */
     function _burnFrom(address account, uint256 amount) internal virtual {
         _burn(account, amount);
-        _approve(account, _msgSender(), _allowances[account][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance"));
+        _approve(
+            account,
+            _msgSender(),
+            _allowances[account][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance")
+        );
     }
 
     /**
@@ -281,5 +293,5 @@ contract ERC20Custom is Context, IERC20 {
      *
      * To learn more about hooks, head to xref:ROOT:using-hooks.adoc[Using Hooks].
      */
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual { }
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {}
 }

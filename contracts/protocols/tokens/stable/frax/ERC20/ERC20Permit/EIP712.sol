@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import "./ECDSA.sol";
 
 /**
@@ -57,9 +57,8 @@ abstract contract EIP712 {
         // bytes32 typeHash = keccak256(
         //     "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
         // );
-        bytes32 typeHash = bytes(
-            "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-        )._hash();
+        bytes32 typeHash =
+            bytes("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)")._hash();
         _HASHED_NAME = hashedName;
         _HASHED_VERSION = hashedVersion;
         _CACHED_CHAIN_ID = block.chainid;
@@ -78,11 +77,11 @@ abstract contract EIP712 {
         }
     }
 
-    function _buildDomainSeparator(
-        bytes32 typeHash,
-        bytes32 nameHash,
-        bytes32 versionHash
-    ) private view returns (bytes32) {
+    function _buildDomainSeparator(bytes32 typeHash, bytes32 nameHash, bytes32 versionHash)
+        private
+        view
+        returns (bytes32)
+    {
         // return keccak256(abi.encode(typeHash, nameHash, versionHash, block.chainid, address(this)));
         return abi.encode(typeHash, nameHash, versionHash, block.chainid, address(this))._hash();
     }

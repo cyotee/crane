@@ -20,16 +20,12 @@ contract AuraEthxBbAWethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
     bool internal constant NO_TOKENS_EXEMPT = true;
     bool internal constant ALL_TOKENS_EXEMPT = false;
 
-    constructor(
-        string memory _name,
-        string memory _symbol
-    )
+    constructor(string memory _name, string memory _symbol)
         BbAWethHelper(LinearPreview(LINEAR_PREVIEW), _BB_A_WETH, _BB_A_WETH_POOL_ID, _WA_WETH)
         PendleAuraBalancerStableLPSYV2(_name, _symbol, LP, AURA_PID, ComposableStablePreview(COMPOSABLE_PREVIEW))
-    //solhint-disable-next-line
-    {
+        //solhint-disable-next-line
 
-    }
+    {}
 
     function _deposit(address tokenIn, uint256 amount) internal override returns (uint256 amountSharesOut) {
         if (tokenIn == NATIVE || tokenIn == WETH || tokenIn == WA_WETH) {
@@ -40,11 +36,11 @@ contract AuraEthxBbAWethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE || tokenOut == WETH || tokenOut == WA_WETH) {
             uint256 amountBbAWeth = super._redeem(address(this), BB_A_WETH, amountSharesToRedeem);
             amountTokenOut = _redeemBbAWeth(receiver, tokenOut, amountBbAWeth);
@@ -53,10 +49,12 @@ contract AuraEthxBbAWethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
         }
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE || tokenIn == WETH || tokenIn == WA_WETH) {
             uint256 amountBbAWeth = _previewDepositBbAWeth(tokenIn, amountTokenToDeposit);
             amountSharesOut = super._previewDeposit(BB_A_WETH, amountBbAWeth);
@@ -65,10 +63,12 @@ contract AuraEthxBbAWethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE || tokenOut == WETH || tokenOut == WA_WETH) {
             uint256 amountBbAWeth = super._previewRedeem(BB_A_WETH, amountSharesToRedeem);
             amountTokenOut = _previewRedeemBbAWeth(tokenOut, amountBbAWeth);
@@ -136,12 +136,8 @@ contract AuraEthxBbAWethSY is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
     }
 
     function isValidTokenIn(address token) public view override returns (bool) {
-        return (token == NATIVE ||
-            token == WETH ||
-            token == WA_WETH ||
-            token == BB_A_WETH ||
-            token == ETHx ||
-            token == LP);
+        return (token == NATIVE || token == WETH || token == WA_WETH || token == BB_A_WETH || token == ETHx
+                || token == LP);
     }
 
     function isValidTokenOut(address token) public view override returns (bool) {

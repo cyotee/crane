@@ -33,7 +33,7 @@ library SafeMath {
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a + b;
         // require(c >= a, "SafeMath: addition overflow");
-        if(c < a) revert SafeMathAdditionOverflow();
+        if (c < a) revert SafeMathAdditionOverflow();
 
         return c;
     }
@@ -48,9 +48,7 @@ library SafeMath {
      * - Subtraction cannot overflow.
      */
     function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        
         return sub(a, b, "SafeMath: subtraction overflow");
-        
     }
 
     /**

@@ -3,10 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {
-    DiamondPackageCallBackFactoryAwareRepo,
-    DiamondPackageCallBackFactoryAwareLayout
-} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
+import {DiamondPackageCallBackFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 /**
@@ -57,7 +54,7 @@ contract DiamondPackageCallBackFactoryAwareRepo_Test is Test {
     }
 
     function test_storageSlot_isCorrectHash() public view {
-        bytes32 expected = keccak256("crane.diamond.package.callback.factory.aware");
+        bytes32 expected = bytes32(uint256(keccak256(abi.encode("crane.diamond.package.callback.factory.aware"))) - 1);
         assertEq(harness.storageSlot(), expected, "Storage slot should match expected hash");
     }
 

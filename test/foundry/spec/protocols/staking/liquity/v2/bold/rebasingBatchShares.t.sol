@@ -140,7 +140,13 @@ contract RebasingBatchShares is DevTestSetup {
         vm.stopPrank();
     }
 
-    function _logTrovesAndBatch(address batch, uint256 /* troveId */ ) internal view {
+    function _logTrovesAndBatch(
+        address batch,
+        uint256 /* troveId */
+    )
+        internal
+        view
+    {
         console2.log("");
         console2.log("Troves And Batch");
         // Log Batch Debt
@@ -232,20 +238,20 @@ contract RebasingBatchShares is DevTestSetup {
         uint256 _debt,
         address _batchAddress
     ) internal returns (uint256) {
-        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params = IBorrowerOperations
-            .OpenTroveAndJoinInterestBatchManagerParams({
-            owner: _troveOwner,
-            ownerIndex: _troveIndex,
-            collAmount: _coll,
-            boldAmount: _debt,
-            upperHint: 0,
-            lowerHint: 0,
-            interestBatchManager: _batchAddress,
-            maxUpfrontFee: 1e24,
-            addManager: address(0),
-            removeManager: address(0),
-            receiver: address(0)
-        });
+        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params =
+            IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                owner: _troveOwner,
+                ownerIndex: _troveIndex,
+                collAmount: _coll,
+                boldAmount: _debt,
+                upperHint: 0,
+                lowerHint: 0,
+                interestBatchManager: _batchAddress,
+                maxUpfrontFee: 1e24,
+                addManager: address(0),
+                removeManager: address(0),
+                receiver: address(0)
+            });
         vm.startPrank(_troveOwner);
         vm.expectRevert(TroveManager.BatchSharesRatioTooHigh.selector);
         uint256 troveId = borrowerOperations.openTroveAndJoinInterestBatchManager(params);
@@ -374,11 +380,7 @@ contract RebasingBatchShares is DevTestSetup {
 
         // Open a Trove to be liquidated
         (uint256 liquidatedTrove,) = openTroveWithExactICRAndDebt({
-            _account: D,
-            _index: 0,
-            _ICR: MCR,
-            _debt: 100_000 ether,
-            _interestRate: MIN_ANNUAL_INTEREST_RATE
+            _account: D, _index: 0, _ICR: MCR, _debt: 100_000 ether, _interestRate: MIN_ANNUAL_INTEREST_RATE
         });
 
         // Liquidate by redistribution

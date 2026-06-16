@@ -2,7 +2,9 @@
 pragma solidity ^0.8.17;
 
 import "../SYBase.sol";
-import {AggregatorV2V3Interface as IChainlinkAggregator} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
+import {
+    AggregatorV2V3Interface as IChainlinkAggregator
+} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
 
 contract PendleBridgedLSDSY is SYBase {
     using PMath for int256;
@@ -28,15 +30,24 @@ contract PendleBridgedLSDSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(address, uint256 amountDeposited) internal pure override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address, uint256 amountDeposited)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountDeposited;
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(tokenOut, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -46,7 +57,7 @@ contract PendleBridgedLSDSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function exchangeRate() public view override returns (uint256) {
-        (, int256 answer, , , ) = IChainlinkAggregator(chainlinkFeed).latestRoundData();
+        (, int256 answer,,,) = IChainlinkAggregator(chainlinkFeed).latestRoundData();
         return answer.Uint();
     }
 
@@ -54,17 +65,25 @@ contract PendleBridgedLSDSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import "./interfaces/IReliquary.sol";
 import "./interfaces/IParentRollingRewarder.sol";
 import "./interfaces/IRewarder.sol";
@@ -56,12 +56,9 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
      * @param _rewardToken The reward token contract address.
      * @param _emissionRate The contract address for the EmissionRate, which will return the emission rate.
      */
-    constructor(
-        address _rewardToken,
-        uint256 _emissionRate,
-        string memory _name,
-        string memory _symbol
-    ) ERC721(_name, _symbol) {
+    constructor(address _rewardToken, uint256 _emissionRate, string memory _name, string memory _symbol)
+        ERC721(_name, _symbol)
+    {
         rewardToken = _rewardToken;
         emissionRate = _emissionRate;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -264,10 +261,7 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
      * @param _relicId NFT ID of the position being withdrawn.
      * @param _harvestTo Address to send rewards to (zero address if harvest should not be performed).
      */
-    function withdraw(uint256 _amount, uint256 _relicId, address _harvestTo)
-        external
-        nonReentrant
-    {
+    function withdraw(uint256 _amount, uint256 _relicId, address _harvestTo) external nonReentrant {
         _requireApprovedOrOwner(_relicId);
         _withdraw(_amount, _relicId, _harvestTo);
     }
@@ -324,8 +318,7 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
         address rewarder_ = poolInfo[position.poolId].rewarder;
 
         if (rewarder_ != address(0)) {
-            (, uint256[] memory rewardAmounts_) =
-                IParentRollingRewarder(rewarder_).pendingTokens(_relicId);
+            (, uint256[] memory rewardAmounts_) = IParentRollingRewarder(rewarder_).pendingTokens(_relicId);
 
             for (uint256 i = 0; i < rewardAmounts_.length; i++) {
                 if (rewardAmounts_[i] != 0) revert Reliquary__BURNING_REWARDS();
@@ -342,11 +335,7 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
      * @param _to Address to mint the Relic to.
      * @return newId_ The NFT ID of the new Relic.
      */
-    function split(uint256 _fromId, uint256 _amount, address _to)
-        public
-        nonReentrant
-        returns (uint256 newId_)
-    {
+    function split(uint256 _fromId, uint256 _amount, address _to) public nonReentrant returns (uint256 newId_) {
         if (_amount == 0) revert Reliquary__ZERO_INPUT();
         _requireApprovedOrOwner(_fromId);
 
@@ -368,19 +357,16 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
         uint256 level_ = uint256(fromPosition.level);
         newPosition.level = uint40(level_);
 
-        uint256 multiplier_ = ReliquaryService._updatePool(
-            poolInfo[poolId_], emissionRate, totalAllocPoint
-        ) * pool.curve.getFunction(level_);
-        fromPosition.rewardCredit +=
-            Math.mulDiv(fromAmount_, multiplier_, ACC_REWARD_PRECISION) - fromPosition.rewardDebt;
+        uint256 multiplier_ = ReliquaryService._updatePool(poolInfo[poolId_], emissionRate, totalAllocPoint)
+            * pool.curve.getFunction(level_);
+        fromPosition.rewardCredit += Math.mulDiv(fromAmount_, multiplier_, ACC_REWARD_PRECISION)
+        - fromPosition.rewardDebt;
 
         fromPosition.rewardDebt = Math.mulDiv(newFromAmount_, multiplier_, ACC_REWARD_PRECISION);
         newPosition.rewardDebt = Math.mulDiv(_amount, multiplier_, ACC_REWARD_PRECISION);
 
         if (pool.rewarder != address(0)) {
-            IRewarder(pool.rewarder).onSplit(
-                pool.curve, _fromId, newId_, _amount, fromAmount_, level_
-            );
+            IRewarder(pool.rewarder).onSplit(pool.curve, _fromId, newId_, _amount, fromAmount_, level_);
         }
 
         emit ReliquaryEvents.Split(_fromId, newId_, _amount);
@@ -444,51 +430,40 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
 
         vars_.accRewardPerShare = ReliquaryService._updatePool(pool, emissionRate, totalAllocPoint);
         vars_.fromMultiplier = vars_.accRewardPerShare * pool.curve.getFunction(vars_.fromLevel);
-        vars_.pendingFrom = Math.mulDiv(
-            vars_.fromAmount, vars_.fromMultiplier, ACC_REWARD_PRECISION
-        ) - fromPosition.rewardDebt;
+        vars_.pendingFrom =
+            Math.mulDiv(vars_.fromAmount, vars_.fromMultiplier, ACC_REWARD_PRECISION) - fromPosition.rewardDebt;
         if (vars_.pendingFrom != 0) {
             fromPosition.rewardCredit += vars_.pendingFrom;
         }
         vars_.pendingTo = Math.mulDiv(
-            vars_.toAmount,
-            vars_.accRewardPerShare * pool.curve.getFunction(vars_.oldToLevel),
-            ACC_REWARD_PRECISION
+            vars_.toAmount, vars_.accRewardPerShare * pool.curve.getFunction(vars_.oldToLevel), ACC_REWARD_PRECISION
         ) - toPosition.rewardDebt;
         if (vars_.pendingTo != 0) {
             toPosition.rewardCredit += vars_.pendingTo;
         }
-        fromPosition.rewardDebt =
-            Math.mulDiv(vars_.newFromAmount, vars_.fromMultiplier, ACC_REWARD_PRECISION);
+        fromPosition.rewardDebt = Math.mulDiv(vars_.newFromAmount, vars_.fromMultiplier, ACC_REWARD_PRECISION);
         toPosition.rewardDebt = Math.mulDiv(
-            vars_.newToAmount * vars_.accRewardPerShare,
-            pool.curve.getFunction(vars_.newToLevel),
-            ACC_REWARD_PRECISION
+            vars_.newToAmount * vars_.accRewardPerShare, pool.curve.getFunction(vars_.newToLevel), ACC_REWARD_PRECISION
         );
 
         address rewarder_ = pool.rewarder;
         if (rewarder_ != address(0)) {
-            IRewarder(rewarder_).onShift(
-                pool.curve,
-                _fromId,
-                _toId,
-                _amount,
-                vars_.fromAmount,
-                vars_.toAmount,
-                vars_.fromLevel,
-                vars_.oldToLevel,
-                vars_.newToLevel
-            );
+            IRewarder(rewarder_)
+                .onShift(
+                    pool.curve,
+                    _fromId,
+                    _toId,
+                    _amount,
+                    vars_.fromAmount,
+                    vars_.toAmount,
+                    vars_.fromLevel,
+                    vars_.oldToLevel,
+                    vars_.newToLevel
+                );
         }
 
         ReliquaryService._updateTotalLpSuppliedShiftMerge(
-            pool,
-            vars_.fromLevel,
-            vars_.oldToLevel,
-            vars_.newToLevel,
-            _amount,
-            vars_.toAmount,
-            vars_.newToAmount
+            pool, vars_.fromLevel, vars_.oldToLevel, vars_.newToLevel, _amount, vars_.toAmount, vars_.newToAmount
         );
 
         emit ReliquaryEvents.Shift(_fromId, _toId, _amount);
@@ -529,30 +504,20 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
         uint256 newToLevel_ = ReliquaryService._updateLevel(toPosition, oldToLevel_);
 
         {
-            uint256 accRewardPerShare_ =
-                ReliquaryService._updatePool(poolInfo[poolId_], emissionRate, totalAllocPoint);
+            uint256 accRewardPerShare_ = ReliquaryService._updatePool(poolInfo[poolId_], emissionRate, totalAllocPoint);
 
             // We split the calculation into two mulDiv()'s to minimise the risk of overflow.
-            uint256 pendingTo_ = (
-                Math.mulDiv(
-                    fromAmount_,
-                    accRewardPerShare_ * pool.curve.getFunction(fromLevel_),
-                    ACC_REWARD_PRECISION
-                )
-                    + Math.mulDiv(
-                        toAmount_,
-                        accRewardPerShare_ * pool.curve.getFunction(oldToLevel_),
-                        ACC_REWARD_PRECISION
-                    )
-            ) + fromPosition.rewardCredit - fromPosition.rewardDebt - toPosition.rewardDebt;
+            uint256 pendingTo_ =
+                (Math.mulDiv(fromAmount_, accRewardPerShare_ * pool.curve.getFunction(fromLevel_), ACC_REWARD_PRECISION)
+                        + Math.mulDiv(
+                            toAmount_, accRewardPerShare_ * pool.curve.getFunction(oldToLevel_), ACC_REWARD_PRECISION
+                        )) + fromPosition.rewardCredit - fromPosition.rewardDebt - toPosition.rewardDebt;
 
             if (pendingTo_ != 0) {
                 toPosition.rewardCredit += pendingTo_;
             }
             toPosition.rewardDebt = Math.mulDiv(
-                newToAmount_,
-                accRewardPerShare_ * pool.curve.getFunction(newToLevel_),
-                ACC_REWARD_PRECISION
+                newToAmount_, accRewardPerShare_ * pool.curve.getFunction(newToLevel_), ACC_REWARD_PRECISION
             );
 
             _burn(_fromId);
@@ -560,16 +525,8 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
         }
 
         if (pool.rewarder != address(0)) {
-            IRewarder(pool.rewarder).onMerge(
-                pool.curve,
-                _fromId,
-                _toId,
-                fromAmount_,
-                toAmount_,
-                fromLevel_,
-                oldToLevel_,
-                newToLevel_
-            );
+            IRewarder(pool.rewarder)
+                .onMerge(pool.curve, _fromId, _toId, fromAmount_, toAmount_, fromLevel_, oldToLevel_, newToLevel_);
         }
 
         ReliquaryService._updateTotalLpSuppliedShiftMerge(
@@ -671,14 +628,11 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
             emit ReliquaryEvents.Harvest(poolId_, received_, _harvestTo, _relicId);
         }
     }
+
     // -------------- views --------------
 
     /// @notice Returns a PositionInfo object for the given relicId.
-    function getPositionForId(uint256 _relicId)
-        external
-        view
-        returns (PositionInfo memory position_)
-    {
+    function getPositionForId(uint256 _relicId) external view returns (PositionInfo memory position_) {
         position_ = positionForId[_relicId];
     }
 
@@ -711,15 +665,13 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
         uint256 secondsSinceReward_ = block.timestamp - uint256(pool.lastRewardTime);
 
         if (secondsSinceReward_ != 0 && lpSupply_ != 0) {
-            uint256 reward_ =
-                (secondsSinceReward_ * emissionRate * uint256(pool.allocPoint)) / totalAllocPoint;
+            uint256 reward_ = (secondsSinceReward_ * emissionRate * uint256(pool.allocPoint)) / totalAllocPoint;
             accRewardPerShare_ += Math.mulDiv(reward_, ACC_REWARD_PRECISION, lpSupply_);
         }
 
-        uint256 leveledAmount_ =
-            uint256(position.amount) * poolInfo[poolId_].curve.getFunction(position.level);
-        pending_ = Math.mulDiv(leveledAmount_, accRewardPerShare_, ACC_REWARD_PRECISION)
-            + position.rewardCredit - position.rewardDebt;
+        uint256 leveledAmount_ = uint256(position.amount) * poolInfo[poolId_].curve.getFunction(position.level);
+        pending_ = Math.mulDiv(leveledAmount_, accRewardPerShare_, ACC_REWARD_PRECISION) + position.rewardCredit
+            - position.rewardDebt;
     }
 
     /**
@@ -729,8 +681,7 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
      */
     function tokenURI(uint256 _relicId) public view override returns (string memory) {
         _requireOwned(_relicId);
-        return INFTDescriptor(poolInfo[positionForId[_relicId].poolId].nftDescriptor)
-            .constructTokenURI(_relicId);
+        return INFTDescriptor(poolInfo[positionForId[_relicId].poolId].nftDescriptor).constructTokenURI(_relicId);
     }
 
     /// @dev Implement ERC165 to return which interfaces this contract conforms to
@@ -744,12 +695,7 @@ contract Reliquary is IERC165, IReliquary, Multicall, ERC721, AccessControlEnume
     }
 
     /// @notice Returns whether `_spender` is allowed to manage Relic `_relicId`.
-    function isApprovedOrOwner(address _spender, uint256 _relicId)
-        external
-        view
-        override
-        returns (bool)
-    {
+    function isApprovedOrOwner(address _spender, uint256 _relicId) external view override returns (bool) {
         return _isAuthorized(_ownerOf(_relicId), _spender, _relicId);
     }
 

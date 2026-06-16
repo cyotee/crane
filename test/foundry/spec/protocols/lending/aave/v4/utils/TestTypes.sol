@@ -1,66 +1,66 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {WETH9} from '@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol';
-import {TestnetERC20} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol';
+import {WETH9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
+import {TestnetERC20} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol";
 
 library TestTypes {
-  struct TokenList {
-    WETH9 weth;
-    TestnetERC20 usdx;
-    TestnetERC20 dai;
-    TestnetERC20 wbtc;
-    TestnetERC20 usdy;
-    TestnetERC20 usdz;
-  }
+    struct TokenList {
+        WETH9 weth;
+        TestnetERC20 usdx;
+        TestnetERC20 dai;
+        TestnetERC20 wbtc;
+        TestnetERC20 usdy;
+        TestnetERC20 usdz;
+    }
 
-  struct SpokeReserveId {
-    address spoke;
-    uint256 reserveId;
-  }
+    struct SpokeReserveId {
+        address spoke;
+        uint256 reserveId;
+    }
 
-  struct TestTokensBatchReport {
-    address weth;
-    address[] tokens;
-  }
+    struct TestTokensBatchReport {
+        address weth;
+        address[] tokens;
+    }
 
-  struct TestTokenInput {
-    string name;
-    string symbol;
-    uint8 decimals;
-  }
+    struct TestTokenInput {
+        string name;
+        string symbol;
+        uint8 decimals;
+    }
 
-  struct TestHubReport {
-    address hub;
-    address irStrategy;
-  }
+    struct TestHubReport {
+        address hub;
+        address irStrategy;
+    }
 
-  struct TestSpokeReport {
-    address spoke;
-    address aaveOracle;
-  }
+    struct TestSpokeReport {
+        address spoke;
+        address aaveOracle;
+    }
 
-  struct TestGatewaysReport {
-    address signatureGateway;
-    address nativeGateway;
-  }
+    struct TestGatewaysReport {
+        address signatureGateway;
+        address nativeGateway;
+    }
 
-  struct TestConfiguratorReport {
-    address hubConfigurator;
-    address spokeConfigurator;
-  }
+    struct TestConfiguratorReport {
+        address hubConfigurator;
+        address spokeConfigurator;
+    }
 
-  struct TestEnvReport {
-    address accessManager;
-    address treasurySpoke;
-    TestHubReport[] hubReports;
-    TestSpokeReport[] spokeReports;
-    TestGatewaysReport gatewaysReport;
-    TestConfiguratorReport configuratorReport;
-  }
+    struct TestEnvReport {
+        address accessManager;
+        address treasurySpoke;
+        TestHubReport[] hubReports;
+        TestSpokeReport[] spokeReports;
+        TestGatewaysReport gatewaysReport;
+        TestConfiguratorReport configuratorReport;
+    }
 
-  struct TestTokensReport {
-    address weth;
-    address[] testTokens;
-  }
+    struct TestTokensReport {
+        address weth;
+        address[] testTokens;
+    }
 }

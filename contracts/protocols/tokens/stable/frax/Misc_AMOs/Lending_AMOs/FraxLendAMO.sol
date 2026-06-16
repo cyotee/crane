@@ -18,30 +18,28 @@ pragma solidity ^0.8.35;
 
 // Reviewer(s) / Contributor(s)
 
-
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/FXS/IFxs.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFrax.sol";
 // import "forge-std/console.sol";
 
 import "./frax-lend/IFraxLendPair_Partial.sol";
 import "./frax-lend/IFraxLendPairDeployer_Partial.sol";
 
-
 contract FraxLendAMO is Owned {
     // SafeMath automatically included in Solidity >= 8.0.0
-    
+
     /* ========== STATE VARIABLES ========== */
     address public timelock_address;
     address public custodian_address;
 
     // FraxLend pairs list
     address[] public fraxlendpairs_array;
-    mapping (address => bool) public fraxlendpairs_check;
+    mapping(address => bool) public fraxlendpairs_check;
 
     // Constants
     IFrax private FRAX = IFrax(0x853d955aCEf822Db058eb8505911ED77F175b99e);
@@ -51,29 +49,25 @@ contract FraxLendAMO is Owned {
 
     // Reward Tokens
 
-
     // FraxLend Addresses
     IFraxLendPairDeployer_Partial private FraxLendPairDeployer;
-    
+
     // iOracle address
 
-    
     // Important Addresses Related to Frax Lend
-    
-    // Settings 
+
+    // Settings
     uint256 private constant PRICE_PRECISION = 1e6;
 
     /* ========== CONSTRUCTOR ========== */
-    
+
     /// @notice FraxLend AMO Constructor
     /// @param _owner_address owner address
     /// @param _amo_minter_address AMO minter address
     /// @param fraxlendpair_deployer_address address of FraxLendPairDeployer
-    constructor (
-        address _owner_address,
-        address _amo_minter_address,
-        address fraxlendpair_deployer_address
-    )  Owned(_owner_address){
+    constructor(address _owner_address, address _amo_minter_address, address fraxlendpair_deployer_address)
+        Owned(_owner_address)
+    {
         amo_minter = IFraxAMOMinter(_amo_minter_address);
         // Get the custodian and timelock addresses from the minter
         custodian_address = amo_minter.custodian_address();
@@ -90,7 +84,10 @@ contract FraxLendAMO is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "FraxLendAMO: Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "FraxLendAMO: Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -107,31 +104,28 @@ contract FraxLendAMO is Owned {
     /* ========== VIEWS ========== */
 
     /// @notice Show allocations of FraxLendAMO in Frax
-    /// @return allocations : 
-    /// allocations[0] = Unallocated FRAX
-    /// allocations[1] = Allocated FRAX
-    /// allocations[2] = Total FRAX
+    /// @return allocations Array: [0]=Unallocated FRAX, [1]=Allocated FRAX, [2]=Total FRAX
     function showAllocations() public view returns (uint256[3] memory allocations) {
         // All numbers given are in FRAX unless otherwise stated
         // Unallocated FRAX
-        allocations[0] = FRAX.balanceOf(address(this)); 
-        
-        // Allocated FRAX 
+        allocations[0] = FRAX.balanceOf(address(this));
+
+        // Allocated FRAX
         // Frax in Frax Lend Pairs
-        for (uint i=0; i < fraxlendpairs_array.length; i++) {
+        for (uint256 i = 0; i < fraxlendpairs_array.length; i++) {
             IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpairs_array[i]);
-            
+
             uint256 share = newFraxLendPair.balanceOf(address(this));
-            allocations[1] = allocations[1] + (fraxlendpairShareToFrax(fraxlendpairs_array[i], share)); 
+            allocations[1] = allocations[1] + (fraxlendpairShareToFrax(fraxlendpairs_array[i], share));
         }
         // Total FRAX possessed in various forms
         uint256 sum_frax = allocations[0] + allocations[1];
-        allocations[2] = sum_frax; 
+        allocations[2] = sum_frax;
     }
-    
-    /// @notice 
-    /// @return frax_val_e18 Frax valume 
-    /// @return collat_val_e18 Frax collateral valume 
+
+    /// @notice Returns FRAX value and collateral value (e18).
+    /// @return frax_val_e18 Frax volume
+    /// @return collat_val_e18 Frax collateral volume
     function dollarBalances() public view returns (uint256 frax_val_e18, uint256 collat_val_e18) {
         frax_val_e18 = showAllocations()[2];
         collat_val_e18 = (frax_val_e18 * FRAX.global_collateral_ratio()) / (PRICE_PRECISION);
@@ -153,7 +147,12 @@ contract FraxLendAMO is Owned {
     /// @param fraxlendpair_address Address of fraxlendpair
     /// @param frax_amount Amount of Frax
     /// @return share in fraxlendpair
-    function fraxToFraxLendPairShare(address fraxlendpair_address, uint256 frax_amount) public approvedPair(fraxlendpair_address) view returns (uint256) {
+    function fraxToFraxLendPairShare(address fraxlendpair_address, uint256 frax_amount)
+        public
+        view
+        approvedPair(fraxlendpair_address)
+        returns (uint256)
+    {
         IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpair_address);
         (uint128 total_amount, uint128 total_shares) = newFraxLendPair.totalAsset();
         if (total_amount == 0) {
@@ -167,7 +166,12 @@ contract FraxLendAMO is Owned {
     /// @param fraxlendpair_address Address of fraxlendpair
     /// @param share Share in Fraxlend Pair
     /// @return frax amount
-    function fraxlendpairShareToFrax(address fraxlendpair_address, uint256 share) public approvedPair(fraxlendpair_address) view returns (uint256) {
+    function fraxlendpairShareToFrax(address fraxlendpair_address, uint256 share)
+        public
+        view
+        approvedPair(fraxlendpair_address)
+        returns (uint256)
+    {
         IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpair_address);
         (uint128 total_amount, uint128 total_shares) = newFraxLendPair.totalAsset();
         if (total_shares == 0) {
@@ -179,14 +183,15 @@ contract FraxLendAMO is Owned {
 
     /* ========== Frax-Lend Pair ========== */
 
-
-    /// @notice Add new fraxlendpair with Frax as asset address to list 
+    /// @notice Add new fraxlendpair with Frax as asset address to list
     /// @param fraxlendpair_address Address of fraxlendpair
-    function addPairToList(address fraxlendpair_address) public onlyByOwnGov{
+    function addPairToList(address fraxlendpair_address) public onlyByOwnGov {
         require(fraxlendpair_address != address(0), "Zero address detected");
         if (fraxlendpairs_check[fraxlendpair_address] == false) {
             IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpair_address);
-            require(address(newFraxLendPair.assetContract()) == fraxAddress, "FraxLendAMO: Fraxlendpair's asset is not frax");
+            require(
+                address(newFraxLendPair.assetContract()) == fraxAddress, "FraxLendAMO: Fraxlendpair's asset is not frax"
+            );
             fraxlendpairs_check[fraxlendpair_address] = true;
             fraxlendpairs_array.push(fraxlendpair_address);
         }
@@ -200,7 +205,7 @@ contract FraxLendAMO is Owned {
 
     /// @notice  accrue Interest of all whitelisted FraxLendPairs
     function accrueInterestAllFraxLendPair() public onlyByOwnGov {
-        for (uint i=0; i < fraxlendpairs_array.length; i++) {
+        for (uint256 i = 0; i < fraxlendpairs_array.length; i++) {
             accrueInterestFraxLendPair(fraxlendpairs_array[i]);
         }
     }
@@ -208,27 +213,35 @@ contract FraxLendAMO is Owned {
     /// @notice Function to deposit frax to specific FraxLendPair
     /// @param fraxlendpair_address Address of fraxlendpair
     /// @param frax_amount Amount of Frax to be diposited
-    function depositToPair(address fraxlendpair_address, uint frax_amount) public approvedPair(fraxlendpair_address) onlyByOwnGov{
+    function depositToPair(address fraxlendpair_address, uint256 frax_amount)
+        public
+        approvedPair(fraxlendpair_address)
+        onlyByOwnGov
+    {
         IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpair_address);
-        require(FRAX.balanceOf(address(this)) >= frax_amount , "FraxLendAMO: FraxLendAMO fund is low");
+        require(FRAX.balanceOf(address(this)) >= frax_amount, "FraxLendAMO: FraxLendAMO fund is low");
         FRAX.approve(fraxlendpair_address, frax_amount);
-        newFraxLendPair.deposit(frax_amount ,address(this));
+        newFraxLendPair.deposit(frax_amount, address(this));
     }
 
     /// @notice Function to withdraw frax from specific FraxLendPair
     /// @param fraxlendpair_address Address of fraxlendpair
     /// @param frax_amount Amount of Frax to be withdrawed
-    function withdrawFromPair(address fraxlendpair_address, uint frax_amount) public approvedPair(fraxlendpair_address) onlyByOwnGov{
+    function withdrawFromPair(address fraxlendpair_address, uint256 frax_amount)
+        public
+        approvedPair(fraxlendpair_address)
+        onlyByOwnGov
+    {
         IFraxLendPair_Partial newFraxLendPair = IFraxLendPair_Partial(fraxlendpair_address);
 
         uint256 share = fraxToFraxLendPairShare(fraxlendpair_address, frax_amount);
-        require(newFraxLendPair.balanceOf(address(this)) >= share , "FraxLendAMO: FraxLendAMO fund is low");
-        
+        require(newFraxLendPair.balanceOf(address(this)) >= share, "FraxLendAMO: FraxLendAMO fund is low");
+
         newFraxLendPair.withdraw(frax_amount, address(this), address(this));
     }
 
     /// @notice Function for creating a new frax lend pair
-    /// @param _collateral ERC20 address of collatral 
+    /// @param _collateral ERC20 address of collatral
     /// @param _oracleTop Oracle Address of Asset
     /// @param _oracleDiv Oracle Address of Collateral
     /// @param _oracleNormalization Oracle Normalization
@@ -241,8 +254,11 @@ contract FraxLendAMO is Owned {
         address _oracleDiv,
         uint256 _oracleNormalization,
         address _rateContract,
-        bytes calldata _rateInitCallData) public onlyByOwnGov returns (address){
-        address cloneAddress = FraxLendPairDeployer.deploy(fraxAddress, _collateral, _oracleTop, _oracleDiv, _oracleNormalization, _rateContract, _rateInitCallData);
+        bytes calldata _rateInitCallData
+    ) public onlyByOwnGov returns (address) {
+        address cloneAddress = FraxLendPairDeployer.deploy(
+            fraxAddress, _collateral, _oracleTop, _oracleDiv, _oracleNormalization, _rateContract, _rateInitCallData
+        );
         // Input Address to address list
         fraxlendpairs_check[cloneAddress] = true;
         fraxlendpairs_array.push(cloneAddress);
@@ -250,7 +266,7 @@ contract FraxLendAMO is Owned {
     }
 
     /* ========== Burns and givebacks ========== */
-   
+
     /// @notice Burn unneeded or excess FRAX. Goes through the minter
     /// @param frax_amount Amount of Frax to burn
     function burnFRAX(uint256 frax_amount) public onlyByOwnGovCust {
@@ -260,7 +276,7 @@ contract FraxLendAMO is Owned {
 
     /* ========== RESTRICTED GOVERNANCE FUNCTIONS ========== */
 
-    /// @notice Change the frax Minter 
+    /// @notice Change the frax Minter
     /// @param _amo_minter_address Frax AMO minter
     function setAMOMinter(address _amo_minter_address) external onlyByOwnGov {
         amo_minter = IFraxAMOMinter(_amo_minter_address);
@@ -278,14 +294,12 @@ contract FraxLendAMO is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
-
-    
 }

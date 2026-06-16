@@ -65,19 +65,11 @@ interface IPActionMiscV3 {
     );
 
     event MintPyFromSy(
-        address indexed caller,
-        address indexed receiver,
-        address indexed YT,
-        uint256 netSyIn,
-        uint256 netPyOut
+        address indexed caller, address indexed receiver, address indexed YT, uint256 netSyIn, uint256 netPyOut
     );
 
     event RedeemPyToSy(
-        address indexed caller,
-        address indexed receiver,
-        address indexed YT,
-        uint256 netPyIn,
-        uint256 netSyOut
+        address indexed caller, address indexed receiver, address indexed YT, uint256 netPyIn, uint256 netSyOut
     );
 
     event MintPyFromToken(
@@ -136,47 +128,31 @@ interface IPActionMiscV3 {
         ExitPostExpReturnParams params
     );
 
-    function mintSyFromToken(
-        address receiver,
-        address SY,
-        uint256 minSyOut,
-        TokenInput calldata input
-    ) external payable returns (uint256 netSyOut);
+    function mintSyFromToken(address receiver, address SY, uint256 minSyOut, TokenInput calldata input)
+        external
+        payable
+        returns (uint256 netSyOut);
 
-    function redeemSyToToken(
-        address receiver,
-        address SY,
-        uint256 netSyIn,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut);
+    function redeemSyToToken(address receiver, address SY, uint256 netSyIn, TokenOutput calldata output)
+        external
+        returns (uint256 netTokenOut);
 
-    function mintPyFromToken(
-        address receiver,
-        address YT,
-        uint256 minPyOut,
-        TokenInput calldata input
-    ) external payable returns (uint256 netPyOut, uint256 netSyInterm);
+    function mintPyFromToken(address receiver, address YT, uint256 minPyOut, TokenInput calldata input)
+        external
+        payable
+        returns (uint256 netPyOut, uint256 netSyInterm);
 
-    function redeemPyToToken(
-        address receiver,
-        address YT,
-        uint256 netPyIn,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut, uint256 netSyInterm);
+    function redeemPyToToken(address receiver, address YT, uint256 netPyIn, TokenOutput calldata output)
+        external
+        returns (uint256 netTokenOut, uint256 netSyInterm);
 
-    function mintPyFromSy(
-        address receiver,
-        address YT,
-        uint256 netSyIn,
-        uint256 minPyOut
-    ) external returns (uint256 netPyOut);
+    function mintPyFromSy(address receiver, address YT, uint256 netSyIn, uint256 minPyOut)
+        external
+        returns (uint256 netPyOut);
 
-    function redeemPyToSy(
-        address receiver,
-        address YT,
-        uint256 netPyIn,
-        uint256 minSyOut
-    ) external returns (uint256 netSyOut);
+    function redeemPyToSy(address receiver, address YT, uint256 netPyIn, uint256 minSyOut)
+        external
+        returns (uint256 netSyOut);
 
     function redeemDueInterestAndRewards(
         address user,
@@ -185,11 +161,10 @@ interface IPActionMiscV3 {
         address[] calldata markets
     ) external;
 
-    function swapTokenToToken(
-        address receiver,
-        uint256 minTokenOut,
-        TokenInput calldata inp
-    ) external payable returns (uint256 netTokenOut);
+    function swapTokenToToken(address receiver, uint256 minTokenOut, TokenInput calldata inp)
+        external
+        payable
+        returns (uint256 netTokenOut);
 
     function swapTokenToTokenViaSy(
         address receiver,
@@ -227,13 +202,9 @@ interface IPActionMiscV3 {
         TokenOutput calldata output
     ) external returns (uint256 netTokenOut, ExitPostExpReturnParams memory params);
 
-    function exitPostExpToSy(
-        address receiver,
-        address market,
-        uint256 netPtIn,
-        uint256 netLpIn,
-        uint256 minSyOut
-    ) external returns (ExitPostExpReturnParams memory params);
+    function exitPostExpToSy(address receiver, address market, uint256 netPtIn, uint256 netLpIn, uint256 minSyOut)
+        external
+        returns (ExitPostExpReturnParams memory params);
 
     function callAndReflect(
         address payable reflector,

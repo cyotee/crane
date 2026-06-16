@@ -4,7 +4,6 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 
 interface IStakingRewardsDualForMigrator {
-
     struct ILockedStake {
         bytes32 kek_id;
         uint256 start_timestamp;
@@ -38,7 +37,7 @@ interface IStakingRewardsDualForMigrator {
 
     function getReward() external;
 
-    function unlockStakes() external; 
+    function unlockStakes() external;
 
     //function exit() external;
 }

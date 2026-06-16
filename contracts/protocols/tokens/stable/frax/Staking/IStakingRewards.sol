@@ -44,7 +44,10 @@ interface IStakingRewards {
     function rewardsDuration() external view returns (uint256);
     function rewardsFor(address account) external view returns (uint256);
     function rewardsToken() external view returns (address);
-    function setLockedStakeTimeForMinAndMaxMultiplier(uint256 _locked_stake_time_for_max_multiplier, uint256 _locked_stake_min_time) external;
+    function setLockedStakeTimeForMinAndMaxMultiplier(
+        uint256 _locked_stake_time_for_max_multiplier,
+        uint256 _locked_stake_min_time
+    ) external;
     function setMultipliers(uint256 _locked_stake_max_multiplier, uint256 _cr_boost_max_multiplier) external;
     function setOwnerAndTimelock(address _new_owner, address _new_timelock) external;
     function setPaused(bool _paused) external;

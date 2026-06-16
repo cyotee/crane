@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockTokenCurrencyStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTokenCurrencyStorage.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockTokenCurrencyStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTokenCurrencyStorage.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
 
-import {MockERC20} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockERC20.sol';
-import {Currency} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol';
-import {IERC20} from 'forge-std/interfaces/IERC20.sol';
+import {MockERC20} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockERC20.sol";
+import {Currency} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol";
+import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
 contract SweepUnsoldTokensTest is BttBase {
     function test_WhenAmountEQ0(uint64 _blockNumber) external {
@@ -16,7 +20,7 @@ contract SweepUnsoldTokensTest is BttBase {
         // it emits {TokensSwept}
 
         vm.roll(_blockNumber);
-        address tokensRecipient = makeAddr('tokensRecipient');
+        address tokensRecipient = makeAddr("tokensRecipient");
 
         Currency token = Currency.wrap(address(new MockERC20()));
 
@@ -45,7 +49,7 @@ contract SweepUnsoldTokensTest is BttBase {
 
         vm.roll(_blockNumber);
 
-        address tokensRecipient = makeAddr('tokensRecipient');
+        address tokensRecipient = makeAddr("tokensRecipient");
         uint256 amount = bound(_amount, 1, type(uint128).max);
 
         Currency token = Currency.wrap(address(new MockERC20()));

@@ -3,14 +3,28 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 import {stdMath} from "forge-std/StdMath.sol";
-import {IERC20Metadata as IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {ICurveStableswapNGPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGPool.sol";
-import {IQuoterV2} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IQuoterV2.sol";
-import {ISwapRouter} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
-import {HybridCurveUniV3ExchangeHelpersV2} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3ExchangeHelpersV2.sol";
-import {IExchange} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IExchange.sol";
-import {IExchangeHelpersV2} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IExchangeHelpersV2.sol";
-import {UseDeployment} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/UseDeployment.sol";
+import {
+    IERC20Metadata as IERC20
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {
+    ICurveStableswapNGPool
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGPool.sol";
+import {
+    IQuoterV2
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IQuoterV2.sol";
+import {
+    ISwapRouter
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
+import {
+    HybridCurveUniV3ExchangeHelpersV2
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3ExchangeHelpersV2.sol";
+import {IExchange} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IExchange.sol";
+import {
+    IExchangeHelpersV2
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IExchangeHelpersV2.sol";
+import {
+    UseDeployment
+} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/UseDeployment.sol";
 
 library Bytes {
     function slice(bytes memory array, uint256 start) internal pure returns (bytes memory sliced) {
@@ -143,11 +157,7 @@ contract ExchangeHelpersTest is Test, UseDeployment {
 
         uint256 dy = uniV3Router.exactInput(
             ISwapRouter.ExactInputParams({
-                path: swapPath,
-                recipient: address(this),
-                deadline: block.timestamp,
-                amountIn: dx,
-                amountOutMinimum: 0
+                path: swapPath, recipient: address(this), deadline: block.timestamp, amountIn: dx, amountOutMinimum: 0
             })
         );
 

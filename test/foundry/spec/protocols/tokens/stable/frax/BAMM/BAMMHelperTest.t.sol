@@ -59,7 +59,8 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
 
             (uint112 r0, uint112 r1,) = pair.getReserves();
             uint256 expectedTknB = (tknA - uint256(swapAmount)) * uint256(r1) / uint256(r0);
-            uint256 precision = _min5(10_000_000, uint256(r0), uint256(r1), tknA - uint256(swapAmount), tknB + amountOut) / 10;
+            uint256 precision =
+                _min5(10_000_000, uint256(r0), uint256(r1), tknA - uint256(swapAmount), tknB + amountOut) / 10;
             int256 diff = (int256(expectedTknB) - int256(tknB + amountOut)) * int256(precision) / int256(expectedTknB);
             assertEq(diff, 0);
         } else {
@@ -75,8 +76,6 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
             assertEq(diff, 0);
         }
     }
-
-
 
     function test_fuzz_getSwapAmount_loop() public {
         for (uint256 i = 0; i < 100; i++) {
@@ -101,7 +100,8 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
         _runLiquidityUnbalancedCase(resA, resB, tknA, tknB, fee);
 
         int256 swapAmount = helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
-        int256 swapSolve = helper.getSwapAmountSolve(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
+        int256 swapSolve =
+            helper.getSwapAmountSolve(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
         assertApproxEqRel(swapAmount, swapSolve, 1e12);
     }
 
@@ -117,7 +117,8 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
             uint256 tknA = 51 * precision;
             uint256 tknB = 50 * precision;
 
-            int256 swapAmount = helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
+            int256 swapAmount =
+                helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
             assertEq(uint256(swapAmount) * 1e5 / precision, 47_679);
 
             precision *= 10;
@@ -136,7 +137,8 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
             uint256 tknA = 50 * precision;
             uint256 tknB = 51 * precision;
 
-            int256 swapAmount = helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
+            int256 swapAmount =
+                helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
             assertEq(uint256(-swapAmount) * 1e5 / precision, 47_679);
 
             precision *= 10;
@@ -158,7 +160,8 @@ contract BAMMHelperTest is TestBase_FraxBAMM {
             _createPair(fee);
             _mintPairLiquidity(resA, resB);
 
-            int256 swapAmount = helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
+            int256 swapAmount =
+                helper.getSwapAmount(int256(resA), int256(resB), int256(tknA), int256(tknB), int256(fee));
             uint256 amountOut = _getAmountOut(resA, resB, fee, uint256(swapAmount));
             token0.transfer(address(pair), uint256(swapAmount));
             if (amountOut > 0) pair.swap(0, amountOut, fraxOwner, "");

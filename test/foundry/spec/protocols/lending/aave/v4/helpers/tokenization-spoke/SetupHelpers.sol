@@ -1,176 +1,161 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {SpokeHelpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SpokeHelpers.sol';
-import {HubActions} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/hub/HubActions.sol';
-import {AaveV4TestOrchestration} from '@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/orchestration/AaveV4TestOrchestration.sol';
-import {IHub, IHubBase} from '@crane/contracts/protocols/lending/aave/v4/hub/interfaces/IHub.sol';
-import {ITreasurySpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/TreasurySpoke.sol';
-import {ITokenizationSpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/TokenizationSpoke.sol';
-import {TokenizationSpokeInstance} from '@crane/contracts/protocols/lending/aave/v4/spoke/instances/TokenizationSpokeInstance.sol';
-import {TestnetERC20} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol';
-import {EIP712Types} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/EIP712Types.sol';
+import {SpokeHelpers} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/spoke/SpokeHelpers.sol";
+import {HubActions} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/hub/HubActions.sol";
+import {
+    AaveV4TestOrchestration
+} from "@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/orchestration/AaveV4TestOrchestration.sol";
+import {IHub, IHubBase} from "@crane/contracts/protocols/lending/aave/v4/hub/interfaces/IHub.sol";
+import {ITreasurySpoke} from "@crane/contracts/protocols/lending/aave/v4/spoke/TreasurySpoke.sol";
+import {ITokenizationSpoke} from "@crane/contracts/protocols/lending/aave/v4/spoke/TokenizationSpoke.sol";
+import {
+    TokenizationSpokeInstance
+} from "@crane/contracts/protocols/lending/aave/v4/spoke/instances/TokenizationSpokeInstance.sol";
+import {TestnetERC20} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/TestnetERC20.sol";
+import {EIP712Types} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/EIP712Types.sol";
 
 /// @title SetupHelpers
 /// @notice Deploy, register, data-builder, and scenario-setup utilities for tokenization spoke tests.
 abstract contract SetupHelpers is SpokeHelpers {
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                  DEPLOY & REGISTER                                        //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                  DEPLOY & REGISTER                                        //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function _deployTokenizationSpoke(
-    IHub hub,
-    address underlying,
-    string memory shareName,
-    string memory shareSymbol,
-    address proxyAdminOwner
-  ) internal pausePrank returns (ITokenizationSpoke) {
-    address tokenizationSpokeImpl = address(
-      new TokenizationSpokeInstance(address(hub), underlying)
-    );
-    ITokenizationSpoke tokenizationSpoke = ITokenizationSpoke(
-      AaveV4TestOrchestration.proxify(
-        tokenizationSpokeImpl,
-        proxyAdminOwner,
-        abi.encodeCall(TokenizationSpokeInstance.initialize, (shareName, shareSymbol))
-      )
-    );
-    return tokenizationSpoke;
-  }
+    function _deployTokenizationSpoke(
+        IHub hub,
+        address underlying,
+        string memory shareName,
+        string memory shareSymbol,
+        address proxyAdminOwner
+    ) internal pausePrank returns (ITokenizationSpoke) {
+        address tokenizationSpokeImpl = address(new TokenizationSpokeInstance(address(hub), underlying));
+        ITokenizationSpoke tokenizationSpoke = ITokenizationSpoke(
+            AaveV4TestOrchestration.proxify(
+                tokenizationSpokeImpl,
+                proxyAdminOwner,
+                abi.encodeCall(TokenizationSpokeInstance.initialize, (shareName, shareSymbol))
+            )
+        );
+        return tokenizationSpoke;
+    }
 
-  function _registerTokenizationSpoke(
-    IHub hub,
-    uint256 assetId,
-    ITokenizationSpoke tokenizationSpoke,
-    address admin
-  ) internal {
-    _registerTokenizationSpoke(
-      hub,
-      assetId,
-      tokenizationSpoke,
-      IHub.SpokeConfig({
-        addCap: type(uint40).max,
-        drawCap: 0,
-        riskPremiumThreshold: 0,
-        active: true,
-        halted: false
-      }),
-      admin
-    );
-  }
+    function _registerTokenizationSpoke(IHub hub, uint256 assetId, ITokenizationSpoke tokenizationSpoke, address admin)
+        internal
+    {
+        _registerTokenizationSpoke(
+            hub,
+            assetId,
+            tokenizationSpoke,
+            IHub.SpokeConfig({
+                addCap: type(uint40).max, drawCap: 0, riskPremiumThreshold: 0, active: true, halted: false
+            }),
+            admin
+        );
+    }
 
-  function _registerTokenizationSpoke(
-    IHub hub,
-    uint256 assetId,
-    ITokenizationSpoke tokenizationSpoke,
-    IHub.SpokeConfig memory config,
-    address admin
-  ) internal pausePrank {
-    vm.prank(admin);
-    hub.addSpoke(assetId, address(tokenizationSpoke), config);
-  }
+    function _registerTokenizationSpoke(
+        IHub hub,
+        uint256 assetId,
+        ITokenizationSpoke tokenizationSpoke,
+        IHub.SpokeConfig memory config,
+        address admin
+    ) internal pausePrank {
+        vm.prank(admin);
+        hub.addSpoke(assetId, address(tokenizationSpoke), config);
+    }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                  DATA BUILDERS                                            //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                  DATA BUILDERS                                            //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function _depositData(
-    ITokenizationSpoke vault,
-    address who,
-    uint256 deadline
-  ) internal view returns (ITokenizationSpoke.TokenizedDeposit memory) {
-    return
-      ITokenizationSpoke.TokenizedDeposit({
-        depositor: who,
-        assets: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
-        receiver: vm.randomAddress(),
-        nonce: vault.nonces(who, _randomNonceKey()),
-        deadline: deadline
-      });
-  }
+    function _depositData(ITokenizationSpoke vault, address who, uint256 deadline)
+        internal
+        view
+        returns (ITokenizationSpoke.TokenizedDeposit memory)
+    {
+        return ITokenizationSpoke.TokenizedDeposit({
+            depositor: who,
+            assets: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
+            receiver: vm.randomAddress(),
+            nonce: vault.nonces(who, _randomNonceKey()),
+            deadline: deadline
+        });
+    }
 
-  function _mintData(
-    ITokenizationSpoke vault,
-    address who,
-    uint256 deadline
-  ) internal view returns (ITokenizationSpoke.TokenizedMint memory) {
-    return
-      ITokenizationSpoke.TokenizedMint({
-        depositor: who,
-        shares: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
-        receiver: vm.randomAddress(),
-        nonce: vault.nonces(who, _randomNonceKey()),
-        deadline: deadline
-      });
-  }
+    function _mintData(ITokenizationSpoke vault, address who, uint256 deadline)
+        internal
+        view
+        returns (ITokenizationSpoke.TokenizedMint memory)
+    {
+        return ITokenizationSpoke.TokenizedMint({
+            depositor: who,
+            shares: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
+            receiver: vm.randomAddress(),
+            nonce: vault.nonces(who, _randomNonceKey()),
+            deadline: deadline
+        });
+    }
 
-  function _withdrawData(
-    ITokenizationSpoke vault,
-    address who,
-    uint256 deadline
-  ) internal view returns (ITokenizationSpoke.TokenizedWithdraw memory) {
-    return
-      ITokenizationSpoke.TokenizedWithdraw({
-        owner: who,
-        assets: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
-        receiver: vm.randomAddress(),
-        nonce: vault.nonces(who, _randomNonceKey()),
-        deadline: deadline
-      });
-  }
+    function _withdrawData(ITokenizationSpoke vault, address who, uint256 deadline)
+        internal
+        view
+        returns (ITokenizationSpoke.TokenizedWithdraw memory)
+    {
+        return ITokenizationSpoke.TokenizedWithdraw({
+            owner: who,
+            assets: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
+            receiver: vm.randomAddress(),
+            nonce: vault.nonces(who, _randomNonceKey()),
+            deadline: deadline
+        });
+    }
 
-  function _redeemData(
-    ITokenizationSpoke vault,
-    address who,
-    uint256 deadline
-  ) internal view returns (ITokenizationSpoke.TokenizedRedeem memory) {
-    return
-      ITokenizationSpoke.TokenizedRedeem({
-        owner: who,
-        shares: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
-        receiver: vm.randomAddress(),
-        nonce: vault.nonces(who, _randomNonceKey()),
-        deadline: deadline
-      });
-  }
+    function _redeemData(ITokenizationSpoke vault, address who, uint256 deadline)
+        internal
+        view
+        returns (ITokenizationSpoke.TokenizedRedeem memory)
+    {
+        return ITokenizationSpoke.TokenizedRedeem({
+            owner: who,
+            shares: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
+            receiver: vm.randomAddress(),
+            nonce: vault.nonces(who, _randomNonceKey()),
+            deadline: deadline
+        });
+    }
 
-  function _permitData(
-    ITokenizationSpoke vault,
-    address who,
-    uint256 deadline
-  ) internal view returns (EIP712Types.Permit memory) {
-    return
-      EIP712Types.Permit({
-        owner: who,
-        spender: address(vault),
-        value: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
-        deadline: deadline,
-        nonce: vault.nonces(who, vault.PERMIT_NONCE_NAMESPACE()) // can only use permit nonce key namespace
-      });
-  }
+    function _permitData(ITokenizationSpoke vault, address who, uint256 deadline)
+        internal
+        view
+        returns (EIP712Types.Permit memory)
+    {
+        return EIP712Types.Permit({
+            owner: who,
+            spender: address(vault),
+            value: vm.randomUint(1, MAX_SUPPLY_AMOUNT),
+            deadline: deadline,
+            nonce: vault.nonces(who, vault.PERMIT_NONCE_NAMESPACE()) // can only use permit nonce key namespace
+        });
+    }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                  SETUP HELPERS                                            //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                  SETUP HELPERS                                            //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function _simulateYield(
-    ITokenizationSpoke vault,
-    uint256 amount,
-    address spoke,
-    address irStrategy_
-  ) internal {
-    IHub hub = IHub(vault.hub());
-    TestnetERC20 asset = TestnetERC20(vault.asset());
-    uint256 assetId = vault.assetId();
+    function _simulateYield(ITokenizationSpoke vault, uint256 amount, address spoke, address irStrategy_) internal {
+        IHub hub = IHub(vault.hub());
+        TestnetERC20 asset = TestnetERC20(vault.asset());
+        uint256 assetId = vault.assetId();
 
-    asset.mint(address(hub), amount);
-    vm.startPrank(spoke);
-    hub.add(assetId, amount);
-    _mockDrawnRateBps(irStrategy_, 100_00);
-    hub.draw(assetId, amount, spoke);
-    skip(365 days);
-    asset.mint(address(hub), amount);
-    hub.restore(assetId, amount, IHubBase.PremiumDelta(0, 0, 0));
-    vm.stopPrank();
-  }
+        asset.mint(address(hub), amount);
+        vm.startPrank(spoke);
+        hub.add(assetId, amount);
+        _mockDrawnRateBps(irStrategy_, 100_00);
+        hub.draw(assetId, amount, spoke);
+        skip(365 days);
+        asset.mint(address(hub), amount);
+        hub.restore(assetId, amount, IHubBase.PremiumDelta(0, 0, 0));
+        vm.stopPrank();
+    }
 }

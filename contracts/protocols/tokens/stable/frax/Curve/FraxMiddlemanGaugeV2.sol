@@ -27,10 +27,10 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeFXSRewardsDistributor.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/IFraxferry.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -54,7 +54,6 @@ contract FraxMiddlemanGaugeV2 is Owned, ReentrancyGuard {
     IFraxferry public ferry;
     address public destination_address;
 
-
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
@@ -69,7 +68,7 @@ contract FraxMiddlemanGaugeV2 is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _rewards_distributor_address,
@@ -99,11 +98,10 @@ contract FraxMiddlemanGaugeV2 is Owned, ReentrancyGuard {
         // Logic here
         ERC20(reward_token_address).approve(address(ferry), reward_amount);
         ferry.embarkWithRecipient(reward_amount, destination_address);
-
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -112,12 +110,12 @@ contract FraxMiddlemanGaugeV2 is Owned, ReentrancyGuard {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 
@@ -127,11 +125,10 @@ contract FraxMiddlemanGaugeV2 is Owned, ReentrancyGuard {
 
     function setBridgeInfo(address _ferry_address, address _destination_address) external onlyByOwnGov {
         ferry = IFraxferry(_ferry_address);
-        
+
         // Overridden cross-chain destination address
         destination_address = _destination_address;
 
-        
         emit BridgeInfoChanged(_ferry_address, _destination_address);
     }
 

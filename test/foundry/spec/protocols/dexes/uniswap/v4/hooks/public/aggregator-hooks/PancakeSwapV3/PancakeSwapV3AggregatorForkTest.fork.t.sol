@@ -18,7 +18,9 @@ import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {
     PancakeSwapV3Aggregator
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/PancakeSwapV3/PancakeSwapV3Aggregator.sol";
-import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
+import {
+    IUniswapV3Pool
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
 
 /// @notice Fork tests — Base mainnet (chain id 8453) PancakeSwap V3 external pools + Uniswap V4 PoolManager on Base.
 /// @dev `FORK_RPC_URL_8453`, `POOL_MANAGER_8453`, `PANCAKE_V3_*`. Skips when RPC unset or any required address env is missing.

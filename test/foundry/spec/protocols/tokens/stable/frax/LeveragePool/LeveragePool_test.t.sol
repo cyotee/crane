@@ -162,13 +162,7 @@ contract LeveragePool_test is Test {
         int256 rebalanceMultiplier,
         bool isLiquidityPool
     ) internal view {
-        (
-            int256 pShares,
-            int256 pCollateral,
-            int256 pLeverage,
-            int256 pRebalance,
-            bool pIsLiq
-        ) = pool.pools(idx);
+        (int256 pShares, int256 pCollateral, int256 pLeverage, int256 pRebalance, bool pIsLiq) = pool.pools(idx);
         assertEq(pShares, shares);
         assertEq(pCollateral, collateralAmt);
         assertEq(pLeverage, leverage);
@@ -311,9 +305,23 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user2, 1, 997e15);
         _assertUserDeposit(user3, 2, 996_887_078_262_708_722);
 
-        _checkPoolAmounts(997e15, 996_887_078_262_708_722, 1_004_312_921_737_291_278, 996_887_078_262_708_722, ONE, ONE, -112_436_806_145_979);
+        _checkPoolAmounts(
+            997e15,
+            996_887_078_262_708_722,
+            1_004_312_921_737_291_278,
+            996_887_078_262_708_722,
+            ONE,
+            ONE,
+            -112_436_806_145_979
+        );
 
-        _checkRates(113_261_521_856_848, -113_261_521_856_848, -12_734_763_776, 992_606_046_070_046_470, -985_266_762_694_811_216);
+        _checkRates(
+            113_261_521_856_848,
+            -113_261_521_856_848,
+            -12_734_763_776,
+            992_606_046_070_046_470,
+            -985_266_762_694_811_216
+        );
 
         oracle.setPrice(uint256(ONE));
         _startNextEpoch();
@@ -347,7 +355,15 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user1, 0, 1_004_200_000_000_000_000);
         _assertUserDeposit(user2, 1, 1_006_970_000_000_000_000);
         _assertUserDeposit(user3, 2, 987_030_000_000_000_000);
-        _checkPoolAmounts(1_006_970_000_000_000_000, 987_030_000_000_000_000, 1_004_200_000_000_000_000, 987_030_000_000_000_000, ONE, ONE, -19_856_602_270_464_050);
+        _checkPoolAmounts(
+            1_006_970_000_000_000_000,
+            987_030_000_000_000_000,
+            1_004_200_000_000_000_000,
+            987_030_000_000_000_000,
+            ONE,
+            ONE,
+            -19_856_602_270_464_050
+        );
         _checkRates(0, 0, 0, 0, 0);
 
         oracle.setPrice(1_030_200_000_000_000_000);
@@ -357,7 +373,15 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user1, 0, 1_003_801_200_000_000_001);
         _assertUserDeposit(user2, 1, 1_027_109_400_000_000_000);
         _assertUserDeposit(user3, 2, 967_289_400_000_000_000);
-        _checkPoolAmounts(1_027_109_400_000_000_000, 967_289_400_000_000_000, 1_003_801_200_000_000_001, 967_289_400_000_000_000, ONE, ONE, -59_593_473_289_332_588);
+        _checkPoolAmounts(
+            1_027_109_400_000_000_000,
+            967_289_400_000_000_000,
+            1_003_801_200_000_000_001,
+            967_289_400_000_000_000,
+            ONE,
+            ONE,
+            -59_593_473_289_332_588
+        );
         _checkRates(0, 0, 0, 0, 0);
 
         oracle.setPrice(1_092_012_000_000_000_000);
@@ -383,7 +407,15 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user1, 3, 1_008_400_000_000_000_000);
         _assertUserDeposit(user2, 4, 994e15);
         _assertUserDeposit(user3, 5, 994e15);
-        _checkPoolAmounts(1_988_000_000_000_000_000, 1_988_000_000_000_000_000, 2_016_800_000_000_000_000, 3_976_000_000_000_000_000, ONE, ONE, 0);
+        _checkPoolAmounts(
+            1_988_000_000_000_000_000,
+            1_988_000_000_000_000_000,
+            2_016_800_000_000_000_000,
+            3_976_000_000_000_000_000,
+            ONE,
+            ONE,
+            0
+        );
         _checkRates(0, 0, 0, 0, 0);
 
         oracle.setPrice(1_010_000_000_000_000_000);
@@ -393,7 +425,15 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user1, 3, 1_008_400_000_000_000_000);
         _assertUserDeposit(user2, 4, 1_013_880_000_000_000_000);
         _assertUserDeposit(user3, 5, 974_120_000_000_000_000);
-        _checkPoolAmounts(2_027_760_000_000_000_000, 1_948_240_000_000_000_000, 2_016_800_000_000_000_000, 3_936_240_000_000_000_000, ONE, ONE, -39_428_798_095_993_653);
+        _checkPoolAmounts(
+            2_027_760_000_000_000_000,
+            1_948_240_000_000_000_000,
+            2_016_800_000_000_000_000,
+            3_936_240_000_000_000_000,
+            ONE,
+            ONE,
+            -39_428_798_095_993_653
+        );
         _checkRates(0, 0, 0, 0, 0);
 
         oracle.setPrice(1_030_200_000_000_000_000);
@@ -403,7 +443,15 @@ contract LeveragePool_test is Test {
         _assertUserDeposit(user1, 3, 1_006_809_600_000_000_001);
         _assertUserDeposit(user2, 4, 1_054_435_200_000_000_000);
         _assertUserDeposit(user3, 5, 935_155_200_000_000_000);
-        _checkPoolAmounts(2_108_870_400_000_000_000, 1_870_310_400_000_000_000, 2_013_619_200_000_000_002, 3_859_900_800_000_000_000, ONE, ONE, -118_473_244_593_615_317);
+        _checkPoolAmounts(
+            2_108_870_400_000_000_000,
+            1_870_310_400_000_000_000,
+            2_013_619_200_000_000_002,
+            3_859_900_800_000_000_000,
+            ONE,
+            ONE,
+            -118_473_244_593_615_317
+        );
         _checkRates(0, 0, 0, 0, 0);
 
         oracle.setPrice(1_092_012_000_000_000_000);
@@ -524,12 +572,7 @@ contract LeveragePool_test is Test {
         int256 deposits,
         int256 withdrawals
     ) internal view {
-        (
-            int256 spd,
-            int256 cpsw,
-            int256 dep,
-            int256 wit
-        ) = pool.poolEpochData(epoch, poolIdx);
+        (int256 spd, int256 cpsw, int256 dep, int256 wit) = pool.poolEpochData(epoch, poolIdx);
         assertEq(spd, sharesPerCollateralDeposit);
         assertEq(cpsw, collateralPerShareWithdraw);
         assertEq(dep, deposits);

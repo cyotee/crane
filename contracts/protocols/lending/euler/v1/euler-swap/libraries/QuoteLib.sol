@@ -23,9 +23,8 @@ library QuoteLib {
         if ((dParams.swapHookedOperations & EULER_SWAP_HOOK_GET_FEE) != 0) {
             CtxLib.State storage s = CtxLib.getState();
 
-            (bool success, bytes memory data) = dParams.swapHook.call(
-                abi.encodeCall(IEulerSwapHookTarget.getFee, (asset0IsInput, s.reserve0, s.reserve1, false))
-            );
+            (bool success, bytes memory data) = dParams.swapHook
+                .call(abi.encodeCall(IEulerSwapHookTarget.getFee, (asset0IsInput, s.reserve0, s.reserve1, false)));
             require(success && data.length >= 32, SwapLib.HookError(EULER_SWAP_HOOK_GET_FEE, data));
             fee = abi.decode(data, (uint64));
         }
@@ -43,9 +42,8 @@ library QuoteLib {
         if ((dParams.swapHookedOperations & EULER_SWAP_HOOK_GET_FEE) != 0) {
             CtxLib.State storage s = CtxLib.getState();
 
-            (bool success, bytes memory data) = dParams.swapHook.staticcall(
-                abi.encodeCall(IEulerSwapHookTarget.getFee, (asset0IsInput, s.reserve0, s.reserve1, true))
-            );
+            (bool success, bytes memory data) = dParams.swapHook
+                .staticcall(abi.encodeCall(IEulerSwapHookTarget.getFee, (asset0IsInput, s.reserve0, s.reserve1, true)));
             require(success && data.length >= 32, SwapLib.HookError(EULER_SWAP_HOOK_GET_FEE, data));
             fee = abi.decode(data, (uint64));
         }

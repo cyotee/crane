@@ -21,10 +21,14 @@ contract PendleFluxLendingSY is SYBase {
         _safeApproveInf(underlying, fToken);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == fToken) {
             return amountDeposited;
         } else {
@@ -35,11 +39,12 @@ contract PendleFluxLendingSY is SYBase {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == fToken) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -55,10 +60,14 @@ contract PendleFluxLendingSY is SYBase {
         return FluxTokenLib.exchangeRateCurrentView(fToken);
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == fToken) {
             return amountTokenToDeposit;
         } else {
@@ -66,10 +75,14 @@ contract PendleFluxLendingSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         if (tokenOut == fToken) {
             return amountSharesToRedeem;
         } else {

@@ -1,14 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {LiquidityAmountsUint256} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/LiquidityAmountsUint256.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {
+    LiquidityAmountsUint256
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/LiquidityAmountsUint256.sol";
 import {LiquidityAmounts} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/LiquidityAmounts.sol";
 
 contract ConstructorTest is BttBase {
@@ -142,12 +150,12 @@ contract ConstructorTest is BttBase {
         uint256 computedMaxBidPrice = MaxBidPriceLib.maxBidPrice(_params.totalSupply);
         // The min possible clearing price is the min floor price
         clearingPrice = _bound(clearingPrice, ConstantsLib.MIN_FLOOR_PRICE + 1, computedMaxBidPrice);
-        assertLe(clearingPrice, MaxBidPriceLib.MAX_V4_PRICE, 'clearingPrice is greater than MAX_V4_PRICE');
-        assertLe(clearingPrice, type(uint160).max, 'clearingPrice is greater than type(uint160).max');
+        assertLe(clearingPrice, MaxBidPriceLib.MAX_V4_PRICE, "clearingPrice is greater than MAX_V4_PRICE");
+        assertLe(clearingPrice, type(uint160).max, "clearingPrice is greater than type(uint160).max");
 
         // Calculate the currency amount if all of the supply was sold at the clearing price
         uint256 currencyAmount = FixedPointMathLib.fullMulDiv(_params.totalSupply, clearingPrice, FixedPoint96.Q96);
-        assertLe(int256(currencyAmount), int256(type(int128).max), 'currencyAmount is greater than type(int128).max');
+        assertLe(int256(currencyAmount), int256(type(int128).max), "currencyAmount is greater than type(int128).max");
 
         // If currency is currency0, we need to invert the price (price = currency1/currency0)
         uint256 temp;
@@ -159,17 +167,17 @@ contract ConstructorTest is BttBase {
             temp = FixedPointMathLib.sqrt(clearingPrice << 96);
         }
         if (temp > type(uint160).max) {
-            revert('sqrtPriceX96 is greater than type(uint160).max');
+            revert("sqrtPriceX96 is greater than type(uint160).max");
         }
         uint160 sqrtPriceX96 = uint160(temp);
 
         // Ensure the sqrt price is within the valid range
-        assertGt(sqrtPriceX96, MIN_SQRT_PRICE, 'sqrtPriceX96 is less than MIN_SQRT_PRICE');
-        assertLt(sqrtPriceX96, MAX_SQRT_PRICE, 'sqrtPriceX96 is greater than MAX_SQRT_PRICE');
+        assertGt(sqrtPriceX96, MIN_SQRT_PRICE, "sqrtPriceX96 is less than MIN_SQRT_PRICE");
+        assertLt(sqrtPriceX96, MAX_SQRT_PRICE, "sqrtPriceX96 is greater than MAX_SQRT_PRICE");
 
-        emit log_named_uint('sqrtPriceX96', sqrtPriceX96);
-        emit log_named_uint('currencyAmount', currencyAmount);
-        emit log_named_uint('_params.totalSupply', _params.totalSupply);
+        emit log_named_uint("sqrtPriceX96", sqrtPriceX96);
+        emit log_named_uint("currencyAmount", currencyAmount);
+        emit log_named_uint("_params.totalSupply", _params.totalSupply);
 
         // Since sqrtPriceX96 is guaranteed to be between min sqrt price and max sqrt price
         uint256 currencyL;
@@ -188,8 +196,8 @@ contract ConstructorTest is BttBase {
             );
         }
 
-        assertLt(currencyL, MAX_LIQUIDITY_BOUND, 'currencyLiquidity is greater than MAX_LIQUIDITY_BOUND');
-        assertLt(tokenL, MAX_LIQUIDITY_BOUND, 'tokenLiquidity is greater than MAX_LIQUIDITY_BOUND');
+        assertLt(currencyL, MAX_LIQUIDITY_BOUND, "currencyLiquidity is greater than MAX_LIQUIDITY_BOUND");
+        assertLt(tokenL, MAX_LIQUIDITY_BOUND, "tokenLiquidity is greater than MAX_LIQUIDITY_BOUND");
 
         // Find the maximum liquidity that can be created with this price range
         // Should not revert and should be under MAX_LIQUIDITY_BOUND
@@ -200,7 +208,7 @@ contract ConstructorTest is BttBase {
             currencyIsToken0 ? currencyAmount : _params.totalSupply,
             currencyIsToken0 ? _params.totalSupply : currencyAmount
         );
-        assertLt(liquidity, MAX_LIQUIDITY_BOUND, 'liquidity is greater than MAX_LIQUIDITY_BOUND');
+        assertLt(liquidity, MAX_LIQUIDITY_BOUND, "liquidity is greater than MAX_LIQUIDITY_BOUND");
         // And since we are doing a full range position, we take the minimum of the two calculated liquidity values
         assertEq(liquidity, FixedPointMathLib.min(currencyL, tokenL));
     }

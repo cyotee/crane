@@ -4,13 +4,15 @@
 pragma solidity ^0.8.20;
 
 import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
-import {IERC721Events} from '@crane/contracts/interfaces/IERC721Events.sol';
+import {IERC721Events} from "@crane/contracts/interfaces/IERC721Events.sol";
 import {IERC721Metadata} from "@crane/contracts/interfaces/IERC721Metadata.sol";
 import {ERC721Utils} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Utils.sol";
 import {ContextUpgradeable} from "../../utils/ContextUpgradeable.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
-import {ERC165Upgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import {
+    ERC165Upgradeable
+} from "@crane/contracts/external/openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {IERC721Errors} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC6093.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
@@ -19,7 +21,15 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
  */
-abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeable, IERC721Events, IERC721Errors, IERC721, IERC721Metadata {
+abstract contract ERC721Upgradeable is
+    Initializable,
+    ContextUpgradeable,
+    ERC165Upgradeable,
+    IERC721Events,
+    IERC721Errors,
+    IERC721,
+    IERC721Metadata
+{
     using Strings for uint256;
 
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC721
@@ -65,10 +75,8 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
      * @dev See {IERC165-supportsInterface}.
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165Upgradeable) returns (bool) {
-        return
-            interfaceId == type(IERC721).interfaceId ||
-            interfaceId == type(IERC721Metadata).interfaceId ||
-            super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC721).interfaceId || interfaceId == type(IERC721Metadata).interfaceId
+            || super.supportsInterface(interfaceId);
     }
 
     /**
@@ -214,9 +222,8 @@ abstract contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165
      * assumption.
      */
     function _isAuthorized(address owner, address spender, uint256 tokenId) internal view virtual returns (bool) {
-        return
-            spender != address(0) &&
-            (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
+        return spender != address(0)
+            && (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
     }
 
     /**

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { BytesLib } from "@crane/contracts/external/solidity-bytes-utils/BytesLib.sol";
+import {BytesLib} from "@crane/contracts/external/solidity-bytes-utils/BytesLib.sol";
 
 library BytesHelper {
     function concat(bytes memory _preBytes, bytes memory _postBytes) internal pure returns (bytes memory) {

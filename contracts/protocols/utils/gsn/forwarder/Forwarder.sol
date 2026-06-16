@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.19;
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {ECDSA} from "@crane/contracts/utils/cryptography/ECDSA.sol";
 import {ERC165} from "@crane/contracts/utils/introspection/ERC165.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";

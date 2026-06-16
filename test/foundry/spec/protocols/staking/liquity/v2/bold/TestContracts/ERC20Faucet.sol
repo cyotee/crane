@@ -15,6 +15,7 @@ contract ERC20Faucet is ERC20Permit, Ownable {
     constructor(string memory _name, string memory _symbol, uint256 _tapAmount, uint256 _tapPeriod)
         ERC20Permit(_name)
         ERC20(_name, _symbol)
+        Ownable(msg.sender)
     {
         tapAmount = _tapAmount;
         tapPeriod = _tapPeriod;

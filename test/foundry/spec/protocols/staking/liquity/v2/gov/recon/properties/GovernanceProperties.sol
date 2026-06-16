@@ -2,14 +2,15 @@
 pragma solidity ^0.8.35;
 
 import {BeforeAfter} from "../BeforeAfter.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";
 import {vm} from "@crane/contracts/external/chimera/Hevm.sol";
-import {IUserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IUserProxy.sol";
+import {IUserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IUserProxy.sol";
 
 abstract contract GovernanceProperties is BeforeAfter {
     uint256 constant TOLLERANCE = 1e19; // NOTE: 1e18 is 1 second due to upscaling
+
     /// So we accept at most 10 seconds of errors
 
     /// A Initiative cannot change in status
@@ -212,12 +213,10 @@ abstract contract GovernanceProperties is BeforeAfter {
             eq(votesSumAndInitiativeValues[i].userSum, votesSumAndInitiativeValues[i].initiativeWeight, "Matching");
             t(
                 votesSumAndInitiativeValues[i].userSum == votesSumAndInitiativeValues[i].initiativeWeight
-                    || (
-                        votesSumAndInitiativeValues[i].userSum
+                    || (votesSumAndInitiativeValues[i].userSum
                             >= votesSumAndInitiativeValues[i].initiativeWeight - TOLLERANCE
-                            && votesSumAndInitiativeValues[i].userSum
-                                <= votesSumAndInitiativeValues[i].initiativeWeight + TOLLERANCE
-                    ),
+                        && votesSumAndInitiativeValues[i].userSum
+                            <= votesSumAndInitiativeValues[i].initiativeWeight + TOLLERANCE),
                 "initiative voting weights and user's allocated weight match within tollerance"
             );
         }
@@ -236,8 +235,9 @@ abstract contract GovernanceProperties is BeforeAfter {
                 (uint256 userVoteLQTY, uint256 userVoteOffset,,,) =
                     governance.lqtyAllocatedByUserToInitiative(users[j], deployedInitiatives[i]);
                 // add the weight calculated for each user's allocation to the accumulator
-                userWeightAccumulatorForInitiative +=
-                    governance.lqtyToVotes(userVoteLQTY, uint256(block.timestamp), userVoteOffset);
+                userWeightAccumulatorForInitiative += governance.lqtyToVotes(
+                    userVoteLQTY, uint256(block.timestamp), userVoteOffset
+                );
             }
 
             (uint256 initiativeVoteLQTY, uint256 initiativeVoteOffset,,,) =
@@ -279,7 +279,8 @@ abstract contract GovernanceProperties is BeforeAfter {
 
         t(
             allocatedLQTYSum == totalCountedLQTY
-                || (allocatedLQTYSum >= totalCountedLQTY - TOLLERANCE && allocatedLQTYSum <= totalCountedLQTY + TOLLERANCE),
+                || (allocatedLQTYSum >= totalCountedLQTY - TOLLERANCE
+                    && allocatedLQTYSum <= totalCountedLQTY + TOLLERANCE),
             "Sum of Initiative LQTY And State matches within absolute tollerance"
         );
 

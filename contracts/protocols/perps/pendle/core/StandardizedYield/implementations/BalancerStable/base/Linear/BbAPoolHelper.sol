@@ -19,32 +19,28 @@ abstract contract BbAPoolHelper is TokenHelper {
         _safeApproveInf(token, BALANCER_VAULT);
     }
 
-    function joinExitPool(
-        address receiver,
-        bytes32 poolId,
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn
-    ) internal returns (uint256 amountOut) {
-        return
-            IVault(BALANCER_VAULT).swap{value: (tokenIn == NATIVE ? amountIn : 0)}(
-                IVault.SingleSwap({
-                    poolId: poolId,
-                    kind: IVault.SwapKind.GIVEN_IN,
-                    assetIn: IAsset(tokenIn),
-                    assetOut: IAsset(tokenOut),
-                    amount: amountIn,
-                    userData: EMPTY_BYTES
-                }),
-                IVault.FundManagement({
-                    sender: address(this),
-                    fromInternalBalance: false,
-                    recipient: payable(receiver),
-                    toInternalBalance: false
-                }),
-                0,
-                block.timestamp
-            );
+    function joinExitPool(address receiver, bytes32 poolId, address tokenIn, address tokenOut, uint256 amountIn)
+        internal
+        returns (uint256 amountOut)
+    {
+        return IVault(BALANCER_VAULT).swap{value: (tokenIn == NATIVE ? amountIn : 0)}(
+            IVault.SingleSwap({
+                poolId: poolId,
+                kind: IVault.SwapKind.GIVEN_IN,
+                assetIn: IAsset(tokenIn),
+                assetOut: IAsset(tokenOut),
+                amount: amountIn,
+                userData: EMPTY_BYTES
+            }),
+            IVault.FundManagement({
+                sender: address(this),
+                fromInternalBalance: false,
+                recipient: payable(receiver),
+                toInternalBalance: false
+            }),
+            0,
+            block.timestamp
+        );
     }
 }
 
@@ -54,12 +50,9 @@ abstract contract BbAWethHelper is BbAPoolHelper {
     bytes32 internal immutable BB_A_WETH_POOL_ID;
     address internal immutable WA_WETH;
 
-    constructor(
-        LinearPreview _linearPreviewHelper,
-        address _bbAWeth,
-        bytes32 _bbAWethPoolId,
-        address _waWeth
-    ) BbAPoolHelper(_linearPreviewHelper) {
+    constructor(LinearPreview _linearPreviewHelper, address _bbAWeth, bytes32 _bbAWethPoolId, address _waWeth)
+        BbAPoolHelper(_linearPreviewHelper)
+    {
         BB_A_WETH = _bbAWeth;
         BB_A_WETH_POOL_ID = _bbAWethPoolId;
         WA_WETH = _waWeth;
@@ -72,34 +65,28 @@ abstract contract BbAWethHelper is BbAPoolHelper {
         amountOut = joinExitPool(address(this), BB_A_WETH_POOL_ID, tokenIn, BB_A_WETH, amountDep);
     }
 
-    function _redeemBbAWeth(
-        address receiver,
-        address tokenOut,
-        uint256 amountRedeem
-    ) internal virtual returns (uint256 amountTokenOut) {
+    function _redeemBbAWeth(address receiver, address tokenOut, uint256 amountRedeem)
+        internal
+        virtual
+        returns (uint256 amountTokenOut)
+    {
         amountTokenOut = joinExitPool(receiver, BB_A_WETH_POOL_ID, BB_A_WETH, tokenOut, amountRedeem);
     }
 
-    function _previewDepositBbAWeth(
-        address tokenIn,
-        uint256 amountDep
-    ) internal view virtual returns (uint256 amountOut) {
-        return
-            linearPreviewHelper.joinExitPoolPreview(
-                BB_A_WETH_POOL_ID,
-                tokenIn == NATIVE ? WETH : tokenIn,
-                BB_A_WETH,
-                amountDep
-            );
+    function _previewDepositBbAWeth(address tokenIn, uint256 amountDep)
+        internal
+        view
+        virtual
+        returns (uint256 amountOut)
+    {
+        return linearPreviewHelper.joinExitPoolPreview(
+            BB_A_WETH_POOL_ID, tokenIn == NATIVE ? WETH : tokenIn, BB_A_WETH, amountDep
+        );
     }
 
     function _previewRedeemBbAWeth(address tokenOut, uint256 amountRedeem) internal view returns (uint256 amountOut) {
-        return
-            linearPreviewHelper.joinExitPoolPreview(
-                BB_A_WETH_POOL_ID,
-                BB_A_WETH,
-                tokenOut == NATIVE ? WETH : tokenOut,
-                amountRedeem
-            );
+        return linearPreviewHelper.joinExitPoolPreview(
+            BB_A_WETH_POOL_ID, BB_A_WETH, tokenOut == NATIVE ? WETH : tokenOut, amountRedeem
+        );
     }
 }

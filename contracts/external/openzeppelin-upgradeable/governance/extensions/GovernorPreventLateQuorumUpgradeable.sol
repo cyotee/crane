@@ -25,7 +25,8 @@ abstract contract GovernorPreventLateQuorumUpgradeable is Initializable, Governo
     }
 
     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.GovernorPreventLateQuorum")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant GovernorPreventLateQuorumStorageLocation = 0x042f525fd47e44d02e065dd7bb464f47b4f926fbd05b5e087891ebd756adf100;
+    bytes32 private constant GovernorPreventLateQuorumStorageLocation =
+        0x042f525fd47e44d02e065dd7bb464f47b4f926fbd05b5e087891ebd756adf100;
 
     function _getGovernorPreventLateQuorumStorage() private pure returns (GovernorPreventLateQuorumStorage storage $) {
         assembly {
@@ -67,13 +68,12 @@ abstract contract GovernorPreventLateQuorumUpgradeable is Initializable, Governo
      *
      * May emit a {ProposalExtended} event.
      */
-    function _castVote(
-        uint256 proposalId,
-        address account,
-        uint8 support,
-        string memory reason,
-        bytes memory params
-    ) internal virtual override returns (uint256) {
+    function _castVote(uint256 proposalId, address account, uint8 support, string memory reason, bytes memory params)
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         GovernorPreventLateQuorumStorage storage $ = _getGovernorPreventLateQuorumStorage();
         uint256 result = super._castVote(proposalId, account, support, reason, params);
 

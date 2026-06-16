@@ -52,14 +52,8 @@ library SwapMath {
 
         uint256 absDelta = usedAmount >= 0 ? uint256(usedAmount) : usedAmount.revToUint256();
         if (nextSqrtP == 0) {
-            deltaL = estimateIncrementalLiquidity(
-                absDelta,
-                liquidity,
-                currentSqrtP,
-                feeInFeeUnits,
-                isExactInput,
-                isToken0
-            );
+            deltaL =
+                estimateIncrementalLiquidity(absDelta, liquidity, currentSqrtP, feeInFeeUnits, isExactInput, isToken0);
             nextSqrtP = calcFinalPrice(absDelta, liquidity, deltaL, currentSqrtP, isExactInput, isToken0).toUint160();
         } else {
             deltaL = calcIncrementalLiquidity(absDelta, liquidity, currentSqrtP, nextSqrtP, isExactInput, isToken0);
@@ -245,23 +239,20 @@ library SwapMath {
             if (isExactInput) {
                 // minimise actual output (<0, make less negative) so we avoid sending too much
                 // returnedAmount = deltaL * nextSqrtP - liquidity * (currentSqrtP - nextSqrtP)
-                returnedAmount =
-                    FullMath.mulDivCeiling(deltaL, nextSqrtP, C.TWO_POW_96).toInt256() +
-                    FullMath.mulDivFloor(liquidity, currentSqrtP - nextSqrtP, C.TWO_POW_96).revToInt256();
+                returnedAmount = FullMath.mulDivCeiling(deltaL, nextSqrtP, C.TWO_POW_96).toInt256()
+                    + FullMath.mulDivFloor(liquidity, currentSqrtP - nextSqrtP, C.TWO_POW_96).revToInt256();
             } else {
                 // maximise actual input (>0) so we get desired output amount
                 // returnedAmount = deltaL * nextSqrtP + liquidity * (nextSqrtP - currentSqrtP)
-                returnedAmount =
-                    FullMath.mulDivCeiling(deltaL, nextSqrtP, C.TWO_POW_96).toInt256() +
-                    FullMath.mulDivCeiling(liquidity, nextSqrtP - currentSqrtP, C.TWO_POW_96).toInt256();
+                returnedAmount = FullMath.mulDivCeiling(deltaL, nextSqrtP, C.TWO_POW_96).toInt256()
+                    + FullMath.mulDivCeiling(liquidity, nextSqrtP - currentSqrtP, C.TWO_POW_96).toInt256();
             }
         } else {
             // returnedAmount = (liquidity + deltaL)/nextSqrtP - (liquidity)/currentSqrtP
             // if exactInput, minimise actual output (<0, make less negative) so we avoid sending too much
             // if exactOutput, maximise actual input (>0) so we get desired output amount
-            returnedAmount =
-                FullMath.mulDivCeiling(liquidity + deltaL, C.TWO_POW_96, nextSqrtP).toInt256() +
-                FullMath.mulDivFloor(liquidity, C.TWO_POW_96, currentSqrtP).revToInt256();
+            returnedAmount = FullMath.mulDivCeiling(liquidity + deltaL, C.TWO_POW_96, nextSqrtP).toInt256()
+                + FullMath.mulDivFloor(liquidity, C.TWO_POW_96, currentSqrtP).revToInt256();
         }
 
         if (isExactInput && returnedAmount == 1) {

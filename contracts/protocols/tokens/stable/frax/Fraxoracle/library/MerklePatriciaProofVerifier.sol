@@ -6,9 +6,8 @@
  */
 pragma solidity ^0.8.35;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {RLPReader} from "./RLPReader.sol";
-
 
 library MerklePatriciaProofVerifier {
     using BetterEfficientHashLib for bytes;
@@ -27,11 +26,11 @@ library MerklePatriciaProofVerifier {
     ///        need to be traversed during verification.
     /// @return value whose inclusion is proved or an empty byte array for
     ///         a proof of exclusion
-    function extractProofValue(
-        bytes32 rootHash,
-        bytes memory path,
-        RLPReader.RLPItem[] memory stack
-    ) internal pure returns (bytes memory value) {
+    function extractProofValue(bytes32 rootHash, bytes memory path, RLPReader.RLPItem[] memory stack)
+        internal
+        pure
+        returns (bytes memory value)
+    {
         bytes memory mptKey = _decodeNibbles(path, 0);
         uint256 mptKeyOffset = 0;
 
@@ -48,7 +47,6 @@ library MerklePatriciaProofVerifier {
 
         // Traverse stack of nodes starting at root.
         for (uint256 i = 0; i < stack.length; i++) {
-
             // We use the fact that an rlp encoded list consists of some
             // encoding of its length plus the concatenation of its
             // *rlp-encoded* items.
@@ -110,8 +108,9 @@ library MerklePatriciaProofVerifier {
 
                     rlpValue = node[1];
                     return rlpValue.toBytes();
-                } else { // extension
-                    // Sanity check
+                } else {
+                    // extension
+                // Sanity check
                     if (i == stack.length - 1) {
                         // shouldn't be at last level
                         revert();
@@ -167,7 +166,6 @@ library MerklePatriciaProofVerifier {
         }
     }
 
-
     /// @dev Computes the hash of the Merkle-Patricia-Trie hash of the RLP item.
     ///      Merkle-Patricia-Tries use a weird "hash function" that outputs
     ///      *variable-length* hashes: If the item is shorter than 32 bytes,
@@ -195,11 +193,14 @@ library MerklePatriciaProofVerifier {
         assembly {
             b := byte(0, mload(memPtr))
         }
-        return b == 0x80 /* empty byte string */;
+        return b == 0x80; /* empty byte string */
     }
 
-
-    function _merklePatriciaCompactDecode(bytes memory compact) private pure returns (bool isLeaf, bytes memory nibbles) {
+    function _merklePatriciaCompactDecode(bytes memory compact)
+        private
+        pure
+        returns (bool isLeaf, bytes memory nibbles)
+    {
         require(compact.length > 0);
         uint256 first_nibble = uint8(compact[0]) >> 4 & 0xF;
         uint256 skipNibbles;
@@ -222,7 +223,6 @@ library MerklePatriciaProofVerifier {
         return (isLeaf, _decodeNibbles(compact, skipNibbles));
     }
 
-
     function _decodeNibbles(bytes memory compact, uint256 skipNibbles) private pure returns (bytes memory nibbles) {
         require(compact.length > 0);
 
@@ -235,16 +235,15 @@ library MerklePatriciaProofVerifier {
 
         for (uint256 i = skipNibbles; i < skipNibbles + length; i += 1) {
             if (i % 2 == 0) {
-                nibbles[nibblesLength] = bytes1((uint8(compact[i/2]) >> 4) & 0xF);
+                nibbles[nibblesLength] = bytes1((uint8(compact[i / 2]) >> 4) & 0xF);
             } else {
-                nibbles[nibblesLength] = bytes1((uint8(compact[i/2]) >> 0) & 0xF);
+                nibbles[nibblesLength] = bytes1((uint8(compact[i / 2]) >> 0) & 0xF);
             }
             nibblesLength += 1;
         }
 
         assert(nibblesLength == nibbles.length);
     }
-
 
     function _sharedPrefixLength(uint256 xsOffset, bytes memory xs, bytes memory ys) private pure returns (uint256) {
         uint256 i;

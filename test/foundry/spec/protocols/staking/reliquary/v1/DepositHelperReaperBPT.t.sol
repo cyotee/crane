@@ -4,7 +4,9 @@ pragma solidity ^0.8.23;
 import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
-import {DepositHelperReaperBPT} from "@crane/contracts/protocols/staking/reliquary/v1/helpers/DepositHelperReaperBPT.sol";
+import {
+    DepositHelperReaperBPT
+} from "@crane/contracts/protocols/staking/reliquary/v1/helpers/DepositHelperReaperBPT.sol";
 import {IReZap} from "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReZap.sol";
 import {NFTDescriptor} from "@crane/contracts/protocols/staking/reliquary/v1/nft_descriptors/NFTDescriptor.sol";
 import {Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/Reliquary.sol";
@@ -65,14 +67,7 @@ contract DepositHelperReaperBPTTest is TestBase_Reliquary {
         deal(address(vault), address(this), 1);
         vault.approve(address(reliquary), 1); // approve 1 wei to bootstrap the pool
         reliquary.addPool(
-            1000,
-            address(vault),
-            address(0),
-            linearCurve,
-            "A Late Quartet",
-            nftDescriptor,
-            true,
-            address(this)
+            1000, address(vault), address(0), linearCurve, "A Late Quartet", nftDescriptor, true, address(this)
         );
 
         reZap = IReZap(0x6E87672e547D40285C8FdCE1139DE4bc7CBF2127);

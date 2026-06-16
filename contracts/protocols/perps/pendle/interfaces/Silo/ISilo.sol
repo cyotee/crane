@@ -78,11 +78,7 @@ interface ISilo {
     /// @param amount amount of asset that was withdrew
     /// @param collateralOnly type of withdraw, true if collateralOnly deposit was used
     event Withdraw(
-        address indexed asset,
-        address indexed depositor,
-        address indexed receiver,
-        uint256 amount,
-        bool collateralOnly
+        address indexed asset, address indexed depositor, address indexed receiver, uint256 amount, bool collateralOnly
     );
 
     /// @notice Emitted on asset borrow
@@ -176,11 +172,9 @@ interface ISilo {
     /// @param _collateralOnly True if depositing collateral only
     /// @return collateralAmount deposited amount
     /// @return collateralShare user collateral shares based on deposited amount
-    function deposit(
-        address _asset,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 collateralAmount, uint256 collateralShare);
+    function deposit(address _asset, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 collateralAmount, uint256 collateralShare);
 
     /// @notice Router function to deposit `_amount` of `_asset` tokens to the Silo for the `_depositor`
     /// @param _asset The address of the token to deposit
@@ -189,12 +183,9 @@ interface ISilo {
     /// @param _collateralOnly True if depositing collateral only
     /// @return collateralAmount deposited amount
     /// @return collateralShare `_depositor` collateral shares based on deposited amount
-    function depositFor(
-        address _asset,
-        address _depositor,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 collateralAmount, uint256 collateralShare);
+    function depositFor(address _asset, address _depositor, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 collateralAmount, uint256 collateralShare);
 
     /// @notice Withdraw `_amount` of `_asset` tokens from the Silo to `msg.sender`
     /// @param _asset The address of the token to withdraw
@@ -202,11 +193,9 @@ interface ISilo {
     /// @param _collateralOnly True if withdrawing collateral only deposit
     /// @return withdrawnAmount withdrawn amount that was transferred to user
     /// @return withdrawnShare burned share based on `withdrawnAmount`
-    function withdraw(
-        address _asset,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 withdrawnAmount, uint256 withdrawnShare);
+    function withdraw(address _asset, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 withdrawnAmount, uint256 withdrawnShare);
 
     /// @notice Router function to withdraw `_amount` of `_asset` tokens from the Silo for the `_depositor`
     /// @param _asset The address of the token to withdraw
@@ -217,13 +206,9 @@ interface ISilo {
     /// @param _collateralOnly True if withdrawing collateral only deposit
     /// @return withdrawnAmount withdrawn amount that was transferred to `_receiver`
     /// @return withdrawnShare burned share based on `withdrawnAmount`
-    function withdrawFor(
-        address _asset,
-        address _depositor,
-        address _receiver,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 withdrawnAmount, uint256 withdrawnShare);
+    function withdrawFor(address _asset, address _depositor, address _receiver, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 withdrawnAmount, uint256 withdrawnShare);
 
     /// @notice Borrow `_amount` of `_asset` tokens from the Silo to `msg.sender`
     /// @param _asset The address of the token to borrow
@@ -240,12 +225,9 @@ interface ISilo {
     /// @param _amount The amount of the token to borrow
     /// @return debtAmount borrowed amount
     /// @return debtShare `_receiver` debt share based on borrowed amount
-    function borrowFor(
-        address _asset,
-        address _borrower,
-        address _receiver,
-        uint256 _amount
-    ) external returns (uint256 debtAmount, uint256 debtShare);
+    function borrowFor(address _asset, address _borrower, address _receiver, uint256 _amount)
+        external
+        returns (uint256 debtAmount, uint256 debtShare);
 
     /// @notice Repay `_amount` of `_asset` tokens from `msg.sender` to the Silo
     /// @param _asset The address of the token to repay
@@ -260,11 +242,9 @@ interface ISilo {
     /// @param _amount amount of asset to repay, includes interests
     /// @return repaidAmount amount repaid
     /// @return burnedShare burned debt share
-    function repayFor(
-        address _asset,
-        address _borrower,
-        uint256 _amount
-    ) external returns (uint256 repaidAmount, uint256 burnedShare);
+    function repayFor(address _asset, address _borrower, uint256 _amount)
+        external
+        returns (uint256 repaidAmount, uint256 burnedShare);
 
     /// @dev harvest protocol fees from an array of assets
     /// @return harvestedAmounts amount harvested during tx execution for each of silo asset
@@ -285,10 +265,7 @@ interface ISilo {
     /// amounts of collaterals send to `_flashReceiver`
     /// @return shareAmountsToRepaid shareAmountsToRepaid[userId][assetId] => amount
     /// required amounts of debt to be repaid
-    function flashLiquidate(
-        address[] memory _users,
-        bytes memory _flashReceiverData
-    )
+    function flashLiquidate(address[] memory _users, bytes memory _flashReceiverData)
         external
         returns (
             address[] memory assets,

@@ -8,10 +8,7 @@ import {FPI} from "@crane/contracts/protocols/tokens/stable/frax/FPI/FPI.sol";
 import {FPIControllerPool} from "@crane/contracts/protocols/tokens/stable/frax/FPI/FPIControllerPool.sol";
 import {FraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapPair.sol";
 import {IFraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
-import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract FPIControllerPool_Tests is TestBase_FraxEthereumFork {
     FPIControllerPool internal pool;

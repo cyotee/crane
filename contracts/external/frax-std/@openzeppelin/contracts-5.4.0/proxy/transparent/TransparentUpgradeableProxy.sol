@@ -349,7 +349,7 @@ library Address {
             revert Errors.InsufficientBalance(address(this).balance, amount);
         }
 
-        (bool success, bytes memory returndata) = recipient.call{ value: amount }("");
+        (bool success, bytes memory returndata) = recipient.call{value: amount}("");
         if (!success) {
             _revert(returndata);
         }
@@ -390,7 +390,7 @@ library Address {
         if (address(this).balance < value) {
             revert Errors.InsufficientBalance(address(this).balance, value);
         }
-        (bool success, bytes memory returndata) = target.call{ value: value }(data);
+        (bool success, bytes memory returndata) = target.call{value: value}(data);
         return verifyCallResultFromTarget(target, success, returndata);
     }
 
@@ -417,11 +417,11 @@ library Address {
      * was not a contract or bubbling up the revert reason (falling back to {Errors.FailedCall}) in case
      * of an unsuccessful call.
      */
-    function verifyCallResultFromTarget(
-        address target,
-        bool success,
-        bytes memory returndata
-    ) internal view returns (bytes memory) {
+    function verifyCallResultFromTarget(address target, bool success, bytes memory returndata)
+        internal
+        view
+        returns (bytes memory)
+    {
         if (!success) {
             _revert(returndata);
         } else {
@@ -802,12 +802,13 @@ contract ProxyAdmin is Ownable {
      * - This contract must be the admin of `proxy`.
      * - If `data` is empty, `msg.value` must be zero.
      */
-    function upgradeAndCall(
-        ITransparentUpgradeableProxy proxy,
-        address implementation,
-        bytes memory data
-    ) public payable virtual onlyOwner {
-        proxy.upgradeToAndCall{ value: msg.value }(implementation, data);
+    function upgradeAndCall(ITransparentUpgradeableProxy proxy, address implementation, bytes memory data)
+        public
+        payable
+        virtual
+        onlyOwner
+    {
+        proxy.upgradeToAndCall{value: msg.value}(implementation, data);
     }
 }
 

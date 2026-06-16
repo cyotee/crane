@@ -1,148 +1,149 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import 'forge-std/Test.sol';
+import "forge-std/Test.sol";
 
-import {Errors} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol';
-import {PriceOracleSentinel} from '@crane/contracts/protocols/lending/aave/v3.6/misc/PriceOracleSentinel.sol';
-import {IPoolAddressesProvider} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolAddressesProvider.sol';
-import {IPriceOracleSentinel} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPriceOracleSentinel.sol';
-import {ACLManager} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/ACLManager.sol';
-import {SequencerOracle, ISequencerOracle} from '@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/oracle/SequencerOracle.sol';
-import {TestnetProcedures} from '../utils/TestnetProcedures.sol';
+import {Errors} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol";
+import {PriceOracleSentinel} from "@crane/contracts/protocols/lending/aave/v3.6/misc/PriceOracleSentinel.sol";
+import {
+    IPoolAddressesProvider
+} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolAddressesProvider.sol";
+import {IPriceOracleSentinel} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPriceOracleSentinel.sol";
+import {ACLManager} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/configuration/ACLManager.sol";
+import {
+    SequencerOracle,
+    ISequencerOracle
+} from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/oracle/SequencerOracle.sol";
+import {TestnetProcedures} from "../utils/TestnetProcedures.sol";
 
 contract PriceOracleSentinelTest is TestnetProcedures {
-  address internal stranger;
-  address internal riskAdmin;
+    address internal stranger;
+    address internal riskAdmin;
 
-  PriceOracleSentinel internal priceOracleSentinel;
-  SequencerOracle internal sequencerOracleMock;
+    PriceOracleSentinel internal priceOracleSentinel;
+    SequencerOracle internal sequencerOracleMock;
 
-  uint256 gracePeriod = 1 days;
+    uint256 gracePeriod = 1 days;
 
-  function setUp() public {
-    initTestEnvironment();
+    function setUp() public {
+        initTestEnvironment();
 
-    stranger = makeAddr('STRANGER');
-    riskAdmin = makeAddr('RISK_ADMIN');
+        stranger = makeAddr("STRANGER");
+        riskAdmin = makeAddr("RISK_ADMIN");
 
-    vm.prank(roleList.marketOwner);
-    ACLManager(report.aclManager).addRiskAdmin(riskAdmin);
+        vm.prank(roleList.marketOwner);
+        ACLManager(report.aclManager).addRiskAdmin(riskAdmin);
 
-    sequencerOracleMock = new SequencerOracle(poolAdmin);
-    priceOracleSentinel = new PriceOracleSentinel(
-      IPoolAddressesProvider(report.poolAddressesProvider),
-      ISequencerOracle(address(sequencerOracleMock)),
-      1 days
-    );
+        sequencerOracleMock = new SequencerOracle(poolAdmin);
+        priceOracleSentinel = new PriceOracleSentinel(
+            IPoolAddressesProvider(report.poolAddressesProvider), ISequencerOracle(address(sequencerOracleMock)), 1 days
+        );
 
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(false, 0);
-  }
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(false, 0);
+    }
 
-  function test_new_PriceOracleSentinel() public {
-    address sequencerOracle = makeAddr('SEQUENCER_ORACLE');
+    function test_new_PriceOracleSentinel() public {
+        address sequencerOracle = makeAddr("SEQUENCER_ORACLE");
 
-    PriceOracleSentinel sentinel = new PriceOracleSentinel(
-      IPoolAddressesProvider(report.poolAddressesProvider),
-      ISequencerOracle(sequencerOracle),
-      gracePeriod
-    );
+        PriceOracleSentinel sentinel = new PriceOracleSentinel(
+            IPoolAddressesProvider(report.poolAddressesProvider), ISequencerOracle(sequencerOracle), gracePeriod
+        );
 
-    assertEq(sentinel.getSequencerOracle(), sequencerOracle);
-    assertEq(sentinel.getGracePeriod(), gracePeriod);
-    assertEq(address(sentinel.ADDRESSES_PROVIDER()), report.poolAddressesProvider);
-  }
+        assertEq(sentinel.getSequencerOracle(), sequencerOracle);
+        assertEq(sentinel.getGracePeriod(), gracePeriod);
+        assertEq(address(sentinel.ADDRESSES_PROVIDER()), report.poolAddressesProvider);
+    }
 
-  function test_reverts_setSequencerOracle_not_poolAdmin() public {
-    vm.expectRevert(abi.encodeWithSelector(Errors.CallerNotPoolAdmin.selector));
+    function test_reverts_setSequencerOracle_not_poolAdmin() public {
+        vm.expectRevert(abi.encodeWithSelector(Errors.CallerNotPoolAdmin.selector));
 
-    vm.prank(stranger);
-    priceOracleSentinel.setSequencerOracle(address(0));
-  }
+        vm.prank(stranger);
+        priceOracleSentinel.setSequencerOracle(address(0));
+    }
 
-  function test_reverts_setGracePeriod_not_poolAdmin() public {
-    vm.expectRevert(abi.encodeWithSelector(Errors.CallerNotRiskOrPoolAdmin.selector));
+    function test_reverts_setGracePeriod_not_poolAdmin() public {
+        vm.expectRevert(abi.encodeWithSelector(Errors.CallerNotRiskOrPoolAdmin.selector));
 
-    vm.prank(stranger);
-    priceOracleSentinel.setGracePeriod(1000 days);
-  }
+        vm.prank(stranger);
+        priceOracleSentinel.setGracePeriod(1000 days);
+    }
 
-  function test_setSequencerOracle() public {
-    vm.expectEmit(address(priceOracleSentinel));
-    emit IPriceOracleSentinel.SequencerOracleUpdated(address(0));
+    function test_setSequencerOracle() public {
+        vm.expectEmit(address(priceOracleSentinel));
+        emit IPriceOracleSentinel.SequencerOracleUpdated(address(0));
 
-    vm.prank(poolAdmin);
-    priceOracleSentinel.setSequencerOracle(address(0));
-  }
+        vm.prank(poolAdmin);
+        priceOracleSentinel.setSequencerOracle(address(0));
+    }
 
-  function test_setGracePeriod() public {
-    vm.expectEmit(address(priceOracleSentinel));
-    emit IPriceOracleSentinel.GracePeriodUpdated(1000 days);
+    function test_setGracePeriod() public {
+        vm.expectEmit(address(priceOracleSentinel));
+        emit IPriceOracleSentinel.GracePeriodUpdated(1000 days);
 
-    vm.prank(poolAdmin);
-    priceOracleSentinel.setGracePeriod(1000 days);
-  }
+        vm.prank(poolAdmin);
+        priceOracleSentinel.setGracePeriod(1000 days);
+    }
 
-  function test_isLiquidationAllowed_true_network_up_grace_period_pass() public {
-    uint256 timestamp = vm.getBlockTimestamp();
-    uint256 gracePeriodEnded = timestamp + 1 days + 1;
+    function test_isLiquidationAllowed_true_network_up_grace_period_pass() public {
+        uint256 timestamp = vm.getBlockTimestamp();
+        uint256 gracePeriodEnded = timestamp + 1 days + 1;
 
-    vm.warp(gracePeriodEnded);
+        vm.warp(gracePeriodEnded);
 
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(false, timestamp);
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(false, timestamp);
 
-    assertEq(priceOracleSentinel.isLiquidationAllowed(), true);
-  }
+        assertEq(priceOracleSentinel.isLiquidationAllowed(), true);
+    }
 
-  function test_isLiquidationAllowed_network_up_not_grace_period() public {
-    uint256 timestamp = vm.getBlockTimestamp();
-    uint256 exactGracePeriod = timestamp + 1 days;
+    function test_isLiquidationAllowed_network_up_not_grace_period() public {
+        uint256 timestamp = vm.getBlockTimestamp();
+        uint256 exactGracePeriod = timestamp + 1 days;
 
-    vm.warp(exactGracePeriod);
+        vm.warp(exactGracePeriod);
 
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(false, timestamp);
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(false, timestamp);
 
-    assertEq(priceOracleSentinel.isLiquidationAllowed(), false);
-  }
+        assertEq(priceOracleSentinel.isLiquidationAllowed(), false);
+    }
 
-  function test_isLiquidationAllowed_network_down() public {
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(true, 0);
+    function test_isLiquidationAllowed_network_down() public {
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(true, 0);
 
-    assertEq(priceOracleSentinel.isLiquidationAllowed(), false);
-  }
+        assertEq(priceOracleSentinel.isLiquidationAllowed(), false);
+    }
 
-  function test_isBorrowAllowed_network_down() public {
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(true, 0);
+    function test_isBorrowAllowed_network_down() public {
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(true, 0);
 
-    assertEq(priceOracleSentinel.isBorrowAllowed(), false);
-  }
+        assertEq(priceOracleSentinel.isBorrowAllowed(), false);
+    }
 
-  function test_isBorrowAllowed_network_up_not_grace_period() public {
-    uint256 timestamp = vm.getBlockTimestamp();
-    uint256 exactGracePeriod = timestamp + 1 days;
+    function test_isBorrowAllowed_network_up_not_grace_period() public {
+        uint256 timestamp = vm.getBlockTimestamp();
+        uint256 exactGracePeriod = timestamp + 1 days;
 
-    vm.warp(exactGracePeriod);
+        vm.warp(exactGracePeriod);
 
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(false, timestamp);
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(false, timestamp);
 
-    assertEq(priceOracleSentinel.isBorrowAllowed(), false);
-  }
+        assertEq(priceOracleSentinel.isBorrowAllowed(), false);
+    }
 
-  function test_isBorrowAllowed_true_network_up_grace_period_pass() public {
-    uint256 timestamp = vm.getBlockTimestamp();
-    uint256 gracePeriodEnded = timestamp + 1 days + 1;
+    function test_isBorrowAllowed_true_network_up_grace_period_pass() public {
+        uint256 timestamp = vm.getBlockTimestamp();
+        uint256 gracePeriodEnded = timestamp + 1 days + 1;
 
-    vm.warp(gracePeriodEnded);
+        vm.warp(gracePeriodEnded);
 
-    vm.prank(poolAdmin);
-    sequencerOracleMock.setAnswer(false, timestamp);
+        vm.prank(poolAdmin);
+        sequencerOracleMock.setAnswer(false, timestamp);
 
-    assertEq(priceOracleSentinel.isBorrowAllowed(), true);
-  }
+        assertEq(priceOracleSentinel.isBorrowAllowed(), true);
+    }
 }

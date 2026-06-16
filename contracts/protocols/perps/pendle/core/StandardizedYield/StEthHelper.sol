@@ -35,10 +35,12 @@ abstract contract StEthHelper is TokenHelper {
     }
 
     /// @dev tokenIn must be either ETH, WETH or STETH
-    function _previewDepositWstETH(
-        address tokenIn,
-        uint256 amountDep
-    ) internal view virtual returns (uint256 amountOut) {
+    function _previewDepositWstETH(address tokenIn, uint256 amountDep)
+        internal
+        view
+        virtual
+        returns (uint256 amountOut)
+    {
         if (tokenIn != STETH) {
             assert(tokenIn == WETH || tokenIn == NATIVE);
             uint256 totalShares = IStETH(STETH).getTotalShares();

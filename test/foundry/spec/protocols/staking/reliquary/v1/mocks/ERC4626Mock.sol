@@ -21,7 +21,9 @@ contract ERC4626Mock is IERC4626 {
     // event Transfer(address indexed from, address indexed to, uint256 value);
     // event Approval(address indexed owner, address indexed spender, uint256 value);
     event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
-    event Withdraw(address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares);
+    event Withdraw(
+        address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares
+    );
 
     constructor(address asset_, string memory name_, string memory symbol_, uint8 decimals_) {
         _asset = IERC20(asset_);

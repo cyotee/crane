@@ -4,7 +4,7 @@
 pragma solidity ^0.8.0;
 
 import "./PendleERC20Upg.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
@@ -13,11 +13,10 @@ import "@crane/contracts/external/openzeppelin-upgradeable/utils/cryptography/dr
 import "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/ECDSA.sol";
 import "@crane/contracts/external/openzeppelin-contracts/utils/Counters.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @dev forked from OZ's ERC20Permit
 abstract contract PendleERC20PermitUpg is PendleERC20Upg, IERC20Permit, EIP712Upgradeable {
-    
     using BetterEfficientHashLib for bytes;
 
     using Counters for Counters.Counter;
@@ -38,15 +37,11 @@ abstract contract PendleERC20PermitUpg is PendleERC20Upg, IERC20Permit, EIP712Up
     /**
      * @dev See {IERC20Permit-permit}.
      */
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public virtual override {
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        public
+        virtual
+        override
+    {
         require(block.timestamp <= deadline, "ERC20Permit: expired deadline");
 
         // bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));

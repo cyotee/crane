@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IDistributionStrategy} from './external/IDistributionStrategy.sol';
+import {IDistributionStrategy} from "./external/IDistributionStrategy.sol";
 
 /// @title IContinuousClearingAuctionFactory
 interface IContinuousClearingAuctionFactory is IDistributionStrategy {

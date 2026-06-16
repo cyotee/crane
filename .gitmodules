@@ -3,10 +3,13 @@
 	url = https://github.com/foundry-rs/forge-std
 [submodule "lib/chainlink-local"]
 	path = lib/chainlink-local
-	url = https://github.com/smartcontractkit/chainlink-local
+	url = ttps://github.com/smartcontractkit/chainlink-local
 [submodule "lib/battlechain-lib"]
 	path = lib/battlechain-lib
 	url = https://github.com/Cyfrin/battlechain-lib
 [submodule "lib/openzeppelin-contracts"]
 	path = lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "lib/gitlawb-contracts"]
+	path = lib/gitlawb-contracts
+	url = https://github.com/cyotee/gitlawb-contracts

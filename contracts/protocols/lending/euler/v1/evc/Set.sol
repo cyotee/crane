@@ -185,10 +185,10 @@ library Set {
 
         if (index1 == 0) {
             (setStorage.firstElement, setStorage.elements[index2].value) =
-                (setStorage.elements[index2].value, firstElement);
+            (setStorage.elements[index2].value, firstElement);
         } else {
             (setStorage.elements[index1].value, setStorage.elements[index2].value) =
-                (setStorage.elements[index2].value, setStorage.elements[index1].value);
+            (setStorage.elements[index2].value, setStorage.elements[index1].value);
         }
     }
 

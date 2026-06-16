@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {MultiStepOwnableRepo} from '@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol';
-import {Permit2AwareRepo} from '@crane/contracts/protocols/utils/permit2/aware/Permit2AwareRepo.sol';
-import {TokenTransferRelayerRepo} from '@crane/contracts/protocols/l2s/superchain/relayers/token/TokenTransferRelayerRepo.sol';
-import {IDiamond} from '@crane/contracts/interfaces/IDiamond.sol';
-import {IFacet} from '@crane/contracts/interfaces/IFacet.sol';
+import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwnableRepo.sol";
+import {Permit2AwareRepo} from "@crane/contracts/protocols/utils/permit2/aware/Permit2AwareRepo.sol";
+import {
+    TokenTransferRelayerRepo
+} from "@crane/contracts/protocols/l2s/superchain/relayers/token/TokenTransferRelayerRepo.sol";
+import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
-import {IMultiStepOwnable} from '@crane/contracts/interfaces/IMultiStepOwnable.sol';
+import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
-import {IApprovedMessageSenderRegistry} from '@crane/contracts/interfaces/IApprovedMessageSenderRegistry.sol';
-import {ITokenTransferRelayer} from '@crane/contracts/interfaces/ITokenTransferRelayer.sol';
-import {DFPkgBase} from '@crane/contracts/factories/diamondPkg/DFPkgBase.sol';
+import {IApprovedMessageSenderRegistry} from "@crane/contracts/interfaces/IApprovedMessageSenderRegistry.sol";
+import {ITokenTransferRelayer} from "@crane/contracts/interfaces/ITokenTransferRelayer.sol";
+import {DFPkgBase} from "@crane/contracts/factories/diamondPkg/DFPkgBase.sol";
 
 interface ITokenTransferRelayerDFPkg is IDiamondFactoryPackage {
     struct PkgInit {
@@ -27,7 +29,6 @@ interface ITokenTransferRelayerDFPkg is IDiamondFactoryPackage {
 }
 
 contract TokenTransferRelayerDFPkg is DFPkgBase, ITokenTransferRelayerDFPkg {
-
     IFacet public immutable OWNABLE_FACET;
 
     IFacet public immutable TOKEN_TRANSFER_RELAYER_FACET;
@@ -50,7 +51,12 @@ contract TokenTransferRelayerDFPkg is DFPkgBase, ITokenTransferRelayerDFPkg {
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetAddresses() public view override(IDiamondFactoryPackage, DFPkgBase) returns (address[] memory facetAddresses_) {
+    function facetAddresses()
+        public
+        view
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (address[] memory facetAddresses_)
+    {
         facetAddresses_ = new address[](2);
         facetAddresses_[0] = address(OWNABLE_FACET);
         facetAddresses_[1] = address(TOKEN_TRANSFER_RELAYER_FACET);
@@ -59,7 +65,12 @@ contract TokenTransferRelayerDFPkg is DFPkgBase, ITokenTransferRelayerDFPkg {
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetInterfaces() public pure override(IDiamondFactoryPackage, DFPkgBase) returns (bytes4[] memory interfaces) {
+    function facetInterfaces()
+        public
+        pure
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (bytes4[] memory interfaces)
+    {
         interfaces = new bytes4[](2);
         interfaces[0] = type(IMultiStepOwnable).interfaceId;
         interfaces[1] = type(ITokenTransferRelayer).interfaceId;
@@ -69,7 +80,12 @@ contract TokenTransferRelayerDFPkg is DFPkgBase, ITokenTransferRelayerDFPkg {
     /**
      * @inheritdoc IDiamondFactoryPackage
      */
-    function facetCuts() public view override(IDiamondFactoryPackage, DFPkgBase) returns (IDiamond.FacetCut[] memory facetCuts_) {
+    function facetCuts()
+        public
+        view
+        override(IDiamondFactoryPackage, DFPkgBase)
+        returns (IDiamond.FacetCut[] memory facetCuts_)
+    {
         facetCuts_ = new IDiamond.FacetCut[](2);
         facetCuts_[0] = IDiamond.FacetCut({
             facetAddress: address(OWNABLE_FACET),
@@ -91,7 +107,5 @@ contract TokenTransferRelayerDFPkg is DFPkgBase, ITokenTransferRelayerDFPkg {
         MultiStepOwnableRepo._initialize(args.owner, 3 days);
         TokenTransferRelayerRepo._initialize(args.approvedMessageSenderRegistry);
         Permit2AwareRepo._initialize(PERMIT2);
-
     }
-
 }

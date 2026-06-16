@@ -9,13 +9,12 @@ import {StableSwapNGAggregator} from "./StableSwapNGAggregator.sol";
 import {ICurveStableSwapNG} from "./interfaces/ICurveStableSwapNG.sol";
 import {ICurveStableSwapFactoryNG} from "./interfaces/ICurveStableSwapFactoryNG.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title StableSwapNGAggregatorFactory
 /// @notice Factory for creating StableSwapNGAggregator hooks via CREATE2 and initializing Uniswap V4 pools
 /// @dev Deploys deterministic hook addresses and initializes pools for all token pairs in the Curve pool
 contract StableSwapNGAggregatorFactory {
-    
     using BetterEfficientHashLib for bytes;
 
     /// @notice The Uniswap V4 PoolManager contract
@@ -91,8 +90,8 @@ contract StableSwapNGAggregatorFactory {
         //     )
         // );
         bytes32 bytecodeHash = abi.encodePacked(
-            type(StableSwapNGAggregator).creationCode, abi.encode(poolManager, curvePool, curveFactory)
-        )._hash();
+                type(StableSwapNGAggregator).creationCode, abi.encode(poolManager, curvePool, curveFactory)
+            )._hash();
         // computedAddress =
         //     address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
         computedAddress =

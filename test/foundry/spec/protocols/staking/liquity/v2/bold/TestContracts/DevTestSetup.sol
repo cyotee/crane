@@ -37,7 +37,8 @@ contract DevTestSetup is BaseTest {
         accounts = new Accounts();
         createAccounts();
 
-        (A, B, C, D, E, F, G) = (
+        (A, B, C, D, E, F, G) =
+        (
             accountsList[0],
             accountsList[1],
             accountsList[2],

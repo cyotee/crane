@@ -3,8 +3,12 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
-import {ICurveFactory} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/ICurveFactory.sol";
-import {ICurveStableSwap} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IStableSwap.sol";
+import {
+    ICurveFactory
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/ICurveFactory.sol";
+import {
+    ICurveStableSwap
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IStableSwap.sol";
 import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol";
 import {PoolKey} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolKey.sol";
 import {PoolIdLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
@@ -17,12 +21,16 @@ import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/utils/HookM
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
 import {ProtocolFeeLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/ProtocolFeeLibrary.sol";
-import {StableSwapAggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
+import {
+    StableSwapAggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
 import {
     StableSwapAggregatorFactory
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregatorFactory.sol";
 import {MockMetaRegistry} from "./mocks/MockMetaRegistry.sol";
-import {IMetaRegistry} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
+import {
+    IMetaRegistry
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
 
 /// @title StableSwapFuzz
 /// @notice Fuzz tests for StableSwap through Uniswap V4 hooks
@@ -86,7 +94,9 @@ contract StableSwapFuzz is Test {
         curveFeeReceiver = makeAddr("curveFeeReceiver");
 
         // Deploy Uniswap V4 PoolManager
-        manager = IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        manager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
 
         // Deploy swap router
         swapRouter = new SafePoolSwapTest(manager);

@@ -2,160 +2,151 @@
 pragma solidity ^0.8.19;
 
 // Interfaces
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {IPool} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol';
-import {IAToken} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IPool} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol";
+import {IAToken} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol";
 
 // Libraries
 
 // Test Contracts
-import {Actor} from '@crane/contracts/protocols/lending/aave/v3.6/utils/Actor.sol';
-import {BaseHandler} from 'test/foundry/spec/protocols/lending/aave/3.6/invariants/base/BaseHandler.t.sol';
+import {Actor} from "@crane/contracts/protocols/lending/aave/v3.6/utils/Actor.sol";
+import {BaseHandler} from "test/foundry/spec/protocols/lending/aave/3.6/invariants/base/BaseHandler.t.sol";
 
 /// @title LendingHandler
 /// @notice Handler test contract for a set of actions
 contract LendingHandler is BaseHandler {
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                      STATE VARIABLES                                      //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                      STATE VARIABLES                                      //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                          ACTIONS                                          //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                          ACTIONS                                          //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function supply(uint256 amount, uint8 i, uint8 j) external setup {
-    bool success;
-    bytes memory returnData;
+    function supply(uint256 amount, uint8 i, uint8 j) external setup {
+        bool success;
+        bytes memory returnData;
 
-    // Get one of the three actors randomly
-    address onBehalfOf = _getRandomActor(i);
-    _setReceiverActor(onBehalfOf);
+        // Get one of the three actors randomly
+        address onBehalfOf = _getRandomActor(i);
+        _setReceiverActor(onBehalfOf);
 
-    address asset = _getRandomBaseAsset(j);
+        address asset = _getRandomBaseAsset(j);
 
-    _mintAndApprove({token: asset, owner: address(actor), spender: address(pool), amount: amount});
+        _mintAndApprove({token: asset, owner: address(actor), spender: address(pool), amount: amount});
 
-    _before();
-    (success, returnData) = actor.proxy(
-      address(pool),
-      abi.encodeWithSelector(IPool.supply.selector, asset, amount, onBehalfOf, 0)
-    );
+        _before();
+        (success, returnData) =
+            actor.proxy(address(pool), abi.encodeWithSelector(IPool.supply.selector, asset, amount, onBehalfOf, 0));
 
-    if (success) {
-      _after();
+        if (success) {
+            _after();
 
-      // POST-CONDITIONS
-      assertEq(
-        snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].underlyingBalance,
-        snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].underlyingBalance +
-          amount,
-        LENDING_HPOST_D
-      );
+            // POST-CONDITIONS
+            assertEq(
+                snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].underlyingBalance,
+                snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].underlyingBalance + amount,
+                LENDING_HPOST_D
+            );
 
-      assertEq(
-        snapshotGlobalVarsBefore.assetsInfo[asset].virtualUnderlyingBalance + amount,
-        snapshotGlobalVarsAfter.assetsInfo[asset].virtualUnderlyingBalance
-      );
+            assertEq(
+                snapshotGlobalVarsBefore.assetsInfo[asset].virtualUnderlyingBalance + amount,
+                snapshotGlobalVarsAfter.assetsInfo[asset].virtualUnderlyingBalance
+            );
 
-      assertApproxEqAbs(
-        snapshotGlobalVarsBefore.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance + amount,
-        snapshotGlobalVarsAfter.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance,
-        2,
-        LENDING_HPOST_E
-      );
-      assertGe(
-        snapshotGlobalVarsBefore.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance + amount,
-        snapshotGlobalVarsAfter.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance,
-        LENDING_HPOST_E
-      );
-    } else {
-      revert('LendingHandler: supply failed');
+            assertApproxEqAbs(
+                snapshotGlobalVarsBefore.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance + amount,
+                snapshotGlobalVarsAfter.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance,
+                2,
+                LENDING_HPOST_E
+            );
+            assertGe(
+                snapshotGlobalVarsBefore.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance + amount,
+                snapshotGlobalVarsAfter.usersInfo[onBehalfOf].userAssetsInfo[asset].aTokenBalance,
+                LENDING_HPOST_E
+            );
+        } else {
+            revert("LendingHandler: supply failed");
+        }
     }
-  }
 
-  function withdraw(uint256 amount, uint8 i, uint8 j) external setup {
-    bool success;
-    bytes memory returnData;
+    function withdraw(uint256 amount, uint8 i, uint8 j) external setup {
+        bool success;
+        bytes memory returnData;
 
-    // Get one of the three actors randomly
-    address to = _getRandomActor(i);
+        // Get one of the three actors randomly
+        address to = _getRandomActor(i);
 
-    address asset = _getRandomBaseAsset(j);
+        address asset = _getRandomBaseAsset(j);
 
-    _before();
-    (success, returnData) = actor.proxy(
-      address(pool),
-      abi.encodeWithSelector(IPool.withdraw.selector, asset, amount, to)
-    );
+        _before();
+        (success, returnData) =
+            actor.proxy(address(pool), abi.encodeWithSelector(IPool.withdraw.selector, asset, amount, to));
 
-    if (success) {
-      _after();
+        if (success) {
+            _after();
 
-      // POST-CONDITIONS
-      assertEq(
-        snapshotGlobalVarsBefore.usersInfo[to].userAssetsInfo[asset].underlyingBalance + amount,
-        snapshotGlobalVarsAfter.usersInfo[to].userAssetsInfo[asset].underlyingBalance
-      );
+            // POST-CONDITIONS
+            assertEq(
+                snapshotGlobalVarsBefore.usersInfo[to].userAssetsInfo[asset].underlyingBalance + amount,
+                snapshotGlobalVarsAfter.usersInfo[to].userAssetsInfo[asset].underlyingBalance
+            );
 
-      assertEq(
-        snapshotGlobalVarsAfter.assetsInfo[asset].virtualUnderlyingBalance + amount,
-        snapshotGlobalVarsBefore.assetsInfo[asset].virtualUnderlyingBalance
-      );
+            assertEq(
+                snapshotGlobalVarsAfter.assetsInfo[asset].virtualUnderlyingBalance + amount,
+                snapshotGlobalVarsBefore.assetsInfo[asset].virtualUnderlyingBalance
+            );
 
-      assertApproxEqAbs(
-        snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance +
-          amount,
-        snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance,
-        2
-      );
-      assertLe(
-        snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance +
-          amount,
-        snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance,
-        ''
-      );
-    } else {
-      revert('LendingHandler: withdraw failed');
+            assertApproxEqAbs(
+                snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance + amount,
+                snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance,
+                2
+            );
+            assertLe(
+                snapshotGlobalVarsAfter.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance + amount,
+                snapshotGlobalVarsBefore.usersInfo[address(actor)].userAssetsInfo[asset].aTokenBalance,
+                ""
+            );
+        } else {
+            revert("LendingHandler: withdraw failed");
+        }
     }
-  }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                         HANDLER INVARIANTS                                //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                         HANDLER INVARIANTS                                //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function assert_BORROWING_HSPOST_G(uint8 i) external setup {
-    bool success;
-    bytes memory returnData;
+    function assert_BORROWING_HSPOST_G(uint8 i) external setup {
+        bool success;
+        bytes memory returnData;
 
-    address asset = _getRandomBaseAsset(i);
+        address asset = _getRandomBaseAsset(i);
 
-    address target = address(pool);
+        address target = address(pool);
 
-    Flags memory flags = _getFlags(asset);
+        Flags memory flags = _getFlags(asset);
 
-    uint256 totalDebt = IERC20(protocolTokens[asset].variableDebtTokenAddress).totalSupply();
+        uint256 totalDebt = IERC20(protocolTokens[asset].variableDebtTokenAddress).totalSupply();
 
-    require(totalDebt == 0, 'totalDebt is not 0');
+        require(totalDebt == 0, "totalDebt is not 0");
 
-    require(!_isBorrowingAny(address(actor)), 'user has debt');
+        require(!_isBorrowingAny(address(actor)), "user has debt");
 
-    uint256 amount = IERC20(protocolTokens[asset].aTokenAddress).balanceOf(address(actor));
+        uint256 amount = IERC20(protocolTokens[asset].aTokenAddress).balanceOf(address(actor));
 
-    require(amount > 0, 'amount is 0');
+        require(amount > 0, "amount is 0");
 
-    require(assertReserveIsActiveAndNotPaused(flags), 'reserve is not active or paused');
+        require(assertReserveIsActiveAndNotPaused(flags), "reserve is not active or paused");
 
-    (success, returnData) = actor.proxy(
-      target,
-      abi.encodeWithSelector(IPool.withdraw.selector, asset, amount, address(actor))
-    );
-  }
+        (success, returnData) =
+            actor.proxy(target, abi.encodeWithSelector(IPool.withdraw.selector, asset, amount, address(actor)));
+    }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                         OWNER ACTIONS                                     //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                         OWNER ACTIONS                                     //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                                           HELPERS                                         //
-  ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //                                           HELPERS                                         //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 }

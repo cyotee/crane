@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import { CommonBase } from "forge-std/Base.sol";
+import {CommonBase} from "forge-std/Base.sol";
 
 contract VmHelper is CommonBase {
     struct MineBlocksResult {

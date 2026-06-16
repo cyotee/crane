@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {BatchId} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/BatchId.sol";
+import {BatchId} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/BatchId.sol";
 
 using BatchIdSetMethods for BatchIdSet global;
 

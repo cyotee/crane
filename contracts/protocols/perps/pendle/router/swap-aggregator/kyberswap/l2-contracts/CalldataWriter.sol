@@ -6,9 +6,11 @@ import {IAggregationExecutorOptimistic as IExecutorHelperL2} from "../interfaces
 import {IExecutorHelper as IExecutorHelperL1} from "../interfaces/IExecutorHelper.sol";
 
 library CalldataWriter {
-    function writeSimpleSwapData(
-        IMetaAggregationRouterV2.SimpleSwapData memory simpleSwapData
-    ) internal pure returns (bytes memory shortData) {
+    function writeSimpleSwapData(IMetaAggregationRouterV2.SimpleSwapData memory simpleSwapData)
+        internal
+        pure
+        returns (bytes memory shortData)
+    {
         shortData = bytes.concat(shortData, _writeAddressArray(simpleSwapData.firstPools));
         shortData = bytes.concat(shortData, _writeUint256ArrayAsUint128Array(simpleSwapData.firstSwapAmounts));
         shortData = bytes.concat(shortData, _writeBytesArray(simpleSwapData.swapDatas));
@@ -19,9 +21,11 @@ library CalldataWriter {
     /*
      ************************ AggregationExecutor ************************
      */
-    function writeSwapExecutorDescription(
-        IExecutorHelperL2.SwapExecutorDescription memory desc
-    ) internal pure returns (bytes memory shortData) {
+    function writeSwapExecutorDescription(IExecutorHelperL2.SwapExecutorDescription memory desc)
+        internal
+        pure
+        returns (bytes memory shortData)
+    {
         // write Swap array
         uint8 lX = uint8(desc.swapSequences.length);
         shortData = bytes.concat(shortData, bytes1(lX));
@@ -41,10 +45,11 @@ library CalldataWriter {
         shortData = bytes.concat(shortData, _writeBytes(desc.positiveSlippageData));
     }
 
-    function writeSimpleModeSwapDatas(
-        bytes[] memory swapDatas,
-        address tokenIn
-    ) internal pure returns (bytes[] memory shortData) {
+    function writeSimpleModeSwapDatas(bytes[] memory swapDatas, address tokenIn)
+        internal
+        pure
+        returns (bytes[] memory shortData)
+    {
         uint8 len = uint8(swapDatas.length);
         for (uint8 i = 0; i < len; ++i) {
             swapDatas[i] = _writeSwapSingleSequence(swapDatas[i], tokenIn);
@@ -52,10 +57,11 @@ library CalldataWriter {
         return (swapDatas);
     }
 
-    function _writeSwapSingleSequence(
-        bytes memory data,
-        address tokenIn
-    ) internal pure returns (bytes memory shortData) {
+    function _writeSwapSingleSequence(bytes memory data, address tokenIn)
+        internal
+        pure
+        returns (bytes memory shortData)
+    {
         IExecutorHelperL2.Swap[] memory swaps = abi.decode(data, (IExecutorHelperL2.Swap[]));
 
         uint8 len = uint8(swaps.length);

@@ -2,9 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 
 import {ERC20TestToken} from "./ERC20TestToken.sol";
 

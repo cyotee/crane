@@ -5,17 +5,25 @@ import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
 import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import { IERC165 } from "@crane/contracts/external/openzeppelin-contracts/utils/introspection/IERC165.sol";
-import { ILegacyMintableERC20, IOptimismMintableERC20 } from "./IOptimismMintableERC20.sol";
-import { ISemver } from "./ISemver.sol";
+import {IERC165} from "@crane/contracts/external/openzeppelin-contracts/utils/introspection/IERC165.sol";
+import {ILegacyMintableERC20, IOptimismMintableERC20} from "./IOptimismMintableERC20.sol";
+import {ISemver} from "./ISemver.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/OwnedV2.sol";
 
 /// @title Parent contract for frxETH.sol, but also CrossChainCanonicalV2
-/** @notice Combines Openzeppelin's ERC20Permit and ERC20Burnable with Synthetix's Owned and Optimism's OptimismMintableERC20. 
-    Also includes a list of authorized minters */
+/**
+ *  @notice Combines Openzeppelin's ERC20Permit and ERC20Burnable with Synthetix's Owned and Optimism's OptimismMintableERC20.
+ *     Also includes a list of authorized minters
+ */
 /// @dev ERC20PermitPermissionedOptiMintable adheres to EIP-712/EIP-2612 and can use permits
-contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, OwnedV2, IOptimismMintableERC20, ILegacyMintableERC20, ISemver {
-    
+contract ERC20PermitPermissionedOptiMintable is
+    ERC20Permit,
+    ERC20Burnable,
+    OwnedV2,
+    IOptimismMintableERC20,
+    ILegacyMintableERC20,
+    ISemver
+{
     /// @notice The timelock address
     address public timelock_address;
 
@@ -24,7 +32,7 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
 
     /// @notice Address of the corresponding version of this token on the remote chain.
     address public immutable REMOTE_TOKEN;
-    
+
     /// @notice Version
     string public constant version = "1.0.0";
 
@@ -51,16 +59,11 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
         address _remoteToken,
         string memory _name,
         string memory _symbol
-    ) 
-    ERC20(_name, _symbol)
-    ERC20Permit(_name) 
-    OwnedV2(_creator_address)
-    {
+    ) ERC20(_name, _symbol) ERC20Permit(_name) OwnedV2(_creator_address) {
         REMOTE_TOKEN = _remoteToken;
         BRIDGE = _bridge;
         timelock_address = _timelock_address;
     }
-
 
     /* ========== MODIFIERS ========== */
 
@@ -72,9 +75,9 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
 
     /// @notice A modifier that only allows a non-bridge minter to call
     modifier onlyMinters() {
-       require(minters[msg.sender] == true, "Only minters");
+        require(minters[msg.sender] == true, "Only minters");
         _;
-    } 
+    }
 
     /// @notice A modifier that only allows the bridge to call
     modifier onlyBridge() {
@@ -123,7 +126,6 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
         bytes4 iface3 = type(IOptimismMintableERC20).interfaceId;
         return _interfaceId == iface1 || _interfaceId == iface2 || _interfaceId == iface3;
     }
-
 
     /* ========== RESTRICTED FUNCTIONS [BRIDGE] ========== */
 
@@ -177,7 +179,7 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
         require(minter_address != address(0), "Zero address detected");
 
         require(minters[minter_address] == false, "Address already exists");
-        minters[minter_address] = true; 
+        minters[minter_address] = true;
         minters_array.push(minter_address);
 
         emit MinterAdded(minter_address);
@@ -188,12 +190,12 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
     function removeMinter(address minter_address) public onlyByOwnGov {
         require(minter_address != address(0), "Zero address detected");
         require(minters[minter_address] == true, "Address nonexistant");
-        
+
         // Delete from the mapping
         delete minters[minter_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < minters_array.length; i++){ 
+        for (uint256 i = 0; i < minters_array.length; i++) {
             if (minters_array[i] == minter_address) {
                 minters_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -203,19 +205,18 @@ contract ERC20PermitPermissionedOptiMintable is ERC20Permit, ERC20Burnable, Owne
         emit MinterRemoved(minter_address);
     }
 
-
     /* ========== RESTRICTED FUNCTIONS [ADMIN-RELATED] ========== */
 
     /// @notice Sets the timelock address
     /// @param _timelock_address Address of the timelock
     function setTimelock(address _timelock_address) public onlyByOwnGov {
-        require(_timelock_address != address(0), "Zero address detected"); 
+        require(_timelock_address != address(0), "Zero address detected");
         timelock_address = _timelock_address;
         emit TimelockChanged(_timelock_address);
     }
 
     /* ========== EVENTS ========== */
-    
+
     /// @notice Emitted whenever the bridge burns tokens from an account
     /// @param account Address of the account tokens are being burned from
     /// @param amount  Amount of tokens burned

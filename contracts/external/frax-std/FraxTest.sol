@@ -1,9 +1,25 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { console2 as console, StdAssertions, StdChains, StdCheats, stdError, StdInvariant, stdJson, stdMath, StdStorage, stdStorage, StdUtils, Vm, StdStyle, TestBase, Test } from "forge-std/Test.sol";
-import { VmHelper } from "./VmHelper.sol";
-import { Strings } from "./StringsHelper.sol";
+import {
+    console2 as console,
+    StdAssertions,
+    StdChains,
+    StdCheats,
+    stdError,
+    StdInvariant,
+    stdJson,
+    stdMath,
+    StdStorage,
+    stdStorage,
+    StdUtils,
+    Vm,
+    StdStyle,
+    TestBase,
+    Test
+} from "forge-std/Test.sol";
+import {VmHelper} from "./VmHelper.sol";
+import {Strings} from "./StringsHelper.sol";
 
 abstract contract FraxTest is VmHelper, Test {
     /// @notice EIP-1967 Slots
@@ -19,20 +35,24 @@ abstract contract FraxTest is VmHelper, Test {
     /// @param _proxyToCheck    The proxy to fetch the implementation and admin of
     /// @return implementation  The Implmentation of the `_proxyToCheck`
     /// @return admin           The Admin of the `_proxyToCheck`
-    function get1967ProxyImplAndAdmin(
-        address _proxyToCheck
-    ) internal view returns (address implementation, address admin) {
-        implementation = address(uint160(uint(vm.load(_proxyToCheck, IMPLEMENTATION_SLOT))));
-        admin = address(uint160(uint(vm.load(_proxyToCheck, ADMIN_SLOT))));
+    function get1967ProxyImplAndAdmin(address _proxyToCheck)
+        internal
+        view
+        returns (address implementation, address admin)
+    {
+        implementation = address(uint160(uint256(vm.load(_proxyToCheck, IMPLEMENTATION_SLOT))));
+        admin = address(uint160(uint256(vm.load(_proxyToCheck, ADMIN_SLOT))));
     }
 
     /// @notice Variant of the above function but the returns will be logged to the console
     /// @param _proxyToCheck    The proxy to fetch the implementation and admin of
     /// @return implementation  The Implmentation of the `_proxyToCheck`
     /// @return admin           The Admin of the `_proxyToCheck`
-    function get1967ProxyImplAndAdminWithLog(
-        address _proxyToCheck
-    ) internal view returns (address implementation, address admin) {
+    function get1967ProxyImplAndAdminWithLog(address _proxyToCheck)
+        internal
+        view
+        returns (address implementation, address admin)
+    {
         (implementation, admin) = get1967ProxyImplAndAdmin(_proxyToCheck);
         console.log("           get1967ProxyImplAndAdminWithLog: Implementation - ", implementation);
         console.log("           get1967ProxyImplAndAdminWithLog: ProxyAdmin - ", admin);
@@ -49,7 +69,7 @@ abstract contract FraxTest is VmHelper, Test {
         console.log("===================================");
         console.log("Storage dump for: ", target);
         console.log("===================================");
-        for (uint i; i <= slotsToDump; i++) {
+        for (uint256 i; i <= slotsToDump; i++) {
             bytes32 slot = vm.load(target, bytes32(uint256(i)));
             string memory exp = Strings.toHexString(uint256(slot), 32);
             console.log("slot", i, ":", exp);
@@ -61,38 +81,38 @@ abstract contract FraxTest is VmHelper, Test {
     /// @param offset       The bits to remove st. the target bits are LSB
     /// @param lenOfTarget  The length target result in bits
     /// @return result      The target bits expressed as a uint256
-    function unpackBits(
-        uint256 dataToUnpack,
-        uint256 offset,
-        uint256 lenOfTarget
-    ) internal pure returns (uint256 result) {
+    function unpackBits(uint256 dataToUnpack, uint256 offset, uint256 lenOfTarget)
+        internal
+        pure
+        returns (uint256 result)
+    {
         uint256 mask = (1 << lenOfTarget) - 1;
         result = (dataToUnpack >> offset) & mask;
     }
 
-    function unpackBits(
-        bytes32 dataToUnpack,
-        uint256 offset,
-        uint256 lenOfTarget
-    ) internal pure returns (uint256 result) {
+    function unpackBits(bytes32 dataToUnpack, uint256 offset, uint256 lenOfTarget)
+        internal
+        pure
+        returns (uint256 result)
+    {
         uint256 mask = (1 << lenOfTarget) - 1;
         result = (uint256(dataToUnpack) >> offset) & mask;
     }
 
-    function unpackBitsAndLogUint(
-        uint256 dataToUnpack,
-        uint256 offset,
-        uint256 lenOfTarget
-    ) internal pure returns (uint256 result) {
+    function unpackBitsAndLogUint(uint256 dataToUnpack, uint256 offset, uint256 lenOfTarget)
+        internal
+        pure
+        returns (uint256 result)
+    {
         result = unpackBits(dataToUnpack, offset, lenOfTarget);
         console.log(result);
     }
 
-    function unpackBitsAndLogUint(
-        bytes32 dataToUnpack,
-        uint256 offset,
-        uint256 lenOfTarget
-    ) internal pure returns (uint256 result) {
+    function unpackBitsAndLogUint(bytes32 dataToUnpack, uint256 offset, uint256 lenOfTarget)
+        internal
+        pure
+        returns (uint256 result)
+    {
         result = unpackBits(dataToUnpack, offset, lenOfTarget);
         console.log(result);
     }

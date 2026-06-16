@@ -23,8 +23,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Curve/ICurvefrxETHETHPool.
 // Primary Author(s)
 // Travis Moore: https://github.com/FortisFortuna
 
-
-contract FrxETHMiniRouter  {
+contract FrxETHMiniRouter {
     /* ========== STATE VARIABLES ========== */
     IfrxETH public frxETH = IfrxETH(0x5E8422345238F34275888049021821E8E08CAa1f);
     IfrxETHMinter public minter = IfrxETHMinter(0xbAFA44EFE7901E04E39Dad13167D089C559c1138);
@@ -39,13 +38,17 @@ contract FrxETHMiniRouter  {
     /* ========== VIEWS ========== */
 
     // Get the prices and estimated frxETH out amounts
-    function getFrxETHRoutePricesAndOuts(uint256 eth_in) public view returns (
-        uint256 minter_price, 
-        uint256 minter_out, 
-        uint256 curve_price,
-        uint256 curve_out,
-        bool use_curve // false: Minter, true: Curve
-    ) {
+    function getFrxETHRoutePricesAndOuts(uint256 eth_in)
+        public
+        view
+        returns (
+            uint256 minter_price,
+            uint256 minter_out,
+            uint256 curve_price,
+            uint256 curve_out,
+            bool use_curve // false: Minter, true: Curve
+        )
+    {
         // Minter prices are fixed
         minter_price = 1e18;
         minter_out = eth_in;
@@ -59,24 +62,19 @@ contract FrxETHMiniRouter  {
     }
 
     // Get the prices and estimated frxETH out amounts
-    function sendETH(
-        address recipient, 
-        bool get_sfrxeth_instead, 
-        uint256 min_frxeth_out
-    ) external payable returns (
-        uint256 frxeth_used, 
-        uint256 frxeth_out,
-        uint256 sfrxeth_out
-    ) {
+    function sendETH(address recipient, bool get_sfrxeth_instead, uint256 min_frxeth_out)
+        external
+        payable
+        returns (uint256 frxeth_used, uint256 frxeth_out, uint256 sfrxeth_out)
+    {
         // First see which route to take
-        (, , , , bool use_curve) = getFrxETHRoutePricesAndOuts(msg.value);
+        (,,,, bool use_curve) = getFrxETHRoutePricesAndOuts(msg.value);
 
         // Take different routes for frxETH depending on pricing
         if (use_curve) {
-            frxeth_used = pool.exchange{ value: msg.value }(0, 1, msg.value, min_frxeth_out);
-        }
-        else {
-            minter.submit{ value: msg.value }();
+            frxeth_used = pool.exchange{value: msg.value}(0, 1, msg.value, min_frxeth_out);
+        } else {
+            minter.submit{value: msg.value}();
             frxeth_used = msg.value;
         }
 
@@ -87,7 +85,7 @@ contract FrxETHMiniRouter  {
 
             // Deposit the frxETH and give the generated sfrxETH to the final recipient
             sfrxeth_out = sfrxETH.deposit(msg.value, recipient);
-            require(sfrxeth_out > 0, 'No sfrxETH was returned');
+            require(sfrxeth_out > 0, "No sfrxETH was returned");
 
             emit ETHToSfrxETH(msg.sender, recipient, use_curve, msg.value, frxeth_used, sfrxeth_out);
         } else {
@@ -102,6 +100,15 @@ contract FrxETHMiniRouter  {
     }
 
     /* ========== EVENTS ========== */
-    event ETHToFrxETH(address indexed from, address indexed recipient, bool curve_used, uint256 eth_in, uint256 frxeth_out);
-    event ETHToSfrxETH(address indexed from, address indexed recipient, bool curve_used, uint256 amt_in, uint256 frxeth_used, uint256 sfrxeth_out);
+    event ETHToFrxETH(
+        address indexed from, address indexed recipient, bool curve_used, uint256 eth_in, uint256 frxeth_out
+    );
+    event ETHToSfrxETH(
+        address indexed from,
+        address indexed recipient,
+        bool curve_used,
+        uint256 amt_in,
+        uint256 frxeth_used,
+        uint256 sfrxeth_out
+    );
 }

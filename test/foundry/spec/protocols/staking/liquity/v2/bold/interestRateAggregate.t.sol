@@ -1499,8 +1499,8 @@ contract InterestRateAggregate is DevTestSetup {
 
         uint256 entireSystemDebt = troveManager.getEntireBranchDebt();
 
-        uint256 sumIndividualTroveDebts =
-            recordedDebt_A + accruedInterest_A + recordedDebt_B + accruedInterest_B + recordedDebt_C + accruedInterest_C;
+        uint256 sumIndividualTroveDebts = recordedDebt_A + accruedInterest_A + recordedDebt_B + accruedInterest_B
+            + recordedDebt_C + accruedInterest_C;
 
         assertApproximatelyEqual(entireSystemDebt, sumIndividualTroveDebts, 10);
     }

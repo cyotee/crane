@@ -29,9 +29,14 @@ contract PendleUniETHSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256) {
+    )
+        internal
+        override
+        returns (uint256)
+    {
         _transferOut(uniETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -58,9 +63,15 @@ contract PendleUniETHSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256) {
+    )
+        internal
+        pure
+        override
+        returns (uint256)
+    {
         return amountSharesToRedeem;
     }
 

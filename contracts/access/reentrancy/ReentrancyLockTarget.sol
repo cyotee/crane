@@ -6,17 +6,41 @@ import {ReentrancyLockRepo} from "@crane/contracts/access/reentrancy/ReentrancyL
 
 // tag::ReentrancyLockTarget[]
 /**
- * @title ReentrancyLockTarget - A simple contract that implements the IReentrancyLock interface by utilizing the ReentrancyLockRepo for state management.
+ * @title ReentrancyLockTarget - Target contract implementing IReentrancyLock.
  * @author cyotee doge <not_cyotee@proton.me>
+ * @notice Exposes reentrancy lock status query by delegating to ReentrancyLockRepo (transient storage).
+ * @dev Follows Facet-Target-Repo. Does not define own storage (delegates entirely). Inherited by ReentrancyLockFacet.
+ *      No custom tags (e.g. selector) per CENTRALLY_COMPUTED_NATSPEC_VALUES.md instruction - prose only.
  */
 contract ReentrancyLockTarget is IReentrancyLock {
     // tag::isLocked()[]
     /**
      * @inheritdoc IReentrancyLock
+     * @dev Delegates to ReentrancyLockRepo._isLocked() which uses the transient storage key from _layoutStruct().
      */
     function isLocked() external view returns (bool) {
         return ReentrancyLockRepo._isLocked();
     }
     // end::isLocked()[]
+
+    // tag::lock()[]
+    /**
+     * @inheritdoc IReentrancyLock
+     * @dev Delegates to ReentrancyLockRepo._lock(). Called via ReentrancyLockModifiers in protected functions (or directly if needed).
+     */
+    function lock() external {
+        ReentrancyLockRepo._lock();
+    }
+    // end::lock()[]
+
+    // tag::unlock()[]
+    /**
+     * @inheritdoc IReentrancyLock
+     * @dev Delegates to ReentrancyLockRepo._unlock(). Called via ReentrancyLockModifiers in protected functions (or directly if needed).
+     */
+    function unlock() external {
+        ReentrancyLockRepo._unlock();
+    }
+    // end::unlock()[]
 }
 // end::ReentrancyLockTarget[]

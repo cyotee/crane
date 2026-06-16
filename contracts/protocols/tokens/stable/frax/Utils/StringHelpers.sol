@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-
 library StringHelpers {
     function parseAddr(string memory _a) internal pure returns (address _parsedAddress) {
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
         uint160 b1;
         uint160 b2;
-        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
+        for (uint256 i = 2; i < 2 + 2 * 20; i += 2) {
             iaddr *= 256;
             b1 = uint160(uint8(tmp[i]));
             b2 = uint160(uint8(tmp[i + 1]));
@@ -31,14 +30,14 @@ library StringHelpers {
         return address(iaddr);
     }
 
-    function strCompare(string memory _a, string memory _b) internal pure returns (int _returnCode) {
+    function strCompare(string memory _a, string memory _b) internal pure returns (int256 _returnCode) {
         bytes memory a = bytes(_a);
         bytes memory b = bytes(_b);
-        uint minLength = a.length;
+        uint256 minLength = a.length;
         if (b.length < minLength) {
             minLength = b.length;
         }
-        for (uint i = 0; i < minLength; i ++) {
+        for (uint256 i = 0; i < minLength; i++) {
             if (a[i] < b[i]) {
                 return -1;
             } else if (a[i] > b[i]) {
@@ -54,7 +53,7 @@ library StringHelpers {
         }
     }
 
-    function indexOf(string memory _haystack, string memory _needle) internal pure returns (int _returnCode) {
+    function indexOf(string memory _haystack, string memory _needle) internal pure returns (int256 _returnCode) {
         bytes memory h = bytes(_haystack);
         bytes memory n = bytes(_needle);
         if (h.length < 1 || n.length < 1 || (n.length > h.length)) {
@@ -62,15 +61,15 @@ library StringHelpers {
         } else if (h.length > (2 ** 128 - 1)) {
             return -1;
         } else {
-            uint subindex = 0;
-            for (uint i = 0; i < h.length; i++) {
+            uint256 subindex = 0;
+            for (uint256 i = 0; i < h.length; i++) {
                 if (h[i] == n[0]) {
                     subindex = 1;
-                    while(subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex]) {
+                    while (subindex < n.length && (i + subindex) < h.length && h[i + subindex] == n[subindex]) {
                         subindex++;
                     }
                     if (subindex == n.length) {
-                        return int(i);
+                        return int256(i);
                     }
                 }
             }
@@ -82,15 +81,27 @@ library StringHelpers {
         return strConcat(_a, _b, "", "", "");
     }
 
-    function strConcat(string memory _a, string memory _b, string memory _c) internal pure returns (string memory _concatenatedString) {
+    function strConcat(string memory _a, string memory _b, string memory _c)
+        internal
+        pure
+        returns (string memory _concatenatedString)
+    {
         return strConcat(_a, _b, _c, "", "");
     }
 
-    function strConcat(string memory _a, string memory _b, string memory _c, string memory _d) internal pure returns (string memory _concatenatedString) {
+    function strConcat(string memory _a, string memory _b, string memory _c, string memory _d)
+        internal
+        pure
+        returns (string memory _concatenatedString)
+    {
         return strConcat(_a, _b, _c, _d, "");
     }
 
-    function strConcat(string memory _a, string memory _b, string memory _c, string memory _d, string memory _e) internal pure returns (string memory _concatenatedString) {
+    function strConcat(string memory _a, string memory _b, string memory _c, string memory _d, string memory _e)
+        internal
+        pure
+        returns (string memory _concatenatedString)
+    {
         bytes memory _ba = bytes(_a);
         bytes memory _bb = bytes(_b);
         bytes memory _bc = bytes(_c);
@@ -98,8 +109,8 @@ library StringHelpers {
         bytes memory _be = bytes(_e);
         string memory abcde = new string(_ba.length + _bb.length + _bc.length + _bd.length + _be.length);
         bytes memory babcde = bytes(abcde);
-        uint k = 0;
-        uint i = 0;
+        uint256 k = 0;
+        uint256 i = 0;
         for (i = 0; i < _ba.length; i++) {
             babcde[k++] = _ba[i];
         }
@@ -118,24 +129,24 @@ library StringHelpers {
         return string(babcde);
     }
 
-    function safeParseInt(string memory _a) internal pure returns (uint _parsedInt) {
+    function safeParseInt(string memory _a) internal pure returns (uint256 _parsedInt) {
         return safeParseInt(_a, 0);
     }
 
-    function safeParseInt(string memory _a, uint _b) internal pure returns (uint _parsedInt) {
+    function safeParseInt(string memory _a, uint256 _b) internal pure returns (uint256 _parsedInt) {
         bytes memory bresult = bytes(_a);
-        uint mint = 0;
+        uint256 mint = 0;
         bool decimals = false;
-        for (uint i = 0; i < bresult.length; i++) {
-            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
+        for (uint256 i = 0; i < bresult.length; i++) {
+            if ((uint256(uint8(bresult[i])) >= 48) && (uint256(uint8(bresult[i])) <= 57)) {
                 if (decimals) {
-                   if (_b == 0) break;
+                    if (_b == 0) break;
                     else _b--;
                 }
                 mint *= 10;
-                mint += uint(uint8(bresult[i])) - 48;
-            } else if (uint(uint8(bresult[i])) == 46) {
-                require(!decimals, 'More than one decimal encountered in string!');
+                mint += uint256(uint8(bresult[i])) - 48;
+            } else if (uint256(uint8(bresult[i])) == 46) {
+                require(!decimals, "More than one decimal encountered in string!");
                 decimals = true;
             } else {
                 revert("Non-numeral character encountered in string!");
@@ -147,26 +158,26 @@ library StringHelpers {
         return mint;
     }
 
-    function parseInt(string memory _a) internal pure returns (uint _parsedInt) {
+    function parseInt(string memory _a) internal pure returns (uint256 _parsedInt) {
         return parseInt(_a, 0);
     }
 
-    function parseInt(string memory _a, uint _b) internal pure returns (uint _parsedInt) {
+    function parseInt(string memory _a, uint256 _b) internal pure returns (uint256 _parsedInt) {
         bytes memory bresult = bytes(_a);
-        uint mint = 0;
+        uint256 mint = 0;
         bool decimals = false;
-        for (uint i = 0; i < bresult.length; i++) {
-            if ((uint(uint8(bresult[i])) >= 48) && (uint(uint8(bresult[i])) <= 57)) {
+        for (uint256 i = 0; i < bresult.length; i++) {
+            if ((uint256(uint8(bresult[i])) >= 48) && (uint256(uint8(bresult[i])) <= 57)) {
                 if (decimals) {
-                   if (_b == 0) {
-                       break;
-                   } else {
-                       _b--;
-                   }
+                    if (_b == 0) {
+                        break;
+                    } else {
+                        _b--;
+                    }
                 }
                 mint *= 10;
-                mint += uint(uint8(bresult[i])) - 48;
-            } else if (uint(uint8(bresult[i])) == 46) {
+                mint += uint256(uint8(bresult[i])) - 48;
+            } else if (uint256(uint8(bresult[i])) == 46) {
                 decimals = true;
             }
         }
@@ -176,18 +187,18 @@ library StringHelpers {
         return mint;
     }
 
-    function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+    function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {
         if (_i == 0) {
             return "0";
         }
-        uint j = _i;
-        uint len;
+        uint256 j = _i;
+        uint256 len;
         while (j != 0) {
             len++;
             j /= 10;
         }
         bytes memory bstr = new bytes(len);
-        uint k = len - 1;
+        uint256 k = len - 1;
         while (_i != 0) {
             bstr[k--] = bytes1(uint8(48 + _i % 10));
             _i /= 10;

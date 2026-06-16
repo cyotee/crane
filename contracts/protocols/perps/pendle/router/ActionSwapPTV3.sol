@@ -16,18 +16,12 @@ contract ActionSwapPTV3 is IPActionSwapPTV3, ActionBase {
         TokenInput calldata input,
         LimitOrderData calldata limit
     ) external payable returns (uint256 netPtOut, uint256 netSyFee, uint256 netSyInterm) {
-        (IStandardizedYield SY, , ) = IPMarket(market).readTokens();
+        (IStandardizedYield SY,,) = IPMarket(market).readTokens();
         netSyInterm = _mintSyFromToken(_entry_swapExactSyForPt(market, limit), address(SY), 1, input);
 
         (netPtOut, netSyFee) = _swapExactSyForPt(receiver, market, netSyInterm, minPtOut, guessPtOut, limit);
         emit SwapPtAndToken(
-            msg.sender,
-            market,
-            input.tokenIn,
-            receiver,
-            netPtOut.Int(),
-            input.netTokenIn.neg(),
-            netSyInterm
+            msg.sender, market, input.tokenIn, receiver, netPtOut.Int(), input.netTokenIn.neg(), netSyInterm
         );
     }
 
@@ -39,7 +33,7 @@ contract ActionSwapPTV3 is IPActionSwapPTV3, ActionBase {
         ApproxParams calldata guessPtOut,
         LimitOrderData calldata limit
     ) external returns (uint256 netPtOut, uint256 netSyFee) {
-        (IStandardizedYield SY, , ) = IPMarket(market).readTokens();
+        (IStandardizedYield SY,,) = IPMarket(market).readTokens();
         _transferFrom(SY, msg.sender, _entry_swapExactSyForPt(market, limit), exactSyIn);
 
         (netPtOut, netSyFee) = _swapExactSyForPt(receiver, market, exactSyIn, minPtOut, guessPtOut, limit);
@@ -53,7 +47,7 @@ contract ActionSwapPTV3 is IPActionSwapPTV3, ActionBase {
         TokenOutput calldata output,
         LimitOrderData calldata limit
     ) external returns (uint256 netTokenOut, uint256 netSyFee, uint256 netSyInterm) {
-        (IStandardizedYield SY, IPPrincipalToken PT, ) = IPMarket(market).readTokens();
+        (IStandardizedYield SY, IPPrincipalToken PT,) = IPMarket(market).readTokens();
         _transferFrom(PT, msg.sender, _entry_swapExactPtForSy(market, limit), exactPtIn);
 
         (netSyInterm, netSyFee) = _swapExactPtForSy(address(SY), market, exactPtIn, 0, limit);
@@ -61,13 +55,7 @@ contract ActionSwapPTV3 is IPActionSwapPTV3, ActionBase {
         netTokenOut = _redeemSyToToken(receiver, address(SY), netSyInterm, output, false);
 
         emit SwapPtAndToken(
-            msg.sender,
-            market,
-            output.tokenOut,
-            receiver,
-            exactPtIn.neg(),
-            netTokenOut.Int(),
-            netSyInterm
+            msg.sender, market, output.tokenOut, receiver, exactPtIn.neg(), netTokenOut.Int(), netSyInterm
         );
     }
 
@@ -78,7 +66,7 @@ contract ActionSwapPTV3 is IPActionSwapPTV3, ActionBase {
         uint256 minSyOut,
         LimitOrderData calldata limit
     ) external returns (uint256 netSyOut, uint256 netSyFee) {
-        (, IPPrincipalToken PT, ) = IPMarket(market).readTokens();
+        (, IPPrincipalToken PT,) = IPMarket(market).readTokens();
         _transferFrom(PT, msg.sender, _entry_swapExactPtForSy(market, limit), exactPtIn);
 
         (netSyOut, netSyFee) = _swapExactPtForSy(receiver, market, exactPtIn, minSyOut, limit);

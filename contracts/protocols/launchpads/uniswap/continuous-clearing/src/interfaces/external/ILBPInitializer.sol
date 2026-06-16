@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IDistributionContract} from './IDistributionContract.sol';
-import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
+import {IDistributionContract} from "./IDistributionContract.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 
 /// @dev The interface id of the ILBPInitializer interface
 bytes4 constant ILBP_INITIALIZER_INTERFACE_ID = type(ILBPInitializer).interfaceId;

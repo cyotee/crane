@@ -21,7 +21,6 @@ pragma solidity ^0.8.35;
 
 // Reviewer(s) / Contributor(s)
 
-
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "./AggregatorV3Interface.sol";
@@ -56,7 +55,7 @@ contract UniV3TWAPOracle is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _creator_address,
         address _timelock_address,
         address _pool_address,
@@ -71,7 +70,7 @@ contract UniV3TWAPOracle is Owned {
         token1 = ERC20(pool.token1());
 
         // Make sure both are E18, until you fix this
-        require ((token0.decimals() == 18) && (token1.decimals() == 18), 'Must both be 18 decs');
+        require((token0.decimals() == 18) && (token1.decimals() == 18), "Must both be 18 decs");
 
         // Chainlink mocking related
         decimals = _decimals;
@@ -84,8 +83,7 @@ contract UniV3TWAPOracle is Owned {
         if (price_in_token0) {
             base = token1.symbol();
             pricing = token0.symbol();
-        }
-        else {
+        } else {
             base = token0.symbol();
             pricing = token1.symbol();
         }
@@ -94,13 +92,12 @@ contract UniV3TWAPOracle is Owned {
     // In E18
     function getPrecisePrice() public view returns (uint256 amount_out) {
         // Get the average price tick first
-        (int24 arithmeticMeanTick, ) = OracleLibrary.consult(address(pool), lookback_secs);
+        (int24 arithmeticMeanTick,) = OracleLibrary.consult(address(pool), lookback_secs);
 
         // Get the quote for selling 1 unit of a token. Assumes 1e18 for both.
         if (price_in_token0) {
             amount_out = OracleLibrary.getQuoteAtTick(arithmeticMeanTick, 1e18, address(token1), address(token0));
-        }
-        else {
+        } else {
             amount_out = OracleLibrary.getQuoteAtTick(arithmeticMeanTick, 1e18, address(token0), address(token1));
         }
     }
@@ -111,13 +108,11 @@ contract UniV3TWAPOracle is Owned {
     }
 
     // AggregatorV3Interface / Chainlink compatibility
-    function latestRoundData() external view returns (
-        uint80 roundId,
-        int256 answer,
-        uint256 startedAt,
-        uint256 updatedAt,
-        uint80 answeredInRound
-    ) {
+    function latestRoundData()
+        external
+        view
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
+    {
         return (0, int256(getPrecisePrice()), 0, block.timestamp, 0);
     }
 
@@ -139,5 +134,4 @@ contract UniV3TWAPOracle is Owned {
     function toggleTokenForPricing() external onlyByOwnGov {
         price_in_token0 = !price_in_token0;
     }
-
 }

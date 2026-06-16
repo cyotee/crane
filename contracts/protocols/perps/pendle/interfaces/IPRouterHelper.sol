@@ -90,11 +90,7 @@ interface IPRouterHelper {
     );
 
     event AddLiquiditySingleSy(
-        address indexed caller,
-        address indexed market,
-        address indexed receiver,
-        uint256 netSyIn,
-        uint256 netLpOut
+        address indexed caller, address indexed market, address indexed receiver, uint256 netSyIn, uint256 netLpOut
     );
 
     event AddLiquiditySingleTokenKeepYt(
@@ -136,11 +132,11 @@ interface IPRouterHelper {
         AddLiquiditySingleSyKeepYtStruct calldata toMarket
     ) external returns (uint256 netLpOut, uint256 netYtOut, uint256 netSyZapIn, uint256 netSyFeeOfRemove);
 
-    function removeLiquiditySingleToken(
-        RemoveLiquiditySingleTokenStruct calldata fromMarket
-    ) external returns (uint256 netTokenOut, uint256 netSyFee);
+    function removeLiquiditySingleToken(RemoveLiquiditySingleTokenStruct calldata fromMarket)
+        external
+        returns (uint256 netTokenOut, uint256 netSyFee);
 
-    function removeLiquiditySingleSy(
-        RemoveLiquiditySingleSyStruct calldata fromMarket
-    ) external returns (uint256 netSyOut, uint256 netSyFee);
+    function removeLiquiditySingleSy(RemoveLiquiditySingleSyStruct calldata fromMarket)
+        external
+        returns (uint256 netSyOut, uint256 netSyFee);
 }

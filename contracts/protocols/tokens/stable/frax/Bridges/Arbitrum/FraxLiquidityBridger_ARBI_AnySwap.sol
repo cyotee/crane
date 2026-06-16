@@ -5,7 +5,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Bridges/FraxLiquidityBridg
 import "./IL1CustomGateway.sol";
 
 contract FraxLiquidityBridger_ARBI_AnySwap is FraxLiquidityBridger {
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _amo_minter_address,
@@ -13,8 +13,16 @@ contract FraxLiquidityBridger_ARBI_AnySwap is FraxLiquidityBridger {
         address _destination_address_override,
         string memory _non_evm_destination_address,
         string memory _name
-    ) 
-    FraxLiquidityBridger(_owner, _timelock_address, _amo_minter_address, _bridge_addresses, _destination_address_override, _non_evm_destination_address, _name)
+    )
+        FraxLiquidityBridger(
+            _owner,
+            _timelock_address,
+            _amo_minter_address,
+            _bridge_addresses,
+            _destination_address_override,
+            _non_evm_destination_address,
+            _name
+        )
     {}
 
     // The Arbitrum One Bridge needs _maxGas and _gasPriceBid parameters
@@ -27,21 +35,27 @@ contract FraxLiquidityBridger_ARBI_AnySwap is FraxLiquidityBridger {
     }
 
     // Override with logic specific to this chain
-    function _bridgingLogic(uint256 token_type, address /*address_to_send_to*/, uint256 token_amount) internal override {
+    function _bridgingLogic(
+        uint256 token_type,
+        address,
+        /*address_to_send_to*/
+        uint256 token_amount
+    )
+        internal
+        override
+    {
         // [Arbitrum]
-        if (token_type == 0){
+        if (token_type == 0) {
             // L1 FRAX -> anyFRAX
             // Simple dump in / CREATE2
             // AnySwap Bridge
             TransferHelper.safeTransfer(address(FRAX), bridge_addresses[token_type], token_amount);
-        }
-        else if (token_type == 1) {
+        } else if (token_type == 1) {
             // L1 FXS -> anyFXS
             // Simple dump in / CREATE2
             // AnySwap Bridge
             TransferHelper.safeTransfer(address(FXS), bridge_addresses[token_type], token_amount);
-        }
-        else {
+        } else {
             revert("COLLATERAL TRANSFERS ARE DISABLED FOR NOW");
             // // L1 USDC -> arbiUSDC
             // // outboundTransfer
@@ -69,9 +83,8 @@ contract FraxLiquidityBridger_ARBI_AnySwap is FraxLiquidityBridger {
             //     gasPriceBid,
             //     the_calldata
             // );
-            
+
             // revert("finalizeInboundTransfer needs to be called somewhere too");
         }
     }
-
 }

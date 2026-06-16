@@ -30,8 +30,9 @@ contract FluidDexLiteFactoryUnitTest is Test {
     uint160 constant SQRT_PRICE_1_1 = 79228162514264337593543950336;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         mockDex = new MockFluidDexLite();
         mockResolver = new MockFluidDexLiteResolver();
         feeAdapter = new MockV4FeeAdapter(poolManager, address(this));

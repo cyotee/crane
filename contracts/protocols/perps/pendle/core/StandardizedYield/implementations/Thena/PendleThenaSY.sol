@@ -39,10 +39,12 @@ contract PendleThenaSY is ThenaLpHelper, SYBaseWithRewards {
     /**
      * @dev See {SYBase-_deposit}
      */
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountLpDeposited) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountLpDeposited)
+    {
         _withdrawAllFromGauge();
         if (tokenIn == pair) {
             amountLpDeposited = amountDeposited;
@@ -55,11 +57,12 @@ contract PendleThenaSY is ThenaLpHelper, SYBaseWithRewards {
     /**
      * @dev See {SYBase-_redeem}
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         _withdrawAllFromGauge();
         if (tokenOut == pair) {
             amountTokenOut = amountSharesToRedeem;

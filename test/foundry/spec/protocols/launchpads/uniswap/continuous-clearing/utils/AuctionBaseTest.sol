@@ -1,29 +1,41 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {Tick} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol';
-import {AuctionParameters, IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ValueX7, ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {Assertions} from './Assertions.sol';
-import {AuctionParamsBuilder} from './AuctionParamsBuilder.sol';
-import {AuctionStepsBuilder} from './AuctionStepsBuilder.sol';
-import {FuzzBid, FuzzDeploymentParams} from './FuzzStructs.sol';
-import {MockFundsRecipient} from './MockFundsRecipient.sol';
-import {MockToken} from './MockToken.sol';
-import {TickBitmap, TickBitmapLib} from './TickBitmap.sol';
-import {TokenHandler} from './TokenHandler.sol';
-import {Test} from 'forge-std/Test.sol';
-import {console} from 'forge-std/console.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {Tick} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol";
+import {
+    AuctionParameters,
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {
+    ValueX7,
+    ValueX7Lib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {Assertions} from "./Assertions.sol";
+import {AuctionParamsBuilder} from "./AuctionParamsBuilder.sol";
+import {AuctionStepsBuilder} from "./AuctionStepsBuilder.sol";
+import {FuzzBid, FuzzDeploymentParams} from "./FuzzStructs.sol";
+import {MockFundsRecipient} from "./MockFundsRecipient.sol";
+import {MockToken} from "./MockToken.sol";
+import {TickBitmap, TickBitmapLib} from "./TickBitmap.sol";
+import {TokenHandler} from "./TokenHandler.sol";
+import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {SafeCastLib} from "contracts/utils/SafeCastLib.sol";
 
 /// @notice Handler contract for setting up an auction
 abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
@@ -262,7 +274,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
         if (remainder != 0) {
             require(
                 _price <= type(uint256).max - (_tickSpacing - remainder),
-                'helper__roundPriceUpToTickSpacing: Price would overflow uint256'
+                "helper__roundPriceUpToTickSpacing: Price would overflow uint256"
             );
             return _price + (_tickSpacing - remainder);
         }
@@ -339,7 +351,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
         }
 
         try auction.submitBid{value: ethInputAmount}(
-            maxPrice, ethInputAmount, _owner, lastTickPrice, bytes('')
+            maxPrice, ethInputAmount, _owner, lastTickPrice, bytes("")
         ) returns (
             uint256 _bidId
         ) {
@@ -373,7 +385,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
             // the bid price is invalid as it is less than or equal to the clearing price
             // skip the test by returning false and 0
             if (maxPrice <= checkpoint.clearingPrice) return true;
-            revert('Uncaught BidMustBeAboveClearingPrice');
+            revert("Uncaught BidMustBeAboveClearingPrice");
         }
 
         return false;
@@ -394,7 +406,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
     }
 
     modifier requireAuctionNotSetup() {
-        require(address(auction) == address(0), 'Auction already setup');
+        require(address(auction) == address(0), "Auction already setup");
         _;
     }
 
@@ -417,10 +429,10 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
     function setUpAuction(FuzzDeploymentParams memory _deploymentParams) public requireAuctionNotSetup {
         setUpTokens();
 
-        alice = makeAddr('alice');
-        bob = makeAddr('bob');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        bob = makeAddr("bob");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         params = helper__validFuzzDeploymentParams(_deploymentParams);
 
@@ -437,10 +449,10 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
     function setUpAuction() public requireAuctionNotSetup {
         setUpTokens();
 
-        alice = makeAddr('alice');
-        bob = makeAddr('bob');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        bob = makeAddr("bob");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         auctionStepsData =
             AuctionStepsBuilder.init().addStep(STANDARD_MPS_1_PERCENT, 50).addStep(STANDARD_MPS_1_PERCENT, 50);
@@ -525,14 +537,14 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
 
     modifier checkAuctionIsSolvent() {
         _;
-        require(block.number >= auction.endBlock(), 'checkAuctionIsSolvent: Auction is not over');
+        require(block.number >= auction.endBlock(), "checkAuctionIsSolvent: Auction is not over");
         auction.checkpoint();
         if (auction.isGraduated()) {
-            emit log_string('==================== INFO ====================');
-            emit log_named_decimal_uint('auction.totalSupply()', auction.totalSupply(), 18);
-            emit log_named_decimal_uint('auction.totalCleared()', auction.totalCleared(), 18);
+            emit log_string("==================== INFO ====================");
+            emit log_named_decimal_uint("auction.totalSupply()", auction.totalSupply(), 18);
+            emit log_named_decimal_uint("auction.totalCleared()", auction.totalCleared(), 18);
 
-            assertLe(auction.totalCleared(), auction.totalSupply(), 'total cleared must be <= total supply');
+            assertLe(auction.totalCleared(), auction.totalSupply(), "total cleared must be <= total supply");
 
             auction.sweepCurrency();
             auction.sweepUnsoldTokens();
@@ -541,19 +553,19 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
                 token.balanceOf(address(auction)),
                 0,
                 MAX_ALLOWABLE_DUST_WEI,
-                'Auction should have less than MAX_ALLOWABLE_DUST_WEI tokens left'
+                "Auction should have less than MAX_ALLOWABLE_DUST_WEI tokens left"
             );
             assertApproxEqAbs(
                 address(auction).balance,
                 0,
                 MAX_ALLOWABLE_DUST_WEI,
-                'Auction should have less than MAX_ALLOWABLE_DUST_WEI wei left of currency'
+                "Auction should have less than MAX_ALLOWABLE_DUST_WEI wei left of currency"
             );
 
             emit log_named_decimal_uint(
-                'after sweeping token.balanceOf(address(auction))', token.balanceOf(address(auction)), 18
+                "after sweeping token.balanceOf(address(auction))", token.balanceOf(address(auction)), 18
             );
-            emit log_named_decimal_uint('after sweeping currency balance', address(auction).balance, 18);
+            emit log_named_decimal_uint("after sweeping currency balance", address(auction).balance, 18);
         } else {
             auction.sweepUnsoldTokens();
             // Assert that all tokens were swept
@@ -566,14 +578,14 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
 
     modifier checkAuctionIsGraduated() {
         _;
-        require(block.number >= auction.endBlock(), 'checkAuctionIsGraduated: Auction is not over');
+        require(block.number >= auction.endBlock(), "checkAuctionIsGraduated: Auction is not over");
         auction.checkpoint();
         assertTrue(auction.isGraduated());
     }
 
     modifier checkAuctionIsNotGraduated() {
         _;
-        require(block.number >= auction.endBlock(), 'checkAuctionIsNotGraduated: Auction is not over');
+        require(block.number >= auction.endBlock(), "checkAuctionIsNotGraduated: Auction is not over");
         auction.checkpoint();
         assertFalse(auction.isGraduated());
     }
@@ -582,7 +594,7 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
         internal
         returns (uint256)
     {
-        return _auction.submitBid{value: _amount}(_maxPrice, _amount, _owner, params.floorPrice, bytes(''));
+        return _auction.submitBid{value: _amount}(_maxPrice, _amount, _owner, params.floorPrice, bytes(""));
     }
 
     /// @notice Helper to submit N number of bids at the same amount and max price
@@ -619,24 +631,24 @@ abstract contract AuctionBaseTest is TokenHandler, Assertions, Test {
     // Logging utilities
     // ============================================
     function logFuzzDeploymentParams(FuzzDeploymentParams memory _deploymentParams) public pure {
-        console.log('---------FuzzDeploymentParams--------');
-        console.log('totalSupply', _deploymentParams.totalSupply);
-        console.log('numberOfSteps', _deploymentParams.numberOfSteps);
+        console.log("---------FuzzDeploymentParams--------");
+        console.log("totalSupply", _deploymentParams.totalSupply);
+        console.log("numberOfSteps", _deploymentParams.numberOfSteps);
         logAuctionParams(_deploymentParams.auctionParams);
     }
 
     function logAuctionParams(AuctionParameters memory _params) public pure {
-        console.log('---------AuctionParams--------');
-        console.log('currency', _params.currency);
-        console.log('tokensRecipient', _params.tokensRecipient);
-        console.log('fundsRecipient', _params.fundsRecipient);
-        console.log('startBlock', _params.startBlock);
-        console.log('endBlock', _params.endBlock);
-        console.log('claimBlock', _params.claimBlock);
-        console.log('tickSpacing', _params.tickSpacing);
-        console.log('validationHook', _params.validationHook);
-        console.log('floorPrice', _params.floorPrice);
-        console.log('auctionStepsData');
+        console.log("---------AuctionParams--------");
+        console.log("currency", _params.currency);
+        console.log("tokensRecipient", _params.tokensRecipient);
+        console.log("fundsRecipient", _params.fundsRecipient);
+        console.log("startBlock", _params.startBlock);
+        console.log("endBlock", _params.endBlock);
+        console.log("claimBlock", _params.claimBlock);
+        console.log("tickSpacing", _params.tickSpacing);
+        console.log("validationHook", _params.validationHook);
+        console.log("floorPrice", _params.floorPrice);
+        console.log("auctionStepsData");
         console.logBytes(_params.auctionStepsData);
     }
 }

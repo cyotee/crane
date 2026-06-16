@@ -27,21 +27,23 @@ contract PendleMellowVaultERC4626SYUpg is PendleMellowVaultSYBaseUpg {
         interfaceVersion = _interfaceVersion;
     }
 
-    function initialize(
-        string memory _name,
-        string memory _symbol,
-        address _pricingHelper
-    ) external override initializer {
+    function initialize(string memory _name, string memory _symbol, address _pricingHelper)
+        external
+        override
+        initializer
+    {
         __SYBaseUpg_init(_name, _symbol);
         _safeApproveInf(asset, erc4626);
         _safeApproveInf(erc4626, vault);
         _setPricingHelper(_pricingHelper);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == vault) {
             return amountDeposited;
         }
@@ -50,20 +52,11 @@ contract PendleMellowVaultERC4626SYUpg is PendleMellowVaultSYBaseUpg {
         }
 
         if (interfaceVersion == 0) {
-            (, amountSharesOut) = IMellowVault(vault).deposit(
-                address(this),
-                ArrayLib.create(amountDeposited),
-                0,
-                type(uint256).max,
-                0
-            );
+            (, amountSharesOut) =
+                IMellowVault(vault).deposit(address(this), ArrayLib.create(amountDeposited), 0, type(uint256).max, 0);
         } else if (interfaceVersion == 1) {
-            (, amountSharesOut) = IMellowVault(vault).deposit(
-                address(this),
-                ArrayLib.create(amountDeposited),
-                0,
-                type(uint256).max
-            );
+            (, amountSharesOut) =
+                IMellowVault(vault).deposit(address(this), ArrayLib.create(amountDeposited), 0, type(uint256).max);
         }
     }
 
@@ -72,10 +65,13 @@ contract PendleMellowVaultERC4626SYUpg is PendleMellowVaultSYBaseUpg {
         return IERC4626(erc4626).convertToAssets((tvl * PMath.ONE) / supply);
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == vault) {
             return amountTokenToDeposit;
         }

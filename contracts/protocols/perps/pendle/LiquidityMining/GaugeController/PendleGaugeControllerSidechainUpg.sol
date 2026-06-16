@@ -26,10 +26,8 @@ contract PendleGaugeControllerSidechainUpg is PendleGaugeControllerBaseUpg, Pend
     }
 
     function _executeMessage(bytes memory message) internal virtual override {
-        (uint128 wTime, address[] memory markets, uint256[] memory pendleAmounts) = abi.decode(
-            message,
-            (uint128, address[], uint256[])
-        );
+        (uint128 wTime, address[] memory markets, uint256[] memory pendleAmounts) =
+            abi.decode(message, (uint128, address[], uint256[]));
         _receiveVotingResults(wTime, markets, pendleAmounts);
     }
 }

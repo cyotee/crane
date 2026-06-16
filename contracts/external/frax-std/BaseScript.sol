@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { Script } from "forge-std/Script.sol";
-import { console2 as console } from "forge-std/Test.sol";
+import {Script} from "forge-std/Script.sol";
+import {console2 as console} from "forge-std/Test.sol";
 import "./@openzeppelin/contracts-5.4.0/utils/Strings.sol";
 
 abstract contract BaseScript is Script {
@@ -32,9 +32,11 @@ abstract contract BaseScript is Script {
         console.log("_updateEnv is deprecated");
     }
 
-    function deploy(
-        function() returns (address, bytes memory, string memory) _deployFunction
-    ) internal broadcaster returns (address _address, bytes memory _constructorParams, string memory _contractName) {
+    function deploy(function() returns (address, bytes memory, string memory) _deployFunction)
+        internal
+        broadcaster
+        returns (address _address, bytes memory _constructorParams, string memory _contractName)
+    {
         (_address, _constructorParams, _contractName) = _deployFunction();
         console.log("_constructorParams:");
         console.logBytes(_constructorParams);
@@ -42,9 +44,11 @@ abstract contract BaseScript is Script {
         _updateEnv(_address, _constructorParams, _contractName);
     }
 
-    function deploy(
-        function() returns (DeployReturn memory) _deployFunction
-    ) internal broadcaster returns (DeployReturn memory _return) {
+    function deploy(function() returns (DeployReturn memory) _deployFunction)
+        internal
+        broadcaster
+        returns (DeployReturn memory _return)
+    {
         _return = _deployFunction();
     }
 }

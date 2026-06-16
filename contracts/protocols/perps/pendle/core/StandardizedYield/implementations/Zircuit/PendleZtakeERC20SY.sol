@@ -24,16 +24,32 @@ contract PendleZtakeERC20SY is SYBaseUpg {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(address /*tokenIn*/, uint256 amountDeposited) internal virtual override returns (uint256) {
+    function _deposit(
+        address,
+        /*tokenIn*/
+        uint256 amountDeposited
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         IZircuitZtaking(zircuitStaking).depositFor(asset, address(this), amountDeposited);
         return amountDeposited;
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IZircuitZtaking(zircuitStaking).withdraw(asset, amountSharesToRedeem);
         _transferOut(asset, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -52,16 +68,32 @@ contract PendleZtakeERC20SY is SYBaseUpg {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

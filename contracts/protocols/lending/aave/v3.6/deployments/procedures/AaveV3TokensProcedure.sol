@@ -1,32 +1,31 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import {ATokenInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/ATokenInstance.sol';
-import {VariableDebtTokenInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/VariableDebtTokenInstance.sol';
-import {IPool} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol';
+import {ATokenInstance} from "@crane/contracts/protocols/lending/aave/v3.6/instances/ATokenInstance.sol";
+import {
+    VariableDebtTokenInstance
+} from "@crane/contracts/protocols/lending/aave/v3.6/instances/VariableDebtTokenInstance.sol";
+import {IPool} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol";
 
 contract AaveV3TokensProcedure {
-  struct TokensReport {
-    address aToken;
-    address variableDebtToken;
-  }
+    struct TokensReport {
+        address aToken;
+        address variableDebtToken;
+    }
 
-  function _deployAaveV3TokensImplementations(
-    address poolProxy,
-    address rewardsControllerProxy,
-    address treasury
-  ) internal returns (TokensReport memory) {
-    TokensReport memory tokensReport;
+    function _deployAaveV3TokensImplementations(address poolProxy, address rewardsControllerProxy, address treasury)
+        internal
+        returns (TokensReport memory)
+    {
+        TokensReport memory tokensReport;
 
-    ATokenInstance aToken = new ATokenInstance(IPool(poolProxy), rewardsControllerProxy, treasury);
-    VariableDebtTokenInstance variableDebtToken = new VariableDebtTokenInstance(
-      IPool(poolProxy),
-      rewardsControllerProxy
-    );
+        ATokenInstance aToken = new ATokenInstance(IPool(poolProxy), rewardsControllerProxy, treasury);
+        VariableDebtTokenInstance variableDebtToken =
+            new VariableDebtTokenInstance(IPool(poolProxy), rewardsControllerProxy);
 
-    tokensReport.aToken = address(aToken);
-    tokensReport.variableDebtToken = address(variableDebtToken);
+        tokensReport.aToken = address(aToken);
+        tokensReport.variableDebtToken = address(variableDebtToken);
 
-    return tokensReport;
-  }
+        return tokensReport;
+    }
 }

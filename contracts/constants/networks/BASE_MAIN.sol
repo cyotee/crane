@@ -4,7 +4,10 @@ pragma solidity ^0.8.0;
 library BASE_MAIN {
     uint256 constant CHAIN_ID = 8453;
 
-    uint256 constant DEFAULT_FORK_BLOCK = 24_666_122;
+    // Using a recent block that includes Aave V3, StataTokens, and other required state for cached forks.
+    // This minimizes additional RPC calls during test runs.
+    uint256 constant DEFAULT_FORK_BLOCK = 45_446_736;
+    // uint256 constant DEFAULT_FORK_BLOCK = 47_551_200;
 
     address constant L2_CROSSDOMAIN_MESSENGER = 0x4200000000000000000000000000000000000007;
     address constant L2_STANDARD_BRIDGE = 0x4200000000000000000000000000000000000010;
@@ -27,6 +30,11 @@ library BASE_MAIN {
     /* -------------------------------------------------------------------------- */
 
     address payable constant WETH9 = payable(0x4200000000000000000000000000000000000006);
+
+    address constant USDC = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+    address constant USD_BC = 0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA;
+    address constant DAI = 0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb;
+    address constant CB_BTC = 0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf;
 
     /* -------------------------------------------------------------------------- */
     /*                                 Uniswap V2                                 */
@@ -189,4 +197,17 @@ library BASE_MAIN {
     address constant BALANCER_V3_OMNI_VOTING_ESCROW_CHILD = 0xE241C6e48CA045C7f631600a0f1403b2bFea05ad;
     address constant BALANCER_V3_VEBOOST_V2 = 0xE42FFA682A26EF8F25891db4882932711D42e467;
     address constant BALANCER_V3_VOTING_ESCROW_DELEGATION_PROXY = 0xD87F44Df0159DC78029AB9CA7D7e57E7249F5ACD;
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Aave V3                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Aave V3 PoolAddressesProvider on Base
+    address constant AAVE_V3_POOL_ADDRESSES_PROVIDER = 0xe20fCBdBfFC4Dd138cE8b2E6FBb6CB49777ad64D;
+
+    /// @notice Aave V3 Pool proxy on Base
+    address constant AAVE_V3_POOL = 0xA238Dd80C259a72e81d7e4664a9801593F98d1c5;
+
+    /// @notice StaticAToken (StataToken) Factory for Aave V3 on Base
+    address constant AAVE_V3_STATIC_A_TOKEN_FACTORY = 0x78d33BF0014ab169725F2Ea5a62b200F2977faeE;
 }

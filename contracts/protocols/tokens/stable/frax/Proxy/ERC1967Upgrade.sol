@@ -73,11 +73,7 @@ abstract contract ERC1967Upgrade is ERC1967Storage {
             // Trigger rollback using upgradeTo from the new implementation
             rollbackTesting.value = true;
             Address.functionDelegateCall(
-                newImplementation,
-                abi.encodeWithSignature(
-                    "upgradeTo(address)",
-                    oldImplementation
-                )
+                newImplementation, abi.encodeWithSignature("upgradeTo(address)", oldImplementation)
             );
             rollbackTesting.value = false;
             // Check rollback was effective

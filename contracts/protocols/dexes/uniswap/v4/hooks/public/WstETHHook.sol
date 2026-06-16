@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import {ERC20} from "@crane/contracts/protocols/dexes/uniswap/v4/external/solmate/tokens/ERC20.sol";
 import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IPoolManager.sol";
-import {FixedPointMathLib} from "@crane/contracts/protocols/dexes/uniswap/v4/external/solmate/utils/FixedPointMathLib.sol";
+import {
+    FixedPointMathLib
+} from "@crane/contracts/protocols/dexes/uniswap/v4/external/solmate/utils/FixedPointMathLib.sol";
 import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {BaseTokenWrapperHook} from "./base/BaseTokenWrapperHook.sol";
 import {IWstETH, IStETH} from "./interfaces/IWstETH.sol";

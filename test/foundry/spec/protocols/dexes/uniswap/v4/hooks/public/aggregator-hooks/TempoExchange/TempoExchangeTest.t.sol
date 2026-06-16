@@ -15,7 +15,9 @@ import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/utils/HookMiner.sol";
 import {MockTIP20} from "./mocks/MockTIP20.sol";
-import {IAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
+import {
+    IAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
 import {
     TempoExchangeAggregator
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/TempoExchange/TempoExchangeAggregator.sol";
@@ -93,7 +95,9 @@ contract TempoExchangeTest is Test {
         betaUSD.mint(address(tempoExchange), INITIAL_BALANCE * 10);
 
         // Deploy PoolManager
-        manager = IPoolManager(deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(0))));
+        manager = IPoolManager(
+            deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(0)))
+        );
 
         // Mint tokens to PoolManager so it has liquidity for swaps
         alphaUSD.mint(address(manager), INITIAL_BALANCE * 10);

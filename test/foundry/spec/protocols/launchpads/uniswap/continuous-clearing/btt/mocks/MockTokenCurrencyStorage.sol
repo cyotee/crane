@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {BlockNumberish} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol';
-import {TokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/TokenCurrencyStorage.sol';
-import {Currency} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol';
+import {
+    BlockNumberish
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol";
+import {
+    TokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/TokenCurrencyStorage.sol";
+import {Currency} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol";
 
 contract MockTokenCurrencyStorage is TokenCurrencyStorage, BlockNumberish {
     constructor(

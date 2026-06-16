@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {MockContinuousClearingAuction} from '../mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {MockContinuousClearingAuction} from "../mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
 
 contract ProcessExitTest is BttBase {
     function test_WhenRefundEqZero(AuctionFuzzConstructorParams memory _params, uint256 _tokensFilled) public {
@@ -21,7 +23,7 @@ contract ProcessExitTest is BttBase {
         ERC20Mock(mParams.token).mint(address(auction), mParams.totalSupply);
         auction.onTokensReceived();
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
 
         (, uint256 bidId) = auction.createBid(1, owner, 1, 1);
 
@@ -56,7 +58,7 @@ contract ProcessExitTest is BttBase {
 
         ERC20Mock(mParams.token).mint(address(auction), mParams.totalSupply);
         auction.onTokensReceived();
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         (, uint256 bidId) = auction.createBid(_amountQ96, owner, 1, 1);
         vm.deal(address(auction), _amountQ96);
 
@@ -91,7 +93,7 @@ contract ProcessExitTest is BttBase {
 
         ERC20Mock(mParams.token).mint(address(auction), mParams.totalSupply);
         auction.onTokensReceived();
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         (, uint256 bidId) = auction.createBid(_amountQ96, owner, 1, 1);
         vm.deal(address(auction), _amountQ96);
 
@@ -108,6 +110,6 @@ contract ProcessExitTest is BttBase {
         }
 
         uint256 balanceAfter = owner.balance;
-        assertEq(balanceAfter, balanceBefore + refund, 'Balance after should be the balance before plus the refund');
+        assertEq(balanceAfter, balanceBefore + refund, "Balance after should be the balance before plus the refund");
     }
 }

@@ -2,9 +2,9 @@
 pragma solidity ^0.8.35;
 
 import {BeforeAfter} from "../BeforeAfter.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
 
 abstract contract TsProperties is BeforeAfter {
     // Properties that ensure that a user TS is somewhat sound

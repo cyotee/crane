@@ -3,8 +3,10 @@
 
 pragma solidity ^0.8.20;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
-import {MessageHashUtils} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MessageHashUtils.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+import {
+    MessageHashUtils
+} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MessageHashUtils.sol";
 import {IERC5267} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC5267.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
@@ -32,7 +34,7 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  */
 abstract contract EIP712Upgradeable is Initializable, IERC5267 {
     using BetterEfficientHashLib for bytes;
-    
+
     bytes32 private constant TYPE_HASH =
         keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
@@ -135,15 +137,16 @@ abstract contract EIP712Upgradeable is Initializable, IERC5267 {
         // and the EIP712 domain is not reliable, as it will be missing name and version.
         require($._hashedName == 0 && $._hashedVersion == 0, "EIP712: Uninitialized");
 
-        return (
-            hex"0f", // 01111
-            _EIP712Name(),
-            _EIP712Version(),
-            block.chainid,
-            address(this),
-            bytes32(0),
-            new uint256[](0)
-        );
+        return
+            (
+                hex"0f", // 01111
+                _EIP712Name(),
+                _EIP712Version(),
+                block.chainid,
+                address(this),
+                bytes32(0),
+                new uint256[](0)
+            );
     }
 
     /**

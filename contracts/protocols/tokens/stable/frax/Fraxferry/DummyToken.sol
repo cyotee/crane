@@ -10,13 +10,9 @@ import "@crane/contracts/external/openzeppelin-contracts/access/Ownable.sol";
 import "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 
 contract DummyToken is ERC20Permit, ERC20Burnable, Ownable {
-    constructor() 
-      Ownable()
-      ERC20("DummyToken", "DUM") 
-      ERC20Permit("DummyToken") {
-    }
+    constructor() Ownable(msg.sender) ERC20("DummyToken", "DUM") ERC20Permit("DummyToken") {}
 
     function mint(address to, uint256 amount) external onlyOwner {
-      _mint(to, amount);
+        _mint(to, amount);
     }
 }

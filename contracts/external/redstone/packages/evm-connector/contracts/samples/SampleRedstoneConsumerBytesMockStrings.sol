@@ -6,10 +6,10 @@ import "../mocks/RedstoneConsumerBytesMock.sol";
 import "../libs/NumericArrayLib.sol";
 
 contract SampleRedstoneConsumerBytesMockStrings is RedstoneConsumerBytesMock {
-  bytes public latestString;
+    bytes public latestString;
 
-  function saveLatestValueInStorage(bytes32 dataFeedId) public {
-    bytes memory bytesValueFromOracle = getOracleBytesValueFromTxMsg(dataFeedId);
-    latestString = bytesValueFromOracle;
-  }
+    function saveLatestValueInStorage(bytes32 dataFeedId) public {
+        bytes memory bytesValueFromOracle = getOracleBytesValueFromTxMsg(dataFeedId);
+        latestString = bytesValueFromOracle;
+    }
 }

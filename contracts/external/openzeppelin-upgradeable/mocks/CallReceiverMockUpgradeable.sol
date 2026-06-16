@@ -9,11 +9,10 @@ contract CallReceiverMockUpgradeable is Initializable {
 
     uint256[] private _array;
 
-    function __CallReceiverMock_init() internal onlyInitializing {
-    }
+    function __CallReceiverMock_init() internal onlyInitializing {}
 
-    function __CallReceiverMock_init_unchained() internal onlyInitializing {
-    }
+    function __CallReceiverMock_init_unchained() internal onlyInitializing {}
+
     function mockFunction() public payable returns (string memory) {
         emit MockFunctionCalled();
 
@@ -53,7 +52,7 @@ contract CallReceiverMockUpgradeable is Initializable {
     }
 
     function mockFunctionOutOfGas() public payable {
-        for (uint256 i = 0; ; ++i) {
+        for (uint256 i = 0;; ++i) {
             _array.push(i);
         }
     }

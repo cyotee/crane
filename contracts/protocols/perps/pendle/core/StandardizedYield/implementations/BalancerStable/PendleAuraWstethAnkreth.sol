@@ -13,12 +13,9 @@ contract PendleAuraWstethAnkreth is PendleAuraBalancerStableLPSYV2, StEthHelper 
     bool internal constant NO_TOKENS_EXEMPT = true;
     bool internal constant ALL_TOKENS_EXEMPT = false;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        ComposableStablePreview _composablePreviewHelper
-    )
+    constructor(string memory _name, string memory _symbol, ComposableStablePreview _composablePreviewHelper)
         PendleAuraBalancerStableLPSYV2(_name, _symbol, LP, AURA_PID, _composablePreviewHelper) //solhint-disable-next-line
+
     {}
 
     function _deposit(address tokenIn, uint256 amount) internal override returns (uint256 amountSharesOut) {
@@ -30,11 +27,11 @@ contract PendleAuraWstethAnkreth is PendleAuraBalancerStableLPSYV2, StEthHelper 
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == STETH) {
             uint256 amountWstETH = super._redeem(address(this), WSTETH, amountSharesToRedeem);
             amountTokenOut = _redeemWstETH(receiver, amountWstETH);

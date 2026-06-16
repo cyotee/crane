@@ -4,12 +4,18 @@ pragma solidity ^0.8.0;
 
 import {IRewardStreams} from "@crane/contracts/protocols/lending/euler/v1/reward-streams/interfaces/IRewardStreams.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
-import {IIRM, IRMLinearKink} from "@crane/contracts/protocols/lending/euler/v1/vault/InterestRateModels/IRMLinearKink.sol";
+import {
+    IIRM,
+    IRMLinearKink
+} from "@crane/contracts/protocols/lending/euler/v1/vault/InterestRateModels/IRMLinearKink.sol";
 import {OracleLens} from "./OracleLens.sol";
 import {UtilsLens} from "./UtilsLens.sol";
 import {IRMLens} from "./IRMLens.sol";
 import {Utils} from "./Utils.sol";
-import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
+import {
+    AmountCap,
+    AmountCapLib
+} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import "./LensTypes.sol";
 
 contract VaultLens is Utils {
@@ -337,9 +343,8 @@ contract VaultLens is Utils {
         result.interestRateInfo = new InterestRateInfo[](cash.length);
 
         for (uint256 i = 0; i < cash.length; ++i) {
-            (bool success, bytes memory data) = result.interestRateModel.staticcall(
-                abi.encodeCall(IIRM.computeInterestRateView, (vault, cash[i], borrows[i]))
-            );
+            (bool success, bytes memory data) = result.interestRateModel
+                .staticcall(abi.encodeCall(IIRM.computeInterestRateView, (vault, cash[i], borrows[i])));
 
             if (!success || data.length < 32) {
                 result.queryFailure = true;

@@ -15,6 +15,15 @@ import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
 import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+import {
+    StorageSlotExtension
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/openzeppelin/StorageSlotExtension.sol";
+import {
+    TransientStorageHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/TransientStorageHelpers.sol";
+import {
     PackedTokenBalance
 } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/PackedTokenBalance.sol";
 
@@ -54,6 +63,8 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
     using VaultStateLib for VaultStateBits;
     using PoolDataLib for PoolData;
     using HooksConfigLib for PoolConfigBits;
+    using TransientStorageHelpers for *;
+    using StorageSlotExtension for *;
 
     /* ========================================================================== */
     /*                                  IFacet                                    */
@@ -745,8 +756,15 @@ contract VaultQueryFacet is BalancerV3VaultModifiers, IFacet {
      * @return result The callback result
      */
     function _queryCallback(bytes calldata data) internal returns (bytes memory result) {
-        // In a Diamond, we can call the unlock/transient functions via delegatecall
-        // For now, just execute the callback directly since query context doesn't modify state
+        // Mirrors VaultExtension._setupQuery in the ported Balancer V3 source:
+        // require a static call so the transient unlock can't be leveraged from
+        // a state-changing transaction, then set _isUnlocked so onlyWhenUnlocked
+        // entry points (e.g. VaultSwapFacet.swap) succeed during the callback.
+        if (EVMCallModeHelpers.isStaticCall() == false) {
+            revert EVMCallModeHelpers.NotStaticCall();
+        }
+        _isUnlocked().tstore(true);
+
         (bool success, bytes memory returnData) = msg.sender.call(data);
         if (!success) {
             // Bubble up the revert reason

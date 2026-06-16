@@ -22,7 +22,7 @@ contract GovernedPerspective is EVCUtil, Ownable, BasePerspective {
     /// @notice Creates a new GovernedPerspective instance.
     /// @param _evc The address of the EVC.
     /// @param _owner The address that will be set as the owner of the contract.
-    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable() BasePerspective(address(0)) {
+    constructor(address _evc, address _owner) EVCUtil(_evc) Ownable(msg.sender) BasePerspective(address(0)) {
         _transferOwnership(_owner);
     }
 
@@ -61,7 +61,7 @@ contract GovernedPerspective is EVCUtil, Ownable, BasePerspective {
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
     /// @return The address of the message sender.
-    function _msgSender() internal view override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 }

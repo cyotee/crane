@@ -4,7 +4,7 @@ pragma solidity ^0.8.35;
 
 import "./TestContracts/DevTestSetup.sol";
 import {WETH9} from "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/GasCompZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/GasCompZapper.sol";
 
 contract ZapperGasCompTest is DevTestSetup {
     function setUp() public override {
@@ -14,7 +14,8 @@ contract ZapperGasCompTest is DevTestSetup {
         accounts = new Accounts();
         createAccounts();
 
-        (A, B, C, D, E, F, G) = (
+        (A, B, C, D, E, F, G) =
+        (
             accountsList[0],
             accountsList[1],
             accountsList[2],

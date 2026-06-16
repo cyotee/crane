@@ -4,7 +4,9 @@
 pragma solidity ^0.8.20;
 
 import {ERC721Upgradeable} from "../ERC721Upgradeable.sol";
-import {IERC721Enumerable} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Enumerable.sol";
+import {
+    IERC721Enumerable
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 import {Initializable} from "../../../proxy/utils/Initializable.sol";
 
@@ -26,7 +28,8 @@ abstract contract ERC721EnumerableUpgradeable is Initializable, ERC721Upgradeabl
     }
 
     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.ERC721Enumerable")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC721EnumerableStorageLocation = 0x645e039705490088daad89bae25049a34f4a9072d398537b1ab2425f24cbed00;
+    bytes32 private constant ERC721EnumerableStorageLocation =
+        0x645e039705490088daad89bae25049a34f4a9072d398537b1ab2425f24cbed00;
 
     function _getERC721EnumerableStorage() private pure returns (ERC721EnumerableStorage storage $) {
         assembly {
@@ -46,11 +49,10 @@ abstract contract ERC721EnumerableUpgradeable is Initializable, ERC721Upgradeabl
      */
     error ERC721EnumerableForbiddenBatchMint();
 
-    function __ERC721Enumerable_init() internal onlyInitializing {
-    }
+    function __ERC721Enumerable_init() internal onlyInitializing {}
 
-    function __ERC721Enumerable_init_unchained() internal onlyInitializing {
-    }
+    function __ERC721Enumerable_init_unchained() internal onlyInitializing {}
+
     /**
      * @dev See {IERC165-supportsInterface}.
      */

@@ -26,7 +26,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFrax.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/FXS/IFxs.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract MSIGHelper is Owned {
@@ -37,7 +37,7 @@ contract MSIGHelper is Owned {
     IFxs public FXS = IFxs(0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0);
     ERC20 public collateral_token;
     IFraxAMOMinter public amo_minter;
-    
+
     // Price constants
     uint256 private constant PRICE_PRECISION = 1e6;
 
@@ -71,11 +71,7 @@ contract MSIGHelper is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner,
-        address _amo_minter_address,
-        address _msig_address
-    ) Owned(_owner) {
+    constructor(address _owner, address _amo_minter_address, address _msig_address) Owned(_owner) {
         // AMO Minter related
         amo_minter_address = _amo_minter_address;
         amo_minter = IFraxAMOMinter(_amo_minter_address);
@@ -129,13 +125,13 @@ contract MSIGHelper is Owned {
         allocations[6] = tkn_bals[2] * (10 ** missing_decimals); // Free Collateral, in E18
         allocations[7] = collat_lent * (10 ** missing_decimals); // Lent Collateral, in E18
         allocations[8] = allocations[6] + allocations[7]; // Total Collateral, in E18
-    
+
         // Total USD value, in E18
         // Ignores FXS
         allocations[9] = allocations[2] + allocations[8];
     }
 
-    // Needed for the Frax contract to function 
+    // Needed for the Frax contract to function
     function collatDollarBalance() public view returns (uint256) {
         (, uint256 col_bal) = dollarBalances();
         return col_bal;
@@ -165,18 +161,16 @@ contract MSIGHelper is Owned {
 
     function lend(address token_address, uint256 token_amount) external onlyByOwnGov {
         // Get the token type
-        uint256 token_type = getTokenType(token_address); 
+        uint256 token_type = getTokenType(token_address);
 
         // Can be overridden
-        if (token_type == 0){
+        if (token_type == 0) {
             TransferHelper.safeTransfer(address(FRAX), msig_address, token_amount);
             frax_lent += token_amount;
-        }
-        else if (token_type == 1) {
+        } else if (token_type == 1) {
             TransferHelper.safeTransfer(address(FXS), msig_address, token_amount);
             fxs_lent += token_amount;
-        }
-        else {
+        } else {
             TransferHelper.safeTransfer(collateral_address, msig_address, token_amount);
             collat_lent += token_amount;
         }
@@ -189,8 +183,9 @@ contract MSIGHelper is Owned {
         amo_minter.burnFraxFromAMO(frax_amount);
 
         // Update the balance after the transfer goes through
-        if (frax_amount >= frax_lent) frax_lent = 0;
-        else {
+        if (frax_amount >= frax_lent) {
+            frax_lent = 0;
+        } else {
             frax_lent -= frax_amount;
         }
     }
@@ -201,8 +196,9 @@ contract MSIGHelper is Owned {
         amo_minter.burnFxsFromAMO(fxs_amount);
 
         // Update the balance after the transfer goes through
-        if (fxs_amount >= fxs_lent) fxs_lent = 0;
-        else {
+        if (fxs_amount >= fxs_lent) {
+            fxs_lent = 0;
+        } else {
             fxs_lent -= fxs_amount;
         }
     }
@@ -213,14 +209,15 @@ contract MSIGHelper is Owned {
         amo_minter.receiveCollatFromAMO(collat_amount);
 
         // Update the balance after the transfer goes through
-        if (collat_amount >= collat_lent) collat_lent = 0;
-        else {
+        if (collat_amount >= collat_lent) {
+            collat_lent = 0;
+        } else {
             collat_lent -= collat_amount;
         }
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     function setTimelock(address _new_timelock) external onlyByOwnGov {
         timelock_address = _new_timelock;
     }
@@ -237,17 +234,23 @@ contract MSIGHelper is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 
     /* ========== EVENTS ========== */
 
     event RecoveredERC20(address token, uint256 amount);
-    event BridgeInfoChanged(address frax_bridge_address, address fxs_bridge_address, address collateral_bridge_address, address destination_address_override, string non_evm_destination_address);
+    event BridgeInfoChanged(
+        address frax_bridge_address,
+        address fxs_bridge_address,
+        address collateral_bridge_address,
+        address destination_address_override,
+        string non_evm_destination_address
+    );
 }

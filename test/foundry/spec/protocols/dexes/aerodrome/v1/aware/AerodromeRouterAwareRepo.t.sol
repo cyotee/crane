@@ -48,7 +48,7 @@ contract AerodromeRouterAwareRepo_Test is Test {
     }
 
     function test_storageSlot_isCorrectHash() public view {
-        bytes32 expected = keccak256("crane.aerodrome.router.aware");
+        bytes32 expected = bytes32(uint256(keccak256(abi.encode("protocols.dexes.aerodrome.v1.router.aware"))) - 1);
         assertEq(harness.storageSlot(), expected, "Storage slot should match expected hash");
     }
 

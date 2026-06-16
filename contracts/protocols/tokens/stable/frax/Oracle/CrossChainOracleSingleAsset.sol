@@ -26,12 +26,11 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract CrossChainOracleSingleAsset is Owned {
-    
     // Core
     address public timelock_address;
     address public bot_address;
     address public tkn_address;
-    
+
     // Prices
     uint256 public price;
     uint256 public last_updated_time;
@@ -49,13 +48,16 @@ contract CrossChainOracleSingleAsset is Owned {
     }
 
     modifier onlyByOwnGovBot() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address, "Not owner, tlck, or bot");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address,
+            "Not owner, tlck, or bot"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _creator_address,
         address _tkn_address,
         address _timelock_address,
@@ -81,13 +83,11 @@ contract CrossChainOracleSingleAsset is Owned {
     }
 
     // AggregatorV3Interface / Chainlink compatibility
-    function latestRoundData() external view returns (
-        uint80 roundId,
-        int256 answer,
-        uint256 startedAt,
-        uint256 updatedAt,
-        uint80 answeredInRound
-    ) {
+    function latestRoundData()
+        external
+        view
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
+    {
         int256 price_e18 = int256(price) * 1e12;
         return (0, price_e18, 0, last_updated_time, 0);
     }
@@ -126,5 +126,4 @@ contract CrossChainOracleSingleAsset is Owned {
     function setBot(address _new_bot_address) external onlyByOwnGov {
         bot_address = _new_bot_address;
     }
-
 }

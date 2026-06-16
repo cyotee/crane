@@ -21,7 +21,7 @@ pragma solidity >=0.8.0;
 
 // ====================================================================
 
-import { OperatorRole } from "./OperatorRole.sol";
+import {OperatorRole} from "./OperatorRole.sol";
 
 /// @title Operator2Step
 /// @author Drake Evans (Frax Finance) https://github.com/drakeevans

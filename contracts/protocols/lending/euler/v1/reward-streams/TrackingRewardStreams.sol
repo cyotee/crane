@@ -29,11 +29,10 @@ contract TrackingRewardStreams is BaseRewardStreams, ITrackingRewardStreams {
     /// @param newAccountBalance The new balance of the account
     /// @param forfeitRecentReward Whether to forfeit the most recent reward and not update the accumulator. Ignored
     /// when the new balance is greater than the current balance.
-    function balanceTrackerHook(
-        address account,
-        uint256 newAccountBalance,
-        bool forfeitRecentReward
-    ) external override {
+    function balanceTrackerHook(address account, uint256 newAccountBalance, bool forfeitRecentReward)
+        external
+        override
+    {
         address rewarded = msg.sender;
         AccountStorage storage accountStorage = accounts[account][rewarded];
         uint256 currentAccountBalance = accountStorage.balance;

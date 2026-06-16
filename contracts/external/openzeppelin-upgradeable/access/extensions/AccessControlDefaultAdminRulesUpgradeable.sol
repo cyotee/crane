@@ -3,7 +3,9 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessControlDefaultAdminRules} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/IAccessControlDefaultAdminRules.sol";
+import {
+    IAccessControlDefaultAdminRules
+} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/IAccessControlDefaultAdminRules.sol";
 import {AccessControlUpgradeable} from "../AccessControlUpgradeable.sol";
 import {IAccessControl} from "@crane/contracts/external/openzeppelin-contracts/access/IAccessControl.sol";
 import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
@@ -38,7 +40,12 @@ import {Initializable} from "../../proxy/utils/Initializable.sol";
  * }
  * ```
  */
-abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IAccessControlDefaultAdminRules, IERC5313, AccessControlUpgradeable {
+abstract contract AccessControlDefaultAdminRulesUpgradeable is
+    Initializable,
+    IAccessControlDefaultAdminRules,
+    IERC5313,
+    AccessControlUpgradeable
+{
     /// @custom:storage-location erc7201:openzeppelin.storage.AccessControlDefaultAdminRules
     struct AccessControlDefaultAdminRulesStorage {
         // pending admin pair read/written together frequently
@@ -54,9 +61,14 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
     }
 
     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.AccessControlDefaultAdminRules")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant AccessControlDefaultAdminRulesStorageLocation = 0xeef3dac4538c82c8ace4063ab0acd2d15cdb5883aa1dff7c2673abb3d8698400;
+    bytes32 private constant AccessControlDefaultAdminRulesStorageLocation =
+        0xeef3dac4538c82c8ace4063ab0acd2d15cdb5883aa1dff7c2673abb3d8698400;
 
-    function _getAccessControlDefaultAdminRulesStorage() private pure returns (AccessControlDefaultAdminRulesStorage storage $) {
+    function _getAccessControlDefaultAdminRulesStorage()
+        private
+        pure
+        returns (AccessControlDefaultAdminRulesStorage storage $)
+    {
         assembly {
             $.slot := AccessControlDefaultAdminRulesStorageLocation
         }
@@ -65,11 +77,17 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
     /**
      * @dev Sets the initial values for {defaultAdminDelay} and {defaultAdmin} address.
      */
-    function __AccessControlDefaultAdminRules_init(uint48 initialDelay, address initialDefaultAdmin) internal onlyInitializing {
+    function __AccessControlDefaultAdminRules_init(uint48 initialDelay, address initialDefaultAdmin)
+        internal
+        onlyInitializing
+    {
         __AccessControlDefaultAdminRules_init_unchained(initialDelay, initialDefaultAdmin);
     }
 
-    function __AccessControlDefaultAdminRules_init_unchained(uint48 initialDelay, address initialDefaultAdmin) internal onlyInitializing {
+    function __AccessControlDefaultAdminRules_init_unchained(uint48 initialDelay, address initialDefaultAdmin)
+        internal
+        onlyInitializing
+    {
         AccessControlDefaultAdminRulesStorage storage $ = _getAccessControlDefaultAdminRulesStorage();
         if (initialDefaultAdmin == address(0)) {
             revert AccessControlInvalidDefaultAdmin(address(0));
@@ -99,7 +117,11 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
     /**
      * @dev See {AccessControl-grantRole}. Reverts for `DEFAULT_ADMIN_ROLE`.
      */
-    function grantRole(bytes32 role, address account) public virtual override(AccessControlUpgradeable, IAccessControl) {
+    function grantRole(bytes32 role, address account)
+        public
+        virtual
+        override(AccessControlUpgradeable, IAccessControl)
+    {
         if (role == DEFAULT_ADMIN_ROLE) {
             revert AccessControlEnforcedDefaultAdminRules();
         }
@@ -109,7 +131,11 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
     /**
      * @dev See {AccessControl-revokeRole}. Reverts for `DEFAULT_ADMIN_ROLE`.
      */
-    function revokeRole(bytes32 role, address account) public virtual override(AccessControlUpgradeable, IAccessControl) {
+    function revokeRole(bytes32 role, address account)
+        public
+        virtual
+        override(AccessControlUpgradeable, IAccessControl)
+    {
         if (role == DEFAULT_ADMIN_ROLE) {
             revert AccessControlEnforcedDefaultAdminRules();
         }
@@ -129,7 +155,11 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
      * thereby disabling any functionality that is only available for it, and the possibility of reassigning a
      * non-administrated role.
      */
-    function renounceRole(bytes32 role, address account) public virtual override(AccessControlUpgradeable, IAccessControl) {
+    function renounceRole(bytes32 role, address account)
+        public
+        virtual
+        override(AccessControlUpgradeable, IAccessControl)
+    {
         AccessControlDefaultAdminRulesStorage storage $ = _getAccessControlDefaultAdminRulesStorage();
         if (role == DEFAULT_ADMIN_ROLE && account == defaultAdmin()) {
             (address newDefaultAdmin, uint48 schedule) = pendingDefaultAdmin();
@@ -269,7 +299,7 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
      * @inheritdoc IAccessControlDefaultAdminRules
      */
     function acceptDefaultAdminTransfer() public virtual {
-        (address newDefaultAdmin, ) = pendingDefaultAdmin();
+        (address newDefaultAdmin,) = pendingDefaultAdmin();
         if (_msgSender() != newDefaultAdmin) {
             // Enforce newDefaultAdmin explicit acceptance.
             revert AccessControlInvalidDefaultAdmin(_msgSender());
@@ -353,10 +383,9 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is Initializable, IA
         // When decreasing the delay, we wait the difference between "current delay" and "new delay". This guarantees
         // that an admin transfer cannot be made faster than "current delay" at the time the delay change is scheduled.
         // For example, if decreasing from 10 days to 3 days, the new delay will come into effect after 7 days.
-        return
-            newDelay > currentDelay
-                ? uint48(Math.min(newDelay, defaultAdminDelayIncreaseWait())) // no need to safecast, both inputs are uint48
-                : currentDelay - newDelay;
+        return newDelay > currentDelay
+            ? uint48(Math.min(newDelay, defaultAdminDelayIncreaseWait()))  // no need to safecast, both inputs are uint48
+            : currentDelay - newDelay;
     }
 
     ///

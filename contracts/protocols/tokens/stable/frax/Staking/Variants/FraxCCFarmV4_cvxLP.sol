@@ -6,14 +6,16 @@ import "@crane/contracts/protocols/tokens/stable/frax/Staking/FraxCrossChainFarm
 contract FraxCCFarmV4_cvxLP is FraxCrossChainFarmV4_ERC20 {
     string public farm_type = "FraxCCFarmV4_cvxLP";
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address _stakingToken,
         address _fraxAddress,
         address _timelockAddress,
         address _rewarder_address
-    ) 
-    FraxCrossChainFarmV4_ERC20(_owner, _rewardTokens, _stakingToken, _fraxAddress, _timelockAddress, _rewarder_address)
+    )
+        FraxCrossChainFarmV4_ERC20(
+            _owner, _rewardTokens, _stakingToken, _fraxAddress, _timelockAddress, _rewarder_address
+        )
     {}
 }

@@ -12,10 +12,12 @@ contract PendleAmphorWstETHVaultSY is SYBase, StEthHelper {
         _safeApproveInf(WSTETH, VAULT);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE) {
             (amountDeposited, tokenIn) = (_depositWstETH(NATIVE, amountDeposited), WSTETH);
         }
@@ -27,9 +29,14 @@ contract PendleAmphorWstETHVaultSY is SYBase, StEthHelper {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256) {
+    )
+        internal
+        override
+        returns (uint256)
+    {
         _transferOut(VAULT, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -38,20 +45,28 @@ contract PendleAmphorWstETHVaultSY is SYBase, StEthHelper {
         return PMath.ONE;
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             return _previewDepositWstETH(NATIVE, amountTokenToDeposit);
         }
         return amountTokenToDeposit;
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

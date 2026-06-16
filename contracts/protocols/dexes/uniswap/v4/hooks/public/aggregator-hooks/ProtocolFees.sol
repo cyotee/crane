@@ -7,7 +7,9 @@ import {SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Pool
 import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {ProtocolFeeLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/ProtocolFeeLibrary.sol";
 import {PoolId} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
-import {IV4FeeAdapter} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeeAdapter.sol";
+import {
+    IV4FeeAdapter
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IV4FeeAdapter.sol";
 import {PoolIdLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
 import {StateLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/StateLibrary.sol";
 import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";

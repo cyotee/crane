@@ -41,11 +41,7 @@ contract DepositHelperReaperVault is Ownable {
     receive() external payable {}
 
     /// @notice Deposit `_amount` of ERC20 tokens (or native ether for a supported pool) into existing Relic `_relicId`.
-    function deposit(uint256 _amount, uint256 _relicId, bool _harvest)
-        external
-        payable
-        returns (uint256 shares_)
-    {
+    function deposit(uint256 _amount, uint256 _relicId, bool _harvest) external payable returns (uint256 shares_) {
         _requireApprovedOrOwner(_relicId);
         shares_ = _prepareDeposit(reliquary.getPositionForId(_relicId).poolId, _amount);
         reliquary.deposit(shares_, _relicId, _harvest ? msg.sender : address(0));
@@ -121,9 +117,7 @@ contract DepositHelperReaperVault is Ownable {
         }
     }
 
-    function _withdraw(uint256 _amount, uint256 _relicId, bool _harvest, bool _giveEther)
-        internal
-    {
+    function _withdraw(uint256 _amount, uint256 _relicId, bool _harvest, bool _giveEther) internal {
         _requireApprovedOrOwner(_relicId);
 
         PositionInfo memory position_ = reliquary.getPositionForId(_relicId);
@@ -134,10 +128,7 @@ contract DepositHelperReaperVault is Ownable {
         } else {
             shares_ = (_amount * 10 ** vault_.decimals()) / vault_.getPricePerFullShare();
             if (shares_ > position_.amount) {
-                require(
-                    shares_ < position_.amount + position_.amount / 1000,
-                    "too much imprecision in share price"
-                );
+                require(shares_ < position_.amount + position_.amount / 1000, "too much imprecision in share price");
                 shares_ = position_.amount;
             }
         }

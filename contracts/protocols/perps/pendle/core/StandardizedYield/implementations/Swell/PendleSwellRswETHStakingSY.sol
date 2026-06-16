@@ -27,10 +27,13 @@ contract PendleSwellRswETHStakingSY is PendleSwellStakingERC20SY {
         return ArrayLib.create(NATIVE);
     }
 
-    function _previewToStakeToken(
-        address,
-        uint256 amountNativeToDeposit
-    ) internal view virtual override returns (uint256) {
+    function _previewToStakeToken(address, uint256 amountNativeToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         return amountNativeToDeposit.divDown(IRswETH(RSWETH).getRate());
     }
 

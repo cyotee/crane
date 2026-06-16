@@ -69,6 +69,7 @@ contract MultiStepOwnableHandler is IHandler {
         actors.push(address(0xFFFF));
         actors.push(ghostCurrentOwner); // filtered out in negative tests
     }
+
     // end::constructor(IMultiStepOwnable)[]
 
     // tag::selectors()[]
@@ -91,6 +92,7 @@ contract MultiStepOwnableHandler is IHandler {
         selectors_[7] = this.attacker_acceptOwnershipTransfer.selector;
         selectors_[8] = this.wrongGuy_acceptOwnershipTransfer.selector;
     }
+
     // end::selectors()[]
 
     // ======================= POSITIVE PATHS =======================
@@ -109,6 +111,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.prank(ghostCurrentOwner);
         try ownable.initiateOwnershipTransfer(newOwner) {} catch {}
     }
+
     // end::initiateOwnershipTransfer(address)[]
 
     // tag::confirmOwnershipTransfer(address)[]
@@ -121,6 +124,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.prank(ghostCurrentOwner);
         try ownable.confirmOwnershipTransfer(newOwner) {} catch {}
     }
+
     // end::confirmOwnershipTransfer(address)[]
 
     // tag::acceptOwnershipTransfer()[]
@@ -137,6 +141,7 @@ contract MultiStepOwnableHandler is IHandler {
             ghostCurrentOwner = pending; // update ghost on success
         } catch {}
     }
+
     // end::acceptOwnershipTransfer()[]
 
     // tag::cancelPendingOwnershipTransfer()[]
@@ -148,6 +153,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.prank(ghostCurrentOwner);
         try ownable.cancelPendingOwnershipTransfer() {} catch {}
     }
+
     // end::cancelPendingOwnershipTransfer()[]
 
     // ======================= NEGATIVE PATHS (must revert) =======================
@@ -164,6 +170,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.expectRevert(IMultiStepOwnable.NotOwner.selector);
         ownable.initiateOwnershipTransfer(newOwner);
     }
+
     // end::attacker_initiateOwnershipTransfer(uint256-address)[]
 
     // tag::attacker_confirmOwnershipTransfer(uint256-address)[]
@@ -177,6 +184,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.expectRevert(IMultiStepOwnable.NotOwner.selector);
         ownable.confirmOwnershipTransfer(newOwner);
     }
+
     // end::attacker_confirmOwnershipTransfer(uint256-address)[]
 
     // tag::attacker_cancelPendingOwnershipTransfer(uint256)[]
@@ -190,6 +198,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.expectRevert(IMultiStepOwnable.NotOwner.selector);
         ownable.cancelPendingOwnershipTransfer();
     }
+
     // end::attacker_cancelPendingOwnershipTransfer(uint256)[]
 
     // tag::attacker_acceptOwnershipTransfer(uint256)[]
@@ -204,6 +213,7 @@ contract MultiStepOwnableHandler is IHandler {
         vm.expectRevert(IMultiStepOwnable.NotPending.selector);
         ownable.acceptOwnershipTransfer();
     }
+
     // end::attacker_acceptOwnershipTransfer(uint256)[]
 
     // tag::wrongGuy_acceptOwnershipTransfer(uint256)[]

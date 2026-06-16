@@ -3,7 +3,9 @@
 pragma solidity ^0.8.0;
 
 import {ContextUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/utils/ContextUpgradeable.sol";
-import {AccessControlEnumerableUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol";
+import {
+    AccessControlEnumerableUpgradeable
+} from "@crane/contracts/external/openzeppelin-upgradeable/access/extensions/AccessControlEnumerableUpgradeable.sol";
 import {
     AccessControlUpgradeable,
     IAccessControl
@@ -36,7 +38,7 @@ abstract contract SelectorAccessControl is EVCUtil, AccessControlEnumerableUpgra
     function grantRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControlUpgradeable, IAccessControl)
+        override(AccessControlUpgradeable, IAccessControl)
         onlyEVCAccountOwner
     {
         super.grantRole(role, account);
@@ -46,7 +48,7 @@ abstract contract SelectorAccessControl is EVCUtil, AccessControlEnumerableUpgra
     function revokeRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControlUpgradeable, IAccessControl)
+        override(AccessControlUpgradeable, IAccessControl)
         onlyEVCAccountOwner
     {
         super.revokeRole(role, account);
@@ -56,7 +58,7 @@ abstract contract SelectorAccessControl is EVCUtil, AccessControlEnumerableUpgra
     function renounceRole(bytes32 role, address callerConfirmation)
         public
         virtual
-        override (AccessControlUpgradeable, IAccessControl)
+        override(AccessControlUpgradeable, IAccessControl)
         onlyEVCAccountOwner
     {
         super.renounceRole(role, callerConfirmation);
@@ -76,7 +78,7 @@ abstract contract SelectorAccessControl is EVCUtil, AccessControlEnumerableUpgra
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
     /// @return The address of the message sender.
-    function _msgSender() internal view virtual override (EVCUtil, ContextUpgradeable) returns (address) {
+    function _msgSender() internal view virtual override(EVCUtil, ContextUpgradeable) returns (address) {
         return EVCUtil._msgSender();
     }
 }

@@ -4,14 +4,12 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/CommunalFarm.sol";
 
 contract CommunalFarm_SaddleD4 is CommunalFarm {
-    constructor (
+    constructor(
         address _owner,
         address _stakingToken,
         string[] memory _rewardSymbols,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates
-    ) 
-    CommunalFarm(_owner, _stakingToken, _rewardSymbols, _rewardTokens, _rewardManagers, _rewardRates)
-    {}
+    ) CommunalFarm(_owner, _stakingToken, _rewardSymbols, _rewardTokens, _rewardManagers, _rewardRates) {}
 }

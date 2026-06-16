@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC20.sol";
 
-import {UserProxyFactory} from "@crane/contracts/protocols/staking/liquity/v2/gov/UserProxyFactory.sol";
+import {UserProxyFactory} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UserProxyFactory.sol";
 
 contract UserProxyFactoryTest is Test {
     IERC20 private constant lqty = IERC20(address(0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D));

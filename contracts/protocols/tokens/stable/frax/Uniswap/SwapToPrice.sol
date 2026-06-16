@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import './Interfaces/IUniswapV2Pair.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Math/Babylonian.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol';
-import './TransferHelper.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol';
-import './Interfaces/IUniswapV2Router01.sol';
-import './UniswapV2Library.sol';
+import "./Interfaces/IUniswapV2Pair.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Math/Babylonian.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
+import "./TransferHelper.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import "./Interfaces/IUniswapV2Router01.sol";
+import "./UniswapV2Library.sol";
 
 contract SwapToPrice {
     using SafeMath for uint256;
@@ -15,7 +15,7 @@ contract SwapToPrice {
     IUniswapV2Router01 public immutable router;
     address public immutable factory;
 
-    constructor (address factory_, IUniswapV2Router01 router_) {
+    constructor(address factory_, IUniswapV2Router01 router_) {
         factory = factory_;
         router = router_;
     }
@@ -26,14 +26,14 @@ contract SwapToPrice {
         uint256 truePriceTokenB,
         uint256 reserveA,
         uint256 reserveB
-    ) pure public returns (bool aToB, uint256 amountIn) {
+    ) public pure returns (bool aToB, uint256 amountIn) {
         aToB = reserveA.mul(truePriceTokenB) / reserveB < truePriceTokenA;
 
         uint256 invariant = reserveA.mul(reserveB);
 
         uint256 leftSide = Babylonian.sqrt(
-            invariant.mul(aToB ? truePriceTokenA : truePriceTokenB).mul(1000) /
-            uint256(aToB ? truePriceTokenB : truePriceTokenA).mul(997)
+            invariant.mul(aToB ? truePriceTokenA : truePriceTokenB).mul(1000)
+                / uint256(aToB ? truePriceTokenB : truePriceTokenA).mul(997)
         );
         uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 997;
 
@@ -63,10 +63,7 @@ contract SwapToPrice {
         uint256 amountIn;
         {
             (uint256 reserveA, uint256 reserveB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
-            (aToB, amountIn) = computeProfitMaximizingTrade(
-                truePriceTokenA, truePriceTokenB,
-                reserveA, reserveB
-            );
+            (aToB, amountIn) = computeProfitMaximizingTrade(truePriceTokenA, truePriceTokenB, reserveA, reserveB);
         }
 
         // spend up to the allowance of the token in

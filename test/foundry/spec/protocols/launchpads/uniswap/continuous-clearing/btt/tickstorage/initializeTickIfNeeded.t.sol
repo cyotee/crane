@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockTickStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol';
-import {BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {StdStorage, stdStorage} from 'forge-std/StdStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockTickStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol";
+import {BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {StdStorage, stdStorage} from "forge-std/StdStorage.sol";
 
 contract InitializeTickIfNeededTest is BttBase {
     using stdStorage for StdStorage;
@@ -46,7 +48,7 @@ contract InitializeTickIfNeededTest is BttBase {
         price = priceIndex * tickSpacing;
 
         _;
-        assertTrue(price % tickSpacing == 0, 'price is not divisible by tick spacing');
+        assertTrue(price % tickSpacing == 0, "price is not divisible by tick spacing");
     }
 
     modifier whenPriceLTMAX_TICK_PTR() {
@@ -103,7 +105,7 @@ contract InitializeTickIfNeededTest is BttBase {
         vm.assume(price != floorPrice);
 
         _;
-        assertGt(price, prevPrice, 'price is not greater than prevPrice');
+        assertGt(price, prevPrice, "price is not greater than prevPrice");
     }
 
     function test_GivenPrevPriceIsNotInitialized(
@@ -167,9 +169,9 @@ contract InitializeTickIfNeededTest is BttBase {
         vm.record();
         vm.recordLogs();
         tickStorage.initializeTickIfNeeded(floorPrice, price);
-        assertEq(vm.getRecordedLogs().length, 1, 'should emit 1 log');
+        assertEq(vm.getRecordedLogs().length, 1, "should emit 1 log");
         (, bytes32[] memory writes) = vm.accesses(address(tickStorage));
-        assertEq(writes.length, 2, 'should write 2 slots');
+        assertEq(writes.length, 2, "should write 2 slots");
 
         assertEq(tickStorage.ticks(firstPrice).next, price);
         assertEq(tickStorage.ticks(price).next, type(uint256).max);
@@ -211,9 +213,9 @@ contract InitializeTickIfNeededTest is BttBase {
         vm.record();
         vm.recordLogs();
         tickStorage.initializeTickIfNeeded(floorPrice, price);
-        assertEq(vm.getRecordedLogs().length, 2, 'should emit 2 log');
+        assertEq(vm.getRecordedLogs().length, 2, "should emit 2 log");
         (, bytes32[] memory writes) = vm.accesses(address(tickStorage));
-        assertEq(writes.length, 3, 'should write 3 slots');
+        assertEq(writes.length, 3, "should write 3 slots");
 
         assertEq(tickStorage.ticks(floorPrice).next, price);
         assertEq(tickStorage.ticks(price).next, firstPrice);

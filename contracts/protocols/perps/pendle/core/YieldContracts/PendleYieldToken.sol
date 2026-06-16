@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "../../interfaces/IStandardizedYield.sol";
 import "../../interfaces/IPYieldToken.sol";
@@ -19,10 +19,10 @@ import "../erc20/PendleERC20.sol";
 import "./InterestManagerYT.sol";
 
 /**
-Invariance to maintain:
-- address(0) & address(this) should never have any rewards & activeBalance accounting done. This is
-    guaranteed by address(0) & address(this) check in each updateForTwo function
-*/
+ * Invariance to maintain:
+ * - address(0) & address(this) should never have any rewards & activeBalance accounting done. This is
+ *     guaranteed by address(0) & address(this) check in each updateForTwo function
+ */
 contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, InterestManagerYT {
     using PMath for uint256;
     using SafeERC20 for IERC20;
@@ -85,10 +85,13 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
      * @notice Tokenize SY into PT + YT of equal qty. Every unit of asset of SY will create 1 PT + 1 YT
      * @dev SY must be transferred to this contract prior to calling
      */
-    function mintPY(
-        address receiverPT,
-        address receiverYT
-    ) external nonReentrant notExpired updateData returns (uint256 amountPYOut) {
+    function mintPY(address receiverPT, address receiverYT)
+        external
+        nonReentrant
+        notExpired
+        updateData
+        returns (uint256 amountPYOut)
+    {
         address[] memory receiverPTs = new address[](1);
         address[] memory receiverYTs = new address[](1);
         uint256[] memory amountSyToMints = new uint256[](1);
@@ -111,8 +114,9 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         if (receiverYTs.length != length || amountSyToMints.length != length) revert Errors.ArrayLengthMismatch();
 
         uint256 totalSyToMint = amountSyToMints.sum();
-        if (totalSyToMint > _getFloatingSyAmount())
+        if (totalSyToMint > _getFloatingSyAmount()) {
             revert Errors.YieldContractInsufficientSy(totalSyToMint, _getFloatingSyAmount());
+        }
 
         amountPYOuts = _mintPY(receiverPTs, receiverYTs, amountSyToMints);
     }
@@ -138,10 +142,12 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
      * @dev PT/YT must be transferred to this contract prior to calling
      * @dev fails if unable to redeem the total PY amount in `amountPYToRedeems`
      */
-    function redeemPYMulti(
-        address[] calldata receivers,
-        uint256[] calldata amountPYToRedeems
-    ) external nonReentrant updateData returns (uint256[] memory amountSyOuts) {
+    function redeemPYMulti(address[] calldata receivers, uint256[] calldata amountPYToRedeems)
+        external
+        nonReentrant
+        updateData
+        returns (uint256[] memory amountSyOuts)
+    {
         if (receivers.length != amountPYToRedeems.length) revert Errors.ArrayLengthMismatch();
         if (receivers.length == 0) revert Errors.ArrayEmpty();
         amountSyOuts = _redeemPY(receivers, amountPYToRedeems);
@@ -157,11 +163,12 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
      * time, unless users redeem their dueInterest or redeemPY. Due to this, it is required to
      * update users' accruedReward STRICTLY BEFORE transferring out their interest.
      */
-    function redeemDueInterestAndRewards(
-        address user,
-        bool redeemInterest,
-        bool redeemRewards
-    ) external nonReentrant updateData returns (uint256 interestOut, uint256[] memory rewardsOut) {
+    function redeemDueInterestAndRewards(address user, bool redeemInterest, bool redeemRewards)
+        external
+        nonReentrant
+        updateData
+        returns (uint256 interestOut, uint256[] memory rewardsOut)
+    {
         if (!redeemInterest && !redeemRewards) revert Errors.YCNothingToRedeem();
 
         // if redeemRewards == true, this line must be here for obvious reason
@@ -268,7 +275,9 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
             uint256[] memory userRewardOwed
         )
     {
-        if (postExpiry.firstPYIndex == 0) revert Errors.YCPostExpiryDataNotSet();
+        if (postExpiry.firstPYIndex == 0) {
+            revert Errors.YCPostExpiryDataNotSet();
+        }
 
         firstPYIndex = postExpiry.firstPYIndex;
         totalSyInterestForTreasury = postExpiry.totalSyInterestForTreasury;
@@ -283,11 +292,10 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         }
     }
 
-    function _mintPY(
-        address[] memory receiverPTs,
-        address[] memory receiverYTs,
-        uint256[] memory amountSyToMints
-    ) internal returns (uint256[] memory amountPYOuts) {
+    function _mintPY(address[] memory receiverPTs, address[] memory receiverYTs, uint256[] memory amountSyToMints)
+        internal
+        returns (uint256[] memory amountPYOuts)
+    {
         amountPYOuts = new uint256[](amountSyToMints.length);
 
         uint256 index = _pyIndexCurrent();
@@ -306,10 +314,10 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         return MiniHelpers.isCurrentlyExpired(expiry);
     }
 
-    function _redeemPY(
-        address[] memory receivers,
-        uint256[] memory amountPYToRedeems
-    ) internal returns (uint256[] memory amountSyOuts) {
+    function _redeemPY(address[] memory receivers, uint256[] memory amountPYToRedeems)
+        internal
+        returns (uint256[] memory amountSyOuts)
+    {
         uint256 totalAmountPYToRedeem = amountPYToRedeems.sum();
         IPPrincipalToken(PT).burnByYT(address(this), totalAmountPYToRedeem);
         if (!isExpired()) _burn(address(this), totalAmountPYToRedeem);
@@ -336,10 +344,11 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         return SYUtils.syToAsset(indexCurrent, amountSy);
     }
 
-    function _calcSyRedeemableFromPY(
-        uint256 amountPY,
-        uint256 indexCurrent
-    ) internal view returns (uint256 syToUser, uint256 syInterestPostExpiry) {
+    function _calcSyRedeemableFromPY(uint256 amountPY, uint256 indexCurrent)
+        internal
+        view
+        returns (uint256 syToUser, uint256 syInterestPostExpiry)
+    {
         syToUser = SYUtils.assetToSy(indexCurrent, amountPY);
         if (isExpired()) {
             uint256 totalSyRedeemable = SYUtils.assetToSy(postExpiry.firstPYIndex, amountPY);
@@ -409,10 +418,12 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         return IStandardizedYield(SY).getRewardTokens();
     }
 
-    function _doTransferOutRewards(
-        address user,
-        address receiver
-    ) internal virtual override returns (uint256[] memory rewardAmounts) {
+    function _doTransferOutRewards(address user, address receiver)
+        internal
+        virtual
+        override
+        returns (uint256[] memory rewardAmounts)
+    {
         address[] memory tokens = getRewardTokens();
 
         if (isExpired()) {
@@ -476,7 +487,9 @@ contract PendleYieldToken is IPYieldToken, PendleERC20, RewardManagerAbstract, I
         tokens = getRewardTokens();
         if (isExpired()) {
             indexes = new uint256[](tokens.length);
-            for (uint256 i = 0; i < tokens.length; i++) indexes[i] = postExpiry.firstRewardIndex[tokens[i]];
+            for (uint256 i = 0; i < tokens.length; i++) {
+                indexes[i] = postExpiry.firstRewardIndex[tokens[i]];
+            }
         } else {
             indexes = IStandardizedYield(SY).rewardIndexesCurrent();
         }

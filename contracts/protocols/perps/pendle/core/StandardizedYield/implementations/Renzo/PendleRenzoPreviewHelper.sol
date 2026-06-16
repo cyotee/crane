@@ -36,17 +36,14 @@ contract PendleRenzoPreviewHelper is IPPreviewHelper, UUPSUpgradeable, BoringOwn
         __BoringOwnable_init();
     }
 
-    function previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) external view returns (uint256 amountSharesOut) {
+    function previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        external
+        view
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == wETH) {
-            uint256 amountWETHBridged = IConnext(connext).calculateSwap(
-                swapKey,
-                depositTokenId,
-                collateralTokenId,
-                amountTokenToDeposit
-            );
+            uint256 amountWETHBridged =
+                IConnext(connext).calculateSwap(swapKey, depositTokenId, collateralTokenId, amountTokenToDeposit);
 
             uint256 feeBps = IRenzoDepositL2(renzoDeposit).bridgeRouterFeeBps();
             amountWETHBridged -= (amountWETHBridged * feeBps) / 10_000;
@@ -58,9 +55,16 @@ contract PendleRenzoPreviewHelper is IPPreviewHelper, UUPSUpgradeable, BoringOwn
     }
 
     function previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 /*amountSharesToBurn*/
-    ) external pure returns (uint256 /*amountTokenOut*/) {
+    )
+        external
+        pure
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         revert("not implemented");
     }
 

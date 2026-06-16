@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionBaseTest} from '../utils/AuctionBaseTest.sol';
-import {AuctionParamsBuilder} from '../utils/AuctionParamsBuilder.sol';
-import {AuctionStepsBuilder} from '../utils/AuctionStepsBuilder.sol';
-import {FuzzDeploymentParams} from '../utils/FuzzStructs.sol';
-import {MockContinuousClearingAuction} from '../utils/MockAuction.sol';
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    AuctionParameters
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionBaseTest} from "../utils/AuctionBaseTest.sol";
+import {AuctionParamsBuilder} from "../utils/AuctionParamsBuilder.sol";
+import {AuctionStepsBuilder} from "../utils/AuctionStepsBuilder.sol";
+import {FuzzDeploymentParams} from "../utils/FuzzStructs.sol";
+import {MockContinuousClearingAuction} from "../utils/MockAuction.sol";
 
 contract AuctionUnitTest is AuctionBaseTest {
     using AuctionParamsBuilder for AuctionParameters;
@@ -28,9 +32,9 @@ contract AuctionUnitTest is AuctionBaseTest {
     function setUpMockAuction(FuzzDeploymentParams memory _deploymentParams) public {
         setUpTokens();
 
-        alice = makeAddr('alice');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         params = helper__validFuzzDeploymentParams(_deploymentParams);
         // Expect the floor price tick to be initialized
@@ -62,9 +66,9 @@ contract AuctionUnitTest is AuctionBaseTest {
     function setUpMockAuction() public requireAuctionNotSetup {
         setUpTokens();
 
-        alice = makeAddr('alice');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         auctionStepsData =
             AuctionStepsBuilder.init().addStep(STANDARD_MPS_1_PERCENT, 50).addStep(STANDARD_MPS_1_PERCENT, 50);

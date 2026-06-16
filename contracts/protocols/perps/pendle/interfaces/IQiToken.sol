@@ -22,7 +22,7 @@
  */
 
 pragma solidity ^0.8.0;
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "./IBenQiInterestRateModel.sol";
 
 interface IQiToken is IERC20 {

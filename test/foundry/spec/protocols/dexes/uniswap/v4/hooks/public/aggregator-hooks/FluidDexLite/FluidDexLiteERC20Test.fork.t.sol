@@ -20,7 +20,9 @@ import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {
     FluidDexLiteAggregator
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/FluidDexLiteAggregator.sol";
-import {IFluidDexLite} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLite.sol";
+import {
+    IFluidDexLite
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLite.sol";
 import {
     IFluidDexLiteResolver
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLiteResolver.sol";

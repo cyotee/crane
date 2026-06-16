@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/CollateralRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/CollateralRegistry.sol";
 
 /* Tester contract inherits from CollateralRegistry, and provides external functions
 for testing the parent's internal functions. */

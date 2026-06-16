@@ -16,17 +16,33 @@ contract PendleEUSDSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function _deposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return IEUSD(eUSD).getSharesByMintedEUSD(amountDeposited);
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return IEUSD(eUSD).transferShares(receiver, amountSharesToRedeem);
     }
 
@@ -43,16 +59,32 @@ contract PendleEUSDSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return IEUSD(eUSD).getSharesByMintedEUSD(amountTokenToDeposit);
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return IEUSD(eUSD).getMintedEUSDByShares(amountSharesToRedeem);
     }
 

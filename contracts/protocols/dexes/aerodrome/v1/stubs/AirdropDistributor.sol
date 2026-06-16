@@ -15,7 +15,7 @@ contract AirdropDistributor is IAirdropDistributor, Ownable {
     /// @inheritdoc IAirdropDistributor
     IVotingEscrow public immutable ve;
 
-    constructor(address _ve) {
+    constructor(address _ve) Ownable(msg.sender) {
         ve = IVotingEscrow(_ve);
         aero = IAero(IVotingEscrow(_ve).token());
     }

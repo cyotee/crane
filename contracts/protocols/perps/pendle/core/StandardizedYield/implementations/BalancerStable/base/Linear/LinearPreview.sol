@@ -30,12 +30,11 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
-    function joinExitPoolPreview(
-        bytes32 poolId,
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn
-    ) external view returns (uint256 amountOut) {
+    function joinExitPoolPreview(bytes32 poolId, address tokenIn, address tokenOut, uint256 amountIn)
+        external
+        view
+        returns (uint256 amountOut)
+    {
         IVault.SwapRequest memory request = IVault.SwapRequest({
             kind: IVault.SwapKind.GIVEN_IN,
             tokenIn: IERC20(tokenIn),
@@ -49,7 +48,7 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
             userData: EMPTY_BYTES
         });
 
-        (IERC20[] memory tokens, uint256[] memory balances, ) = IVault(BALANCER_VAULT).getPoolTokens(poolId);
+        (IERC20[] memory tokens, uint256[] memory balances,) = IVault(BALANCER_VAULT).getPoolTokens(poolId);
         address pool = address(uint160(uint256(poolId) >> (12 * 8)));
         IERC20 mainToken = IERC20(IERC4626LinearPool(pool).getMainToken());
 
@@ -57,7 +56,7 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
         uint256 indexOut;
         ImmutableData memory imd;
 
-        for (uint256 i = 0; i < tokens.length; ) {
+        for (uint256 i = 0; i < tokens.length;) {
             if (address(tokens[i]) == address(mainToken)) {
                 imd._mainToken = mainToken;
                 imd._mainIndex = i;
@@ -95,9 +94,7 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
 
         (uint256 lowerTarget, uint256 upperTarget) = IERC4626LinearPool(imd.pool).getTargets();
         LinearMath.Params memory params = LinearMath.Params({
-            fee: IERC4626LinearPool(imd.pool).getSwapFeePercentage(),
-            lowerTarget: lowerTarget,
-            upperTarget: upperTarget
+            fee: IERC4626LinearPool(imd.pool).getSwapFeePercentage(), lowerTarget: lowerTarget, upperTarget: upperTarget
         });
 
         assert(request.kind == IVault.SwapKind.GIVEN_IN);
@@ -136,14 +133,15 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
         //     request.tokenOut == _mainToken || request.tokenOut == _wrappedToken,
         //     Errors.INVALID_TOKEN
         // );
-        return
-            (address(request.tokenOut) == address(imd._mainToken) ? LinearMath._calcMainOutPerBptIn : LinearMath._calcWrappedOutPerBptIn)(
-                request.amount,
-                balances[imd._mainIndex],
-                balances[imd._wrappedIndex],
-                _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
-                params
-            );
+        return (address(request.tokenOut) == address(imd._mainToken)
+                ? LinearMath._calcMainOutPerBptIn
+                : LinearMath._calcWrappedOutPerBptIn)(
+            request.amount,
+            balances[imd._mainIndex],
+            balances[imd._wrappedIndex],
+            _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
+            params
+        );
     }
 
     function _swapGivenMainIn(
@@ -156,16 +154,15 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
         //     request.tokenOut == _wrappedToken || request.tokenOut == this,
         //     Errors.INVALID_TOKEN
         // );
-        return
-            address(request.tokenOut) == address(imd.pool)
-                ? LinearMath._calcBptOutPerMainIn(
-                    request.amount,
-                    balances[imd._mainIndex],
-                    balances[imd._wrappedIndex],
-                    _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
-                    params
-                )
-                : LinearMath._calcWrappedOutPerMainIn(request.amount, balances[imd._mainIndex], params);
+        return address(request.tokenOut) == address(imd.pool)
+            ? LinearMath._calcBptOutPerMainIn(
+                request.amount,
+                balances[imd._mainIndex],
+                balances[imd._wrappedIndex],
+                _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
+                params
+            )
+            : LinearMath._calcWrappedOutPerMainIn(request.amount, balances[imd._mainIndex], params);
     }
 
     function _swapGivenWrappedIn(
@@ -175,16 +172,15 @@ contract LinearPreview is BoringOwnableUpgradeable, UUPSUpgradeable {
         ImmutableData memory imd
     ) internal view returns (uint256) {
         // _require(request.tokenOut == _mainToken || request.tokenOut == this, Errors.INVALID_TOKEN);
-        return
-            address(request.tokenOut) == address(imd.pool)
-                ? LinearMath._calcBptOutPerWrappedIn(
-                    request.amount,
-                    balances[imd._mainIndex],
-                    balances[imd._wrappedIndex],
-                    _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
-                    params
-                )
-                : LinearMath._calcMainOutPerWrappedIn(request.amount, balances[imd._mainIndex], params);
+        return address(request.tokenOut) == address(imd.pool)
+            ? LinearMath._calcBptOutPerWrappedIn(
+                request.amount,
+                balances[imd._mainIndex],
+                balances[imd._wrappedIndex],
+                _getVirtualSupply(balances[imd._BPT_INDEX], imd.pool),
+                params
+            )
+            : LinearMath._calcMainOutPerWrappedIn(request.amount, balances[imd._mainIndex], params);
     }
 
     function _getVirtualSupply(uint256 bptBalance, address pool) internal view returns (uint256) {

@@ -1,18 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
-import {FuzzDeploymentParams} from './utils/FuzzStructs.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {
+    CheckpointAccountingLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {ValueX7Lib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionBaseTest} from "./utils/AuctionBaseTest.sol";
+import {FuzzDeploymentParams} from "./utils/FuzzStructs.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {SafeCastLib} from "contracts/utils/SafeCastLib.sol";
 
 /// @dev These tests fuzz over the full range of inputs for both the auction parameters and the bids submitted
 ///      so we limit the number of fuzz runs.
@@ -37,7 +43,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
         checkAuctionIsGraduated
         checkAuctionIsSolvent
     {
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory finalCheckpoint = auction.checkpoint();
@@ -55,7 +61,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
             auction.totalCleared(),
             token.balanceOf(alice) - aliceTokensBefore,
             MAX_ALLOWABLE_DUST_WEI,
-            'Total cleared must be within 1e18 wei of the tokens filled by alice'
+            "Total cleared must be within 1e18 wei of the tokens filled by alice"
         );
     }
 
@@ -74,7 +80,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
         checkAuctionIsNotGraduated
         checkAuctionIsSolvent
     {
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         uint256 aliceBalanceBefore = address(alice).balance;
         vm.roll(auction.endBlock());
@@ -101,9 +107,9 @@ contract AuctionGraduationTest is AuctionBaseTest {
     {
         uint64 startBlock = auction.startBlock();
         uint256 lowPrice = helper__roundPriceUpToTickSpacing(params.floorPrice + 1, params.tickSpacing);
-        uint256 bidId1 = auction.submitBid{value: 1}(lowPrice, 1, alice, params.floorPrice, bytes(''));
+        uint256 bidId1 = auction.submitBid{value: 1}(lowPrice, 1, alice, params.floorPrice, bytes(""));
         vm.assume($maxPrice > lowPrice);
-        auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(block.number + 1);
         // Assume that the auction is not over
@@ -200,14 +206,14 @@ contract AuctionGraduationTest is AuctionBaseTest {
         uint256 totalSupply = auction.totalSupply();
         $bidAmount = uint128(totalSupply.fullMulDivUp($maxPrice, FixedPoint96.Q96) / 2);
         vm.assume($bidAmount > 0);
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(block.number + 1);
         Checkpoint memory checkpoint = auction.checkpoint();
         assertLt(
             checkpoint.clearingPrice,
             $maxPrice,
-            'test setup failed: checkpoint.clearingPrice must be less than $maxPrice'
+            "test setup failed: checkpoint.clearingPrice must be less than $maxPrice"
         );
         vm.assume(checkpoint.cumulativeMps < ConstantsLib.MPS);
 
@@ -215,7 +221,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
             _getRequiredAmountToMoveClearingToPrice(totalSupply, $maxPrice, $bidAmount, checkpoint.cumulativeMps);
 
         uint256 nextBidId = auction.submitBid{value: requiredAmount}(
-            $maxPrice + auction.tickSpacing(), requiredAmount, alice, params.floorPrice, bytes('')
+            $maxPrice + auction.tickSpacing(), requiredAmount, alice, params.floorPrice, bytes("")
         );
 
         /**
@@ -317,7 +323,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
         givenFullyFundedAccount
         checkAuctionIsNotGraduated
     {
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(auction.endBlock());
         auction.checkpoint();
@@ -329,15 +335,15 @@ contract AuctionGraduationTest is AuctionBaseTest {
         vm.expectRevert(ITokenCurrencyStorage.NotGraduated.selector);
         auction.sweepCurrency();
 
-        emit log_string('===== Auction is NOT graduated =====');
-        emit log_named_uint('currencyRaised in final checkpoint', expectedCurrencyRaisedFromCheckpoint);
-        emit log_named_uint('balance before refunds', address(auction).balance);
-        emit log_named_uint('currencyRaised', expectedCurrencyRaised);
+        emit log_string("===== Auction is NOT graduated =====");
+        emit log_named_uint("currencyRaised in final checkpoint", expectedCurrencyRaisedFromCheckpoint);
+        emit log_named_uint("balance before refunds", address(auction).balance);
+        emit log_named_uint("currencyRaised", expectedCurrencyRaised);
         // Expected currency raised MUST always be less than or equal to the balance since it did not graduate
         assertLe(expectedCurrencyRaised, address(auction).balance);
         // Process refunds
         auction.exitBid(bidId);
-        emit log_named_uint('balance after refunds', address(auction).balance);
+        emit log_named_uint("balance after refunds", address(auction).balance);
         // Assert that the balance is zero since it did not graduate
         assertEq(address(auction).balance, 0);
     }
@@ -358,7 +364,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
         checkAuctionIsSolvent
     {
         uint64 bidIdBlock = uint64(block.number);
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory finalCheckpoint = auction.checkpoint();
@@ -379,7 +385,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
             token.balanceOf(alice),
             aliceTokensBefore + auction.totalCleared(),
             MAX_ALLOWABLE_DUST_WEI,
-            'Total cleared must be within 1e18 wei of the tokens filled by alice'
+            "Total cleared must be within 1e18 wei of the tokens filled by alice"
         );
     }
 
@@ -400,7 +406,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
     {
         uint64 bidBlock = uint64(_bound(block.number, auction.startBlock(), auction.endBlock() - 1));
         vm.roll(bidBlock);
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory finalCheckpoint = auction.checkpoint();
@@ -430,7 +436,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
             auction.totalCleared(),
             token.balanceOf(alice) - aliceTokensBefore,
             MAX_ALLOWABLE_DUST_WEI,
-            'Total cleared must be within 1e18 wei of the tokens filled by alice'
+            "Total cleared must be within 1e18 wei of the tokens filled by alice"
         );
     }
 
@@ -450,7 +456,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
     {
         uint64 bidBlock = uint64(_bound(block.number, auction.startBlock(), auction.endBlock() - 1));
         vm.roll(bidBlock);
-        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(''));
+        uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(auction.endBlock());
         // Update the lastCheckpoint
@@ -468,10 +474,10 @@ contract AuctionGraduationTest is AuctionBaseTest {
         uint256 expectedCurrencyRaisedFromCheckpoint =
             auction.currencyRaisedQ96_X7().scaleDownToUint256() >> FixedPoint96.RESOLUTION;
 
-        emit log_string('===== Auction is NOT graduated =====');
-        emit log_named_uint('currencyRaised in final checkpoint', expectedCurrencyRaisedFromCheckpoint);
-        emit log_named_uint('balance before refunds', address(auction).balance);
-        emit log_named_uint('currencyRaised', expectedCurrencyRaised);
+        emit log_string("===== Auction is NOT graduated =====");
+        emit log_named_uint("currencyRaised in final checkpoint", expectedCurrencyRaisedFromCheckpoint);
+        emit log_named_uint("balance before refunds", address(auction).balance);
+        emit log_named_uint("currencyRaised", expectedCurrencyRaised);
         // Expected currency raised MUST always be less than or equal to the balance since it did not graduate
         assertLe(expectedCurrencyRaised, address(auction).balance);
         // Process refunds
@@ -480,7 +486,7 @@ contract AuctionGraduationTest is AuctionBaseTest {
         } else {
             auction.exitPartiallyFilledBid(bidId, bidBlock, 0);
         }
-        emit log_named_uint('balance after refunds', address(auction).balance);
+        emit log_named_uint("balance after refunds", address(auction).balance);
         // Assert that the balance is zero since it did not graduate
         assertEq(address(auction).balance, 0);
     }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "../../../../../interfaces/Balancer/IVault.sol";
 import "../../../../../interfaces/Balancer/IBalancerFees.sol";
 import "../../../../../interfaces/Balancer/IBalancerStablePreview.sol";
@@ -31,12 +31,7 @@ abstract contract StablePreviewBase is IBalancerStablePreview {
         bytes memory data
     ) external view returns (uint256 amountBptOut) {
         amountBptOut = _joinOrExit(
-            PoolBalanceChangeKind.JOIN,
-            poolId,
-            sender,
-            payable(recipient),
-            _toPoolBalanceChange(request),
-            data
+            PoolBalanceChangeKind.JOIN, poolId, sender, payable(recipient), _toPoolBalanceChange(request), data
         );
     }
 
@@ -48,12 +43,7 @@ abstract contract StablePreviewBase is IBalancerStablePreview {
         bytes memory data
     ) external view returns (uint256 amountTokenOut) {
         amountTokenOut = _joinOrExit(
-            PoolBalanceChangeKind.EXIT,
-            poolId,
-            sender,
-            recipient,
-            _toPoolBalanceChange(request),
-            data
+            PoolBalanceChangeKind.EXIT, poolId, sender, recipient, _toPoolBalanceChange(request), data
         );
     }
 
@@ -68,16 +58,8 @@ abstract contract StablePreviewBase is IBalancerStablePreview {
         IERC20[] memory tokens = _translateToIERC20(change.assets);
         (uint256[] memory balances, uint256 lastChangeBlock) = _validateTokensAndGetBalances(poolId, tokens);
 
-        amountBptOrTokensOut = _callPoolBalanceChange(
-            kind,
-            poolId,
-            sender,
-            recipient,
-            change,
-            balances,
-            lastChangeBlock,
-            data
-        );
+        amountBptOrTokensOut =
+            _callPoolBalanceChange(kind, poolId, sender, recipient, change, balances, lastChangeBlock, data);
     }
 
     function _callPoolBalanceChange(
@@ -122,7 +104,11 @@ abstract contract StablePreviewBase is IBalancerStablePreview {
     function _validateTokensAndGetBalances(
         bytes32 poolId,
         IERC20[] memory //expectedTokens
-    ) private view returns (uint256[] memory, uint256) {
+    )
+        private
+        view
+        returns (uint256[] memory, uint256)
+    {
         (, uint256[] memory balances, uint256 lastChangeBlock) = IVault(BALANCER_VAULT).getPoolTokens(poolId);
         return (balances, lastChangeBlock);
     }
@@ -139,18 +125,22 @@ abstract contract StablePreviewBase is IBalancerStablePreview {
         return address(asset) == address(0) ? IERC20(WETH) : IERC20(address(asset));
     }
 
-    function _toPoolBalanceChange(
-        IVault.JoinPoolRequest memory request
-    ) private pure returns (PoolBalanceChange memory change) {
+    function _toPoolBalanceChange(IVault.JoinPoolRequest memory request)
+        private
+        pure
+        returns (PoolBalanceChange memory change)
+    {
         // solhint-disable-next-line no-inline-assembly
         assembly {
             change := request
         }
     }
 
-    function _toPoolBalanceChange(
-        IVault.ExitPoolRequest memory request
-    ) private pure returns (PoolBalanceChange memory change) {
+    function _toPoolBalanceChange(IVault.ExitPoolRequest memory request)
+        private
+        pure
+        returns (PoolBalanceChange memory change)
+    {
         // solhint-disable-next-line no-inline-assembly
         assembly {
             change := request

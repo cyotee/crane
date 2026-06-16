@@ -5,11 +5,9 @@ import "../PendleERC4626SY.sol";
 import "../../../../interfaces/IERC4626.sol";
 
 contract PendleGTokenSY is PendleERC4626SY {
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _erc4626
-    ) PendleERC4626SY(_name, _symbol, _erc4626) {}
+    constructor(string memory _name, string memory _symbol, address _erc4626)
+        PendleERC4626SY(_name, _symbol, _erc4626)
+    {}
 
     function getTokensOut() public view virtual override returns (address[] memory res) {
         res = new address[](1);

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ISortedTroves.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ISortedTroves.sol";
 
 // Used as both a wrapper for SortedTroves functions and a mock TroveManager.
 contract SortedTrovesTester {

@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
 import "@crane/contracts/external/openzeppelin-upgradeable/proxy/utils/Initializable.sol";
@@ -163,11 +163,13 @@ abstract contract PendleERC20Upg is Context, Initializable, IERC20, IERC20Metada
      * - the caller must have allowance for ``from``'s tokens of at least
      * `amount`.
      */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) external virtual override nonReentrant returns (bool) {
+    function transferFrom(address from, address to, uint256 amount)
+        external
+        virtual
+        override
+        nonReentrant
+        returns (bool)
+    {
         address spender = _msgSender();
         _spendAllowance(from, spender, amount);
         _transfer(from, to, amount);
@@ -207,7 +209,8 @@ abstract contract PendleERC20Upg is Context, Initializable, IERC20, IERC20Metada
         _afterTokenTransfer(from, to, amount);
     }
 
-    /** @dev Creates `amount` tokens and assigns them to `account`, increasing
+    /**
+     * @dev Creates `amount` tokens and assigns them to `account`, increasing
      * the total supply.
      *
      * Emits a {Transfer} event with `from` set to the zero address.

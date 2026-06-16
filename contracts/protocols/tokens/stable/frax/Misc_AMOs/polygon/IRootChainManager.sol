@@ -2,10 +2,9 @@
 pragma solidity ^0.8.35;
 
 interface IRootChainManager {
-  function depositFor (address user, address rootToken, bytes memory depositData) external;
-  function tokenToType (address) external view returns (bytes32);
-  function typeToPredicate (bytes32) external view returns (address);
-
+    function depositFor(address user, address rootToken, bytes memory depositData) external;
+    function tokenToType(address) external view returns (bytes32);
+    function typeToPredicate(bytes32) external view returns (address);
 }
 
 // interface GeneratedInterface {

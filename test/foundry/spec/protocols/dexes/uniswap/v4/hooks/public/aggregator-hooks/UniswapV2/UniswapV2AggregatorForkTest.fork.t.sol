@@ -15,7 +15,9 @@ import {SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Pool
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {UniswapV2Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV2/UniswapV2Aggregator.sol";
+import {
+    UniswapV2Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV2/UniswapV2Aggregator.sol";
 import {IUniswapV2Pair as IUniV2Pair} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 
 /// @notice Fork tests — Ethereum mainnet (chain id 1).

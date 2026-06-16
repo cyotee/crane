@@ -2,21 +2,25 @@
 pragma solidity ^0.8.0;
 
 import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
-import {Test} from 'forge-std/Test.sol';
-import {MockERC1155} from '@crane/contracts/test/stubs/MockERC1155.sol';
-import {IValidationHook} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol';
+import {Test} from "forge-std/Test.sol";
+import {MockERC1155} from "@crane/contracts/test/stubs/MockERC1155.sol";
+import {
+    IValidationHook
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol";
 import {
     BaseERC1155ValidationHook,
     IBaseERC1155ValidationHook
-} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/BaseERC1155ValidationHook.sol';
-import {IValidationHookIntrospection} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/ValidationHookIntrospection.sol';
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/BaseERC1155ValidationHook.sol";
+import {
+    IValidationHookIntrospection
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/ValidationHookIntrospection.sol";
 
 contract BaseERC1155ValidationHookTest is Test {
     IValidationHookIntrospection hook;
     MockERC1155 token;
 
-    address owner = makeAddr('owner');
-    address sender = makeAddr('sender');
+    address owner = makeAddr("owner");
+    address sender = makeAddr("sender");
 
     uint256 TOKEN_ID = 0;
 
@@ -36,7 +40,7 @@ contract BaseERC1155ValidationHookTest is Test {
     }
 
     function test_supportsInterface_WhenNotSupported() public view {
-        bytes4 _interfaceId = bytes4(keccak256('not_supported'));
+        bytes4 _interfaceId = bytes4(keccak256("not_supported"));
         assertFalse(hook.supportsInterface(_interfaceId));
     }
 
@@ -45,18 +49,18 @@ contract BaseERC1155ValidationHookTest is Test {
         token.mint(owner, TOKEN_ID, amount);
 
         vm.expectRevert(BaseERC1155ValidationHook.SenderMustBeOwner.selector);
-        hook.validate(0, 0, owner, sender, bytes(''));
+        hook.validate(0, 0, owner, sender, bytes(""));
     }
 
     function test_validate_whenSenderIsOwnerAndTokenIsNotOwned_reverts() public {
         assertEq(token.balanceOf(owner, TOKEN_ID), 0);
         vm.expectRevert(abi.encodeWithSelector(BaseERC1155ValidationHook.NotOwnerOfERC1155Token.selector, TOKEN_ID));
-        hook.validate(0, 0, owner, owner, bytes(''));
+        hook.validate(0, 0, owner, owner, bytes(""));
     }
 
     function test_validate_succeeds(uint256 amount) public {
         vm.assume(amount > 0);
         token.mint(owner, TOKEN_ID, amount);
-        hook.validate(0, 0, owner, owner, bytes(''));
+        hook.validate(0, 0, owner, owner, bytes(""));
     }
 }

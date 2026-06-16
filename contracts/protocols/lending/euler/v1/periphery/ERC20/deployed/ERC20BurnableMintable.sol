@@ -2,8 +2,13 @@
 
 pragma solidity ^0.8.0;
 
-import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
-import {ERC20, ERC20Burnable} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import {
+    AccessControlEnumerable
+} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
+import {
+    ERC20,
+    ERC20Burnable
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import {ERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 
 /// @title ERC20BurnableMintable

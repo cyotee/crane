@@ -47,11 +47,11 @@ contract PendleZtakeWeETHSY is SYBaseUpg {
         IZircuitZtaking(zircuitStaking).depositFor(weETH, address(this), amountSharesOut);
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         IZircuitZtaking(zircuitStaking).withdraw(weETH, amountSharesToRedeem);
         if (tokenOut == weETH) {
             amountTokenOut = amountSharesToRedeem;

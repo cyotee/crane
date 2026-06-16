@@ -4,7 +4,6 @@ pragma solidity ^0.8.35;
 import {RLPReader} from "./RLPReader.sol";
 import {MerklePatriciaProofVerifier} from "./MerklePatriciaProofVerifier.sol";
 
-
 /**
  * @title A helper library for verification of Merkle Patricia account and state proofs.
  */
@@ -36,28 +35,22 @@ library StateProofVerifier {
         uint256 value;
     }
 
-
     /**
      * @notice Parses block header and verifies its presence onchain within the latest 256 blocks.
      * @param _headerRlpBytes RLP-encoded block header.
      */
-    function verifyBlockHeader(bytes memory _headerRlpBytes)
-        internal view returns (BlockHeader memory)
-    {
+    function verifyBlockHeader(bytes memory _headerRlpBytes) internal view returns (BlockHeader memory) {
         BlockHeader memory header = parseBlockHeader(_headerRlpBytes);
         // ensure that the block is actually in the blockchain
         require(header.hash == blockhash(header.number), "blockhash mismatch");
         return header;
     }
 
-
     /**
      * @notice Parses RLP-encoded block header.
      * @param _headerRlpBytes RLP-encoded block header.
      */
-    function parseBlockHeader(bytes memory _headerRlpBytes)
-        internal pure returns (BlockHeader memory)
-    {
+    function parseBlockHeader(bytes memory _headerRlpBytes) internal pure returns (BlockHeader memory) {
         BlockHeader memory result;
         RLPReader.RLPItem[] memory headerFields = _headerRlpBytes.toRlpItem().toList();
 
@@ -71,7 +64,6 @@ library StateProofVerifier {
         return result;
     }
 
-
     /**
      * @notice Verifies Merkle Patricia proof of an account and extracts the account fields.
      *
@@ -82,14 +74,9 @@ library StateProofVerifier {
         bytes32 _addressHash, // keccak256(abi.encodePacked(address))
         bytes32 _stateRootHash,
         RLPReader.RLPItem[] memory _proof
-    )
-        internal pure returns (Account memory)
-    {
-        bytes memory acctRlpBytes = MerklePatriciaProofVerifier.extractProofValue(
-            _stateRootHash,
-            abi.encodePacked(_addressHash),
-            _proof
-        );
+    ) internal pure returns (Account memory) {
+        bytes memory acctRlpBytes =
+            MerklePatriciaProofVerifier.extractProofValue(_stateRootHash, abi.encodePacked(_addressHash), _proof);
 
         Account memory account;
 
@@ -109,25 +96,19 @@ library StateProofVerifier {
         return account;
     }
 
-
     /**
      * @notice Verifies Merkle Patricia proof of a slot and extracts the slot's value.
      *
      * @param _slotHash Keccak256 hash of the slot position.
      * @param _storageRootHash MPT root hash of the account's storage trie.
      */
-    function extractSlotValueFromProof(
-        bytes32 _slotHash,
-        bytes32 _storageRootHash,
-        RLPReader.RLPItem[] memory _proof
-    )
-        internal pure returns (SlotValue memory)
+    function extractSlotValueFromProof(bytes32 _slotHash, bytes32 _storageRootHash, RLPReader.RLPItem[] memory _proof)
+        internal
+        pure
+        returns (SlotValue memory)
     {
-        bytes memory valueRlpBytes = MerklePatriciaProofVerifier.extractProofValue(
-            _storageRootHash,
-            abi.encodePacked(_slotHash),
-            _proof
-        );
+        bytes memory valueRlpBytes =
+            MerklePatriciaProofVerifier.extractProofValue(_storageRootHash, abi.encodePacked(_slotHash), _proof);
 
         SlotValue memory value;
 
@@ -138,5 +119,4 @@ library StateProofVerifier {
 
         return value;
     }
-
 }

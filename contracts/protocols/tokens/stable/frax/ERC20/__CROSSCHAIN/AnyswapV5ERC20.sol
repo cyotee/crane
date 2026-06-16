@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.35;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /**
  * @dev Interface of the ERC20 standard as defined in the EIP.
@@ -14,8 +14,17 @@ interface IERC20 {
     function allowance(address owner, address spender) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    function permit(address target, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external;
-    function transferWithPermit(address target, address to, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external returns (bool);
+    function permit(address target, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external;
+    function transferWithPermit(
+        address target,
+        address to,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external returns (bool);
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
@@ -30,7 +39,6 @@ interface IERC20 {
  * See https://eips.ethereum.org/EIPS/eip-2612.
  */
 interface IERC2612 {
-
     /**
      * @dev Returns the current ERC2612 nonce for `owner`. This value must be
      * included whenever a signature is generated for {permit}.
@@ -45,7 +53,6 @@ interface IERC2612 {
 /// `withdraw` ERC-20 from AnyswapV3ERC20, which will then burn AnyswapV3ERC20 token in your wallet. The amount of AnyswapV3ERC20 token in any wallet is always identical to the
 /// balance of ERC-20 deposited minus the ERC-20 withdrawn with that specific wallet.
 interface IAnyswapV3ERC20 is IERC20, IERC2612 {
-
     /// @dev Sets `value` as allowance of `spender` account over caller account's AnyswapV3ERC20 token,
     /// after which a call is executed to an ERC677-compliant contract with the `data` parameter.
     /// Emits {Approval} event.
@@ -61,15 +68,15 @@ interface IAnyswapV3ERC20 is IERC20, IERC2612 {
     /// Requirements:
     ///   - caller account must have at least `value` AnyswapV3ERC20 token.
     /// For more information on transferAndCall format, see https://github.com/ethereum/EIPs/issues/677.
-    function transferAndCall(address to, uint value, bytes calldata data) external returns (bool);
+    function transferAndCall(address to, uint256 value, bytes calldata data) external returns (bool);
 }
 
 interface ITransferReceiver {
-    function onTokenTransfer(address, uint, bytes calldata) external returns (bool);
+    function onTokenTransfer(address, uint256, bytes calldata) external returns (bool);
 }
 
 interface IApprovalReceiver {
-    function onTokenApproval(address, uint, bytes calldata) external returns (bool);
+    function onTokenApproval(address, uint256, bytes calldata) external returns (bool);
 }
 
 library Address {
@@ -85,20 +92,22 @@ library Address {
 library SafeERC20 {
     using Address for address;
 
-    function safeTransfer(IERC20 token, address to, uint value) internal {
+    function safeTransfer(IERC20 token, address to, uint256 value) internal {
         callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
     }
 
-    function safeTransferFrom(IERC20 token, address from, address to, uint value) internal {
+    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
         callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
     }
 
-    function safeApprove(IERC20 token, address spender, uint value) internal {
-        require((value == 0) || (token.allowance(address(this), spender) == 0),
+    function safeApprove(IERC20 token, address spender, uint256 value) internal {
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
             "SafeERC20: approve from non-zero to non-zero allowance"
         );
         callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
     }
+
     function callOptionalReturn(IERC20 token, bytes memory data) private {
         require(address(token).isContract(), "SafeERC20: call to non-contract");
 
@@ -106,8 +115,9 @@ library SafeERC20 {
         (bool success, bytes memory returndata) = address(token).call(data);
         require(success, "SafeERC20: low-level call failed");
 
-        if (returndata.length > 0) { // Return data is optional
-            // solhint-disable-next-line max-line-length
+        if (returndata.length > 0) {
+            // Return data is optional
+        // solhint-disable-next-line max-line-length
             require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
         }
     }
@@ -118,16 +128,18 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
     using SafeERC20 for IERC20;
     string public name;
     string public symbol;
-    uint8  public immutable override decimals;
+    uint8 public immutable override decimals;
 
     address public immutable underlying;
 
-    bytes32 public constant PERMIT_TYPEHASH = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-    bytes32 public constant TRANSFER_TYPEHASH = keccak256("Transfer(address owner,address to,uint256 value,uint256 nonce,uint256 deadline)");
+    bytes32 public constant PERMIT_TYPEHASH =
+        keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+    bytes32 public constant TRANSFER_TYPEHASH =
+        keccak256("Transfer(address owner,address to,uint256 value,uint256 nonce,uint256 deadline)");
     bytes32 public immutable DOMAIN_SEPARATOR;
 
     /// @dev Records amount of AnyswapV3ERC20 token owned by account.
-    mapping (address => uint256) public override balanceOf;
+    mapping(address => uint256) public override balanceOf;
     uint256 private _totalSupply;
 
     // init flag for setting immediate vault, needed for CREATE2 support
@@ -137,8 +149,7 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
     bool private _vaultOnly;
 
     // configurable delay for timelock functions
-    uint public delay = 2*24*3600;
-
+    uint256 public delay = 2 * 24 * 3600;
 
     // set of minters, can be this bridge or other bridges
     mapping(address => bool) public isMinter;
@@ -148,14 +159,13 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
     address public vault;
 
     address public pendingMinter;
-    uint public delayMinter;
+    uint256 public delayMinter;
 
     address public pendingVault;
-    uint public delayVault;
+    uint256 public delayVault;
 
-    uint public pendingDelay;
-    uint public delayDelay;
-
+    uint256 public pendingDelay;
+    uint256 public delayDelay;
 
     modifier onlyAuth() {
         require(isMinter[msg.sender], "AnyswapV4ERC20: FORBIDDEN");
@@ -222,7 +232,6 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         return minters;
     }
 
-
     function changeVault(address newVault) external onlyVault returns (bool) {
         require(newVault != address(0), "AnyswapV3ERC20: address(0x0)");
         pendingVault = newVault;
@@ -266,16 +275,16 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
 
     /// @dev Records current ERC2612 nonce for account. This value must be included whenever signature is generated for {permit}.
     /// Every successful call to {permit} increases account's nonce by one. This prevents signature from being used multiple times.
-    mapping (address => uint256) public override nonces;
+    mapping(address => uint256) public override nonces;
 
     /// @dev Records number of AnyswapV3ERC20 token that account (second) will be allowed to spend on behalf of another account (first) through {transferFrom}.
-    mapping (address => mapping (address => uint256)) public override allowance;
+    mapping(address => mapping(address => uint256)) public override allowance;
 
-    event LogChangeVault(address indexed oldVault, address indexed newVault, uint indexed effectiveTime);
-    event LogChangeMPCOwner(address indexed oldOwner, address indexed newOwner, uint indexed effectiveHeight);
-    event LogSwapin(bytes32 indexed txhash, address indexed account, uint amount);
-    event LogSwapout(address indexed account, address indexed bindaddr, uint amount);
-    event LogAddAuth(address indexed auth, uint timestamp);
+    event LogChangeVault(address indexed oldVault, address indexed newVault, uint256 indexed effectiveTime);
+    event LogChangeMPCOwner(address indexed oldOwner, address indexed newOwner, uint256 indexed effectiveHeight);
+    event LogSwapin(bytes32 indexed txhash, address indexed account, uint256 amount);
+    event LogSwapout(address indexed account, address indexed bindaddr, uint256 amount);
+    event LogAddAuth(address indexed auth, uint256 timestamp);
 
     constructor(string memory _name, string memory _symbol, uint8 _decimals, address _underlying, address _vault) {
         name = _name;
@@ -297,14 +306,16 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         delayVault = block.timestamp;
 
         uint256 chainId;
-        assembly {chainId := chainid()}
+        assembly { chainId := chainid() }
         DOMAIN_SEPARATOR = keccak256(
             abi.encode(
                 keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
                 keccak256(bytes(name)),
                 keccak256(bytes("1")),
                 chainId,
-                address(this)));
+                address(this)
+            )
+        );
     }
 
     /// @dev Returns the total supply of AnyswapV3ERC20 token as the ETH held in this contract.
@@ -312,66 +323,83 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         return _totalSupply;
     }
 
-    function depositWithPermit(address target, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s, address to) external returns (uint) {
+    function depositWithPermit(
+        address target,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address to
+    ) external returns (uint256) {
         IERC20(underlying).permit(target, address(this), value, deadline, v, r, s);
         IERC20(underlying).safeTransferFrom(target, address(this), value);
         return _deposit(value, to);
     }
 
-    function depositWithTransferPermit(address target, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s, address to) external returns (uint) {
+    function depositWithTransferPermit(
+        address target,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address to
+    ) external returns (uint256) {
         IERC20(underlying).transferWithPermit(target, address(this), value, deadline, v, r, s);
         return _deposit(value, to);
     }
 
-    function deposit() external returns (uint) {
-        uint _amount = IERC20(underlying).balanceOf(msg.sender);
+    function deposit() external returns (uint256) {
+        uint256 _amount = IERC20(underlying).balanceOf(msg.sender);
         IERC20(underlying).safeTransferFrom(msg.sender, address(this), _amount);
         return _deposit(_amount, msg.sender);
     }
 
-    function deposit(uint amount) external returns (uint) {
+    function deposit(uint256 amount) external returns (uint256) {
         IERC20(underlying).safeTransferFrom(msg.sender, address(this), amount);
         return _deposit(amount, msg.sender);
     }
 
-    function deposit(uint amount, address to) external returns (uint) {
+    function deposit(uint256 amount, address to) external returns (uint256) {
         IERC20(underlying).safeTransferFrom(msg.sender, address(this), amount);
         return _deposit(amount, to);
     }
 
-    function depositVault(uint amount, address to) external onlyVault returns (uint) {
+    function depositVault(uint256 amount, address to) external onlyVault returns (uint256) {
         return _deposit(amount, to);
     }
 
-    function _deposit(uint amount, address to) internal returns (uint) {
+    function _deposit(uint256 amount, address to) internal returns (uint256) {
         require(underlying != address(0x0) && underlying != address(this));
         _mint(to, amount);
         return amount;
     }
 
-    function withdraw() external returns (uint) {
+    function withdraw() external returns (uint256) {
         return _withdraw(msg.sender, balanceOf[msg.sender], msg.sender);
     }
 
-    function withdraw(uint amount) external returns (uint) {
+    function withdraw(uint256 amount) external returns (uint256) {
         return _withdraw(msg.sender, amount, msg.sender);
     }
 
-    function withdraw(uint amount, address to) external returns (uint) {
+    function withdraw(uint256 amount, address to) external returns (uint256) {
         return _withdraw(msg.sender, amount, to);
     }
 
-    function withdrawVault(address from, uint amount, address to) external onlyVault returns (uint) {
+    function withdrawVault(address from, uint256 amount, address to) external onlyVault returns (uint256) {
         return _withdraw(from, amount, to);
     }
 
-    function _withdraw(address from, uint amount, address to) internal returns (uint) {
+    function _withdraw(address from, uint256 amount, address to) internal returns (uint256) {
         _burn(from, amount);
         IERC20(underlying).safeTransfer(to, amount);
         return amount;
     }
 
-    /** @dev Creates `amount` tokens and assigns them to `account`, increasing
+    /**
+     * @dev Creates `amount` tokens and assigns them to `account`, increasing
      * the total supply.
      *
      * Emits a {Transfer} event with `from` set to the zero address.
@@ -440,7 +468,10 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
     ///   - the signer cannot be zero address and must be `owner` account.
     /// For more information on signature format, see https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP section].
     /// AnyswapV3ERC20 token implementation adapted from https://github.com/albertocuestacanada/ERC20Permit/blob/master/contracts/ERC20Permit.sol.
-    function permit(address target, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external override {
+    function permit(address target, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external
+        override
+    {
         require(block.timestamp <= deadline, "AnyswapV3ERC20: Expired permit");
 
         // bytes32 hashStruct = keccak256(
@@ -451,14 +482,7 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         //         value,
         //         nonces[target]++,
         //         deadline));
-        bytes32 hashStruct = abi.encode(
-                PERMIT_TYPEHASH,
-                target,
-                spender,
-                value,
-                nonces[target]++,
-                deadline
-            )._hash();
+        bytes32 hashStruct = abi.encode(PERMIT_TYPEHASH, target, spender, value, nonces[target]++, deadline)._hash();
 
         require(verifyEIP712(target, hashStruct, v, r, s) || verifyPersonalSign(target, hashStruct, v, r, s));
 
@@ -467,7 +491,15 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         emit Approval(target, spender, value);
     }
 
-    function transferWithPermit(address target, address to, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external override returns (bool) {
+    function transferWithPermit(
+        address target,
+        address to,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external override returns (bool) {
         require(block.timestamp <= deadline, "AnyswapV3ERC20: Expired permit");
 
         // bytes32 hashStruct = keccak256(
@@ -478,14 +510,7 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         //         value,
         //         nonces[target]++,
         //         deadline));
-        bytes32 hashStruct = abi.encode(
-                TRANSFER_TYPEHASH,
-                target,
-                to,
-                value,
-                nonces[target]++,
-                deadline
-            )._hash();
+        bytes32 hashStruct = abi.encode(TRANSFER_TYPEHASH, target, to, value, nonces[target]++, deadline)._hash();
 
         require(verifyEIP712(target, hashStruct, v, r, s) || verifyPersonalSign(target, hashStruct, v, r, s));
 
@@ -501,22 +526,26 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
         return true;
     }
 
-    function verifyEIP712(address target, bytes32 hashStruct, uint8 v, bytes32 r, bytes32 s) internal view returns (bool) {
+    function verifyEIP712(address target, bytes32 hashStruct, uint8 v, bytes32 r, bytes32 s)
+        internal
+        view
+        returns (bool)
+    {
         // bytes32 hash = keccak256(
         //     abi.encodePacked(
         //         "\x19\x01",
         //         DOMAIN_SEPARATOR,
         //         hashStruct));
-        bytes32 hash = abi.encodePacked(
-                "\x19\x01",
-                DOMAIN_SEPARATOR,
-                hashStruct
-            )._hash();
+        bytes32 hash = abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashStruct)._hash();
         address signer = ecrecover(hash, v, r, s);
         return (signer != address(0) && signer == target);
     }
 
-    function verifyPersonalSign(address target, bytes32 hashStruct, uint8 v, bytes32 r, bytes32 s) internal view returns (bool) {
+    function verifyPersonalSign(address target, bytes32 hashStruct, uint8 v, bytes32 r, bytes32 s)
+        internal
+        view
+        returns (bool)
+    {
         bytes32 hash = prefixed(hashStruct);
         address signer = ecrecover(hash, v, r, s);
         return (signer != address(0) && signer == target);
@@ -587,7 +616,7 @@ contract AnyswapV5ERC20 is IAnyswapV3ERC20 {
     /// Requirements:
     ///   - caller account must have at least `value` AnyswapV3ERC20 token.
     /// For more information on transferAndCall format, see https://github.com/ethereum/EIPs/issues/677.
-    function transferAndCall(address to, uint value, bytes calldata data) external override returns (bool) {
+    function transferAndCall(address to, uint256 value, bytes calldata data) external override returns (bool) {
         require(to != address(0) || to != address(this));
 
         uint256 balance = balanceOf[msg.sender];

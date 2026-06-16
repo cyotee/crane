@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "cartographer.graph.v2",
+  "root": "/Users/cyotee/Development/github-cyotee/indexedex/lib/daosys/lib/crane",
+  "generatedAt": "2026-06-21T15:56:09.609Z",
+  "scanner": {
+    "name": "cartographer",
+    "version": "0.1.0"
+  },
+  "git": {
+    "commit": "809f391931e10b5fb06a1acc722958ff5ffb0f13",
+    "dirty": true,
+    "trackedFiles": 10901,
+    "untrackedFiles": 0,
+    "modifiedFiles": 36,
+    "deletedFiles": 0
+  },
+  "totals": {
+    "files": 10664,
+    "packages": 40,
+    "nodes": 13864,
+    "edges": 19829,
+    "findings": 0
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "**/node_modules/**",
+    "dist/**",
+    "**/dist/**",
+    ".git/**",
+    ".bun-tmp/**",
+    ".claude/**",
+    ".cartographer/**",
+    "docs/codegraph/**",
+    "supabase/.temp/**",
+    "supabase/.branches/**",
+    "e2e/playwright-report/**",
+    "e2e/test-results/**",
+    "e2e/reports/**",
+    "specs/states/**",
+    "**/states/**",
+    "*_TTrace_*",
+    "*.st",
+    "*.fp",
+    "specs/tla2tools.jar"
+  ],
+  "defaultProvenance": {
+    "source": "syntax",
+    "confidence": "parser-backed",
+    "freshness": "fresh",
+    "snapshotCommit": "809f391931e10b5fb06a1acc722958ff5ffb0f13",
+    "scannerVersion": "0.1.0"
+  }
+}

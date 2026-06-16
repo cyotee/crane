@@ -3,7 +3,7 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 
-import {DoubleLinkedList} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/DoubleLinkedList.sol";
+import {DoubleLinkedList} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/DoubleLinkedList.sol";
 
 contract DoubleLinkedListWrapper {
     using DoubleLinkedList for DoubleLinkedList.List;

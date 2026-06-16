@@ -15,8 +15,12 @@ import {
     PancakeSwapV3Aggregator
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/PancakeSwapV3/PancakeSwapV3Aggregator.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
-import {IPancakeV3Factory} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Factory.sol";
-import {IPancakeV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Pool.sol";
+import {
+    IPancakeV3Factory
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Factory.sol";
+import {
+    IPancakeV3Pool
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/pancakeswap/v3-core/interfaces/IPancakeV3Pool.sol";
 import {IPancakeV3PoolDeployer} from "./mocks/IPancakeV3PoolDeployer.sol";
 import {PancakeV3MintHelper} from "./mocks/PancakeV3MintHelper.sol";
 import "forge-std/Test.sol";
@@ -56,8 +60,9 @@ contract PancakeSwapV3AggregatorFuzz is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
 
         address poolDeployer = _deployCreate(POOL_DEPLOYER_BYTECODE_PATH);

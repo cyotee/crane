@@ -20,5 +20,5 @@ contract GasHelper {
         emit GasUsed(string(abi.encodePacked(checkpointLabel, " Gas")), gasDelta);
     }
 
-    event GasUsed(string key, uint val);
+    event GasUsed(string key, uint256 val);
 }

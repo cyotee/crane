@@ -13,10 +13,14 @@ contract PendleERC4626SY is SYBase {
         _safeApproveInf(asset, _erc4626);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == yieldToken) {
             return amountDeposited;
         } else {
@@ -24,11 +28,11 @@ contract PendleERC4626SY is SYBase {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == yieldToken) {
             amountTokenOut = amountSharesToRedeem;
             _transferOut(yieldToken, receiver, amountTokenOut);
@@ -43,18 +47,27 @@ contract PendleERC4626SY is SYBase {
         return totalAssets.divDown(totalSupply);
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == yieldToken) return amountTokenToDeposit;
         else return IERC4626(yieldToken).previewDeposit(amountTokenToDeposit);
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         if (tokenOut == yieldToken) return amountSharesToRedeem;
         else return IERC4626(yieldToken).previewRedeem(amountSharesToRedeem);
     }

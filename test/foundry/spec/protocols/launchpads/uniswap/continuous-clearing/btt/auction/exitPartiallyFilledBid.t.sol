@@ -1,13 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockContinuousClearingAuction} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
+import {
+    AuctionFuzzConstructorParams,
+    BttBase
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockContinuousClearingAuction
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
 
 contract ExitPartiallyFilledBidTest is BttBase {
     function test_WhenBidAlreadyExited(AuctionFuzzConstructorParams memory _params, uint128 _bidAmount) public {
@@ -31,9 +40,9 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         auction.checkpoint();
@@ -73,9 +82,9 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock - 1);
         vm.expectRevert(IContinuousClearingAuction.CannotPartiallyExitBidBeforeGraduation.selector);
@@ -110,9 +119,9 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         auction.checkpoint();
@@ -153,10 +162,10 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
         // Bid a small amount to ensure that maxPrice == clearing price
-        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(""));
 
         // Invalid as long as not == startBlock
         vm.assume(_lastFullyFilledCheckpointBlock != mParams.parameters.startBlock);
@@ -200,14 +209,14 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(""));
 
         // Bid a second bid to ensure that the outbid block hint is invalid
         uint256 maxPrice2 = maxPrice + mParams.parameters.tickSpacing;
         uint128 bidAmount2 = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice2, FixedPoint96.Q96));
-        uint256 bidId2 = auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(''));
+        uint256 bidId2 = auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock - 1);
         auction.checkpoint();
@@ -255,13 +264,13 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(""));
 
         uint256 maxPrice2 = maxPrice + mParams.parameters.tickSpacing;
         uint128 bidAmount2 = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice2, FixedPoint96.Q96));
-        auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(''));
+        auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock - 1);
         auction.checkpoint();
@@ -300,14 +309,14 @@ contract ExitPartiallyFilledBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, owner, bytes(""));
 
         // Move price above the initial bid's max price
         uint256 maxPrice2 = maxPrice + mParams.parameters.tickSpacing;
         uint128 bidAmount2 = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice2, FixedPoint96.Q96));
-        auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(''));
+        auction.submitBid{value: bidAmount2}(maxPrice2, bidAmount2, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         auction.checkpoint();

@@ -2,10 +2,7 @@ pragma solidity ^0.8.0;
 
 library SDKErrorsDirectory {
     error ApproxBinarySearchInputInvalid(
-        uint256 approxGuessMin,
-        uint256 approxGuessMax,
-        uint256 minGuessMin,
-        uint256 maxGuessMax
+        uint256 approxGuessMin, uint256 approxGuessMax, uint256 minGuessMin, uint256 maxGuessMax
     );
     error ApproxDstExecutionGasNotSet();
     error ApproxFail();

@@ -5,13 +5,15 @@ import {Test} from "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC20.sol";
 
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {ICurveStableswapFactoryNG} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ICurveStableswapFactoryNG.sol";
-import {ICurveStableswapNG} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ICurveStableswapNG.sol";
-import {ILiquidityGauge} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILiquidityGauge.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {
+    ICurveStableswapFactoryNG
+} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ICurveStableswapFactoryNG.sol";
+import {ICurveStableswapNG} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ICurveStableswapNG.sol";
+import {ILiquidityGauge} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILiquidityGauge.sol";
 
-import {CurveV2GaugeRewards} from "@crane/contracts/protocols/staking/liquity/v2/gov/CurveV2GaugeRewards.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
+import {CurveV2GaugeRewards} from "@crane/contracts/protocols/cdps/liquity/v2/gov/CurveV2GaugeRewards.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
 
 contract ForkedCurveV2GaugeRewardsTest is Test {
     IERC20 private constant lqty = IERC20(address(0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D));

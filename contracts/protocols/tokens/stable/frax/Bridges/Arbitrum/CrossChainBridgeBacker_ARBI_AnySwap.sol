@@ -6,7 +6,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/IAnyswa
 import "./IL2GatewayRouter.sol";
 
 contract CrossChainBridgeBacker_ARBI_AnySwap is CrossChainBridgeBacker {
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _cross_chain_oracle_address,
@@ -15,26 +15,33 @@ contract CrossChainBridgeBacker_ARBI_AnySwap is CrossChainBridgeBacker {
         address _destination_address_override,
         string memory _non_evm_destination_address,
         string memory _name
-    ) 
-    CrossChainBridgeBacker(_owner, _timelock_address, _cross_chain_oracle_address, _token_addresses, _bridge_addresses, _destination_address_override, _non_evm_destination_address, _name)
+    )
+        CrossChainBridgeBacker(
+            _owner,
+            _timelock_address,
+            _cross_chain_oracle_address,
+            _token_addresses,
+            _bridge_addresses,
+            _destination_address_override,
+            _non_evm_destination_address,
+            _name
+        )
     {}
 
     // Override with logic specific to this chain
     function _bridgingLogic(uint256 token_type, address address_to_send_to, uint256 token_amount) internal override {
         // [Arbitrum]
-        if (token_type == 0){
+        if (token_type == 0) {
             // anyFRAX -> L1 FRAX
             // Swapout
             // AnySwap Bridge
             IAnyswapV5ERC20(address(anyFRAX)).Swapout(token_amount, address_to_send_to);
-        }
-        else if (token_type == 1) {
+        } else if (token_type == 1) {
             // anyFXS -> L1 FXS
             // Swapout
             // AnySwap Bridge
             IAnyswapV5ERC20(address(anyFXS)).Swapout(token_amount, address_to_send_to);
-        }
-        else {
+        } else {
             revert("COLLATERAL TRANSFERS ARE DISABLED FOR NOW");
             // // arbiUSDC => L1 USDC
             // // outboundTransfer

@@ -2,10 +2,10 @@
 pragma solidity ^0.8.27;
 
 import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 // import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 import {IEulerSwap} from "./interfaces/IEulerSwap.sol";
 import {IEulerSwapFactory} from "./interfaces/IEulerSwapFactory.sol";
@@ -83,9 +83,7 @@ contract EulerSwapRegistry is IEulerSwapRegistry, EVCUtil {
 
     error E_AccountLiquidity(); // From EVK
 
-    constructor(address evc, address eulerSwapFactory_, address validVaultPerspective_, address curator_)
-        EVCUtil(evc)
-    {
+    constructor(address evc, address eulerSwapFactory_, address validVaultPerspective_, address curator_) EVCUtil(evc) {
         eulerSwapFactory = eulerSwapFactory_;
         validVaultPerspective = validVaultPerspective_;
         curator = curator_;
@@ -192,17 +190,18 @@ contract EulerSwapRegistry is IEulerSwapRegistry, EVCUtil {
         uint256 quote = pool.computeQuote(tokenIn, tokenOut, amount, exactIn);
 
         {
-            (bool success, bytes memory error) = address(this).call(
-                abi.encodeWithSelector(
-                    this.challengePoolAttempt.selector,
-                    msg.sender,
-                    poolAddr,
-                    asset0IsInput,
-                    tokenIn,
-                    exactIn ? amount : quote,
-                    exactIn ? quote : amount
-                )
-            );
+            (bool success, bytes memory error) = address(this)
+                .call(
+                    abi.encodeWithSelector(
+                        this.challengePoolAttempt.selector,
+                        msg.sender,
+                        poolAddr,
+                        asset0IsInput,
+                        tokenIn,
+                        exactIn ? amount : quote,
+                        exactIn ? quote : amount
+                    )
+                );
             require(!success, ChallengeSwapSucceeded());
             require(
                 bytes4(error) == E_AccountLiquidity.selector || bytes4(error) == SwapLib.HookError.selector,

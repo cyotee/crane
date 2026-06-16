@@ -25,7 +25,9 @@ import {ERC721HolderUpgradeable} from "../token/ERC721/utils/ERC721HolderUpgrade
 import {Heap} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/Heap.sol";
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {MerkleProof} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MerkleProof.sol";
-import {MessageHashUtils} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MessageHashUtils.sol";
+import {
+    MessageHashUtils
+} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/MessageHashUtils.sol";
 import {P256} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/P256.sol";
 import {Panic} from "@crane/contracts/external/openzeppelin-contracts/utils/Panic.sol";
 import {Packing} from "@crane/contracts/external/openzeppelin-contracts/utils/Packing.sol";
@@ -33,16 +35,17 @@ import {RSA} from "@crane/contracts/external/openzeppelin-contracts/utils/crypto
 import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
 import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import {ShortStrings} from "@crane/contracts/external/openzeppelin-contracts/utils/ShortStrings.sol";
-import {SignatureChecker} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/SignatureChecker.sol";
+import {
+    SignatureChecker
+} from "@crane/contracts/external/openzeppelin-contracts/utils/cryptography/SignatureChecker.sol";
 import {SignedMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SignedMath.sol";
 import {StorageSlot} from "@crane/contracts/external/openzeppelin-contracts/utils/StorageSlot.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {Time} from "@crane/contracts/external/openzeppelin-contracts/utils/types/Time.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
-contract Dummy1234Upgradeable is Initializable {    function __Dummy1234_init() internal onlyInitializing {
-    }
+contract Dummy1234Upgradeable is Initializable {
+    function __Dummy1234_init() internal onlyInitializing {}
 
-    function __Dummy1234_init_unchained() internal onlyInitializing {
-    }
+    function __Dummy1234_init_unchained() internal onlyInitializing {}
 }

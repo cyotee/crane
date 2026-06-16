@@ -60,10 +60,11 @@ library VeBalanceLib {
         res.bias = res.slope * position.expiry;
     }
 
-    function convertToVeBalance(
-        LockedPosition memory position,
-        uint256 weight
-    ) internal pure returns (VeBalance memory res) {
+    function convertToVeBalance(LockedPosition memory position, uint256 weight)
+        internal
+        pure
+        returns (VeBalance memory res)
+    {
         res.slope = ((position.amount * weight) / MAX_LOCK_TIME / USER_VOTE_MAX_WEIGHT).Uint128();
         res.bias = res.slope * position.expiry;
     }

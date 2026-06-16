@@ -36,8 +36,8 @@ contract PendleMsgReceiveEndpointUpg is ILayerZeroReceiver, Initializable, UUPSU
      */
     modifier mustOriginateFromSendEndpoint(uint16 srcChainId, bytes memory path) {
         if (
-            sendEndpointAddr != LayerZeroHelper._getFirstAddressFromPath(path) ||
-            sendEndpointChainId != LayerZeroHelper._getOriginalChainIds(srcChainId)
+            sendEndpointAddr != LayerZeroHelper._getFirstAddressFromPath(path)
+                || sendEndpointChainId != LayerZeroHelper._getOriginalChainIds(srcChainId)
         ) revert Errors.MsgNotFromSendEndpoint(srcChainId, path);
         _;
     }
@@ -54,19 +54,17 @@ contract PendleMsgReceiveEndpointUpg is ILayerZeroReceiver, Initializable, UUPSU
         __BoringOwnable_init();
     }
 
-    function lzReceive(
-        uint16 _srcChainId,
-        bytes calldata _path,
-        uint64 _nonce,
-        bytes calldata _payload
-    ) external onlyLzEndpoint mustOriginateFromSendEndpoint(_srcChainId, _path) {
+    function lzReceive(uint16 _srcChainId, bytes calldata _path, uint64 _nonce, bytes calldata _payload)
+        external
+        onlyLzEndpoint
+        mustOriginateFromSendEndpoint(_srcChainId, _path)
+    {
         (address receiver, bytes memory message) = abi.decode(_payload, (address, bytes));
 
-        (bool success, bytes memory reason) = address(receiver).excessivelySafeCall(
-            gasleft(),
-            150,
-            abi.encodeWithSelector(IPMsgReceiverApp.executeMessage.selector, message)
-        );
+        (bool success, bytes memory reason) = address(receiver)
+            .excessivelySafeCall(
+                gasleft(), 150, abi.encodeWithSelector(IPMsgReceiverApp.executeMessage.selector, message)
+            );
 
         if (!success) {
             emit MessageFailed(_srcChainId, _path, _nonce, _payload, reason);

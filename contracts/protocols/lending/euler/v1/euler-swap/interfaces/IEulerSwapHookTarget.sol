@@ -8,9 +8,7 @@ uint8 constant EULER_SWAP_HOOK_AFTER_SWAP = 1 << 2;
 interface IEulerSwapHookTarget {
     function beforeSwap(uint256 amount0Out, uint256 amount1Out, address msgSender, address to) external;
 
-    function getFee(bool asset0IsInput, uint112 reserve0, uint112 reserve1, bool readOnly)
-        external
-        returns (uint64 fee);
+    function getFee(bool asset0IsInput, uint112 reserve0, uint112 reserve1, bool readOnly) external returns (uint64 fee);
 
     function afterSwap(
         uint256 amount0In,

@@ -15,7 +15,7 @@ library LibSort {
 
     /// @dev Sorts the array in-place with insertion sort.
     function insertionSort(uint256[] memory a) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let n := mload(a) // Length of `a`.
             mstore(a, 0) // For insertion sort's inner loop to terminate.
             let h := add(a, shl(5, n)) // High slot.
@@ -66,7 +66,7 @@ library LibSort {
 
     /// @dev Sorts the array in-place with intro-quicksort.
     function sort(uint256[] memory a) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             function swap(a_, b_) -> _a, _b {
                 _b := a_
                 _a := b_
@@ -197,7 +197,7 @@ library LibSort {
 
     /// @dev Removes duplicate elements from a ascendingly sorted memory array.
     function uniquifySorted(uint256[] memory a) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             // If the length of `a` is greater than 1.
             if iszero(lt(mload(a), 2)) {
                 let x := add(a, 0x20)
@@ -277,7 +277,7 @@ library LibSort {
 
     /// @dev Reverses the array in-place.
     function reverse(uint256[] memory a) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             if iszero(lt(mload(a), 2)) {
                 let s := 0x20
                 let w := not(0x1f)
@@ -311,7 +311,7 @@ library LibSort {
 
     /// @dev Returns a copy of the array.
     function copy(uint256[] memory a) internal pure returns (uint256[] memory result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             result := mload(0x40)
             let end := add(add(result, 0x20), shl(5, mload(a)))
             let o := result
@@ -341,7 +341,7 @@ library LibSort {
 
     /// @dev Returns whether the array is sorted in ascending order.
     function isSorted(uint256[] memory a) internal pure returns (bool result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -357,7 +357,7 @@ library LibSort {
 
     /// @dev Returns whether the array is sorted in ascending order.
     function isSorted(int256[] memory a) internal pure returns (bool result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -383,7 +383,7 @@ library LibSort {
 
     /// @dev Returns whether the array is strictly ascending (sorted and uniquified).
     function isSortedAndUniquified(uint256[] memory a) internal pure returns (bool result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -399,7 +399,7 @@ library LibSort {
 
     /// @dev Returns whether the array is strictly ascending (sorted and uniquified).
     function isSortedAndUniquified(int256[] memory a) internal pure returns (bool result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             result := 1
             if iszero(lt(mload(a), 2)) {
                 let end := add(a, shl(5, mload(a)))
@@ -498,7 +498,7 @@ library LibSort {
     /// @dev Cleans the upper 96 bits of the addresses.
     /// In case `a` is produced via assembly and might have dirty upper bits.
     function clean(address[] memory a) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let addressMask := shr(96, not(0))
             for { let end := add(a, shl(5, mload(a))) } iszero(eq(a, end)) {} {
                 a := add(a, 0x20)
@@ -509,7 +509,7 @@ library LibSort {
 
     /// @dev Sorts and uniquifies `keys`. Updates `values` with the grouped sums by key.
     function groupSum(uint256[] memory keys, uint256[] memory values) internal pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             function mswap(i_, j_) {
                 let t_ := mload(i_)
                 mstore(i_, mload(j_))
@@ -584,7 +584,7 @@ library LibSort {
 
     /// @dev Returns if `a` has any duplicate. Does NOT mutate `a`. `O(n)`.
     function hasDuplicate(uint256[] memory a) internal pure returns (bool result) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             function p(i_, x_) -> _y {
                 _y := or(shr(i_, x_), x_)
             }
@@ -639,14 +639,14 @@ library LibSort {
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(int256[] memory a) private pure returns (uint256[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(address[] memory a) private pure returns (uint256[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             // As any address written to memory will have the upper 96 bits
             // of the word zeroized (as per Solidity spec), we can directly
             // compare these addresses as if they are whole uint256 words.
@@ -656,28 +656,28 @@ library LibSort {
 
     /// @dev Reinterpret cast to an uint256 array.
     function _toUints(bytes32[] memory a) private pure returns (uint256[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an int array.
     function _toInts(uint256[] memory a) private pure returns (int256[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an address array.
     function _toAddresses(uint256[] memory a) private pure returns (address[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             casted := a
         }
     }
 
     /// @dev Reinterpret cast to an bytes32 array.
     function _toBytes32s(uint256[] memory a) private pure returns (bytes32[] memory casted) {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             casted := a
         }
     }
@@ -685,7 +685,7 @@ library LibSort {
     /// @dev Converts an array of signed integers to unsigned
     /// integers suitable for sorting or vice versa.
     function _flipSign(int256[] memory a) private pure {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let q := shl(255, 1)
             for { let i := add(a, shl(5, mload(a))) } iszero(eq(a, i)) {} {
                 mstore(i, add(mload(i), q))
@@ -701,7 +701,7 @@ library LibSort {
         pure
         returns (bool found, uint256 index)
     {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let w := not(0)
             let l := 1
             let h := mload(a)
@@ -733,7 +733,7 @@ library LibSort {
         pure
         returns (uint256[] memory c)
     {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))
@@ -774,7 +774,7 @@ library LibSort {
         pure
         returns (uint256[] memory c)
     {
-        assembly ('memory-safe'){
+        assembly ("memory-safe") {
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))
@@ -806,7 +806,7 @@ library LibSort {
     /// @dev Returns the sorted set union of `a` and `b`.
     /// Note: Behaviour is undefined if inputs are not sorted and uniquified.
     function _union(uint256[] memory a, uint256[] memory b, uint256 signed) private pure returns (uint256[] memory c) {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let s := 0x20
             let aEnd := add(a, shl(5, mload(a)))
             let bEnd := add(b, shl(5, mload(b)))

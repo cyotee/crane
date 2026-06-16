@@ -22,9 +22,7 @@ import {
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IHooks} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IHooks.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 
@@ -62,7 +60,7 @@ import {CowPoolDFPkg, ICowPoolDFPkg} from "@crane/contracts/protocols/dexes/bala
 /*                              Mock Implementations                          */
 /* -------------------------------------------------------------------------- */
 
-import {MockERC20} from '@crane/contracts/tokens/ERC20/test/MockERC20.sol';
+import {MockERC20} from "@crane/contracts/tokens/ERC20/test/MockERC20.sol";
 
 /**
  * @notice Minimal IFacet to satisfy the DFPkg pool-info cut.

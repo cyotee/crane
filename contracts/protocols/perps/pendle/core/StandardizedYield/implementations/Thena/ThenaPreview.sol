@@ -89,11 +89,11 @@ contract ThenaPreview is IPPreviewHelper, ThenaMath, BoringOwnableUpgradeable, U
      * @notice This function simulates Camelot router so any precision issues from their calculation
      * is preserved in preview functions...
      */
-    function _calcAmountLpOut(
-        ThenaData memory data,
-        uint256 amount0ToAddLiq,
-        uint256 amount1ToAddLiq
-    ) private view returns (uint256 amountLpOut) {
+    function _calcAmountLpOut(ThenaData memory data, uint256 amount0ToAddLiq, uint256 amount1ToAddLiq)
+        private
+        view
+        returns (uint256 amountLpOut)
+    {
         uint256 amount1Optimal = _quote(amount0ToAddLiq, data.reserve0, data.reserve1);
         if (amount1Optimal <= amount1ToAddLiq) {
             amount1ToAddLiq = amount1Optimal;
@@ -113,7 +113,7 @@ contract ThenaPreview is IPPreviewHelper, ThenaMath, BoringOwnableUpgradeable, U
         data.pair = pair;
         data.isStable = IThenaPair(pair).isStable();
         data.fee = IThenaFactory(factory).getFee(data.isStable);
-        (data.reserve0, data.reserve1, ) = IThenaPair(pair).getReserves();
+        (data.reserve0, data.reserve1,) = IThenaPair(pair).getReserves();
 
         if (data.isStable) {
             // if not stable, skip readding these datas

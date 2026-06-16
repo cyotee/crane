@@ -21,6 +21,7 @@ contract MultiStepOwnableViewTarget is IMultiStepOwnableView {
     function owner() external view returns (address) {
         return MultiStepOwnableRepo._owner();
     }
+
     // end::owner()[]
 
     // tag::pendingOwner()[]
@@ -30,6 +31,7 @@ contract MultiStepOwnableViewTarget is IMultiStepOwnableView {
     function pendingOwner() external view returns (address) {
         return MultiStepOwnableRepo._pendingOwner();
     }
+
     // end::pendingOwner()[]
 
     // tag::preConfirmedOwner()[]
@@ -39,6 +41,7 @@ contract MultiStepOwnableViewTarget is IMultiStepOwnableView {
     function preConfirmedOwner() external view returns (address) {
         return MultiStepOwnableRepo._preConfirmedOwner();
     }
+
     // end::preConfirmedOwner()[]
 
     // tag::getOwnershipTransferBuffer()[]

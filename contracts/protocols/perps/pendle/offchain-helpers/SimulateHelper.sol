@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import "../core/libraries/Errors.sol";
 
 contract SimulateHelper {
@@ -14,16 +14,22 @@ contract SimulateHelper {
     }
 
     function multicallRevert(
-        uint256 /*gasLimit*/,
+        uint256,
+        /*gasLimit*/
         address[] calldata targets,
         bytes[] calldata callDatas
-    ) public payable virtual returns (bytes[] memory res, uint256[] memory gasUsed) {
+    )
+        public
+        payable
+        virtual
+        returns (bytes[] memory res, uint256[] memory gasUsed)
+    {
         require(targets.length == callDatas.length, "length mismatch");
 
         uint256 length = callDatas.length;
         res = new bytes[](length);
         gasUsed = new uint256[](length);
-        for (uint256 i = 0; i < length; ) {
+        for (uint256 i = 0; i < length;) {
             uint256 gasBefore = gasleft();
             // (, res[i]) = original.delegatecall{gas: gasLimit}(
             //     abi.encodeWithSignature("simulate(address,bytes)", targets[i], callDatas[i])

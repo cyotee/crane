@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockCheckpointStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockCheckpointStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol";
 
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {CheckpointAccountingLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {
+    CheckpointAccountingLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointAccountingLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract CalculateFillTest is BttBase {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -49,22 +53,22 @@ contract CalculateFillTest is BttBase {
                 && _bid.amountQ96 < type(uint256).max / _cumulativeMpsDelta
         ) {
             assertApproxEqAbs(
-                tokensFilled, _bid.amountQ96 * _cumulativeMpsPerPriceDelta / (q96Sqr * left), 1, 'tokens filled'
+                tokensFilled, _bid.amountQ96 * _cumulativeMpsPerPriceDelta / (q96Sqr * left), 1, "tokens filled"
             );
-            assertApproxEqAbs(currencySpent, _bid.amountQ96 * _cumulativeMpsDelta / left, 1, 'currency spent');
+            assertApproxEqAbs(currencySpent, _bid.amountQ96 * _cumulativeMpsDelta / left, 1, "currency spent");
         }
 
         // Intermediate 512 bits.
         assertEq(
             tokensFilled,
             FixedPointMathLib.fullMulDiv(_bid.amountQ96, _cumulativeMpsPerPriceDelta, q96Sqr * left),
-            'tokens filled'
+            "tokens filled"
         );
         assertEq(
-            currencySpent, FixedPointMathLib.fullMulDivUp(_bid.amountQ96, _cumulativeMpsDelta, left), 'currency spent'
+            currencySpent, FixedPointMathLib.fullMulDivUp(_bid.amountQ96, _cumulativeMpsDelta, left), "currency spent"
         );
 
         // Given that the bid amount is greater than 0, the currency spent must be greater than 0
-        assertGt(currencySpent, 0, 'currency spent must be greater than 0');
+        assertGt(currencySpent, 0, "currency spent must be greater than 0");
     }
 }

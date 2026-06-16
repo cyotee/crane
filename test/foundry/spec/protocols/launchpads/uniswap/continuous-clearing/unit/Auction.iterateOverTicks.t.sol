@@ -1,20 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {CheckpointLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7, ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {FuzzDeploymentParams} from '../utils/FuzzStructs.sol';
-import {FuzzBid} from '../utils/FuzzStructs.sol';
-import {MockContinuousClearingAuction} from '../utils/MockAuction.sol';
-import {AuctionUnitTest} from './AuctionUnitTest.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    AuctionParameters
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {
+    CheckpointLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    ValueX7,
+    ValueX7Lib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {FuzzDeploymentParams} from "../utils/FuzzStructs.sol";
+import {FuzzBid} from "../utils/FuzzStructs.sol";
+import {MockContinuousClearingAuction} from "../utils/MockAuction.sol";
+import {AuctionUnitTest} from "./AuctionUnitTest.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract AuctionIterateOverTicksTest is AuctionUnitTest {
     using ValueX7Lib for *;
@@ -88,7 +97,7 @@ contract AuctionIterateOverTicksTest is AuctionUnitTest {
             assertLt(
                 mockAuction.sumCurrencyDemandAboveClearingQ96(),
                 mockAuction.totalSupply() * mockAuction.nextActiveTickPrice(),
-                'sumCurrencyDemandAboveClearingQ96 is greater than or equal to currency required to move to the next active tick'
+                "sumCurrencyDemandAboveClearingQ96 is greater than or equal to currency required to move to the next active tick"
             );
         }
     }

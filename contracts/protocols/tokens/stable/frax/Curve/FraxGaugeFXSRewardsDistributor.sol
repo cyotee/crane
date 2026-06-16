@@ -26,10 +26,10 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeController.sol";
 import "./FraxMiddlemanGauge.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -67,7 +67,10 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
     }
 
     modifier onlyByOwnerOrCuratorOrGovernance() {
-        require(msg.sender == owner || msg.sender == curator_address || msg.sender == timelock_address, "Not owner, curator, or timelock");
+        require(
+            msg.sender == owner || msg.sender == curator_address || msg.sender == timelock_address,
+            "Not owner, curator, or timelock"
+        );
         _;
     }
 
@@ -78,7 +81,7 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _curator_address,
@@ -92,7 +95,6 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
         gauge_controller = IFraxGaugeController(_gauge_controller_address);
 
         distributionsOn = true;
-
     }
 
     /* ========== VIEWS ========== */
@@ -107,17 +109,21 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     // Callable by anyone
-    function distributeReward(address gauge_address) public isDistributing nonReentrant returns (uint256 weeks_elapsed, uint256 reward_tally) {
+    function distributeReward(address gauge_address)
+        public
+        isDistributing
+        nonReentrant
+        returns (uint256 weeks_elapsed, uint256 reward_tally)
+    {
         require(gauge_whitelist[gauge_address], "Gauge not whitelisted");
-        
-        // Calculate the elapsed time in weeks. 
+
+        // Calculate the elapsed time in weeks.
         uint256 last_time_paid = last_time_gauge_paid[gauge_address];
 
         // Edge case for first reward for this gauge
-        if (last_time_paid == 0){
+        if (last_time_paid == 0) {
             weeks_elapsed = 1;
-        }
-        else {
+        } else {
             // Truncation desired
             weeks_elapsed = (block.timestamp).sub(last_time_gauge_paid[gauge_address]) / ONE_WEEK;
 
@@ -129,15 +135,15 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
 
         // NOTE: This will always use the current global_emission_rate()
         reward_tally = 0;
-        for (uint i = 0; i < (weeks_elapsed); i++){ 
+        for (uint256 i = 0; i < (weeks_elapsed); i++) {
             uint256 rel_weight_at_week;
             if (i == 0) {
                 // Mutative, for the current week. Makes sure the weight is checkpointed. Also returns the weight.
                 rel_weight_at_week = gauge_controller.gauge_relative_weight_write(gauge_address, block.timestamp);
-            }
-            else {
+            } else {
                 // View
-                rel_weight_at_week = gauge_controller.gauge_relative_weight(gauge_address, (block.timestamp).sub(ONE_WEEK * i));
+                rel_weight_at_week =
+                    gauge_controller.gauge_relative_weight(gauge_address, (block.timestamp).sub(ONE_WEEK * i));
             }
             uint256 rwd_rate_at_week = (gauge_controller.global_emission_rate()).mul(rel_weight_at_week).div(1e18);
             reward_tally = reward_tally.add(rwd_rate_at_week.mul(ONE_WEEK));
@@ -146,15 +152,14 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
         // Update the last time paid
         last_time_gauge_paid[gauge_address] = block.timestamp;
 
-        if (is_middleman[gauge_address]){
+        if (is_middleman[gauge_address]) {
             // Cross chain: Pay out the rewards to the middleman contract
             // Approve for the middleman first
             ERC20(reward_token_address).approve(gauge_address, reward_tally);
 
             // Trigger the middleman
             FraxMiddlemanGauge(gauge_address).pullAndBridge(reward_tally);
-        }
-        else {
+        } else {
             // Mainnet: Pay out the rewards directly to the gauge
             TransferHelper.safeTransfer(reward_token_address, gauge_address, reward_tally);
         }
@@ -172,7 +177,7 @@ contract FraxGaugeFXSRewardsDistributor is Owned, ReentrancyGuard {
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal

@@ -78,24 +78,20 @@ contract RollingRewarder is IRollingRewarder {
 
     // -------------- Hooks --------------
 
-    function onUpdate(
-        ICurves _curve,
-        uint256 _relicId,
-        uint256 _amount,
-        uint256 _oldLevel,
-        uint256 _newLevel
-    ) external virtual onlyParent {
+    function onUpdate(ICurves _curve, uint256 _relicId, uint256 _amount, uint256 _oldLevel, uint256 _newLevel)
+        external
+        virtual
+        onlyParent
+    {
         uint256 oldAmountMultiplied_ = _amount * _curve.getFunction(_oldLevel);
         uint256 newAmountMultiplied_ = _amount * _curve.getFunction(_newLevel);
 
         _issueTokens();
 
         uint256 accRewardPerShare_ = accRewardPerShare;
-        rewardCredit[_relicId] += Math.mulDiv(
-            oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_relicId];
-        rewardDebt[_relicId] =
-            Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardCredit[_relicId] += Math.mulDiv(oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_relicId];
+        rewardDebt[_relicId] = Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
     }
 
     /// @dev Must always be called after `onUpdate`, `onDeposit` or `onWithdraw`.
@@ -123,11 +119,9 @@ contract RollingRewarder is IRollingRewarder {
         _issueTokens();
 
         uint256 accRewardPerShare_ = accRewardPerShare;
-        rewardCredit[_relicId] += Math.mulDiv(
-            oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_relicId];
-        rewardDebt[_relicId] =
-            Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardCredit[_relicId] += Math.mulDiv(oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_relicId];
+        rewardDebt[_relicId] = Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
     }
 
     function onWithdraw(
@@ -139,17 +133,14 @@ contract RollingRewarder is IRollingRewarder {
         uint256 _newLevel
     ) external virtual onlyParent {
         uint256 oldAmountMultiplied_ = _oldAmount * _curve.getFunction(_oldLevel);
-        uint256 newAmountMultiplied_ =
-            (_oldAmount - _withdrawalAmount) * _curve.getFunction(_newLevel);
+        uint256 newAmountMultiplied_ = (_oldAmount - _withdrawalAmount) * _curve.getFunction(_newLevel);
 
         _issueTokens();
 
         uint256 accRewardPerShare_ = accRewardPerShare;
-        rewardCredit[_relicId] += Math.mulDiv(
-            oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_relicId];
-        rewardDebt[_relicId] =
-            Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardCredit[_relicId] += Math.mulDiv(oldAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_relicId];
+        rewardDebt[_relicId] = Math.mulDiv(newAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
     }
 
     function onSplit(
@@ -164,14 +155,10 @@ contract RollingRewarder is IRollingRewarder {
 
         uint256 accRewardPerShare_ = accRewardPerShare;
         uint256 multiplier_ = _curve.getFunction(_level);
-        rewardCredit[_fromId] += Math.mulDiv(
-            _fromAmount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_fromId];
-        rewardDebt[_fromId] = Math.mulDiv(
-            _fromAmount - _amount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION
-        );
-        rewardDebt[_newId] =
-            Math.mulDiv(_amount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardCredit[_fromId] += Math.mulDiv(_fromAmount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_fromId];
+        rewardDebt[_fromId] = Math.mulDiv(_fromAmount - _amount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardDebt[_newId] = Math.mulDiv(_amount, multiplier_ * accRewardPerShare_, ACC_REWARD_PRECISION);
     }
 
     function onShift(
@@ -190,19 +177,16 @@ contract RollingRewarder is IRollingRewarder {
         _issueTokens();
 
         uint256 accRewardPerShare_ = accRewardPerShare;
-        rewardCredit[_fromId] += Math.mulDiv(
-            _oldFromAmount, _multiplierFrom * accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_fromId];
-        rewardDebt[_fromId] = Math.mulDiv(
-            _oldFromAmount - _amount, _multiplierFrom * accRewardPerShare_, ACC_REWARD_PRECISION
-        );
-        rewardCredit[_toId] += Math.mulDiv(
-            _oldToAmount, _curve.getFunction(_oldToLevel) * accRewardPerShare_, ACC_REWARD_PRECISION
-        ) - rewardDebt[_toId];
+        rewardCredit[_fromId] += Math.mulDiv(_oldFromAmount, _multiplierFrom * accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_fromId];
+        rewardDebt[_fromId] =
+            Math.mulDiv(_oldFromAmount - _amount, _multiplierFrom * accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardCredit[
+            _toId
+        ] += Math.mulDiv(_oldToAmount, _curve.getFunction(_oldToLevel) * accRewardPerShare_, ACC_REWARD_PRECISION)
+        - rewardDebt[_toId];
         rewardDebt[_toId] = Math.mulDiv(
-            _oldToAmount + _amount,
-            _curve.getFunction(_newToLevel) * accRewardPerShare_,
-            ACC_REWARD_PRECISION
+            _oldToAmount + _amount, _curve.getFunction(_newToLevel) * accRewardPerShare_, ACC_REWARD_PRECISION
         );
     }
 
@@ -232,8 +216,7 @@ contract RollingRewarder is IRollingRewarder {
 
         rewardCredit[_fromId] = 0;
 
-        rewardDebt[_toId] =
-            Math.mulDiv(newToAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
+        rewardDebt[_toId] = Math.mulDiv(newToAmountMultiplied_, accRewardPerShare_, ACC_REWARD_PRECISION);
     }
 
     // -------------- Internals --------------
@@ -267,8 +250,7 @@ contract RollingRewarder is IRollingRewarder {
         uint256 lastDistributionTime_ = lastDistributionTime; // Timestamp of the final distribution of tokens.
 
         if (lastIssuanceTimestamp_ < lastDistributionTime_) {
-            uint256 endTimestamp_ =
-                block.timestamp > lastDistributionTime_ ? lastDistributionTime_ : block.timestamp;
+            uint256 endTimestamp_ = block.timestamp > lastDistributionTime_ ? lastDistributionTime_ : block.timestamp;
             issuance_ = getRewardAmount(endTimestamp_ - lastIssuanceTimestamp_);
             if (poolBalance_ != 0) {
                 accRewardPerShare += Math.mulDiv(issuance_, ACC_REWARD_PRECISION, poolBalance_);
@@ -287,8 +269,7 @@ contract RollingRewarder is IRollingRewarder {
         uint256 lastDistributionTime_ = lastDistributionTime; // Timestamp of the final distribution of tokens.
         uint256 newAccReward_ = accRewardPerShare;
         if (lastIssuanceTimestamp_ < lastDistributionTime_) {
-            uint256 endTimestamp_ =
-                block.timestamp > lastDistributionTime_ ? lastDistributionTime_ : block.timestamp;
+            uint256 endTimestamp_ = block.timestamp > lastDistributionTime_ ? lastDistributionTime_ : block.timestamp;
             uint256 issuance_ = getRewardAmount(endTimestamp_ - lastIssuanceTimestamp_);
             if (poolBalance_ != 0) {
                 newAccReward_ += Math.mulDiv(issuance_, ACC_REWARD_PRECISION, poolBalance_);
@@ -299,8 +280,7 @@ contract RollingRewarder is IRollingRewarder {
         uint256 amountMultiplied_ = uint256(position_.amount)
             * IReliquary(reliquary).getPoolInfo(poolId).curve.getFunction(uint256(position_.level));
 
-        uint256 pending_ = Math.mulDiv(amountMultiplied_, newAccReward_, ACC_REWARD_PRECISION)
-            - rewardDebt[_relicId];
+        uint256 pending_ = Math.mulDiv(amountMultiplied_, newAccReward_, ACC_REWARD_PRECISION) - rewardDebt[_relicId];
         pending_ += rewardCredit[_relicId];
 
         amount_ = pending_;

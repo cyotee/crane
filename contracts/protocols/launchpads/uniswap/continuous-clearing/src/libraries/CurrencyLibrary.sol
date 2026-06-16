@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {IERC20Minimal} from '../interfaces/external/IERC20Minimal.sol';
+import {IERC20Minimal} from "../interfaces/external/IERC20Minimal.sol";
 
 type Currency is address;
 
@@ -26,7 +26,7 @@ library CurrencyLibrary {
 
         bool success;
         if (currency.isAddressZero()) {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 // Transfer the ETH and revert if it fails.
                 success := call(gas(), to, amount, 0, 0, 0, 0)
             }
@@ -35,7 +35,7 @@ library CurrencyLibrary {
                 revert NativeTransferFailed();
             }
         } else {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 // Get a pointer to some free memory.
                 let fmp := mload(0x40)
 

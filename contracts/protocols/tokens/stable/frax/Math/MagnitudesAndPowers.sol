@@ -3,25 +3,24 @@ pragma solidity ^0.8.35;
 
 // https://ethereum.stackexchange.com/a/69590
 library MagnitudesAndPowers {
-    
-    function magnitude (uint x) public pure returns (uint) {
-        require (x > 0);
+    function magnitude(uint256 x) public pure returns (uint256) {
+        require(x > 0);
 
-        uint a = 0;
-        uint b = 77;
+        uint256 a = 0;
+        uint256 b = 77;
 
         while (b > a) {
-            uint m = a + b + 1 >> 1;
-            if (x >= pow10 (m)) a = m;
+            uint256 m = a + b + 1 >> 1;
+            if (x >= pow10(m)) a = m;
             else b = m - 1;
         }
 
         return a;
     }
 
-    function pow10 (uint x) private pure returns (uint) {
-        uint result = 1;
-        uint y = 10;
+    function pow10(uint256 x) private pure returns (uint256) {
+        uint256 result = 1;
+        uint256 y = 10;
         while (x > 0) {
             if (x % 2 == 1) {
                 result *= y;
@@ -33,5 +32,4 @@ library MagnitudesAndPowers {
         }
         return result;
     }
-
 }

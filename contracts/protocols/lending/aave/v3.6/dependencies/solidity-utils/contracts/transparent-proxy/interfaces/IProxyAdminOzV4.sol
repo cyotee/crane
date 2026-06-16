@@ -7,9 +7,9 @@ pragma solidity ^0.8.10;
  */
 
 interface IProxyAdminOzV4 {
-  function changeProxyAdmin(address proxy, address newAdmin) external;
+    function changeProxyAdmin(address proxy, address newAdmin) external;
 
-  function upgrade(address proxy, address implementation) external;
+    function upgrade(address proxy, address implementation) external;
 
-  function upgradeAndCall(address proxy, address implementation, bytes memory data) external;
+    function upgradeAndCall(address proxy, address implementation, bytes memory data) external;
 }

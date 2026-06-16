@@ -18,7 +18,10 @@ abstract contract CustomLiquidatorBase is EVCUtil, Ownable {
 
     event CustomLiquidationVaultSet(address indexed vault, bool enabled);
 
-    constructor(address evc, address owner, address[] memory _customLiquidationVaults) EVCUtil(evc) Ownable() {
+    constructor(address evc, address owner, address[] memory _customLiquidationVaults)
+        EVCUtil(evc)
+        Ownable(msg.sender)
+    {
         _transferOwnership(owner);
         for (uint256 i = 0; i < _customLiquidationVaults.length; i++) {
             customLiquidationVaults.add(_customLiquidationVaults[i]);
@@ -93,7 +96,7 @@ abstract contract CustomLiquidatorBase is EVCUtil, Ownable {
 
     /// @notice Overrides the default msgSender to use the EVCUtil msgSender.
     /// @return address The EVC authenticated sender.
-    function _msgSender() internal view override (Context, EVCUtil) returns (address) {
+    function _msgSender() internal view override(Context, EVCUtil) returns (address) {
         return EVCUtil._msgSender();
     }
 

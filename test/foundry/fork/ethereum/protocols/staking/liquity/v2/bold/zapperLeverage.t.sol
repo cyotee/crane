@@ -4,20 +4,20 @@ pragma solidity ^0.8.35;
 
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/DevTestSetup.sol";
 import "@crane/contracts/protocols/tokens/wrappers/weth/v9/WETH9.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurvePool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/CurveExchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IUniswapV3Pool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniV3Exchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IUniswapV3Factory.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IQuoterV2.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3Exchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3ExchangeHelpers.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IFlashLoanProvider.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/FlashLoans/Balancer/vault/IVault.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurvePool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/CurveExchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IUniswapV3Pool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniV3Exchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IUniswapV3Factory.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/IQuoterV2.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3Exchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3ExchangeHelpers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IFlashLoanProvider.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/FlashLoans/Balancer/vault/IVault.sol";
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGFactory.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGFactory.sol";
 
 contract ZapperLeverageMainnet is DevTestSetup {
     using StringFormatting for uint256;
@@ -114,7 +114,8 @@ contract ZapperLeverageMainnet is DevTestSetup {
         accounts = new Accounts();
         createAccounts();
 
-        (A, B, C, D, E, F, G) = (
+        (A, B, C, D, E, F, G) =
+        (
             accountsList[0],
             accountsList[1],
             accountsList[2],
@@ -355,10 +356,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         return (vars.troveId, vars.effectiveBoldAmount);
     }
 
-    function _setInitialBalances(ILeverageZapper _leverageZapper, uint256 _branch, TestVars memory vars)
-        internal
-        view
-    {
+    function _setInitialBalances(ILeverageZapper _leverageZapper, uint256 _branch, TestVars memory vars) internal view {
         vars.boldBalanceBeforeA = boldToken.balanceOf(A);
         vars.ethBalanceBeforeA = A.balance;
         vars.collBalanceBeforeA = contractsArray[_branch].collToken.balanceOf(A);
@@ -415,9 +413,10 @@ contract ZapperLeverageMainnet is DevTestSetup {
 
     function _registerBatchManager(address _account, uint256 _branch) internal {
         vm.startPrank(_account);
-        contractsArray[_branch].borrowerOperations.registerBatchManager(
-            uint128(1e16), uint128(20e16), uint128(5e16), uint128(25e14), MIN_INTEREST_RATE_CHANGE_PERIOD
-        );
+        contractsArray[_branch].borrowerOperations
+            .registerBatchManager(
+                uint128(1e16), uint128(20e16), uint128(5e16), uint128(25e14), MIN_INTEREST_RATE_CHANGE_PERIOD
+            );
         vm.stopPrank();
     }
 
@@ -764,9 +763,8 @@ contract ZapperLeverageMainnet is DevTestSetup {
         });
         vm.startPrank(A);
         // Change receiver in BO
-        contractsArray[_branch].borrowerOperations.setRemoveManagerWithReceiver(
-            vars.troveId, address(_leverageZapper), C
-        );
+        contractsArray[_branch].borrowerOperations
+            .setRemoveManagerWithReceiver(vars.troveId, address(_leverageZapper), C);
         vm.expectRevert("BZ: Zapper is not receiver for this trove");
         _leverageZapper.leverUpTrove(params);
         vm.stopPrank();
@@ -848,10 +846,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         (uint256 flashLoanAmount, uint256 effectiveBoldAmount) = _getLeverUpFlashLoanAndBoldAmount(getterParams);
 
         ILeverageZapper.LeverUpTroveParams memory params = ILeverageZapper.LeverUpTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            boldAmount: effectiveBoldAmount,
-            maxUpfrontFee: 1000e18
+            troveId: troveId, flashLoanAmount: flashLoanAmount, boldAmount: effectiveBoldAmount, maxUpfrontFee: 1000e18
         });
         // B tries to lever up A’s trove
         vm.startPrank(B);
@@ -917,10 +912,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
 
         // B tries to lever up A’s trove calling our flash loan provider module
         ILeverageZapper.LeverUpTroveParams memory params = ILeverageZapper.LeverUpTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            boldAmount: effectiveBoldAmount,
-            maxUpfrontFee: 1000e18
+            troveId: troveId, flashLoanAmount: flashLoanAmount, boldAmount: effectiveBoldAmount, maxUpfrontFee: 1000e18
         });
         IFlashLoanProvider flashLoanProvider = _leverageZapper.flashLoanProvider();
         vm.startPrank(B);
@@ -991,10 +983,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         (uint256 flashLoanAmount, uint256 effectiveBoldAmount) = _getLeverUpFlashLoanAndBoldAmount(getterParams);
 
         ILeverageZapper.LeverUpTroveParams memory params = ILeverageZapper.LeverUpTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            boldAmount: effectiveBoldAmount,
-            maxUpfrontFee: 1000e18
+            troveId: troveId, flashLoanAmount: flashLoanAmount, boldAmount: effectiveBoldAmount, maxUpfrontFee: 1000e18
         });
         IFlashLoanProvider flashLoanProvider = _leverageZapper.flashLoanProvider();
         IERC20[] memory tokens = new IERC20[](1);
@@ -1046,9 +1035,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
             _getLeverDownFlashLoanAndBoldAmount(_leverageZapper, _troveId, _leverageRatio, _troveManager, _priceFeed);
 
         ILeverageZapper.LeverDownTroveParams memory params = ILeverageZapper.LeverDownTroveParams({
-            troveId: _troveId,
-            flashLoanAmount: flashLoanAmount,
-            minBoldAmount: minBoldDebt
+            troveId: _troveId, flashLoanAmount: flashLoanAmount, minBoldAmount: minBoldDebt
         });
         vm.startPrank(A);
         _leverageZapper.leverDownTrove(params);
@@ -1213,9 +1200,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         );
 
         ILeverageZapper.LeverDownTroveParams memory params = ILeverageZapper.LeverDownTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            minBoldAmount: minBoldDebt
+            troveId: troveId, flashLoanAmount: flashLoanAmount, minBoldAmount: minBoldDebt
         });
         vm.startPrank(A);
         // Change receiver in BO
@@ -1299,9 +1284,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         );
 
         ILeverageZapper.LeverDownTroveParams memory params = ILeverageZapper.LeverDownTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            minBoldAmount: minBoldDebt
+            troveId: troveId, flashLoanAmount: flashLoanAmount, minBoldAmount: minBoldDebt
         });
         vm.startPrank(B);
         vm.expectRevert(AddRemoveManagers.NotOwnerNorRemoveManager.selector);
@@ -1367,9 +1350,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         );
 
         ILeverageZapper.LeverDownTroveParams memory params = ILeverageZapper.LeverDownTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            minBoldAmount: minBoldDebt
+            troveId: troveId, flashLoanAmount: flashLoanAmount, minBoldAmount: minBoldDebt
         });
         IFlashLoanProvider flashLoanProvider = _leverageZapper.flashLoanProvider();
         vm.startPrank(B);
@@ -1437,9 +1418,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         );
 
         ILeverageZapper.LeverDownTroveParams memory params = ILeverageZapper.LeverDownTroveParams({
-            troveId: troveId,
-            flashLoanAmount: flashLoanAmount,
-            minBoldAmount: minBoldDebt
+            troveId: troveId, flashLoanAmount: flashLoanAmount, minBoldAmount: minBoldDebt
         });
         IFlashLoanProvider flashLoanProvider = _leverageZapper.flashLoanProvider();
         IERC20[] memory tokens = new IERC20[](1);
@@ -1674,11 +1653,7 @@ contract ZapperLeverageMainnet is DevTestSetup {
         WETH.approve(address(uniV3Router), swapWETHAmount);
         bytes memory path = abi.encodePacked(WETH, UNIV3_FEE_USDC_WETH, USDC);
         ISwapRouter.ExactInputParams memory params = ISwapRouter.ExactInputParams({
-            path: path,
-            recipient: B,
-            deadline: block.timestamp,
-            amountIn: swapWETHAmount,
-            amountOutMinimum: 0
+            path: path, recipient: B, deadline: block.timestamp, amountIn: swapWETHAmount, amountOutMinimum: 0
         });
 
         uniV3Router.exactInput(params);
@@ -2046,8 +2021,9 @@ contract ZapperLeverageMainnet is DevTestSetup {
         uint256 _desiredCollAmount,
         uint256 _acceptedSlippage
     ) internal {
-        (uint256 collAmount, uint256 slippage) =
-            hybridCurveUniV3ExchangeHelpers.getCollFromBold(_boldAmount, _collToken, _desiredCollAmount);
+        (uint256 collAmount, uint256 slippage) = hybridCurveUniV3ExchangeHelpers.getCollFromBold(
+            _boldAmount, _collToken, _desiredCollAmount
+        );
         //console2.log(collAmount, "collAmount");
         //console2.log(slippage, "slippage");
         assertGe(collAmount, (DECIMAL_PRECISION - slippage) * _desiredCollAmount / DECIMAL_PRECISION);

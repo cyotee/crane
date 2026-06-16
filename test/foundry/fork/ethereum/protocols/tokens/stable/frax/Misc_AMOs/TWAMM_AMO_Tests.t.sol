@@ -8,10 +8,7 @@ import {FRAXShares} from "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.
 import {TWAMM_AMO} from "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/TWAMM_AMO.sol";
 import {FraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapPair.sol";
 import {IFraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
-import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract TWAMM_AMO_Tests is TestBase_FraxEthereumFork {
     TWAMM_AMO internal amo;

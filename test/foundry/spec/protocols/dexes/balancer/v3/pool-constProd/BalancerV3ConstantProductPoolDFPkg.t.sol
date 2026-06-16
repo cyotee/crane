@@ -8,9 +8,7 @@ import {IERC20Events} from "@crane/contracts/interfaces/IERC20Events.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {TokenConfig, TokenType} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 import {
@@ -31,7 +29,7 @@ import {
     IBalancerV3ConstantProductPoolStandardVaultPkg
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-constProd/BalancerV3ConstantProductPoolDFPkg.sol";
 
-import {MockERC20} from '@crane/contracts/tokens/ERC20/test/MockERC20.sol';
+import {MockERC20} from "@crane/contracts/tokens/ERC20/test/MockERC20.sol";
 
 // Mock Facet implementing IFacet for testing
 contract MockFacet is IFacet {

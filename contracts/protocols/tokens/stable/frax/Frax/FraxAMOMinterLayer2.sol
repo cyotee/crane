@@ -29,8 +29,8 @@ import "@crane/contracts/protocols/tokens/stable/frax/Frax/Pools/FraxPoolV3.sol"
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/Pools/IFraxPool.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/IAMO.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/IAMO.sol";
 
 contract FraxAMOMinterLayer2 is Owned {
     /* ========== STATE VARIABLES ========== */
@@ -61,7 +61,6 @@ contract FraxAMOMinterLayer2 is Owned {
     // AMO balance corrections
     mapping(address => int256[2]) public correction_offsets_amos;
 
-
     /* ========== DEPRECATED STATE VARIABLES ========== */
 
     // Collateral borrowed balances
@@ -73,12 +72,8 @@ contract FraxAMOMinterLayer2 is Owned {
     uint256 public collatDollarBalanceStored = 0;
 
     /* ========== CONSTRUCTOR ========== */
-    
-    constructor (
-        address _owner_address,
-        address _frax_address,
-        address _fxs_address
-    ) Owned(_owner_address) {
+
+    constructor(address _owner_address, address _frax_address, address _fxs_address) Owned(_owner_address) {
         FRAX = ICrossChainCanonical(_frax_address);
         FXS = ICrossChainCanonical(_fxs_address);
     }
@@ -94,7 +89,6 @@ contract FraxAMOMinterLayer2 is Owned {
         require(amos[amo_address], "Invalid AMO");
         _;
     }
-
 
     /* ========== VIEWS ========== */
 
@@ -114,26 +108,24 @@ contract FraxAMOMinterLayer2 is Owned {
         return fxs_mint_balances[amo_address] + correction_offsets_amos[amo_address][1];
     }
 
-
     /* ========== PUBLIC FUNCTIONS ========== */
 
     // Callable by anyone willing to pay the gas
     function syncDollarBalances() public {
         uint256 total_frax_value_d18 = 0;
-        for (uint i = 0; i < amos_array.length; i++){ 
+        for (uint256 i = 0; i < amos_array.length; i++) {
             // Exclude null addresses
             address amo_address = amos_array[i];
             if (amo_address != address(0)) {
-                (uint256 frax_val_e18, ) = IAMO(amo_address).dollarBalances();
+                (uint256 frax_val_e18,) = IAMO(amo_address).dollarBalances();
                 total_frax_value_d18 += uint256(int256(frax_val_e18) + correction_offsets_amos[amo_address][0]);
             }
         }
         fraxDollarBalanceStored = total_frax_value_d18;
     }
 
-
     /* ==================== OWNER / GOVERNANCE FUNCTIONS ONLY ==================== */
-    // Only owner or timelock can call, to limit risk 
+    // Only owner or timelock can call, to limit risk
 
     // ------------------------------------------------------------------
     // ------------------------------ FRAX ------------------------------
@@ -141,7 +133,11 @@ contract FraxAMOMinterLayer2 is Owned {
 
     // This contract is essentially marked as a 'pool' so it can call OnlyPools functions like pool_mint and pool_burn_from
     // on the main FRAX contract
-    function mintFraxForAMO(address destination_amo, uint256 frax_amount) external onlyByOwner validAMO(destination_amo) {
+    function mintFraxForAMO(address destination_amo, uint256 frax_amount)
+        external
+        onlyByOwner
+        validAMO(destination_amo)
+    {
         int256 frax_amt_i256 = int256(frax_amount);
 
         // Make sure you aren't minting more than the minter's mint cap
@@ -205,15 +201,15 @@ contract FraxAMOMinterLayer2 is Owned {
 
     /* ========== RESTRICTED GOVERNANCE FUNCTIONS ========== */
 
-    // Adds an AMO 
+    // Adds an AMO
     function addAMO(address amo_address, bool sync_too) public onlyByOwner {
         require(amo_address != address(0), "Zero address detected");
 
-        (uint256 frax_val_e18, ) = IAMO(amo_address).dollarBalances();
+        (uint256 frax_val_e18,) = IAMO(amo_address).dollarBalances();
         require(frax_val_e18 >= 0, "Invalid AMO");
 
         require(amos[amo_address] == false, "Address already exists");
-        amos[amo_address] = true; 
+        amos[amo_address] = true;
         amos_array.push(amo_address);
 
         // Mint balances
@@ -233,12 +229,12 @@ contract FraxAMOMinterLayer2 is Owned {
     function removeAMO(address amo_address, bool sync_too) public onlyByOwner {
         require(amo_address != address(0), "Zero address detected");
         require(amos[amo_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete amos[amo_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < amos_array.length; i++){ 
+        for (uint256 i = 0; i < amos_array.length; i++) {
             if (amos_array[i] == amo_address) {
                 amos_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -258,7 +254,10 @@ contract FraxAMOMinterLayer2 is Owned {
         fxs_mint_cap = int256(_fxs_mint_cap);
     }
 
-    function setAMOCorrectionOffsets(address amo_address, int256 frax_e18_correction, int256 fxs_e18_correction) external onlyByOwner {
+    function setAMOCorrectionOffsets(address amo_address, int256 frax_e18_correction, int256 fxs_e18_correction)
+        external
+        onlyByOwner
+    {
         correction_offsets_amos[amo_address][0] = frax_e18_correction;
         correction_offsets_amos[amo_address][1] = fxs_e18_correction;
     }
@@ -266,17 +265,17 @@ contract FraxAMOMinterLayer2 is Owned {
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwner {
         // Can only be triggered by owner or governance
         TransferHelper.safeTransfer(tokenAddress, owner, tokenAmount);
-        
+
         emit Recovered(tokenAddress, tokenAmount);
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwner returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwner
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

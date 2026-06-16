@@ -1,14 +1,14 @@
 pragma solidity ^0.8.35;
 
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/Babylonian.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/Babylonian.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/libraries/TransferHelper.sol";
 
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/UniswapV2LiquidityMathLibrary.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/interfaces/IERC20.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/interfaces/IUniswapV2Router01V5.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/SafeMath.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/FraxswapRouterLibrary.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/UniswapV2LiquidityMathLibrary.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/interfaces/IERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/interfaces/IUniswapV2Router01V5.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/SafeMath.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/libraries/FraxswapRouterLibrary.sol";
 
 contract ExampleSwapToPrice {
     using SafeMath for uint256;
@@ -43,15 +43,14 @@ contract ExampleSwapToPrice {
         uint256 amountIn;
         {
             (uint256 reserveA, uint256 reserveB) = FraxswapRouterLibrary.getReserves(factory, tokenA, tokenB);
-            
+
             IFraxswapPair pair = IFraxswapPair(FraxswapRouterLibrary.pairFor(factory, tokenA, tokenB));
             (aToB, amountIn) = UniswapV2LiquidityMathLibrary.computeProfitMaximizingTrade(
-                truePriceTokenA, truePriceTokenB,
-                reserveA, reserveB, pair.fee()
+                truePriceTokenA, truePriceTokenB, reserveA, reserveB, pair.fee()
             );
         }
 
-        require(amountIn > 0, 'ExampleSwapToPrice: ZERO_AMOUNT_IN');
+        require(amountIn > 0, "ExampleSwapToPrice: ZERO_AMOUNT_IN");
 
         // spend up to the allowance of the token in
         uint256 maxSpend = aToB ? maxSpendTokenA : maxSpendTokenB;

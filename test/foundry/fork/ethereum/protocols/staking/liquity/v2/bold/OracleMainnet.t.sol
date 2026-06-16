@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/WSTETHPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/MainnetPriceFeedBase.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/RETHPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/WETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/WSTETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/MainnetPriceFeedBase.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/RETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/WETHPriceFeed.sol";
 
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/Accounts.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/ChainlinkOracleMock.sol";
@@ -15,12 +15,12 @@ import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/WSTETHTokenMock.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/Deployment.t.sol";
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AggregatorV3Interface.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IRETHPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IWSTETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AggregatorV3Interface.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IRETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IWSTETHPriceFeed.sol";
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IRETHToken.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IWSTETH.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IRETHToken.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IWSTETH.sol";
 
 import "forge-std/Test.sol";
 import "forge-std/console2.sol";
@@ -105,7 +105,7 @@ contract OraclesMainnet is TestAccounts {
         createAccounts();
 
         (A, B, C, D, E, F) =
-            (accountsList[0], accountsList[1], accountsList[2], accountsList[3], accountsList[4], accountsList[5]);
+        (accountsList[0], accountsList[1], accountsList[2], accountsList[3], accountsList[4], accountsList[5]);
 
         vars.numCollaterals = 3;
         TestDeployer.TroveManagerParams memory tmParams =
@@ -462,9 +462,8 @@ contract OraclesMainnet is TestAccounts {
         assertEq(trovesCount, 0);
 
         vm.startPrank(A);
-        contractsArray[0].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[0].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         trovesCount = contractsArray[0].troveManager.getTroveIdsCount();
         assertEq(trovesCount, 1);
@@ -483,9 +482,8 @@ contract OraclesMainnet is TestAccounts {
         assertEq(trovesCount, 0);
 
         vm.startPrank(A);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         trovesCount = contractsArray[1].troveManager.getTroveIdsCount();
         assertEq(trovesCount, 1);
@@ -504,9 +502,8 @@ contract OraclesMainnet is TestAccounts {
         assertEq(trovesCount, 0);
 
         vm.startPrank(A);
-        contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         trovesCount = contractsArray[2].troveManager.getTroveIdsCount();
         assertEq(trovesCount, 1);
@@ -546,9 +543,10 @@ contract OraclesMainnet is TestAccounts {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.NewOracleFailureDetected.selector);
-        contractsArray[0].borrowerOperations.openTrove(
-            A, 0, vars.coll, vars.debtRequest, 0, 0, 5e16, vars.debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[0].borrowerOperations
+            .openTrove(
+                A, 0, vars.coll, vars.debtRequest, 0, 0, 5e16, vars.debtRequest, address(0), address(0), address(0)
+            );
     }
 
     function testAdjustTroveWETHWithStalePriceReverts() public {
@@ -558,9 +556,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = coll * price / 2 / 1e18;
 
         vm.startPrank(A);
-        uint256 troveId = contractsArray[0].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        uint256 troveId = contractsArray[0].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // confirm Trove was opened
         uint256 trovesCount = contractsArray[0].troveManager.getTroveIdsCount();
@@ -590,9 +587,8 @@ contract OraclesMainnet is TestAccounts {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.NewOracleFailureDetected.selector);
-        contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
     }
 
     function testAdjustTroveWSTETHWithStalePriceReverts() public {
@@ -602,9 +598,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = coll * price / 2 / 1e18;
 
         vm.startPrank(A);
-        uint256 troveId = contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        uint256 troveId = contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // confirm Trove was opened
         uint256 trovesCount = contractsArray[2].troveManager.getTroveIdsCount();
@@ -637,9 +632,8 @@ contract OraclesMainnet is TestAccounts {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.NewOracleFailureDetected.selector);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
     }
 
     function testAdjustTroveRETHWithStaleRETHPriceReverts() public {
@@ -651,9 +645,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = coll * calcdRethUsdPrice / 2 / 1e18;
 
         vm.startPrank(A);
-        uint256 troveId = contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        uint256 troveId = contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // confirm Trove was opened
         uint256 trovesCount = contractsArray[1].troveManager.getTroveIdsCount();
@@ -686,9 +679,8 @@ contract OraclesMainnet is TestAccounts {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.NewOracleFailureDetected.selector);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
     }
 
     function testAdjustTroveRETHWithStaleETHPriceReverts() public {
@@ -700,9 +692,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = coll * calcdRethUsdPrice / 2 / 1e18;
 
         vm.startPrank(A);
-        uint256 troveId = contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        uint256 troveId = contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // confirm Trove was opened
         uint256 trovesCount = contractsArray[1].troveManager.getTroveIdsCount();
@@ -1689,9 +1680,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[0].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[0].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Make the ETH-USD oracle stale
         etchStaleMockToEthOracle(address(mockOracle).code);
@@ -1733,9 +1723,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Make the RETH-ETH oracle stale
         etchStaleMockToRethOracle(address(mockOracle).code);
@@ -1777,9 +1766,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Make the STETH-USD oracle stale
         etchStaleMockToStethOracle(address(mockOracle).code);
@@ -1821,9 +1809,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[0].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[0].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Expected price used for primary calc: ETH-USD market price
         uint256 expectedPrice = _getLatestAnswerFromOracle(ethOracle);
@@ -1870,9 +1857,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Expected price used for primary calc: ETH-USD market price
         uint256 ethUsdPrice = _getLatestAnswerFromOracle(ethOracle);
@@ -1931,9 +1917,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[2].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[2].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Get the raw ETH-USD price (at 8 decimals) for comparison
         (, int256 rawEthUsdPrice,,,) = ethOracle.latestRoundData();
@@ -2015,9 +2000,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
 
         // Expected price used for primary calc: ETH-USD market price
         uint256 canonicalRethRate = rethToken.getExchangeRate();
@@ -2077,9 +2061,8 @@ contract OraclesMainnet is TestAccounts {
         uint256 debtRequest = 3000e18;
 
         vm.startPrank(A);
-        contractsArray[1].borrowerOperations.openTrove(
-            A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0)
-        );
+        contractsArray[1].borrowerOperations
+            .openTrove(A, 0, coll, debtRequest, 0, 0, 5e16, debtRequest, address(0), address(0), address(0));
         vm.stopPrank();
 
         // Replace the RETH Oracle's code with the mock oracle's code
@@ -2247,9 +2230,10 @@ contract OraclesMainnet is TestAccounts {
 
         // Open annchor Trove with high CR and 51m BOLD
         vm.startPrank(A);
-        vars.troveId_A = contractsArray[1].borrowerOperations.openTrove(
-            A, 0, 1000_000 ether, 51_000_000e18, 0, 0, 5e16, 51_000_000e18, address(0), address(0), address(0)
-        );
+        vars.troveId_A = contractsArray[1].borrowerOperations
+            .openTrove(
+                A, 0, 1000_000 ether, 51_000_000e18, 0, 0, 5e16, 51_000_000e18, address(0), address(0), address(0)
+            );
         vm.stopPrank();
 
         // Get the calculated RETH-USD price directly from the system
@@ -2262,21 +2246,18 @@ contract OraclesMainnet is TestAccounts {
         vars.debt_D = 10000e18 - 1e18;
 
         vm.startPrank(B);
-        vars.troveId_B = contractsArray[1].borrowerOperations.openTrove(
-            B, 0, vars.coll, vars.debt_B, 0, 0, 5e15, vars.debt_B, address(0), address(0), address(0)
-        );
+        vars.troveId_B = contractsArray[1].borrowerOperations
+            .openTrove(B, 0, vars.coll, vars.debt_B, 0, 0, 5e15, vars.debt_B, address(0), address(0), address(0));
         vm.stopPrank();
 
         vm.startPrank(C);
-        vars.troveId_C = contractsArray[1].borrowerOperations.openTrove(
-            C, 0, vars.coll, vars.debt_C, 0, 0, 5e15, vars.debt_C, address(0), address(0), address(0)
-        );
+        vars.troveId_C = contractsArray[1].borrowerOperations
+            .openTrove(C, 0, vars.coll, vars.debt_C, 0, 0, 5e15, vars.debt_C, address(0), address(0), address(0));
         vm.stopPrank();
 
         vm.startPrank(D);
-        vars.troveId_D = contractsArray[1].borrowerOperations.openTrove(
-            D, 0, vars.coll, vars.debt_D, 0, 0, 5e15, vars.debt_D, address(0), address(0), address(0)
-        );
+        vars.troveId_D = contractsArray[1].borrowerOperations
+            .openTrove(D, 0, vars.coll, vars.debt_D, 0, 0, 5e15, vars.debt_D, address(0), address(0), address(0));
         vm.stopPrank();
 
         vars.ICR_C = contractsArray[1].troveManager.getCurrentICR(vars.troveId_C, vars.systemPrice);
@@ -2388,9 +2369,10 @@ contract OraclesMainnet is TestAccounts {
 
         // Open anchor Trove with high CR and 51m BOLD
         vm.startPrank(A);
-        vars.troveId_A = contractsArray[2].borrowerOperations.openTrove(
-            A, 0, 1000_000 ether, 51_000_000e18, 0, 0, 5e16, 51_000_000e18, address(0), address(0), address(0)
-        );
+        vars.troveId_A = contractsArray[2].borrowerOperations
+            .openTrove(
+                A, 0, 1000_000 ether, 51_000_000e18, 0, 0, 5e16, 51_000_000e18, address(0), address(0), address(0)
+            );
         vm.stopPrank();
 
         // Get the calculated WSTETH-USD price directly from the system
@@ -2403,21 +2385,18 @@ contract OraclesMainnet is TestAccounts {
         vars.debt_D = 10000e18 - 1e18;
 
         vm.startPrank(B);
-        vars.troveId_B = contractsArray[2].borrowerOperations.openTrove(
-            B, 0, vars.coll, vars.debt_B, 0, 0, 5e15, vars.debt_B, address(0), address(0), address(0)
-        );
+        vars.troveId_B = contractsArray[2].borrowerOperations
+            .openTrove(B, 0, vars.coll, vars.debt_B, 0, 0, 5e15, vars.debt_B, address(0), address(0), address(0));
         vm.stopPrank();
 
         vm.startPrank(C);
-        vars.troveId_C = contractsArray[2].borrowerOperations.openTrove(
-            C, 0, vars.coll, vars.debt_C, 0, 0, 5e15, vars.debt_C, address(0), address(0), address(0)
-        );
+        vars.troveId_C = contractsArray[2].borrowerOperations
+            .openTrove(C, 0, vars.coll, vars.debt_C, 0, 0, 5e15, vars.debt_C, address(0), address(0), address(0));
         vm.stopPrank();
 
         vm.startPrank(D);
-        vars.troveId_D = contractsArray[2].borrowerOperations.openTrove(
-            D, 0, vars.coll, vars.debt_D, 0, 0, 5e15, vars.debt_D, address(0), address(0), address(0)
-        );
+        vars.troveId_D = contractsArray[2].borrowerOperations
+            .openTrove(D, 0, vars.coll, vars.debt_D, 0, 0, 5e15, vars.debt_D, address(0), address(0), address(0));
         vm.stopPrank();
 
         vars.ICR_C = contractsArray[2].troveManager.getCurrentICR(vars.troveId_C, vars.systemPrice);

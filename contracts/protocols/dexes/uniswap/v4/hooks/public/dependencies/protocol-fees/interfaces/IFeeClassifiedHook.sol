@@ -10,8 +10,8 @@ pragma solidity ^0.8.0;
 /// Governance can always override via setHookFamily().
 /// @custom:security-contact security@uniswap.org
 interface IFeeClassifiedHook {
-  /// @notice Returns the hook's self-reported behavioral flags.
-  /// @dev Return 0 to indicate no self-classification (falls through to defaultFee).
-  /// Flags are OR'd constants from HookFeeFlags — see that library for the vocabulary.
-  function protocolFeeFlags() external view returns (uint256);
+    /// @notice Returns the hook's self-reported behavioral flags.
+    /// @dev Return 0 to indicate no self-classification (falls through to defaultFee).
+    /// Flags are OR'd constants from HookFeeFlags — see that library for the vocabulary.
+    function protocolFeeFlags() external view returns (uint256);
 }

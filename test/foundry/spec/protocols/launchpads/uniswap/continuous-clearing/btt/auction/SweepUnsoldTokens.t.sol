@@ -1,16 +1,29 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockContinuousClearingAuction} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {IERC20Minimal} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
+import {
+    AuctionFuzzConstructorParams,
+    BttBase
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockContinuousClearingAuction
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {
+    IERC20Minimal
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
 
 contract SweepUnsoldTokensTest is BttBase {
     function test_WhenAuctionNotOver(AuctionFuzzConstructorParams memory _params, uint256 _blockNumber) external {
@@ -74,7 +87,7 @@ contract SweepUnsoldTokensTest is BttBase {
 
         // Mostly the same as what is in isGraduated.sol, @todo reuse where possible
 
-        alice = makeAddr('alice');
+        alice = makeAddr("alice");
 
         AuctionFuzzConstructorParams memory mParams = validAuctionConstructorInputs(_params);
         mParams.token = address(new ERC20Mock());
@@ -106,21 +119,21 @@ contract SweepUnsoldTokensTest is BttBase {
         uint128 bidAmount = uint128(bound(_bidAmount, mParams.parameters.requiredCurrencyRaised, type(uint128).max));
 
         vm.deal(address(this), bidAmount);
-        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(''));
+        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory checkpoint = auction.checkpoint();
 
-        assertTrue(auction.isGraduated(), 'auction is not graduated');
+        assertTrue(auction.isGraduated(), "auction is not graduated");
 
-        assertGe(maxPrice, checkpoint.clearingPrice, 'the clearing price rounded upwards to bigger than bids');
+        assertGe(maxPrice, checkpoint.clearingPrice, "the clearing price rounded upwards to bigger than bids");
 
         if (maxPrice > checkpoint.clearingPrice) {
             auction.exitBid(bidId);
         } else if (maxPrice == checkpoint.clearingPrice) {
             auction.exitPartiallyFilledBid(bidId, auction.startBlock(), 0);
         } else {
-            revert('the clearing price rounded downwards to smaller than bids');
+            revert("the clearing price rounded downwards to smaller than bids");
         }
 
         // Expect 0 calls to transfer
@@ -147,7 +160,7 @@ contract SweepUnsoldTokensTest is BttBase {
             ERC20Mock(mParams.token).balanceOf(address(auction)),
             0,
             MAX_ALLOWABLE_DUST_WEI,
-            'more than dust left in the contract'
+            "more than dust left in the contract"
         );
     }
 
@@ -165,7 +178,7 @@ contract SweepUnsoldTokensTest is BttBase {
 
         // Mostly the same as what is in isGraduated.sol, @todo reuse where possible
 
-        alice = makeAddr('alice');
+        alice = makeAddr("alice");
 
         AuctionFuzzConstructorParams memory mParams = validAuctionConstructorInputs(_params);
         mParams.token = address(new ERC20Mock());
@@ -198,19 +211,19 @@ contract SweepUnsoldTokensTest is BttBase {
 
         vm.deal(address(this), bidAmount);
 
-        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(''));
+        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory checkpoint = auction.checkpoint();
 
-        assertGe(maxPrice, checkpoint.clearingPrice, 'the clearing price rounded upwards to bigger than bids');
+        assertGe(maxPrice, checkpoint.clearingPrice, "the clearing price rounded upwards to bigger than bids");
 
         if (maxPrice > checkpoint.clearingPrice) {
             auction.exitBid(bidId);
         } else if (maxPrice == checkpoint.clearingPrice) {
             auction.exitPartiallyFilledBid(bidId, auction.startBlock(), 0);
         } else {
-            revert('the clearing price rounded downwards to smaller than bids');
+            revert("the clearing price rounded downwards to smaller than bids");
         }
 
         vm.expectEmit(true, true, true, true, address(auction));
@@ -231,11 +244,11 @@ contract SweepUnsoldTokensTest is BttBase {
 
         assertEq(auction.sweepUnsoldTokensBlock(), block.number);
 
-        assertEq(ERC20Mock(mParams.token).balanceOf(address(auction)), 0, 'tokens left in contract');
+        assertEq(ERC20Mock(mParams.token).balanceOf(address(auction)), 0, "tokens left in contract");
         assertEq(
             ERC20Mock(mParams.token).balanceOf(address(mParams.parameters.tokensRecipient)),
             mParams.totalSupply,
-            'tokens not transferred to recipient'
+            "tokens not transferred to recipient"
         );
     }
 }

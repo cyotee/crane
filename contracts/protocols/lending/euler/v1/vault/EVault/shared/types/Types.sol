@@ -30,9 +30,7 @@ type ConfigAmount is uint16;
 type Flags is uint32;
 
 using SharesLib for Shares global;
-using {
-    addShares as +, subShares as -, eqShares as ==, neqShares as !=, gtShares as >, ltShares as <
-} for Shares global;
+using {addShares as +, subShares as -, eqShares as ==, neqShares as !=, gtShares as >, ltShares as <} for Shares global;
 
 using AssetsLib for Assets global;
 using {
@@ -50,9 +48,7 @@ using OwedLib for Owed global;
 using {addOwed as +, subOwed as -, eqOwed as ==, neqOwed as !=, gtOwed as >, ltOwed as <} for Owed global;
 
 using ConfigAmountLib for ConfigAmount global;
-using {
-    gtConfigAmount as >, gteConfigAmount as >=, ltConfigAmount as <, lteConfigAmount as <=
-} for ConfigAmount global;
+using {gtConfigAmount as >, gteConfigAmount as >=, ltConfigAmount as <, lteConfigAmount as <=} for ConfigAmount global;
 
 using AmountCapLib for AmountCap global;
 using FlagsLib for Flags global;

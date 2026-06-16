@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {MockStepStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol';
+import {
+    MockStepStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol";
 
-import {BttBase, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {AuctionStep, StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {BttBase, Step} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {
+    AuctionStep,
+    StepLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
 
 contract ConstructorTest is BttBase {
     MockStepStorage public auctionStepStorage;
@@ -40,7 +45,7 @@ contract ConstructorTest is BttBase {
 
         if (!isCoverage()) {
             assertEq(writes.length, 2);
-            assertEq(uint256(vm.load(address(auctionStepStorage), writes[1])), StepLib.UINT64_SIZE, 'offset'); // The offset
+            assertEq(uint256(vm.load(address(auctionStepStorage), writes[1])), StepLib.UINT64_SIZE, "offset"); // The offset
         }
 
         assertEq(auctionStepStorage.startBlock(), startBlock);

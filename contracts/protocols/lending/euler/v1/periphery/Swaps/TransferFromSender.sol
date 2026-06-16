@@ -2,7 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import {SafeERC20Permit2Lib, IERC20} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/libraries/SafeERC20Permit2Lib.sol";
+import {
+    SafeERC20Permit2Lib,
+    IERC20
+} from "@crane/contracts/protocols/lending/euler/v1/euler-earn/libraries/SafeERC20Permit2Lib.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// @title TransferFromSender

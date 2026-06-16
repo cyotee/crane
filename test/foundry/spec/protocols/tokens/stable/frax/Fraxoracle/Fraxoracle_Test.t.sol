@@ -7,8 +7,13 @@ import {Test} from "forge-std/Test.sol";
 import {Fraxoracle} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/Fraxoracle.sol";
 import {DummyPriceOracle} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/DummyPriceOracle.sol";
 import {DummyStateRootOracle} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/DummyStateRootOracle.sol";
-import {FraxoraclePriceSource} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/FraxoraclePriceSource.sol";
-import {MerkleProofPriceSource} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/MerkleProofPriceSource.sol";
+import {
+    FraxoraclePriceSource
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/FraxoraclePriceSource.sol";
+import {
+    MerkleProofPriceSource
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/MerkleProofPriceSource.sol";
+
 contract Fraxoracle_Test is Test {
     uint256 internal constant MAX_DELAY = 24 hours;
     uint256 internal constant LOW = 100e18;
@@ -28,8 +33,7 @@ contract Fraxoracle_Test is Test {
         fraxoracleL2 = new Fraxoracle(18, "TestFraxoracleL2", 1, MAX_DELAY, 2e16);
         fraxoraclePriceSource = new FraxoraclePriceSource(fraxoracle, dummyPriceOracle);
         fraxoracle.setPriceSource(address(fraxoraclePriceSource));
-        merkleProofPriceSource =
-            new MerkleProofPriceSource(fraxoracleL2, dummyStateRootOracle, address(fraxoracle));
+        merkleProofPriceSource = new MerkleProofPriceSource(fraxoracleL2, dummyStateRootOracle, address(fraxoracle));
         fraxoracleL2.setPriceSource(address(merkleProofPriceSource));
     }
 

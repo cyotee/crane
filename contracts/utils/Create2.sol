@@ -44,7 +44,7 @@ library Create2 {
         if (bytecode.length == 0) {
             revert Create2EmptyBytecode();
         }
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             addr := create2(amount, add(bytecode, 0x20), mload(bytecode), salt)
         }
         if (addr == address(0)) {
@@ -65,7 +65,7 @@ library Create2 {
      * `deployer`. If `deployer` is this contract's address, returns the same value as {computeAddress}.
      */
     function computeAddress(bytes32 salt, bytes32 bytecodeHash, address deployer) internal pure returns (address addr) {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let ptr := mload(0x40) // Get free memory pointer
 
             // |                   | ↓ ptr ...  ↓ ptr + 0x0B (11 bytes) ...  ↓ ptr + 0x20 (32 bytes) ...  ↓ ptr + 0x40 (64 bytes)   |

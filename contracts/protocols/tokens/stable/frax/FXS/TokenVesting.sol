@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Custom.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
+import {ERC20Custom} from "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Custom.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
 
 /**
  * @title TokenVesting
  * @dev A token holder contract that can release its token balance gradually like a
  * typical vesting scheme, with a cliff and vesting period. Optionally revocable by the
  * owner.
- * 
+ *
  * Modified from OpenZeppelin's TokenVesting.sol draft
  */
 contract TokenVesting {
@@ -55,13 +55,7 @@ contract TokenVesting {
      * @param revocable whether the vesting is revocable or not
      */
 
-    constructor (
-        address beneficiary,
-        uint256 start,
-        uint256 cliffDuration,
-        uint256 duration,
-        bool revocable
-    ) {
+    constructor(address beneficiary, uint256 start, uint256 cliffDuration, uint256 duration, bool revocable) {
         require(beneficiary != address(0), "TokenVesting: beneficiary is the zero address");
         // solhint-disable-next-line max-line-length
         require(cliffDuration <= duration, "TokenVesting: cliff is longer than duration");
@@ -182,7 +176,6 @@ contract TokenVesting {
         require(tokenAddress != _FXS_contract_address, "Cannot withdraw the FXS through this function");
         ERC20(tokenAddress).transfer(_beneficiary, tokenAmount);
     }
-
 
     /**
      * @dev Calculates the amount that has already vested but hasn't been released yet.

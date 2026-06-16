@@ -4,11 +4,16 @@ pragma solidity ^0.8.0;
 import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
 import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/StableMath.sol";
 
+// tag::BalancerV3StablePoolRepo[]
 /**
- * @title BalancerV3StablePoolRepo
- * @notice Storage library for Balancer V3 stable pool amplification parameters.
- * @dev Implements the standard Crane Repo pattern with dual overloads (parameterized and default).
- * Stable pools have time-based gradual amplification transitions.
+ * @title BalancerV3StablePoolRepo - Storage library for Balancer V3 stable pool amplification parameters.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Storage library (Repo) for Balancer V3 stable pool amp factor + transition state.
+ * @dev Provides dual (parameterized + default) overloads for _initialize, amp update/start/stop, getters.
+ * @dev Stable pools have time-based gradual amplification transitions.
+ * @dev Follows the gold standard from BalancerV3VaultAwareRepo, OperableRepo, ERC20Repo, EIP712Repo, ERC2535Repo
+ *      (rich NatSpec, exact // tag:: / end:: include tags, @dev "The Storage struct to operate on.", ERC1967-compliant STORAGE_SLOT).
+ * @dev Used by BalancerV3 stable pool targets/facets/DFPkgs for Diamond storage binding of amplification state.
  *
  * The amplification parameter controls the "flatness" of the invariant curve:
  * - Higher values (up to 50000): Flatter curve, lower slippage for pegged assets
@@ -21,7 +26,16 @@ import {StableMath} from "@crane/contracts/external/balancer/v3/solidity-utils/c
 library BalancerV3StablePoolRepo {
     using FixedPoint for uint256;
 
-    bytes32 internal constant STORAGE_SLOT = keccak256("protocols.dexes.balancer.v3.pool.stable");
+    // tag::STORAGE_SLOT[]
+    /**
+     * @dev ERC1967-compliant storage slot.
+     *      Computed as bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.stable"))) - 1).
+     *      This follows the canonical pattern used by BalancerV3VaultAwareRepo, OperableRepo (crane.access.operable),
+     *      ERC20Repo (eip.erc.20), ERC2535Repo (eip.erc.2535), MultiStepOwnableRepo and other gold-standard Repos
+     *      for collision-resistant deterministic storage binding.
+     */
+    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.stable"))) - 1);
+    // end::STORAGE_SLOT[]
 
     /// @notice The amplification factor is below the minimum of the range (1 - 50000).
     error AmplificationFactorTooLow();
@@ -47,6 +61,11 @@ library BalancerV3StablePoolRepo {
     /// @notice Maximum rate of amplification change (2x per day).
     uint256 internal constant MAX_AMP_UPDATE_DAILY_RATE = 2;
 
+    // tag::Storage[]
+    /**
+     * @dev Standardized storage layout for Balancer V3 stable pool amplification state.
+     *      Packed for gas efficiency: start/end values and times for gradual amp updates.
+     */
     struct Storage {
         // Amplification transition state (packed for gas efficiency)
         uint64 startValue;
@@ -54,23 +73,40 @@ library BalancerV3StablePoolRepo {
         uint32 startTime;
         uint32 endTime;
     }
+    // end::Storage[]
 
-    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
+    // tag::_layoutStruct(bytes32)[]
+    /**
+     * @dev Argumented version of _layoutStruct to allow for custom storage slot usage.
+     * @param slot_ The storage slot to bind.
+     * @return layoutStruct The Storage struct bound to the provided slot.
+     */
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layoutStruct.slot := slot
+            layoutStruct.slot := slot_
         }
     }
+    // end::_layoutStruct(bytes32)[]
 
+    // tag::_layoutStruct()[]
+    /**
+     * @dev Default _layoutStruct binding to the canonical ERC1967 STORAGE_SLOT.
+     * @return layoutStruct The Storage struct bound to STORAGE_SLOT.
+     */
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+    // end::_layoutStruct()[]
 
+    // tag::_initialize(Storage-uint256)[]
     /**
-     * @notice Initialize the stable pool with an amplification parameter.
-     * @dev The amplification parameter must be within [MIN_AMP, MAX_AMP].
-     * Stored value includes the AMP_PRECISION multiplier.
-     * @param layoutStruct Storage pointer.
+     * @dev Argumented version of _initialize to allow direct Storage access.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      * @param amplificationParameter_ Initial amplification factor (1-5000, without precision).
+     *      Stored value includes the AMP_PRECISION multiplier from StableMath.
+     * @custom:throws AmplificationFactorTooLow
+     * @custom:throws AmplificationFactorTooHigh
      */
     function _initialize(Storage storage layoutStruct, uint256 amplificationParameter_) internal {
         if (amplificationParameter_ < StableMath.MIN_AMP) revert AmplificationFactorTooLow();
@@ -85,19 +121,36 @@ library BalancerV3StablePoolRepo {
         layoutStruct.startTime = uint32(block.timestamp);
         layoutStruct.endTime = uint32(block.timestamp);
     }
+    // end::_initialize(Storage-uint256)[]
 
+    // tag::_initialize(uint256)[]
+    /**
+     * @dev Default version of _initialize binding to the standard STORAGE_SLOT.
+     * @param amplificationParameter_ Initial amplification factor (1-5000, without precision).
+     * @custom:throws AmplificationFactorTooLow
+     * @custom:throws AmplificationFactorTooHigh
+     */
     function _initialize(uint256 amplificationParameter_) internal {
         _initialize(_layoutStruct(), amplificationParameter_);
     }
+    // end::_initialize(uint256)[]
 
+    // tag::_startAmplificationParameterUpdate(Storage-uint256-uint256)[]
     /**
-     * @notice Start a gradual amplification parameter update.
-     * @dev Validates rate limits and duration requirements.
-     * @param layoutStruct Storage pointer.
+     * @dev Argumented version of _startAmplificationParameterUpdate to allow direct Storage access.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      * @param rawEndValue Target amplification value (without precision multiplier).
      * @param endTime Timestamp when the update should complete.
+     * @custom:throws AmplificationFactorTooLow
+     * @custom:throws AmplificationFactorTooHigh
+     * @custom:throws AmpUpdateDurationTooShort
+     * @custom:throws AmpUpdateAlreadyStarted
+     * @custom:throws AmpUpdateRateTooFast
      */
-    function _startAmplificationParameterUpdate(Storage storage layoutStruct, uint256 rawEndValue, uint256 endTime) internal {
+    function _startAmplificationParameterUpdate(Storage storage layoutStruct, uint256 rawEndValue, uint256 endTime)
+        internal
+    {
         if (rawEndValue < StableMath.MIN_AMP) revert AmplificationFactorTooLow();
         if (rawEndValue > StableMath.MAX_AMP) revert AmplificationFactorTooHigh();
 
@@ -122,15 +175,30 @@ library BalancerV3StablePoolRepo {
         layoutStruct.startTime = uint32(block.timestamp);
         layoutStruct.endTime = uint32(endTime);
     }
+    // end::_startAmplificationParameterUpdate(Storage-uint256-uint256)[]
 
+    // tag::_startAmplificationParameterUpdate(uint256-uint256)[]
+    /**
+     * @dev Default version of _startAmplificationParameterUpdate binding to the standard STORAGE_SLOT.
+     * @param rawEndValue Target amplification value (without precision multiplier).
+     * @param endTime Timestamp when the update should complete.
+     * @custom:throws AmplificationFactorTooLow
+     * @custom:throws AmplificationFactorTooHigh
+     * @custom:throws AmpUpdateDurationTooShort
+     * @custom:throws AmpUpdateAlreadyStarted
+     * @custom:throws AmpUpdateRateTooFast
+     */
     function _startAmplificationParameterUpdate(uint256 rawEndValue, uint256 endTime) internal {
         _startAmplificationParameterUpdate(_layoutStruct(), rawEndValue, endTime);
     }
+    // end::_startAmplificationParameterUpdate(uint256-uint256)[]
 
+    // tag::_stopAmplificationParameterUpdate(Storage)[]
     /**
-     * @notice Stop an in-progress amplification update.
-     * @dev Freezes the current interpolated value as the new static value.
-     * @param layoutStruct Storage pointer.
+     * @dev Argumented version of _stopAmplificationParameterUpdate to allow direct Storage access.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @custom:throws AmpUpdateNotStarted
      */
     function _stopAmplificationParameterUpdate(Storage storage layoutStruct) internal {
         (uint256 currentValue, bool isUpdating) = _getAmplificationParameter(layoutStruct);
@@ -138,18 +206,31 @@ library BalancerV3StablePoolRepo {
 
         _stopAmplification(layoutStruct, currentValue);
     }
+    // end::_stopAmplificationParameterUpdate(Storage)[]
 
+    // tag::_stopAmplificationParameterUpdate()[]
+    /**
+     * @dev Default version of _stopAmplificationParameterUpdate binding to the standard STORAGE_SLOT.
+     * @custom:throws AmpUpdateNotStarted
+     */
     function _stopAmplificationParameterUpdate() internal {
         _stopAmplificationParameterUpdate(_layoutStruct());
     }
+    // end::_stopAmplificationParameterUpdate()[]
 
+    // tag::_getAmplificationParameter(Storage)[]
     /**
-     * @notice Get the current amplification parameter with interpolation.
-     * @param layoutStruct Storage pointer.
+     * @dev Argumented version of _getAmplificationParameter to allow direct Storage access.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      * @return value Current amplification value (includes precision).
      * @return isUpdating True if currently transitioning.
      */
-    function _getAmplificationParameter(Storage storage layoutStruct) internal view returns (uint256 value, bool isUpdating) {
+    function _getAmplificationParameter(Storage storage layoutStruct)
+        internal
+        view
+        returns (uint256 value, bool isUpdating)
+    {
         uint256 startValue = layoutStruct.startValue;
         uint256 endValue = layoutStruct.endValue;
         uint256 startTime = layoutStruct.startTime;
@@ -173,14 +254,24 @@ library BalancerV3StablePoolRepo {
             value = endValue;
         }
     }
+    // end::_getAmplificationParameter(Storage)[]
 
+    // tag::_getAmplificationParameter()[]
+    /**
+     * @dev Default version of _getAmplificationParameter binding to the standard STORAGE_SLOT.
+     * @return value Current amplification value (includes precision).
+     * @return isUpdating True if currently transitioning.
+     */
     function _getAmplificationParameter() internal view returns (uint256 value, bool isUpdating) {
         return _getAmplificationParameter(_layoutStruct());
     }
+    // end::_getAmplificationParameter()[]
 
+    // tag::_getAmplificationState(Storage)[]
     /**
-     * @notice Get the full amplification state.
-     * @param layoutStruct Storage pointer.
+     * @dev Argumented version of _getAmplificationState to allow direct Storage access.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      * @return startValue Starting value of transition.
      * @return endValue Ending value of transition.
      * @return startTime Start timestamp.
@@ -196,7 +287,16 @@ library BalancerV3StablePoolRepo {
         startTime = layoutStruct.startTime;
         endTime = layoutStruct.endTime;
     }
+    // end::_getAmplificationState(Storage)[]
 
+    // tag::_getAmplificationState()[]
+    /**
+     * @dev Default version of _getAmplificationState binding to the standard STORAGE_SLOT.
+     * @return startValue Starting value of transition.
+     * @return endValue Ending value of transition.
+     * @return startTime Start timestamp.
+     * @return endTime End timestamp.
+     */
     function _getAmplificationState()
         internal
         view
@@ -204,10 +304,13 @@ library BalancerV3StablePoolRepo {
     {
         return _getAmplificationState(_layoutStruct());
     }
+    // end::_getAmplificationState()[]
+
+    // (internal non-dual helper _stopAmplification remains without tag; called only from dual wrappers)
 
     /**
      * @notice Internal helper to stop amplification at a specific value.
-     * @param layoutStruct Storage pointer.
+     * @param layoutStruct The Storage struct to operate on.
      * @param value The value to freeze at.
      */
     function _stopAmplification(Storage storage layoutStruct, uint256 value) internal {
@@ -220,3 +323,4 @@ library BalancerV3StablePoolRepo {
         layoutStruct.endTime = currentTime;
     }
 }
+// end::BalancerV3StablePoolRepo[]

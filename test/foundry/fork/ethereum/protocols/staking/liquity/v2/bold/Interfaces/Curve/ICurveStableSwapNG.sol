@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {IERC20Metadata} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {
+    IERC20Metadata
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 interface ICurveStableSwapNG is IERC20Metadata {
     function add_liquidity(uint256[] memory amounts, uint256 min_mint_amount) external returns (uint256);

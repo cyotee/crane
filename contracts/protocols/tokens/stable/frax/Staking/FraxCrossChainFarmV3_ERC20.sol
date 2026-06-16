@@ -31,7 +31,7 @@ pragma solidity ^0.8.35;
 // Originally inspired by Synthetix.io, but heavily modified by the Frax team
 // https://raw.githubusercontent.com/Synthetixio/synthetix/develop/contracts/StakingRewards.sol
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/IveFXS.sol";
@@ -39,8 +39,8 @@ import "@crane/contracts/protocols/tokens/stable/frax/Curve/FraxCrossChainReward
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/IanyFXS.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/CrossChainCanonicalFXS.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 // import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/balancer/IBalancerVault.sol'; // Balancer frxETH-bb-a-WETH Gauge
 // import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/balancer/IBalancerChildLiquidityGauge.sol'; // Balancer frxETH-bb-a-WETH Gauge
@@ -49,9 +49,9 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interface.sol"; // Balancer frxETH-bb-a-WETH Gauge
 // import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2pool.sol'; // Curve 2-token
 // import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I3pool.sol'; // Curve 3-token
-import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKSElasticLMV2.sol'; // KyberSwap Elastic
-import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKyberSwapFarmingToken.sol'; // KyberSwap Elastic
-import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKSReinvestmentTokenPool.sol'; // KyberSwap Elastic
+import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKSElasticLMV2.sol"; // KyberSwap Elastic
+import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKyberSwapFarmingToken.sol"; // KyberSwap Elastic
+import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKSReinvestmentTokenPool.sol"; // KyberSwap Elastic
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/factory/IKyberFactory.sol"; // KyberSwap Elastic
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elastic/IKyberSwapFarmingToken.sol"; // KyberSwap Elastic
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle_KyberSwapElasticV2.sol"; // KyberSwap Elastic
@@ -81,18 +81,19 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     IveFXS public veFXS;
     CrossChainCanonicalFXS public rewardsToken0; // Assumed to be canFXS
     ERC20 public rewardsToken1;
-    
+
     // KyberSwap Elastic
     // Manually set during deploy
     // ===================================================================
     // <>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>
     IKyberSwapFarmingToken public stakingToken; // KyberSwap Elastic
-    ComboOracle_KyberSwapElasticV2 public KSE_ComboOracleV2 = ComboOracle_KyberSwapElasticV2(0xfBCB0F967817c924f83e26e04F0FB28ED4d6276F);  // KyberSwap Elastic
-    IKyberFactory public immutable kyber_factory = IKyberFactory(0xC7a590291e07B9fe9E64b86c58fD8fC764308C4A);  // KyberSwap Elastic
+    ComboOracle_KyberSwapElasticV2 public KSE_ComboOracleV2 =
+        ComboOracle_KyberSwapElasticV2(0xfBCB0F967817c924f83e26e04F0FB28ED4d6276F); // KyberSwap Elastic
+    IKyberFactory public immutable kyber_factory = IKyberFactory(0xC7a590291e07B9fe9E64b86c58fD8fC764308C4A); // KyberSwap Elastic
     // Need to seed a starting token to use both as a basis for fraxPerLPToken
     // as well as getting ticks, etc
-    uint256 public seed_token_id = 7366; 
-    
+    uint256 public seed_token_id = 7366;
+
     function setSeedTokenID(uint256 _seed_token_id) public onlyByOwnGov {
         seed_token_id = _seed_token_id;
     }
@@ -101,7 +102,6 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         KSE_ComboOracleV2 = ComboOracle_KyberSwapElasticV2(_kse_combo_oracle_address);
     }
     // <>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>KYBERSWAP<>
-
 
     // Balancer frxETH-bb-a-WETH Gauge
     // IBalancerChildLiquidityGauge public stakingToken; // Balancer frxETH-bb-a-WETH Gauge
@@ -115,10 +115,10 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     //     // Returns in E8
     //     (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
     //     require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+
     //     return price;
     // }
-    
+
     // I2pool public stakingToken; // Curve 2-token
     // I3pool public stakingToken; // Curve 3-token
     // IStableXPair public stakingToken; // Impossible
@@ -132,7 +132,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
     // FRAX
     address public frax_address;
-    
+
     // Constant for various precisions
     uint256 private constant MULTIPLIER_PRECISION = 1e18;
 
@@ -159,7 +159,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     uint256 public rewardRate1;
 
     // Reward period
-    uint256 public rewardsDuration = 604800; // 7 * 86400 (7 days). 
+    uint256 public rewardsDuration = 604800; // 7 * 86400 (7 days).
 
     // Reward tracking
     uint256 public ttlRew0Owed;
@@ -203,7 +203,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     bool public isInitialized;
 
     /* ========== STRUCTS ========== */
-    
+
     struct LockedStake {
         bytes32 kek_id;
         uint256 start_timestamp;
@@ -220,7 +220,10 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     }
 
     modifier onlyByOwnGovCtrlr() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == controller_address, "Not own, tlk, or ctrlr");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == controller_address,
+            "Not own, tlk, or ctrlr"
+        );
         _;
     }
 
@@ -238,10 +241,10 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         _updateRewardAndBalance(account, sync_too, false);
         _;
     }
-    
+
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _rewardsToken0,
         address _rewardsToken1,
@@ -249,11 +252,11 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         address _frax_address,
         address _timelock_address,
         address _rewarder_address
-    ) Owned(_owner){
+    ) Owned(_owner) {
         frax_address = _frax_address;
         rewardsToken0 = CrossChainCanonicalFXS(_rewardsToken0);
         rewardsToken1 = ERC20(_rewardsToken1);
-        
+
         // stakingToken = IBalancerChildLiquidityGauge(_stakingToken); // Balancer frxETH-bb-a-WETH Gauge
         // stakingToken = I2pool(_stakingToken);
         // stakingToken = I3pool(_stakingToken);
@@ -273,7 +276,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         // address token0 = stakingToken.token0();
         // if (token0 == frax_address) frax_is_token0 = true;
         // else frax_is_token0 = false;
-        
+
         // Other booleans
         migrationsOn = false;
         stakesUnlocked = false;
@@ -318,10 +321,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         //         (secs * (lock_max_multiplier - MULTIPLIER_PRECISION)) / lock_time_for_max_multiplier
         //     )
         // ) ;
-        return Math.min(
-            lock_max_multiplier,
-            (secs * lock_max_multiplier) / lock_time_for_max_multiplier
-        ) ;
+        return Math.min(lock_max_multiplier, (secs * lock_max_multiplier) / lock_time_for_max_multiplier);
     }
 
     function lastTimeRewardApplicable() internal view returns (uint256) {
@@ -341,7 +341,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         //     * withdrawn and held outside the Vault by the Pool's token Asset Manager. The Pool's total balance for `token`
         //     * equals the sum of `cash` and `managed`.
         //     */
-        
+
         //     (uint256 cash, uint256 managed, , ) = vault.getPoolTokenInfo(0xd00f9ca46ce0e4a63067c4657986f0167b0de1e5000000000000000000000b42, 0xEe327F889d5947c1dc1934Bb208a1E792F953E96);
         //     uint256 frxETH_usd_val_per_lp_e8 = ((cash + managed) * uint256(getLatestETHPriceE8())) / stakingToken.totalSupply();
         //     frax_per_lp_token = frxETH_usd_val_per_lp_e8 * (1e10); // We use USD as "Frax" here. Scale up to E18
@@ -383,7 +383,8 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         // ============================================
         {
             // Fetch total pool TVL using the seed token id
-            ComboOracle_KyberSwapElasticV2.NFTValueInfo memory nft_value_info = KSE_ComboOracleV2.getNFTValueInfo(seed_token_id);
+            ComboOracle_KyberSwapElasticV2.NFTValueInfo memory nft_value_info =
+                KSE_ComboOracleV2.getNFTValueInfo(seed_token_id);
 
             // Assume half of the liquidity is FRAX or FRAX-related, even if it is not.
             frax_per_lp_token = (nft_value_info.pool_tvl_usd * MULTIPLIER_PRECISION) / (stakingToken.totalSupply() * 2);
@@ -431,8 +432,6 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         //     frax_per_lp_token = total_frax_reserves.mul(1e18).div(stakingToken.totalSupply());
         // }
 
-
-
         return frax_per_lp_token;
     }
 
@@ -445,26 +444,33 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     }
 
     function veFXSMultiplier(address account) public view returns (uint256) {
-        if (address(veFXS) != address(0)){
+        if (address(veFXS) != address(0)) {
             // The claimer gets a boost depending on amount of veFXS they have relative to the amount of FRAX 'inside'
             // of their locked LP tokens
             uint256 veFXS_needed_for_max_boost = minVeFXSForMaxBoost(account);
-            if (veFXS_needed_for_max_boost > 0){ 
-                uint256 user_vefxs_fraction = (veFXS.balanceOf(account)).mul(MULTIPLIER_PRECISION).div(veFXS_needed_for_max_boost);
-                
+            if (veFXS_needed_for_max_boost > 0) {
+                uint256 user_vefxs_fraction =
+                    (veFXS.balanceOf(account)).mul(MULTIPLIER_PRECISION).div(veFXS_needed_for_max_boost);
+
                 uint256 vefxs_multiplier = ((user_vefxs_fraction).mul(vefxs_max_multiplier)).div(MULTIPLIER_PRECISION);
 
                 // Cap the boost to the vefxs_max_multiplier
                 if (vefxs_multiplier > vefxs_max_multiplier) vefxs_multiplier = vefxs_max_multiplier;
 
-                return vefxs_multiplier;        
+                return vefxs_multiplier;
+            } else {
+                return 0; // This will happen with the first stake, when user_staked_frax is 0
             }
-            else return 0; // This will happen with the first stake, when user_staked_frax is 0
+        } else {
+            return 0;
         }
-        else return 0;
     }
 
-    function calcCurrLockMultiplier(address account, uint256 stake_idx) public view returns (uint256 midpoint_lock_multiplier) {
+    function calcCurrLockMultiplier(address account, uint256 stake_idx)
+        public
+        view
+        returns (uint256 midpoint_lock_multiplier)
+    {
         // Get the stake
         LockedStake memory thisStake = lockedStakes[account][stake_idx];
 
@@ -473,15 +479,14 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         uint256 accrue_start_time;
         if (lastRewardClaimTime[account] < thisStake.start_timestamp) {
             accrue_start_time = thisStake.start_timestamp;
-        }
-        else {
+        } else {
             accrue_start_time = lastRewardClaimTime[account];
         }
-        
+
         // If the lock is expired
         if (thisStake.ending_timestamp <= block.timestamp) {
             // If the lock expired in the time since the last claim, the weight needs to be proportionately averaged this time
-            if (lastRewardClaimTime[account] < thisStake.ending_timestamp){
+            if (lastRewardClaimTime[account] < thisStake.ending_timestamp) {
                 uint256 time_before_expiry = thisStake.ending_timestamp - accrue_start_time;
                 uint256 time_after_expiry = block.timestamp - thisStake.ending_timestamp;
 
@@ -492,8 +497,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
                 // uint256 numerator = (pre_expiry_avg_multiplier * time_before_expiry) + (MULTIPLIER_PRECISION * time_after_expiry);
                 uint256 numerator = (pre_expiry_avg_multiplier * time_before_expiry) + (0 * time_after_expiry);
                 midpoint_lock_multiplier = numerator / (time_before_expiry + time_after_expiry);
-            }
-            else {
+            } else {
                 // Otherwise, it needs to just be 1x
                 // midpoint_lock_multiplier = MULTIPLIER_PRECISION;
 
@@ -518,12 +522,10 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     }
 
     // Calculate the combined weight for an account
-    function calcCurCombinedWeight(address account) public view
-        returns (
-            uint256 old_combined_weight,
-            uint256 new_vefxs_multiplier,
-            uint256 new_combined_weight
-        )
+    function calcCurCombinedWeight(address account)
+        public
+        view
+        returns (uint256 old_combined_weight, uint256 new_vefxs_multiplier, uint256 new_combined_weight)
     {
         // Get the old combined weight
         old_combined_weight = _combined_weights[account];
@@ -534,14 +536,13 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
         uint256 midpoint_vefxs_multiplier;
         if (
-            (_locked_liquidity[account] == 0 && _combined_weights[account] == 0) || 
-            (new_vefxs_multiplier >= _vefxsMultiplierStored[account])
+            (_locked_liquidity[account] == 0 && _combined_weights[account] == 0)
+                || (new_vefxs_multiplier >= _vefxsMultiplierStored[account])
         ) {
             // This is only called for the first stake to make sure the veFXS multiplier is not cut in half
             // Also used if the user increased or maintained their position
             midpoint_vefxs_multiplier = new_vefxs_multiplier;
-        }
-        else {
+        } else {
             // Handles natural decay with a non-increased veFXS position
             midpoint_vefxs_multiplier = (new_vefxs_multiplier + _vefxsMultiplierStored[account]) / 2;
         }
@@ -556,7 +557,8 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
             // Calculate the combined boost
             uint256 liquidity = thisStake.liquidity;
-            uint256 combined_boosted_amount = liquidity + ((liquidity * (midpoint_lock_multiplier + midpoint_vefxs_multiplier)) / MULTIPLIER_PRECISION);
+            uint256 combined_boosted_amount = liquidity
+                + ((liquidity * (midpoint_lock_multiplier + midpoint_vefxs_multiplier)) / MULTIPLIER_PRECISION);
             new_combined_weight += combined_boosted_amount;
         }
     }
@@ -564,14 +566,15 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     function rewardPerToken() public view returns (uint256, uint256) {
         if (_total_liquidity_locked == 0 || _total_combined_weight == 0) {
             return (rewardPerTokenStored0, rewardPerTokenStored1);
-        }
-        else {
+        } else {
             return (
                 rewardPerTokenStored0.add(
-                    lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate0).mul(1e18).div(_total_combined_weight)
+                    lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate0).mul(1e18)
+                        .div(_total_combined_weight)
                 ),
                 rewardPerTokenStored1.add(
-                    lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate1).mul(1e18).div(_total_combined_weight)
+                    lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate1).mul(1e18)
+                        .div(_total_combined_weight)
                 )
             );
         }
@@ -579,55 +582,54 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
     function earned(address account) public view returns (uint256, uint256) {
         (uint256 rew_per_token0, uint256 rew_per_token1) = rewardPerToken();
-        if (_combined_weights[account] == 0){
+        if (_combined_weights[account] == 0) {
             return (0, 0);
         }
         return (
-            (_combined_weights[account].mul(rew_per_token0.sub(userRewardPerTokenPaid0[account]))).div(1e18).add(rewards0[account]),
-            (_combined_weights[account].mul(rew_per_token1.sub(userRewardPerTokenPaid1[account]))).div(1e18).add(rewards1[account])
+            (_combined_weights[account].mul(rew_per_token0.sub(userRewardPerTokenPaid0[account]))).div(1e18)
+                .add(rewards0[account]),
+            (_combined_weights[account].mul(rew_per_token1.sub(userRewardPerTokenPaid1[account]))).div(1e18)
+                .add(rewards1[account])
         );
     }
 
     function getRewardForDuration() external view returns (uint256, uint256) {
-        return (
-            rewardRate0.mul(rewardsDuration),
-            rewardRate1.mul(rewardsDuration)
-        );
+        return (rewardRate0.mul(rewardsDuration), rewardRate1.mul(rewardsDuration));
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    function _getStake(address staker_address, bytes32 kek_id) internal view returns (LockedStake memory locked_stake, uint256 arr_idx) {
-        for (uint256 i = 0; i < lockedStakes[staker_address].length; i++){ 
-            if (kek_id == lockedStakes[staker_address][i].kek_id){
+    function _getStake(address staker_address, bytes32 kek_id)
+        internal
+        view
+        returns (LockedStake memory locked_stake, uint256 arr_idx)
+    {
+        for (uint256 i = 0; i < lockedStakes[staker_address].length; i++) {
+            if (kek_id == lockedStakes[staker_address][i].kek_id) {
                 locked_stake = lockedStakes[staker_address][i];
                 arr_idx = i;
                 break;
             }
         }
         require(locked_stake.kek_id == kek_id, "Stake not found");
-        
     }
 
     function _updateRewardAndBalance(address account, bool sync_too, bool pre_sync_vemxstored) internal {
         // Need to retro-adjust some things if the period hasn't been renewed, then start a new one
-        if (sync_too){
+        if (sync_too) {
             sync();
         }
 
         // Used to make sure the veFXS multiplier is correct if a stake is increased, before calcCurCombinedWeight
-        if (pre_sync_vemxstored){
+        if (pre_sync_vemxstored) {
             _vefxsMultiplierStored[account] = veFXSMultiplier(account);
         }
-        
+
         if (account != address(0)) {
             // To keep the math correct, the user's combined weight must be recomputed to account for their
             // ever-changing veFXS balance.
-            (   
-                uint256 old_combined_weight,
-                uint256 new_vefxs_multiplier,
-                uint256 new_combined_weight
-            ) = calcCurCombinedWeight(account);
+            (uint256 old_combined_weight, uint256 new_vefxs_multiplier, uint256 new_combined_weight) =
+                calcCurCombinedWeight(account);
 
             // Calculate the earnings first
             _syncEarned(account);
@@ -645,15 +647,18 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
                 _total_combined_weight = _total_combined_weight.sub(weight_diff);
                 _combined_weights[account] = old_combined_weight.sub(weight_diff);
             }
-
         }
     }
 
     // Add additional LPs to an existing locked stake
-    function lockAdditional(bytes32 kek_id, uint256 addl_liq) nonReentrant updateRewardAndBalance(msg.sender, true) public {
+    function lockAdditional(bytes32 kek_id, uint256 addl_liq)
+        public
+        nonReentrant
+        updateRewardAndBalance(msg.sender, true)
+    {
         // Make sure staking isn't paused
         require(!stakingPaused, "Staking paused");
-        
+
         // Get the stake and its index
         (LockedStake memory thisStake, uint256 theArrayIndex) = _getStake(msg.sender, kek_id);
 
@@ -668,11 +673,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
         // Update the stake
         lockedStakes[msg.sender][theArrayIndex] = LockedStake(
-            kek_id,
-            thisStake.start_timestamp,
-            new_amt,
-            thisStake.ending_timestamp,
-            thisStake.lock_multiplier
+            kek_id, thisStake.start_timestamp, new_amt, thisStake.ending_timestamp, thisStake.lock_multiplier
         );
 
         // Update liquidities
@@ -686,10 +687,14 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     }
 
     // Extends the lock of an existing stake
-    function lockLonger(bytes32 kek_id, uint256 new_ending_ts) nonReentrant updateRewardAndBalance(msg.sender, true) public {
+    function lockLonger(bytes32 kek_id, uint256 new_ending_ts)
+        public
+        nonReentrant
+        updateRewardAndBalance(msg.sender, true)
+    {
         // Make sure staking isn't paused
         require(!stakingPaused, "Staking paused");
-        
+
         // Get the stake and its index
         (LockedStake memory thisStake, uint256 theArrayIndex) = _getStake(msg.sender, kek_id);
 
@@ -697,7 +702,8 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         require(new_ending_ts > block.timestamp, "Must be in the future");
 
         // Calculate some times
-        uint256 time_left = (thisStake.ending_timestamp > block.timestamp) ? thisStake.ending_timestamp - block.timestamp : 0;
+        uint256 time_left =
+            (thisStake.ending_timestamp > block.timestamp) ? thisStake.ending_timestamp - block.timestamp : 0;
         uint256 new_secs = new_ending_ts - block.timestamp;
 
         // Checks
@@ -707,13 +713,8 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         require(new_secs <= lock_time_for_max_multiplier, "Trying to lock for too long");
 
         // Update the stake
-        lockedStakes[msg.sender][theArrayIndex] = LockedStake(
-            kek_id,
-            block.timestamp,
-            thisStake.liquidity,
-            new_ending_ts,
-            lockMultiplier(new_secs)
-        );
+        lockedStakes[msg.sender][theArrayIndex] =
+            LockedStake(kek_id, block.timestamp, thisStake.liquidity, new_ending_ts, lockMultiplier(new_secs));
 
         // Need to call to update the combined weights
         _updateRewardAndBalance(msg.sender, false, true);
@@ -732,47 +733,44 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         }
     }
 
-    // Staker can allow a migrator 
+    // Staker can allow a migrator
     function stakerAllowMigrator(address migrator_address) external {
         require(valid_migrators[migrator_address], "Invalid migrator address");
-        staker_allowed_migrators[msg.sender][migrator_address] = true; 
+        staker_allowed_migrators[msg.sender][migrator_address] = true;
     }
 
-    // Staker can disallow a previously-allowed migrator  
+    // Staker can disallow a previously-allowed migrator
     function stakerDisallowMigrator(address migrator_address) external {
         // Delete from the mapping
         delete staker_allowed_migrators[msg.sender][migrator_address];
     }
-    
+
     // Two different stake functions are needed because of delegateCall and msg.sender issues (important for migration)
-    function stakeLocked(uint256 liquidity, uint256 secs) nonReentrant public {
+    function stakeLocked(uint256 liquidity, uint256 secs) public nonReentrant {
         _stakeLocked(msg.sender, msg.sender, liquidity, secs, block.timestamp);
     }
 
     // If this were not internal, and source_address had an infinite approve, this could be exploitable
     // (pull funds from source_address and stake for an arbitrary staker_address)
     function _stakeLocked(
-        address staker_address, 
-        address source_address, 
-        uint256 liquidity, 
+        address staker_address,
+        address source_address,
+        uint256 liquidity,
         uint256 secs,
         uint256 start_timestamp
     ) internal updateRewardAndBalance(staker_address, true) {
         require(!stakingPaused || valid_migrators[msg.sender] == true, "Staking paused or in migration");
         require(liquidity > 0, "Must stake more than zero");
         require(secs >= lock_time_min, "Minimum stake time not met");
-        require(secs <= lock_time_for_max_multiplier,"Trying to lock for too long");
+        require(secs <= lock_time_for_max_multiplier, "Trying to lock for too long");
 
         uint256 lock_multiplier = lockMultiplier(secs);
         // bytes32 kek_id = keccak256(abi.encodePacked(staker_address, start_timestamp, liquidity, _locked_liquidity[staker_address]));
-        bytes32 kek_id = abi.encodePacked(staker_address, start_timestamp, liquidity, _locked_liquidity[staker_address])._hash();
-        lockedStakes[staker_address].push(LockedStake(
-            kek_id,
-            start_timestamp,
-            liquidity,
-            start_timestamp.add(secs),
-            lock_multiplier
-        ));
+        bytes32 kek_id =
+            abi.encodePacked(staker_address, start_timestamp, liquidity, _locked_liquidity[staker_address])._hash();
+        lockedStakes[staker_address].push(
+            LockedStake(kek_id, start_timestamp, liquidity, start_timestamp.add(secs), lock_multiplier)
+        );
 
         // Pull the tokens from the source_address
         TransferHelper.safeTransferFrom(address(stakingToken), source_address, address(this), liquidity);
@@ -788,26 +786,33 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     }
 
     // Two different withdrawLocked functions are needed because of delegateCall and msg.sender issues (important for migration)
-    function withdrawLocked(bytes32 kek_id, bool claim_rewards) nonReentrant public {
+    function withdrawLocked(bytes32 kek_id, bool claim_rewards) public nonReentrant {
         require(withdrawalsPaused == false, "Withdrawals paused");
         _withdrawLocked(msg.sender, msg.sender, kek_id, claim_rewards);
     }
 
     // No withdrawer == msg.sender check needed since this is only internally callable and the checks are done in the wrapper
     // functions like withdraw(), migrator_withdraw_unlocked() and migrator_withdraw_locked()
-    function _withdrawLocked(address staker_address, address destination_address, bytes32 kek_id, bool claim_rewards) internal  {
+    function _withdrawLocked(address staker_address, address destination_address, bytes32 kek_id, bool claim_rewards)
+        internal
+    {
         // Collect rewards first and then update the balances
         // collectRewardsOnWithdrawalPaused to be used in an emergency situation if reward is overemitted or not available
         // and the user can forfeit rewards to get their principal back. User can also specify it in withdrawLocked
-        if (claim_rewards || !collectRewardsOnWithdrawalPaused) _getReward(staker_address, destination_address);
-        else {
+        if (claim_rewards || !collectRewardsOnWithdrawalPaused) {
+            _getReward(staker_address, destination_address);
+        } else {
             // Sync the rewards at least
             _updateRewardAndBalance(staker_address, true, false);
         }
-        
+
         (LockedStake memory thisStake, uint256 theArrayIndex) = _getStake(staker_address, kek_id);
         require(thisStake.kek_id == kek_id, "Stake not found");
-        require(block.timestamp >= thisStake.ending_timestamp || stakesUnlocked == true || valid_migrators[msg.sender] == true, "Stake is still locked!");
+        require(
+            block.timestamp >= thisStake.ending_timestamp || stakesUnlocked == true
+                || valid_migrators[msg.sender] == true,
+            "Stake is still locked!"
+        );
 
         uint256 liquidity = thisStake.liquidity;
 
@@ -828,18 +833,21 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
 
             emit WithdrawLocked(staker_address, liquidity, kek_id, destination_address);
         }
-
     }
-    
+
     // Two different getReward functions are needed because of delegateCall and msg.sender issues (important for migration)
     function getReward() external nonReentrant returns (uint256, uint256) {
-        require(rewardsCollectionPaused == false,"Rewards collection paused");
+        require(rewardsCollectionPaused == false, "Rewards collection paused");
         return _getReward(msg.sender, msg.sender);
     }
 
     // No withdrawer == msg.sender check needed since this is only internally callable
     // This distinction is important for the migrator
-    function _getReward(address rewardee, address destination_address) internal updateRewardAndBalance(rewardee, true) returns (uint256 reward0, uint256 reward1) {
+    function _getReward(address rewardee, address destination_address)
+        internal
+        updateRewardAndBalance(rewardee, true)
+        returns (uint256 reward0, uint256 reward1)
+    {
         reward0 = rewards0[rewardee];
         reward1 = rewards1[rewardee];
 
@@ -905,21 +913,19 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
             uint256 unpaid1 = ttlRew1Owed.sub(ttlRew1Paid);
 
             // Handle reward token0
-            if (curr_bal_0 <= unpaid0){
+            if (curr_bal_0 <= unpaid0) {
                 // token0 is depleted, so stop emitting
                 rewardRate0 = 0;
-            }
-            else {
+            } else {
                 uint256 free0 = curr_bal_0.sub(unpaid0);
                 rewardRate0 = (free0).div(rewardsDuration);
             }
 
             // Handle reward token1
-            if (curr_bal_1 <= unpaid1){
+            if (curr_bal_1 <= unpaid1) {
                 // token1 is depleted, so stop emitting
                 rewardRate1 = 0;
-            }
-            else {
+            } else {
                 uint256 free1 = curr_bal_1.sub(unpaid1);
                 rewardRate1 = (free1).div(rewardsDuration);
             }
@@ -947,7 +953,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         isInitialized = true;
 
         // Bring in rewards, if applicable
-        if (address(rewarder) != address(0)){
+        if (address(rewarder) != address(0)) {
             rewarder.distributeReward();
             lastRewardPull = block.timestamp;
         }
@@ -955,19 +961,28 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         emit DefaultInitialization();
     }
 
-    // Migrator can stake for someone else (they won't be able to withdraw it back though, only staker_address can). 
-    function migrator_stakeLocked_for(address staker_address, uint256 amount, uint256 secs, uint256 start_timestamp) external isMigrating {
-        require(staker_allowed_migrators[staker_address][msg.sender] && valid_migrators[msg.sender], "Mig. invalid or unapproved");
+    // Migrator can stake for someone else (they won't be able to withdraw it back though, only staker_address can).
+    function migrator_stakeLocked_for(address staker_address, uint256 amount, uint256 secs, uint256 start_timestamp)
+        external
+        isMigrating
+    {
+        require(
+            staker_allowed_migrators[staker_address][msg.sender] && valid_migrators[msg.sender],
+            "Mig. invalid or unapproved"
+        );
         _stakeLocked(staker_address, msg.sender, amount, secs, start_timestamp);
     }
 
     // Used for migrations
     function migrator_withdraw_locked(address staker_address, bytes32 kek_id) external isMigrating {
-        require(staker_allowed_migrators[staker_address][msg.sender] && valid_migrators[msg.sender], "Mig. invalid or unapproved");
+        require(
+            staker_allowed_migrators[staker_address][msg.sender] && valid_migrators[msg.sender],
+            "Mig. invalid or unapproved"
+        );
         _withdrawLocked(staker_address, msg.sender, kek_id, true);
     }
 
-    // Adds supported migrator address 
+    // Adds supported migrator address
     function addMigrator(address migrator_address) external onlyByOwnGov {
         valid_migrators[migrator_address] = true;
     }
@@ -975,7 +990,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     // Remove a migrator address
     function removeMigrator(address migrator_address) external onlyByOwnGov {
         require(valid_migrators[migrator_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete valid_migrators[migrator_address];
     }
@@ -983,7 +998,7 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Admin cannot withdraw the staking token from the contract unless currently migrating
-        if(!migrationsOn){
+        if (!migrationsOn) {
             require(tokenAddress != address(stakingToken), "Not in migration"); // Only Governance / Timelock can trigger a migration
         }
         // Only the owner address can ever receive the recovery withdrawal
@@ -991,7 +1006,11 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         emit Recovered(tokenAddress, tokenAmount);
     }
 
-    function setMultipliers(uint256 _lock_max_multiplier, uint256 _vefxs_max_multiplier, uint256 _vefxs_per_frax_for_max_boost) external onlyByOwnGov {
+    function setMultipliers(
+        uint256 _lock_max_multiplier,
+        uint256 _vefxs_max_multiplier,
+        uint256 _vefxs_per_frax_for_max_boost
+    ) external onlyByOwnGov {
         require(_lock_max_multiplier >= MULTIPLIER_PRECISION, "Mult must be >= MULTIPLIER_PRECISION");
         require(_vefxs_max_multiplier >= 0, "veFXS mul must be >= 0");
         require(_vefxs_per_frax_for_max_boost > 0, "veFXS pct max must be >= 0");
@@ -1005,7 +1024,10 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
         emit veFXSPerFraxForMaxBoostUpdated(vefxs_per_frax_for_max_boost);
     }
 
-    function setLockedStakeTimeForMinAndMaxMultiplier(uint256 _lock_time_for_max_multiplier, uint256 _lock_time_min) external onlyByOwnGov {
+    function setLockedStakeTimeForMinAndMaxMultiplier(uint256 _lock_time_for_max_multiplier, uint256 _lock_time_min)
+        external
+        onlyByOwnGov
+    {
         require(_lock_time_for_max_multiplier >= 1, "Mul max time must be >= 1");
         require(_lock_time_min >= 1, "Mul min time must be >= 1");
 
@@ -1063,7 +1085,9 @@ contract FraxCrossChainFarmV3_ERC20 is Owned, ReentrancyGuard {
     event LockedStakeTimeForMaxMultiplier(uint256 secs);
     event LockedStakeMinTime(uint256 secs);
     event LockedAdditional(address indexed user, bytes32 kek_id, uint256 amount);
-    event LockedLonger(address indexed user, bytes32 kek_id, uint256 new_secs, uint256 new_start_ts, uint256 new_end_ts);
+    event LockedLonger(
+        address indexed user, bytes32 kek_id, uint256 new_secs, uint256 new_start_ts, uint256 new_end_ts
+    );
     event MaxVeFXSMultiplier(uint256 multiplier);
     event veFXSPerFraxForMaxBoostUpdated(uint256 scale_factor);
 }

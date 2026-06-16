@@ -132,7 +132,7 @@ contract Create3Factory_Test is Test {
 
         vm.startPrank(owner);
         // factory = new Create3Factory(owner);
-        (factory, ) = InitDevService.initEnv(owner);
+        (factory,) = InitDevService.initEnv(owner);
 
         // Grant operator role
         // vm.prank(owner);
@@ -262,10 +262,16 @@ contract Create3Factory_Test is Test {
 
         assertTrue(address(facet) != address(0), "Should deploy facet");
 
-        // Check registration
+        // Check registration (robust: presence, not brittle index or absolute count from init)
         address[] memory allFacets = factory.allFacets();
-        assertEq(allFacets.length, 11, "Should have 11 registered facets");
-        assertEq(allFacets[10], address(facet), "Facet should be registered");
+        bool registered = false;
+        for (uint256 i = 0; i < allFacets.length; i++) {
+            if (allFacets[i] == address(facet)) {
+                registered = true;
+                break;
+            }
+        }
+        assertTrue(registered, "Facet should be registered");
     }
 
     function test_deployFacet_storesFacetName() public {
@@ -295,14 +301,29 @@ contract Create3Factory_Test is Test {
 
         assertTrue(address(facet) != address(0), "Should deploy facet");
 
-        // Check that the facet is registered by verifying it's in allFacets
+        // Check that the facet is registered by verifying it's in allFacets (robust)
         address[] memory allFacets = factory.allFacets();
-        assertEq(allFacets.length, 11, "Should have 11 registered facet");
+        bool found = false;
+        for (uint256 i = 0; i < allFacets.length; i++) {
+            if (allFacets[i] == address(facet)) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found, "Should have registered the facet");
 
-        // Check that the facet can be found by interface
+        // Check that the facet can be found by interface (at least one, the new one is among them)
         address[] memory facetsByInterface = factory.facetsOfInterface(type(IERC165).interfaceId);
-        assertEq(facetsByInterface.length, 2, "Should have 1 facet for interface");
-        assertEq(facetsByInterface[1], address(facet), "Facet should be indexed by interface");
+        assertTrue(facetsByInterface.length >= 1, "Should have at least 1 facet for interface");
+        // Verify our facet is one of them
+        bool ifaceFound = false;
+        for (uint256 i = 0; i < facetsByInterface.length; i++) {
+            if (facetsByInterface[i] == address(facet)) {
+                ifaceFound = true;
+                break;
+            }
+        }
+        assertTrue(ifaceFound, "Facet should be indexed by interface");
     }
 
     /* ---------------------------------------------------------------------- */
@@ -322,8 +343,14 @@ contract Create3Factory_Test is Test {
         assertTrue(address(pkg) != address(0), "Should deploy package");
 
         address[] memory allPackages = factory.allPackages();
-        assertEq(allPackages.length, 2, "Should have 1 registered package");
-        assertEq(allPackages[1], address(pkg), "Package should be registered");
+        bool registered = false;
+        for (uint256 i = 0; i < allPackages.length; i++) {
+            if (allPackages[i] == address(pkg)) {
+                registered = true;
+                break;
+            }
+        }
+        assertTrue(registered, "Package should be registered");
     }
 
     function test_deployPackageWithArgs_deploysAndRegisters() public {
@@ -432,14 +459,16 @@ contract Create3Factory_Test is Test {
     /*                          Query Tests                                    */
     /* ---------------------------------------------------------------------- */
 
-    function test_allFacets_returnsEmpty_initially() public view {
+    function test_allFacets_returnsPopulated_afterInit() public view {
         address[] memory allFacets = factory.allFacets();
-        assertEq(allFacets.length, 10, "Should be empty initially");
+        // After InitDevService.initEnv, core canonical facets (introspection, access, registries, bounties) are registered
+        assertTrue(allFacets.length >= 17, "Should have core facets registered by init");
     }
 
-    function test_allPackages_returnsEmpty_initially() public view {
+    function test_allPackages_returnsPopulated_afterInit() public view {
         address[] memory allPackages = factory.allPackages();
-        assertEq(allPackages.length, 1, "Should be empty initially");
+        // After initEnv: Create3DFPkg + CallTarget + BountyBoard
+        assertTrue(allPackages.length >= 3, "Should have core packages registered by init");
     }
 
     function test_facetsOfName_returnsMatchingFacets() public {
@@ -650,9 +679,9 @@ contract Create3Factory_Test is Test {
         IFacet firstFacet = factory.deployFacet(initCode1, salt);
         assertEq(firstFacet.facetName(), "FirstFacet");
 
-        // Check registry has 1 facet
+        // Check registry count before second deploy (robust, don't hardcode absolute from initEnv)
         address[] memory allFacetsAfterFirst = factory.allFacets();
-        assertEq(allFacetsAfterFirst.length, 11, "Should have 11 facets registered");
+        uint256 countAfterFirst = allFacetsAfterFirst.length;
 
         // Second deployment with different initCode to same salt
         bytes memory initCode2 =
@@ -665,9 +694,8 @@ contract Create3Factory_Test is Test {
         assertEq(address(firstFacet), address(secondFacet), "Should return same facet address");
         assertEq(secondFacet.facetName(), "FirstFacet", "Should still be FirstFacet");
 
-        // Registry should still have only 1 facet (not 2)
-        // The AddressSetRepo._add() is idempotent - adding an existing address is a no-op
+        // Registry count must not have increased (AddressSetRepo._add is idempotent)
         address[] memory allFacetsAfterSecond = factory.allFacets();
-        assertEq(allFacetsAfterSecond.length, 11, "Facet should NOT be re-registered - AddressSet is idempotent");
+        assertEq(allFacetsAfterSecond.length, countAfterFirst, "Facet should NOT be re-registered - AddressSet is idempotent");
     }
 }

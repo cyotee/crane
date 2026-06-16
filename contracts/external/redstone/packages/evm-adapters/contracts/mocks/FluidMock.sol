@@ -5,11 +5,10 @@ import {FluidRedstoneAdapterReader} from "../custom-integrations/fluid/FluidReds
 import {IFluidOracle} from "../custom-integrations/fluid/IFluidOracle.sol";
 
 contract FluidMock is FluidRedstoneAdapterReader {
-
     address immutable oracleAddress;
     IFluidOracle immutable oracle;
 
-    constructor(IFluidOracle _oracle)  {
+    constructor(IFluidOracle _oracle) {
         oracleAddress = address(_oracle);
         oracle = _oracle;
     }
@@ -20,8 +19,6 @@ contract FluidMock is FluidRedstoneAdapterReader {
 
     function normalGetExchangesRate() external view {
         oracle.getExchangeRate();
-   }
-
+    }
 }
-
 

@@ -13,16 +13,31 @@ contract PendleREZtakeSY is SYBase {
         _safeApproveInf(rez, ztake);
     }
 
-    function _deposit(address /*tokenIn*/, uint256 amountDeposited) internal virtual override returns (uint256) {
+    function _deposit(
+        address,
+        /*tokenIn*/
+        uint256 amountDeposited
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         IRenzoReztake(ztake).stake(amountDeposited);
         return amountDeposited;
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         IRenzoReztake(ztake).unStake(amountSharesToRedeem);
         IRenzoReztake(ztake).claim(0);
         _transferOut(rez, receiver, amountSharesToRedeem);
@@ -42,16 +57,28 @@ contract PendleREZtakeSY is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 amountSharesOut) {
+    )
+        internal
+        pure
+        override
+        returns (uint256 amountSharesOut)
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 amountTokenOut) {
+    )
+        internal
+        pure
+        override
+        returns (uint256 amountTokenOut)
+    {
         return amountSharesToRedeem;
     }
 

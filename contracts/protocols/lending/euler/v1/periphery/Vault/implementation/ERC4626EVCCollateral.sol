@@ -19,7 +19,7 @@ abstract contract ERC4626EVCCollateral is ERC4626EVC {
     /// @param to The recipient of the transfer.
     /// @param amount The amount shares to transfer.
     /// @return A boolean indicating whether the transfer was successful.
-    function transfer(address to, uint256 amount) public virtual override (IERC20, ERC20) returns (bool) {
+    function transfer(address to, uint256 amount) public virtual override(IERC20, ERC20) returns (bool) {
         bool result = super.transfer(to, amount);
         evc.requireAccountStatusCheck(_msgSender());
         return result;
@@ -33,7 +33,7 @@ abstract contract ERC4626EVCCollateral is ERC4626EVC {
     function transferFrom(address from, address to, uint256 amount)
         public
         virtual
-        override (IERC20, ERC20)
+        override(IERC20, ERC20)
         returns (bool)
     {
         bool result = super.transferFrom(from, to, amount);

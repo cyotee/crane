@@ -2,13 +2,15 @@
 
 pragma solidity ^0.8.24;
 
-import { ISwapFeePercentageBounds } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
+import {
+    ISwapFeePercentageBounds
+} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/ISwapFeePercentageBounds.sol";
 import {
     IUnbalancedLiquidityInvariantRatioBounds
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IUnbalancedLiquidityInvariantRatioBounds.sol";
-import { IVaultErrors } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
-import { IBasePool } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
-import { IVault } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
+import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
+import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
 import {
     IWeightedPool,
     WeightedPoolDynamicData,
@@ -16,13 +18,13 @@ import {
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-weighted/IWeightedPool.sol";
 import "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 
-import { InputHelpers } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
-import { MinTokenBalanceLib } from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
-import { WeightedMath } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
-import { BalancerPoolToken } from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
-import { FixedPoint } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
-import { Version } from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
-import { PoolInfo } from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
+import {InputHelpers} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/InputHelpers.sol";
+import {MinTokenBalanceLib} from "@crane/contracts/external/balancer/v3/vault/contracts/lib/MinTokenBalanceLib.sol";
+import {WeightedMath} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/WeightedMath.sol";
+import {BalancerPoolToken} from "@crane/contracts/external/balancer/v3/vault/contracts/BalancerPoolToken.sol";
+import {FixedPoint} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/math/FixedPoint.sol";
+import {Version} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/Version.sol";
+import {PoolInfo} from "@crane/contracts/external/balancer/v3/pool-utils/contracts/PoolInfo.sol";
 
 /**
  * @notice Standard Balancer Weighted Pool, with fixed weights.
@@ -89,10 +91,11 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
      */
     error WeightedPoolBptRateUnsupported();
 
-    constructor(
-        NewPoolParams memory params,
-        IVault vault
-    ) BalancerPoolToken(vault, params.name, params.symbol) PoolInfo(vault) Version(params.version) {
+    constructor(NewPoolParams memory params, IVault vault)
+        BalancerPoolToken(vault, params.name, params.symbol)
+        PoolInfo(vault)
+        Version(params.version)
+    {
         _totalTokens = params.numTokens;
         InputHelpers.ensureInputLengthMatch(_totalTokens, params.normalizedWeights.length);
 
@@ -111,16 +114,30 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
                 revert MinTokenBalanceLib.InvalidMinTokenBalance();
             }
 
-            // prettier-ignore
-            {
-                if (i == 0) { _normalizedWeight0 = normalizedWeight; _minBalance0 = minTokenBalance; }
-                else if (i == 1) { _normalizedWeight1 = normalizedWeight; _minBalance1 = minTokenBalance; }
-                else if (i == 2) { _normalizedWeight2 = normalizedWeight; _minBalance2 = minTokenBalance; }
-                else if (i == 3) { _normalizedWeight3 = normalizedWeight; _minBalance3 = minTokenBalance; }
-                else if (i == 4) { _normalizedWeight4 = normalizedWeight; _minBalance4 = minTokenBalance; }
-                else if (i == 5) { _normalizedWeight5 = normalizedWeight; _minBalance5 = minTokenBalance; }
-                else if (i == 6) { _normalizedWeight6 = normalizedWeight; _minBalance6 = minTokenBalance; }
-                else if (i == 7) { _normalizedWeight7 = normalizedWeight; _minBalance7 = minTokenBalance; }
+            if (i == 0) {
+                _normalizedWeight0 = normalizedWeight;
+                _minBalance0 = minTokenBalance;
+            } else if (i == 1) {
+                _normalizedWeight1 = normalizedWeight;
+                _minBalance1 = minTokenBalance;
+            } else if (i == 2) {
+                _normalizedWeight2 = normalizedWeight;
+                _minBalance2 = minTokenBalance;
+            } else if (i == 3) {
+                _normalizedWeight3 = normalizedWeight;
+                _minBalance3 = minTokenBalance;
+            } else if (i == 4) {
+                _normalizedWeight4 = normalizedWeight;
+                _minBalance4 = minTokenBalance;
+            } else if (i == 5) {
+                _normalizedWeight5 = normalizedWeight;
+                _minBalance5 = minTokenBalance;
+            } else if (i == 6) {
+                _normalizedWeight6 = normalizedWeight;
+                _minBalance6 = minTokenBalance;
+            } else if (i == 7) {
+                _normalizedWeight7 = normalizedWeight;
+                _minBalance7 = minTokenBalance;
             }
         }
 
@@ -131,32 +148,31 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
     }
 
     /// @inheritdoc IBasePool
-    function computeInvariant(
-        uint256[] memory balancesLiveScaled18,
-        Rounding rounding
-    ) public view virtual returns (uint256) {
+    function computeInvariant(uint256[] memory balancesLiveScaled18, Rounding rounding)
+        public
+        view
+        virtual
+        returns (uint256)
+    {
         _ensureMinTokenBalances(balancesLiveScaled18);
 
-        function(uint256[] memory, uint256[] memory) internal pure returns (uint256) _upOrDown = rounding ==
-            Rounding.ROUND_UP
-            ? WeightedMath.computeInvariantUp
-            : WeightedMath.computeInvariantDown;
+        function(uint256[] memory, uint256[] memory) internal pure returns (uint256) _upOrDown =
+            rounding == Rounding.ROUND_UP ? WeightedMath.computeInvariantUp : WeightedMath.computeInvariantDown;
 
         return _upOrDown(_getNormalizedWeights(), balancesLiveScaled18);
     }
 
     /// @inheritdoc IBasePool
-    function computeBalance(
-        uint256[] memory balancesLiveScaled18,
-        uint256 tokenInIndex,
-        uint256 invariantRatio
-    ) external view virtual returns (uint256 newBalance) {
+    function computeBalance(uint256[] memory balancesLiveScaled18, uint256 tokenInIndex, uint256 invariantRatio)
+        external
+        view
+        virtual
+        returns (uint256 newBalance)
+    {
         uint256 originalBalance = balancesLiveScaled18[tokenInIndex];
 
         newBalance = WeightedMath.computeBalanceOutGivenInvariant(
-            originalBalance,
-            _getNormalizedWeight(tokenInIndex),
-            invariantRatio
+            originalBalance, _getNormalizedWeight(tokenInIndex), invariantRatio
         );
 
         if (originalBalance <= newBalance) {
@@ -253,7 +269,7 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
     /// @inheritdoc IWeightedPool
     function getWeightedPoolImmutableData() external view virtual returns (WeightedPoolImmutableData memory data) {
         data.tokens = _vault.getPoolTokens(address(this));
-        (data.decimalScalingFactors, ) = _vault.getPoolTokenRates(address(this));
+        (data.decimalScalingFactors,) = _vault.getPoolTokenRates(address(this));
         data.normalizedWeights = _getNormalizedWeights();
         data.minTokenBalances = _getMinTokenBalances();
     }
@@ -271,27 +287,40 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
         {
             normalizedWeights[0] = _normalizedWeight0;
             normalizedWeights[1] = _normalizedWeight1;
-            if (totalTokens > 2) { normalizedWeights[2] = _normalizedWeight2; } else { return normalizedWeights; }
-            if (totalTokens > 3) { normalizedWeights[3] = _normalizedWeight3; } else { return normalizedWeights; }
-            if (totalTokens > 4) { normalizedWeights[4] = _normalizedWeight4; } else { return normalizedWeights; }
-            if (totalTokens > 5) { normalizedWeights[5] = _normalizedWeight5; } else { return normalizedWeights; }
-            if (totalTokens > 6) { normalizedWeights[6] = _normalizedWeight6; } else { return normalizedWeights; }
-            if (totalTokens > 7) { normalizedWeights[7] = _normalizedWeight7; }
+            if (totalTokens > 2) normalizedWeights[2] = _normalizedWeight2;
+            else return normalizedWeights;
+            if (totalTokens > 3) normalizedWeights[3] = _normalizedWeight3;
+            else return normalizedWeights;
+            if (totalTokens > 4) normalizedWeights[4] = _normalizedWeight4;
+            else return normalizedWeights;
+            if (totalTokens > 5) normalizedWeights[5] = _normalizedWeight5;
+            else return normalizedWeights;
+            if (totalTokens > 6) normalizedWeights[6] = _normalizedWeight6;
+            else return normalizedWeights;
+            if (totalTokens > 7) normalizedWeights[7] = _normalizedWeight7;
         }
     }
 
     function _getNormalizedWeight(uint256 tokenIndex) internal view virtual returns (uint256) {
         // prettier-ignore
         {
-            if (tokenIndex == 0) { return _normalizedWeight0; }
-            else if (tokenIndex == 1) { return _normalizedWeight1; }
-            else if (tokenIndex == 2) { return _normalizedWeight2; }
-            else if (tokenIndex == 3) { return _normalizedWeight3; }
-            else if (tokenIndex == 4) { return _normalizedWeight4; }
-            else if (tokenIndex == 5) { return _normalizedWeight5; }
-            else if (tokenIndex == 6) { return _normalizedWeight6; }
-            else if (tokenIndex == 7) { return _normalizedWeight7; }
-            else {
+            if (tokenIndex == 0) {
+                return _normalizedWeight0;
+            } else if (tokenIndex == 1) {
+                return _normalizedWeight1;
+            } else if (tokenIndex == 2) {
+                return _normalizedWeight2;
+            } else if (tokenIndex == 3) {
+                return _normalizedWeight3;
+            } else if (tokenIndex == 4) {
+                return _normalizedWeight4;
+            } else if (tokenIndex == 5) {
+                return _normalizedWeight5;
+            } else if (tokenIndex == 6) {
+                return _normalizedWeight6;
+            } else if (tokenIndex == 7) {
+                return _normalizedWeight7;
+            } else {
                 revert IVaultErrors.InvalidToken();
             }
         }
@@ -307,12 +336,17 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
         {
             minTokenBalances[0] = _minBalance0;
             minTokenBalances[1] = _minBalance1;
-            if (numTokens > 2) { minTokenBalances[2] = _minBalance2; } else { return minTokenBalances; }
-            if (numTokens > 3) { minTokenBalances[3] = _minBalance3; } else { return minTokenBalances; }
-            if (numTokens > 4) { minTokenBalances[4] = _minBalance4; } else { return minTokenBalances; }
-            if (numTokens > 5) { minTokenBalances[5] = _minBalance5; } else { return minTokenBalances; }
-            if (numTokens > 6) { minTokenBalances[6] = _minBalance6; } else { return minTokenBalances; }
-            if (numTokens > 7) { minTokenBalances[7] = _minBalance7; }
+            if (numTokens > 2) minTokenBalances[2] = _minBalance2;
+            else return minTokenBalances;
+            if (numTokens > 3) minTokenBalances[3] = _minBalance3;
+            else return minTokenBalances;
+            if (numTokens > 4) minTokenBalances[4] = _minBalance4;
+            else return minTokenBalances;
+            if (numTokens > 5) minTokenBalances[5] = _minBalance5;
+            else return minTokenBalances;
+            if (numTokens > 6) minTokenBalances[6] = _minBalance6;
+            else return minTokenBalances;
+            if (numTokens > 7) minTokenBalances[7] = _minBalance7;
         }
     }
 
@@ -380,14 +414,14 @@ contract WeightedPool is IWeightedPool, BalancerPoolToken, PoolInfo, Version {
 
         // prettier-ignore
         {
-            if (tokenIndex == 0) { minimumBalanceScaled18 = _minBalance0; }
-            else if (tokenIndex == 1) { minimumBalanceScaled18 = _minBalance1; }
-            else if (tokenIndex == 2) { minimumBalanceScaled18 = _minBalance2; }
-            else if (tokenIndex == 3) { minimumBalanceScaled18 = _minBalance3; }
-            else if (tokenIndex == 4) { minimumBalanceScaled18 = _minBalance4; }
-            else if (tokenIndex == 5) { minimumBalanceScaled18 = _minBalance5; }
-            else if (tokenIndex == 6) { minimumBalanceScaled18 = _minBalance6; }
-            else { minimumBalanceScaled18 = _minBalance7; }   
+            if (tokenIndex == 0) minimumBalanceScaled18 = _minBalance0;
+            else if (tokenIndex == 1) minimumBalanceScaled18 = _minBalance1;
+            else if (tokenIndex == 2) minimumBalanceScaled18 = _minBalance2;
+            else if (tokenIndex == 3) minimumBalanceScaled18 = _minBalance3;
+            else if (tokenIndex == 4) minimumBalanceScaled18 = _minBalance4;
+            else if (tokenIndex == 5) minimumBalanceScaled18 = _minBalance5;
+            else if (tokenIndex == 6) minimumBalanceScaled18 = _minBalance6;
+            else minimumBalanceScaled18 = _minBalance7;
         }
 
         if (endingBalanceScaled18 < minimumBalanceScaled18) {

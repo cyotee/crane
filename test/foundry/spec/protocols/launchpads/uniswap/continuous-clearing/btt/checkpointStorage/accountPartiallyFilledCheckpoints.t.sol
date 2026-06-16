@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockCheckpointStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockCheckpointStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol";
 
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {ValueX7Lib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract AccountPartiallyFilledCheckpointsTest is BttBase {
     using ValueX7Lib for uint256;
@@ -77,10 +81,10 @@ contract AccountPartiallyFilledCheckpointsTest is BttBase {
         );
 
         // Given that the bid amount is greater than 0, the currency spent must be greater than 0
-        assertGt(_bid.amountQ96, 0, 'bid amount must be greater than 0');
+        assertGt(_bid.amountQ96, 0, "bid amount must be greater than 0");
         // Assert that currency spent rounded up is always greater than 0
-        assertGt(currencySpentQ96RoundedUp, 0, 'currencySpentQ96RoundedUp must be greater than 0');
-        assertGt(currencySpent, 0, 'currency spent must be greater than 0');
+        assertGt(currencySpentQ96RoundedUp, 0, "currencySpentQ96RoundedUp must be greater than 0");
+        assertGt(currencySpent, 0, "currency spent must be greater than 0");
 
         uint256 tokensFilledRoundedDown = FixedPointMathLib.fullMulDiv(
             _bid.amountQ96,
@@ -88,12 +92,12 @@ contract AccountPartiallyFilledCheckpointsTest is BttBase {
             _tickDemandQ96 * BidLib.mpsRemainingInAuctionAfterSubmission(_bid)
         ) / _bid.maxPrice;
 
-        assertEq(currencySpent, currencySpentQ96RoundedUp, 'currency spent');
-        assertEq(tokensFilled, tokensFilledRoundedDown, 'tokens filled');
+        assertEq(currencySpent, currencySpentQ96RoundedUp, "currency spent");
+        assertEq(tokensFilled, tokensFilledRoundedDown, "tokens filled");
 
         // In the case where the currency spent rounded down is 0, we must assert that no tokens were filled.
         if (currencySpentQ96RoundedDown == 0) {
-            assertEq(tokensFilled, 0, 'tokens filled must be 0 if currency spent rounded down is 0');
+            assertEq(tokensFilled, 0, "tokens filled must be 0 if currency spent rounded down is 0");
         }
     }
 

@@ -22,9 +22,7 @@ import {
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IGyroECLPPool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-gyro/IGyroECLPPool.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -62,7 +60,7 @@ import {
     IBalancerV3GyroECLPPoolDFPkg
 } from "@crane/contracts/protocols/dexes/balancer/v3/pool-gyro/eclp/BalancerV3GyroECLPPoolDFPkg.sol";
 
-import {MockERC20} from '@crane/contracts/tokens/ERC20/test/MockERC20.sol';
+import {MockERC20} from "@crane/contracts/tokens/ERC20/test/MockERC20.sol";
 
 /**
  * @title MockPoolInfoFacet

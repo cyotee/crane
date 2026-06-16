@@ -45,9 +45,17 @@ contract PendleSUSDEMantleSY is PendleERC20SYUpg, IPTokenWithSupplyCap {
     //////////////////////////////////////////////////////////////*/
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         uint256 _newSupply = totalSupply() + amountTokenToDeposit;
         uint256 _supplyCap = supplyCap;
 

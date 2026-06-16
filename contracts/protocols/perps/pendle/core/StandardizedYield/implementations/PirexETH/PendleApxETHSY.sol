@@ -15,9 +15,9 @@ contract PendleApxETHSY is SYBase {
     address public immutable pxETH;
     address public immutable apxETH;
 
-    constructor(
-        address _pirexETH
-    ) SYBase("SY Autocompounding Pirex ETH", "SY-apxETH", IPirexETH(_pirexETH).autoPxEth()) {
+    constructor(address _pirexETH)
+        SYBase("SY Autocompounding Pirex ETH", "SY-apxETH", IPirexETH(_pirexETH).autoPxEth())
+    {
         pirexETH = _pirexETH;
         pxETH = IPirexETH(_pirexETH).pxEth();
         apxETH = IPirexETH(_pirexETH).autoPxEth();
@@ -29,10 +29,13 @@ contract PendleApxETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == apxETH) {
             return amountDeposited;
         }
@@ -46,11 +49,11 @@ contract PendleApxETHSY is SYBase {
         return _selfBalance(apxETH) - preBalance;
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == apxETH) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -58,7 +61,7 @@ contract PendleApxETHSY is SYBase {
             if (tokenOut == pxETH) {
                 amountTokenOut = amountPxETH;
             } else {
-                (amountTokenOut, ) = IPirexETH(pirexETH).instantRedeemWithPxEth(amountPxETH, address(this));
+                (amountTokenOut,) = IPirexETH(pirexETH).instantRedeemWithPxEth(amountPxETH, address(this));
             }
         }
         _transferOut(tokenOut, receiver, amountTokenOut);
@@ -76,10 +79,14 @@ contract PendleApxETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == apxETH) {
             return amountTokenToDeposit;
         } else {
@@ -89,10 +96,14 @@ contract PendleApxETHSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         if (tokenOut == apxETH) {
             return amountSharesToRedeem;
         } else {

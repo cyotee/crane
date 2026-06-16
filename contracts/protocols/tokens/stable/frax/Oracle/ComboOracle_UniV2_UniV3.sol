@@ -26,7 +26,7 @@ import "./AggregatorV3Interface.sol";
 import "./IPricePerShareOptions.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Math/HomoraMath.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Math/HomoraMath.sol";
 
 // ComboOracle
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle.sol";
@@ -46,9 +46,9 @@ import "@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/ISwapRouter.sol
 contract ComboOracle_UniV2_UniV3 is Owned {
     using SafeMath for uint256;
     using HomoraMath for uint256;
-    
+
     /* ========== STATE VARIABLES ========== */
-    
+
     // Core addresses
     address timelock_address;
     address public frax_address;
@@ -88,8 +88,8 @@ contract ComboOracle_UniV2_UniV3 is Owned {
     }
 
     struct UniV2PriceInfo {
-        uint256 precise_price; 
-        uint256 short_price; 
+        uint256 precise_price;
+        uint256 short_price;
         string token_symbol;
         string token_name;
         string token0_symbol;
@@ -105,9 +105,9 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        uint256 token0_decimals; 
-        uint256 token1_decimals; 
-        uint256 lowest_decimals; 
+        uint256 token0_decimals;
+        uint256 token1_decimals;
+        uint256 lowest_decimals;
     }
 
     struct UniV3NFTValueInfo {
@@ -118,14 +118,10 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         string token1_symbol;
         uint256 liquidity_price;
     }
-    
+
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner_address,
-        address[] memory _starting_addresses
-    ) Owned(_owner_address) {
-
+    constructor(address _owner_address, address[] memory _starting_addresses) Owned(_owner_address) {
         // Core addresses
         frax_address = _starting_addresses[0];
         fxs_address = _starting_addresses[1];
@@ -145,7 +141,9 @@ contract ComboOracle_UniV2_UniV3 is Owned {
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
-        require(msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock");
+        require(
+            msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock"
+        );
         _;
     }
 
@@ -157,7 +155,7 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         IUniswapV2Pair the_pair = IUniswapV2Pair(pair_address);
 
         // Get the reserves
-        (uint256 reserve0, uint256 reserve1, ) = (the_pair.getReserves());
+        (uint256 reserve0, uint256 reserve1,) = (the_pair.getReserves());
 
         // Get the token1 address
         address token0 = the_pair.token0();
@@ -193,20 +191,22 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         // Alpha Homora method
         uint256 precise_price;
         {
-            uint sqrtK = HomoraMath.sqrt(lp_basic_info.token0_reserves * lp_basic_info.token1_reserves).fdiv(lp_basic_info.lp_total_supply); // in 2**112
-            uint px0 = combo_oracle.getETHPx112(lp_basic_info.token0); // in 2**112
-            uint px1 = combo_oracle.getETHPx112(lp_basic_info.token1); // in 2**112
+            uint256 sqrtK = HomoraMath.sqrt(lp_basic_info.token0_reserves * lp_basic_info.token1_reserves)
+                .fdiv(lp_basic_info.lp_total_supply); // in 2**112
+            uint256 px0 = combo_oracle.getETHPx112(lp_basic_info.token0); // in 2**112
+            uint256 px1 = combo_oracle.getETHPx112(lp_basic_info.token1); // in 2**112
             // fair token0 amt: sqrtK * sqrt(px1/px0)
             // fair token1 amt: sqrtK * sqrt(px0/px1)
             // fair lp price = 2 * sqrt(px0 * px1)
             // split into 2 sqrts multiplication to prevent uint overflow (note the 2**112)
 
             // In ETH per unit of LP, multiplied by 2**112.
-            uint256 precise_price_eth112 = (((sqrtK * 2 * HomoraMath.sqrt(px0)) / (2 ** 56)) * HomoraMath.sqrt(px1)) / (2 ** 56);
+            uint256 precise_price_eth112 =
+                (((sqrtK * 2 * HomoraMath.sqrt(px0)) / (2 ** 56)) * HomoraMath.sqrt(px1)) / (2 ** 56);
 
             // In USD
             // Split into 2 parts to avoid overflows
-            uint256 precise_price56 = precise_price_eth112 / (2 ** 56); 
+            uint256 precise_price56 = precise_price_eth112 / (2 ** 56);
             precise_price = (precise_price56 * eth_price) / (2 ** 56);
         }
 
@@ -231,23 +231,22 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         // Then multiply by 2 since both sides are equal dollar value
         // Then divide the the total number of LP tokens
         uint256 precise_price;
-        if (combo_oracle.has_info(lp_basic_info.token0)){
-            (uint256 token_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token0);
+        if (combo_oracle.has_info(lp_basic_info.token0)) {
+            (uint256 token_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token0);
 
             // Multiply by 2 because each token is half of the TVL
             precise_price = (2 * token_precise_price * lp_basic_info.token0_reserves) / lp_basic_info.lp_total_supply;
 
             // Scale to E18
-            precise_price *= (10 ** (uint(18) - lp_basic_info.token0_decimals));
-        }
-        else {
-            (uint256 token_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token1);
-            
+            precise_price *= (10 ** (uint256(18) - lp_basic_info.token0_decimals));
+        } else {
+            (uint256 token_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token1);
+
             // Multiply by 2 because each token is half of the TVL
             precise_price = (2 * token_precise_price * lp_basic_info.token1_reserves) / lp_basic_info.lp_total_supply;
 
             // Scale to E18
-            precise_price *= (10 ** (uint(18) - lp_basic_info.token1_decimals));
+            precise_price *= (10 ** (uint256(18) - lp_basic_info.token1_decimals));
         }
 
         return UniV2PriceInfo(
@@ -288,8 +287,8 @@ contract ComboOracle_UniV2_UniV3 is Owned {
             tickLower, // [3]
             tickUpper, // [4]
             liquidity, // [5]
-            tkn0_dec,  // [6]
-            tkn1_dec,  // [7]
+            tkn0_dec, // [6]
+            tkn1_dec, // [7]
             (tkn0_dec < tkn1_dec) ? tkn0_dec : tkn1_dec // [8]
         );
     }
@@ -303,12 +302,12 @@ contract ComboOracle_UniV2_UniV3 is Owned {
         {
             address pool_address = univ3_factory.getPool(lp_basic_info.token0, lp_basic_info.token1, lp_basic_info.fee);
             IUniswapV3Pool the_pool = IUniswapV3Pool(pool_address);
-            (sqrtPriceX96, , , , , , ) = the_pool.slot0();
+            (sqrtPriceX96,,,,,,) = the_pool.slot0();
         }
 
         // Tick math
         uint256 token0_val_usd = 0;
-        uint256 token1_val_usd = 0; 
+        uint256 token1_val_usd = 0;
         {
             // Get the amount of each underlying token in each NFT
             uint160 sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(lp_basic_info.tickLower);
@@ -316,21 +315,25 @@ contract ComboOracle_UniV2_UniV3 is Owned {
 
             // Get amount of each token for 0.1% liquidity movement in each direction (1 per mille)
             uint256 liq_pricing_divisor = (10 ** lp_basic_info.lowest_decimals);
-            (uint256 token0_1pm_amt, uint256 token1_1pm_amt) = LiquidityAmounts.getAmountsForLiquidity(sqrtPriceX96, sqrtRatioAX96, sqrtRatioBX96, uint128(lp_basic_info.liquidity / liq_pricing_divisor));
+            (uint256 token0_1pm_amt, uint256 token1_1pm_amt) = LiquidityAmounts.getAmountsForLiquidity(
+                sqrtPriceX96, sqrtRatioAX96, sqrtRatioBX96, uint128(lp_basic_info.liquidity / liq_pricing_divisor)
+            );
 
             // Get missing decimals
-            uint256 token0_miss_dec_mult = 10 ** (uint(18) - lp_basic_info.token0_decimals);
-            uint256 token1_miss_dec_mult = 10 ** (uint(18) - lp_basic_info.token1_decimals);
+            uint256 token0_miss_dec_mult = 10 ** (uint256(18) - lp_basic_info.token0_decimals);
+            uint256 token1_miss_dec_mult = 10 ** (uint256(18) - lp_basic_info.token1_decimals);
 
             // Get token prices
             // Will revert if ComboOracle doesn't have a price for both token0 and token1
-            (uint256 token0_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token0);
-            (uint256 token1_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token1);
+            (uint256 token0_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token0);
+            (uint256 token1_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token1);
 
             // Get the value of each portion
             // Multiply by liq_pricing_divisor as well
-            token0_val_usd = (token0_1pm_amt * liq_pricing_divisor * token0_precise_price * token0_miss_dec_mult) / PRECISE_PRICE_PRECISION;
-            token1_val_usd = (token1_1pm_amt * liq_pricing_divisor * token1_precise_price * token1_miss_dec_mult) / PRECISE_PRICE_PRECISION;
+            token0_val_usd = (token0_1pm_amt * liq_pricing_divisor * token0_precise_price * token0_miss_dec_mult)
+                / PRECISE_PRICE_PRECISION;
+            token1_val_usd = (token1_1pm_amt * liq_pricing_divisor * token1_precise_price * token1_miss_dec_mult)
+                / PRECISE_PRICE_PRECISION;
         }
 
         // Return the total value of the UniV3 NFT

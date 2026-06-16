@@ -8,13 +8,13 @@ import {console2} from "forge-std/Test.sol";
 
 import {Properties} from "../Properties.sol";
 import {MaliciousInitiative} from "../../mocks/MaliciousInitiative.sol";
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
-import {IInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IInitiative.sol";
-import {IUserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IUserProxy.sol";
-import {PermitParams} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/Types.sol";
-import {add} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/Math.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {IInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IInitiative.sol";
+import {IUserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IUserProxy.sol";
+import {PermitParams} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/Types.sol";
+import {add} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/Math.sol";
 
 abstract contract GovernanceTargets is BaseTargetFunctions, Properties {
     // clamps to a single initiative to ensure coverage in case both haven't been registered yet

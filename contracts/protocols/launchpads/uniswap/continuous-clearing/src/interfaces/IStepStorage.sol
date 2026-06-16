@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AuctionStep} from '../libraries/StepLib.sol';
+import {AuctionStep} from "../libraries/StepLib.sol";
 
 /// @notice Interface for managing auction step storage
 interface IStepStorage {

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.24;
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {IAllowanceTransfer} from "@crane/contracts/interfaces/protocols/utils/permit2/IAllowanceTransfer.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";

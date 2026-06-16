@@ -1,16 +1,26 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol';
-import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {VmSafe} from 'forge-std/Vm.sol';
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol";
+import {
+    AuctionParameters
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {VmSafe} from "forge-std/Vm.sol";
 // Chore: move to a shared place
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {CompactStep, CompactStepLib, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol';
-import {AuctionBaseTest} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol';
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {AuctionStep} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {
+    CompactStep,
+    CompactStepLib,
+    Step
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol";
+import {
+    AuctionBaseTest
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol";
 
 struct AuctionFuzzConstructorParams {
     address token;
@@ -96,7 +106,7 @@ contract BttBase is AuctionBaseTest {
             totalMps += _steps[numberOfSteps].mps * _steps[numberOfSteps].blockDelta;
             numberOfSteps++;
         }
-        assertEq(totalMps, ConstantsLib.MPS, 'totalMps');
+        assertEq(totalMps, ConstantsLib.MPS, "totalMps");
 
         // Encode the steps into the compact step format
         // Calculate the total number of blocks to inform the fuzzed endBlock Values
@@ -113,18 +123,18 @@ contract BttBase is AuctionBaseTest {
     }
 
     function assertEq(Bid memory _bid, Bid memory _bid2) internal pure {
-        assertEq(_bid.startBlock, _bid2.startBlock, 'startBlock');
-        assertEq(_bid.startCumulativeMps, _bid2.startCumulativeMps, 'startCumulativeMps');
-        assertEq(_bid.exitedBlock, _bid2.exitedBlock, 'exitedBlock');
-        assertEq(_bid.maxPrice, _bid2.maxPrice, 'maxPrice');
-        assertEq(_bid.owner, _bid2.owner, 'owner');
-        assertEq(_bid.amountQ96, _bid2.amountQ96, 'amountQ96');
-        assertEq(_bid.tokensFilled, _bid2.tokensFilled, 'tokensFilled');
+        assertEq(_bid.startBlock, _bid2.startBlock, "startBlock");
+        assertEq(_bid.startCumulativeMps, _bid2.startCumulativeMps, "startCumulativeMps");
+        assertEq(_bid.exitedBlock, _bid2.exitedBlock, "exitedBlock");
+        assertEq(_bid.maxPrice, _bid2.maxPrice, "maxPrice");
+        assertEq(_bid.owner, _bid2.owner, "owner");
+        assertEq(_bid.amountQ96, _bid2.amountQ96, "amountQ96");
+        assertEq(_bid.tokensFilled, _bid2.tokensFilled, "tokensFilled");
     }
 
     function assertEq(AuctionStep memory _step, AuctionStep memory _step2) internal pure {
-        assertEq(_step.startBlock, _step2.startBlock, 'startBlock');
-        assertEq(_step.endBlock, _step2.endBlock, 'endBlock');
-        assertEq(_step.mps, _step2.mps, 'mps');
+        assertEq(_step.startBlock, _step2.startBlock, "startBlock");
+        assertEq(_step.endBlock, _step2.endBlock, "endBlock");
+        assertEq(_step.mps, _step2.mps, "mps");
     }
 }

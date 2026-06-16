@@ -23,10 +23,14 @@ contract PendlePufWETHSY is SYBaseUpg {
         _safeApproveInf(asset, yieldToken);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == yieldToken) {
             return amountDeposited;
         } else {
@@ -36,9 +40,14 @@ contract PendlePufWETHSY is SYBaseUpg {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256) {
+    )
+        internal
+        override
+        returns (uint256)
+    {
         _transferOut(yieldToken, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -49,18 +58,30 @@ contract PendlePufWETHSY is SYBaseUpg {
         return totalAssets.divDown(totalSupply);
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == yieldToken) return amountTokenToDeposit;
         else return IERC4626(yieldToken).previewDeposit(amountTokenToDeposit);
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

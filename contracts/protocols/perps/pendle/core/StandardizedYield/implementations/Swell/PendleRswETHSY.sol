@@ -9,12 +9,9 @@ contract PendleRswETHSY is SYBase {
     address public immutable rswETH;
     address public immutable referral;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _rswETH,
-        address _referral
-    ) SYBase(_name, _symbol, _rswETH) {
+    constructor(string memory _name, string memory _symbol, address _rswETH, address _referral)
+        SYBase(_name, _symbol, _rswETH)
+    {
         rswETH = _rswETH;
         referral = _referral;
     }
@@ -23,10 +20,14 @@ contract PendleRswETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             uint256 preBalance = _selfBalance(rswETH);
             IRswETH(rswETH).depositWithReferral{value: amountDeposited}(referral);
@@ -39,9 +40,17 @@ contract PendleRswETHSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(rswETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -58,10 +67,14 @@ contract PendleRswETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
             return amountTokenToDeposit.divDown(IRswETH(rswETH).getRate());
         } else {
@@ -70,9 +83,17 @@ contract PendleRswETHSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

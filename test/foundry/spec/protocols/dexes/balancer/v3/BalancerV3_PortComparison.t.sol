@@ -22,6 +22,7 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {ETHEREUM_MAIN} from "@crane/contracts/constants/networks/ETHEREUM_MAIN.sol";
 
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
+import {IVaultErrors} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVaultErrors.sol";
 import {IRouter} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IRouter.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IBasePoolFactory} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePoolFactory.sol";
@@ -732,9 +733,13 @@ contract BalancerV3_PortComparison is CraneTest {
             uint256 out
         ) {
             localAmountOutRaw = out;
-        } catch {
-            // If local deployment doesn't yet support the upstream pool's token config (rate providers / yield fees),
-            // record in artifact and skip to keep the suite usable.
+        } catch (bytes memory reason) {
+            // Only tolerate reverts caused by the local deployment not yet
+            // supporting the upstream pool's token config (rate providers,
+            // missing tokens, pool initialization state). Anything else --
+            // notably unlock/transient regressions like VaultIsNotUnlocked --
+            // must surface as a failure, not a silent skip.
+            _bubbleUpIfNotTolerableLocalSetupRevert(reason);
             _writePortQuerySwapExactInArtifact(
                 indexIn,
                 indexOut,
@@ -848,7 +853,10 @@ contract BalancerV3_PortComparison is CraneTest {
         ) {
         // no-op
         }
-        catch {
+        catch (bytes memory reason) {
+            // Same allowlist policy as the querySwap catch: only setup-shaped
+            // reverts may turn into a skip; anything else bubbles up.
+            _bubbleUpIfNotTolerableLocalSetupRevert(reason);
             vm.skip(true);
         }
     }
@@ -1432,5 +1440,43 @@ contract BalancerV3_PortComparison is CraneTest {
         if (tolerance == 0) tolerance = 1;
         uint256 diff = a > b ? a - b : b - a;
         if (diff > tolerance) revert(string.concat("Parity check failed for ", label));
+    }
+
+    /**
+     * @dev Allowlist of revert selectors that may legitimately be raised when
+     * the local Crane fork does not yet support every upstream pool
+     * configuration (rate providers, missing tokens, pool not yet
+     * initialized). Reverts matching this list are treated as a justified
+     * `vm.skip(true)`; anything else is re-thrown so latent regressions (such
+     * as the VaultIsNotUnlocked stub previously hidden by a catch-all) cannot
+     * masquerade as a skip.
+     */
+    function _isTolerableLocalSetupRevertSelector(bytes4 selector) internal pure returns (bool) {
+        return selector == IVaultErrors.TokenNotRegistered.selector
+            || selector == IVaultErrors.TokenAlreadyRegistered.selector
+            || selector == IVaultErrors.PoolNotRegistered.selector
+            || selector == IVaultErrors.PoolNotInitialized.selector
+            || selector == IVaultErrors.PoolAlreadyInitialized.selector;
+    }
+
+    /**
+     * @dev Decodes the leading selector from a caught revert payload and
+     * bubbles the original revert up unchanged when the selector is not in
+     * the tolerable-setup allowlist. Callers should only invoke `vm.skip` in
+     * the path that survives this check.
+     */
+    function _bubbleUpIfNotTolerableLocalSetupRevert(bytes memory reason) internal pure {
+        if (reason.length >= 4) {
+            bytes4 selector;
+            assembly {
+                selector := mload(add(reason, 32))
+            }
+            if (_isTolerableLocalSetupRevertSelector(selector)) {
+                return;
+            }
+        }
+        assembly {
+            revert(add(reason, 32), mload(reason))
+        }
     }
 }

@@ -338,11 +338,7 @@ library BalancerV38020WeightedPoolMath {
      * @param bptIn Exact BPT burned.
      * @return amountsOut Proportional amounts out for each token (exact match to pool's raw calculation, rounded down).
      */
-    function _calcProportionalAmountsOutGivenBptIn(
-        uint256[] memory balances,
-        uint256 totalSupply,
-        uint256 bptIn
-    )
+    function _calcProportionalAmountsOutGivenBptIn(uint256[] memory balances, uint256 totalSupply, uint256 bptIn)
         internal
         pure
         returns (uint256[] memory amountsOut)

@@ -6,10 +6,7 @@ pragma solidity ^0.8.35;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {CPITrackerOracle} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/CPITrackerOracle.sol";
-import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract CPITrackerOracle_Tests is TestBase_FraxEthereumFork {
     CPITrackerOracle internal oracle;

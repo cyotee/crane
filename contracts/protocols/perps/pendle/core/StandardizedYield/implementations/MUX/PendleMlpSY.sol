@@ -25,11 +25,9 @@ contract PendleMlpSY is SYBaseWithRewards {
     // non-security related
     address public immutable mlpPriceFeed;
 
-    constructor(
-        address _rewardRouter,
-        address _mlpPriceFeed,
-        address _arb
-    ) SYBaseWithRewards("SY MUXLP", "SY-MUXLP", IMUXRewardRouter(_rewardRouter).mlp()) {
+    constructor(address _rewardRouter, address _mlpPriceFeed, address _arb)
+        SYBaseWithRewards("SY MUXLP", "SY-MUXLP", IMUXRewardRouter(_rewardRouter).mlp())
+    {
         rewardRouter = _rewardRouter;
         weth = IMUXRewardRouter(_rewardRouter).weth();
         mlp = IMUXRewardRouter(_rewardRouter).mlp();
@@ -51,18 +49,29 @@ contract PendleMlpSY is SYBaseWithRewards {
     //////////////////////////////////////////////////////////////*/
 
     function _deposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         IMUXRewardRouter(rewardRouter).stakeMlp(amountDeposited);
         return amountDeposited;
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IMUXRewardRouter(rewardRouter).unstakeMlp(amountSharesToRedeem);
         _transferOut(tokenOut, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -112,17 +121,25 @@ contract PendleMlpSY is SYBaseWithRewards {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal pure override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 
@@ -163,10 +180,8 @@ contract PendleMlpSY is SYBaseWithRewards {
     function withdrawAndVestMux() external onlyOwner {
         IMUXRewardRouter(rewardRouter).unstakeMcbAndMux();
 
-        uint256 amountToVest = PMath.min(
-            _selfBalance(mux),
-            IMUXRewardRouter(rewardRouter).maxVestableTokenFromVe(address(this))
-        );
+        uint256 amountToVest =
+            PMath.min(_selfBalance(mux), IMUXRewardRouter(rewardRouter).maxVestableTokenFromVe(address(this)));
         IMUXRewardRouter(rewardRouter).depositToVeVester(amountToVest);
     }
 

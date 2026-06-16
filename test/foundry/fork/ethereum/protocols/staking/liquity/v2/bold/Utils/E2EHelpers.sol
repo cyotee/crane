@@ -3,22 +3,34 @@ pragma solidity ^0.8.35;
 
 import {Vm} from "forge-std/Vm.sol";
 import {Test} from "forge-std/Test.sol";
-import {IERC20Metadata as IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {
+    IERC20Metadata as IERC20
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {ILeverageZapper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/ILeverageZapper.sol";
-import {IZapper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IZapper.sol";
-import {IPriceFeed} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IPriceFeed.sol";
-import {IBorrowerOperationsV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/IBorrowerOperationsV1.sol";
-import {IPriceFeedV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/IPriceFeedV1.sol";
-import {ISortedTrovesV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/ISortedTrovesV1.sol";
-import {ITroveManagerV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/ITroveManagerV1.sol";
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {ILeverageZapper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/ILeverageZapper.sol";
+import {IZapper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IZapper.sol";
+import {IPriceFeed} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IPriceFeed.sol";
+import {
+    IBorrowerOperationsV1
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/IBorrowerOperationsV1.sol";
+import {
+    IPriceFeedV1
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/IPriceFeedV1.sol";
+import {
+    ISortedTrovesV1
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/ISortedTrovesV1.sol";
+import {
+    ITroveManagerV1
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Interfaces/LiquityV1/ITroveManagerV1.sol";
 import {ERC20Faucet} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/TestContracts/ERC20Faucet.sol";
 
 import {StringEquality} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Utils/StringEquality.sol";
-import {UseDeployment} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/UseDeployment.sol";
+import {
+    UseDeployment
+} from "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/UseDeployment.sol";
 import {TroveId} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/bold/Utils/TroveId.sol";
 
 uint256 constant PRICE_TOLERANCE = 0.05 ether;
@@ -38,7 +50,6 @@ ISortedTrovesV1 constant mainnet_V1_sortedTroves = ISortedTrovesV1(0x8FdD3fbFEb3
 ITroveManagerV1 constant mainnet_V1_troveManager = ITroveManagerV1(0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2);
 
 contract SideEffectFreeGetPriceHelper {
-
     function _revert(bytes memory revertData) internal pure {
         assembly {
             revert(add(32, revertData), mload(revertData))
@@ -212,9 +223,7 @@ contract E2EHelpers is Test, UseDeployment, TroveId {
 
         vm.startPrank(owner);
         zapper.closeTroveFromCollateral({
-            _troveId: troveId,
-            _flashLoanAmount: flashLoanAmount,
-            _minExpectedCollateral: coll - flashLoanAmount
+            _troveId: troveId, _flashLoanAmount: flashLoanAmount, _minExpectedCollateral: coll - flashLoanAmount
         });
         vm.stopPrank();
 

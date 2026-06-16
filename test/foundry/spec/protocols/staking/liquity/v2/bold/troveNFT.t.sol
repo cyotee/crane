@@ -2,8 +2,8 @@ pragma solidity ^0.8.35;
 
 import "./TestContracts/DevTestSetup.sol";
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/TroveNFT.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/TroveNFT.sol";
 
 import "@crane/contracts/external/solady/utils/Base64.sol";
 
@@ -33,19 +33,20 @@ contract troveNFTTest is DevTestSetup {
 
         vm.startPrank(_account);
 
-        troveId = contractsArray[_collIndex].borrowerOperations.openTrove(
-            _account,
-            _index,
-            _coll,
-            _boldAmount,
-            0, // _upperHint
-            0, // _lowerHint
-            _annualInterestRate,
-            upfrontFee,
-            address(0),
-            address(0),
-            address(0)
-        );
+        troveId = contractsArray[_collIndex].borrowerOperations
+            .openTrove(
+                _account,
+                _index,
+                _coll,
+                _boldAmount,
+                0, // _upperHint
+                0, // _lowerHint
+                _annualInterestRate,
+                upfrontFee,
+                address(0),
+                address(0),
+                address(0)
+            );
 
         vm.stopPrank();
     }
@@ -57,7 +58,8 @@ contract troveNFTTest is DevTestSetup {
         accounts = new Accounts();
         createAccounts();
 
-        (A, B, C, D, E, F, G) = (
+        (A, B, C, D, E, F, G) =
+        (
             accountsList[0],
             accountsList[1],
             accountsList[2],

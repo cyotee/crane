@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IFacet} from '@crane/contracts/interfaces/IFacet.sol';
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 abstract contract FacetBase is IFacet {
     // tag::facetName()[]
@@ -23,10 +23,11 @@ abstract contract FacetBase is IFacet {
      * @inheritdoc IFacet
      */
     function facetFuncs() public view virtual returns (bytes4[] memory funcs);
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
-    
+
     /**
      * @inheritdoc IFacet
      */
@@ -34,10 +35,11 @@ abstract contract FacetBase is IFacet {
         public
         view
         virtual
-        returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions) {
-            name = facetName();
-            interfaces = facetInterfaces();
-            functions = facetFuncs();
-        }
+        returns (string memory name, bytes4[] memory interfaces, bytes4[] memory functions)
+    {
+        name = facetName();
+        interfaces = facetInterfaces();
+        functions = facetFuncs();
+    }
     // end::facetMetadata()[]
 }

@@ -110,30 +110,18 @@ interface IERC4626LinearPool {
         bytes memory userData
     ) external returns (uint256[] memory amountsIn, uint256[] memory dueProtocolFees);
 
-    function onSwap(
-        SwapRequest memory request,
-        uint256[] memory balances,
-        uint256 indexIn,
-        uint256 indexOut
-    ) external returns (uint256);
+    function onSwap(SwapRequest memory request, uint256[] memory balances, uint256 indexIn, uint256 indexOut)
+        external
+        returns (uint256);
 
-    function onSwap(
-        SwapRequest memory request,
-        uint256 balanceTokenIn,
-        uint256 balanceTokenOut
-    ) external returns (uint256);
+    function onSwap(SwapRequest memory request, uint256 balanceTokenIn, uint256 balanceTokenOut)
+        external
+        returns (uint256);
 
     function pause() external;
 
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external;
 
     function queryExit(
         bytes32,

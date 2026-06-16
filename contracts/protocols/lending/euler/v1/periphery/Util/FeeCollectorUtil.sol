@@ -2,12 +2,18 @@
 
 pragma solidity ^0.8.0;
 
-import {AccessControlEnumerable} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
-import {AccessControl, IAccessControl, Context} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {
+    AccessControlEnumerable
+} from "@crane/contracts/external/openzeppelin-contracts/access/extensions/AccessControlEnumerable.sol";
+import {
+    AccessControl,
+    IAccessControl,
+    Context
+} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 // import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
@@ -53,7 +59,7 @@ contract FeeCollectorUtil is AccessControlEnumerable, EVCUtil {
     function grantRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.grantRole(role, account);
@@ -65,7 +71,7 @@ contract FeeCollectorUtil is AccessControlEnumerable, EVCUtil {
     function revokeRole(bytes32 role, address account)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.revokeRole(role, account);
@@ -77,7 +83,7 @@ contract FeeCollectorUtil is AccessControlEnumerable, EVCUtil {
     function renounceRole(bytes32 role, address callerConfirmation)
         public
         virtual
-        override (AccessControl, IAccessControl)
+        override(AccessControl, IAccessControl)
         onlyEVCAccountOwner
     {
         super.renounceRole(role, callerConfirmation);
@@ -147,7 +153,7 @@ contract FeeCollectorUtil is AccessControlEnumerable, EVCUtil {
 
     /// @notice Retrieves the message sender in the context of the EVC.
     /// @return msgSender The address of the message sender.
-    function _msgSender() internal view virtual override (EVCUtil, Context) returns (address msgSender) {
+    function _msgSender() internal view virtual override(EVCUtil, Context) returns (address msgSender) {
         return EVCUtil._msgSender();
     }
 }

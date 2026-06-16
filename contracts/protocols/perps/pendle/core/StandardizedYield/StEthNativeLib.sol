@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "../../interfaces/IStETH.sol";
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library StETHNativeLib {
     address internal constant STETH = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84;

@@ -6,7 +6,7 @@ import "../../interfaces/IPPrincipalToken.sol";
 import "../../interfaces/IPInterestManagerYT.sol";
 import "../../interfaces/IPYieldContractFactory.sol";
 
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "../libraries/math/PMath.sol";
 import "../libraries/TokenHelper.sol";
@@ -40,11 +40,10 @@ abstract contract InterestManagerYT is TokenHelper, IPInterestManagerYT {
         if (user2 != address(0) && user2 != address(this)) _distributeInterestPrivate(user2, index);
     }
 
-    function _doTransferOutInterest(
-        address user,
-        address SY,
-        address factory
-    ) internal returns (uint256 interestAmount) {
+    function _doTransferOutInterest(address user, address SY, address factory)
+        internal
+        returns (uint256 interestAmount)
+    {
         address treasury = IPYieldContractFactory(factory).treasury();
         uint256 feeRate = IPYieldContractFactory(factory).interestFeeRate();
 

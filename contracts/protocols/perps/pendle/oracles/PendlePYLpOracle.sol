@@ -81,35 +81,30 @@ contract PendlePYLpOracle is BoringOwnableUpgradeable, IPPYLpOracle {
      * @return increaseCardinalityRequired a boolean indicates whether the cardinality should be increased to serve the duration
      * @return cardinalityRequired the amount of cardinality required for the twap duration
      */
-    function getOracleState(
-        address market,
-        uint32 duration
-    )
+    function getOracleState(address market, uint32 duration)
         external
         view
         returns (bool increaseCardinalityRequired, uint16 cardinalityRequired, bool oldestObservationSatisfied)
     {
-        (, , , uint16 observationIndex, uint16 observationCardinality, uint16 cardinalityReserved) = IPMarket(market)
-            ._storage();
+        (,,, uint16 observationIndex, uint16 observationCardinality, uint16 cardinalityReserved) =
+            IPMarket(market)._storage();
 
         // checkIncreaseCardinalityRequired
         cardinalityRequired = _calcCardinalityRequiredRequired(duration);
         increaseCardinalityRequired = cardinalityReserved < cardinalityRequired;
 
         // check oldestObservationSatisfied
-        (uint32 oldestTimestamp, , bool initialized) = IPMarket(market).observations(
-            (observationIndex + 1) % observationCardinality
-        );
+        (uint32 oldestTimestamp,, bool initialized) =
+            IPMarket(market).observations((observationIndex + 1) % observationCardinality);
         if (!initialized) {
-            (oldestTimestamp, , ) = IPMarket(market).observations(0);
+            (oldestTimestamp,,) = IPMarket(market).observations(0);
         }
         oldestObservationSatisfied = oldestTimestamp < block.timestamp - duration;
     }
 
     function _calcCardinalityRequiredRequired(uint32 duration) internal view returns (uint16) {
-        uint32 cardinalityRequired = (duration * BLOCK_CYCLE_DENOMINATOR + blockCycleNumerator - 1) /
-            blockCycleNumerator +
-            1;
+        uint32 cardinalityRequired =
+            (duration * BLOCK_CYCLE_DENOMINATOR + blockCycleNumerator - 1) / blockCycleNumerator + 1;
         if (cardinalityRequired > type(uint16).max) {
             revert TwapDurationTooLarge(duration, cardinalityRequired);
         }

@@ -2,64 +2,66 @@
 pragma solidity ^0.8.35;
 
 interface IConvexBooster {
-  function FEE_DENOMINATOR() external view returns (uint256);
-  function MaxFees() external view returns (uint256);
-  function addPool(address _lptoken, address _gauge, uint256 _stashVersion) external returns (bool);
-  function claimRewards(uint256 _pid, address _gauge) external returns (bool);
-  function crv() external view returns (address);
-  function deposit(uint256 _pid, uint256 _amount, bool _stake) external returns (bool);
-  function depositAll(uint256 _pid, bool _stake) external returns (bool);
-  function distributionAddressId() external view returns (uint256);
-  function earmarkFees() external returns (bool);
-  function earmarkIncentive() external view returns (uint256);
-  function earmarkRewards(uint256 _pid) external returns (bool);
-  function feeDistro() external view returns (address);
-  function feeManager() external view returns (address);
-  function feeToken() external view returns (address);
-  function gaugeMap(address) external view returns (bool);
-  function isShutdown() external view returns (bool);
-  function lockFees() external view returns (address);
-  function lockIncentive() external view returns (uint256);
-  function lockRewards() external view returns (address);
-  function minter() external view returns (address);
-  function owner() external view returns (address);
-  function platformFee() external view returns (uint256);
-  function poolInfo(uint256) external view returns (address lptoken, address token, address gauge, address crvRewards, address stash, bool shutdown);
-  function poolLength() external view returns (uint256);
-  function poolManager() external view returns (address);
-  function registry() external view returns (address);
-  function rewardArbitrator() external view returns (address);
-  function rewardClaimed(uint256 _pid, address _address, uint256 _amount) external returns (bool);
-  function rewardFactory() external view returns (address);
-  function setArbitrator(address _arb) external;
-  function setFactories(address _rfactory, address _sfactory, address _tfactory) external;
-  function setFeeInfo() external;
-  function setFeeManager(address _feeM) external;
-  function setFees(uint256 _lockFees, uint256 _stakerFees, uint256 _callerFees, uint256 _platform) external;
-  function setGaugeRedirect(uint256 _pid) external returns (bool);
-  function setOwner(address _owner) external;
-  function setPoolManager(address _poolM) external;
-  function setRewardContracts(address _rewards, address _stakerRewards) external;
-  function setTreasury(address _treasury) external;
-  function setVoteDelegate(address _voteDelegate) external;
-  function shutdownPool(uint256 _pid) external returns (bool);
-  function shutdownSystem() external;
-  function staker() external view returns (address);
-  function stakerIncentive() external view returns (uint256);
-  function stakerRewards() external view returns (address);
-  function stashFactory() external view returns (address);
-  function tokenFactory() external view returns (address);
-  function treasury() external view returns (address);
-  function vote(uint256 _voteId, address _votingAddress, bool _support) external returns (bool);
-  function voteDelegate() external view returns (address);
-  function voteGaugeWeight(address[] memory _gauge, uint256[] memory _weight) external returns (bool);
-  function voteOwnership() external view returns (address);
-  function voteParameter() external view returns (address);
-  function withdraw(uint256 _pid, uint256 _amount) external returns (bool);
-  function withdrawAll(uint256 _pid) external returns (bool);
-  function withdrawTo(uint256 _pid, uint256 _amount, address _to) external returns (bool);
+    function FEE_DENOMINATOR() external view returns (uint256);
+    function MaxFees() external view returns (uint256);
+    function addPool(address _lptoken, address _gauge, uint256 _stashVersion) external returns (bool);
+    function claimRewards(uint256 _pid, address _gauge) external returns (bool);
+    function crv() external view returns (address);
+    function deposit(uint256 _pid, uint256 _amount, bool _stake) external returns (bool);
+    function depositAll(uint256 _pid, bool _stake) external returns (bool);
+    function distributionAddressId() external view returns (uint256);
+    function earmarkFees() external returns (bool);
+    function earmarkIncentive() external view returns (uint256);
+    function earmarkRewards(uint256 _pid) external returns (bool);
+    function feeDistro() external view returns (address);
+    function feeManager() external view returns (address);
+    function feeToken() external view returns (address);
+    function gaugeMap(address) external view returns (bool);
+    function isShutdown() external view returns (bool);
+    function lockFees() external view returns (address);
+    function lockIncentive() external view returns (uint256);
+    function lockRewards() external view returns (address);
+    function minter() external view returns (address);
+    function owner() external view returns (address);
+    function platformFee() external view returns (uint256);
+    function poolInfo(uint256)
+        external
+        view
+        returns (address lptoken, address token, address gauge, address crvRewards, address stash, bool shutdown);
+    function poolLength() external view returns (uint256);
+    function poolManager() external view returns (address);
+    function registry() external view returns (address);
+    function rewardArbitrator() external view returns (address);
+    function rewardClaimed(uint256 _pid, address _address, uint256 _amount) external returns (bool);
+    function rewardFactory() external view returns (address);
+    function setArbitrator(address _arb) external;
+    function setFactories(address _rfactory, address _sfactory, address _tfactory) external;
+    function setFeeInfo() external;
+    function setFeeManager(address _feeM) external;
+    function setFees(uint256 _lockFees, uint256 _stakerFees, uint256 _callerFees, uint256 _platform) external;
+    function setGaugeRedirect(uint256 _pid) external returns (bool);
+    function setOwner(address _owner) external;
+    function setPoolManager(address _poolM) external;
+    function setRewardContracts(address _rewards, address _stakerRewards) external;
+    function setTreasury(address _treasury) external;
+    function setVoteDelegate(address _voteDelegate) external;
+    function shutdownPool(uint256 _pid) external returns (bool);
+    function shutdownSystem() external;
+    function staker() external view returns (address);
+    function stakerIncentive() external view returns (uint256);
+    function stakerRewards() external view returns (address);
+    function stashFactory() external view returns (address);
+    function tokenFactory() external view returns (address);
+    function treasury() external view returns (address);
+    function vote(uint256 _voteId, address _votingAddress, bool _support) external returns (bool);
+    function voteDelegate() external view returns (address);
+    function voteGaugeWeight(address[] memory _gauge, uint256[] memory _weight) external returns (bool);
+    function voteOwnership() external view returns (address);
+    function voteParameter() external view returns (address);
+    function withdraw(uint256 _pid, uint256 _amount) external returns (bool);
+    function withdrawAll(uint256 _pid) external returns (bool);
+    function withdrawTo(uint256 _pid, uint256 _amount, address _to) external returns (bool);
 }
-
 
 // /**
 //  * @dev Standard math utilities missing in the Solidity language.
@@ -111,7 +113,7 @@ interface IConvexBooster {
 
 // interface IVoting{
 //     function vote(uint256, bool, bool) external; //voteId, support, executeIfDecided
-//     function getVote(uint256) external view returns(bool,bool,uint64,uint64,uint64,uint64,uint256,uint256,uint256,bytes memory); 
+//     function getVote(uint256) external view returns(bool,bool,uint64,uint64,uint64,uint64,uint256,uint256,uint256,bytes memory);
 //     function vote_for_gauge_weights(address,uint256) external;
 // }
 
@@ -705,9 +707,7 @@ interface IConvexBooster {
 
 // // File: @openzeppelin\contracts\token\ERC20\SafeERC20.sol
 
-
 // pragma solidity >=0.6.0 <0.8.0;
-
 
 // /**
 //  * @title SafeERC20
@@ -781,8 +781,6 @@ interface IConvexBooster {
 
 // pragma solidity ^0.8.35;
 
-
-
 // contract Booster{
 //     using SafeERC20 for IERC20;
 //     using Address for address;
@@ -849,7 +847,6 @@ interface IConvexBooster {
 //         minter = _minter;
 //     }
 
-
 //     /// SETTER SECTION ///
 
 //     function setOwner(address _owner) external {
@@ -869,7 +866,7 @@ interface IConvexBooster {
 
 //     function setFactories(address _rfactory, address _sfactory, address _tfactory) external {
 //         require(msg.sender == owner, "!auth");
-        
+
 //         //reward factory only allow this to be called once even if owner
 //         //removes ability to inject malicious staking contracts
 //         //token factory can also be immutable
@@ -895,7 +892,7 @@ interface IConvexBooster {
 
 //     function setRewardContracts(address _rewards, address _stakerRewards) external {
 //         require(msg.sender == owner, "!auth");
-        
+
 //         //reward contracts are immutable or else the owner
 //         //has a means to redeploy and mint cvx via rewardClaimed()
 //         if(lockRewards == address(0)){
@@ -907,7 +904,7 @@ interface IConvexBooster {
 //     // Set reward token and claim contract, get from Curve's registry
 //     function setFeeInfo() external {
 //         require(msg.sender==feeManager, "!auth");
-        
+
 //         feeDistro = IRegistry(registry).get_address(distributionAddressId);
 //         address _feeToken = IFeeDistro(feeDistro).token();
 //         if(feeToken != _feeToken){
@@ -923,7 +920,7 @@ interface IConvexBooster {
 //         uint256 total = _lockFees.add(_stakerFees).add(_callerFees).add(_platform);
 //         require(total <= MaxFees, ">MaxFees");
 
-//         //values must be within certain ranges     
+//         //values must be within certain ranges
 //         if(_lockFees >= 1000 && _lockFees <= 1500
 //             && _stakerFees >= 300 && _stakerFees <= 600
 //             && _callerFees >= 10 && _callerFees <= 100
@@ -941,7 +938,6 @@ interface IConvexBooster {
 //     }
 
 //     /// END SETTER SECTION ///
-
 
 //     function poolLength() external view returns (uint256) {
 //         return poolInfo.length;
@@ -1020,7 +1016,6 @@ interface IConvexBooster {
 //         }
 //     }
 
-
 //     //deposit lp tokens and stake
 //     function deposit(uint256 _pid, uint256 _amount, bool _stake) public returns(bool){
 //         require(!isShutdown,"shutdown");
@@ -1055,7 +1050,6 @@ interface IConvexBooster {
 //             ITokenMinter(token).mint(msg.sender,_amount);
 //         }
 
-        
 //         emit Deposited(msg.sender, _pid, _amount);
 //         return true;
 //     }
@@ -1090,7 +1084,7 @@ interface IConvexBooster {
 //         if(stash != address(0) && !isShutdown && !pool.shutdown){
 //             IStash(stash).stashRewards();
 //         }
-        
+
 //         //return lp tokens
 //         IERC20(lptoken).safeTransfer(_to, _amount);
 
@@ -1120,12 +1114,11 @@ interface IConvexBooster {
 //         return true;
 //     }
 
-
 //     //delegate address votes on dao
 //     function vote(uint256 _voteId, address _votingAddress, bool _support) external returns(bool){
 //         require(msg.sender == voteDelegate, "!auth");
 //         require(_votingAddress == voteOwnership || _votingAddress == voteParameter, "!voteAddr");
-        
+
 //         IStaker(staker).vote(_voteId,_votingAddress,_support);
 //         return true;
 //     }
@@ -1182,7 +1175,7 @@ interface IConvexBooster {
 //             uint256 _lockIncentive = crvBal.mul(lockIncentive).div(FEE_DENOMINATOR);
 //             uint256 _stakerIncentive = crvBal.mul(stakerIncentive).div(FEE_DENOMINATOR);
 //             uint256 _callIncentive = crvBal.mul(earmarkIncentive).div(FEE_DENOMINATOR);
-            
+
 //             //send treasury
 //             if(treasury != address(0) && treasury != address(this) && platformFee > 0){
 //                 //only subtract after address condition check
@@ -1195,7 +1188,7 @@ interface IConvexBooster {
 //             crvBal = crvBal.sub(_lockIncentive).sub(_callIncentive).sub(_stakerIncentive);
 
 //             //send incentives for calling
-//             IERC20(crv).safeTransfer(msg.sender, _callIncentive);          
+//             IERC20(crv).safeTransfer(msg.sender, _callIncentive);
 
 //             //send crv to lp provider reward contract
 //             address rewardContract = pool.crvRewards;
@@ -1236,7 +1229,7 @@ interface IConvexBooster {
 
 //         //mint reward tokens
 //         ITokenMinter(minter).mint(_address,_amount);
-        
+
 //         return true;
 //     }
 

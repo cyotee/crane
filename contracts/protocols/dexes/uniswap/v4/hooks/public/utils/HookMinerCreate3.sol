@@ -4,12 +4,11 @@ pragma solidity ^0.8.0;
 import {CREATE3} from "@crane/contracts/protocols/dexes/uniswap/v4/external/solmate/utils/CREATE3.sol";
 import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title HookMinerCreate3
 /// @notice A minimal library for mining hook addresses using CREATE3
 library HookMinerCreate3 {
-    
     using BetterEfficientHashLib for bytes;
 
     // mask to slice out the bottom 14 bit of the address

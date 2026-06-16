@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Checkpoint} from '../libraries/CheckpointLib.sol';
+import {Checkpoint} from "../libraries/CheckpointLib.sol";
 
 /// @notice Interface for checkpoint storage operations
 interface ICheckpointStorage {

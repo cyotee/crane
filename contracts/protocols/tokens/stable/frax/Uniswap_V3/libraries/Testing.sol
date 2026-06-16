@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import './FullMath.sol';
-import './FixedPoint96.sol';
+import "./FullMath.sol";
+import "./FixedPoint96.sol";
 
 contract Testing {
-
-    constructor () public {}
+    constructor() {}
 
     /// @dev The minimum tick that may be passed to #getSqrtRatioAtTick computed from log base 1.0001 of 2**-128
     int24 internal constant MIN_TICK = -887272;
@@ -25,7 +24,7 @@ contract Testing {
     /// at the given tick
     function getSqrtRatioAtTick(int24 tick) public pure returns (uint160 sqrtPriceX96) {
         uint256 absTick = tick < 0 ? uint256(-int256(tick)) : uint256(int256(tick));
-        require(int256(absTick) <= int256(MAX_TICK), 'T');
+        require(int256(absTick) <= int256(MAX_TICK), "T");
 
         uint256 ratio = absTick & 0x1 != 0 ? 0xfffcb933bd6fad37aa2d162d1a594001 : 0x100000000000000000000000000000000;
         if (absTick & 0x2 != 0) ratio = (ratio * 0xfff97272373d413259a46990580e213a) >> 128;
@@ -56,25 +55,21 @@ contract Testing {
         sqrtPriceX96 = uint160((ratio >> 32) + (ratio % (1 << 32) == 0 ? 0 : 1));
     }
 
-
     /// @notice Computes the amount of token0 for a given amount of liquidity and a price range
     /// @param sqrtRatioAX96 A sqrt price representing the first tick boundary
     /// @param sqrtRatioBX96 A sqrt price representing the second tick boundary
     /// @param liquidity The liquidity being valued
     /// @return amount0 The amount of token0
-    function getAmount0ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) public pure returns (uint256 amount0) {
+    function getAmount0ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        public
+        pure
+        returns (uint256 amount0)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
 
-        return
-            FullMath.mulDiv(
-                uint256(liquidity) << FixedPoint96.RESOLUTION,
-                sqrtRatioBX96 - sqrtRatioAX96,
-                sqrtRatioBX96
-            ) / sqrtRatioAX96;
+        return FullMath.mulDiv(
+            uint256(liquidity) << FixedPoint96.RESOLUTION, sqrtRatioBX96 - sqrtRatioAX96, sqrtRatioBX96
+        ) / sqrtRatioAX96;
     }
 
     /// @notice Computes the amount of token1 for a given amount of liquidity and a price range
@@ -82,14 +77,13 @@ contract Testing {
     /// @param sqrtRatioBX96 A sqrt price representing the second tick boundary
     /// @param liquidity The liquidity being valued
     /// @return amount1 The amount of token1
-    function getAmount1ForLiquidity(
-        uint160 sqrtRatioAX96,
-        uint160 sqrtRatioBX96,
-        uint128 liquidity
-    ) public pure returns (uint256 amount1) {
+    function getAmount1ForLiquidity(uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity)
+        public
+        pure
+        returns (uint256 amount1)
+    {
         if (sqrtRatioAX96 > sqrtRatioBX96) (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
 
         return FullMath.mulDiv(liquidity, sqrtRatioBX96 - sqrtRatioAX96, FixedPoint96.Q96);
     }
-
 }

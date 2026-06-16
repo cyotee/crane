@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 interface IERC4626Errors {
-
     /**
      * @dev Attempted to deposit more assets than the max amount for `receiver`.
      */

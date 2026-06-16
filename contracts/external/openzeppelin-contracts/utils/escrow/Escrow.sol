@@ -20,6 +20,7 @@ import "../Address.sol";
  * to the escrow's deposit and withdraw.
  */
 contract Escrow is Ownable {
+    constructor() Ownable(msg.sender) {}
     using Address for address payable;
 
     event Deposited(address indexed payee, uint256 weiAmount);

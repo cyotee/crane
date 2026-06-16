@@ -13,21 +13,21 @@ import "../LockingRegistry.sol";
  * and the vesting period which lineary unlocks deposited tokens.
  */
 contract VestingWalletV2 is Initializable {
-  event TokensReleased(uint256 amount);
+    event TokensReleased(uint256 amount);
 
-  ERC20 public token;
-  address public beneficiary;
-  LockingRegistry public lockingRegistry;
-  uint256 public allocation;
-  uint64 public start;
-  uint64 public cliffDuration;
-  uint64 public vestingDuration;
+    ERC20 public token;
+    address public beneficiary;
+    LockingRegistry public lockingRegistry;
+    uint256 public allocation;
+    uint64 public start;
+    uint64 public cliffDuration;
+    uint64 public vestingDuration;
 
-  /**
-   * @dev This returns the amount still locked in the contract, as a function of time
-   */
-  function getUnvestedAmount(uint256 timestamp) public view virtual returns (uint256) {
-    timestamp;
-    return 42;
-  }
+    /**
+     * @dev This returns the amount still locked in the contract, as a function of time
+     */
+    function getUnvestedAmount(uint256 timestamp) public view virtual returns (uint256) {
+        timestamp;
+        return 42;
+    }
 }

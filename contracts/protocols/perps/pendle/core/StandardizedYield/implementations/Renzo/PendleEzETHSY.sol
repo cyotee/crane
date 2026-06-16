@@ -19,12 +19,9 @@ contract PendleEzETHSY is SYBase {
 
     event SetNewExchangeRateOracle(address oracle);
 
-    constructor(
-        address _ezETH,
-        address _stakeManager,
-        address _exchangeRateOracle,
-        uint256 _referralId
-    ) SYBase("SY Renzo ezETH", "SY-ezETH", _ezETH) {
+    constructor(address _ezETH, address _stakeManager, address _exchangeRateOracle, uint256 _referralId)
+        SYBase("SY Renzo ezETH", "SY-ezETH", _ezETH)
+    {
         ezETH = _ezETH;
         restakeManager = _stakeManager;
         exchangeRateOracle = _exchangeRateOracle;
@@ -65,9 +62,15 @@ contract PendleEzETHSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         _transferOut(ezETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -89,16 +92,18 @@ contract PendleEzETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == ezETH) {
             return amountTokenToDeposit;
         }
 
         uint256 supply = IERC20(ezETH).totalSupply();
-        (, , uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
+        (,, uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
 
         uint256 value;
         if (tokenIn == NATIVE) {
@@ -111,9 +116,15 @@ contract PendleEzETHSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 amountTokenOut) {
+    )
+        internal
+        pure
+        override
+        returns (uint256 amountTokenOut)
+    {
         return amountSharesToRedeem;
     }
 

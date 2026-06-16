@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-
 contract RedstoneMulticall3 {
     struct RedstoneCall3 {
         address target;
@@ -36,16 +35,18 @@ contract RedstoneMulticall3 {
                     revert(0x00, 0x64)
                 }
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
     }
-    
-    /** 
-                                                            IMPORTANT
-        Rest of the code is copied from import "./Mulitcall3.sol" (omitted aggregate3) we don't use inheritence to have single aggregate3 function 
-    */
 
-     struct Call {
+    /**
+     *                                                         IMPORTANT
+     *     Rest of the code is copied from import "./Mulitcall3.sol" (omitted aggregate3) we don't use inheritence to have single aggregate3 function
+     */
+
+    struct Call {
         address target;
         bytes callData;
     }
@@ -82,7 +83,9 @@ contract RedstoneMulticall3 {
             call = calls[i];
             (success, returnData[i]) = call.target.call(call.callData);
             require(success, "Multicall3: call failed");
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
     }
 
@@ -91,7 +94,11 @@ contract RedstoneMulticall3 {
     /// @param requireSuccess If true, require all calls to succeed
     /// @param calls An array of Call structs
     /// @return returnData An array of Result structs
-    function tryAggregate(bool requireSuccess, Call[] calldata calls) public payable returns (Result[] memory returnData) {
+    function tryAggregate(bool requireSuccess, Call[] calldata calls)
+        public
+        payable
+        returns (Result[] memory returnData)
+    {
         uint256 length = calls.length;
         returnData = new Result[](length);
         Call calldata call;
@@ -100,7 +107,9 @@ contract RedstoneMulticall3 {
             call = calls[i];
             (result.success, result.returnData) = call.target.call(call.callData);
             if (requireSuccess) require(result.success, "Multicall3: call failed");
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
     }
 
@@ -110,7 +119,11 @@ contract RedstoneMulticall3 {
     /// @return blockNumber The block number where the calls were executed
     /// @return blockHash The hash of the block where the calls were executed
     /// @return returnData An array of Result structs
-    function tryBlockAndAggregate(bool requireSuccess, Call[] calldata calls) public payable returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData) {
+    function tryBlockAndAggregate(bool requireSuccess, Call[] calldata calls)
+        public
+        payable
+        returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData)
+    {
         blockNumber = block.number;
         blockHash = blockhash(block.number);
         returnData = tryAggregate(requireSuccess, calls);
@@ -122,7 +135,11 @@ contract RedstoneMulticall3 {
     /// @return blockNumber The block number where the calls were executed
     /// @return blockHash The hash of the block where the calls were executed
     /// @return returnData An array of Result structs
-    function blockAndAggregate(Call[] calldata calls) public payable returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData) {
+    function blockAndAggregate(Call[] calldata calls)
+        public
+        payable
+        returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData)
+    {
         (blockNumber, blockHash, returnData) = tryBlockAndAggregate(true, calls);
     }
 
@@ -141,7 +158,9 @@ contract RedstoneMulticall3 {
             uint256 val = calli.value;
             // Humanity will be a Type V Kardashev Civilization before this overflows - andreas
             // ~ 10^25 Wei in existence << ~ 10^76 size uint fits in a uint256
-            unchecked { valAccumulator += val; }
+            unchecked {
+                valAccumulator += val;
+            }
             (result.success, result.returnData) = calli.target.call{value: val}(calli.callData);
             assembly {
                 // Revert if the call fails and failure is not allowed
@@ -158,7 +177,9 @@ contract RedstoneMulticall3 {
                     revert(0x00, 0x84)
                 }
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         // Finally, make sure the msg.value = SUM(call[0...i].value)
         require(msg.value == valAccumulator, "Multicall3: value mismatch");

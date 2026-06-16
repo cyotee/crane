@@ -40,9 +40,9 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/positi
 
 contract ComboOracle_KyberSwapElastic is Owned {
     using SafeMath for uint256;
-    
+
     /* ========== STATE VARIABLES ========== */
-    
+
     // Core addresses
     address timelock_address;
 
@@ -71,9 +71,9 @@ contract ComboOracle_KyberSwapElastic is Owned {
         int24 tickLower;
         int24 tickUpper;
         uint128 liquidity;
-        uint256 token0_decimals; 
-        uint256 token1_decimals; 
-        uint256 lowest_decimals; 
+        uint256 token0_decimals;
+        uint256 token1_decimals;
+        uint256 lowest_decimals;
     }
 
     struct NFTValueInfo {
@@ -84,13 +84,10 @@ contract ComboOracle_KyberSwapElastic is Owned {
         string token1_symbol;
         uint256 liquidity_price;
     }
-    
+
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner_address,
-        address[] memory _starting_addresses
-    ) Owned(_owner_address) {
+    constructor(address _owner_address, address[] memory _starting_addresses) Owned(_owner_address) {
         // Oracle info
         combo_oracle = ComboOracle(_starting_addresses[0]);
 
@@ -105,7 +102,9 @@ contract ComboOracle_KyberSwapElastic is Owned {
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
-        require(msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock");
+        require(
+            msg.sender == owner || msg.sender == timelock_address, "You are not an owner or the governance timelock"
+        );
         _;
     }
 
@@ -113,10 +112,8 @@ contract ComboOracle_KyberSwapElastic is Owned {
 
     function getNFTBasicInfo(uint256 token_id) public view returns (NFTBasicInfo memory) {
         // Get the position information
-        ( 
-            IAntiSnipAttackPositionManager.Position memory pos, 
-            IAntiSnipAttackPositionManager.PoolInfo memory info
-        ) = kyber_positions_mgr.positions(token_id);
+        (IAntiSnipAttackPositionManager.Position memory pos, IAntiSnipAttackPositionManager.PoolInfo memory info) =
+            kyber_positions_mgr.positions(token_id);
 
         // Get decimals
         uint256 tkn0_dec = ERC20(info.token0).decimals();
@@ -129,8 +126,8 @@ contract ComboOracle_KyberSwapElastic is Owned {
             pos.tickLower, // [3]
             pos.tickUpper, // [4]
             pos.liquidity, // [5]
-            tkn0_dec,  // [6]
-            tkn1_dec,  // [7]
+            tkn0_dec, // [6]
+            tkn1_dec, // [7]
             (tkn0_dec < tkn1_dec) ? tkn0_dec : tkn1_dec // [8]
         );
     }
@@ -144,12 +141,12 @@ contract ComboOracle_KyberSwapElastic is Owned {
         {
             address pool_address = kyber_factory.getPool(lp_basic_info.token0, lp_basic_info.token1, lp_basic_info.fee);
             IKyberPool the_pool = IKyberPool(pool_address);
-            (sqrtPriceX96, , , ) = the_pool.getPoolState();
+            (sqrtPriceX96,,,) = the_pool.getPoolState();
         }
 
         // Tick math
         uint256 token0_val_usd = 0;
-        uint256 token1_val_usd = 0; 
+        uint256 token1_val_usd = 0;
         {
             // Get the amount of each underlying token in each NFT
             uint160 sqrtRatioAX96 = KyberTickMath.getSqrtRatioAtTick(lp_basic_info.tickLower);
@@ -157,21 +154,25 @@ contract ComboOracle_KyberSwapElastic is Owned {
 
             // Get amount of each token for 0.1% liquidity movement in each direction (1 per mille)
             uint256 liq_pricing_divisor = (10 ** lp_basic_info.lowest_decimals);
-            (uint256 token0_1pm_amt, uint256 token1_1pm_amt) = LiquidityAmounts.getAmountsForLiquidity(sqrtPriceX96, sqrtRatioAX96, sqrtRatioBX96, uint128(lp_basic_info.liquidity / liq_pricing_divisor));
+            (uint256 token0_1pm_amt, uint256 token1_1pm_amt) = LiquidityAmounts.getAmountsForLiquidity(
+                sqrtPriceX96, sqrtRatioAX96, sqrtRatioBX96, uint128(lp_basic_info.liquidity / liq_pricing_divisor)
+            );
 
             // Get missing decimals
-            uint256 token0_miss_dec_mult = 10 ** (uint(18) - lp_basic_info.token0_decimals);
-            uint256 token1_miss_dec_mult = 10 ** (uint(18) - lp_basic_info.token1_decimals);
+            uint256 token0_miss_dec_mult = 10 ** (uint256(18) - lp_basic_info.token0_decimals);
+            uint256 token1_miss_dec_mult = 10 ** (uint256(18) - lp_basic_info.token1_decimals);
 
             // Get token prices
             // Will revert if ComboOracle doesn't have a price for both token0 and token1
-            (uint256 token0_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token0);
-            (uint256 token1_precise_price, , ) = combo_oracle.getTokenPrice(lp_basic_info.token1);
+            (uint256 token0_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token0);
+            (uint256 token1_precise_price,,) = combo_oracle.getTokenPrice(lp_basic_info.token1);
 
             // Get the value of each portion
             // Multiply by liq_pricing_divisor as well
-            token0_val_usd = (token0_1pm_amt * liq_pricing_divisor * token0_precise_price * token0_miss_dec_mult) / PRECISE_PRICE_PRECISION;
-            token1_val_usd = (token1_1pm_amt * liq_pricing_divisor * token1_precise_price * token1_miss_dec_mult) / PRECISE_PRICE_PRECISION;
+            token0_val_usd = (token0_1pm_amt * liq_pricing_divisor * token0_precise_price * token0_miss_dec_mult)
+                / PRECISE_PRICE_PRECISION;
+            token1_val_usd = (token1_1pm_amt * liq_pricing_divisor * token1_precise_price * token1_miss_dec_mult)
+                / PRECISE_PRICE_PRECISION;
         }
 
         // Return the total value of the UniV3 NFT
@@ -189,62 +190,58 @@ contract ComboOracle_KyberSwapElastic is Owned {
     }
 
     function getFeeCollectionMulticallPayload(
-        uint256 token_id, 
-        address tkn0_addr, 
-        address tkn1_addr, 
-        uint24 fee, 
+        uint256 token_id,
+        address tkn0_addr,
+        address tkn1_addr,
+        uint24 fee,
         address dest_addr
     ) external view returns (bytes[] memory multicall_payloads, uint256 tk0_owed, uint256 tk1_owed, bool has_rewards) {
         address pool_address = kyber_factory.getPool(tkn0_addr, tkn1_addr, fee);
-        (tk0_owed, tk1_owed) = kyber_tick_fees_reader.getTotalFeesOwedToPosition(address(kyber_positions_mgr), pool_address, token_id);
+        (tk0_owed, tk1_owed) =
+            kyber_tick_fees_reader.getTotalFeesOwedToPosition(address(kyber_positions_mgr), pool_address, token_id);
 
         // Will return an empty payload array unless there is actually something to collect
         has_rewards = ((tk0_owed + tk1_owed) > 0);
         if (has_rewards) {
             multicall_payloads = new bytes[](4);
             multicall_payloads[0] = abi.encodeWithSignature(
-                "removeLiquidity(uint256,uint128,uint256,uint256,uint256)", 
-                token_id, 
-                1, 
+                "removeLiquidity(uint256,uint128,uint256,uint256,uint256)",
+                token_id,
+                1,
                 0,
                 0,
                 7289575165 // Year 2200
             );
             multicall_payloads[1] = abi.encodeWithSignature(
-                "burnRTokens(uint256,uint256,uint256,uint256)", 
-                token_id, 
-                0, 
+                "burnRTokens(uint256,uint256,uint256,uint256)",
+                token_id,
+                0,
                 0,
                 7289575165 // Year 2200
             );
-            multicall_payloads[2] = abi.encodeWithSignature(
-                "transferAllTokens(address,uint256,address)", 
-                tkn0_addr, 
-                tk0_owed, 
-                dest_addr
-            );
-            multicall_payloads[3] = abi.encodeWithSignature(
-                "transferAllTokens(address,uint256,address)", 
-                tkn1_addr, 
-                tk1_owed, 
-                dest_addr
-            );
-        }
-        else {
+            multicall_payloads[2] =
+                abi.encodeWithSignature("transferAllTokens(address,uint256,address)", tkn0_addr, tk0_owed, dest_addr);
+            multicall_payloads[3] =
+                abi.encodeWithSignature("transferAllTokens(address,uint256,address)", tkn1_addr, tk1_owed, dest_addr);
+        } else {
             multicall_payloads = new bytes[](0);
         }
     }
 
-    function checkKyberElasticNFT(uint256 seed_nft_id, uint256 test_nft_id) external view returns (uint256 liquidity, int24 tick_lower, int24 tick_upper) {
+    function checkKyberElasticNFT(uint256 seed_nft_id, uint256 test_nft_id)
+        external
+        view
+        returns (uint256 liquidity, int24 tick_lower, int24 tick_upper)
+    {
         // Get the seed NFT info
-        ( 
-            IAntiSnipAttackPositionManager.Position memory pos_seed, 
+        (
+            IAntiSnipAttackPositionManager.Position memory pos_seed,
             IAntiSnipAttackPositionManager.PoolInfo memory info_seed
         ) = kyber_positions_mgr.positions(seed_nft_id);
-        
+
         // Get the test NFT info
-        ( 
-            IAntiSnipAttackPositionManager.Position memory pos_test, 
+        (
+            IAntiSnipAttackPositionManager.Position memory pos_test,
             IAntiSnipAttackPositionManager.PoolInfo memory info_test
         ) = kyber_positions_mgr.positions(test_nft_id);
 
@@ -253,15 +250,12 @@ contract ComboOracle_KyberSwapElastic is Owned {
 
         // Do the checks
         if (
-            (info_test.token0 == info_seed.token0) && 
-            (info_test.token1 == info_seed.token1) && 
-            (info_test.fee == info_seed.fee) && 
-            (pos_test.tickLower == pos_seed.tickLower) && 
-            (pos_test.tickUpper == pos_seed.tickUpper)
+            (info_test.token0 == info_seed.token0) && (info_test.token1 == info_seed.token1)
+                && (info_test.fee == info_seed.fee) && (pos_test.tickLower == pos_seed.tickLower)
+                && (pos_test.tickUpper == pos_seed.tickUpper)
         ) {
             // Do nothing
-        }
-        else {
+        } else {
             revert("Wrong token characteristics");
         }
         return (liquidity, pos_test.tickLower, pos_test.tickUpper);
@@ -277,12 +271,10 @@ contract ComboOracle_KyberSwapElastic is Owned {
         combo_oracle = ComboOracle(_combo_oracle);
     }
 
-    function setMiscAddrs(
-        address _factory, 
-        address _positions_nft_manager, 
-        address _router,
-        address _tick_fees_reader
-    ) external onlyByOwnGov {
+    function setMiscAddrs(address _factory, address _positions_nft_manager, address _router, address _tick_fees_reader)
+        external
+        onlyByOwnGov
+    {
         // KyberSwap Elastic
         kyber_factory = IKyberFactory(_factory);
         kyber_positions_mgr = IAntiSnipAttackPositionManager(_positions_nft_manager);

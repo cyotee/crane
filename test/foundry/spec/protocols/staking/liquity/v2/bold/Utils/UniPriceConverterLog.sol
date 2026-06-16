@@ -4,10 +4,12 @@ pragma solidity ^0.8.35;
 
 import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 
-import {UniPriceConverter} from "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/UniPriceConverter.sol";
+import {
+    UniPriceConverter
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/UniPriceConverter.sol";
 import {Logging} from "./Logging.sol";
 import {StringFormatting} from "./StringFormatting.sol";
-import {DECIMAL_PRECISION} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+import {DECIMAL_PRECISION} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 import "forge-std/console2.sol";
 

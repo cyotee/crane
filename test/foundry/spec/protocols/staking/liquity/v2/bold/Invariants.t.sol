@@ -4,12 +4,12 @@ pragma solidity ^0.8.35;
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
-import {BatchId} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/BatchId.sol";
-import {LatestBatchData} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/LatestBatchData.sol";
-import {LatestTroveData} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/LatestTroveData.sol";
-import {ISortedTroves} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ISortedTroves.sol";
-import {IStabilityPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPool.sol";
-import {ITroveManager} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveManager.sol";
+import {BatchId} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/BatchId.sol";
+import {LatestBatchData} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/LatestBatchData.sol";
+import {LatestTroveData} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/LatestTroveData.sol";
+import {ISortedTroves} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ISortedTroves.sol";
+import {IStabilityPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPool.sol";
+import {ITroveManager} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveManager.sol";
 import {BatchIdSet} from "./Utils/BatchIdSet.sol";
 import {Logging} from "./Utils/Logging.sol";
 import {StringFormatting} from "./Utils/StringFormatting.sol";
@@ -86,8 +86,13 @@ contract InvariantsTest is Assertions, Logging, BaseInvariantTest, BaseMultiColl
 
         TestDeployer deployer = new TestDeployer();
         Contracts memory contracts;
-        (contracts.branches, contracts.collateralRegistry, contracts.boldToken, contracts.hintHelpers,, contracts.weth,)
-        = deployer.deployAndConnectContractsMultiColl(p);
+        (
+            contracts.branches,
+            contracts.collateralRegistry,
+            contracts.boldToken,
+            contracts.hintHelpers,,
+            contracts.weth,
+        ) = deployer.deployAndConnectContractsMultiColl(p);
         setupContracts(contracts);
 
         handler = new InvariantsTestHandler({contracts: contracts, assumeNoExpectedFailures: true});

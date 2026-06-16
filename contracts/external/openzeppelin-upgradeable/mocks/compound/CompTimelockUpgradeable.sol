@@ -26,7 +26,7 @@
 
 pragma solidity ^0.8.20;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
 
 contract CompTimelockUpgradeable is Initializable {
@@ -36,28 +36,13 @@ contract CompTimelockUpgradeable is Initializable {
     event NewPendingAdmin(address indexed newPendingAdmin);
     event NewDelay(uint256 indexed newDelay);
     event CancelTransaction(
-        bytes32 indexed txHash,
-        address indexed target,
-        uint256 value,
-        string signature,
-        bytes data,
-        uint256 eta
+        bytes32 indexed txHash, address indexed target, uint256 value, string signature, bytes data, uint256 eta
     );
     event ExecuteTransaction(
-        bytes32 indexed txHash,
-        address indexed target,
-        uint256 value,
-        string signature,
-        bytes data,
-        uint256 eta
+        bytes32 indexed txHash, address indexed target, uint256 value, string signature, bytes data, uint256 eta
     );
     event QueueTransaction(
-        bytes32 indexed txHash,
-        address indexed target,
-        uint256 value,
-        string signature,
-        bytes data,
-        uint256 eta
+        bytes32 indexed txHash, address indexed target, uint256 value, string signature, bytes data, uint256 eta
     );
 
     uint256 public constant GRACE_PERIOD = 14 days;
@@ -108,13 +93,10 @@ contract CompTimelockUpgradeable is Initializable {
         emit NewPendingAdmin(pendingAdmin);
     }
 
-    function queueTransaction(
-        address target,
-        uint256 value,
-        string memory signature,
-        bytes memory data,
-        uint256 eta
-    ) public returns (bytes32) {
+    function queueTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 eta)
+        public
+        returns (bytes32)
+    {
         require(msg.sender == admin, "Timelock::queueTransaction: Call must come from admin.");
         require(
             eta >= getBlockTimestamp() + delay,
@@ -129,13 +111,9 @@ contract CompTimelockUpgradeable is Initializable {
         return txHash;
     }
 
-    function cancelTransaction(
-        address target,
-        uint256 value,
-        string memory signature,
-        bytes memory data,
-        uint256 eta
-    ) public {
+    function cancelTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 eta)
+        public
+    {
         require(msg.sender == admin, "Timelock::cancelTransaction: Call must come from admin.");
 
         // bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
@@ -145,13 +123,11 @@ contract CompTimelockUpgradeable is Initializable {
         emit CancelTransaction(txHash, target, value, signature, data, eta);
     }
 
-    function executeTransaction(
-        address target,
-        uint256 value,
-        string memory signature,
-        bytes memory data,
-        uint256 eta
-    ) public payable returns (bytes memory) {
+    function executeTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 eta)
+        public
+        payable
+        returns (bytes memory)
+    {
         require(msg.sender == admin, "Timelock::executeTransaction: Call must come from admin.");
 
         // bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));

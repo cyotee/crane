@@ -3,7 +3,7 @@
 
 pragma solidity >=0.6.2;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /**
  * @dev Temporary Approval Extension for ERC-20 (https://github.com/ethereum/ERCs/pull/358[ERC-7674])

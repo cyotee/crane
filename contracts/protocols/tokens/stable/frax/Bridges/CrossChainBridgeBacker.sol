@@ -29,11 +29,11 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/IAnyswa
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/CrossChainCanonical.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/FraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Oracle/ICrossChainOracle.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/ICrossChainAMO.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ICrossChainOracle.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/ICrossChainAMO.sol";
 
 contract CrossChainBridgeBacker is Owned {
     // SafeMath automatically included in Solidity >= 8.0.0
@@ -56,7 +56,7 @@ contract CrossChainBridgeBacker is Owned {
     address[] public amos_array;
     mapping(address => bool) public eoa_amos; // These need to be tracked so allBalances() skips them
     mapping(address => bool) public amos; // Mapping is also used for faster verification
-    
+
     // Informational
     string public name;
 
@@ -99,17 +99,17 @@ contract CrossChainBridgeBacker is Owned {
     }
 
     modifier validCanonicalToken(address token_address) {
-        require (
-                token_address == address(canFRAX) || 
-                token_address == address(canFXS) ||
-                token_address == address(collateral_token), "Invalid canonical token"
-            );
+        require(
+            token_address == address(canFRAX) || token_address == address(canFXS)
+                || token_address == address(collateral_token),
+            "Invalid canonical token"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _cross_chain_oracle_address,
@@ -127,7 +127,7 @@ contract CrossChainBridgeBacker is Owned {
         anyFXS = IAnyswapV4ERC20(_token_addresses[2]);
         canFXS = CrossChainCanonical(_token_addresses[3]);
         collateral_token = ERC20(_token_addresses[4]);
-        missing_decimals = uint(18) - collateral_token.decimals();
+        missing_decimals = uint256(18) - collateral_token.decimals();
 
         // Bridge related
         bridge_addresses = _bridge_addresses;
@@ -138,13 +138,12 @@ contract CrossChainBridgeBacker is Owned {
         name = _name;
 
         // Add this bridger as an AMO. Cannot used the addAMO function
-        amos[address(this)] = true; 
+        amos[address(this)] = true;
         amos_array.push(address(this));
         frax_lent_balances[address(this)] = 0;
         fxs_lent_balances[address(this)] = 0;
         collat_lent_balances[address(this)] = 0;
     }
-
 
     /* ========== VIEWS ========== */
 
@@ -196,17 +195,21 @@ contract CrossChainBridgeBacker is Owned {
         allocations[8] = collat_lent_sum; // Lent Collateral
         allocations[9] = allocations[7] + allocations[8]; // Total Collateral, in native decimals()
         allocations[10] = allocations[9] * (10 ** missing_decimals); // Total Collateral, in E18
-    
+
         // Total USD value of everything, in E18
         allocations[11] = allocations[2] + allocations[6] + allocations[10];
     }
 
-    function allBalances() public view returns (
-        uint256 frax_ttl, 
-        uint256 fxs_ttl,
-        uint256 col_ttl, // in native decimals()
-        uint256 ttl_val_usd_e18
-    ) {
+    function allBalances()
+        public
+        view
+        returns (
+            uint256 frax_ttl,
+            uint256 fxs_ttl,
+            uint256 col_ttl, // in native decimals()
+            uint256 ttl_val_usd_e18
+        )
+    {
         // Handle this contract first (amos_array[0])
         uint256[12] memory allocations = showAllocations();
         frax_ttl = allocations[2];
@@ -214,16 +217,12 @@ contract CrossChainBridgeBacker is Owned {
         col_ttl = allocations[9];
         ttl_val_usd_e18 = allocations[11];
 
-        // [0] will always be this address, so skip it to avoid an infinite loop 
-        for (uint i = 1; i < amos_array.length; i++){ 
+        // [0] will always be this address, so skip it to avoid an infinite loop
+        for (uint256 i = 1; i < amos_array.length; i++) {
             // Exclude null addresses and EOAs
-            if (amos_array[i] != address(0) && !eoa_amos[amos_array[i]]){
-                (
-                    uint256 frax_bal, 
-                    uint256 fxs_bal, 
-                    uint256 collat_bal,
-                    uint256 total_val_e18
-                ) = ICrossChainAMO(amos_array[i]).allDollarBalances();
+            if (amos_array[i] != address(0) && !eoa_amos[amos_array[i]]) {
+                (uint256 frax_bal, uint256 fxs_bal, uint256 collat_bal, uint256 total_val_e18) =
+                    ICrossChainAMO(amos_array[i]).allDollarBalances();
 
                 frax_ttl += frax_bal;
                 fxs_ttl += fxs_bal;
@@ -233,41 +232,47 @@ contract CrossChainBridgeBacker is Owned {
         }
     }
 
-
     /* ========== BRIDGING / AMO FUNCTIONS ========== */
 
     // Used for crumbs and drop-ins sitting in this contract
     // Can also manually bridge back anyFRAX
     // If do_swap is true, it will swap out canTokens in this contract for anyTokens in the canToken contracts
     function selfBridge(uint256 token_type, uint256 token_amount, bool do_swap) external onlyByOwnGov {
-        require(token_type == 0 || token_type == 1 || token_type == 2, 'Invalid token type');
+        require(token_type == 0 || token_type == 1 || token_type == 2, "Invalid token type");
 
         _receiveBack(address(this), token_type, token_amount, true, do_swap);
     }
 
     // AMOs should only be giving back canonical tokens
-    function receiveBackViaAMO(address canonical_token_address, uint256 token_amount, bool do_bridging) external validCanonicalToken(canonical_token_address) validAMO(msg.sender) {
+    function receiveBackViaAMO(address canonical_token_address, uint256 token_amount, bool do_bridging)
+        external
+        validCanonicalToken(canonical_token_address)
+        validAMO(msg.sender)
+    {
         // Pull in the tokens from the AMO
         TransferHelper.safeTransferFrom(canonical_token_address, msg.sender, address(this), token_amount);
 
         // Get the token type
-        uint256 token_type = getTokenType(canonical_token_address); 
+        uint256 token_type = getTokenType(canonical_token_address);
 
         _receiveBack(msg.sender, token_type, token_amount, do_bridging, true);
     }
 
     // Optionally bridge
-    function _receiveBack(address from_address, uint256 token_type, uint256 token_amount, bool do_bridging, bool do_swap) internal {
-
-
+    function _receiveBack(
+        address from_address,
+        uint256 token_type,
+        uint256 token_amount,
+        bool do_bridging,
+        bool do_swap
+    ) internal {
         if (do_bridging) {
             // Swap canTokens for bridgeable anyTokens, if necessary
             if (token_type == 0) {
                 // FRAX
                 // Swap the canonical tokens out for bridgeable anyTokens
                 if (do_swap) _swapCanonicalForAny(0, token_amount);
-            }
-            else if (token_type == 1){
+            } else if (token_type == 1) {
                 // FXS
                 // Swap the canonical tokens out for bridgeable anyTokens
                 if (do_swap) _swapCanonicalForAny(1, token_amount);
@@ -284,7 +289,7 @@ contract CrossChainBridgeBacker is Owned {
         }
 
         // Account for the lent balances
-        if (token_type == 0){
+        if (token_type == 0) {
             if (token_amount >= frax_lent_balances[from_address]) frax_lent_balances[from_address] = 0;
             else frax_lent_balances[from_address] -= token_amount;
 
@@ -292,8 +297,7 @@ contract CrossChainBridgeBacker is Owned {
             else frax_lent_sum -= token_amount;
 
             if (do_bridging) frax_bridged_back_sum += token_amount;
-        }
-        else if (token_type == 1){
+        } else if (token_type == 1) {
             if (token_amount >= fxs_lent_balances[from_address]) fxs_lent_balances[from_address] = 0;
             else fxs_lent_balances[from_address] -= token_amount;
 
@@ -301,8 +305,7 @@ contract CrossChainBridgeBacker is Owned {
             else fxs_lent_sum -= token_amount;
 
             if (do_bridging) fxs_bridged_back_sum += token_amount;
-        }
-        else {
+        } else {
             if (token_amount >= collat_lent_balances[from_address]) collat_lent_balances[from_address] = 0;
             else collat_lent_balances[from_address] -= token_amount;
 
@@ -314,14 +317,27 @@ contract CrossChainBridgeBacker is Owned {
     }
 
     // Meant to be overriden
-    function _bridgingLogic(uint256 /*token_type*/, address /*address_to_send_to*/, uint256 /*token_amount*/) internal virtual {
+    function _bridgingLogic(
+        uint256,
+        /*token_type*/
+        address,
+        /*address_to_send_to*/
+        uint256 /*token_amount*/
+    )
+        internal
+        virtual
+    {
         revert("Need bridging logic");
     }
 
     /* ========== LENDING FUNCTIONS ========== */
 
     // Lend out canonical FRAX
-    function lendFraxToAMO(address destination_amo, uint256 frax_amount) external onlyByOwnGov validAMO(destination_amo) {
+    function lendFraxToAMO(address destination_amo, uint256 frax_amount)
+        external
+        onlyByOwnGov
+        validAMO(destination_amo)
+    {
         // Track the balances
         frax_lent_balances[destination_amo] += frax_amount;
         frax_lent_sum += frax_amount;
@@ -341,7 +357,11 @@ contract CrossChainBridgeBacker is Owned {
     }
 
     // Lend out collateral
-    function lendCollatToAMO(address destination_amo, uint256 collat_amount) external onlyByOwnGov validAMO(destination_amo) {
+    function lendCollatToAMO(address destination_amo, uint256 collat_amount)
+        external
+        onlyByOwnGov
+        validAMO(destination_amo)
+    {
         // Track the balances
         collat_lent_balances[destination_amo] += collat_amount;
         collat_lent_sum += collat_amount;
@@ -350,9 +370,8 @@ contract CrossChainBridgeBacker is Owned {
         TransferHelper.safeTransfer(address(collateral_token), destination_amo, collat_amount);
     }
 
-
     /* ========== SWAPPING, GIVING, MINTING, AND BURNING ========== */
-    
+
     // ----------------- SWAPPING -----------------
 
     // Swap anyToken for canToken [GOVERNANCE CALLABLE]
@@ -367,8 +386,7 @@ contract CrossChainBridgeBacker is Owned {
             // Approve and swap
             anyFRAX.approve(address(canFRAX), token_amount);
             canFRAX.exchangeOldForCanonical(address(anyFRAX), token_amount);
-        }
-        else {
+        } else {
             // FXS
             // Approve and swap
             anyFXS.approve(address(canFXS), token_amount);
@@ -388,8 +406,7 @@ contract CrossChainBridgeBacker is Owned {
             // Approve and swap
             canFRAX.approve(address(canFRAX), token_amount);
             canFRAX.exchangeCanonicalForOld(address(anyFRAX), token_amount);
-        }
-        else {
+        } else {
             // FXS
             // Approve and swap
             canFXS.approve(address(canFXS), token_amount);
@@ -405,8 +422,7 @@ contract CrossChainBridgeBacker is Owned {
             // FRAX
             // Transfer
             TransferHelper.safeTransfer(address(anyFRAX), address(canFRAX), token_amount);
-        }
-        else {
+        } else {
             // FXS
             // Transfer
             TransferHelper.safeTransfer(address(anyFXS), address(canFXS), token_amount);
@@ -433,35 +449,35 @@ contract CrossChainBridgeBacker is Owned {
         canFXS.minter_burn(fxs_amount);
     }
 
-
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
 
-    function collectBridgeTokens(uint256 token_type, address bridge_token_address, uint256 token_amount) external onlyByOwnGov {
+    function collectBridgeTokens(uint256 token_type, address bridge_token_address, uint256 token_amount)
+        external
+        onlyByOwnGov
+    {
         if (token_type == 0) {
             canFRAX.withdrawBridgeTokens(bridge_token_address, token_amount);
-        }
-        else if (token_type == 1) {
+        } else if (token_type == 1) {
             canFXS.withdrawBridgeTokens(bridge_token_address, token_amount);
-        }
-        else {
+        } else {
             revert("Invalid token_type");
         }
     }
-    
-    // Adds an AMO 
+
+    // Adds an AMO
     function addAMO(address amo_address, bool is_eoa) external onlyByOwnGov {
         require(amo_address != address(0), "Zero address detected");
 
         if (is_eoa) {
             eoa_amos[amo_address] = true;
-        }
-        else {
-            (uint256 frax_val_e18, uint256 fxs_val_e18, uint256 collat_val_e18, uint256 total_val_e18) = ICrossChainAMO(amo_address).allDollarBalances();
+        } else {
+            (uint256 frax_val_e18, uint256 fxs_val_e18, uint256 collat_val_e18, uint256 total_val_e18) =
+                ICrossChainAMO(amo_address).allDollarBalances();
             require(frax_val_e18 >= 0 && fxs_val_e18 >= 0 && collat_val_e18 >= 0 && total_val_e18 >= 0, "Invalid AMO");
         }
 
         require(amos[amo_address] == false, "Address already exists");
-        amos[amo_address] = true; 
+        amos[amo_address] = true;
         amos_array.push(amo_address);
 
         frax_lent_balances[amo_address] = 0;
@@ -475,12 +491,12 @@ contract CrossChainBridgeBacker is Owned {
     function removeAMO(address amo_address) external onlyByOwnGov {
         require(amo_address != address(0), "Zero address detected");
         require(amos[amo_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete amos[amo_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < amos_array.length; i++){ 
+        for (uint256 i = 0; i < amos_array.length; i++) {
             if (amos_array[i] == amo_address) {
                 amos_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -489,7 +505,7 @@ contract CrossChainBridgeBacker is Owned {
 
         emit AMORemoved(amo_address);
     }
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -506,46 +522,57 @@ contract CrossChainBridgeBacker is Owned {
     }
 
     function setBridgeInfo(
-        address _frax_bridge_address, 
-        address _fxs_bridge_address, 
-        address _collateral_bridge_address, 
-        address _destination_address_override, 
+        address _frax_bridge_address,
+        address _fxs_bridge_address,
+        address _collateral_bridge_address,
+        address _destination_address_override,
         string memory _non_evm_destination_address
     ) external onlyByOwnGov {
         // Make sure there are valid bridges
         require(
-            _frax_bridge_address != address(0) && 
-            _fxs_bridge_address != address(0) &&
-            _collateral_bridge_address != address(0)
-        , "Invalid bridge address");
+            _frax_bridge_address != address(0) && _fxs_bridge_address != address(0)
+                && _collateral_bridge_address != address(0),
+            "Invalid bridge address"
+        );
 
         // Set bridge addresses
         bridge_addresses = [_frax_bridge_address, _fxs_bridge_address, _collateral_bridge_address];
-        
+
         // Overridden cross-chain destination address
         destination_address_override = _destination_address_override;
 
         // Set bytes32 / non-EVM address on the other chain, if applicable
         non_evm_destination_address = _non_evm_destination_address;
-        
-        emit BridgeInfoChanged(_frax_bridge_address, _fxs_bridge_address, _collateral_bridge_address, _destination_address_override, _non_evm_destination_address);
+
+        emit BridgeInfoChanged(
+            _frax_bridge_address,
+            _fxs_bridge_address,
+            _collateral_bridge_address,
+            _destination_address_override,
+            _non_evm_destination_address
+        );
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
-
 
     /* ========== EVENTS ========== */
 
     event AMOAdded(address amo_address);
     event AMORemoved(address amo_address);
     event RecoveredERC20(address token, uint256 amount);
-    event BridgeInfoChanged(address frax_bridge_address, address fxs_bridge_address, address collateral_bridge_address, address destination_address_override, string non_evm_destination_address);
+    event BridgeInfoChanged(
+        address frax_bridge_address,
+        address fxs_bridge_address,
+        address collateral_bridge_address,
+        address destination_address_override,
+        string non_evm_destination_address
+    );
 }

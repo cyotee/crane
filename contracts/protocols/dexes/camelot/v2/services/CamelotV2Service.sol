@@ -15,6 +15,15 @@ import {ICamelotFactory} from "@crane/contracts/interfaces/protocols/dexes/camel
 import {ICamelotV2Router} from "@crane/contracts/interfaces/protocols/dexes/camelot/v2/ICamelotV2Router.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 
+// tag::CamelotV2Service[]
+/**
+ * @title CamelotV2Service - Stateless library for Camelot V2 DEX operations: swaps, liquidity deposit/withdraw, and balanced asset operations.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Internal-only API (prefixed _). Consumed via `using CamelotV2Service for ...` in targets/services or tests.
+ * @dev Uses `ConstProdUtils` for constant-product AMM math (purchase/sale quotes, swap deposit calcs).
+ * @dev Structs bundle parameters to avoid stack-too-deep in complex flows.
+ * @dev See AGENTS.md for *Service pattern and PRD LR-1 for NatSpec requirements.
+ */
 library CamelotV2Service {
     using ConstProdUtils for uint256;
     // using CamelotV2Utils for uint256;
@@ -22,14 +31,23 @@ library CamelotV2Service {
     using CamelotV2Service for ICamelotV2Router;
     using SafeERC20 for IERC20;
 
-    // Struct to help avoid stack too deep errors
+    // tag::ReserveInfo[]
+    /**
+     * @dev Internal struct bundling reserve and fee data for a token pair side.
+     * Used to avoid stack depth issues in swap/deposit logic.
+     */
     struct ReserveInfo {
         uint256 reserveIn;
         uint256 reserveOut;
         uint256 feePercent;
         uint256 unknownFee;
     }
+    // end::ReserveInfo[]
 
+    // tag::SwapParams[]
+    /**
+     * @dev Internal param struct for _swap flows.
+     */
     struct SwapParams {
         ICamelotV2Router router;
         uint256 amountIn;
@@ -40,7 +58,12 @@ library CamelotV2Service {
         uint256 reserveOut;
         address referrer;
     }
+    // end::SwapParams[]
 
+    // tag::BalanceParams[]
+    /**
+     * @dev Internal param struct for _balanceAssets and _swapDeposit flows.
+     */
     struct BalanceParams {
         ICamelotV2Router router;
         uint256 saleAmt;
@@ -51,11 +74,24 @@ library CamelotV2Service {
         uint256 reserveOut;
         address referrer;
     }
+    // end::BalanceParams[]
 
     /* ---------------------------------------------------------------------- */
     /*                                 Deposit                                */
     /* ---------------------------------------------------------------------- */
 
+    // tag::_deposit(ICamelotV2Router-IERC20-IERC20-uint256-uint256)[]
+    /**
+     * @notice Deposits (adds) liquidity for a token pair via the Camelot router.
+     * Approves and calls addLiquidity; returns minted LP tokens to self.
+     * @dev Internal; slippage tolerance set to 1 wei min.
+     * @param router The CamelotV2 router instance.
+     * @param tokenA First token of the pair.
+     * @param tokenB Second token of the pair.
+     * @param amountADesired Desired amount of tokenA to deposit.
+     * @param amountBDesired Desired amount of tokenB to deposit.
+     * @return liquidity Amount of LP tokens minted.
+     */
     function _deposit(
         ICamelotV2Router router,
         IERC20 tokenA,
@@ -69,21 +105,37 @@ library CamelotV2Service {
             address(tokenA), address(tokenB), amountADesired, amountBDesired, 1, 1, address(this), block.timestamp
         );
     }
+    // end::_deposit(ICamelotV2Router-IERC20-IERC20-uint256-uint256)[]
 
     /* ---------------------------------------------------------------------- */
     /*                                Withdraw                                */
     /* ---------------------------------------------------------------------- */
 
+    // tag::_withdrawDirect(ICamelotPair-uint256)[]
+    /**
+     * @notice Burns LP tokens directly on the pair to withdraw underlying reserves.
+     * @dev Sends LP to pool then calls burn; returns withdrawn token amounts.
+     * @param pool The Camelot pair (LP token).
+     * @param amt Amount of LP tokens to burn/withdraw.
+     * @return amount0 Amount of token0 withdrawn.
+     * @return amount1 Amount of token1 withdrawn.
+     */
     function _withdrawDirect(ICamelotPair pool, uint256 amt) internal returns (uint256 amount0, uint256 amount1) {
         pool.transfer(address(pool), amt);
         (amount0, amount1) = pool.burn(address(this));
     }
+    // end::_withdrawDirect(ICamelotPair-uint256)[]
 
     /* ---------------------------------------------------------------------- */
     /*                                  Swap                                  */
     /* ---------------------------------------------------------------------- */
 
-    // Helper function to create path and approve token
+    // tag::_prepareSwap(SwapParams)[]
+    /**
+     * @dev Helper: builds 2-hop path array and approves input for router.
+     * @param params Swap params bundle.
+     * @return path The token path for the swap.
+     */
     function _prepareSwap(SwapParams memory params) private returns (address[] memory path) {
         path = new address[](2);
         path[0] = address(params.tokenIn);
@@ -91,8 +143,14 @@ library CamelotV2Service {
         params.tokenIn.approve(address(params.router), params.amountIn);
         return path;
     }
+    // end::_prepareSwap(SwapParams)[]
 
-    // Helper function to perform router swap
+    // tag::_executeSwap(SwapParams-address[])[]
+    /**
+     * @dev Helper: executes the fee-on-transfer supporting exact-in swap via router.
+     * @param params Swap params bundle.
+     * @param path The token path.
+     */
     function _executeSwap(SwapParams memory params, address[] memory path) private {
         params.router
             .swapExactTokensForTokensSupportingFeeOnTransferTokens(
@@ -104,7 +162,23 @@ library CamelotV2Service {
                 block.timestamp // uint deadline
             );
     }
+    // end::_executeSwap(SwapParams-address[])[]
 
+    // tag::_swap(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
+    /**
+     * @notice Executes a token swap using provided reserves and fee, via Camelot router (supports fee-on-transfer tokens).
+     * Computes sale quote via ConstProdUtils then performs the swap.
+     * @param router The CamelotV2 router.
+     * @param amountIn Amount of input token to swap.
+     * @param tokenIn Input token.
+     * @param reserveIn Current reserve of input token.
+     * @param feePercent Fee percent for the input side (in basis points or as used by pair).
+     * @param tokenOut Output token.
+     * @param reserveOut Current reserve of output token.
+     * @param referrer Referrer address for fee sharing (if any).
+     * @return amountOut Actual output amount received (after fees/transfer).
+     * @custom:emits (via router) Transfer events and swap events from pair.
+     */
     function _swap(
         ICamelotV2Router router,
         uint256 amountIn,
@@ -136,7 +210,19 @@ library CamelotV2Service {
         // Execute swap
         _executeSwap(params, path);
     }
+    // end::_swap(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
 
+    // tag::_swap(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
+    /**
+     * @notice Overload: swaps given a pool, fetching reserves/fees via _sortReservesStruct.
+     * @param router The CamelotV2 router.
+     * @param pool The pair to derive reserves/fees from.
+     * @param amountIn Amount of input token to swap.
+     * @param tokenIn Input token.
+     * @param tokenOut Output token.
+     * @param referrer Referrer address.
+     * @return amountOut Actual amount out.
+     */
     function _swap(
         ICamelotV2Router router,
         ICamelotPair pool,
@@ -153,7 +239,18 @@ library CamelotV2Service {
             router, amountIn, tokenIn, reserves.reserveIn, reserves.feePercent, tokenOut, reserves.reserveOut, referrer
         );
     }
+    // end::_swap(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
 
+    // tag::_sortReserves(ICamelotPair-IERC20)[]
+    /**
+     * @notice Returns sorted reserves + fees for known token vs opposing.
+     * @param pool The pair.
+     * @param knownToken The token whose side to treat as "in".
+     * @return knownReserve Reserve of known.
+     * @return opposingReserve Reserve of the other.
+     * @return knownFeePercent Fee for known side.
+     * @return opposingFeePercent Fee for opposing side.
+     */
     function _sortReserves(ICamelotPair pool, IERC20 knownToken)
         internal
         view
@@ -162,7 +259,16 @@ library CamelotV2Service {
         ReserveInfo memory reserves = _sortReservesStruct(pool, knownToken);
         return (reserves.reserveIn, reserves.reserveOut, reserves.feePercent, reserves.unknownFee);
     }
+    // end::_sortReserves(ICamelotPair-IERC20)[]
 
+    // tag::_sortReservesStruct(ICamelotPair-IERC20)[]
+    /**
+     * @notice Returns ReserveInfo struct with reserves and fees sorted by known token.
+     * Reads getReserves() and token0 to decide sides.
+     * @param pool The pair.
+     * @param knownToken The token for "in" side (or zero to default to token0).
+     * @return reserves Populated ReserveInfo.
+     */
     function _sortReservesStruct(ICamelotPair pool, IERC20 knownToken)
         internal
         view
@@ -188,7 +294,20 @@ library CamelotV2Service {
 
         return reserves;
     }
+    // end::_sortReservesStruct(ICamelotPair-IERC20)[]
 
+    // tag::_swapDeposit(ICamelotV2Router-ICamelotPair-IERC20-uint256-IERC20-address)[]
+    /**
+     * @notice Performs a swap of some input to balance for a subsequent deposit into the pool.
+     * Returns the LP amount received.
+     * @param router Router.
+     * @param pool Pair for reserves.
+     * @param tokenIn The sale token (input for balancing swap).
+     * @param saleAmt Amount of tokenIn available to (partially) swap + deposit.
+     * @param opToken The opposing token.
+     * @param referrer Referrer.
+     * @return LP tokens minted.
+     */
     function _swapDeposit(
         ICamelotV2Router router,
         ICamelotPair pool,
@@ -220,7 +339,20 @@ library CamelotV2Service {
 
         return poolTokenAmount;
     }
+    // end::_swapDeposit(ICamelotV2Router-ICamelotPair-IERC20-uint256-IERC20-address)[]
 
+    // tag::_balanceAssets(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
+    /**
+     * @notice Computes balanced deposit amounts by optionally swapping excess of sale token.
+     * Overload taking a pool to derive reserves.
+     * @param router Router.
+     * @param pool Pair.
+     * @param saleAmt Amount of sale/input token.
+     * @param tokenIn Sale token.
+     * @param tokenOut Opposing token.
+     * @param referrer Referrer.
+     * @return amounts [amountInToDeposit, amountOutToDeposit]
+     */
     function _balanceAssets(
         ICamelotV2Router router,
         ICamelotPair pool,
@@ -247,7 +379,21 @@ library CamelotV2Service {
         // Use the helper with direct reserves
         return _balanceAssetsInternal(params);
     }
+    // end::_balanceAssets(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
 
+    // tag::_balanceAssets(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
+    /**
+     * @notice Computes balanced amounts given explicit reserves.
+     * @param router Router.
+     * @param saleAmt Amount of sale token.
+     * @param tokenIn Sale token.
+     * @param saleReserve Reserve of sale token.
+     * @param saleTokenFeePerc Fee % for sale side.
+     * @param tokenOut Opposing.
+     * @param reserveOut Opposing reserve.
+     * @param referrer Referrer.
+     * @return amounts Balanced pair amounts ready for deposit.
+     */
     function _balanceAssets(
         ICamelotV2Router router,
         uint256 saleAmt,
@@ -272,8 +418,14 @@ library CamelotV2Service {
 
         return _balanceAssetsInternal(params);
     }
+    // end::_balanceAssets(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
 
-    // Helper function to implement _balanceAssets logic to avoid stack too deep
+    // tag::_balanceAssetsInternal(BalanceParams)[]
+    /**
+     * @dev Core impl for balancing: computes swap portion then performs the swap.
+     * @param params Balance params.
+     * @return amounts [keepForDeposit, swappedAmount]
+     */
     function _balanceAssetsInternal(BalanceParams memory params) private returns (uint256[] memory amounts) {
         // Get amount of input token to be swapped
         uint256 swapAmountIn = _calculateSwapAmount(params.saleAmt, params.saleReserve, params.saleTokenFeePerc);
@@ -295,8 +447,17 @@ library CamelotV2Service {
 
         return amounts;
     }
+    // end::_balanceAssetsInternal(BalanceParams)[]
 
-    // Helper function to calculate swap amount for balanced deposit
+    // tag::_calculateSwapAmount(uint256-uint256-uint256)[]
+    /**
+     * @notice Pure calc of how much of the sale amount should be swapped for balanced deposit.
+     * Delegates to ConstProdUtils._swapDepositSaleAmt.
+     * @param saleAmt Total sale token input.
+     * @param saleReserve Current reserve of sale token.
+     * @param saleTokenFeePerc Fee percent.
+     * @return Amount to swap (remainder kept for direct deposit).
+     */
     function _calculateSwapAmount(uint256 saleAmt, uint256 saleReserve, uint256 saleTokenFeePerc)
         internal
         pure
@@ -304,11 +465,16 @@ library CamelotV2Service {
     {
         return ConstProdUtils._swapDepositSaleAmt(saleAmt, saleReserve, saleTokenFeePerc);
     }
+    // end::_calculateSwapAmount(uint256-uint256-uint256)[]
 
     /* ---------------------------------------------------------------------- */
     /*                              Withdraw/Swap                             */
     /* ---------------------------------------------------------------------- */
 
+    // tag::WithdrawSwapParams[]
+    /**
+     * @dev Internal struct for _withdrawSwapDirect to avoid stack depth.
+     */
     struct WithdrawSwapParams {
         ICamelotPair pool;
         ICamelotV2Router router;
@@ -317,7 +483,19 @@ library CamelotV2Service {
         IERC20 opToken;
         address referrer;
     }
+    // end::WithdrawSwapParams[]
 
+    // tag::_withdrawSwapDirect(ICamelotPair-ICamelotV2Router-uint256-IERC20-IERC20-address)[]
+    /**
+     * @notice Withdraws LP then swaps the non-target token to target, returning total in target token.
+     * @param pool Pool/LP.
+     * @param router Router for possible swap.
+     * @param amt LP amount to withdraw.
+     * @param tokenOut Desired final token.
+     * @param opToken The other token in pair.
+     * @param referrer Referrer.
+     * @return amountOut Total received in tokenOut (direct + swapped proceeds).
+     */
     function _withdrawSwapDirect(
         ICamelotPair pool,
         ICamelotV2Router router,
@@ -341,8 +519,17 @@ library CamelotV2Service {
         uint256 proceedsAmount = _swapWithdrawnTokens(params, saleTokenWDAmt);
         amountOut = tokenOutWDAmt + proceedsAmount;
     }
+    // end::_withdrawSwapDirect(ICamelotPair-ICamelotV2Router-uint256-IERC20-IERC20-address)[]
 
-    // Helper function to determine token amounts after withdrawal
+    // tag::_determineTokenAmounts(WithdrawSwapParams-uint256-uint256)[]
+    /**
+     * @dev Splits withdrawn amounts according to which is the target tokenOut.
+     * @param params Withdraw params.
+     * @param amount0 Withdrawn token0 amt.
+     * @param amount1 Withdrawn token1 amt.
+     * @return tokenOutAmount Amount of desired tokenOut.
+     * @return saleTokenAmount Amount of the other (to be swapped).
+     */
     function _determineTokenAmounts(WithdrawSwapParams memory params, uint256 amount0, uint256 amount1)
         internal
         view
@@ -358,9 +545,19 @@ library CamelotV2Service {
             saleTokenAmount = amount0;
         }
     }
+    // end::_determineTokenAmounts(WithdrawSwapParams-uint256-uint256)[]
 
-    // Helper function to swap withdrawn tokens
+    // tag::_swapWithdrawnTokens(WithdrawSwapParams-uint256)[]
+    /**
+     * @dev Swaps the sale/withdrawn other token into the target using router overload.
+     * @param params Withdraw params.
+     * @param saleTokenWDAmt Amount of sale token withdrawn.
+     * @return Amount received from the swap.
+     */
     function _swapWithdrawnTokens(WithdrawSwapParams memory params, uint256 saleTokenWDAmt) internal returns (uint256) {
         return params.router._swap(params.pool, saleTokenWDAmt, params.opToken, params.tokenOut, params.referrer);
     }
+    // end::_swapWithdrawnTokens(WithdrawSwapParams-uint256)[]
+
+// end::CamelotV2Service[]
 }

@@ -2,15 +2,15 @@
 pragma solidity ^0.8.35;
 
 contract OwnerTesting {
-  constructor () {}
+    constructor() {}
 
-  function owner() external view returns(address) {}
-  function owner_address() external view returns(address) {}
-  function controller_address() external view returns(address) {}
-  function admin() external view returns(address) {}
-  function timelock() external view returns(address) {}
-  function timelock_address() external view returns(address) {}
-  function custodian() external view returns(address) {}
-  function custodian_address() external view returns(address) {}
-  function rewardManagers(address tkn_addr) external view returns(address) {}
+    function owner() external view returns (address) {}
+    function owner_address() external view returns (address) {}
+    function controller_address() external view returns (address) {}
+    function admin() external view returns (address) {}
+    function timelock() external view returns (address) {}
+    function timelock_address() external view returns (address) {}
+    function custodian() external view returns (address) {}
+    function custodian_address() external view returns (address) {}
+    function rewardManagers(address tkn_addr) external view returns (address) {}
 }

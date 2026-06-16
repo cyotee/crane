@@ -3,18 +3,22 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {ILUSD} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILUSD.sol";
-import {ILQTY} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTY.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {ILUSD} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILUSD.sol";
+import {ILQTY} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTY.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
 
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {UserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/UserProxy.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {UserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UserProxy.sol";
 
-import {MaliciousInitiative} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MaliciousInitiative.sol";
+import {
+    MaliciousInitiative
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MaliciousInitiative.sol";
 import {MockERC20Tester} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockERC20Tester.sol";
 import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";
-import {MockStakingV1Deployer} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
+import {
+    MockStakingV1Deployer
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/constants.sol";
 
 abstract contract GovernanceAttacksTest is Test {

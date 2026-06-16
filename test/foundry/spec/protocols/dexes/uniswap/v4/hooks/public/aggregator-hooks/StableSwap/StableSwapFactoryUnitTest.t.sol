@@ -9,8 +9,12 @@ import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {MockCurveStableSwap} from "./mocks/MockCurveStableSwap.sol";
 import {MockMetaRegistry} from "./mocks/MockMetaRegistry.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
-import {IMetaRegistry} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
-import {StableSwapAggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
+import {
+    IMetaRegistry
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
+import {
+    StableSwapAggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
 import {
     StableSwapAggregatorFactory
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregatorFactory.sol";
@@ -29,8 +33,9 @@ contract StableSwapFactoryUnitTest is Test {
     uint160 constant SQRT_PRICE_1_1 = 79228162514264337593543950336; // 1:1 price
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
 
         token0 = new MockERC20("Token0", "TK0", 18);
         token1 = new MockERC20("Token1", "TK1", 18);

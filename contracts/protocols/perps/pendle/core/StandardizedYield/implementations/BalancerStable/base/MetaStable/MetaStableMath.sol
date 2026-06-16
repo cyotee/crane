@@ -11,20 +11,20 @@ library MetaStableMath {
     uint256 internal constant _MAX_AMP = 5000;
     uint256 internal constant _AMP_PRECISION = 1e3;
 
-    function _calculateInvariant(
-        uint256 amplificationParameter,
-        uint256[] memory balances,
-        bool roundUp
-    ) public pure returns (uint256) {
+    function _calculateInvariant(uint256 amplificationParameter, uint256[] memory balances, bool roundUp)
+        public
+        pure
+        returns (uint256)
+    {
         unchecked {
             /**********************************************************************************************
-        // invariant                                                                                 //
-        // D = invariant                                                  D^(n+1)                    //
-        // A = amplification coefficient      A  n^n S + D = A D n^n + -----------                   //
-        // S = sum of balances                                             n^n P                     //
-        // P = product of balances                                                                   //
-        // n = number of tokens                                                                      //
-        **********************************************************************************************/
+            // invariant                                                                                 //
+            // D = invariant                                                  D^(n+1)                    //
+            // A = amplification coefficient      A  n^n S + D = A D n^n + -----------                   //
+            // S = sum of balances                                             n^n P                     //
+            // P = product of balances                                                                   //
+            // n = number of tokens                                                                      //
+            **********************************************************************************************/
             // We support rounding up or down.
 
             uint256 sum = 0;
@@ -47,13 +47,13 @@ library MetaStableMath {
                 }
                 prevInvariant = invariant;
                 invariant = div(
-                    mul(mul(numTokens, invariant), invariant).add(
-                        div(mul(mul(ampTimesTotal, sum), P_D), _AMP_PRECISION, roundUp)
-                    ),
-                    mul(numTokens + 1, invariant).add(
-                        // No need to use checked arithmetic for the amp precision, the amp is guaranteed to be at least 1
-                        div(mul(ampTimesTotal - _AMP_PRECISION, P_D), _AMP_PRECISION, !roundUp)
-                    ),
+                    mul(mul(numTokens, invariant), invariant)
+                        .add(div(mul(mul(ampTimesTotal, sum), P_D), _AMP_PRECISION, roundUp)),
+                    mul(numTokens + 1, invariant)
+                        .add(
+                            // No need to use checked arithmetic for the amp precision, the amp is guaranteed to be at least 1
+                            div(mul(ampTimesTotal - _AMP_PRECISION, P_D), _AMP_PRECISION, !roundUp)
+                        ),
                     roundUp
                 );
 
@@ -107,9 +107,7 @@ library MetaStableMath {
                     uint256 nonTaxableAmount = balances[i].mulDown(invariantRatioWithFees.sub(FixedPoint.ONE));
                     uint256 taxableAmount = amountsIn[i].sub(nonTaxableAmount);
                     // No need to use checked arithmetic for the swap fee, it is guaranteed to be lower than 50%
-                    amountInWithoutFee = nonTaxableAmount.add(
-                        taxableAmount.mulDown(FixedPoint.ONE - swapFeePercentage)
-                    );
+                    amountInWithoutFee = nonTaxableAmount.add(taxableAmount.mulDown(FixedPoint.ONE - swapFeePercentage));
                 } else {
                     amountInWithoutFee = amountsIn[i];
                 }
@@ -147,12 +145,8 @@ library MetaStableMath {
             uint256 newInvariant = bptTotalSupply.sub(bptAmountIn).divUp(bptTotalSupply).mulUp(currentInvariant);
 
             // Calculate amount out without fee
-            uint256 newBalanceTokenIndex = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-                amp,
-                balances,
-                newInvariant,
-                tokenIndex
-            );
+            uint256 newBalanceTokenIndex =
+                _getTokenBalanceGivenInvariantAndAllOtherBalances(amp, balances, newInvariant, tokenIndex);
             uint256 amountOutWithoutFee = balances[tokenIndex].sub(newBalanceTokenIndex);
 
             // First calculate the sum of all token balances, which will be used to calculate
@@ -187,24 +181,21 @@ library MetaStableMath {
     ) internal pure returns (uint256) {
         unchecked {
             /**************************************************************************************************************
-        // oneTokenSwapFee - polynomial equation to solve                                                            //
-        // af = fee amount to calculate in one token                                                                 //
-        // bf = balance of fee token                                                                                 //
-        // f = bf - af (finalBalanceFeeToken)                                                                        //
-        // D = old invariant                                            D                     D^(n+1)                //
-        // A = amplification coefficient               f^2 + ( S - ----------  - D) * f -  ------------- = 0         //
-        // n = number of tokens                                    (A * n^n)               A * n^2n * P              //
-        // S = sum of final balances but f                                                                           //
-        // P = product of final balances but f                                                                       //
-        **************************************************************************************************************/
+            // oneTokenSwapFee - polynomial equation to solve                                                            //
+            // af = fee amount to calculate in one token                                                                 //
+            // bf = balance of fee token                                                                                 //
+            // f = bf - af (finalBalanceFeeToken)                                                                        //
+            // D = old invariant                                            D                     D^(n+1)                //
+            // A = amplification coefficient               f^2 + ( S - ----------  - D) * f -  ------------- = 0         //
+            // n = number of tokens                                    (A * n^n)               A * n^2n * P              //
+            // S = sum of final balances but f                                                                           //
+            // P = product of final balances but f                                                                       //
+            **************************************************************************************************************/
 
             // Protocol swap fee amount, so we round down overall.
 
             uint256 finalBalanceFeeToken = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-                amplificationParameter,
-                balances,
-                lastInvariant,
-                tokenIndex
+                amplificationParameter, balances, lastInvariant, tokenIndex
             );
 
             if (balances[tokenIndex] <= finalBalanceFeeToken) {
@@ -254,10 +245,7 @@ library MetaStableMath {
             for (uint256 i = 0; i < 255; i++) {
                 prevTokenBalance = tokenBalance;
 
-                tokenBalance = divUp(
-                    mul(tokenBalance, tokenBalance).add(c),
-                    mul(tokenBalance, 2).add(b).sub(invariant)
-                );
+                tokenBalance = divUp(mul(tokenBalance, tokenBalance).add(c), mul(tokenBalance, 2).add(b).sub(invariant));
 
                 if (tokenBalance > prevTokenBalance) {
                     if (tokenBalance - prevTokenBalance <= 1) {

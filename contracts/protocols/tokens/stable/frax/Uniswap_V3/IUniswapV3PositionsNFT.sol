@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import '@crane/contracts/protocols/tokens/stable/frax/ERC721/IERC721.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/ERC721/IERC721.sol";
 
 // Originally INonfungiblePositionManager
 interface IUniswapV3PositionsNFT is IERC721 {
-    
     struct CollectParams {
         uint256 tokenId;
         address recipient;

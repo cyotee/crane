@@ -6,13 +6,13 @@ import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC2
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {ERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {IERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {ILUSD} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILUSD.sol";
-import {ILQTY} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTY.sol";
+import {ILUSD} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILUSD.sol";
+import {ILQTY} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTY.sol";
 
 contract MockERC20Tester is ILUSD, ILQTY, ERC20Permit, Ownable {
     mapping(address spender => bool) public mock_isWildcardSpender;
 
-    constructor(string memory name, string memory symbol) ERC20Permit(name) ERC20(name, symbol) Ownable() {}
+    constructor(string memory name, string memory symbol) ERC20Permit(name) ERC20(name, symbol) Ownable(msg.sender) {}
 
     // LUSD & LQTY expose this
     function domainSeparator() external view returns (bytes32) {

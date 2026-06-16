@@ -5,8 +5,9 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 import {StateProver} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/StateProver.sol";
-import {StateProofVerifier as Verifier} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/library/StateProofVerifier.sol";
+import {
+    StateProofVerifier as Verifier
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/library/StateProofVerifier.sol";
 import {StateProverFixtures} from "./StateProverFixtures.sol";
 
 contract StateProver_Test is Test {

@@ -24,9 +24,7 @@ import {
     LiquidityManagement
 } from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/VaultTypes.sol";
 import {IVault} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IVault.sol";
-import {
-    IRateProvider
-} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
+import {IRateProvider} from "@crane/contracts/interfaces/protocols/dexes/balancer/common/IRateProvider.sol";
 import {IBasePool} from "@crane/contracts/external/balancer/v3/interfaces/contracts/vault/IBasePool.sol";
 import {IPoolInfo} from "@crane/contracts/external/balancer/v3/interfaces/contracts/pool-utils/IPoolInfo.sol";
 import {
@@ -91,7 +89,7 @@ bytes32 constant BALANCER_V3_VAULT_AWARE_SLOT = keccak256("protocols.dexes.balan
 /*                              Mock Implementations                          */
 /* -------------------------------------------------------------------------- */
 
-import {MockERC20} from '@crane/contracts/tokens/ERC20/test/MockERC20.sol';
+import {MockERC20} from "@crane/contracts/tokens/ERC20/test/MockERC20.sol";
 
 /**
  * @title MockPoolInfoFacet
@@ -742,12 +740,12 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
 
-        // BalancerV3PoolRepo.Storage layout:
-        //   slot+0: minimumInvariantRatio
-        //   slot+1: maximumInvariantRatio
-        //   slot+2: minimumSwapFeePercentage
-        //   slot+3: maximumSwapFeePercentage
-        bytes32 baseSlot = keccak256("protocols.dexes.balancer.v3.pool.common");
+        // BalancerV3PoolRepo.Storage layout uses ERC1967: keccak(encode(str)) - 1
+        //   +0: minimumInvariantRatio
+        //   +1: maximumInvariantRatio
+        //   +2: minimumSwapFeePercentage
+        //   +3: maximumSwapFeePercentage
+        bytes32 baseSlot = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.common"))) - 1);
         uint256 minSwapFee = uint256(vm.load(proxy, bytes32(uint256(baseSlot) + 2)));
         uint256 maxSwapFee = uint256(vm.load(proxy, bytes32(uint256(baseSlot) + 3)));
 
@@ -769,7 +767,7 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
 
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
 
-        bytes32 baseSlot = keccak256("protocols.dexes.balancer.v3.pool.common");
+        bytes32 baseSlot = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.common"))) - 1);
         uint256 minRatio = uint256(vm.load(proxy, baseSlot));
         uint256 maxRatio = uint256(vm.load(proxy, bytes32(uint256(baseSlot) + 1)));
 
@@ -792,23 +790,20 @@ contract BalancerV3ConstantProductPoolDFPkg_Integration_Test is CraneTest {
         address proxy = diamondFactory.deploy(pkg, pkgArgs);
 
         // Read token count from BalancerV3PoolRepo storage on the proxy.
-        // Storage layout: Storage struct has 4 uint256 fields before the AddressSet tokens field.
-        // AddressSet struct: { mapping(address => uint256) indexes, address[] values }
-        //   - indexes mapping occupies slot offset +4
-        //   - values array length at slot offset +5
-        //   - values array data at keccak256(abi.encode(offset+5))
-        bytes32 baseSlot = keccak256("protocols.dexes.balancer.v3.pool.common");
+        // Storage layout: 4 uints then AddressSet at +4; array length at +5; data at keccak(+5)
+        // Note: baseSlot must use the ERC1967 form (keccak - 1) as defined in BalancerV3PoolRepo.
+        bytes32 baseSlot = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.common"))) - 1);
         bytes32 valuesLenSlot = bytes32(uint256(baseSlot) + 5);
         uint256 tokenCount = uint256(vm.load(proxy, valuesLenSlot));
 
-        assertEq(tokenCount, 2, "Pool should have 2 tokens stored");
+        assertEq(tokenCount, 2, "Pool token count should be 2 after initAccount");
 
         // Read individual token addresses from dynamic array storage
         bytes32 arrayDataSlot = keccak256(abi.encode(valuesLenSlot));
         address storedToken0 = address(uint160(uint256(vm.load(proxy, arrayDataSlot))));
         address storedToken1 = address(uint160(uint256(vm.load(proxy, bytes32(uint256(arrayDataSlot) + 1)))));
 
-        // Determine expected sorted order
+        // Determine expected sorted order (initAccount receives sorted? but we verify)
         address lower = address(tokenA) < address(tokenB) ? address(tokenA) : address(tokenB);
         address higher = address(tokenA) < address(tokenB) ? address(tokenB) : address(tokenA);
 

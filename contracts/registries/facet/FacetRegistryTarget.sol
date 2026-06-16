@@ -12,7 +12,10 @@ contract FacetRegistryTarget is OperableModifiers, IFacetRegistry {
         return FacetRegistryService._deployFacet(initCode, salt);
     }
 
-    function deployCanonicalFacetOverride(bytes calldata initCode, bytes32 salt, bytes4 interfaceId) external returns (IFacet facet) {
+    function deployCanonicalFacetOverride(bytes calldata initCode, bytes32 salt, bytes4 interfaceId)
+        external
+        returns (IFacet facet)
+    {
         facet = FacetRegistryService._deployFacet(initCode, salt);
         FacetRegistryRepo._setCanonicalFacet(interfaceId, facet);
         return facet;
@@ -26,13 +29,16 @@ contract FacetRegistryTarget is OperableModifiers, IFacetRegistry {
         return FacetRegistryService._deployFacet(initCode, initArgs, salt);
     }
 
-    function deployCanonicalFacetWithArgsOverride(bytes calldata initCode, bytes calldata initArgs, bytes32 salt, bytes4 interfaceId)
-        external
-        returns (IFacet facet) {
-            facet = FacetRegistryService._deployFacet(initCode, initArgs, salt);
-            FacetRegistryRepo._setCanonicalFacet(interfaceId, facet);
-            return facet;
-        }
+    function deployCanonicalFacetWithArgsOverride(
+        bytes calldata initCode,
+        bytes calldata initArgs,
+        bytes32 salt,
+        bytes4 interfaceId
+    ) external returns (IFacet facet) {
+        facet = FacetRegistryService._deployFacet(initCode, initArgs, salt);
+        FacetRegistryRepo._setCanonicalFacet(interfaceId, facet);
+        return facet;
+    }
 
     function registerFacet(IFacet facet, string memory name, bytes4[] memory interfaces, bytes4[] memory functions)
         external

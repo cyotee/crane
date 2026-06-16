@@ -347,7 +347,8 @@ contract VaultRegistrationFacet is BalancerV3VaultModifiers, IERC20MultiTokenErr
         uint256 minBptAmountOut
     ) internal returns (uint256 bptAmountOut) {
         BalancerV3VaultStorageRepo.Storage storage layoutStruct = BalancerV3VaultStorageRepo._layoutStruct();
-        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolBalances = layoutStruct.poolTokenBalances[pool];
+        mapping(uint256 tokenIndex => bytes32 packedTokenBalance) storage poolBalances =
+            layoutStruct.poolTokenBalances[pool];
 
         uint256 numTokens = poolData.tokens.length;
 

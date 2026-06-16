@@ -28,9 +28,7 @@ import "@crane/contracts/external/openzeppelin-contracts/utils/Pausable.sol";
 import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "./FXBFactory.sol";
 
-
 contract FXB is ERC20, ERC20Burnable, ERC20Permit {
-
     /* ========== STATE VARIABLES ========== */
 
     // Core
@@ -41,9 +39,7 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
     uint256 public maturity_timestamp;
     uint256 public mint_cap;
 
-
     /* ========== STRUCTS ========== */
-
 
     struct BondInfo {
         string symbol;
@@ -53,7 +49,6 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
         uint256 mintCap;
     }
 
-
     /* ========== CONSTRUCTOR ========== */
 
     /// @notice Called by the factory
@@ -61,14 +56,9 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
     /// @param __name Date the bond can start being minted
     /// @param _issue_timestamp Date the bond can start being minted
     /// @param _maturity_timestamp Date the bond will mature and be redeemable
-    constructor(
-        string memory __symbol,
-        string memory __name,
-        uint256 _issue_timestamp,
-        uint256 _maturity_timestamp
-    ) 
-        ERC20(__symbol, __name) 
-        ERC20Permit(__symbol) 
+    constructor(string memory __symbol, string memory __name, uint256 _issue_timestamp, uint256 _maturity_timestamp)
+        ERC20(__symbol, __name)
+        ERC20Permit(__symbol)
     {
         // Set the factory
         factory = FXBFactory(msg.sender);
@@ -78,36 +68,27 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
         maturity_timestamp = _maturity_timestamp;
     }
 
-
     /* ========== MODIFIERS ========== */
 
     /// @notice Makes sure only the factory owner can call
     modifier onlyFactoryOwner() {
-       require(msg.sender == factory.owner(), "Only factory owner");
+        require(msg.sender == factory.owner(), "Only factory owner");
         _;
-    } 
+    }
 
     /// @notice Makes sure only minters specified by the factory can call
     modifier onlyFactoryMinters() {
-       require(factory.minters(msg.sender) == true, "Only factory minters");
+        require(factory.minters(msg.sender) == true, "Only factory minters");
         _;
-    } 
-
+    }
 
     /* ========== VIEW FUNCTIONS ========== */
 
     /// @notice Returns summary information about the bond
     /// @return BondInfo Summary of the bond
     function bondInfo() external view returns (BondInfo memory) {
-        return BondInfo(
-            symbol(),
-            name(),
-            issue_timestamp,
-            maturity_timestamp,
-            mint_cap
-        );
+        return BondInfo(symbol(), name(), issue_timestamp, maturity_timestamp, mint_cap);
     }
-
 
     /* ========== MINTER FUNCTIONS ========== */
 
@@ -122,10 +103,7 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
         _mint(to, amount);
     }
 
-
     /* ========== INTERNAL FUNCTIONS ========== */
-
-
 
     /* ========== OWNER / GOVERNANCE FUNCTIONS ONLY ========== */
 
@@ -140,5 +118,4 @@ contract FXB is ERC20, ERC20Burnable, ERC20Permit {
 
     /// @dev Emits when mint cap is set
     event MintCapSet(uint256 new_mint_cap);
-
 }

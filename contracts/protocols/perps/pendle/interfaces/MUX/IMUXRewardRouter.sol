@@ -36,9 +36,7 @@ interface IMUXRewardRouter {
     function withdrawToken(address _token, address _account, uint256 _amount) external;
 
     // ========================== aggregated staking interfaces ==========================
-    function claimableRewards(
-        address account
-    )
+    function claimableRewards(address account)
         external
         returns (
             uint256 mlpFeeAmount,

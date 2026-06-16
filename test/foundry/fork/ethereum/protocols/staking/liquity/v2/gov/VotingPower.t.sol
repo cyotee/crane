@@ -6,11 +6,11 @@ pragma solidity ^0.8.24;
 
 // import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC20.sol";
 
-// import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-// import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+// import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+// import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
 
-// import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-// import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
+// import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+// import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
 
 // import {MockERC20Tester} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockERC20Tester.sol";
 // import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";

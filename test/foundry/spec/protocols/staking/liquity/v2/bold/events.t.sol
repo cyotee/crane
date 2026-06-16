@@ -2,9 +2,9 @@
 pragma solidity ^0.8.35;
 
 import "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPoolEvents.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPoolEvents.sol";
 import "./TestContracts/DevTestSetup.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 struct LiquidationParams {
     uint256 collSentToSP;

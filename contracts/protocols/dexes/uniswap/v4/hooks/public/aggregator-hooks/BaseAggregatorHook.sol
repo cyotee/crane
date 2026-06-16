@@ -5,7 +5,10 @@ import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfac
 import {IHooks} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IHooks.sol";
 import {PoolKey} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolKey.sol";
 import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
-import {BeforeSwapDelta, toBeforeSwapDelta} from "@crane/contracts/protocols/dexes/uniswap/v4/types/BeforeSwapDelta.sol";
+import {
+    BeforeSwapDelta,
+    toBeforeSwapDelta
+} from "@crane/contracts/protocols/dexes/uniswap/v4/types/BeforeSwapDelta.sol";
 import {Currency, CurrencyLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {PoolId} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
@@ -17,8 +20,12 @@ import {StateLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/librarie
 import {DeltaResolver} from "@crane/contracts/protocols/dexes/uniswap/v4/base/DeltaResolver.sol";
 import {IAggregatorHook} from "./interfaces/IAggregatorHook.sol";
 import {ProtocolFees} from "./ProtocolFees.sol";
-import {IFeeClassifiedHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IFeeClassifiedHook.sol";
-import {HookFeeFlags} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/libraries/HookFeeFlags.sol";
+import {
+    IFeeClassifiedHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/interfaces/IFeeClassifiedHook.sol";
+import {
+    HookFeeFlags
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/protocol-fees/libraries/HookFeeFlags.sol";
 
 /// @title BaseAggregatorHook
 /// @notice Abstract contract for implementing aggregator hooks in Uniswap V4

@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockTokenCurrencyStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTokenCurrencyStorage.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockTokenCurrencyStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTokenCurrencyStorage.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
 
-import {MockERC20} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockERC20.sol';
+import {MockERC20} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockERC20.sol";
 
-import {Currency} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol';
-import {Vm, VmSafe} from 'forge-std/Vm.sol';
-import {IERC20} from 'forge-std/interfaces/IERC20.sol';
+import {Currency} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol";
+import {Vm, VmSafe} from "forge-std/Vm.sol";
+import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
 contract SweepCurrencyTest is BttBase {
     function test_WhenAmountEQ0(bool _isNativeCurrency, uint64 _blockNumber) external {
@@ -18,7 +22,7 @@ contract SweepCurrencyTest is BttBase {
         // it emits {CurrencySwept}
 
         vm.roll(_blockNumber);
-        address fundsRecipient = makeAddr('fundsRecipient');
+        address fundsRecipient = makeAddr("fundsRecipient");
 
         address currency = _isNativeCurrency ? address(0) : address(new MockERC20());
 
@@ -55,7 +59,7 @@ contract SweepCurrencyTest is BttBase {
         }
 
         assertEq(
-            tokenCurrencyStorage.sweepCurrencyBlock(), _blockNumber, 'sweepCurrencyBlock is not equal to block number'
+            tokenCurrencyStorage.sweepCurrencyBlock(), _blockNumber, "sweepCurrencyBlock is not equal to block number"
         );
         assertEq(Currency.wrap(currency).balanceOf(address(tokenCurrencyStorage)), 0);
         assertEq(Currency.wrap(currency).balanceOf(address(fundsRecipient)), 0);
@@ -67,7 +71,7 @@ contract SweepCurrencyTest is BttBase {
         // it emits {CurrencySwept}
 
         vm.roll(_blockNumber);
-        address fundsRecipient = makeAddr('fundsRecipient');
+        address fundsRecipient = makeAddr("fundsRecipient");
 
         address currency = _isNativeCurrency ? address(0) : address(new MockERC20());
 
@@ -114,7 +118,7 @@ contract SweepCurrencyTest is BttBase {
         }
 
         assertEq(
-            tokenCurrencyStorage.sweepCurrencyBlock(), _blockNumber, 'sweepCurrencyBlock is not equal to block number'
+            tokenCurrencyStorage.sweepCurrencyBlock(), _blockNumber, "sweepCurrencyBlock is not equal to block number"
         );
         assertEq(Currency.wrap(currency).balanceOf(address(tokenCurrencyStorage)), 0);
         assertEq(Currency.wrap(currency).balanceOf(address(fundsRecipient)), amount);

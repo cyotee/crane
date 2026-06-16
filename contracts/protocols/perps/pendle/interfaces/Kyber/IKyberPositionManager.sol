@@ -3,19 +3,11 @@ pragma solidity >=0.8.0;
 
 interface IKyberPositionManager {
     event MintPosition(
-        uint256 indexed tokenId,
-        uint80 indexed poolId,
-        uint128 liquidity,
-        uint256 amount0,
-        uint256 amount1
+        uint256 indexed tokenId, uint80 indexed poolId, uint128 liquidity, uint256 amount0, uint256 amount1
     );
 
     event RemoveLiquidity(
-        uint256 indexed tokenId,
-        uint128 liquidity,
-        uint256 amount0,
-        uint256 amount1,
-        uint256 additionalRTokenOwed
+        uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed
     );
 
     struct Position {
@@ -124,28 +116,28 @@ interface IKyberPositionManager {
     /// @param fee the fee for the pool
     /// @param currentSqrtP the initia'l price of the pool
     /// @return pool returns the pool address
-    function createAndUnlockPoolIfNecessary(
-        address token0,
-        address token1,
-        uint24 fee,
-        uint160 currentSqrtP
-    ) external payable returns (address pool);
+    function createAndUnlockPoolIfNecessary(address token0, address token1, uint24 fee, uint160 currentSqrtP)
+        external
+        payable
+        returns (address pool);
 
-    function mint(
-        MintParams calldata params
-    ) external payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
+    function mint(MintParams calldata params)
+        external
+        payable
+        returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
 
-    function addLiquidity(
-        IncreaseLiquidityParams calldata params
-    ) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function addLiquidity(IncreaseLiquidityParams calldata params)
+        external
+        payable
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
 
-    function removeLiquidity(
-        RemoveLiquidityParams calldata params
-    ) external returns (uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function removeLiquidity(RemoveLiquidityParams calldata params)
+        external
+        returns (uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
 
-    function burnRTokens(
-        BurnRTokenParams calldata params
-    ) external returns (uint256 rTokenQty, uint256 amount0, uint256 amount1);
+    function burnRTokens(BurnRTokenParams calldata params)
+        external
+        returns (uint256 rTokenQty, uint256 amount0, uint256 amount1);
 
     /**
      * @dev Burn the token by its owner

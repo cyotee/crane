@@ -118,7 +118,7 @@ library ECDSA {
      * JSON-RPC method as part of EIP-712.
      */
     function toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32 digest) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let ptr := mload(0x40)
             mstore(ptr, hex"1901")
             mstore(add(ptr, 0x02), domainSeparator)

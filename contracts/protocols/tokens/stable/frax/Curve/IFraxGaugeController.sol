@@ -24,25 +24,16 @@ interface IFraxGaugeController {
     function n_gauges() external view returns (int128);
     function gauge_type_names(int128) external view returns (string memory);
     function gauges(uint256) external view returns (address);
-    function vote_user_slopes(address, address)
-        external
-        view
-        returns (VotedSlope memory);
+    function vote_user_slopes(address, address) external view returns (VotedSlope memory);
     function vote_user_power(address) external view returns (uint256);
     function last_user_vote(address, address) external view returns (uint256);
-    function points_weight(address, uint256)
-        external
-        view
-        returns (Point memory);
+    function points_weight(address, uint256) external view returns (Point memory);
     function time_weight(address) external view returns (uint256);
     function points_sum(int128, uint256) external view returns (Point memory);
     function time_sum(uint256) external view returns (uint256);
     function points_total(uint256) external view returns (uint256);
     function time_total() external view returns (uint256);
-    function points_type_weight(int128, uint256)
-        external
-        view
-        returns (uint256);
+    function points_type_weight(int128, uint256) external view returns (uint256);
     function time_type_weight(uint256) external view returns (uint256);
 
     // Getter functions
@@ -57,20 +48,12 @@ interface IFraxGaugeController {
     // External functions
     function commit_transfer_ownership(address) external;
     function apply_transfer_ownership() external;
-    function add_gauge(
-        address,
-        int128,
-        uint256
-    ) external;
+    function add_gauge(address, int128, uint256) external;
     function checkpoint() external;
     function checkpoint_gauge(address) external;
     function global_emission_rate() external view returns (uint256);
-    function gauge_relative_weight_write(address)
-        external
-        returns (uint256);
-    function gauge_relative_weight_write(address, uint256)
-        external
-        returns (uint256);
+    function gauge_relative_weight_write(address) external returns (uint256);
+    function gauge_relative_weight_write(address, uint256) external returns (uint256);
     function add_type(string memory, uint256) external;
     function change_type_weight(int128, uint256) external;
     function change_gauge_weight(address, uint256) external;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {IValidationHook} from '../interfaces/IValidationHook.sol';
+import {IValidationHook} from "../interfaces/IValidationHook.sol";
 
 /// @title ValidationHookLib
 /// @notice Library for handling calls to validation hooks and bubbling up the revert reason

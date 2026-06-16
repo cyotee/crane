@@ -3,31 +3,42 @@
 pragma solidity ^0.8.17;
 
 interface IMultiFeedAdapter {
+    event ValueUpdate(uint256 value, bytes32 dataFeedId, uint256 updatedAt);
+    event UpdateSkipDueToBlockTimestamp(bytes32 dataFeedId);
+    event UpdateSkipDueToDataTimestamp(bytes32 dataFeedId);
+    event UpdateSkipDueToInvalidValue(bytes32 dataFeedId);
 
-  event ValueUpdate(uint256 value, bytes32 dataFeedId, uint256 updatedAt);
-  event UpdateSkipDueToBlockTimestamp(bytes32 dataFeedId);
-  event UpdateSkipDueToDataTimestamp(bytes32 dataFeedId);
-  event UpdateSkipDueToInvalidValue(bytes32 dataFeedId);
+    struct LastUpdateDetails {
+        uint256 dataTimestamp;
+        uint256 blockTimestamp;
+        uint256 value;
+    }
 
-  struct LastUpdateDetails {
-    uint256 dataTimestamp;
-    uint256 blockTimestamp;
-    uint256 value;
-  }
+    function updateDataFeedsValuesPartial(bytes32[] memory dataFeedsIds) external;
 
-  function updateDataFeedsValuesPartial(bytes32[] memory dataFeedsIds) external;
+    function getLastUpdateDetails(bytes32 dataFeedId)
+        external
+        view
+        returns (uint256 lastDataTimestamp, uint256 lastBlockTimestamp, uint256 lastValue);
 
-  function getLastUpdateDetails(bytes32 dataFeedId) external view returns (uint256 lastDataTimestamp, uint256 lastBlockTimestamp, uint256 lastValue);
+    function getLastUpdateDetailsUnsafe(bytes32 dataFeedId)
+        external
+        view
+        returns (uint256 lastDataTimestamp, uint256 lastBlockTimestamp, uint256 lastValue);
 
-  function getLastUpdateDetailsUnsafe(bytes32 dataFeedId) external view returns (uint256 lastDataTimestamp, uint256 lastBlockTimestamp, uint256 lastValue);
+    function getLastUpdateDetailsUnsafeForMany(bytes32[] memory dataFeedIds)
+        external
+        view
+        returns (LastUpdateDetails[] memory detailsForFeeds);
 
-  function getLastUpdateDetailsUnsafeForMany(bytes32[] memory dataFeedIds) external view returns (LastUpdateDetails[] memory detailsForFeeds);
+    function getValuesForDataFeeds(bytes32[] memory requestedDataFeedIds)
+        external
+        view
+        returns (uint256[] memory values);
 
-  function getValuesForDataFeeds(bytes32[] memory requestedDataFeedIds) external view returns (uint256[] memory values);
+    function getValueForDataFeed(bytes32 dataFeedId) external view returns (uint256 dataFeedValue);
 
-  function getValueForDataFeed(bytes32 dataFeedId) external view returns (uint256 dataFeedValue);
+    function getDataTimestampFromLatestUpdate(bytes32 dataFeedId) external view returns (uint256 lastDataTimestamp);
 
-  function getDataTimestampFromLatestUpdate(bytes32 dataFeedId) external view returns (uint256 lastDataTimestamp);
-
-  function getBlockTimestampFromLatestUpdate(bytes32 dataFeedId) external view returns (uint256 blockTimestamp);
+    function getBlockTimestampFromLatestUpdate(bytes32 dataFeedId) external view returns (uint256 blockTimestamp);
 }

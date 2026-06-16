@@ -45,6 +45,10 @@ import {DiamondLoupeFacet} from "@crane/contracts/introspection/ERC2535/DiamondL
 import {ERC8109IntrospectionFacet} from "@crane/contracts/introspection/ERC8109/ERC8109IntrospectionFacet.sol";
 import {PostDeployAccountHookFacet} from "@crane/contracts/factories/diamondPkg/PostDeployAccountHookFacet.sol";
 
+import {
+    EVMCallModeHelpers
+} from "@crane/contracts/external/balancer/v3/solidity-utils/contracts/helpers/EVMCallModeHelpers.sol";
+
 /* -------------------------------------------------------------------------- */
 /*                         Balancer V3 Vault DFPkg                            */
 /* -------------------------------------------------------------------------- */
@@ -86,6 +90,40 @@ import {
 contract MockAuthorizer is IAuthorizer {
     function canPerform(bytes32, address, address) external pure returns (bool) {
         return true;
+    }
+}
+
+/**
+ * @notice Probe used to drive `vault.quote()` and observe the unlock state
+ * mid-callback.
+ * @dev `runProbe` is what the test calls; the vault then calls back into
+ * `probeHook` (because `quote` does `msg.sender.call(data)`). The hook reads
+ * `vault.isUnlocked()` so the test can assert the vault was unlocked exactly
+ * when the callback ran. Mirrors the round-trip the standard exchange router
+ * relies on for `querySwap`.
+ */
+contract VaultQuoteUnlockProbe {
+    IVault public immutable vault;
+    bool public observedUnlocked;
+    bool public hookCalled;
+
+    constructor(IVault _vault) {
+        vault = _vault;
+    }
+
+    /// @dev Entry point called by the test. Asks the vault to enter a query
+    /// context and call back into `probeHook()` on this contract.
+    function runProbe() external returns (bool) {
+        bytes memory result = vault.quote(abi.encodeCall(VaultQuoteUnlockProbe.probeHook, ()));
+        return abi.decode(result, (bool));
+    }
+
+    /// @dev Vault-invoked callback that records the unlock state visible
+    /// during the query context.
+    function probeHook() external returns (bool) {
+        hookCalled = true;
+        observedUnlocked = IVaultExtension(address(vault)).isUnlocked();
+        return observedUnlocked;
     }
 }
 
@@ -641,5 +679,44 @@ contract BalancerV3VaultDFPkgTest is Test {
         assertTrue(
             facetAddress != address(0), string.concat("Selector for ", functionName, " should resolve to a facet")
         );
+    }
+
+    /* ========================================================================== */
+    /*                       VaultQueryFacet.quote behaviour                      */
+    /* ========================================================================== */
+
+    /**
+     * @notice Regression guard for the canonical `quote() → callback → vault op`
+     * round-trip. The Crane fork previously shipped `_queryCallback` as a stub
+     * that skipped `_isUnlocked().tstore(true)`, so any `onlyWhenUnlocked`
+     * function invoked from inside the callback reverted with
+     * `VaultIsNotUnlocked()`. This test fails if that stub ever returns.
+     */
+    function test_quote_unlocksVaultDuringCallback() public {
+        address vault = _deployVault();
+        VaultQuoteUnlockProbe probe = new VaultQuoteUnlockProbe(IVault(vault));
+
+        // Match the eth_call semantics that `EVMCallModeHelpers.isStaticCall`
+        // detects via `tx.origin == address(0)`.
+        vm.prank(address(0), address(0));
+        bool observedUnlocked = probe.runProbe();
+
+        assertTrue(probe.hookCalled(), "quote() should invoke the callback on msg.sender");
+        assertTrue(observedUnlocked, "vault.isUnlocked() should report true inside the quote callback");
+        assertTrue(probe.observedUnlocked(), "probe should have recorded the unlocked state during the callback");
+    }
+
+    /**
+     * @notice `quote()` mirrors the upstream `_setupQuery` static-call guard.
+     * Without the `tx.origin == address(0)` shape that an `eth_call` produces,
+     * the vault must refuse to enter a query context. Catches the security
+     * regression of accepting state-changing entry into quote.
+     */
+    function test_quote_revertsWhenNotStaticCall() public {
+        address vault = _deployVault();
+        VaultQuoteUnlockProbe probe = new VaultQuoteUnlockProbe(IVault(vault));
+
+        vm.expectRevert(EVMCallModeHelpers.NotStaticCall.selector);
+        probe.runProbe();
     }
 }

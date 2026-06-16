@@ -23,27 +23,39 @@ contract PendleMellowVaultSYBaseUpg is SYBaseUpg, IPTokenWithSupplyCap {
         _disableInitializers();
     }
 
-    function initialize(
-        string memory _name,
-        string memory _symbol,
-        address _pricingHelper
-    ) external virtual initializer {
+    function initialize(string memory _name, string memory _symbol, address _pricingHelper)
+        external
+        virtual
+        initializer
+    {
         __SYBaseUpg_init(_name, _symbol);
         _setPricingHelper(_pricingHelper);
     }
 
     function _deposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         return amountDeposited;
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         _transferOut(vault, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -53,16 +65,34 @@ contract PendleMellowVaultSYBaseUpg is SYBaseUpg, IPTokenWithSupplyCap {
     }
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal view virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {IBidStorage} from './interfaces/IBidStorage.sol';
-import {Bid} from './libraries/BidLib.sol';
+import {IBidStorage} from "./interfaces/IBidStorage.sol";
+import {Bid} from "./libraries/BidLib.sol";
 
 /// @notice Abstract contract for managing bid storage
 abstract contract BidStorage is IBidStorage {

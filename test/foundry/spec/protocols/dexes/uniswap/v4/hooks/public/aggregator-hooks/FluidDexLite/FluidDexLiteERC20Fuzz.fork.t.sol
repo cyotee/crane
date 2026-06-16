@@ -28,7 +28,9 @@ import {
 import {
     IFluidDexLiteResolver
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLiteResolver.sol";
-import {IFluidDexLite} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLite.sol";
+import {
+    IFluidDexLite
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexLite/interfaces/IFluidDexLite.sol";
 
 /// @title FluidDexLiteERC20Fuzz
 /// @notice Fuzz tests for FluidDexLite through Uniswap V4 hooks (ERC20 tokens only)
@@ -123,8 +125,9 @@ contract FluidDexLiteERC20Fuzz is Test {
         }
 
         // Deploy V4 infrastructure
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
         feeAdapter = new MockV4FeeAdapter(poolManager, tokenJar);
         hookFactory = new FluidDexLiteAggregatorFactory(poolManager, dexLite, resolver);

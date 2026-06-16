@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AggregatorV3Interface.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AggregatorV3Interface.sol";
 
 // Mock Chainlink oracle that returns a stale price answer.
 // this contract code is etched over mainnet oracle addresses in mainnet fork tests.

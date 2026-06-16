@@ -43,21 +43,23 @@ contract PendleAaveV3WithRewardsSY is SYBaseWithRewards {
         _safeApproveInf(underlying, _aavePool);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == underlying) {
             IAaveV3Pool(aavePool).supply(underlying, amountDeposited, address(this), 0);
         }
         amountSharesOut = AaveAdapterLib.calcSharesFromAssetUp(amountDeposited, _getNormalizedIncome());
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         amountTokenOut = AaveAdapterLib.calcSharesToAssetDown(amountSharesToRedeem, _getNormalizedIncome());
         if (tokenOut == underlying) {
             IAaveV3Pool(aavePool).withdraw(underlying, amountTokenOut, receiver);
@@ -70,17 +72,25 @@ contract PendleAaveV3WithRewardsSY is SYBaseWithRewards {
         return _getNormalizedIncome() / 1e9;
     }
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return AaveAdapterLib.calcSharesFromAssetUp(amountTokenToDeposit, _getNormalizedIncome());
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return AaveAdapterLib.calcSharesToAssetDown(amountSharesToRedeem, _getNormalizedIncome());
     }
 

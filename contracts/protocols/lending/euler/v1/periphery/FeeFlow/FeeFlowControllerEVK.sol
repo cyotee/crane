@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 // import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {
     IOFT,
     MessagingFee,
@@ -33,7 +33,7 @@ contract FeeFlowControllerEVK is EVCUtil {
     uint256 public constant MAX_PRICE_MULTIPLIER = 3e18; // Should not exceed 300% of settlement price
     uint256 public constant ABS_MIN_INIT_PRICE = 1e6; // Minimum sane value for init price
     uint256 public constant ABS_MAX_INIT_PRICE = type(uint192).max; // chosen so that initPrice * priceMultiplier does
-        // not exceed uint256
+    // not exceed uint256
     uint256 public constant PRICE_MULTIPLIER_SCALE = 1e18;
 
     IERC20 public immutable paymentToken;

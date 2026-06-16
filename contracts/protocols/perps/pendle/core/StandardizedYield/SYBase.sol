@@ -16,11 +16,10 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
 
     address public immutable yieldToken;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _yieldToken
-    ) PendleERC20Permit(_name, _symbol, IERC20Metadata(_yieldToken).decimals()) initializer {
+    constructor(string memory _name, string memory _symbol, address _yieldToken)
+        PendleERC20Permit(_name, _symbol, IERC20Metadata(_yieldToken).decimals())
+        initializer
+    {
         yieldToken = _yieldToken;
         __BoringOwnable_init();
     }
@@ -35,12 +34,12 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
     /**
      * @dev See {IStandardizedYield-deposit}
      */
-    function deposit(
-        address receiver,
-        address tokenIn,
-        uint256 amountTokenToDeposit,
-        uint256 minSharesOut
-    ) external payable nonReentrant returns (uint256 amountSharesOut) {
+    function deposit(address receiver, address tokenIn, uint256 amountTokenToDeposit, uint256 minSharesOut)
+        external
+        payable
+        nonReentrant
+        returns (uint256 amountSharesOut)
+    {
         if (!isValidTokenIn(tokenIn)) revert Errors.SYInvalidTokenIn(tokenIn);
         if (amountTokenToDeposit == 0) revert Errors.SYZeroDeposit();
 
@@ -91,11 +90,10 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
      * @param amountSharesToRedeem amount of shares to be burned
      * @return amountTokenOut amount of base tokens redeemed
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual returns (uint256 amountTokenOut);
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        returns (uint256 amountTokenOut);
 
     /*///////////////////////////////////////////////////////////////
                                EXCHANGE-RATE
@@ -113,7 +111,14 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
     /**
      * @dev See {IStandardizedYield-claimRewards}
      */
-    function claimRewards(address /*user*/) external virtual override returns (uint256[] memory rewardAmounts) {
+    function claimRewards(
+        address /*user*/
+    )
+        external
+        virtual
+        override
+        returns (uint256[] memory rewardAmounts)
+    {
         rewardAmounts = new uint256[](0);
     }
 
@@ -127,7 +132,15 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
     /**
      * @dev See {IStandardizedYield-accruedRewards}
      */
-    function accruedRewards(address /*user*/) external view virtual override returns (uint256[] memory rewardAmounts) {
+    function accruedRewards(
+        address /*user*/
+    )
+        external
+        view
+        virtual
+        override
+        returns (uint256[] memory rewardAmounts)
+    {
         rewardAmounts = new uint256[](0);
     }
 
@@ -143,18 +156,22 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
                 MISC METADATA FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) external view virtual returns (uint256 amountSharesOut) {
+    function previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        external
+        view
+        virtual
+        returns (uint256 amountSharesOut)
+    {
         if (!isValidTokenIn(tokenIn)) revert Errors.SYInvalidTokenIn(tokenIn);
         return _previewDeposit(tokenIn, amountTokenToDeposit);
     }
 
-    function previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) external view virtual returns (uint256 amountTokenOut) {
+    function previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        external
+        view
+        virtual
+        returns (uint256 amountTokenOut)
+    {
         if (!isValidTokenOut(tokenOut)) revert Errors.SYInvalidTokenOut(tokenOut);
         return _previewRedeem(tokenOut, amountSharesToRedeem);
     }
@@ -169,15 +186,17 @@ abstract contract SYBase is IStandardizedYield, PendleERC20Permit, TokenHelper, 
 
     function _beforeTokenTransfer(address, address, uint256) internal virtual override whenNotPaused {}
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual returns (uint256 amountSharesOut);
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        returns (uint256 amountSharesOut);
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view virtual returns (uint256 amountTokenOut);
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        virtual
+        returns (uint256 amountTokenOut);
 
     function getTokensIn() public view virtual returns (address[] memory res);
 

@@ -4,11 +4,10 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/ComboOracle_SLP_UniV2_UniV3-Tests.js`
 
 import {ComboOracle} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle.sol";
-import {ComboOracle_UniV2_UniV3} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle_UniV2_UniV3.sol";
 import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+    ComboOracle_UniV2_UniV3
+} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle_UniV2_UniV3.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract ComboOracle_UniV2_UniV3_Tests is TestBase_FraxEthereumFork {
     ComboOracle internal combo;
@@ -38,7 +37,8 @@ contract ComboOracle_UniV2_UniV3_Tests is TestBase_FraxEthereumFork {
     }
 
     function test_Main_uniV2LPPriceInfo_homora() public view {
-        ComboOracle_UniV2_UniV3.UniV2PriceInfo memory info = comboUni.uniV2LPPriceInfo(FraxEthereumAddresses.UNIV2_LP_FRAX_FXS);
+        ComboOracle_UniV2_UniV3.UniV2PriceInfo memory info =
+            comboUni.uniV2LPPriceInfo(FraxEthereumAddresses.UNIV2_LP_FRAX_FXS);
         assertGt(info.precise_price, 0);
         assertGt(bytes(info.token_symbol).length, 0);
     }

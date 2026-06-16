@@ -27,8 +27,8 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -59,7 +59,10 @@ contract FraxCrossChainRewarder is Owned, ReentrancyGuard {
     }
 
     modifier onlyByOwnerOrCuratorOrGovernance() {
-        require(msg.sender == owner || msg.sender == curator_address || msg.sender == timelock_address, "Not owner, curator, or timelock");
+        require(
+            msg.sender == owner || msg.sender == curator_address || msg.sender == timelock_address,
+            "Not owner, curator, or timelock"
+        );
         _;
     }
 
@@ -70,17 +73,12 @@ contract FraxCrossChainRewarder is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner,
-        address _curator_address,
-        address _reward_token_address
-    ) Owned(_owner) {
+    constructor(address _owner, address _curator_address, address _reward_token_address) Owned(_owner) {
         curator_address = _curator_address;
         reward_token_address = _reward_token_address;
 
         distributionsOn = true;
     }
-
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
@@ -105,7 +103,7 @@ contract FraxCrossChainRewarder is Owned, ReentrancyGuard {
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -114,12 +112,12 @@ contract FraxCrossChainRewarder is Owned, ReentrancyGuard {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

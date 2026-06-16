@@ -2,28 +2,29 @@
 pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/FraxUnifiedFarm_ERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxlend/IFraxlendPair.sol';
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxlend/IFraxlendPairHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxlend/IFraxlendPair.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxlend/IFraxlendPairHelper.sol";
 
 contract FraxUnifiedFarm_ERC20_Fraxlend is FraxUnifiedFarm_ERC20 {
-
     string public farm_type = "ERC20_Fraxlend";
 
     IFraxlendPairHelper public flp_helper = IFraxlendPairHelper(0x1b0bCeD6dd26a7c234506E261BC68C9A3A4031b7);
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
-        
+
         // Fraxlend
         // stakingToken = IFraxlendPair(_stakingToken);
         // address token0 = 0x853d955aCEf822Db058eb8505911ED77F175b99e;

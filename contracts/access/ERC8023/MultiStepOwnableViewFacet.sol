@@ -36,6 +36,7 @@ contract MultiStepOwnableViewFacet is MultiStepOwnableViewTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(MultiStepOwnableViewFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]

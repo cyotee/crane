@@ -8,7 +8,6 @@
  */
 pragma solidity ^0.8.35;
 
-
 library AssertBytes {
     // Event to maintain compatibility with Truffle's Assertion Lib
     event TestEvent(bool indexed result, string message);
@@ -46,8 +45,8 @@ library AssertBytes {
 
                 for {
                     let cc := add(_b, 0x20)
-                // the next line is the loop condition:
-                // while(uint256(mc < end) + cb == 2)
+                    // the next line is the loop condition:
+                    // while(uint256(mc < end) + cb == 2)
                 } eq(add(lt(mc, end), cb), 2) {
                     mc := add(mc, 0x20)
                     cc := add(cc, 0x20)
@@ -98,7 +97,6 @@ library AssertBytes {
         Returns:
             result (bool) - The result.
     */
-    
 
     function _equal_nonAligned(bytes memory _preBytes, bytes memory _postBytes) internal pure returns (bool) {
         bool success = true;
@@ -144,8 +142,8 @@ library AssertBytes {
                     let ccRem := mload(cc)
                     for {
                         let i := 0
-                    // the next line is the loop condition:
-                    // while(uint256(i < numTailBytes) + cb == 2)
+                        // the next line is the loop condition:
+                        // while(uint256(i < numTailBytes) + cb == 2)
                     } eq(add(lt(i, numTailBytes), cb), 2) {
                         i := add(i, 1)
                     } {
@@ -288,9 +286,10 @@ library AssertBytes {
             message (string) - The message that is sent if the assertion fails.
     */
     function _report(bool result, string memory message) internal {
-        if (result)
+        if (result) {
             emit TestEvent(true, "");
-        else
+        } else {
             emit TestEvent(false, message);
+        }
     }
 }

@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BaseERC1155ValidationHookTest} from './BaseERC1155ValidationHook.t.sol';
-import {Test} from 'forge-std/Test.sol';
+import {BaseERC1155ValidationHookTest} from "./BaseERC1155ValidationHook.t.sol";
+import {Test} from "forge-std/Test.sol";
 import {
     GatedERC1155ValidationHook,
     IGatedERC1155ValidationHook
-} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/GatedERC1155ValidationHook.sol';
-import {IValidationHookIntrospection} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/ValidationHookIntrospection.sol';
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/GatedERC1155ValidationHook.sol";
+import {
+    IValidationHookIntrospection
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/periphery/validationHooks/ValidationHookIntrospection.sol";
 
 contract GatedERC1155ValidationHookTest is BaseERC1155ValidationHookTest {
     function _getHook() internal override returns (IValidationHookIntrospection) {
@@ -67,7 +69,7 @@ contract GatedERC1155ValidationHookTest is BaseERC1155ValidationHookTest {
         assertNotEq(sender, owner);
         token.mint(owner, TOKEN_ID, amount);
 
-        hook.validate(0, 0, owner, sender, bytes(''));
+        hook.validate(0, 0, owner, sender, bytes(""));
     }
 
     function test_validate_whenSenderIsOwnerAndTokenIsNotOwnedAndGateUntilIsGTECurrentBlock(uint64 _gateUntil)
@@ -80,6 +82,6 @@ contract GatedERC1155ValidationHookTest is BaseERC1155ValidationHookTest {
         vm.roll(_gateUntil);
 
         assertEq(token.balanceOf(owner, TOKEN_ID), 0);
-        hook.validate(0, 0, owner, owner, bytes(''));
+        hook.validate(0, 0, owner, owner, bytes(""));
     }
 }

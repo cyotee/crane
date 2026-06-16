@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "./IAsset.sol";
 
 interface IVault {
@@ -40,12 +40,9 @@ interface IVault {
         bytes userData;
     }
 
-    function joinPool(
-        bytes32 poolId,
-        address sender,
-        address recipient,
-        JoinPoolRequest memory request
-    ) external payable;
+    function joinPool(bytes32 poolId, address sender, address recipient, JoinPoolRequest memory request)
+        external
+        payable;
 
     struct ExitPoolRequest {
         address[] assets;
@@ -54,12 +51,8 @@ interface IVault {
         bool toInternalBalance;
     }
 
-    function exitPool(
-        bytes32 poolId,
-        address sender,
-        address payable recipient,
-        ExitPoolRequest memory request
-    ) external;
+    function exitPool(bytes32 poolId, address sender, address payable recipient, ExitPoolRequest memory request)
+        external;
 
     enum SwapKind {
         GIVEN_IN,
@@ -82,16 +75,15 @@ interface IVault {
         bool toInternalBalance;
     }
 
-    function swap(
-        SingleSwap memory singleSwap,
-        FundManagement memory funds,
-        uint256 limit,
-        uint256 deadline
-    ) external payable returns (uint256);
+    function swap(SingleSwap memory singleSwap, FundManagement memory funds, uint256 limit, uint256 deadline)
+        external
+        payable
+        returns (uint256);
 
-    function getPoolTokens(
-        bytes32 poolId
-    ) external view returns (IERC20[] memory tokens, uint256[] memory balances, uint256 lastChangeBlock);
+    function getPoolTokens(bytes32 poolId)
+        external
+        view
+        returns (IERC20[] memory tokens, uint256[] memory balances, uint256 lastChangeBlock);
 
     function WETH() external view returns (IERC20);
 

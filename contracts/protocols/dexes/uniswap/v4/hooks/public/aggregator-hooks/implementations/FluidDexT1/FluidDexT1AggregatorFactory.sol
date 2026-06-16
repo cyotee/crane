@@ -10,13 +10,12 @@ import {IFluidDexT1} from "./interfaces/IFluidDexT1.sol";
 import {IFluidDexReservesResolver} from "./interfaces/IFluidDexReservesResolver.sol";
 import {IFluidDexResolver} from "./interfaces/IFluidDexResolver.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title FluidDexT1AggregatorFactory
 /// @notice Factory for creating FluidDexT1Aggregator hooks via CREATE2 and initializing Uniswap V4 pools
 /// @dev Deploys deterministic hook addresses that meet Uniswap V4's hook address requirements
 contract FluidDexT1AggregatorFactory {
-    
     using BetterEfficientHashLib for bytes;
 
     /// @notice The Uniswap V4 PoolManager contract
@@ -89,9 +88,9 @@ contract FluidDexT1AggregatorFactory {
         //     )
         // );
         bytes32 bytecodeHash = abi.encodePacked(
-            type(FluidDexT1Aggregator).creationCode,
-            abi.encode(poolManager, fluidPool, fluidDexReservesResolver, fluidDexResolver, fluidLiquidity)
-        )._hash();
+                type(FluidDexT1Aggregator).creationCode,
+                abi.encode(poolManager, fluidPool, fluidDexReservesResolver, fluidDexResolver, fluidLiquidity)
+            )._hash();
         // computedAddress =
         //     address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, bytecodeHash)))));
         computedAddress =

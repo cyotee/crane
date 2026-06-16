@@ -18,9 +18,14 @@ abstract contract SYBaseWithRewardsUpg is SYBaseUpg, RewardManager {
     /**
      * @dev See {IStandardizedYield-claimRewards}
      */
-    function claimRewards(
-        address user
-    ) external virtual override nonReentrant whenNotPaused returns (uint256[] memory rewardAmounts) {
+    function claimRewards(address user)
+        external
+        virtual
+        override
+        nonReentrant
+        whenNotPaused
+        returns (uint256[] memory rewardAmounts)
+    {
         _updateAndDistributeRewards(user);
         rewardAmounts = _doTransferOutRewards(user, user);
 
@@ -40,7 +45,7 @@ abstract contract SYBaseWithRewardsUpg is SYBaseUpg, RewardManager {
     function accruedRewards(address user) external view virtual override returns (uint256[] memory rewardAmounts) {
         address[] memory rewardTokens = _getRewardTokens();
         rewardAmounts = new uint256[](rewardTokens.length);
-        for (uint256 i = 0; i < rewardTokens.length; ) {
+        for (uint256 i = 0; i < rewardTokens.length;) {
             rewardAmounts[i] = userReward[rewardTokens[i]][user].accrued;
             unchecked {
                 i++;
@@ -55,7 +60,7 @@ abstract contract SYBaseWithRewardsUpg is SYBaseUpg, RewardManager {
     function rewardIndexesStored() public view virtual override returns (uint256[] memory indexes) {
         address[] memory rewardTokens = _getRewardTokens();
         indexes = new uint256[](rewardTokens.length);
-        for (uint256 i = 0; i < rewardTokens.length; ) {
+        for (uint256 i = 0; i < rewardTokens.length;) {
             indexes[i] = rewardState[rewardTokens[i]].index;
             unchecked {
                 i++;

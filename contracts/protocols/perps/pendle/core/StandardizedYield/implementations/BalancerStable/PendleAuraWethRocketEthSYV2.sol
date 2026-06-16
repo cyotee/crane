@@ -12,11 +12,9 @@ contract PendleAuraWethRocketEthSYV2 is PendleAuraBalancerStableLPSYV2 {
     uint256 internal constant AURA_PID = 15;
     address internal constant LP = 0x1E19CF2D73a72Ef1332C882F20534B6519Be0276;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        MetaStablePreview _previewHelper
-    ) PendleAuraBalancerStableLPSYV2(_name, _symbol, LP, AURA_PID, _previewHelper) {}
+    constructor(string memory _name, string memory _symbol, MetaStablePreview _previewHelper)
+        PendleAuraBalancerStableLPSYV2(_name, _symbol, LP, AURA_PID, _previewHelper)
+    {}
 
     function _deposit(address tokenIn, uint256 amount) internal virtual override returns (uint256 amountSharesOut) {
         if (tokenIn == NATIVE) {
@@ -27,11 +25,12 @@ contract PendleAuraWethRocketEthSYV2 is PendleAuraBalancerStableLPSYV2 {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         if (tokenOut == NATIVE) {
             uint256 amountTokenOut = super._redeem(address(this), WETH, amountSharesToRedeem);
             IWETH(WETH).withdraw(amountTokenOut);
@@ -42,10 +41,13 @@ contract PendleAuraWethRocketEthSYV2 is PendleAuraBalancerStableLPSYV2 {
         }
     }
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == NATIVE) {
             amountSharesOut = super._previewDeposit(WETH, amountTokenToDeposit);
         } else {
@@ -53,10 +55,13 @@ contract PendleAuraWethRocketEthSYV2 is PendleAuraBalancerStableLPSYV2 {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view virtual override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == NATIVE) {
             amountTokenOut = super._previewRedeem(WETH, amountSharesToRedeem);
         } else {

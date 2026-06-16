@@ -37,12 +37,11 @@ contract DepositHelperReaperBPT is Ownable {
 
     receive() external payable {}
 
-    function deposit(
-        IReZap.Step[] calldata _steps,
-        uint256 _amount,
-        uint256 _relicId,
-        bool _harvest
-    ) external payable returns (uint256 shares_) {
+    function deposit(IReZap.Step[] calldata _steps, uint256 _amount, uint256 _relicId, bool _harvest)
+        external
+        payable
+        returns (uint256 shares_)
+    {
         _requireApprovedOrOwner(_relicId);
 
         shares_ = _prepareDeposit(_steps, reliquary.getPositionForId(_relicId).poolId, _amount);
@@ -58,13 +57,9 @@ contract DepositHelperReaperBPT is Ownable {
         relicId_ = reliquary.createRelicAndDeposit(msg.sender, _pid, shares_);
     }
 
-    function withdraw(
-        IReZap.Step[] calldata _steps,
-        uint256 _shares,
-        uint256 _relicId,
-        bool _harvest,
-        bool _giveEther
-    ) external {
+    function withdraw(IReZap.Step[] calldata _steps, uint256 _shares, uint256 _relicId, bool _harvest, bool _giveEther)
+        external
+    {
         (, IReaperVault vault) = _prepareWithdrawal(_steps, _relicId, _giveEther);
         if (_giveEther) {
             _withdrawEther(vault, _steps, _shares, _relicId, _harvest);
@@ -73,14 +68,10 @@ contract DepositHelperReaperBPT is Ownable {
         }
     }
 
-    function withdrawAllAndHarvest(
-        IReZap.Step[] calldata _steps,
-        uint256 _relicId,
-        bool _giveEther,
-        bool _burn
-    ) external {
-        (PositionInfo memory position, IReaperVault vault) =
-            _prepareWithdrawal(_steps, _relicId, _giveEther);
+    function withdrawAllAndHarvest(IReZap.Step[] calldata _steps, uint256 _relicId, bool _giveEther, bool _burn)
+        external
+    {
+        (PositionInfo memory position, IReaperVault vault) = _prepareWithdrawal(_steps, _relicId, _giveEther);
         if (_giveEther) {
             _withdrawEther(vault, _steps, position.amount, _relicId, true);
         } else {
@@ -179,12 +170,9 @@ contract DepositHelperReaperBPT is Ownable {
         payable(msg.sender).sendValue(address(this).balance - initialEtherBalance_);
     }
 
-    function _withdrawFromRelicAndApproveVault(
-        IReaperVault _vault,
-        uint256 _shares,
-        uint256 _relicId,
-        bool _harvest
-    ) internal {
+    function _withdrawFromRelicAndApproveVault(IReaperVault _vault, uint256 _shares, uint256 _relicId, bool _harvest)
+        internal
+    {
         reliquary.withdraw(_shares, _relicId, _harvest ? msg.sender : address(0));
 
         if (_vault.allowance(address(this), address(reZap)) == 0) {

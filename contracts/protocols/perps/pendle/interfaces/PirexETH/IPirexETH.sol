@@ -7,15 +7,14 @@ interface IPirexETH {
         InstantRedemption
     }
 
-    function deposit(
-        address receiver,
-        bool shouldCompound
-    ) external payable returns (uint256 postFeeAmount, uint256 feeAmount);
+    function deposit(address receiver, bool shouldCompound)
+        external
+        payable
+        returns (uint256 postFeeAmount, uint256 feeAmount);
 
-    function instantRedeemWithPxEth(
-        uint256 _assets,
-        address _receiver
-    ) external returns (uint256 postFeeAmount, uint256 feeAmount);
+    function instantRedeemWithPxEth(uint256 _assets, address _receiver)
+        external
+        returns (uint256 postFeeAmount, uint256 feeAmount);
 
     function fees(Fees _feeType) external view returns (uint256);
 

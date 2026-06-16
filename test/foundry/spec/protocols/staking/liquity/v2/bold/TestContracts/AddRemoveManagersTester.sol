@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
 
 contract AddRemoveManagersTester is AddRemoveManagers {
     constructor(IAddressesRegistry _addressesRegistry) AddRemoveManagers(_addressesRegistry) {}

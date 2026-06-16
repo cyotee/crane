@@ -35,7 +35,7 @@ library FixedPointMathLib {
     //////////////////////////////////////////////////////////////*/
 
     function mulDivDown(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Equivalent to require(denominator != 0 && (y == 0 || x <= type(uint256).max / y))
             if iszero(mul(denominator, iszero(mul(y, gt(x, div(MAX_UINT256, y)))))) {
                 revert(0, 0)
@@ -47,7 +47,7 @@ library FixedPointMathLib {
     }
 
     function mulDivUp(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Equivalent to require(denominator != 0 && (y == 0 || x <= type(uint256).max / y))
             if iszero(mul(denominator, iszero(mul(y, gt(x, div(MAX_UINT256, y)))))) {
                 revert(0, 0)
@@ -60,7 +60,7 @@ library FixedPointMathLib {
     }
 
     function rpow(uint256 x, uint256 n, uint256 scalar) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             switch x
             case 0 {
                 switch n
@@ -148,7 +148,7 @@ library FixedPointMathLib {
     //////////////////////////////////////////////////////////////*/
 
     function sqrt(uint256 x) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let y := x // We start y at x, which will help us make our initial estimate.
 
             z := 181 // The "correct" value is 1, but this saves a multiplication later.
@@ -212,7 +212,7 @@ library FixedPointMathLib {
     }
 
     function unsafeMod(uint256 x, uint256 y) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Mod x by y. Note this will return
             // 0 instead of reverting if y is zero.
             z := mod(x, y)
@@ -220,7 +220,7 @@ library FixedPointMathLib {
     }
 
     function unsafeDiv(uint256 x, uint256 y) internal pure returns (uint256 r) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Divide x by y. Note this will return
             // 0 instead of reverting if y is zero.
             r := div(x, y)
@@ -228,7 +228,7 @@ library FixedPointMathLib {
     }
 
     function unsafeDivUp(uint256 x, uint256 y) internal pure returns (uint256 z) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Add 1 to x * y if x % y > 0. Note this will
             // return 0 instead of reverting if y is zero.
             z := add(gt(mod(x, y), 0), div(x, y))

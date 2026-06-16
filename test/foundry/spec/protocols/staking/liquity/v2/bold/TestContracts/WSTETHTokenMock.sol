@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IWSTETH.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IWSTETH.sol";
 
 contract WSTETHTokenMock is IWSTETH {
     function stEthPerToken() external pure returns (uint256) {

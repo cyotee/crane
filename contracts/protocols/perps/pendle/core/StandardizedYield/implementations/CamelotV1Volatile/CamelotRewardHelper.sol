@@ -52,7 +52,7 @@ contract CamelotRewardHelper is TokenHelper, ICamelotNFTHandler {
         }
 
         address lp;
-        (lp, GRAIL, xGRAIL, , , , , ) = ICamelotNFTPool(nftPool).getPoolInfo();
+        (lp, GRAIL, xGRAIL,,,,,) = ICamelotNFTPool(nftPool).getPoolInfo();
         yieldBooster = ICamelotNFTPool(nftPool).yieldBooster();
 
         _safeApproveInf(lp, nftPool);
@@ -146,30 +146,30 @@ contract CamelotRewardHelper is TokenHelper, ICamelotNFTHandler {
      * ==================================================================
      */
 
-    function onERC721Received(
-        address,
-        address,
-        uint256 tokenId,
-        bytes calldata
-    ) external view ensureValidTokenId(tokenId) returns (bytes4) {
+    function onERC721Received(address, address, uint256 tokenId, bytes calldata)
+        external
+        view
+        ensureValidTokenId(tokenId)
+        returns (bytes4)
+    {
         return _ERC721_RECEIVED;
     }
 
-    function onNFTHarvest(
-        address,
-        address,
-        uint256 tokenId,
-        uint256,
-        uint256
-    ) external view ensureValidTokenId(tokenId) returns (bool) {
+    function onNFTHarvest(address, address, uint256 tokenId, uint256, uint256)
+        external
+        view
+        ensureValidTokenId(tokenId)
+        returns (bool)
+    {
         return true;
     }
 
-    function onNFTAddToPosition(
-        address,
-        uint256 tokenId,
-        uint256
-    ) external view ensureValidTokenId(tokenId) returns (bool) {
+    function onNFTAddToPosition(address, uint256 tokenId, uint256)
+        external
+        view
+        ensureValidTokenId(tokenId)
+        returns (bool)
+    {
         return true;
     }
 

@@ -2,27 +2,27 @@
 
 pragma solidity ^0.8.17;
 
-import {AuthorisedMockSignersBase} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
+import {
+    AuthorisedMockSignersBase
+} from "@crane/contracts/external/redstone/packages/evm-connector/contracts/mocks/AuthorisedMockSignersBase.sol";
 import {PriceFeedsAdapterWithoutRounds} from "../price-feeds/without-rounds/PriceFeedsAdapterWithoutRounds.sol";
 import {LowestGasRead} from "../custom-integrations/LowestGasRead.sol";
 
-contract PriceFeedsAdapterWithLowestGasRead is PriceFeedsAdapterWithoutRounds, AuthorisedMockSignersBase, LowestGasRead {
-  function getDataFeedIds() public pure virtual override returns (bytes32[] memory dataFeedIds) {
-    dataFeedIds = new bytes32[](1);
-    dataFeedIds[0] = bytes32("BTC");
-  }
+contract PriceFeedsAdapterWithLowestGasRead is
+    PriceFeedsAdapterWithoutRounds,
+    AuthorisedMockSignersBase,
+    LowestGasRead
+{
+    function getDataFeedIds() public pure virtual override returns (bytes32[] memory dataFeedIds) {
+        dataFeedIds = new bytes32[](1);
+        dataFeedIds[0] = bytes32("BTC");
+    }
 
-  function getUniqueSignersThreshold() public view virtual override returns (uint8) {
-    return 2;
-  }
+    function getUniqueSignersThreshold() public view virtual override returns (uint8) {
+        return 2;
+    }
 
-  function getAuthorisedSignerIndex(address signerAddress)
-    public
-    view
-    virtual
-    override
-    returns (uint8)
-  {
-    return getAuthorisedMockSignerIndex(signerAddress);
-  }
+    function getAuthorisedSignerIndex(address signerAddress) public view virtual override returns (uint8) {
+        return getAuthorisedMockSignerIndex(signerAddress);
+    }
 }

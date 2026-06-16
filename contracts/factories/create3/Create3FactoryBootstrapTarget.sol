@@ -30,11 +30,22 @@ contract Create3FactoryBootstrapTarget is MultiStepOwnableModifiers, OperableMod
 
     function initFactory() external onlyOwner returns (bool) {
         ICREATE3DFPkg.PkgArgs memory pkgArgs = ICREATE3DFPkg.PkgArgs({owner: MultiStepOwnableRepo._owner()});
-        address(DiamondPackageFactoryAwareRepo._diamondPackageFactory()).functionDelegateCall(abi.encodeWithSelector(IDiamondPackageCallBackFactory.initAccount.selector, DiamondFactoryPackageRegistryRepo._canonicalPackage(type(ICREATE3DFPkg).interfaceId), abi.encode(pkgArgs)));
+        address(DiamondPackageFactoryAwareRepo._diamondPackageFactory())
+            .functionDelegateCall(
+                abi.encodeWithSelector(
+                    IDiamondPackageCallBackFactory.initAccount.selector,
+                    DiamondFactoryPackageRegistryRepo._canonicalPackage(type(ICREATE3DFPkg).interfaceId),
+                    abi.encode(pkgArgs)
+                )
+            );
         return true;
     }
 
-    function setDiamondPackageFactory(IDiamondPackageCallBackFactory diamondPackageFactory_) external onlyOwner returns (bool) {
+    function setDiamondPackageFactory(IDiamondPackageCallBackFactory diamondPackageFactory_)
+        external
+        onlyOwner
+        returns (bool)
+    {
         DiamondPackageFactoryAwareRepo._initialize(diamondPackageFactory_);
         return true;
     }

@@ -23,26 +23,26 @@ address constant FPIS = 0xc2544A32872A91F4A553b404C6950e89De901fdb;
 
 address constant ALICE = address(0xA11CE);
 address constant BOB = address(0xB0B);
-address constant CADE = address (0xCADE);
+address constant CADE = address(0xCADE);
 
-uint256 constant MAXTIME = 4 * 365 * 86400;  // 4 years
+uint256 constant MAXTIME = 4 * 365 * 86400; // 4 years
 uint256 constant WEEK = 7 * 86400;
 uint256 constant PRECISION = 1e6;
 
 interface IFPIS {
-    event Approval(address indexed owner, address indexed spender, uint value);
-    event Transfer(address indexed from, address indexed to, uint value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Transfer(address indexed from, address indexed to, uint256 value);
 
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
-    function totalSupply() external view returns (uint);
-    function balanceOf(address owner) external view returns (uint);
-    function allowance(address owner, address spender) external view returns (uint);
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address owner) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
 
-    function approve(address spender, uint value) external returns (bool);
-    function transfer(address to, uint value) external returns (bool);
-    function transferFrom(address from, address to, uint value) external returns (bool);
+    function approve(address spender, uint256 value) external returns (bool);
+    function transfer(address to, uint256 value) external returns (bool);
+    function transferFrom(address from, address to, uint256 value) external returns (bool);
 
     function addMinter(address minter_address) external;
     function minter_mint(address m_address, uint256 m_amount) external;
@@ -56,23 +56,28 @@ struct AppViewRtn {
 contract MockApp {
     veFPISProxy public proxy;
     IERC20 public fpis;
+
     constructor(address _proxyAddr) {
         proxy = veFPISProxy(_proxyAddr);
         fpis = IERC20(FPIS);
     }
+
     function take(address user, uint256 amount) public {
         proxy.transferFromVeFPISToApp(user, amount);
     }
+
     function repay(address user, uint256 amount) public {
         fpis.approve(address(VEFPIS), amount);
         proxy.transferFromAppToVeFPIS(user, amount);
     }
+
     function slash(address user, uint256 amount) public {
         proxy.appSlash(user, amount);
     }
+
     function add(address user, uint256 amount) public {
-        (,,uint maxUsage) = proxy.getUserAppMaxUsages(address(this), user);
-        uint surplus = 0;
+        (,, uint256 maxUsage) = proxy.getUserAppMaxUsages(address(this), user);
+        uint256 surplus = 0;
         if (amount > maxUsage) {
             surplus = amount - maxUsage;
         }
@@ -104,7 +109,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         // // Have Alice lock in veFPIS
         // vm.startPrank(ALICE, ALICE); // First param is msg.sender, 2nd param tx.origin
         // fpis.approve(address(veFPIS), 1000);
-        // veFPIS.create_lock(1000, block.timestamp + MAXTIME);  
+        // veFPIS.create_lock(1000, block.timestamp + MAXTIME);
         // vm.stopPrank();
 
         // // Have Bob lock in veFPIS
@@ -125,7 +130,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         fpis.addMinter(FPIS_COMPTROLLER);
     }
 
-    function deployApp(uint256 maxUsageAllowedPct) public returns(address){
+    function deployApp(uint256 maxUsageAllowedPct) public returns (address) {
         MockApp app = new MockApp(address(proxy));
         vm.startPrank(FPIS_COMPTROLLER);
         proxy.addNewApp(address(app), maxUsageAllowedPct, false);
@@ -157,14 +162,16 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         assertEq(fpis.balanceOf(address(app)), amountFPIS);
         assertEq(veFPIS.user_proxy_balance(ALICE), amountFPIS);
     }
-    
-    function testMultiTransferFromVeFPISToApp(uint256 amount1, uint256 amount2, uint256 amount3, uint256 amount4) public {
+
+    function testMultiTransferFromVeFPISToApp(uint256 amount1, uint256 amount2, uint256 amount3, uint256 amount4)
+        public
+    {
         vm.assume(amount1 < 1000000000000000000000000000);
         vm.assume(amount2 < 1000000000000000000000000000);
         vm.assume(amount3 < 1000000000000000000000000000);
         vm.assume(amount4 < 1000000000000000000000000000);
         MockApp app = MockApp(deployApp(PRECISION)); // 100% Max allowed usage
-        uint sum = amount1 + amount2 + amount3 + amount4;
+        uint256 sum = amount1 + amount2 + amount3 + amount4;
         giveVeFPIS(address(ALICE), sum);
 
         vm.prank(ALICE);
@@ -241,7 +248,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         assertEq(veFPIS.user_proxy_balance(ALICE), amount1);
     }
 
-    // Testing transferFromAppToVeFPIS 
+    // Testing transferFromAppToVeFPIS
     function testTransferFromAppToVeFPIS(uint256 amountFPIS) public {
         vm.assume(amountFPIS < 1000000000000000000000000000);
         giveVeFPIS(address(ALICE), amountFPIS);
@@ -448,7 +455,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         giveVeFPIS(address(ALICE), amountFPIS);
 
         MockApp app = MockApp(deployApp(PRECISION)); // 100% Max allowed usage
-        
+
         vm.prank(ALICE);
         proxy.userSetAppMaxFPISUsage(address(app), amountFPIS);
 
@@ -469,9 +476,9 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         vm.assume(amount2 > 0); // Amount of 0 won't revert
         uint256 sum = amount1 + amount2;
         giveVeFPIS(address(ALICE), sum);
-        
+
         MockApp app = MockApp(deployApp(PRECISION)); // 100% Max allowed usage
-        
+
         vm.prank(ALICE);
         proxy.userSetAppMaxFPISUsage(address(app), sum);
 
@@ -496,7 +503,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
 
         vm.prank(FPIS_COMPTROLLER);
         proxy.addNewApp(address(app), maxUsagePct, false);
-        
+
         assertEq(proxy.getAppMaxUsagePct(address(app)), maxUsagePct);
         assertTrue(proxy.isApp(address(app)));
     }
@@ -550,8 +557,8 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
         assertEq(veFPIS.user_proxy_balance(ALICE), amountSlash);
     }
 
-    function giveVeFPIS(address user, uint amountFPIS) internal {
-        if(amountFPIS == 0) {
+    function giveVeFPIS(address user, uint256 amountFPIS) internal {
+        if (amountFPIS == 0) {
             amountFPIS = 1;
         }
         vm.prank(FPIS_COMPTROLLER);
@@ -560,7 +567,7 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
 
         vm.startPrank(user, user); // First param is msg.sender, 2nd param tx.origin
         fpis.approve(VEFPIS, amountFPIS);
-        veFPIS.create_lock(amountFPIS, block.timestamp + MAXTIME);  
+        veFPIS.create_lock(amountFPIS, block.timestamp + MAXTIME);
         vm.stopPrank();
         // assertEq(fpis.balanceOf(user), 0);
     }
@@ -573,7 +580,6 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
     // function testFuzzWalk(uint amountFPIS, uint seed) {
 
     // }
-
 
     // function testTryBreak(uint amountFPIS, uint pctAllow1, uint pctAllow2, uint pctAllow3, uint usrAllow1, uint usrAllow2, uint usrAllow3) public {
     //     vm.assume(amountFPIS < 1000000000000000000000000000);
@@ -588,7 +594,6 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
     //     MockApp app1 = MockApp(deployApp(appUse1));
     //     MockApp app1 = MockApp(deployApp(appUse1));
 
-
     //     vm.startPrank(FPIS_COMPTROLLER);
     //     fpis.addMinter(FPIS_COMPTROLLER);
     //     fpis.minter_mint(CADE, amountFPIS);
@@ -597,11 +602,10 @@ contract veFPISProxyTest is TestBase_FraxEthereumFork {
 
     //     vm.startPrank(CADE, CADE); // First param is msg.sender, 2nd param tx.origin
     //     fpis.approve(VEFPIS, amountFPIS);
-    //     veFPIS.create_lock(amountFPIS, block.timestamp + MAXTIME);  
+    //     veFPIS.create_lock(amountFPIS, block.timestamp + MAXTIME);
     //     vm.stopPrank();
     //     assertEq(fpis.balanceOf(CADE), 0);
 
-        
     // }
 
     // function testManyApp(uint numApps, uint fpisPerApp) public {

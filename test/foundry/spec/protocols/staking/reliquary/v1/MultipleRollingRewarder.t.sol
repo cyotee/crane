@@ -10,7 +10,9 @@ import {LinearCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curve
 import {LinearPlateauCurve} from "@crane/contracts/protocols/staking/reliquary/v1/curves/LinearPlateauCurve.sol";
 import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
-import {ParentRollingRewarder} from "@crane/contracts/protocols/staking/reliquary/v1/rewarders/ParentRollingRewarder.sol";
+import {
+    ParentRollingRewarder
+} from "@crane/contracts/protocols/staking/reliquary/v1/rewarders/ParentRollingRewarder.sol";
 import {RollingRewarder} from "@crane/contracts/protocols/staking/reliquary/v1/rewarders/RollingRewarder.sol";
 import {TestBase_Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/test/bases/TestBase_Reliquary.sol";
 
@@ -137,9 +139,7 @@ contract MultipleRollingRewarder is TestBase_Reliquary {
             for (uint256 u = 0; u < users.length; u++) {
                 (, uint256[] memory rewardAmounts_) = parentRewarder.pendingTokens(relics[u]);
                 assertEq(rewardAmounts_[i], 0); // 0,001%
-                assertApproxEqRel(
-                    rewardTokens[i].balanceOf(users[u]), initialFunding[i] / 3, 0.001e18
-                ); // 0,001%
+                assertApproxEqRel(rewardTokens[i].balanceOf(users[u]), initialFunding[i] / 3, 0.001e18); // 0,001%
             }
         }
     }

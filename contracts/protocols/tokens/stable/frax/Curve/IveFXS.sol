@@ -2,7 +2,6 @@
 pragma solidity ^0.8.35;
 
 interface IveFXS {
-
     struct LockedBalance {
         int128 amount;
         uint256 end;
@@ -36,8 +35,14 @@ interface IveFXS {
     function supply() external view returns (uint256);
     function locked(address addr) external view returns (LockedBalance memory);
     function epoch() external view returns (uint256);
-    function point_history(uint256 arg0) external view returns (int128 bias, int128 slope, uint256 ts, uint256 blk, uint256 fxs_amt);
-    function user_point_history(address arg0, uint256 arg1) external view returns (int128 bias, int128 slope, uint256 ts, uint256 blk, uint256 fxs_amt);
+    function point_history(uint256 arg0)
+        external
+        view
+        returns (int128 bias, int128 slope, uint256 ts, uint256 blk, uint256 fxs_amt);
+    function user_point_history(address arg0, uint256 arg1)
+        external
+        view
+        returns (int128 bias, int128 slope, uint256 ts, uint256 blk, uint256 fxs_amt);
     function user_point_epoch(address arg0) external view returns (uint256);
     function slope_changes(uint256 arg0) external view returns (int128);
     function controller() external view returns (address);

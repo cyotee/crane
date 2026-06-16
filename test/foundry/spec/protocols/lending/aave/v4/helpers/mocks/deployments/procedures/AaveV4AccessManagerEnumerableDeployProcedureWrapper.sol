@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AaveV4AccessManagerEnumerableDeployProcedure} from '@crane/contracts/protocols/lending/aave/v4/deployments/procedures/deploy/AaveV4AccessManagerEnumerableDeployProcedure.sol';
+import {
+    AaveV4AccessManagerEnumerableDeployProcedure
+} from "@crane/contracts/protocols/lending/aave/v4/deployments/procedures/deploy/AaveV4AccessManagerEnumerableDeployProcedure.sol";
 
-contract AaveV4AccessManagerEnumerableDeployProcedureWrapper is
-  AaveV4AccessManagerEnumerableDeployProcedure
-{
-  bool public IS_TEST = true;
-  function deployAccessManagerEnumerable(address admin, bytes32 salt) external returns (address) {
-    return _deployAccessManagerEnumerable(admin, salt);
-  }
+contract AaveV4AccessManagerEnumerableDeployProcedureWrapper is AaveV4AccessManagerEnumerableDeployProcedure {
+    bool public IS_TEST = true;
+
+    function deployAccessManagerEnumerable(address admin, bytes32 salt) external returns (address) {
+        return _deployAccessManagerEnumerable(admin, salt);
+    }
 }

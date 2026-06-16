@@ -35,7 +35,6 @@ import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/librari
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
 
 contract FPIControllerPool is Owned {
-
     // Core
     address public timelock_address;
     FPI public FPI_TKN;
@@ -52,7 +51,7 @@ contract FPIControllerPool is Owned {
     // Tracking
     uint256 public last_order_id_twamm; // Last TWAMM order ID that was used
 
-   // AMO addresses (lend out FRAX)
+    // AMO addresses (lend out FRAX)
     address[] public amos_array;
     mapping(address => bool) public amos; // Mapping is also used for faster verification
 
@@ -65,12 +64,12 @@ contract FPIControllerPool is Owned {
     bool public use_manual_mint_fee = true;
     uint256 public mint_fee_manual = 3000; // E6
     uint256 public mint_fee_multiplier = 1000000; // E6
-    
+
     // Redeem Fee Related
     bool public use_manual_redeem_fee = true;
     uint256 public redeem_fee_manual = 3000; // E6
     uint256 public redeem_fee_multiplier = 1000000; // E6
-    
+
     // Safety
     uint256 public fpi_mint_cap = 110000000e18; // 110M
     uint256 public peg_band_mint_redeem = 50000; // 5%
@@ -105,11 +104,9 @@ contract FPIControllerPool is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address,
-        address[6] memory _address_pack
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address, address[6] memory _address_pack)
+        Owned(_creator_address)
+    {
         timelock_address = _timelock_address;
 
         // Set instances
@@ -133,7 +130,6 @@ contract FPIControllerPool is Owned {
         num_twamm_intervals = swap_period / TWAMM.orderTimeInterval();
     }
 
-
     /* ========== VIEWS ========== */
 
     // Needed as a FRAX AMO
@@ -145,32 +141,30 @@ contract FPIControllerPool is Owned {
 
     // In Chainlink decimals
     function getFRAXPriceE18() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
 
         return ((uint256(price) * 1e18) / (10 ** chainlink_frax_usd_decimals));
     }
 
-    // In Chainlink decimals    
+    // In Chainlink decimals
     function getFPIPriceE18() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFPIUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFPIUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
 
         return ((uint256(price) * 1e18) / (10 ** chainlink_fpi_usd_decimals));
     }
 
-    // Reserve spot price (fpi_price is dangerous / flash loan susceptible, so use carefully)    
+    // Reserve spot price (fpi_price is dangerous / flash loan susceptible, so use carefully)
     function getReservesAndFPISpot() public returns (uint256 reserveFRAX, uint256 reserveFPI, uint256 fpi_price) {
         // Update and get the reserves
         TWAMM.executeVirtualOrders(block.timestamp);
         {
-            (uint256 reserveA, uint256 reserveB, ) = TWAMM.getReserves();
-            if (frax_is_token0){
+            (uint256 reserveA, uint256 reserveB,) = TWAMM.getReserves();
+            if (frax_is_token0) {
                 reserveFRAX = reserveA;
                 reserveFPI = reserveB;
-                
-            }
-            else {
+            } else {
                 reserveFRAX = reserveB;
                 reserveFPI = reserveA;
             }
@@ -183,7 +177,7 @@ contract FPIControllerPool is Owned {
     // function getTwammToPegAmt() public returns (uint256 frax_in, uint256 fpi_in) {
     //     // Update and get the reserves
     //     (uint256 reserveFRAX, uint256 reserveFPI, uint256 reservePriceFPI) = getReservesAndFPISpot();
-        
+
     //     // Get the CPI price
     //     uint256 cpi_peg_price = cpiTracker.currPegPrice();
 
@@ -208,8 +202,9 @@ contract FPIControllerPool is Owned {
 
     // In E6
     function mint_fee() public view returns (uint256 fee) {
-        if (use_manual_mint_fee) fee = mint_fee_manual;
-        else {
+        if (use_manual_mint_fee) {
+            fee = mint_fee_manual;
+        } else {
             // For future variable fees
             fee = 0;
 
@@ -220,16 +215,15 @@ contract FPIControllerPool is Owned {
 
     // In E6
     function redeem_fee() public view returns (uint256 fee) {
-        if (use_manual_redeem_fee) fee = redeem_fee_manual;
-        else {
+        if (use_manual_redeem_fee) {
+            fee = redeem_fee_manual;
+        } else {
             // For future variable fees
             fee = 0;
 
             // Apply the multiplier
             fee = (fee * redeem_fee_multiplier) / 1e6;
         }
-
-        
     }
 
     // Get some info about the peg status
@@ -237,10 +231,9 @@ contract FPIControllerPool is Owned {
         uint256 fpi_price = getFPIPriceE18();
         cpi_peg_price = cpiTracker.currPegPrice();
 
-        if (fpi_price > cpi_peg_price){
+        if (fpi_price > cpi_peg_price) {
             diff_frac_abs = ((fpi_price - cpi_peg_price) * PEG_BAND_PRECISION) / fpi_price;
-        }
-        else {
+        } else {
             diff_frac_abs = ((cpi_peg_price - fpi_price) * PEG_BAND_PRECISION) / fpi_price;
         }
 
@@ -248,21 +241,19 @@ contract FPIControllerPool is Owned {
     }
 
     // Get additional info about the peg status
-    function price_info() public view returns (
-        int256 collat_imbalance, 
-        uint256 cpi_peg_price,
-        uint256 fpi_price,
-        uint256 price_diff_frac_abs
-    ) {
+    function price_info()
+        public
+        view
+        returns (int256 collat_imbalance, uint256 cpi_peg_price, uint256 fpi_price, uint256 price_diff_frac_abs)
+    {
         fpi_price = getFPIPriceE18();
         cpi_peg_price = cpiTracker.currPegPrice();
         uint256 fpi_supply = FPI_TKN.totalSupply();
 
-        if (fpi_price > cpi_peg_price){
+        if (fpi_price > cpi_peg_price) {
             collat_imbalance = int256(((fpi_price - cpi_peg_price) * fpi_supply) / PRICE_PRECISION);
             price_diff_frac_abs = ((fpi_price - cpi_peg_price) * PEG_BAND_PRECISION) / fpi_price;
-        }
-        else {
+        } else {
             collat_imbalance = -1 * int256(((cpi_peg_price - fpi_price) * fpi_supply) / PRICE_PRECISION);
             price_diff_frac_abs = ((cpi_peg_price - fpi_price) * PEG_BAND_PRECISION) / fpi_price;
         }
@@ -275,7 +266,7 @@ contract FPIControllerPool is Owned {
         require(!mints_paused, "Mints paused");
 
         // Fetch the CPI price and other info
-        (uint256 cpi_peg_price, , bool within_range) = pegStatusMntRdm();
+        (uint256 cpi_peg_price,, bool within_range) = pegStatusMntRdm();
 
         // Make sure the peg is within range for minting
         // Helps combat oracle errors and megadumping
@@ -312,7 +303,7 @@ contract FPIControllerPool is Owned {
         require(!redeems_paused, "Redeems paused");
 
         // Fetch the CPI price and other info
-        (uint256 cpi_peg_price, , bool within_range) = pegStatusMntRdm();
+        (uint256 cpi_peg_price,, bool within_range) = pegStatusMntRdm();
 
         // Make sure the peg is within range for minting
         // Helps combat oracle errors and megadumping
@@ -342,31 +333,35 @@ contract FPIControllerPool is Owned {
     }
 
     // Use the TWAMM for bulk peg corrections
-    function twammManual(uint256 frax_sell_amt, uint256 fpi_sell_amt, uint256 override_intervals) external onlyByOwnGov returns (uint256 frax_to_use, uint256 fpi_to_use) {
+    function twammManual(uint256 frax_sell_amt, uint256 fpi_sell_amt, uint256 override_intervals)
+        external
+        onlyByOwnGov
+        returns (uint256 frax_to_use, uint256 fpi_to_use)
+    {
         // Make sure only one direction occurs
         require(!((frax_sell_amt > 0) && (fpi_sell_amt > 0)), "Can only sell in one direction");
 
         // Update and get the reserves
         // longTermSwapFrom0to1 and longTermSwapFrom1To0 do it automatically
         // TWAMM.executeVirtualOrders(block.timestamp);
-        
+
         // Cancel the previous order (if any) and collect any leftover tokens
         if (pending_twamm_order) TWAMM.cancelLongTermSwap(last_order_id_twamm);
 
         // Now calculate the imbalance after the burn
-        (, , , uint256 price_diff_abs) = price_info();
+        (,,, uint256 price_diff_abs) = price_info();
 
         // Make sure the FPI oracle price hasn't moved away too much from the target peg price
         require(price_diff_abs <= peg_band_twamm, "Peg band [TWAMM]");
 
         // Create a new order
-        last_order_id_twamm = TWAMM.getNextOrderID(); 
+        last_order_id_twamm = TWAMM.getNextOrderID();
         {
             if (fpi_sell_amt > 0) {
                 // Mint FPI and sell for FRAX
                 // --------------------------------
                 fpi_to_use = fpi_sell_amt;
-    
+
                 // Make sure nonzero
                 require(fpi_to_use > 0, "FPI sold must be nonzero");
 
@@ -381,13 +376,15 @@ contract FPIControllerPool is Owned {
 
                 // Sell FPI for FRAX
                 if (frax_is_token0) {
-                    TWAMM.longTermSwapFrom1To0(fpi_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
+                    TWAMM.longTermSwapFrom1To0(
+                        fpi_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
+                } else {
+                    TWAMM.longTermSwapFrom0To1(
+                        fpi_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
                 }
-                else {
-                    TWAMM.longTermSwapFrom0To1(fpi_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
-                }
-            }
-            else {
+            } else {
                 // Use FRAX to buy FPI
                 // --------------------------------
                 frax_to_use = frax_sell_amt;
@@ -403,10 +400,13 @@ contract FPIControllerPool is Owned {
 
                 // Sell FRAX for FPI
                 if (frax_is_token0) {
-                    TWAMM.longTermSwapFrom0To1(frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
-                }
-                else {
-                    TWAMM.longTermSwapFrom1To0(frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals);
+                    TWAMM.longTermSwapFrom0To1(
+                        frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
+                } else {
+                    TWAMM.longTermSwapFrom1To0(
+                        frax_to_use, override_intervals > 0 ? override_intervals : num_twamm_intervals
+                    );
                 }
             }
         }
@@ -435,8 +435,9 @@ contract FPIControllerPool is Owned {
         uint256 order_id_to_use = (order_id_override == 0 ? last_order_id_twamm : order_id_override);
 
         // Withdraw current proceeds
-        (bool is_expired, address rewardTkn, uint256 totalReward) = TWAMM.withdrawProceedsFromLongTermSwap(order_id_to_use);
-        
+        (bool is_expired, address rewardTkn, uint256 totalReward) =
+            TWAMM.withdrawProceedsFromLongTermSwap(order_id_to_use);
+
         // If using the last_order_id_twamm and it is expired, clear the pending order indicator
         if (is_expired && (order_id_override == 0)) pending_twamm_order = false;
 
@@ -460,8 +461,12 @@ contract FPIControllerPool is Owned {
     // ------------------------------------------------------------------
 
     // Lend the FRAX collateral to an AMO
-    function giveFRAXToAMO(address destination_amo, uint256 frax_amount) external onlyByOwnGov validAMO(destination_amo) {
-        require(frax_amount <= (2**255 - 1), "int256 overflow");
+    function giveFRAXToAMO(address destination_amo, uint256 frax_amount)
+        external
+        onlyByOwnGov
+        validAMO(destination_amo)
+    {
+        require(frax_amount <= (2 ** 255 - 1), "int256 overflow");
         int256 frax_amount_i256 = int256(frax_amount);
 
         // Update the balances first
@@ -477,7 +482,7 @@ contract FPIControllerPool is Owned {
 
     // AMO gives back FRAX. Needed for proper accounting
     function receiveFRAXFromAMO(uint256 frax_amount) external validAMO(msg.sender) {
-        require(frax_amount <= (2**255 - 1), "int256 overflow");
+        require(frax_amount <= (2 ** 255 - 1), "int256 overflow");
         int256 frax_amt_i256 = int256(frax_amount);
 
         // Give back first
@@ -492,12 +497,12 @@ contract FPIControllerPool is Owned {
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    // Adds an AMO 
+    // Adds an AMO
     function addAMO(address amo_address) public onlyByOwnGov {
         require(amo_address != address(0), "Zero address detected");
 
         require(amos[amo_address] == false, "Address already exists");
-        amos[amo_address] = true; 
+        amos[amo_address] = true;
         amos_array.push(amo_address);
 
         emit AMOAdded(amo_address);
@@ -507,12 +512,12 @@ contract FPIControllerPool is Owned {
     function removeAMO(address amo_address) public onlyByOwnGov {
         require(amo_address != address(0), "Zero address detected");
         require(amos[amo_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete amos[amo_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < amos_array.length; i++){ 
+        for (uint256 i = 0; i < amos_array.length; i++) {
             if (amos_array[i] == amo_address) {
                 amos_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -535,7 +540,7 @@ contract FPIControllerPool is Owned {
     function setTWAMMAndSwapPeriod(address _twamm_addr, uint256 _swap_period) external onlyByOwnGov {
         // Cancel an outstanding order, if present
         if (pending_twamm_order) cancelCurrTWAMMOrder(last_order_id_twamm);
-        
+
         // Change the TWAMM parameters
         TWAMM = IFraxswapPair(_twamm_addr);
         swap_period = _swap_period;
@@ -552,7 +557,7 @@ contract FPIControllerPool is Owned {
 
     function setFraxBorrowCap(int256 _frax_borrow_cap) external onlyByOwnGov {
         require(_frax_borrow_cap >= 0, "int256 underflow");
-        require(_frax_borrow_cap <= (2**255 - 1), "int256 overflow");
+        require(_frax_borrow_cap <= (2 ** 255 - 1), "int256 overflow");
         frax_borrow_cap = _frax_borrow_cap;
     }
 
@@ -567,10 +572,10 @@ contract FPIControllerPool is Owned {
 
     function setMintRedeemFees(
         bool _use_manual_mint_fee,
-        uint256 _mint_fee_manual, 
-        uint256 _mint_fee_multiplier, 
+        uint256 _mint_fee_manual,
+        uint256 _mint_fee_multiplier,
         bool _use_manual_redeem_fee,
-        uint256 _redeem_fee_manual, 
+        uint256 _redeem_fee_manual,
         uint256 _redeem_fee_multiplier
     ) external onlyByOwnGov {
         use_manual_mint_fee = _use_manual_mint_fee;

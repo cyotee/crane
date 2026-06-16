@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {Initializable} from "../../proxy/utils/Initializable.sol";
@@ -14,11 +14,10 @@ contract ERC20GetterHelperUpgradeable is Initializable {
     event ERC20Symbol(IERC20Metadata token, string symbol);
     event ERC20Decimals(IERC20Metadata token, uint8 decimals);
 
-    function __ERC20GetterHelper_init() internal onlyInitializing {
-    }
+    function __ERC20GetterHelper_init() internal onlyInitializing {}
 
-    function __ERC20GetterHelper_init_unchained() internal onlyInitializing {
-    }
+    function __ERC20GetterHelper_init_unchained() internal onlyInitializing {}
+
     function totalSupply(IERC20 token) external {
         emit ERC20TotalSupply(token, token.totalSupply());
     }

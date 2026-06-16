@@ -108,8 +108,9 @@ contract ChainlinkInfrequentXStocksOracle is ChainlinkInfrequentOracle {
 
     /// @notice Revert if the relative multiplier change is >= maxAllowedMultiplierChange.
     function _checkMultiplierChange(uint256 previousMultiplier, uint256 newMultiplier) internal view {
-        uint256 diff =
-            newMultiplier > previousMultiplier ? newMultiplier - previousMultiplier : previousMultiplier - newMultiplier;
+        uint256 diff = newMultiplier > previousMultiplier
+            ? newMultiplier - previousMultiplier
+            : previousMultiplier - newMultiplier;
         if (diff * 1e18 / previousMultiplier >= maxAllowedMultiplierChange) {
             revert PriceOracle_MultiplierUpdatePause();
         }

@@ -10,7 +10,10 @@ interface IBunniLens {
         int24 tickUpper;
     }
 
-    function getReserves (BunniKey calldata key) external view returns (uint112 reserve0, uint112 reserve1);
-    function hub () external view returns (address);
-    function pricePerFullShare (BunniKey calldata key) external view returns (uint128 liquidity, uint256 amount0, uint256 amount1);
+    function getReserves(BunniKey calldata key) external view returns (uint112 reserve0, uint112 reserve1);
+    function hub() external view returns (address);
+    function pricePerFullShare(BunniKey calldata key)
+        external
+        view
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1);
 }

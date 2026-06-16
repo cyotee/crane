@@ -107,7 +107,11 @@ abstract contract TestBase_UniswapV2Fork is Test {
     }
 
     /// @notice Get sorted reserves for a pair given the tokens
-    function getReserves(IUniswapV2Pair pair, address tokenA, address /* tokenB */)
+    function getReserves(
+        IUniswapV2Pair pair,
+        address tokenA,
+        address /* tokenB */
+    )
         internal
         view
         returns (uint256 reserveA, uint256 reserveB)

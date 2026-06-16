@@ -51,10 +51,14 @@ abstract contract PendleKarakVaultSYBaseUpg is SYBaseUpg {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn != stakeToken && tokenIn != vault) {
             (tokenIn, amountDeposited) = (stakeToken, _wrapToStakeToken(tokenIn, amountDeposited));
         }
@@ -69,9 +73,17 @@ abstract contract PendleKarakVaultSYBaseUpg is SYBaseUpg {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         IKarakVaultSupervisor(vaultSupervisor).gimmieShares(vault, amountSharesToRedeem);
         _transferOut(vault, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
@@ -99,9 +111,17 @@ abstract contract PendleKarakVaultSYBaseUpg is SYBaseUpg {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 
@@ -128,12 +148,12 @@ abstract contract PendleKarakVaultSYBaseUpg is SYBaseUpg {
     function _getAdditionalTokens() internal view virtual returns (address[] memory) {}
 
     function _previewToStakeToken(address, uint256) internal view virtual returns (uint256 amountOut) {
-        amountOut= 0;
+        amountOut = 0;
         assert(false);
     }
 
     function _wrapToStakeToken(address, uint256) internal virtual returns (uint256 amountOut) {
-        amountOut= 0;
+        amountOut = 0;
         assert(false);
     }
 

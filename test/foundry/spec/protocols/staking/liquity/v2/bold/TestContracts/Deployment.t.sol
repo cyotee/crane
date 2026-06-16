@@ -2,48 +2,48 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/AddressesRegistry.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/ActivePool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/BoldToken.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/BorrowerOperations.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/CollSurplusPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/DefaultPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/GasPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/HintHelpers.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/MultiTroveGetter.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/SortedTroves.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/StabilityPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/AddressesRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/ActivePool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/BoldToken.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/BorrowerOperations.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/CollSurplusPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/DefaultPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/GasPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/HintHelpers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/MultiTroveGetter.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/SortedTroves.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/StabilityPool.sol";
 import "./BorrowerOperationsTester.t.sol";
 import "./TroveManagerTester.t.sol";
 import "./CollateralRegistryTester.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/TroveNFT.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/CollateralRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/TroveNFT.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/NFTMetadata/MetadataNFT.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/CollateralRegistry.sol";
 import "./MockInterestRouter.sol";
 import "./PriceFeedTestnet.sol";
 import "./MetadataDeployment.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/WETHZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/GasCompZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/LeverageLSTZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/LeverageWETHZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IFlashLoanProvider.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Interfaces/IExchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveFactory.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGFactory.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurvePool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/CurveExchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniV3Exchange.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3Exchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/WETHZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/GasCompZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/LeverageLSTZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/LeverageWETHZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IFlashLoanProvider.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Interfaces/IExchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveFactory.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGFactory.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurvePool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/Curve/ICurveStableswapNGPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/CurveExchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/ISwapRouter.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniV3Exchange.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/Modules/Exchanges/HybridCurveUniV3Exchange.sol";
 import {WETHTester} from "./WETHTester.sol";
 import {ERC20Faucet} from "./ERC20Faucet.sol";
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/WETHPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/WSTETHPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/PriceFeeds/RETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/WETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/WSTETHPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/PriceFeeds/RETHPriceFeed.sol";
 
 import "forge-std/console2.sol";
 
@@ -695,12 +695,13 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _params.boldToken.setBranchAddresses(
-            address(contracts.troveManager),
-            address(contracts.stabilityPool),
-            address(contracts.borrowerOperations),
-            address(contracts.activePool)
-        );
+        _params.boldToken
+            .setBranchAddresses(
+                address(contracts.troveManager),
+                address(contracts.stabilityPool),
+                address(contracts.borrowerOperations),
+                address(contracts.activePool)
+            );
 
         // deploy zappers
         _deployZappers(
@@ -833,8 +834,9 @@ contract TestDeployer is MetadataDeployment {
     ) internal {
         zappers.leverageZapperCurve =
             _deployCurveLeverageZapper(_addressesRegistry, _flashLoanProvider, _curveExchange, _lst);
-        zappers.leverageZapperUniV3 =
-            _deployUniV3LeverageZapper(_addressesRegistry, _collToken, _boldToken, _priceFeed, _flashLoanProvider, _lst);
+        zappers.leverageZapperUniV3 = _deployUniV3LeverageZapper(
+            _addressesRegistry, _collToken, _boldToken, _priceFeed, _flashLoanProvider, _lst
+        );
         zappers.leverageZapperHybrid = _deployHybridLeverageZapper(
             _addressesRegistry, _collToken, _boldToken, _flashLoanProvider, _usdcCurvePool, _lst
         );

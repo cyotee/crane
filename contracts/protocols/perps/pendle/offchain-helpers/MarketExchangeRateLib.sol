@@ -18,7 +18,7 @@ library MarketExchangeRateLib {
     }
 
     function _getPYIndexCurrent(address market) private view returns (PYIndex) {
-        (IStandardizedYield SY, , IPYieldToken YT) = IPMarket(market).readTokens();
+        (IStandardizedYield SY,, IPYieldToken YT) = IPMarket(market).readTokens();
         uint256 ytIndex = YT.pyIndexStored();
         uint256 pyIndexCurrent;
         if (YT.doCacheIndexSameBlock() && YT.pyIndexLastUpdatedBlock() == block.number) {

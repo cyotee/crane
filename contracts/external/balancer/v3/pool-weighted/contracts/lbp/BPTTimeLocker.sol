@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.24;
 
-import {ERC6909Metadata} from "@crane/contracts/external/openzeppelin-contracts/token/ERC6909/extensions/ERC6909Metadata.sol";
+import {
+    ERC6909Metadata
+} from "@crane/contracts/external/openzeppelin-contracts/token/ERC6909/extensions/ERC6909Metadata.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {SafeERC20} from "@crane/contracts/utils/SafeERC20.sol";
 import {ERC6909} from "@crane/contracts/external/openzeppelin-contracts/token/ERC6909/ERC6909.sol";

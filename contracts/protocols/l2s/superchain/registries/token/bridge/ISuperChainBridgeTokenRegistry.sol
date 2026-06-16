@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /**
  * @title ISuperChainBridgeTokenRegistry
@@ -12,7 +12,6 @@ import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
  * @notice There is also no limit on the number of remote tokens.
  */
 interface ISuperChainBridgeTokenRegistry {
-
     /**
      * @notice Get the remote token and minimum gas limit for a given local token and destination chain.
      * @param chainId The destination chain ID.
@@ -36,7 +35,10 @@ interface ISuperChainBridgeTokenRegistry {
      * @return remoteToken The remote token address.
      * @return minGasLimit The minimum gas limit for bridging the local token to the remote token.
      */
-    function getRemoteTokenAndLimit(uint256 chainId, IERC20 localToken) external view returns (IERC20 remoteToken, uint256 minGasLimit);
+    function getRemoteTokenAndLimit(uint256 chainId, IERC20 localToken)
+        external
+        view
+        returns (IERC20 remoteToken, uint256 minGasLimit);
 
     /**
      * @notice Set the remote token and minimum gas limit for a given local token and destination chain.
@@ -46,7 +48,9 @@ interface ISuperChainBridgeTokenRegistry {
      * @param minGasLimit The minimum gas limit for bridging the local token to the remote token.
      * @return True if the remote token and minimum gas limit were successfully set, false otherwise.
      */
-    function setRemoteToken(uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit) external returns (bool);
+    function setRemoteToken(uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit)
+        external
+        returns (bool);
 
     /**
      * @notice Set the minimum gas limit for a given remote token and destination chain.

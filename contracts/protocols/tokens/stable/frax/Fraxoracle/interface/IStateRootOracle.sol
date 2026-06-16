@@ -2,9 +2,9 @@
 pragma solidity ^0.8.35;
 
 interface IStateRootOracle {
-   struct BlockInfo {
-      bytes32 stateRoot;
-      uint32 timestamp;
-   }
-   function getBlockInfo(uint blockNumber) external view returns (BlockInfo memory);
+    struct BlockInfo {
+        bytes32 stateRoot;
+        uint32 timestamp;
+    }
+    function getBlockInfo(uint256 blockNumber) external view returns (BlockInfo memory);
 }

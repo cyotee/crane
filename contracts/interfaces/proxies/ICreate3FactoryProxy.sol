@@ -9,6 +9,11 @@ import {ICreate3Factory} from "@crane/contracts/factories/create3/ICreate3Factor
 import {IFacetRegistry} from "@crane/contracts/interfaces/IFacetRegistry.sol";
 import {IDiamondFactoryPackageRegistry} from "@crane/contracts/interfaces/IDiamondFactoryPackageRegistry.sol";
 
-interface ICreate3FactoryProxy is IDiamondCut, IMultiStepOwnable, IOperable, ICreate3Factory, IFacetRegistry, IDiamondFactoryPackageRegistry {
-
-}
+interface ICreate3FactoryProxy is
+    IDiamondCut,
+    IMultiStepOwnable,
+    IOperable,
+    ICreate3Factory,
+    IFacetRegistry,
+    IDiamondFactoryPackageRegistry
+{}

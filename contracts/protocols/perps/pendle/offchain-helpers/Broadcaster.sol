@@ -28,7 +28,7 @@ contract Broadcaster is Initializable, BoringOwnableUpgradeable, UUPSUpgradeable
         lastBroadcastedWeek = currentWeek;
 
         votingController.finalizeEpoch();
-        for (uint256 i = 0; i < chainIds.length; ) {
+        for (uint256 i = 0; i < chainIds.length;) {
             uint64 chainId = chainIds[i];
             uint256 fee = votingController.getBroadcastResultFee(chainId);
             votingController.broadcastResults{value: fee}(chainId);

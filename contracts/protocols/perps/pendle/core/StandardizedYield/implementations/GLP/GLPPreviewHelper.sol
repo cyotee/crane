@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "../../../../interfaces/GMX/IGMXVault.sol";
 import "../../../../interfaces/GMX/IVaultPriceFeed.sol";
 
@@ -28,14 +28,8 @@ abstract contract GLPPreviewHelper {
         usdgAmount = vault.adjustForDecimals(usdgAmount, _token, usdg);
         require(usdgAmount > 0, "preview buyUSDG: usdgAmount must be > 0");
 
-        uint256 feeBasisPoints = __getFeeBasisPoints(
-            _token,
-            usdgAmount,
-            0,
-            vault.mintBurnFeeBasisPoints(),
-            vault.taxBasisPoints(),
-            true
-        );
+        uint256 feeBasisPoints =
+            __getFeeBasisPoints(_token, usdgAmount, 0, vault.mintBurnFeeBasisPoints(), vault.taxBasisPoints(), true);
         uint256 amountAfterFees = __collectSwapFees(_token, tokenAmount, feeBasisPoints);
         uint256 mintAmount = (amountAfterFees * price) / PRICE_PRECISION;
         mintAmount = vault.adjustForDecimals(mintAmount, _token, usdg);
@@ -51,12 +45,7 @@ abstract contract GLPPreviewHelper {
         require(redemptionAmount > 0, "preview sellUSDG: redemptionAmount must be > 0");
 
         uint256 feeBasisPoints = __getFeeBasisPoints(
-            _token,
-            usdgAmount,
-            usdgAmount,
-            vault.mintBurnFeeBasisPoints(),
-            vault.taxBasisPoints(),
-            false
+            _token, usdgAmount, usdgAmount, vault.mintBurnFeeBasisPoints(), vault.taxBasisPoints(), false
         );
         uint256 amountOut = __collectSwapFees(_token, redemptionAmount, feeBasisPoints);
         require(amountOut > 0, "preview sellUSDG: amountOut must be > 0");
@@ -72,10 +61,15 @@ abstract contract GLPPreviewHelper {
     }
 
     function __collectSwapFees(
-        address /*_token*/,
+        address,
+        /*_token*/
         uint256 _amount,
         uint256 _feeBasisPoints
-    ) private pure returns (uint256) {
+    )
+        private
+        pure
+        returns (uint256)
+    {
         uint256 afterFeeAmount = (_amount * (BASIS_POINTS_DIVISOR - _feeBasisPoints)) / (BASIS_POINTS_DIVISOR);
         return afterFeeAmount;
     }
@@ -105,9 +99,7 @@ abstract contract GLPPreviewHelper {
             return _feeBasisPoints;
         }
 
-        uint256 initialDiff = initialAmount > targetAmount
-            ? initialAmount - targetAmount
-            : targetAmount - initialAmount;
+        uint256 initialDiff = initialAmount > targetAmount ? initialAmount - targetAmount : targetAmount - initialAmount;
         uint256 nextDiff = nextAmount > targetAmount ? nextAmount - targetAmount : targetAmount - nextAmount;
 
         // action improves relative asset balance

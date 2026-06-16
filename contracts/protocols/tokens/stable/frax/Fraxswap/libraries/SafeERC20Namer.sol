@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.35;
 
-import './AddressStringUtil.sol';
+import "./AddressStringUtil.sol";
 
 // produces token descriptors from inconsistent or absent ERC20 symbol implementations that can return string or bytes32
 // this library will always produce a string symbol to represent the token
@@ -57,7 +57,7 @@ library SafeERC20Namer {
         (bool success, bytes memory data) = token.staticcall(abi.encodeWithSelector(selector));
         // if not implemented, or returns empty data, return empty string
         if (!success || data.length == 0) {
-            return '';
+            return "";
         }
         // bytes32 data always has length 32
         if (data.length == 32) {
@@ -66,7 +66,7 @@ library SafeERC20Namer {
         } else if (data.length > 64) {
             return abi.decode(data, (string));
         }
-        return '';
+        return "";
     }
 
     // attempts to extract the token symbol. if it does not implement symbol, returns a symbol derived from the address

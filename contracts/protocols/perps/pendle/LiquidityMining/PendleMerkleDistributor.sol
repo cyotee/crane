@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "../core/libraries/BoringOwnableUpgradeable.sol";
 import "../core/libraries/TokenHelper.sol";
 import "../interfaces/IPMerkleDistributor.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract PendleMerkleDistributor is IPMerkleDistributor, UUPSUpgradeable, BoringOwnableUpgradeable, TokenHelper {
-    
     using BetterEfficientHashLib for bytes;
 
     address public immutable token;
@@ -31,11 +30,10 @@ contract PendleMerkleDistributor is IPMerkleDistributor, UUPSUpgradeable, Boring
         __BoringOwnable_init();
     }
 
-    function claim(
-        address receiver,
-        uint256 totalAccrued,
-        bytes32[] calldata proof
-    ) external returns (uint256 amountOut) {
+    function claim(address receiver, uint256 totalAccrued, bytes32[] calldata proof)
+        external
+        returns (uint256 amountOut)
+    {
         address user = msg.sender;
         if (!_verifyMerkleData(user, totalAccrued, proof)) revert InvalidMerkleProof();
 
@@ -62,11 +60,10 @@ contract PendleMerkleDistributor is IPMerkleDistributor, UUPSUpgradeable, Boring
         emit Claimed(user, receiver, amountOut);
     }
 
-    function verify(
-        address user,
-        uint256 totalAccrued,
-        bytes32[] calldata proof
-    ) external returns (uint256 amountClaimable) {
+    function verify(address user, uint256 totalAccrued, bytes32[] calldata proof)
+        external
+        returns (uint256 amountClaimable)
+    {
         if (!_verifyMerkleData(user, totalAccrued, proof)) revert InvalidMerkleProof();
         amountClaimable = totalAccrued - claimed[user];
         verified[user] = totalAccrued;

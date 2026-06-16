@@ -5,7 +5,9 @@ import "forge-std/Test.sol";
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import {ERC721Holder} from "@crane/contracts/external/openzeppelin-contracts/token/ERC721/utils/ERC721Holder.sol";
-import {DepositHelperReaperVault} from "@crane/contracts/protocols/staking/reliquary/v1/helpers/DepositHelperReaperVault.sol";
+import {
+    DepositHelperReaperVault
+} from "@crane/contracts/protocols/staking/reliquary/v1/helpers/DepositHelperReaperVault.sol";
 import {NFTDescriptor} from "@crane/contracts/protocols/staking/reliquary/v1/nft_descriptors/NFTDescriptor.sol";
 import {IReliquary} from "@crane/contracts/protocols/staking/reliquary/v1/interfaces/IReliquary.sol";
 import {Reliquary} from "@crane/contracts/protocols/staking/reliquary/v1/Reliquary.sol";
@@ -70,40 +72,13 @@ contract DepositHelperReaperVaultTest is TestBase_Reliquary {
         address nftDescriptor = address(new NFTDescriptor(address(reliquary)));
         deal(address(wethVault), address(this), 1);
         wethVault.approve(address(reliquary), 1); // approve 1 wei to bootstrap the pool
-        reliquary.addPool(
-            1000,
-            address(wethVault),
-            address(0),
-            linearCurve,
-            "WETH",
-            nftDescriptor,
-            true,
-            address(this)
-        );
+        reliquary.addPool(1000, address(wethVault), address(0), linearCurve, "WETH", nftDescriptor, true, address(this));
         deal(address(usdcVault), address(this), 1);
         usdcVault.approve(address(reliquary), 1); // approve 1 wei to bootstrap the pool
-        reliquary.addPool(
-            1000,
-            address(usdcVault),
-            address(0),
-            linearCurve,
-            "USDC",
-            nftDescriptor,
-            true,
-            address(this)
-        );
+        reliquary.addPool(1000, address(usdcVault), address(0), linearCurve, "USDC", nftDescriptor, true, address(this));
         deal(address(sternVault), address(this), 1);
         sternVault.approve(address(reliquary), 1); // approve 1 wei to bootstrap the pool
-        reliquary.addPool(
-            1000,
-            address(sternVault),
-            address(0),
-            linearCurve,
-            "ERN",
-            nftDescriptor,
-            true,
-            address(this)
-        );
+        reliquary.addPool(1000, address(sternVault), address(0), linearCurve, "ERN", nftDescriptor, true, address(this));
 
         weth = IWETH(address(wethVault.token()));
         helper = new DepositHelperReaperVault(reliquary, address(weth));
@@ -115,16 +90,11 @@ contract DepositHelperReaperVaultTest is TestBase_Reliquary {
 
     function testCreateNew(uint256 amount, bool depositETH) public {
         amount = bound(amount, 10, weth.balanceOf(address(this)));
-        (uint256 relicId, uint256 shares) =
-            helper.createRelicAndDeposit{value: depositETH ? amount : 0}(0, amount);
+        (uint256 relicId, uint256 shares) = helper.createRelicAndDeposit{value: depositETH ? amount : 0}(0, amount);
 
         assertEq(weth.balanceOf(address(helper)), 0);
         assertEq(reliquary.balanceOf(address(this)), 4, "no Relic given");
-        assertEq(
-            reliquary.getPositionForId(relicId).amount,
-            shares,
-            "deposited amount not expected amount"
-        );
+        assertEq(reliquary.getPositionForId(relicId).amount, shares, "deposited amount not expected amount");
     }
 
     // Additional tests ported as in upstream

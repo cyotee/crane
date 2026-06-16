@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
 import "./TestContracts/DevTestSetup.sol";
 
 contract InterestBatchManagementTest is DevTestSetup {
@@ -464,39 +464,39 @@ contract InterestBatchManagementTest is DevTestSetup {
 
         // Register a new batch manager and add a trove to it
         registerBatchManager(C);
-        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory paramsD = IBorrowerOperations
-            .OpenTroveAndJoinInterestBatchManagerParams({
-            owner: D,
-            ownerIndex: 0,
-            collAmount: 100e18,
-            boldAmount: 5000e18,
-            upperHint: 0,
-            lowerHint: 0,
-            interestBatchManager: C,
-            maxUpfrontFee: 1e24,
-            addManager: address(0),
-            removeManager: address(0),
-            receiver: address(0)
-        });
+        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory paramsD =
+            IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                owner: D,
+                ownerIndex: 0,
+                collAmount: 100e18,
+                boldAmount: 5000e18,
+                upperHint: 0,
+                lowerHint: 0,
+                interestBatchManager: C,
+                maxUpfrontFee: 1e24,
+                addManager: address(0),
+                removeManager: address(0),
+                receiver: address(0)
+            });
         vm.startPrank(D);
         troveIDs.D = borrowerOperations.openTroveAndJoinInterestBatchManager(paramsD);
         vm.stopPrank();
 
         // Add a new trove to first manager
-        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory paramsE = IBorrowerOperations
-            .OpenTroveAndJoinInterestBatchManagerParams({
-            owner: E,
-            ownerIndex: 0,
-            collAmount: 100e18,
-            boldAmount: 5000e18,
-            upperHint: 0,
-            lowerHint: 0,
-            interestBatchManager: B,
-            maxUpfrontFee: 1e24,
-            addManager: address(0),
-            removeManager: address(0),
-            receiver: address(0)
-        });
+        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory paramsE =
+            IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                owner: E,
+                ownerIndex: 0,
+                collAmount: 100e18,
+                boldAmount: 5000e18,
+                upperHint: 0,
+                lowerHint: 0,
+                interestBatchManager: B,
+                maxUpfrontFee: 1e24,
+                addManager: address(0),
+                removeManager: address(0),
+                receiver: address(0)
+            });
         vm.startPrank(E);
         troveIDs.E = borrowerOperations.openTroveAndJoinInterestBatchManager(paramsE);
         vm.stopPrank();
@@ -1360,20 +1360,20 @@ contract InterestBatchManagementTest is DevTestSetup {
         uint256 boldAmount = 10000e18;
         uint256 collAmount = boldAmount * (MCR + BCR) / price; // upfront fee will put it slightly below
 
-        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params = IBorrowerOperations
-            .OpenTroveAndJoinInterestBatchManagerParams({
-            owner: A,
-            ownerIndex: 0,
-            collAmount: collAmount,
-            boldAmount: boldAmount,
-            upperHint: 0,
-            lowerHint: 0,
-            interestBatchManager: B,
-            maxUpfrontFee: 1e24,
-            addManager: address(0),
-            removeManager: address(0),
-            receiver: address(0)
-        });
+        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params =
+            IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                owner: A,
+                ownerIndex: 0,
+                collAmount: collAmount,
+                boldAmount: boldAmount,
+                upperHint: 0,
+                lowerHint: 0,
+                interestBatchManager: B,
+                maxUpfrontFee: 1e24,
+                addManager: address(0),
+                removeManager: address(0),
+                receiver: address(0)
+            });
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.ICRBelowMCRPlusBCR.selector);

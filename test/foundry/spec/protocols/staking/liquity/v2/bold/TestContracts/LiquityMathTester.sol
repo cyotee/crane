@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/LiquityMath.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/LiquityMath.sol";
 
 /* Tester contract for math functions in Math.sol library. */
 

@@ -32,24 +32,12 @@ contract Governance_Slap_2_Tests is Test, TestBase_FraxEthereumFork {
         bytes memory data = abi.encode(FraxEthereumAddresses.COMPTROLLER);
 
         vm.prank(TIMELOCK_ADMIN);
-        timelock.queueTransaction(
-            address(timelock),
-            0,
-            "setPendingAdmin(address)",
-            data,
-            eta
-        );
+        timelock.queueTransaction(address(timelock), 0, "setPendingAdmin(address)", data, eta);
 
         vm.warp(eta + 1);
 
         vm.prank(TIMELOCK_ADMIN);
-        timelock.executeTransaction(
-            address(timelock),
-            0,
-            "setPendingAdmin(address)",
-            data,
-            eta
-        );
+        timelock.executeTransaction(address(timelock), 0, "setPendingAdmin(address)", data, eta);
 
         assertEq(timelock.pendingAdmin(), FraxEthereumAddresses.COMPTROLLER);
 

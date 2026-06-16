@@ -24,21 +24,24 @@ contract PendleDolomiteSY is SYBase {
                         DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal override returns (uint256 /*amountSharesOut*/) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == dToken) {
             return amountDeposited;
         }
         return IDolomiteDToken(dToken).mint(amountDeposited);
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == dToken) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -56,8 +59,8 @@ contract PendleDolomiteSY is SYBase {
     }
 
     function _getDolomiteCurrentSupplyIndex() internal view returns (uint256) {
-        IDolomiteMarginContract.Index memory dolomiteIndex = IDolomiteMarginContract(marginContract)
-            .getMarketCurrentIndex(marketId);
+        IDolomiteMarginContract.Index memory dolomiteIndex =
+            IDolomiteMarginContract(marginContract).getMarketCurrentIndex(marketId);
         return dolomiteIndex.supply;
     }
 

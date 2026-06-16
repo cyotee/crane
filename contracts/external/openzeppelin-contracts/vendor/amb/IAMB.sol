@@ -6,10 +6,7 @@ interface IAMB {
     event UserRequestForAffirmation(bytes32 indexed messageId, bytes encodedData);
     event UserRequestForSignature(bytes32 indexed messageId, bytes encodedData);
     event AffirmationCompleted(
-        address indexed sender,
-        address indexed executor,
-        bytes32 indexed messageId,
-        bool status
+        address indexed sender, address indexed executor, bytes32 indexed messageId, bool status
     );
     event RelayedMessage(address indexed sender, address indexed executor, bytes32 indexed messageId, bool status);
 

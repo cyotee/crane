@@ -5,7 +5,9 @@ import {IPoolManager} from "@crane/contracts/protocols/dexes/uniswap/v4/interfac
 import {PoolId} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
 import {SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolOperation.sol";
 import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
-import {BaseAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/BaseAggregatorHook.sol";
+import {
+    BaseAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/BaseAggregatorHook.sol";
 import {MockExternalLiqSource} from "./MockExternalLiqSource.sol";
 
 /// @title MockAggregatorHook

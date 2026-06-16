@@ -2,25 +2,26 @@
 pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/FraxUnifiedFarm_ERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/interfaces/IFraxswapPair.sol";
 
 contract FraxUnifiedFarm_ERC20_FraxswapV2 is FraxUnifiedFarm_ERC20 {
-
     string public farm_type = "ERC20_Fraxswap_V2";
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
-        
+
         // // Fraxswap
         // stakingToken = IFraxswapPair(_stakingToken);
         // address token0 = stakingToken.token0();

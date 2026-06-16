@@ -81,5 +81,4 @@ contract FXSDisableVoteTrackingTest is FraxTest, GasHelper, TestBase_FraxEthereu
         fxs.pool_mint(FXS_WHALE, 100e18);
         fxs.pool_burn_from(FXS_WHALE, 100e18);
     }
-
 }

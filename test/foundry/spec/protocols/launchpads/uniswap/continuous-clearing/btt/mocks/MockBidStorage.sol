@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {BlockNumberish} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol';
-import {Bid, BidStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol';
+import {
+    BlockNumberish
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol";
+import {Bid, BidStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/BidStorage.sol";
 
 contract MockBidStorage is BidStorage, BlockNumberish {
     constructor() BlockNumberish() {}

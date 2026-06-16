@@ -9,7 +9,9 @@ import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
 import {MockFluidDexT1} from "./mocks/MockFluidDexT1.sol";
 import {MockFluidDexReservesResolver} from "./mocks/MockFluidDexReservesResolver.sol";
-import {FluidDexT1Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
+import {
+    FluidDexT1Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
 import {
     FluidDexT1AggregatorFactory
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1AggregatorFactory.sol";
@@ -33,8 +35,9 @@ contract FluidDexT1FactoryUnitTest is Test {
     address public fluidLiquidity = makeAddr("fluidLiquidity");
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         mockPool = new MockFluidDexT1();
         mockResolver = new MockFluidDexReservesResolver();
         feeAdapter = new MockV4FeeAdapter(poolManager, address(this));

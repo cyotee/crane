@@ -11,12 +11,9 @@ contract PendleWstEthSY is SYBase {
     address public immutable stETH;
     address public immutable wstETH;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _wETH,
-        address _wstETH
-    ) SYBase(_name, _symbol, _wstETH) {
+    constructor(string memory _name, string memory _symbol, address _wETH, address _wstETH)
+        SYBase(_name, _symbol, _wstETH)
+    {
         wETH = _wETH;
         wstETH = _wstETH;
         stETH = IWstETH(wstETH).stETH();
@@ -35,10 +32,12 @@ contract PendleWstEthSY is SYBase {
      *
      * The exchange rate of wstETH to shares is 1:1
      */
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == wstETH) {
             amountSharesOut = amountDeposited;
         } else {
@@ -61,11 +60,12 @@ contract PendleWstEthSY is SYBase {
      * The shares are redeemed into the same amount of wstETH. If `tokenOut` is stETH, the function also
      * unwraps said amount of wstETH into stETH for redemption.
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == wstETH) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -90,12 +90,15 @@ contract PendleWstEthSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
-        if (tokenIn == wstETH) amountSharesOut = amountTokenToDeposit;
-        else {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
+        if (tokenIn == wstETH) {
+            amountSharesOut = amountTokenToDeposit;
+        } else {
             if (tokenIn != stETH) {
                 uint256 totalShares = IStETH(stETH).getTotalShares();
                 uint256 totalPooledEth = IStETH(stETH).getTotalPooledEther();
@@ -112,10 +115,12 @@ contract PendleWstEthSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == wstETH) amountTokenOut = amountSharesToRedeem;
         else amountTokenOut = IStETH(stETH).getPooledEthByShares(amountSharesToRedeem);
     }

@@ -26,7 +26,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFrax.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "./rari/ICErc20Delegator.sol";
 import "./rari/IRariComptroller.sol";
 
@@ -48,14 +48,13 @@ contract RariFuseLendingAMO_V3 is Owned {
 
     address[] public fuse_borrow_pools_array;
     mapping(address => bool) public fuse_borrow_pools; // Mapping is also used for faster verification
-    
 
     // Price constants
     uint256 private constant PRICE_PRECISION = 1e6;
 
     /* ========== CONSTRUCTOR ========== */
-    
-    constructor (
+
+    constructor(
         address _owner_address,
         address[] memory _initial_unitrollers,
         address[] memory _initial_fuse_pools,
@@ -66,7 +65,7 @@ contract RariFuseLendingAMO_V3 is Owned {
 
         // Set the initial pools and enter markets
         fuse_pools_array = _initial_fuse_pools;
-        for (uint256 i = 0; i < fuse_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_pools_array.length; i++) {
             // Set the pools as valid
             fuse_pools[_initial_fuse_pools[i]] = true;
 
@@ -89,7 +88,10 @@ contract RariFuseLendingAMO_V3 is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -108,12 +110,12 @@ contract RariFuseLendingAMO_V3 is Owned {
     function showAllocations() public view returns (uint256[3] memory allocations) {
         // All numbers given are in FRAX unless otherwise stated
         allocations[0] = FRAX.balanceOf(address(this)); // Unallocated FRAX
-    
+
         uint256 sum_fuse_pool_tally = 0;
-        for (uint i = 0; i < fuse_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_pools_array.length; i++) {
             // Make sure the pool is enabled first
             address pool_address = fuse_pools_array[i];
-            if (fuse_pools[pool_address]){
+            if (fuse_pools[pool_address]) {
                 sum_fuse_pool_tally = sum_fuse_pool_tally.add(fraxInPoolByPoolIdx(i));
             }
         }
@@ -138,8 +140,8 @@ contract RariFuseLendingAMO_V3 is Owned {
     }
 
     function poolAddrToIdx(address pool_address) public view returns (uint256) {
-        for (uint i = 0; i < fuse_pools_array.length; i++){ 
-            if (fuse_pools_array[i] == pool_address){
+        for (uint256 i = 0; i < fuse_pools_array.length; i++) {
+            if (fuse_pools_array[i] == pool_address) {
                 return i;
             }
         }
@@ -156,7 +158,7 @@ contract RariFuseLendingAMO_V3 is Owned {
         uint256 pool_idx = poolAddrToIdx(pool_address);
         return fraxInPoolByPoolIdx(pool_idx);
     }
-        
+
     // Backwards compatibility
     function mintedBalance() public view returns (int256) {
         return amo_minter.frax_mint_balances(address(this));
@@ -178,8 +180,8 @@ contract RariFuseLendingAMO_V3 is Owned {
     }
 
     function borrowPoolAddrToIdx(address pool_address) public view returns (uint256) {
-        for (uint i = 0; i < fuse_borrow_pools_array.length; i++){ 
-            if (fuse_borrow_pools_array[i] == pool_address){
+        for (uint256 i = 0; i < fuse_borrow_pools_array.length; i++) {
+            if (fuse_borrow_pools_array[i] == pool_address) {
                 return i;
             }
         }
@@ -199,7 +201,7 @@ contract RariFuseLendingAMO_V3 is Owned {
 
     function assetDeptToPoolByPoolIdx(uint256 pool_idx) public view returns (uint256) {
         ICErc20Delegator delegator = ICErc20Delegator(fuse_borrow_pools_array[pool_idx]);
-        (,,uint debt_bal,) = delegator.getAccountSnapshot(address(this));
+        (,, uint256 debt_bal,) = delegator.getAccountSnapshot(address(this));
         return debt_bal;
     }
 
@@ -215,43 +217,59 @@ contract RariFuseLendingAMO_V3 is Owned {
     /* ---------------------------------------------------- */
 
     /// @notice IRariComptroller can vary
-    function enterMarkets(address comptroller_address, address pool_address) validPool(pool_address) public onlyByOwnGovCust {
+    function enterMarkets(address comptroller_address, address pool_address)
+        public
+        validPool(pool_address)
+        onlyByOwnGovCust
+    {
         address[] memory cTokens = new address[](1);
         cTokens[0] = pool_address;
         IRariComptroller(comptroller_address).enterMarkets(cTokens);
     }
 
     /// @notice E18
-    function lendToPool(address pool_address, uint256 lend_amount) validPool(pool_address) public onlyByOwnGovCust {
+    function lendToPool(address pool_address, uint256 lend_amount) public validPool(pool_address) onlyByOwnGovCust {
         uint256 pool_idx = poolAddrToIdx(pool_address);
         FRAX.approve(pool_address, lend_amount);
         ICErc20Delegator(fuse_pools_array[pool_idx]).mint(lend_amount);
     }
 
     /// @notice E18
-    function redeemFromPool(address pool_address, uint256 redeem_amount) validPool(pool_address) public onlyByOwnGovCust {
+    function redeemFromPool(address pool_address, uint256 redeem_amount)
+        public
+        validPool(pool_address)
+        onlyByOwnGovCust
+    {
         uint256 pool_idx = poolAddrToIdx(pool_address);
         ICErc20Delegator(fuse_pools_array[pool_idx]).redeemUnderlying(redeem_amount);
     }
 
     /// @notice Auto compounds interest
     function accrueInterest() public onlyByOwnGovCust {
-        for (uint i = 0; i < fuse_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_pools_array.length; i++) {
             // Make sure the pool is enabled first
             address pool_address = fuse_pools_array[i];
-            if (fuse_pools[pool_address]){
+            if (fuse_pools[pool_address]) {
                 ICErc20Delegator(fuse_pools_array[i]).accrueInterest();
             }
         }
     }
 
     /// @notice Borrow from pool
-    function borrowFromPool(address pool_address, uint256 borrow_amount) validBorrowPool(pool_address) public onlyByOwnGovCust {
+    function borrowFromPool(address pool_address, uint256 borrow_amount)
+        public
+        validBorrowPool(pool_address)
+        onlyByOwnGovCust
+    {
         ICErc20Delegator(pool_address).borrow(borrow_amount);
     }
 
     /// @notice Repay borrowed asset to pool
-    function repayToPool(address pool_address, uint256 repay_amount) validBorrowPool(pool_address) public onlyByOwnGovCust {
+    function repayToPool(address pool_address, uint256 repay_amount)
+        public
+        validBorrowPool(pool_address)
+        onlyByOwnGovCust
+    {
         ICErc20Delegator delegator = ICErc20Delegator(pool_address);
         ERC20(delegator.underlying()).approve(pool_address, repay_amount);
         delegator.repayBorrow(repay_amount);
@@ -259,10 +277,10 @@ contract RariFuseLendingAMO_V3 is Owned {
 
     /// @notice Auto compounds interest for borrow pools
     function accrueBorrowInterest() public onlyByOwnGovCust {
-        for (uint i = 0; i < fuse_borrow_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_borrow_pools_array.length; i++) {
             // Make sure the pool is enabled first
             address pool_address = fuse_borrow_pools_array[i];
-            if (fuse_borrow_pools[pool_address]){
+            if (fuse_borrow_pools[pool_address]) {
                 ICErc20Delegator(fuse_borrow_pools_array[i]).accrueInterest();
             }
         }
@@ -277,14 +295,14 @@ contract RariFuseLendingAMO_V3 is Owned {
     }
 
     /* ========== OWNER / GOVERNANCE FUNCTIONS ONLY ========== */
-    // Only owner or timelock can call, to limit risk 
+    // Only owner or timelock can call, to limit risk
 
-    // Add a fuse pool 
+    // Add a fuse pool
     function addFusePool(address pool_address) public onlyByOwnGov {
         require(pool_address != address(0), "Zero address detected");
 
         require(fuse_pools[pool_address] == false, "Address already exists");
-        fuse_pools[pool_address] = true; 
+        fuse_pools[pool_address] = true;
         fuse_pools_array.push(pool_address);
 
         emit FusePoolAdded(pool_address);
@@ -294,12 +312,12 @@ contract RariFuseLendingAMO_V3 is Owned {
     function removeFusePool(address pool_address) public onlyByOwnGov {
         require(pool_address != address(0), "Zero address detected");
         require(fuse_pools[pool_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete fuse_pools[pool_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < fuse_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_pools_array.length; i++) {
             if (fuse_pools_array[i] == pool_address) {
                 fuse_pools_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -314,22 +332,22 @@ contract RariFuseLendingAMO_V3 is Owned {
         require(pool_address != address(0), "Zero address detected");
 
         require(fuse_borrow_pools[pool_address] == false, "Address already exists");
-        fuse_borrow_pools[pool_address] = true; 
+        fuse_borrow_pools[pool_address] = true;
         fuse_borrow_pools_array.push(pool_address);
 
         emit BorrowFusePoolAdded(pool_address);
     }
 
-    // Remove a borrow fuse pool 
+    // Remove a borrow fuse pool
     function removeBorrowFusePool(address pool_address) public onlyByOwnGov {
         require(pool_address != address(0), "Zero address detected");
         require(fuse_borrow_pools[pool_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete fuse_borrow_pools[pool_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < fuse_borrow_pools_array.length; i++){ 
+        for (uint256 i = 0; i < fuse_borrow_pools_array.length; i++) {
             if (fuse_borrow_pools_array[i] == pool_address) {
                 fuse_borrow_pools_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -355,12 +373,12 @@ contract RariFuseLendingAMO_V3 is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

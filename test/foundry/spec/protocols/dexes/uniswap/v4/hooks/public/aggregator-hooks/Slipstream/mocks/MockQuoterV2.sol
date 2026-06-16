@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IQuoterV2} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/Slipstream/interfaces/IQuoterV2.sol";
+import {
+    IQuoterV2
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/Slipstream/interfaces/IQuoterV2.sol";
 
 /// @notice Same math as UniswapV3 `MockQuoterV2` but Slipstream quoter ABI (`tickSpacing` field).
 contract MockQuoterV2 is IQuoterV2 {

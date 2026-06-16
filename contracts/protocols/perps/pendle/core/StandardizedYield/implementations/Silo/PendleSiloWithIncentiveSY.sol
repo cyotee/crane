@@ -43,10 +43,12 @@ contract PendleSiloWithIncentiveSY is SYBaseWithRewards {
         _safeApproveInf(asset, silo);
     }
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == collateralToken) {
             return amountDeposited;
         } else {
@@ -54,11 +56,12 @@ contract PendleSiloWithIncentiveSY is SYBaseWithRewards {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == collateralToken) {
             _transferOut(collateralToken, receiver, amountSharesToRedeem);
             return amountSharesToRedeem;
@@ -110,10 +113,8 @@ contract PendleSiloWithIncentiveSY is SYBaseWithRewards {
     }
 
     function _redeemExternalReward() internal override {
-        ISiloIncentiveController(incentiveController).claimRewardsToSelf(
-            ArrayLib.create(collateralToken),
-            type(uint256).max
-        );
+        ISiloIncentiveController(incentiveController)
+            .claimRewardsToSelf(ArrayLib.create(collateralToken), type(uint256).max);
     }
 
     /*///////////////////////////////////////////////////////////////
@@ -129,10 +130,12 @@ contract PendleSiloWithIncentiveSY is SYBaseWithRewards {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == collateralToken) {
             return amountTokenToDeposit;
         } else {
@@ -141,10 +144,12 @@ contract PendleSiloWithIncentiveSY is SYBaseWithRewards {
         }
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == collateralToken) {
             return amountSharesToRedeem;
         } else {

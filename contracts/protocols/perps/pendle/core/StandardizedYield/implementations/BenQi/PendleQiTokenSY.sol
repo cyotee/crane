@@ -71,11 +71,11 @@ contract PendleQiTokenSY is SYBaseWithRewards, PendleQiTokenHelper {
      * The shares are redeemed into the same amount of qiTokens. If `tokenOut` is the underlying asset,
      * the function also redeems said asset from the corresponding amount of qiToken.
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == qiToken) {
             amountTokenOut = amountSharesToRedeem;
         } else {
@@ -132,8 +132,9 @@ contract PendleQiTokenSY is SYBaseWithRewards, PendleQiTokenHelper {
         uint256 rewardAccruedType0 = IBenQiComptroller(comptroller).rewardAccrued(0, address(this));
         uint256 rewardAccruedType1 = IBenQiComptroller(comptroller).rewardAccrued(1, address(this));
 
-        if (rewardAccruedType0 > 0 || rewardAccruedType1 > 0)
+        if (rewardAccruedType0 > 0 || rewardAccruedType1 > 0) {
             revert Errors.SYQiTokenRedeemRewardsFailed(rewardAccruedType0, rewardAccruedType1);
+        }
 
         if (address(this).balance != 0) IWETH(WAVAX).deposit{value: address(this).balance}();
     }
@@ -142,18 +143,22 @@ contract PendleQiTokenSY is SYBaseWithRewards, PendleQiTokenHelper {
                     MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == qiToken) amountSharesOut = amountTokenToDeposit;
         else amountSharesOut = (amountTokenToDeposit * 1e18) / exchangeRate();
     }
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         if (tokenOut == qiToken) amountTokenOut = amountSharesToRedeem;
         else amountTokenOut = (amountSharesToRedeem * exchangeRate()) / 1e18;
     }

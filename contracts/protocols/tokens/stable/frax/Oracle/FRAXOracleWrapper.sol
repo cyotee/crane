@@ -47,10 +47,7 @@ contract FRAXOracleWrapper is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address) Owned(_creator_address) {
         timelock_address = _timelock_address;
 
         // FRAX / ETH
@@ -61,26 +58,27 @@ contract FRAXOracleWrapper is Owned {
     /* ========== VIEWS ========== */
 
     function getFRAXPrice() public view returns (uint256 raw_price, uint256 precise_price) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXETH.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFRAXETH.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
+
         // E6
         raw_price = uint256(price).mul(PRICE_PRECISION).div(uint256(10) ** chainlink_frax_eth_decimals);
 
         // E12
-        precise_price = uint256(price).mul(PRICE_PRECISION).mul(EXTRA_PRECISION).div(uint256(10) ** chainlink_frax_eth_decimals);
+        precise_price =
+            uint256(price).mul(PRICE_PRECISION).mul(EXTRA_PRECISION).div(uint256(10) ** chainlink_frax_eth_decimals);
     }
 
     // Override the logic of the FRAX-WETH Uniswap TWAP Oracle
     // Expected Parameters: weth address, uint256 1e6
     // Returns: FRAX-WETH Chainlink price (with 1e6 precision)
-    function consult(address token, uint amountIn) external view returns (uint amountOut) {
+    function consult(address token, uint256 amountIn) external view returns (uint256 amountOut) {
         // safety checks (replacing regular FRAX-WETH oracle in FRAX.sol)
         require(token == 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2, "must use weth address");
         require(amountIn == 1e6, "must call with 1e6");
 
         // needs to return it inverted
-        (, uint256 frax_precise_price) = getFRAXPrice(); 
+        (, uint256 frax_precise_price) = getFRAXPrice();
         return PRICE_PRECISION.mul(PRICE_PRECISION).mul(EXTRA_PRECISION).div(frax_precise_price);
     }
 
@@ -90,5 +88,4 @@ contract FRAXOracleWrapper is Owned {
         priceFeedFRAXETH = AggregatorV3Interface(_chainlink_frax_eth_oracle);
         chainlink_frax_eth_decimals = priceFeedFRAXETH.decimals();
     }
-
 }

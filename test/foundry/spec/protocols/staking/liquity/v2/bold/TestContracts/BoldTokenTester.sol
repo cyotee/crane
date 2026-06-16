@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/BoldToken.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/BoldToken.sol";
 
 contract BoldTokenTester is BoldToken {
     constructor(address _owner) BoldToken(_owner) {}

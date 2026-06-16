@@ -28,14 +28,13 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeFXSRewardsDistributor.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/IFraxferry.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/optimism/IL1StandardBridge.sol";
-
 
 contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
     using SafeMath for uint256;
@@ -64,7 +63,6 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
     // Routing
     bool public useL1StandardBridge;
 
-
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
@@ -79,7 +77,7 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _rewards_distributor_address,
@@ -111,26 +109,31 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
         } else {
             require(address(ferry) != address(0), "Invalid ferry address");
         }
-        
+
         // Pull in the rewards from the rewards distributor
         TransferHelper.safeTransferFrom(reward_token_address, rewards_distributor_address, address(this), reward_amount);
 
         // Logic here
-        if (useL1StandardBridge) { 
+        if (useL1StandardBridge) {
             // Use the standard bridge
             ERC20(reward_token_address).approve(address(l1StandardBridge), reward_amount);
-            l1StandardBridge.depositERC20To(reward_token_address, fraxtal_reward_token_address, destination_address, reward_amount, bridgeL2GasLimit, bridgeExtraData);
-
+            l1StandardBridge.depositERC20To(
+                reward_token_address,
+                fraxtal_reward_token_address,
+                destination_address,
+                reward_amount,
+                bridgeL2GasLimit,
+                bridgeExtraData
+            );
         } else {
             // Use the ferry
             ERC20(reward_token_address).approve(address(ferry), reward_amount);
             ferry.embarkWithRecipient(reward_amount, destination_address);
         }
-
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -139,17 +142,21 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 
-
-    function setBridgeInfo(address _bridge_address, address _destination_address, uint32 _bridgeL2GasLimit, bytes calldata _bridgeExtraData) external onlyByOwnGov {
+    function setBridgeInfo(
+        address _bridge_address,
+        address _destination_address,
+        uint32 _bridgeL2GasLimit,
+        bytes calldata _bridgeExtraData
+    ) external onlyByOwnGov {
         // Set the new bridge
         l1StandardBridge = IL1StandardBridge(_bridge_address);
 
@@ -159,14 +166,14 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
         // Set other bridge info
         bridgeL2GasLimit = _bridgeL2GasLimit;
         bridgeExtraData = _bridgeExtraData;
-        
+
         emit BridgeInfoChanged(_bridge_address, _destination_address, _bridgeL2GasLimit, _bridgeExtraData);
     }
 
     function setFerryInfo(address _ferry_address, address _destination_address) external onlyByOwnGov {
         // Set the new ferry
         ferry = IFraxferry(_ferry_address);
-        
+
         // Set the cross-chain destination address
         destination_address = _destination_address;
 
@@ -187,7 +194,9 @@ contract FraxMiddlemanGaugeV3 is Owned, ReentrancyGuard {
 
     /* ========== EVENTS ========== */
 
-    event BridgeInfoChanged(address bridge_address, address destination_address, uint32 _bridgeL2GasLimit, bytes _bridgeExtraData);
+    event BridgeInfoChanged(
+        address bridge_address, address destination_address, uint32 _bridgeL2GasLimit, bytes _bridgeExtraData
+    );
     event FerryInfoChanged(address ferry_address, address destination_address);
     event RecoveredERC20(address token, uint256 amount);
 }

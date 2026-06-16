@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: ISC
 pragma solidity >=0.8.0;
 
-import { TransparentUpgradeableProxy } from "./@openzeppelin/contracts-5.4.0/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {
+    TransparentUpgradeableProxy
+} from "./@openzeppelin/contracts-5.4.0/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 // ====================================================================
 // |     ______                   _______                             |
@@ -15,11 +17,9 @@ import { TransparentUpgradeableProxy } from "./@openzeppelin/contracts-5.4.0/pro
 // ====================================================================
 
 contract FraxTransparentProxy is TransparentUpgradeableProxy {
-    constructor(
-        address _logic,
-        address _initialAdmin,
-        bytes memory _data
-    ) TransparentUpgradeableProxy(_logic, _initialAdmin, _data) {}
+    constructor(address _logic, address _initialAdmin, bytes memory _data)
+        TransparentUpgradeableProxy(_logic, _initialAdmin, _data)
+    {}
 
     // ================================================================
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~ Extension ~~~~~~~~~~~~~~~~~~~~~~~~~~

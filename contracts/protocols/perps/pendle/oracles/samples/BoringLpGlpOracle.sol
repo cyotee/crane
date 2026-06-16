@@ -23,10 +23,8 @@ contract BoringLpGlpOracle {
         market = _market;
         glpManager = _glpManager;
 
-        (bool increaseCardinalityRequired, , bool oldestObservationSatisfied) = IPPYLpOracle(_ptOracle).getOracleState(
-            market,
-            twapDuration
-        );
+        (bool increaseCardinalityRequired,, bool oldestObservationSatisfied) =
+            IPPYLpOracle(_ptOracle).getOracleState(market, twapDuration);
 
         if (increaseCardinalityRequired || !oldestObservationSatisfied) {
             revert OracleNotReady(increaseCardinalityRequired, oldestObservationSatisfied);

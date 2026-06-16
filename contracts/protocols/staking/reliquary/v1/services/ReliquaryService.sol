@@ -72,14 +72,10 @@ library ReliquaryService {
         vars_.newLevel = _updateLevel(position, vars_.oldLevel);
 
         position.rewardCredit += Math.mulDiv(
-            vars_.oldAmount,
-            pool.curve.getFunction(vars_.oldLevel) * accRewardPerShare_,
-            ACC_REWARD_PRECISION
+            vars_.oldAmount, pool.curve.getFunction(vars_.oldLevel) * accRewardPerShare_, ACC_REWARD_PRECISION
         ) - position.rewardDebt;
         position.rewardDebt = Math.mulDiv(
-            vars_.newAmount,
-            pool.curve.getFunction(vars_.newLevel) * accRewardPerShare_,
-            ACC_REWARD_PRECISION
+            vars_.newAmount, pool.curve.getFunction(vars_.newLevel) * accRewardPerShare_, ACC_REWARD_PRECISION
         );
 
         if (_harvestTo != address(0)) {
@@ -134,8 +130,7 @@ library ReliquaryService {
             uint256 lpSupply_ = pool.totalLpSupplied;
 
             if (lpSupply_ != 0) {
-                uint256 reward_ = (secondsSinceReward_ * _emissionRate * uint256(pool.allocPoint))
-                    / _totalAllocPoint;
+                uint256 reward_ = (secondsSinceReward_ * _emissionRate * uint256(pool.allocPoint)) / _totalAllocPoint;
                 accRewardPerShare_ += Math.mulDiv(reward_, ACC_REWARD_PRECISION, lpSupply_);
                 pool.accRewardPerShare = accRewardPerShare_;
             }
@@ -152,11 +147,7 @@ library ReliquaryService {
      * @param _emissionRate The current emission rate.
      * @param _totalAllocPoint The total allocation points of all pools.
      */
-    function _massUpdatePools(
-        PoolInfo[] storage poolInfo,
-        uint256 _emissionRate,
-        uint256 _totalAllocPoint
-    ) internal {
+    function _massUpdatePools(PoolInfo[] storage poolInfo, uint256 _emissionRate, uint256 _totalAllocPoint) internal {
         for (uint256 i_; i_ < poolInfo.length; ++i_) {
             _updatePool(poolInfo[i_], _emissionRate, _totalAllocPoint);
         }
@@ -205,10 +196,7 @@ library ReliquaryService {
      * @param _oldLevel Level of position before update.
      * @return newLevel_ Level of position after update.
      */
-    function _updateLevel(PositionInfo storage position, uint256 _oldLevel)
-        internal
-        returns (uint256 newLevel_)
-    {
+    function _updateLevel(PositionInfo storage position, uint256 _oldLevel) internal returns (uint256 newLevel_) {
         newLevel_ = block.timestamp - uint256(position.entry);
         if (_oldLevel != newLevel_) {
             position.level = uint40(newLevel_);
@@ -223,17 +211,13 @@ library ReliquaryService {
      * @param _entryAdded Entry of the amount to be added.
      * @return weightedEntry_ The weighted entry.
      */
-    function _weightEntry(
-        uint256 _amountBefore,
-        uint256 _entryBefore,
-        uint256 _amountAdded,
-        uint256 _entryAdded
-    ) internal pure returns (uint40 weightedEntry_) {
+    function _weightEntry(uint256 _amountBefore, uint256 _entryBefore, uint256 _amountAdded, uint256 _entryAdded)
+        internal
+        pure
+        returns (uint40 weightedEntry_)
+    {
         weightedEntry_ = uint40(
-            Math.ceilDiv(
-                _amountBefore * _entryBefore + _amountAdded * _entryAdded,
-                _amountBefore + _amountAdded
-            ) // round up div
+            Math.ceilDiv(_amountBefore * _entryBefore + _amountAdded * _entryAdded, _amountBefore + _amountAdded) // round up div
         ); // unsafe cast ok
     }
 
@@ -294,8 +278,7 @@ library ReliquaryService {
         if (amountBefore_ == 0) {
             position.entry = uint40(block.timestamp);
         } else {
-            position.entry =
-                _weightEntry(amountBefore_, uint256(position.entry), _amount, block.timestamp);
+            position.entry = _weightEntry(amountBefore_, uint256(position.entry), _amount, block.timestamp);
         }
     }
 
@@ -304,11 +287,7 @@ library ReliquaryService {
      * @param _pendingReward Amount of reward token owed.
      * @return received_ The minimum between amount owed and amount available.
      */
-    function _receivedReward(address _rewardToken, uint256 _pendingReward)
-        private
-        view
-        returns (uint256 received_)
-    {
+    function _receivedReward(address _rewardToken, uint256 _pendingReward) private view returns (uint256 received_) {
         uint256 available_ = IERC20(_rewardToken).balanceOf(address(this));
         received_ = (available_ > _pendingReward) ? _pendingReward : available_;
     }

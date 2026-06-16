@@ -19,11 +19,11 @@ contract ActionVePendleStatic is IPActionVePendleStatic {
         vePENDLE = _vePENDLE;
     }
 
-    function increaseLockPositionStatic(
-        address user,
-        uint128 additionalAmountToLock,
-        uint128 newExpiry
-    ) external view returns (uint128 newVeBalance) {
+    function increaseLockPositionStatic(address user, uint128 additionalAmountToLock, uint128 newExpiry)
+        external
+        view
+        returns (uint128 newVeBalance)
+    {
         if (!WeekMath.isValidWTime(newExpiry)) revert Errors.InvalidWTime(newExpiry);
         if (MiniHelpers.isTimeInThePast(newExpiry)) revert Errors.ExpiryInThePast(newExpiry);
 
@@ -44,10 +44,8 @@ contract ActionVePendleStatic is IPActionVePendleStatic {
 
         uint128 additionalDurationToLock = newExpiry - oldPosition.expiry;
 
-        LockedPosition memory newPosition = LockedPosition(
-            oldPosition.amount + additionalAmountToLock,
-            oldPosition.expiry + additionalDurationToLock
-        );
+        LockedPosition memory newPosition =
+            LockedPosition(oldPosition.amount + additionalAmountToLock, oldPosition.expiry + additionalDurationToLock);
 
         VeBalance memory newBalance = newPosition.convertToVeBalance();
         return newBalance.getCurrentValue();

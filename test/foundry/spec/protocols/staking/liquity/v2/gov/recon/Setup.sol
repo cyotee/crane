@@ -8,10 +8,10 @@ import {IERC20} from "forge-std/interfaces/IERC20.sol";
 import {MockERC20Tester} from "../mocks/MockERC20Tester.sol";
 import {MockStakingV1} from "../mocks/MockStakingV1.sol";
 import {MockStakingV1Deployer} from "../mocks/MockStakingV1Deployer.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 
 abstract contract Setup is BaseSetup, MockStakingV1Deployer {
     Governance governance;

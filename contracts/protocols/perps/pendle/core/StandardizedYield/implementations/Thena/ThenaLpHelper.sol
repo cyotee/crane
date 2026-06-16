@@ -56,10 +56,10 @@ abstract contract ThenaLpHelper is TokenHelper, ThenaMath {
         }
     }
 
-    function _swapZapIn(
-        address tokenIn,
-        uint256 amountIn
-    ) private returns (uint256 amount0ToAddLiq, uint256 amount1ToAddLiq) {
+    function _swapZapIn(address tokenIn, uint256 amountIn)
+        private
+        returns (uint256 amount0ToAddLiq, uint256 amount1ToAddLiq)
+    {
         ThenaData memory data = _getNormalizedThenaData(tokenIn);
         if (tokenIn == token0) {
             uint256 amount0ToSwap = _getZapInSwapAmount(data, tokenIn, amountIn);
@@ -79,46 +79,25 @@ abstract contract ThenaLpHelper is TokenHelper, ThenaMath {
      */
 
     function _addLiquidity(uint256 amount0ToAddLiq, uint256 amount1ToAddLiq) private returns (uint256 amountLpOut) {
-        (, , amountLpOut) = IThenaRouter(router).addLiquidity(
-            token0,
-            token1,
-            isStable,
-            amount0ToAddLiq,
-            amount1ToAddLiq,
-            0,
-            0,
-            address(this),
-            block.timestamp
-        );
+        (,, amountLpOut) = IThenaRouter(router)
+            .addLiquidity(
+                token0, token1, isStable, amount0ToAddLiq, amount1ToAddLiq, 0, 0, address(this), block.timestamp
+            );
     }
 
     function _removeLiquidity(uint256 amountLpToRemove) private returns (uint256 amountTokenA, uint256 amountTokenB) {
-        return
-            IThenaRouter(router).removeLiquidity(
-                token0,
-                token1,
-                isStable,
-                amountLpToRemove,
-                0,
-                0,
-                address(this),
-                block.timestamp
-            );
+        return IThenaRouter(router)
+            .removeLiquidity(token0, token1, isStable, amountLpToRemove, 0, 0, address(this), block.timestamp);
     }
 
     function _swap(address tokenIn, uint256 amountTokenIn) private returns (uint256) {
         address tokenOut = tokenIn == token0 ? token1 : token0;
         uint256 preBalance = _selfBalance(tokenOut);
 
-        IThenaRouter(router).swapExactTokensForTokensSimple(
-            amountTokenIn,
-            0,
-            tokenIn,
-            tokenOut,
-            isStable,
-            address(this),
-            block.timestamp
-        );
+        IThenaRouter(router)
+            .swapExactTokensForTokensSimple(
+                amountTokenIn, 0, tokenIn, tokenOut, isStable, address(this), block.timestamp
+            );
 
         return _selfBalance(tokenOut) - preBalance;
     }
@@ -133,7 +112,7 @@ abstract contract ThenaLpHelper is TokenHelper, ThenaMath {
         data.pair = pair;
         data.isStable = isStable;
         data.fee = IThenaFactory(factory).getFee(data.isStable);
-        (data.reserve0, data.reserve1, ) = IThenaPair(pair).getReserves();
+        (data.reserve0, data.reserve1,) = IThenaPair(pair).getReserves();
 
         if (data.isStable) {
             // if not stable, skip reading these data

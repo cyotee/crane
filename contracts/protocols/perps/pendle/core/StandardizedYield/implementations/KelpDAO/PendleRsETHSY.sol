@@ -47,7 +47,7 @@ contract PendleRsETHSY is SYBase {
 
     function safeApproveSupportedTokens() public {
         address[] memory assets = IKelpLRTConfig(lrtConfig).getSupportedAssetList();
-        for (uint256 i = 0; i < assets.length; ) {
+        for (uint256 i = 0; i < assets.length;) {
             _safeApproveInf(assets[i], depositPool);
             unchecked {
                 i++;
@@ -59,35 +59,39 @@ contract PendleRsETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256 amountSharesOut) {
+    function _deposit(address tokenIn, uint256 amountDeposited)
+        internal
+        virtual
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == rsETH) {
             amountSharesOut = amountDeposited;
         } else {
             if (tokenIn == NATIVE) {
-                (tokenIn, amountDeposited) = (
-                    ETHx,
-                    IStaderStakeManager(staderStakeManager).deposit{value: amountDeposited}(address(this))
-                );
+                (tokenIn, amountDeposited) =
+                (ETHx, IStaderStakeManager(staderStakeManager).deposit{value: amountDeposited}(address(this)));
             }
             uint256 preBalance = _selfBalance(rsETH);
-            IKelpDepositPool(depositPool).depositAsset(
-                tokenIn,
-                amountDeposited,
-                0,
-                "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
-            );
+            IKelpDepositPool(depositPool)
+                .depositAsset(
+                    tokenIn, amountDeposited, 0, "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
+                );
             amountSharesOut = _selfBalance(rsETH) - preBalance;
         }
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         _transferOut(rsETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -109,26 +113,32 @@ contract PendleRsETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         if (tokenIn == rsETH) {
             return amountTokenToDeposit;
         }
         if (tokenIn == NATIVE) {
-            (tokenIn, amountTokenToDeposit) = (
-                ETHx,
-                IStaderStakeManager(staderStakeManager).previewDeposit(amountTokenToDeposit)
-            );
+            (tokenIn, amountTokenToDeposit) =
+            (ETHx, IStaderStakeManager(staderStakeManager).previewDeposit(amountTokenToDeposit));
         }
         return IKelpDepositPool(depositPool).getRsETHAmountToMint(tokenIn, amountTokenToDeposit);
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 amountTokenOut) {
+    )
+        internal
+        pure
+        override
+        returns (uint256 amountTokenOut)
+    {
         return amountSharesToRedeem;
     }
 

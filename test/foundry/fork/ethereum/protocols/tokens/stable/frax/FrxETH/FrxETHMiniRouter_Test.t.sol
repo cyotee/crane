@@ -5,10 +5,7 @@ pragma solidity ^0.8.35;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {FrxETHMiniRouter} from "@crane/contracts/protocols/tokens/stable/frax/FraxETH/FrxETHMiniRouter.sol";
-import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract FrxETHMiniRouter_Test is TestBase_FraxEthereumFork {
     FrxETHMiniRouter internal router;
@@ -27,7 +24,6 @@ contract FrxETHMiniRouter_Test is TestBase_FraxEthereumFork {
     }
 
     function test_ETH_to_frxETH() public {
-
         uint256 ethBefore = address(this).balance;
         uint256 frxBefore = frxETH.balanceOf(address(this));
         uint256 sfrxBefore = sfrxETH.balanceOf(address(this));
@@ -41,7 +37,6 @@ contract FrxETHMiniRouter_Test is TestBase_FraxEthereumFork {
     }
 
     function test_ETH_to_sfrxETH() public {
-
         uint256 sfrxBefore = sfrxETH.balanceOf(address(this));
 
         (uint256 frxUsed,, uint256 sfrxOut) = router.sendETH{value: 0.1 ether}(address(this), true, 0);

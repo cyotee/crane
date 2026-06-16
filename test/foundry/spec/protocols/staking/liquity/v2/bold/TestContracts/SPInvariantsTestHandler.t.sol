@@ -2,15 +2,15 @@
 pragma solidity ^0.8.35;
 
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
-import {IBorrowerOperations} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
-import {IBoldToken} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBoldToken.sol";
-import {IStabilityPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPool.sol";
-import {ITroveManager} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveManager.sol";
-import {ICollSurplusPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ICollSurplusPool.sol";
-import {HintHelpers} from "@crane/contracts/protocols/staking/liquity/v2/bold/HintHelpers.sol";
+import {IBorrowerOperations} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
+import {IBoldToken} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBoldToken.sol";
+import {IStabilityPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPool.sol";
+import {ITroveManager} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveManager.sol";
+import {ICollSurplusPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ICollSurplusPool.sol";
+import {HintHelpers} from "@crane/contracts/protocols/cdps/liquity/v2/bold/HintHelpers.sol";
 import {IPriceFeedTestnet} from "./Interfaces/IPriceFeedTestnet.sol";
 import {ITroveManagerTester} from "./Interfaces/ITroveManagerTester.sol";
-import {LiquityMath} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/LiquityMath.sol";
+import {LiquityMath} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/LiquityMath.sol";
 import {mulDivCeil} from "../Utils/Math.sol";
 import {StringFormatting} from "../Utils/StringFormatting.sol";
 import {TroveId} from "../Utils/TroveId.sol";
@@ -24,7 +24,7 @@ import {
     COLL_GAS_COMPENSATION_DIVISOR,
     MIN_ANNUAL_INTEREST_RATE,
     MIN_BOLD_IN_SP
-} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 using {mulDivCeil} for uint256;
 

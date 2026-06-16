@@ -2,8 +2,9 @@
 pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
-import {FraxswapRangeFactory} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/range/FraxswapRangeFactory.sol";
+import {
+    FraxswapRangeFactory
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/range/FraxswapRangeFactory.sol";
 import {FraxswapRangePair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/range/FraxswapRangePair.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
 

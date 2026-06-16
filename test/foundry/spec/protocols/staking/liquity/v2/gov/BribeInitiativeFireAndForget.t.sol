@@ -4,10 +4,10 @@ pragma solidity ^0.8.35;
 import {console2 as console} from "forge-std/console2.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
-import {IBribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IBribeInitiative.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
+import {IBribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IBribeInitiative.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
 import {MockERC20Tester} from "./mocks/MockERC20Tester.sol";
 import {MockStakingV1} from "./mocks/MockStakingV1.sol";
 import {MockStakingV1Deployer} from "./mocks/MockStakingV1Deployer.sol";
@@ -236,9 +236,9 @@ contract BribeInitiativeFireAndForgetTest is MockStakingV1Deployer {
 
                     claimData.push(claimDataAtEpoch);
                     expectedBold += boldAtEpoch[epochPermutation[i]] * voteAtEpoch[epochPermutation[i]]
-                        / toteAtEpoch[epochPermutation[i]];
+                    / toteAtEpoch[epochPermutation[i]];
                     expectedBryb += brybAtEpoch[epochPermutation[i]] * voteAtEpoch[epochPermutation[i]]
-                        / toteAtEpoch[epochPermutation[i]];
+                    / toteAtEpoch[epochPermutation[i]];
                 }
             }
 

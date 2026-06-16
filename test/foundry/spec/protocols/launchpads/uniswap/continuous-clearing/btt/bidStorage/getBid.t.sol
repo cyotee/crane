@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {Bid, MockBidStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidStorage.sol';
-import {IBidStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IBidStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    Bid,
+    MockBidStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidStorage.sol";
+import {IBidStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IBidStorage.sol";
 
 contract GetBidTest is BttBase {
     MockBidStorage public bidStorage;

@@ -11,19 +11,20 @@ library ComposableStableMath {
     uint256 internal constant _MAX_AMP = 5000;
     uint256 internal constant _AMP_PRECISION = 1e3;
 
-    function _calculateInvariant(
-        uint256 amplificationParameter,
-        uint256[] memory balances
-    ) internal pure returns (uint256) {
+    function _calculateInvariant(uint256 amplificationParameter, uint256[] memory balances)
+        internal
+        pure
+        returns (uint256)
+    {
         unchecked {
             /**********************************************************************************************
-        // invariant                                                                                 //
-        // D = invariant                                                  D^(n+1)                    //
-        // A = amplification coefficient      A  n^n S + D = A D n^n + -----------                   //
-        // S = sum of balances                                             n^n P                     //
-        // P = product of balances                                                                   //
-        // n = number of tokens                                                                      //
-        **********************************************************************************************/
+            // invariant                                                                                 //
+            // D = invariant                                                  D^(n+1)                    //
+            // A = amplification coefficient      A  n^n S + D = A D n^n + -----------                   //
+            // S = sum of balances                                             n^n P                     //
+            // P = product of balances                                                                   //
+            // n = number of tokens                                                                      //
+            **********************************************************************************************/
 
             // Always round down, to match Vyper's arithmetic (which always truncates).
 
@@ -57,11 +58,8 @@ library ComposableStableMath {
                         invariant
                     ),
                     // ((ampTimesTotal - _AMP_PRECISION) * invariant) / _AMP_PRECISION + (numTokens + 1) * D_P
-                    (
-                        divDown(mul((ampTimesTotal - _AMP_PRECISION), invariant), _AMP_PRECISION).add(
-                            mul((numTokens + 1), D_P)
-                        )
-                    )
+                    (divDown(mul((ampTimesTotal - _AMP_PRECISION), invariant), _AMP_PRECISION)
+                            .add(mul((numTokens + 1), D_P)))
                 );
 
                 if (invariant > prevInvariant) {
@@ -115,9 +113,7 @@ library ComposableStableMath {
                     uint256 nonTaxableAmount = balances[i].mulDown(invariantRatioWithFees.sub(FixedPoint.ONE));
                     uint256 taxableAmount = amountsIn[i].sub(nonTaxableAmount);
                     // No need to use checked arithmetic for the swap fee, it is guaranteed to be lower than 50%
-                    amountInWithoutFee = nonTaxableAmount.add(
-                        taxableAmount.mulDown(FixedPoint.ONE - swapFeePercentage)
-                    );
+                    amountInWithoutFee = nonTaxableAmount.add(taxableAmount.mulDown(FixedPoint.ONE - swapFeePercentage));
                 } else {
                     amountInWithoutFee = amountsIn[i];
                 }
@@ -152,12 +148,8 @@ library ComposableStableMath {
             uint256 newInvariant = bptTotalSupply.sub(bptAmountIn).divUp(bptTotalSupply).mulUp(currentInvariant);
 
             // Calculate amount out without fee
-            uint256 newBalanceTokenIndex = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-                amp,
-                balances,
-                newInvariant,
-                tokenIndex
-            );
+            uint256 newBalanceTokenIndex =
+                _getTokenBalanceGivenInvariantAndAllOtherBalances(amp, balances, newInvariant, tokenIndex);
             uint256 amountOutWithoutFee = balances[tokenIndex].sub(newBalanceTokenIndex);
 
             // First calculate the sum of all token balances, which will be used to calculate
@@ -217,10 +209,7 @@ library ComposableStableMath {
             for (uint256 i = 0; i < 255; i++) {
                 prevTokenBalance = tokenBalance;
 
-                tokenBalance = divUp(
-                    mul(tokenBalance, tokenBalance).add(c),
-                    mul(tokenBalance, 2).add(b).sub(invariant)
-                );
+                tokenBalance = divUp(mul(tokenBalance, tokenBalance).add(c), mul(tokenBalance, 2).add(b).sub(invariant));
 
                 if (tokenBalance > prevTokenBalance) {
                     if (tokenBalance - prevTokenBalance <= 1) {

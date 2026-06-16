@@ -13,12 +13,18 @@ import "forge-std/Test.sol";
 
 import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
 import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.sol";
+import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+import {OperableFacet} from "@crane/contracts/access/operable/OperableFacet.sol";
 import {OperableTargetStub} from "@crane/contracts/access/operable/OperableTargetStub.sol";
+import {Behavior_IFacet} from "@crane/contracts/factories/diamondPkg/Behavior_IFacet.sol";
 
 /**
  * @title OperableTest
- * @notice Tests for Operable access control system.
+ * @notice Tests for Operable access control system (functional via stub + LR-7 declaration tests).
+ * @dev Follows LR-7: full init (real owner state, no 0), exact asserts, Behavior usage for facets, NatSpec per LR-1.
+ *      Uses ONLY central values from CENTRALLY_COMPUTED_NATSPEC_VALUES.md for IOperable (0xa7f11160, 0x6d70f7ae etc) and IFacet refs.
  */
+// tag::OperableTest[]
 contract OperableTest is Test {
     OperableTargetStub public operable;
 
@@ -28,6 +34,8 @@ contract OperableTest is Test {
     address public nonOperator;
 
     function setUp() public {
+        // LR-7 full initialization: real subject with owner (no address(0), self-contained MultiStepOwnable init via stub)
+        // Proper init before any assertions; follows CraneTest/TestBase order principles (no factories needed for this access logic).
         owner = makeAddr("owner");
         operator = makeAddr("operator");
         functionOperator = makeAddr("functionOperator");
@@ -43,7 +51,8 @@ contract OperableTest is Test {
     /* -------------------------------------------------------------------------- */
 
     function test_setOperator_grantsOperatorRole() public {
-        assertFalse(operable.isOperator(operator), "Should not be operator initially");
+        // exact expected value (LR-7)
+        assertEq(operable.isOperator(operator), false, "Initial status must be exact false");
 
         vm.expectEmit(true, true, true, true);
         emit IOperable.NewGlobalOperatorStatus(operator, true);
@@ -51,14 +60,14 @@ contract OperableTest is Test {
         vm.prank(owner);
         operable.setOperator(operator, true);
 
-        assertTrue(operable.isOperator(operator), "Should be operator after setting");
+        assertEq(operable.isOperator(operator), true, "Status must be exact true after setOperator(true)");
     }
 
     function test_setOperator_revokesOperatorRole() public {
         // First grant operator status
         vm.prank(owner);
         operable.setOperator(operator, true);
-        assertTrue(operable.isOperator(operator), "Should be operator after granting");
+        assertEq(operable.isOperator(operator), true, "Exact true after granting");
 
         // Now revoke
         vm.expectEmit(true, true, true, true);
@@ -67,7 +76,7 @@ contract OperableTest is Test {
         vm.prank(owner);
         operable.setOperator(operator, false);
 
-        assertFalse(operable.isOperator(operator), "Should not be operator after revoking");
+        assertEq(operable.isOperator(operator), false, "Exact false after revoking");
     }
 
     function test_setOperator_revertsWhenNotOwner() public {
@@ -77,15 +86,15 @@ contract OperableTest is Test {
     }
 
     function test_isOperator_returnsCorrectStatus() public {
-        assertFalse(operable.isOperator(operator), "Initial status should be false");
+        assertEq(operable.isOperator(operator), false, "Initial status must be exact false");
 
         vm.prank(owner);
         operable.setOperator(operator, true);
-        assertTrue(operable.isOperator(operator), "Status should be true after granting");
+        assertEq(operable.isOperator(operator), true, "Exact true after granting");
 
         vm.prank(owner);
         operable.setOperator(operator, false);
-        assertFalse(operable.isOperator(operator), "Status should be false after revoking");
+        assertEq(operable.isOperator(operator), false, "Exact false after revoking");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -94,7 +103,7 @@ contract OperableTest is Test {
 
     function test_setOperatorFor_grantsFunctionSpecificAccess() public {
         bytes4 funcSelector = operable.restrictedByOnlyOperatorSelector();
-        assertFalse(operable.isOperatorFor(funcSelector, functionOperator), "Should not be function operator initially");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), false, "Exact false initially for function op");
 
         vm.expectEmit(true, true, true, true);
         emit IOperable.NewFunctionOperatorStatus(functionOperator, funcSelector, true);
@@ -102,7 +111,7 @@ contract OperableTest is Test {
         vm.prank(owner);
         operable.setOperatorFor(funcSelector, functionOperator, true);
 
-        assertTrue(operable.isOperatorFor(funcSelector, functionOperator), "Should be function operator after setting");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), true, "Exact true after setOperatorFor(true)");
     }
 
     function test_setOperatorFor_revokesFunctionSpecificAccess() public {
@@ -135,15 +144,15 @@ contract OperableTest is Test {
     function test_isOperatorFor_returnsCorrectStatus() public {
         bytes4 funcSelector = operable.restrictedByOnlyOperatorSelector();
 
-        assertFalse(operable.isOperatorFor(funcSelector, functionOperator), "Initial status should be false");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), false, "Initial must be exact false");
 
         vm.prank(owner);
         operable.setOperatorFor(funcSelector, functionOperator, true);
-        assertTrue(operable.isOperatorFor(funcSelector, functionOperator), "Status should be true after granting");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), true, "Exact true after granting");
 
         vm.prank(owner);
         operable.setOperatorFor(funcSelector, functionOperator, false);
-        assertFalse(operable.isOperatorFor(funcSelector, functionOperator), "Status should be false after revoking");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), false, "Exact false after revoking");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -246,8 +255,8 @@ contract OperableTest is Test {
         operable.setOperator(operator2, true);
         vm.stopPrank();
 
-        assertTrue(operable.isOperator(operator), "First operator should be set");
-        assertTrue(operable.isOperator(operator2), "Second operator should be set");
+        assertEq(operable.isOperator(operator), true, "First operator exact set");
+        assertEq(operable.isOperator(operator2), true, "Second operator exact set");
 
         vm.prank(operator);
         operable.restrictedByOnlyOperator(1);
@@ -267,8 +276,8 @@ contract OperableTest is Test {
         operable.setOperatorFor(funcSelector, funcOp2, true);
         vm.stopPrank();
 
-        assertTrue(operable.isOperatorFor(funcSelector, functionOperator), "First function operator should be set");
-        assertTrue(operable.isOperatorFor(funcSelector, funcOp2), "Second function operator should be set");
+        assertEq(operable.isOperatorFor(funcSelector, functionOperator), true, "First function operator exact");
+        assertEq(operable.isOperatorFor(funcSelector, funcOp2), true, "Second function operator exact");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -307,7 +316,7 @@ contract OperableTest is Test {
         vm.prank(owner);
         operable.setOperator(anyOperator, true);
 
-        assertTrue(operable.isOperator(anyOperator), "Any address can become operator");
+        assertEq(operable.isOperator(anyOperator), true, "Exact: any address can become operator");
     }
 
     function testFuzz_nonOwnerCannotSetOperator(address attacker) public {
@@ -330,4 +339,47 @@ contract OperableTest is Test {
         vm.prank(caller);
         operable.restrictedByOnlyOperator(42);
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                 LR-7: Facet Declaration Tests via Behavior                 */
+    /* -------------------------------------------------------------------------- */
+
+    // tag::test_LR7_OperableFacet_declaration_viaBehavior()[]
+    /**
+     * @notice LR-7: OperableFacet must declare correct metadata using Behavior_IFacet (mandatory).
+     *         Full init of facet (new, real), exact via Behavior + central values only.
+     *         References IOperable interfaceId 0xa7f11160 and selectors from CENTRALLY_COMPUTED_NATSPEC_VALUES.md ONLY.
+     * @custom:signature test_LR7_OperableFacet_declaration_viaBehavior()
+     */
+    function test_LR7_OperableFacet_declaration_viaBehavior() public {
+        // LR-7 full init of real facet (no 0)
+        IFacet operableF = IFacet(address(new OperableFacet()));
+        vm.label(address(operableF), type(OperableFacet).name);
+
+        // Expected from IOperable (central: interface 0xa7f11160; funcs 0x6d70f7ae,0xea562a25,0x558a7297,0x755dbe7c)
+        // + IFacet overlap (central: 0x5b6f4d01 etc). Use .interfaceId/.selector for runtime correctness.
+        bytes4[] memory expectedIfaces = new bytes4[](1);
+        expectedIfaces[0] = type(IOperable).interfaceId; // == 0xa7f11160 per central
+
+        bytes4[] memory expectedFuncs = new bytes4[](4);
+        expectedFuncs[0] = IOperable.isOperator.selector;     // 0x6d70f7ae
+        expectedFuncs[1] = IOperable.isOperatorFor.selector;  // 0xea562a25
+        expectedFuncs[2] = IOperable.setOperator.selector;    // 0x558a7297
+        expectedFuncs[3] = IOperable.setOperatorFor.selector; // 0x755dbe7c
+
+        // Use Behavior libs per LR-7 + AGENTS crane-testing (expect then hasValid)
+        Behavior_IFacet.expect_IFacet_facetName(operableF, type(OperableFacet).name);
+        Behavior_IFacet.expect_IFacet_facetInterfaces(operableF, expectedIfaces);
+        Behavior_IFacet.expect_IFacet_facetFuncs(operableF, expectedFuncs);
+
+        assertTrue(Behavior_IFacet.hasValid_IFacet_facetName(operableF), "facetName exact via Behavior");
+        assertTrue(Behavior_IFacet.hasValid_IFacet_facetInterfaces(operableF), "facetInterfaces exact via Behavior");
+        assertTrue(Behavior_IFacet.hasValid_IFacet_facetFuncs(operableF), "facetFuncs exact via Behavior");
+        assertTrue(
+            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(operableF),
+            "facetMetadata consistency exact"
+        );
+    }
+    // end::test_LR7_OperableFacet_declaration_viaBehavior()[]
 }
+// end::OperableTest[]

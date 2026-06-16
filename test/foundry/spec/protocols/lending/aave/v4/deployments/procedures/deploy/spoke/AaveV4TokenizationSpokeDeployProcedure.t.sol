@@ -1,134 +1,126 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import '@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/procedures/ProceduresBase.t.sol';
+import "@crane/test/foundry/spec/protocols/lending/aave/v4/deployments/procedures/ProceduresBase.t.sol";
 
 contract AaveV4TokenizationSpokeDeployProcedureTest is ProceduresBase {
-  AaveV4TokenizationSpokeDeployProcedureWrapper public wrapper;
-  address public deployedHub;
-  uint256 public assetId;
-  address public underlying;
-  string public shareName = 'Test Vault Share';
-  string public shareSymbol = 'tvDAI';
+    AaveV4TokenizationSpokeDeployProcedureWrapper public wrapper;
+    address public deployedHub;
+    uint256 public assetId;
+    address public underlying;
+    string public shareName = "Test Vault Share";
+    string public shareSymbol = "tvDAI";
 
-  function setUp() public override {
-    super.setUp();
-    wrapper = new AaveV4TokenizationSpokeDeployProcedureWrapper();
+    function setUp() public override {
+        super.setUp();
+        wrapper = new AaveV4TokenizationSpokeDeployProcedureWrapper();
 
-    // TokenizationSpokeInstance constructor requires hub
-    AaveV4HubInstanceBatch hubInstanceBatch = new AaveV4HubInstanceBatch({
-      proxyAdminOwner_: admin,
-      authority_: accessManager,
-      hubBytecode_: hubBytecode,
-      salt_: salt
-    });
-    BatchReports.HubInstanceBatchReport memory hubReport = hubInstanceBatch.getReport();
-    deployedHub = hubReport.hubProxy;
+        // TokenizationSpokeInstance constructor requires hub
+        // Use a dedicated proxy admin owner distinct from 'admin' (the business caller with configurator role)
+        // to avoid "admin cannot fallback to proxy target" when calling impl functions via the Transparent proxy.
+        address hubProxyAdminOwner = makeAddr("hubProxyAdminOwner");
+        AaveV4HubInstanceBatch hubInstanceBatch = new AaveV4HubInstanceBatch({
+            proxyAdminOwner_: hubProxyAdminOwner, authority_: accessManager, hubBytecode_: hubBytecode, salt_: salt
+        });
+        BatchReports.HubInstanceBatchReport memory hubReport = hubInstanceBatch.getReport();
+        deployedHub = hubReport.hubProxy;
 
-    // Deploy test ERC20
-    TestnetERC20 testToken = new TestnetERC20('Test DAI', 'tDAI', 18);
-    underlying = address(testToken);
+        // Deploy test ERC20
+        TestnetERC20 testToken = new TestnetERC20("Test DAI", "tDAI", 18);
+        underlying = address(testToken);
 
-    // Setup Hub roles and add asset
-    vm.startPrank(accessManagerAdmin);
-    AaveV4HubRolesProcedure.setupHubAllRoles(accessManager, deployedHub);
-    IAccessManagerEnumerable(accessManager).grantRole(Roles.HUB_CONFIGURATOR_ROLE, admin, 0);
-    vm.stopPrank();
+        // Setup Hub roles and add asset
+        vm.startPrank(accessManagerAdmin);
+        AaveV4HubRolesProcedure.setupHubAllRoles(accessManager, deployedHub);
+        IAccessManagerEnumerable(accessManager).grantRole(Roles.HUB_CONFIGURATOR_ROLE, admin, 0);
+        vm.stopPrank();
 
-    bytes memory irData = abi.encode(
-      IAssetInterestRateStrategy.InterestRateData({
-        optimalUsageRatio: 90_00,
-        baseDrawnRate: 5_00,
-        rateGrowthBeforeOptimal: 5_00,
-        rateGrowthAfterOptimal: 5_00
-      })
-    );
+        bytes memory irData = abi.encode(
+            IAssetInterestRateStrategy.InterestRateData({
+                optimalUsageRatio: 90_00,
+                baseDrawnRate: 5_00,
+                rateGrowthBeforeOptimal: 5_00,
+                rateGrowthAfterOptimal: 5_00
+            })
+        );
 
-    vm.prank(admin);
-    assetId = IHub(deployedHub).addAsset({
-      underlying: underlying,
-      decimals: 18,
-      feeReceiver: feeReceiver,
-      irStrategy: hubReport.irStrategy,
-      irData: irData
-    });
-  }
+        vm.prank(admin);
+        assetId = IHub(deployedHub)
+            .addAsset({
+                underlying: underlying,
+                decimals: 18,
+                feeReceiver: feeReceiver,
+                irStrategy: hubReport.irStrategy,
+                irData: irData
+            });
+    }
 
-  function test_deployUpgradeableTokenizationSpokeInstance() public {
-    (address tokenizationSpokeProxy, address tokenizationSpokeImplementation) = wrapper
-      .deployUpgradeableTokenizationSpokeInstance(
-        deployedHub,
-        underlying,
-        owner,
-        shareName,
-        shareSymbol,
-        salt
-      );
-    assertNotEq(tokenizationSpokeProxy, address(0));
-    assertNotEq(tokenizationSpokeImplementation, address(0));
-    assertEq(Ownable(ProxyHelper.getProxyAdmin(tokenizationSpokeProxy)).owner(), owner);
-    assertEq(
-      ProxyHelper.getImplementation(tokenizationSpokeProxy),
-      tokenizationSpokeImplementation
-    );
-    assertEq(ITokenizationSpoke(tokenizationSpokeProxy).hub(), deployedHub);
-    assertEq(ITokenizationSpoke(tokenizationSpokeProxy).assetId(), assetId);
-    assertEq(ITokenizationSpoke(tokenizationSpokeProxy).asset(), underlying);
-  }
+    function test_deployUpgradeableTokenizationSpokeInstance() public {
+        (address tokenizationSpokeProxy, address tokenizationSpokeImplementation) = wrapper.deployUpgradeableTokenizationSpokeInstance(
+            deployedHub, underlying, owner, shareName, shareSymbol, salt
+        );
+        assertNotEq(tokenizationSpokeProxy, address(0));
+        assertNotEq(tokenizationSpokeImplementation, address(0));
+        address adminInSlot = ProxyHelper.getProxyAdmin(tokenizationSpokeProxy);
+        address resolvedOwner = adminInSlot.code.length > 0 ? Ownable(adminInSlot).owner() : adminInSlot;
+        assertEq(resolvedOwner, owner);
+        assertEq(ProxyHelper.getImplementation(tokenizationSpokeProxy), tokenizationSpokeImplementation);
+        assertEq(ITokenizationSpoke(tokenizationSpokeProxy).hub(), deployedHub);
+        assertEq(ITokenizationSpoke(tokenizationSpokeProxy).assetId(), assetId);
+        assertEq(ITokenizationSpoke(tokenizationSpokeProxy).asset(), underlying);
+    }
 
-  function test_deployUpgradeableTokenizationSpokeInstance_reverts() public {
-    vm.expectRevert('invalid hub');
-    wrapper.deployUpgradeableTokenizationSpokeInstance({
-      hub: address(0),
-      underlying: underlying,
-      proxyAdminOwner: owner,
-      shareName: shareName,
-      shareSymbol: shareSymbol,
-      salt: salt
-    });
+    function test_deployUpgradeableTokenizationSpokeInstance_reverts() public {
+        vm.expectRevert("invalid hub");
+        wrapper.deployUpgradeableTokenizationSpokeInstance({
+            hub: address(0),
+            underlying: underlying,
+            proxyAdminOwner: owner,
+            shareName: shareName,
+            shareSymbol: shareSymbol,
+            salt: salt
+        });
 
-    vm.expectRevert('invalid proxy admin owner');
-    wrapper.deployUpgradeableTokenizationSpokeInstance({
-      hub: deployedHub,
-      underlying: underlying,
-      proxyAdminOwner: address(0),
-      shareName: shareName,
-      shareSymbol: shareSymbol,
-      salt: keccak256('zeroAdminSalt')
-    });
+        vm.expectRevert("invalid proxy admin owner");
+        wrapper.deployUpgradeableTokenizationSpokeInstance({
+            hub: deployedHub,
+            underlying: underlying,
+            proxyAdminOwner: address(0),
+            shareName: shareName,
+            shareSymbol: shareSymbol,
+            salt: keccak256("zeroAdminSalt")
+        });
 
-    vm.expectRevert('invalid share name');
-    wrapper.deployUpgradeableTokenizationSpokeInstance({
-      hub: deployedHub,
-      underlying: underlying,
-      proxyAdminOwner: owner,
-      shareName: '',
-      shareSymbol: shareSymbol,
-      salt: keccak256('emptyNameSalt')
-    });
+        vm.expectRevert("invalid share name");
+        wrapper.deployUpgradeableTokenizationSpokeInstance({
+            hub: deployedHub,
+            underlying: underlying,
+            proxyAdminOwner: owner,
+            shareName: "",
+            shareSymbol: shareSymbol,
+            salt: keccak256("emptyNameSalt")
+        });
 
-    vm.expectRevert('invalid share symbol');
-    wrapper.deployUpgradeableTokenizationSpokeInstance({
-      hub: deployedHub,
-      underlying: underlying,
-      proxyAdminOwner: owner,
-      shareName: shareName,
-      shareSymbol: '',
-      salt: keccak256('emptySymbolSalt')
-    });
-  }
+        vm.expectRevert("invalid share symbol");
+        wrapper.deployUpgradeableTokenizationSpokeInstance({
+            hub: deployedHub,
+            underlying: underlying,
+            proxyAdminOwner: owner,
+            shareName: shareName,
+            shareSymbol: "",
+            salt: keccak256("emptySymbolSalt")
+        });
+    }
 
-  function test_deployUpgradeableTokenizationSpokeInstance_revertsWith_failedCreate2FactoryCall()
-    public
-  {
-    vm.expectRevert(Create2Utils.FailedCreate2FactoryCall.selector);
-    wrapper.deployUpgradeableTokenizationSpokeInstance({
-      hub: deployedHub,
-      underlying: makeAddr('nonExistentUnderlying'),
-      proxyAdminOwner: owner,
-      shareName: shareName,
-      shareSymbol: shareSymbol,
-      salt: keccak256('salt')
-    });
-  }
+    function test_deployUpgradeableTokenizationSpokeInstance_revertsWith_failedCreate2FactoryCall() public {
+        vm.expectRevert(Create2Utils.FailedCreate2FactoryCall.selector);
+        wrapper.deployUpgradeableTokenizationSpokeInstance({
+            hub: deployedHub,
+            underlying: makeAddr("nonExistentUnderlying"),
+            proxyAdminOwner: owner,
+            shareName: shareName,
+            shareSymbol: shareSymbol,
+            salt: keccak256("salt")
+        });
+    }
 }

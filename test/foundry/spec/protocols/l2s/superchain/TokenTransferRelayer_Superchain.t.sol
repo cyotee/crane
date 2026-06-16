@@ -29,17 +29,23 @@ import {ERC20PermitDFPkg, IERC20PermitDFPkg} from "@crane/contracts/tokens/ERC20
 import {ERC20Facet} from "@crane/contracts/tokens/ERC20/ERC20Facet.sol";
 import {ERC2612Facet} from "@crane/contracts/tokens/ERC2612/ERC2612Facet.sol";
 import {ERC5267Facet} from "@crane/contracts/utils/cryptography/ERC5267/ERC5267Facet.sol";
-import {ApprovedMessageSenderRegistryFactoryService} from "@crane/contracts/protocols/l2s/superchain/registries/message/sender/ApprovedMessageSenderRegistryFactoryService.sol";
-import {TokenTransferRelayerFactoryService} from "@crane/contracts/protocols/l2s/superchain/relayers/token/TokenTransferRelayerFactoryService.sol";
-import {SuperchainSenderNonceRepo} from "@crane/contracts/protocols/l2s/superchain/senders/SuperchainSenderNonceRepo.sol";
-import {SuperchainSenderNonceTarget} from "@crane/contracts/protocols/l2s/superchain/senders/SuperchainSenderNonceTarget.sol";
+import {
+    ApprovedMessageSenderRegistryFactoryService
+} from "@crane/contracts/protocols/l2s/superchain/registries/message/sender/ApprovedMessageSenderRegistryFactoryService.sol";
+import {
+    TokenTransferRelayerFactoryService
+} from "@crane/contracts/protocols/l2s/superchain/relayers/token/TokenTransferRelayerFactoryService.sol";
+import {
+    SuperchainSenderNonceRepo
+} from "@crane/contracts/protocols/l2s/superchain/senders/SuperchainSenderNonceRepo.sol";
+import {
+    SuperchainSenderNonceTarget
+} from "@crane/contracts/protocols/l2s/superchain/senders/SuperchainSenderNonceTarget.sol";
 
 interface IOptimismMintableERC20Factory {
-    function createOptimismMintableERC20(
-        address remoteToken,
-        string memory name,
-        string memory symbol
-    ) external returns (address);
+    function createOptimismMintableERC20(address remoteToken, string memory name, string memory symbol)
+        external
+        returns (address);
 }
 
 interface IOptimismMintableERC20 is IERC20, IERC20Metadata {
@@ -204,9 +210,8 @@ abstract contract SuperchainPackageTestBase is Test {
 
         (_l2Create3Factory, _l2DiamondFactory) = InitDevService.initEnv(address(this));
         _l2Token = IOptimismMintableERC20(
-            IOptimismMintableERC20Factory(_l2MintableFactory()).createOptimismMintableERC20(
-                address(_l1Token), "Test Token L2", "TST-L2"
-            )
+            IOptimismMintableERC20Factory(_l2MintableFactory())
+                .createOptimismMintableERC20(address(_l1Token), "Test Token L2", "TST-L2")
         );
 
         _vault = new TestERC4626Vault(IERC20(address(_l2Token)));
@@ -218,9 +223,8 @@ abstract contract SuperchainPackageTestBase is Test {
     }
 
     function _deployL1TokenPackage() internal returns (IERC20 token) {
-        IFacet erc20Facet = _l1Create3Factory.deployFacet(
-            type(ERC20Facet).creationCode, keccak256(abi.encode(type(ERC20Facet).name))
-        );
+        IFacet erc20Facet =
+            _l1Create3Factory.deployFacet(type(ERC20Facet).creationCode, keccak256(abi.encode(type(ERC20Facet).name)));
         IFacet erc2612Facet = _l1Create3Factory.deployFacet(
             type(ERC2612Facet).creationCode, keccak256(abi.encode(type(ERC2612Facet).name))
         );
@@ -228,11 +232,8 @@ abstract contract SuperchainPackageTestBase is Test {
             type(ERC5267Facet).creationCode, keccak256(abi.encode(type(ERC5267Facet).name))
         );
 
-        IERC20PermitDFPkg.PkgInit memory pkgInit = IERC20PermitDFPkg.PkgInit({
-            erc20Facet: erc20Facet,
-            erc5267Facet: erc5267Facet,
-            erc2612Facet: erc2612Facet
-        });
+        IERC20PermitDFPkg.PkgInit memory pkgInit =
+            IERC20PermitDFPkg.PkgInit({erc20Facet: erc20Facet, erc5267Facet: erc5267Facet, erc2612Facet: erc2612Facet});
 
         ERC20PermitDFPkg dfpkg = ERC20PermitDFPkg(
             address(
@@ -259,16 +260,14 @@ abstract contract SuperchainPackageTestBase is Test {
     function _deployRegistryPackage() internal returns (IApprovedMessageSenderRegistry registry) {
         IFacet registryFacet =
             ApprovedMessageSenderRegistryFactoryService.deployApprovedMessageSenderRegistryFacet(_l2Create3Factory);
-        IFacet ownableFacet = IFacetRegistry(address(_l2Create3Factory)).canonicalFacet(type(IMultiStepOwnable).interfaceId);
+        IFacet ownableFacet =
+            IFacetRegistry(address(_l2Create3Factory)).canonicalFacet(type(IMultiStepOwnable).interfaceId);
         IFacet operableFacet = IFacetRegistry(address(_l2Create3Factory)).canonicalFacet(type(IOperable).interfaceId);
 
         registry = ApprovedMessageSenderRegistryFactoryService.deployApprovedMessageSenderRegistry(
             _l2DiamondFactory,
             ApprovedMessageSenderRegistryFactoryService.deployApprovedMessageSenderRegistryDFPkg(
-                _l2Create3Factory,
-                ownableFacet,
-                operableFacet,
-                registryFacet
+                _l2Create3Factory, ownableFacet, operableFacet, registryFacet
             ),
             address(this)
         );
@@ -361,14 +360,15 @@ abstract contract SuperchainPackageTestBase is Test {
     function _relayBridgeFinalize(uint256 nonce, address from, uint256 amount) internal {
         vm.selectFork(_l2Fork);
         vm.prank(_computeAlias(_l1CrossDomainMessenger()));
-        _l2Messenger().relayMessage(
-            nonce,
-            _l1StandardBridge(),
-            _l2StandardBridge(),
-            0,
-            _BRIDGE_MIN_GAS_LIMIT,
-            _buildBridgeFinalizeMessage(from, amount)
-        );
+        _l2Messenger()
+            .relayMessage(
+                nonce,
+                _l1StandardBridge(),
+                _l2StandardBridge(),
+                0,
+                _BRIDGE_MIN_GAS_LIMIT,
+                _buildBridgeFinalizeMessage(from, amount)
+            );
     }
 
     function _relayProcessorMessage(
@@ -379,25 +379,12 @@ abstract contract SuperchainPackageTestBase is Test {
         uint256 senderNonce
     ) internal returns (bytes32 messageHash) {
         bytes memory message = _buildProcessorRelayMessage(beneficiary, amount, senderNonce);
-        messageHash = _hashCrossDomainMessageV1(
-            nonce,
-            l1Sender,
-            address(_relayer),
-            0,
-            _PROCESSOR_MIN_GAS_LIMIT,
-            message
-        );
+        messageHash =
+            _hashCrossDomainMessageV1(nonce, l1Sender, address(_relayer), 0, _PROCESSOR_MIN_GAS_LIMIT, message);
 
         vm.selectFork(_l2Fork);
         vm.prank(_computeAlias(_l1CrossDomainMessenger()));
-        _l2Messenger().relayMessage(
-            nonce,
-            l1Sender,
-            address(_relayer),
-            0,
-            _PROCESSOR_MIN_GAS_LIMIT,
-            message
-        );
+        _l2Messenger().relayMessage(nonce, l1Sender, address(_relayer), 0, _PROCESSOR_MIN_GAS_LIMIT, message);
     }
 
     function _relayProcessorMessageWithGas(
@@ -409,14 +396,8 @@ abstract contract SuperchainPackageTestBase is Test {
         uint256 callGas
     ) internal returns (bytes32 messageHash) {
         bytes memory message = _buildProcessorRelayMessage(beneficiary, amount, senderNonce);
-        messageHash = _hashCrossDomainMessageV1(
-            nonce,
-            l1Sender,
-            address(_relayer),
-            0,
-            _PROCESSOR_MIN_GAS_LIMIT,
-            message
-        );
+        messageHash =
+            _hashCrossDomainMessageV1(nonce, l1Sender, address(_relayer), 0, _PROCESSOR_MIN_GAS_LIMIT, message);
 
         vm.selectFork(_l2Fork);
         vm.prank(_computeAlias(_l1CrossDomainMessenger()));
@@ -547,13 +528,16 @@ abstract contract SuperchainPackageTestBase is Test {
         assertEq(_vault.balanceOf(_beneficiary), 0, "beneficiary should not receive shares");
 
         vm.selectFork(_l1Fork);
-        assertEq(_l1Sender.nextNonce(_l2ChainId()), 0, "sender nonce should remain zero when sender helper did not originate message");
+        assertEq(
+            _l1Sender.nextNonce(_l2ChainId()),
+            0,
+            "sender nonce should remain zero when sender helper did not originate message"
+        );
 
         vm.selectFork(_l2Fork);
         assertEq(_relayer.nextNonce(unauthorizedSender), 0, "unauthorized sender nonce should remain zero");
         assertTrue(
-            _failedMessageLogExists(entries, _l2CrossDomainMessenger(), processorHash),
-            "missing failed relay event"
+            _failedMessageLogExists(entries, _l2CrossDomainMessenger(), processorHash), "missing failed relay event"
         );
     }
 
@@ -587,14 +571,15 @@ abstract contract SuperchainPackageTestBase is Test {
         vm.selectFork(_l2Fork);
         vm.prank(_computeAlias(_l1CrossDomainMessenger()));
         vm.expectRevert("CrossDomainMessenger: message has already been relayed");
-        _l2Messenger().relayMessage(
-            processorNonce,
-            address(_l1Sender),
-            address(_relayer),
-            0,
-            _PROCESSOR_MIN_GAS_LIMIT,
-            _buildProcessorRelayMessage(_beneficiary, amount, 0)
-        );
+        _l2Messenger()
+            .relayMessage(
+                processorNonce,
+                address(_l1Sender),
+                address(_relayer),
+                0,
+                _PROCESSOR_MIN_GAS_LIMIT,
+                _buildProcessorRelayMessage(_beneficiary, amount, 0)
+            );
     }
 
     function testDuplicateSenderNonceMarksMessageFailed() public {
@@ -622,10 +607,14 @@ abstract contract SuperchainPackageTestBase is Test {
         assertFalse(_l2Messenger().successfulMessages(processorHash), "duplicate sender nonce should not succeed");
 
         vm.selectFork(_l1Fork);
-        assertEq(_l1Sender.nextNonce(_l2ChainId()), 0, "sender helper nonce should remain zero in manual duplicate test");
+        assertEq(
+            _l1Sender.nextNonce(_l2ChainId()), 0, "sender helper nonce should remain zero in manual duplicate test"
+        );
 
         vm.selectFork(_l2Fork);
-        assertEq(_relayer.nextNonce(address(_l1Sender)), 1, "sender nonce should remain unchanged after duplicate relay");
+        assertEq(
+            _relayer.nextNonce(address(_l1Sender)), 1, "sender nonce should remain unchanged after duplicate relay"
+        );
         assertEq(_l2Token.balanceOf(address(_relayer)), amount, "relayer should retain second bridged amount");
         assertTrue(
             _failedMessageLogExists(entries, _l2CrossDomainMessenger(), processorHash),
@@ -658,8 +647,7 @@ abstract contract SuperchainPackageTestBase is Test {
         vm.selectFork(_l2Fork);
         assertEq(_relayer.nextNonce(address(_l1Sender)), 0, "sender nonce should not increment after failed relay");
         assertTrue(
-            _failedMessageLogExists(entries, _l2CrossDomainMessenger(), processorHash),
-            "missing failed relay event"
+            _failedMessageLogExists(entries, _l2CrossDomainMessenger(), processorHash), "missing failed relay event"
         );
     }
 }

@@ -20,9 +20,9 @@ contract ActionStorageStatic is StorageLayout, IPActionStorageStatic, IPMiniDiam
     }
 
     function setFacetForSelectors(SelectorsToFacet[] calldata arr) external onlyOwner {
-        for (uint256 i = 0; i < arr.length; ) {
+        for (uint256 i = 0; i < arr.length;) {
             SelectorsToFacet memory s = arr[i];
-            for (uint256 j = 0; j < s.selectors.length; ) {
+            for (uint256 j = 0; j < s.selectors.length;) {
                 selectorToFacet[s.selectors[j]] = s.facet;
                 unchecked {
                     j++;

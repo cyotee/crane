@@ -32,7 +32,7 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     if tload(s) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -40,7 +40,7 @@ abstract contract ReentrancyGuardTransient {
                     tstore(s, address())
                 }
             } else {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     if eq(sload(s), address()) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -49,7 +49,7 @@ abstract contract ReentrancyGuardTransient {
                 }
             }
         } else {
-            assembly("memory-safe") {
+            assembly ("memory-safe") {
                 if tload(_REENTRANCY_GUARD_SLOT) {
                     mstore(0x00, 0xab143c06) // `Reentrancy()`.
                     revert(0x1c, 0x04)
@@ -61,16 +61,16 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     tstore(s, 0)
                 }
             } else {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     sstore(s, s)
                 }
             }
         } else {
-            assembly("memory-safe") {
+            assembly ("memory-safe") {
                 tstore(_REENTRANCY_GUARD_SLOT, 0)
             }
         }
@@ -81,14 +81,14 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     if tload(s) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
                     }
                 }
             } else {
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     if eq(sload(s), address()) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -96,7 +96,7 @@ abstract contract ReentrancyGuardTransient {
                 }
             }
         } else {
-            assembly("memory-safe") {
+            assembly ("memory-safe") {
                 if tload(_REENTRANCY_GUARD_SLOT) {
                     mstore(0x00, 0xab143c06) // `Reentrancy()`.
                     revert(0x1c, 0x04)

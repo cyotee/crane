@@ -134,7 +134,8 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
     function _testZapOutToTargetWithFeeImpossible(
         IUniswapV2Pair pair,
         ERC20PermitMintableStub targetToken,
-        ERC20PermitMintableStub /*saleToken*/,
+        ERC20PermitMintableStub,
+        /*saleToken*/
         bool feesEnabled
     ) internal {
         _setupUniswapFees(feesEnabled);
@@ -198,12 +199,19 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Uniswap_Test is TestBase_Cons
     }
 
     function _calculateMaxPossibleOutput(
-        uint256 /*lpTotalSupply*/,
+        uint256,
+        /*lpTotalSupply*/
         uint256 reserveTarget,
-        uint256 /*reserveSale*/,
-        uint256 /*feePercent*/,
+        uint256,
+        /*reserveSale*/
+        uint256,
+        /*feePercent*/
         uint256 /*feeDenominator*/
-    ) internal pure returns (uint256 maxOutput) {
+    )
+        internal
+        pure
+        returns (uint256 maxOutput)
+    {
         maxOutput = reserveTarget;
     }
 

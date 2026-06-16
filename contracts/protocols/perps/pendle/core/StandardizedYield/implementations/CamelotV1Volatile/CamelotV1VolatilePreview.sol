@@ -25,23 +25,19 @@ contract CamelotV1VolatilePreview is CamelotV1VolatileCommon, BoringOwnableUpgra
      * @notice The Camelot.swap() function takes reserve() as the previously recorded at the start
      * and take into account ALL floating balances after.
      */
-    function previewZapIn(
-        CamelotPairData memory data,
-        address tokenIn,
-        uint256 amountTokenIn
-    ) external view returns (uint256 amountLpOut) {
+    function previewZapIn(CamelotPairData memory data, address tokenIn, uint256 amountTokenIn)
+        external
+        view
+        returns (uint256 amountLpOut)
+    {
         bool isToken0 = tokenIn == data.token0;
 
         uint256 amountToSwap = isToken0
             ? _getZapInSwapAmount(amountTokenIn, data.reserve0, data.fee0)
             : _getZapInSwapAmount(amountTokenIn, data.reserve1, data.fee1);
 
-        uint256 amountSwapOut = _getSwapAmountOut(
-            data,
-            amountToSwap,
-            tokenIn,
-            tokenIn == data.token0 ? data.fee0 : data.fee1
-        );
+        uint256 amountSwapOut =
+            _getSwapAmountOut(data, amountToSwap, tokenIn, tokenIn == data.token0 ? data.fee0 : data.fee1);
 
         uint256 amount0ToAddLiq;
         uint256 amount1ToAddLiq;
@@ -63,11 +59,11 @@ contract CamelotV1VolatilePreview is CamelotV1VolatileCommon, BoringOwnableUpgra
         return _calcAmountLpOut(data, amount0ToAddLiq, amount1ToAddLiq);
     }
 
-    function previewZapOut(
-        CamelotPairData memory data,
-        address tokenOut,
-        uint256 amountLpIn
-    ) external view returns (uint256) {
+    function previewZapOut(CamelotPairData memory data, address tokenOut, uint256 amountLpIn)
+        external
+        view
+        returns (uint256)
+    {
         uint256 totalSupply = _getTotalSupplyAfterMintFee(data);
 
         data.reserve0 = _getPairBalance0(data);
@@ -95,15 +91,13 @@ contract CamelotV1VolatilePreview is CamelotV1VolatileCommon, BoringOwnableUpgra
     }
 
     // @reference: Camelot
-    function _getSwapAmountOut(
-        CamelotPairData memory data,
-        uint256 amountIn,
-        address tokenIn,
-        uint256 feePercent
-    ) internal pure returns (uint256) {
-        (uint256 reserve0, uint256 reserve1) = tokenIn == data.token0
-            ? (data.reserve0, data.reserve1)
-            : (data.reserve1, data.reserve0);
+    function _getSwapAmountOut(CamelotPairData memory data, uint256 amountIn, address tokenIn, uint256 feePercent)
+        internal
+        pure
+        returns (uint256)
+    {
+        (uint256 reserve0, uint256 reserve1) =
+            tokenIn == data.token0 ? (data.reserve0, data.reserve1) : (data.reserve1, data.reserve0);
         amountIn = amountIn * (FEE_DENOMINATOR - feePercent);
         return (amountIn * reserve1) / (reserve0 * FEE_DENOMINATOR + amountIn);
     }
@@ -112,11 +106,11 @@ contract CamelotV1VolatilePreview is CamelotV1VolatileCommon, BoringOwnableUpgra
      * @notice This function simulates Camelot router so any precision issues from their calculation
      * is preserved in preview functions...
      */
-    function _calcAmountLpOut(
-        CamelotPairData memory data,
-        uint256 amount0ToAddLiq,
-        uint256 amount1ToAddLiq
-    ) private view returns (uint256 amountLpOut) {
+    function _calcAmountLpOut(CamelotPairData memory data, uint256 amount0ToAddLiq, uint256 amount1ToAddLiq)
+        private
+        view
+        returns (uint256 amountLpOut)
+    {
         uint256 amount1Optimal = _quote(amount0ToAddLiq, data.reserve0, data.reserve1);
         if (amount1Optimal <= amount1ToAddLiq) {
             amount1ToAddLiq = amount1Optimal;

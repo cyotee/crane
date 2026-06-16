@@ -7,19 +7,18 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/kyberswap/elasti
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ComboOracle_KyberSwapElasticV2.sol";
 
 contract FraxUnifiedFarm_ERC20_KyberSwapElasticV2 is FraxUnifiedFarm_ERC20 {
-
     string public farm_type = "ERC20_KyberSwapElasticV2";
 
     // Need to seed a starting token to use both as a basis for fraxPerLPToken
     // as well as getting ticks, etc
-    uint256 public seed_token_id; 
+    uint256 public seed_token_id;
 
     // For KS-FT pricing
     ComboOracle_KyberSwapElasticV2 public KSE_ComboOracleV2;
     IKyberFactory public immutable kyber_factory = IKyberFactory(0xC7a590291e07B9fe9E64b86c58fD8fC764308C4A);
 
-    constructor (
-        address _owner, 
+    constructor(
+        address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
@@ -28,8 +27,10 @@ contract FraxUnifiedFarm_ERC20_KyberSwapElasticV2 is FraxUnifiedFarm_ERC20 {
         address _kse_combo_oracle,
         address _stakingToken,
         uint256 _seed_token_id
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
         // stakingToken = IKyberSwapFarmingToken(_stakingToken);
@@ -37,8 +38,8 @@ contract FraxUnifiedFarm_ERC20_KyberSwapElasticV2 is FraxUnifiedFarm_ERC20 {
 
         // seed_token_id = _seed_token_id;
         // KSE_ComboOracleV2 = ComboOracle_KyberSwapElasticV2(_kse_combo_oracle);
-        
-    }
+
+        }
 
     function setSeedTokenID(uint256 _seed_token_id) public onlyByOwnGov {
         seed_token_id = _seed_token_id;
@@ -47,7 +48,6 @@ contract FraxUnifiedFarm_ERC20_KyberSwapElasticV2 is FraxUnifiedFarm_ERC20 {
     function setKyberSwapElasticComboOracle(address _kse_combo_oracle_address) public onlyByOwnGov {
         KSE_ComboOracleV2 = ComboOracle_KyberSwapElasticV2(_kse_combo_oracle_address);
     }
-
 
     function fraxPerLPToken() public view override returns (uint256 frax_per_lp_token) {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING

@@ -20,7 +20,6 @@ import "./AggregatorV3Interface.sol";
 // import "@crane/contracts/external/chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 
 contract ChainlinkETHUSDPriceConsumerTest {
-
     // VERY IMPORTANT: UNCOMMENT THIS LATER
     // VERY IMPORTANT: UNCOMMENT THIS LATER
     // VERY IMPORTANT: UNCOMMENT THIS LATER
@@ -48,8 +47,7 @@ contract ChainlinkETHUSDPriceConsumerTest {
      * Address: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
      */
 
-     
-    constructor () public {
+    constructor() {
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // VERY IMPORTANT: UNCOMMENT THIS LATER
@@ -70,7 +68,7 @@ contract ChainlinkETHUSDPriceConsumerTest {
     /**
      * Returns the latest price
      */
-    function getLatestPrice() public pure returns (int) {
+    function getLatestPrice() public pure returns (int256) {
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // VERY IMPORTANT: UNCOMMENT THIS LATER
@@ -86,7 +84,7 @@ contract ChainlinkETHUSDPriceConsumerTest {
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // VERY IMPORTANT: UNCOMMENT THIS LATER
         // (
-        //     uint80 roundID, 
+        //     uint80 roundID,
         //     int price,
         //     uint startedAt,
         //     uint timeStamp,

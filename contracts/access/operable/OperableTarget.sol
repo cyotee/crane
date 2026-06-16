@@ -13,6 +13,7 @@ import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiSt
  * @dev Uses storage CRUD operations to ensure consistency with validations.
  */
 contract OperableTarget is
+
     // Some functions are restricted to Owner.
     MultiStepOwnableModifiers,
     // Exposes IOperable interface
@@ -25,6 +26,7 @@ contract OperableTarget is
     function isOperator(address query) public view returns (bool) {
         return OperableRepo._isOperator(query);
     }
+
     // end::isOperator(address query)[]
 
     // tag::isOperatorFor(bytes4,address)[]
@@ -34,6 +36,7 @@ contract OperableTarget is
     function isOperatorFor(bytes4 func, address query) public view returns (bool) {
         return OperableRepo._isFunctionOperator(func, query);
     }
+
     // end::isOperatorFor(bytes4,address)[]
 
     // tag::setOperator(address,bool)[]
@@ -50,6 +53,7 @@ contract OperableTarget is
         OperableRepo._setOperatorStatus(operator, status);
         return true;
     }
+
     // end::setOperator(address,bool)[]
 
     // tag::setOperatorFor(bytes4,address,bool)[]

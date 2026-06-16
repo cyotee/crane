@@ -24,10 +24,10 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeFXSRewardsDistributor.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/IFraxferry.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -44,7 +44,6 @@ contract FraxMiddlemanGaugeFerryHelper is Owned {
     IFraxferry public ferry;
     address public middleman_address;
 
-
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
@@ -52,15 +51,11 @@ contract FraxMiddlemanGaugeFerryHelper is Owned {
         _;
     }
 
-
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner,
-        address _timelock_address,
-        address _ferry_address,
-        address _middleman_address
-    ) Owned(_owner) {
+    constructor(address _owner, address _timelock_address, address _ferry_address, address _middleman_address)
+        Owned(_owner)
+    {
         timelock_address = _timelock_address;
         ferry = IFraxferry(_ferry_address);
         middleman_address = _middleman_address;
@@ -78,11 +73,10 @@ contract FraxMiddlemanGaugeFerryHelper is Owned {
         // Ferry logic here
         ERC20(reward_token_address).approve(address(ferry), reward_amount);
         ferry.embarkWithRecipient(reward_amount, destination_address);
-
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -91,12 +85,12 @@ contract FraxMiddlemanGaugeFerryHelper is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {StepLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {StepLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
 
-import {CompactStep, CompactStepLib, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol';
+import {
+    CompactStep,
+    CompactStepLib,
+    Step
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol";
 
 contract AuctionStepWrapper {
     constructor() {}

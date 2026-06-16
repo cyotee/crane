@@ -1,16 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {MockContinuousClearingAuction} from '../mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {MockContinuousClearingAuction} from "../mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
 
 contract ClaimTokensBatchTest is BttBase {
     function test_WhenBlockIsLTClaimBlock(AuctionFuzzConstructorParams memory _params, uint64 _blockNumber) public {
@@ -66,17 +72,17 @@ contract ClaimTokensBatchTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
 
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         // Add a bid higher than the first
         maxPrice = maxPrice + mParams.parameters.tickSpacing;
         // Sell out the auction at that price
         uint128 amount = uint128(FixedPointMathLib.fullMulDivUp(mParams.totalSupply, maxPrice, FixedPoint96.Q96));
         vm.assume(amount > 0);
-        auction.submitBid{value: amount}(maxPrice, amount, owner, bytes(''));
+        auction.submitBid{value: amount}(maxPrice, amount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock - 1);
         // Exit the first bid which is outbid
@@ -91,7 +97,7 @@ contract ClaimTokensBatchTest is BttBase {
         assertNotEq(
             auction.lastCheckpointedBlock(),
             mParams.parameters.endBlock,
-            'Last checkpointed block should not be the end block'
+            "Last checkpointed block should not be the end block"
         );
         vm.expectEmit(true, true, true, true);
         emit IContinuousClearingAuction.CheckpointUpdated(mParams.parameters.endBlock, maxPrice, ConstantsLib.MPS);
@@ -128,13 +134,13 @@ contract ClaimTokensBatchTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
+        address owner = makeAddr("owner");
 
         // It's impossible to raise more than uint128.max currency given that bids are uint128s and
         // max price must be > 1 (given min tick spacing)
 
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         auction.exitPartiallyFilledBid(bidId, mParams.parameters.startBlock, 0);
@@ -178,13 +184,13 @@ contract ClaimTokensBatchTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
 
-        address owner = makeAddr('owner');
-        address owner2 = makeAddr('owner2');
+        address owner = makeAddr("owner");
+        address owner2 = makeAddr("owner2");
 
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
-        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(''));
+        uint256 bidId = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner, bytes(""));
         // Submit identical bid to the first bid but to a different owner
-        uint256 bidId2 = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner2, bytes(''));
+        uint256 bidId2 = auction.submitBid{value: _bidAmount}(maxPrice, _bidAmount, owner2, bytes(""));
 
         vm.roll(mParams.parameters.endBlock);
         Checkpoint memory checkpoint = auction.checkpoint();

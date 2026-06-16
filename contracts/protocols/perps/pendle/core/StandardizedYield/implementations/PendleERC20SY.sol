@@ -9,17 +9,30 @@ contract PendleERC20SY is SYBase {
     constructor(string memory _name, string memory _symbol, address _erc20) SYBase(_name, _symbol, _erc20) {}
 
     function _deposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountDeposited;
     }
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal override returns (uint256) {
+    )
+        internal
+        override
+        returns (uint256)
+    {
         _transferOut(yieldToken, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -29,16 +42,34 @@ contract PendleERC20SY is SYBase {
     }
 
     function _previewDeposit(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256 /*amountSharesOut*/) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         return amountTokenToDeposit;
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal view virtual override returns (uint256 /*amountTokenOut*/) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

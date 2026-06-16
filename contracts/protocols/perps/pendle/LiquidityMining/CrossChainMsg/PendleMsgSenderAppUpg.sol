@@ -62,7 +62,6 @@ abstract contract PendleMsgSenderAppUpg is BoringOwnableUpgradeable {
     }
 
     function _getSendMessageFee(uint256 chainId, bytes memory message) internal view returns (uint256) {
-        return
-            pendleMsgSendEndpoint.calcFee(destinationContracts.get(chainId), chainId, message, approxDstExecutionGas);
+        return pendleMsgSendEndpoint.calcFee(destinationContracts.get(chainId), chainId, message, approxDstExecutionGas);
     }
 }

@@ -2,9 +2,11 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
-import {IERC3156FlashBorrower} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC3156FlashBorrower.sol";
+import {
+    IERC3156FlashBorrower
+} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC3156FlashBorrower.sol";
 import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {Initializable} from "../proxy/utils/Initializable.sol";
 
@@ -28,18 +30,25 @@ contract ERC3156FlashBorrowerMockUpgradeable is Initializable, IERC3156FlashBorr
         __ERC3156FlashBorrowerMock_init_unchained(enableReturn, enableApprove);
     }
 
-    function __ERC3156FlashBorrowerMock_init_unchained(bool enableReturn, bool enableApprove) internal onlyInitializing {
+    function __ERC3156FlashBorrowerMock_init_unchained(bool enableReturn, bool enableApprove)
+        internal
+        onlyInitializing
+    {
         _enableApprove = enableApprove;
         _enableReturn = enableReturn;
     }
 
     function onFlashLoan(
-        address /*initiator*/,
+        address,
+        /*initiator*/
         address token,
         uint256 amount,
         uint256 fee,
         bytes calldata data
-    ) public returns (bytes32) {
+    )
+        public
+        returns (bytes32)
+    {
         require(msg.sender == token);
 
         emit BalanceOf(token, address(this), IERC20(token).balanceOf(address(this)));

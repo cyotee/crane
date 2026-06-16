@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IBidStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IBidStorage.sol';
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Assertions} from './utils/Assertions.sol';
-import {MockBidStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidStorage.sol';
-import {Test} from 'forge-std/Test.sol';
+import {IBidStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IBidStorage.sol";
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Assertions} from "./utils/Assertions.sol";
+import {
+    MockBidStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockBidStorage.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract BidStorageTest is Assertions, Test {
     MockBidStorage public mockBidStorage;

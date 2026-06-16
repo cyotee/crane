@@ -1,18 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {AuctionParameters} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
-import {FuzzBid, FuzzDeploymentParams} from './utils/FuzzStructs.sol';
-import {console2} from 'forge-std/console2.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    AuctionParameters
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionBaseTest} from "./utils/AuctionBaseTest.sol";
+import {FuzzBid, FuzzDeploymentParams} from "./utils/FuzzStructs.sol";
+import {console2} from "forge-std/console2.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract AuctionSubmitBidTest is AuctionBaseTest {
     using BidLib for *;
@@ -51,7 +57,7 @@ contract AuctionSubmitBidTest is AuctionBaseTest {
                 IContinuousClearingAuction.InvalidBidPriceTooHigh.selector, _maxPrice, auction.MAX_BID_PRICE()
             )
         );
-        auction.submitBid{value: 1}(_maxPrice, 1, alice, params.floorPrice, bytes(''));
+        auction.submitBid{value: 1}(_maxPrice, 1, alice, params.floorPrice, bytes(""));
     }
 
     // Rationale:
@@ -75,7 +81,7 @@ contract AuctionSubmitBidTest is AuctionBaseTest {
         // Show that TOTAL_SUPPLY * MAX_BID_PRICE * MPS does not overflow a uint256
         uint256 totalSupplyTimesMaxBidPriceTimesMPS = _deploymentParams.totalSupply * maxBidPrice * ConstantsLib.MPS;
         assertLt(
-            totalSupplyTimesMaxBidPriceTimesMPS, type(uint256).max, 'totalSupplyTimesMaxBidPriceTimesMPS would overflow'
+            totalSupplyTimesMaxBidPriceTimesMPS, type(uint256).max, "totalSupplyTimesMaxBidPriceTimesMPS would overflow"
         );
     }
 
@@ -94,7 +100,7 @@ contract AuctionSubmitBidTest is AuctionBaseTest {
         // Show that TOTAL_SUPPLY * MAX_BID_PRICE * MPS does not overflow a uint256
         uint256 totalSupplyTimesMaxBidPriceTimesMPS = _deploymentParams.totalSupply * maxBidPrice * ConstantsLib.MPS;
         assertLt(
-            totalSupplyTimesMaxBidPriceTimesMPS, type(uint256).max, 'totalSupplyTimesMaxBidPriceTimesMPS would overflow'
+            totalSupplyTimesMaxBidPriceTimesMPS, type(uint256).max, "totalSupplyTimesMaxBidPriceTimesMPS would overflow"
         );
     }
 
@@ -111,7 +117,7 @@ contract AuctionSubmitBidTest is AuctionBaseTest {
             /* zero amount */
             alice,
             params.floorPrice,
-            bytes('')
+            bytes("")
         );
     }
 
@@ -122,6 +128,6 @@ contract AuctionSubmitBidTest is AuctionBaseTest {
         givenFullyFundedAccount
     {
         vm.expectRevert(IContinuousClearingAuction.BidOwnerCannotBeZeroAddress.selector);
-        auction.submitBid{value: 1}(1, 1, address(0), params.floorPrice, bytes(''));
+        auction.submitBid{value: 1}(1, 1, address(0), params.floorPrice, bytes(""));
     }
 }

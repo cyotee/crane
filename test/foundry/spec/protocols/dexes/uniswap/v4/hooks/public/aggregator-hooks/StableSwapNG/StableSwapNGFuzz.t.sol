@@ -86,7 +86,9 @@ contract StableSwapNGFuzz is Test {
         curveFeeReceiver = makeAddr("curveFeeReceiver");
 
         // Deploy Uniswap V4 PoolManager
-        manager = IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        manager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
 
         // Deploy swap router
         swapRouter = new SafePoolSwapTest(manager);

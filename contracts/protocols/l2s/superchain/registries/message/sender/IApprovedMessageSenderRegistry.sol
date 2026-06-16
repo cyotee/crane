@@ -20,7 +20,7 @@ interface IApprovedMessageSenderRegistry {
      * @return An array of addresses representing the approved senders for the recipient.
      */
     function allApprovedSenders(address recipient) external view returns (address[] memory);
-    
+
     /**
      * @notice Approves a sender to send messages to a recipient.
      * @param recipient The address of the message recipient.

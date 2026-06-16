@@ -15,12 +15,16 @@ import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {MockFluidDexT1, ReentrancyAttacker, UnauthorizedCallbackCaller} from "./mocks/MockFluidDexT1.sol";
 import {MockFluidDexReservesResolver} from "./mocks/MockFluidDexReservesResolver.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
-import {FluidDexT1Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
+import {
+    FluidDexT1Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
 import {
     IFluidDexResolver
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexResolver.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
-import {IAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
+import {
+    IAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
 import {CustomRevert} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/CustomRevert.sol";
 
 contract FluidDexT1AggregatorUnitTest is Test {
@@ -50,8 +54,9 @@ contract FluidDexT1AggregatorUnitTest is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
         mockPool = new MockFluidDexT1();
         mockResolver = new MockFluidDexReservesResolver();

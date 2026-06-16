@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 library ETHEREUM_SEPOLIA {
     uint256 constant CHAIN_ID = 11155111;
 
-    uint256 constant DEFAULT_FORK_BLOCK = 10_400_000;
+    uint256 constant DEFAULT_FORK_BLOCK = 11_000_000;
 
     /* ---------------------------------------------------------------------- */
     /*                                  WETH9                                 */

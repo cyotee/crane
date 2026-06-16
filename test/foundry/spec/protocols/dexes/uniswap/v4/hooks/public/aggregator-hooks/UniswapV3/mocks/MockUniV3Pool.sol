@@ -2,7 +2,9 @@
 pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
+import {
+    IUniswapV3Pool
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
 import {
     IUniswapV3SwapCallback
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3SwapCallback.sol";

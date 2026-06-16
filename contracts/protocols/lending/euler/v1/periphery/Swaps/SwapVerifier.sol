@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import {IEVault} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
 import {TransferFromSender} from "./TransferFromSender.sol";
 import {IEVault, IERC4626} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 // import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 
 /// @title SwapVerifier
 /// @custom:security-contact security@euler.xyz

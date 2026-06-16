@@ -6,15 +6,15 @@ import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {Address} from "@crane/contracts/external/openzeppelin-contracts/utils/Address.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
-import {LatestBatchData} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/LatestBatchData.sol";
-import {LatestTroveData} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/LatestTroveData.sol";
-import {IBorrowerOperations} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
-import {ISortedTroves} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ISortedTroves.sol";
-import {ITroveManager} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveManager.sol";
-import {AddressesRegistry} from "@crane/contracts/protocols/staking/liquity/v2/bold/AddressesRegistry.sol";
-import {AddRemoveManagers} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
-import {BorrowerOperations} from "@crane/contracts/protocols/staking/liquity/v2/bold/BorrowerOperations.sol";
-import {TroveManager} from "@crane/contracts/protocols/staking/liquity/v2/bold/TroveManager.sol";
+import {LatestBatchData} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/LatestBatchData.sol";
+import {LatestTroveData} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/LatestTroveData.sol";
+import {IBorrowerOperations} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBorrowerOperations.sol";
+import {ISortedTroves} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ISortedTroves.sol";
+import {ITroveManager} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveManager.sol";
+import {AddressesRegistry} from "@crane/contracts/protocols/cdps/liquity/v2/bold/AddressesRegistry.sol";
+import {AddRemoveManagers} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/AddRemoveManagers.sol";
+import {BorrowerOperations} from "@crane/contracts/protocols/cdps/liquity/v2/bold/BorrowerOperations.sol";
+import {TroveManager} from "@crane/contracts/protocols/cdps/liquity/v2/bold/TroveManager.sol";
 import {EnumerableAddressSet, EnumerableSet} from "../Utils/EnumerableSet.sol";
 import {pow} from "../Utils/Math.sol";
 import {StringFormatting} from "../Utils/StringFormatting.sol";
@@ -49,7 +49,7 @@ import {
     SP_YIELD_SPLIT,
     UPFRONT_INTEREST_PERIOD,
     URGENT_REDEMPTION_BONUS
-} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 uint256 constant TIME_DELTA_MIN = 0;
 uint256 constant TIME_DELTA_MAX = ONE_YEAR;
@@ -961,9 +961,8 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         );
 
         vm.prank(msg.sender);
-        try v.c.borrowerOperations.adjustTroveInterestRate(
-            v.troveId, newInterestRate, v.upperHint, v.lowerHint, v.upfrontFee
-        ) {
+        try v.c.borrowerOperations
+            .adjustTroveInterestRate(v.troveId, newInterestRate, v.upperHint, v.lowerHint, v.upfrontFee) {
             uint256 newICR = _ICR(i, v.troveId);
             uint256 newTCR = _TCR(i);
 
@@ -1289,7 +1288,7 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
             batchManagementFee[j] = new uint256[](r[j].batchManagers.size());
             for (uint256 i = 0; i < r[j].batchManagers.size(); ++i) {
                 batchManagementFee[j][i] =
-                    branches[j].troveManager.getLatestBatchData(r[j].batchManagers.get(i)).accruedManagementFee;
+                branches[j].troveManager.getLatestBatchData(r[j].batchManagers.get(i)).accruedManagementFee;
             }
         }
 
@@ -1893,13 +1892,14 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         string memory errorString;
         vm.prank(msg.sender);
 
-        try c.borrowerOperations.registerBatchManager(
-            uint128(minInterestRate),
-            uint128(maxInterestRate),
-            uint128(currentInterestRate),
-            uint128(annualManagementFee),
-            uint128(minInterestRateChangePeriod)
-        ) {
+        try c.borrowerOperations
+            .registerBatchManager(
+                uint128(minInterestRate),
+                uint128(maxInterestRate),
+                uint128(currentInterestRate),
+                uint128(annualManagementFee),
+                uint128(minInterestRateChangePeriod)
+            ) {
             // Preconditions
             assertFalse(isShutdown[i], "Should have failed as branch had been shut down");
             assertFalse(_batchManagers[i].has(msg.sender), "Should have failed as batch manager had already registered");
@@ -2068,9 +2068,8 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         );
 
         vm.prank(msg.sender);
-        try v.c.borrowerOperations.setInterestBatchManager(
-            v.troveId, v.newBatchManager, v.upperHint, v.lowerHint, v.upfrontFee
-        ) {
+        try v.c.borrowerOperations
+            .setInterestBatchManager(v.troveId, v.newBatchManager, v.upperHint, v.lowerHint, v.upfrontFee) {
             uint256 newICR = _ICR(i, v.troveId);
             uint256 newTCR = _TCR(i);
 
@@ -2164,9 +2163,9 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         v.wasActive = _isActive(i, v.troveId);
         v.premature = newInterestRate != v.t.annualInterestRate
             && Math.min(
-                _timeSinceLastTroveInterestRateAdjustment[i][v.troveId],
-                _timeSinceLastBatchInterestRateAdjustment[i][v.batchManager]
-            ) < INTEREST_RATE_ADJ_COOLDOWN;
+                    _timeSinceLastTroveInterestRateAdjustment[i][v.troveId],
+                    _timeSinceLastBatchInterestRateAdjustment[i][v.batchManager]
+                ) < INTEREST_RATE_ADJ_COOLDOWN;
 
         if (v.batchManager != address(0)) {
             v.upfrontFee = hintHelpers.predictRemoveFromBatchUpfrontFee(i, v.troveId, newInterestRate);
@@ -2299,9 +2298,8 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         );
 
         vm.prank(msg.sender);
-        try v.c.borrowerOperations.setBatchManagerAnnualInterestRate(
-            uint128(newAnnualInterestRate), v.upperHint, v.lowerHint, v.upfrontFee
-        ) {
+        try v.c.borrowerOperations
+            .setBatchManagerAnnualInterestRate(uint128(newAnnualInterestRate), v.upperHint, v.lowerHint, v.upfrontFee) {
             uint256 newTCR = _TCR(i);
 
             // Preconditions
@@ -2734,9 +2732,10 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         uint256 collRedeemed = collRedeemedPlusFee - fee;
 
         mapping(uint256 branchIdx => RedemptionTransientState) storage r = _redemption;
-        r[i].redeemed.push(
-            Redeemed({troveId: troveId, coll: collRedeemed, debt: debtRedeemed, becomesZombie: newDebt < MIN_DEBT})
-        );
+        r[i].redeemed
+            .push(
+                Redeemed({troveId: troveId, coll: collRedeemed, debt: debtRedeemed, becomesZombie: newDebt < MIN_DEBT})
+            );
         r[i].totalCollRedeemed += collRedeemed;
 
         address batchManager = _batchManagerOf[i][troveId];
@@ -2856,8 +2855,7 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
         return v.join
             ? abi.encodeCall(
                 IBorrowerOperations.openTroveAndJoinInterestBatchManager,
-                (
-                    IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                (IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
                         owner: msg.sender,
                         ownerIndex: _troveIndexOf[v.i][msg.sender],
                         collAmount: v.coll,
@@ -2869,8 +2867,7 @@ contract InvariantsTestHandler is Assertions, BaseHandler, BaseMultiCollateralTe
                         addManager: address(0),
                         removeManager: address(0),
                         receiver: address(0)
-                    })
-                )
+                    }))
             )
             : abi.encodeCall(
                 IBorrowerOperations.openTrove,

@@ -24,14 +24,14 @@ pragma solidity ^0.8.35;
 // Travis Moore: https://github.com/FortisFortuna
 
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/Frax.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Frax/Pools/FraxPool.sol";
+import {FraxPool} from "@crane/contracts/protocols/tokens/stable/frax/Frax/Pools/FraxPool.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import {FRAXShares} from "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 import "@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/IUniswapV3Factory.sol";
@@ -42,8 +42,8 @@ import "@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/IUniswapV3Pool.
 import "@crane/contracts/protocols/tokens/stable/frax/Uniswap_V3/ISwapRouter.sol";
 
 abstract contract OracleLike {
-    function read() external virtual view returns (uint);
-    function uniswapPool() external virtual view returns (address);
+    function read() external view virtual returns (uint256);
+    function uniswapPool() external view virtual returns (address);
 }
 
 contract UniV3LiquidityAMO_V2 is Owned {
@@ -95,16 +95,14 @@ contract UniV3LiquidityAMO_V2 is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(
-        address _creator_address,
-        address _giveback_collateral_address,
-        address _amo_minter_address
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _giveback_collateral_address, address _amo_minter_address)
+        Owned(_creator_address)
+    {
         FRAX = FRAXStablecoin(0x853d955aCEf822Db058eb8505911ED77F175b99e);
         FXS = FRAXShares(0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0);
         giveback_collateral_address = _giveback_collateral_address;
         giveback_collateral = ERC20(_giveback_collateral_address);
-        missing_decimals_giveback_collat = uint(18).sub(giveback_collateral.decimals());
+        missing_decimals_giveback_collat = uint256(18).sub(giveback_collateral.decimals());
 
         collateral_addresses.push(_giveback_collateral_address);
         allowed_collaterals[_giveback_collateral_address] = true;
@@ -129,7 +127,10 @@ contract UniV3LiquidityAMO_V2 is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -159,7 +160,7 @@ contract UniV3LiquidityAMO_V2 is Owned {
     // E18 Collateral dollar value
     function freeColDolVal() public view returns (uint256) {
         uint256 value_tally_e18 = 0;
-        for (uint i = 0; i < collateral_addresses.length; i++){
+        for (uint256 i = 0; i < collateral_addresses.length; i++) {
             ERC20 thisCollateral = ERC20(collateral_addresses[i]);
             uint256 missing_decs = uint256(18).sub(thisCollateral.decimals());
             uint256 col_bal_e18 = thisCollateral.balanceOf(address(this)).mul(10 ** missing_decs);
@@ -201,14 +202,16 @@ contract UniV3LiquidityAMO_V2 is Owned {
         for (uint256 i = 0; i < positions_array.length; i++) {
             thisPosition = positions_array[i];
             uint128 this_liq = thisPosition.liquidity;
-            if (this_liq > 0){
+            if (this_liq > 0) {
                 uint160 sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(thisPosition.tickLower);
                 uint160 sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(thisPosition.tickUpper);
-                if (thisPosition.collateral_address > 0x853d955aCEf822Db058eb8505911ED77F175b99e){ // if address(FRAX) < collateral_address, then FRAX is token0
-                    frax_tally = frax_tally.add(LiquidityAmounts.getAmount0ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, this_liq));
-                }
-                else {
-                    frax_tally = frax_tally.add(LiquidityAmounts.getAmount1ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, this_liq));
+                if (thisPosition.collateral_address > 0x853d955aCEf822Db058eb8505911ED77F175b99e) {
+                    // if address(FRAX) < collateral_address, then FRAX is token0
+                    frax_tally =
+                        frax_tally.add(LiquidityAmounts.getAmount0ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, this_liq));
+                } else {
+                    frax_tally =
+                        frax_tally.add(LiquidityAmounts.getAmount1ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, this_liq));
                 }
             }
         }
@@ -218,11 +221,15 @@ contract UniV3LiquidityAMO_V2 is Owned {
     }
 
     // Returns this contract's liquidity in a specific [FRAX]-[collateral] uni v3 pool
-    function liquidityInPool(address _collateral_address, int24 _tickLower, int24 _tickUpper, uint24 _fee) public view returns (uint128) {
+    function liquidityInPool(address _collateral_address, int24 _tickLower, int24 _tickUpper, uint24 _fee)
+        public
+        view
+        returns (uint128)
+    {
         IUniswapV3Pool get_pool = IUniswapV3Pool(univ3_factory.getPool(address(FRAX), _collateral_address, _fee));
 
         // goes into the pool's positions mapping, and grabs this address's liquidity
-        (uint128 liquidity, , , , ) = get_pool.positions(keccak256(abi.encodePacked(address(this), _tickLower, _tickUpper)));
+        (uint128 liquidity,,,,) = get_pool.positions(keccak256(abi.encodePacked(address(this), _tickLower, _tickUpper)));
         return liquidity;
     }
 
@@ -249,13 +256,10 @@ contract UniV3LiquidityAMO_V2 is Owned {
 
     // Iterate through all positions and collect fees accumulated
     function collectFees() external onlyByOwnGovCust {
-        for (uint i = 0; i < positions_array.length; i++){
+        for (uint256 i = 0; i < positions_array.length; i++) {
             Position memory current_position = positions_array[i];
             INonfungiblePositionManager.CollectParams memory collect_params = INonfungiblePositionManager.CollectParams(
-                current_position.token_id,
-                custodian_address,
-                type(uint128).max,
-                type(uint128).max
+                current_position.token_id, custodian_address, type(uint128).max, type(uint128).max
             );
 
             // Send to custodian address
@@ -263,24 +267,35 @@ contract UniV3LiquidityAMO_V2 is Owned {
         }
     }
 
-
     /* ---------------------------------------------------- */
     /* ---------------------- Uni v3 ---------------------- */
     /* ---------------------------------------------------- */
 
-    function approveTarget(address _target, address _token, uint256 _amount, bool use_safe_approve) public onlyByOwnGov {
+    function approveTarget(address _target, address _token, uint256 _amount, bool use_safe_approve)
+        public
+        onlyByOwnGov
+    {
         if (use_safe_approve) {
             // safeApprove needed for USDT and others for the first approval
             // You need to approve 0 every time beforehand for USDT: it resets
             TransferHelper.safeApprove(_token, _target, _amount);
-        }
-        else {
+        } else {
             ERC20(_token).approve(_target, _amount);
         }
     }
 
     // IUniswapV3Pool public current_uni_pool; // only used for mint callback; is set and accessed during execution of addLiquidity()
-    function addLiquidity(address _tokenA, address _tokenB, int24 _tickLower, int24 _tickUpper, uint24 _fee, uint256 _amount0Desired, uint256 _amount1Desired, uint256 _amount0Min, uint256 _amount1Min) public onlyByOwnGov {
+    function addLiquidity(
+        address _tokenA,
+        address _tokenB,
+        int24 _tickLower,
+        int24 _tickUpper,
+        uint24 _fee,
+        uint256 _amount0Desired,
+        uint256 _amount1Desired,
+        uint256 _amount0Min,
+        uint256 _amount1Min
+    ) public onlyByOwnGov {
         // Make sure the collateral is allowed
         require(allowed_collaterals[_tokenA] || _tokenA == address(FRAX), "TokenA not allowed");
         require(allowed_collaterals[_tokenB] || _tokenB == address(FRAX), "TokenB not allowed");
@@ -308,12 +323,7 @@ contract UniV3LiquidityAMO_V2 is Owned {
         (uint256 tokenId, uint128 amountLiquidity,,) = univ3_positions.mint(params);
 
         Position memory pos = Position(
-            tokenId,
-            _tokenA == address(FRAX) ? _tokenB : _tokenA,
-            amountLiquidity,
-            _tickLower,
-            _tickUpper,
-            _fee
+            tokenId, _tokenA == address(FRAX) ? _tokenB : _tokenA, amountLiquidity, _tickLower, _tickUpper, _fee
         );
 
         positions_array.push(pos);
@@ -323,30 +333,35 @@ contract UniV3LiquidityAMO_V2 is Owned {
     /*
     **  burn tokenAmount from the recipient and send tokens to the receipient
     */
-    event log(uint);
+    event log(uint256);
+
     function removeLiquidity(uint256 positionIndex) public onlyByOwnGov {
-            Position memory pos = positions_array[positionIndex];
-            INonfungiblePositionManager.CollectParams memory collect_params = INonfungiblePositionManager.CollectParams(
-                pos.token_id,
-                custodian_address,
-                type(uint128).max,
-                type(uint128).max
-            );
+        Position memory pos = positions_array[positionIndex];
+        INonfungiblePositionManager.CollectParams memory collect_params = INonfungiblePositionManager.CollectParams(
+            pos.token_id, custodian_address, type(uint128).max, type(uint128).max
+        );
 
-            univ3_positions.collect(collect_params);
-            univ3_positions.burn(pos.token_id);
+        univ3_positions.collect(collect_params);
+        univ3_positions.burn(pos.token_id);
 
-            positions_array[positionIndex] = positions_array[positions_array.length -1];
-            positions_array.pop();
-            delete positions_mapping[pos.token_id];
+        positions_array[positionIndex] = positions_array[positions_array.length - 1];
+        positions_array.pop();
+        delete positions_mapping[pos.token_id];
 
-            emit log(positions_array.length);
-            emit log(positions_mapping[pos.token_id].token_id);
+        emit log(positions_array.length);
+        emit log(positions_mapping[pos.token_id].token_id);
     }
 
     // Swap tokenA into tokenB using univ3_router.ExactInputSingle()
     // Uni V3 only
-    function swap(address _tokenA, address _tokenB, uint24 _fee_tier, uint256 _amountAtoB, uint256 _amountOutMinimum, uint160 _sqrtPriceLimitX96) public onlyByOwnGov returns (uint256) {
+    function swap(
+        address _tokenA,
+        address _tokenB,
+        uint24 _fee_tier,
+        uint256 _amountAtoB,
+        uint256 _amountOutMinimum,
+        uint160 _sqrtPriceLimitX96
+    ) public onlyByOwnGov returns (uint256) {
         // Make sure the collateral is allowed
         require(allowed_collaterals[_tokenA] || _tokenA == address(FRAX), "TokenA not allowed");
         require(allowed_collaterals[_tokenB] || _tokenB == address(FRAX), "TokenB not allowed");
@@ -421,17 +436,17 @@ contract UniV3LiquidityAMO_V2 is Owned {
     function recoverERC721(address tokenAddress, uint256 token_id) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
         // INonfungiblePositionManager inherits IERC721 so the latter does not need to be imported
-        INonfungiblePositionManager(tokenAddress).safeTransferFrom( address(this), custodian_address, token_id);
+        INonfungiblePositionManager(tokenAddress).safeTransferFrom(address(this), custodian_address, token_id);
         emit RecoveredERC721(tokenAddress, token_id);
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

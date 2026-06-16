@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 import {EVCUtil} from "@crane/contracts/protocols/lending/euler/v1/evc/utils/EVCUtil.sol";
 
 /// By accessing or using Euler's products and services, I agree to the
@@ -54,11 +54,7 @@ contract TermsOfUseSigner is EVCUtil {
     /// @param account The address of the account to check
     /// @param termsOfUseHash The hash of the terms of use to check
     /// @return The timestamp of the last signature for the given terms of use hash
-    function lastTermsOfUseSignatureTimestamp(address account, bytes32 termsOfUseHash)
-        external
-        view
-        returns (uint256)
-    {
+    function lastTermsOfUseSignatureTimestamp(address account, bytes32 termsOfUseHash) external view returns (uint256) {
         return termsOfUseLastSignatureTimestamps[account][termsOfUseHash];
     }
 }

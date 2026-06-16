@@ -17,12 +17,9 @@ contract sAPE is SYBase {
 
     uint256 private lastRewardClaimedEpoch;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _apeCoin,
-        address _apeStaking
-    ) SYBase(_name, _symbol, _apeCoin) {
+    constructor(string memory _name, string memory _symbol, address _apeCoin, address _apeStaking)
+        SYBase(_name, _symbol, _apeCoin)
+    {
         apeStaking = _apeStaking;
         apeCoin = _apeCoin;
         lastRewardClaimedEpoch = _getCurrentEpochId();
@@ -60,11 +57,12 @@ contract sAPE is SYBase {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         _harvest();
 
         // As SY is burned before calling _redeem(), we should account for priorSupply
@@ -94,7 +92,7 @@ contract sAPE is SYBase {
     //////////////////////////////////////////////////////////////*/
 
     function getTotalAssetOwned() public view returns (uint256 totalAssetOwned) {
-        (uint256 stakedAmount, ) = IApeStaking(apeStaking).addressPosition(address(this));
+        (uint256 stakedAmount,) = IApeStaking(apeStaking).addressPosition(address(this));
         uint256 unclaimedAmount = IApeStaking(apeStaking).pendingRewards(APE_COIN_POOL_ID, address(this), 0);
         uint256 floatingAmount = _selfBalance(apeCoin);
         totalAssetOwned = stakedAmount + unclaimedAmount + floatingAmount;
@@ -129,18 +127,22 @@ contract sAPE is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         // This function is intentionally left reverted when totalSupply() = 0
         amountSharesOut = (amountTokenToDeposit * totalSupply()) / getTotalAssetOwned();
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         // This function is intentionally left reverted when totalSupply() = 0
         amountTokenOut = (amountSharesToRedeem * getTotalAssetOwned()) / totalSupply();
     }

@@ -1,278 +1,258 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import 'forge-std/Test.sol';
+import "forge-std/Test.sol";
 
-import {IERC20Metadata} from '@crane/contracts/interfaces/IERC20Metadata.sol';
+import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 
-import {WadRayMath} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/WadRayMath.sol';
-import {ATokenInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/ATokenInstance.sol';
-import {TestnetProcedures, TestVars} from '../../utils/TestnetProcedures.sol';
-import {AaveSetters} from '../../utils/AaveSetters.sol';
-import {IAToken, IERC20} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol';
-import {Errors} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol';
+import {WadRayMath} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/WadRayMath.sol";
+import {ATokenInstance} from "@crane/contracts/protocols/lending/aave/v3.6/instances/ATokenInstance.sol";
+import {TestnetProcedures, TestVars} from "../../utils/TestnetProcedures.sol";
+import {AaveSetters} from "../../utils/AaveSetters.sol";
+import {IAToken, IERC20} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol";
+import {Errors} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol";
 
 contract ATokenRoundingTest is TestnetProcedures {
-  using WadRayMath for uint256;
+    using WadRayMath for uint256;
 
-  address internal user;
+    address internal user;
 
-  address internal asset;
-  address internal aToken;
-
-  function setUp() external {
-    initTestEnvironment();
-    asset = tokenList.weth;
-
-    aToken = contracts.poolProxy.getReserveAToken(asset);
+    address internal asset;
+    address internal aToken;
 
-    user = alice;
-  }
+    function setUp() external {
+        initTestEnvironment();
+        asset = tokenList.weth;
 
-  function test_balanceShouldRoundDown() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27);
-    AaveSetters.setATokenBalance(aToken, user, 1, 1e27);
+        aToken = contracts.poolProxy.getReserveAToken(asset);
 
-    // user balance should be rounded down
-    // 1 * 1e27 / 1e27 = 1
-    assertEq(IAToken(aToken).balanceOf(user), 1);
+        user = alice;
+    }
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
-    // user balance should be rounded down
-    // 1 * (1e27 + 1) / 1e27 = 1.000000000000000000000000001
-    assertEq(IAToken(aToken).balanceOf(user), 1);
+    function test_balanceShouldRoundDown() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27);
+        AaveSetters.setATokenBalance(aToken, user, 1, 1e27);
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 - 1);
-    // user balance should be rounded down
-    // 1 * (1e27 - 1) / 1e27 = 0.999999999999999999999999999
-    assertEq(IAToken(aToken).balanceOf(user), 0);
-
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 - 1);
-    // user balance should be rounded down
-    // 1 * (2e27 - 1) / 1e27 = 1.999999999999999999999999999
-    assertEq(IAToken(aToken).balanceOf(user), 1);
-  }
+        // user balance should be rounded down
+        // 1 * 1e27 / 1e27 = 1
+        assertEq(IAToken(aToken).balanceOf(user), 1);
 
-  function test_totalSupplyShouldRoundDown() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27);
-    AaveSetters.setATokenTotalSupply(aToken, 1);
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
+        // user balance should be rounded down
+        // 1 * (1e27 + 1) / 1e27 = 1.000000000000000000000000001
+        assertEq(IAToken(aToken).balanceOf(user), 1);
 
-    // total supply should be rounded down
-    // 1 * 1e27 / 1e27 = 1
-    assertEq(IAToken(aToken).totalSupply(), 1);
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 - 1);
+        // user balance should be rounded down
+        // 1 * (1e27 - 1) / 1e27 = 0.999999999999999999999999999
+        assertEq(IAToken(aToken).balanceOf(user), 0);
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
-    // total supply should be rounded down
-    // 1 * (1e27 + 1) / 1e27 = 1.000000000000000000000000001
-    assertEq(IAToken(aToken).totalSupply(), 1);
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 - 1);
+        // user balance should be rounded down
+        // 1 * (2e27 - 1) / 1e27 = 1.999999999999999999999999999
+        assertEq(IAToken(aToken).balanceOf(user), 1);
+    }
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 - 1);
-    // total supply should be rounded down
-    // 1 * (1e27 - 1) / 1e27 = 0.999999999999999999999999999
-    assertEq(IAToken(aToken).totalSupply(), 0);
+    function test_totalSupplyShouldRoundDown() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27);
+        AaveSetters.setATokenTotalSupply(aToken, 1);
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 - 1);
-    // total supply should be rounded down
-    // 1 * (2e27 - 1) / 1e27 = 1.999999999999999999999999999
-    assertEq(IAToken(aToken).totalSupply(), 1);
-  }
+        // total supply should be rounded down
+        // 1 * 1e27 / 1e27 = 1
+        assertEq(IAToken(aToken).totalSupply(), 1);
 
-  function test_supplyShouldRoundDown_revertIfZero() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
+        // total supply should be rounded down
+        // 1 * (1e27 + 1) / 1e27 = 1.000000000000000000000000001
+        assertEq(IAToken(aToken).totalSupply(), 1);
 
-    uint256 supplyAmount = 1;
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 - 1);
+        // total supply should be rounded down
+        // 1 * (1e27 - 1) / 1e27 = 0.999999999999999999999999999
+        assertEq(IAToken(aToken).totalSupply(), 0);
 
-    vm.startPrank(user);
-    deal(asset, user, supplyAmount);
-    IERC20(asset).approve(report.poolProxy, supplyAmount);
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 - 1);
+        // total supply should be rounded down
+        // 1 * (2e27 - 1) / 1e27 = 1.999999999999999999999999999
+        assertEq(IAToken(aToken).totalSupply(), 1);
+    }
 
-    // user scaled balance should be rounded down
-    // 1 * 1e27 / (1e27 + 1) = 0.9999999999999999999999999990...
+    function test_supplyShouldRoundDown_revertIfZero() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 1e27 + 1);
 
-    vm.expectRevert(abi.encodeWithSelector(Errors.InvalidAmount.selector));
-    contracts.poolProxy.supply({
-      asset: asset,
-      amount: supplyAmount,
-      onBehalfOf: user,
-      referralCode: 0
-    });
-  }
+        uint256 supplyAmount = 1;
 
-  function test_supplyShouldRoundDown() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
+        vm.startPrank(user);
+        deal(asset, user, supplyAmount);
+        IERC20(asset).approve(report.poolProxy, supplyAmount);
 
-    uint256 supplyAmount = 4;
+        // user scaled balance should be rounded down
+        // 1 * 1e27 / (1e27 + 1) = 0.9999999999999999999999999990...
 
-    vm.startPrank(user);
-    deal(asset, user, supplyAmount);
-    IERC20(asset).approve(report.poolProxy, supplyAmount);
+        vm.expectRevert(abi.encodeWithSelector(Errors.InvalidAmount.selector));
+        contracts.poolProxy.supply({asset: asset, amount: supplyAmount, onBehalfOf: user, referralCode: 0});
+    }
 
-    // user scaled balance should be rounded down
-    // 4 * 1e27 / (2e27 + 1) = 1.9999999999999999999999999990...
+    function test_supplyShouldRoundDown() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
 
-    // user balance should be rounded down
-    // 1 * (2e27 + 1) / 1e27 = 2.000000000000000000000000001
+        uint256 supplyAmount = 4;
 
-    contracts.poolProxy.supply({
-      asset: asset,
-      amount: supplyAmount,
-      onBehalfOf: user,
-      referralCode: 0
-    });
+        vm.startPrank(user);
+        deal(asset, user, supplyAmount);
+        IERC20(asset).approve(report.poolProxy, supplyAmount);
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 1);
-    assertEq(IAToken(aToken).balanceOf(user), 2);
-    assertEq(IAToken(aToken).totalSupply(), 2);
-  }
+        // user scaled balance should be rounded down
+        // 4 * 1e27 / (2e27 + 1) = 1.9999999999999999999999999990...
 
-  function test_withdrawShouldRoundUp() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
+        // user balance should be rounded down
+        // 1 * (2e27 + 1) / 1e27 = 2.000000000000000000000000001
 
-    uint256 supplyAmount = 8;
+        contracts.poolProxy.supply({asset: asset, amount: supplyAmount, onBehalfOf: user, referralCode: 0});
 
-    vm.startPrank(user);
-    deal(asset, user, supplyAmount);
-    IERC20(asset).approve(report.poolProxy, supplyAmount);
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 1);
+        assertEq(IAToken(aToken).balanceOf(user), 2);
+        assertEq(IAToken(aToken).totalSupply(), 2);
+    }
 
-    // user scaled balance should be rounded down
-    // 8 * 1e27 / (2e27 + 1) = 3.9999999999999999999999999980...
+    function test_withdrawShouldRoundUp() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
 
-    // user balance should be rounded down
-    // 3 * (2e27 + 1) / 1e27 = 6.000000000000000000000000003
+        uint256 supplyAmount = 8;
 
-    contracts.poolProxy.supply({
-      asset: asset,
-      amount: supplyAmount,
-      onBehalfOf: user,
-      referralCode: 0
-    });
+        vm.startPrank(user);
+        deal(asset, user, supplyAmount);
+        IERC20(asset).approve(report.poolProxy, supplyAmount);
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
-    assertEq(IAToken(aToken).balanceOf(user), 6);
-    assertEq(IAToken(aToken).totalSupply(), 6);
+        // user scaled balance should be rounded down
+        // 8 * 1e27 / (2e27 + 1) = 3.9999999999999999999999999980...
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 3e27 - 1);
+        // user balance should be rounded down
+        // 3 * (2e27 + 1) / 1e27 = 6.000000000000000000000000003
 
-    // user balance should be rounded down
-    // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
+        contracts.poolProxy.supply({asset: asset, amount: supplyAmount, onBehalfOf: user, referralCode: 0});
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
-    assertEq(IAToken(aToken).balanceOf(user), 8);
-    assertEq(IAToken(aToken).totalSupply(), 8);
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
+        assertEq(IAToken(aToken).balanceOf(user), 6);
+        assertEq(IAToken(aToken).totalSupply(), 6);
 
-    uint256 withdrawAmount = 9;
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 3e27 - 1);
 
-    vm.expectRevert(abi.encodeWithSelector(Errors.NotEnoughAvailableUserBalance.selector));
-    contracts.poolProxy.withdraw({asset: asset, amount: withdrawAmount, to: user});
+        // user balance should be rounded down
+        // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
 
-    withdrawAmount = 4;
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
+        assertEq(IAToken(aToken).balanceOf(user), 8);
+        assertEq(IAToken(aToken).totalSupply(), 8);
 
-    // withdraw scaled amount should be rounded up
-    // 4 * 1e27 / (3e27 - 1) = 1.33333333333333333333333333377777777777777777777777777792592592592592592592...
-    // scaled up to 2
+        uint256 withdrawAmount = 9;
 
-    // user balance after withdrawal should be rounded down
-    // 1 * (3e27 - 1) / 1e27 = 2.999999999999999999999999999
+        vm.expectRevert(abi.encodeWithSelector(Errors.NotEnoughAvailableUserBalance.selector));
+        contracts.poolProxy.withdraw({asset: asset, amount: withdrawAmount, to: user});
 
-    contracts.poolProxy.withdraw({asset: asset, amount: withdrawAmount, to: user});
+        withdrawAmount = 4;
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 1);
-    assertEq(IAToken(aToken).balanceOf(user), 2);
-    assertEq(IAToken(aToken).totalSupply(), 2);
-  }
+        // withdraw scaled amount should be rounded up
+        // 4 * 1e27 / (3e27 - 1) = 1.33333333333333333333333333377777777777777777777777777792592592592592592592...
+        // scaled up to 2
 
-  function test_transferAmountShouldBeRoundedUp() external {
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
+        // user balance after withdrawal should be rounded down
+        // 1 * (3e27 - 1) / 1e27 = 2.999999999999999999999999999
 
-    uint256 supplyAmount = 8;
+        contracts.poolProxy.withdraw({asset: asset, amount: withdrawAmount, to: user});
 
-    vm.startPrank(user);
-    deal(asset, user, supplyAmount);
-    IERC20(asset).approve(report.poolProxy, supplyAmount);
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 1);
+        assertEq(IAToken(aToken).balanceOf(user), 2);
+        assertEq(IAToken(aToken).totalSupply(), 2);
+    }
 
-    // user scaled balance should be rounded down
-    // 8 * 1e27 / (2e27 + 1) = 3.9999999999999999999999999980...
+    function test_transferAmountShouldBeRoundedUp() external {
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 2e27 + 1);
 
-    // user balance should be rounded down
-    // 3 * (2e27 + 1) / 1e27 = 6.000000000000000000000000003
+        uint256 supplyAmount = 8;
 
-    contracts.poolProxy.supply({
-      asset: asset,
-      amount: supplyAmount,
-      onBehalfOf: user,
-      referralCode: 0
-    });
+        vm.startPrank(user);
+        deal(asset, user, supplyAmount);
+        IERC20(asset).approve(report.poolProxy, supplyAmount);
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
-    assertEq(IAToken(aToken).balanceOf(user), 6);
-    assertEq(IAToken(aToken).totalSupply(), 6);
+        // user scaled balance should be rounded down
+        // 8 * 1e27 / (2e27 + 1) = 3.9999999999999999999999999980...
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, 3e27 - 1);
+        // user balance should be rounded down
+        // 3 * (2e27 + 1) / 1e27 = 6.000000000000000000000000003
 
-    // user balance should be rounded down
-    // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
+        contracts.poolProxy.supply({asset: asset, amount: supplyAmount, onBehalfOf: user, referralCode: 0});
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
-    assertEq(IAToken(aToken).balanceOf(user), 8);
-    assertEq(IAToken(aToken).totalSupply(), 8);
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
+        assertEq(IAToken(aToken).balanceOf(user), 6);
+        assertEq(IAToken(aToken).totalSupply(), 6);
 
-    uint256 transferAmount = 8;
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, 3e27 - 1);
 
-    // transfer scaled amount should be rounded up
-    // 8 * 1e27 / (3e27 - 1) = 2.6666666666666666666666666675...
-    // scaled up to 3
+        // user balance should be rounded down
+        // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
 
-    // bob balance should be rounded down
-    // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 3);
+        assertEq(IAToken(aToken).balanceOf(user), 8);
+        assertEq(IAToken(aToken).totalSupply(), 8);
 
-    // forge-lint: disable-next-line(erc20-unchecked-transfer)
-    IAToken(aToken).transfer(bob, transferAmount);
-    vm.stopPrank();
+        uint256 transferAmount = 8;
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 0);
-    assertEq(IAToken(aToken).balanceOf(user), 0);
-    assertEq(IAToken(aToken).scaledBalanceOf(bob), 3);
-    assertEq(IAToken(aToken).balanceOf(bob), 8);
-    assertEq(IAToken(aToken).totalSupply(), 8);
+        // transfer scaled amount should be rounded up
+        // 8 * 1e27 / (3e27 - 1) = 2.6666666666666666666666666675...
+        // scaled up to 3
 
-    transferAmount = 4;
+        // bob balance should be rounded down
+        // 3 * (3e27 - 1) / 1e27 = 8.999999999999999999999999997
 
-    // transfer scaled amount should be rounded up
-    // 4 * 1e27 / (3e27 - 1) = 1.3333333333333333333333333337...
-    // scaled up to 2
+        // forge-lint: disable-next-line(erc20-unchecked-transfer)
+        IAToken(aToken).transfer(bob, transferAmount);
+        vm.stopPrank();
 
-    // user balance should be rounded down
-    // 2 * (3e27 - 1) / 1e27 = 5.999999999999999999999999998
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 0);
+        assertEq(IAToken(aToken).balanceOf(user), 0);
+        assertEq(IAToken(aToken).scaledBalanceOf(bob), 3);
+        assertEq(IAToken(aToken).balanceOf(bob), 8);
+        assertEq(IAToken(aToken).totalSupply(), 8);
 
-    // bob balance should be rounded down
-    // 1 * (3e27 - 1) / 1e27 = 2.999999999999999999999999999
+        transferAmount = 4;
 
-    vm.startPrank(bob);
-    // forge-lint: disable-next-line(erc20-unchecked-transfer)
-    IAToken(aToken).transfer(user, transferAmount);
+        // transfer scaled amount should be rounded up
+        // 4 * 1e27 / (3e27 - 1) = 1.3333333333333333333333333337...
+        // scaled up to 2
 
-    assertEq(IAToken(aToken).scaledBalanceOf(user), 2);
-    assertEq(IAToken(aToken).balanceOf(user), 5);
-    assertEq(IAToken(aToken).scaledBalanceOf(bob), 1);
-    assertEq(IAToken(aToken).balanceOf(bob), 2);
-    assertEq(IAToken(aToken).totalSupply(), 8);
-  }
+        // user balance should be rounded down
+        // 2 * (3e27 - 1) / 1e27 = 5.999999999999999999999999998
 
-  function test_fuzzEdge(uint256 index, uint256 amount, uint256 amountToWithdraw) external {
-    index = bound(index, 1e27, 100e27);
-    amount = bound(amount, 1, type(uint96).max);
-    amountToWithdraw = bound(amountToWithdraw, 1, amount);
+        // bob balance should be rounded down
+        // 1 * (3e27 - 1) / 1e27 = 2.999999999999999999999999999
 
-    vm.startPrank(user);
-    deal(asset, user, amount);
-    IERC20(asset).approve(report.poolProxy, amount);
-    contracts.poolProxy.supply(asset, amount, user, 0);
+        vm.startPrank(bob);
+        // forge-lint: disable-next-line(erc20-unchecked-transfer)
+        IAToken(aToken).transfer(user, transferAmount);
 
-    AaveSetters.setLiquidityIndex(report.poolProxy, asset, index);
-    uint256 aBalanceBefore = IAToken(aToken).balanceOf(user);
-    contracts.poolProxy.withdraw(asset, amountToWithdraw, user);
-    uint256 aBalanceAfter = IAToken(aToken).balanceOf(user);
-    uint256 balanceAfter = IERC20(asset).balanceOf(user);
-    assertGe(aBalanceBefore, aBalanceAfter + balanceAfter);
-  }
+        assertEq(IAToken(aToken).scaledBalanceOf(user), 2);
+        assertEq(IAToken(aToken).balanceOf(user), 5);
+        assertEq(IAToken(aToken).scaledBalanceOf(bob), 1);
+        assertEq(IAToken(aToken).balanceOf(bob), 2);
+        assertEq(IAToken(aToken).totalSupply(), 8);
+    }
+
+    function test_fuzzEdge(uint256 index, uint256 amount, uint256 amountToWithdraw) external {
+        index = bound(index, 1e27, 100e27);
+        amount = bound(amount, 1, type(uint96).max);
+        amountToWithdraw = bound(amountToWithdraw, 1, amount);
+
+        vm.startPrank(user);
+        deal(asset, user, amount);
+        IERC20(asset).approve(report.poolProxy, amount);
+        contracts.poolProxy.supply(asset, amount, user, 0);
+
+        AaveSetters.setLiquidityIndex(report.poolProxy, asset, index);
+        uint256 aBalanceBefore = IAToken(aToken).balanceOf(user);
+        contracts.poolProxy.withdraw(asset, amountToWithdraw, user);
+        uint256 aBalanceAfter = IAToken(aToken).balanceOf(user);
+        uint256 balanceAfter = IERC20(asset).balanceOf(user);
+        assertGe(aBalanceBefore, aBalanceAfter + balanceAfter);
+    }
 }

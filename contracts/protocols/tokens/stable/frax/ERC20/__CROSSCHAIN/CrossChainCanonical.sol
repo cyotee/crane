@@ -12,7 +12,7 @@ pragma solidity ^0.8.35;
 // ======================== CrossChainCanonical =======================
 // ====================================================================
 // Cross-chain / non mainnet canonical token contract.
-// Can accept any number of old non-canonical tokens. These will be 
+// Can accept any number of old non-canonical tokens. These will be
 // withdrawable by the owner so they can de-bridge it and get back mainnet 'real' tokens
 // Does not include any spurious mainnet logic
 
@@ -28,7 +28,7 @@ pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Permit/ERC20Permit.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -39,7 +39,7 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
 
     // Core
     address public timelock_address; // Governance timelock address
-    address public custodian_address; 
+    address public custodian_address;
 
     // Misc
     uint256 public mint_cap;
@@ -69,28 +69,31 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
     modifier onlyMinters() {
-       require(minters[msg.sender], "Not a minter");
+        require(minters[msg.sender], "Not a minter");
         _;
-    } 
+    }
 
     modifier onlyMintersOwnGov() {
-       require(_isMinterOwnGov(msg.sender), "Not minter, owner, or tlck");
+        require(_isMinterOwnGov(msg.sender), "Not minter, owner, or tlck");
         _;
-    } 
+    }
 
     modifier validBridgeToken(address token_address) {
-       require(bridge_tokens[token_address], "Invalid old token");
+        require(bridge_tokens[token_address], "Invalid old token");
         _;
-    } 
+    }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         string memory _name,
         string memory _symbol,
         address _creator_address,
@@ -101,7 +104,7 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
         custodian_address = _custodian_address;
 
         // Initialize the starting old tokens
-        for (uint256 i = 0; i < _bridge_tokens.length; i++){ 
+        for (uint256 i = 0; i < _bridge_tokens.length; i++) {
             // Mark as accepted
             bridge_tokens[_bridge_tokens[i]] = true;
 
@@ -120,8 +123,6 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
 
         // Mint some canonical tokens to the creator
         super._mint(_creator_address, _initial_mint_amt);
-
-
     }
 
     /* ========== VIEWS ========== */
@@ -150,7 +151,12 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
     /* ========== PUBLIC FUNCTIONS ========== */
 
     // Exchange old or bridge tokens for these canonical tokens
-    function exchangeOldForCanonical(address bridge_token_address, uint256 token_amount) external nonReentrant validBridgeToken(bridge_token_address) returns (uint256 canonical_tokens_out) {
+    function exchangeOldForCanonical(address bridge_token_address, uint256 token_amount)
+        external
+        nonReentrant
+        validBridgeToken(bridge_token_address)
+        returns (uint256 canonical_tokens_out)
+    {
         require(!exchangesPaused && canSwap[bridge_token_address], "Exchanges paused");
 
         // Pull in the old / bridge tokens
@@ -167,9 +173,14 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
     }
 
     // Exchange canonical tokens for old or bridge tokens
-    function exchangeCanonicalForOld(address bridge_token_address, uint256 token_amount) external nonReentrant validBridgeToken(bridge_token_address) returns (uint256 bridge_tokens_out) {
+    function exchangeCanonicalForOld(address bridge_token_address, uint256 token_amount)
+        external
+        nonReentrant
+        validBridgeToken(bridge_token_address)
+        returns (uint256 bridge_tokens_out)
+    {
         require(!exchangesPaused && canSwap[bridge_token_address], "Exchanges paused");
-        
+
         // Burn the canonical tokens
         super._burn(msg.sender, token_amount);
 
@@ -186,13 +197,17 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
     /* ========== MINTERS OR GOVERNANCE FUNCTIONS ========== */
 
     // Collect old / bridge tokens so you can de-bridge them back on mainnet
-    function withdrawBridgeTokens(address bridge_token_address, uint256 bridge_token_amount) external onlyMintersOwnGov validBridgeToken(bridge_token_address) {
+    function withdrawBridgeTokens(address bridge_token_address, uint256 bridge_token_amount)
+        external
+        onlyMintersOwnGov
+        validBridgeToken(bridge_token_address)
+    {
         TransferHelper.safeTransfer(bridge_token_address, msg.sender, bridge_token_amount);
     }
 
     /* ========== MINTERS ONLY ========== */
 
-    // This function is what other minters will call to mint new tokens 
+    // This function is what other minters will call to mint new tokens
     function minter_mint(address m_address, uint256 m_amount) external onlyMinters {
         _mint_capped(m_address, m_amount);
         emit TokenMinted(msg.sender, m_address, m_amount);
@@ -212,10 +227,13 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    function addBridgeToken(address bridge_token_address, uint256 _brdg_to_can_fee, uint256 _can_to_brdg_fee) external onlyByOwnGov {
+    function addBridgeToken(address bridge_token_address, uint256 _brdg_to_can_fee, uint256 _can_to_brdg_fee)
+        external
+        onlyByOwnGov
+    {
         // Make sure the token is not already present
-        for (uint i = 0; i < bridge_tokens_array.length; i++){ 
-            if (bridge_tokens_array[i] == bridge_token_address){
+        for (uint256 i = 0; i < bridge_tokens_array.length; i++) {
+            if (bridge_tokens_array[i] == bridge_token_address) {
                 revert("Token already present");
             }
         }
@@ -237,8 +255,8 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
     function toggleBridgeToken(address bridge_token_address) external onlyByOwnGov {
         // Make sure the token is already present in the array
         bool bridge_tkn_found;
-        for (uint i = 0; i < bridge_tokens_array.length; i++){ 
-            if (bridge_tokens_array[i] == bridge_token_address){
+        for (uint256 i = 0; i < bridge_tokens_array.length; i++) {
+            if (bridge_tokens_array[i] == bridge_token_address) {
                 bridge_tkn_found = true;
                 break;
             }
@@ -259,22 +277,22 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
         require(minter_address != address(0), "Zero address detected");
 
         require(minters[minter_address] == false, "Address already exists");
-        minters[minter_address] = true; 
+        minters[minter_address] = true;
         minters_array.push(minter_address);
 
         emit MinterAdded(minter_address);
     }
 
-    // Remove a minter 
+    // Remove a minter
     function removeMinter(address minter_address) external onlyByOwnGov {
         require(minter_address != address(0), "Zero address detected");
         require(minters[minter_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete minters[minter_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < minters_array.length; i++){ 
+        for (uint256 i = 0; i < minters_array.length; i++) {
             if (minters_array[i] == minter_address) {
                 minters_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -290,7 +308,10 @@ contract CrossChainCanonical is ERC20Permit, Owned, ReentrancyGuard {
         emit MintCapSet(_mint_cap);
     }
 
-    function setSwapFees(address bridge_token_address, uint256 _bridge_to_canonical, uint256 _canonical_to_old) external onlyByOwnGov {
+    function setSwapFees(address bridge_token_address, uint256 _bridge_to_canonical, uint256 _canonical_to_old)
+        external
+        onlyByOwnGov
+    {
         swap_fees[bridge_token_address] = [_bridge_to_canonical, _canonical_to_old];
     }
 

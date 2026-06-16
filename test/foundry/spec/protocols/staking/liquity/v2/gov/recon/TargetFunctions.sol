@@ -10,11 +10,11 @@ import {Properties} from "./Properties.sol";
 import {GovernanceTargets} from "./targets/GovernanceTargets.sol";
 import {BribeInitiativeTargets} from "./targets/BribeInitiativeTargets.sol";
 import {MaliciousInitiative} from "../mocks/MaliciousInitiative.sol";
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
-import {IInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IInitiative.sol";
-import {IUserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IUserProxy.sol";
-import {PermitParams} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/Types.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {IInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IInitiative.sol";
+import {IUserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IUserProxy.sol";
+import {PermitParams} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/Types.sol";
 
 abstract contract TargetFunctions is GovernanceTargets, BribeInitiativeTargets {
     // helper to deploy initiatives for registering that results in more bold transferred to the Governance contract

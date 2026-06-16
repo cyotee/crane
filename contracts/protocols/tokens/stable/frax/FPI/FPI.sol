@@ -28,16 +28,11 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20PermissionedMint.sol";
 
 contract FPI is ERC20PermissionedMint {
-
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(
-      address _creator_address,
-      address _timelock_address
-    ) 
-    ERC20PermissionedMint(_creator_address, _timelock_address, "Frax Price Index", "FPI") 
+    constructor(address _creator_address, address _timelock_address)
+        ERC20PermissionedMint(_creator_address, _timelock_address, "Frax Price Index", "FPI")
     {
-      _mint(_creator_address, 100000000e18); // Genesis mint
+        _mint(_creator_address, 100000000e18); // Genesis mint
     }
-
 }

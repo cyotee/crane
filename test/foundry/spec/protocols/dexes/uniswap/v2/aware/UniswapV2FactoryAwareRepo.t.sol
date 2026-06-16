@@ -48,7 +48,7 @@ contract UniswapV2FactoryAwareRepo_Test is Test {
     }
 
     function test_storageSlot_isCorrectHash() public view {
-        bytes32 expected = keccak256("crane.uniswap.v2.factory.aware");
+        bytes32 expected = bytes32(uint256(keccak256(abi.encode("protocols.dexes.uniswap.v2.factory.aware"))) - 1);
         assertEq(harness.storageSlot(), expected, "Storage slot should match expected hash");
     }
 

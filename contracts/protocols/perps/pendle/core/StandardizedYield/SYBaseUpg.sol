@@ -44,12 +44,12 @@ abstract contract SYBaseUpg is
     /**
      * @dev See {IStandardizedYield-deposit}
      */
-    function deposit(
-        address receiver,
-        address tokenIn,
-        uint256 amountTokenToDeposit,
-        uint256 minSharesOut
-    ) external payable nonReentrant returns (uint256 amountSharesOut) {
+    function deposit(address receiver, address tokenIn, uint256 amountTokenToDeposit, uint256 minSharesOut)
+        external
+        payable
+        nonReentrant
+        returns (uint256 amountSharesOut)
+    {
         if (!isValidTokenIn(tokenIn)) revert Errors.SYInvalidTokenIn(tokenIn);
         if (amountTokenToDeposit == 0) revert Errors.SYZeroDeposit();
 
@@ -100,11 +100,10 @@ abstract contract SYBaseUpg is
      * @param amountSharesToRedeem amount of shares to be burned
      * @return amountTokenOut amount of base tokens redeemed
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual returns (uint256 amountTokenOut);
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        returns (uint256 amountTokenOut);
 
     /*///////////////////////////////////////////////////////////////
                                EXCHANGE-RATE
@@ -122,7 +121,14 @@ abstract contract SYBaseUpg is
     /**
      * @dev See {IStandardizedYield-claimRewards}
      */
-    function claimRewards(address /*user*/) external virtual override returns (uint256[] memory rewardAmounts) {
+    function claimRewards(
+        address /*user*/
+    )
+        external
+        virtual
+        override
+        returns (uint256[] memory rewardAmounts)
+    {
         rewardAmounts = new uint256[](0);
     }
 
@@ -136,7 +142,15 @@ abstract contract SYBaseUpg is
     /**
      * @dev See {IStandardizedYield-accruedRewards}
      */
-    function accruedRewards(address /*user*/) external view virtual override returns (uint256[] memory rewardAmounts) {
+    function accruedRewards(
+        address /*user*/
+    )
+        external
+        view
+        virtual
+        override
+        returns (uint256[] memory rewardAmounts)
+    {
         rewardAmounts = new uint256[](0);
     }
 
@@ -152,18 +166,22 @@ abstract contract SYBaseUpg is
                 MISC METADATA FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) external view virtual returns (uint256 amountSharesOut) {
+    function previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        external
+        view
+        virtual
+        returns (uint256 amountSharesOut)
+    {
         if (!isValidTokenIn(tokenIn)) revert Errors.SYInvalidTokenIn(tokenIn);
         return _previewDeposit(tokenIn, amountTokenToDeposit);
     }
 
-    function previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) external view virtual returns (uint256 amountTokenOut) {
+    function previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        external
+        view
+        virtual
+        returns (uint256 amountTokenOut)
+    {
         if (!isValidTokenOut(tokenOut)) revert Errors.SYInvalidTokenOut(tokenOut);
         return _previewRedeem(tokenOut, amountSharesToRedeem);
     }
@@ -178,15 +196,17 @@ abstract contract SYBaseUpg is
 
     function _beforeTokenTransfer(address, address, uint256) internal virtual override whenNotPaused {}
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view virtual returns (uint256 amountSharesOut);
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        virtual
+        returns (uint256 amountSharesOut);
 
-    function _previewRedeem(
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal view virtual returns (uint256 amountTokenOut);
+    function _previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        view
+        virtual
+        returns (uint256 amountTokenOut);
 
     function getTokensIn() public view virtual returns (address[] memory res);
 

@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.24;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
 import {IERC7674} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC7674.sol";
@@ -28,19 +28,23 @@ abstract contract ERC20TemporaryApprovalUpgradeable is Initializable, ERC20Upgra
     bytes32 private constant ERC20_TEMPORARY_APPROVAL_STORAGE =
         0xea2d0e77a01400d0111492b1321103eed560d8fe44b9a7c2410407714583c400;
 
-    function __ERC20TemporaryApproval_init() internal onlyInitializing {
-    }
+    function __ERC20TemporaryApproval_init() internal onlyInitializing {}
 
-    function __ERC20TemporaryApproval_init_unchained() internal onlyInitializing {
-    }
+    function __ERC20TemporaryApproval_init_unchained() internal onlyInitializing {}
+
     /**
      * @dev {allowance} override that includes the temporary allowance when looking up the current allowance. If
      * adding up the persistent and the temporary allowances result in an overflow, type(uint256).max is returned.
      */
-    function allowance(address owner, address spender) public view virtual override(IERC20, ERC20Upgradeable) returns (uint256) {
+    function allowance(address owner, address spender)
+        public
+        view
+        virtual
+        override(IERC20, ERC20Upgradeable)
+        returns (uint256)
+    {
         (bool success, uint256 amount) = Math.tryAdd(
-            super.allowance(owner, spender),
-            _temporaryAllowance(owner, spender)
+            super.allowance(owner, spender), _temporaryAllowance(owner, spender)
         );
         return success ? amount : type(uint256).max;
     }

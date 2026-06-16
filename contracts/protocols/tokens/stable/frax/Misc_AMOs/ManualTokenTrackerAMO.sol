@@ -25,7 +25,7 @@ pragma solidity ^0.8.35;
 // Jason Huan: https://github.com/jasonhuan
 // Sam Kazemian: https://github.com/samkazemian
 
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract ManualTokenTrackerAMO is Owned {
@@ -55,17 +55,16 @@ contract ManualTokenTrackerAMO is Owned {
     }
 
     modifier onlyByOwnGovBot() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address, "Not owner, tlck, or bot");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address,
+            "Not owner, tlck, or bot"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address,
-        address _bot_address
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address, address _bot_address) Owned(_creator_address) {
         timelock_address = _timelock_address;
         bot_address = _bot_address;
     }
@@ -93,11 +92,10 @@ contract ManualTokenTrackerAMO is Owned {
     // Set the dollar balances for tracked tokens.
     // These balances are calculated off-chain due to extensive gas.
     // The very first set should be done manually
-    function setDollarBalances(
-        uint256 _new_frax_dollar_balance, 
-        uint256 _new_collat_dollar_balance, 
-        bool bypass_checks
-    ) public onlyByOwnGovBot {
+    function setDollarBalances(uint256 _new_frax_dollar_balance, uint256 _new_collat_dollar_balance, bool bypass_checks)
+        public
+        onlyByOwnGovBot
+    {
         // The bot cannot bypass the checks or update too fast
         if (msg.sender == bot_address) {
             require(!bypass_checks, "Only owner or governance can bypass checks");
@@ -109,43 +107,35 @@ contract ManualTokenTrackerAMO is Owned {
         uint256 collat_db_change = (collatDollarBalanceStored * change_tolerance) / PRICE_PRECISION;
 
         // Do the checks
-        if (!bypass_checks){
+        if (!bypass_checks) {
             // FRAX Dollar Balance
             if (_new_frax_dollar_balance >= fraxDollarBalanceStored) {
                 require(
-                    _new_frax_dollar_balance <= (fraxDollarBalanceStored + frax_db_change), 
+                    _new_frax_dollar_balance <= (fraxDollarBalanceStored + frax_db_change),
                     "_new_frax_dollar_balance too high"
                 );
-            }
-            else {
+            } else {
                 // Prevent underflow
                 uint256 lower_frax_db_bound = 0;
-                if (frax_db_change < fraxDollarBalanceStored){
+                if (frax_db_change < fraxDollarBalanceStored) {
                     lower_frax_db_bound = fraxDollarBalanceStored - frax_db_change;
                 }
-                require(
-                    _new_frax_dollar_balance >= lower_frax_db_bound, 
-                    "_new_frax_dollar_balance too low"
-                );
+                require(_new_frax_dollar_balance >= lower_frax_db_bound, "_new_frax_dollar_balance too low");
             }
 
             // Collat Dollar Balance
             if (_new_collat_dollar_balance >= collatDollarBalanceStored) {
                 require(
-                    _new_collat_dollar_balance <= (collatDollarBalanceStored + collat_db_change), 
+                    _new_collat_dollar_balance <= (collatDollarBalanceStored + collat_db_change),
                     "_new_collat_dollar_balance too high"
                 );
-            }
-            else {
+            } else {
                 // Prevent underflow
                 uint256 lower_collat_db_bound = 0;
-                if (collat_db_change < collatDollarBalanceStored){
+                if (collat_db_change < collatDollarBalanceStored) {
                     lower_collat_db_bound = collatDollarBalanceStored - collat_db_change;
                 }
-                require(
-                    _new_collat_dollar_balance >= lower_collat_db_bound, 
-                    "_new_collat_dollar_balance too low"
-                );
+                require(_new_collat_dollar_balance >= lower_collat_db_bound, "_new_collat_dollar_balance too low");
             }
         }
 
@@ -154,7 +144,6 @@ contract ManualTokenTrackerAMO is Owned {
         collatDollarBalanceStored = _new_collat_dollar_balance;
         last_timestamp = block.timestamp;
     }
-
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
@@ -167,7 +156,7 @@ contract ManualTokenTrackerAMO is Owned {
     }
 
     // Used to block fat-finger balance changes, or balanceOf/pricing errors
-    // In E6. 50000 = +/- 5% tolerance 
+    // In E6. 50000 = +/- 5% tolerance
     function setChangeTolerance(uint256 _change_tolerance) external onlyByOwnGov {
         change_tolerance = _change_tolerance;
     }
@@ -181,17 +170,17 @@ contract ManualTokenTrackerAMO is Owned {
         // Can only be triggered by owner or governance, not custodian
         // Tokens are sent to the custodian, as a sort of safeguard
         TransferHelper.safeTransfer(tokenAddress, owner, tokenAmount);
-        
+
         emit RecoveredERC20(tokenAddress, tokenAmount);
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 

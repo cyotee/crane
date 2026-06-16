@@ -40,6 +40,16 @@ import {
     DiamondFactoryPackageRegistryFacet
 } from "@crane/contracts/registries/package/DiamondFactoryPackageRegistryFacet.sol";
 import {ICREATE3DFPkg, Create3FactoryDFPkg} from "@crane/contracts/factories/create3/Create3FactoryDFPkg.sol";
+import {
+    ICallTargetRegistryDFPkg,
+    CallTargetRegistryDFPkg
+} from "@crane/contracts/registries/target/CallTargetRegistryDFPkg.sol";
+import {IBountyBoardDFPkg, BountyBoardDFPkg} from "@crane/contracts/bounties/BountyBoardDFPkg.sol";
+import {BountyCommonFacet} from "@crane/contracts/bounties/common/BountyCommonFacet.sol";
+import {SingleFinalBountyFacet} from "@crane/contracts/bounties/single/SingleFinalBountyFacet.sol";
+import {MilestoneBountyFacet} from "@crane/contracts/bounties/milestone/MilestoneBountyFacet.sol";
+import {ContestBountyFacet} from "@crane/contracts/bounties/contest/ContestBountyFacet.sol";
+import {ContinuousBountyFacet} from "@crane/contracts/bounties/continuous/ContinuousBountyFacet.sol";
 
 import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 import {IDiamondFactoryPackage} from "@crane/contracts/interfaces/IDiamondFactoryPackage.sol";
@@ -54,7 +64,28 @@ import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
 import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {IFacetRegistry} from "@crane/contracts/registries/facet/IFacetRegistry.sol";
 import {IDiamondFactoryPackageRegistry} from "@crane/contracts/registries/package/IDiamondFactoryPackageRegistry.sol";
+import {ICallTargetRegistryQuery} from "@crane/contracts/interfaces/ICallTargetRegistryQuery.sol";
+import {ICallTargetRegistryManagement} from "@crane/contracts/interfaces/ICallTargetRegistryManagement.sol";
+import {CallTargetRegistryQueryFacet} from "@crane/contracts/registries/target/CallTargetRegistryQueryFacet.sol";
+import {
+    CallTargetRegistryManagementFacet
+} from "@crane/contracts/registries/target/CallTargetRegistryManagementFacet.sol";
+import {IBountyCommon} from "@crane/contracts/bounties/common/IBountyCommon.sol";
+import {ISingleFinalBounty} from "@crane/contracts/bounties/single/ISingleFinalBounty.sol";
+import {IMilestoneBounty} from "@crane/contracts/bounties/milestone/IMilestoneBounty.sol";
+import {IContestBounty} from "@crane/contracts/bounties/contest/IContestBounty.sol";
+import {IContinuousBounty} from "@crane/contracts/bounties/continuous/IContinuousBounty.sol";
 
+// tag::InitDevService[]
+/**
+ * @title InitDevService
+ * @notice Core bootstrap library providing deterministic dev/test initialization of Create3Factory (via CREATE2 salt), DiamondPackageCallBackFactory, core introspection/ownership/operable/registry/bounty facets, and canonical DFPkgs (Create3FactoryDFPkg, CallTargetRegistryDFPkg, BountyBoardDFPkg).
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Internal-only API (no external/public functions). All functions are `internal` and intended for use inside tests, scripts, and CraneTest inheritance (normally via `InitDevService.initEnv(...)`).
+ * @dev This enables LR-7 compliant full non-zero initialization of factories and packages for tests (see CraneTest, DevEnvSmokeTest, TestBases). See AGENTS.md (Diamond Package Deployment Pattern, key files list, "Initialize via InitDevService.initEnv"), crane-deployment skill, and PRD LR-1/LR-7.
+ * @dev Uses canonical facets looked up from the IFacetRegistry populated during initFactory. Deploys the three key DFPkgs that bundle operational surfaces. Labels all deployed artifacts for traces.
+ * @dev Modeled on gold *Service (CamelotV2Service, AerodromeService*) and Create3FactoryDFPkg for NatSpec + include-tag style. No @custom:selector values here (none listed for this helper in CENTRALLY_COMPUTED_NATSPEC_VALUES.md; use ONLY centrals).
+ */
 library InitDevService {
     using BetterEfficientHashLib for bytes;
 
@@ -72,9 +103,30 @@ library InitDevService {
     bytes32 constant OPERABLE_FACET_SALT = keccak256(abi.encode(type(OperableFacet).name));
     bytes32 constant CREATE3_FACTORY_FACET_SALT = keccak256(abi.encode(type(Create3FactoryFacet).name));
     bytes32 constant FACET_REGISTRY_FACET_SALT = keccak256(abi.encode(type(FacetRegistryFacet).name));
-    bytes32 constant DIAMOND_FACTORY_PACKAGE_FACET_SALT = keccak256(abi.encode(type(DiamondFactoryPackageRegistryFacet).name));
+    bytes32 constant DIAMOND_FACTORY_PACKAGE_FACET_SALT =
+        keccak256(abi.encode(type(DiamondFactoryPackageRegistryFacet).name));
+    bytes32 constant CALL_TARGET_REGISTRY_QUERY_FACET_SALT =
+        keccak256(abi.encode(type(CallTargetRegistryQueryFacet).name));
+    bytes32 constant CALL_TARGET_REGISTRY_MANAGEMENT_FACET_SALT =
+        keccak256(abi.encode(type(CallTargetRegistryManagementFacet).name));
     bytes32 constant CREATE3_FACTORY_PACKAGE_SALT = keccak256(abi.encode(type(Create3FactoryDFPkg).name));
+    bytes32 constant CALL_TARGET_REGISTRY_PACKAGE_SALT = keccak256(abi.encode(type(CallTargetRegistryDFPkg).name));
+    bytes32 constant BOUNTY_COMMON_FACET_SALT = keccak256(abi.encode(type(BountyCommonFacet).name));
+    bytes32 constant SINGLE_FINAL_BOUNTY_FACET_SALT = keccak256(abi.encode(type(SingleFinalBountyFacet).name));
+    bytes32 constant MILESTONE_BOUNTY_FACET_SALT = keccak256(abi.encode(type(MilestoneBountyFacet).name));
+    bytes32 constant CONTEST_BOUNTY_FACET_SALT = keccak256(abi.encode(type(ContestBountyFacet).name));
+    bytes32 constant CONTINUOUS_BOUNTY_FACET_SALT = keccak256(abi.encode(type(ContinuousBountyFacet).name));
+    bytes32 constant BOUNTY_BOARD_PACKAGE_SALT = keccak256(abi.encode(type(BountyBoardDFPkg).name));
 
+    // tag::initEnv(address)[]
+    /**
+     * @notice Initializes the full dev environment: a salted Create3Factory (populating canonical core facets), the DiamondPackageCallBackFactory, then deploys and labels the Create3 DFPkg (which bundles cut/ownable/operable + all registries), the CallTargetRegistry DFPkg, and the BountyBoard DFPkg (all bounties).
+     * @dev Performs the bootstrap sequence described in AGENTS.md and IDiamondFactoryPackage flow. After initFactory, canonical facets are looked up from registry (non-zero LR-7 requirement) to build PkgInit for DFPkgs. Calls Create3Factory.initFactory() after Create3 DFPkg.
+     * @dev This is the primary entrypoint used by CraneTest / TestBases / smoke tests for realistic non-zero factory + pkg state.
+     * @param owner The initial owner address (used for salt and ownership setup in DFPkgs).
+     * @return factory The initialized ICreate3FactoryProxy (also hosts registries).
+     * @return diamondFactory The initialized IDiamondPackageCallBackFactory (set on the create3 factory).
+     */
     function initEnv(address owner)
         internal
         returns (ICreate3FactoryProxy factory, IDiamondPackageCallBackFactory diamondFactory)
@@ -88,11 +140,19 @@ library InitDevService {
                 abi.encode(
                     ICREATE3DFPkg.PkgInit({
                         diamondCutFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IDiamondCut).interfaceId),
-                        multiStepOwnableFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IMultiStepOwnable).interfaceId),
+                        multiStepOwnableFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IMultiStepOwnable).interfaceId),
                         operableFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IOperable).interfaceId),
-                        create3FactoryFacet: IFacetRegistry(address(factory)).canonicalFacet(type(ICreate3Factory).interfaceId),
-                        facetRegistryFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IFacetRegistry).interfaceId),
-                        packageRegistryFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IDiamondFactoryPackageRegistry).interfaceId),
+                        create3FactoryFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ICreate3Factory).interfaceId),
+                        facetRegistryFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IFacetRegistry).interfaceId),
+                        packageRegistryFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IDiamondFactoryPackageRegistry).interfaceId),
+                        callTargetRegistryQueryFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ICallTargetRegistryQuery).interfaceId),
+                        callTargetRegistryManagementFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ICallTargetRegistryManagement).interfaceId),
                         diamondFactory: diamondFactory
                     })
                 ),
@@ -102,62 +162,155 @@ library InitDevService {
         );
         vm.label(address(create3DFPkg_), type(Create3FactoryDFPkg).name);
         Create3Factory(payable(address(factory))).initFactory();
-    }
 
+        IDiamondFactoryPackage callTargetRegistryDFPkg_ = IDiamondFactoryPackage(
+            factory.deployCanonicalPackageWithArgs(
+                type(CallTargetRegistryDFPkg).creationCode,
+                abi.encode(
+                    ICallTargetRegistryDFPkg.PkgInit({
+                        diamondCutFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IDiamondCut).interfaceId),
+                        multiStepOwnableFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IMultiStepOwnable).interfaceId),
+                        callTargetRegistryQueryFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ICallTargetRegistryQuery).interfaceId),
+                        callTargetRegistryManagementFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ICallTargetRegistryManagement).interfaceId),
+                        diamondFactory: diamondFactory
+                    })
+                ),
+                CALL_TARGET_REGISTRY_PACKAGE_SALT,
+                type(ICallTargetRegistryDFPkg).interfaceId
+            )
+        );
+        vm.label(address(callTargetRegistryDFPkg_), type(CallTargetRegistryDFPkg).name);
+
+        IDiamondFactoryPackage bountyBoardDFPkg_ = IDiamondFactoryPackage(
+            factory.deployCanonicalPackageWithArgs(
+                type(BountyBoardDFPkg).creationCode,
+                abi.encode(
+                    IBountyBoardDFPkg.PkgInit({
+                        diamondCutFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IDiamondCut).interfaceId),
+                        multiStepOwnableFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IMultiStepOwnable).interfaceId),
+                        bountyCommonFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IBountyCommon).interfaceId),
+                        singleFinalBountyFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(ISingleFinalBounty).interfaceId),
+                        milestoneBountyFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IMilestoneBounty).interfaceId),
+                        contestBountyFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IContestBounty).interfaceId),
+                        continuousBountyFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IContinuousBounty).interfaceId),
+                        diamondFactory: diamondFactory
+                    })
+                ),
+                BOUNTY_BOARD_PACKAGE_SALT,
+                type(IBountyBoardDFPkg).interfaceId
+            )
+        );
+        vm.label(address(bountyBoardDFPkg_), type(BountyBoardDFPkg).name);
+    }
+    // end::initEnv(address)[]
+
+    // tag::initFactory(address-bytes32)[]
+    /**
+     * @notice Deploys (CREATE2 salted) a Create3Factory and populates it with all canonical core facets required for operation (ERC165, DiamondLoupe, ERC8109, PostDeployHook, DiamondCut, MultiStepOwnable, Operable, Create3FactoryFacet, FacetRegistry, DiamondFactoryPackageRegistry, CallTarget* registries, and all Bounty* facets).
+     * @dev Uses ICreate3FactoryBootstrap.deployCanonicalFacet for each. Reuses a temp var for bounty facets to avoid stack-too-deep. Labels every deployed facet. The owner and salt determine deterministic address.
+     * @dev After this, the returned factory is a fully initialized ICreate3FactoryProxy with registries ready for canonical lookups (used by initEnv to build DFPkgs).
+     * @param owner The owner to set on the deployed Create3Factory.
+     * @param salt The CREATE2 salt (typically keccak of owner or similar for determinism).
+     * @return factory The deployed and facet-populated ICreate3FactoryProxy.
+     */
     function initFactory(address owner, bytes32 salt) internal returns (ICreate3FactoryProxy factory) {
         factory = ICreate3FactoryProxy(address(new Create3Factory{salt: salt}(owner)));
         vm.label(address(factory), type(Create3Factory).name);
 
-        IFacet erc165Facet =
-            ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(type(ERC165Facet).creationCode, ERC165_FACET_SALT);
+        IFacet erc165Facet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(ERC165Facet).creationCode, ERC165_FACET_SALT);
         vm.label(address(erc165Facet), type(ERC165Facet).name);
 
-        IFacet diamondLoupeFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(DiamondLoupeFacet).creationCode, DIAMOND_LOUPE_FACET_SALT
-        );
+        IFacet diamondLoupeFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(DiamondLoupeFacet).creationCode, DIAMOND_LOUPE_FACET_SALT);
         vm.label(address(diamondLoupeFacet), type(DiamondLoupeFacet).name);
 
-        IFacet erc8109IntrospectionFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(ERC8109IntrospectionFacet).creationCode, ERC8109_INTROSPECTION_FACET_SALT
-        );
+        IFacet erc8109IntrospectionFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(ERC8109IntrospectionFacet).creationCode, ERC8109_INTROSPECTION_FACET_SALT);
         vm.label(address(erc8109IntrospectionFacet), type(ERC8109IntrospectionFacet).name);
 
-        IFacet postDeployAccountHookFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(PostDeployAccountHookFacet).creationCode, POST_DEPLOY_HOOK_FACET_SALT
-        );
+        IFacet postDeployAccountHookFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(PostDeployAccountHookFacet).creationCode, POST_DEPLOY_HOOK_FACET_SALT);
         vm.label(address(postDeployAccountHookFacet), type(PostDeployAccountHookFacet).name);
 
-        IFacet diamondCutFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(DiamondCutFacet).creationCode, DIAMOND_CUT_FACET_SALT
-        );
+        IFacet diamondCutFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(DiamondCutFacet).creationCode, DIAMOND_CUT_FACET_SALT);
         vm.label(address(diamondCutFacet), type(DiamondCutFacet).name);
 
-        IFacet multiStepOwnableFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(MultiStepOwnableFacet).creationCode, MULTI_STEP_OWNABLE_FACET_SALT
-        );
+        IFacet multiStepOwnableFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(MultiStepOwnableFacet).creationCode, MULTI_STEP_OWNABLE_FACET_SALT);
         vm.label(address(multiStepOwnableFacet), type(MultiStepOwnableFacet).name);
-        
-        IFacet operableFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(OperableFacet).creationCode, OPERABLE_FACET_SALT
-        );
+
+        IFacet operableFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(OperableFacet).creationCode, OPERABLE_FACET_SALT);
         vm.label(address(operableFacet), type(OperableFacet).name);
 
-        IFacet create3FactoryFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(Create3FactoryFacet).creationCode, CREATE3_FACTORY_FACET_SALT
-        );
+        IFacet create3FactoryFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(Create3FactoryFacet).creationCode, CREATE3_FACTORY_FACET_SALT);
         vm.label(address(create3FactoryFacet), type(Create3FactoryFacet).name);
 
-        IFacet facetRegistryFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(FacetRegistryFacet).creationCode, FACET_REGISTRY_FACET_SALT
-        );
+        IFacet facetRegistryFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(FacetRegistryFacet).creationCode, FACET_REGISTRY_FACET_SALT);
         vm.label(address(facetRegistryFacet), type(FacetRegistryFacet).name);
 
-        IFacet packageRegistryFacet = ICreate3FactoryBootstrap(address(factory)).deployCanonicalFacet(
-            type(DiamondFactoryPackageRegistryFacet).creationCode, DIAMOND_FACTORY_PACKAGE_FACET_SALT
-        );
+        IFacet packageRegistryFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(
+                type(DiamondFactoryPackageRegistryFacet).creationCode, DIAMOND_FACTORY_PACKAGE_FACET_SALT
+            );
         vm.label(address(packageRegistryFacet), type(DiamondFactoryPackageRegistryFacet).name);
-    }
 
+        IFacet callTargetRegistryQueryFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(
+                type(CallTargetRegistryQueryFacet).creationCode, CALL_TARGET_REGISTRY_QUERY_FACET_SALT
+            );
+        vm.label(address(callTargetRegistryQueryFacet), type(CallTargetRegistryQueryFacet).name);
+
+        IFacet callTargetRegistryManagementFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(
+                type(CallTargetRegistryManagementFacet).creationCode, CALL_TARGET_REGISTRY_MANAGEMENT_FACET_SALT
+            );
+        vm.label(address(callTargetRegistryManagementFacet), type(CallTargetRegistryManagementFacet).name);
+
+        // Reuse temp to avoid stack-too-deep with many IFacet locals in initFactory
+        IFacet tempFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(BountyCommonFacet).creationCode, BOUNTY_COMMON_FACET_SALT);
+        vm.label(address(tempFacet), type(BountyCommonFacet).name);
+
+        tempFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(SingleFinalBountyFacet).creationCode, SINGLE_FINAL_BOUNTY_FACET_SALT);
+        vm.label(address(tempFacet), type(SingleFinalBountyFacet).name);
+
+        tempFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(MilestoneBountyFacet).creationCode, MILESTONE_BOUNTY_FACET_SALT);
+        vm.label(address(tempFacet), type(MilestoneBountyFacet).name);
+
+        tempFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(ContestBountyFacet).creationCode, CONTEST_BOUNTY_FACET_SALT);
+        vm.label(address(tempFacet), type(ContestBountyFacet).name);
+
+        tempFacet = ICreate3FactoryBootstrap(address(factory))
+            .deployCanonicalFacet(type(ContinuousBountyFacet).creationCode, CONTINUOUS_BOUNTY_FACET_SALT);
+        vm.label(address(tempFacet), type(ContinuousBountyFacet).name);
+    }
+    // end::initFactory(address-bytes32)[]
+
+    // tag::initDiamondFactory(ICreate3FactoryProxy)[]
+    /**
+     * @notice Deploys the DiamondPackageCallBackFactory (via factory.create3WithArgs) configured with the canonical introspection facets (ERC165, DiamondLoupe, ERC8109, PostDeployHook) looked up from the registry.
+     * @dev Then registers it via factory.setDiamondPackageFactory(diamondFactory). This is the callback factory used by all DFPkgs to deploy actual Diamond proxy instances (with initAccount delegatecall).
+     * @dev Part of the two-factory hierarchy (Create3Factory + DiamondPackageCallBackFactory).
+     * @param factory The already-initialized ICreate3FactoryProxy (must have facets and registries populated).
+     * @return diamondFactory The deployed and registered IDiamondPackageCallBackFactory.
+     */
     function initDiamondFactory(ICreate3FactoryProxy factory)
         internal
         returns (IDiamondPackageCallBackFactory diamondFactory)
@@ -168,9 +321,12 @@ library InitDevService {
                 abi.encode(
                     IDiamondPackageCallBackFactoryInit.InitArgs({
                         erc165Facet: IFacetRegistry(address(factory)).canonicalFacet(type(IERC165).interfaceId),
-                        diamondLoupeFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IDiamondLoupe).interfaceId),
-                        erc8109IntrospectionFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IERC8109Introspection).interfaceId),
-                        postDeployHookFacet: IFacetRegistry(address(factory)).canonicalFacet(type(IPostDeployAccountHook).interfaceId)
+                        diamondLoupeFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IDiamondLoupe).interfaceId),
+                        erc8109IntrospectionFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IERC8109Introspection).interfaceId),
+                        postDeployHookFacet: IFacetRegistry(address(factory))
+                            .canonicalFacet(type(IPostDeployAccountHook).interfaceId)
                     })
                 ),
                 DIAMOND_FACTORY_SALT
@@ -179,4 +335,6 @@ library InitDevService {
         factory.setDiamondPackageFactory(diamondFactory);
         vm.label(address(diamondFactory), "DiamondPackageCallBackFactory");
     }
+    // end::initDiamondFactory(ICreate3FactoryProxy)[]
 }
+// end::InitDevService[]

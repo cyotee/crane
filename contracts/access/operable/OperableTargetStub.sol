@@ -33,6 +33,7 @@ contract OperableTargetStub is OperableTarget, OperableModifiers {
         lastCalledValue = value;
         return value;
     }
+
     // end::restrictedByOnlyOperator(uint256)[]
 
     // tag::restrictedByOnlyOwnerOrOperator(uint256)[]
@@ -45,6 +46,7 @@ contract OperableTargetStub is OperableTarget, OperableModifiers {
         lastCalledValue = value;
         return value;
     }
+
     // end::restrictedByOnlyOwnerOrOperator(uint256)[]
 
     // tag::publicFunction(uint256)[]
@@ -57,6 +59,7 @@ contract OperableTargetStub is OperableTarget, OperableModifiers {
         lastCalledValue = value;
         return value;
     }
+
     // end::publicFunction(uint256)[]
 
     // tag::restrictedByOnlyOperatorSelector()[]

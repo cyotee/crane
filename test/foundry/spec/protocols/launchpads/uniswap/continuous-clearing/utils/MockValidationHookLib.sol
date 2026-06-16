@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IValidationHook} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol';
-import {ValidationHookLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol';
+import {
+    IValidationHook
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol";
+import {
+    ValidationHookLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol";
 
 /// @notice Mock implementation of the library
 contract MockValidationHookLib {

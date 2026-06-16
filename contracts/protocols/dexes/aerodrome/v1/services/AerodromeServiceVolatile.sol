@@ -7,10 +7,13 @@ import {IRouter} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IRo
 import {IPoolFactory} from "@crane/contracts/interfaces/protocols/dexes/aerodrome/IPoolFactory.sol";
 import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
 
+// tag::AerodromeServiceVolatile[]
 /**
  * @title AerodromeServiceVolatile
- * @notice Library for interacting with Aerodrome volatile pools (xy = k curve)
- * @dev For stable pools (x³y + xy³ = k curve), use AerodromeServiceStable instead.
+ * @notice Library for interacting with Aerodrome volatile pools (xy = k curve) via router/factory.
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Active specialized service for volatile (non-stable) pools using xy=k constant product curve.
+ * For stable pools (x³y + xy³ = k curve), use AerodromeServiceStable instead.
  *
  * This library provides functions for:
  * - Swapping tokens in volatile pools
@@ -19,6 +22,11 @@ import {ConstProdUtils} from "@crane/contracts/utils/math/ConstProdUtils.sol";
  * - Quoting optimal swap amounts for balanced deposits
  *
  * All functions explicitly use `stable: false` for pool/router interactions.
+ *
+ * @dev Internal-only (_-prefixed). For *Service pattern see AGENTS.md; NatSpec per PRD LR-1.
+ * @dev Uses `ConstProdUtils` for constant-product AMM math (volatile xy=k case).
+ * @dev Structs bundle parameters to avoid stack-too-deep in complex flows.
+ * @dev Ties to LR-2 (protocol utility docs + test usage in Aerodrome ports).
  */
 library AerodromeServiceVolatile {
     using ConstProdUtils for uint256;
@@ -34,16 +42,9 @@ library AerodromeServiceVolatile {
     /*                                   Structs                                   */
     /* -------------------------------------------------------------------------- */
 
+    // tag::SwapVolatileParams[]
     /**
-     * @notice Parameters for swapping tokens in a volatile pool
-     * @param router The Aerodrome router contract
-     * @param factory The Aerodrome pool factory contract
-     * @param pool The volatile pool to swap in
-     * @param tokenIn The token being sold
-     * @param tokenOut The token being purchased
-     * @param amountIn The amount of tokenIn to swap
-     * @param recipient The address to receive tokenOut
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _swapVolatile flows.
      */
     struct SwapVolatileParams {
         IRouter router;
@@ -55,18 +56,11 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+    // end::SwapVolatileParams[]
 
+    // tag::SwapDepositVolatileParams[]
     /**
-     * @notice Parameters for swap-deposit (zap in) to a volatile pool
-     * @param router The Aerodrome router contract
-     * @param factory The Aerodrome pool factory contract
-     * @param pool The volatile pool to deposit into
-     * @param token0 The token0 of the pool (for reserve sorting)
-     * @param tokenIn The single token being deposited
-     * @param opposingToken The other token in the pool
-     * @param amountIn The amount of tokenIn to deposit
-     * @param recipient The address to receive LP tokens
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _swapDepositVolatile and _quoteSwapDepositSaleAmtVolatile.
      */
     struct SwapDepositVolatileParams {
         IRouter router;
@@ -79,17 +73,11 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+    // end::SwapDepositVolatileParams[]
 
+    // tag::WithdrawSwapVolatileParams[]
     /**
-     * @notice Parameters for withdraw-swap (zap out) from a volatile pool
-     * @param aerodromeRouter The Aerodrome router contract
-     * @param pool The volatile pool to withdraw from
-     * @param factory The Aerodrome pool factory contract
-     * @param tokenOut The desired output token
-     * @param opposingToken The other token in the pool (will be swapped)
-     * @param lpBurnAmt The amount of LP tokens to burn
-     * @param recipient The address to receive tokenOut
-     * @param deadline The transaction deadline timestamp
+     * @dev Internal param struct for _withdrawSwapVolatile (zap out).
      */
     struct WithdrawSwapVolatileParams {
         IRouter aerodromeRouter;
@@ -101,51 +89,62 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+    // end::WithdrawSwapVolatileParams[]
 
     /* -------------------------------------------------------------------------- */
     /*                                  Functions                                  */
     /* -------------------------------------------------------------------------- */
 
+    // tag::_swapVolatile(SwapVolatileParams)[]
     /**
-     * @notice Swaps tokens in a volatile pool
-     * @dev Uses `stable: false` for the swap route
-     * @param params The swap parameters
-     * @return amountOut The amount of tokenOut received
+     * @notice Executes exact-in swap for volatile (non-stable) Aerodrome pool.
+     * Builds single-hop Route (stable=false), approves, calls router.swapExactTokensForTokens.
+     * @dev Uses `stable: false` explicitly. Caller responsible for slippage (amountOutMin=0 here).
+     * @param params Bundle with router/factory/pool + tokens/amounts/recipient/deadline.
+     * @return amountOut Output token amount received.
+     * @custom:emits Transfer (token approvals + router/pool transfers).
      */
-    function _swapVolatile(
-        SwapVolatileParams memory params
-    ) internal returns (uint256 amountOut) {
+    function _swapVolatile(SwapVolatileParams memory params) internal returns (uint256 amountOut) {
         IRouter.Route memory route = IRouter.Route({
+            // address from;
             from: address(params.tokenIn),
+            // address to;
             to: address(params.tokenOut),
-            stable: false, // Volatile pool
+            // bool stable;
+            stable: false,
+            // address factory;
             factory: address(params.factory)
         });
         IRouter.Route[] memory routes = new IRouter.Route[](1);
         routes[0] = route;
-
         params.tokenIn.approve(address(params.router), params.amountIn);
-
-        uint256[] memory amountsOut = params.router.swapExactTokensForTokens(
-            params.amountIn,
-            0, // amountOutMin - caller should implement slippage protection
-            routes,
-            params.recipient,
-            params.deadline
-        );
-
+        uint256[] memory amountsOut = params.router
+            .swapExactTokensForTokens(
+                // uint256 amountIn,
+                params.amountIn,
+                // uint256 amountOutMin,
+                0,
+                // Route[] calldata routes,
+                routes,
+                // address to,
+                params.recipient,
+                // uint256 deadline
+                params.deadline
+            );
         return amountsOut[amountsOut.length - 1];
     }
+    // end::_swapVolatile(SwapVolatileParams)[]
 
+    // tag::_swapDepositVolatile(SwapDepositVolatileParams)[]
     /**
-     * @notice Performs a swap-deposit (zap in) to a volatile pool
-     * @dev Swaps a portion of tokenIn for opposingToken, then deposits both
-     * @param params The swap-deposit parameters
-     * @return lpOut The amount of LP tokens minted
+     * @notice Performs swap-deposit (zap in) for balanced LP in volatile Aerodrome pool.
+     * Quotes sale amt using _quote..., swaps portion of tokenIn for opposing, then adds liquidity (stable=false).
+     * @dev Internal use only. Recipient receives the LP tokens.
+     * @param params Bundle (router, factory, pool, token0, tokenIn, opposingToken, amountIn, recipient, deadline).
+     * @return lpOut Amount of LP tokens minted to recipient.
+     * @custom:emits Transfer (approvals + deposits) + liquidity add events from router/pool.
      */
-    function _swapDepositVolatile(
-        SwapDepositVolatileParams memory params
-    ) internal returns (uint256 lpOut) {
+    function _swapDepositVolatile(SwapDepositVolatileParams memory params) internal returns (uint256 lpOut) {
         // Calculate optimal swap amount
         uint256 swapAmount = _quoteSwapDepositSaleAmtVolatile(params);
 
@@ -167,64 +166,72 @@ library AerodromeServiceVolatile {
         params.tokenIn.approve(address(params.router), depositAmountIn);
         params.opposingToken.approve(address(params.router), swapAmountOut);
 
-        (
-            , // amountA
-            , // amountB
-            lpOut
-        ) = params.router.addLiquidity(
-            address(params.tokenIn),
-            address(params.opposingToken),
-            false, // Volatile pool
-            depositAmountIn,
-            swapAmountOut,
-            0, // amountAMin - caller should implement slippage protection
-            0, // amountBMin
-            params.recipient,
-            params.deadline
-        );
+        (,, lpOut) = params.router
+            .addLiquidity(
+                address(params.tokenIn),
+                address(params.opposingToken),
+                false, // Volatile pool
+                depositAmountIn,
+                swapAmountOut,
+                0, // amountAMin - caller should implement slippage protection
+                0, // amountBMin
+                params.recipient,
+                params.deadline
+            );
     }
+    // end::_swapDepositVolatile(SwapDepositVolatileParams)[]
 
+    // tag::_quoteSwapDepositSaleAmtVolatile(SwapDepositVolatileParams)[]
     /**
-     * @notice Calculates the optimal swap amount for a swap-deposit operation
-     * @dev Uses ConstProdUtils for volatile pool math (xy = k)
-     * @param params The swap-deposit parameters
-     * @return saleAmt The optimal amount to swap
+     * @notice Quotes the amount of tokenIn to sell (swap) to balance a deposit into the pool.
+     * Uses ConstProdUtils + pool reserves + factory fee (for volatile=false).
+     * @dev Internal view helper for swap-deposit flows.
+     * @param params The swap-deposit params (amountIn, token0 side, pool, factory).
+     * @return saleAmt Portion to swap out for opposing token.
      */
-    function _quoteSwapDepositSaleAmtVolatile(
-        SwapDepositVolatileParams memory params
-    ) internal view returns (uint256 saleAmt) {
-        uint256 saleReserve = address(params.tokenIn) == address(params.token0)
-            ? params.pool.reserve0()
-            : params.pool.reserve1();
-
+    function _quoteSwapDepositSaleAmtVolatile(SwapDepositVolatileParams memory params)
+        internal
+        view
+        returns (uint256 saleAmt)
+    {
+        uint256 saleReserve =
+            address(params.tokenIn) == address(params.token0) ? params.pool.reserve0() : params.pool.reserve1();
         saleAmt = ConstProdUtils._swapDepositSaleAmt(
-            params.amountIn,
-            saleReserve,
-            params.factory.getFee(address(params.pool), false), // Volatile pool fee
-            AERO_FEE_DENOM
+            params.amountIn, saleReserve, params.factory.getFee(address(params.pool), false), AERO_FEE_DENOM
         );
     }
+    // end::_quoteSwapDepositSaleAmtVolatile(SwapDepositVolatileParams)[]
 
+    // tag::_withdrawSwapVolatile(WithdrawSwapVolatileParams)[]
     /**
-     * @notice Performs a withdraw-swap (zap out) from a volatile pool
-     * @dev Removes liquidity and swaps opposingToken to tokenOut
-     * @param params The withdraw-swap parameters
-     * @return amountOut The total amount of tokenOut received
+     * @notice Withdraw-swap (zap out): remove LP, swap the opposing portion to target tokenOut.
+     * Removes liquidity to self (stable=false), swaps the B portion to tokenOut, transfers A + swapped to recipient.
+     * @dev Assumes volatile pool (stable=false). Caller responsible for mins/slippage.
+     * @param params Bundle with router/pool/factory + tokenOut + opposing + lpBurnAmt + recipient + deadline.
+     * @return amountOut Total tokenOut received (direct A + swapped proceeds).
+     * @custom:emits Transfer (from remove + swap) + liquidity remove events.
      */
-    function _withdrawSwapVolatile(
-        WithdrawSwapVolatileParams memory params
-    ) internal returns (uint256 amountOut) {
+    function _withdrawSwapVolatile(WithdrawSwapVolatileParams memory params) internal returns (uint256 amountOut) {
         // Remove liquidity
-        (uint256 amountA, uint256 amountB) = params.aerodromeRouter.removeLiquidity(
-            address(params.tokenOut),
-            address(params.opposingToken),
-            false, // Volatile pool
-            params.lpBurnAmt,
-            0, // amountAMin
-            0, // amountBMin
-            address(this),
-            params.deadline
-        );
+        (uint256 amountA, uint256 amountB) = params.aerodromeRouter
+            .removeLiquidity(
+                // address tokenA,
+                address(params.tokenOut),
+                // address tokenB,
+                address(params.opposingToken),
+                // bool stable,
+                false,
+                // uint256 liquidity,
+                params.lpBurnAmt,
+                // uint256 amountAMin,
+                0,
+                // uint256 amountBMin,
+                0,
+                // address to,
+                address(this),
+                // uint256 deadline
+                params.deadline
+            );
 
         // Swap opposingToken (amountB) to tokenOut
         SwapVolatileParams memory swapParams = SwapVolatileParams({
@@ -244,4 +251,7 @@ library AerodromeServiceVolatile {
 
         return amountA + swapAmountOut;
     }
+    // end::_withdrawSwapVolatile(WithdrawSwapVolatileParams)[]
+
+// end::AerodromeServiceVolatile[]
 }

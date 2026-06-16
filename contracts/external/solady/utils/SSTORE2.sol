@@ -33,7 +33,7 @@ library SSTORE2 {
 
     /// @dev Writes `data` into the bytecode of a storage contract and returns its address.
     function write(bytes memory data) internal returns (address pointer) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let n := mload(data) // Let `l` be `n + 1`. +1 as we prefix a STOP opcode.
             /**
              * ---------------------------------------------------+
@@ -65,11 +65,8 @@ library SSTORE2 {
 
     /// @dev Writes `data` into the bytecode of a storage contract with `salt`
     /// and returns its normal CREATE2 deterministic address.
-    function writeCounterfactual(bytes memory data, bytes32 salt)
-        internal
-        returns (address pointer)
-    {
-        assembly("memory-safe") {
+    function writeCounterfactual(bytes memory data, bytes32 salt) internal returns (address pointer) {
+        assembly ("memory-safe") {
             let n := mload(data)
             // Do a out-of-gas revert if `n + 1` is more than 2 bytes.
             mstore(add(data, gt(n, 0xfffe)), add(0xfe61000180600a3d393df300, shl(0x40, n)))
@@ -86,11 +83,8 @@ library SSTORE2 {
     /// @dev Writes `data` into the bytecode of a storage contract and returns its address.
     /// This uses the so-called "CREATE3" workflow,
     /// which means that `pointer` is agnostic to `data, and only depends on `salt`.
-    function writeDeterministic(bytes memory data, bytes32 salt)
-        internal
-        returns (address pointer)
-    {
-        assembly("memory-safe") {
+    function writeDeterministic(bytes memory data, bytes32 salt) internal returns (address pointer) {
+        assembly ("memory-safe") {
             let n := mload(data)
             mstore(0x00, _CREATE3_PROXY_INITCODE) // Store the `_PROXY_INITCODE`.
             let proxy := create2(0, 0x10, 0x10, salt)
@@ -127,7 +121,7 @@ library SSTORE2 {
     /// @dev Returns the initialization code hash of the storage contract for `data`.
     /// Used for mining vanity addresses with create2crunch.
     function initCodeHash(bytes memory data) internal pure returns (bytes32 hash) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let n := mload(data)
             // Do a out-of-gas revert if `n + 1` is more than 2 bytes.
             returndatacopy(returndatasize(), returndatasize(), gt(n, 0xfffe))
@@ -138,11 +132,7 @@ library SSTORE2 {
     }
 
     /// @dev Equivalent to `predictCounterfactualAddress(data, salt, address(this))`
-    function predictCounterfactualAddress(bytes memory data, bytes32 salt)
-        internal
-        view
-        returns (address pointer)
-    {
+    function predictCounterfactualAddress(bytes memory data, bytes32 salt) internal view returns (address pointer) {
         pointer = predictCounterfactualAddress(data, salt, address(this));
     }
 
@@ -155,7 +145,7 @@ library SSTORE2 {
         returns (address predicted)
     {
         bytes32 hash = initCodeHash(data);
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Compute and store the bytecode hash.
             mstore8(0x00, 0xff) // Write the prefix.
             mstore(0x35, hash)
@@ -173,12 +163,8 @@ library SSTORE2 {
     }
 
     /// @dev Returns the "CREATE3" deterministic address for `salt` with `deployer`.
-    function predictDeterministicAddress(bytes32 salt, address deployer)
-        internal
-        pure
-        returns (address pointer)
-    {
-        assembly("memory-safe") {
+    function predictDeterministicAddress(bytes32 salt, address deployer) internal pure returns (address pointer) {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Cache the free memory pointer.
             mstore(0x00, deployer) // Store `deployer`.
             mstore8(0x0b, 0xff) // Store the prefix.
@@ -201,7 +187,7 @@ library SSTORE2 {
 
     /// @dev Equivalent to `read(pointer, 0, 2 ** 256 - 1)`.
     function read(address pointer) internal view returns (bytes memory data) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             data := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(pointer), 0x01))
             extcodecopy(pointer, add(data, 0x1f), 0x00, add(n, 0x21))
@@ -212,7 +198,7 @@ library SSTORE2 {
 
     /// @dev Equivalent to `read(pointer, start, 2 ** 256 - 1)`.
     function read(address pointer, uint256 start) internal view returns (bytes memory data) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             data := mload(0x40)
             let n := and(0xffffffffff, sub(extcodesize(pointer), 0x01))
             let l := sub(n, and(0xffffff, mul(lt(start, n), start)))
@@ -227,12 +213,8 @@ library SSTORE2 {
     /// The `pointer` MUST be deployed via the SSTORE2 write functions.
     /// Otherwise, the behavior is undefined.
     /// Out-of-gas reverts if `pointer` does not have any code.
-    function read(address pointer, uint256 start, uint256 end)
-        internal
-        view
-        returns (bytes memory data)
-    {
-        assembly("memory-safe") {
+    function read(address pointer, uint256 start, uint256 end) internal view returns (bytes memory data) {
+        assembly ("memory-safe") {
             data := mload(0x40)
             if iszero(lt(end, 0xffff)) { end := 0xffff }
             let d := mul(sub(end, start), lt(start, end))

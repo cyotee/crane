@@ -14,14 +14,13 @@ import {ITIP20} from "./interfaces/ITIP20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @title TempoExchangeAggregator
 /// @notice Singleton Uniswap V4 hook that aggregates liquidity from Tempo's enshrined stablecoin DEX
 /// @dev Supports multiple pools and both exact-input and exact-output swaps
 /// @dev Tempo uses uint128 for amounts; this contract handles the conversion from uint256
 contract TempoExchangeAggregator is BaseAggregatorHook {
-    
     using BetterEfficientHashLib for bytes;
 
     using StateLibrary for IPoolManager;

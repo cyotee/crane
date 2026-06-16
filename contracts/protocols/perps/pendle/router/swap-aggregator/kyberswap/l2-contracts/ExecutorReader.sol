@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./CalldataReader.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "../interfaces/IAggregationExecutorOptimistic.sol";
 
 library ExecutorReader {
@@ -34,9 +34,11 @@ library ExecutorReader {
         return abi.encode(desc);
     }
 
-    function readSwapSingleSequence(
-        bytes memory data
-    ) internal pure returns (IAggregationExecutorOptimistic.Swap[] memory swaps, address tokenIn) {
+    function readSwapSingleSequence(bytes memory data)
+        internal
+        pure
+        returns (IAggregationExecutorOptimistic.Swap[] memory swaps, address tokenIn)
+    {
         uint256 startByte = 0;
         bytes memory ret;
         (ret, startByte) = CalldataReader._calldataVal(data, startByte, 1);
@@ -48,10 +50,11 @@ library ExecutorReader {
         (tokenIn, startByte) = CalldataReader._readAddress(data, startByte);
     }
 
-    function _readSwap(
-        bytes memory data,
-        uint256 startByte
-    ) internal pure returns (IAggregationExecutorOptimistic.Swap memory swap, uint256) {
+    function _readSwap(bytes memory data, uint256 startByte)
+        internal
+        pure
+        returns (IAggregationExecutorOptimistic.Swap memory swap, uint256)
+    {
         (swap.data, startByte) = CalldataReader._readBytes(data, startByte);
         bytes1 t;
         (t, startByte) = CalldataReader._readBytes1(data, startByte);

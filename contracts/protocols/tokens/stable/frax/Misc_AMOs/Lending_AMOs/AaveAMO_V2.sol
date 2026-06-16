@@ -28,10 +28,10 @@ import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/UniswapPairOracle.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "./aave/IAAVELendingPool_Partial.sol";
 import "./aave/IAAVE_aFRAX.sol";
-import "./aave/IStakedAave.sol";
+import {IStakedAave} from "./aave/IStakedAave.sol";
 import "./aave/IAaveIncentivesControllerPartial.sol";
 import "./aave/IProtocolDataProvider.sol";
 
@@ -47,17 +47,19 @@ contract AaveAMO_V2 is Owned {
     IFrax private FRAX = IFrax(0x853d955aCEf822Db058eb8505911ED77F175b99e);
     IFxs private FXS = IFxs(0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0);
     IFraxAMOMinter private amo_minter;
-    
-    
+
     // Pools and vaults
-    IAAVELendingPool_Partial private aaveLending_Pool = IAAVELendingPool_Partial(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
+    IAAVELendingPool_Partial private aaveLending_Pool =
+        IAAVELendingPool_Partial(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
     IAAVE_aFRAX private aaveFRAX_Token = IAAVE_aFRAX(0xd4937682df3C8aEF4FE912A96A74121C0829E664);
 
     // Reward Tokens
     ERC20 private AAVE = ERC20(0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9);
     IStakedAave private stkAAVE = IStakedAave(0x4da27a545c0c5B758a6BA100e3a049001de870f5);
-    IAaveIncentivesControllerPartial private AAVEIncentivesController = IAaveIncentivesControllerPartial(0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5);
-    IProtocolDataProvider private AAVEProtocolDataProvider = IProtocolDataProvider(0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d);
+    IAaveIncentivesControllerPartial private AAVEIncentivesController =
+        IAaveIncentivesControllerPartial(0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5);
+    IProtocolDataProvider private AAVEProtocolDataProvider =
+        IProtocolDataProvider(0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d);
 
     // Borrowed assets
     address[] public aave_borrow_asset_list;
@@ -67,16 +69,13 @@ contract AaveAMO_V2 is Owned {
     uint256 private constant PRICE_PRECISION = 1e6;
 
     /* ========== CONSTRUCTOR ========== */
-    
+
     /// @notice Aave AMO Constructor
     /// @param _owner_address owner address
     /// @param _amo_minter_address AMO minter address
-    constructor (
-        address _owner_address,
-        address _amo_minter_address
-    ) Owned(_owner_address) {
+    constructor(address _owner_address, address _amo_minter_address) Owned(_owner_address) {
         amo_minter = IFraxAMOMinter(_amo_minter_address);
-        
+
         // Get the custodian and timelock addresses from the minter
         custodian_address = amo_minter.custodian_address();
         timelock_address = amo_minter.timelock_address();
@@ -90,7 +89,10 @@ contract AaveAMO_V2 is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -102,10 +104,7 @@ contract AaveAMO_V2 is Owned {
     /* ========== VIEWS ========== */
 
     /// @notice Show allocations of AMO in Frax
-    /// @return allocations : 
-    /// allocations[0] = Unallocated FRAX
-    /// allocations[1] = Allocated FRAX
-    /// allocations[2] = Total FRAX
+    /// @return allocations Array: [0]=Unallocated FRAX, [1]=Allocated FRAX, [2]=Total FRAX
     function showAllocations() public view returns (uint256[3] memory allocations) {
         // All numbers given are in FRAX unless otherwise stated
         allocations[0] = FRAX.balanceOf(address(this)); // Unallocated FRAX
@@ -115,32 +114,28 @@ contract AaveAMO_V2 is Owned {
     }
 
     /// @notice Show debts of AMO by Asset
-    /// @return debts : 
-    /// debts[0] = Total debt balance
-    /// debts[1] = AMO Asset balance
-    /// debts[2] = Total Frax used for collateral 
+    /// @return debts Array: [0]=Total debt, [1]=AMO Asset balance, [2]=Total Frax collateral
     function showDebtsByAsset(address asset_address) public view returns (uint256[3] memory debts) {
         // All numbers given are in FRAX unless otherwise stated
         require(aave_borrow_asset_check[asset_address], "Asset is not available in borrowed list.");
-        (, uint256 currentStableDebt, uint256 currentVariableDebt, ,  , , , , ) = AAVEProtocolDataProvider.getUserReserveData(asset_address, address(this));
+        (, uint256 currentStableDebt, uint256 currentVariableDebt,,,,,,) =
+            AAVEProtocolDataProvider.getUserReserveData(asset_address, address(this));
         debts[0] = currentStableDebt + currentVariableDebt; // Total debt balance
         ERC20 _asset = ERC20(asset_address);
         debts[1] = _asset.balanceOf(address(this)); // AMO Asset balance
         debts[2] = aaveFRAX_Token.balanceOf(address(this)); // Total Frax used for collateral (this is total potential collateral for all borrows)
     }
 
-    /// @notice 
-    /// @return frax_val_e18 Frax valume 
-    /// @return collat_val_e18 Frax collateral valume 
+    /// @notice Returns FRAX value and collateral value (e18).
+    /// @return frax_val_e18 Frax volume
+    /// @return collat_val_e18 Frax collateral volume
     function dollarBalances() public view returns (uint256 frax_val_e18, uint256 collat_val_e18) {
         frax_val_e18 = showAllocations()[2];
         collat_val_e18 = (frax_val_e18).mul(FRAX.global_collateral_ratio()).div(PRICE_PRECISION);
     }
 
     /// @notice For potential Aave incentives in the future
-    /// @return rewards :
-    /// rewards[0] = stkAAVE balance 
-    /// rewards[1] = AAVE balance 
+    /// @return rewards Array: [0]=stkAAVE balance, [1]=AAVE balance
     function showRewards() external view returns (uint256[2] memory rewards) {
         rewards[0] = stkAAVE.balanceOf(address(this)); // stkAAVE
         rewards[1] = AAVE.balanceOf(address(this)); // AAVE
@@ -166,9 +161,9 @@ contract AaveAMO_V2 is Owned {
     function aaveWithdrawFRAX(uint256 aFRAX_amount) public onlyByOwnGovCust {
         aaveLending_Pool.withdraw(address(FRAX), aFRAX_amount, address(this));
     }
-    
+
     /// @notice Function to deposit other assets as collateral to Aave pool
-    /// @param collateral_address collateral ERC20 address 
+    /// @param collateral_address collateral ERC20 address
     /// @param amount Amount of asset to be diposited
     function aaveDepositCollateral(address collateral_address, uint256 amount) public onlyByOwnGovCust {
         ERC20 token = ERC20(collateral_address);
@@ -177,24 +172,24 @@ contract AaveAMO_V2 is Owned {
     }
 
     /// @notice Function to withdraw other assets as collateral from Aave pool
-    /// @param collateral_address collateral ERC20 address 
+    /// @param collateral_address collateral ERC20 address
     /// @param aToken_amount Amount of asset to be withdrawed
     function aaveWithdrawCollateral(address collateral_address, uint256 aToken_amount) public onlyByOwnGovCust {
         aaveLending_Pool.withdraw(collateral_address, aToken_amount, address(this));
     }
 
     /// @notice Function to borrow other assets from Aave pool
-    /// @param asset Borrowing asset ERC20 address 
+    /// @param asset Borrowing asset ERC20 address
     /// @param borrow_amount Amount of asset to be borrowed
     /// @param interestRateMode The interest rate mode at which the AMO wants to borrow: 1 for Stable, 2 for Variable
     function aaveBorrow(address asset, uint256 borrow_amount, uint256 interestRateMode) public onlyByOwnGovCust {
         aaveLending_Pool.borrow(asset, borrow_amount, interestRateMode, 0, address(this));
-        aave_borrow_asset_check[asset] = true; 
+        aave_borrow_asset_check[asset] = true;
         aave_borrow_asset_list.push(asset);
     }
 
     /// @notice Function to repay other assets to Aave pool
-    /// @param asset Borrowing asset ERC20 address 
+    /// @param asset Borrowing asset ERC20 address
     /// @param repay_amount Amount of asset to be withdrawed
     /// @param interestRateMode The interest rate mode at which the AMO wants to borrow: 1 for Stable, 2 for Variable
     function aaveRepay(address asset, uint256 repay_amount, uint256 interestRateMode) public onlyByOwnGovCust {
@@ -211,13 +206,13 @@ contract AaveAMO_V2 is Owned {
         uint256 rewards_balance = AAVEIncentivesController.getRewardsBalance(the_assets, address(this));
         AAVEIncentivesController.claimRewards(the_assets, rewards_balance, address(this));
 
-        if (withdraw_too){
+        if (withdraw_too) {
             withdrawRewards();
         }
     }
 
     /* ========== Burns and givebacks ========== */
-   
+
     /// @notice Burn unneeded or excess FRAX. Goes through the minter
     /// @param frax_amount Amount of Frax to burn
     function burnFRAX(uint256 frax_amount) public onlyByOwnGovCust {
@@ -239,10 +234,10 @@ contract AaveAMO_V2 is Owned {
         stkAAVE.transfer(msg.sender, stkAAVE.balanceOf(address(this)));
         AAVE.transfer(msg.sender, AAVE.balanceOf(address(this)));
     }
-   
+
     /* ========== RESTRICTED GOVERNANCE FUNCTIONS ========== */
 
-    /// @notice Change the frax Minter 
+    /// @notice Change the frax Minter
     /// @param _amo_minter_address Frax AMO minter
     function setAMOMinter(address _amo_minter_address) external onlyByOwnGov {
         amo_minter = IFraxAMOMinter(_amo_minter_address);
@@ -260,13 +255,12 @@ contract AaveAMO_V2 is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
-
 }

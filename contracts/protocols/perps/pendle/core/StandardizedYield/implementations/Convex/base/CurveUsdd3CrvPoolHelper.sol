@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "../../../../libraries/math/PMath.sol";
 import "../../../../../interfaces/Curve/ICrvPool.sol";
 import "./Curve3CrvPoolHelper.sol";
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library CurveUsdd3CrvPoolHelper {
     using PMath for uint256;
@@ -82,19 +82,20 @@ library CurveUsdd3CrvPoolHelper {
         return mint_amount;
     }
 
-    function get_D_mem(
-        uint256[N_COINS] memory _rates,
-        uint256[N_COINS] memory _balances,
-        uint256 _amp
-    ) internal pure returns (uint256) {
+    function get_D_mem(uint256[N_COINS] memory _rates, uint256[N_COINS] memory _balances, uint256 _amp)
+        internal
+        pure
+        returns (uint256)
+    {
         uint256[N_COINS] memory xp = _xp_mem(_rates, _balances);
         return get_D(xp, _amp);
     }
 
-    function _xp_mem(
-        uint256[N_COINS] memory _rates,
-        uint256[N_COINS] memory balances
-    ) internal pure returns (uint256[N_COINS] memory) {
+    function _xp_mem(uint256[N_COINS] memory _rates, uint256[N_COINS] memory balances)
+        internal
+        pure
+        returns (uint256[N_COINS] memory)
+    {
         uint256[N_COINS] memory result;
         for (uint256 i = 0; i < N_COINS; ++i) {
             result[i] = (balances[i] * _rates[i]) / PRECISION;
@@ -110,7 +111,7 @@ library CurveUsdd3CrvPoolHelper {
         }
         if (S == 0) return 0;
 
-        // uint256 
+        // uint256
         D = S;
         uint256 Ann = _amp * N_COINS;
         for (uint256 _i = 0; _i < 255; ++_i) {
@@ -119,9 +120,8 @@ library CurveUsdd3CrvPoolHelper {
                 D_P = (D_P * D) / (_xp[k] * N_COINS);
             }
             Dprev = D;
-            D =
-                (((Ann * S) / A_PRECISION + D_P * N_COINS) * D) /
-                (((Ann - A_PRECISION) * D) / A_PRECISION + (N_COINS + 1) * D_P);
+            D = (((Ann * S) / A_PRECISION + D_P * N_COINS) * D)
+                / (((Ann - A_PRECISION) * D) / A_PRECISION + (N_COINS + 1) * D_P);
 
             if (D > Dprev) {
                 if (D - Dprev <= 1) {

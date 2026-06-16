@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
 
-import "./Frax.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Governance/AccessControl.sol";
+import {FRAXStablecoin} from "@crane/contracts/protocols/tokens/stable/frax/Frax/Frax.sol";
+import {TransferHelper} from "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import {Owned} from "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
+import {AccessControl} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 
 contract FraxBridge is AccessControl, Owned {
     /* ========== STATE VARIABLES ========== */
@@ -18,20 +18,15 @@ contract FraxBridge is AccessControl, Owned {
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
-        require(
-            msg.sender == timelock_address || msg.sender == owner,
-            "Not owner or timelock"
-        );
+        require(msg.sender == timelock_address || msg.sender == owner, "Not owner or timelock");
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _frax_contract_address,
-        address _creator_address,
-        address _timelock_address
-    ) Owned(_creator_address) {
+    constructor(address _frax_contract_address, address _creator_address, address _timelock_address)
+        Owned(_creator_address)
+    {
         FRAX = FRAXStablecoin(_frax_contract_address);
         timelock_address = _timelock_address;
         _setupRole(DEFAULT_ADMIN_ROLE, owner);
@@ -46,11 +41,7 @@ contract FraxBridge is AccessControl, Owned {
 
     /* ========== PUBLIC FUNCTIONS ========== */
 
-    function depositFrax(
-        uint256 _chain_id,
-        string memory _to,
-        uint256 _amount_d18
-    ) external {
+    function depositFrax(uint256 _chain_id, string memory _to, uint256 _amount_d18) external {
         TransferHelper.safeTransferFrom(address(FRAX), msg.sender, address(this), _amount_d18);
         cumulative_deposits += _amount_d18;
         FRAX.pool_burn_from(address(this), _amount_d18);
@@ -59,10 +50,7 @@ contract FraxBridge is AccessControl, Owned {
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    function withdrawFrax(address _to, uint256 _amount_d18)
-        external
-        onlyByOwnGov
-    {
+    function withdrawFrax(address _to, uint256 _amount_d18) external onlyByOwnGov {
         cumulative_withdrawals += _amount_d18;
         FRAX.pool_mint(_to, _amount_d18);
     }

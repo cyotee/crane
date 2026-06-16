@@ -55,11 +55,12 @@ contract PendleCamelotV1VolatileSY is SYBaseWithRewards, CamelotRewardHelper, Ca
     /**
      * @dev See {SYBase-_redeem}
      */
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         // solhint-disable-next-line
         if (isRewardDisabled) {
             // if isRewardDisabled is activated, the LP has been withdrawn from the pool
@@ -76,7 +77,7 @@ contract PendleCamelotV1VolatileSY is SYBaseWithRewards, CamelotRewardHelper, Ca
     }
 
     function exchangeRate() public view virtual override returns (uint256) {
-        (uint256 reserve0, uint256 reserve1, , ) = ICamelotPair(pair).getReserves();
+        (uint256 reserve0, uint256 reserve1,,) = ICamelotPair(pair).getReserves();
         uint256 supply = ICamelotPair(pair).totalSupply();
         return PMath.sqrt(reserve0 * reserve1).divDown(supply);
     }

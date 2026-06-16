@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 import "./MentoAdapterMock.sol";
 
 contract MentoAdapterMockV2 is MentoAdapterMock {
-  function getDataFeedsCount() public pure override returns (uint256) {
-    return 1;
-  }
+    function getDataFeedsCount() public pure override returns (uint256) {
+        return 1;
+    }
 }

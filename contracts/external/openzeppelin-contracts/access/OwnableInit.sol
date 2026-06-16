@@ -98,6 +98,7 @@ abstract contract Ownable is Context {
         _owner = newOwner;
         emit OwnershipTransferred(oldOwner, newOwner);
     }
+
     /**
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Internal function without access restriction.

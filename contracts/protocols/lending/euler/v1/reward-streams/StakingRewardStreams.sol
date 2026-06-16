@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
-import {BetterSafeERC20 as SafeERC20} from '@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {BetterSafeERC20 as SafeERC20} from "@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol";
 import {Set, SetStorage} from "../evc/Set.sol";
 import {BaseRewardStreams} from "./BaseRewardStreams.sol";
 import {IStakingRewardStreams} from "./interfaces/IRewardStreams.sol";
@@ -68,12 +68,12 @@ contract StakingRewardStreams is BaseRewardStreams, IStakingRewardStreams {
     /// @param recipient The address to receive the unstaked tokens.
     /// @param amount The amount of tokens to unstake.
     /// @param forfeitRecentReward Whether to forfeit the recent reward and not update the accumulator.
-    function unstake(
-        address rewarded,
-        uint256 amount,
-        address recipient,
-        bool forfeitRecentReward
-    ) external virtual override nonReentrant {
+    function unstake(address rewarded, uint256 amount, address recipient, bool forfeitRecentReward)
+        external
+        virtual
+        override
+        nonReentrant
+    {
         address msgSender = _msgSender();
         AccountStorage storage accountStorage = accounts[msgSender][rewarded];
         uint256 currentAccountBalance = accountStorage.balance;

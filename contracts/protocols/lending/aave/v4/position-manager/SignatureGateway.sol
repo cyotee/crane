@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: LicenseRef-BUSL
 pragma solidity ^0.8.28;
 
-import {SafeERC20, IERC20} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/SafeERC20.sol';
-import {EIP712Hash} from '@crane/contracts/protocols/lending/aave/v4/position-manager/libraries/EIP712Hash.sol';
-import {MathUtils} from '@crane/contracts/protocols/lending/aave/v4/libraries/math/MathUtils.sol';
-import {ISpoke} from '@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol';
-import {ISignatureGateway} from '@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ISignatureGateway.sol';
-import {PositionManagerIntentBase} from '@crane/contracts/protocols/lending/aave/v4/position-manager/PositionManagerIntentBase.sol';
+import {SafeERC20, IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {EIP712Hash} from "@crane/contracts/protocols/lending/aave/v4/position-manager/libraries/EIP712Hash.sol";
+import {MathUtils} from "@crane/contracts/protocols/lending/aave/v4/libraries/math/MathUtils.sol";
+import {ISpoke} from "@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol";
+import {
+    ISignatureGateway
+} from "@crane/contracts/protocols/lending/aave/v4/position-manager/interfaces/ISignatureGateway.sol";
+import {
+    PositionManagerIntentBase
+} from "@crane/contracts/protocols/lending/aave/v4/position-manager/PositionManagerIntentBase.sol";
 
 /// @title SignatureGateway
 /// @author Aave Labs
@@ -14,196 +18,187 @@ import {PositionManagerIntentBase} from '@crane/contracts/protocols/lending/aave
 /// @dev Uses keyed-nonces where each key's namespace nonce is consumed sequentially. Intents bundled through
 /// multicall can be executed independently in order of signed nonce & deadline; does not guarantee batch atomicity.
 contract SignatureGateway is ISignatureGateway, PositionManagerIntentBase {
-  using SafeERC20 for IERC20;
-  using EIP712Hash for *;
+    using SafeERC20 for IERC20;
+    using EIP712Hash for *;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant SUPPLY_TYPEHASH = EIP712Hash.SUPPLY_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant SUPPLY_TYPEHASH = EIP712Hash.SUPPLY_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant WITHDRAW_TYPEHASH = EIP712Hash.WITHDRAW_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant WITHDRAW_TYPEHASH = EIP712Hash.WITHDRAW_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant BORROW_TYPEHASH = EIP712Hash.BORROW_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant BORROW_TYPEHASH = EIP712Hash.BORROW_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant REPAY_TYPEHASH = EIP712Hash.REPAY_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant REPAY_TYPEHASH = EIP712Hash.REPAY_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant SET_USING_AS_COLLATERAL_TYPEHASH =
-    EIP712Hash.SET_USING_AS_COLLATERAL_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant SET_USING_AS_COLLATERAL_TYPEHASH = EIP712Hash.SET_USING_AS_COLLATERAL_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant UPDATE_USER_RISK_PREMIUM_TYPEHASH =
-    EIP712Hash.UPDATE_USER_RISK_PREMIUM_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant UPDATE_USER_RISK_PREMIUM_TYPEHASH = EIP712Hash.UPDATE_USER_RISK_PREMIUM_TYPEHASH;
 
-  /// @inheritdoc ISignatureGateway
-  bytes32 public constant UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH =
-    EIP712Hash.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH;
+    /// @inheritdoc ISignatureGateway
+    bytes32 public constant UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH = EIP712Hash.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH;
 
-  /// @dev Constructor.
-  /// @param initialOwner_ The address of the initial owner.
-  constructor(address initialOwner_) PositionManagerIntentBase(initialOwner_) {}
+    /// @dev Constructor.
+    /// @param initialOwner_ The address of the initial owner.
+    constructor(address initialOwner_) PositionManagerIntentBase(initialOwner_) {}
 
-  /// @inheritdoc ISignatureGateway
-  function supplyWithSig(
-    Supply calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) returns (uint256, uint256) {
-    address spoke = params.spoke;
-    uint256 reserveId = params.reserveId;
-    address onBehalfOf = params.onBehalfOf;
-    _verifyAndConsumeIntent({
-      signer: onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function supplyWithSig(Supply calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+        returns (uint256, uint256)
+    {
+        address spoke = params.spoke;
+        uint256 reserveId = params.reserveId;
+        address onBehalfOf = params.onBehalfOf;
+        _verifyAndConsumeIntent({
+            signer: onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
-    underlying.safeTransferFrom(onBehalfOf, address(this), params.amount);
-    underlying.forceApprove(spoke, params.amount);
+        IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
+        underlying.safeTransferFrom(onBehalfOf, address(this), params.amount);
+        underlying.forceApprove(spoke, params.amount);
 
-    return ISpoke(spoke).supply(reserveId, params.amount, onBehalfOf);
-  }
+        return ISpoke(spoke).supply(reserveId, params.amount, onBehalfOf);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function withdrawWithSig(
-    Withdraw calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) returns (uint256, uint256) {
-    address spoke = params.spoke;
-    uint256 reserveId = params.reserveId;
-    address onBehalfOf = params.onBehalfOf;
-    _verifyAndConsumeIntent({
-      signer: onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function withdrawWithSig(Withdraw calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+        returns (uint256, uint256)
+    {
+        address spoke = params.spoke;
+        uint256 reserveId = params.reserveId;
+        address onBehalfOf = params.onBehalfOf;
+        _verifyAndConsumeIntent({
+            signer: onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
-    (uint256 withdrawnShares, uint256 withdrawnAmount) = ISpoke(spoke).withdraw(
-      reserveId,
-      params.amount,
-      onBehalfOf
-    );
-    underlying.safeTransfer(onBehalfOf, withdrawnAmount);
+        IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
+        (uint256 withdrawnShares, uint256 withdrawnAmount) =
+            ISpoke(spoke).withdraw(reserveId, params.amount, onBehalfOf);
+        underlying.safeTransfer(onBehalfOf, withdrawnAmount);
 
-    return (withdrawnShares, withdrawnAmount);
-  }
+        return (withdrawnShares, withdrawnAmount);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function borrowWithSig(
-    Borrow calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) returns (uint256, uint256) {
-    address spoke = params.spoke;
-    uint256 reserveId = params.reserveId;
-    address onBehalfOf = params.onBehalfOf;
-    _verifyAndConsumeIntent({
-      signer: onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function borrowWithSig(Borrow calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+        returns (uint256, uint256)
+    {
+        address spoke = params.spoke;
+        uint256 reserveId = params.reserveId;
+        address onBehalfOf = params.onBehalfOf;
+        _verifyAndConsumeIntent({
+            signer: onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
-    (uint256 borrowedShares, uint256 borrowedAmount) = ISpoke(spoke).borrow(
-      reserveId,
-      params.amount,
-      onBehalfOf
-    );
-    underlying.safeTransfer(onBehalfOf, borrowedAmount);
+        IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
+        (uint256 borrowedShares, uint256 borrowedAmount) = ISpoke(spoke).borrow(reserveId, params.amount, onBehalfOf);
+        underlying.safeTransfer(onBehalfOf, borrowedAmount);
 
-    return (borrowedShares, borrowedAmount);
-  }
+        return (borrowedShares, borrowedAmount);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function repayWithSig(
-    Repay calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) returns (uint256, uint256) {
-    address spoke = params.spoke;
-    uint256 reserveId = params.reserveId;
-    address onBehalfOf = params.onBehalfOf;
-    _verifyAndConsumeIntent({
-      signer: onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function repayWithSig(Repay calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+        returns (uint256, uint256)
+    {
+        address spoke = params.spoke;
+        uint256 reserveId = params.reserveId;
+        address onBehalfOf = params.onBehalfOf;
+        _verifyAndConsumeIntent({
+            signer: onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
-    uint256 repayAmount = MathUtils.min(
-      params.amount,
-      ISpoke(spoke).getUserTotalDebt(reserveId, onBehalfOf)
-    );
+        IERC20 underlying = IERC20(_getReserveUnderlying(spoke, reserveId));
+        uint256 repayAmount = MathUtils.min(params.amount, ISpoke(spoke).getUserTotalDebt(reserveId, onBehalfOf));
 
-    underlying.safeTransferFrom(onBehalfOf, address(this), repayAmount);
-    underlying.forceApprove(spoke, repayAmount);
+        underlying.safeTransferFrom(onBehalfOf, address(this), repayAmount);
+        underlying.forceApprove(spoke, repayAmount);
 
-    return ISpoke(spoke).repay(reserveId, repayAmount, onBehalfOf);
-  }
+        return ISpoke(spoke).repay(reserveId, repayAmount, onBehalfOf);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function setUsingAsCollateralWithSig(
-    SetUsingAsCollateral calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) {
-    address onBehalfOf = params.onBehalfOf;
-    _verifyAndConsumeIntent({
-      signer: onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function setUsingAsCollateralWithSig(SetUsingAsCollateral calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+    {
+        address onBehalfOf = params.onBehalfOf;
+        _verifyAndConsumeIntent({
+            signer: onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    ISpoke(params.spoke).setUsingAsCollateral(params.reserveId, params.useAsCollateral, onBehalfOf);
-  }
+        ISpoke(params.spoke).setUsingAsCollateral(params.reserveId, params.useAsCollateral, onBehalfOf);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function updateUserRiskPremiumWithSig(
-    UpdateUserRiskPremium calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) {
-    _verifyAndConsumeIntent({
-      signer: params.onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function updateUserRiskPremiumWithSig(UpdateUserRiskPremium calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+    {
+        _verifyAndConsumeIntent({
+            signer: params.onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    ISpoke(params.spoke).updateUserRiskPremium(params.onBehalfOf);
-  }
+        ISpoke(params.spoke).updateUserRiskPremium(params.onBehalfOf);
+    }
 
-  /// @inheritdoc ISignatureGateway
-  function updateUserDynamicConfigWithSig(
-    UpdateUserDynamicConfig calldata params,
-    bytes calldata signature
-  ) external onlyRegisteredSpoke(params.spoke) {
-    _verifyAndConsumeIntent({
-      signer: params.onBehalfOf,
-      intentHash: params.hash(),
-      nonce: params.nonce,
-      deadline: params.deadline,
-      signature: signature
-    });
+    /// @inheritdoc ISignatureGateway
+    function updateUserDynamicConfigWithSig(UpdateUserDynamicConfig calldata params, bytes calldata signature)
+        external
+        onlyRegisteredSpoke(params.spoke)
+    {
+        _verifyAndConsumeIntent({
+            signer: params.onBehalfOf,
+            intentHash: params.hash(),
+            nonce: params.nonce,
+            deadline: params.deadline,
+            signature: signature
+        });
 
-    ISpoke(params.spoke).updateUserDynamicConfig(params.onBehalfOf);
-  }
+        ISpoke(params.spoke).updateUserDynamicConfig(params.onBehalfOf);
+    }
 
-  function _multicallEnabled() internal pure override returns (bool) {
-    return true;
-  }
+    function _multicallEnabled() internal pure override returns (bool) {
+        return true;
+    }
 
-  function _domainNameAndVersion() internal pure override returns (string memory, string memory) {
-    return ('SignatureGateway', '1');
-  }
+    function _domainNameAndVersion() internal pure override returns (string memory, string memory) {
+        return ("SignatureGateway", "1");
+    }
 }

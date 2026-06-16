@@ -15,8 +15,12 @@ import {SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Pool
 import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/TickMath.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/utils/HookMiner.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {UniswapV3Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/UniswapV3Aggregator.sol";
-import {IUniswapV3Pool} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
+import {
+    UniswapV3Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/UniswapV3Aggregator.sol";
+import {
+    IUniswapV3Pool
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV3/interfaces/IUniswapV3Pool.sol";
 
 /// @notice Fork tests — Ethereum mainnet (chain id 1).
 /// @dev `FORK_RPC_URL_1` and optional `FORK_BLOCK_NUMBER_1`. Skips when RPC unset.

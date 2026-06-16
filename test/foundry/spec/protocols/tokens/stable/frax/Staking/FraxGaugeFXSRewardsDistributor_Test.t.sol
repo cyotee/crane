@@ -4,11 +4,11 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/FraxGaugeFXSRewardsDistributor-Tests.js` (mock gauge controller)
 
 import {Test} from "forge-std/Test.sol";
-import {FraxGaugeFXSRewardsDistributor} from
-    "@crane/contracts/protocols/tokens/stable/frax/Curve/FraxGaugeFXSRewardsDistributor.sol";
+import {
+    FraxGaugeFXSRewardsDistributor
+} from "@crane/contracts/protocols/tokens/stable/frax/Curve/FraxGaugeFXSRewardsDistributor.sol";
 import {MintableERC20} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MintableERC20.sol";
-import {MockFraxGaugeController} from
-    "@crane/contracts/protocols/tokens/stable/frax/mocks/MockFraxGaugeController.sol";
+import {MockFraxGaugeController} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MockFraxGaugeController.sol";
 
 contract FraxGaugeFXSRewardsDistributor_Test is Test {
     uint256 internal constant ONE_WEEK = 604_800;

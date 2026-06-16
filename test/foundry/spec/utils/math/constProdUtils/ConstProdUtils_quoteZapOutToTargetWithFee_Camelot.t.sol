@@ -143,7 +143,8 @@ contract ConstProdUtils_quoteZapOutToTargetWithFee_Camelot_Test is TestBase_Cons
     function _testZapOutToTargetWithFeeImpossible(
         ICamelotPair pair,
         ERC20PermitMintableStub targetToken,
-        ERC20PermitMintableStub /*saleToken*/,
+        ERC20PermitMintableStub,
+        /*saleToken*/
         bool feesEnabled
     ) internal {
         _initializeCamelotBalancedPools();

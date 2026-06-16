@@ -19,11 +19,11 @@ library LiquidityMath {
     /// @param upperSqrtP An upper sqrt price
     /// @param qty0 amount of token0
     /// @return liquidity amount of returned liquidity to not exceed the qty0
-    function getLiquidityFromQty0(
-        uint160 lowerSqrtP,
-        uint160 upperSqrtP,
-        uint256 qty0
-    ) internal pure returns (uint128) {
+    function getLiquidityFromQty0(uint160 lowerSqrtP, uint160 upperSqrtP, uint256 qty0)
+        internal
+        pure
+        returns (uint128)
+    {
         uint256 liq = FullMath.mulDivFloor(lowerSqrtP, upperSqrtP, C.TWO_POW_96);
         unchecked {
             return FullMath.mulDivFloor(liq, qty0, upperSqrtP - lowerSqrtP).toUint128();
@@ -37,11 +37,11 @@ library LiquidityMath {
     /// @param upperSqrtP An upper sqrt price
     /// @param qty1 amount of token1
     /// @return liquidity amount of returned liquidity to not exceed to qty1
-    function getLiquidityFromQty1(
-        uint160 lowerSqrtP,
-        uint160 upperSqrtP,
-        uint256 qty1
-    ) internal pure returns (uint128) {
+    function getLiquidityFromQty1(uint160 lowerSqrtP, uint160 upperSqrtP, uint256 qty1)
+        internal
+        pure
+        returns (uint128)
+    {
         unchecked {
             return FullMath.mulDivFloor(qty1, C.TWO_POW_96, upperSqrtP - lowerSqrtP).toUint128();
         }

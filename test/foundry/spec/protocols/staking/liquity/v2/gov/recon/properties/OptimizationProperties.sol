@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 pragma solidity ^0.8.35;
 
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 import {vm} from "@crane/contracts/external/chimera/Hevm.sol";
-import {IUserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IUserProxy.sol";
+import {IUserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IUserProxy.sol";
 import {GovernanceProperties} from "./GovernanceProperties.sol";
 import {console} from "forge-std/console.sol";
 

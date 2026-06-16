@@ -17,7 +17,7 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
     using BetterSafeERC20 for IERC20;
     using ERC4626Repo for ERC4626Repo.Storage;
 
-    function deposit(uint256 assets, address receiver) public virtual lock returns (uint256 shares) {
+    function deposit(uint256 assets, address receiver) public virtual nonReentrant returns (uint256 shares) {
         ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 lastTotalAssets = ERC4626Repo._lastTotalAssets(erc4626);
         uint256 actualIn = ERC4626Service._secureReserveDeposit(erc4626, lastTotalAssets, assets);
@@ -31,7 +31,7 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
         return shares;
     }
 
-    function mint(uint256 shares, address receiver) public virtual lock returns (uint256 assets) {
+    function mint(uint256 shares, address receiver) public virtual nonReentrant returns (uint256 assets) {
         ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 lastTotalAssets = ERC4626Repo._lastTotalAssets(erc4626);
         ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
@@ -44,7 +44,7 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
         return assets;
     }
 
-    function withdraw(uint256 assets, address receiver, address owner) public virtual lock returns (uint256 shares) {
+    function withdraw(uint256 assets, address receiver, address owner) public virtual nonReentrant returns (uint256 shares) {
         ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(erc4626);
         ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
@@ -64,7 +64,7 @@ contract ERC4626Target is ReentrancyLockModifiers, IERC4626Events {
         return shares;
     }
 
-    function redeem(uint256 shares, address receiver, address owner) public virtual lock returns (uint256 assets) {
+    function redeem(uint256 shares, address receiver, address owner) public virtual nonReentrant returns (uint256 assets) {
         ERC4626Repo.Storage storage erc4626 = ERC4626Repo._layoutStruct();
         ERC20Repo.Storage storage erc20 = ERC20Repo._layoutStruct();
         uint256 totalAssets_ = ERC4626Repo._lastTotalAssets(erc4626);

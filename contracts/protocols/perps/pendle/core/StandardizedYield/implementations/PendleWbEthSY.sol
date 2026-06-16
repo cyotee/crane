@@ -10,12 +10,9 @@ contract PendleWbEthSY is SYBase {
     address public immutable eth;
     address public immutable wbETH;
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _eth,
-        address _wbETH
-    ) SYBase(_name, _symbol, _wbETH) {
+    constructor(string memory _name, string memory _symbol, address _eth, address _wbETH)
+        SYBase(_name, _symbol, _wbETH)
+    {
         eth = _eth;
         wbETH = _wbETH;
         _safeApproveInf(eth, wbETH);
@@ -36,11 +33,13 @@ contract PendleWbEthSY is SYBase {
         }
     }
 
-    function _redeem(
-        address receiver,
-        address tokenOut,
-        uint256 amountSharesToRedeem
-    ) internal override returns (uint256 /*amountTokenOut*/) {
+    function _redeem(address receiver, address tokenOut, uint256 amountSharesToRedeem)
+        internal
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         _transferOut(tokenOut, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -58,10 +57,14 @@ contract PendleWbEthSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == eth) {
             return amountTokenToDeposit.divDown(exchangeRate());
         } else {
@@ -69,10 +72,14 @@ contract PendleWbEthSY is SYBase {
         }
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 /*amountTokenOut*/) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        pure
+        override
+        returns (
+            uint256 /*amountTokenOut*/
+        )
+    {
         return amountSharesToRedeem;
     }
 

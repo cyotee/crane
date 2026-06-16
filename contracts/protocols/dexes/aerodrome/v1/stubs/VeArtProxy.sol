@@ -535,12 +535,12 @@ contract VeArtProxy is IVeArtProxy {
             uint256 length = log10(value) + 1;
             string memory buffer = new string(length);
             uint256 ptr;
-            assembly("memory-safe") {
+            assembly ("memory-safe") {
                 ptr := add(buffer, add(32, length))
             }
             while (true) {
                 ptr--;
-                assembly("memory-safe") {
+                assembly ("memory-safe") {
                     mstore8(ptr, byte(mod(value, 10), _SYMBOLS))
                 }
                 value /= 10;

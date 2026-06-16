@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.24;
 
-import {BetterAddress} from '@crane/contracts/utils/BetterAddress.sol';
+import {BetterAddress} from "@crane/contracts/utils/BetterAddress.sol";
 import {ERC20} from "@crane/contracts/tokens/ERC20/ERC20.sol";
 
 /// @notice Crane-local port of Balancer's WETHTestToken for testing purposes.

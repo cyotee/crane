@@ -1,14 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Test} from 'forge-std/Test.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {AuctionBaseTest} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol';
-import {AuctionStepsBuilder} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionStepsBuilder.sol';
-import {FuzzDeploymentParams} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/FuzzStructs.sol';
+import {Test} from "forge-std/Test.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    AuctionBaseTest
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionBaseTest.sol";
+import {
+    AuctionStepsBuilder
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionStepsBuilder.sol";
+import {
+    FuzzDeploymentParams
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/FuzzStructs.sol";
 
 /// @title AuctionDosTest
 /// @notice Test showing that `forceIterateOverTicks` can unbrick the auction in a DoS attack
@@ -31,10 +39,10 @@ contract AuctionDosTest is AuctionBaseTest {
 
         setUpTokens();
 
-        alice = makeAddr('alice');
-        bob = makeAddr('bob');
-        tokensRecipient = makeAddr('tokensRecipient');
-        fundsRecipient = makeAddr('fundsRecipient');
+        alice = makeAddr("alice");
+        bob = makeAddr("bob");
+        tokensRecipient = makeAddr("tokensRecipient");
+        fundsRecipient = makeAddr("fundsRecipient");
 
         _deploymentParams.auctionParams = helper__validFuzzDeploymentParams(_deploymentParams);
         vm.assume(_deploymentParams.auctionParams.startBlock < type(uint64).max - 1e7);
@@ -61,7 +69,7 @@ contract AuctionDosTest is AuctionBaseTest {
                 1,
                 alice,
                 _deploymentParams.auctionParams.floorPrice + (i - 1) * _deploymentParams.auctionParams.tickSpacing,
-                bytes('')
+                bytes("")
             );
         }
 
@@ -75,7 +83,7 @@ contract AuctionDosTest is AuctionBaseTest {
         uint128 bidAmount = uint128(FixedPointMathLib.fullMulDivUp(auction.totalSupply(), maxPrice, FixedPoint96.Q96));
 
         // Move the auction up to the highest tick
-        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, prevPrice, bytes(''));
+        auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, prevPrice, bytes(""));
 
         vm.roll(block.number + 1);
         // This should revert due to OOG
@@ -88,8 +96,8 @@ contract AuctionDosTest is AuctionBaseTest {
         emit ITickStorage.NextActiveTickUpdated(untilTickPrice);
         auction.forceIterateOverTicks{gas: FUSAKA_TX_GAS_LIMIT}(untilTickPrice);
 
-        emit log_named_uint('gasleft', gasleft());
-        require(gasleft() > FUSAKA_TX_GAS_LIMIT, 'Gas left is not greater than FUSAKA_TX_GAS_LIMIT');
+        emit log_named_uint("gasleft", gasleft());
+        require(gasleft() > FUSAKA_TX_GAS_LIMIT, "Gas left is not greater than FUSAKA_TX_GAS_LIMIT");
 
         // Now you should be able to checkpoint
         auction.checkpoint{gas: FUSAKA_TX_GAS_LIMIT}();

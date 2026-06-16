@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ITroveManager.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ITroveManager.sol";
 
 interface ITroveManagerTester is ITroveManager {
     function liquidate(uint256 _troveId) external;

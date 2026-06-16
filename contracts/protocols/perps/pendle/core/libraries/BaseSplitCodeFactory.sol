@@ -85,9 +85,7 @@ library CodeDeployer {
 }
 
 library BaseSplitCodeFactory {
-    function setCreationCode(
-        bytes memory creationCode
-    )
+    function setCreationCode(bytes memory creationCode)
         internal
         returns (
             address creationCodeContractA,
@@ -165,14 +163,9 @@ library BaseSplitCodeFactory {
         address creationCodeContractB,
         uint256 creationCodeSizeB
     ) internal view returns (bytes memory) {
-        return
-            _getCreationCodeWithArgs(
-                "",
-                creationCodeContractA,
-                creationCodeSizeA,
-                creationCodeContractB,
-                creationCodeSizeB
-            );
+        return _getCreationCodeWithArgs(
+            "", creationCodeContractA, creationCodeSizeA, creationCodeContractB, creationCodeSizeB
+        );
     }
 
     /**
@@ -244,17 +237,16 @@ library BaseSplitCodeFactory {
     ) internal returns (address) {
         unchecked {
             bytes memory creationCode = _getCreationCodeWithArgs(
-                constructorArgs,
-                creationCodeContractA,
-                creationCodeSizeA,
-                creationCodeContractB,
-                creationCodeSizeB
+                constructorArgs, creationCodeContractA, creationCodeSizeA, creationCodeContractB, creationCodeSizeB
             );
             return _deployCreate2(amount, salt, creationCode);
         }
     }
 
-    function _deployCreate2(uint256 amount, bytes32 salt, bytes memory creationCode) private returns (address deployed) {
+    function _deployCreate2(uint256 amount, bytes32 salt, bytes memory creationCode)
+        private
+        returns (address deployed)
+    {
         require(creationCode.length != 0, "zero length");
 
         assembly {

@@ -40,10 +40,11 @@ library IntrospectionFacetFactoryService {
         vm.label(address(diamondCutFacet), type(DiamondCutFacet).name);
     }
 
-    function deployDiamondCutDFPkg(ICreate3FactoryProxy create3Factory, IFacet multiStepOwnableFacet, IFacet diamondCutFacet)
-        internal
-        returns (IDiamondCutFacetDFPkg diamondCutDFPkg)
-    {
+    function deployDiamondCutDFPkg(
+        ICreate3FactoryProxy create3Factory,
+        IFacet multiStepOwnableFacet,
+        IFacet diamondCutFacet
+    ) internal returns (IDiamondCutFacetDFPkg diamondCutDFPkg) {
         diamondCutDFPkg = IDiamondCutFacetDFPkg(
             address(
                 create3Factory.deployPackageWithArgs(

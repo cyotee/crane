@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.35;
 
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IRETHToken.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IRETHToken.sol";
 import "forge-std/console2.sol";
 
 contract RETHTokenMock is IRETHToken {

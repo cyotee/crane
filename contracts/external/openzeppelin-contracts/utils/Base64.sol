@@ -35,7 +35,7 @@ library Base64 {
         // - `4 *`              -> 4 characters for each chunk
         string memory result = new string(4 * ((data.length + 2) / 3));
 
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Prepare the lookup table (skip the first "length" byte)
             let tablePtr := add(table, 1)
 
@@ -51,11 +51,7 @@ library Base64 {
             mstore(afterPtr, 0x00)
 
             // Run over the input, 3 bytes at a time
-            for {
-
-            } lt(dataPtr, endPtr) {
-
-            } {
+            for {} lt(dataPtr, endPtr) {} {
                 // Advance 3 bytes
                 dataPtr := add(dataPtr, 3)
                 let input := mload(dataPtr)

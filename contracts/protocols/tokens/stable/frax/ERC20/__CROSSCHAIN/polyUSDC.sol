@@ -5,4 +5,5 @@ import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 // Mock polyUSDC token
 contract polyUSDC is ERC20("Polygon USDC", "polyUSDC") {
     // Nothing here
-}
+
+    }

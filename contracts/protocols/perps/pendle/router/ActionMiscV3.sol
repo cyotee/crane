@@ -6,32 +6,28 @@ import "../interfaces/IPActionMiscV3.sol";
 import "../interfaces/IPReflector.sol";
 
 contract ActionMiscV3 is IPActionMiscV3, ActionBase {
-    function mintSyFromToken(
-        address receiver,
-        address SY,
-        uint256 minSyOut,
-        TokenInput calldata input
-    ) external payable returns (uint256 netSyOut) {
+    function mintSyFromToken(address receiver, address SY, uint256 minSyOut, TokenInput calldata input)
+        external
+        payable
+        returns (uint256 netSyOut)
+    {
         netSyOut = _mintSyFromToken(receiver, SY, minSyOut, input);
         emit MintSyFromToken(msg.sender, input.tokenIn, SY, receiver, input.netTokenIn, netSyOut);
     }
 
-    function redeemSyToToken(
-        address receiver,
-        address SY,
-        uint256 netSyIn,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut) {
+    function redeemSyToToken(address receiver, address SY, uint256 netSyIn, TokenOutput calldata output)
+        external
+        returns (uint256 netTokenOut)
+    {
         netTokenOut = _redeemSyToToken(receiver, SY, netSyIn, output, true);
         emit RedeemSyToToken(msg.sender, output.tokenOut, SY, receiver, netSyIn, netTokenOut);
     }
 
-    function mintPyFromToken(
-        address receiver,
-        address YT,
-        uint256 minPyOut,
-        TokenInput calldata input
-    ) external payable returns (uint256 netPyOut, uint256 netSyInterm) {
+    function mintPyFromToken(address receiver, address YT, uint256 minPyOut, TokenInput calldata input)
+        external
+        payable
+        returns (uint256 netPyOut, uint256 netSyInterm)
+    {
         address SY = IPYieldToken(YT).SY();
 
         netSyInterm = _mintSyFromToken(YT, SY, 0, input);
@@ -40,12 +36,10 @@ contract ActionMiscV3 is IPActionMiscV3, ActionBase {
         emit MintPyFromToken(msg.sender, input.tokenIn, YT, receiver, input.netTokenIn, netPyOut, netSyInterm);
     }
 
-    function redeemPyToToken(
-        address receiver,
-        address YT,
-        uint256 netPyIn,
-        TokenOutput calldata output
-    ) external returns (uint256 netTokenOut, uint256 netSyInterm) {
+    function redeemPyToToken(address receiver, address YT, uint256 netPyIn, TokenOutput calldata output)
+        external
+        returns (uint256 netTokenOut, uint256 netSyInterm)
+    {
         address SY = IPYieldToken(YT).SY();
 
         netSyInterm = _redeemPyToSy(SY, YT, netPyIn, 1);
@@ -54,22 +48,18 @@ contract ActionMiscV3 is IPActionMiscV3, ActionBase {
         emit RedeemPyToToken(msg.sender, output.tokenOut, YT, receiver, netPyIn, netTokenOut, netSyInterm);
     }
 
-    function mintPyFromSy(
-        address receiver,
-        address YT,
-        uint256 netSyIn,
-        uint256 minPyOut
-    ) external returns (uint256 netPyOut) {
+    function mintPyFromSy(address receiver, address YT, uint256 netSyIn, uint256 minPyOut)
+        external
+        returns (uint256 netPyOut)
+    {
         netPyOut = _mintPyFromSy(receiver, IPYieldToken(YT).SY(), YT, netSyIn, minPyOut, true);
         emit MintPyFromSy(msg.sender, receiver, YT, netSyIn, netPyOut);
     }
 
-    function redeemPyToSy(
-        address receiver,
-        address YT,
-        uint256 netPyIn,
-        uint256 minSyOut
-    ) external returns (uint256 netSyOut) {
+    function redeemPyToSy(address receiver, address YT, uint256 netPyIn, uint256 minSyOut)
+        external
+        returns (uint256 netSyOut)
+    {
         netSyOut = _redeemPyToSy(receiver, YT, netPyIn, minSyOut);
         emit RedeemPyToSy(msg.sender, receiver, YT, netPyIn, netSyOut);
     }
@@ -93,11 +83,11 @@ contract ActionMiscV3 is IPActionMiscV3, ActionBase {
         }
     }
 
-    function swapTokenToToken(
-        address receiver,
-        uint256 minTokenOut,
-        TokenInput calldata inp
-    ) external payable returns (uint256 netTokenOut) {
+    function swapTokenToToken(address receiver, uint256 minTokenOut, TokenInput calldata inp)
+        external
+        payable
+        returns (uint256 netTokenOut)
+    {
         _swapTokenInput(inp);
 
         netTokenOut = _selfBalance(inp.tokenMintSy);
@@ -215,26 +205,20 @@ contract ActionMiscV3 is IPActionMiscV3, ActionBase {
     }
 
     /// @dev The interface might change in the future, check with Pendle team before use
-    function exitPostExpToSy(
-        address receiver,
-        address market,
-        uint256 netPtIn,
-        uint256 netLpIn,
-        uint256 minSyOut
-    ) external returns (ExitPostExpReturnParams memory params) {
+    function exitPostExpToSy(address receiver, address market, uint256 netPtIn, uint256 netLpIn, uint256 minSyOut)
+        external
+        returns (ExitPostExpReturnParams memory params)
+    {
         (, params) = _exitPostExpToSy(false, receiver, market, netPtIn, netLpIn);
         require(params.totalSyOut >= minSyOut, "Slippage: INSUFFICIENT_SY_OUT");
 
         emit ExitPostExpToSy(msg.sender, market, receiver, netLpIn, params);
     }
 
-    function _exitPostExpToSy(
-        bool setReceiverToSy,
-        address receiver,
-        address market,
-        uint256 netPtIn,
-        uint256 netLpIn
-    ) internal returns (IStandardizedYield SY, ExitPostExpReturnParams memory p) {
+    function _exitPostExpToSy(bool setReceiverToSy, address receiver, address market, uint256 netPtIn, uint256 netLpIn)
+        internal
+        returns (IStandardizedYield SY, ExitPostExpReturnParams memory p)
+    {
         IPPrincipalToken PT;
         IPYieldToken YT;
         (SY, PT, YT) = IPMarket(market).readTokens();
@@ -290,10 +274,10 @@ contract ActionMiscV3 is IPActionMiscV3, ActionBase {
         revert Errors.SimulationResults(success, result);
     }
 
-    function _delegateToSelf(
-        bytes memory data,
-        bool allowFailure
-    ) internal returns (bool success, bytes memory result) {
+    function _delegateToSelf(bytes memory data, bool allowFailure)
+        internal
+        returns (bool success, bytes memory result)
+    {
         (success, result) = address(this).delegatecall(data);
 
         if (!success && !allowFailure) {

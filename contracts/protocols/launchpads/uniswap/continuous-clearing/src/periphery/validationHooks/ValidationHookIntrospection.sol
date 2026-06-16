@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {IValidationHook} from '../../interfaces/IValidationHook.sol';
-import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
+import {IValidationHook} from "../../interfaces/IValidationHook.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
 
 interface IValidationHookIntrospection is IValidationHook, IERC165 {}
 

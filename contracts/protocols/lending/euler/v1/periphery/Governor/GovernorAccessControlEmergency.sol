@@ -3,7 +3,10 @@
 pragma solidity ^0.8.0;
 
 import {GovernorAccessControl} from "./GovernorAccessControl.sol";
-import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
+import {
+    AmountCap,
+    AmountCapLib
+} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import {IGovernance} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/IEVault.sol";
 import {OP_MAX_VALUE} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
 
@@ -73,9 +76,9 @@ contract GovernorAccessControlEmergency is GovernorAccessControl {
         currentSupplyCapResolved = AmountCap.wrap(uint16(currentSupplyCapResolved)).resolve();
         currentBorrowCapResolved = AmountCap.wrap(uint16(currentBorrowCapResolved)).resolve();
 
-        bool isEmergency = (
-            supplyCapResolved < currentSupplyCapResolved || borrowCapResolved < currentBorrowCapResolved
-        ) && (supplyCapResolved <= currentSupplyCapResolved && borrowCapResolved <= currentBorrowCapResolved);
+        bool isEmergency = (supplyCapResolved < currentSupplyCapResolved
+                || borrowCapResolved < currentBorrowCapResolved)
+            && (supplyCapResolved <= currentSupplyCapResolved && borrowCapResolved <= currentBorrowCapResolved);
 
         if (!isEmergency || !hasRole(CAPS_EMERGENCY_ROLE, _msgSender())) {
             _authenticateCaller();

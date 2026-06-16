@@ -4,8 +4,7 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/old_tests/StakingRewardsDualV5-Tests.js` (local mocks)
 
 import {Test} from "forge-std/Test.sol";
-import {StakingRewardsDualV5} from
-    "@crane/contracts/protocols/tokens/stable/frax/Staking/StakingRewardsDualV5.sol";
+import {StakingRewardsDualV5} from "@crane/contracts/protocols/tokens/stable/frax/Staking/StakingRewardsDualV5.sol";
 import {MintableERC20} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MintableERC20.sol";
 import {MockVeFXS} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MockVeFXS.sol";
 import {MockUniswapV2Pair} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MockUniswapV2Pair.sol";
@@ -38,13 +37,7 @@ contract StakingRewardsDualV5_Test is Test {
         veFXS = new MockVeFXS();
 
         farm = new StakingRewardsDualV5(
-            address(this),
-            address(reward0),
-            address(reward1),
-            address(lp),
-            address(frax),
-            timelock,
-            address(veFXS)
+            address(this), address(reward0), address(reward1), address(lp), address(frax), timelock, address(veFXS)
         );
 
         farm.toggleToken1Rewards();

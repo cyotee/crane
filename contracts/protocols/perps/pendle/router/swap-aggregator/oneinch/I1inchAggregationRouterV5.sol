@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface I1inchAggregationRouterV5 {
     struct SwapDescription {
@@ -15,19 +16,15 @@ interface I1inchAggregationRouterV5 {
         uint256 flags;
     }
 
-    function uniswapV3SwapTo(
-        address payable recipient,
-        uint256 amount,
-        uint256 minReturn,
-        uint256[] calldata pools
-    ) external payable returns (uint256 returnAmount);
+    function uniswapV3SwapTo(address payable recipient, uint256 amount, uint256 minReturn, uint256[] calldata pools)
+        external
+        payable
+        returns (uint256 returnAmount);
 
-    function swap(
-        address executor,
-        SwapDescription calldata desc,
-        bytes calldata permit,
-        bytes calldata data
-    ) external payable returns (uint256 returnAmount, uint256 spentAmount);
+    function swap(address executor, SwapDescription calldata desc, bytes calldata permit, bytes calldata data)
+        external
+        payable
+        returns (uint256 returnAmount, uint256 spentAmount);
 
     function unoswapTo(
         address payable recipient,

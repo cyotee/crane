@@ -9,12 +9,9 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     using PMath for uint256;
     using ArrayLib for address[];
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _yieldToken
-    )
+    constructor(string memory _name, string memory _symbol, address _yieldToken)
         SYBase(_name, _symbol, _yieldToken) // solhint-disable-next-line no-empty-blocks
+
     {}
 
     /*///////////////////////////////////////////////////////////////
@@ -24,9 +21,14 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     /**
      * @dev See {IStandardizedYield-claimRewards}
      */
-    function claimRewards(
-        address user
-    ) external virtual override nonReentrant whenNotPaused returns (uint256[] memory rewardAmounts) {
+    function claimRewards(address user)
+        external
+        virtual
+        override
+        nonReentrant
+        whenNotPaused
+        returns (uint256[] memory rewardAmounts)
+    {
         _updateAndDistributeRewards(user);
         rewardAmounts = _doTransferOutRewards(user, user);
 
@@ -46,7 +48,7 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     function accruedRewards(address user) external view virtual override returns (uint256[] memory rewardAmounts) {
         address[] memory rewardTokens = _getRewardTokens();
         rewardAmounts = new uint256[](rewardTokens.length);
-        for (uint256 i = 0; i < rewardTokens.length; ) {
+        for (uint256 i = 0; i < rewardTokens.length;) {
             rewardAmounts[i] = userReward[rewardTokens[i]][user].accrued;
             unchecked {
                 i++;
@@ -61,7 +63,7 @@ abstract contract SYBaseWithRewards is SYBase, RewardManager {
     function rewardIndexesStored() public view virtual override returns (uint256[] memory indexes) {
         address[] memory rewardTokens = _getRewardTokens();
         indexes = new uint256[](rewardTokens.length);
-        for (uint256 i = 0; i < rewardTokens.length; ) {
+        for (uint256 i = 0; i < rewardTokens.length;) {
             indexes[i] = rewardState[rewardTokens[i]].index;
             unchecked {
                 i++;

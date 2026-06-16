@@ -26,9 +26,8 @@ contract CamelotV1VolatileCommon {
 
     // reference: https://blog.alphaventuredao.io/onesideduniswap/
     function _getZapInSwapAmount(uint256 amountIn, uint256 reserve, uint256 fee) internal pure returns (uint256) {
-        return
-            (PMath.sqrt(PMath.square((TWO - fee) * reserve) + FOUR * (ONE - fee) * amountIn * reserve) -
-                (TWO - fee) *
-                reserve) / (2 * (ONE - fee));
+        return (PMath.sqrt(PMath.square((TWO - fee) * reserve) + FOUR * (ONE - fee) * amountIn * reserve)
+                - (TWO - fee)
+                * reserve) / (2 * (ONE - fee));
     }
 }

@@ -2,8 +2,8 @@
 pragma solidity ^0.8.35;
 
 import {DevTestSetup} from "./TestContracts/DevTestSetup.sol";
-import {IDebtInFrontHelper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IDebtInFrontHelper.sol";
-import {DebtInFrontHelper} from "@crane/contracts/protocols/staking/liquity/v2/bold/DebtInFrontHelper.sol";
+import {IDebtInFrontHelper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IDebtInFrontHelper.sol";
+import {DebtInFrontHelper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/DebtInFrontHelper.sol";
 
 contract DebtInFrontHelperTest is DevTestSetup {
     IDebtInFrontHelper debtInFrontHelper;

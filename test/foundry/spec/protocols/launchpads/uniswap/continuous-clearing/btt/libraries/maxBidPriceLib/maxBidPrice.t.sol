@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {Test} from 'forge-std/Test.sol';
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract MaxBidPriceLibTest is Test {
     function test_WhenTotalSupplyIsLELowerTotalSupplyThreshold_ThenMaxBidPriceIsMaxV4Price(uint128 _totalSupply)
         public
+        pure
     {
         // it returns MaxBidPriceLib.MAX_V4_PRICE
 
@@ -16,7 +19,7 @@ contract MaxBidPriceLibTest is Test {
         assertEq(maxBidPrice, MaxBidPriceLib.MAX_V4_PRICE);
     }
 
-    function test_WhenTotalSupplyIsGTLowerTotalSupplyThreshold(uint128 _totalSupply) public {
+    function test_WhenTotalSupplyIsGTLowerTotalSupplyThreshold(uint128 _totalSupply) public pure {
         // it returns the calculated max bid price which is less than MaxBidPriceLib.MAX_V4_PRICE
 
         _totalSupply = uint128(

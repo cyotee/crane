@@ -5,7 +5,7 @@ import {Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/O
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
 
 contract MockStakingV1 is ILQTYStaking, Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -19,7 +19,7 @@ contract MockStakingV1 is ILQTYStaking, Ownable {
     mapping(address staker => uint256) internal _pendingLUSDGain;
     mapping(address staker => uint256) internal _pendingETHGain;
 
-    constructor(IERC20 lqty, IERC20 lusd) Ownable() {
+    constructor(IERC20 lqty, IERC20 lusd) Ownable(msg.sender) {
         _lqty = lqty;
         _lusd = lusd;
     }

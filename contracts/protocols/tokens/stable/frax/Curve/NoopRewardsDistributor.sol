@@ -21,8 +21,8 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -51,25 +51,26 @@ contract NoopRewardsDistributor is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner,
-        address _timelock_address
-    ) Owned(_owner) {
+    constructor(address _owner, address _timelock_address) Owned(_owner) {
         timelock_address = _timelock_address;
     }
-
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     // No-op
-    function distributeReward(address gauge_address) public nonReentrant returns (uint256 /*weeks_elapsed*/, uint256 /*reward_tally*/) {
+    function distributeReward(address gauge_address)
+        public
+        nonReentrant
+        returns (uint256 weeks_elapsed, uint256 reward_tally)
+    {
         // Do nothing
-
+        weeks_elapsed = 0;
+        reward_tally = 0;
         emit RewardDistributed(gauge_address, 0);
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -80,7 +81,6 @@ contract NoopRewardsDistributor is Owned, ReentrancyGuard {
     function setTimelock(address _new_timelock) external onlyByOwnGov {
         timelock_address = _new_timelock;
     }
-
 
     /* ========== EVENTS ========== */
 

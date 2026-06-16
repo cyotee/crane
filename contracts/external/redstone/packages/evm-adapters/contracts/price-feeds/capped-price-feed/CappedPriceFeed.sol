@@ -9,8 +9,7 @@ import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 /// @author RedStone team
 /// @notice Described in ICappedPriceFeed
 /// @dev It assumes that all prices are described in same ratio, with same decimals
-abstract contract CappedPriceFeed is ICappedPriceFeed
-{
+abstract contract CappedPriceFeed is ICappedPriceFeed {
     /// Defines precision for parameters passed in percentage
     uint256 constant PERCENTAGE_FACTOR = 1e4;
 
@@ -22,16 +21,16 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
     uint256 constant LOWER_HARD_LIMIT_PERCENT = 1;
 
     /// @inheritdoc ICappedPriceFeed
-    function getFundamentalRatio() view public virtual returns (uint256);
+    function getFundamentalRatio() public view virtual returns (uint256);
 
     /// @inheritdoc ICappedPriceFeed
-    function getMarketPriceFeed() view public virtual returns (IPriceFeed);
+    function getMarketPriceFeed() public view virtual returns (IPriceFeed);
 
     /// Optimized to fit in single storage slot
     struct ParamsStorage {
-       uint16 maxYearlyRatioGrowthPercent;
-       uint16 maxMarketDeviationPercent;
-       address paramsSetter;
+        uint16 maxYearlyRatioGrowthPercent;
+        uint16 maxMarketDeviationPercent;
+        address paramsSetter;
     }
 
     /// Optimized to fit in single storage slot (if fundamental ratio is less then 200 bits)
@@ -42,11 +41,12 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
         uint256 fundamentalRatioBiggerValue;
     }
 
-
     /// ethers.utils.solidityKeccak256(["string"],["RedStone.CappedPriceFeed.ParamsStorage"])
-    bytes32 private constant PARAMS_STORAGE_LOCATION = 0xc5cf9af1b5468f91e35aaa8a7815124709f84924a3bced8b979ee79c432284c5;
+    bytes32 private constant PARAMS_STORAGE_LOCATION =
+        0xc5cf9af1b5468f91e35aaa8a7815124709f84924a3bced8b979ee79c432284c5;
     /// ethers.utils.solidityKeccak256(["string"],["RedStone.CappedPriceFeed.SnapshotStorage"])
-    bytes32 private constant SNAPSHOT_STORAGE_LOCATION = 0x116215827db36200c2bc718454306c172623c83e4d26fe94709962facae54db7;
+    bytes32 private constant SNAPSHOT_STORAGE_LOCATION =
+        0x116215827db36200c2bc718454306c172623c83e4d26fe94709962facae54db7;
 
     function _getParamsStorage() private pure returns (ParamsStorage storage $) {
         assembly {
@@ -92,7 +92,7 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
 
     /// @inheritdoc ICappedPriceFeed
     function getSnapshotTimestamp() external view returns (uint256 timestamp) {
-        (,timestamp) = getSnapshot();
+        (, timestamp) = getSnapshot();
     }
 
     /// @inheritdoc ICappedPriceFeed
@@ -116,7 +116,9 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
         (uint256 snapshottedRatio, uint256 snapshottedTimestamp) = getSnapshot();
         ParamsStorage storage paramsStore = _getParamsStorage();
 
-        uint256 maxAllowedGrowthFromLastSnapshot = (snapshottedRatio * paramsStore.maxYearlyRatioGrowthPercent * (block.timestamp - snapshottedTimestamp)) / PERCENTAGE_FACTOR / 365 days;
+        uint256 maxAllowedGrowthFromLastSnapshot =
+            (snapshottedRatio * paramsStore.maxYearlyRatioGrowthPercent * (block.timestamp - snapshottedTimestamp))
+                / PERCENTAGE_FACTOR / 365 days;
 
         uint256 maxRatio = snapshottedRatio + maxAllowedGrowthFromLastSnapshot;
 
@@ -150,7 +152,7 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
 
     /// @inheritdoc ICappedPriceFeed
     function isCapped() external view returns (bool) {
-       return getRatio() > getMaxRatio();
+        return getRatio() > getMaxRatio();
     }
 
     /// @inheritdoc ICappedPriceFeed
@@ -167,7 +169,7 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
             revert FundamentalRatioCantExceedMaxRatio();
         }
 
-       _unsafeSetSnapshotRatio(fundamentalRatio);
+        _unsafeSetSnapshotRatio(fundamentalRatio);
     }
 
     /// @dev ability to call this function also add extra permission to update snapshot ratio in same block
@@ -225,7 +227,7 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
     }
 
     function validatePercentBoundaries(uint256 valueInPercent) internal view virtual {
-        if (valueInPercent >  UPPER_HARD_LIMIT_PERCENT || valueInPercent < LOWER_HARD_LIMIT_PERCENT) {
+        if (valueInPercent > UPPER_HARD_LIMIT_PERCENT || valueInPercent < LOWER_HARD_LIMIT_PERCENT) {
             revert PercentValueOutOfRange(LOWER_HARD_LIMIT_PERCENT, UPPER_HARD_LIMIT_PERCENT, valueInPercent);
         }
     }
@@ -255,7 +257,7 @@ abstract contract CappedPriceFeed is ICappedPriceFeed
     }
 
     function description() external view returns (string memory) {
-       return getMarketPriceFeed().description();
+        return getMarketPriceFeed().description();
     }
 
     function getDataFeedId() external view returns (bytes32) {

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../../core/libraries/BoringOwnableUpgradeable.sol";
 import "../../core/libraries/Errors.sol";
 import "../../interfaces/IPFeeDistributor.sol";
@@ -73,7 +74,9 @@ contract PendleFeeDistributor is UUPSUpgradeable, BoringOwnableUpgradeable, IPFe
             totalFunded += amounts[i].sum();
         }
 
-        if (totalFunded != totalAmountToFund) revert Errors.FDTotalAmountFundedNotMatch(totalFunded, totalAmountToFund);
+        if (totalFunded != totalAmountToFund) {
+            revert Errors.FDTotalAmountFundedNotMatch(totalFunded, totalAmountToFund);
+        }
 
         IERC20(token).transferFrom(msg.sender, address(this), totalFunded);
     }
@@ -104,7 +107,7 @@ contract PendleFeeDistributor is UUPSUpgradeable, BoringOwnableUpgradeable, IPFe
 
     function claimReward(address user, address[] calldata pools) external returns (uint256[] memory amountRewardOut) {
         amountRewardOut = new uint256[](pools.length);
-        for (uint256 i = 0; i < pools.length; ) {
+        for (uint256 i = 0; i < pools.length;) {
             amountRewardOut[i] = _accumulateUserReward(pools[i], user);
             unchecked {
                 i++;
@@ -117,10 +120,11 @@ contract PendleFeeDistributor is UUPSUpgradeable, BoringOwnableUpgradeable, IPFe
         return allPools;
     }
 
-    function _accumulateUserReward(
-        address pool,
-        address user
-    ) internal ensureValidPool(pool) returns (uint256 totalReward) {
+    function _accumulateUserReward(address pool, address user)
+        internal
+        ensureValidPool(pool)
+        returns (uint256 totalReward)
+    {
         uint256 length = _getUserCheckpointLength(pool, user);
         if (length == 0) return 0;
 

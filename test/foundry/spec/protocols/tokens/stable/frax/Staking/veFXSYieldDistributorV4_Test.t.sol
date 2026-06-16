@@ -4,8 +4,9 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/veFXSYieldDistributorV4-Tests.js` (local mock veFXS)
 
 import {Test} from "forge-std/Test.sol";
-import {veFXSYieldDistributorV4} from
-    "@crane/contracts/protocols/tokens/stable/frax/Staking/veFXSYieldDistributorV4.sol";
+import {
+    veFXSYieldDistributorV4
+} from "@crane/contracts/protocols/tokens/stable/frax/Staking/veFXSYieldDistributorV4.sol";
 import {MintableERC20} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MintableERC20.sol";
 import {MockVeFXS} from "@crane/contracts/protocols/tokens/stable/frax/mocks/MockVeFXS.sol";
 

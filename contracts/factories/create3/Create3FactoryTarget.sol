@@ -5,7 +5,7 @@ import {ICreate3Factory} from "@crane/contracts/interfaces/ICreate3Factory.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 import {DiamondPackageFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageFactoryAwareRepo.sol";
 import {Create3FactoryService} from "@crane/contracts/factories/create3/Create3FactoryService.sol";
-import {MultiStepOwnableModifiers} from '@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol';
+import {MultiStepOwnableModifiers} from "@crane/contracts/access/ERC8023/MultiStepOwnableModifiers.sol";
 import {OperableModifiers} from "@crane/contracts/access/operable/OperableModifiers.sol";
 // import {OperableModifiers} from '@crane/contracts/access/operable/OperableModifiers.sol';
 
@@ -14,7 +14,11 @@ contract Create3FactoryTarget is MultiStepOwnableModifiers, OperableModifiers, I
         return DiamondPackageFactoryAwareRepo._diamondPackageFactory();
     }
 
-    function setDiamondPackageFactory(IDiamondPackageCallBackFactory diamondPackageFactory_) external onlyOwner returns (bool) {
+    function setDiamondPackageFactory(IDiamondPackageCallBackFactory diamondPackageFactory_)
+        external
+        onlyOwner
+        returns (bool)
+    {
         DiamondPackageFactoryAwareRepo._initialize(diamondPackageFactory_);
         return true;
     }

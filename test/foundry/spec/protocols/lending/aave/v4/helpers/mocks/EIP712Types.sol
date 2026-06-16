@@ -6,174 +6,216 @@ pragma solidity ^0.8.20;
 /// @notice Defines type structs used in EIP712-typed signatures.
 /// @dev Consolidated types to generate JsonBindings.sol using `forge bind-json` for vm.eip712* cheat-codes.
 library EIP712Types {
-  /// @dev Spoke Intents
-  struct SetUserPositionManagers {
-    address onBehalfOf;
-    PositionManagerUpdate[] updates;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    /// @dev Spoke Intents
+    struct SetUserPositionManagers {
+        address onBehalfOf;
+        PositionManagerUpdate[] updates;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct PositionManagerUpdate {
-    address positionManager;
-    bool approve;
-  }
+    struct PositionManagerUpdate {
+        address positionManager;
+        bool approve;
+    }
 
-  struct Permit {
-    address owner;
-    address spender;
-    uint256 value;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct Permit {
+        address owner;
+        address spender;
+        uint256 value;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  /// @dev SignatureGateway Intents
-  struct Supply {
-    address spoke;
-    uint256 reserveId;
-    uint256 amount;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    /// @dev SignatureGateway Intents
+    struct Supply {
+        address spoke;
+        uint256 reserveId;
+        uint256 amount;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct Withdraw {
-    address spoke;
-    uint256 reserveId;
-    uint256 amount;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct Withdraw {
+        address spoke;
+        uint256 reserveId;
+        uint256 amount;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct Borrow {
-    address spoke;
-    uint256 reserveId;
-    uint256 amount;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct Borrow {
+        address spoke;
+        uint256 reserveId;
+        uint256 amount;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct Repay {
-    address spoke;
-    uint256 reserveId;
-    uint256 amount;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct Repay {
+        address spoke;
+        uint256 reserveId;
+        uint256 amount;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct SetUsingAsCollateral {
-    address spoke;
-    uint256 reserveId;
-    bool useAsCollateral;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct SetUsingAsCollateral {
+        address spoke;
+        uint256 reserveId;
+        bool useAsCollateral;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct UpdateUserRiskPremium {
-    address spoke;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct UpdateUserRiskPremium {
+        address spoke;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct UpdateUserDynamicConfig {
-    address spoke;
-    address onBehalfOf;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct UpdateUserDynamicConfig {
+        address spoke;
+        address onBehalfOf;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct WithdrawPermit {
-    address spoke;
-    uint256 reserveId;
-    address owner;
-    address spender;
-    uint256 amount;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct WithdrawPermit {
+        address spoke;
+        uint256 reserveId;
+        address owner;
+        address spender;
+        uint256 amount;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct BorrowPermit {
-    address spoke;
-    uint256 reserveId;
-    address owner;
-    address spender;
-    uint256 amount;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct BorrowPermit {
+        address spoke;
+        uint256 reserveId;
+        address owner;
+        address spender;
+        uint256 amount;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  /// @dev ConfigPositionManager Intents
-  struct SetGlobalPermissionPermit {
-    address spoke;
-    address delegator;
-    address delegatee;
-    bool status;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    /// @dev ConfigPositionManager Intents
+    struct SetGlobalPermissionPermit {
+        address spoke;
+        address delegator;
+        address delegatee;
+        bool status;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct SetCanSetUsingAsCollateralPermissionPermit {
-    address spoke;
-    address delegator;
-    address delegatee;
-    bool status;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct SetCanSetUsingAsCollateralPermissionPermit {
+        address spoke;
+        address delegator;
+        address delegatee;
+        bool status;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct SetCanUpdateUserRiskPremiumPermissionPermit {
-    address spoke;
-    address delegator;
-    address delegatee;
-    bool status;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct SetCanUpdateUserRiskPremiumPermissionPermit {
+        address spoke;
+        address delegator;
+        address delegatee;
+        bool status;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct SetCanUpdateUserDynamicConfigPermissionPermit {
-    address spoke;
-    address delegator;
-    address delegatee;
-    bool status;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct SetCanUpdateUserDynamicConfigPermissionPermit {
+        address spoke;
+        address delegator;
+        address delegatee;
+        bool status;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  /// @dev TokenizationSpoke Intents
-  struct TokenizedDeposit {
-    address depositor;
-    uint256 assets;
-    address receiver;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    /// @dev TokenizationSpoke Intents
+    struct TokenizedDeposit {
+        address depositor;
+        uint256 assets;
+        address receiver;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct TokenizedMint {
-    address depositor;
-    uint256 shares;
-    address receiver;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct TokenizedMint {
+        address depositor;
+        uint256 shares;
+        address receiver;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct TokenizedWithdraw {
-    address owner;
-    uint256 assets;
-    address receiver;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct TokenizedWithdraw {
+        address owner;
+        uint256 assets;
+        address receiver;
+        uint256 nonce;
+        uint256 deadline;
+    }
 
-  struct TokenizedRedeem {
-    address owner;
-    uint256 shares;
-    address receiver;
-    uint256 nonce;
-    uint256 deadline;
-  }
+    struct TokenizedRedeem {
+        address owner;
+        uint256 shares;
+        address receiver;
+        uint256 nonce;
+        uint256 deadline;
+    }
+
+    // EIP-712 type strings for use with vm.eip712HashStruct(typeDef, data) form (bypasses JsonBindings).
+    // These match the canonical representations used for signature intents.
+    string internal constant TYPE_SetUserPositionManagers =
+        "SetUserPositionManagers(address onBehalfOf,PositionManagerUpdate[] updates,uint256 nonce,uint256 deadline)PositionManagerUpdate(address positionManager,bool approve)";
+    string internal constant TYPE_PositionManagerUpdate = "PositionManagerUpdate(address positionManager,bool approve)";
+    string internal constant TYPE_Permit =
+        "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_Supply =
+        "Supply(address spoke,uint256 reserveId,uint256 amount,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_Withdraw =
+        "Withdraw(address spoke,uint256 reserveId,uint256 amount,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_Borrow =
+        "Borrow(address spoke,uint256 reserveId,uint256 amount,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_Repay =
+        "Repay(address spoke,uint256 reserveId,uint256 amount,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_SetUsingAsCollateral =
+        "SetUsingAsCollateral(address spoke,uint256 reserveId,bool useAsCollateral,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_UpdateUserRiskPremium =
+        "UpdateUserRiskPremium(address spoke,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_UpdateUserDynamicConfig =
+        "UpdateUserDynamicConfig(address spoke,address onBehalfOf,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_WithdrawPermit =
+        "WithdrawPermit(address spoke,uint256 reserveId,address owner,address spender,uint256 amount,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_BorrowPermit =
+        "BorrowPermit(address spoke,uint256 reserveId,address owner,address spender,uint256 amount,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_SetGlobalPermissionPermit =
+        "SetGlobalPermissionPermit(address spoke,address delegator,address delegatee,bool status,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_SetCanSetUsingAsCollateralPermissionPermit =
+        "SetCanSetUsingAsCollateralPermissionPermit(address spoke,address delegator,address delegatee,bool status,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_SetCanUpdateUserRiskPremiumPermissionPermit =
+        "SetCanUpdateUserRiskPremiumPermissionPermit(address spoke,address delegator,address delegatee,bool status,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_SetCanUpdateUserDynamicConfigPermissionPermit =
+        "SetCanUpdateUserDynamicConfigPermissionPermit(address spoke,address delegator,address delegatee,bool status,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_TokenizedDeposit =
+        "TokenizedDeposit(address depositor,uint256 assets,address receiver,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_TokenizedMint =
+        "TokenizedMint(address depositor,uint256 shares,address receiver,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_TokenizedWithdraw =
+        "TokenizedWithdraw(address owner,uint256 assets,address receiver,uint256 nonce,uint256 deadline)";
+    string internal constant TYPE_TokenizedRedeem =
+        "TokenizedRedeem(address owner,uint256 shares,address receiver,uint256 nonce,uint256 deadline)";
 }

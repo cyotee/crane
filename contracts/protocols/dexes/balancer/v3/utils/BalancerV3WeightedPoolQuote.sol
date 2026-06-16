@@ -28,13 +28,7 @@ library BalancerV3WeightedPoolQuote {
             return 0;
         }
 
-        amountOut = WeightedMath.computeOutGivenExactIn(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountInAfterFee
-        );
+        amountOut = WeightedMath.computeOutGivenExactIn(balanceIn, weightIn, balanceOut, weightOut, amountInAfterFee);
     }
 
     function computeInGivenExactOutBeforeFee(
@@ -49,13 +43,8 @@ library BalancerV3WeightedPoolQuote {
             return 0;
         }
 
-        uint256 amountInAfterFee = WeightedMath.computeInGivenExactOut(
-            balanceIn,
-            weightIn,
-            balanceOut,
-            weightOut,
-            amountOut
-        );
+        uint256 amountInAfterFee =
+            WeightedMath.computeInGivenExactOut(balanceIn, weightIn, balanceOut, weightOut, amountOut);
         amountIn = amountInAfterFee.divUp(FixedPoint.ONE - swapFeePercentage);
     }
 }

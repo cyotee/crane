@@ -4,21 +4,19 @@ pragma solidity ^0.8.35;
 import "./AggregatorV3Interface.sol";
 
 contract ChainlinkETHUSDPriceConsumer {
-
     AggregatorV3Interface internal priceFeed;
 
-
-    constructor () {
+    constructor() {
         priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
     }
 
     /**
      * Returns the latest price
      */
-    function getLatestPrice() public view returns (int) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeed.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+    function getLatestPrice() public view returns (int256) {
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeed.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
+
         return price;
     }
 

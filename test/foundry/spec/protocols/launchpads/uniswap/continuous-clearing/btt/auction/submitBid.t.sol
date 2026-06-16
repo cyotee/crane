@@ -1,19 +1,29 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from '../BttBase.sol';
-import {MockContinuousClearingAuction} from '../mocks/MockContinuousClearingAuction.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {ReentrancyGuardTransient} from 'contracts/external/solady/utils/ReentrancyGuardTransient.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {IValidationHook} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {ValidationHookLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol';
-import {AuctionStepsBuilder} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionStepsBuilder.sol';
-import {MockReenteringValidationHook} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/MockReenteringValidationHook.sol';
+import {AuctionFuzzConstructorParams, BttBase} from "../BttBase.sol";
+import {MockContinuousClearingAuction} from "../mocks/MockContinuousClearingAuction.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {ReentrancyGuardTransient} from "contracts/external/solady/utils/ReentrancyGuardTransient.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/CheckpointStorage.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {
+    IValidationHook
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IValidationHook.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {
+    ValidationHookLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValidationHookLib.sol";
+import {
+    AuctionStepsBuilder
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/AuctionStepsBuilder.sol";
+import {
+    MockReenteringValidationHook
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/utils/MockReenteringValidationHook.sol";
 
 contract SubmitBidTest is BttBase {
     using AuctionStepsBuilder for bytes;
@@ -35,7 +45,7 @@ contract SubmitBidTest is BttBase {
         _blockNumber = uint64(bound(_blockNumber, 0, mParams.parameters.startBlock - 1));
         vm.roll(_blockNumber);
         vm.expectRevert(IContinuousClearingAuction.AuctionNotStarted.selector);
-        auction.submitBid{value: 1}(1, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(1, 1, address(this), bytes(""));
     }
 
     modifier givenAuctionIsActive() {
@@ -63,7 +73,7 @@ contract SubmitBidTest is BttBase {
 
         vm.roll(_blockNumber);
         vm.expectRevert(IStepStorage.AuctionIsOver.selector);
-        auction.submitBid{value: 1}(1, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(1, 1, address(this), bytes(""));
     }
 
     modifier givenBlockNumberIsBeforeEndBlock() {
@@ -89,7 +99,7 @@ contract SubmitBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
         vm.expectRevert(IContinuousClearingAuction.BidAmountTooSmall.selector);
-        auction.submitBid{value: 0}(1, 0, address(this), bytes(''));
+        auction.submitBid{value: 0}(1, 0, address(this), bytes(""));
     }
 
     modifier givenBidAmountGTZero() {
@@ -116,7 +126,7 @@ contract SubmitBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
         vm.expectRevert(IContinuousClearingAuction.BidOwnerCannotBeZeroAddress.selector);
-        auction.submitBid{value: 1}(1, 1, address(0), bytes(''));
+        auction.submitBid{value: 1}(1, 1, address(0), bytes(""));
     }
 
     modifier givenBidOwnerIsNotZeroAddress() {
@@ -144,7 +154,7 @@ contract SubmitBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
         vm.expectRevert(IContinuousClearingAuction.InvalidAmount.selector);
-        auction.submitBid{value: 0}(1, 1, address(this), bytes(''));
+        auction.submitBid{value: 0}(1, 1, address(this), bytes(""));
     }
 
     function test_WhenCurrencyIsNotZeroAndMsgValueIsNotZero(AuctionFuzzConstructorParams memory _params)
@@ -168,7 +178,7 @@ contract SubmitBidTest is BttBase {
 
         vm.roll(mParams.parameters.startBlock);
         vm.expectRevert(IContinuousClearingAuction.CurrencyIsNotNative.selector);
-        auction.submitBid{value: 1}(1, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(1, 1, address(this), bytes(""));
     }
 
     function test_WhenMaxPriceIsGreaterThanMaxBidPrice(AuctionFuzzConstructorParams memory _params, uint256 _maxPrice)
@@ -198,7 +208,7 @@ contract SubmitBidTest is BttBase {
                 IContinuousClearingAuction.InvalidBidPriceTooHigh.selector, _maxPrice, auction.MAX_BID_PRICE()
             )
         );
-        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(""));
     }
 
     modifier givenMaxPriceIsLTEMaxBidPrice() {
@@ -217,7 +227,7 @@ contract SubmitBidTest is BttBase {
         mParams.token = address(new ERC20Mock());
         vm.assume(mParams.token != mParams.parameters.currency);
         mParams.parameters.currency = address(0);
-        mParams.parameters.validationHook = makeAddr('MockValidationHook');
+        mParams.parameters.validationHook = makeAddr("MockValidationHook");
 
         MockContinuousClearingAuction auction =
             new MockContinuousClearingAuction(mParams.token, mParams.totalSupply, mParams.parameters);
@@ -230,12 +240,12 @@ contract SubmitBidTest is BttBase {
         vm.mockCallRevert(
             mParams.parameters.validationHook,
             abi.encodeWithSelector(IValidationHook.validate.selector),
-            'REVERT_REASON'
+            "REVERT_REASON"
         );
 
         vm.roll(mParams.parameters.startBlock);
-        vm.expectRevert(abi.encodeWithSelector(ValidationHookLib.ValidationHookCallFailed.selector, 'REVERT_REASON'));
-        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(''));
+        vm.expectRevert(abi.encodeWithSelector(ValidationHookLib.ValidationHookCallFailed.selector, "REVERT_REASON"));
+        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(""));
     }
 
     function test_WhenValidationHookReenters(AuctionFuzzConstructorParams memory _params, uint256 _maxPrice)
@@ -268,7 +278,7 @@ contract SubmitBidTest is BttBase {
                 abi.encodeWithSelector(ReentrancyGuardTransient.Reentrancy.selector)
             )
         );
-        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(""));
     }
 
     modifier givenValidationHookSucceeds() {
@@ -305,11 +315,11 @@ contract SubmitBidTest is BttBase {
         _maxPrice = _bound(_maxPrice, 1, auction.MAX_BID_PRICE());
 
         vm.mockCall(
-            mParams.parameters.validationHook, abi.encodeWithSelector(IValidationHook.validate.selector), bytes('')
+            mParams.parameters.validationHook, abi.encodeWithSelector(IValidationHook.validate.selector), bytes("")
         );
 
         vm.roll(mParams.parameters.endBlock - 1);
         vm.expectRevert(IContinuousClearingAuction.AuctionSoldOut.selector);
-        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(''));
+        auction.submitBid{value: 1}(_maxPrice, 1, address(this), bytes(""));
     }
 }

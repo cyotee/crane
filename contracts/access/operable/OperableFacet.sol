@@ -6,25 +6,31 @@ import {IOperable} from "@crane/contracts/interfaces/IOperable.sol";
 import {OperableTarget} from "@crane/contracts/access/operable/OperableTarget.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
+/* -------------------------------------------------------------------------- */
+/*                                    Crane                                   */
+/* -------------------------------------------------------------------------- */
+
 // tag::OperableFacet[]
 /**
- * @title OperableFacet - Facet for Diamond proxies to expose IOperable.
+ * @title OperableFacet - Reusable Diamond facet implementing IOperable (operator-based access control) per Facet-Target-Repo.
  * @author cyotee doge <doge.cyotee>
- * @dev Reusable across proxies.
- * @dev Do not inherit into your own Facets.
- * @dev Include in your Package to reuse the deployed Facet.
+ * @dev Extends OperableTarget for business logic (delegates to OperableRepo, guarded by MultiStepOwnable). Implements IFacet to declare
+ *      supported interfaces and functions for use with Diamond loupes, DFPkgs, registries, and composition.
+ *      The facet surface exposes IOperable (isOperator, isOperatorFor, setOperator, setOperatorFor) plus the IFacet declaration methods.
+ * @custom:contractlistipfs
  */
-contract OperableFacet is
-    OperableTarget,
-    IFacet
-{
-    /* ---------------------------------------------------------------------- */
-    /*                                 IFacet                                 */
-    /* ---------------------------------------------------------------------- */
+contract OperableFacet is OperableTarget, IFacet {
+    /* -------------------------------------------------------------------------- */
+    /*                                   IFacet                                   */
+    /* -------------------------------------------------------------------------- */
 
-    // tag::facetMetadata()[]
+    // tag::facetName()[]
     /**
      * @inheritdoc IFacet
+     * @notice Declares a canonical nonunique name for the exposing facet.
+     * @return name The name of the facet.
+     * @custom:selector 0x5b6f4d01
+     * @custom:signature facetName()
      */
     function facetName() public pure returns (string memory name) {
         return type(OperableFacet).name;
@@ -34,6 +40,10 @@ contract OperableFacet is
     // tag::facetInterfaces()[]
     /**
      * @inheritdoc IFacet
+     * @notice Declares the interfaces implemented by the exposing facet for use in a composing proxy.
+     * @return interfaces The interface IDs implemented by the facet.
+     * @custom:selector 0x2ea80826
+     * @custom:signature facetInterfaces()
      */
     function facetInterfaces() public pure virtual override returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](1);
@@ -44,6 +54,10 @@ contract OperableFacet is
     // tag::facetFuncs()[]
     /**
      * @inheritdoc IFacet
+     * @notice Declares the function selectors implemented by the exposing facet for use in a composing proxy.
+     * @return funcs The function selectors implemented by the facet.
+     * @custom:selector 0x574a4cff
+     * @custom:signature facetFuncs()
      */
     function facetFuncs() public pure virtual override returns (bytes4[] memory funcs) {
         funcs = new bytes4[](4);
@@ -57,6 +71,13 @@ contract OperableFacet is
     // tag::facetMetadata()[]
     /**
      * @inheritdoc IFacet
+     * @notice Declares comprehensive metadata about the exposing facet.
+     * @dev Exposed to allow for single call retrieval of all facet metadata.
+     * @return name The name of the facet.
+     * @return interfaces The interface IDs implemented by the facet.
+     * @return functions The function selectors implemented by the facet.
+     * @custom:selector 0xf10d7a75
+     * @custom:signature facetMetadata()
      */
     function facetMetadata()
         external

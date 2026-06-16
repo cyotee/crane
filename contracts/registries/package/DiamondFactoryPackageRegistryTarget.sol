@@ -49,7 +49,7 @@ contract DiamondFactoryPackageRegistryTarget is OperableModifiers, IDiamondFacto
         DiamondFactoryPackageRegistryRepo._setCanonicalPackage(interfaceId, package);
         return package;
     }
-    
+
     function registerPackage(
         IDiamondFactoryPackage package,
         string memory name,

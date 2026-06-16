@@ -49,21 +49,13 @@ abstract contract ERC1155 {
     /// @dev Emitted when `amount` of token `id` is transferred
     /// from `from` to `to` by `operator`.
     event TransferSingle(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256 id,
-        uint256 amount
+        address indexed operator, address indexed from, address indexed to, uint256 id, uint256 amount
     );
 
     /// @dev Emitted when `amounts` of token `ids` are transferred
     /// from `from` to `to` by `operator`.
     event TransferBatch(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256[] ids,
-        uint256[] amounts
+        address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] amounts
     );
 
     /// @dev Emitted when `owner` enables or disables `operator` to manage all of their tokens.
@@ -131,7 +123,7 @@ abstract contract ERC1155 {
 
     /// @dev Returns the amount of `id` owned by `owner`.
     function balanceOf(address owner, uint256 id) public view virtual returns (uint256 result) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             mstore(0x20, _ERC1155_MASTER_SLOT_SEED)
             mstore(0x14, owner)
             mstore(0x00, id)
@@ -140,13 +132,8 @@ abstract contract ERC1155 {
     }
 
     /// @dev Returns whether `operator` is approved to manage the tokens of `owner`.
-    function isApprovedForAll(address owner, address operator)
-        public
-        view
-        virtual
-        returns (bool result)
-    {
-        assembly("memory-safe") {
+    function isApprovedForAll(address owner, address operator) public view virtual returns (bool result) {
+        assembly ("memory-safe") {
             mstore(0x20, _ERC1155_MASTER_SLOT_SEED)
             mstore(0x14, owner)
             mstore(0x00, operator)
@@ -158,7 +145,7 @@ abstract contract ERC1155 {
     ///
     /// Emits a {ApprovalForAll} event.
     function setApprovalForAll(address operator, bool isApproved) public virtual {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Convert to 0 or 1.
             isApproved := iszero(iszero(isApproved))
             // Update the `isApproved` for (`msg.sender`, `operator`).
@@ -184,17 +171,14 @@ abstract contract ERC1155 {
     ///   {ERC1155-onERC1155Received}, which is called upon a batch transfer.
     ///
     /// Emits a {TransferSingle} event.
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes calldata data
-    ) public virtual {
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data)
+        public
+        virtual
+    {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, to, _single(id), _single(amount), data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let fromSlotSeed := or(_ERC1155_MASTER_SLOT_SEED, shl(96, from))
             let toSlotSeed := or(_ERC1155_MASTER_SLOT_SEED, shl(96, to))
             mstore(0x20, fromSlotSeed)
@@ -244,7 +228,7 @@ abstract contract ERC1155 {
         if (_useAfterTokenTransfer()) {
             _afterTokenTransfer(from, to, _single(id), _single(amount), data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Do the {onERC1155Received} check if `to` is a smart contract.
             if extcodesize(to) {
                 // Prepare the calldata.
@@ -297,7 +281,7 @@ abstract contract ERC1155 {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, to, ids, amounts, data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             if iszero(eq(ids.length, amounts.length)) {
                 mstore(0x00, 0x3b800a46) // `ArrayLengthsMismatch()`.
                 revert(0x1c, 0x04)
@@ -372,7 +356,7 @@ abstract contract ERC1155 {
         if (_useAfterTokenTransfer()) {
             _afterTokenTransferCalldata(from, to, ids, amounts, data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Do the {onERC1155BatchReceived} check if `to` is a smart contract.
             if extcodesize(to) {
                 mstore(0x00, to) // Cache `to` to prevent stack too deep.
@@ -425,7 +409,7 @@ abstract contract ERC1155 {
         virtual
         returns (uint256[] memory balances)
     {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             if iszero(eq(ids.length, owners.length)) {
                 mstore(0x00, 0x3b800a46) // `ArrayLengthsMismatch()`.
                 revert(0x1c, 0x04)
@@ -450,7 +434,7 @@ abstract contract ERC1155 {
     /// See: https://eips.ethereum.org/EIPS/eip-165
     /// This function call must use less than 30000 gas.
     function supportsInterface(bytes4 interfaceId) public view virtual returns (bool result) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let s := shr(224, interfaceId)
             // ERC165: 0x01ffc9a7, ERC1155: 0xd9b67a26, ERC1155MetadataURI: 0x0e89341c.
             result := or(or(eq(s, 0x01ffc9a7), eq(s, 0xd9b67a26)), eq(s, 0x0e89341c))
@@ -473,7 +457,7 @@ abstract contract ERC1155 {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(address(0), to, _single(id), _single(amount), data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let to_ := shl(96, to)
             // Revert if `to` is the zero address.
             if iszero(to_) {
@@ -513,16 +497,14 @@ abstract contract ERC1155 {
     ///   {ERC1155-onERC1155BatchReceived}, which is called upon a batch transfer.
     ///
     /// Emits a {TransferBatch} event.
-    function _batchMint(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual {
+    function _batchMint(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
+        internal
+        virtual
+    {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(address(0), to, ids, amounts, data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             if iszero(eq(mload(ids), mload(amounts))) {
                 mstore(0x00, 0x3b800a46) // `ArrayLengthsMismatch()`.
                 revert(0x1c, 0x04)
@@ -597,7 +579,7 @@ abstract contract ERC1155 {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, address(0), _single(id), _single(amount), "");
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let from_ := shl(96, from)
             mstore(0x20, or(_ERC1155_MASTER_SLOT_SEED, from_))
             // If `by` is not the zero address, and not equal to `from`,
@@ -630,10 +612,7 @@ abstract contract ERC1155 {
     }
 
     /// @dev Equivalent to `_batchBurn(address(0), from, ids, amounts)`.
-    function _batchBurn(address from, uint256[] memory ids, uint256[] memory amounts)
-        internal
-        virtual
-    {
+    function _batchBurn(address from, uint256[] memory ids, uint256[] memory amounts) internal virtual {
         _batchBurn(address(0), from, ids, amounts);
     }
 
@@ -646,14 +625,11 @@ abstract contract ERC1155 {
     ///   or approved to manage the tokens of `from`.
     ///
     /// Emits a {TransferBatch} event.
-    function _batchBurn(address by, address from, uint256[] memory ids, uint256[] memory amounts)
-        internal
-        virtual
-    {
+    function _batchBurn(address by, address from, uint256[] memory ids, uint256[] memory amounts) internal virtual {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, address(0), ids, amounts, "");
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             if iszero(eq(mload(ids), mload(amounts))) {
                 mstore(0x00, 0x3b800a46) // `ArrayLengthsMismatch()`.
                 revert(0x1c, 0x04)
@@ -719,7 +695,7 @@ abstract contract ERC1155 {
     ///
     /// Emits a {ApprovalForAll} event.
     function _setApprovalForAll(address by, address operator, bool isApproved) internal virtual {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Convert to 0 or 1.
             isApproved := iszero(iszero(isApproved))
             // Update the `isApproved` for (`by`, `operator`).
@@ -739,10 +715,7 @@ abstract contract ERC1155 {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Equivalent to `_safeTransfer(address(0), from, to, id, amount, data)`.
-    function _safeTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data)
-        internal
-        virtual
-    {
+    function _safeTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) internal virtual {
         _safeTransfer(address(0), from, to, id, amount, data);
     }
 
@@ -757,18 +730,14 @@ abstract contract ERC1155 {
     ///   {ERC1155-onERC1155Received}, which is called upon a batch transfer.
     ///
     /// Emits a {TransferSingle} event.
-    function _safeTransfer(
-        address by,
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) internal virtual {
+    function _safeTransfer(address by, address from, address to, uint256 id, uint256 amount, bytes memory data)
+        internal
+        virtual
+    {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, to, _single(id), _single(amount), data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             let from_ := shl(96, from)
             let to_ := shl(96, to)
             // Revert if `to` is the zero address.
@@ -855,7 +824,7 @@ abstract contract ERC1155 {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, to, ids, amounts, data);
         }
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             if iszero(eq(mload(ids), mload(amounts))) {
                 mstore(0x00, 0x3b800a46) // `ArrayLengthsMismatch()`.
                 revert(0x1c, 0x04)
@@ -996,21 +965,15 @@ abstract contract ERC1155 {
 
     /// @dev Returns if `a` has bytecode of non-zero length.
     function _hasCode(address a) private view returns (bool result) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             result := extcodesize(a) // Can handle dirty upper bits.
         }
     }
 
     /// @dev Perform a call to invoke {IERC1155Receiver-onERC1155Received} on `to`.
     /// Reverts if the target does not support the function correctly.
-    function _checkOnERC1155Received(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) private {
-        assembly("memory-safe") {
+    function _checkOnERC1155Received(address from, address to, uint256 id, uint256 amount, bytes memory data) private {
+        assembly ("memory-safe") {
             // Prepare the calldata.
             let m := mload(0x40)
             // `onERC1155Received(address,address,uint256,uint256,bytes)`.
@@ -1048,7 +1011,7 @@ abstract contract ERC1155 {
         uint256[] memory amounts,
         bytes memory data
     ) private {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             // Prepare the calldata.
             let m := mload(0x40)
             // `onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)`.
@@ -1090,7 +1053,7 @@ abstract contract ERC1155 {
 
     /// @dev Returns `x` in an array with a single element.
     function _single(uint256 x) private pure returns (uint256[] memory result) {
-        assembly("memory-safe") {
+        assembly ("memory-safe") {
             result := mload(0x40)
             mstore(0x40, add(result, 0x40))
             mstore(result, 1)

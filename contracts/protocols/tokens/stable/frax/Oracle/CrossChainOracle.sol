@@ -25,11 +25,10 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
 contract CrossChainOracle is Owned {
-    
     // Core
     address public timelock_address;
     address public bot_address;
-    
+
     // Prices
     mapping(address => uint256) public prices;
 
@@ -41,17 +40,16 @@ contract CrossChainOracle is Owned {
     }
 
     modifier onlyByOwnGovBot() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address, "Not owner, tlck, or bot");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address,
+            "Not owner, tlck, or bot"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address,
-        address _bot_address
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address, address _bot_address) Owned(_creator_address) {
         timelock_address = _timelock_address;
         bot_address = _bot_address;
     }
@@ -71,7 +69,7 @@ contract CrossChainOracle is Owned {
 
     // Batch set prices for multiple tokens
     function setMultiplePrices(address[] memory token_addresses, uint256[] memory prices_e6) public onlyByOwnGovBot {
-        for (uint i = 0; i < token_addresses.length; i++){ 
+        for (uint256 i = 0; i < token_addresses.length; i++) {
             prices[token_addresses[i]] = prices_e6[i];
         }
     }
@@ -85,5 +83,4 @@ contract CrossChainOracle is Owned {
     function setBot(address _new_bot_address) external onlyByOwnGov {
         bot_address = _new_bot_address;
     }
-
 }

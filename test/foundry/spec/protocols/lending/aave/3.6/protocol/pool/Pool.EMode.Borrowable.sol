@@ -1,137 +1,139 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import 'forge-std/Test.sol';
-import 'forge-std/StdStorage.sol';
+import "forge-std/Test.sol";
+import "forge-std/StdStorage.sol";
 
-import {IPriceOracleGetter} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPriceOracleGetter.sol';
-import {IAToken, IERC20} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol';
-import {IPool, DataTypes} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol';
-import {IPoolAddressesProvider} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolAddressesProvider.sol';
-import {PoolInstance} from '@crane/contracts/protocols/lending/aave/v3.6/instances/PoolInstance.sol';
-import {Errors} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol';
-import {ReserveConfiguration} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/pool/PoolConfigurator.sol';
-import {WadRayMath} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/WadRayMath.sol';
-import {PercentageMath} from '@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/PercentageMath.sol';
-import {IAaveOracle} from '@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAaveOracle.sol';
-import {TestnetProcedures} from '../../utils/TestnetProcedures.sol';
-import {TestnetERC20} from '@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/testnet-helpers/TestnetERC20.sol';
-import {LiquidationHelper} from '../../helpers/LiquidationHelper.sol';
+import {IPriceOracleGetter} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPriceOracleGetter.sol";
+import {IAToken, IERC20} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAToken.sol";
+import {IPool, DataTypes} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPool.sol";
+import {
+    IPoolAddressesProvider
+} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPoolAddressesProvider.sol";
+import {PoolInstance} from "@crane/contracts/protocols/lending/aave/v3.6/instances/PoolInstance.sol";
+import {Errors} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/helpers/Errors.sol";
+import {ReserveConfiguration} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/pool/PoolConfigurator.sol";
+import {WadRayMath} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/WadRayMath.sol";
+import {PercentageMath} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/PercentageMath.sol";
+import {IAaveOracle} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAaveOracle.sol";
+import {TestnetProcedures} from "../../utils/TestnetProcedures.sol";
+import {TestnetERC20} from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/testnet-helpers/TestnetERC20.sol";
+import {LiquidationHelper} from "../../helpers/LiquidationHelper.sol";
 
 contract PoolEModeBorrowableTests is TestnetProcedures {
-  using stdStorage for StdStorage;
+    using stdStorage for StdStorage;
 
-  using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
-  using WadRayMath for uint256;
-  using PercentageMath for uint256;
+    using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
+    using WadRayMath for uint256;
+    using PercentageMath for uint256;
 
-  address rando = makeAddr('randomUser');
+    address rando = makeAddr("randomUser");
 
-  /**
-   * All tests assume a:
-   * eMode 1 borrowable wbtc, usdx
-   * eMode 2 borrowable wbtc
-   */
-  function setUp() public virtual {
-    initTestEnvironment(false);
+    /**
+     * All tests assume a:
+     * eMode 1 borrowable wbtc, usdx
+     * eMode 2 borrowable wbtc
+     */
+    function setUp() public virtual {
+        initTestEnvironment(false);
 
-    vm.startPrank(poolAdmin);
-    EModeCategoryInput memory ct1 = _genCategoryOne();
-    EModeCategoryInput memory ct2 = _genCategoryTwo();
+        vm.startPrank(poolAdmin);
+        EModeCategoryInput memory ct1 = _genCategoryOne();
+        EModeCategoryInput memory ct2 = _genCategoryTwo();
 
-    contracts.poolConfiguratorProxy.setEModeCategory(ct1.id, ct1.ltv, ct1.lt, ct1.lb, ct1.label);
-    contracts.poolConfiguratorProxy.setEModeCategory(ct2.id, ct2.ltv, ct2.lt, ct2.lb, ct2.label);
-    contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.usdx, 1, true);
-    contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 1, true);
-    contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 2, true);
-    vm.stopPrank();
+        contracts.poolConfiguratorProxy.setEModeCategory(ct1.id, ct1.ltv, ct1.lt, ct1.lb, ct1.label);
+        contracts.poolConfiguratorProxy.setEModeCategory(ct2.id, ct2.ltv, ct2.lt, ct2.lb, ct2.label);
+        contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.usdx, 1, true);
+        contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 1, true);
+        contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 2, true);
+        vm.stopPrank();
 
-    _supplyAndEnableAsCollateral(tokenList.weth, 100 ether, rando);
-    _supplyAndEnableAsCollateral(tokenList.usdx, 1_000_000e6, rando);
-    _supplyAndEnableAsCollateral(tokenList.wbtc, 100e8, rando);
-  }
+        _supplyAndEnableAsCollateral(tokenList.weth, 100 ether, rando);
+        _supplyAndEnableAsCollateral(tokenList.usdx, 1_000_000e6, rando);
+        _supplyAndEnableAsCollateral(tokenList.wbtc, 100e8, rando);
+    }
 
-  /**
-   * @dev You should be able to enter and leave eModes if all your borrowed assets are supported.
-   */
-  function test_shouldAllow_switchingEmodesIfAssetAllowedInTargetEmode() external {
-    _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
-    vm.startPrank(alice);
+    /**
+     * @dev You should be able to enter and leave eModes if all your borrowed assets are supported.
+     */
+    function test_shouldAllow_switchingEmodesIfAssetAllowedInTargetEmode() external {
+        _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
+        vm.startPrank(alice);
 
-    // both eMode 1 and 2 allow wbtc borrowing
-    contracts.poolProxy.setUserEMode(1);
-    contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
-    contracts.poolProxy.setUserEMode(2);
-    contracts.poolProxy.setUserEMode(0);
-  }
+        // both eMode 1 and 2 allow wbtc borrowing
+        contracts.poolProxy.setUserEMode(1);
+        contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
+        contracts.poolProxy.setUserEMode(2);
+        contracts.poolProxy.setUserEMode(0);
+    }
 
-  /**
-   * @dev You should not be able to enter and leave eModes if any of your borrowed assets is not supported.
-   */
-  function test_shouldRevert_switchingEmodesIfAssetNotAllowedInTargetEmode() external {
-    vm.prank(poolAdmin);
-    contracts.poolConfiguratorProxy.setReserveBorrowing(tokenList.usdx, false);
-    _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
-    vm.startPrank(alice);
+    /**
+     * @dev You should not be able to enter and leave eModes if any of your borrowed assets is not supported.
+     */
+    function test_shouldRevert_switchingEmodesIfAssetNotAllowedInTargetEmode() external {
+        vm.prank(poolAdmin);
+        contracts.poolConfiguratorProxy.setReserveBorrowing(tokenList.usdx, false);
+        _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
+        vm.startPrank(alice);
 
-    contracts.poolProxy.setUserEMode(1);
-    contracts.poolProxy.borrow(tokenList.usdx, 100e6, 2, 0, alice);
-    // not borrowable insode eMode 2
-    vm.expectRevert(abi.encodeWithSelector(Errors.InvalidDebtInEmode.selector, tokenList.usdx, 2));
-    contracts.poolProxy.setUserEMode(2);
-    // not borrowable outside eMode
-    vm.expectRevert(abi.encodeWithSelector(Errors.InvalidDebtInEmode.selector, tokenList.usdx, 0));
-    contracts.poolProxy.setUserEMode(0);
-  }
+        contracts.poolProxy.setUserEMode(1);
+        contracts.poolProxy.borrow(tokenList.usdx, 100e6, 2, 0, alice);
+        // not borrowable insode eMode 2
+        vm.expectRevert(abi.encodeWithSelector(Errors.InvalidDebtInEmode.selector, tokenList.usdx, 2));
+        contracts.poolProxy.setUserEMode(2);
+        // not borrowable outside eMode
+        vm.expectRevert(abi.encodeWithSelector(Errors.InvalidDebtInEmode.selector, tokenList.usdx, 0));
+        contracts.poolProxy.setUserEMode(0);
+    }
 
-  /**
-   * @dev You should only be able to borrow assets allowed in your eMode.
-   */
-  function test_shouldRevert_BorrowingIfNotBorrowableInEmode() external {
-    _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
-    vm.startPrank(alice);
+    /**
+     * @dev You should only be able to borrow assets allowed in your eMode.
+     */
+    function test_shouldRevert_BorrowingIfNotBorrowableInEmode() external {
+        _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
+        vm.startPrank(alice);
 
-    contracts.poolProxy.setUserEMode(2);
-    vm.expectRevert(abi.encodeWithSelector(Errors.NotBorrowableInEMode.selector));
-    contracts.poolProxy.borrow(tokenList.usdx, 100e6, 2, 0, alice);
-  }
+        contracts.poolProxy.setUserEMode(2);
+        vm.expectRevert(abi.encodeWithSelector(Errors.NotBorrowableInEMode.selector));
+        contracts.poolProxy.borrow(tokenList.usdx, 100e6, 2, 0, alice);
+    }
 
-  /**
-   * @dev It should be possible to borrow an asset inside eMode,
-   * even if it is not possible to borrow the asset outside.
-   * This behavior was introduced in Aave v3.4
-   */
-  function test_shouldAllow_borrowingWithinEmodeWhenNotBorrowablOutside() external {
-    vm.prank(poolAdmin);
-    contracts.poolConfiguratorProxy.setReserveBorrowing(tokenList.wbtc, false);
-    _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
-    vm.startPrank(alice);
+    /**
+     * @dev It should be possible to borrow an asset inside eMode,
+     * even if it is not possible to borrow the asset outside.
+     * This behavior was introduced in Aave v3.4
+     */
+    function test_shouldAllow_borrowingWithinEmodeWhenNotBorrowablOutside() external {
+        vm.prank(poolAdmin);
+        contracts.poolConfiguratorProxy.setReserveBorrowing(tokenList.wbtc, false);
+        _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
+        vm.startPrank(alice);
 
-    // reverts outside eMode
-    vm.expectRevert(abi.encodeWithSelector(Errors.BorrowingNotEnabled.selector));
-    contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
+        // reverts outside eMode
+        vm.expectRevert(abi.encodeWithSelector(Errors.BorrowingNotEnabled.selector));
+        contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
 
-    // succeeds within
-    contracts.poolProxy.setUserEMode(1);
-    contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
-  }
+        // succeeds within
+        contracts.poolProxy.setUserEMode(1);
+        contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
+    }
 
-  /**
-   * @dev While it is possible that an asset becomes non borrowable inside an eMode,
-   * it should be impossible to increase exposure.
-   */
-  function test_shouldRevert_borrowingAssetThatIsNoLongerBorrowable() external {
-    _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
-    vm.startPrank(alice);
-    contracts.poolProxy.setUserEMode(1);
-    contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
-    vm.stopPrank();
+    /**
+     * @dev While it is possible that an asset becomes non borrowable inside an eMode,
+     * it should be impossible to increase exposure.
+     */
+    function test_shouldRevert_borrowingAssetThatIsNoLongerBorrowable() external {
+        _supplyAndEnableAsCollateral(tokenList.usdx, 30_000e6, alice);
+        vm.startPrank(alice);
+        contracts.poolProxy.setUserEMode(1);
+        contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
+        vm.stopPrank();
 
-    vm.prank(poolAdmin);
-    contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 1, false);
+        vm.prank(poolAdmin);
+        contracts.poolConfiguratorProxy.setAssetBorrowableInEMode(tokenList.wbtc, 1, false);
 
-    vm.startPrank(alice);
-    vm.expectRevert(abi.encodeWithSelector(Errors.NotBorrowableInEMode.selector));
-    contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
-  }
+        vm.startPrank(alice);
+        vm.expectRevert(abi.encodeWithSelector(Errors.NotBorrowableInEMode.selector));
+        contracts.poolProxy.borrow(tokenList.wbtc, 0.2e8, 2, 0, alice);
+    }
 }

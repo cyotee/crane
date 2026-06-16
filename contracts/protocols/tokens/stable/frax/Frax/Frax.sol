@@ -21,23 +21,28 @@ pragma solidity ^0.8.35;
 // Reviewer(s) / Contributor(s)
 // Sam Sun: https://github.com/samczsun
 
-import "@crane/contracts/protocols/tokens/stable/frax/Common/Context.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Custom.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.sol";
-import "./Pools/FraxPool.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Oracle/UniswapPairOracle.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Oracle/ChainlinkETHUSDPriceConsumer.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Governance/AccessControl.sol";
+import {Context} from "@crane/contracts/external/openzeppelin-contracts/utils/Context.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {ERC20Custom} from "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Custom.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
+import {Owned} from "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
+import {FRAXShares} from "@crane/contracts/protocols/tokens/stable/frax/FXS/FXS.sol";
+import {FraxPool} from "./Pools/FraxPool.sol";
+import {UniswapPairOracle} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/UniswapPairOracle.sol";
+import {
+    ChainlinkETHUSDPriceConsumer
+} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/ChainlinkETHUSDPriceConsumer.sol";
+import {AccessControl} from "@crane/contracts/external/openzeppelin-contracts/access/AccessControl.sol";
 
 contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
     using SafeMath for uint256;
 
     /* ========== STATE VARIABLES ========== */
-    enum PriceChoice { FRAX, FXS }
+    enum PriceChoice {
+        FRAX,
+        FXS
+    }
     ChainlinkETHUSDPriceConsumer private eth_usd_pricer;
     uint8 private eth_usd_pricer_decimals;
     UniswapPairOracle private fraxEthOracle;
@@ -59,11 +64,11 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
     address[] public frax_pools_array;
 
     // Mapping is also used for faster verification
-    mapping(address => bool) public frax_pools; 
+    mapping(address => bool) public frax_pools;
 
     // Constants for various precisions
     uint256 private constant PRICE_PRECISION = 1e6;
-    
+
     uint256 public global_collateral_ratio; // 6 decimals of precision, e.g. 924102 = 0.924102
     uint256 public redemption_fee; // 6 decimals of precision, divide by 1000000 in calculations for fee
     uint256 public minting_fee; // 6 decimals of precision, divide by 1000000 in calculations for fee
@@ -84,33 +89,32 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
     }
 
     modifier onlyPools() {
-       require(frax_pools[msg.sender] == true, "Only frax pools can call this function");
+        require(frax_pools[msg.sender] == true, "Only frax pools can call this function");
         _;
-    } 
-    
+    }
+
     modifier onlyByOwnerGovernanceOrController() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == controller_address, "Not the owner, controller, or the governance timelock");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == controller_address,
+            "Not the owner, controller, or the governance timelock"
+        );
         _;
     }
 
     modifier onlyByOwnerGovernanceOrPool() {
         require(
-            msg.sender == owner 
-            || msg.sender == timelock_address 
-            || frax_pools[msg.sender] == true, 
-            "Not the owner, the governance timelock, or a pool");
+            msg.sender == owner || msg.sender == timelock_address || frax_pools[msg.sender] == true,
+            "Not the owner, the governance timelock, or a pool"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        string memory _name,
-        string memory _symbol,
-        address _creator_address,
-        address _timelock_address
-    ) Owned(_creator_address){
-        require(_timelock_address != address(0), "Zero address detected"); 
+    constructor(string memory _name, string memory _symbol, address _creator_address, address _timelock_address)
+        Owned(_creator_address)
+    {
+        require(_timelock_address != address(0), "Zero address detected");
         name = _name;
         symbol = _symbol;
         creator_address = _creator_address;
@@ -132,16 +136,17 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
     // Choice = 'FRAX' or 'FXS' for now
     function oracle_price(PriceChoice choice) internal view returns (uint256) {
         // Get the ETH / USD price first, and cut it down to 1e6 precision
-        uint256 __eth_usd_price = uint256(eth_usd_pricer.getLatestPrice()).mul(PRICE_PRECISION).div(uint256(10) ** eth_usd_pricer_decimals);
+        uint256 __eth_usd_price =
+            uint256(eth_usd_pricer.getLatestPrice()).mul(PRICE_PRECISION).div(uint256(10) ** eth_usd_pricer_decimals);
         uint256 price_vs_eth = 0;
 
         if (choice == PriceChoice.FRAX) {
             price_vs_eth = uint256(fraxEthOracle.consult(weth_address, PRICE_PRECISION)); // How much FRAX if you put in PRICE_PRECISION WETH
-        }
-        else if (choice == PriceChoice.FXS) {
+        } else if (choice == PriceChoice.FXS) {
             price_vs_eth = uint256(fxsEthOracle.consult(weth_address, PRICE_PRECISION)); // How much FXS if you put in PRICE_PRECISION WETH
+        } else {
+            revert("INVALID PRICE CHOICE. Needs to be either 0 (FRAX) or 1 (FXS)");
         }
-        else revert("INVALID PRICE CHOICE. Needs to be either 0 (FRAX) or 1 (FXS)");
 
         // Will be in 1e6 format
         return __eth_usd_price.mul(PRICE_PRECISION).div(price_vs_eth);
@@ -153,7 +158,7 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
     }
 
     // Returns X FXS = 1 USD
-    function fxs_price()  public view returns (uint256) {
+    function fxs_price() public view returns (uint256) {
         return oracle_price(PriceChoice.FXS);
     }
 
@@ -176,39 +181,46 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
         );
     }
 
-    // Iterate through all frax pools and calculate all value of collateral in all pools globally 
+    // Iterate through all frax pools and calculate all value of collateral in all pools globally
     function globalCollateralValue() public view returns (uint256) {
-        uint256 total_collateral_value_d18 = 0; 
+        uint256 total_collateral_value_d18 = 0;
 
-        for (uint i = 0; i < frax_pools_array.length; i++){ 
+        for (uint256 i = 0; i < frax_pools_array.length; i++) {
             // Exclude null addresses
-            if (frax_pools_array[i] != address(0)){
-                total_collateral_value_d18 = total_collateral_value_d18.add(FraxPool(frax_pools_array[i]).collatDollarBalance());
+            if (frax_pools_array[i] != address(0)) {
+                total_collateral_value_d18 =
+                    total_collateral_value_d18.add(FraxPool(frax_pools_array[i]).collatDollarBalance());
             }
-
         }
         return total_collateral_value_d18;
     }
 
     /* ========== PUBLIC FUNCTIONS ========== */
-    
+
     // There needs to be a time interval that this can be called. Otherwise it can be called multiple times per expansion.
     uint256 public last_call_time; // Last time the refreshCollateralRatio function was called
+
     function refreshCollateralRatio() public {
         require(collateral_ratio_paused == false, "Collateral Ratio has been paused");
         uint256 frax_price_cur = frax_price();
-        require(block.timestamp - last_call_time >= refresh_cooldown, "Must wait for the refresh cooldown since last refresh");
+        require(
+            block.timestamp - last_call_time >= refresh_cooldown,
+            "Must wait for the refresh cooldown since last refresh"
+        );
 
-        // Step increments are 0.25% (upon genesis, changable by setFraxStep()) 
-        
-        if (frax_price_cur > price_target.add(price_band)) { //decrease collateral ratio
-            if(global_collateral_ratio <= frax_step){ //if within a step of 0, go to 0
+        // Step increments are 0.25% (upon genesis, changable by setFraxStep())
+
+        if (frax_price_cur > price_target.add(price_band)) {
+            //decrease collateral ratio
+            if (global_collateral_ratio <= frax_step) {
+                //if within a step of 0, go to 0
                 global_collateral_ratio = 0;
             } else {
                 global_collateral_ratio = global_collateral_ratio.sub(frax_step);
             }
-        } else if (frax_price_cur < price_target.sub(price_band)) { //increase collateral ratio
-            if(global_collateral_ratio.add(frax_step) >= 1000000){
+        } else if (frax_price_cur < price_target.sub(price_band)) {
+            //increase collateral ratio
+            if (global_collateral_ratio.add(frax_step) >= 1000000) {
                 global_collateral_ratio = 1000000; // cap collateral ratio at 1.000000
             } else {
                 global_collateral_ratio = global_collateral_ratio.add(frax_step);
@@ -228,33 +240,33 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
         emit FRAXBurned(b_address, msg.sender, b_amount);
     }
 
-    // This function is what other frax pools will call to mint new FRAX 
+    // This function is what other frax pools will call to mint new FRAX
     function pool_mint(address m_address, uint256 m_amount) public onlyPools {
         super._mint(m_address, m_amount);
         emit FRAXMinted(msg.sender, m_address, m_amount);
     }
 
-    // Adds collateral addresses supported, such as tether and busd, must be ERC20 
+    // Adds collateral addresses supported, such as tether and busd, must be ERC20
     function addPool(address pool_address) public onlyByOwnerGovernanceOrController {
         require(pool_address != address(0), "Zero address detected");
 
         require(frax_pools[pool_address] == false, "Address already exists");
-        frax_pools[pool_address] = true; 
+        frax_pools[pool_address] = true;
         frax_pools_array.push(pool_address);
 
         emit PoolAdded(pool_address);
     }
 
-    // Remove a pool 
+    // Remove a pool
     function removePool(address pool_address) public onlyByOwnerGovernanceOrController {
         require(pool_address != address(0), "Zero address detected");
         require(frax_pools[pool_address] == true, "Address nonexistent");
-        
+
         // Delete from the mapping
         delete frax_pools[pool_address];
 
         // 'Delete' from the array by setting the address to 0x0
-        for (uint i = 0; i < frax_pools_array.length; i++){ 
+        for (uint256 i = 0; i < frax_pools_array.length; i++) {
             if (frax_pools_array[i] == pool_address) {
                 frax_pools_array[i] = address(0); // This will leave a null in the array and keep the indices the same
                 break;
@@ -274,22 +286,22 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
         minting_fee = min_fee;
 
         emit MintingFeeSet(min_fee);
-    }  
+    }
 
     function setFraxStep(uint256 _new_step) public onlyByOwnerGovernanceOrController {
         frax_step = _new_step;
 
         emit FraxStepSet(_new_step);
-    }  
+    }
 
-    function setPriceTarget (uint256 _new_price_target) public onlyByOwnerGovernanceOrController {
+    function setPriceTarget(uint256 _new_price_target) public onlyByOwnerGovernanceOrController {
         price_target = _new_price_target;
 
         emit PriceTargetSet(_new_price_target);
     }
 
     function setRefreshCooldown(uint256 _new_cooldown) public onlyByOwnerGovernanceOrController {
-    	refresh_cooldown = _new_cooldown;
+        refresh_cooldown = _new_cooldown;
 
         emit RefreshCooldownSet(_new_cooldown);
     }
@@ -334,17 +346,20 @@ contract FRAXStablecoin is ERC20Custom, AccessControl, Owned {
         emit PriceBandSet(_price_band);
     }
 
-    // Sets the FRAX_ETH Uniswap oracle address 
-    function setFRAXEthOracle(address _frax_oracle_addr, address _weth_address) public onlyByOwnerGovernanceOrController {
+    // Sets the FRAX_ETH Uniswap oracle address
+    function setFRAXEthOracle(address _frax_oracle_addr, address _weth_address)
+        public
+        onlyByOwnerGovernanceOrController
+    {
         require((_frax_oracle_addr != address(0)) && (_weth_address != address(0)), "Zero address detected");
         frax_eth_oracle_address = _frax_oracle_addr;
-        fraxEthOracle = UniswapPairOracle(_frax_oracle_addr); 
+        fraxEthOracle = UniswapPairOracle(_frax_oracle_addr);
         weth_address = _weth_address;
 
         emit FRAXETHOracleSet(_frax_oracle_addr, _weth_address);
     }
 
-    // Sets the FXS_ETH Uniswap oracle address 
+    // Sets the FXS_ETH Uniswap oracle address
     function setFXSEthOracle(address _fxs_oracle_addr, address _weth_address) public onlyByOwnerGovernanceOrController {
         require((_fxs_oracle_addr != address(0)) && (_weth_address != address(0)), "Zero address detected");
 

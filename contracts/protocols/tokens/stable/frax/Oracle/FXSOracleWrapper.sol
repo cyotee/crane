@@ -48,10 +48,7 @@ contract FXSOracleWrapper is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address) Owned(_creator_address) {
         timelock_address = _timelock_address;
 
         // FXS/USD
@@ -66,23 +63,23 @@ contract FXSOracleWrapper is Owned {
     /* ========== VIEWS ========== */
 
     function getFXSPrice() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedFXSUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedFXSUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
 
         return uint256(price).mul(PRICE_PRECISION).div(10 ** chainlink_fxs_usd_decimals);
     }
 
     function getETHPrice() public view returns (uint256) {
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
+
         return uint256(price).mul(PRICE_PRECISION).div(10 ** chainlink_eth_usd_decimals);
     }
 
     // Override the logic of the FXS-WETH Uniswap TWAP Oracle
     // Expected Parameters: weth address, uint256 1e6
     // Returns: FXS Chainlink price (with 1e6 precision)
-    function consult(address token, uint amountIn) external view returns (uint amountOut) {
+    function consult(address token, uint256 amountIn) external view returns (uint256 amountOut) {
         // safety checks (replacing regular FXS-WETH oracle in FRAX.sol)
         require(token == 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2, "must use weth address");
         require(amountIn == 1e6, "must call with 1e6");

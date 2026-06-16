@@ -32,10 +32,12 @@ contract PendleSUSDESY is PendleERC4626SY, IPTokenWithSupplyCap {
                             SUPPLY CAP LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         amountSharesOut = super._previewDeposit(tokenIn, amountTokenToDeposit);
         uint256 _newSupply = totalSupply() + amountSharesOut;
         uint256 _supplyCap = supplyCap;

@@ -3,23 +3,23 @@ pragma solidity ^0.8.35;
 
 // import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
 import "./Accounts.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IActivePool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBoldToken.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ICollSurplusPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IDefaultPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IPriceFeed.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ISortedTroves.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IActivePool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBoldToken.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ICollSurplusPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IDefaultPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IPriceFeed.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ISortedTroves.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPool.sol";
 import "./BorrowerOperationsTester.t.sol";
 import "./TroveManagerTester.t.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/ICollateralRegistry.sol";
 import "./PriceFeedTestnet.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IInterestRouter.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/GasPool.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/HintHelpers.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/WETHZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/GasCompZapper.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Zappers/LeverageLSTZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IInterestRouter.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/GasPool.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/HintHelpers.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/WETHZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/GasCompZapper.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Zappers/LeverageLSTZapper.sol";
 import {mulDivCeil} from "../Utils/Math.sol";
 import {Logging} from "../Utils/Logging.sol";
 import {StringFormatting} from "../Utils/StringFormatting.sol";
@@ -483,20 +483,20 @@ contract BaseTest is TestAccounts, Logging, TroveId {
             );
         }
 
-        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params = IBorrowerOperations
-            .OpenTroveAndJoinInterestBatchManagerParams({
-            owner: _troveOwner,
-            ownerIndex: _index,
-            collAmount: _coll,
-            boldAmount: _debt,
-            upperHint: 0,
-            lowerHint: 0,
-            interestBatchManager: _batchAddress,
-            maxUpfrontFee: 1e24,
-            addManager: address(0),
-            removeManager: address(0),
-            receiver: address(0)
-        });
+        IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams memory params =
+            IBorrowerOperations.OpenTroveAndJoinInterestBatchManagerParams({
+                owner: _troveOwner,
+                ownerIndex: _index,
+                collAmount: _coll,
+                boldAmount: _debt,
+                upperHint: 0,
+                lowerHint: 0,
+                interestBatchManager: _batchAddress,
+                maxUpfrontFee: 1e24,
+                addManager: address(0),
+                removeManager: address(0),
+                receiver: address(0)
+            });
         vm.startPrank(_troveOwner);
         uint256 troveId = borrowerOperations.openTroveAndJoinInterestBatchManager(params);
         vm.stopPrank();

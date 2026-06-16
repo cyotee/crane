@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {IStepStorage} from './interfaces/IStepStorage.sol';
-import {ConstantsLib} from './libraries/ConstantsLib.sol';
-import {AuctionStep, StepLib} from './libraries/StepLib.sol';
-import {SSTORE2} from 'contracts/external/solady/utils/SSTORE2.sol';
+import {IStepStorage} from "./interfaces/IStepStorage.sol";
+import {ConstantsLib} from "./libraries/ConstantsLib.sol";
+import {AuctionStep, StepLib} from "./libraries/StepLib.sol";
+import {SSTORE2} from "contracts/external/solady/utils/SSTORE2.sol";
 
 /// @title StepStorage
 /// @notice Abstract contract to store and read information about the auction issuance schedule

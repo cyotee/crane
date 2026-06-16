@@ -12,7 +12,10 @@ interface IStakingRewardsDualV3 {
 
     function acceptOwnership() external;
     function addMigrator(address migrator_address) external;
-    function calcCurCombinedWeight(address account) external view returns (uint256 old_combined_weight, uint256 new_vefxs_multiplier, uint256 new_combined_weight);
+    function calcCurCombinedWeight(address account)
+        external
+        view
+        returns (uint256 old_combined_weight, uint256 new_vefxs_multiplier, uint256 new_combined_weight);
     function combinedWeightOf(address account) external view returns (uint256);
     function earned(address account) external view returns (uint256, uint256);
     function fraxPerLPToken() external view returns (uint256);
@@ -50,8 +53,13 @@ interface IStakingRewardsDualV3 {
     function rewards1(address) external view returns (uint256);
     function rewardsCollectionPaused() external view returns (bool);
     function rewardsDuration() external view returns (uint256);
-    function setLockedStakeTimeForMinAndMaxMultiplier(uint256 _lock_time_for_max_multiplier, uint256 _lock_time_min) external;
-    function setMultipliers(uint256 _lock_max_multiplier, uint256 _vefxs_max_multiplier, uint256 _vefxs_per_frax_for_max_boost) external;
+    function setLockedStakeTimeForMinAndMaxMultiplier(uint256 _lock_time_for_max_multiplier, uint256 _lock_time_min)
+        external;
+    function setMultipliers(
+        uint256 _lock_max_multiplier,
+        uint256 _vefxs_max_multiplier,
+        uint256 _vefxs_per_frax_for_max_boost
+    ) external;
     function setRewardRates(uint256 _new_rate0, uint256 _new_rate1, bool sync_too) external;
     function setRewardsDuration(uint256 _rewardsDuration) external;
     function setTimelock(address _new_timelock) external;

@@ -1,20 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {AuctionParameters, ContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol';
-import {ContinuousClearingAuctionFactory} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuctionFactory.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {IContinuousClearingAuctionFactory} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuctionFactory.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {IDistributionContract} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionContract.sol';
-import {IDistributionStrategy} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionStrategy.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionBaseTest} from './utils/AuctionBaseTest.sol';
-import {AuctionParamsBuilder} from './utils/AuctionParamsBuilder.sol';
-import {AuctionStepsBuilder} from './utils/AuctionStepsBuilder.sol';
-import {FuzzDeploymentParams} from './utils/FuzzStructs.sol';
+import {
+    AuctionParameters,
+    ContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuction.sol";
+import {
+    ContinuousClearingAuctionFactory
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/ContinuousClearingAuctionFactory.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    IContinuousClearingAuctionFactory
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuctionFactory.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {
+    IDistributionContract
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionContract.sol";
+import {
+    IDistributionStrategy
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IDistributionStrategy.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {ValueX7Lib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionBaseTest} from "./utils/AuctionBaseTest.sol";
+import {AuctionParamsBuilder} from "./utils/AuctionParamsBuilder.sol";
+import {AuctionStepsBuilder} from "./utils/AuctionStepsBuilder.sol";
+import {FuzzDeploymentParams} from "./utils/FuzzStructs.sol";
 
 contract AuctionFactoryTest is AuctionBaseTest {
     using AuctionParamsBuilder for AuctionParameters;
@@ -63,7 +78,7 @@ contract AuctionFactoryTest is AuctionBaseTest {
         params = params.withFundsRecipient(address(1));
         bytes memory configData = abi.encode(params);
 
-        address sender = makeAddr('sender');
+        address sender = makeAddr("sender");
         bytes memory expectedConfigData = abi.encode(params.withFundsRecipient(address(sender)));
 
         // Expect the AuctionCreated event (don't check the auction address since it's deterministic)
@@ -104,7 +119,7 @@ contract AuctionFactoryTest is AuctionBaseTest {
             factory.initializeDistribution(address(token), TOTAL_SUPPLY, configData, bytes32(0));
 
         // Create auction with token2 (different token address)
-        address token2 = makeAddr('token2');
+        address token2 = makeAddr("token2");
         IDistributionContract distributionContract2 =
             factory.initializeDistribution(token2, TOTAL_SUPPLY, configData, bytes32(0));
 

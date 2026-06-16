@@ -10,19 +10,13 @@ interface IKyberMathHelper {
         int24 tickUpper
     ) external view returns (uint256 amountToSwap);
 
-    function previewDeposit(
-        address kyberPool,
-        int24 tickLower,
-        int24 tickUpper,
-        bool isToken0,
-        uint256 amountIn
-    ) external view returns (uint256);
+    function previewDeposit(address kyberPool, int24 tickLower, int24 tickUpper, bool isToken0, uint256 amountIn)
+        external
+        view
+        returns (uint256);
 
-    function previewRedeem(
-        address kyberPool,
-        int24 tickLower,
-        int24 tickUpper,
-        bool isToken0,
-        uint256 amountShares
-    ) external view returns (uint256);
+    function previewRedeem(address kyberPool, int24 tickLower, int24 tickUpper, bool isToken0, uint256 amountShares)
+        external
+        view
+        returns (uint256);
 }

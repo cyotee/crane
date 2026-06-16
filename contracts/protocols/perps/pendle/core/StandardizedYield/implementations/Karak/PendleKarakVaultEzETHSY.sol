@@ -53,18 +53,31 @@ contract PendleKarakVaultEzETHSY is PendleKarakVaultSYBaseUpg {
     }
 
     function _previewToStakeToken(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountTokenToDeposit
-    ) internal view virtual override returns (uint256) {
+    )
+        internal
+        view
+        virtual
+        override
+        returns (uint256)
+    {
         uint256 supply = IERC20(ezETH).totalSupply();
-        (, , uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
+        (,, uint256 tvl) = IRenzoRestakeManager(restakeManager).calculateTVLs();
         return IRenzoOracle(renzoOracle).calculateMintAmount(tvl, amountTokenToDeposit, supply);
     }
 
     function _wrapToStakeToken(
-        address /*tokenIn*/,
+        address,
+        /*tokenIn*/
         uint256 amountDeposited
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         uint256 preBalance = _selfBalance(ezETH);
         IRenzoRestakeManager(restakeManager).depositETH{value: amountDeposited}(referralId);
         return _selfBalance(ezETH) - preBalance;

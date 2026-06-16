@@ -26,17 +26,13 @@ contract PendleAgETHSY is SYBase {
                     DEPOSIT/REDEEM USING BASE TOKENS
     //////////////////////////////////////////////////////////////*/
 
-    function _deposit(
-        address tokenIn,
-        uint256 amountDeposited
-    ) internal virtual override returns (uint256) {
+    function _deposit(address tokenIn, uint256 amountDeposited) internal virtual override returns (uint256) {
         if (tokenIn == agETH) {
             return amountDeposited;
         } else {
             if (tokenIn == NATIVE) {
                 IKelpDepositPool(depositPool).depositETH{value: amountDeposited}(
-                    0,
-                    "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
+                    0, "c05f6902ec7c7434ceb666010c16a63a2e3995aad11f1280855b26402194346b"
                 );
                 (amountDeposited, tokenIn) = (_selfBalance(rsETH), rsETH);
             }
@@ -46,9 +42,15 @@ contract PendleAgETHSY is SYBase {
 
     function _redeem(
         address receiver,
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256) {
+    )
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
         _transferOut(agETH, receiver, amountSharesToRedeem);
         return amountSharesToRedeem;
     }
@@ -70,15 +72,17 @@ contract PendleAgETHSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address tokenIn,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 /*amountSharesOut*/) {
+    function _previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (
+            uint256 /*amountSharesOut*/
+        )
+    {
         if (tokenIn == NATIVE) {
-            (tokenIn, amountTokenToDeposit) = (
-                rsETH,
-                IKelpDepositPool(depositPool).getRsETHAmountToMint(ETH_TOKEN, amountTokenToDeposit)
-            );
+            (tokenIn, amountTokenToDeposit) =
+            (rsETH, IKelpDepositPool(depositPool).getRsETHAmountToMint(ETH_TOKEN, amountTokenToDeposit));
         }
         if (tokenIn == rsETH) {
             return IERC4626(agETH).previewDeposit(amountTokenToDeposit);
@@ -87,9 +91,15 @@ contract PendleAgETHSY is SYBase {
     }
 
     function _previewRedeem(
-        address /*tokenOut*/,
+        address,
+        /*tokenOut*/
         uint256 amountSharesToRedeem
-    ) internal pure override returns (uint256 amountTokenOut) {
+    )
+        internal
+        pure
+        override
+        returns (uint256 amountTokenOut)
+    {
         return amountSharesToRedeem;
     }
 

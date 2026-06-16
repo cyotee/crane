@@ -74,7 +74,8 @@ contract Fraxswap_UniswapV2_Test is Test {
 
         (uint112 r0, uint112 r1,) = pair.getReserves();
         uint256 feeMultiplier = 10_000 - POOL_FEE;
-        uint256 expectedOutput = (tradeAmount * feeMultiplier * r1) / (uint256(r0) * 10_000 + tradeAmount * feeMultiplier);
+        uint256 expectedOutput =
+            (tradeAmount * feeMultiplier * r1) / (uint256(r0) * 10_000 + tradeAmount * feeMultiplier);
 
         uint256 balanceBefore = token1.balanceOf(user1);
 
@@ -149,11 +150,7 @@ contract Fraxswap_UniswapV2_Test is Test {
         pair.mint(owner);
     }
 
-    function _getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
-        internal
-        pure
-        returns (uint256)
-    {
+    function _getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) internal pure returns (uint256) {
         uint256 amountInWithFee = amountIn * (10_000 - POOL_FEE);
         return (amountInWithFee * reserveOut) / (reserveIn * 10_000 + amountInWithFee);
     }

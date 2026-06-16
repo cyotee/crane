@@ -1,25 +1,34 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {IERC20Minimal} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol';
-import {Bid, BidLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {Currency, CurrencyLibrary} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {ValueX7Lib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {AuctionUnitTest} from './unit/AuctionUnitTest.sol';
-import {Assertions} from './utils/Assertions.sol';
-import {MockContinuousClearingAuction} from './utils/MockAuction.sol';
-import {Test} from 'forge-std/Test.sol';
-import {console} from 'forge-std/console.sol';
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITickStorage.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {
+    IERC20Minimal
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol";
+import {Bid, BidLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {
+    Currency,
+    CurrencyLibrary
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CurrencyLibrary.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {ValueX7Lib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {AuctionUnitTest} from "./unit/AuctionUnitTest.sol";
+import {Assertions} from "./utils/Assertions.sol";
+import {MockContinuousClearingAuction} from "./utils/MockAuction.sol";
+import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
 import {IPermit2} from "@crane/contracts/interfaces/protocols/utils/permit2/IPermit2.sol";
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
-import {SafeCastLib} from 'contracts/utils/SafeCastLib.sol';
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
+import {SafeCastLib} from "contracts/utils/SafeCastLib.sol";
 
 contract AuctionInvariantHandler is Test, Assertions {
     using CurrencyLibrary for Currency;
@@ -103,27 +112,27 @@ contract AuctionInvariantHandler is Test, Assertions {
             metrics.cnt_checkpoints++;
         }
         // Check that the clearing price is always increasing
-        assertGe(checkpoint.clearingPrice, _checkpoint.clearingPrice, 'Checkpoint clearing price is not increasing');
+        assertGe(checkpoint.clearingPrice, _checkpoint.clearingPrice, "Checkpoint clearing price is not increasing");
         // Check that the cumulative variables are always increasing
-        assertGe(checkpoint.cumulativeMps, _checkpoint.cumulativeMps, 'Checkpoint cumulative mps is not increasing');
+        assertGe(checkpoint.cumulativeMps, _checkpoint.cumulativeMps, "Checkpoint cumulative mps is not increasing");
         assertGe(
             checkpoint.cumulativeMpsPerPrice,
             _checkpoint.cumulativeMpsPerPrice,
-            'Checkpoint cumulative mps per price is not increasing'
+            "Checkpoint cumulative mps per price is not increasing"
         );
 
         // Check that total cleared does not exceed the max tokens that can be sold in the auction so far
         assertLe(
             mockAuction.totalCleared(),
             (uint256(mockAuction.totalSupply()) * checkpoint.cumulativeMps) / ConstantsLib.MPS,
-            'Total cleared exceeds the max tokens that can be sold in the auction so far'
+            "Total cleared exceeds the max tokens that can be sold in the auction so far"
         );
 
         // We can never have more sweepable tokens than the auction's balance
         assertLe(
             mockAuction.sweepableTokens(),
             token.balanceOf(address(mockAuction)),
-            'Sweepable tokens exceeds the auction\'s balance'
+            "Sweepable tokens exceeds the auction\'s balance"
         );
 
         _checkpoint = checkpoint;
@@ -256,9 +265,9 @@ contract AuctionInvariantHandler is Test, Assertions {
 
         uint256 prevTickPrice = _getLowerTick(maxPrice);
         uint256 nextBidId = mockAuction.nextBidId();
-        emit log_named_decimal_uint('submitting bid with amount', inputAmount, 18);
+        emit log_named_decimal_uint("submitting bid with amount", inputAmount, 18);
         try mockAuction.submitBid{value: currency.isAddressZero() ? inputAmount : 0}(
-            maxPrice, inputAmount, currentActor, prevTickPrice, bytes('')
+            maxPrice, inputAmount, currentActor, prevTickPrice, bytes("")
         ) {
             bidIds.push(nextBidId);
             bidCount++;
@@ -276,7 +285,7 @@ contract AuctionInvariantHandler is Test, Assertions {
                 assertLe(
                     maxPrice,
                     mockAuction.clearingPrice(),
-                    'Reverted with BidMustBeAboveClearingPrice but maxPrice is not above clearing price'
+                    "Reverted with BidMustBeAboveClearingPrice but maxPrice is not above clearing price"
                 );
                 metrics.cnt_BidMustBeAboveClearingPriceError++;
             } else if (inputAmount == 0) {
@@ -306,7 +315,7 @@ contract AuctionInvariantHandler is Test, Assertions {
                 // For race conditions or any errors that require additional calls to be made
 
                 // Uncaught error so we bubble up the revert reason
-                emit log_string('Invariant::handleSubmitBid: Uncaught error');
+                emit log_string("Invariant::handleSubmitBid: Uncaught error");
                 assembly {
                     revert(add(revertData, 0x20), mload(revertData))
                 }
@@ -326,7 +335,7 @@ contract AuctionInvariantHandler is Test, Assertions {
             return;
         }
 
-        assertLt(bid.maxPrice, _checkpoint.clearingPrice, 'Bid must be less than clearing price to early exit');
+        assertLt(bid.maxPrice, _checkpoint.clearingPrice, "Bid must be less than clearing price to early exit");
         (uint64 lower, uint64 upper) = _getLowerUpperCheckpointHints(bid.maxPrice);
 
         uint256 ownerBalanceBefore = bid.owner.balance;
@@ -336,37 +345,37 @@ contract AuctionInvariantHandler is Test, Assertions {
         bid = mockAuction.bids(outbidBidId);
         uint256 maximumTokensFilled =
             FixedPointMathLib.min(BidLib.toEffectiveAmount(bid) / mockAuction.floorPrice(), mockAuction.totalSupply());
-        assertLe(bid.tokensFilled, maximumTokensFilled, 'Bid tokens filled must be less than the maximum tokens filled');
+        assertLe(bid.tokensFilled, maximumTokensFilled, "Bid tokens filled must be less than the maximum tokens filled");
 
         uint256 refundAmount = bid.owner.balance - ownerBalanceBefore;
         totalCurrencyRaised += bid.amountQ96 / FixedPoint96.Q96 - refundAmount;
         assertLe(
             refundAmount,
             bid.amountQ96 / FixedPoint96.Q96,
-            'Bid owner can never be refunded more Currency than provided'
+            "Bid owner can never be refunded more Currency than provided"
         );
         if (refundAmount == bid.amountQ96 / FixedPoint96.Q96) {
-            assertEq(bid.tokensFilled, 0, 'Bid tokens filled must be 0 if bid is fully refunded');
+            assertEq(bid.tokensFilled, 0, "Bid tokens filled must be 0 if bid is fully refunded");
         }
 
         metrics.cnt_BidEarlyExited++;
     }
 
     function printMetrics() public {
-        emit log_string('==================== METRICS ====================');
-        emit log_named_uint('bidCount', bidCount);
-        emit log_named_uint('BidEarlyExited count', metrics.cnt_BidEarlyExited);
-        emit log_named_uint('checkpoints count', metrics.cnt_checkpoints);
-        emit log_named_uint('clearingPriceUpdated count', metrics.cnt_clearingPriceUpdated);
-        emit log_named_uint('untilTickPriceMAX_TICK_PTR count', metrics.cnt_untilTickPriceMAX_TICK_PTR);
-        emit log_named_uint('untilTickPrice count', metrics.cnt_untilTickPrice);
-        emit log_named_uint('AuctionIsOverError count', metrics.cnt_AuctionIsOverError);
-        emit log_named_uint('BidAmountTooSmallError count', metrics.cnt_BidAmountTooSmallError);
-        emit log_named_uint('TickPriceNotIncreasingError count', metrics.cnt_TickPriceNotIncreasingError);
-        emit log_named_uint('InvalidBidUnableToClearError count', metrics.cnt_InvalidBidUnableToClearError);
-        emit log_named_uint('BidMustBeAboveClearingPriceError count', metrics.cnt_BidMustBeAboveClearingPriceError);
-        emit log_named_uint('NoBidToEarlyExitError count', metrics.cnt_NoBidToEarlyExitError);
-        emit log_named_uint('BidAlreadyExitedError count', metrics.cnt_BidAlreadyExitedError);
+        emit log_string("==================== METRICS ====================");
+        emit log_named_uint("bidCount", bidCount);
+        emit log_named_uint("BidEarlyExited count", metrics.cnt_BidEarlyExited);
+        emit log_named_uint("checkpoints count", metrics.cnt_checkpoints);
+        emit log_named_uint("clearingPriceUpdated count", metrics.cnt_clearingPriceUpdated);
+        emit log_named_uint("untilTickPriceMAX_TICK_PTR count", metrics.cnt_untilTickPriceMAX_TICK_PTR);
+        emit log_named_uint("untilTickPrice count", metrics.cnt_untilTickPrice);
+        emit log_named_uint("AuctionIsOverError count", metrics.cnt_AuctionIsOverError);
+        emit log_named_uint("BidAmountTooSmallError count", metrics.cnt_BidAmountTooSmallError);
+        emit log_named_uint("TickPriceNotIncreasingError count", metrics.cnt_TickPriceNotIncreasingError);
+        emit log_named_uint("InvalidBidUnableToClearError count", metrics.cnt_InvalidBidUnableToClearError);
+        emit log_named_uint("BidMustBeAboveClearingPriceError count", metrics.cnt_BidMustBeAboveClearingPriceError);
+        emit log_named_uint("NoBidToEarlyExitError count", metrics.cnt_NoBidToEarlyExitError);
+        emit log_named_uint("BidAlreadyExitedError count", metrics.cnt_BidAlreadyExitedError);
     }
 }
 
@@ -404,22 +413,22 @@ contract AuctionInvariantTest is AuctionUnitTest {
     }
 
     function _printBalances() internal {
-        emit log_string('==================== Auction Balances ====================');
-        emit log_named_decimal_uint('currency balance', address(mockAuction).balance, 18);
-        emit log_named_decimal_uint('token balance', token.balanceOf(address(mockAuction)), 18);
-        emit log_string('==================== Funds Recipient Balances ====================');
-        emit log_named_decimal_uint('currency balance', address(mockAuction.fundsRecipient()).balance, 18);
-        emit log_string('==================== Tokens Recipient Balances ====================');
-        emit log_named_decimal_uint('token balance', token.balanceOf(address(mockAuction.tokensRecipient())), 18);
+        emit log_string("==================== Auction Balances ====================");
+        emit log_named_decimal_uint("currency balance", address(mockAuction).balance, 18);
+        emit log_named_decimal_uint("token balance", token.balanceOf(address(mockAuction)), 18);
+        emit log_string("==================== Funds Recipient Balances ====================");
+        emit log_named_decimal_uint("currency balance", address(mockAuction.fundsRecipient()).balance, 18);
+        emit log_string("==================== Tokens Recipient Balances ====================");
+        emit log_named_decimal_uint("token balance", token.balanceOf(address(mockAuction.tokensRecipient())), 18);
     }
 
     function _printState() internal {
-        emit log_string('==================== Auction State ====================');
-        emit log_named_decimal_uint('totalSupply', mockAuction.totalSupply(), 18);
-        emit log_named_uint('floorPrice', mockAuction.floorPrice());
-        emit log_named_uint('tickSpacing', mockAuction.tickSpacing());
-        emit log_named_uint('final clearing price', mockAuction.clearingPrice());
-        emit log_named_decimal_uint('currencyRaised', mockAuction.currencyRaised(), 18);
+        emit log_string("==================== Auction State ====================");
+        emit log_named_decimal_uint("totalSupply", mockAuction.totalSupply(), 18);
+        emit log_named_uint("floorPrice", mockAuction.floorPrice());
+        emit log_named_uint("tickSpacing", mockAuction.tickSpacing());
+        emit log_named_uint("final clearing price", mockAuction.clearingPrice());
+        emit log_named_decimal_uint("currencyRaised", mockAuction.currencyRaised(), 18);
     }
 
     /// Helper function to return the correct checkpoint hints for a partiallFilledBid
@@ -449,20 +458,20 @@ contract AuctionInvariantTest is AuctionUnitTest {
     /// @notice Assert that the auction loses no more than 1e18 wei of currency or tokens
     function assertAcceptableDustBalances() internal view {
         assertApproxEqAbs(
-            address(mockAuction).balance, 0, 1e18, 'Auction currency balance is not within 1e18 wei of zero'
+            address(mockAuction).balance, 0, 1e18, "Auction currency balance is not within 1e18 wei of zero"
         );
         assertApproxEqAbs(
-            token.balanceOf(address(mockAuction)), 0, 1e18, 'Auction token balance is not within 1e18 wei of zero'
+            token.balanceOf(address(mockAuction)), 0, 1e18, "Auction token balance is not within 1e18 wei of zero"
         );
     }
 
     /// @notice Exit and claim all outstanding bids on the auction
     /// @return totalCurrencyRaised The total currency raised from all bids exited and claimed
     function helper__exitAndClaimAllBids() internal returns (uint256 totalCurrencyRaised) {
-        require(block.number >= mockAuction.endBlock(), 'helper__exitAndClaimAllBids::Auction must be over');
+        require(block.number >= mockAuction.endBlock(), "helper__exitAndClaimAllBids::Auction must be over");
         require(
             mockAuction.lastCheckpointedBlock() == mockAuction.endBlock(),
-            'helper__sweep::Auction must be checkpointed at endBlock'
+            "helper__sweep::Auction must be checkpointed at endBlock"
         );
 
         uint256 clearingPrice = mockAuction.clearingPrice();
@@ -491,7 +500,7 @@ contract AuctionInvariantTest is AuctionUnitTest {
             assertLe(
                 refundAmount,
                 bid.amountQ96 / FixedPoint96.Q96,
-                'Bid owner can never be refunded more Currency than provided'
+                "Bid owner can never be refunded more Currency than provided"
             );
 
             // Bid might be deleted if tokensFilled = 0
@@ -518,9 +527,9 @@ contract AuctionInvariantTest is AuctionUnitTest {
                 currencySpent,
                 maxValueAtBidPrice + 1e6,
                 string.concat(
-                    'ROUNDING INVARIANT VIOLATED: Bid ',
+                    "ROUNDING INVARIANT VIOLATED: Bid ",
                     vm.toString(bidId),
-                    ' - average purchase price exceeds maxPrice'
+                    " - average purchase price exceeds maxPrice"
                 )
             );
 
@@ -530,7 +539,7 @@ contract AuctionInvariantTest is AuctionUnitTest {
                 BidLib.toEffectiveAmount(bid) / mockAuction.floorPrice(), mockAuction.totalSupply()
             );
             assertLe(
-                bid.tokensFilled, maximumTokensFilled, 'Bid tokens filled must be less than the maximum tokens filled'
+                bid.tokensFilled, maximumTokensFilled, "Bid tokens filled must be less than the maximum tokens filled"
             );
         }
 
@@ -554,26 +563,26 @@ contract AuctionInvariantTest is AuctionUnitTest {
 
         uint256 expectedCurrencyRaised = mockAuction.currencyRaised();
 
-        emit log_string('==================== AFTER EXIT AND CLAIM TOKENS ====================');
-        emit log_named_uint('bidCount', handler.bidCount());
-        emit log_named_uint('auction duration (blocks)', mockAuction.endBlock() - mockAuction.startBlock());
-        emit log_named_decimal_uint('auction floor price', mockAuction.floorPrice(), 96);
-        emit log_named_decimal_uint('auction final clearing price', mockAuction.clearingPrice(), 96);
-        emit log_named_decimal_uint('auction total supply', mockAuction.totalSupply(), 18);
-        emit log_named_decimal_uint('auction totalCleared', mockAuction.totalCleared(), 18);
-        emit log_named_decimal_uint('auction remaining token balance', token.balanceOf(address(mockAuction)), 18);
-        emit log_named_decimal_uint('auction remaining currency balance', address(mockAuction).balance, 18);
-        emit log_named_decimal_uint('actualCurrencyRaised', totalCurrencyRaised, 18);
-        emit log_named_decimal_uint('expectedCurrencyRaised', expectedCurrencyRaised, 18);
+        emit log_string("==================== AFTER EXIT AND CLAIM TOKENS ====================");
+        emit log_named_uint("bidCount", handler.bidCount());
+        emit log_named_uint("auction duration (blocks)", mockAuction.endBlock() - mockAuction.startBlock());
+        emit log_named_decimal_uint("auction floor price", mockAuction.floorPrice(), 96);
+        emit log_named_decimal_uint("auction final clearing price", mockAuction.clearingPrice(), 96);
+        emit log_named_decimal_uint("auction total supply", mockAuction.totalSupply(), 18);
+        emit log_named_decimal_uint("auction totalCleared", mockAuction.totalCleared(), 18);
+        emit log_named_decimal_uint("auction remaining token balance", token.balanceOf(address(mockAuction)), 18);
+        emit log_named_decimal_uint("auction remaining currency balance", address(mockAuction).balance, 18);
+        emit log_named_decimal_uint("actualCurrencyRaised", totalCurrencyRaised, 18);
+        emit log_named_decimal_uint("expectedCurrencyRaised", expectedCurrencyRaised, 18);
 
         return totalCurrencyRaised;
     }
 
     function helper__sweep() internal {
-        require(block.number >= mockAuction.endBlock(), 'helper__sweep::Auction must be over');
+        require(block.number >= mockAuction.endBlock(), "helper__sweep::Auction must be over");
         require(
             mockAuction.lastCheckpointedBlock() == mockAuction.endBlock(),
-            'helper__sweep::Auction must be checkpointed at endBlock'
+            "helper__sweep::Auction must be checkpointed at endBlock"
         );
 
         // Get the expected currency raised from the auction
@@ -583,11 +592,11 @@ contract AuctionInvariantTest is AuctionUnitTest {
         mockAuction.sweepUnsoldTokens();
 
         if (mockAuction.isGraduated()) {
-            emit log_string('==================== GRADUATED AUCTION ====================');
+            emit log_string("==================== GRADUATED AUCTION ====================");
             assertLe(
                 expectedCurrencyRaised,
                 address(mockAuction).balance,
-                'Expected currency raised is greater than auction balance'
+                "Expected currency raised is greater than auction balance"
             );
             // Sweep the currency
             vm.expectEmit(true, true, true, true);
@@ -597,14 +606,14 @@ contract AuctionInvariantTest is AuctionUnitTest {
             assertEq(
                 mockAuction.fundsRecipient().balance,
                 expectedCurrencyRaised,
-                'Funds recipient balance does not match expected currency raised'
+                "Funds recipient balance does not match expected currency raised"
             );
         } else {
-            emit log_string('==================== NOT GRADUATED AUCTION ====================');
+            emit log_string("==================== NOT GRADUATED AUCTION ====================");
             vm.expectRevert(ITokenCurrencyStorage.NotGraduated.selector);
             mockAuction.sweepCurrency();
             // At this point we know all bids have been exited so auction balance should be zero
-            assertEq(address(mockAuction).balance, 0, 'Auction balance is not zero at end of auction');
+            assertEq(address(mockAuction).balance, 0, "Auction balance is not zero at end of auction");
         }
     }
 
@@ -629,7 +638,7 @@ contract AuctionInvariantTest is AuctionUnitTest {
         assertLe(
             expectedCurrencyRaised,
             totalCurrencyRaised,
-            'Expected currency raised is greater than total currency raised'
+            "Expected currency raised is greater than total currency raised"
         );
 
         _printBalances();
@@ -652,7 +661,7 @@ contract AuctionInvariantTest is AuctionUnitTest {
         assertLe(
             expectedCurrencyRaised,
             totalCurrencyRaised,
-            'Expected currency raised is greater than total currency raised'
+            "Expected currency raised is greater than total currency raised"
         );
 
         _printBalances();

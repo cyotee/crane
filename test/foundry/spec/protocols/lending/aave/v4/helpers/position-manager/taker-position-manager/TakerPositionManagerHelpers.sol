@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {EIP712Helpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/position-manager/taker-position-manager/EIP712Helpers.sol';
-import {SetupHelpers} from '@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/position-manager/taker-position-manager/SetupHelpers.sol';
+import {
+    EIP712Helpers
+} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/position-manager/taker-position-manager/EIP712Helpers.sol";
+import {
+    SetupHelpers
+} from "@crane/test/foundry/spec/protocols/lending/aave/v4/helpers/position-manager/taker-position-manager/SetupHelpers.sol";
 
 /// @title TakerPositionManagerHelpers
 /// @notice Aggregates all TakerPositionManager test helpers.

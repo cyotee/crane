@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {UniV4MerklRewards, IDistributionCreator} from "@crane/contracts/protocols/staking/liquity/v2/gov/UniV4MerklRewards.sol";
+import {
+    UniV4MerklRewards,
+    IDistributionCreator
+} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UniV4MerklRewards.sol";
 import "@crane/test/foundry/fork/ethereum/protocols/staking/liquity/v2/bold/Utils/E2EHelpers.sol";
 import "forge-std/console2.sol";
 
@@ -11,7 +14,8 @@ import "forge-std/console2.sol";
 contract InitiativeUniV4Merkl is E2EHelpers {
     address constant GOVERNANCE_WHALE = 0xF30da4E4e7e20Dbf5fBE9adCD8699075D62C60A4;
     address constant NEW_LQTY_WHALE = 0xF977814e90dA44bFA03b6295A0616a897441aceC;
-    UniV4MerklRewards constant uniV4MerklRewardsInitiative = UniV4MerklRewards(0xB42448852A1BFc99d66ed53C65e2B49cF954f615);
+    UniV4MerklRewards constant uniV4MerklRewardsInitiative =
+        UniV4MerklRewards(0xB42448852A1BFc99d66ed53C65e2B49cF954f615);
     IDistributionCreator constant merklDistributionCreator =
         IDistributionCreator(0x8BB4C975Ff3c250e0ceEA271728547f3802B36Fd);
 
@@ -39,7 +43,11 @@ contract InitiativeUniV4Merkl is E2EHelpers {
 
         skip(28 days);
 
-        assertEq(governance.registeredInitiatives(address(uniV4MerklRewardsInitiative)), 0, "Initiative should not be registered");
+        assertEq(
+            governance.registeredInitiatives(address(uniV4MerklRewardsInitiative)),
+            0,
+            "Initiative should not be registered"
+        );
 
         // Register initiative
         vm.startPrank(registrant);
@@ -47,7 +55,9 @@ contract InitiativeUniV4Merkl is E2EHelpers {
         governance.registerInitiative(address(uniV4MerklRewardsInitiative));
         vm.stopPrank();
 
-        assertGt(governance.registeredInitiatives(address(uniV4MerklRewardsInitiative)), 0, "Initiative should be registered");
+        assertGt(
+            governance.registeredInitiatives(address(uniV4MerklRewardsInitiative)), 0, "Initiative should be registered"
+        );
 
         skip(7 days);
 
@@ -77,13 +87,18 @@ contract InitiativeUniV4Merkl is E2EHelpers {
         */
 
         // Claim for initiative
-        uint256 initialMerklDistributorBoldBalance = boldToken.balanceOf(address(merklDistributionCreator.distributor()));
+        uint256 initialMerklDistributorBoldBalance =
+            boldToken.balanceOf(address(merklDistributionCreator.distributor()));
         (,, uint256 claimableAmount) = governance.getInitiativeState(address(uniV4MerklRewardsInitiative));
         // Creating a campaign is expensive, and uses more than the allowed by Gorvernace contract, so we need a wrapper
         // governance.claimForInitiative(address(uniV4MerklRewardsInitiative));
         uniV4MerklRewardsInitiative.claimForInitiative();
         //console2.log(boldToken.balanceOf(address(uniV4MerklRewardsInitiative)), "boldToken.balanceOf(address(uniV4MerklRewardsInitiative))");
-        assertEq(boldToken.balanceOf(address(uniV4MerklRewardsInitiative)), 0, "Initiative should have sent incentives to campaign");
+        assertEq(
+            boldToken.balanceOf(address(uniV4MerklRewardsInitiative)),
+            0,
+            "Initiative should have sent incentives to campaign"
+        );
         // Check campaign
         uint256 epochEnd = EPOCH_START + (governance.epoch() - 1) * EPOCH_DURATION;
         IDistributionCreator.CampaignParameters memory params = IDistributionCreator.CampaignParameters({
@@ -112,6 +127,5 @@ contract InitiativeUniV4Merkl is E2EHelpers {
             campaignAmount,
             "Merkl Distributor should have campaign amount BOLD"
         );
-
     }
 }

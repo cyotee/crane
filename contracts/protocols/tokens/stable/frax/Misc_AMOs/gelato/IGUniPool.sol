@@ -1,25 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.35;
-import { IERC20 } from "../../ERC20/IERC20.sol";
-import { IUniswapV3Pool } from "../../Uniswap_V3/IUniswapV3Pool.sol";
+
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {IUniswapV3Pool} from "../../Uniswap_V3/IUniswapV3Pool.sol";
 
 interface IGUniPool {
     function mint(uint256 mintAmount, address receiver)
         external
-        returns (
-            uint256 amount0,
-            uint256 amount1,
-            uint128 liquidityMinted
-        );
+        returns (uint256 amount0, uint256 amount1, uint128 liquidityMinted);
 
     function burn(uint256 burnAmount, address receiver)
         external
-        returns (
-            uint256 amount0,
-            uint256 amount1,
-            uint128 liquidityBurned
-        );
-        
+        returns (uint256 amount0, uint256 amount1, uint128 liquidityBurned);
+
     function allowance(address owner, address spender) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function token0() external view returns (IERC20);
@@ -35,16 +28,9 @@ interface IGUniPool {
     function getMintAmounts(uint256 amount0Max, uint256 amount1Max)
         external
         view
-        returns (
-            uint256 amount0,
-            uint256 amount1,
-            uint256 mintAmount
-        );
+        returns (uint256 amount0, uint256 amount1, uint256 mintAmount);
 
-    function getUnderlyingBalances()
-        external
-        view
-        returns (uint256 amount0, uint256 amount1);
+    function getUnderlyingBalances() external view returns (uint256 amount0, uint256 amount1);
 
     function getPositionID() external view returns (bytes32 positionID);
 }

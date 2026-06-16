@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase, Step} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {CompactStep, CompactStepLib} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol';
-import {MockStepStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol';
-import {IStepStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {AuctionStep} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol';
-import {SSTORE2} from 'contracts/external/solady/utils/SSTORE2.sol';
+import {BttBase, Step} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    CompactStep,
+    CompactStepLib
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/libraries/auctionStepLib/StepUtils.sol";
+import {
+    MockStepStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockStepStorage.sol";
+import {IStepStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IStepStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {AuctionStep} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/StepLib.sol";
+import {SSTORE2} from "contracts/external/solady/utils/SSTORE2.sol";
 
 contract ValidateTest is BttBase {
     using SSTORE2 for *;
@@ -18,7 +23,7 @@ contract ValidateTest is BttBase {
         // it reverts with {InvalidAuctionDataLength}
 
         vm.expectRevert(IStepStorage.InvalidAuctionDataLength.selector);
-        auctionStepStorage = new MockStepStorage(bytes(''), 1, 2);
+        auctionStepStorage = new MockStepStorage(bytes(""), 1, 2);
     }
 
     modifier whenAuctionStepsDataLengthNEQ0() {

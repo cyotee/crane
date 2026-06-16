@@ -22,15 +22,20 @@ interface IFacetRegistry {
 
     function deployFacet(bytes calldata initCode, bytes32 salt) external returns (IFacet facet);
 
-    function deployCanonicalFacetOverride(bytes calldata initCode, bytes32 salt, bytes4 interfaceId) external returns (IFacet facet);
+    function deployCanonicalFacetOverride(bytes calldata initCode, bytes32 salt, bytes4 interfaceId)
+        external
+        returns (IFacet facet);
 
     function deployFacetWithArgs(bytes calldata initCode, bytes calldata initArgs, bytes32 salt)
         external
         returns (IFacet facet);
 
-    function deployCanonicalFacetWithArgsOverride(bytes calldata initCode, bytes calldata initArgs, bytes32 salt, bytes4 interfaceId)
-        external
-        returns (IFacet facet);
+    function deployCanonicalFacetWithArgsOverride(
+        bytes calldata initCode,
+        bytes calldata initArgs,
+        bytes32 salt,
+        bytes4 interfaceId
+    ) external returns (IFacet facet);
 
     function registerFacet(IFacet facet, string memory name, bytes4[] memory interfaces, bytes4[] memory functions)
         external

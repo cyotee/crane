@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ValueX7} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol';
-import {Assertions} from './utils/Assertions.sol';
-import {Test} from 'forge-std/Test.sol';
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ValueX7} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ValueX7Lib.sol";
+import {Assertions} from "./utils/Assertions.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract AssertionsTest is Assertions, Test {
     function test_assertValueX7(uint256 a, uint256 b) public pure {

@@ -49,14 +49,7 @@ contract DepositHelperERC4626Test is TestBase_Reliquary {
         deal(address(vault), address(this), 1);
         vault.approve(address(reliquary), 1); // approve 1 wei to bootstrap the pool
         reliquary.addPool(
-            1000,
-            address(vault),
-            address(0),
-            linearCurve,
-            "ETH Crypt",
-            nftDescriptor,
-            true,
-            address(this)
+            1000, address(vault), address(0), linearCurve, "ETH Crypt", nftDescriptor, true, address(this)
         );
     }
 
@@ -72,9 +65,7 @@ contract DepositHelperERC4626Test is TestBase_Reliquary {
         );
     }
 
-    function testDepositExisting(uint256 amountA, uint256 amountB, bool aIsETH, bool bIsETH)
-        public
-    {
+    function testDepositExisting(uint256 amountA, uint256 amountB, bool aIsETH, bool bIsETH) public {
         amountA = bound(amountA, 10, 500_000 ether);
         amountB = bound(amountB, 10, 1_000_000 ether - amountA);
 

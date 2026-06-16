@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import "../../../libraries/BoringOwnableUpgradeable.sol";
 import "../../../../interfaces/HMX/IHMXCalculator.sol";

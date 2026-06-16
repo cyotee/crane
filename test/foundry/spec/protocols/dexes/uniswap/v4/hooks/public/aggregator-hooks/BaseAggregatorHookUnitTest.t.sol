@@ -7,7 +7,9 @@ import {PoolKey} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolKey
 import {PoolId, PoolIdLibrary} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolId.sol";
 import {Currency} from "@crane/contracts/protocols/dexes/uniswap/v4/types/Currency.sol";
 import {ModifyLiquidityParams, SwapParams} from "@crane/contracts/protocols/dexes/uniswap/v4/types/PoolOperation.sol";
-import {PoolModifyLiquidityTest} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/v4-core/test/PoolModifyLiquidityTest.sol";
+import {
+    PoolModifyLiquidityTest
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/dependencies/v4-core/test/PoolModifyLiquidityTest.sol";
 import {IHooks} from "@crane/contracts/protocols/dexes/uniswap/v4/interfaces/IHooks.sol";
 import {Hooks} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Hooks.sol";
 import {CustomRevert} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/CustomRevert.sol";
@@ -19,8 +21,12 @@ import {MockExternalLiqSource} from "./mocks/MockExternalLiqSource.sol";
 import {MockAggregatorHook} from "./mocks/MockAggregatorHook.sol";
 import {MockV4FeeAdapter} from "./mocks/MockV4FeeAdapter.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
-import {BaseAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/BaseAggregatorHook.sol";
-import {IAggregatorHook} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
+import {
+    BaseAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/BaseAggregatorHook.sol";
+import {
+    IAggregatorHook
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/interfaces/IAggregatorHook.sol";
 import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 
 contract BaseAggregatorHookUnitTest is Test {

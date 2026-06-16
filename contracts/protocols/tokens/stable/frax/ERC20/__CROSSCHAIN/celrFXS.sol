@@ -2,8 +2,8 @@
 pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20Virtual.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface IFraxCanoToken {
     function exchangeOldForCanonical(address, uint256) external returns (uint256);
@@ -83,12 +83,9 @@ contract celrFXS is ERC20Virtual, Ownable {
         _;
     }
 
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        address bridge_,
-        address canonical_
-    ) ERC20Virtual(name_, symbol_) {
+    constructor(string memory name_, string memory symbol_, address bridge_, address canonical_)
+        ERC20Virtual(name_, symbol_)
+    {
         bridge = bridge_;
         canonical = canonical_;
     }

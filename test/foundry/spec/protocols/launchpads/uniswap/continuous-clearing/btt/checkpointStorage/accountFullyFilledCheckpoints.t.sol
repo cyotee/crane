@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockCheckpointStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockCheckpointStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockCheckpointStorage.sol";
 
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract AccountFullyFilledCheckpointsTest is BttBase {
     MockCheckpointStorage public mockCheckpointStorage;
@@ -48,18 +50,18 @@ contract AccountFullyFilledCheckpointsTest is BttBase {
 
         // Simple maths in uint256. Allow 1 wei diff
         assertApproxEqAbs(
-            tokensFilled, _bid.amountQ96 * cumulativeMpsPerPriceDelta / (q96Sqr * left), 1, 'tokens filled'
+            tokensFilled, _bid.amountQ96 * cumulativeMpsPerPriceDelta / (q96Sqr * left), 1, "tokens filled"
         );
-        assertApproxEqAbs(currencySpent, _bid.amountQ96 * cumulativeMpsDelta / left, 1, 'currency spent');
+        assertApproxEqAbs(currencySpent, _bid.amountQ96 * cumulativeMpsDelta / left, 1, "currency spent");
 
         // Intermediate 512 bits.
         assertEq(
             tokensFilled,
             FixedPointMathLib.fullMulDiv(_bid.amountQ96, cumulativeMpsPerPriceDelta, q96Sqr * left),
-            'tokens filled'
+            "tokens filled"
         );
         assertEq(
-            currencySpent, FixedPointMathLib.fullMulDivUp(_bid.amountQ96, cumulativeMpsDelta, left), 'currency spent'
+            currencySpent, FixedPointMathLib.fullMulDivUp(_bid.amountQ96, cumulativeMpsDelta, left), "currency spent"
         );
     }
 }

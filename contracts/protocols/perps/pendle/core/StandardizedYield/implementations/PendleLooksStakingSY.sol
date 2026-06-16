@@ -36,11 +36,12 @@ contract PendleLooksStakingSY is SYBase {
         amountSharesOut = ILooksStaking(stakingContract).userInfo(address(this)) - previousShare;
     }
 
-    function _redeem(
-        address receiver,
-        address,
-        uint256 amountSharesToRedeem
-    ) internal virtual override returns (uint256 amountTokenOut) {
+    function _redeem(address receiver, address, uint256 amountSharesToRedeem)
+        internal
+        virtual
+        override
+        returns (uint256 amountTokenOut)
+    {
         uint256 previousBalance = _selfBalance(looks);
         ILooksStaking(stakingContract).withdraw(amountSharesToRedeem);
         amountTokenOut = _selfBalance(looks) - previousBalance;
@@ -60,18 +61,22 @@ contract PendleLooksStakingSY is SYBase {
                 MISC FUNCTIONS FOR METADATA
     //////////////////////////////////////////////////////////////*/
 
-    function _previewDeposit(
-        address,
-        uint256 amountTokenToDeposit
-    ) internal view override returns (uint256 amountSharesOut) {
+    function _previewDeposit(address, uint256 amountTokenToDeposit)
+        internal
+        view
+        override
+        returns (uint256 amountSharesOut)
+    {
         (uint256 totalShares, uint256 totalLooks) = _getLooksStakingParams();
         amountSharesOut = (amountTokenToDeposit * totalShares) / totalLooks;
     }
 
-    function _previewRedeem(
-        address,
-        uint256 amountSharesToRedeem
-    ) internal view override returns (uint256 amountTokenOut) {
+    function _previewRedeem(address, uint256 amountSharesToRedeem)
+        internal
+        view
+        override
+        returns (uint256 amountTokenOut)
+    {
         (uint256 totalShares, uint256 totalLooks) = _getLooksStakingParams();
         amountTokenOut = (amountSharesToRedeem * totalLooks) / totalShares;
     }

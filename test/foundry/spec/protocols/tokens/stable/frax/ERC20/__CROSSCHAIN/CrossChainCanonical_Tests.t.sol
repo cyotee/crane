@@ -6,8 +6,9 @@ pragma solidity ^0.8.35;
 
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {CrossChainCanonicalFRAX} from
-    "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/CrossChainCanonicalFRAX.sol";
+import {
+    CrossChainCanonicalFRAX
+} from "@crane/contracts/protocols/tokens/stable/frax/ERC20/__CROSSCHAIN/CrossChainCanonicalFRAX.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
 
 contract CrossChainCanonical_Tests is Test {
@@ -39,14 +40,7 @@ contract CrossChainCanonical_Tests is Test {
         bridges[0] = address(bridgeToken);
 
         vm.prank(collateralOwner);
-        canFrax = new CrossChainCanonicalFRAX(
-            "Frax",
-            "FRAX",
-            collateralOwner,
-            INITIAL_MINT,
-            collateralOwner,
-            bridges
-        );
+        canFrax = new CrossChainCanonicalFRAX("Frax", "FRAX", collateralOwner, INITIAL_MINT, collateralOwner, bridges);
 
         _seedBalances();
         _runInitializationSetup();

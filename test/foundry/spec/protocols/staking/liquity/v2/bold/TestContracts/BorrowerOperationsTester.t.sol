@@ -3,8 +3,8 @@
 pragma solidity ^0.8.35;
 
 // import {IWETH} from "@crane/contracts/external/balancer/v3/interfaces/contracts/solidity-utils/misc/IWETH.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
-import "@crane/contracts/protocols/staking/liquity/v2/bold/BorrowerOperations.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
+import "@crane/contracts/protocols/cdps/liquity/v2/bold/BorrowerOperations.sol";
 import "./Interfaces/IBorrowerOperationsTester.sol";
 
 /* Tester contract inherits from BorrowerOperations, and provides external functions

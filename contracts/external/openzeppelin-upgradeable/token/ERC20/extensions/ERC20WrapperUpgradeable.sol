@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 import {ERC20Upgradeable} from "../ERC20Upgradeable.sol";
@@ -29,7 +29,8 @@ abstract contract ERC20WrapperUpgradeable is Initializable, ERC20Upgradeable {
     }
 
     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.ERC20Wrapper")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC20WrapperStorageLocation = 0x3b5a617e0d4c238430871a64fe18212794b0c8d05a4eac064a8c9039fb5e0700;
+    bytes32 private constant ERC20WrapperStorageLocation =
+        0x3b5a617e0d4c238430871a64fe18212794b0c8d05a4eac064a8c9039fb5e0700;
 
     function _getERC20WrapperStorage() private pure returns (ERC20WrapperStorage storage $) {
         assembly {

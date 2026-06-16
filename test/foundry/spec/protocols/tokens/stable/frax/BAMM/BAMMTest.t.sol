@@ -10,7 +10,9 @@ import {FraxswapOracle} from "@crane/contracts/protocols/tokens/stable/frax/BAMM
 import {FraxswapDummyRouter} from "@crane/contracts/protocols/tokens/stable/frax/BAMM/FraxswapDummyRouter.sol";
 import {FraxswapFactory} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapFactory.sol";
 import {FraxswapPair} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/core/FraxswapPair.sol";
-import {FraxswapRouterMultihop} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
+import {
+    FraxswapRouterMultihop
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxswap/periphery/FraxswapRouterMultihop.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
 
@@ -313,9 +315,8 @@ contract BAMMTest is Test {
         token1.approve(address(bamm), 100e18);
         bamm.executeActions(_actionWith(0, 1e18, 1e18, false));
 
-        FraxswapRouterMultihop.FraxswapParams memory swapParams = _swapParams(
-            address(token0), 45e16, address(token1), 45e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory swapParams =
+            _swapParams(address(token0), 45e16, address(token1), 45e16);
         BAMM.Action memory emptyAction = _action(0, 0);
         bamm.executeActionsAndSwap(emptyAction, swapParams);
         vm.stopPrank();
@@ -332,9 +333,8 @@ contract BAMMTest is Test {
 
         vm.startPrank(user1);
         token1.approve(address(bamm), 100e18);
-        FraxswapRouterMultihop.FraxswapParams memory swapParams = _swapParams(
-            address(token0), 45e16, address(token1), 45e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory swapParams =
+            _swapParams(address(token0), 45e16, address(token1), 45e16);
         bamm.executeActionsAndSwap(_actionWith(0, 1e18, 1e18, false), swapParams);
         vm.stopPrank();
 
@@ -349,14 +349,12 @@ contract BAMMTest is Test {
 
         vm.startPrank(user1);
         token1.approve(address(bamm), 100e18);
-        FraxswapRouterMultihop.FraxswapParams memory openSwap = _swapParams(
-            address(token0), 45e16, address(token1), 45e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory openSwap =
+            _swapParams(address(token0), 45e16, address(token1), 45e16);
         bamm.executeActionsAndSwap(_actionWith(0, 1e18, 1e18, false), openSwap);
 
-        FraxswapRouterMultihop.FraxswapParams memory closeSwap = _swapParams(
-            address(token1), 44e16, address(token0), 46e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory closeSwap =
+            _swapParams(address(token1), 44e16, address(token0), 46e16);
         bamm.executeActionsAndSwap(_actionClose(), closeSwap);
         vm.stopPrank();
 
@@ -373,9 +371,8 @@ contract BAMMTest is Test {
 
         vm.startPrank(user1);
         token1.approve(address(bamm), 100e18);
-        FraxswapRouterMultihop.FraxswapParams memory swapParams = _swapParams(
-            address(token0), 49e16, address(token1), 49e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory swapParams =
+            _swapParams(address(token0), 49e16, address(token1), 49e16);
         bamm.executeActionsAndSwap(_actionWith(0, 1e18, 90e16, false), swapParams);
         vm.stopPrank();
 
@@ -400,9 +397,8 @@ contract BAMMTest is Test {
 
         vm.startPrank(user1);
         token1.approve(address(bamm), 100e18);
-        FraxswapRouterMultihop.FraxswapParams memory swapParams = _swapParams(
-            address(token0), 49e16, address(token1), 49e16
-        );
+        FraxswapRouterMultihop.FraxswapParams memory swapParams =
+            _swapParams(address(token0), 49e16, address(token1), 49e16);
         bamm.executeActionsAndSwap(_actionWith(0, 1e18, 90e16, false), swapParams);
         vm.stopPrank();
 
@@ -546,12 +542,7 @@ contract BAMMTest is Test {
         FraxswapOracle oracle = new FraxswapOracle();
 
         bamm = new BAMM(
-            pair,
-            true,
-            10_000 - feeTier,
-            FraxswapRouterMultihop(payable(address(dummyRouter))),
-            helper,
-            oracle
+            pair, true, 10_000 - feeTier, FraxswapRouterMultihop(payable(address(dummyRouter))), helper, oracle
         );
     }
 

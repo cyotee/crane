@@ -5,6 +5,8 @@ pragma solidity ^0.8.24;
 /**
  * @title IOperable - Simple function caller authorization interface.
  * @author cyotee doge <doge.cyotee>
+ * @notice Interface for global and per-function operator based access control.
+ *         Used to authorize callers for protected functions without full ownership.
  * @custom:interfaceid 0xa7f11160
  */
 interface IOperable {
@@ -41,7 +43,9 @@ interface IOperable {
 
     // tag::NotOperator(address)[]
     /**
+     * @notice Thrown when a caller that is not an authorized operator attempts a restricted action.
      * @param caller Caller that failed Operator status validation.
+     * @custom:signature NotOperator(address)
      * @custom:selector 0x76c6c93a
      */
     error NotOperator(address caller);
@@ -51,39 +55,56 @@ interface IOperable {
     /*                                  Functions                                 */
     /* -------------------------------------------------------------------------- */
 
+    // tag::isOperator(address)[]
     /**
+     * @notice Returns whether `query` is authorized as a global operator (for all functions).
      * @param query Address for which to query authorization as an operator.
-     * @return Boolean indicating if query is authorized as an operator
-     * @custom:func-sig isOperator(address)
+     * @return True if the address is authorized as an operator.
+     * @custom:signature isOperator(address)
      * @custom:selector 0x6d70f7ae
      */
     function isOperator(address query) external view returns (bool);
+    // end::isOperator(address)[]
 
+    // tag::isOperatorFor(bytes4-address)[]
     /**
+     * @notice Returns whether `query` is authorized to call the specific function `func`.
      * @param func Function selector for which to query operator authorization.
      * @param query Account for which to query authorization to call `func`.
-     * @custom:func-sig isOperator(address)
+     * @return True if the account is authorized for the given function selector.
+     * @custom:signature isOperatorFor(bytes4,address)
      * @custom:selector 0xea562a25
      */
     function isOperatorFor(bytes4 func, address query) external view returns (bool);
+    // end::isOperatorFor(bytes4-address)[]
 
+    // tag::setOperator(address-bool)[]
     /**
+     * @notice Sets (or revokes) global operator status for an address.
      * @param newOperator Address for which to change authorization.
      * @param approval Authorization status to set for newOperator.
-     * @return Gas saving boolean indicating success.
-     * @custom:func-sig setOperator(address,bool)
+     * @return True on success (gas-saving return value).
+     * @custom:signature setOperator(address,bool)
      * @custom:selector 0x558a7297
+     * @custom:emits NewGlobalOperatorStatus(address,bool)
+     * @custom:throws NotOperator(address)
      */
     function setOperator(address newOperator, bool approval) external returns (bool);
+    // end::setOperator(address-bool)[]
 
+    // tag::setOperatorFor(bytes4-address-bool)[]
     /**
+     * @notice Sets (or revokes) per-function operator status for an address on a specific selector.
      * @param func Function selector for which to update authorization of `newOperator`.
      * @param newOperator Account for which to update authorization to call `func`.
      * @param approval Call authorization change.
-     * @return Gas saving boolean indicating success.
-     * @custom:func-sig isOperator(address)
+     * @return True on success (gas-saving return value).
+     * @custom:signature setOperatorFor(bytes4,address,bool)
      * @custom:selector 0x755dbe7c
+     * @custom:emits NewFunctionOperatorStatus(address,bytes4,bool)
+     * @custom:throws NotOperator(address)
      */
     function setOperatorFor(bytes4 func, address newOperator, bool approval) external returns (bool);
+    // end::setOperatorFor(bytes4-address-bool)[]
 }
 // end::IOperable[]

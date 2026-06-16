@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IMetaRegistry} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
+import {
+    IMetaRegistry
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
 
 /// @title MockMetaRegistry
 /// @notice Mock Curve MetaRegistry with settable return values for unit tests.

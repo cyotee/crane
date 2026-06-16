@@ -415,7 +415,9 @@ abstract contract BalancerV3VaultModifiers is IVaultEvents, IVaultErrors {
             roundingDirection
         );
 
-        PoolDataLib.syncPoolBalancesAndFees(poolData, layoutStruct.poolTokenBalances[pool], layoutStruct.aggregateFeeAmounts[pool]);
+        PoolDataLib.syncPoolBalancesAndFees(
+            poolData, layoutStruct.poolTokenBalances[pool], layoutStruct.aggregateFeeAmounts[pool]
+        );
     }
 
     /**

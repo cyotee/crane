@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { Script } from "forge-std/Script.sol";
-import { stdJson } from "forge-std/StdJson.sol";
-import { Strings } from "./@openzeppelin/contracts-5.4.0/utils/Strings.sol";
+import {Script} from "forge-std/Script.sol";
+import {stdJson} from "forge-std/StdJson.sol";
+import {Strings} from "./@openzeppelin/contracts-5.4.0/utils/Strings.sol";
 
 struct SafeTx {
     string name;
@@ -45,7 +45,7 @@ contract SafeTxHelper is Script {
         vm.serializeString(json, "transactions", safeTxs);
         string memory finalJson = vm.serializeString(json, "meta", serializedMeta);
 
-        vm.writeJson({ json: finalJson, path: path });
+        vm.writeJson({json: finalJson, path: path});
 
         string[] memory commands = new string[](4);
         // re-used commands to find-replace

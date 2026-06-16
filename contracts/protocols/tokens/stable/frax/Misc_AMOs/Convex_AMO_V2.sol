@@ -21,7 +21,6 @@ pragma solidity ^0.8.35;
 // Sam Kazemian: https://github.com/samkazemian
 // Dennis: github.com/denett
 
-
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/IStableSwap3Pool.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/IMetaImplementationUSD.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/convex/IConvexBooster.sol";
@@ -31,9 +30,9 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/convex/IConvexCl
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/convex/IcvxRewardPool.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/Frax.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
+import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {SafeMath} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Proxy/Initializable.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 
@@ -86,7 +85,7 @@ contract Convex_AMO_V2 is Owned {
     uint256 public convergence_window; // 1 cent
 
     // Default will use global_collateral_ratio()
-    bool public custom_floor;    
+    bool public custom_floor;
     uint256 public frax_floor;
 
     // Discount
@@ -95,10 +94,7 @@ contract Convex_AMO_V2 is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner_address,
-        address _amo_minter_address
-    ) Owned(_owner_address) {
+    constructor(address _owner_address, address _amo_minter_address) Owned(_owner_address) {
         owner = _owner_address;
         missing_decimals = 12;
 
@@ -108,7 +104,7 @@ contract Convex_AMO_V2 is Owned {
         three_pool_erc20 = ERC20(0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490);
         amo_minter = IFraxAMOMinter(_amo_minter_address);
 
-        // Convex-related 
+        // Convex-related
         convex_booster = IConvexBooster(0xF403C135812408BFbE8713b5A23a04b3D48AAE31);
         convex_base_reward_pool = IConvexBaseRewardPool(0xB900EF131301B307dB5eFcbed9DBb50A3e209B2e);
         convex_claim_zap = IConvexClaimZap(0x4890970BB23FCdF624A0557845A29366033e6Fa2);
@@ -124,7 +120,7 @@ contract Convex_AMO_V2 is Owned {
         liq_slippage_3crv = 800000;
         slippage_metapool = 950000;
         convergence_window = 1e16;
-        custom_floor = false;  
+        custom_floor = false;
         set_discount = false;
 
         // Get the custodian and timelock addresses from the minter
@@ -140,7 +136,10 @@ contract Convex_AMO_V2 is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -167,13 +166,14 @@ contract Convex_AMO_V2 is Owned {
 
         uint256 frax_withdrawable;
         uint256 _3pool_withdrawable;
-        (frax_withdrawable, _3pool_withdrawable, ,) = iterate();
+        (frax_withdrawable, _3pool_withdrawable,,) = iterate();
         if (frax3crv_supply > 0) {
             _3pool_withdrawable = _3pool_withdrawable.mul(lp_owned).div(frax3crv_supply);
             frax_withdrawable = frax_withdrawable.mul(lp_owned).div(frax3crv_supply);
+        } else {
+            _3pool_withdrawable = 0;
         }
-        else _3pool_withdrawable = 0;
-         
+
         // ------------Frax Balance------------
         // Frax sums
         uint256 frax_in_contract = FRAX.balanceOf(address(this));
@@ -183,7 +183,8 @@ contract Convex_AMO_V2 is Owned {
         uint256 usdc_in_contract = collateral_token.balanceOf(address(this));
 
         // Returns the dollar value withdrawable of USDC if the contract redeemed its 3CRV from the metapool; assume 1 USDC = $1
-        uint256 usdc_withdrawable = _3pool_withdrawable.mul(three_pool.get_virtual_price()).div(1e18).div(10 ** missing_decimals);
+        uint256 usdc_withdrawable =
+            _3pool_withdrawable.mul(three_pool.get_virtual_price()).div(1e18).div(10 ** missing_decimals);
 
         // USDC subtotal assuming FRAX drops to the CR and all reserves are arbed
         uint256 usdc_subtotal = usdc_in_contract.add(usdc_withdrawable);
@@ -195,7 +196,9 @@ contract Convex_AMO_V2 is Owned {
             usdc_in_contract, // [3] Free USDC
             usdc_withdrawable, // [4] USDC withdrawable from the FRAX3CRV tokens
             usdc_subtotal, // [5] USDC subtotal assuming FRAX drops to the CR and all reserves are arbed
-            usdc_subtotal.add((frax_in_contract.add(frax_withdrawable)).mul(fraxDiscountRate()).div(1e6 * (10 ** missing_decimals))), // [6] USDC Total
+            usdc_subtotal.add(
+                (frax_in_contract.add(frax_withdrawable)).mul(fraxDiscountRate()).div(1e6 * (10 ** missing_decimals))
+            ), // [6] USDC Total
             lp_owned, // [7] FRAX3CRV free or in the vault
             frax3crv_supply, // [8] Total supply of FRAX3CRV tokens
             _3pool_withdrawable, // [9] 3pool withdrawable from the FRAX3CRV tokens
@@ -225,27 +228,32 @@ contract Convex_AMO_V2 is Owned {
         uint256 crv3_balance = three_pool_erc20.balanceOf(frax3crv_metapool_address);
         uint256 total_balance = frax_balance.add(crv3_balance);
 
-        uint256 floor_price_frax = uint(1e18).mul(fraxFloor()).div(1e6);
-        
+        uint256 floor_price_frax = uint256(1e18).mul(fraxFloor()).div(1e6);
+
         uint256 crv3_received;
         uint256 dollar_value; // 3crv is usually slightly above $1 due to collecting 3pool swap fees
-        for(uint i = 0; i < 256; i++){
+        for (uint256 i = 0; i < 256; i++) {
             crv3_received = frax3crv_metapool.get_dy(0, 1, 1e18, [frax_balance, crv3_balance]);
             dollar_value = crv3_received.mul(1e18).div(three_pool.get_virtual_price());
-            if(dollar_value <= floor_price_frax.add(convergence_window) && dollar_value >= floor_price_frax.sub(convergence_window)){
+            if (
+                dollar_value <= floor_price_frax.add(convergence_window)
+                    && dollar_value >= floor_price_frax.sub(convergence_window)
+            ) {
                 uint256 factor = uint256(1e6).mul(total_balance).div(frax_balance.add(crv3_balance)); //1e6 precision
 
                 // Normalize back to initial balances, since this estimation method adds in extra tokens
                 frax_balance = frax_balance.mul(factor).div(1e6);
                 crv3_balance = crv3_balance.mul(factor).div(1e6);
                 return (frax_balance, crv3_balance, i, factor);
-            } else if (dollar_value <= floor_price_frax.add(convergence_window)){
+            } else if (dollar_value <= floor_price_frax.add(convergence_window)) {
                 uint256 crv3_to_swap = total_balance.div(2 ** i);
-                frax_balance = frax_balance.sub(frax3crv_metapool.get_dy(1, 0, crv3_to_swap, [frax_balance, crv3_balance]));
+                frax_balance =
+                    frax_balance.sub(frax3crv_metapool.get_dy(1, 0, crv3_to_swap, [frax_balance, crv3_balance]));
                 crv3_balance = crv3_balance.add(crv3_to_swap);
-            } else if (dollar_value >= floor_price_frax.sub(convergence_window)){
+            } else if (dollar_value >= floor_price_frax.sub(convergence_window)) {
                 uint256 frax_to_swap = total_balance.div(2 ** i);
-                crv3_balance = crv3_balance.sub(frax3crv_metapool.get_dy(0, 1, frax_to_swap, [frax_balance, crv3_balance]));
+                crv3_balance =
+                    crv3_balance.sub(frax3crv_metapool.get_dy(0, 1, frax_to_swap, [frax_balance, crv3_balance]));
                 frax_balance = frax_balance.add(frax_to_swap);
             }
         }
@@ -253,7 +261,7 @@ contract Convex_AMO_V2 is Owned {
     }
 
     function fraxFloor() public view returns (uint256) {
-        if(custom_floor){
+        if (custom_floor) {
             return frax_floor;
         } else {
             return FRAX.global_collateral_ratio();
@@ -261,7 +269,7 @@ contract Convex_AMO_V2 is Owned {
     }
 
     function fraxDiscountRate() public view returns (uint256) {
-        if(set_discount){
+        if (set_discount) {
             return discount_rate;
         } else {
             return FRAX.global_collateral_ratio();
@@ -281,10 +289,14 @@ contract Convex_AMO_V2 is Owned {
         uint256 vault_balance = FRAX3CRVInVault();
         return vault_balance.mul(frax3crv_metapool.get_virtual_price()).div(1e18);
     }
-    
+
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    function metapoolDeposit(uint256 _frax_amount, uint256 _collateral_amount) external onlyByOwnGov returns (uint256 metapool_LP_received) {
+    function metapoolDeposit(uint256 _frax_amount, uint256 _collateral_amount)
+        external
+        onlyByOwnGov
+        returns (uint256 metapool_LP_received)
+    {
         uint256 threeCRV_received = 0;
         if (_collateral_amount > 0) {
             // Approve the collateral to be added to 3pool
@@ -294,7 +306,8 @@ contract Convex_AMO_V2 is Owned {
             uint256[3] memory three_pool_collaterals;
             three_pool_collaterals[1] = _collateral_amount;
             {
-                uint256 min_3pool_out = (_collateral_amount * (10 ** missing_decimals)).mul(liq_slippage_3crv).div(PRICE_PRECISION);
+                uint256 min_3pool_out =
+                    (_collateral_amount * (10 ** missing_decimals)).mul(liq_slippage_3crv).div(PRICE_PRECISION);
                 three_pool.add_liquidity(three_pool_collaterals, min_3pool_out);
             }
 
@@ -306,7 +319,7 @@ contract Convex_AMO_V2 is Owned {
             three_pool_erc20.approve(frax3crv_metapool_address, 0);
             three_pool_erc20.approve(frax3crv_metapool_address, threeCRV_received);
         }
-        
+
         // Approve the FRAX for the metapool
         FRAX.approve(frax3crv_metapool_address, _frax_amount);
 
@@ -319,13 +332,17 @@ contract Convex_AMO_V2 is Owned {
         return metapool_LP_received;
     }
 
-    function metapoolWithdrawFrax(uint256 _metapool_lp_in, bool burn_the_frax) external onlyByOwnGov returns (uint256 frax_received) {
+    function metapoolWithdrawFrax(uint256 _metapool_lp_in, bool burn_the_frax)
+        external
+        onlyByOwnGov
+        returns (uint256 frax_received)
+    {
         // Withdraw FRAX from the metapool
         uint256 min_frax_out = _metapool_lp_in.mul(slippage_metapool).div(PRICE_PRECISION);
         frax_received = frax3crv_metapool.remove_liquidity_one_coin(_metapool_lp_in, 0, min_frax_out);
 
         // Optionally burn the FRAX
-        if (burn_the_frax){
+        if (burn_the_frax) {
             burnFRAX(frax_received);
         }
     }
@@ -358,7 +375,7 @@ contract Convex_AMO_V2 is Owned {
         collateral_token.approve(address(amo_minter), collat_amount);
         amo_minter.receiveCollatFromAMO(collat_amount);
     }
-   
+
     // Burn unneeded or excess FRAX. Goes through the minter
     function burnFRAX(uint256 frax_amount) public onlyByOwnGovCust {
         FRAX.approve(address(amo_minter), frax_amount);
@@ -368,16 +385,16 @@ contract Convex_AMO_V2 is Owned {
     /* ========== Convex: Deposit / Claim / Withdraw FRAX3CRV Metapool LP ========== */
 
     // Deposit Metapool LP tokens, convert them to Convex LP, and deposit into their vault
-    function depositFRAX3CRV(uint256 _metapool_lp_in) external onlyByOwnGovCust{
+    function depositFRAX3CRV(uint256 _metapool_lp_in) external onlyByOwnGovCust {
         // Approve the metapool LP tokens for the vault contract
         frax3crv_metapool.approve(address(convex_booster), _metapool_lp_in);
-        
+
         // Deposit the metapool LP into the vault contract
         convex_booster.deposit(lp_deposit_pid, _metapool_lp_in, true);
     }
 
     // Withdraw Convex LP, convert it back to Metapool LP tokens, and give them back to the sender
-    function withdrawAndUnwrapFRAX3CRV(uint256 amount, bool claim) external onlyByOwnGovCust{
+    function withdrawAndUnwrapFRAX3CRV(uint256 amount, bool claim) external onlyByOwnGovCust {
         convex_base_reward_pool.withdrawAndUnwrap(amount, claim);
     }
 
@@ -388,15 +405,7 @@ contract Convex_AMO_V2 is Owned {
 
         uint256[] memory chefIds = new uint256[](0);
 
-        convex_claim_zap.claimRewards(
-            rewardContracts, 
-            chefIds, 
-            false, 
-            false, 
-            false, 
-            0, 
-            0
-        );
+        convex_claim_zap.claimRewards(rewardContracts, chefIds, false, false, false, 0, 0);
     }
 
     /* ========== Convex: Stake / Claim / Withdraw CVX ========== */
@@ -406,7 +415,7 @@ contract Convex_AMO_V2 is Owned {
     function stakeCVX(uint256 _cvx_in) external onlyByOwnGovCust {
         // Approve the CVX tokens for the staking contract
         cvx.approve(address(cvx_reward_pool), _cvx_in);
-        
+
         // Stake the CVX tokens into the staking contract
         cvx_reward_pool.stakeFor(address(this), _cvx_in);
     }
@@ -422,12 +431,10 @@ contract Convex_AMO_V2 is Owned {
         cvx_reward_pool.withdraw(cvx_amt, claim);
     }
 
-    function withdrawRewards(
-        uint256 crv_amt,
-        uint256 cvx_amt,
-        uint256 cvxCRV_amt,
-        uint256 fxs_amt
-    ) external onlyByOwnGovCust {
+    function withdrawRewards(uint256 crv_amt, uint256 cvx_amt, uint256 cvxCRV_amt, uint256 fxs_amt)
+        external
+        onlyByOwnGovCust
+    {
         if (crv_amt > 0) TransferHelper.safeTransfer(crv_address, msg.sender, crv_amt);
         if (cvx_amt > 0) TransferHelper.safeTransfer(address(cvx), msg.sender, cvx_amt);
         if (cvxCRV_amt > 0) TransferHelper.safeTransfer(cvx_crv_address, msg.sender, cvxCRV_amt);
@@ -475,12 +482,12 @@ contract Convex_AMO_V2 is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 }

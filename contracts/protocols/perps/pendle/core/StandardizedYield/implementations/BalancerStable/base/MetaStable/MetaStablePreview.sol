@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import {IERC20} from '@crane/contracts/interfaces/IERC20.sol';
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 import "../../../../../../interfaces/Balancer/IMetaStablePool.sol";
@@ -54,7 +54,7 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         // skip totalSupply == 0 case
 
         _upscaleArray(balances, scalingFactors);
-        (bptAmountOut, , ) = _onJoinPool(
+        (bptAmountOut,,) = _onJoinPool(
             poolId,
             sender,
             recipient,
@@ -86,7 +86,7 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         uint256[] memory scalingFactors = _scalingFactors(imd, caches);
         _upscaleArray(balances, scalingFactors);
 
-        (, uint256[] memory amountsOut, ) = _onExitPool(
+        (, uint256[] memory amountsOut,) = _onExitPool(
             poolId,
             sender,
             recipient,
@@ -187,11 +187,7 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
 
         (uint256 _lastInvariant, uint256 _lastInvariantAmp) = IMetaStablePool(imd.LP).getLastInvariant();
         dueProtocolFeeAmounts[chosenTokenIndex] = MetaStableMath._calcDueTokenProtocolSwapFeeAmount(
-            _lastInvariantAmp,
-            balances,
-            _lastInvariant,
-            chosenTokenIndex,
-            protocolSwapFeePercentage
+            _lastInvariantAmp, balances, _lastInvariant, chosenTokenIndex, protocolSwapFeePercentage
         );
 
         return dueProtocolFeeAmounts;
@@ -212,11 +208,11 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         bytes memory userData,
         ImmutableData memory imd
     ) private view returns (uint256, uint256[] memory) {
-        (uint256[] memory amountsIn, ) = userData.exactTokensInForBptOut();
+        (uint256[] memory amountsIn,) = userData.exactTokensInForBptOut();
 
         _upscaleArray(amountsIn, scalingFactors);
 
-        (uint256 currentAmp, , ) = IMetaStablePool(imd.LP).getAmplificationParameter();
+        (uint256 currentAmp,,) = IMetaStablePool(imd.LP).getAmplificationParameter();
         uint256 bptAmountOut = MetaStableMath._calcBptOutGivenExactTokensIn(
             currentAmp,
             balances,
@@ -228,20 +224,19 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         return (bptAmountOut, amountsIn);
     }
 
-    function _doExit(
-        uint256[] memory balances,
-        uint256[] memory,
-        bytes memory userData,
-        ImmutableData memory imd
-    ) private view returns (uint256, uint256[] memory) {
+    function _doExit(uint256[] memory balances, uint256[] memory, bytes memory userData, ImmutableData memory imd)
+        private
+        view
+        returns (uint256, uint256[] memory)
+    {
         return _exitExactBPTInForTokenOut(balances, userData, imd);
     }
 
-    function _exitExactBPTInForTokenOut(
-        uint256[] memory balances,
-        bytes memory userData,
-        ImmutableData memory imd
-    ) private view returns (uint256, uint256[] memory) {
+    function _exitExactBPTInForTokenOut(uint256[] memory balances, bytes memory userData, ImmutableData memory imd)
+        private
+        view
+        returns (uint256, uint256[] memory)
+    {
         // This exit function is disabled if the contract is paused.
 
         (uint256 bptAmountIn, uint256 tokenIndex) = userData.exactBptInForTokenOut();
@@ -251,7 +246,7 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         uint256[] memory amountsOut = new uint256[](2);
 
         // And then assign the result to the selected token
-        (uint256 currentAmp, , ) = IMetaStablePool(imd.LP).getAmplificationParameter();
+        (uint256 currentAmp,,) = IMetaStablePool(imd.LP).getAmplificationParameter();
         amountsOut[tokenIndex] = MetaStableMath._calcTokenOutGivenExactBptIn(
             currentAmp,
             balances,
@@ -264,10 +259,12 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         return (bptAmountIn, amountsOut);
     }
 
-    function _scalingFactors(
-        ImmutableData memory imd,
-        uint256[] memory caches
-    ) internal view virtual returns (uint256[] memory) {
+    function _scalingFactors(ImmutableData memory imd, uint256[] memory caches)
+        internal
+        view
+        virtual
+        returns (uint256[] memory)
+    {
         uint256[] memory scalingFactors = new uint256[](2);
 
         for (uint256 i = 0; i < 2; ++i) {
@@ -291,7 +288,7 @@ contract MetaStablePreview is StablePreviewBase, BoringOwnableUpgradeable, UUPSU
         if (!_hasRateProvider(imd, index)) return res;
 
         uint256 expires;
-        (res, , expires) = IMetaStablePool(imd.LP).getPriceRateCache(IERC20(imd.poolTokens[index]));
+        (res,, expires) = IMetaStablePool(imd.LP).getPriceRateCache(IERC20(imd.poolTokens[index]));
 
         if (block.timestamp > expires) {
             res = IRateProvider(imd.rateProviders[index]).getRate();

@@ -27,12 +27,12 @@ pragma solidity ^0.8.35;
 import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeFXSRewardsDistributor.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/harmony/IERC20EthManager.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/polygon/IRootChainManager.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/solana/IWormhole.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 
@@ -75,7 +75,7 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _timelock_address,
         address _rewards_distributor_address,
@@ -114,17 +114,14 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
         if (bridge_type == 0) {
             // Avalanche [Anyswap]
             TransferHelper.safeTransfer(reward_token_address, bridge_address, reward_amount);
-        }
-        else if (bridge_type == 1) {
+        } else if (bridge_type == 1) {
             // BSC
             TransferHelper.safeTransfer(reward_token_address, bridge_address, reward_amount);
-        }
-        else if (bridge_type == 2) {
+        } else if (bridge_type == 2) {
             // Fantom [Multichain / Anyswap]
             // Bridge is 0xC564EE9f21Ed8A2d8E7e76c085740d5e4c5FaFbE
             TransferHelper.safeTransfer(reward_token_address, bridge_address, reward_amount);
-        }
-        else if (bridge_type == 3) {
+        } else if (bridge_type == 3) {
             // Polygon
             // Bridge is 0xA0c68C638235ee32657e8f720a23ceC1bFc77C77
             // Interesting info https://blog.cryption.network/cryption-network-launches-cross-chain-staking-6cf000c25477
@@ -134,12 +131,11 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
             bytes32 tokenType = rootChainMgr.tokenToType(reward_token_address);
             address predicate = rootChainMgr.typeToPredicate(tokenType);
             ERC20(reward_token_address).approve(predicate, reward_amount);
-            
+
             // DepositFor
             bytes memory depositData = abi.encode(reward_amount);
             rootChainMgr.depositFor(address_to_send_to, reward_token_address, depositData);
-        }
-        else if (bridge_type == 4) {
+        } else if (bridge_type == 4) {
             // Solana
             // Wormhole Bridge is 0xf92cD566Ea4864356C5491c177A430C222d7e678
 
@@ -164,10 +160,8 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
         // else if (bridge_type == 5) {
         //     // Harmony
         //     // Bridge is at 0x2dccdb493827e15a5dc8f8b72147e6c4a5620857
-
         //     // Approve
         //     ERC20(reward_token_address).approve(bridge_address, reward_amount);
-
         //     // lockToken
         //     IERC20EthManager(bridge_address).lockToken(reward_token_address, reward_amount, address_to_send_to);
         // }
@@ -181,7 +175,7 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -190,12 +184,12 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 
@@ -203,9 +197,14 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
         timelock_address = _new_timelock;
     }
 
-    function setBridgeInfo(address _bridge_address, uint256 _bridge_type, address _destination_address_override, string memory _non_evm_destination_address) external onlyByOwnGov {
+    function setBridgeInfo(
+        address _bridge_address,
+        uint256 _bridge_type,
+        address _destination_address_override,
+        string memory _non_evm_destination_address
+    ) external onlyByOwnGov {
         bridge_address = _bridge_address;
-        
+
         // 0: Avalanche
         // 1: BSC
         // 2: Fantom
@@ -220,8 +219,10 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
 
         // Set bytes32 / non-EVM address on the other chain, if applicable
         non_evm_destination_address = _non_evm_destination_address;
-        
-        emit BridgeInfoChanged(_bridge_address, _bridge_type, _destination_address_override, _non_evm_destination_address);
+
+        emit BridgeInfoChanged(
+            _bridge_address, _bridge_type, _destination_address_override, _non_evm_destination_address
+        );
     }
 
     function setRewardsDistributor(address _rewards_distributor_address) external onlyByOwnGov {
@@ -231,5 +232,10 @@ contract FraxMiddlemanGauge is Owned, ReentrancyGuard {
     /* ========== EVENTS ========== */
 
     event RecoveredERC20(address token, uint256 amount);
-    event BridgeInfoChanged(address bridge_address, uint256 bridge_type, address destination_address_override, string non_evm_destination_address);
+    event BridgeInfoChanged(
+        address bridge_address,
+        uint256 bridge_type,
+        address destination_address_override,
+        string non_evm_destination_address
+    );
 }

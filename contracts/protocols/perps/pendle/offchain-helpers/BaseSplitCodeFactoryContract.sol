@@ -17,10 +17,7 @@ contract BaseSplitCodeFactoryContract is BoringOwnableUpgradeable {
         __BoringOwnable_init();
     }
 
-    function deploy(
-        string memory name,
-        bytes calldata creationCode
-    )
+    function deploy(string memory name, bytes calldata creationCode)
         external
         onlyOwner
         returns (
@@ -30,8 +27,9 @@ contract BaseSplitCodeFactoryContract is BoringOwnableUpgradeable {
             uint256 creationCodeSizeB
         )
     {
-        (creationCodeContractA, creationCodeSizeA, creationCodeContractB, creationCodeSizeB) = BaseSplitCodeFactory
-            .setCreationCode(creationCode);
+        (
+            creationCodeContractA, creationCodeSizeA, creationCodeContractB, creationCodeSizeB
+        ) = BaseSplitCodeFactory.setCreationCode(creationCode);
         emit Deployed(name, creationCodeContractA, creationCodeSizeA, creationCodeContractB, creationCodeSizeB);
     }
 }

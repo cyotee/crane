@@ -32,12 +32,9 @@ interface IStargateLP {
         uint256 lkbRemove;
     }
 
-    function swapRemote(
-        uint16 _srcChainId,
-        uint256 _srcPoolId,
-        address _to,
-        SwapObj memory _s
-    ) external returns (uint256 amountLD);
+    function swapRemote(uint16 _srcChainId, uint256 _srcPoolId, address _to, SwapObj memory _s)
+        external
+        returns (uint256 amountLD);
 
     function poolId() external view returns (uint256);
 

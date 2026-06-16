@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IValidationHook} from '../../interfaces/IValidationHook.sol';
-import {BaseERC1155ValidationHook} from './BaseERC1155ValidationHook.sol';
-import {IBaseERC1155ValidationHook} from './BaseERC1155ValidationHook.sol';
-import {IERC165} from '@crane/contracts/interfaces/IERC165.sol';
-import {BlockNumberish} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol';
+import {IValidationHook} from "../../interfaces/IValidationHook.sol";
+import {BaseERC1155ValidationHook} from "./BaseERC1155ValidationHook.sol";
+import {IBaseERC1155ValidationHook} from "./BaseERC1155ValidationHook.sol";
+import {IERC165} from "@crane/contracts/interfaces/IERC165.sol";
+import {
+    BlockNumberish
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BlockNumberish.sol";
 
 interface IGatedERC1155ValidationHook is IBaseERC1155ValidationHook {
     /// @notice The block number until which the validation check is enforced

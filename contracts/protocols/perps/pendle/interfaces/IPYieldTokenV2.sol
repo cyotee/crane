@@ -29,16 +29,13 @@ interface IPYieldTokenV2 is IERC20Metadata, IRewardManager, IPInterestManagerYTV
 
     function redeemPY(address receiver) external returns (uint256 amountSyOut);
 
-    function redeemPYMulti(
-        address[] calldata receivers,
-        uint256[] calldata amountPYToRedeems
-    ) external returns (uint256[] memory amountSyOuts);
+    function redeemPYMulti(address[] calldata receivers, uint256[] calldata amountPYToRedeems)
+        external
+        returns (uint256[] memory amountSyOuts);
 
-    function redeemDueInterestAndRewards(
-        address user,
-        bool redeemInterest,
-        bool redeemRewards
-    ) external returns (uint256 interestOut, uint256[] memory rewardsOut);
+    function redeemDueInterestAndRewards(address user, bool redeemInterest, bool redeemRewards)
+        external
+        returns (uint256 interestOut, uint256[] memory rewardsOut);
 
     function rewardIndexesCurrent() external returns (uint256[] memory);
 

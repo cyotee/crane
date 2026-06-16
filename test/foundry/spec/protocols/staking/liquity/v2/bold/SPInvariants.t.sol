@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {IBoldToken} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IBoldToken.sol";
-import {IStabilityPool} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IStabilityPool.sol";
-import {HintHelpers} from "@crane/contracts/protocols/staking/liquity/v2/bold/HintHelpers.sol";
+import {IBoldToken} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IBoldToken.sol";
+import {IStabilityPool} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IStabilityPool.sol";
+import {HintHelpers} from "@crane/contracts/protocols/cdps/liquity/v2/bold/HintHelpers.sol";
 import {Assertions} from "./TestContracts/Assertions.sol";
 import {BaseInvariantTest} from "./TestContracts/BaseInvariantTest.sol";
 import {TestDeployer} from "./TestContracts/Deployment.t.sol";

@@ -28,11 +28,10 @@ contract PendleGaugeControllerMainchainUpg is PendleGaugeControllerBaseUpg, IPGa
         __BoringOwnable_init();
     }
 
-    function updateVotingResults(
-        uint128 wTime,
-        address[] memory markets,
-        uint256[] memory pendleSpeeds
-    ) external onlyVotingController {
+    function updateVotingResults(uint128 wTime, address[] memory markets, uint256[] memory pendleSpeeds)
+        external
+        onlyVotingController
+    {
         _receiveVotingResults(wTime, markets, pendleSpeeds);
     }
 }

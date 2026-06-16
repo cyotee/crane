@@ -126,7 +126,7 @@ contract EulerEarn is ReentrancyGuard, ERC4626, Ownable2Step, EVCUtil, IEulerEar
         address _asset,
         string memory __name,
         string memory __symbol
-    ) ERC4626(IERC20(_asset)) ERC20("", "") Ownable() EVCUtil(evc) {
+    ) ERC4626(IERC20(_asset)) ERC20("", "") Ownable(msg.sender) EVCUtil(evc) {
         _transferOwnership(owner);
         if (initialTimelock != 0) _checkTimelockBounds(initialTimelock);
         _setTimelock(initialTimelock);

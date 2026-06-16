@@ -54,11 +54,13 @@ contract HookTargetTermsOfUse is BaseHookTarget, EVCUtil, Ownable {
     /// @param _eVaultFactory The address of the EVault factory.
     /// @param _termsOfUseContract The address of the TermsOfUseSigner contract.
     /// @param _termsOfUseHash The initial terms of use hash.
-    constructor(address _evc, address _owner, address _eVaultFactory, address _termsOfUseContract, bytes32 _termsOfUseHash)
-        BaseHookTarget(_eVaultFactory)
-        Ownable()
-        EVCUtil(_evc)
-    {
+    constructor(
+        address _evc,
+        address _owner,
+        address _eVaultFactory,
+        address _termsOfUseContract,
+        bytes32 _termsOfUseHash
+    ) BaseHookTarget(_eVaultFactory) Ownable(msg.sender) EVCUtil(_evc) {
         _transferOwnership(_owner);
         termsOfUseContract = _termsOfUseContract;
         termsOfUseHash = _termsOfUseHash;
@@ -135,7 +137,7 @@ contract HookTargetTermsOfUse is BaseHookTarget, EVCUtil, Ownable {
     }
 
     /// @notice Retrieves the effective sender. Account calling the hooked vault, or direct caller,
-    /// possibly authenticated through EVC (for owner functions) 
+    /// possibly authenticated through EVC (for owner functions)
     /// @return The address of the message sender.
     function _msgSender() internal view override(BaseHookTarget, Context, EVCUtil) returns (address) {
         address msgSender = BaseHookTarget._msgSender();

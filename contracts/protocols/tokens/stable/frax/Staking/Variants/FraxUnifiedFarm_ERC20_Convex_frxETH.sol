@@ -10,24 +10,25 @@ import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/I2poolToke
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/ICurveStableSwapNG.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/curve/ICurveStableSwapMetaNG.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interface.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 contract FraxUnifiedFarm_ERC20_Convex_frxETH is FraxUnifiedFarm_ERC20 {
-
     AggregatorV3Interface internal priceFeedETHUSD = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
 
     string public farm_type = "ERC20_Convex_frxETH";
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
 
@@ -47,11 +48,11 @@ contract FraxUnifiedFarm_ERC20_Convex_frxETH is FraxUnifiedFarm_ERC20 {
         // curvePool = ICurveStableSwapNG(stakingToken.curveToken());
     }
 
-    function getLatestETHPriceE8() public view returns (int) {
+    function getLatestETHPriceE8() public view returns (int256) {
         // Returns in E8
-        (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
-        require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+        (uint80 roundID, int256 price,, uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
+        require(price >= 0 && updatedAt != 0 && answeredInRound >= roundID, "Invalid chainlink price");
+
         return price;
     }
 
@@ -74,5 +75,5 @@ contract FraxUnifiedFarm_ERC20_Convex_frxETH is FraxUnifiedFarm_ERC20 {
         //     frax_per_lp_token = frxETH_usd_val_per_lp_e8 * (1e10); // We use USD as "Frax" here
         // }
 
-    }
+        }
 }

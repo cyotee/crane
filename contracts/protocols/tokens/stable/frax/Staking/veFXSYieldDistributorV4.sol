@@ -31,7 +31,7 @@ import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Curve/IveFXS.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 import "./Owned.sol";
 
@@ -88,7 +88,7 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
     /* ========== MODIFIERS ========== */
 
     modifier onlyByOwnGov() {
-        require( msg.sender == owner || msg.sender == timelock_address, "Not owner or timelock");
+        require(msg.sender == owner || msg.sender == timelock_address, "Not owner or timelock");
         _;
     }
 
@@ -104,12 +104,9 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _owner,
-        address _emittedToken,
-        address _timelock_address,
-        address _veFXS_address
-    ) Owned(_owner) {
+    constructor(address _owner, address _emittedToken, address _timelock_address, address _veFXS_address)
+        Owned(_owner)
+    {
         emitted_token_address = _emittedToken;
         emittedToken = ERC20(_emittedToken);
 
@@ -128,20 +125,22 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
 
     // Only positions with locked veFXS can accrue yield. Otherwise, expired-locked veFXS
     // is de-facto rewards for FXS.
-    function eligibleCurrentVeFXS(address account) public view returns (uint256 eligible_vefxs_bal, uint256 stored_ending_timestamp) {
+    function eligibleCurrentVeFXS(address account)
+        public
+        view
+        returns (uint256 eligible_vefxs_bal, uint256 stored_ending_timestamp)
+    {
         uint256 curr_vefxs_bal = veFXS.balanceOf(account);
-        
+
         // Stored is used to prevent abuse
         stored_ending_timestamp = userVeFXSEndpointCheckpointed[account];
 
         // Only unexpired veFXS should be eligible
-        if (stored_ending_timestamp != 0 && (block.timestamp >= stored_ending_timestamp)){
+        if (stored_ending_timestamp != 0 && (block.timestamp >= stored_ending_timestamp)) {
             eligible_vefxs_bal = 0;
-        }
-        else if (block.timestamp >= stored_ending_timestamp){
+        } else if (block.timestamp >= stored_ending_timestamp) {
             eligible_vefxs_bal = 0;
-        }
-        else {
+        } else {
             eligible_vefxs_bal = curr_vefxs_bal;
         }
     }
@@ -154,15 +153,9 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
         if (totalVeFXSSupplyStored == 0) {
             return yieldPerVeFXSStored;
         } else {
-            return (
-                yieldPerVeFXSStored.add(
-                    lastTimeYieldApplicable()
-                        .sub(lastUpdateTime)
-                        .mul(yieldRate)
-                        .mul(1e18)
-                        .div(totalVeFXSSupplyStored)
-                )
-            );
+            return (yieldPerVeFXSStored.add(
+                    lastTimeYieldApplicable().sub(lastUpdateTime).mul(yieldRate).mul(1e18).div(totalVeFXSSupplyStored)
+                ));
         }
     }
 
@@ -175,7 +168,7 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
 
         // If your veFXS is unlocked
         uint256 eligible_time_fraction = PRICE_PRECISION;
-        if (eligible_current_vefxs == 0){
+        if (eligible_current_vefxs == 0) {
             // And you already claimed after expiration
             if (lastRewardClaimTime[account] >= ending_timestamp) {
                 // You get NOTHING. You LOSE. Good DAY ser!
@@ -194,21 +187,15 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
         uint256 vefxs_balance_to_use;
         {
             uint256 old_vefxs_balance = userVeFXSCheckpointed[account];
-            if (eligible_current_vefxs > old_vefxs_balance){
+            if (eligible_current_vefxs > old_vefxs_balance) {
                 vefxs_balance_to_use = old_vefxs_balance;
-            }
-            else {
-                vefxs_balance_to_use = ((eligible_current_vefxs).add(old_vefxs_balance)).div(2); 
+            } else {
+                vefxs_balance_to_use = ((eligible_current_vefxs).add(old_vefxs_balance)).div(2);
             }
         }
 
-        return (
-            vefxs_balance_to_use
-                .mul(yieldPerVeFXS().sub(userYieldPerTokenPaid[account]))
-                .mul(eligible_time_fraction)
-                .div(1e18 * PRICE_PRECISION)
-                .add(yields[account])
-        );
+        return (vefxs_balance_to_use.mul(yieldPerVeFXS().sub(userYieldPerTokenPaid[account]))
+                .mul(eligible_time_fraction).div(1e18 * PRICE_PRECISION).add(yields[account]));
     }
 
     function getYieldForDuration() external view returns (uint256) {
@@ -269,23 +256,24 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
         _checkpointUser(msg.sender);
     }
 
-    function getYield() external nonReentrant notYieldCollectionPaused checkpointUser(msg.sender) returns (uint256 yield0) {
+    function getYield()
+        external
+        nonReentrant
+        notYieldCollectionPaused
+        checkpointUser(msg.sender)
+        returns (uint256 yield0)
+    {
         require(greylist[msg.sender] == false, "Address has been greylisted");
 
         yield0 = yields[msg.sender];
         if (yield0 > 0) {
             yields[msg.sender] = 0;
-            TransferHelper.safeTransfer(
-                emitted_token_address,
-                msg.sender,
-                yield0
-            );
+            TransferHelper.safeTransfer(emitted_token_address, msg.sender, yield0);
             emit YieldCollected(msg.sender, yield0, emitted_token_address);
         }
 
         lastRewardClaimTime[msg.sender] = block.timestamp;
     }
-
 
     function sync() public {
         // Update the total veFXS supply
@@ -313,7 +301,7 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
             uint256 leftover = remaining.mul(yieldRate);
             yieldRate = amount.add(leftover).div(yieldDuration);
         }
-        
+
         // Update duration-related info
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(yieldDuration);
@@ -331,7 +319,10 @@ contract veFXSYieldDistributorV4 is Owned, ReentrancyGuard {
     }
 
     function setYieldDuration(uint256 _yieldDuration) external onlyByOwnGov {
-        require( periodFinish == 0 || block.timestamp > periodFinish, "Previous yield period must be complete before changing the duration for the new period");
+        require(
+            periodFinish == 0 || block.timestamp > periodFinish,
+            "Previous yield period must be complete before changing the duration for the new period"
+        );
         yieldDuration = _yieldDuration;
         emit YieldDurationUpdated(yieldDuration);
     }

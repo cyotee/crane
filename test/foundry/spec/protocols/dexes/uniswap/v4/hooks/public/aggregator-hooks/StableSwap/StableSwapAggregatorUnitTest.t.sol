@@ -15,7 +15,9 @@ import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
 import {MockCurveStableSwap} from "./mocks/MockCurveStableSwap.sol";
 import {MockMetaRegistry} from "./mocks/MockMetaRegistry.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
-import {StableSwapAggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
+import {
+    StableSwapAggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
 import {CustomRevert} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/CustomRevert.sol";
 
@@ -46,8 +48,9 @@ contract StableSwapAggregatorUnitTest is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
         feeAdapter = new MockV4FeeAdapter(poolManager, address(this));
 

@@ -57,7 +57,13 @@ ignored_error_codes = [
     # will be promoted to keyword in the future and will not be allowed as an identifier anymore
     6335,
     # Virtual modifiers are deprecated and scheduled for removal
-    8429
+    8429,
+    # Natspec @return missing name (vendored Frax etc.)
+    5856,
+    # Tuple type conversion issues in vendored/generated protocol code (Liquity, Aerodrome)
+    7407,
+    # Documented parameter not found in function (natspec mismatch in core DFPkgs)
+    3881
 ]
 
 skip = [
@@ -66,7 +72,7 @@ skip = [
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts-upgradeable/certora/**",
     # Aave V4 generated EIP-712 bindings file (kept out of test compilation; read at runtime via vm.eip712HashType).
     "test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/JsonBindings.sol",
-    # Liquity Bold upstream submodule — port lives in contracts/protocols/staking/liquity/v2/.
+    # Liquity Bold upstream submodule — port lives in contracts/protocols/cdps/liquity/v2/.
     "lib/bold/**",
     # Frax upstream submodule — ported tree lives under contracts/protocols/tokens/stable/frax/.
     "lib/frax-solidity/**",

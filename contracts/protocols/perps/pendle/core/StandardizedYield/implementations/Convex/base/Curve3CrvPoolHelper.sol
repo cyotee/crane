@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "../../../../libraries/math/PMath.sol";
 import "../../../../../interfaces/Curve/ITriCrvPool.sol";
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
+import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 
 library Curve3CrvPoolHelper {
     using PMath for uint256;
@@ -63,10 +64,11 @@ library Curve3CrvPoolHelper {
     // ----------------- Forking StableSwap3Pool's calculation -----------------
 
     // fork of StableSwap3Pool.vy
-    function preview3CrvDeposit(
-        address token,
-        uint256 amount
-    ) internal view returns (uint256 netLpOut, uint256 new_virtual_price) {
+    function preview3CrvDeposit(address token, uint256 amount)
+        internal
+        view
+        returns (uint256 netLpOut, uint256 new_virtual_price)
+    {
         uint256[N_COINS] memory amounts = _getTokenAmounts(token, amount);
         uint256[N_COINS] memory self_balances = _getBalances();
 
@@ -111,10 +113,11 @@ library Curve3CrvPoolHelper {
         new_virtual_price = _get_virtual_price_with_balances(self_balances, token_supply + netLpOut);
     }
 
-    function _get_virtual_price_with_balances(
-        uint256[N_COINS] memory balances,
-        uint256 token_supply
-    ) internal view returns (uint256) {
+    function _get_virtual_price_with_balances(uint256[N_COINS] memory balances, uint256 token_supply)
+        internal
+        view
+        returns (uint256)
+    {
         uint256 amp = ITriCrvPool(POOL).A();
         uint256 D = get_D_mem(balances, amp);
         return (D * PRECISION) / token_supply;
@@ -135,7 +138,9 @@ library Curve3CrvPoolHelper {
 
     function get_D(uint256[N_COINS] memory _xp, uint256 _amp) internal pure returns (uint256) {
         uint256 S = 0;
-        for (uint256 k = 0; k < N_COINS; ++k) S += _xp[k];
+        for (uint256 k = 0; k < N_COINS; ++k) {
+            S += _xp[k];
+        }
         if (S == 0) return 0;
 
         uint256 Dprev = 0;

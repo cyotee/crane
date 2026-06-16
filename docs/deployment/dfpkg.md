@@ -11,6 +11,8 @@ A DFPkg is a contract that implements `IDiamondFactoryPackage`. It packages a se
 
 Because facets are immutable references inside the package, every proxy created from the package shares the identical logic implementations.
 
+The `DiamondPackageCallBackFactory` that executes DFPkg deployments (via `pkg.deploy(diamondFactory, args)`) is deployed once and reused across chains and projects. You obtain it from your Create3Factory; you do not deploy a new callback factory for each chain or DFPkg use.
+
 ## Interface
 
 ```solidity
@@ -31,6 +33,10 @@ interface IDiamondFactoryPackage {
 ```
 
 ## Typical Package Structure
+
+**Important**: `PkgInit` and `PkgArgs` **must** be defined inside the `I*DFPkg` interface (not the contract implementation). This allows type-safe references like `IMyDFPkg.PkgInit` from FactoryServices and callers.
+
+See the `crane-architecture` skill `references/dfpkg-pattern.md` for the full rule and the frequent error of defining them on the contract.
 
 ```solidity
 interface IERC20DFPkg {
@@ -143,3 +149,7 @@ IERC20 token = erc20Pkg.deploy(
 ## Post-Deploy Hooks
 
 Packages may install a temporary `PostDeployAccountHookFacet` during initialization. After `postDeploy` returns, the factory removes the hook facet. This provides a safe window for privileged one-time setup actions.
+
+## Application / Consumer Layers
+
+Crane's DFPkg + factory primitives are general. Some projects add registry or manager facades on top for registration, discovery, and access control of certain package types. Those additional rules and entry points are the responsibility of the consuming application — see the consumer's documentation.

@@ -2,7 +2,9 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/Address.sol";
-import {AggregatorV2V3Interface as IChainlinkAggregator} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
+import {
+    AggregatorV2V3Interface as IChainlinkAggregator
+} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
 
 import "../../../../LiquidityMining/CrossChainMsg/libraries/LayerZeroHelper.sol";
 import "../../../../interfaces/ILayerZeroEndpoint.sol";

@@ -6,6 +6,7 @@ pragma solidity ^0.8.35;
 import {Test} from "forge-std/Test.sol";
 import {Fraxferry} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/Fraxferry.sol";
 import {DummyToken} from "@crane/contracts/protocols/tokens/stable/frax/Fraxferry/DummyToken.sol";
+
 contract Fraxferry_test is Test {
     uint256 internal constant REDUCED_DECIMALS = 1e10;
 

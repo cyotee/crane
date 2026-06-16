@@ -31,11 +31,11 @@ import "@crane/contracts/external/chainlink/contracts/src/v0.8/operatorforwarder
 import "@crane/contracts/external/chainlink/contracts/src/v0.8/vendor/ENSResolver.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Math/BokkyPooBahsDateTimeContract.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 
 contract CPITrackerOracle is Owned, ChainlinkClient {
     using Chainlink for Chainlink.Request;
-  
+
     // Core
     BokkyPooBahsDateTimeContract public time_contract;
     address public timelock_address;
@@ -62,15 +62,14 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     CPIObservation[] public cpi_observations; // Historical tracking of CPI data
 
     // Safety
-    uint256 public max_delta_frac = 25000; // 2.5%. Max month-to-month CPI delta. 
+    uint256 public max_delta_frac = 25000; // 2.5%. Max month-to-month CPI delta.
 
     // Misc
     string[13] public month_names; // English names of the 12 months
     uint256 public fulfill_ready_day = 15; // Date of the month that CPI data is expected to by ready by
 
-
     /* ========== STRUCTS ========== */
-    
+
     struct CPIObservation {
         uint256 result_year;
         uint256 result_month;
@@ -87,34 +86,35 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     }
 
     modifier onlyByOwnGovBot() {
-        require(msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address, "Not owner, tlck, or bot");
+        require(
+            msg.sender == owner || msg.sender == timelock_address || msg.sender == bot_address,
+            "Not owner, tlck, or bot"
+        );
         _;
     }
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
-        address _creator_address,
-        address _timelock_address,
-        CPIObservation[] memory initial_observations
-    ) Owned(_creator_address) {
+    constructor(address _creator_address, address _timelock_address, CPIObservation[] memory initial_observations)
+        Owned(_creator_address)
+    {
         timelock_address = _timelock_address;
 
         // Initialize the array. Cannot be done in the declaration
         month_names = [
-            '',
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
         ];
 
         // CPI [Ethereum]
@@ -143,22 +143,21 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
 
         // Add some observations
 
-        for (uint256 i = 0; i < initial_observations.length; i++){ 
+        for (uint256 i = 0; i < initial_observations.length; i++) {
             cpi_observations.push(initial_observations[i]);
         }
     }
 
     /* ========== VIEWS ========== */
-    function upcomingCPIParams() public view returns (
-        uint256 upcoming_year,
-        uint256 upcoming_month, 
-        uint256 upcoming_timestamp
-    ) {
+    function upcomingCPIParams()
+        public
+        view
+        returns (uint256 upcoming_year, uint256 upcoming_month, uint256 upcoming_timestamp)
+    {
         if (stored_month == 12) {
             upcoming_year = stored_year + 1;
             upcoming_month = 1;
-        }
-        else {
+        } else {
             upcoming_year = stored_year;
             upcoming_month = stored_month + 1;
         }
@@ -171,10 +170,13 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     // Display the upcoming CPI month
     function upcomingSerie() external view returns (string memory serie_name) {
         // Get the upcoming CPI params
-        (uint256 upcoming_year, uint256 upcoming_month, ) = upcomingCPIParams();
+        (uint256 upcoming_year, uint256 upcoming_month,) = upcomingCPIParams();
 
         // Convert to a string
-        return string(abi.encodePacked("CUSR0000SA0", " ", month_names[upcoming_month], " ", Strings.toString(upcoming_year)));
+        return
+            string(
+                abi.encodePacked("CUSR0000SA0", " ", month_names[upcoming_month], " ", Strings.toString(upcoming_year))
+            );
     }
 
     // Delta between the current and previous peg prices
@@ -195,11 +197,11 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
         uint256 elapsed_time = block.timestamp - lastUpdateTime;
         if (elapsed_time >= ramp_period) {
             return peg_price_target;
-        }
-        else {
+        } else {
             // Calculate the fraction of the delta to use, based on the elapsed time
             // Can be negative in case of deflation (that never happens right :])
-            int256 fractional_price_delta = ((int256(peg_price_target) - int256(peg_price_last)) * int256(elapsed_time)) / int256(ramp_period);
+            int256 fractional_price_delta =
+                ((int256(peg_price_target) - int256(peg_price_last)) * int256(elapsed_time)) / int256(ramp_period);
             return uint256(int256(peg_price_last) + int256(fractional_price_delta));
         }
     }
@@ -212,8 +214,7 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     /* ========== MUTATIVE ========== */
 
     // Fetch the CPI data from the Chainlink oracle
-    function requestCPIData() external onlyByOwnGovBot returns (bytes32 requestId) 
-    {
+    function requestCPIData() external onlyByOwnGovBot returns (bytes32 requestId) {
         Chainlink.Request memory request = _buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
 
         // Get the upcoming CPI params
@@ -224,7 +225,7 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
 
         request.add("serie", "CUSR0000SA0"); // CPI-U: https://data.bls.gov/timeseries/CUSR0000SA0
         request.add("month", month_names[upcoming_month]);
-        request.add("year", Strings.toString(upcoming_year)); 
+        request.add("year", Strings.toString(upcoming_year));
         return _sendChainlinkRequestTo(oracle, request, fee);
     }
 
@@ -232,8 +233,7 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
      * Callback function
      */
     //  Called by the Chainlink oracle
-    function fulfill(bytes32 _requestId, uint256 result) public recordChainlinkFulfillment(_requestId)
-    {
+    function fulfill(bytes32 _requestId, uint256 result) public recordChainlinkFulfillment(_requestId) {
         // Set the stored CPI and price to the old targets
         cpi_last = cpi_target;
         peg_price_last = peg_price_target;
@@ -249,7 +249,7 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
         lastUpdateTime = block.timestamp;
 
         // Update the year and month
-        (uint256 result_year, uint256 result_month, ) = upcomingCPIParams();
+        (uint256 result_year, uint256 result_month,) = upcomingCPIParams();
         stored_year = result_year;
         stored_month = result_month;
 
@@ -258,26 +258,18 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
         ramp_period = future_ramp_period;
 
         // Add the observation
-        cpi_observations.push(CPIObservation(
-            result_year,
-            result_month,
-            cpi_target,
-            peg_price_target,
-            block.timestamp
-        ));
+        cpi_observations.push(CPIObservation(result_year, result_month, cpi_target, peg_price_target, block.timestamp));
 
         emit CPIUpdated(result_year, result_month, result, peg_price_target, ramp_period);
     }
 
-    function cancelRequest(
-        bytes32 _requestId,
-        uint256 _payment,
-        bytes4 _callbackFunc,
-        uint256 _expiration
-    ) external onlyByOwnGovBot {
+    function cancelRequest(bytes32 _requestId, uint256 _payment, bytes4 _callbackFunc, uint256 _expiration)
+        external
+        onlyByOwnGovBot
+    {
         _cancelChainlinkRequest(_requestId, _payment, _callbackFunc, _expiration);
     }
-    
+
     /* ========== RESTRICTED FUNCTIONS ========== */
 
     function setTimelock(address _new_timelock_address) external onlyByOwnGov {
@@ -295,11 +287,11 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     }
 
     function setMaxDeltaFrac(uint256 _max_delta_frac) external onlyByOwnGov {
-        max_delta_frac = _max_delta_frac; 
+        max_delta_frac = _max_delta_frac;
     }
 
     function setFulfillReadyDay(uint256 _fulfill_ready_day) external onlyByOwnGov {
-        fulfill_ready_day = _fulfill_ready_day; 
+        fulfill_ready_day = _fulfill_ready_day;
     }
 
     function setFutureRampPeriod(uint256 _future_ramp_period) external onlyByOwnGov {
@@ -313,6 +305,6 @@ contract CPITrackerOracle is Owned, ChainlinkClient {
     }
 
     /* ========== EVENTS ========== */
-    
+
     event CPIUpdated(uint256 year, uint256 month, uint256 result, uint256 peg_price_target, uint256 ramp_period);
 }

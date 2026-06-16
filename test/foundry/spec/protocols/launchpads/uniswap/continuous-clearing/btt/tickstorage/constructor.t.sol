@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
+import {BttBase} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
 
-import {MockTickStorage} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol';
-import {ITickStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
+import {
+    MockTickStorage
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockTickStorage.sol";
+import {ITickStorage} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/TickStorage.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
 
 contract ConstructorTest is BttBase {
     uint256 tickSpacing;
@@ -38,7 +42,7 @@ contract ConstructorTest is BttBase {
 
     modifier whenFloorPriceGT0() {
         _;
-        assertGt(floorPrice, 0, 'floor price is 0');
+        assertGt(floorPrice, 0, "floor price is 0");
     }
 
     function test_WhenFloorPriceLTMinFloorPrice(uint256 _tickSpacing, uint256 _floorPrice) external {
@@ -55,7 +59,7 @@ contract ConstructorTest is BttBase {
 
     modifier whenFloorPriceGTEMinFloorPrice() {
         _;
-        assertGe(floorPrice, ConstantsLib.MIN_FLOOR_PRICE, 'floor price is less than min floor price');
+        assertGe(floorPrice, ConstantsLib.MIN_FLOOR_PRICE, "floor price is less than min floor price");
     }
 
     function test_WhenFloorPriceNotPerfectlyDivisibleByTickSpacing(uint256 _tickSpacing, uint256 _floorPrice)

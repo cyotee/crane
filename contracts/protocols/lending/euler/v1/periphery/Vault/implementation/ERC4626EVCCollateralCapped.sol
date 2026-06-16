@@ -2,7 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import {AmountCap, AmountCapLib} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
+import {
+    AmountCap,
+    AmountCapLib
+} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/types/AmountCap.sol";
 import {ERC4626EVC, ERC4626EVCCollateral, ERC20, IERC20} from "../implementation/ERC4626EVCCollateral.sol";
 import {IVault} from "@crane/contracts/protocols/lending/euler/v1/evc/interfaces/IVault.sol";
 import {MAX_SANE_AMOUNT} from "@crane/contracts/protocols/lending/euler/v1/vault/EVault/shared/Constants.sol";
@@ -95,7 +98,7 @@ abstract contract ERC4626EVCCollateralCapped is ERC4626EVCCollateral {
         public
         view
         virtual
-        override (ERC20, IERC20)
+        override(ERC20, IERC20)
         nonReentrantView(this.totalSupply.selector)
         returns (uint256)
     {
@@ -109,7 +112,7 @@ abstract contract ERC4626EVCCollateralCapped is ERC4626EVCCollateral {
         public
         view
         virtual
-        override (ERC20, IERC20)
+        override(ERC20, IERC20)
         nonReentrantView(this.balanceOf.selector)
         returns (uint256)
     {
@@ -124,7 +127,7 @@ abstract contract ERC4626EVCCollateralCapped is ERC4626EVCCollateral {
         public
         view
         virtual
-        override (ERC20, IERC20)
+        override(ERC20, IERC20)
         nonReentrantView(this.allowance.selector)
         returns (uint256)
     {
@@ -342,7 +345,7 @@ abstract contract ERC4626EVCCollateralCapped is ERC4626EVCCollateral {
     function approve(address spender, uint256 amount)
         public
         virtual
-        override (ERC20, IERC20)
+        override(ERC20, IERC20)
         nonReentrant
         returns (bool)
     {

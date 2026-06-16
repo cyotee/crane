@@ -28,11 +28,7 @@ interface IKyberLiquidityMining {
     event WithdrawUnusedRewards(address token, uint256 amount, address receiver);
 
     event AddFarm(
-        uint256 indexed fId,
-        address poolAddress,
-        RangeInput[] ranges,
-        PhaseInput phase,
-        address farmingToken
+        uint256 indexed fId, address poolAddress, RangeInput[] ranges, PhaseInput phase, address farmingToken
     );
     event AddPhase(uint256 indexed fId, PhaseInput phase);
     event ForceClosePhase(uint256 indexed fId);
@@ -176,9 +172,7 @@ interface IKyberLiquidityMining {
 
     // ======== view ============
 
-    function getFarm(
-        uint256 fId
-    )
+    function getFarm(uint256 fId)
         external
         view
         returns (
@@ -193,9 +187,7 @@ interface IKyberLiquidityMining {
 
     function getDepositedNFTs(address user) external view returns (uint256[] memory listNFTs);
 
-    function getStake(
-        uint256 nftId
-    )
+    function getStake(uint256 nftId)
         external
         view
         returns (

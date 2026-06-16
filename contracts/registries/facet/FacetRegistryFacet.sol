@@ -3,22 +3,47 @@ pragma solidity ^0.8.0;
 
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 import {IFacetRegistry} from "@crane/contracts/registries/facet/IFacetRegistry.sol";
+
+/* --------------------------- Imported Contracts --------------------------- */
+
 import {FacetRegistryTarget} from "@crane/contracts/registries/facet/FacetRegistryTarget.sol";
 
+// tag::FacetRegistryFacet[]
+/**
+ * @title FacetRegistryFacet - Reusable Diamond facet providing registry for deployed facets (by name, interface, function, canonical per interface).
+ * @author cyotee doge <not_cyotee@proton.me>
+ * @dev Extends FacetRegistryTarget for business logic (delegates to FacetRegistryService + FacetRegistryRepo). Implements IFacet to declare
+ *      supported interfaces and functions for use with Diamond loupes, DFPkgs, registries, and composition.
+ * @custom:contractlistipfs
+ */
 contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
-    /* ---------------------------------------------------------------------- */
-    /*                                 IFacet                                 */
-    /* ---------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                                   IFacet                                   */
+    /* -------------------------------------------------------------------------- */
 
+    // tag::facetName()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetName() public pure returns (string memory name) {
         return type(FacetRegistryFacet).name;
     }
+    // end::facetName()[]
 
+    // tag::facetInterfaces()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetInterfaces() public pure virtual returns (bytes4[] memory interfaces) {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IFacetRegistry).interfaceId;
     }
+    // end::facetInterfaces()[]
 
+    // tag::facetFuncs()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetFuncs() public pure virtual returns (bytes4[] memory funcs) {
         funcs = new bytes4[](14);
         funcs[0] = IFacetRegistry.allFacets.selector;
@@ -36,7 +61,12 @@ contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
         funcs[12] = IFacetRegistry.registerFacet.selector;
         funcs[13] = IFacetRegistry.setCanonicalFacet.selector;
     }
+    // end::facetFuncs()[]
 
+    // tag::facetMetadata()[]
+    /**
+     * @inheritdoc IFacet
+     */
     function facetMetadata()
         external
         pure
@@ -46,4 +76,6 @@ contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+    // end::facetMetadata()[]
 }
+// end::FacetRegistryFacet[]

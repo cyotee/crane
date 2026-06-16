@@ -8,21 +8,23 @@ import {console} from "forge-std/console.sol";
 import {IERC20Errors} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC6093.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
 
-import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
-import {ILUSD} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILUSD.sol";
-import {ILQTY} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTY.sol";
-import {ILQTYStaking} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/ILQTYStaking.sol";
+import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
+import {ILUSD} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILUSD.sol";
+import {ILQTY} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTY.sol";
+import {ILQTYStaking} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/ILQTYStaking.sol";
 
-import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
-import {Governance} from "@crane/contracts/protocols/staking/liquity/v2/gov/Governance.sol";
-import {UserProxy} from "@crane/contracts/protocols/staking/liquity/v2/gov/UserProxy.sol";
+import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
+import {Governance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/Governance.sol";
+import {UserProxy} from "@crane/contracts/protocols/cdps/liquity/v2/gov/UserProxy.sol";
 
-import {PermitParams} from "@crane/contracts/protocols/staking/liquity/v2/gov/utils/Types.sol";
+import {PermitParams} from "@crane/contracts/protocols/cdps/liquity/v2/gov/utils/Types.sol";
 
 import {MockERC20Tester} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockERC20Tester.sol";
 import {MockInitiative} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockInitiative.sol";
 import {MockStakingV1} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1.sol";
-import {MockStakingV1Deployer} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
+import {
+    MockStakingV1Deployer
+} from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/constants.sol";
 
 contract GovernanceTester is Governance {
@@ -1059,8 +1061,12 @@ abstract contract GovernanceTest is Test {
         governance.depositLQTY(1e18);
 
         IGovernance.UserState memory user2State;
-        (user2State.unallocatedLQTY, user2State.unallocatedOffset, user2State.allocatedLQTY, user2State.allocatedOffset)
-        = governance.userStates(user2);
+        (
+            user2State.unallocatedLQTY,
+            user2State.unallocatedOffset,
+            user2State.allocatedLQTY,
+            user2State.allocatedOffset
+        ) = governance.userStates(user2);
         assertEq(user2State.allocatedLQTY, 0);
         assertEq(user2State.allocatedOffset, 0);
         assertEq(
@@ -2690,7 +2696,12 @@ abstract contract GovernanceTest is Test {
         vm.stopPrank();
     }
 
-    function _deAllocateLQTY(address allocator, uint256 /*amount*/) internal {
+    function _deAllocateLQTY(
+        address allocator,
+        uint256 /*amount*/
+    )
+        internal
+    {
         address[] memory initiatives = new address[](1);
         initiatives[0] = baseInitiative1;
 

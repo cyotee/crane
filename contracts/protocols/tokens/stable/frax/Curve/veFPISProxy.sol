@@ -20,12 +20,12 @@ pragma solidity ^0.8.35;
 
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 import "./IveFPIS.sol";
-import "@crane/contracts/protocols/tokens/stable/frax/ERC20/IERC20.sol";
+import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 
 /// @title Manages other smart contracts which can use a user's locked FPIS (as part of their veFPIS poistion) as a sort of collateral
 /// @dev Is given special permissions in veFPIS.vy to transfer FPIS to itself and whitelisted apps, and also to slash / lock additional FPIS for a user
 /// @dev Users cannot withdraw their veFPIS while they have a balance in the proxy
-contract veFPISProxy is Owned { 
+contract veFPISProxy is Owned {
     uint256 private constant PRECISION = 1e6;
 
     IveFPIS immutable veFPIS;
@@ -41,8 +41,8 @@ contract veFPISProxy is Owned {
     struct App {
         bool allowUserSlashes;
         uint256 maxUsageAllowedPct; // What percent of a user's locked FPIS an app is able to control at max, 1e6 precision
-        mapping (address => uint256) userMaxFPISAppCanUse; // Set by user as a cap. In FPIS #, not %
-        mapping (address => uint256) userFPISUsed; // The amount of a user's FPIS which is currently custodied in the app
+        mapping(address => uint256) userMaxFPISAppCanUse; // Set by user as a cap. In FPIS #, not %
+        mapping(address => uint256) userFPISUsed; // The amount of a user's FPIS which is currently custodied in the app
     }
 
     struct AppViewRtn {
@@ -67,15 +67,19 @@ contract veFPISProxy is Owned {
     }
 
     /* ============= VIEWS ============= */
-    function getUserAppUsages(address userAddr, bool give_maxes_too) external view returns (
-        uint256[] memory curr_fpis_usages, 
-        uint256[] memory max_fpis_usages_app,
-        uint256[] memory max_fpis_usages_user,
-        uint256[] memory max_fpis_usages_actual
-    ) {
+    function getUserAppUsages(address userAddr, bool give_maxes_too)
+        external
+        view
+        returns (
+            uint256[] memory curr_fpis_usages,
+            uint256[] memory max_fpis_usages_app,
+            uint256[] memory max_fpis_usages_user,
+            uint256[] memory max_fpis_usages_actual
+        )
+    {
         uint256 curr_locked_fpis;
         if (give_maxes_too) curr_locked_fpis = uint256(uint128(veFPIS.locked__amount(userAddr))); // Only needs to be fetched once
-        
+
         // Instantiate the return arrays
         curr_fpis_usages = new uint256[](allApps.length);
         max_fpis_usages_app = new uint256[](allApps.length);
@@ -83,7 +87,7 @@ contract veFPISProxy is Owned {
         max_fpis_usages_actual = new uint256[](allApps.length);
 
         // Loop
-        for(uint i = 0; i < allApps.length; i++) {
+        for (uint256 i = 0; i < allApps.length; i++) {
             // Get the app-specific usage for this user
             curr_fpis_usages[i] = addrToApp[allApps[i]].userFPISUsed[userAddr];
 
@@ -93,13 +97,11 @@ contract veFPISProxy is Owned {
                 max_fpis_usages_app[i] = app_max;
                 max_fpis_usages_user[i] = user_max;
                 max_fpis_usages_actual[i] = actual_max;
-            }
-            else {
+            } else {
                 max_fpis_usages_app[i] = 0; // Push zeroes if you don't care
                 max_fpis_usages_user[i] = 0; // Push zeroes if you don't care
                 max_fpis_usages_actual[i] = 0; // Push zeroes if you don't care
             }
-
         }
     }
 
@@ -108,8 +110,10 @@ contract veFPISProxy is Owned {
         apps = new AppViewRtn[](allApps.length);
 
         // Loop
-        for(uint i = 0; i < allApps.length; i++){
-            apps[i] = AppViewRtn(allApps[i], addrToApp[allApps[i]].maxUsageAllowedPct, addrToApp[allApps[i]].allowUserSlashes);
+        for (uint256 i = 0; i < allApps.length; i++) {
+            apps[i] = AppViewRtn(
+                allApps[i], addrToApp[allApps[i]].maxUsageAllowedPct, addrToApp[allApps[i]].allowUserSlashes
+            );
         }
     }
 
@@ -122,14 +126,15 @@ contract veFPISProxy is Owned {
     }
 
     /// @notice Returns the max number of a specific user's locked FPIS that a specific app may control
-    function getUserAppMaxUsages(address userAddr, address appAddr) public view returns (
-        uint256 app_set_max, 
-        uint256 user_set_max,
-        uint256 actual_max
-    ) {
+    function getUserAppMaxUsages(address userAddr, address appAddr)
+        public
+        view
+        returns (uint256 app_set_max, uint256 user_set_max, uint256 actual_max)
+    {
         // Default / set at app-level
-        app_set_max = ((addrToApp[appAddr].maxUsageAllowedPct * uint256(uint128(veFPIS.locked__amount(userAddr)))) / PRECISION);
-        
+        app_set_max =
+        ((addrToApp[appAddr].maxUsageAllowedPct * uint256(uint128(veFPIS.locked__amount(userAddr)))) / PRECISION);
+
         // Set by the user
         user_set_max = addrToApp[appAddr].userMaxFPISAppCanUse[userAddr];
 
@@ -139,11 +144,11 @@ contract veFPISProxy is Owned {
 
     /* =============== MUTATIVE FUNCTIONS, APP ONLY =============== */
 
-    /// @notice Moves funds from an app to veFPIS.vy 
+    /// @notice Moves funds from an app to veFPIS.vy
     /// @dev App must first approve the veFPIS contract to spend the amount of FPIS to payback
     function transferFromAppToVeFPIS(address userAddr, uint256 amountFPIS) external onlyApp {
         App storage app = addrToApp[msg.sender];
-        require (amountFPIS <= app.userFPISUsed[userAddr], "Payback amount exceeds usage");
+        require(amountFPIS <= app.userFPISUsed[userAddr], "Payback amount exceeds usage");
 
         // Account for the change beforehand, for CEI
         app.userFPISUsed[userAddr] -= amountFPIS;
@@ -157,7 +162,7 @@ contract veFPISProxy is Owned {
     /// @notice Moves funds from veFPIS.vy to an app and increases usage
     function transferFromVeFPISToApp(address userAddr, uint256 amountFPIS) external onlyApp {
         App storage app = addrToApp[msg.sender];
-        
+
         // Pull in the funds from veFPIS.vy, then give them to the app
         veFPIS.transfer_to_app(userAddr, msg.sender, int128(int256(amountFPIS)));
 
@@ -165,8 +170,8 @@ contract veFPISProxy is Owned {
         app.userFPISUsed[userAddr] += amountFPIS;
 
         // Do the check at the end for safety
-        (, , uint256 max_usage_to_use) = getUserAppMaxUsages(userAddr, msg.sender);
-        require(app.userFPISUsed[userAddr]<= max_usage_to_use, "max_usage_to_use limit");
+        (,, uint256 max_usage_to_use) = getUserAppMaxUsages(userAddr, msg.sender);
+        require(app.userFPISUsed[userAddr] <= max_usage_to_use, "max_usage_to_use limit");
 
         emit TransferredFromVeFPISToApp(msg.sender, userAddr, amountFPIS);
     }
@@ -176,7 +181,7 @@ contract veFPISProxy is Owned {
         App storage app = addrToApp[msg.sender];
 
         // Find the max the app is allowed to use.
-        (, , uint256 max_usage_to_use) = getUserAppMaxUsages(userAddr, msg.sender);
+        (,, uint256 max_usage_to_use) = getUserAppMaxUsages(userAddr, msg.sender);
 
         // Add the entire amountFPIS amount first
         veFPIS.proxy_add(userAddr, amountFPIS);
@@ -190,7 +195,7 @@ contract veFPISProxy is Owned {
             // ==========================
 
             // Calculate the surplus amount over the limit
-            surplus_amt = app.userFPISUsed[userAddr] + amountFPIS - max_usage_to_use; 
+            surplus_amt = app.userFPISUsed[userAddr] + amountFPIS - max_usage_to_use;
 
             // Transfer the surplus FPIS back to the user
             // Make sure app approves first
@@ -198,8 +203,7 @@ contract veFPISProxy is Owned {
 
             // Max out the user at the new app cap
             app.userFPISUsed[userAddr] = max_usage_to_use;
-        }
-        else {
+        } else {
             // User is under the app usage limit
             // ==========================
 
@@ -216,8 +220,8 @@ contract veFPISProxy is Owned {
     function _slash(address userAddr, address appAddr, uint256 amountFPIS) internal {
         require(isApp[appAddr], "App nonexistent");
         App storage app = addrToApp[appAddr];
-        
-        require (amountFPIS <= app.userFPISUsed[userAddr], "Slash amount exceeds usage");
+
+        require(amountFPIS <= app.userFPISUsed[userAddr], "Slash amount exceeds usage");
 
         // Slash the user's veFPIS position
         veFPIS.proxy_slash(userAddr, amountFPIS);
@@ -233,7 +237,7 @@ contract veFPISProxy is Owned {
 
     /* =============== MUTATIVE FUNCTIONS, USER ONLY =============== */
 
-    /// @notice User sets the max FPIS usage allowed for an app. 
+    /// @notice User sets the max FPIS usage allowed for an app.
     /// @notice Overrides the setAppMaxUsagePct if this number ends up being lower
     function userSetAppMaxFPISUsage(address appAddr, uint256 max_fpis) external {
         require(isApp[appAddr], "App nonexistent");
@@ -245,28 +249,28 @@ contract veFPISProxy is Owned {
     /// @notice Allows a user to slash themselves if Owner has enabled it
     /// @dev useful in the case of a bug in the app which would otherwise prevent user from withdrawing from veFPIS
     function userSlash(address appAddr, uint256 amountFPIS) external {
-        require(addrToApp[appAddr].allowUserSlashes, "User slashes not allowed"); 
+        require(addrToApp[appAddr].allowUserSlashes, "User slashes not allowed");
         _slash(msg.sender, appAddr, amountFPIS);
         emit UserSlashes(appAddr, msg.sender, amountFPIS);
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
 
-    /// @notice Whitelists an app to use the proxy and sets the max usage and max slash 
+    /// @notice Whitelists an app to use the proxy and sets the max usage and max slash
     function addNewApp(address appAddr, uint256 newMaxUsageAllowedPct, bool allowUserSlashes) external onlyOwner {
         require(!isApp[appAddr], "App already added");
         require(newMaxUsageAllowedPct <= PRECISION, "Must be <= PRECISION");
         isApp[appAddr] = true;
         addrToApp[appAddr].maxUsageAllowedPct = newMaxUsageAllowedPct;
         addrToApp[appAddr].allowUserSlashes = allowUserSlashes;
-        
+
         // Add the new app address to the array
         allApps.push(appAddr);
 
         emit AddNewApp(appAddr, newMaxUsageAllowedPct);
     }
 
-    /// @notice Sets the max usage allowed for an app. Individual users can set lower than this with 
+    /// @notice Sets the max usage allowed for an app. Individual users can set lower than this with
     /// @notice E.g. a lending app could prevent a user from using more than, say, 10% of their locked FPIS in it.
     function setAppMaxUsagePct(address appAddr, uint256 newMaxUsageAllowedPct) external onlyOwner {
         require(isApp[appAddr], "App nonexistent");
@@ -284,7 +288,6 @@ contract veFPISProxy is Owned {
 
     function setTimelock(address _timelock) external onlyOwner {
         timelock = _timelock;
-
     }
 
     /* ========== EVENTS ========== */

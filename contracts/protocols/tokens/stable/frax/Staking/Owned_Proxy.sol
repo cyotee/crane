@@ -18,7 +18,7 @@ contract Owned_Proxy {
         nominatedOwner = address(0);
     }
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Only the contract owner may perform this action");
         _;
     }

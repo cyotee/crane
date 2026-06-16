@@ -35,7 +35,7 @@ contract ESynth is ERC20EVCCompatible, Ownable {
 
     constructor(address evc_, string memory name_, string memory symbol_)
         ERC20EVCCompatible(evc_, name_, symbol_)
-        Ownable()
+        Ownable(msg.sender)
     {
         ignoredForTotalSupply.add(address(this));
     }
@@ -127,7 +127,7 @@ contract ESynth is ERC20EVCCompatible, Ownable {
     /// @dev This function returns the account on behalf of which the current operation is being performed, which is
     /// either msg.sender or the account authenticated by the EVC.
     /// @return msgSender The address of the message sender.
-    function _msgSender() internal view virtual override (ERC20EVCCompatible, Context) returns (address msgSender) {
+    function _msgSender() internal view virtual override(ERC20EVCCompatible, Context) returns (address msgSender) {
         return ERC20EVCCompatible._msgSender();
     }
 

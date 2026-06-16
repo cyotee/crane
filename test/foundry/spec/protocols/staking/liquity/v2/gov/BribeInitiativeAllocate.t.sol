@@ -4,9 +4,9 @@
 // import {Test} from "forge-std/Test.sol";
 // import {console} from "forge-std/console.sol";
 
-// import {BribeInitiative} from "@crane/contracts/protocols/staking/liquity/v2/gov/BribeInitiative.sol";
+// import {BribeInitiative} from "@crane/contracts/protocols/cdps/liquity/v2/gov/BribeInitiative.sol";
 
-// import {IGovernance} from "@crane/contracts/protocols/staking/liquity/v2/gov/interfaces/IGovernance.sol";
+// import {IGovernance} from "@crane/contracts/protocols/cdps/liquity/v2/gov/interfaces/IGovernance.sol";
 
 // import {MockERC20Tester} from "./mocks/MockERC20Tester.sol";
 // import {MockGovernance} from "./mocks/MockGovernance.sol";

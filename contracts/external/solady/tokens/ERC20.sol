@@ -142,14 +142,14 @@ abstract contract ERC20 {
 
     /// @dev Returns the amount of tokens in existence.
     function totalSupply() public view virtual returns (uint256 result) {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             result := sload(_TOTAL_SUPPLY_SLOT)
         }
     }
 
     /// @dev Returns the amount of tokens owned by `owner`.
     function balanceOf(address owner) public view virtual returns (uint256 result) {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, owner)
             result := sload(keccak256(0x0c, 0x20))
@@ -161,7 +161,7 @@ abstract contract ERC20 {
         if (_givePermit2InfiniteAllowance()) {
             if (spender == _PERMIT2) return type(uint256).max;
         }
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
             mstore(0x00, owner)
@@ -174,7 +174,7 @@ abstract contract ERC20 {
     /// Emits a {Approval} event.
     function approve(address spender, uint256 amount) public virtual returns (bool) {
         if (_givePermit2InfiniteAllowance()) {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 // If `spender == _PERMIT2 && amount != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(amount)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -182,7 +182,7 @@ abstract contract ERC20 {
                 }
             }
         }
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Compute the allowance slot and store the amount.
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
@@ -203,7 +203,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function transfer(address to, uint256 amount) public virtual returns (bool) {
         _beforeTokenTransfer(msg.sender, to, amount);
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Compute the balance slot and load its value.
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, caller())
@@ -244,7 +244,7 @@ abstract contract ERC20 {
         _beforeTokenTransfer(from, to, amount);
         // Code duplication is for zero-cost abstraction if possible.
         if (_givePermit2InfiniteAllowance()) {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 let from_ := shl(96, from)
                 if iszero(eq(caller(), _PERMIT2)) {
                     // Compute the allowance slot and load its value.
@@ -286,7 +286,7 @@ abstract contract ERC20 {
                 log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, shr(96, from_), shr(96, mload(0x0c)))
             }
         } else {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 let from_ := shl(96, from)
                 // Compute the allowance slot and load its value.
                 mstore(0x20, caller())
@@ -345,7 +345,7 @@ abstract contract ERC20 {
 
     /// @dev For inheriting contracts to increment the nonce.
     function _incrementNonce(address owner) internal virtual {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             mstore(0x0c, _NONCES_SLOT_SEED)
             mstore(0x00, owner)
             let nonceSlot := keccak256(0x0c, 0x20)
@@ -356,7 +356,7 @@ abstract contract ERC20 {
     /// @dev Returns the current nonce for `owner`.
     /// This value is used to compute the signature for EIP-2612 permit.
     function nonces(address owner) public view virtual returns (uint256 result) {
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Compute the nonce slot and load its value.
             mstore(0x0c, _NONCES_SLOT_SEED)
             mstore(0x00, owner)
@@ -373,7 +373,7 @@ abstract contract ERC20 {
         virtual
     {
         if (_givePermit2InfiniteAllowance()) {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 // If `spender == _PERMIT2 && value != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(value)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -385,7 +385,7 @@ abstract contract ERC20 {
         //  We simply calculate it on-the-fly to allow for cases where the `name` may change.
         if (nameHash == bytes32(0)) nameHash = keccak256(bytes(name()));
         bytes32 versionHash = _versionHash();
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Revert if the block timestamp is greater than `deadline`.
             if gt(timestamp(), deadline) {
                 mstore(0x00, 0x1a15a3cc) // `PermitExpired()`.
@@ -449,7 +449,7 @@ abstract contract ERC20 {
         //  We simply calculate it on-the-fly to allow for cases where the `name` may change.
         if (nameHash == bytes32(0)) nameHash = keccak256(bytes(name()));
         bytes32 versionHash = _versionHash();
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let m := mload(0x40) // Grab the free memory pointer.
             mstore(m, _DOMAIN_TYPEHASH)
             mstore(add(m, 0x20), nameHash)
@@ -469,7 +469,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function _mint(address to, uint256 amount) internal virtual {
         _beforeTokenTransfer(address(0), to, amount);
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let totalSupplyBefore := sload(_TOTAL_SUPPLY_SLOT)
             let totalSupplyAfter := add(totalSupplyBefore, amount)
             // Revert if the total supply overflows.
@@ -501,7 +501,7 @@ abstract contract ERC20 {
     /// Emits a {Transfer} event.
     function _burn(address from, uint256 amount) internal virtual {
         _beforeTokenTransfer(from, address(0), amount);
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Compute the balance slot and load its value.
             mstore(0x0c, _BALANCE_SLOT_SEED)
             mstore(0x00, from)
@@ -530,7 +530,7 @@ abstract contract ERC20 {
     /// @dev Moves `amount` of tokens from `from` to `to`.
     function _transfer(address from, address to, uint256 amount) internal virtual {
         _beforeTokenTransfer(from, to, amount);
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let from_ := shl(96, from)
             // Compute the balance slot and load its value.
             mstore(0x0c, or(from_, _BALANCE_SLOT_SEED))
@@ -566,7 +566,7 @@ abstract contract ERC20 {
         if (_givePermit2InfiniteAllowance()) {
             if (spender == _PERMIT2) return; // Do nothing, as allowance is infinite.
         }
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             // Compute the allowance slot and load its value.
             mstore(0x20, spender)
             mstore(0x0c, _ALLOWANCE_SLOT_SEED)
@@ -591,7 +591,7 @@ abstract contract ERC20 {
     /// Emits a {Approval} event.
     function _approve(address owner, address spender, uint256 amount) internal virtual {
         if (_givePermit2InfiniteAllowance()) {
-            assembly ('memory-safe') {
+            assembly ("memory-safe") {
                 // If `spender == _PERMIT2 && amount != type(uint256).max`.
                 if iszero(or(xor(shr(96, shl(96, spender)), _PERMIT2), iszero(not(amount)))) {
                     mstore(0x00, 0x3f68539a) // `Permit2AllowanceIsFixedAtInfinity()`.
@@ -599,7 +599,7 @@ abstract contract ERC20 {
                 }
             }
         }
-        assembly ('memory-safe') {
+        assembly ("memory-safe") {
             let owner_ := shl(96, owner)
             // Compute the allowance slot and store the amount.
             mstore(0x20, spender)

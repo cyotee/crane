@@ -386,10 +386,7 @@ interface IExecutorHelper {
 
     function executeCamelot(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
-    function executeKyberLimitOrder(
-        bytes memory data,
-        uint256 flagsAndPrevAmountOut
-    ) external payable returns (uint256);
+    function executeKyberLimitOrder(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
     function executeMaverick(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
@@ -409,10 +406,10 @@ interface IExecutorHelper {
 
     function executeTraderJoeV2(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
-    function executePancakeStableSwap(
-        bytes memory data,
-        uint256 flagsAndPrevAmountOut
-    ) external payable returns (uint256);
+    function executePancakeStableSwap(bytes memory data, uint256 flagsAndPrevAmountOut)
+        external
+        payable
+        returns (uint256);
 
     function executeLevelFiV2(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
@@ -474,10 +471,10 @@ interface IExecutorHelper {
 
     function executeSfrxETH(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 
-    function executeSfrxETHConvertor(
-        bytes memory data,
-        uint256 flagsAndPrevAmountOut
-    ) external payable returns (uint256);
+    function executeSfrxETHConvertor(bytes memory data, uint256 flagsAndPrevAmountOut)
+        external
+        payable
+        returns (uint256);
 
     function executeSwellETH(bytes memory data, uint256 flagsAndPrevAmountOut) external payable returns (uint256);
 

@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 import {MergedPriceFeedAdapterWithRoundsMock} from "./MergedPriceFeedAdapterWithRoundsMock.sol";
 
 contract MergedPriceFeedAdapterWithRoundsUpdatedMock is MergedPriceFeedAdapterWithRoundsMock {
-  function version() public virtual pure override returns (uint256) {
-    return 42;
-  }
+    function version() public pure virtual override returns (uint256) {
+        return 42;
+    }
 }

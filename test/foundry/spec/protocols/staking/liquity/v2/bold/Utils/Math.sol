@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.35;
 
-import {DECIMAL_PRECISION} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
+import {DECIMAL_PRECISION} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
 
 function roundedMul(uint256 x, uint256 y) pure returns (uint256) {
     return (x * y + DECIMAL_PRECISION / 2) / DECIMAL_PRECISION;

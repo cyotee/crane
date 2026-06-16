@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IAToken} from './IAToken.sol';
-import {IBaseDelegation} from '../protocol/tokenization/delegation/interfaces/IBaseDelegation.sol';
+import {IAToken} from "./IAToken.sol";
+import {IBaseDelegation} from "../protocol/tokenization/delegation/interfaces/IBaseDelegation.sol";
 
 /**
  * @notice Interface for an AToken with delegation capabilities.

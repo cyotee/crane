@@ -12,41 +12,43 @@ pragma solidity ^0.8.35;
 // ======================== FraxMiddlemanGauge ========================
 // ====================================================================
 /**
-*   @title FraxFamilialPitchGauge
-*   @notice Redistributes gauge rewards to multiple gauges (FraxFarms) based on each "child" gauge's `total_combined_weight`.
-*   @author Modified version of the FraxMiddlemanGauge - by ZrowGz @ Pitch Foundation
-*   @dev To use this:
-*       - Add to GaugeController as a gauge
-*       - Add to FXS Rewards Distributor as a gauge
-*           * BUT do not set as a middleman gauge on the FXS Rewards Distributor
-*       - Set as the `gaugeController` & `rewardsDistributor` on all children FraxFarms
-*       - Disable rewards for pre-existing gauges on the FXS Rewards Distributor
-*/
+ *   @title FraxFamilialPitchGauge
+ *   @notice Redistributes gauge rewards to multiple gauges (FraxFarms) based on each "child" gauge's `total_combined_weight`.
+ *   @author Modified version of the FraxMiddlemanGauge - by ZrowGz @ Pitch Foundation
+ *   @dev To use this:
+ *       - Add to GaugeController as a gauge
+ *       - Add to FXS Rewards Distributor as a gauge
+ *           * BUT do not set as a middleman gauge on the FXS Rewards Distributor
+ *       - Set as the `gaugeController` & `rewardsDistributor` on all children FraxFarms
+ *       - Disable rewards for pre-existing gauges on the FXS Rewards Distributor
+ */
 
 // import "@crane/contracts/protocols/tokens/stable/frax/Math/Math.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/Math/SafeMath.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
-// import "@crane/contracts/protocols/tokens/stable/frax/ERC20/SafeERC20.sol";
+// import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
 import "./IFraxGaugeFXSRewardsDistributor.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
 // import "@crane/contracts/protocols/tokens/stable/frax/Utils/ReentrancyGuard.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/IFraxFarm.sol";
 import "./IFraxGaugeControllerV2.sol";
 
 /**
-*   @title FraxFamilialPitchGauge
-*   @notice Redistributes gauge rewards to multiple gauges (FraxFarms) based on each "child" gauge's `total_combined_weight`.
-*   @author Modified version of the FraxMiddlemanGauge - by ZrowGz @ Pitch Foundation
-*   @dev To use this:
-*       - Add to GaugeController as a gauge
-*       - Add to FXS Rewards Distributor as a gauge
-*           * BUT do not set as a middleman gauge on the FXS Rewards Distributor
-*       - Set as the `gaugeController` & `rewardsDistributor` on all children FraxFarms
-*       - Disable rewards for pre-existing gauges on the FXS Rewards Distributor
-*/
+ *   @title FraxFamilialPitchGauge
+ *   @notice Redistributes gauge rewards to multiple gauges (FraxFarms) based on each "child" gauge's `total_combined_weight`.
+ *   @author Modified version of the FraxMiddlemanGauge - by ZrowGz @ Pitch Foundation
+ *   @dev To use this:
+ *       - Add to GaugeController as a gauge
+ *       - Add to FXS Rewards Distributor as a gauge
+ *           * BUT do not set as a middleman gauge on the FXS Rewards Distributor
+ *       - Set as the `gaugeController` & `rewardsDistributor` on all children FraxFarms
+ *       - Disable rewards for pre-existing gauges on the FXS Rewards Distributor
+ */
 
-contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
+contract FraxFamilialPitchGauge is
+    Owned //, ReentrancyGuard {
+{
     // using SafeMath for uint256;
     // using SafeERC20 for ERC20;
 
@@ -66,7 +68,7 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
     /// @notice Address of the FXS Rewards Distributor
     address internal immutable rewards_distributor;
     /// @notice Address of the rewardToken
-    address internal immutable reward_token;// = 0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0; // FXS
+    address internal immutable reward_token; // = 0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0; // FXS
 
     ///// Familial Gauge Storage /////
     /// @notice Array of all child gauges
@@ -87,8 +89,8 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
     uint256 internal familial_total_combined_weight;
     /// @notice Each gauge's combined weight for this reward epoch, available at the farm
     mapping(address => uint256) internal gauge_to_total_combined_weight;
-    
-    // Distributor provided 
+
+    // Distributor provided
     /// @notice The timestamp of the vote period
     uint256 public weeks_elapsed;
     /// @notice The amount of FXS awarded to the family by the vote, from the Distributor
@@ -113,7 +115,7 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         string memory _name,
         address _owner,
         address _timelock_address,
@@ -148,12 +150,12 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
         if (block.timestamp > time_total_stored) {
             //// First, update all the state variables applicable to all child gauges
             // store the most recent time_total for the farms to use & prevent this logic from being executed until epoch
-            time_total_stored = IFraxGaugeController(gauge_controller).time_total();//latest_time_total;
+            time_total_stored = IFraxGaugeController(gauge_controller).time_total(); //latest_time_total;
 
             // get & set the gauge controller's last global emission rate
             // note this should be the same for all gauges, but if there were to be multiple controllers,
             // we would need to have the emission rate for each of them.
-            global_emission_rate_stored = IFraxGaugeController(gauge_controller).global_emission_rate();//gauge_to_controller[gauges[i]]).global_emission_rate();
+            global_emission_rate_stored = IFraxGaugeController(gauge_controller).global_emission_rate(); //gauge_to_controller[gauges[i]]).global_emission_rate();
 
             // to prevent re-calling the first gauge
             address _gauge_calling;
@@ -172,36 +174,38 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
             familial_total_combined_weight = 0;
 
             // get the familial vote weight for this period
-            total_familial_relative_weight = 
+            total_familial_relative_weight =
                 IFraxGaugeController(gauge_controller).gauge_relative_weight_write(address(this), timestamp);
 
             // update all the gauge weights
             for (uint256 i; i < gauges.length; i++) {
                 // it shouldn't be zero, unless we don't use `delete` to remove a gauge
-                if (gauge_active[gauges[i]]) { 
+                if (gauge_active[gauges[i]]) {
                     /// update the child gauges' total combined weights
                     gauge_to_total_combined_weight[gauges[i]] = IFraxFarm(gauges[i]).totalCombinedWeight();
                     familial_total_combined_weight += gauge_to_total_combined_weight[gauges[i]];
                 }
             }
 
-            // divvy up the relative weights based on each gauges `total combined weight` 
+            // divvy up the relative weights based on each gauges `total combined weight`
             for (uint256 i; i < gauges.length; i++) {
-                if (gauge_active[gauges[i]]) { 
-                    gauge_to_last_relative_weight[gauges[i]] = 
-                        gauge_to_total_combined_weight[gauges[i]] * total_familial_relative_weight / familial_total_combined_weight;
+                if (gauge_active[gauges[i]]) {
+                    gauge_to_last_relative_weight[gauges[i]] = gauge_to_total_combined_weight[gauges[i]]
+                        * total_familial_relative_weight / familial_total_combined_weight;
                 }
             }
 
             // pull in the reward tokens allocated to the fam
-            (weeks_elapsed, reward_tally) = IFraxGaugeFXSRewardsDistributor(rewards_distributor).distributeReward(address(this));
+            (weeks_elapsed, reward_tally) =
+                IFraxGaugeFXSRewardsDistributor(rewards_distributor).distributeReward(address(this));
             emit FamilialRewardClaimed(address(this), weeks_elapsed, reward_tally);
 
             // divide the reward_tally amount by the gauge's allocation
             // note this will be used when the farm calls `distributeReward`
             for (uint256 i; i < gauges.length; i++) {
-                if (gauge_active[gauges[i]]) { 
-                    gauge_to_reward_tally[gauges[i]] = reward_tally * gauge_to_total_combined_weight[gauges[i]] / familial_total_combined_weight;
+                if (gauge_active[gauges[i]]) {
+                    gauge_to_reward_tally[gauges[i]] =
+                        reward_tally * gauge_to_total_combined_weight[gauges[i]] / familial_total_combined_weight;
                 }
             }
 
@@ -261,19 +265,19 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
 
         // preserve the gauge's reward tally for returning to the gauge
         uint256 claimingGaugeRewardTally = gauge_to_reward_tally[child_gauge];
-        
+
         /// when the reward is distributed, send the amount in gauge_to_reward_tally to the gauge & zero that value out
         TransferHelper.safeTransfer(reward_token, child_gauge, claimingGaugeRewardTally);
-        
+
         // reset the reward tally to zero for the gauge
         gauge_to_reward_tally[child_gauge] = 0;
         emit ChildGaugeRewardDistributed(child_gauge, gauge_to_reward_tally[child_gauge]);
-        
+
         return (weeks_elapsed, claimingGaugeRewardTally);
     }
 
     /* ========== RESTRICTED FUNCTIONS - Owner or timelock only ========== */
-    
+
     // Added to support recovering LP Rewards and other mistaken tokens from other systems to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyByOwnGov {
         // Only the owner address can ever receive the recovery withdrawal
@@ -282,12 +286,12 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
 
@@ -333,7 +337,7 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
     // }
     /* ========== GETTERS ========== */
 
-    /// @notice Matches the abi available in the farms 
+    /// @notice Matches the abi available in the farms
     /// @return global_emission_rate The global emission rate from the controller
     function global_emission_rate() external view returns (uint256) {
         return global_emission_rate_stored;
@@ -345,7 +349,6 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
         return time_total_stored;
     }
 
-    
     function getNumberOfGauges() external view returns (uint256) {
         return gauges.length;
     }
@@ -366,10 +369,7 @@ contract FraxFamilialPitchGauge is Owned {//, ReentrancyGuard {
     /// @return last_relative_weight The redistributed last relative weight of the gauge
     /// @return reward_tally The redistributed reward tally of the gauge
     function getChildGaugeValues(address child_gauge) external view returns (uint256, uint256) {
-        return (
-            gauge_to_last_relative_weight[child_gauge],
-            gauge_to_reward_tally[child_gauge]
-        );
+        return (gauge_to_last_relative_weight[child_gauge], gauge_to_reward_tally[child_gauge]);
     }
 
     /// @notice Returns the `periodFinish` stored

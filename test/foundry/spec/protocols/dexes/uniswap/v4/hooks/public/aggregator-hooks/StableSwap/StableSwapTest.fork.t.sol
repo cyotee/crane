@@ -18,9 +18,15 @@ import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/utils/HookM
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
-import {StableSwapAggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
-import {ICurveStableSwap} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IStableSwap.sol";
-import {IMetaRegistry} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
+import {
+    StableSwapAggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/StableSwapAggregator.sol";
+import {
+    ICurveStableSwap
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IStableSwap.sol";
+import {
+    IMetaRegistry
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/StableSwap/interfaces/IMetaRegistry.sol";
 
 contract StableSwapForkedTest is Test {
     using PoolIdLibrary for PoolKey;

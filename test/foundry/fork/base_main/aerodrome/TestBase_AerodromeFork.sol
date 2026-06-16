@@ -20,7 +20,7 @@ abstract contract TestBase_AerodromeFork is Test {
 
     /// @dev Block number for fork reproducibility (Jan 2026 - adjust as needed)
     /// Use a recent block with known pool states for deterministic testing
-    uint256 internal constant FORK_BLOCK = 28_000_000;
+    // uint256 internal constant FORK_BLOCK = 28_000_000;
 
     /* -------------------------------------------------------------------------- */
     /*                            Mainnet Contract Refs                           */
@@ -71,7 +71,7 @@ abstract contract TestBase_AerodromeFork is Test {
 
         // Create fork at specific block for reproducibility
         // Uses the rpc_endpoints defined in foundry.toml
-        vm.createSelectFork("base_mainnet_infura", FORK_BLOCK);
+        vm.createSelectFork("base_mainnet_infura", BASE_MAIN.DEFAULT_FORK_BLOCK);
 
         // Set up contract references
         aerodromeFactory = IPoolFactory(BASE_MAIN.AERODROME_POOL_FACTORY);

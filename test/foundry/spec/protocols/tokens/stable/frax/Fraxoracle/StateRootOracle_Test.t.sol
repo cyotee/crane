@@ -5,11 +5,13 @@ pragma solidity ^0.8.35;
 /// @dev Full `proofStateRoot` + RLP header encoding needs `eth_getBlock` JSON; covered via fork integration separately.
 
 import {Test} from "forge-std/Test.sol";
-import {OperatorBlockhashProvider} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/provider/OperatorBlockhashProvider.sol";
+import {
+    OperatorBlockhashProvider
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/provider/OperatorBlockhashProvider.sol";
 import {StateRootOracle} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/StateRootOracle.sol";
-import {IBlockhashProvider} from
-    "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/interface/IBlockhashProvider.sol";
+import {
+    IBlockhashProvider
+} from "@crane/contracts/protocols/tokens/stable/frax/Fraxoracle/interface/IBlockhashProvider.sol";
 
 contract StateRootOracle_Test is Test {
     OperatorBlockhashProvider internal provider1;

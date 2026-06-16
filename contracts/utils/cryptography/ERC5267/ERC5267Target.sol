@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import {IERC5267} from "@crane/contracts/interfaces/IERC5267.sol";
-import {EIP712Layout, EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
+import {EIP712Repo} from "@crane/contracts/utils/cryptography/EIP712/EIP712Repo.sol";
 
 /**
  * @title ERC5267Target - ERC712 domain declaration standardization contract.
@@ -27,7 +27,7 @@ contract ERC5267Target is IERC5267 {
             uint256[] memory extensions
         )
     {
-        EIP712Layout storage layoutStruct = EIP712Repo._layoutStruct();
+        EIP712Repo.Storage storage layoutStruct = EIP712Repo._layoutStruct();
         return (
             hex"0f", // 01111
             EIP712Repo._EIP712Name(layoutStruct),

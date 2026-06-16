@@ -36,7 +36,6 @@ pragma solidity ^0.8.35;
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 */
 
-
 library Address {
     /**
      * @dev Returns true if `account` is a contract.
@@ -182,7 +181,7 @@ contract Owned {
     address public owner;
     address public nominatedOwner;
 
-    constructor (address _owner) public {
+    constructor(address _owner) {
         require(_owner != address(0), "Owner address cannot be 0");
         owner = _owner;
         emit OwnerChanged(address(0), _owner);
@@ -200,7 +199,7 @@ contract Owned {
         nominatedOwner = address(0);
     }
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         _onlyOwner();
         _;
     }
@@ -214,10 +213,10 @@ contract Owned {
 }
 
 abstract contract Pausable is Owned {
-    uint public lastPauseTime;
+    uint256 public lastPauseTime;
     bool public paused;
 
-    constructor () internal {
+    constructor() {
         // This contract is abstract, and thus cannot be instantiated directly
         require(owner != address(0), "Owner must be set");
         // Paused will be false, and lastPauseTime will be 0 upon initialisation
@@ -247,7 +246,7 @@ abstract contract Pausable is Owned {
 
     event PauseChanged(bool isPaused);
 
-    modifier notPaused {
+    modifier notPaused() {
         require(!paused, "This action cannot be performed while the contract is paused");
         _;
     }
@@ -257,7 +256,7 @@ abstract contract ReentrancyGuard {
     /// @dev counter to allow mutex lock with only one SSTORE operation
     uint256 private _guardCounter;
 
-    constructor () internal {
+    constructor() {
         // The counter starts at one to prevent changing it from zero to a non-zero
         // value, which is a more expensive operation.
         _guardCounter = 1;
@@ -310,7 +309,8 @@ library SafeERC20 {
         // or when resetting it to zero. To increase and decrease it, use
         // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
         // solhint-disable-next-line max-line-length
-        require((value == 0) || (token.allowance(address(this), spender) == 0),
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
             "SafeERC20: approve from non-zero to non-zero allowance"
         );
         callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
@@ -347,8 +347,9 @@ library SafeERC20 {
         (bool success, bytes memory returndata) = address(token).call(data);
         require(success, "SafeERC20: low-level call failed");
 
-        if (returndata.length > 0) { // Return data is optional
-            // solhint-disable-next-line max-line-length
+        if (returndata.length > 0) {
+            // Return data is optional
+        // solhint-disable-next-line max-line-length
             require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
         }
     }
@@ -469,13 +470,13 @@ contract FRAX3CRV_Curve_FXS_Distributor is IStakingRewards, RewardsDistributionR
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor (
+    constructor(
         address _owner,
         address _rewardsDistribution,
         address _rewardsToken,
         address _stakingToken,
         uint256 _rewardsDuration
-    ) public Owned(_owner) {
+    ) Owned(_owner) {
         rewardsToken = IERC20(_rewardsToken);
         stakingToken = IERC20(_stakingToken);
         rewardsDistribution = _rewardsDistribution;
@@ -500,14 +501,15 @@ contract FRAX3CRV_Curve_FXS_Distributor is IStakingRewards, RewardsDistributionR
         if (_totalSupply == 0) {
             return rewardPerTokenStored;
         }
-        return
-            rewardPerTokenStored.add(
-                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply)
-            );
+        return rewardPerTokenStored.add(
+            lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply)
+        );
     }
 
     function earned(address account) public view returns (uint256) {
-        return _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
+        return
+            _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18)
+                .add(rewards[account]);
     }
 
     function getRewardForDuration() external view returns (uint256) {
@@ -574,10 +576,7 @@ contract FRAX3CRV_Curve_FXS_Distributor is IStakingRewards, RewardsDistributionR
     }
 
     function setRewardsDuration(uint256 _rewardsDuration) external onlyOwner {
-        require(
-            block.timestamp > periodFinish,
-            "Reward period incomplete"
-        );
+        require(block.timestamp > periodFinish, "Reward period incomplete");
         rewardsDuration = _rewardsDuration;
         emit RewardsDurationUpdated(rewardsDuration);
     }

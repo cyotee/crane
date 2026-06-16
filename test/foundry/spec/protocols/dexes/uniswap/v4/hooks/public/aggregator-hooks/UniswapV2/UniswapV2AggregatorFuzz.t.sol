@@ -13,7 +13,9 @@ import {TickMath} from "@crane/contracts/protocols/dexes/uniswap/v4/libraries/Ti
 import {MockERC20} from "@crane/contracts/test/mocks/MockERC20.sol";
 import {HookMiner} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/utils/HookMiner.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {UniswapV2Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV2/UniswapV2Aggregator.sol";
+import {
+    UniswapV2Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/UniswapV2/UniswapV2Aggregator.sol";
 import {IUniswapV2Factory} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Factory.sol";
 import {IUniswapV2Pair as IUniV2Pair} from "@crane/contracts/interfaces/protocols/dexes/uniswap/v2/IUniswapV2Pair.sol";
 
@@ -45,8 +47,9 @@ contract UniswapV2AggregatorFuzz is Test {
     PoolId public poolId;
 
     function setUp() public {
-        poolManager =
-            IPoolManager(vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this))));
+        poolManager = IPoolManager(
+            vm.deployCode("contracts/protocols/dexes/uniswap/v4/PoolManager.sol:PoolManager", abi.encode(address(this)))
+        );
         swapRouter = new SafePoolSwapTest(poolManager);
 
         factory = IUniswapV2Factory(_deployV2FactoryFromPrecompile());

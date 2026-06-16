@@ -6,7 +6,9 @@ import "../../interfaces/IPMarket.sol";
 import "../../core/libraries/math/PMath.sol";
 import "../PendleLpOracleLib.sol";
 
-import {AggregatorV2V3Interface as IChainlinkAggregator} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
+import {
+    AggregatorV2V3Interface as IChainlinkAggregator
+} from "@crane/contracts/protocols/oracles/chainlink/AggregatorV2V3Interface.sol";
 
 /**
  * @notice The returned price from this contract is multiplied by the default USD price of the
@@ -84,9 +86,8 @@ contract BoringPYUsdChainlinkSYOracle {
 
     /// @notice Call only once for each (market, duration). Once successful, it's permanently valid (also for any shorter duration).
     function checkOracleState() external view {
-        (bool increaseCardinalityRequired, uint16 cardinalityRequired, bool oldestObservationSatisfied) = IPPYLpOracle(
-            pyLpOracle
-        ).getOracleState(market, twapDuration);
+        (bool increaseCardinalityRequired, uint16 cardinalityRequired, bool oldestObservationSatisfied) =
+            IPPYLpOracle(pyLpOracle).getOracleState(market, twapDuration);
 
         if (increaseCardinalityRequired) {
             // It's required to call IPMarket(market).increaseObservationsCardinalityNext(cardinalityRequired) and wait for

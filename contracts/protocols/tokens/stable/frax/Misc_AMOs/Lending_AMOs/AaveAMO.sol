@@ -27,10 +27,10 @@ import "@crane/contracts/protocols/tokens/stable/frax/Frax/IFraxAMOMinter.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/ERC20/ERC20.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Oracle/UniswapPairOracle.sol";
 import "@crane/contracts/protocols/tokens/stable/frax/Staking/Owned.sol";
-import '@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol';
+import "@crane/contracts/protocols/tokens/stable/frax/Uniswap/TransferHelper.sol";
 import "./aave/IAAVELendingPool_Partial.sol";
 import "./aave/IAAVE_aFRAX.sol";
-import "./aave/IStakedAave.sol";
+import {IStakedAave} from "./aave/IStakedAave.sol";
 import "./aave/IAaveIncentivesControllerPartial.sol";
 
 contract AaveAMO is Owned {
@@ -42,15 +42,17 @@ contract AaveAMO is Owned {
     IFrax private FRAX = IFrax(0x853d955aCEf822Db058eb8505911ED77F175b99e);
     IFxs private FXS = IFxs(0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0);
     IFraxAMOMinter private amo_minter;
-    
+
     // Pools and vaults
-    IAAVELendingPool_Partial private aaveFRAX_Pool = IAAVELendingPool_Partial(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
+    IAAVELendingPool_Partial private aaveFRAX_Pool =
+        IAAVELendingPool_Partial(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
     IAAVE_aFRAX private aaveFRAX_Token = IAAVE_aFRAX(0xd4937682df3C8aEF4FE912A96A74121C0829E664);
 
     // Reward Tokens
     ERC20 private AAVE = ERC20(0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9);
     IStakedAave private stkAAVE = IStakedAave(0x4da27a545c0c5B758a6BA100e3a049001de870f5);
-    IAaveIncentivesControllerPartial private AAVEIncentivesController = IAaveIncentivesControllerPartial(0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5);
+    IAaveIncentivesControllerPartial private AAVEIncentivesController =
+        IAaveIncentivesControllerPartial(0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5);
 
     address public timelock_address;
     address public custodian_address;
@@ -58,13 +60,10 @@ contract AaveAMO is Owned {
     uint256 private constant PRICE_PRECISION = 1e6;
 
     /* ========== CONSTRUCTOR ========== */
-    
-    constructor (
-        address _owner_address,
-        address _amo_minter_address
-    ) Owned(_owner_address) {
+
+    constructor(address _owner_address, address _amo_minter_address) Owned(_owner_address) {
         amo_minter = IFraxAMOMinter(_amo_minter_address);
-        
+
         // Get the custodian and timelock addresses from the minter
         custodian_address = amo_minter.custodian_address();
         timelock_address = amo_minter.timelock_address();
@@ -78,7 +77,10 @@ contract AaveAMO is Owned {
     }
 
     modifier onlyByOwnGovCust() {
-        require(msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address, "Not owner, tlck, or custd");
+        require(
+            msg.sender == timelock_address || msg.sender == owner || msg.sender == custodian_address,
+            "Not owner, tlck, or custd"
+        );
         _;
     }
 
@@ -125,7 +127,7 @@ contract AaveAMO is Owned {
     function aaveWithdrawFRAX(uint256 aFRAX_amount) public onlyByOwnGovCust {
         aaveFRAX_Pool.withdraw(address(FRAX), aFRAX_amount, address(this));
     }
-    
+
     // Collect stkAAVE
     function aaveCollect_stkAAVE(bool withdraw_too) public onlyByOwnGovCust {
         address[] memory the_assets = new address[](1);
@@ -133,13 +135,13 @@ contract AaveAMO is Owned {
         uint256 rewards_balance = AAVEIncentivesController.getRewardsBalance(the_assets, address(this));
         AAVEIncentivesController.claimRewards(the_assets, rewards_balance, address(this));
 
-        if (withdraw_too){
+        if (withdraw_too) {
             withdrawRewards();
         }
     }
 
     /* ========== Burns and givebacks ========== */
-   
+
     // Burn unneeded or excess FRAX. Goes through the minter
     function burnFRAX(uint256 frax_amount) public onlyByOwnGovCust {
         FRAX.approve(address(amo_minter), frax_amount);
@@ -158,7 +160,7 @@ contract AaveAMO is Owned {
         stkAAVE.transfer(msg.sender, stkAAVE.balanceOf(address(this)));
         AAVE.transfer(msg.sender, AAVE.balanceOf(address(this)));
     }
-   
+
     /* ========== RESTRICTED GOVERNANCE FUNCTIONS ========== */
 
     function setAMOMinter(address _amo_minter_address) external onlyByOwnGov {
@@ -177,13 +179,12 @@ contract AaveAMO is Owned {
     }
 
     // Generic proxy
-    function execute(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external onlyByOwnGov returns (bool, bytes memory) {
-        (bool success, bytes memory result) = _to.call{value:_value}(_data);
+    function execute(address _to, uint256 _value, bytes calldata _data)
+        external
+        onlyByOwnGov
+        returns (bool, bytes memory)
+    {
+        (bool success, bytes memory result) = _to.call{value: _value}(_data);
         return (success, result);
     }
-
 }

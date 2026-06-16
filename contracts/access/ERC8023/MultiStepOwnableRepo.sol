@@ -9,24 +9,32 @@ import {IMultiStepOwnable} from "@crane/contracts/interfaces/IMultiStepOwnable.s
 
 // tag::MultiStepOwnableRepo[]
 /**
- * @title MultiStepOwnableRepo - Storage logic for MultiStepOwnable functionality.
+ * @title MultiStepOwnableRepo
  * @author cyotee doge <not_cyotee@proton.me>
- * @dev Library to be used by contracts implementing multi-step ownership transfer.
- * @dev Typically only required in packages to initialize owner.
- * @dev All required functionality should be available in the Modifiers and Facet contracts.
- * @dev You may reuse by inheriting MultiStepOwnableModifiers and composing MultiStepOwnableFacet into your proxy.
+ * @notice Storage library for EIP-8023 two-step ownership transfer.
+ * @dev Implements the Repo tier of Facet-Target-Repo. All functions have dual overloads:
+ *      parameterized (taking explicit `Storage storage layoutStruct`) and default (using internal slot).
+ *      Guard logic lives in _only* functions; duals delegate. Models OperableRepo + ERC2535Repo gold standard
+ *      for NatSpec (@dev on Storage param = "The Storage struct to operate on."), tags, and ERC1967 slot form.
+ * @dev This library is intended for internal use by MultiStepOwnableTarget/Facet and Modifiers.
+ *      Initialization is typically performed once via package initAccount delegatecall.
  */
 library MultiStepOwnableRepo {
     // tag::STORAGE_SLOT[]
     /**
-     * @dev Standardized storage slot for EIP-8023 Multi-Step Ownable data.
+     * @dev ERC1967-compliant storage slot.
+     *      Computed as bytes32(uint256(keccak256(abi.encode("eip.erc.8023"))) - 1).
+     *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, FacetRegistryRepo and other
+     *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = keccak256("eip.erc.8023");
+    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.8023"))) - 1);
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
     /**
-     * @dev Standardized storage layout for EIP-8023 Multi-Step Ownable data.
+     * @dev Storage layout for EIP-8023 Multi-Step Ownable.
+     *      Owner is the current owner. pendingOwner / pendingOwnerConfirmed / bufferPeriodEnd support the
+     *      two-step + buffer period confirmation flow defined by IMultiStepOwnable.
      */
     struct Storage {
         address owner;
@@ -39,21 +47,21 @@ library MultiStepOwnableRepo {
 
     // tag::_layoutStruct(bytes32)[]
     /**
-     * @dev Argumented version of _layoutStruct to allow for custom storage slot usage.
-     * @param slot Storage slot to bind to the Repo's Storage struct.
-     * @return layoutStruct The bound Storage struct.
+     * @dev Parameterized _layoutStruct allowing custom slot (for testing or special cases).
+     * @param slot_ The storage slot to bind.
+     * @return layoutStruct The Storage struct bound to the provided slot.
      */
-    function _layoutStruct(bytes32 slot) internal pure returns (Storage storage layoutStruct) {
+    function _layoutStruct(bytes32 slot_) internal pure returns (Storage storage layoutStruct) {
         assembly {
-            layoutStruct.slot := slot
+            layoutStruct.slot := slot_
         }
     }
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
     /**
-     * @dev Default version of _layoutStruct binding to the standard STORAGE_SLOT.
-     * @return layoutStruct The bound Storage struct.
+     * @dev Default _layoutStruct binding to the canonical ERC1967 STORAGE_SLOT.
+     * @return layoutStruct The Storage struct bound to STORAGE_SLOT.
      */
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
@@ -62,32 +70,34 @@ library MultiStepOwnableRepo {
 
     // tag::_initialize(Storage-address-uint256)[]
     /**
-     * @dev Argumented version of _initialize to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to initialize.
-     * @param initialOwner First owner of the contract.
-     * @param ownershipBufferPeriod Period new ownership transfers must wait before confirmation.
+     * @dev Parameterized initializer. Sets initial owner and buffer period.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @param initialOwner_ First owner of the contract.
+     * @param ownershipBufferPeriod_ Period (seconds) that must elapse between initiate and confirm.
      */
-    function _initialize(Storage storage layoutStruct, address initialOwner, uint256 ownershipBufferPeriod) internal {
-        layoutStruct.owner = initialOwner;
-        layoutStruct.ownershipBufferPeriod = ownershipBufferPeriod;
+    function _initialize(Storage storage layoutStruct, address initialOwner_, uint256 ownershipBufferPeriod_) internal {
+        layoutStruct.owner = initialOwner_;
+        layoutStruct.ownershipBufferPeriod = ownershipBufferPeriod_;
     }
     // end::_initialize(Storage-address-uint256)[]
 
     // tag::_initialize(address-uint256)[]
     /**
-     * @dev Default version of _initialize binding to the standard STORAGE_SLOT.
-     * @param initialOwner First owner of the contract.
-     * @param ownershipBufferPeriod Period new ownership transfers must wait before confirmation.
+     * @dev Default initializer. Delegates to parameterized form using _layoutStruct().
+     * @param initialOwner_ First owner of the contract.
+     * @param ownershipBufferPeriod_ Period (seconds) that must elapse between initiate and confirm.
      */
-    function _initialize(address initialOwner, uint256 ownershipBufferPeriod) internal {
-        _initialize(_layoutStruct(), initialOwner, ownershipBufferPeriod);
+    function _initialize(address initialOwner_, uint256 ownershipBufferPeriod_) internal {
+        _initialize(_layoutStruct(), initialOwner_, ownershipBufferPeriod_);
     }
     // end::_initialize(address-uint256)[]
 
     // tag::_onlyOwner(Storage)[]
     /**
-     * @dev Revert if msg.sender is not the current owner.
-     * @param layoutStruct Storage pointer to Storage struct to check.
+     * @dev Guard: reverts with NotOwner if caller is not current owner.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      */
     function _onlyOwner(Storage storage layoutStruct) internal view {
         if (msg.sender != layoutStruct.owner) {
@@ -98,7 +108,7 @@ library MultiStepOwnableRepo {
 
     // tag::_onlyOwner()[]
     /**
-     * @dev Default version of _onlyOwner binding to the standard STORAGE_SLOT.
+     * @dev Default guard delegating to _onlyOwner(_layoutStruct()).
      */
     function _onlyOwner() internal view {
         _onlyOwner(_layoutStruct());
@@ -107,8 +117,9 @@ library MultiStepOwnableRepo {
 
     // tag::_onlyPendingOwner(Storage)[]
     /**
-     * @dev Revert if msg.sender is not the current pending owner.
-     * @param layoutStruct Storage pointer to Storage struct to check.
+     * @dev Guard: reverts with NotPending if caller is not the current pendingOwner.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      */
     function _onlyPendingOwner(Storage storage layoutStruct) internal view {
         if (msg.sender != layoutStruct.pendingOwner) {
@@ -119,7 +130,7 @@ library MultiStepOwnableRepo {
 
     // tag::_onlyPendingOwner()[]
     /**
-     * @dev Default version of _onlyPendingOwner binding to the standard STORAGE_SLOT.
+     * @dev Default guard delegating to _onlyPendingOwner(_layoutStruct()).
      */
     function _onlyPendingOwner() internal view {
         _onlyPendingOwner(_layoutStruct());
@@ -128,38 +139,42 @@ library MultiStepOwnableRepo {
 
     // tag::_initiateOwnershipTransfer(Storage-address)[]
     /**
-     * @dev Argumented version of _initiateOwnershipTransfer to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to update.
-     * @param pendingOwner Address of the proposed new owner.
+     * @dev Initiate two-step transfer (must be called by current owner).
+     *      Sets buffer end and pendingOwner. Emits OwnershipTransferInitiated.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @param pendingOwner_ Address of the proposed new owner.
      */
-    function _initiateOwnershipTransfer(Storage storage layoutStruct, address pendingOwner) internal {
+    function _initiateOwnershipTransfer(Storage storage layoutStruct, address pendingOwner_) internal {
         address owner = layoutStruct.owner;
         if (msg.sender != owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
         }
         layoutStruct.bufferPeriodEnd = block.timestamp + layoutStruct.ownershipBufferPeriod;
-        layoutStruct.pendingOwner = pendingOwner;
-        emit IMultiStepOwnable.OwnershipTransferInitiated(owner, pendingOwner);
+        layoutStruct.pendingOwner = pendingOwner_;
+        emit IMultiStepOwnable.OwnershipTransferInitiated(owner, pendingOwner_);
     }
     // end::_initiateOwnershipTransfer(Storage-address)[]
 
     // tag::_initiateOwnershipTransfer(address)[]
     /**
-     * @dev Default version of _initiateOwnershipTransfer binding to the standard STORAGE_SLOT.
-     * @param pendingOwner Address of the proposed new owner.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @param pendingOwner_ Address of the proposed new owner.
      */
-    function _initiateOwnershipTransfer(address pendingOwner) internal {
-        _initiateOwnershipTransfer(_layoutStruct(), pendingOwner);
+    function _initiateOwnershipTransfer(address pendingOwner_) internal {
+        _initiateOwnershipTransfer(_layoutStruct(), pendingOwner_);
     }
     // end::_initiateOwnershipTransfer(address)[]
 
     // tag::_confirmOwnershipTransfer(Storage-address)[]
     /**
-     * @dev Argumented version of _confirmOwnershipTransfer to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to update.
-     * @param pendingOwner Address of the proposed new owner to confirm.
+     * @dev Confirm a previously initiated transfer (owner only, after buffer elapsed, exact pending match).
+     *      Sets pendingOwnerConfirmed. Emits OwnershipTransferConfirmed.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @param pendingOwner_ Address of the proposed new owner to confirm (must match pending).
      */
-    function _confirmOwnershipTransfer(Storage storage layoutStruct, address pendingOwner) internal {
+    function _confirmOwnershipTransfer(Storage storage layoutStruct, address pendingOwner_) internal {
         address owner = layoutStruct.owner;
         if (msg.sender != owner) {
             revert IMultiStepOwnable.NotOwner(msg.sender);
@@ -168,8 +183,8 @@ library MultiStepOwnableRepo {
             revert IMultiStepOwnable.BufferPeriodNotElapsed(block.timestamp, layoutStruct.bufferPeriodEnd);
         }
         address expectedPendingOwner = layoutStruct.pendingOwner;
-        if (pendingOwner != expectedPendingOwner) {
-            revert IMultiStepOwnable.NotPending(pendingOwner);
+        if (pendingOwner_ != expectedPendingOwner) {
+            revert IMultiStepOwnable.NotPending(pendingOwner_);
         }
         layoutStruct.pendingOwnerConfirmed = true;
         emit IMultiStepOwnable.OwnershipTransferConfirmed(owner, layoutStruct.pendingOwner);
@@ -178,18 +193,19 @@ library MultiStepOwnableRepo {
 
     // tag::_confirmOwnershipTransfer(address)[]
     /**
-     * @dev Default version of _confirmOwnershipTransfer binding to the standard STORAGE_SLOT.
-     * @param pendingOwner Address of the proposed new owner to confirm.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @param pendingOwner_ Address of the proposed new owner to confirm.
      */
-    function _confirmOwnershipTransfer(address pendingOwner) internal {
-        _confirmOwnershipTransfer(_layoutStruct(), pendingOwner);
+    function _confirmOwnershipTransfer(address pendingOwner_) internal {
+        _confirmOwnershipTransfer(_layoutStruct(), pendingOwner_);
     }
     // end::_confirmOwnershipTransfer(address)[]
 
     // tag::_cancelPendingOwnershipTransfer(Storage)[]
     /**
-     * @dev Argumented version of _cancelPendingOwnershipTransfer to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to update.
+     * @dev Cancel a pending transfer (owner only). Clears pendingOwner, confirmed flag and buffer.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      */
     function _cancelPendingOwnershipTransfer(Storage storage layoutStruct) internal {
         address owner = layoutStruct.owner;
@@ -204,7 +220,7 @@ library MultiStepOwnableRepo {
 
     // tag::_cancelPendingOwnershipTransfer()[]
     /**
-     * @dev Default version of _cancelPendingOwnershipTransfer binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
      */
     function _cancelPendingOwnershipTransfer() internal {
         _cancelPendingOwnershipTransfer(_layoutStruct());
@@ -213,8 +229,10 @@ library MultiStepOwnableRepo {
 
     // tag::_acceptOwnershipTransfer(Storage)[]
     /**
-     * @dev Argumented version of _acceptOwnershipTransfer to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to update.
+     * @dev Accept pending ownership (must be called by the pendingOwner after confirmation).
+     *      Transfers owner, clears pending state. Emits OwnershipTransferred.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
      */
     function _acceptOwnershipTransfer(Storage storage layoutStruct) internal {
         address pendingOwner = layoutStruct.pendingOwner;
@@ -232,7 +250,7 @@ library MultiStepOwnableRepo {
 
     // tag::_acceptOwnershipTransfer()[]
     /**
-     * @dev Default version of _acceptOwnershipTransfer binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
      */
     function _acceptOwnershipTransfer() internal {
         _acceptOwnershipTransfer(_layoutStruct());
@@ -241,48 +259,56 @@ library MultiStepOwnableRepo {
 
     // tag::_owner(Storage)[]
     /**
-     * @dev Argumented version of _owner to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to read.
+     * @dev Returns the current owner.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @return owner_ Current owner address.
      */
-    function _owner(Storage storage layoutStruct) internal view returns (address) {
+    function _owner(Storage storage layoutStruct) internal view returns (address owner_) {
         return layoutStruct.owner;
     }
     // end::_owner(Storage)[]
 
     // tag::_owner()[]
     /**
-     * @dev Default version of _owner binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @return owner_ Current owner address.
      */
-    function _owner() internal view returns (address) {
+    function _owner() internal view returns (address owner_) {
         return _owner(_layoutStruct());
     }
     // end::_owner()[]
 
     // tag::_pendingOwner(Storage)[]
     /**
-     * @dev Argumented version of _pendingOwner to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to read.
+     * @dev Returns the current pendingOwner (may be zero if none set).
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @return pendingOwner_ Current pending owner address.
      */
-    function _pendingOwner(Storage storage layoutStruct) internal view returns (address) {
+    function _pendingOwner(Storage storage layoutStruct) internal view returns (address pendingOwner_) {
         return layoutStruct.pendingOwner;
     }
     // end::_pendingOwner(Storage)[]
 
     // tag::_pendingOwner()[]
     /**
-     * @dev Default version of _pendingOwner binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @return pendingOwner_ Current pending owner address.
      */
-    function _pendingOwner() internal view returns (address) {
+    function _pendingOwner() internal view returns (address pendingOwner_) {
         return _pendingOwner(_layoutStruct());
     }
     // end::_pendingOwner()[]
 
     // tag::_preConfirmedOwner(Storage)[]
     /**
-     * @dev Argumented version of _preConfirmedOwner to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to read.
+     * @dev Returns pendingOwner only if the transfer has been confirmed by current owner; else address(0).
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @return preConfirmedOwner_ The pre-confirmed pending owner or zero.
      */
-    function _preConfirmedOwner(Storage storage layoutStruct) internal view returns (address) {
+    function _preConfirmedOwner(Storage storage layoutStruct) internal view returns (address preConfirmedOwner_) {
         if (!layoutStruct.pendingOwnerConfirmed) {
             return address(0);
         }
@@ -292,29 +318,32 @@ library MultiStepOwnableRepo {
 
     // tag::_preConfirmedOwner()[]
     /**
-     * @dev Default version of _preConfirmedOwner binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @return preConfirmedOwner_ The pre-confirmed pending owner or zero.
      */
-    function _preConfirmedOwner() internal view returns (address) {
+    function _preConfirmedOwner() internal view returns (address preConfirmedOwner_) {
         return _preConfirmedOwner(_layoutStruct());
     }
-
     // end::_preConfirmedOwner()[]
 
     // tag::_ownershipBufferPeriod(Storage)[]
     /**
-     * @dev Argumented version of _ownershipBufferPeriod to allow for custom storage slot usage.
-     * @param layoutStruct Storage pointer to Storage struct to read.
+     * @dev Returns the configured buffer period (seconds) required between initiate and confirm.
+     * @dev The Storage struct to operate on.
+     * @param layoutStruct The Storage struct to operate on.
+     * @return ownershipBufferPeriod_ The buffer period in seconds.
      */
-    function _ownershipBufferPeriod(Storage storage layoutStruct) internal view returns (uint256) {
+    function _ownershipBufferPeriod(Storage storage layoutStruct) internal view returns (uint256 ownershipBufferPeriod_) {
         return layoutStruct.ownershipBufferPeriod;
     }
     // end::_ownershipBufferPeriod(Storage)[]
 
     // tag::_ownershipBufferPeriod()[]
     /**
-     * @dev Default version of _ownershipBufferPeriod binding to the standard STORAGE_SLOT.
+     * @dev Default form delegating to parameterized using _layoutStruct().
+     * @return ownershipBufferPeriod_ The buffer period in seconds.
      */
-    function _ownershipBufferPeriod() internal view returns (uint256) {
+    function _ownershipBufferPeriod() internal view returns (uint256 ownershipBufferPeriod_) {
         return _ownershipBufferPeriod(_layoutStruct());
     }
     // end::_ownershipBufferPeriod()[]

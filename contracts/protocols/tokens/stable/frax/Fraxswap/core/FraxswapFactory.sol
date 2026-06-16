@@ -31,9 +31,9 @@ pragma solidity ^0.8.35;
 // Jack Corddry: https://github.com/corddry
 // Justin Moore: https://github.com/0xJM
 
-import './interfaces/IUniswapV2FactoryV5.sol';
-import './FraxswapPair.sol';
-import {BetterEfficientHashLib} from '@crane/contracts/utils/BetterEfficientHashLib.sol';
+import "./interfaces/IUniswapV2FactoryV5.sol";
+import "./FraxswapPair.sol";
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 contract FraxswapFactory is IUniswapV2FactoryV5 {
     using BetterEfficientHashLib for bytes;
@@ -58,7 +58,7 @@ contract FraxswapFactory is IUniswapV2FactoryV5 {
         _;
     }
 
-    function allPairsLength() external override view returns (uint) {
+    function allPairsLength() external view override returns (uint256) {
         return allPairs.length;
     }
 
@@ -66,11 +66,11 @@ contract FraxswapFactory is IUniswapV2FactoryV5 {
         return createPair(tokenA, tokenB, 30); // default fee 0.30%
     }
 
-    function createPair(address tokenA, address tokenB, uint fee) public override returns (address pair) {
-        if(tokenA == tokenB) revert IdenticalAddress(); // IDENTICAL_ADDRESSES
+    function createPair(address tokenA, address tokenB, uint256 fee) public override returns (address pair) {
+        if (tokenA == tokenB) revert IdenticalAddress(); // IDENTICAL_ADDRESSES
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        if(token0 == address(0)) revert ZeroAddress(); // ZERO_ADDRESS
-        if(getPair[token0][token1] != address(0)) revert PairExists(); // PAIR_EXISTS // single check is sufficient
+        if (token0 == address(0)) revert ZeroAddress(); // ZERO_ADDRESS
+        if (getPair[token0][token1] != address(0)) revert PairExists(); // PAIR_EXISTS // single check is sufficient
         bytes memory bytecode = type(FraxswapPair).creationCode;
         // bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         bytes32 salt = abi.encodePacked(token0, token1)._hash();

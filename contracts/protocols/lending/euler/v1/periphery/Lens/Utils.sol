@@ -217,7 +217,7 @@ abstract contract Utils {
                 collateralInfos[i].borrowInterest = collateralValues[i] * multiplier / ONE - collateralValues[i];
 
                 collateralInterest += collateralInfos[i].borrowInterest * collateralInfos[i].borrows
-                    * (CONFIG_SCALE - collateralInfos[i].interestFee) / collateralInfos[i].totalAssets / CONFIG_SCALE;
+                * (CONFIG_SCALE - collateralInfos[i].interestFee) / collateralInfos[i].totalAssets / CONFIG_SCALE;
             }
 
             // calculate the health factor

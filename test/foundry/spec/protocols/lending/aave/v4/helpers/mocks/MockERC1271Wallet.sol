@@ -1,28 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {IERC1271} from '@crane/contracts/protocols/lending/aave/v4/dependencies/openzeppelin/IERC1271.sol';
+import {IERC1271} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC1271.sol";
 
 contract MockERC1271Wallet is IERC1271 {
-  address public owner;
+    address public owner;
 
-  mapping(bytes32 => bool) public isValidHash;
+    mapping(bytes32 => bool) public isValidHash;
 
-  error OnlyOwner();
+    error OnlyOwner();
 
-  constructor(address owner_) {
-    owner = owner_;
-  }
+    constructor(address owner_) {
+        owner = owner_;
+    }
 
-  function approveHash(bytes32 _hash) external {
-    if (msg.sender != owner) revert OnlyOwner();
-    isValidHash[_hash] = true;
-  }
+    function approveHash(bytes32 _hash) external {
+        if (msg.sender != owner) revert OnlyOwner();
+        isValidHash[_hash] = true;
+    }
 
-  function isValidSignature(
-    bytes32 _hash,
-    bytes memory /*_signature*/
-  ) public view returns (bytes4) {
-    return isValidHash[_hash] ? this.isValidSignature.selector : bytes4(0);
-  }
+    function isValidSignature(
+        bytes32 _hash,
+        bytes memory /*_signature*/
+    )
+        public
+        view
+        returns (bytes4)
+    {
+        return isValidHash[_hash] ? this.isValidSignature.selector : bytes4(0);
+    }
 }

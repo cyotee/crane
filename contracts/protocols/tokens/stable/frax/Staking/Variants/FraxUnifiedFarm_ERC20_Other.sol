@@ -24,7 +24,6 @@ import "@crane/contracts/protocols/tokens/stable/frax/Oracle/AggregatorV3Interfa
 import "@crane/contracts/protocols/tokens/stable/frax/Misc_AMOs/morpho/IMetaMorpho.sol";
 
 contract FraxUnifiedFarm_ERC20_Other is FraxUnifiedFarm_ERC20 {
-
     // frxETH Pricing
     // AggregatorV3Interface internal priceFeedETHUSD = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
 
@@ -38,22 +37,23 @@ contract FraxUnifiedFarm_ERC20_Other is FraxUnifiedFarm_ERC20 {
 
     // Morpho
 
-
     string public farm_type = "ERC20_Convex_Other";
 
-    constructor (
+    constructor(
         address _owner,
         address[] memory _rewardTokens,
         address[] memory _rewardManagers,
         uint256[] memory _rewardRates,
         address[] memory _gaugeControllers,
         address[] memory _rewardDistributors,
-        address _stakingToken 
-    ) 
-    FraxUnifiedFarm_ERC20(_owner , _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken)
+        address _stakingToken
+    )
+        FraxUnifiedFarm_ERC20(
+            _owner, _rewardTokens, _rewardManagers, _rewardRates, _gaugeControllers, _rewardDistributors, _stakingToken
+        )
     {
         // COMMENTED OUT SO COMPILER DOESNT COMPLAIN. UNCOMMENT WHEN DEPLOYING
-        
+
         // Balancer
         // stakingToken = IAuraDeposit(_stakingToken);
         // bal_vanilla_lp_tkn = IComposableStablePool(0xB06bFBD7b50F80c8d9dA57Fc4cF5CBD5B3E2f148);
@@ -68,7 +68,6 @@ contract FraxUnifiedFarm_ERC20_Other is FraxUnifiedFarm_ERC20 {
 
         // Morpho
         stakingToken = IMetaMorpho(_stakingToken);
-
     }
 
     // Aura & Balancer
@@ -91,14 +90,13 @@ contract FraxUnifiedFarm_ERC20_Other is FraxUnifiedFarm_ERC20 {
     // ----------------------------------------
     // Nothing
 
-
     // // frxETH pricing
     // // ----------------------------------------
     // function getLatestETHPriceE8() public view returns (int) {
     //     // Returns in E8
     //     (uint80 roundID, int price, , uint256 updatedAt, uint80 answeredInRound) = priceFeedETHUSD.latestRoundData();
     //     require(price >= 0 && updatedAt!= 0 && answeredInRound >= roundID, "Invalid chainlink price");
-        
+
     //     return price;
     // }
 
@@ -149,6 +147,5 @@ contract FraxUnifiedFarm_ERC20_Other is FraxUnifiedFarm_ERC20 {
             // Convert 1e18 shares to FRAX
             frax_per_lp_token = stakingToken.convertToAssets(1e18);
         }
-
     }
 }

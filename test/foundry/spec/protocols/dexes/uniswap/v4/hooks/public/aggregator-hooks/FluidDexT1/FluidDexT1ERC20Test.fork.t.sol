@@ -17,8 +17,12 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {MockV4FeeAdapter} from "../mocks/MockV4FeeAdapter.sol";
 import {SafePoolSwapTest} from "../shared/SafePoolSwapTest.sol";
-import {FluidDexT1Aggregator} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
-import {IFluidDexT1} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexT1.sol";
+import {
+    FluidDexT1Aggregator
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/FluidDexT1Aggregator.sol";
+import {
+    IFluidDexT1
+} from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexT1.sol";
 import {
     IFluidDexReservesResolver
 } from "@crane/contracts/protocols/dexes/uniswap/v4/hooks/public/aggregator-hooks/implementations/FluidDexT1/interfaces/IFluidDexReservesResolver.sol";

@@ -37,13 +37,12 @@ contract PendleMsgSendEndpointUpg is IPMsgSendEndpoint, Initializable, UUPSUpgra
         __BoringOwnable_init();
     }
 
-    function calcFee(
-        address dstAddress,
-        uint256 dstChainId,
-        bytes memory payload,
-        uint256 estimatedGasAmount
-    ) external view returns (uint256 fee) {
-        (fee, ) = lzEndpoint.estimateFees(
+    function calcFee(address dstAddress, uint256 dstChainId, bytes memory payload, uint256 estimatedGasAmount)
+        external
+        view
+        returns (uint256 fee)
+    {
+        (fee,) = lzEndpoint.estimateFees(
             LayerZeroHelper._getLayerZeroChainIds(dstChainId),
             receiveEndpoints.get(dstChainId),
             abi.encode(dstAddress, payload),
@@ -52,12 +51,11 @@ contract PendleMsgSendEndpointUpg is IPMsgSendEndpoint, Initializable, UUPSUpgra
         );
     }
 
-    function sendMessage(
-        address dstAddress,
-        uint256 dstChainId,
-        bytes calldata payload,
-        uint256 estimatedGasAmount
-    ) external payable onlyWhitelisted {
+    function sendMessage(address dstAddress, uint256 dstChainId, bytes calldata payload, uint256 estimatedGasAmount)
+        external
+        payable
+        onlyWhitelisted
+    {
         bytes memory path = abi.encodePacked(receiveEndpoints.get(dstChainId), address(this));
         lzEndpoint.send{value: msg.value}(
             LayerZeroHelper._getLayerZeroChainIds(dstChainId),

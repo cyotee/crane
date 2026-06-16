@@ -4,10 +4,7 @@ pragma solidity ^0.8.35;
 /// @notice Port of `lib/frax-solidity/src/hardhat/test/UniV3TWAPOracle-Tests.js`
 
 import {UniV3TWAPOracle} from "@crane/contracts/protocols/tokens/stable/frax/Oracle/UniV3TWAPOracle.sol";
-import {
-    TestBase_FraxEthereumFork,
-    FraxEthereumAddresses
-} from "../TestBase_FraxEthereumFork.sol";
+import {TestBase_FraxEthereumFork, FraxEthereumAddresses} from "../TestBase_FraxEthereumFork.sol";
 
 contract UniV3TWAPOracle_Tests is TestBase_FraxEthereumFork {
     UniV3TWAPOracle internal oracle;
@@ -33,7 +30,10 @@ contract UniV3TWAPOracle_Tests is TestBase_FraxEthereumFork {
         assertGt(priceAfter, 0);
 
         (string memory baseAfter, string memory quoteAfter) = oracle.token_symbols();
-        assertTrue(keccak256(bytes(baseAfter)) != keccak256(bytes(baseBefore)) || keccak256(bytes(quoteAfter)) != keccak256(bytes(quoteBefore)));
+        assertTrue(
+            keccak256(bytes(baseAfter)) != keccak256(bytes(baseBefore))
+                || keccak256(bytes(quoteAfter)) != keccak256(bytes(quoteBefore))
+        );
     }
 
     function test_getPrice_scalesToE6() public view {

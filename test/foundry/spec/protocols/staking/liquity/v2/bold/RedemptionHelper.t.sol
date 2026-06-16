@@ -3,11 +3,11 @@ pragma solidity ^0.8.35;
 
 import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
 import {Strings} from "@crane/contracts/external/openzeppelin-contracts/utils/Strings.sol";
-import {MIN_DEBT} from "@crane/contracts/protocols/staking/liquity/v2/bold/Dependencies/Constants.sol";
-import {IAddressesRegistry} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
-import {IRedemptionHelper} from "@crane/contracts/protocols/staking/liquity/v2/bold/Interfaces/IRedemptionHelper.sol";
-import {TroveChange} from "@crane/contracts/protocols/staking/liquity/v2/bold/Types/TroveChange.sol";
-import {RedemptionHelper} from "@crane/contracts/protocols/staking/liquity/v2/bold/RedemptionHelper.sol";
+import {MIN_DEBT} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Dependencies/Constants.sol";
+import {IAddressesRegistry} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IAddressesRegistry.sol";
+import {IRedemptionHelper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Interfaces/IRedemptionHelper.sol";
+import {TroveChange} from "@crane/contracts/protocols/cdps/liquity/v2/bold/Types/TroveChange.sol";
+import {RedemptionHelper} from "@crane/contracts/protocols/cdps/liquity/v2/bold/RedemptionHelper.sol";
 import {Accounts} from "./TestContracts/Accounts.sol";
 import {TestDeployer} from "./TestContracts/Deployment.t.sol";
 import {DevTestSetup} from "./TestContracts/DevTestSetup.sol";
@@ -35,7 +35,8 @@ contract RedemptionHelperTest is DevTestSetup {
         accounts = new Accounts();
         createAccounts();
 
-        (A, B, C, D, E, F, G) = (
+        (A, B, C, D, E, F, G) =
+        (
             accountsList[0],
             accountsList[1],
             accountsList[2],
@@ -121,19 +122,20 @@ contract RedemptionHelperTest is DevTestSetup {
         uint256 coll = Math.ceilDiv(debt * collRatio, branch[branchIdx].priceFeed.getPrice());
 
         vm.prank(owner);
-        branch[branchIdx].borrowerOperations.openTrove({
-            _owner: owner,
-            _ownerIndex: ownerIdx,
-            _ETHAmount: coll,
-            _boldAmount: borrow,
-            _upperHint: 0,
-            _lowerHint: 0,
-            _annualInterestRate: interestRate,
-            _maxUpfrontFee: upfrontFee,
-            _addManager: address(0),
-            _removeManager: address(0),
-            _receiver: address(0)
-        });
+        branch[branchIdx].borrowerOperations
+            .openTrove({
+                _owner: owner,
+                _ownerIndex: ownerIdx,
+                _ETHAmount: coll,
+                _boldAmount: borrow,
+                _upperHint: 0,
+                _lowerHint: 0,
+                _annualInterestRate: interestRate,
+                _maxUpfrontFee: upfrontFee,
+                _addManager: address(0),
+                _removeManager: address(0),
+                _receiver: address(0)
+            });
     }
 
     function openTroves(address owner, TroveParams[NUM_TROVES] memory trove) internal {
@@ -195,7 +197,9 @@ contract RedemptionHelperTest is DevTestSetup {
         }
 
         assertLeDecimal(expectedRedeemedBold, attemptedRedeemedBold, 18, "expectedRedeemedBold > attemptedRedeemedBold");
-        if (maxIterations != 0) assertLe(expectedMaxIterations, maxIterations, "expectedMaxIterations > maxIterations");
+        if (maxIterations != 0) {
+            assertLe(expectedMaxIterations, maxIterations, "expectedMaxIterations > maxIterations");
+        }
 
         uint256 boldBalanceBefore = boldToken.balanceOf(A);
         vm.prank(A);

@@ -1,18 +1,31 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import {AuctionFuzzConstructorParams, BttBase} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol';
-import {MockContinuousClearingAuction} from 'test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol';
-import {IContinuousClearingAuction} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol';
-import {ITokenCurrencyStorage} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol';
-import {IERC20Minimal} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol';
-import {Bid} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol';
-import {Checkpoint} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol';
-import {ConstantsLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol';
-import {FixedPoint96} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol';
-import {MaxBidPriceLib} from 'contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol';
-import {ERC20Mock} from 'openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol';
-import {FixedPointMathLib} from 'contracts/external/solady/utils/FixedPointMathLib.sol';
+import {
+    AuctionFuzzConstructorParams,
+    BttBase
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/BttBase.sol";
+import {
+    MockContinuousClearingAuction
+} from "test/foundry/spec/protocols/launchpads/uniswap/continuous-clearing/btt/mocks/MockContinuousClearingAuction.sol";
+import {
+    IContinuousClearingAuction
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/IContinuousClearingAuction.sol";
+import {
+    ITokenCurrencyStorage
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/ITokenCurrencyStorage.sol";
+import {
+    IERC20Minimal
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/interfaces/external/IERC20Minimal.sol";
+import {Bid} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/BidLib.sol";
+import {Checkpoint} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/CheckpointLib.sol";
+import {ConstantsLib} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/ConstantsLib.sol";
+import {FixedPoint96} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/FixedPoint96.sol";
+import {
+    MaxBidPriceLib
+} from "contracts/protocols/launchpads/uniswap/continuous-clearing/src/libraries/MaxBidPriceLib.sol";
+import {ERC20Mock} from "openzeppelin-contracts/contracts/mocks/token/ERC20Mock.sol";
+import {FixedPointMathLib} from "contracts/external/solady/utils/FixedPointMathLib.sol";
 
 contract ClaimTokensTest is BttBase {
     function test_WhenBlockNumberLTClaimBlock(AuctionFuzzConstructorParams memory _params, uint256 _blockNumber)
@@ -71,7 +84,7 @@ contract ClaimTokensTest is BttBase {
 
         _requiredCurrencyRaised = uint128(bound(_requiredCurrencyRaised, 1, type(uint128).max));
 
-        alice = makeAddr('alice');
+        alice = makeAddr("alice");
 
         AuctionFuzzConstructorParams memory mParams = validAuctionConstructorInputs(_params);
         mParams.token = address(new ERC20Mock());
@@ -79,8 +92,8 @@ contract ClaimTokensTest is BttBase {
         mParams.parameters.currency = address(0);
         mParams.parameters.validationHook = address(0);
         mParams.parameters.requiredCurrencyRaised = _requiredCurrencyRaised;
-        mParams.parameters.fundsRecipient = makeAddr('fundsRecipient');
-        mParams.parameters.tokensRecipient = makeAddr('tokensRecipient');
+        mParams.parameters.fundsRecipient = makeAddr("fundsRecipient");
+        mParams.parameters.tokensRecipient = makeAddr("tokensRecipient");
         mParams.parameters.tickSpacing = bound(mParams.parameters.tickSpacing, 2, type(uint24).max) * FixedPoint96.Q96;
         mParams.parameters.floorPrice = bound(mParams.parameters.floorPrice, 1, 100) * mParams.parameters.tickSpacing;
 
@@ -102,7 +115,7 @@ contract ClaimTokensTest is BttBase {
 
         vm.deal(address(this), bidAmount);
         vm.roll(auction.startBlock());
-        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(''));
+        uint256 bidId = auction.submitBid{value: bidAmount}(maxPrice, bidAmount, alice, bytes(""));
 
         vm.roll(auction.endBlock());
         Checkpoint memory checkpoint = auction.checkpoint();
@@ -116,7 +129,7 @@ contract ClaimTokensTest is BttBase {
         }
 
         Bid memory bid = auction.bids(bidId);
-        assertLe(bid.tokensFilled, maximumTokensFilled, 'Bid tokens filled must be less than the maximum tokens filled');
+        assertLe(bid.tokensFilled, maximumTokensFilled, "Bid tokens filled must be less than the maximum tokens filled");
 
         // Assume bid filled some tokens
         vm.assume(bid.tokensFilled > 0);
@@ -129,7 +142,7 @@ contract ClaimTokensTest is BttBase {
         emit IContinuousClearingAuction.TokensClaimed(bidId, alice, bid.tokensFilled);
         auction.claimTokens(bidId);
 
-        assertLe(ERC20Mock(mParams.token).balanceOf(alice), aliceTokensBefore + bid.tokensFilled, 'tokens filled');
+        assertLe(ERC20Mock(mParams.token).balanceOf(alice), aliceTokensBefore + bid.tokensFilled, "tokens filled");
     }
 
     modifier givenGraduated() {
@@ -144,7 +157,7 @@ contract ClaimTokensTest is BttBase {
         // it does not emit {TokensClaimed}
         // it does not transfer tokens
 
-        alice = makeAddr('alice');
+        alice = makeAddr("alice");
 
         AuctionFuzzConstructorParams memory mParams = validAuctionConstructorInputs(_params);
         mParams.token = address(new ERC20Mock());
@@ -153,8 +166,8 @@ contract ClaimTokensTest is BttBase {
         mParams.parameters.validationHook = address(0);
         // No currency raised required
         mParams.parameters.requiredCurrencyRaised = 0;
-        mParams.parameters.fundsRecipient = makeAddr('fundsRecipient');
-        mParams.parameters.tokensRecipient = makeAddr('tokensRecipient');
+        mParams.parameters.fundsRecipient = makeAddr("fundsRecipient");
+        mParams.parameters.tokensRecipient = makeAddr("tokensRecipient");
         mParams.parameters.tickSpacing = bound(mParams.parameters.tickSpacing, 2, type(uint24).max) * FixedPoint96.Q96;
         mParams.parameters.floorPrice = bound(mParams.parameters.floorPrice, 1, 100) * mParams.parameters.tickSpacing;
 
@@ -172,12 +185,12 @@ contract ClaimTokensTest is BttBase {
         uint256 maxPrice = mParams.parameters.floorPrice + mParams.parameters.tickSpacing;
 
         vm.roll(auction.startBlock());
-        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, alice, bytes(''));
+        uint256 bidId = auction.submitBid{value: 1}(maxPrice, 1, alice, bytes(""));
 
         vm.roll(auction.endBlock());
         auction.exitBid(bidId);
 
-        assertTrue(auction.isGraduated(), 'Auction must be graduated');
+        assertTrue(auction.isGraduated(), "Auction must be graduated");
 
         uint256 blockNumber = bound(_blockNumber, mParams.parameters.claimBlock, type(uint64).max);
 
