@@ -3,7 +3,7 @@
 	url = https://github.com/foundry-rs/forge-std
 [submodule "lib/chainlink-local"]
 	path = lib/chainlink-local
-	url = ttps://github.com/smartcontractkit/chainlink-local
+	url = https://github.com/smartcontractkit/chainlink-local
 [submodule "lib/battlechain-lib"]
 	path = lib/battlechain-lib
 	url = https://github.com/Cyfrin/battlechain-lib
