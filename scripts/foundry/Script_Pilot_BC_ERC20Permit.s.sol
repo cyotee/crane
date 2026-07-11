@@ -25,7 +25,7 @@ import {IERC20PermitDFPkg, ERC20PermitDFPkg} from "@crane/contracts/tokens/ERC20
 import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
 
 /// @notice Deploys the Crane ERC20Permit pilot through BattleChain Safe Harbor.
-///         The core Create3Factory is deployed via IBCDeployer.deployCreate2; all other
+///         The core Create3Factory is deployed via IBattleChainDeployer.deployCreate2; all other
 ///         contracts become children-by-lineage. A Safe Harbor agreement is then created
 ///         listing the Create3Factory as the only scope account with ChildContractScope.All.
 contract Script_Pilot_BC_ERC20Permit is BCScript {

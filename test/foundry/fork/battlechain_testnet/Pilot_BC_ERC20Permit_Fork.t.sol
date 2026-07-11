@@ -7,8 +7,8 @@ import "forge-std/Test.sol";
 /*                                BattleChain                                 */
 /* -------------------------------------------------------------------------- */
 
-import {IAgreement} from "battlechain-lib/interfaces/IAgreement.sol";
-import {IBCSafeHarborRegistry} from "battlechain-lib/interfaces/IBCSafeHarborRegistry.sol";
+import {IAgreement} from "@battlechain-contracts/interface/IAgreement.sol";
+import {IBattleChainSafeHarborRegistry} from "@battlechain-contracts/interface/IBattleChainSafeHarborRegistry.sol";
 import {AgreementDetails, ChildContractScope} from "battlechain-lib/types/AgreementTypes.sol";
 
 /* -------------------------------------------------------------------------- */
@@ -20,11 +20,11 @@ import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
 import {IERC2612} from "@crane/contracts/interfaces/IERC2612.sol";
 
 /// @notice Fork test against BattleChain testnet (chain 627). Skips cleanly when the
-///         RPC is unreachable or chain id is wrong. Uses only the v0.1.2
-///         `battlechain-lib` interfaces — the lineage-query methods on AttackRegistry
-///         (getAgreementForContract / isTopLevelContractUnderAttack) are not in the
-///         lib's interface so we verify coverage via IAgreement.isContractInScope
-///         and IAgreement.getBattleChainScopeAddresses instead.
+///         RPC is unreachable or chain id is wrong. Uses battlechain-lib 1.1.x interfaces
+///         sourced from the battlechain-safe-harbor-contracts remapping. Lineage-query
+///         methods on AttackRegistry (getAgreementForContract / isTopLevelContractUnderAttack)
+///         are verified via IAgreement.isContractInScope and
+///         IAgreement.getBattleChainScopeAddresses instead.
 contract Pilot_BC_ERC20Permit_Fork_Test is Script_Pilot_BC_ERC20Permit, Test {
     bytes32 internal constant PERMIT_TYPEHASH =
         keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
@@ -71,7 +71,7 @@ contract Pilot_BC_ERC20Permit_Fork_Test is Script_Pilot_BC_ERC20Permit, Test {
 
         // Adoption registered through real BattleChain Safe Harbor registry.
         assertEq(
-            IBCSafeHarborRegistry(_bcRegistry()).getAgreement(address(this)),
+            IBattleChainSafeHarborRegistry(_bcRegistry()).getAgreement(address(this)),
             agreement,
             "adoption registered with real registry"
         );

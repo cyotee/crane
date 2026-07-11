@@ -15,7 +15,7 @@ library BC_TESTNET {
     address internal constant REGISTRY = 0x07E09f67B272aec60eebBfB3D592eC649BDCFEFc;
     address internal constant AGREEMENT_FACTORY = 0xf52CEA27b9E20D03Ec48CDe4fafF8F27565646f2;
     address internal constant ATTACK_REGISTRY = 0x22134e878c409a0Eab7259d873b38e26Ca966d3C;
-    address internal constant DEPLOYER = 0x0f75289c6b883b885A1fDF9BCCABE1bbFB094077; // BattleChainDeployer (via IBCDeployer)
+    address internal constant DEPLOYER = 0x0f75289c6b883b885A1fDF9BCCABE1bbFB094077; // BattleChainDeployer (via IBattleChainDeployer)
     address internal constant CREATEX = 0xf1Ebfaa992854ECcB01Ac1F60e5b5279095cca7F;
 
     // Mock moderator for testnet instant approvals in demos/pilots

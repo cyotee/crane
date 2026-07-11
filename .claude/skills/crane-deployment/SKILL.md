@@ -244,7 +244,7 @@ See `references/factory-service-examples.md` for complete examples (Access, Intr
 
 ## Test Setup Pattern (LR-7 Compliant)
 
-Per LR-7 testing rules: full initialization before assertions (never pass `address(0)` facets into DFPkgs or packages); exact value assertions (not just "changed"); use `Behavior_*` libraries (e.g. `Behavior_IFacet`, `Behavior_IDiamondFactoryPackage`) for declaration and compliance (never hand-rolled asserts for standard surfaces); assert registry population, salt determinism, and full DFPkg lifecycle (calcSalt, processArgs, initAccount via delegatecall, postDeploy); inherit CraneTest/TestBase properly and call parent setUp in order; use `vm.expectEmit` + exact deltas.
+Per LR-7 testing rules: full initialization before assertions (never pass `address(0)` facets into DFPkgs or packages); exact value assertions (not just "changed"); use `Behavior_*` libraries (e.g. `Behavior_IFacet`, `Behavior_IDiamondFactoryPackage`) for declaration and compliance (never hand-rolled asserts for standard surfaces); assert registry population, salt determinism, and full DFPkg lifecycle (calcSalt, processArgs, initAccount via delegatecall, postDeploy); inherit CraneTest/TestBase properly and call parent setUp in order; use `vm.expectEmit` + exact deltas. **Tests should use the same factory/DFPkg deploy path as production** (prefer production code over mocks for the SUT — see `crane-testing`).
 
 ```solidity
 contract MyTest is CraneTest {

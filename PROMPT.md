@@ -42,19 +42,20 @@ Facets are also covered by this same lineage rule, since they are deployed by th
 
 ## Library + Remappings
 
-`battlechain-lib@0.1.2` is installed at `lib/battlechain-lib/`. The released tag does NOT include `BCQuery.sol`, so the FFI-based `isAttackable(...)` path is unavailable; we use the real `IAttackRegistry` on the fork instead.
+`battlechain-lib` **1.1.x** is installed at `lib/battlechain-lib/` (monorepo pin ≈ `js-v1.1.1` / `v1.1.x`). As of 1.1.0, Solidity interfaces live in the nested `battlechain-safe-harbor-contracts` submodule, not `src/interfaces/`.
 
-`remappings.txt` entries (the first already exists; add the second):
+`remappings.txt` entries:
 
 ```
 battlechain-lib/=lib/battlechain-lib/src/
 battlechain-lib-mocks/=lib/battlechain-lib/test/mocks/
+@battlechain-contracts/=lib/battlechain-lib/lib/battlechain-safe-harbor-contracts/src/
 ```
 
 What `battlechain-lib` ships:
 
-- Script helpers: `BCBase`, `BCConfig`, `BCDeploy`, `BCSafeHarbor`, `BCScript`, `CreateXChains`
-- Interfaces only for the on-chain primitives: `IAgreement`, `IAgreementFactory`, `IAttackRegistry`, `IBCDeployer`, `IBCSafeHarborRegistry`
+- Script helpers: `BCBase`, `BCConfig`, `BCDeploy`, `BCSafeHarbor`, `BCScript`, `CreateXChains`, `BCQuery`
+- Interfaces (via `@battlechain-contracts/interface/`): `IAgreement`, `IAgreementFactory`, `IAttackRegistry`, `IBattleChainDeployer`, `IBattleChainSafeHarborRegistry`
 - Types: `AgreementDetails`, `BcChain`, `BcAccount`, `ChildContractScope`, `BountyTerms`, `IdentityRequirements`, `Contact`
 - Mocks (under `test/mocks/MockBCInfra.sol`): `MockBCDeployer`, `MockAgreementFactory`, `MockAgreement`, `MockBCRegistry`, `MockAttackRegistry`
 
@@ -62,7 +63,7 @@ The lib does NOT ship production implementations of the on-chain registries — 
 
 ## Key BattleChain Mechanics
 
-- `bcDeployCreate*` delegates to `IBCDeployer` (`BattleChainDeployer` on chain 627, `CreateX` elsewhere) and pushes every deployed address into `BCDeploy._deployedContracts`, queryable via `getDeployedContracts()`.
+- `bcDeployCreate*` delegates to `IBattleChainDeployer` (`BattleChainDeployer` on chain 627, `CreateX` elsewhere) and pushes every deployed address into `BCDeploy._deployedContracts`, queryable via `getDeployedContracts()`.
 - Child registration is implicit: `BcAccount.childContractScope = ChildContractScope.All` covers all past and future children of a top-level account through deployer lineage. There is no `registerChild(parent, child)` call.
 - `BCSafeHarbor.buildAccounts(...)` defaults every supplied address to `ChildContractScope.All`.
 - `BCBase._setBcAddresses(registry, factory, attackRegistry, deployer)` overrides resolution so the same script runs against mocks locally and real contracts on chain 627.
@@ -74,7 +75,7 @@ The lib does NOT ship production implementations of the on-chain registries — 
 
 | Path | Purpose |
 | --- | --- |
-| `contracts/InitBcService.sol` | New parallel bootstrap library. Same return shape as `InitDevService.initEnv` but routes the core `Create3Factory` through `IBCDeployer.deployCreate2`. Library form (not a `BCDeploy` subclass) — see Section 2 for rationale. |
+| `contracts/InitBcService.sol` | New parallel bootstrap library. Same return shape as `InitDevService.initEnv` but routes the core `Create3Factory` through `IBattleChainDeployer.deployCreate2`. Library form (not a `BCDeploy` subclass) — see Section 2 for rationale. |
 | `scripts/foundry/Script_Pilot_BC_ERC20Permit.s.sol` | `BCScript` subclass. Runs `InitBcService.initEnvBc`, deploys the three facets and the package, deploys an ERC20 permit proxy, builds `AgreementDetails` with the core factory as the only scope account (`ChildContractScope.All`), calls `createAndAdoptAgreement`, conditionally calls `requestAttackMode` on chain 627. |
 | `test/foundry/spec/pilot/Pilot_BC_ERC20Permit_LocalMock.t.sol` | Local test. Deploys lib mocks in `setUp`, wires them via `_setBcAddresses`, then runs the script's deploy logic and asserts. |
 | `test/foundry/fork/battlechain_testnet/Pilot_BC_ERC20Permit_Fork.t.sol` | Fork test against `https://testnet.battlechain.com`. Gated by `block.chainid == 627`. Lives under `test/foundry/fork/<chain>/` per Crane convention. |
@@ -92,7 +93,7 @@ The lib does NOT ship production implementations of the on-chain registries — 
 - `contracts/factories/create3/Create3Factory.sol`
 - `contracts/factories/diamondPkg/DiamondPackageCallBackFactory.sol`
 - `contracts/tokens/ERC20/facets/ERC20Facet.sol`, `ERC5267Facet.sol`, `ERC2612Facet.sol`
-- `lib/battlechain-lib/` (installed at v0.1.2)
+- `lib/battlechain-lib/` (installed at 1.1.x)
 
 ## Assertion Plan (consequence of reusing lib mocks)
 
@@ -102,7 +103,7 @@ The lib's mocks are minimal (`MockAgreement` discards `AgreementDetails`; `MockA
 | --- | --- | --- |
 | `bcDeployCreate2` actually invoked for the core factory | `MockBCDeployer.Deployed` event emitted with the core factory's address (`InitBcService` is a library and does not maintain its own tracker — see Section 2) | Real `BattleChainDeployer` emits an equivalent deploy event |
 | `AgreementDetails` lists the core factory with `ChildContractScope.All` | `vm.expectCall(mockFactory, abi.encodeCall(IAgreementFactory.create, (expectedDetails, owner, salt)))` before the call (the mock discards the struct, so we verify at the call-encoding seam) | Read the agreement's scope back from `IAgreement.getDetails()` after creation and assert the account list / scope enum |
-| Adoption succeeded | `MockBCRegistry.getAgreement(adopter) != address(0)` | `IBCSafeHarborRegistry.getAgreement(adopter) != address(0)` |
+| Adoption succeeded | `MockBCRegistry.getAgreement(adopter) != address(0)` | `IBattleChainSafeHarborRegistry.getAgreement(adopter) != address(0)` |
 | Commitment window set (14 days) | `MockAgreement.cantChangeUntil > 0` | `IAgreement.getCantChangeUntil() > 0` |
 | Diamond factory and proxy are children-by-lineage of the core factory | Verified through Crane state only: `factory.getDiamondPackageFactory() == diamondFactory` and `diamondFactory.calcAddress(pkg, args) == proxy` | Same, plus `attackRegistry.getAgreementForContract(diamondFactory)` resolves to the agreement |
 | `requestAttackMode` accepted | Skipped (helper reverts off chain 626/627) | `attackRegistry.isTopLevelContractUnderAttack(coreFactory) == true` after request |
@@ -132,11 +133,11 @@ library InitBcService {
     // ... 9 more salt constants identical to InitDevService ...
 
     /// @notice BattleChain-aware bootstrap. Mirrors `InitDevService.initEnv` exactly,
-    /// except the top-level Create3Factory is deployed through `IBCDeployer.deployCreate2`
+    /// except the top-level Create3Factory is deployed through `IBattleChainDeployer.deployCreate2`
     /// rather than `new Create3Factory{salt: salt}(owner)`.
     ///
     /// @param owner       Initial Create3Factory owner.
-    /// @param bcDeployer  Address of the IBCDeployer. On chain 627 this is `BCConfig.deployer()`;
+    /// @param bcDeployer  Address of the IBattleChainDeployer. On chain 627 this is `BCConfig.deployer()`;
     ///                    locally it is a `MockBCDeployer`.
     function initEnvBc(address owner, address bcDeployer)
         internal
@@ -157,7 +158,7 @@ library InitBcService {
 
 ```solidity
 bytes memory initCode = abi.encodePacked(type(Create3Factory).creationCode, abi.encode(owner));
-factory = ICreate3FactoryProxy(IBCDeployer(bcDeployer).deployCreate2(salt, initCode));
+factory = ICreate3FactoryProxy(IBattleChainDeployer(bcDeployer).deployCreate2(salt, initCode));
 ```
 
 All nine `deployCanonicalFacet` calls inside `initFactoryBc` are copied verbatim from `InitDevService.initFactory`.
@@ -180,7 +181,7 @@ The BCScript subclass owns the BattleChain-side concerns:
 4. `createAndAdoptAgreement(defaultAgreementDetails(name, contacts, scope, recovery), owner, AGREEMENT_SALT)`.
 5. If `_isBattleChain()`, `requestAttackMode(agreement)`.
 
-The script does not need to call `bcDeployCreate2` itself — the library does that via `IBCDeployer.deployCreate2`. `BCDeploy._deployedContracts` on the script stays empty, intentionally.
+The script does not need to call `bcDeployCreate2` itself — the library does that via `IBattleChainDeployer.deployCreate2`. `BCDeploy._deployedContracts` on the script stays empty, intentionally.
 
 ### Salt strategy
 
@@ -193,7 +194,7 @@ The script does not need to call `bcDeployCreate2` itself — the library does t
 
 ### Compatibility
 
-`InitBcService` pins to `pragma solidity ^0.8.24;` to match `battlechain-lib@0.1.2`. `InitDevService` stays at `^0.8.0;`. Both libraries co-exist; existing Crane tests continue to use `InitDevService`.
+`InitBcService` pins to `pragma solidity ^0.8.24;` to match `battlechain-lib` 1.1.x. `InitDevService` stays at `^0.8.0;`. Both libraries co-exist; existing Crane tests continue to use `InitDevService`.
 
 ## Section 3 — Script + Test Wiring (Approved)
 
@@ -254,7 +255,7 @@ test/foundry/fork/battlechain_testnet/Pilot_BC_ERC20Permit_Fork.t.sol
      - `getAgreementForContract(diamondFactory) == agreement` (lineage)
      - `getAgreementForContract(permitPackage) == agreement` (lineage)
      - `getAgreementForContract(permitProxy) == agreement` (lineage)
-     - `IBCSafeHarborRegistry(_bcRegistry()).getAgreement(address(this)) == agreement`
+     - `IBattleChainSafeHarborRegistry(_bcRegistry()).getAgreement(address(this)) == agreement`
      - `IAgreement(agreement).getCantChangeUntil() > block.timestamp`
   2. `test_fork_permitSignature_works` — same EIP-712 flow as local-mock variant, against the real proxy.
 
@@ -262,7 +263,7 @@ test/foundry/fork/battlechain_testnet/Pilot_BC_ERC20Permit_Fork.t.sol
 
 - **Test inherits the script** to reuse `_runDeploy`. `forge-std/Test` does not extend `forge-std/Script`, so the only `Script` in the inheritance chain comes from `BCScript`. No diamond conflict.
 - **`vm.expectCall` snapshot dance** (`vm.snapshotState → _runDeploy → revertToState → expectCall → _runDeploy`) is the only test-only trick. Used so we can install the matcher with the concrete `coreFactory` address that `_runDeploy` itself produces.
-- **No FFI required.** `BCQuery.sol` is absent from v0.1.2, so `--ffi` is not needed. Plain `forge test` works.
+- **No FFI required for the pilot path.** Plain `forge test` works for local-mock; fork tests use on-chain interfaces rather than FFI `BCQuery` helpers.
 - **`foundry.toml` needs no changes.** The fork directory is already excluded from the default test pass (existing convention), so the local-mock test runs in every `forge test`, the fork test runs only when explicitly matched.
 
 ## Section 4 — Acceptance Criteria & Run Plan (Approved)

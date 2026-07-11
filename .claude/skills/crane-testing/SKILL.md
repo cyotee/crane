@@ -1,12 +1,43 @@
 ---
 name: crane-testing
-description: This skill should be used when the user asks about "testbase", "behavior library", "invariant test", "handler", "fuzz test", "test pattern", "Behavior_", "TestBase_", or needs guidance on Crane's testing infrastructure for writing comprehensive smart contract tests.
+description: This skill should be used when the user asks about "testbase", "behavior library", "invariant test", "handler", "fuzz test", "test pattern", "Behavior_", "TestBase_", "mock", "vm.mockCall", "unit test", "write a test", "CraneTest", or needs guidance on Crane's testing infrastructure for writing comprehensive smart contract tests. Prefer production code over mocks.
 license: MIT
 ---
 
 # Crane Testing Patterns
 
 Crane uses structured testing patterns with TestBase contracts, Behavior libraries, and Handler contracts for comprehensive coverage. All patterns must comply with LR-7 (see PRD) and LR-1 (NatSpec on test code).
+
+## Production-first testing (read this first)
+
+**Prefer production code and production deploy paths. Do not invent mocks for the subject under test (SUT).**
+
+Generic Foundry skills that show `MockOracle`, `vm.mockCall`, or `new MyContract()` are **subordinate** to this skill for Crane work.
+
+### Ladder (use the highest step that fits)
+
+1. **Real production contracts**, deployed via `CraneTest` factories (`create3Factory`, `diamondPackageFactory`) — same path as production. No `address(0)` facets in DFPkg init.
+2. **Existing `TestBase_*` chains**. Search `contracts/**/TestBase_*.sol` before writing setup from scratch.
+3. **External protocols**: **protocol ports** under `contracts/protocols/.../stubs/` (real/protocol-faithful code for hermetic deploy) **or** fork bases (`TestBase_*Fork` + live addresses). Do not invent interface mocks when a TestBase already deploys the protocol.
+4. **Harness doubles outside the SUT** only when they implement real interfaces and add controllability (mintable ERC20, reentrancy token, Behavior targets like `ERC20TargetStub`).
+5. **`vm.mockCall` / fake contracts** only for non-SUT isolation, failure modes production cannot express cheaply, or documented oracle/VRF harnesses — **SUT remains real**.
+
+### Forbidden for SUT
+
+- Mocking facets, DFPkgs, diamond proxies, Create3/diamond factories, or registries under test
+- Replacing a protocol integration with a canned mock when `TestBase_*` + protocol ports or forks exist
+- Deploying production Crane facets/DFPkgs with `new` (use factories; protocol *ports* in TestBases may use `new` for the ported protocol code only)
+
+### Terminology (do not conflate)
+
+| Term | Meaning |
+|------|---------|
+| **Protocol port (`*/stubs/`)** | Real/protocol-faithful implementation for hermetic local deploy (e.g. `CamelotFactory`) — **not** a fake |
+| **Harness / mintable stub** | Minimal ERC20/target with test hooks |
+| **Mock / test double** | Canned dependency behavior; last resort; never the SUT |
+| **Handler** | Fuzz/invariant wrapper around a **real** SUT |
+
+See also `docs/development/testing.md` and consumer project AGENTS (e.g. IndexedEx `indexedex-testing`) for layered registry rules.
 
 **Critical Alignment Requirements (LR-3):**
 - Skills reflect finalized standards: full initialization, exact value assertions, mandatory Behavior library usage (not ad-hoc asserts), Facet + Package declaration tests, correct CraneTest/TestBase_* setUp() call order, NatSpec on all test surfaces (TestBase, Behavior, Handler, *.t.sol per LR-1 scope).
@@ -29,9 +60,12 @@ contracts/                              # Test infrastructure WITH the code
 │   ├── TestBase_IERC165.sol            # Behavior testing
 │   └── Behavior_IERC165.sol            # Validation library
 └── test/
-    ├── stubs/                          # Example implementations
+    ├── stubs/                          # Small harnesses / examples (not protocol ports)
     ├── comparators/                    # Assertion helpers
     └── behaviors/                      # Shared behavior utilities
+
+# Protocol ports (real protocol code for hermetic deploy) live under:
+# contracts/protocols/.../stubs/  — e.g. CamelotFactory, not interface mocks
 
 test/foundry/spec/                      # Actual test specs mirror contracts/
 ├── access/ERC8023/
@@ -52,7 +86,7 @@ Two types of TestBase contracts exist. All TestBases **MUST** follow LR-7 rules.
 
 ### Protocol Setup TestBase
 
-Sets up protocol infrastructure with inheritance chains:
+Sets up protocol infrastructure with inheritance chains. `new CamelotFactory` / `new CamelotRouter` here deploy **protocol ports** (production-faithful code under `protocols/.../stubs/`), not canned mocks. Crane facets/DFPkgs under test still go through factories.
 
 ```solidity
 abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
@@ -62,6 +96,7 @@ abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
     function setUp() public virtual override {
         TestBase_Weth9.setUp();  // Call parent setUp FIRST (CraneTest provides factories)
         if (address(camelotV2Factory) == address(0)) {
+            // Protocol port under contracts/protocols/dexes/camelot/v2/stubs/
             camelotV2Factory = new CamelotFactory(feeToSetter);
         }
         if (address(camelotV2Router) == address(0)) {
@@ -275,6 +310,7 @@ See GitBook LR-2: `docs/development/testing.md` + deployment docs for registry +
 
 ## Key Conventions (LR-7)
 
+- **Production-first**: real contracts + factories; no mocks for SUT (see top of this skill).
 - **Full init only**: SUTs (especially via DFPkgs) use real non-zero facet addresses; no bypass.
 - Handler normalizes fuzz inputs: `addrFromSeed(seed)` maps to small address set.
 - Handler tracks expected state: `_expectedAllowance`, `_seen`, etc.
@@ -312,7 +348,7 @@ Ties to other skills: `crane-deployment` (factories + init in tests), `crane-arc
 
 All tests (unit, behavior/declaration, invariant, fork) must satisfy (non-exhaustive per PRD):
 
-1. **Full and Correct Initialization** - Fully initialize before assertions. Packages use real facets (no address(0)). Production-like state only.
+1. **Full and Correct Initialization** - Fully initialize before assertions. Packages use real facets (no address(0)). Production-like state only. Prefer production code over mocks for the SUT.
 2. **Exact Expected Value Assertions** - Precise values/deltas (e.g. `assertEq(delta, expectedAmount)`), not side-effect "changed".
 3. **Preview Function Exact Match** - For previewDeposit etc., assert returned value exactly equals result of executing the action (incl. edges).
 4. **Facet Declaration Tests** - Validate `facetInterfaces()`, `facetFuncs()`, `facetName()`, `facetMetadata()` using `Behavior_IFacet` + control values.

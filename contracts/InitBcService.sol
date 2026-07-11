@@ -11,7 +11,7 @@ import {Vm} from "forge-std/Vm.sol";
 /*                                BattleChain                                 */
 /* -------------------------------------------------------------------------- */
 
-import {IBCDeployer} from "battlechain-lib/interfaces/IBCDeployer.sol";
+import {IBattleChainDeployer} from "@battlechain-contracts/interface/IBattleChainDeployer.sol";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
@@ -76,7 +76,7 @@ import {OperableFacet} from "@crane/contracts/access/operable/OperableFacet.sol"
 import {ICreate3FactoryProxy} from "@crane/contracts/interfaces/proxies/ICreate3FactoryProxy.sol";
 
 /// @notice BattleChain-aware variant of `InitDevService`. Identical bootstrap, but the
-///         top-level Create3Factory is deployed through `IBCDeployer.deployCreate2`.
+///         top-level Create3Factory is deployed through `IBattleChainDeployer.deployCreate2`.
 ///         Every other contract is deployed by the Create3Factory itself, so they are
 ///         children-by-lineage automatically.
 library InitBcService {
@@ -200,7 +200,7 @@ library InitBcService {
         returns (ICreate3FactoryProxy factory)
     {
         bytes memory initCode = abi.encodePacked(type(Create3Factory).creationCode, abi.encode(owner));
-        factory = ICreate3FactoryProxy(IBCDeployer(bcDeployer).deployCreate2(salt, initCode));
+        factory = ICreate3FactoryProxy(IBattleChainDeployer(bcDeployer).deployCreate2(salt, initCode));
         vm.label(address(factory), type(Create3Factory).name);
 
         IFacet erc165Facet = ICreate3FactoryBootstrap(address(factory))

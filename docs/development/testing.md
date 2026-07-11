@@ -2,6 +2,8 @@
 
 Crane tests separate infrastructure setup, behavior specification, and invariant declarations. All patterns strictly follow **LR-7 Testing Standards** (full/correct initialization before any asserts, exact expected-value assertions and state deltas, mandatory `Behavior_*` libraries for declarations, preview/execute parity, CREATE3/salt determinism + registry population verification, NatSpec + include-tags on test code that exposes APIs, handler-driven invariants, and fork parity for ports).
 
+**Production-first:** Prefer real production contracts and production deploy paths (`CraneTest` factories, full DFPkg init). Do **not** invent mocks for the subject under test. See the ladder and terminology in `AGENTS.md` (Testing) and the `crane-testing` skill.
+
 **LR-2 GitBook Focus (this document):** Detailed patterns, Behavior libs, handlers, TestBase usage, cross-links to registries, ported protocols, and utilities (Sets, ConstProdUtils, etc.). Content enables agents and developers to correctly exercise Crane for safe reuse of verified facets/packages (see LR-4).
 
 **Central NatSpec Rule (aligns LR-1/LR-7):** Any NatSpec examples or declaration tests shown here use **ONLY** values from `docs/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md`. Never ad-hoc `cast` in docs. See `docs/development/natspec.md` and the dedicated `scripts/foundry/ComputeNatSpecValues.s.sol` verification script.
@@ -123,7 +125,8 @@ abstract contract TestBase_CamelotV2 is TestBase_Weth9 {
 **Cross-links for detailed protocol TestBase + usage (LR-2 required areas):**
 - All DEXes: `docs/protocols/dexes.md` (Camelot V2 + `TestBase_CamelotV2` + `TestBase_CamelotV2_Pools` + `CamelotV2Handler`; Uniswap V2/V3/V4 + Aerodrome + Slipstream bases + fork variants; Balancer V3 `TestBase_BalancerV3Vault` + real `BalancerV3VaultDFPkg` + pool DFPkg bases).
 - Lending: `docs/protocols/lending.md` (Aave `ProtocolV3TestBase` + Aave v4 `Base` + `AaveV4TestOrchestration` + `deployTestEnv`; Euler EVC/EVault test bases; combinable with CraneTest).
-- Stubs vs forks: Stubs (in `*/stubs/`) for fast hermetic tests inside bases. Fork bases (e.g. `TestBase_*Fork`) use `vm.createSelectFork` + network constants; never mix.
+- **Protocol ports vs forks:** Protocol ports under `contracts/protocols/.../stubs/` are real/protocol-faithful implementations for fast hermetic deploy inside TestBases (not canned interface mocks). Fork bases (e.g. `TestBase_*Fork`) use `vm.createSelectFork` + network constants. Do not mix hermetic ports and fork addresses in one base without a clear mode switch.
+- **Harness stubs vs mocks:** `contracts/test/stubs/` and mintable ERC20s add test controllability outside the SUT. Do not mock facets/DFPkgs/diamonds under test.
 - DFPkg integration tests (Balancer example): use `diamondFactory.deploy(pkg, pkgArgs)` with real facets (never address(0) — LR-7 violation).
 
 See also `contracts/protocols/.../test/bases/` and `test/foundry/spec/...` for concrete inheritance + usage.

@@ -42,6 +42,7 @@ remappings = [
     "@crane/contracts/=contracts/",
     "@crane/test/=test/",
     "battlechain-lib/=lib/battlechain-lib/src/",
+    "@battlechain-contracts/=lib/battlechain-lib/lib/battlechain-safe-harbor-contracts/src/",
     "@oz/=lib/openzeppelin-contracts/",
     "@ozu=lib/openzeppelin-contracts-upgradable/"
 ]

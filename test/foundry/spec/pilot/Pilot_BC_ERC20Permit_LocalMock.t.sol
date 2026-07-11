@@ -8,7 +8,7 @@ import "forge-std/Test.sol";
 /* -------------------------------------------------------------------------- */
 
 import {ChildContractScope, AgreementDetails} from "battlechain-lib/types/AgreementTypes.sol";
-import {IAgreementFactory} from "battlechain-lib/interfaces/IAgreementFactory.sol";
+import {IAgreementFactory} from "@battlechain-contracts/interface/IAgreementFactory.sol";
 import {
     MockBCDeployer,
     MockAgreementFactory,

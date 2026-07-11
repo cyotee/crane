@@ -6,12 +6,13 @@ If PROGRESS.md exists in the project root, read it for cross-session context bef
 ## Required Reading
 
 - Read this file for high-level Crane patterns and navigation.
-- Use/consult the skills installed in this repo (`.claude/skills/`), especially:
+- **Canonical skills** live in `.claude/skills/` (this repo). Especially:
   - `crane-deployment` for CREATE3, DFPkgs, FactoryService, and Diamond proxy instantiation.
   - `crane-architecture` for Facet-Target-Repo, DFPkg structure, storage slots, etc.
-  - `crane-testing` for `CraneTest`, TestBase inheritance, factory bootstrap in tests, Behavior libraries, and handlers.
-- See `docs/` (especially `docs/deployment/`) for additional reference material.
+  - `crane-testing` for `CraneTest`, TestBase inheritance, factory bootstrap, Behavior libraries, handlers, and **production-first testing**.
+- See `docs/` (especially `docs/deployment/` and `docs/development/testing.md`) for additional reference material.
 - See `docs/CODEBASE_MAP.md` for architecture overview.
+- Generic Foundry primers (`forge-testing`) are subordinate to `crane-testing` for protocol and Diamond work.
 
 Consumers of Crane may layer additional rules (e.g. registries for certain packages). Those details belong in the consumer's documentation.
 
@@ -501,7 +502,7 @@ Each DEX follows:
 protocols/dexes/{protocol}/{version}/
 ├── *AwareRepo.sol   # Dependency injection for router/factory/vault
 ├── services/        # Business logic libraries
-├── stubs/           # Mock implementations for testing
+├── stubs/           # Protocol ports: real/protocol-faithful impls for hermetic local deploy (NOT mocks)
 └── test/bases/      # TestBase_*.sol shared test setup
 ```
 
@@ -570,6 +571,29 @@ Use hierarchical dot-notation:
 
 ## Testing
 
+### Production-first (mandatory preference)
+
+**Prefer production code and production deploy paths. Do not invent mocks for the subject under test.**
+
+1. Deploy real facets / DFPkgs / diamonds via `CraneTest` factories (`create3Factory`, `diamondPackageFactory`) — same path as production.
+2. Inherit existing `TestBase_*` chains; search before inventing setup.
+3. External protocols: use **protocol ports** under `protocols/.../stubs/` (hermetic) or **fork bases** (live state). Do not invent interface mocks when a TestBase already deploys the protocol.
+4. Test doubles outside the SUT are OK only when they implement real interfaces and add controllability (e.g. mintable ERC20).
+5. `vm.mockCall` / fake contracts: last resort for non-SUT isolation or documented oracle/VRF harnesses — **SUT stays real**.
+
+**Never mock** facets, DFPkgs, diamond proxies, or factory/registry surfaces under test. Never pass `address(0)` facets into DFPkg init (LR-7).
+
+### Terminology
+
+| Term | Meaning |
+|------|---------|
+| **Protocol port (`*/stubs/`)** | Protocol-faithful implementation for hermetic deploy (e.g. Camelot factory) — not a fake |
+| **Harness / mintable stub** | Minimal token or target with test hooks (mint, reentrancy) |
+| **Mock / test double** | Canned dependency; last resort; never the SUT |
+| **Handler** | Fuzz/invariant wrapper around a real SUT |
+
+Details: `crane-testing` skill + `docs/development/testing.md`.
+
 ### Test Directory Structure
 
 Test infrastructure lives in `contracts/`, test specs live in `test/`:
@@ -616,7 +640,8 @@ test/foundry/spec/                      # Actual test specs mirror contracts/
 - `TestBase_*.sol` and `Behavior_*.sol` live in `contracts/` alongside the code they test
 - Protocol test bases go in `contracts/protocols/.../test/bases/`
 - Actual test specs (`*.t.sol`) go in `test/foundry/spec/` mirroring `contracts/` structure
-- Stubs, comparators, and shared utilities go in `contracts/test/`
+- Protocol ports live under `protocols/.../stubs/`; small harness stubs/comparators live in `contracts/test/`
+- Prefer production-first ladder above; see LR-7 in `crane-testing`
 
 ### TestBase Pattern
 
