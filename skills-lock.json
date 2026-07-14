@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "skills": {
+    "0xwork": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "0xwork/SKILL.md",
+      "computedHash": "184d25c4affdf1874c5f7132a2af128233a8c20ddf6cff98c006784b9403782e"
+    },
+    "1claw": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "1claw/SKILL.md",
+      "computedHash": "60a0f9528c23c13bbeb5d9b684b069f3c4d9b3940fbba6a192386183339768ce"
+    },
+    "Base Account": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base-account/SKILL.md",
+      "computedHash": "75ae43a389f5c964e1ab4af6c9be39fe551bccf772c47ff49cd0f14f25badc6e"
+    },
+    "Base Deploy": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base-deploy/SKILL.md",
+      "computedHash": "2cdd1d89540f426d996b4ec5f2665eb45c819b04571ecf24434682c3c1d30d51"
+    },
+    "Base Network": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base-network/SKILL.md",
+      "computedHash": "66d37f3d6f91fed807690072c4ef7d79bffded63ca323923c1aecc14ce501ebb"
+    },
+    "Base Node": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base-node/SKILL.md",
+      "computedHash": "2b47e935a94b9049d3df8fe2de33308c18e9113c703c9301e246f8dd7071e51b"
+    },
+    "Building Blocks": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-building-blocks/SKILL.md",
+      "computedHash": "3784afb3861e05770fd99d07e92979b88107ecca0fb674343e4983e26a318633"
+    },
+    "Contract Addresses": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-addresses/SKILL.md",
+      "computedHash": "7a242d7e41dc46046725ec77e8001c7eaafff10c4640fc6606b4ab62857b2aae"
+    },
+    "Frontend Playbook": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-frontend-playbook/SKILL.md",
+      "computedHash": "91fa97e596e895c3182a1760234f6819ede0aefab48d038fc8736806146d3e91"
+    },
+    "Frontend UX": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-frontend-ux/SKILL.md",
+      "computedHash": "9222cb12971b9f6f0dd64a87fac6b125b32ec1d94e4527e356de8db7fbb00fd0"
+    },
+    "Gas & Costs": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-gas/SKILL.md",
+      "computedHash": "8992d4d740f5e50f31d08ee965bb11798e99eb0d15c3186ed159109c9f504c1f"
+    },
+    "Indexing": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-indexing/SKILL.md",
+      "computedHash": "a6bca552344b5c1b0fc2e921fb0ba488d051b9f8ad1513b226cbc0fb368544aa"
+    },
+    "Layer 2s": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-l2s/SKILL.md",
+      "computedHash": "42f903f785407abf5bb8fe9d7c7ecb21cd2cbec1dde5042c357d5b355fb8d9e5"
+    },
+    "MiniKit to Farcaster": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base-minikit/SKILL.md",
+      "computedHash": "0653aeaa8904fdd4f1c751f14f009cb422effa587b23205d27bc7923474272ff"
+    },
+    "Orchestration": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-orchestration/SKILL.md",
+      "computedHash": "f3e39c56d7d88b38ad5d1f151f91a1f841aa6c31c22927780606c0530d6ad988"
+    },
+    "QA Checklist": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-qa/SKILL.md",
+      "computedHash": "4c26618a162e9a1dbfcd7f3c7beb20717325533c41405f3bad531bcbb3ec5b7c"
+    },
+    "Security": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-security/SKILL.md",
+      "computedHash": "ac663e79fbf29d569c401df0d6b519b06db31d0bb0903633400128f882ce5028"
+    },
+    "Smart Contract Audit": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-audit/SKILL.md",
+      "computedHash": "1ea4db6a62849d525a9a9fb737f9c054dc5295dad38745b2a045da812a9689d8"
+    },
+    "Standards": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-standards/SKILL.md",
+      "computedHash": "ed20765b1a71065e0ed4ad26ca5367a781be428b46d28411654772e1365a30fe"
+    },
+    "Testing": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-testing/SKILL.md",
+      "computedHash": "f0bd00741518358b5403cc9b5927942dafac5d88ea0317a08932d026bc28f846"
+    },
+    "Tools": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-tools/SKILL.md",
+      "computedHash": "4a5f66bc9384d3691369119f345063f56f5aa3ffbb6423f72313220d4237aeea"
+    },
+    "Uniswap CCA": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "uniswap-cca/SKILL.md",
+      "computedHash": "a8602654320b579380bf5c05c0fd03b6e261dce4e441ca6d55c65006f6bdc772"
+    },
+    "Uniswap Driver": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "uniswap-driver/SKILL.md",
+      "computedHash": "20c81279dd27c5947f3cf745b1dc205769e9748b10874b9163428e27433291ef"
+    },
+    "Uniswap Hooks": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "uniswap-hooks/SKILL.md",
+      "computedHash": "2f104ae4093c9b0e28ffe231df5a1cc5204146988f1e5a832680214d00b97999"
+    },
+    "Uniswap Trading": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "uniswap-trading/SKILL.md",
+      "computedHash": "f4b824bde19e602da87a489ba2d932e8364f657fc4b88fd273b15f071f0a0d29"
+    },
+    "Uniswap Viem": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "uniswap-viem/SKILL.md",
+      "computedHash": "4f8b2f50d89464227e03409c46744fdb8786c7cb37288f1998e9f79bf9926ff4"
+    },
+    "Wallets": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-wallets/SKILL.md",
+      "computedHash": "d87593bf9ec84c30d7f3ed252c88696201f7b575eeafdbb9690f3ddbffac1ceb"
+    },
+    "Why Ethereum": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ethskills-why/SKILL.md",
+      "computedHash": "104cd57fa04ffe0c098ac4a22b884ddcdb09ff76249a4e23faaff814d06531ef"
+    },
+    "aeon-autoresearch": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-autoresearch/SKILL.md",
+      "computedHash": "4e6e8a47777da6489e373346d9bd8d6c07de4f66aa157084fff95efe15ee2a4a"
+    },
+    "aeon-deal-flow": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-deal-flow/SKILL.md",
+      "computedHash": "43db82366c057e961b9763ee485b8c3de4127ef2e1b92838e8ac90aa7e837e30"
+    },
+    "aeon-deep-research": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-deep-research/SKILL.md",
+      "computedHash": "3303bbfb4fa144eb93dbdb90f7ff7b4650e7ba28cebfbd00a0e08bc559835e2e"
+    },
+    "aeon-defi-monitor": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-defi-monitor/SKILL.md",
+      "computedHash": "fa501379bb92d4a1b8a7342b32335ab95635348203455c1bbb01ccfa5a6e1409"
+    },
+    "aeon-defi-overview": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-defi-overview/SKILL.md",
+      "computedHash": "3f7f69f505aed871deeddd114832da12c878da172aa282cc5f7192be3aeb7a0e"
+    },
+    "aeon-distribute-tokens": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-distribute-tokens/SKILL.md",
+      "computedHash": "29d1115365cd754baef0be3e56508bee03fc0283a64f92bf487cc4b64cd0c0e6"
+    },
+    "aeon-hacker-news-digest": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-hacker-news-digest/SKILL.md",
+      "computedHash": "265e4ae77521591659b2b264f3ce6479e786adc164c5ffc2286011315c0a03c8"
+    },
+    "aeon-huggingface-trending": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-huggingface-trending/SKILL.md",
+      "computedHash": "4537cddb6e9801fc94ad21e80d96198746c400e7ced3c897c8bf967a189e3c59"
+    },
+    "aeon-last30": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-last30/SKILL.md",
+      "computedHash": "5c54f8b4c11b6674f273f8657ecbba029039dbdac1078a4d722c56cacf5f5ea9"
+    },
+    "aeon-monitor-kalshi": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-monitor-kalshi/SKILL.md",
+      "computedHash": "9dac5830d32bc3c1687a34e54bed9cb8142e5c152a29a92600f7039df5083074"
+    },
+    "aeon-monitor-polymarket": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-monitor-polymarket/SKILL.md",
+      "computedHash": "012d32dff7d249a6bed447d97f5b923d2e973b9a44552393a8e7d49d7132c8b4"
+    },
+    "aeon-monitor-runners": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-monitor-runners/SKILL.md",
+      "computedHash": "06a35d8f23b15e6d64449d24b7e50cd9a7e2ae8716fe164093234fadc8497f47"
+    },
+    "aeon-narrative-tracker": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-narrative-tracker/SKILL.md",
+      "computedHash": "5f85b5cfa9e7e073d670c8b6296da5f68b0f195c8230f7bd8d6a16f07e8a2869"
+    },
+    "aeon-on-chain-monitor": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-on-chain-monitor/SKILL.md",
+      "computedHash": "f8b329db9d283ff514fb849b9e1b0e52619a27fb2377e98a07e91adef210c182"
+    },
+    "aeon-paper-pick": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-paper-pick/SKILL.md",
+      "computedHash": "ccf67a60cb67b1139e9dab642a23c175875027ff637befe059beb0d1af077962"
+    },
+    "aeon-reg-monitor": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-reg-monitor/SKILL.md",
+      "computedHash": "b785486721f000608ffc3bd655d56ecfe2743c6333ccb093e64b32232ecf8b0d"
+    },
+    "aeon-rss-digest": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-rss-digest/SKILL.md",
+      "computedHash": "91e7b099cee7ed0bd467d459de6c65f351d23d87bd5d2a370d2edefe54291828"
+    },
+    "aeon-skill-evals": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-skill-evals/SKILL.md",
+      "computedHash": "1de61d826e95e6eb2c0a0baefcedf31edf0b9cba8e8c3373de10ac8d19ebef72"
+    },
+    "aeon-skill-repair": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-skill-repair/SKILL.md",
+      "computedHash": "34d42510184602ccb9fd33ef1793f9d27b1ff414b9f9ececf7889f22d522705d"
+    },
+    "aeon-skill-security-scan": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-skill-security-scan/SKILL.md",
+      "computedHash": "3542820475b10ee53a643c3a698ec3a46cc444586b8eca603dd257e13ecbbf92"
+    },
+    "aeon-token-movers": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-token-movers/SKILL.md",
+      "computedHash": "a6a3d8e844925a6721959efc842ceeb1fa82f47f10a26286f014980525f42529"
+    },
+    "aeon-token-pick": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-token-pick/SKILL.md",
+      "computedHash": "a65041dd1b9e215f7a98c68c231833cd7063a1d3b8b6b3a34a4e445483b9b0ac"
+    },
+    "aeon-unlock-monitor": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-unlock-monitor/SKILL.md",
+      "computedHash": "57114a5960c90869f5c80324a0d68dddf90c1e0b5928627258647941763ca42b"
+    },
+    "aeon-vuln-scanner": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "aeon-vuln-scanner/SKILL.md",
+      "computedHash": "21cd1258682782300a235bd05618c96518c5d61d3b998e85abcd414c8c625b4a"
+    },
+    "agent-wormhole": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "agent-wormhole/SKILL.md",
+      "computedHash": "3be6f0b24ba13f1f9ef0b2e91745ce27ea3200f9a789eb8f1fdde3f832bbc516"
+    },
+    "agenticbets": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "agenticbets/SKILL.md",
+      "computedHash": "c0bd71f57778c9bad71b3d74bd37a1848daddcd94028b22c9660d2804e066be3"
+    },
+    "alchemy": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "alchemy/SKILL.md",
+      "computedHash": "548f109638fcc143d2591f0556097febf0d23d43d861834f9618c67120e26770"
+    },
+    "autoboy": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "autoboy/SKILL.md",
+      "computedHash": "688f68e14663f29a975073f0c7564d5de8ac4e92ebcc3e974975f434494675f6"
+    },
+    "azzle": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "azzle/SKILL.md",
+      "computedHash": "ed2496bda710a84b74e9f17b23221250c8ee5a47e0681bbd9f7aef82792f321c"
+    },
+    "b20-console": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "b20-console/SKILL.md",
+      "computedHash": "218d237dc65592d5d69c67d003091b2aa33dc666c182775e66ca120fcd2705a1"
+    },
+    "bankr": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "bankr/SKILL.md",
+      "computedHash": "519c73b4833d73ee1f003124b796568fbcdf05cc3048e23416176954ab1b2f49"
+    },
+    "bankr-communities": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "bankr-communities/SKILL.md",
+      "computedHash": "af6eb3a67ed5e464c686b30220ebca532eaf3dfffbdd0a2ec9003bc8488ee5de"
+    },
+    "bankr-shopify": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "bankr-shopify/SKILL.md",
+      "computedHash": "4bdde0ffb825162b755bdfca1b503716ccc32642a7f2b37dc8e7f9cd725db125"
+    },
+    "base": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "base/SKILL.md",
+      "computedHash": "ec6d3f968180692dbf2ddec20ef77643f118f12ee1bcc691747a3a087de17e7c"
+    },
+    "berry-juicer": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "berry-juicer/SKILL.md",
+      "computedHash": "d2fc977ae8aa16d5edd8303d0a86ab0c77f1ad1a8d66857c7da45c828ac6d6ab"
+    },
+    "blueagent-x402": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "blueagent/SKILL.md",
+      "computedHash": "69d18b75f03e160d82e1edb9e5a19bd0c2df50adec976fb158a33e5b92c570ac"
+    },
+    "botchan": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "botchan/SKILL.md",
+      "computedHash": "2d1d9a8e535ae96d16f5fced2941463339882b3bc0dbc314dc83f996c5082d73"
+    },
+    "botcoin-miner": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "BOTCOIN/SKILL.md",
+      "computedHash": "03eb71cb08202922629dc4432ccc5e6a5f86b76379fcda4f6b726707b8c69363"
+    },
+    "capacitr": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "capacitr/SKILL.md",
+      "computedHash": "7f299ff435a3069e8b1ba56f470e801091937d1d15eed8b1e9de418dff509ce7"
+    },
+    "cattown": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "cattown/SKILL.md",
+      "computedHash": "4a674a1c908b7435adfb5e74833458214f363c3a876103b8dbc5a5f24447986e"
+    },
+    "checkr": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "checkr/SKILL.md",
+      "computedHash": "5b200a930834b06f2854618c22b2ebc129e9a6ee6711a8e1b6cc985b81ea327f"
+    },
+    "clanker": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "clanker/SKILL.md",
+      "computedHash": "d2b8d4e4f49b01fc4d3afc16cdf104e4b18223bf42c7283f1313ffb8f163e11f"
+    },
+    "codegrid": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "codegrid/SKILL.md",
+      "computedHash": "190010a186265c5ba000b986d4c33aab7a4e291dde06598cef9f481a759c7afe"
+    },
+    "darksol-random-oracle": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "darksol-random-oracle/SKILL.md",
+      "computedHash": "3caf14c3768df3e98428d9ca01827b5d329525ed557713ac6c95013849b228f5"
+    },
+    "delu-oracle": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "delu-oracle/SKILL.md",
+      "computedHash": "125622ea80e8aeb9634b3cf2b26e8ab762bdac1bbc0b3b6532af5a56020aa78a"
+    },
+    "endaoment": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "endaoment/SKILL.md",
+      "computedHash": "79f767525fd84c2ef705db8fe1ccd38660ca25e76edcc7009f6c69cdfd0fcdf7"
+    },
+    "ens-primary-name": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "ens-primary-name/SKILL.md",
+      "computedHash": "a9cbb590f8d38cfdd8c6b9949b165f92947f16af8cb691073a3845b1160bfc3c"
+    },
+    "erc-8004": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "erc-8004/SKILL.md",
+      "computedHash": "4478f6da7aa01ce5f391f11d45b9baa2297f4ccace49bb6a057b591666cc384c"
+    },
+    "gem-miner": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "gem-miner/SKILL.md",
+      "computedHash": "20964a1c99dbe9cbd36792f46b9077891dbe49d4033ccab8fcace28fb6933054"
+    },
+    "github-vesting": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "github-vesting/SKILL.md",
+      "computedHash": "ac3586567acdd32919d80e2d40297763ba73200d0450c28d187cad9520289763"
+    },
+    "gitlawb": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "gitlawb/SKILL.md",
+      "computedHash": "fe783ffd1452d023613b5d8defc03dc524b93a7a7802249881734d61f6169836"
+    },
+    "gmfarcaster": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "gmfarcaster/SKILL.md",
+      "computedHash": "3fa79df48646fb22d084ce7bf55b61282eec722b83fc28a84cb29bb25450a280"
+    },
+    "helixa": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "helixa/SKILL.md",
+      "computedHash": "9d98a3892bf42c6d92292dafc03fd9710e6d195c5b4f8a2a20aca0bd348688f7"
+    },
+    "hermesone": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "hermesone/SKILL.md",
+      "computedHash": "66a9e518670765c407d404a8975bc8cbcf70b7fc72ebd5c6b965db39ae0b3ee8"
+    },
+    "hoodmarkets": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "hoodmarkets/SKILL.md",
+      "computedHash": "cf5346dc4c9102487a096c3835152e20b4ba08ee6ed38f0b6876d0b211d258cb"
+    },
+    "hunch": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "hunch/SKILL.md",
+      "computedHash": "705686f1f396fb8369e8eca45a5cc3e61e034f6866d66df16c8a26daa15141cc"
+    },
+    "hydrex": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "hydrex/SKILL.md",
+      "computedHash": "37e78c3e565be77a31bf6567856c0e0a578518c5310e7cfdbafd9cb8860b13e7"
+    },
+    "litcoin-miner": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "litcoin/SKILL.md",
+      "computedHash": "bcb57742d69d1f4900bb692bf44458dfd1a155f101893bda406e1eae1f43d7e4"
+    },
+    "lonestaroracle-data": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "lonestaroracle-data/SKILL.md",
+      "computedHash": "7d538b3d968fe9032ca6a2d8cf566a3dc097f81dda00564330fd8f2c995bb9e6"
+    },
+    "megapot": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "megapot/SKILL.md",
+      "computedHash": "6a2e3e9fcf80e8760345701f01ee164024260e55a57552ca6d8e4573f18b27a2"
+    },
+    "moltycash": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "moltycash/SKILL.md",
+      "computedHash": "92a814215ba96b114aaad4337d94c29f1a366ca8872dfdb12826354c34f36b24"
+    },
+    "nexus": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "nexus-trading-labs/SKILL.md",
+      "computedHash": "4f94181c78044fc8cb8b6330b3178046aa4cef68fc04ac3714b9cae0d5034812"
+    },
+    "neynar": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "neynar/SKILL.md",
+      "computedHash": "a8eb00a2a6bb2bb49f611e2ee48ac2bdfcefe4140452d7b3c9b0738aa8785bdc"
+    },
+    "nookplot": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "nookplot/SKILL.md",
+      "computedHash": "bd6408412b03796982701717b0489d0a6ea1fca9f0a8377cf279be0a42f619ee"
+    },
+    "onair-shoutout": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "onair-shoutout/SKILL.md",
+      "computedHash": "1a52f8ad52652afa38f46575bc8cd3826951057fd0f1b00be6a637972fe3a16a"
+    },
+    "onchainkit": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "onchainkit/SKILL.md",
+      "computedHash": "3ab8b3eb6eea72365a25c8a185c92ada0017c931a08b249bfdb67d42994d05bb"
+    },
+    "opensea": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "opensea/SKILL.md",
+      "computedHash": "3711b88cb6dcfb8b45d0946440425c5874ca221bfcf0de14d85c0c46be3cf9a2"
+    },
+    "orlix": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "orlix/SKILL.md",
+      "computedHash": "be373a29eb1d73b17563bc8f6f47ba6545fe9ab169c9f6d66cdb32aeb5e1f25d"
+    },
+    "pmfi-parbitrage": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "pmfi-parbitrage/SKILL.md",
+      "computedHash": "518872628f8b3e32416cc7a167f1ceb6150963595738005c2747e94120ea360a"
+    },
+    "polygraph": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "polygraph/SKILL.md",
+      "computedHash": "9576f61173fc3cdcfcce6954a952d63349d388971d6bfa10a7723000b183fa4e"
+    },
+    "productclank-campaigns": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "productclank/SKILL.md",
+      "computedHash": "041b3453bbd4f54cd1d31b4d2bd60a3e226d3cd4232410576de3410c8f1a53ff"
+    },
+    "qrcoin": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "qrcoin/SKILL.md",
+      "computedHash": "260f624027166ae4de97f9cd410700484df7cbeddbdd2ed7b459ed60d4b16ccf"
+    },
+    "quicknode": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "quicknode/SKILL.md",
+      "computedHash": "c993c7fc3b53e48df3cdae38bb8affb69605f71a7b72175d2bd44892aa9a94a4"
+    },
+    "quotient-api": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "quotient/SKILL.md",
+      "computedHash": "cf02e52be2cbb12464b6fb7457ab21d2b94d580d0c5e6fff453eba6d13c1294b"
+    },
+    "rider-battle": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "rider-battle/SKILL.md",
+      "computedHash": "005c3620b5b0dc2a64983c4896b66e19039cbe4c185f0e19fd216566e0e68129"
+    },
+    "signa": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "signa/SKILL.md",
+      "computedHash": "4363b8a068c3c9b44a2c5f38b73bf1115cc6d627e98675b8cb2d88f4cc8110b1"
+    },
+    "signals": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "signals/SKILL.md",
+      "computedHash": "4f293df1b71744a3809c11d9bdf855cac0fbc9f837ec27131eb9d27c48e8eb39"
+    },
+    "siwa": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "siwa/SKILL.md",
+      "computedHash": "a3485e41efa322eb4b0f082377202963f467b1459a0f9628d25b9fa74e5633f0"
+    },
+    "sleuth-ai": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "sleuth-ai/SKILL.md",
+      "computedHash": "75d68fc49859c78e11854f1d0736fa4bd9a0f22c35b6f6143bfae5a99233045d"
+    },
+    "splits": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "splits/SKILL.md",
+      "computedHash": "3d1f2c54e7e963b9e6af618c21ce07cab91f06bb85d63059526446d829455f75"
+    },
+    "stakr-protocol": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "stakr/SKILL.md",
+      "computedHash": "f1281db78c0202c84fc5e4f77816e2d2d4cbce30ec97d0639e46d1da749a28ba"
+    },
+    "starchild-dao": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "starchild-dao/SKILL.md",
+      "computedHash": "2b42e52a16477f92ebd2cb56b1ddda8f9485cc9ef1af45374b443f4db2c910e5"
+    },
+    "symbiosis": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "symbiosis/SKILL.md",
+      "computedHash": "b275985aac48b1b50faaa815e4a609482376c7e7ae5667cffd913851b4847d2d"
+    },
+    "token-scam-analysis": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "bankr-token-scam-analysis/SKILL.md",
+      "computedHash": "977b2d9957d7b06520b846ba85c8b258727c3c533e5982e0990518f6c61aabf2"
+    },
+    "trustlayer-sybil-scanner": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "trustlayer-sybil-scanner/SKILL.md",
+      "computedHash": "765eefb9d8889061db3392243ded5d302b11cc67b3f1e917be18e7e308fe5db0"
+    },
+    "twitter-agent": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "bankr-twitter-agent/SKILL.md",
+      "computedHash": "2fd612bd5bfde6596429cb143f356344034dfb5001de50a9d868dec2a9bfdd29"
+    },
+    "veil": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "veil/SKILL.md",
+      "computedHash": "4dae667f58e9f5776d4b43b91569f19d370f44751190d61094368b1eb89aca58"
+    },
+    "versa-deploy": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "versa/SKILL.md",
+      "computedHash": "aadc59c5a8693a1cf307dcc6fec83b6d40c2f8d3fc8d77c472a9dd661b1f3e82"
+    },
+    "wake-token-spotter-analysis": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "wake-token-spotter-analysis/SKILL.md",
+      "computedHash": "1c801b40bf1e0421f232b0078eabdb6830039835e3f3913b474e6880e387e22e"
+    },
+    "yoink": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "yoink/SKILL.md",
+      "computedHash": "b8b60d219943720d674d816fd782547b0211132c626789e6992e82bb38c08fba"
+    },
+    "zapper": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "zapper/SKILL.md",
+      "computedHash": "65c9f487451c81283b954dd12ff9854d33902cce717315efa58b0b81bdcda431"
+    },
+    "zerion": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "zerion/SKILL.md",
+      "computedHash": "65dbd3b28ca1becfa034ed803e9899fac59d0516777cec82281d822d1e779950"
+    },
+    "zyfai": {
+      "source": "BankrBot/skills",
+      "sourceType": "github",
+      "skillPath": "zyfai/SKILL.md",
+      "computedHash": "67e42c084f49e847a42d850997da5419726edd409ebb36f02cfd56e8dd84b429"
+    }
+  }
+}

@@ -89,7 +89,11 @@
       "Bash(git config *)",
       "Bash(rm -rf /Users/cyotee/Development/github-cyotee/indexedex/.git/modules/lib/crane/modules/lib/chainlink-local)",
       "Bash(rm -rf lib/chainlink-local)",
-      "Bash(git submodule *)"
+      "Bash(git submodule *)",
+      "Read(//Users/cyotee/Development/projects-defi/daosys/lib/indexedex/**)",
+      "Bash(forge test *)",
+      "Bash(\"/Users/cyotee/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" e848d4d *)",
+      "Bash(grep -rln \"facetFuncs\\(\\)\\\\.length\\\\|facetFuncs\\(\\).length == 11\\\\|funcs.length\" test/foundry/spec/protocols/dexes/balancer/v3/pools/constProd/standardExchange/)"
     ]
   },
   "sandbox": {
