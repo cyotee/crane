@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verify GitBook publish readiness for Crane docs/ (SUMMARY uniqueness + path existence).
+# Verify GitBook publish readiness for Crane docs/.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -28,7 +28,6 @@ if [[ ! -f docs/SUMMARY.md ]]; then
   exit 1
 fi
 
-# Extract markdown link targets ending in .md (path only, no anchors)
 paths_file="$(mktemp)"
 grep -oE '\([^)#]+\.md' docs/SUMMARY.md | sed 's/^(//' | sort > "$paths_file"
 
@@ -40,7 +39,6 @@ fi
 
 count="$(wc -l < "$paths_file" | tr -d ' ')"
 
-# Uniqueness
 dupes="$(uniq -c "$paths_file" | awk '$1 > 1 {print}')"
 if [[ -n "$dupes" ]]; then
   echo "FAIL: duplicate SUMMARY paths:"
@@ -50,7 +48,6 @@ else
   echo "OK: every SUMMARY path appears exactly once ($count entries)"
 fi
 
-# Existence
 while IFS= read -r f; do
   if [[ ! -f "docs/$f" ]]; then
     echo "FAIL: missing docs/$f"
@@ -60,7 +57,6 @@ done < "$paths_file"
 echo "OK: all SUMMARY targets exist under docs/"
 rm -f "$paths_file"
 
-# Bulk pollution at docs top-level
 for name in reports audits; do
   if [[ -e "docs/$name" ]]; then
     echo "FAIL: docs/$name should be under docs/archive/"
@@ -77,7 +73,6 @@ else
   echo "OK: no Balancer Hack scrapes at docs top-level"
 fi
 
-# Required public pages for LR-2
 for f in \
   docs/getting-started.md \
   docs/deployment/create3.md \
@@ -97,6 +92,75 @@ do
   fi
 done
 echo "OK: required LR-2 public pages present"
+
+# Stale pre-archive path in public product docs (exclude archive + superpowers)
+stale_file="$(mktemp)"
+find docs -name '*.md' \
+  ! -path 'docs/archive/*' \
+  ! -path 'docs/superpowers/*' \
+  -exec grep -Hn 'docs/reports/gap' {} + > "$stale_file" 2>/dev/null || true
+if [[ -s "$stale_file" ]]; then
+  echo "FAIL: public docs still reference archived path docs/reports/gap:"
+  cat "$stale_file"
+  fail=1
+else
+  echo "OK: no public docs reference stale docs/reports/gap"
+fi
+rm -f "$stale_file"
+
+# Relative .md links must resolve (public product docs only)
+link_out="$(mktemp)"
+python3 - "$ROOT" <<'PY' > "$link_out"
+import os, re, sys
+root = sys.argv[1]
+pat = re.compile(r"\]\(([^)]+)\)")
+broken = []
+for dirpath, dirnames, filenames in os.walk(os.path.join(root, "docs")):
+    # prune archive and superpowers
+    parts = os.path.relpath(dirpath, root).split(os.sep)
+    if "archive" in parts or "superpowers" in parts:
+        dirnames[:] = []
+        continue
+    for name in filenames:
+        if not name.endswith(".md"):
+            continue
+        path = os.path.join(dirpath, name)
+        try:
+            text = open(path, encoding="utf-8", errors="replace").read()
+        except OSError as e:
+            broken.append(f"{path}: unreadable ({e})")
+            continue
+        for m in pat.finditer(text):
+            target = m.group(1).strip()
+            if target.startswith(("http://", "https://", "mailto:", "#")):
+                continue
+            # strip optional title
+            if " " in target and (target.endswith('"') or '"' in target):
+                target = target.split(" ")[0]
+            path_part = target.split("#", 1)[0]
+            if not path_part.endswith(".md"):
+                continue
+            if path_part.startswith("/"):
+                resolved = os.path.normpath(root + path_part)
+            else:
+                resolved = os.path.normpath(os.path.join(dirpath, path_part))
+            if not os.path.isfile(resolved):
+                rel = os.path.relpath(path, root)
+                broken.append(f"{rel} -> {target}")
+if broken:
+    print("FAIL: broken relative .md links in public docs:")
+    for b in sorted(set(broken)):
+        print(b)
+    sys.exit(1)
+print("OK: all relative .md links in public docs resolve")
+sys.exit(0)
+PY
+link_rc=$?
+cat "$link_out"
+rm -f "$link_out"
+if [[ "$link_rc" -ne 0 ]]; then
+  fail=1
+fi
 
 if [[ "$fail" -ne 0 ]]; then
   echo "GitBook docs check FAILED"

@@ -44,7 +44,7 @@ Storage symbols are documented to the same standard as all public surface:
   ```
 - Dual `_layoutStruct(bytes32)` and `_layoutStruct()` overloads are similarly tagged (e.g. `_layoutStruct(bytes32)[]`).
 
-This follows the canonical ERC8023 gold standard and AGENTS.md rules. Documentation tooling can `include::` exact snippets. Custom NatSpec values for related selectors (e.g. IFacet methods `facetInterfaces()` = 0x2ea80826) are populated exclusively from `docs/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` via the dedicated verification script (`scripts/foundry/ComputeNatSpecValues.s.sol`). See [development/natspec.md](../development/natspec.md).
+This follows the canonical ERC8023 gold standard and AGENTS.md rules. Documentation tooling can `include::` exact snippets. Custom NatSpec values for related selectors (e.g. IFacet methods `facetInterfaces()` = 0x2ea80826) are populated exclusively from `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` via the dedicated verification script (`scripts/foundry/ComputeNatSpecValues.s.sol`). See [NatSpec and Documentation](../development/natspec.md).
 
 Repos always document **both** the parameterized form (taking `Storage storage layoutStruct`) and the default overload.
 

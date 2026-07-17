@@ -113,16 +113,16 @@ Existing `docs/development/natspec.md` (this file) reflects the full scope (incl
 
 ## Central Values Process (Single Source of Truth)
 
-Use `docs/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` exclusively:
+Use `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` exclusively (moved under `docs/archive/` for GitBook hygiene; still the single source of truth for selectors/interfaceIds):
 
-1. Find the symbol in the relevant gap report under `docs/reports/gap/`.
+1. Find the symbol in the relevant gap report under `docs/archive/reports/gap/`.
 2. Insert the `@custom:` lines using **ONLY** the pre-computed values from that file.
 3. Wrap with the exact `// tag::...[]` / `// end::...[]` as per gold standard.
 4. Verify with `forge build` and targeted tests.
 
 Subagents and consumers must not independently compute values (e.g. via ad-hoc `cast`). Date of current central pass: 2026-07-02. Values were derived via cast for this pass but the strict requirement (LR-1) is to use the dedicated Foundry Script (`scripts/foundry/ComputeNatSpecValues.s.sol`) for authoritative values going forward. The central file is the single source of truth populated from the script output.
 
-See the top of `CENTRALLY_COMPUTED_NATSPEC_VALUES.md` for usage and expansion instructions. Regenerate via the script when symbols are added.
+See the top of `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` for usage and expansion instructions. Regenerate via the script when symbols are added.
 
 ## Required Elements for Every Documented Symbol (LR-1)
 
@@ -163,25 +163,25 @@ This standard enables safe reuse by other agents and projects:
 
 - Follow AGENTS.md "NatSpec & Documentation Comment Standard" together with this doc (PRD LR-1 is authoritative; it requires the stricter Foundry Script + central values over older `cast`-only examples).
 - `crane-natspec` skill (and references/natspec-examples.md) operationalizes this for agents. Keep skills in sync (LR-3).
-- Supports LR-2 GitBook requirements: accurate extractable NatSpec underpins required content on CREATE3 Package for chain setup, DiamondPackageCallBackFactory public reuse (no per-chain redeploy), Registries (purpose/population/usage), ported protocol TestBases + utilities, general Sets/math/collections (cross-link to `docs/deployment/*`, `docs/concepts/*`, `docs/protocols/*`).
+- Supports LR-2 GitBook requirements: accurate extractable NatSpec underpins required content on CREATE3 Package for chain setup, DiamondPackageCallBackFactory public reuse (no per-chain redeploy), Registries (purpose/population/usage), ported protocol TestBases + utilities, general Sets/math/collections (cross-link to [deployment](../deployment/create3.md), [concepts](../concepts/registries.md), [protocols](../protocols/dexes.md)).
 - LR-4 value prop: Fully documented, centrally-verified facets/packages allow "deploy once, attach everywhere" -- security via reuse of verified code (agent-error reduction), cost via not re-deploying bytecode.
-- When working: always read the target gap report + CENTRALLY_COMPUTED... + PRD LR sections + AGENTS.md + referenced sources (in that strict order) before editing.
+- When working: always read the target gap report + central NatSpec values + PRD LR sections + AGENTS.md + referenced sources (in that strict order) before editing.
 - Document test code when referenced in public surfaces or behaviors.
 
 See also:
-- `docs/development/testing.md` (Behavior, TestBase, declaration tests)
-- `docs/deployment/dfpkg.md`, `docs/deployment/create3.md`, `docs/deployment/factory-services.md`
-- `docs/concepts/facet-target-repo.md`, `docs/concepts/storage-slots.md`
-- `docs/reference/agent-skills.md`
-- `PRD.md` (LR-1, LR-2, LR-3, LR-7)
-- `GAP_REPORT.md` (tracking)
+- [Testing Patterns](testing.md) (Behavior, TestBase, declaration tests)
+- [Diamond Factory Packages](../deployment/dfpkg.md), [CREATE3](../deployment/create3.md), [Factory Services](../deployment/factory-services.md)
+- [Facet-Target-Repo](../concepts/facet-target-repo.md), [Storage Slots](../concepts/storage-slots.md)
+- [AI Agent Skills](../reference/agent-skills.md)
+- Repo-root `PRD.md` (LR-1, LR-2, LR-3, LR-7)
+- Archived tracking: `docs/archive/reports/gap/` (includes former `GAP_REPORT` gap tree)
 - Gold standard ERC8023 sources
 
 ## Related Files
 
 - `scripts/foundry/ComputeNatSpecValues.s.sol` (PRIMARY dedicated Foundry Script per LR-1 for compiler-accurate values; see "Verification Script Requirement")
 - `scripts/compute_natspec_values.sh` (helper wrapper referencing the .s.sol for central pass)
-- `docs/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` (use ONLY these values)
-- Per-file gap reports under `docs/reports/gap/`
+- `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` (use ONLY these values)
+- Per-file gap reports under `docs/archive/reports/gap/`
 - `contracts/factories/diamondPkg/Behavior_IFacet.sol` and `TestBase_IFacet.sol` (example usage of documented IFacet surface)
 - Gold standard: `contracts/access/ERC8023/*` (full tags + custom + rich NatSpec + duals)

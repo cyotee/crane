@@ -6,9 +6,9 @@ Crane tests separate infrastructure setup, behavior specification, and invariant
 
 **LR-2 GitBook Focus (this document):** Detailed patterns, Behavior libs, handlers, TestBase usage, cross-links to registries, ported protocols, and utilities (Sets, ConstProdUtils, etc.). Content enables agents and developers to correctly exercise Crane for safe reuse of verified facets/packages (see LR-4).
 
-**Central NatSpec Rule (aligns LR-1/LR-7):** Any NatSpec examples or declaration tests shown here use **ONLY** values from `docs/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md`. Never ad-hoc `cast` in docs. See `docs/development/natspec.md` and the dedicated `scripts/foundry/ComputeNatSpecValues.s.sol` verification script.
+**Central NatSpec Rule (aligns LR-1/LR-7):** Any NatSpec examples or declaration tests shown here use **ONLY** values from the central NatSpec values file at `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` (archived after GitBook hygiene; still the in-repo single source for selectors). Never ad-hoc `cast` in docs. See [NatSpec and Documentation](natspec.md) and the dedicated `scripts/foundry/ComputeNatSpecValues.s.sol` verification script.
 
-See also: [AGENTS.md](AGENTS.md) (crane-testing section + full TestBase/Behavior/handler examples), PRD.md (LR-2/LR-7), `crane-testing` skill.
+See also: repo-root `AGENTS.md` (crane-testing section + full TestBase/Behavior/handler examples), `PRD.md` (LR-2/LR-7), `crane-testing` skill.
 
 ## Directory Layout
 

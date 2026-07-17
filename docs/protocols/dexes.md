@@ -241,10 +241,10 @@ See concrete examples in:
 ## Cross-Links & Next Steps
 
 - Full Crane test inheritance: AGENTS.md "TestBase Inheritance Chain Example".
-- DFPkg + factory flow for DEX pool wrappers: [docs/deployment/dfpkg.md](docs/deployment/dfpkg.md), IDiamondFactoryPackage (central selectors: `facetCuts()` `0xa4b3ad35`, `initAccount()` `0x870d4838`, `postDeploy()` `0x70068fcf`).
-- General utilities (Sets, other math): referenced in PRD LR-2; see `contracts/utils/collections/`, `contracts/utils/math/`.
-- Registries + CREATE3: deployment docs (registries track facets/packages for reuse).
-- Agent skills: `reference/agent-skills.md`.
+- DFPkg + factory flow for DEX pool wrappers: [Diamond Factory Packages](../deployment/dfpkg.md), IDiamondFactoryPackage (central selectors: `facetCuts()` `0xa4b3ad35`, `initAccount()` `0x870d4838`, `postDeploy()` `0x70068fcf`).
+- General utilities (Sets, other math): [Utilities Overview](../utilities/overview.md); see also `contracts/utils/collections/`, `contracts/utils/math/`.
+- Registries + CREATE3: [Registries](../concepts/registries.md), [CREATE3](../deployment/create3.md).
+- Agent skills: [AI Agent Skills](../reference/agent-skills.md).
 
 Consult individual skills and the source `contracts/protocols/dexes/*/README.md` (where present) for integration recipes. All tests follow LR-7 rules (full init before asserts, exact vs side-effect, Behavior where applicable).
 
