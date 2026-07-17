@@ -15,10 +15,11 @@ See the protocol-specific skills for deeper agent guidance:
 - `crane-camelot`.
 
 Cross-reference:
-- Architecture: [docs/CODEBASE_MAP.md](docs/CODEBASE_MAP.md) and AGENTS.md (protocol structure + TestBase inheritance).
-- Lifecycle details: [docs/protocols/balancer/v3/Balancer_V3_Lifecycle.md](docs/protocols/balancer/v3/Balancer_V3_Lifecycle.md), [docs/protocols/uniswap/v4/Uniswap_V4_Lifecycle.md](docs/protocols/uniswap/v4/Uniswap_V4_Lifecycle.md).
-- Testing patterns: [docs/development/testing.md](docs/development/testing.md), crane-testing skill.
-- Deployment reuse: DiamondPackageCallBackFactory (interfaceId `0x949da331`) is intended for public reuse across chains; see deployment docs and IDiamondFactoryPackage (e.g. `packageName()` selector `0xabc8b346`).
+- Architecture: [Codebase Map](../CODEBASE_MAP.md) and AGENTS.md (protocol structure + TestBase inheritance).
+- Lifecycle details: [Balancer V3 Lifecycle](balancer/v3/Balancer_V3_Lifecycle.md), [Uniswap V4 Lifecycle](uniswap/v4/Uniswap_V4_Lifecycle.md).
+- Testing patterns: [Testing Patterns](../development/testing.md), crane-testing skill.
+- Shared math: [ConstProdUtils & Math](../utilities/math-const-prod.md).
+- Deployment reuse: DiamondPackageCallBackFactory (interfaceId `0x949da331`) is intended for public reuse across chains; see [CREATE3](../deployment/create3.md) and [DFPkg](../deployment/dfpkg.md) (e.g. `packageName()` selector `0xabc8b346`).
 
 ## Protocol Directory Structure
 
@@ -248,3 +249,11 @@ See concrete examples in:
 Consult individual skills and the source `contracts/protocols/dexes/*/README.md` (where present) for integration recipes. All tests follow LR-7 rules (full init before asserts, exact vs side-effect, Behavior where applicable).
 
 This surface enables safe, reusable DEX logic inside upgradeable Diamonds with minimal redeployment cost.
+
+## See also
+
+- [Lending Protocols](lending.md)
+- [ConstProdUtils & Math](../utilities/math-const-prod.md)
+- [Testing Patterns](../development/testing.md)
+- [CREATE3 & New Chain Setup](../deployment/create3.md)
+- [Getting Started](../getting-started.md)

@@ -274,3 +274,12 @@ All core facets (DiamondCut, MultiStepOwnable, Operable, ERC165, Loupe, etc.) ar
 ## Registry Integration
 
 See the detailed "Registries Explanation" section above for purpose, population mechanics (via `_register*` in Create3Factory), and consumer usage (`canonicalFacet` etc. via interface ID). The factory system maintains facet and package registries. Packages and higher-level services can resolve the canonical facet for a given interface instead of passing addresses explicitly in every `PkgInit`. Registries are exposed as facets on bootstrapped Create3Factory instances (installed via Create3FactoryDFPkg).
+
+## See also
+
+- [Registries (concept)](../concepts/registries.md)
+- [DFPkg Pattern](../concepts/dfpkg.md)
+- [Diamond Factory Packages](dfpkg.md)
+- [Factory Services](factory-services.md)
+- [Getting Started](../getting-started.md)
+- [Testing Patterns](../development/testing.md)

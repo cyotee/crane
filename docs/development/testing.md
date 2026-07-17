@@ -282,11 +282,12 @@ See `docs/development/natspec.md`.
 
 ## Cross-Reference Summary (LR-2 GitBook Navigation)
 
-- Registries, CREATE3 bootstrap, DFPkg reuse: `docs/deployment/create3.md`, `docs/deployment/dfpkg.md`
-- Ported protocols + their TestBase/handler details: `docs/protocols/dexes.md`, `docs/protocols/lending.md`
-- General utilities + Sets: referenced above + `docs/development/` (expand as needed)
+- Registries, CREATE3 bootstrap, DFPkg reuse: [CREATE3](../deployment/create3.md), [DFPkg deploy](../deployment/dfpkg.md), [Registries](../concepts/registries.md), [DFPkg pattern](../concepts/dfpkg.md)
+- Ported protocols + TestBase/handler details: [DEX Integrations](../protocols/dexes.md), [Lending](../protocols/lending.md)
+- General utilities + Sets: [Utilities Overview](../utilities/overview.md), [Sets](../utilities/sets.md), [ConstProdUtils](../utilities/math-const-prod.md)
 - Core patterns + full examples: `AGENTS.md` (Testing section)
-- NatSpec process: `docs/development/natspec.md`
+- NatSpec process: [NatSpec](natspec.md)
+- Getting started / agent reuse: [Getting Started](../getting-started.md)
 - Source roots: `contracts/test/`, `contracts/*/TestBase_*.sol`, `contracts/*/Behavior_*.sol`, `test/foundry/spec/`
 - Skills: `crane-testing`, protocol-specific skills
 

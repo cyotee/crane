@@ -34,3 +34,9 @@ Failure to respect the gate risks fund loss for users of reusable packages.
 - `contracts/InitBcService.sol`
 - BattleChain docs (LLM-friendly): https://docs.battlechain.com/llms-full.txt
 - Pilot examples in `scripts/`
+
+## See also
+
+- [CREATE3 & New Chain Setup](create3.md)
+- [Testing Patterns](../development/testing.md)
+- [Getting Started](../getting-started.md)

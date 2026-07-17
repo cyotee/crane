@@ -153,3 +153,11 @@ Packages may install a temporary `PostDeployAccountHookFacet` during initializat
 ## Application / Consumer Layers
 
 Crane's DFPkg + factory primitives are general. Some projects add registry or manager facades on top for registration, discovery, and access control of certain package types. Those additional rules and entry points are the responsibility of the consuming application — see the consumer's documentation.
+
+## See also
+
+- [DFPkg Pattern (concepts)](../concepts/dfpkg.md)
+- [CREATE3 & New Chain Setup](create3.md)
+- [Registries](../concepts/registries.md)
+- [Getting Started](../getting-started.md)
+- [ERC20 + Permit + DFPkg](../tokens/erc20.md)

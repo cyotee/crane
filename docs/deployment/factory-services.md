@@ -62,3 +62,9 @@ SomePkg pkg = ... (deployPackageWithArgs(..., abi.encode(PkgInit({
 ## Benefits for Reuse
 
 All consumers resolve to the same canonical facet addresses. When a package is constructed with these facets, every proxy it creates references the identical implementations. Updating a facet requires only redeploying the facet (new salt or new versioned package) and updating packages that depend on it.
+
+## See also
+
+- [CREATE3 & New Chain Setup](create3.md)
+- [Diamond Factory Packages](dfpkg.md)
+- [Registries](../concepts/registries.md)

@@ -47,11 +47,16 @@ Packages define the set of facets and the initialization steps required to produ
 
 ## How to Use These Docs
 
-- Concepts: architecture and patterns.
-- Development: style, documentation, and testing conventions.
-- Deployment: factories and packages.
-- Access Control and Tokens: ready-to-use building blocks.
-- Reference: interfaces and metadata.
+Navigation is driven by [SUMMARY.md](SUMMARY.md) (GitBook TOC — each page listed once).
+
+- [Getting Started](getting-started.md) — install, agent reuse, map of required topics
+- Concepts: architecture and patterns ([Facet-Target-Repo](concepts/facet-target-repo.md), [Registries](concepts/registries.md), [DFPkg](concepts/dfpkg.md))
+- Development: style, documentation, and testing conventions
+- Deployment: [CREATE3](deployment/create3.md), packages, factory services
+- Utilities: [overview](utilities/overview.md), [sets](utilities/sets.md), [ConstProdUtils](utilities/math-const-prod.md)
+- Access Control and Tokens: ready-to-use building blocks
+- Protocols: [DEX](protocols/dexes.md), [lending](protocols/lending.md)
+- Reference: interfaces, agent skills, [codebase map](CODEBASE_MAP.md)
 
 ## Prerequisites
 

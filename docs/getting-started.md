@@ -46,7 +46,20 @@ All agent-facing docs and skills ground claims in this exact reuse-based reasoni
   - Math utilities (e.g. ConstProdUtils).
   - Other collections, cryptography, and helper libraries.
 
-Agent-focused "Getting Started", "Building with Crane", and architecture sections must tie everything back to reusability benefits. See also `docs/deployment/create3.md`, `docs/deployment/dfpkg.md`, `docs/CODEBASE_MAP.md`, `docs/development/testing.md`.
+Agent-focused "Getting Started", "Building with Crane", and architecture sections must tie everything back to reusability benefits.
+
+## Documentation map (GitBook)
+
+| Topic | Page |
+|-------|------|
+| CREATE3 / new chain / DPCF reuse | [CREATE3 & New Chain Setup](deployment/create3.md) |
+| DFPkg operations | [Diamond Factory Packages](deployment/dfpkg.md) · [DFPkg Pattern](concepts/dfpkg.md) |
+| Registries | [Registries](concepts/registries.md) |
+| Testing / TestBases | [Testing Patterns](development/testing.md) |
+| DEX / lending ports | [DEX Integrations](protocols/dexes.md) · [Lending](protocols/lending.md) |
+| Sets / ConstProdUtils | [Utilities Overview](utilities/overview.md) · [Sets](utilities/sets.md) · [Math](utilities/math-const-prod.md) |
+| Building modules | [Building with Crane](concepts/building-with-crane.md) |
+| Architecture map | [Codebase Map](CODEBASE_MAP.md) |
 
 ## Install
 
@@ -245,7 +258,7 @@ IERC20 token = erc20Pkg.deploy(
 - Read `AGENTS.md` (required; covers skills install, patterns, deployment) and `docs/CODEBASE_MAP.md` (GitBook navigation for LR-2 areas: registries, protocols, utilities/Sets).
 - Install + follow `crane-deployment`, `crane-testing`, `crane-architecture` skills (repo `.claude/skills/` **and** your global per LR-3/PRD/AGENTS). The relevant Crane and protocol skills must be installed and available both inside this repository (`.claude/skills/`) **and** in the user's global Claude/agent environment. Use for LR-2 GitBook content (Create3 pkg chain setup with ONLY central NatSpec values, DPCF reuse, registries, TestBase for protocols + utilities + Sets). Skills must be kept in sync with standards.
 - Implement tests with `TestBase_*` + `Behavior_*` + handlers (full init, exact asserts, declaration tests using central values per LR-7).
-- Add NatSpec + `// tag::Symbol[] ... // end::Symbol[]` on all documented symbols (use ONLY `CENTRALLY_COMPUTED_NATSPEC_VALUES.md`).
+- Add NatSpec + `// tag::Symbol[] ... // end::Symbol[]` on all documented symbols (use verified central NatSpec values only; if regenerating, see archive note under `docs/archive/README.md`).
 - Contribute/update skills when you ship reusable patterns.
 - Practice exact **LR-4 reuse**: When code is known to be good, reusing it (via facets attached through DFPkgs) eliminates the risk of introducing new bugs through inadvertent changes. This risk is especially high when development or deployment work is delegated to an AI agent. Reusing battle-tested, already-audited deployed logic removes that class of error. **deploy once, attach everywhere** (Create3FactoryDFPkg for per-chain Create3 once; reuse DPCF + DFPkgs + registries + protocol utils/sets) to **reuse already deployed and verified code** (via facets attached through DFPkgs) which eliminates the risk of introducing new bugs through inadvertent changes (especially high for AI agents). Directly saves gas by simply not needing to deploy as much bytecode. All claims grounded in this reuse-based reasoning. See PRD LR-4.
 
@@ -259,4 +272,10 @@ forge fmt
 
 For full test matrix: `npm run test-all` (if configured).
 
-See [deployment docs](deployment/) and [Bankr token launch](BANKR_LAUNCH.md) for production flows.
+## See also
+
+- [CREATE3 & New Chain Setup](deployment/create3.md)
+- [Registries](concepts/registries.md)
+- [Testing Patterns](development/testing.md)
+- [Utilities Overview](utilities/overview.md)
+- [BankrBot Token Launch](funding/bankr-launch.md)

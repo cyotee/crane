@@ -11,7 +11,7 @@ Native Crane pieces include `Permit2Aware` (IPermit2Aware + Repo/Target) and rat
 
 Ports are structured for reuse via `*AwareRepo` + `*Service` patterns (where Crane wrappers added) and direct integration with core (DFPkgs, registries, factories).
 
-See CODEBASE_MAP.md, docs/protocols/lending/*/ lifecycle notes, and EULER_PORTING_PLAN.md.
+See [Codebase Map](../CODEBASE_MAP.md), [Testing Patterns](../development/testing.md), lifecycle notes under `protocols/lending/`, and internal port history under `docs/archive/internal-plans/` (not part of primary GitBook nav).
 
 ## Aave Ports
 
@@ -154,3 +154,11 @@ For GitBook: this surfaces port details, test usage, and utilities as required.
 
 ## Verification
 After updates, `forge build` and targeted lending tests (as above). All NatSpec examples use ONLY values from CENTRALLY_COMPUTED_NATSPEC_VALUES.md. No viaIR. Full init in examples/tests.
+
+## See also
+
+- [DEX Integrations](dexes.md)
+- [Testing Patterns](../development/testing.md)
+- [CREATE3 & New Chain Setup](../deployment/create3.md)
+- [Getting Started](../getting-started.md)
+- [Codebase Map](../CODEBASE_MAP.md)

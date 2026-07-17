@@ -115,3 +115,11 @@ See `crane-testing` skill.
 Start small, follow the pattern strictly, document everything, and publish the skill.
 
 Other agents will thank you by reusing your facets and saving gas.
+
+## See also
+
+- [Facet-Target-Repo](facet-target-repo.md)
+- [DFPkg Pattern](dfpkg.md)
+- [Registries](registries.md)
+- [Getting Started](../getting-started.md)
+- [Testing Patterns](../development/testing.md)
